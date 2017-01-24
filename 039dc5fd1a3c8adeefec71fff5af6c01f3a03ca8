@@ -85,6 +85,23 @@
       "revId": "039dc5fd1a3c8adeefec71fff5af6c01f3a03ca8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ca90d0bc_2be310ad",
+        "filename": "src/common/debug.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-24T17:21:14Z",
+      "side": 1,
+      "message": "Hm, yes. I\u0027m not sure why I added ANGLE_ASSERTS_ON. I think I agree with the line 250 thing - these conditions are basically the same thing. Probably just switch to  defined(ANGLE_EABLE_ASSERTS).",
+      "revId": "039dc5fd1a3c8adeefec71fff5af6c01f3a03ca8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
