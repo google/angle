@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0848be9f_702756e5",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1110,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-01-24T06:19:03Z",
+      "side": 1,
+      "message": "How can you ensure that setDefaultWidth has the same target with getDefaultWidth. Please remove FramebufferState\u0027s get/set functions. And use glGetFramebufferParameteriv to get the right value.",
+      "revId": "f68ee6710f287b8e5ddcb138d25c283b7ff2b3dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a8509249_62e307ec",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-01-24T06:19:03Z",
+      "side": 1,
+      "message": "gl::Error FramebufferGL::getDefaultWidth(GLenum target, GLint *defaultWidth)\n{\n    mFunctions-\u003eGetFramebufferParameteriv(target, GL_FRAMEBUFFER_DEFAULT_WIDTH, defaultWidth);\n\n\nYou can\u0027t ensure that the set target and get target is same. And use the set value to return. Same with below.",
+      "range": {
+        "startLine": 379,
+        "startChar": 0,
+        "endLine": 381,
+        "endChar": 45
+      },
+      "revId": "f68ee6710f287b8e5ddcb138d25c283b7ff2b3dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4842b67f_57b174eb",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-01-24T06:19:03Z",
+      "side": 1,
+      "message": "Why do you need to call bindFramebuffer? Same with below.",
+      "revId": "f68ee6710f287b8e5ddcb138d25c283b7ff2b3dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
