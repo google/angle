@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "03ebe18c_f242b008",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1076,
+      "author": {
+        "id": 1000608
+      },
+      "writtenOn": "2017-01-24T23:18:37Z",
+      "side": 1,
+      "message": "Done",
+      "range": {
+        "startLine": 1076,
+        "startChar": 11,
+        "endLine": 1076,
+        "endChar": 68
+      },
+      "revId": "dd3baa3ac32de8263059316eff5a46cb1fc6657a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "74027081_ed21b39f",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 2
@@ -48,6 +71,29 @@
     },
     {
       "key": {
+        "uuid": "0f1e9809_1ded1f28",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1079,
+      "author": {
+        "id": 1000608
+      },
+      "writtenOn": "2017-01-24T23:18:37Z",
+      "side": 1,
+      "message": "Yeah, maxExistingRT \u003d 0 and shouldn\u0027t early-out, because there may still be 1 view that needs to be set, and also the DSV needs to be set.",
+      "range": {
+        "startLine": 1079,
+        "startChar": 54,
+        "endLine": 1079,
+        "endChar": 67
+      },
+      "revId": "dd3baa3ac32de8263059316eff5a46cb1fc6657a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "60a52ba6_2e026b24",
         "filename": "src/tests/egl_tests/EGLSurfaceTest.cpp",
         "patchSetId": 2
@@ -59,6 +105,29 @@
       "writtenOn": "2017-01-24T22:02:40Z",
       "side": 1,
       "message": "nit: conditional defines should go after unconditional.\n\nhttps://google.github.io/styleguide/cppguide.html#Names_and_Order_of_Includes",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 6
+      },
+      "revId": "dd3baa3ac32de8263059316eff5a46cb1fc6657a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aa3b62b7_478da4af",
+        "filename": "src/tests/egl_tests/EGLSurfaceTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1000608
+      },
+      "writtenOn": "2017-01-24T23:18:37Z",
+      "side": 1,
+      "message": "Ok, moved this down, though I needed to also include guiddef.h to make it compile then.",
       "range": {
         "startLine": 10,
         "startChar": 0,
