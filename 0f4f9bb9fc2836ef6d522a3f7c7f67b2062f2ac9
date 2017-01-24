@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6854da0e_219b1596",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 537,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-24T03:18:22Z",
+      "side": 1,
+      "message": "Deqp checks attaching different fixedSampleLocations to a framebuffer in tests:\nDEQP-GLES31.functional.texture.multisample.negative.fbo_attach_different_fixed_state_tex_*.\nAdd to todo list.\nI will splt it to another patch, reported a bug anglebug:1728.",
+      "parentUuid": "239765c6_fcfe49f1",
+      "revId": "0f4f9bb9fc2836ef6d522a3f7c7f67b2062f2ac9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "239765c6_fc8ba9ba",
         "filename": "src/libANGLE/Framebuffer.h",
         "patchSetId": 5
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "6854da0e_c1fa01c1",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-24T03:18:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "239765c6_fc8ba9ba",
+      "range": {
+        "startLine": 89,
+        "startChar": 31,
+        "endLine": 89,
+        "endChar": 43
+      },
+      "revId": "0f4f9bb9fc2836ef6d522a3f7c7f67b2062f2ac9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "239765c6_3c6ef116",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 5
@@ -53,6 +95,30 @@
       "writtenOn": "2017-01-18T08:44:30Z",
       "side": 1,
       "message": "same here",
+      "range": {
+        "startLine": 847,
+        "startChar": 18,
+        "endLine": 847,
+        "endChar": 26
+      },
+      "revId": "0f4f9bb9fc2836ef6d522a3f7c7f67b2062f2ac9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_2181d552",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 847,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-24T03:18:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "239765c6_3c6ef116",
       "range": {
         "startLine": 847,
         "startChar": 18,
@@ -112,6 +178,30 @@
     },
     {
       "key": {
+        "uuid": "6854da0e_3b0c6bb3",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 956,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-24T03:18:22Z",
+      "side": 1,
+      "message": "Yes, it should return the default value.I have run a small native deqp test case, it returns what it\u0027s set instead of size of attachments.",
+      "parentUuid": "239765c6_9ca38542",
+      "range": {
+        "startLine": 845,
+        "startChar": 2,
+        "endLine": 956,
+        "endChar": 18
+      },
+      "revId": "0f4f9bb9fc2836ef6d522a3f7c7f67b2062f2ac9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "239765c6_3c5c315b",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 5
@@ -123,6 +213,30 @@
       "writtenOn": "2017-01-18T08:44:30Z",
       "side": 1,
       "message": "defaultWidth -\u003e maxWidth, similar in other place",
+      "range": {
+        "startLine": 417,
+        "startChar": 14,
+        "endLine": 417,
+        "endChar": 26
+      },
+      "revId": "0f4f9bb9fc2836ef6d522a3f7c7f67b2062f2ac9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_e1d61d33",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 417,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-24T03:18:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "239765c6_3c5c315b",
       "range": {
         "startLine": 417,
         "startChar": 14,
@@ -158,6 +272,30 @@
     },
     {
       "key": {
+        "uuid": "6854da0e_8163e9c1",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-24T03:18:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "239765c6_7c66b92c",
+      "range": {
+        "startLine": 440,
+        "startChar": 8,
+        "endLine": 440,
+        "endChar": 32
+      },
+      "revId": "0f4f9bb9fc2836ef6d522a3f7c7f67b2062f2ac9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "239765c6_1c5f7552",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 5
@@ -181,6 +319,30 @@
     },
     {
       "key": {
+        "uuid": "6854da0e_6168ed9b",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-24T03:18:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "239765c6_1c5f7552",
+      "range": {
+        "startLine": 456,
+        "startChar": 8,
+        "endLine": 456,
+        "endChar": 57
+      },
+      "revId": "0f4f9bb9fc2836ef6d522a3f7c7f67b2062f2ac9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "239765c6_bc368121",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 5
@@ -192,6 +354,30 @@
       "writtenOn": "2017-01-18T08:44:30Z",
       "side": 1,
       "message": "Error(GL_INVALID_ENUM, \"Invalid pname: 0x%X\", pname) and other similar places.",
+      "range": {
+        "startLine": 483,
+        "startChar": 29,
+        "endLine": 483,
+        "endChar": 80
+      },
+      "revId": "0f4f9bb9fc2836ef6d522a3f7c7f67b2062f2ac9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6854da0e_e1429dfc",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 483,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-24T03:18:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "239765c6_bc368121",
       "range": {
         "startLine": 483,
         "startChar": 29,
