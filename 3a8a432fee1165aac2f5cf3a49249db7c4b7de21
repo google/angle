@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "080fde79_43d6e6a7",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-01-24T09:01:40Z",
+      "side": 1,
+      "message": "check if (getClientVersion() \u003e\u003d Version(3, 1)) here and below",
+      "revId": "3a8a432fee1165aac2f5cf3a49249db7c4b7de21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
