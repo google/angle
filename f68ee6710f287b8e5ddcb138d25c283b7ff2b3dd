@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6845ba83_92682c9d",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1110,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-24T07:06:59Z",
+      "side": 1,
+      "message": "The fbo is getted in the entry point by getTargetFramebuffer, so the params can be queryed by the cashe.",
+      "parentUuid": "0848be9f_702756e5",
+      "revId": "f68ee6710f287b8e5ddcb138d25c283b7ff2b3dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a8509249_62e307ec",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 9
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "284bc29d_5755eb62",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-24T07:06:59Z",
+      "side": 1,
+      "message": "The fbo is getted in the entry point by getTargetFramebuffer and the params are private variable of the framebufferstate.Current fbo target is set by bindFramebuffer entry point, it\u0027s set to the mReadFramebuffer and mDrawFramebuffer of class State.",
+      "parentUuid": "a8509249_62e307ec",
+      "range": {
+        "startLine": 379,
+        "startChar": 0,
+        "endLine": 381,
+        "endChar": 45
+      },
+      "revId": "f68ee6710f287b8e5ddcb138d25c283b7ff2b3dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4842b67f_57b174eb",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 9
@@ -53,6 +95,24 @@
       "writtenOn": "2017-01-24T06:19:03Z",
       "side": 1,
       "message": "Why do you need to call bindFramebuffer? Same with below.",
+      "revId": "f68ee6710f287b8e5ddcb138d25c283b7ff2b3dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a8509249_b5cd573f",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-01-24T07:06:59Z",
+      "side": 1,
+      "message": "Because bindFramebuffer does\u0027t call to the driver, it just set current fbo to variables in class State, so it\u0027s needed to bind current fbo to driver by calling mStateManager-\u003ebindFramebuffer before the set function.",
+      "parentUuid": "4842b67f_57b174eb",
       "revId": "f68ee6710f287b8e5ddcb138d25c283b7ff2b3dd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
