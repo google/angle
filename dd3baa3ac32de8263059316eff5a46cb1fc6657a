@@ -94,6 +94,29 @@
     },
     {
       "key": {
+        "uuid": "7dcaab27_342dfc80",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1079,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-24T23:27:21Z",
+      "side": 1,
+      "message": "Ah right. I think you should put the +1 in the maxExistingRT assignment, to keep the \u003d\u003d0 case distinct (otherwise you\u0027re setting color buffer 0 even if there wasn\u0027t a change).",
+      "range": {
+        "startLine": 1079,
+        "startChar": 54,
+        "endLine": 1079,
+        "endChar": 67
+      },
+      "revId": "dd3baa3ac32de8263059316eff5a46cb1fc6657a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "60a52ba6_2e026b24",
         "filename": "src/tests/egl_tests/EGLSurfaceTest.cpp",
         "patchSetId": 2
