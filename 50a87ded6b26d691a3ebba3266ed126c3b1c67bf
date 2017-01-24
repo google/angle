@@ -93,6 +93,29 @@
       "revId": "50a87ded6b26d691a3ebba3266ed126c3b1c67bf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "92ba209a_a058b59f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2060,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-24T19:14:02Z",
+      "side": 1,
+      "message": "Thank you Jiajia for clarifying that you need access to first/count/instances, I did not understand that initially. This is a difficult problem and we need to figure out when we need to pull the buffer data back from the GPU for ANGLE, and when we can be fast. It is very important to avoid the GPU readback for any fast performance, so it\u0027s something we must figure out.\n\nFor first/count/instances and applyVertexBuffers, we need to think about the following places first/count/instances are used in applyVertexBuffers:\n\n1) for static and dynamic vertex buffer updates, when the user specifies DYNAMIC usage, or we need to perform attribute translation. Note: there must be an ARRAY_BUFFER bound in ES3.1 draw indirect calls, so we don\u0027t have to worry about vertexAttribPointer with client data.\n\n2) for instanced point sprites. We don\u0027t currently use this in mainline D3D11, though it is something we were thinking about.\n\n3) for computing the vertex attribute offsets in applyVertexBuffers.\n\n4) for updating buffer usage in VertexArray11::clearDirtyAndPromoteDynamicAttribs.\n\nFor 1) I think we can use a readback. It seems easy enough, without having to think about custom vertex pulling or other more advanced solutions.\n\nFor 2) I think we can ignore the problem for now, and either use trivial values (0, 1, etc) or pass in Optional\u003c\u003e and set them to Invalid.\n\nFor 3) this is difficult to solve, let me think about this carefully and discuss it with the other team members.\n\nFor 4) this is also a difficult issue, but we may be able to ignore it, since it\u0027s mostly an optimization.\n\nWill get back to you Jiajia. I will also study drawElements.",
+      "range": {
+        "startLine": 2007,
+        "startChar": 4,
+        "endLine": 2060,
+        "endChar": 15
+      },
+      "revId": "50a87ded6b26d691a3ebba3266ed126c3b1c67bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
