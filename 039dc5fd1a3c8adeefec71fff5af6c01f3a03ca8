@@ -68,6 +68,23 @@
       "revId": "039dc5fd1a3c8adeefec71fff5af6c01f3a03ca8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "44f98ed0_c7c4d230",
+        "filename": "src/common/debug.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-24T16:58:26Z",
+      "side": 1,
+      "message": "Some form of ANGLE_ASSERTS_ON \u003d\u003d 1 should be correct, however, ANGLE_ENABLED is defined in src/libANGLE/features.h, and we are in src/common here, so can\u0027t depend on libANGLE. Do you propose to move ANGLE_ENABLED definition somewhere else?\n\nAlternatively, I think ANGLE_ASSERTS_ON \u003d\u003d 1 if and only if defined(ANGLE_ENABLE_ASSERTS).\nAs I understand:\ndefined(NDEBUG) \u0026\u0026 !defined(ANGLE_ENABLE_ASSERTS) \u003d\u003d\ndefined(NDEBUG) \u0026\u0026 !(!defined(NDEBUG) || defined(ANGLE_ENABLE_RELEASE_ASSERTS)) \u003d\u003d\ndefined(NDEBUG) \u0026\u0026 !!defined(NDEBUG) \u0026\u0026 !defined(ANGLE_ENABLE_RELEASE_ASSERTS) \u003d\u003d\ndefined(NDEBUG) \u0026\u0026 defined(NDEBUG) \u0026\u0026 !defined(ANGLE_ENABLE_RELEASE_ASSERTS) \u003d\u003d\ndefined(NDEBUG) \u0026\u0026 !defined(ANGLE_ENABLE_RELEASE_ASSERTS) \u003d\u003d\n!!defined(NDEBUG) \u0026\u0026 !defined(ANGLE_ENABLE_RELEASE_ASSERTS) \u003d\u003d\n!(!defined(NDEBUG) || defined(ANGLE_ENABLE_RELEASE_ASSERTS)) \u003d\u003d\n!defined(ANGLE_ENABLE_ASSERTS)\n\nThus, I think I could get rid of ANGLE_ASSERTS_ON entirely, replacing usage in line 250 with \"false\".",
+      "revId": "039dc5fd1a3c8adeefec71fff5af6c01f3a03ca8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
