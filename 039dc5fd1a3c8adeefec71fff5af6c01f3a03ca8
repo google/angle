@@ -25,6 +25,23 @@
     },
     {
       "key": {
+        "uuid": "53946da2_9d637f34",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-24T19:41:53Z",
+      "side": 1,
+      "message": "Done",
+      "revId": "039dc5fd1a3c8adeefec71fff5af6c01f3a03ca8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c85f8657_d3a2ac8a",
         "filename": "src/common/debug.cpp",
         "patchSetId": 2
@@ -42,6 +59,23 @@
         "endLine": 134,
         "endChar": 52
       },
+      "revId": "039dc5fd1a3c8adeefec71fff5af6c01f3a03ca8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "757546e1_24c21b28",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-24T19:41:53Z",
+      "side": 1,
+      "message": "Done",
       "revId": "039dc5fd1a3c8adeefec71fff5af6c01f3a03ca8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -99,6 +133,23 @@
       "writtenOn": "2017-01-24T17:21:14Z",
       "side": 1,
       "message": "Hm, yes. I\u0027m not sure why I added ANGLE_ASSERTS_ON. I think I agree with the line 250 thing - these conditions are basically the same thing. Probably just switch to  defined(ANGLE_EABLE_ASSERTS).",
+      "revId": "039dc5fd1a3c8adeefec71fff5af6c01f3a03ca8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "32cbda3d_384625be",
+        "filename": "src/common/debug.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-01-24T19:41:53Z",
+      "side": 1,
+      "message": "Done",
       "revId": "039dc5fd1a3c8adeefec71fff5af6c01f3a03ca8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
