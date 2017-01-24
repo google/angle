@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4842b67f_97d2dc09",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-24T06:12:47Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 95,
+        "startChar": 6,
+        "endLine": 95,
+        "endChar": 22
+      },
+      "revId": "039dc5fd1a3c8adeefec71fff5af6c01f3a03ca8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c85f8657_d3a2ac8a",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-24T06:12:47Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 134,
+        "startChar": 36,
+        "endLine": 134,
+        "endChar": 52
+      },
+      "revId": "039dc5fd1a3c8adeefec71fff5af6c01f3a03ca8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "883caef3_ce716b8a",
+        "filename": "src/common/debug.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-24T06:12:47Z",
+      "side": 1,
+      "message": "can you replace this with a more specific check, either defined(ANGLE_ASSERTS_ON) or ANGLE_ASSERTS_ON \u003d\u003d ANGLE_ENABLED, whichever is correct.",
+      "range": {
+        "startLine": 261,
+        "startChar": 36,
+        "endLine": 261,
+        "endChar": 52
+      },
+      "revId": "039dc5fd1a3c8adeefec71fff5af6c01f3a03ca8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
