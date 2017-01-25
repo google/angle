@@ -115,10 +115,17 @@ gl::Error BufferGL::map(GLenum access, GLvoid **mapPtr)
     {
         *mapPtr = mShadowCopy.data();
     }
-    else
+    else if (mFunctions->mapBuffer)
     {
         mStateManager->bindBuffer(DestBufferOperationTarget, mBufferID);
         *mapPtr = mFunctions->mapBuffer(DestBufferOperationTarget, access);
+    }
+    else
+    {
+        ASSERT(mFunctions->mapBufferRange && access == GL_WRITE_ONLY_OES);
+        mStateManager->bindBuffer(DestBufferOperationTarget, mBufferID);
+        *mapPtr =
+            mFunctions->mapBufferRange(DestBufferOperationTarget, 0, mBufferSize, GL_MAP_WRITE_BIT);
     }
 
     mIsMapped = true;

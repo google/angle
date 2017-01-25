@@ -1230,7 +1230,7 @@ bool ValidateGetBufferParameterBase(ValidationContext *context,
             if (!extensions.mapBuffer)
             {
                 context->handleError(
-                    Error(GL_INVALID_ENUM, "pname requires OpenGL ES 3.0 or GL_OES_map_buffer."));
+                    Error(GL_INVALID_ENUM, "pname requires OpenGL ES 3.0 or GL_OES_mapbuffer."));
                 return false;
             }
             break;
@@ -1242,7 +1242,7 @@ bool ValidateGetBufferParameterBase(ValidationContext *context,
             {
                 context->handleError(Error(
                     GL_INVALID_ENUM,
-                    "pname requires OpenGL ES 3.0, GL_OES_map_buffer or GL_EXT_map_buffer_range."));
+                    "pname requires OpenGL ES 3.0, GL_OES_mapbuffer or GL_EXT_map_buffer_range."));
                 return false;
             }
             break;
@@ -4366,7 +4366,7 @@ bool ValidateGetBufferPointervBase(Context *context,
     {
         context->handleError(
             Error(GL_INVALID_OPERATION,
-                  "Context does not support OpenGL ES 3.0 or GL_OES_map_buffer is not enabled."));
+                  "Context does not support OpenGL ES 3.0 or GL_OES_mapbuffer is not enabled."));
         return false;
     }
 

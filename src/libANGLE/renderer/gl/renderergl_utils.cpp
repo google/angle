@@ -788,6 +788,7 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
     extensions->readFormatBGRA = functions->isAtLeastGL(gl::Version(1, 2)) || functions->hasGLExtension("GL_EXT_bgra") ||
                                  functions->hasGLESExtension("GL_EXT_read_format_bgra");
     extensions->mapBuffer = functions->isAtLeastGL(gl::Version(1, 5)) ||
+                            functions->isAtLeastGLES(gl::Version(3, 0)) ||
                             functions->hasGLESExtension("GL_OES_mapbuffer");
     extensions->mapBufferRange = functions->isAtLeastGL(gl::Version(3, 0)) || functions->hasGLExtension("GL_ARB_map_buffer_range") ||
                                  functions->isAtLeastGLES(gl::Version(3, 0)) || functions->hasGLESExtension("GL_EXT_map_buffer_range");

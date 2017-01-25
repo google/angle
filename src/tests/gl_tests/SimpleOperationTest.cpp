@@ -10,6 +10,9 @@
 
 #include <vector>
 
+#include "random_utils.h"
+#include "test_utils/gl_raii.h"
+
 using namespace angle;
 
 namespace
@@ -27,7 +30,27 @@ class SimpleOperationTest : public ANGLETest
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
     }
+
+    void verifyBuffer(const std::vector<uint8_t> &data, GLenum binding);
 };
+
+void SimpleOperationTest::verifyBuffer(const std::vector<uint8_t> &data, GLenum binding)
+{
+    if (!extensionEnabled("GL_EXT_map_buffer_range"))
+    {
+        return;
+    }
+
+    uint8_t *mapPointer =
+        static_cast<uint8_t *>(glMapBufferRangeEXT(GL_ARRAY_BUFFER, 0, 1024, GL_MAP_READ_BIT));
+    ASSERT_GL_NO_ERROR();
+
+    std::vector<uint8_t> readbackData(data.size());
+    memcpy(readbackData.data(), mapPointer, data.size());
+    glUnmapBufferOES(GL_ARRAY_BUFFER);
+
+    EXPECT_EQ(data, readbackData);
+}
 
 TEST_P(SimpleOperationTest, CompileVertexShader)
 {
@@ -154,46 +177,47 @@ TEST_P(SimpleOperationTest, LinkProgramWithAttributes)
 
 TEST_P(SimpleOperationTest, BufferDataWithData)
 {
-    GLuint buffer;
-    glGenBuffers(1, &buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer.get());
 
     std::vector<uint8_t> data(1024);
+    FillVectorWithRandomUBytes(&data);
     glBufferData(GL_ARRAY_BUFFER, data.size(), &data[0], GL_STATIC_DRAW);
 
-    glDeleteBuffers(1, &buffer);
+    verifyBuffer(data, GL_ARRAY_BUFFER);
 
     EXPECT_GL_NO_ERROR();
 }
 
 TEST_P(SimpleOperationTest, BufferDataWithNoData)
 {
-    GLuint buffer;
-    glGenBuffers(1, &buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer.get());
     glBufferData(GL_ARRAY_BUFFER, 1024, nullptr, GL_STATIC_DRAW);
-    glDeleteBuffers(1, &buffer);
 
     EXPECT_GL_NO_ERROR();
 }
 
 TEST_P(SimpleOperationTest, BufferSubData)
 {
-    GLuint buffer;
-    glGenBuffers(1, &buffer);
-    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer.get());
 
-    const size_t bufferSize = 1024;
+    constexpr size_t bufferSize = 1024;
+    std::vector<uint8_t> data(bufferSize);
+    FillVectorWithRandomUBytes(&data);
+
     glBufferData(GL_ARRAY_BUFFER, bufferSize, nullptr, GL_STATIC_DRAW);
 
-    const size_t subDataCount = 16;
-    std::vector<uint8_t> data(bufferSize / subDataCount);
+    constexpr size_t subDataCount = 16;
+    constexpr size_t sliceSize    = bufferSize / subDataCount;
     for (size_t i = 0; i < subDataCount; i++)
     {
-        glBufferSubData(GL_ARRAY_BUFFER, data.size() * i, data.size(), &data[0]);
+        size_t offset = i * sliceSize;
+        glBufferSubData(GL_ARRAY_BUFFER, offset, sliceSize, &data[offset]);
     }
 
-    glDeleteBuffers(1, &buffer);
+    verifyBuffer(data, GL_ARRAY_BUFFER);
 
     EXPECT_GL_NO_ERROR();
 }
