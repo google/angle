@@ -16,6 +16,23 @@
       "revId": "3a8a432fee1165aac2f5cf3a49249db7c4b7de21",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6fe0ba73_b6968887",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-01-25T07:19:17Z",
+      "side": 1,
+      "message": "Done. Move it to line 316 under if (getClientVersion() \u003e\u003d Version(3, 1))",
+      "revId": "3a8a432fee1165aac2f5cf3a49249db7c4b7de21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
