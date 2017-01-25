@@ -22,6 +22,29 @@
       "revId": "3d573ef98d66f298807de0db41c870813b14c798",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6e8b5fe_99f5b114",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 791,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-25T21:38:04Z",
+      "side": 1,
+      "message": "Should be sufficient to check for OES_mapbuffer, since EXT_map_buffer_range implies OES_mapbuffer.",
+      "range": {
+        "startLine": 791,
+        "startChar": 28,
+        "endLine": 791,
+        "endChar": 71
+      },
+      "revId": "3d573ef98d66f298807de0db41c870813b14c798",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
