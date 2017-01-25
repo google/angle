@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "68f3faab_62c31e1d",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 837,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-25T18:57:23Z",
+      "side": 1,
+      "message": "LGTM, I was not able to find a better algorithm for this.",
+      "revId": "1b0c91b79d2cb37f7b14545e613b66ff391d38c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb86b3d2_f9995abb",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 849,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-25T18:57:23Z",
+      "side": 1,
+      "message": "carry can be declared here.",
+      "revId": "1b0c91b79d2cb37f7b14545e613b66ff391d38c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d252c7a5_2830b26d",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 879,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-25T18:57:23Z",
+      "side": 1,
+      "message": "LGTM I don\u0027t have a better idea for this either. If x or y are -2^31, taking their abs is undefined but I\u0027m not sure if we want to handle that special case.",
+      "revId": "1b0c91b79d2cb37f7b14545e613b66ff391d38c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "68f3faab_b7a42aa8",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2197,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-25T18:57:23Z",
+      "side": 1,
+      "message": "Can you add helper functions to math_util.h for the following 4 cases, that uses the VS or GCC builtins? You will be able to fold in ScanForward from BitSetIterator.h",
+      "revId": "1b0c91b79d2cb37f7b14545e613b66ff391d38c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "68f3faab_6275de35",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2284,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-25T18:57:23Z",
+      "side": 1,
+      "message": "nit: if intValue \u003c 0 then set value \u003d ~static_cast\u003cuint32_t\u003e(intValue) else static_cast\u003cuint32_t\u003e(intValue). This should remove the need for lookForZero.",
+      "revId": "1b0c91b79d2cb37f7b14545e613b66ff391d38c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
