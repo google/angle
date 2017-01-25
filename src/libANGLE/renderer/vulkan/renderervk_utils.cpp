@@ -763,6 +763,67 @@ Error StagingImage::init(uint32_t queueFamilyIndex,
     return NoError();
 }
 
+// Buffer implementation.
+Buffer::Buffer()
+{
+}
+
+Buffer::Buffer(VkDevice device) : WrappedObject(device), mMemory(device)
+{
+}
+
+Buffer::Buffer(Buffer &&other)
+    : WrappedObject(std::move(other)), mMemory(std::move(other.getMemory()))
+{
+}
+
+Buffer::~Buffer()
+{
+    if (mHandle != VK_NULL_HANDLE)
+    {
+        ASSERT(validDevice());
+        vkDestroyBuffer(mDevice, mHandle, nullptr);
+    }
+}
+
+Buffer &Buffer::operator=(Buffer &&other)
+{
+    assignOpBase(std::move(other));
+    std::swap(mMemory, other.mMemory);
+    return *this;
+}
+
+Error Buffer::init(const VkBufferCreateInfo &createInfo)
+{
+    ASSERT(validDevice() && !valid());
+    ANGLE_VK_TRY(vkCreateBuffer(mDevice, &createInfo, nullptr, &mHandle));
+    return NoError();
+}
+
+Error Buffer::bindMemory()
+{
+    ASSERT(valid() && mMemory.valid());
+    ANGLE_VK_TRY(vkBindBufferMemory(mDevice, mHandle, mMemory.getHandle(), 0));
+    return NoError();
+}
+
 }  // namespace vk
+
+Optional<uint32_t> FindMemoryType(const VkPhysicalDeviceMemoryProperties &memoryProps,
+                                  const VkMemoryRequirements &requirements,
+                                  uint32_t propertyFlagMask)
+{
+    for (uint32_t typeIndex = 0; typeIndex < memoryProps.memoryTypeCount; ++typeIndex)
+    {
+        if ((requirements.memoryTypeBits & (1u << typeIndex)) != 0 &&
+            ((memoryProps.memoryTypes[typeIndex].propertyFlags & propertyFlagMask) ==
+             propertyFlagMask))
+        {
+            return typeIndex;
+        }
+    }
+
+    return Optional<uint32_t>::Invalid();
+}
 
 }  // namespace rx

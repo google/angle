@@ -509,10 +509,15 @@ void RendererVk::ensureCapsInitialized() const
 
 void RendererVk::generateCaps(gl::Caps * /*outCaps*/,
                               gl::TextureCapsMap * /*outTextureCaps*/,
-                              gl::Extensions * /*outExtensions*/,
+                              gl::Extensions *outExtensions,
                               gl::Limitations * /* outLimitations */) const
 {
     // TODO(jmadill): Caps.
+
+    // Enable this for simple buffer readback testing, but some functionality is missing.
+    // TODO(jmadill): Support full mapBufferRange extension.
+    outExtensions->mapBuffer      = true;
+    outExtensions->mapBufferRange = true;
 }
 
 const gl::Caps &RendererVk::getNativeCaps() const

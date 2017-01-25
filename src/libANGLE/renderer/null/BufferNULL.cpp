@@ -24,7 +24,11 @@ BufferNULL::~BufferNULL()
 {
 }
 
-gl::Error BufferNULL::setData(GLenum target, const void *data, size_t size, GLenum usage)
+gl::Error BufferNULL::setData(ContextImpl *context,
+                              GLenum target,
+                              const void *data,
+                              size_t size,
+                              GLenum usage)
 {
     mData.resize(size, 0);
     if (size > 0 && data != nullptr)
@@ -34,7 +38,11 @@ gl::Error BufferNULL::setData(GLenum target, const void *data, size_t size, GLen
     return gl::NoError();
 }
 
-gl::Error BufferNULL::setSubData(GLenum target, const void *data, size_t size, size_t offset)
+gl::Error BufferNULL::setSubData(ContextImpl *context,
+                                 GLenum target,
+                                 const void *data,
+                                 size_t size,
+                                 size_t offset)
 {
     if (size > 0)
     {

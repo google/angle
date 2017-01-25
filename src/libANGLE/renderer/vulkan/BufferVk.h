@@ -11,6 +11,7 @@
 #define LIBANGLE_RENDERER_VULKAN_BUFFERVK_H_
 
 #include "libANGLE/renderer/BufferImpl.h"
+#include "libANGLE/renderer/vulkan/renderervk_utils.h"
 
 namespace rx
 {
@@ -21,8 +22,16 @@ class BufferVk : public BufferImpl
     BufferVk(const gl::BufferState &state);
     ~BufferVk() override;
 
-    gl::Error setData(GLenum target, const void *data, size_t size, GLenum usage) override;
-    gl::Error setSubData(GLenum target, const void *data, size_t size, size_t offset) override;
+    gl::Error setData(ContextImpl *context,
+                      GLenum target,
+                      const void *data,
+                      size_t size,
+                      GLenum usage) override;
+    gl::Error setSubData(ContextImpl *context,
+                         GLenum target,
+                         const void *data,
+                         size_t size,
+                         size_t offset) override;
     gl::Error copySubData(BufferImpl *source,
                           GLintptr sourceOffset,
                           GLintptr destOffset,
@@ -36,6 +45,12 @@ class BufferVk : public BufferImpl
                             size_t count,
                             bool primitiveRestartEnabled,
                             gl::IndexRange *outRange) override;
+
+  private:
+    vk::Error setDataImpl(const uint8_t *data, size_t size, size_t offset);
+
+    vk::Buffer mBuffer;
+    size_t mRequiredSize;
 };
 
 }  // namespace rx

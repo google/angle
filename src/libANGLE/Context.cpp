@@ -3577,7 +3577,7 @@ void Context::bufferData(GLenum target, GLsizeiptr size, const GLvoid *data, GLe
 {
     Buffer *buffer = mGLState.getTargetBuffer(target);
     ASSERT(buffer);
-    handleError(buffer->bufferData(target, data, size, usage));
+    handleError(buffer->bufferData(this, target, data, size, usage));
 }
 
 void Context::bufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const GLvoid *data)
@@ -3589,7 +3589,7 @@ void Context::bufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, con
 
     Buffer *buffer = mGLState.getTargetBuffer(target);
     ASSERT(buffer);
-    handleError(buffer->bufferSubData(target, data, size, offset));
+    handleError(buffer->bufferSubData(this, target, data, size, offset));
 }
 
 void Context::attachShader(GLuint program, GLuint shader)

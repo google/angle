@@ -299,10 +299,14 @@ Buffer11::~Buffer11()
     mRenderer->onBufferDelete(this);
 }
 
-gl::Error Buffer11::setData(GLenum target, const void *data, size_t size, GLenum usage)
+gl::Error Buffer11::setData(ContextImpl *context,
+                            GLenum target,
+                            const void *data,
+                            size_t size,
+                            GLenum usage)
 {
     updateD3DBufferUsage(usage);
-    ANGLE_TRY(setSubData(target, data, size, 0));
+    ANGLE_TRY(setSubData(context, target, data, size, 0));
     return gl::NoError();
 }
 
@@ -324,7 +328,11 @@ gl::ErrorOrResult<Buffer11::SystemMemoryStorage *> Buffer11::getSystemMemoryStor
     return GetAs<SystemMemoryStorage>(storage);
 }
 
-gl::Error Buffer11::setSubData(GLenum target, const void *data, size_t size, size_t offset)
+gl::Error Buffer11::setSubData(ContextImpl * /*context*/,
+                               GLenum target,
+                               const void *data,
+                               size_t size,
+                               size_t offset)
 {
     size_t requiredSize = size + offset;
 

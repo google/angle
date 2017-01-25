@@ -12,6 +12,7 @@
 
 #include <vulkan/vulkan.h>
 
+#include "common/Optional.h"
 #include "libANGLE/Error.h"
 
 namespace gl
@@ -270,7 +271,30 @@ class StagingImage final : angle::NonCopyable
     VkDeviceSize mSize;
 };
 
+class Buffer final : public WrappedObject<VkBuffer>
+{
+  public:
+    Buffer();
+    Buffer(VkDevice device);
+    Buffer(Buffer &&other);
+    ~Buffer();
+    Buffer &operator=(Buffer &&other);
+
+    Error init(const VkBufferCreateInfo &createInfo);
+    Error bindMemory();
+
+    DeviceMemory &getMemory() { return mMemory; }
+    const DeviceMemory &getMemory() const { return mMemory; }
+
+  private:
+    DeviceMemory mMemory;
+};
+
 }  // namespace vk
+
+Optional<uint32_t> FindMemoryType(const VkPhysicalDeviceMemoryProperties &memoryProps,
+                                  const VkMemoryRequirements &requirements,
+                                  uint32_t propertyFlagMask);
 
 }  // namespace rx
 

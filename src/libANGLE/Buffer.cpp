@@ -9,6 +9,8 @@
 // [OpenGL ES 2.0.24] section 2.9 page 21.
 
 #include "libANGLE/Buffer.h"
+
+#include "libANGLE/Context.h"
 #include "libANGLE/renderer/BufferImpl.h"
 #include "libANGLE/renderer/GLImplFactory.h"
 
@@ -52,9 +54,13 @@ const std::string &Buffer::getLabel() const
     return mState.mLabel;
 }
 
-Error Buffer::bufferData(GLenum target, const void *data, GLsizeiptr size, GLenum usage)
+Error Buffer::bufferData(const Context *context,
+                         GLenum target,
+                         const void *data,
+                         GLsizeiptr size,
+                         GLenum usage)
 {
-    ANGLE_TRY(mImpl->setData(target, data, size, usage));
+    ANGLE_TRY(mImpl->setData(rx::SafeGetImpl(context), target, data, size, usage));
 
     mIndexRangeCache.clear();
     mState.mUsage = usage;
@@ -63,9 +69,13 @@ Error Buffer::bufferData(GLenum target, const void *data, GLsizeiptr size, GLenu
     return NoError();
 }
 
-Error Buffer::bufferSubData(GLenum target, const void *data, GLsizeiptr size, GLintptr offset)
+Error Buffer::bufferSubData(const Context *context,
+                            GLenum target,
+                            const void *data,
+                            GLsizeiptr size,
+                            GLintptr offset)
 {
-    ANGLE_TRY(mImpl->setSubData(target, data, size, offset));
+    ANGLE_TRY(mImpl->setSubData(rx::SafeGetImpl(context), target, data, size, offset));
 
     mIndexRangeCache.invalidateRange(static_cast<unsigned int>(offset), static_cast<unsigned int>(size));
 

@@ -21,7 +21,11 @@ Buffer9::~Buffer9()
     mSize = 0;
 }
 
-gl::Error Buffer9::setData(GLenum /*target*/, const void *data, size_t size, GLenum usage)
+gl::Error Buffer9::setData(ContextImpl * /*context*/,
+                           GLenum /*target*/,
+                           const void *data,
+                           size_t size,
+                           GLenum usage)
 {
     if (size > mMemory.size())
     {
@@ -50,7 +54,11 @@ gl::Error Buffer9::getData(const uint8_t **outData)
     return gl::NoError();
 }
 
-gl::Error Buffer9::setSubData(GLenum /*target*/, const void *data, size_t size, size_t offset)
+gl::Error Buffer9::setSubData(ContextImpl * /*context*/,
+                              GLenum /*target*/,
+                              const void *data,
+                              size_t size,
+                              size_t offset)
 {
     if (offset + size > mMemory.size())
     {

@@ -54,6 +54,13 @@ void SimpleOperationTest::verifyBuffer(const std::vector<uint8_t> &data, GLenum 
 
 TEST_P(SimpleOperationTest, CompileVertexShader)
 {
+    if (IsVulkan())
+    {
+        // TODO(jmadill): Complete Vulkan implementation.
+        std::cout << "Test skipped on Vulkan." << std::endl;
+        return;
+    }
+
     const std::string source = SHADER_SOURCE
     (
         attribute vec4 a_input;
@@ -72,6 +79,13 @@ TEST_P(SimpleOperationTest, CompileVertexShader)
 
 TEST_P(SimpleOperationTest, CompileFragmentShader)
 {
+    if (IsVulkan())
+    {
+        // TODO(jmadill): Complete Vulkan implementation.
+        std::cout << "Test skipped on Vulkan." << std::endl;
+        return;
+    }
+
     const std::string source = SHADER_SOURCE
     (
         precision mediump float;
@@ -91,6 +105,13 @@ TEST_P(SimpleOperationTest, CompileFragmentShader)
 
 TEST_P(SimpleOperationTest, LinkProgram)
 {
+    if (IsVulkan())
+    {
+        // TODO(jmadill): Complete Vulkan implementation.
+        std::cout << "Test skipped on Vulkan." << std::endl;
+        return;
+    }
+
     const std::string vsSource = SHADER_SOURCE
     (
         void main()
@@ -116,6 +137,13 @@ TEST_P(SimpleOperationTest, LinkProgram)
 
 TEST_P(SimpleOperationTest, LinkProgramWithUniforms)
 {
+    if (IsVulkan())
+    {
+        // TODO(jmadill): Complete Vulkan implementation.
+        std::cout << "Test skipped on Vulkan." << std::endl;
+        return;
+    }
+
     const std::string vsSource = SHADER_SOURCE
     (
         void main()
@@ -147,6 +175,13 @@ TEST_P(SimpleOperationTest, LinkProgramWithUniforms)
 
 TEST_P(SimpleOperationTest, LinkProgramWithAttributes)
 {
+    if (IsVulkan())
+    {
+        // TODO(jmadill): Complete Vulkan implementation.
+        std::cout << "Test skipped on Vulkan." << std::endl;
+        return;
+    }
+
     const std::string vsSource = SHADER_SOURCE
     (
         attribute vec4 a_input;
@@ -231,6 +266,7 @@ ANGLE_INSTANTIATE_TEST(SimpleOperationTest,
                        ES2_OPENGL(),
                        ES3_OPENGL(),
                        ES2_OPENGLES(),
-                       ES3_OPENGLES());
+                       ES3_OPENGLES(),
+                       ES2_VULKAN());
 
 } // namespace

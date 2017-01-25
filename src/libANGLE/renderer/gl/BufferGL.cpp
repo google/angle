@@ -55,7 +55,11 @@ BufferGL::~BufferGL()
     mBufferID = 0;
 }
 
-gl::Error BufferGL::setData(GLenum /*target*/, const void *data, size_t size, GLenum usage)
+gl::Error BufferGL::setData(ContextImpl * /*context*/,
+                            GLenum /*target*/,
+                            const void *data,
+                            size_t size,
+                            GLenum usage)
 {
     mStateManager->bindBuffer(DestBufferOperationTarget, mBufferID);
     mFunctions->bufferData(DestBufferOperationTarget, size, data, usage);
@@ -78,7 +82,11 @@ gl::Error BufferGL::setData(GLenum /*target*/, const void *data, size_t size, GL
     return gl::NoError();
 }
 
-gl::Error BufferGL::setSubData(GLenum /*target*/, const void *data, size_t size, size_t offset)
+gl::Error BufferGL::setSubData(ContextImpl * /*context*/,
+                               GLenum /*target*/,
+                               const void *data,
+                               size_t size,
+                               size_t offset)
 {
     mStateManager->bindBuffer(DestBufferOperationTarget, mBufferID);
     mFunctions->bufferSubData(DestBufferOperationTarget, offset, size, data);

@@ -26,6 +26,7 @@ class GLImplFactory;
 namespace gl
 {
 class Buffer;
+class Context;
 
 class BufferState final : angle::NonCopyable
 {
@@ -68,9 +69,20 @@ class Buffer final : public RefCountObject, public LabeledObject
     void setLabel(const std::string &label) override;
     const std::string &getLabel() const override;
 
-    Error bufferData(GLenum target, const void *data, GLsizeiptr size, GLenum usage);
-    Error bufferSubData(GLenum target, const void *data, GLsizeiptr size, GLintptr offset);
-    Error copyBufferSubData(Buffer* source, GLintptr sourceOffset, GLintptr destOffset, GLsizeiptr size);
+    Error bufferData(const Context *context,
+                     GLenum target,
+                     const void *data,
+                     GLsizeiptr size,
+                     GLenum usage);
+    Error bufferSubData(const Context *context,
+                        GLenum target,
+                        const void *data,
+                        GLsizeiptr size,
+                        GLintptr offset);
+    Error copyBufferSubData(Buffer *source,
+                            GLintptr sourceOffset,
+                            GLintptr destOffset,
+                            GLsizeiptr size);
     Error map(GLenum access);
     Error mapRange(GLintptr offset, GLsizeiptr length, GLbitfield access);
     Error unmap(GLboolean *result);
@@ -102,6 +114,6 @@ class Buffer final : public RefCountObject, public LabeledObject
     mutable IndexRangeCache mIndexRangeCache;
 };
 
-}
+}  // namespace gl
 
 #endif   // LIBANGLE_BUFFER_H_
