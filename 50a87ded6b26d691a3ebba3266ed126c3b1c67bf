@@ -116,6 +116,29 @@
       "revId": "50a87ded6b26d691a3ebba3266ed126c3b1c67bf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "88b58399_5b39016c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2060,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-01-25T03:19:48Z",
+      "side": 1,
+      "message": "Hi, Jamie. Thanks for your analysis. I used to think to avoid the gpu readback for first\\count\\instances and use mimic values to applyVertexBuffers. The blocker is 3). Ideally, if we can use 0 as the vertex attribute buffer offset in applyVertexBuffers, and the \u0027first\u0027 as the \u0027startVertexLocation\u0027 parameter in D3D Indirect args, we even don\u0027t need the translation between GL Indirect args and D3D Indirect args. In that case, the indirect buffer can be directly used in d3d. But, in that time, It seems that I missed to consider some situations so that some cases can\u0027t pass. Maybe I need to reconsider and understand that part deeply. I totally agree with you that we must figure them out before move on. Thanks.",
+      "range": {
+        "startLine": 2007,
+        "startChar": 4,
+        "endLine": 2060,
+        "endChar": 15
+      },
+      "revId": "50a87ded6b26d691a3ebba3266ed126c3b1c67bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
