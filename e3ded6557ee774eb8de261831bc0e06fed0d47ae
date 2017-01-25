@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "83f213b6_4ac29583",
+        "filename": "src/tests/compiler_tests/TypeTracking_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 492,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-25T19:00:47Z",
+      "side": 1,
+      "message": "Can we have two calls with different precision here too, as well as in the tests below?",
+      "revId": "e3ded6557ee774eb8de261831bc0e06fed0d47ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
