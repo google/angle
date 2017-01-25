@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e3afbef9_d3cbe30f",
+        "filename": "src/tests/egl_tests/EGLSurfaceTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 545,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-25T01:28:58Z",
+      "side": 1,
+      "message": "LoadLibraryA(\"dcomp.dll\")",
+      "range": {
+        "startLine": 545,
+        "startChar": 27,
+        "endLine": 545,
+        "endChar": 38
+      },
+      "revId": "5792760a473beee52815a7a59b04b9a166b95bf6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
