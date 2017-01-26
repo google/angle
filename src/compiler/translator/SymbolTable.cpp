@@ -158,7 +158,7 @@ TSymbol *TSymbolTable::findBuiltIn(const TString &name, int shaderVersion) const
 TFunction *TSymbolTable::findBuiltInOp(TIntermAggregate *callNode, int shaderVersion) const
 {
     ASSERT(!callNode->isConstructor());
-    ASSERT(callNode->getOp() != EOpFunctionCall);
+    ASSERT(!callNode->isFunctionCall());
     TString opString = GetOperatorString(callNode->getOp());
     // The return type doesn't affect the mangled name of the function, which is used to look it up.
     TType dummyReturnType;

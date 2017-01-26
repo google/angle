@@ -403,8 +403,15 @@ bool TOutputTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
         // mostly use GLSL names for functions.
         switch (node->getOp())
         {
-            case EOpFunctionCall:
-                OutputFunction(out, "Function Call", node->getFunctionSymbolInfo());
+            case EOpCallFunctionInAST:
+                OutputFunction(out, "Call an user-defined function", node->getFunctionSymbolInfo());
+                break;
+            case EOpCallInternalRawFunction:
+                OutputFunction(out, "Call an internal function with raw implementation",
+                               node->getFunctionSymbolInfo());
+                break;
+            case EOpCallBuiltInFunction:
+                OutputFunction(out, "Call a built-in function", node->getFunctionSymbolInfo());
                 break;
 
             case EOpEqualComponentWise:

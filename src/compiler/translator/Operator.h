@@ -13,7 +13,20 @@
 enum TOperator
 {
     EOpNull,  // if in a node, should only mean a node is still being built
-    EOpFunctionCall,
+
+    // Call a function defined in the AST. This might be a user-defined function or a function
+    // inserted by an AST transformation.
+    EOpCallFunctionInAST,
+
+    // Call an internal helper function with a raw implementation - the implementation can't be
+    // subject to AST transformations. Raw functions have a few constraints to keep them compatible
+    // with AST traversers:
+    // * They should not return arrays.
+    // * They should not have out parameters.
+    EOpCallInternalRawFunction,
+
+    // Call a built-in function like a texture or image function.
+    EOpCallBuiltInFunction,
 
     //
     // Unary operators

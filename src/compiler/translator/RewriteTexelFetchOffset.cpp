@@ -66,7 +66,7 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
     }
 
     // Decide if the node represents the call of texelFetchOffset.
-    if (node->getOp() != EOpFunctionCall || node->isUserDefined())
+    if (node->getOp() != EOpCallBuiltInFunction)
     {
         return true;
     }
@@ -94,7 +94,7 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
 
     // Create new node that represents the call of function texelFetch.
     // Its argument list will be: texelFetch(sampler, Position+offset, lod).
-    TIntermAggregate *texelFetchNode = new TIntermAggregate(EOpFunctionCall);
+    TIntermAggregate *texelFetchNode = new TIntermAggregate(EOpCallBuiltInFunction);
     texelFetchNode->getFunctionSymbolInfo()->setName(newName);
     texelFetchNode->getFunctionSymbolInfo()->setId(uniqueId);
     texelFetchNode->setType(node->getType());

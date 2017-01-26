@@ -43,9 +43,8 @@ TIntermSymbol *CreateReturnValueOutSymbol(const TType &type)
 TIntermAggregate *CreateReplacementCall(TIntermAggregate *originalCall,
                                         TIntermTyped *returnValueTarget)
 {
-    TIntermAggregate *replacementCall = new TIntermAggregate(EOpFunctionCall);
+    TIntermAggregate *replacementCall = new TIntermAggregate(EOpCallFunctionInAST);
     replacementCall->setType(TType(EbtVoid));
-    replacementCall->setUserDefined();
     *replacementCall->getFunctionSymbolInfo() = *originalCall->getFunctionSymbolInfo();
     replacementCall->setLine(originalCall->getLine());
     TIntermSequence *replacementParameters = replacementCall->getSequence();
@@ -124,7 +123,8 @@ bool ArrayReturnValueToOutParameterTraverser::visitFunctionPrototype(Visit visit
 
 bool ArrayReturnValueToOutParameterTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
 {
-    if (visit == PreVisit && node->isArray() && node->getOp() == EOpFunctionCall)
+    ASSERT(!node->isArray() || node->getOp() != EOpCallInternalRawFunction);
+    if (visit == PreVisit && node->isArray() && node->getOp() == EOpCallFunctionInAST)
     {
         // Handle call sites where the returned array is not assigned.
         // Examples where f() is a function returning an array:
@@ -181,8 +181,8 @@ bool ArrayReturnValueToOutParameterTraverser::visitBinary(Visit visit, TIntermBi
     if (node->getOp() == EOpAssign && node->getLeft()->isArray())
     {
         TIntermAggregate *rightAgg = node->getRight()->getAsAggregate();
-        if (rightAgg != nullptr && rightAgg->getOp() == EOpFunctionCall &&
-            rightAgg->isUserDefined())
+        ASSERT(rightAgg == nullptr || rightAgg->getOp() != EOpCallInternalRawFunction);
+        if (rightAgg != nullptr && rightAgg->getOp() == EOpCallFunctionInAST)
         {
             TIntermAggregate *replacementCall = CreateReplacementCall(rightAgg, node->getLeft());
             queueReplacement(node, replacementCall, OriginalNode::IS_DROPPED);

@@ -102,27 +102,23 @@ class PullGradient : public TIntermTraverser
     {
         if (visit == PreVisit)
         {
-            if (node->getOp() == EOpFunctionCall)
+            if (node->getOp() == EOpCallFunctionInAST)
             {
-                if (node->isUserDefined())
-                {
-                    size_t calleeIndex = mDag.findIndex(node->getFunctionSymbolInfo());
-                    ASSERT(calleeIndex != CallDAG::InvalidIndex && calleeIndex < mIndex);
+                size_t calleeIndex = mDag.findIndex(node->getFunctionSymbolInfo());
+                ASSERT(calleeIndex != CallDAG::InvalidIndex && calleeIndex < mIndex);
 
-                    if ((*mMetadataList)[calleeIndex].mUsesGradient)
-                    {
-                        onGradient();
-                    }
+                if ((*mMetadataList)[calleeIndex].mUsesGradient)
+                {
+                    onGradient();
                 }
-                else
-                {
-                    TString name =
-                        TFunction::unmangleName(node->getFunctionSymbolInfo()->getName());
+            }
+            else if (node->getOp() == EOpCallBuiltInFunction)
+            {
+                TString name = TFunction::unmangleName(node->getFunctionSymbolInfo()->getName());
 
-                    if (name == "texture2D" || name == "texture2DProj" || name == "textureCube")
-                    {
-                        onGradient();
-                    }
+                if (name == "texture2D" || name == "texture2DProj" || name == "textureCube")
+                {
+                    onGradient();
                 }
             }
         }
@@ -273,17 +269,14 @@ class PullComputeDiscontinuousAndGradientLoops : public TIntermTraverser
 
     bool visitAggregate(Visit visit, TIntermAggregate *node) override
     {
-        if (visit == PreVisit && node->getOp() == EOpFunctionCall)
+        if (visit == PreVisit && node->getOp() == EOpCallFunctionInAST)
         {
-            if (node->isUserDefined())
-            {
-                size_t calleeIndex = mDag.findIndex(node->getFunctionSymbolInfo());
-                ASSERT(calleeIndex != CallDAG::InvalidIndex && calleeIndex < mIndex);
+            size_t calleeIndex = mDag.findIndex(node->getFunctionSymbolInfo());
+            ASSERT(calleeIndex != CallDAG::InvalidIndex && calleeIndex < mIndex);
 
-                if ((*mMetadataList)[calleeIndex].mHasGradientLoopInCallGraph)
-                {
-                    onGradientLoop();
-                }
+            if ((*mMetadataList)[calleeIndex].mHasGradientLoopInCallGraph)
+            {
+                onGradientLoop();
             }
         }
 
@@ -354,8 +347,8 @@ class PushDiscontinuousLoops : public TIntermTraverser
     {
         switch (node->getOp())
         {
-            case EOpFunctionCall:
-                if (visit == PreVisit && node->isUserDefined() && mNestedDiscont > 0)
+            case EOpCallFunctionInAST:
+                if (visit == PreVisit && mNestedDiscont > 0)
                 {
                     size_t calleeIndex = mDag.findIndex(node->getFunctionSymbolInfo());
                     ASSERT(calleeIndex != CallDAG::InvalidIndex && calleeIndex < mIndex);

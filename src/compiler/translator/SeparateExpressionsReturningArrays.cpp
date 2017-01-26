@@ -63,10 +63,6 @@ TIntermAggregate *CopyAggregateNode(TIntermAggregate *node)
     copySeq->insert(copySeq->begin(), node->getSequence()->begin(), node->getSequence()->end());
     copyNode->setType(node->getType());
     *copyNode->getFunctionSymbolInfo() = *node->getFunctionSymbolInfo();
-    if (node->isUserDefined())
-    {
-        copyNode->setUserDefined();
-    }
     return copyNode;
 }
 
@@ -104,7 +100,7 @@ bool SeparateExpressionsTraverser::visitAggregate(Visit visit, TIntermAggregate 
     if (!mPatternToSeparateMatcher.match(node, getParentNode()))
         return true;
 
-    ASSERT(node->isConstructor() || node->getOp() == EOpFunctionCall);
+    ASSERT(node->isConstructor() || node->getOp() == EOpCallFunctionInAST);
 
     mFoundArrayExpression = true;
 

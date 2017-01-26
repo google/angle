@@ -27,8 +27,7 @@ class FunctionCallFinder : public TIntermTraverser
 
     bool visitAggregate(Visit visit, TIntermAggregate *node) override
     {
-        if (node->getOp() == EOpFunctionCall &&
-            node->getFunctionSymbolInfo()->getName() == mFunctionName)
+        if (node->isFunctionCall() && node->getFunctionSymbolInfo()->getName() == mFunctionName)
         {
             mNodeFound = node;
             return false;

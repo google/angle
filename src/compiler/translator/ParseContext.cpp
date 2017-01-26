@@ -4180,7 +4180,7 @@ TIntermBranch *TParseContext::addBranch(TOperator op,
 
 void TParseContext::checkTextureOffsetConst(TIntermAggregate *functionCall)
 {
-    ASSERT(!functionCall->isUserDefined());
+    ASSERT(functionCall->getOp() == EOpCallBuiltInFunction);
     const TString &name        = functionCall->getFunctionSymbolInfo()->getName();
     TIntermNode *offset        = nullptr;
     TIntermSequence *arguments = functionCall->getSequence();
@@ -4232,7 +4232,7 @@ void TParseContext::checkTextureOffsetConst(TIntermAggregate *functionCall)
 // GLSL ES 3.10 Revision 4, 4.9 Memory Access Qualifiers
 void TParseContext::checkImageMemoryAccessForBuiltinFunctions(TIntermAggregate *functionCall)
 {
-    ASSERT(!functionCall->isUserDefined());
+    ASSERT(functionCall->getOp() == EOpCallBuiltInFunction);
     const TString &name = functionCall->getFunctionSymbolInfo()->getName();
 
     if (name.compare(0, 5, "image") == 0)
@@ -4269,7 +4269,7 @@ void TParseContext::checkImageMemoryAccessForUserDefinedFunctions(
     const TFunction *functionDefinition,
     const TIntermAggregate *functionCall)
 {
-    ASSERT(functionCall->isUserDefined());
+    ASSERT(functionCall->getOp() == EOpCallFunctionInAST);
 
     const TIntermSequence &arguments = *functionCall->getSequence();
 
@@ -4463,29 +4463,24 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall,
             {
                 // This is a real function call
                 ASSERT(argumentsNode->getOp() == EOpNull);
-                argumentsNode->setOp(EOpFunctionCall);
                 argumentsNode->setType(fnCandidate->getReturnType());
-
-                // this is how we know whether the given function is a builtIn function or a user
-                // defined function
-                // if builtIn == false, it's a userDefined -> could be an overloaded
-                // builtIn function also
-                // if builtIn == true, it's definitely a builtIn function with EOpNull
-                if (!builtIn)
-                    argumentsNode->setUserDefined();
                 argumentsNode->getFunctionSymbolInfo()->setFromFunction(*fnCandidate);
 
-                // This needs to happen after the function info including name is set
+                // If builtIn == false, the function is user defined - could be an overloaded
+                // built-in as well.
+                // if builtIn == true, it's a builtIn function with no op associated with it.
+                // This needs to happen after the function info including name is set.
                 if (builtIn)
                 {
+                    argumentsNode->setOp(EOpCallBuiltInFunction);
                     argumentsNode->setBuiltInFunctionPrecision();
 
                     checkTextureOffsetConst(argumentsNode);
-
                     checkImageMemoryAccessForBuiltinFunctions(argumentsNode);
                 }
                 else
                 {
+                    argumentsNode->setOp(EOpCallFunctionInAST);
                     checkImageMemoryAccessForUserDefinedFunctions(fnCandidate, argumentsNode);
                 }
 

@@ -309,7 +309,7 @@ void TIntermAggregate::setPrecisionFromChildren()
 void TIntermAggregate::setPrecisionForBuiltInOp()
 {
     ASSERT(!isConstructor());
-    ASSERT(mOp != EOpFunctionCall);
+    ASSERT(!isFunctionCall());
     if (!setPrecisionForSpecialBuiltInOp())
     {
         setPrecisionFromChildren();
@@ -340,7 +340,7 @@ void TIntermAggregate::setBuiltInFunctionPrecision()
 {
     // All built-ins returning bool should be handled as ops, not functions.
     ASSERT(getBasicType() != EbtBool);
-    ASSERT(getOp() == EOpFunctionCall);
+    ASSERT(mOp == EOpCallBuiltInFunction);
 
     TPrecision precision                = EbpUndefined;
     TIntermSequence::iterator childIter = mSequence.begin();
@@ -549,7 +549,6 @@ void TFunctionSymbolInfo::setFromFunction(const TFunction &function)
 
 TIntermAggregate::TIntermAggregate(const TIntermAggregate &node)
     : TIntermOperator(node),
-      mUserDefined(node.mUserDefined),
       mUseEmulatedFunction(node.mUseEmulatedFunction),
       mGotPrecisionFromChildren(node.mGotPrecisionFromChildren),
       mFunctionInfo(node.mFunctionInfo)
@@ -653,6 +652,19 @@ bool TIntermOperator::isConstructor() const
         case EOpConstructBVec4:
         case EOpConstructBool:
         case EOpConstructStruct:
+            return true;
+        default:
+            return false;
+    }
+}
+
+bool TIntermOperator::isFunctionCall() const
+{
+    switch (mOp)
+    {
+        case EOpCallFunctionInAST:
+        case EOpCallBuiltInFunction:
+        case EOpCallInternalRawFunction:
             return true;
         default:
             return false;

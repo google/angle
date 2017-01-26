@@ -108,7 +108,8 @@ bool ValidateLimitations::visitAggregate(Visit, TIntermAggregate *node)
 {
     switch (node->getOp())
     {
-        case EOpFunctionCall:
+        case EOpCallFunctionInAST:
+        case EOpCallBuiltInFunction:
             validateFunctionCall(node);
             break;
         default:
@@ -378,7 +379,7 @@ bool ValidateLimitations::validateForLoopExpr(TIntermLoop *node, int indexSymbol
 
 bool ValidateLimitations::validateFunctionCall(TIntermAggregate *node)
 {
-    ASSERT(node->getOp() == EOpFunctionCall);
+    ASSERT(node->getOp() == EOpCallFunctionInAST || node->getOp() == EOpCallBuiltInFunction);
 
     // If not within loop body, there is nothing to check.
     if (!withinLoopBody())

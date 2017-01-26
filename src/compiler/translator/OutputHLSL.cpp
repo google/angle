@@ -1000,7 +1000,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
                 }
                 // ArrayReturnValueToOutParameter should have eliminated expressions where a
                 // function call is assigned.
-                ASSERT(rightAgg == nullptr || rightAgg->getOp() != EOpFunctionCall);
+                ASSERT(rightAgg == nullptr);
 
                 const TString &functionName = addArrayAssignmentFunction(node->getType());
                 outputTriplet(out, visit, (functionName + "(").c_str(), ", ", ")");
@@ -1755,12 +1755,14 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
     switch (node->getOp())
     {
-        case EOpFunctionCall:
+        case EOpCallBuiltInFunction:
+        case EOpCallFunctionInAST:
+        case EOpCallInternalRawFunction:
         {
             TIntermSequence *arguments = node->getSequence();
 
             bool lod0 = mInsideDiscontinuousLoop || mOutputLod0Function;
-            if (node->isUserDefined())
+            if (node->getOp() == EOpCallFunctionInAST)
             {
                 if (node->isArray())
                 {
@@ -1774,7 +1776,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 out << DisambiguateFunctionName(node->getSequence());
                 out << (lod0 ? "Lod0(" : "(");
             }
-            else if (node->getFunctionSymbolInfo()->getNameObj().isInternal())
+            else if (node->getOp() == EOpCallInternalRawFunction)
             {
                 // This path is used for internal functions that don't have their definitions in the
                 // AST, such as precision emulation functions.

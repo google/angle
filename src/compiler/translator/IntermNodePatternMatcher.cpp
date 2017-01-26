@@ -87,8 +87,7 @@ bool IntermNodePatternMatcher::match(TIntermAggregate *node, TIntermNode *parent
                  (parentBinary->getOp() == EOpAssign || parentBinary->getOp() == EOpInitialize));
 
             if (node->getType().isArray() && !parentIsAssignment &&
-                (node->isConstructor() || node->getOp() == EOpFunctionCall) &&
-                !parentNode->getAsBlock())
+                (node->isConstructor() || node->isFunctionCall()) && !parentNode->getAsBlock())
             {
                 return true;
             }

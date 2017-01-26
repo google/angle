@@ -877,7 +877,9 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
     TInfoSinkBase &out       = objSink();
     switch (node->getOp())
     {
-        case EOpFunctionCall:
+        case EOpCallFunctionInAST:
+        case EOpCallInternalRawFunction:
+        case EOpCallBuiltInFunction:
             // Function call.
             if (visit == PreVisit)
                 out << hashFunctionNameIfNeeded(node->getFunctionSymbolInfo()->getNameObj()) << "(";

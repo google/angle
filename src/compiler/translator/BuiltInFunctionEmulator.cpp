@@ -38,7 +38,7 @@ class BuiltInFunctionEmulator::BuiltInFunctionEmulationMarker : public TIntermTr
         {
             // Here we handle all the built-in functions mapped to ops, not just the ones that are
             // currently identified as problematic.
-            if (node->isConstructor() || node->getOp() == EOpFunctionCall)
+            if (node->isConstructor() || node->isFunctionCall())
             {
                 return true;
             }

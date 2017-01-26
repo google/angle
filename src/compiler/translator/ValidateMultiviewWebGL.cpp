@@ -354,27 +354,24 @@ bool ValidateMultiviewTraverser::visitAggregate(Visit visit, TIntermAggregate *n
     {
         // Check if the node is an user-defined function call or if an l-value is required, or if
         // there are possible visible side effects, such as image writes.
-        if (node->getOp() == EOpFunctionCall)
+        if (node->getOp() == EOpCallFunctionInAST)
         {
-            if (node->isUserDefined())
-            {
-                mDiagnostics->error(node->getLine(),
-                                    "Disallowed user defined function call inside assignment to "
-                                    "gl_Position.x when using OVR_multiview",
-                                    GetOperatorString(node->getOp()));
-                mValid = false;
-            }
-            else if (TFunction::unmangleName(node->getFunctionSymbolInfo()->getName()) ==
-                     "imageStore")
-            {
-                // TODO(oetuaho@nvidia.com): Record which built-in functions have side effects in
-                // the symbol info instead.
-                mDiagnostics->error(node->getLine(),
-                                    "Disallowed function call with side effects inside assignment "
-                                    "to gl_Position.x when using OVR_multiview",
-                                    GetOperatorString(node->getOp()));
-                mValid = false;
-            }
+            mDiagnostics->error(node->getLine(),
+                                "Disallowed user defined function call inside assignment to "
+                                "gl_Position.x when using OVR_multiview",
+                                GetOperatorString(node->getOp()));
+            mValid = false;
+        }
+        else if (node->getOp() == EOpCallBuiltInFunction &&
+                 TFunction::unmangleName(node->getFunctionSymbolInfo()->getName()) == "imageStore")
+        {
+            // TODO(oetuaho@nvidia.com): Record which built-in functions have side effects in
+            // the symbol info instead.
+            mDiagnostics->error(node->getLine(),
+                                "Disallowed function call with side effects inside assignment "
+                                "to gl_Position.x when using OVR_multiview",
+                                GetOperatorString(node->getOp()));
+            mValid = false;
         }
         else if (!node->isConstructor())
         {

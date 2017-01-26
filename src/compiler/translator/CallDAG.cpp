@@ -136,30 +136,17 @@ class CallDAG::CallDAGCreator : public TIntermTraverser
     // Aggregates the AST node for each function as well as the name of the functions called by it
     bool visitAggregate(Visit visit, TIntermAggregate *node) override
     {
-        switch (node->getOp())
+        if (visit == PreVisit && node->getOp() == EOpCallFunctionInAST)
         {
-            case EOpFunctionCall:
-            {
-                // Function call, add the callees
-                if (visit == PreVisit)
-                {
-                    // Do not handle calls to builtin functions
-                    if (node->isUserDefined())
-                    {
-                        auto it = mFunctions.find(node->getFunctionSymbolInfo()->getName());
-                        ASSERT(it != mFunctions.end());
+            // Function call, add the callees
+            auto it = mFunctions.find(node->getFunctionSymbolInfo()->getName());
+            ASSERT(it != mFunctions.end());
 
-                        // We might be in a top-level function call to set a global variable
-                        if (mCurrentFunction)
-                        {
-                            mCurrentFunction->callees.insert(&it->second);
-                        }
-                    }
-                }
-                break;
+            // We might be in a top-level function call to set a global variable
+            if (mCurrentFunction)
+            {
+                mCurrentFunction->callees.insert(&it->second);
             }
-            default:
-                break;
         }
         return true;
     }

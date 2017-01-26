@@ -55,6 +55,8 @@ TName GetIndexFunctionName(const TType &type, bool write)
     }
     TString nameString = TFunction::mangleName(nameSink.c_str());
     TName name(nameString);
+    // TODO(oetuaho@nvidia.com): would be better to have the parameter types in the mangled name as
+    // well.
     name.setInternal(true);
     return name;
 }
@@ -349,9 +351,8 @@ TIntermAggregate *CreateIndexFunctionCall(TIntermBinary *node,
                                           TIntermTyped *index)
 {
     ASSERT(node->getOp() == EOpIndexIndirect);
-    TIntermAggregate *indexingCall = new TIntermAggregate(EOpFunctionCall);
+    TIntermAggregate *indexingCall = new TIntermAggregate(EOpCallFunctionInAST);
     indexingCall->setLine(node->getLine());
-    indexingCall->setUserDefined();
     indexingCall->getFunctionSymbolInfo()->setNameObj(
         GetIndexFunctionName(indexedNode->getType(), false));
     indexingCall->getSequence()->push_back(indexedNode);
@@ -520,6 +521,11 @@ void RemoveDynamicIndexing(TIntermNode *root,
         root->traverse(&traverser);
         traverser.updateTree();
     } while (traverser.usedTreeInsertion());
+    // TOOD(oetuaho@nvidia.com): It might be nicer to add the helper definitions also in the middle
+    // of traversal. Now the tree ends up in an inconsistent state in the middle, since there are
+    // function call nodes with no corresponding definition nodes. This needs special handling in
+    // TIntermLValueTrackingTraverser, and creates intricacies that are not easily apparent from a
+    // superficial reading of the code.
     traverser.insertHelperDefinitions(root);
     traverser.updateTree();
 }

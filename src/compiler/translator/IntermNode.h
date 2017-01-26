@@ -411,6 +411,10 @@ class TIntermOperator : public TIntermTyped
     bool isMultiplication() const;
     bool isConstructor() const;
 
+    // Returns true for calls mapped to EOpCall*, false for built-ins that have their own specific
+    // ops.
+    bool isFunctionCall() const;
+
     bool hasSideEffects() const override { return isAssignment(); }
 
   protected:
@@ -547,6 +551,7 @@ class TFunctionSymbolInfo
 
     void setFromFunction(const TFunction &function);
 
+    // The name stored here should always be mangled.
     void setNameObj(const TName &name) { mName = name; }
     const TName &getNameObj() const { return mName; }
 
@@ -590,7 +595,6 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
   public:
     TIntermAggregate(TOperator op)
         : TIntermOperator(op),
-          mUserDefined(false),
           mUseEmulatedFunction(false),
           mGotPrecisionFromChildren(false)
     {
@@ -613,9 +617,6 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
     TIntermSequence *getSequence() override { return &mSequence; }
     const TIntermSequence *getSequence() const override { return &mSequence; }
 
-    void setUserDefined() { mUserDefined = true; }
-    bool isUserDefined() const { return mUserDefined; }
-
     void setUseEmulatedFunction() { mUseEmulatedFunction = true; }
     bool getUseEmulatedFunction() { return mUseEmulatedFunction; }
 
@@ -625,7 +626,7 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
 
     void setPrecisionFromChildren();
 
-    // Used for built-in functions under EOpFunctionCall.
+    // Used for built-in functions under EOpCallBuiltInFunction.
     void setBuiltInFunctionPrecision();
 
     // Returns true if changing parameter precision may affect the return value.
@@ -636,10 +637,9 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
 
   protected:
     TIntermSequence mSequence;
-    bool mUserDefined;  // used for user defined function names
 
     // If set to true, replace the built-in function call with an emulated one
-    // to work around driver bugs.
+    // to work around driver bugs. Only for calls mapped to ops other than EOpCall*.
     bool mUseEmulatedFunction;
 
     bool mGotPrecisionFromChildren;
@@ -1188,10 +1188,6 @@ class TLValueTrackingTraverser : public TIntermTraverser
         return mOperatorRequiresLValue || mInFunctionCallOutParameter;
     }
 
-    // Return true if the prototype or definition of the function being called has been encountered
-    // during traversal.
-    bool isInFunctionMap(const TIntermAggregate *callNode) const;
-
   private:
     // Track whether an l-value is required in the node that is currently being traversed by the
     // surrounding operator.
@@ -1204,6 +1200,10 @@ class TLValueTrackingTraverser : public TIntermTraverser
 
     // Add a function encountered during traversal to the function map.
     void addToFunctionMap(const TName &name, TIntermSequence *paramSequence);
+
+    // Return true if the prototype or definition of the function being called has been encountered
+    // during traversal.
+    bool isInFunctionMap(const TIntermAggregate *callNode) const;
 
     // Return the parameters sequence from the function definition or prototype.
     TIntermSequence *getFunctionParameters(const TIntermAggregate *callNode);
