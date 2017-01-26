@@ -16,6 +16,23 @@
       "revId": "64c8797584bfacd64c3eaec08d4e346d9d8182ff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f8507be3_8edb0e47",
+        "filename": "src/compiler/translator/OutputVulkanGLSL.h",
+        "patchSetId": 39
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-26T23:56:43Z",
+      "side": 1,
+      "message": "Done",
+      "revId": "64c8797584bfacd64c3eaec08d4e346d9d8182ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
