@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df3becfa_70094496",
+        "filename": "src/compiler/translator/OutputVulkanGLSL.h",
+        "patchSetId": 39
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-26T22:21:38Z",
+      "side": 1,
+      "message": "nit: shouldn\u0027t this have override too?",
+      "revId": "64c8797584bfacd64c3eaec08d4e346d9d8182ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
