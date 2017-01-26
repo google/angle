@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b44c76eb_27e51dc1",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 52
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-01-26T14:31:44Z",
+      "side": 1,
+      "message": "VERTEX_ATTRIB_ARRAY_POINTER and VERTEX_ATTRIB_ARRAY_STRIDE should not be the members of AttributeFormat. They should belong to whole Vertex Attribute.",
+      "revId": "73c8c1bf78507e87fc80f0dfe7f677a3ad8f3acd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
