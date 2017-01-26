@@ -33,6 +33,23 @@
       "revId": "e3ded6557ee774eb8de261831bc0e06fed0d47ae",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ff3ce44b_50e29b8c",
+        "filename": "src/tests/compiler_tests/TypeTracking_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 492,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-26T21:40:55Z",
+      "side": 1,
+      "message": "Thank you!",
+      "revId": "e3ded6557ee774eb8de261831bc0e06fed0d47ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
