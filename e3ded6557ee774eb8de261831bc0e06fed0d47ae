@@ -16,6 +16,23 @@
       "revId": "e3ded6557ee774eb8de261831bc0e06fed0d47ae",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c196d9a3_32d36f31",
+        "filename": "src/tests/compiler_tests/TypeTracking_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 492,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-01-26T16:06:56Z",
+      "side": 1,
+      "message": "The rules for bitfieldInsert are a bit more complex than the others, so it\u0027s good to have a couple of independent test cases covering it. I restructured the tests a bit in the new version of the patch. We could always add even more variations for each of these but I don\u0027t think that adds significant value.",
+      "revId": "e3ded6557ee774eb8de261831bc0e06fed0d47ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
