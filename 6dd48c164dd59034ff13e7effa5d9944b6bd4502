@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df2a60fd_e48eecf1",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 47
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-26T17:10:20Z",
+      "side": 1,
+      "message": "I like how you made the AttributeBinding NonCopyable, can you do the same here?",
+      "range": {
+        "startLine": 37,
+        "startChar": 13,
+        "endLine": 37,
+        "endChar": 28
+      },
+      "revId": "6dd48c164dd59034ff13e7effa5d9944b6bd4502",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
