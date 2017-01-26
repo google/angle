@@ -36,6 +36,23 @@
     },
     {
       "key": {
+        "uuid": "de42c30d_a2454403",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 849,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-01-26T16:06:56Z",
+      "side": 1,
+      "message": "Done",
+      "revId": "1b0c91b79d2cb37f7b14545e613b66ff391d38c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d252c7a5_2830b26d",
         "filename": "src/compiler/translator/BuiltInFunctionEmulatorHLSL.cpp",
         "patchSetId": 5
@@ -47,6 +64,23 @@
       "writtenOn": "2017-01-25T18:57:23Z",
       "side": 1,
       "message": "LGTM I don\u0027t have a better idea for this either. If x or y are -2^31, taking their abs is undefined but I\u0027m not sure if we want to handle that special case.",
+      "revId": "1b0c91b79d2cb37f7b14545e613b66ff391d38c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0386c910_c9bb2a56",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulatorHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 879,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-01-26T16:06:56Z",
+      "side": 1,
+      "message": "Added a TODO.",
       "revId": "1b0c91b79d2cb37f7b14545e613b66ff391d38c3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -70,6 +104,23 @@
     },
     {
       "key": {
+        "uuid": "0e1f6b8c_5e341d90",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2197,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-01-26T16:06:56Z",
+      "side": 1,
+      "message": "Done",
+      "revId": "1b0c91b79d2cb37f7b14545e613b66ff391d38c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "68f3faab_6275de35",
         "filename": "src/compiler/translator/IntermNode.cpp",
         "patchSetId": 5
@@ -81,6 +132,23 @@
       "writtenOn": "2017-01-25T18:57:23Z",
       "side": 1,
       "message": "nit: if intValue \u003c 0 then set value \u003d ~static_cast\u003cuint32_t\u003e(intValue) else static_cast\u003cuint32_t\u003e(intValue). This should remove the need for lookForZero.",
+      "revId": "1b0c91b79d2cb37f7b14545e613b66ff391d38c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "86255bc7_d37b30ab",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2284,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-01-26T16:06:56Z",
+      "side": 1,
+      "message": "Done",
       "revId": "1b0c91b79d2cb37f7b14545e613b66ff391d38c3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
