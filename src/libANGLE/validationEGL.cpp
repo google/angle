@@ -828,6 +828,94 @@ Error ValidateCreatePbufferFromClientBuffer(Display *display, EGLenum buftype, E
     return Error(EGL_SUCCESS);
 }
 
+Error ValidateMakeCurrent(Display *display, EGLSurface draw, EGLSurface read, gl::Context *context)
+{
+    if (context == EGL_NO_CONTEXT && (draw != EGL_NO_SURFACE || read != EGL_NO_SURFACE))
+    {
+        return Error(EGL_BAD_MATCH, "If ctx is EGL_NO_CONTEXT, surfaces must be EGL_NO_SURFACE");
+    }
+
+    // If ctx is EGL_NO_CONTEXT and either draw or read are not EGL_NO_SURFACE, an EGL_BAD_MATCH
+    // error is generated. EGL_KHR_surfaceless_context allows both surfaces to be EGL_NO_SURFACE.
+    if (context != EGL_NO_CONTEXT && (draw == EGL_NO_SURFACE || read == EGL_NO_SURFACE))
+    {
+        if (display->getExtensions().surfacelessContext)
+        {
+            if ((draw == EGL_NO_SURFACE) != (read == EGL_NO_SURFACE))
+            {
+                return Error(EGL_BAD_MATCH,
+                             "If ctx is not EGL_NOT_CONTEXT, draw or read must both be "
+                             "EGL_NO_SURFACE, or both not");
+            }
+        }
+        else
+        {
+            return Error(EGL_BAD_MATCH,
+                         "If ctx is not EGL_NO_CONTEXT, surfaces must not be EGL_NO_SURFACE");
+        }
+    }
+
+    // If either of draw or read is a valid surface and the other is EGL_NO_SURFACE, an
+    // EGL_BAD_MATCH error is generated.
+    if ((read == EGL_NO_SURFACE) != (draw == EGL_NO_SURFACE))
+    {
+        return Error(EGL_BAD_MATCH,
+                     "read and draw must both be valid surfaces, or both be EGL_NO_SURFACE");
+    }
+
+    if (display == EGL_NO_DISPLAY || !Display::isValidDisplay(display))
+    {
+        return Error(EGL_BAD_DISPLAY, "'dpy' not a valid EGLDisplay handle");
+    }
+
+    // EGL 1.5 spec: dpy can be uninitialized if all other parameters are null
+    if (!display->isInitialized() &&
+        (context != EGL_NO_CONTEXT || draw != EGL_NO_SURFACE || read != EGL_NO_SURFACE))
+    {
+        return Error(EGL_NOT_INITIALIZED, "'dpy' not initialized");
+    }
+
+    if (context != EGL_NO_CONTEXT)
+    {
+        ANGLE_TRY(ValidateContext(display, context));
+    }
+
+    if (display->isInitialized() && display->testDeviceLost())
+    {
+        return Error(EGL_CONTEXT_LOST);
+    }
+
+    Surface *drawSurface = static_cast<Surface *>(draw);
+    if (draw != EGL_NO_SURFACE)
+    {
+        ANGLE_TRY(ValidateSurface(display, drawSurface));
+    }
+
+    Surface *readSurface = static_cast<Surface *>(read);
+    if (read != EGL_NO_SURFACE)
+    {
+        ANGLE_TRY(ValidateSurface(display, readSurface));
+    }
+
+    if (readSurface)
+    {
+        ANGLE_TRY(ValidateCompatibleConfigs(display, readSurface->getConfig(), readSurface,
+                                            context->getConfig(), readSurface->getType()));
+    }
+
+    if (draw != read)
+    {
+        UNIMPLEMENTED();  // FIXME
+
+        if (drawSurface)
+        {
+            ANGLE_TRY(ValidateCompatibleConfigs(display, drawSurface->getConfig(), drawSurface,
+                                                context->getConfig(), drawSurface->getType()));
+        }
+    }
+    return egl::NoError();
+}
+
 Error ValidateCompatibleConfigs(const Display *display,
                                 const Config *config1,
                                 const Surface *surface,

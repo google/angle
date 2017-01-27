@@ -643,6 +643,9 @@ struct DisplayExtensions
 
     // EGL_EXT_pixel_format_float
     bool pixelFormatFloat;
+
+    // EGL_KHR_surfaceless_context
+    bool surfacelessContext;
 };
 
 struct DeviceExtensions

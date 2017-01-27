@@ -81,7 +81,7 @@ egl::Error DisplayGL::makeCurrent(egl::Surface *drawSurface, egl::Surface *readS
     }
     mCurrentDrawSurface = nullptr;
 
-    if (!drawSurface)
+    if (!context)
     {
         return egl::Error(EGL_SUCCESS);
     }
@@ -90,16 +90,28 @@ egl::Error DisplayGL::makeCurrent(egl::Surface *drawSurface, egl::Surface *readS
     ContextGL *glContext = GetImplAs<ContextGL>(context);
     glContext->getStateManager()->pauseTransformFeedback();
 
-    SurfaceGL *glDrawSurface = GetImplAs<SurfaceGL>(drawSurface);
-    ANGLE_TRY(glDrawSurface->makeCurrent());
-    mCurrentDrawSurface = drawSurface;
-
-    return egl::Error(EGL_SUCCESS);
+    if (drawSurface != nullptr)
+    {
+        SurfaceGL *glDrawSurface = GetImplAs<SurfaceGL>(drawSurface);
+        ANGLE_TRY(glDrawSurface->makeCurrent());
+        mCurrentDrawSurface = drawSurface;
+        return egl::Error(EGL_SUCCESS);
+    }
+    else
+    {
+        return makeCurrentSurfaceless(context);
+    }
 }
 
 gl::Version DisplayGL::getMaxSupportedESVersion() const
 {
     ASSERT(mRenderer != nullptr);
     return mRenderer->getMaxSupportedESVersion();
+}
+
+egl::Error DisplayGL::makeCurrentSurfaceless(gl::Context *context)
+{
+    UNIMPLEMENTED();
+    return egl::NoError();
 }
 }

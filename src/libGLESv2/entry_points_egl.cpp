@@ -548,109 +548,15 @@ EGLBoolean EGLAPIENTRY MakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface r
     Display *display = static_cast<Display*>(dpy);
     gl::Context *context = static_cast<gl::Context*>(ctx);
 
-    // If ctx is EGL_NO_CONTEXT and either draw or read are not EGL_NO_SURFACE, an EGL_BAD_MATCH
-    // error is generated.
-    if (ctx == EGL_NO_CONTEXT && (draw != EGL_NO_SURFACE || read != EGL_NO_SURFACE))
+    Error error = ValidateMakeCurrent(display, draw, read, context);
+    if (error.isError())
     {
-        thread->setError(Error(EGL_BAD_MATCH));
+        thread->setError(error);
         return EGL_FALSE;
-    }
-
-    if (ctx != EGL_NO_CONTEXT && draw == EGL_NO_SURFACE && read == EGL_NO_SURFACE)
-    {
-        thread->setError(Error(EGL_BAD_MATCH));
-        return EGL_FALSE;
-    }
-
-    // If either of draw or read is a valid surface and the other is EGL_NO_SURFACE, an
-    // EGL_BAD_MATCH error is generated.
-    if ((read == EGL_NO_SURFACE) != (draw == EGL_NO_SURFACE))
-    {
-        thread->setError(Error(
-            EGL_BAD_MATCH, "read and draw must both be valid surfaces, or both be EGL_NO_SURFACE"));
-        return EGL_FALSE;
-    }
-
-    if (dpy == EGL_NO_DISPLAY || !Display::isValidDisplay(display))
-    {
-        thread->setError(Error(EGL_BAD_DISPLAY, "'dpy' not a valid EGLDisplay handle"));
-        return EGL_FALSE;
-    }
-
-    // EGL 1.5 spec: dpy can be uninitialized if all other parameters are null
-    if (!display->isInitialized() && (ctx != EGL_NO_CONTEXT || draw != EGL_NO_SURFACE || read != EGL_NO_SURFACE))
-    {
-        thread->setError(Error(EGL_NOT_INITIALIZED, "'dpy' not initialized"));
-        return EGL_FALSE;
-    }
-
-    if (ctx != EGL_NO_CONTEXT)
-    {
-        Error error = ValidateContext(display, context);
-        if (error.isError())
-        {
-            thread->setError(error);
-            return EGL_FALSE;
-        }
-    }
-
-    if (display->isInitialized() && display->testDeviceLost())
-    {
-        thread->setError(Error(EGL_CONTEXT_LOST));
-        return EGL_FALSE;
-    }
-
-    Surface *drawSurface = static_cast<Surface*>(draw);
-    if (draw != EGL_NO_SURFACE)
-    {
-        Error error = ValidateSurface(display, drawSurface);
-        if (error.isError())
-        {
-            thread->setError(error);
-            return EGL_FALSE;
-        }
     }
 
     Surface *readSurface = static_cast<Surface*>(read);
-    if (read != EGL_NO_SURFACE)
-    {
-        Error error = ValidateSurface(display, readSurface);
-        if (error.isError())
-        {
-            thread->setError(error);
-            return EGL_FALSE;
-        }
-    }
-
-    if (readSurface)
-    {
-        Error readCompatError =
-            ValidateCompatibleConfigs(display, readSurface->getConfig(), readSurface,
-                                      context->getConfig(), readSurface->getType());
-        if (readCompatError.isError())
-        {
-            thread->setError(readCompatError);
-            return EGL_FALSE;
-        }
-    }
-
-    if (draw != read)
-    {
-        UNIMPLEMENTED();   // FIXME
-
-        if (drawSurface)
-        {
-            Error drawCompatError =
-                ValidateCompatibleConfigs(display, drawSurface->getConfig(), drawSurface,
-                                          context->getConfig(), drawSurface->getType());
-            if (drawCompatError.isError())
-            {
-                thread->setError(drawCompatError);
-                return EGL_FALSE;
-            }
-        }
-    }
-
+    Surface *drawSurface   = static_cast<Surface *>(draw);
     Error makeCurrentError = display->makeCurrent(drawSurface, readSurface, context);
     if (makeCurrentError.isError())
     {

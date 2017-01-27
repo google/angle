@@ -20,7 +20,6 @@
 #include "common/version.h"
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Compiler.h"
-#include "libANGLE/Display.h"
 #include "libANGLE/Fence.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
@@ -237,7 +236,8 @@ namespace gl
 Context::Context(rx::EGLImplFactory *implFactory,
                  const egl::Config *config,
                  const Context *shareContext,
-                 const egl::AttributeMap &attribs)
+                 const egl::AttributeMap &attribs,
+                 const egl::DisplayExtensions &displayExtensions)
 
     : ValidationContext(shareContext,
                         GetClientVersion(attribs),
@@ -265,7 +265,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
         UNIMPLEMENTED();
     }
 
-    initCaps(GetWebGLContext(attribs));
+    initCaps(GetWebGLContext(attribs), displayExtensions);
     initWorkarounds();
 
     mGLState.initialize(mCaps, mExtensions, getClientVersion(), GetDebug(attribs),
@@ -419,10 +419,7 @@ Context::~Context()
 
     SafeDelete(mSurfacelessFramebuffer);
 
-    if (mCurrentSurface != nullptr)
-    {
-        releaseSurface();
-    }
+    releaseSurface();
 
     SafeDelete(mCompiler);
 }
@@ -435,8 +432,16 @@ void Context::makeCurrent(egl::Surface *surface)
         initVersionStrings();
         initExtensionStrings();
 
-        mGLState.setViewportParams(0, 0, surface->getWidth(), surface->getHeight());
-        mGLState.setScissorParams(0, 0, surface->getWidth(), surface->getHeight());
+        int width  = 0;
+        int height = 0;
+        if (surface != nullptr)
+        {
+            width  = surface->getWidth();
+            height = surface->getHeight();
+        }
+
+        mGLState.setViewportParams(0, 0, width, height);
+        mGLState.setScissorParams(0, 0, width, height);
 
         mHasBeenCurrent = true;
     }
@@ -444,10 +449,7 @@ void Context::makeCurrent(egl::Surface *surface)
     // TODO(jmadill): Rework this when we support ContextImpl
     mGLState.setAllDirtyBits();
 
-    if (mCurrentSurface)
-    {
-        releaseSurface();
-    }
+    releaseSurface();
 
     Framebuffer *newDefault = nullptr;
     if (surface != nullptr)
@@ -486,24 +488,32 @@ void Context::makeCurrent(egl::Surface *surface)
 
 void Context::releaseSurface()
 {
-    ASSERT(mCurrentSurface != nullptr);
-
     // Remove the default framebuffer
+    Framebuffer *currentDefault = nullptr;
+    if (mCurrentSurface != nullptr)
     {
-        Framebuffer *currentDefault = mCurrentSurface->getDefaultFramebuffer();
-        if (mGLState.getReadFramebuffer() == currentDefault)
-        {
-            mGLState.setReadFramebufferBinding(nullptr);
-        }
-        if (mGLState.getDrawFramebuffer() == currentDefault)
-        {
-            mGLState.setDrawFramebufferBinding(nullptr);
-        }
-        mState.mFramebuffers->setDefaultFramebuffer(nullptr);
+        currentDefault = mCurrentSurface->getDefaultFramebuffer();
+    }
+    else if (mSurfacelessFramebuffer != nullptr)
+    {
+        currentDefault = mSurfacelessFramebuffer;
     }
 
-    mCurrentSurface->setIsCurrent(false);
-    mCurrentSurface = nullptr;
+    if (mGLState.getReadFramebuffer() == currentDefault)
+    {
+        mGLState.setReadFramebufferBinding(nullptr);
+    }
+    if (mGLState.getDrawFramebuffer() == currentDefault)
+    {
+        mGLState.setDrawFramebufferBinding(nullptr);
+    }
+    mState.mFramebuffers->setDefaultFramebuffer(nullptr);
+
+    if (mCurrentSurface)
+    {
+        mCurrentSurface->setIsCurrent(false);
+        mCurrentSurface = nullptr;
+    }
 }
 
 GLuint Context::createBuffer()
@@ -2378,7 +2388,7 @@ bool Context::hasActiveTransformFeedback(GLuint program) const
     return false;
 }
 
-void Context::initCaps(bool webGLContext)
+void Context::initCaps(bool webGLContext, const egl::DisplayExtensions &displayExtensions)
 {
     mCaps = mImplementation->getNativeCaps();
 
@@ -2410,7 +2420,7 @@ void Context::initCaps(bool webGLContext)
     mExtensions.noError = mSkipValidation;
 
     // Enable surfaceless to advertise we'll have the correct behavior when there is no default FBO
-    mExtensions.surfacelessContext = true;
+    mExtensions.surfacelessContext = displayExtensions.surfacelessContext;
 
     // Explicitly enable GL_KHR_debug
     mExtensions.debug                   = true;

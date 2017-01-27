@@ -51,6 +51,7 @@ class DisplayGL : public DisplayImpl
 
   private:
     virtual const FunctionsGL *getFunctionsGL() const = 0;
+    virtual egl::Error makeCurrentSurfaceless(gl::Context *context);
 
     RendererGL *mRenderer;
 

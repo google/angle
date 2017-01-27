@@ -61,7 +61,8 @@ class Context final : public ValidationContext
     Context(rx::EGLImplFactory *implFactory,
             const egl::Config *config,
             const Context *shareContext,
-            const egl::AttributeMap &attribs);
+            const egl::AttributeMap &attribs,
+            const egl::DisplayExtensions &displayExtensions);
 
     virtual ~Context();
 
@@ -641,7 +642,7 @@ class Context final : public ValidationContext
     void initVersionStrings();
     void initExtensionStrings();
 
-    void initCaps(bool webGLContext);
+    void initCaps(bool webGLContext, const egl::DisplayExtensions &displayExtensions);
     void updateCaps();
     void initWorkarounds();
 
