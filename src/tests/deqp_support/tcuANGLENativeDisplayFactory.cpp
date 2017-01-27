@@ -72,7 +72,14 @@ class ANGLENativeDisplay : public eglu::NativeDisplay
     ANGLENativeDisplay(const std::vector<eglw::EGLAttrib> &attribs);
     virtual ~ANGLENativeDisplay() {}
 
-    void *getPlatformNative() override { return mDeviceContext; }
+    void *getPlatformNative() override
+    {
+        // On OSX 64bits mDeviceContext is a 32 bit integer, so we can't simply
+        // use reinterpret_cast<void*>.
+        void *result = nullptr;
+        memcpy(&result, &mDeviceContext, sizeof(mDeviceContext));
+        return result;
+    }
     const eglw::EGLAttrib *getPlatformAttributes() const override { return &mPlatformAttributes[0]; }
     const eglw::Library &getLibrary() const override { return mLibrary; }
 
