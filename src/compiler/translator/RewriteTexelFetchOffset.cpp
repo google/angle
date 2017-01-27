@@ -94,14 +94,11 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
 
     // Create new node that represents the call of function texelFetch.
     // Its argument list will be: texelFetch(sampler, Position+offset, lod).
-    TIntermAggregate *texelFetchNode = new TIntermAggregate(EOpCallBuiltInFunction);
-    texelFetchNode->getFunctionSymbolInfo()->setName(newName);
-    texelFetchNode->getFunctionSymbolInfo()->setId(uniqueId);
-    texelFetchNode->setType(node->getType());
-    texelFetchNode->setLine(node->getLine());
+
+    TIntermSequence *texelFetchArguments = new TIntermSequence();
 
     // sampler
-    texelFetchNode->getSequence()->push_back(sequence->at(0));
+    texelFetchArguments->push_back(sequence->at(0));
 
     // Position
     TIntermTyped *texCoordNode = sequence->at(1)->getAsTyped();
@@ -114,20 +111,15 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
     {
         // For 2DArray samplers, Position is ivec3 and offset is ivec2;
         // So offset must be converted into an ivec3 before being added to Position.
-        TIntermAggregate *constructIVec3Node = new TIntermAggregate(EOpConstructIVec3);
-        constructIVec3Node->setLine(texCoordNode->getLine());
-        constructIVec3Node->setType(texCoordNode->getType());
+        TIntermSequence *constructOffsetIvecArguments = new TIntermSequence();
+        constructOffsetIvecArguments->push_back(sequence->at(3)->getAsTyped());
 
-        constructIVec3Node->getSequence()->push_back(sequence->at(3)->getAsTyped());
+        TIntermTyped *zeroNode = TIntermTyped::CreateZero(TType(EbtInt));
+        constructOffsetIvecArguments->push_back(zeroNode);
 
-        TConstantUnion *zero = new TConstantUnion();
-        zero->setIConst(0);
-        TType *intType = new TType(EbtInt);
-
-        TIntermConstantUnion *zeroNode = new TIntermConstantUnion(zero, *intType);
-        constructIVec3Node->getSequence()->push_back(zeroNode);
-
-        offsetNode = constructIVec3Node;
+        offsetNode = new TIntermAggregate(texCoordNode->getType(), EOpConstructIVec3,
+                                          constructOffsetIvecArguments);
+        offsetNode->setLine(texCoordNode->getLine());
     }
     else
     {
@@ -137,12 +129,18 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
     // Position+offset
     TIntermBinary *add = new TIntermBinary(EOpAdd, texCoordNode, offsetNode);
     add->setLine(texCoordNode->getLine());
-    texelFetchNode->getSequence()->push_back(add);
+    texelFetchArguments->push_back(add);
 
     // lod
-    texelFetchNode->getSequence()->push_back(sequence->at(2));
+    texelFetchArguments->push_back(sequence->at(2));
 
-    ASSERT(texelFetchNode->getSequence()->size() == 3u);
+    ASSERT(texelFetchArguments->size() == 3u);
+
+    TIntermAggregate *texelFetchNode =
+        new TIntermAggregate(node->getType(), EOpCallBuiltInFunction, texelFetchArguments);
+    texelFetchNode->getFunctionSymbolInfo()->setName(newName);
+    texelFetchNode->getFunctionSymbolInfo()->setId(uniqueId);
+    texelFetchNode->setLine(node->getLine());
 
     // Replace the old node by this new node.
     queueReplacement(node, texelFetchNode, OriginalNode::IS_DROPPED);

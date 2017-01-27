@@ -136,15 +136,6 @@ struct TIntermNodePair
 };
 
 //
-// This is just to help yacc.
-//
-struct TIntermFunctionCallOrMethod
-{
-    TIntermAggregate *argumentsNode;
-    TIntermNode *thisNode;
-};
-
-//
 // Intermediate class for nodes that have a type.
 //
 class TIntermTyped : public TIntermNode
@@ -569,6 +560,15 @@ class TFunctionSymbolInfo
 typedef TVector<TIntermNode *> TIntermSequence;
 typedef TVector<int> TQualifierList;
 
+//
+// This is just to help yacc.
+//
+struct TIntermFunctionCallOrMethod
+{
+    TIntermSequence *arguments;
+    TIntermNode *thisNode;
+};
+
 // Interface for node classes that have an arbitrarily sized set of children.
 class TIntermAggregateBase
 {
@@ -593,18 +593,11 @@ class TIntermAggregateBase
 class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
 {
   public:
-    TIntermAggregate(TOperator op)
-        : TIntermOperator(op),
-          mUseEmulatedFunction(false),
-          mGotPrecisionFromChildren(false)
-    {
-    }
+    TIntermAggregate(const TType &type, TOperator op, TIntermSequence *arguments);
     ~TIntermAggregate() {}
 
     // Note: only supported for nodes that can be a part of an expression.
     TIntermTyped *deepCopy() const override { return new TIntermAggregate(*this); }
-
-    void setOp(TOperator op) { mOp = op; }
 
     TIntermAggregate *getAsAggregate() override { return this; }
     void traverse(TIntermTraverser *it) override;
@@ -614,20 +607,11 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
     bool hasSideEffects() const override { return true; }
     TIntermTyped *fold(TDiagnostics *diagnostics);
 
-    TIntermSequence *getSequence() override { return &mSequence; }
-    const TIntermSequence *getSequence() const override { return &mSequence; }
+    TIntermSequence *getSequence() override { return &mArguments; }
+    const TIntermSequence *getSequence() const override { return &mArguments; }
 
     void setUseEmulatedFunction() { mUseEmulatedFunction = true; }
     bool getUseEmulatedFunction() { return mUseEmulatedFunction; }
-
-    bool areChildrenConstQualified();
-
-    void setPrecisionForBuiltInOp();
-
-    void setPrecisionFromChildren();
-
-    // Used for built-in functions under EOpCallBuiltInFunction.
-    void setBuiltInFunctionPrecision();
 
     // Returns true if changing parameter precision may affect the return value.
     bool gotPrecisionFromChildren() const { return mGotPrecisionFromChildren; }
@@ -635,8 +619,12 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
     TFunctionSymbolInfo *getFunctionSymbolInfo() { return &mFunctionInfo; }
     const TFunctionSymbolInfo *getFunctionSymbolInfo() const { return &mFunctionInfo; }
 
+    // Used for built-in functions under EOpCallBuiltInFunction. The function name in the symbol
+    // info needs to be set before calling this.
+    void setBuiltInFunctionPrecision();
+
   protected:
-    TIntermSequence mSequence;
+    TIntermSequence mArguments;
 
     // If set to true, replace the built-in function call with an emulated one
     // to work around driver bugs. Only for calls mapped to ops other than EOpCall*.
@@ -648,6 +636,14 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
 
   private:
     TIntermAggregate(const TIntermAggregate &node);  // note: not deleted, just private!
+
+    void setTypePrecisionAndQualifier(const TType &type);
+
+    bool areChildrenConstQualified();
+
+    void setPrecisionFromChildren();
+
+    void setPrecisionForBuiltInOp();
 
     // Returns true if precision was set according to special rules for this built-in.
     bool setPrecisionForSpecialBuiltInOp();

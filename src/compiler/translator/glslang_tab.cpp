@@ -2619,7 +2619,7 @@ yyreduce:
   case 18:
 
     {
-        (yyval.interm.intermTypedNode) = context->addFunctionCallOrMethod((yyvsp[0].interm).function, (yyvsp[0].interm).callOrMethodPair.argumentsNode, (yyvsp[0].interm).callOrMethodPair.thisNode, (yylsp[0]));
+        (yyval.interm.intermTypedNode) = context->addFunctionCallOrMethod((yyvsp[0].interm).function, (yyvsp[0].interm).callOrMethodPair.arguments, (yyvsp[0].interm).callOrMethodPair.thisNode, (yylsp[0]));
     }
 
     break;
@@ -2663,7 +2663,7 @@ yyreduce:
 
     {
         (yyval.interm).function = (yyvsp[-1].interm.function);
-        (yyval.interm).callOrMethodPair.argumentsNode = context->createEmptyArgumentsNode((yylsp[-1]));
+        (yyval.interm).callOrMethodPair.arguments = context->createEmptyArgumentsList();
     }
 
     break;
@@ -2672,7 +2672,7 @@ yyreduce:
 
     {
         (yyval.interm).function = (yyvsp[0].interm.function);
-        (yyval.interm).callOrMethodPair.argumentsNode = context->createEmptyArgumentsNode((yylsp[0]));
+        (yyval.interm).callOrMethodPair.arguments = context->createEmptyArgumentsList();
     }
 
     break;
@@ -2680,9 +2680,9 @@ yyreduce:
   case 25:
 
     {
-        (yyval.interm).callOrMethodPair.argumentsNode = context->createEmptyArgumentsNode((yylsp[-1]));
+        (yyval.interm).callOrMethodPair.arguments = context->createEmptyArgumentsList();
         (yyval.interm).function = (yyvsp[-1].interm.function);
-        (yyval.interm).callOrMethodPair.argumentsNode->getSequence()->push_back((yyvsp[0].interm.intermTypedNode));
+        (yyval.interm).callOrMethodPair.arguments->push_back((yyvsp[0].interm.intermTypedNode));
     }
 
     break;
@@ -2691,7 +2691,7 @@ yyreduce:
 
     {
         (yyval.interm).function = (yyvsp[-2].interm).function;
-        (yyval.interm).callOrMethodPair.argumentsNode->getSequence()->push_back((yyvsp[0].interm.intermTypedNode));
+        (yyval.interm).callOrMethodPair.arguments->push_back((yyvsp[0].interm.intermTypedNode));
     }
 
     break;

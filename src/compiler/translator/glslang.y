@@ -315,7 +315,7 @@ integer_expression
 
 function_call
     : function_call_or_method {
-        $$ = context->addFunctionCallOrMethod($1.function, $1.callOrMethodPair.argumentsNode, $1.callOrMethodPair.thisNode, @1);
+        $$ = context->addFunctionCallOrMethod($1.function, $1.callOrMethodPair.arguments, $1.callOrMethodPair.thisNode, @1);
     }
     ;
 
@@ -343,23 +343,23 @@ function_call_generic
 function_call_header_no_parameters
     : function_call_header VOID_TYPE {
         $$.function = $1;
-        $$.callOrMethodPair.argumentsNode = context->createEmptyArgumentsNode(@1);
+        $$.callOrMethodPair.arguments = context->createEmptyArgumentsList();
     }
     | function_call_header {
         $$.function = $1;
-        $$.callOrMethodPair.argumentsNode = context->createEmptyArgumentsNode(@1);
+        $$.callOrMethodPair.arguments = context->createEmptyArgumentsList();
     }
     ;
 
 function_call_header_with_parameters
     : function_call_header assignment_expression {
-        $$.callOrMethodPair.argumentsNode = context->createEmptyArgumentsNode(@1);
+        $$.callOrMethodPair.arguments = context->createEmptyArgumentsList();
         $$.function = $1;
-        $$.callOrMethodPair.argumentsNode->getSequence()->push_back($2);
+        $$.callOrMethodPair.arguments->push_back($2);
     }
     | function_call_header_with_parameters COMMA assignment_expression {
         $$.function = $1.function;
-        $$.callOrMethodPair.argumentsNode->getSequence()->push_back($3);
+        $$.callOrMethodPair.arguments->push_back($3);
     }
     ;
 

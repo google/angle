@@ -43,17 +43,17 @@ TIntermSymbol *CreateReturnValueOutSymbol(const TType &type)
 TIntermAggregate *CreateReplacementCall(TIntermAggregate *originalCall,
                                         TIntermTyped *returnValueTarget)
 {
-    TIntermAggregate *replacementCall = new TIntermAggregate(EOpCallFunctionInAST);
-    replacementCall->setType(TType(EbtVoid));
+    TIntermSequence *replacementArguments = new TIntermSequence();
+    TIntermSequence *originalArguments    = originalCall->getSequence();
+    for (auto &arg : *originalArguments)
+    {
+        replacementArguments->push_back(arg);
+    }
+    replacementArguments->push_back(returnValueTarget);
+    TIntermAggregate *replacementCall =
+        new TIntermAggregate(TType(EbtVoid), EOpCallFunctionInAST, replacementArguments);
     *replacementCall->getFunctionSymbolInfo() = *originalCall->getFunctionSymbolInfo();
     replacementCall->setLine(originalCall->getLine());
-    TIntermSequence *replacementParameters = replacementCall->getSequence();
-    TIntermSequence *originalParameters    = originalCall->getSequence();
-    for (auto &param : *originalParameters)
-    {
-        replacementParameters->push_back(param);
-    }
-    replacementParameters->push_back(returnValueTarget);
     return replacementCall;
 }
 

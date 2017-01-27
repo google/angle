@@ -427,13 +427,14 @@ bool canRoundFloat(const TType &type)
            (type.getPrecision() == EbpLow || type.getPrecision() == EbpMedium);
 }
 
-TIntermAggregate *createInternalFunctionCallNode(TString name, TIntermNode *child)
+TIntermAggregate *createInternalFunctionCallNode(const TType &type,
+                                                 TString name,
+                                                 TIntermSequence *arguments)
 {
-    TIntermAggregate *callNode = new TIntermAggregate(EOpCallInternalRawFunction);
-    TName nameObj(TFunction::mangleName(name));
+    TName nameObj(TFunction::GetMangledNameFromCall(name, *arguments));
     nameObj.setInternal(true);
+    TIntermAggregate *callNode = new TIntermAggregate(type, EOpCallInternalRawFunction, arguments);
     callNode->getFunctionSymbolInfo()->setNameObj(nameObj);
-    callNode->getSequence()->push_back(child);
     return callNode;
 }
 
@@ -444,9 +445,9 @@ TIntermAggregate *createRoundingFunctionCallNode(TIntermTyped *roundedChild)
         roundFunctionName = "angle_frm";
     else
         roundFunctionName      = "angle_frl";
-    TIntermAggregate *callNode = createInternalFunctionCallNode(roundFunctionName, roundedChild);
-    callNode->setType(roundedChild->getType());
-    return callNode;
+    TIntermSequence *arguments = new TIntermSequence();
+    arguments->push_back(roundedChild);
+    return createInternalFunctionCallNode(roundedChild->getType(), roundFunctionName, arguments);
 }
 
 TIntermAggregate *createCompoundAssignmentFunctionCallNode(TIntermTyped *left,
@@ -459,9 +460,10 @@ TIntermAggregate *createCompoundAssignmentFunctionCallNode(TIntermTyped *left,
     else
         strstr << "angle_compound_" << opNameStr << "_frl";
     TString functionName       = strstr.str().c_str();
-    TIntermAggregate *callNode = createInternalFunctionCallNode(functionName, left);
-    callNode->getSequence()->push_back(right);
-    return callNode;
+    TIntermSequence *arguments = new TIntermSequence();
+    arguments->push_back(left);
+    arguments->push_back(right);
+    return createInternalFunctionCallNode(TType(EbtVoid), functionName, arguments);
 }
 
 bool parentUsesResult(TIntermNode *parent, TIntermNode *node)

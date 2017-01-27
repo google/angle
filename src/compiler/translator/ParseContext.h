@@ -112,7 +112,7 @@ class TParseContext : angle::NonCopyable
     void checkIsScalarInteger(TIntermTyped *node, const char *token);
     bool checkIsAtGlobalLevel(const TSourceLoc &line, const char *token);
     bool checkConstructorArguments(const TSourceLoc &line,
-                                   const TIntermAggregate *argumentsNode,
+                                   const TIntermSequence *arguments,
                                    TOperator op,
                                    const TType &type);
 
@@ -167,10 +167,6 @@ class TParseContext : angle::NonCopyable
                                const char *value,
                                bool stdgl);
 
-    const TFunction *findFunction(const TSourceLoc &line,
-                                  TFunction *pfnCall,
-                                  int inputShaderVersion,
-                                  bool *builtIn = 0);
     bool executeInitializer(const TSourceLoc &line,
                             const TString &identifier,
                             const TPublicType &pType,
@@ -252,10 +248,6 @@ class TParseContext : angle::NonCopyable
                                    const TString *name,
                                    const TSourceLoc &location);
     TFunction *addConstructorFunc(const TPublicType &publicType);
-    TIntermTyped *addConstructor(TIntermAggregate *arguments,
-                                 TOperator op,
-                                 TType type,
-                                 const TSourceLoc &line);
 
     TIntermTyped *addIndexExpression(TIntermTyped *baseExpression,
                                      const TSourceLoc &location,
@@ -345,12 +337,12 @@ class TParseContext : angle::NonCopyable
     void checkImageMemoryAccessForBuiltinFunctions(TIntermAggregate *functionCall);
     void checkImageMemoryAccessForUserDefinedFunctions(const TFunction *functionDefinition,
                                                        const TIntermAggregate *functionCall);
-    TIntermAggregate *createEmptyArgumentsNode(const TSourceLoc &loc);
+    TIntermSequence *createEmptyArgumentsList();
 
-    // fnCall is only storing the built-in op, and function name or constructor type. argumentsNode
+    // fnCall is only storing the built-in op, and function name or constructor type. arguments
     // has the arguments.
     TIntermTyped *addFunctionCallOrMethod(TFunction *fnCall,
-                                          TIntermAggregate *argumentsNode,
+                                          TIntermSequence *arguments,
                                           TIntermNode *thisNode,
                                           const TSourceLoc &loc);
 
@@ -406,9 +398,19 @@ class TParseContext : angle::NonCopyable
                                 TIntermTyped *left,
                                 TIntermTyped *right,
                                 const TSourceLoc &loc);
-    TIntermTyped *createUnaryMath(TOperator op,
-                                  TIntermTyped *child,
-                                  const TSourceLoc &loc);
+    TIntermTyped *createUnaryMath(TOperator op, TIntermTyped *child, const TSourceLoc &loc);
+
+    TIntermTyped *addMethod(TFunction *fnCall,
+                            TIntermSequence *arguments,
+                            TIntermNode *thisNode,
+                            const TSourceLoc &loc);
+    TIntermTyped *addConstructor(TIntermSequence *arguments,
+                                 TOperator op,
+                                 TType type,
+                                 const TSourceLoc &line);
+    TIntermTyped *addNonConstructorFunctionCall(TFunction *fnCall,
+                                                TIntermSequence *arguments,
+                                                const TSourceLoc &loc);
 
     // Return true if the checks pass
     bool binaryOpCommonCheck(TOperator op,

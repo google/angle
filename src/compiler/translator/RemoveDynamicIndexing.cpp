@@ -113,11 +113,9 @@ TIntermTyped *EnsureSignedInt(TIntermTyped *node)
     if (node->getBasicType() == EbtInt)
         return node;
 
-    TIntermAggregate *convertedNode = new TIntermAggregate(EOpConstructInt);
-    convertedNode->setType(TType(EbtInt));
-    convertedNode->getSequence()->push_back(node);
-    convertedNode->setPrecisionFromChildren();
-    return convertedNode;
+    TIntermSequence *arguments = new TIntermSequence();
+    arguments->push_back(node);
+    return new TIntermAggregate(TType(EbtInt), EOpConstructInt, arguments);
 }
 
 TType GetFieldType(const TType &indexedType)
@@ -351,15 +349,16 @@ TIntermAggregate *CreateIndexFunctionCall(TIntermBinary *node,
                                           TIntermTyped *index)
 {
     ASSERT(node->getOp() == EOpIndexIndirect);
-    TIntermAggregate *indexingCall = new TIntermAggregate(EOpCallFunctionInAST);
+    TIntermSequence *arguments = new TIntermSequence();
+    arguments->push_back(indexedNode);
+    arguments->push_back(index);
+
+    TType fieldType = GetFieldType(indexedNode->getType());
+    TIntermAggregate *indexingCall =
+        new TIntermAggregate(fieldType, EOpCallFunctionInAST, arguments);
     indexingCall->setLine(node->getLine());
     indexingCall->getFunctionSymbolInfo()->setNameObj(
         GetIndexFunctionName(indexedNode->getType(), false));
-    indexingCall->getSequence()->push_back(indexedNode);
-    indexingCall->getSequence()->push_back(index);
-
-    TType fieldType = GetFieldType(indexedNode->getType());
-    indexingCall->setType(fieldType);
     return indexingCall;
 }
 
