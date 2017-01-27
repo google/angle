@@ -2610,6 +2610,13 @@ TEST_P(WebGLGLSLTest, MaxVaryingVec3ArrayAndMaxPlusOneFloatArray)
 // Test that FindLSB and FindMSB return correct values in their corner cases.
 TEST_P(GLSLTest_ES31, FindMSBAndFindLSBCornerCases)
 {
+    // Suspecting AMD driver bug - failure seen on bots running on AMD R5 230.
+    if (IsAMD() && IsOpenGL() && IsLinux())
+    {
+        std::cout << "Test skipped on AMD OpenGL Linux" << std::endl;
+        return;
+    }
+
     const std::string &fragmentShader =
         "#version 310 es\n"
         "precision mediump float;\n"
