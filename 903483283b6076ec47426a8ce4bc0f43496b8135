@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "5b2e41ea_62cae0e5",
+        "filename": "src/compiler/translator/Operator.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-01-27T22:16:32Z",
+      "side": 1,
+      "message": "If it was EOpCallUserDefinedFunction, it would be easier to accidentally use it when EOpCallInternalRawFunction should be used instead.\n\nSo I personally prefer \"InAST\" or maybe we could come up with some better alternative. What do you think of CallASTDefinedFunction or CallFunctionDefinedInAST?",
+      "range": {
+        "startLine": 18,
+        "startChar": 4,
+        "endLine": 18,
+        "endChar": 24
+      },
+      "revId": "903483283b6076ec47426a8ce4bc0f43496b8135",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a2abb102_4421d3d2",
         "filename": "src/compiler/translator/Operator.h",
         "patchSetId": 4
@@ -36,6 +59,29 @@
       "writtenOn": "2017-01-27T21:55:14Z",
       "side": 1,
       "message": "this seems OK but maybe could be shorter? like\n\nEOpCallInternalRawFunction. It\u0027s true the parameters aren\u0027t raw, but I think people will understand.",
+      "range": {
+        "startLine": 25,
+        "startChar": 4,
+        "endLine": 25,
+        "endChar": 48
+      },
+      "revId": "903483283b6076ec47426a8ce4bc0f43496b8135",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6e995ac2_5523d167",
+        "filename": "src/compiler/translator/Operator.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-01-27T22:16:32Z",
+      "side": 1,
+      "message": "Will do.",
       "range": {
         "startLine": 25,
         "startChar": 4,
