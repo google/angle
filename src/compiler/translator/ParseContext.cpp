@@ -3658,13 +3658,9 @@ TIntermCase *TParseContext::addDefault(const TSourceLoc &loc)
 
 TIntermTyped *TParseContext::createUnaryMath(TOperator op,
                                              TIntermTyped *child,
-                                             const TSourceLoc &loc,
-                                             const TType *funcReturnType)
+                                             const TSourceLoc &loc)
 {
-    if (child == nullptr)
-    {
-        return nullptr;
-    }
+    ASSERT(child != nullptr);
 
     switch (op)
     {
@@ -3672,6 +3668,7 @@ TIntermTyped *TParseContext::createUnaryMath(TOperator op,
             if (child->getBasicType() != EbtBool || child->isMatrix() || child->isArray() ||
                 child->isVector())
             {
+                unaryOpError(loc, GetOperatorString(op), child->getCompleteString());
                 return nullptr;
             }
             break;
@@ -3679,6 +3676,7 @@ TIntermTyped *TParseContext::createUnaryMath(TOperator op,
             if ((child->getBasicType() != EbtInt && child->getBasicType() != EbtUInt) ||
                 child->isMatrix() || child->isArray())
             {
+                unaryOpError(loc, GetOperatorString(op), child->getCompleteString());
                 return nullptr;
             }
             break;
@@ -3691,6 +3689,7 @@ TIntermTyped *TParseContext::createUnaryMath(TOperator op,
             if (child->getBasicType() == EbtStruct || child->getBasicType() == EbtBool ||
                 child->isArray() || IsOpaqueType(child->getBasicType()))
             {
+                unaryOpError(loc, GetOperatorString(op), child->getCompleteString());
                 return nullptr;
             }
         // Operators for built-ins are already type checked against their prototype.
@@ -3710,10 +3709,9 @@ TIntermTyped *TParseContext::createUnaryMath(TOperator op,
 
 TIntermTyped *TParseContext::addUnaryMath(TOperator op, TIntermTyped *child, const TSourceLoc &loc)
 {
-    TIntermTyped *node = createUnaryMath(op, child, loc, nullptr);
+    TIntermTyped *node = createUnaryMath(op, child, loc);
     if (node == nullptr)
     {
-        unaryOpError(loc, GetOperatorString(op), child->getCompleteString());
         return child;
     }
     return node;
@@ -4409,27 +4407,13 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall,
             op = fnCandidate->getBuiltInOp();
             if (builtIn && op != EOpNull)
             {
-                //
                 // A function call mapped to a built-in operation.
-                //
                 if (fnCandidate->getParamCount() == 1)
                 {
-                    //
                     // Treat it like a built-in unary operator.
-                    //
                     TIntermNode *unaryParamNode = argumentsNode->getSequence()->front();
-                    callNode = createUnaryMath(op, unaryParamNode->getAsTyped(), loc,
-                                               &fnCandidate->getReturnType());
-                    if (callNode == nullptr)
-                    {
-                        std::stringstream reasonStream;
-                        reasonStream
-                            << "wrong operand type for built in unary function: "
-                            << static_cast<TIntermTyped *>(argumentsNode)->getCompleteString();
-                        std::string reason = reasonStream.str();
-                        error(argumentsNode->getLine(), reason.c_str(), "Internal Error");
-                        return TIntermTyped::CreateZero(TType(EbtFloat, EbpMedium, EvqConst));
-                    }
+                    callNode = createUnaryMath(op, unaryParamNode->getAsTyped(), loc);
+                    ASSERT(callNode != nullptr);
                 }
                 else
                 {
