@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ffd3db15_1a4e7e66",
+        "filename": "src/compiler/translator/Operator.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-27T21:55:14Z",
+      "side": 1,
+      "message": "InAST kind of confuses me.. maybe\n\nEOpCallUserDefinedFunction? Seems to be clear that the user is the person calling Compile.",
+      "range": {
+        "startLine": 18,
+        "startChar": 4,
+        "endLine": 18,
+        "endChar": 24
+      },
+      "revId": "903483283b6076ec47426a8ce4bc0f43496b8135",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a2abb102_4421d3d2",
+        "filename": "src/compiler/translator/Operator.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-27T21:55:14Z",
+      "side": 1,
+      "message": "this seems OK but maybe could be shorter? like\n\nEOpCallInternalRawFunction. It\u0027s true the parameters aren\u0027t raw, but I think people will understand.",
+      "range": {
+        "startLine": 25,
+        "startChar": 4,
+        "endLine": 25,
+        "endChar": 48
+      },
+      "revId": "903483283b6076ec47426a8ce4bc0f43496b8135",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
