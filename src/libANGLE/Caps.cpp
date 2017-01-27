@@ -211,7 +211,8 @@ Extensions::Extensions()
       multisampleCompatibility(false),
       framebufferMixedSamples(false),
       textureNorm16(false),
-      pathRendering(false)
+      pathRendering(false),
+      surfacelessContext(false)
 {
 }
 
@@ -643,6 +644,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_CHROMIUM_framebuffer_mixed_samples"] = esOnlyExtension(&Extensions::framebufferMixedSamples);
         map["GL_EXT_texture_norm16"] = esOnlyExtension(&Extensions::textureNorm16);
         map["GL_CHROMIUM_path_rendering"] = esOnlyExtension(&Extensions::pathRendering);
+        map["GL_OES_surfaceless_context"] = esOnlyExtension(&Extensions::surfacelessContext);
         // clang-format on
 
         return map;

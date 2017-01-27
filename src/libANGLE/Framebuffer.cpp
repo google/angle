@@ -242,12 +242,6 @@ size_t FramebufferState::getDrawBufferCount() const
     return mDrawBufferStates.size();
 }
 
-Error Framebuffer::getSamplePosition(size_t index, GLfloat *xy) const
-{
-    ANGLE_TRY(mImpl->getSamplePosition(index, xy));
-    return gl::NoError();
-}
-
 bool FramebufferState::colorAttachmentsAreUniqueImages() const
 {
     for (size_t firstAttachmentIdx = 0; firstAttachmentIdx < mColorAttachments.size();
@@ -307,6 +301,18 @@ Framebuffer::Framebuffer(rx::SurfaceImpl *surface)
       mDirtyStencilAttachmentBinding(this, DIRTY_BIT_STENCIL_ATTACHMENT)
 {
     ASSERT(mImpl != nullptr);
+    mDirtyColorAttachmentBindings.push_back(
+        ChannelBinding(this, static_cast<SignalToken>(DIRTY_BIT_COLOR_ATTACHMENT_0)));
+}
+
+Framebuffer::Framebuffer(rx::GLImplFactory *factory)
+    : mState(),
+      mImpl(factory->createFramebuffer(mState)),
+      mId(0),
+      mCachedStatus(GL_FRAMEBUFFER_UNDEFINED_OES),
+      mDirtyDepthAttachmentBinding(this, DIRTY_BIT_DEPTH_ATTACHMENT),
+      mDirtyStencilAttachmentBinding(this, DIRTY_BIT_STENCIL_ATTACHMENT)
+{
     mDirtyColorAttachmentBindings.push_back(
         ChannelBinding(this, static_cast<SignalToken>(DIRTY_BIT_COLOR_ATTACHMENT_0)));
 }
@@ -511,11 +517,15 @@ bool Framebuffer::usingExtendedDrawBuffers() const
 
 GLenum Framebuffer::checkStatus(const ContextState &state)
 {
-    // The default framebuffer *must* always be complete, though it may not be
-    // subject to the same rules as application FBOs. ie, it could have 0x0 size.
+    // The default framebuffer is always complete except when it is surfaceless in which
+    // case it is always unsupported. We return early because the default framebuffer may
+    // not be subject to the same rules as application FBOs. ie, it could have 0x0 size.
     if (mId == 0)
     {
-        return GL_FRAMEBUFFER_COMPLETE;
+        ASSERT(mCachedStatus.valid());
+        ASSERT(mCachedStatus.value() == GL_FRAMEBUFFER_COMPLETE ||
+               mCachedStatus.value() == GL_FRAMEBUFFER_UNDEFINED_OES);
+        return mCachedStatus.value();
     }
 
     if (hasAnyDirtyBit() || !mCachedStatus.valid())
@@ -911,6 +921,12 @@ int Framebuffer::getSamples(const ContextState &state)
     return 0;
 }
 
+Error Framebuffer::getSamplePosition(size_t index, GLfloat *xy) const
+{
+    ANGLE_TRY(mImpl->getSamplePosition(index, xy));
+    return gl::NoError();
+}
+
 bool Framebuffer::hasValidDepthStencil() const
 {
     return mState.getDepthStencilAttachment() != nullptr;
@@ -991,7 +1007,10 @@ void Framebuffer::syncState()
     {
         mImpl->syncState(mDirtyBits);
         mDirtyBits.reset();
-        mCachedStatus.reset();
+        if (mId != 0)
+        {
+            mCachedStatus.reset();
+        }
     }
 }
 

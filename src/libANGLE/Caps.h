@@ -348,6 +348,9 @@ struct Extensions
 
     // GL_CHROMIUM_path_rendering
     bool pathRendering;
+
+    // GL_OES_surfaceless_context
+    bool surfacelessContext;
 };
 
 struct ExtensionInfo
