@@ -48,6 +48,29 @@
     },
     {
       "key": {
+        "uuid": "1680546d_4652d297",
+        "filename": "src/compiler/translator/Operator.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-27T22:23:53Z",
+      "side": 1,
+      "message": "AST is not clear.. it really is a function call defined by the user in the shader source. Hence, why I suggested EOpCalUserDefinedFunction. To me there\u0027s no confusion with raw functions, which are not defined by the user, but internal methods.",
+      "range": {
+        "startLine": 18,
+        "startChar": 4,
+        "endLine": 18,
+        "endChar": 24
+      },
+      "revId": "903483283b6076ec47426a8ce4bc0f43496b8135",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a2abb102_4421d3d2",
         "filename": "src/compiler/translator/Operator.h",
         "patchSetId": 4
