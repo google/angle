@@ -267,7 +267,7 @@ ANGLETest::~ANGLETest()
 
 void ANGLETest::SetUp()
 {
-    angle::g_testPlatformInstance.enableMessages();
+    EnableANGLEPlatformMessages();
     angle::g_testPlatformInstance.setCurrentTest(this);
 
     // Resize the window before creating the context so that the first make current
@@ -966,4 +966,9 @@ void IgnoreANGLEPlatformMessages()
 {
     // Negative tests may trigger expected errors/warnings in the ANGLE Platform.
     angle::g_testPlatformInstance.ignoreMessages();
+}
+
+void EnableANGLEPlatformMessages()
+{
+    angle::g_testPlatformInstance.enableMessages();
 }

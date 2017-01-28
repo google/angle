@@ -17,7 +17,6 @@
 #include <vector>
 
 #include "common/angleutils.h"
-#include "common/platform.h"
 #include "common/Optional.h"
 
 namespace gl
@@ -37,7 +36,32 @@ constexpr const char *LogSeverityName(int severity)
                                                             : "UNKNOWN";
 }
 
+bool ShouldCreateLogMessage(LogSeverity severity)
+{
+#if defined(ANGLE_TRACE_ENABLED)
+    return true;
+#elif defined(ANGLE_ENABLE_ASSERTS)
+    return severity == LOG_ERR;
+#else
+    return false;
+#endif
+}
+
 }  // namespace
+
+namespace priv
+{
+
+bool ShouldCreatePlatformLogMessage(LogSeverity severity)
+{
+#if defined(ANGLE_TRACE_ENABLED)
+    return true;
+#else
+    return severity != LOG_EVENT;
+#endif
+}
+
+}  // namespace priv
 
 bool DebugAnnotationsActive()
 {
@@ -46,6 +70,11 @@ bool DebugAnnotationsActive()
 #else
     return false;
 #endif
+}
+
+bool DebugAnnotationsInitialized()
+{
+    return g_debugAnnotator != nullptr;
 }
 
 void InitializeDebugAnnotations(DebugAnnotator *debugAnnotator)
@@ -85,30 +114,39 @@ ScopedPerfEventHelper::~ScopedPerfEventHelper()
     }
 }
 
-namespace priv
-{
-
-bool ShouldCreateLogMessage(LogSeverity severity)
-{
-#if defined(ANGLE_TRACE_ENABLED)
-    return true;
-#elif defined(ANGLE_ENABLE_ASSERTS)
-    return severity == LOG_ERR;
-#else
-    return false;
-#endif
-}
-
 LogMessage::LogMessage(const char *function, int line, LogSeverity severity)
-    : mSeverity(severity), mFunction(function), mLine(line)
+    : mFunction(function), mLine(line), mSeverity(severity)
 {
-    init(function, line);
 }
 
 LogMessage::~LogMessage()
 {
-    mStream << std::endl;
-    std::string str(mStream.str());
+    if (DebugAnnotationsInitialized() && (mSeverity == LOG_ERR || mSeverity == LOG_WARN))
+    {
+        g_debugAnnotator->logMessage(*this);
+    }
+    else
+    {
+        trace();
+    }
+}
+
+void LogMessage::trace() const
+{
+    if (!ShouldCreateLogMessage(mSeverity))
+    {
+        return;
+    }
+
+    std::ostringstream stream;
+    stream << LogSeverityName(mSeverity) << ": ";
+    // EVENT() don't require additional function(line) info
+    if (mSeverity != LOG_EVENT)
+    {
+        stream << mFunction << "(" << mLine << "): ";
+    }
+    stream << mStream.str() << std::endl;
+    std::string str(stream.str());
 
     if (DebugAnnotationsActive())
     {
@@ -125,11 +163,7 @@ LogMessage::~LogMessage()
         }
     }
 
-    // Give any log message handler first dibs on the message.
-    bool handled = g_debugAnnotator != nullptr &&
-                   g_debugAnnotator->logMessage(mSeverity, mFunction, mLine, mMessageStart, str);
-
-    if (!handled && mSeverity == LOG_ERR)
+    if (mSeverity == LOG_ERR)
     {
         std::cerr << str;
 #if !defined(NDEBUG) && defined(_MSC_VER)
@@ -158,20 +192,17 @@ LogMessage::~LogMessage()
 #endif  // ANGLE_ENABLE_DEBUG_TRACE
 }
 
-// writes the common header info to the stream
-void LogMessage::init(const char *function, int line)
+LogSeverity LogMessage::getSeverity() const
 {
-    if (mSeverity >= 0)
-        mStream << LogSeverityName(mSeverity);
-    else
-        mStream << "VERBOSE" << -mSeverity;
-
-    mStream << ": " << function << "(" << line << "): ";
-
-    mMessageStart = mStream.str().length();
+    return mSeverity;
 }
 
-}  // namespace priv
+std::string LogMessage::getMessage() const
+{
+    std::ostringstream stream;
+    stream << mFunction << "(" << mLine << "): " << mStream.str() << std::endl;
+    return stream.str();
+}
 
 #if defined(ANGLE_PLATFORM_WINDOWS)
 std::ostream &operator<<(std::ostream &os, const FmtHR &fmt)

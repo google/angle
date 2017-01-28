@@ -304,6 +304,7 @@ bool IsRelease();
 
 // Negative tests may trigger expected errors/warnings in the ANGLE Platform.
 void IgnoreANGLEPlatformMessages();
+void EnableANGLEPlatformMessages();
 
 // Note: git cl format messes up this formatting.
 #define ANGLE_SKIP_TEST_IF(COND)                              \

@@ -93,12 +93,25 @@ static void INTERNAL_GL_APIENTRY LogGLDebugMessage(GLenum source, GLenum type, G
       default:                             severityText = "UNKNOWN";      break;
     }
 
-    ERR() << std::endl
-          << "\tSource: " << sourceText << std::endl
-          << "\tType: " << typeText << std::endl
-          << "\tID: " << id << std::endl
-          << "\tSeverity: " << severityText << std::endl
-          << "\tMessage: " << message;
+    if (type == GL_DEBUG_TYPE_ERROR)
+    {
+        ERR() << std::endl
+              << "\tSource: " << sourceText << std::endl
+              << "\tType: " << typeText << std::endl
+              << "\tID: " << gl::Error(id) << std::endl
+              << "\tSeverity: " << severityText << std::endl
+              << "\tMessage: " << message;
+    }
+    else
+    {
+        // TODO(ynovikov): filter into WARN and INFO if INFO is ever implemented
+        WARN() << std::endl
+               << "\tSource: " << sourceText << std::endl
+               << "\tType: " << typeText << std::endl
+               << "\tID: " << gl::Error(id) << std::endl
+               << "\tSeverity: " << severityText << std::endl
+               << "\tMessage: " << message;
+    }
 }
 #endif
 

@@ -63,7 +63,7 @@ VkBool32 VKAPI_CALL DebugReportCallback(VkDebugReportFlagsEXT flags,
 {
     if ((flags & VK_DEBUG_REPORT_ERROR_BIT_EXT) != 0)
     {
-        ANGLEPlatformCurrent()->logError(message);
+        ERR() << message;
 #if !defined(NDEBUG)
         // Abort the call in Debug builds.
         return VK_TRUE;
@@ -71,11 +71,12 @@ VkBool32 VKAPI_CALL DebugReportCallback(VkDebugReportFlagsEXT flags,
     }
     else if ((flags & VK_DEBUG_REPORT_WARNING_BIT_EXT) != 0)
     {
-        ANGLEPlatformCurrent()->logWarning(message);
+        WARN() << message;
     }
     else
     {
-        ANGLEPlatformCurrent()->logInfo(message);
+        // Uncomment this if you want Vulkan spam.
+        // WARN() << message;
     }
 
     return VK_FALSE;
@@ -162,7 +163,7 @@ vk::Error RendererVk::initialize(const egl::AttributeMap &attribs)
         const auto &cwd = angle::GetCWD();
         if (!cwd.valid())
         {
-            ANGLEPlatformCurrent()->logError("Error getting CWD for Vulkan layers init.");
+            ERR() << "Error getting CWD for Vulkan layers init.";
             mEnableValidationLayers = false;
         }
         else
@@ -202,12 +203,11 @@ vk::Error RendererVk::initialize(const egl::AttributeMap &attribs)
             // Generate an error if the attribute was requested, warning otherwise.
             if (attribs.contains(EGL_PLATFORM_ANGLE_ENABLE_VALIDATION_LAYER_ANGLE))
             {
-                ANGLEPlatformCurrent()->logError("Vulkan standard validation layers are missing.");
+                ERR() << "Vulkan standard validation layers are missing.";
             }
             else
             {
-                ANGLEPlatformCurrent()->logWarning(
-                    "Vulkan standard validation layers are missing.");
+                WARN() << "Vulkan standard validation layers are missing.";
             }
             mEnableValidationLayers = false;
         }
@@ -372,7 +372,7 @@ vk::Error RendererVk::initializeDevice(uint32_t queueFamilyIndex)
     {
         if (!HasStandardValidationLayer(deviceLayerProps))
         {
-            ANGLEPlatformCurrent()->logWarning("Vulkan standard validation layer is missing.");
+            WARN() << "Vulkan standard validation layer is missing.";
             mEnableValidationLayers = false;
         }
     }

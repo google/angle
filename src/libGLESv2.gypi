@@ -128,6 +128,8 @@
             'libANGLE/ImageIndex.cpp',
             'libANGLE/IndexRangeCache.cpp',
             'libANGLE/IndexRangeCache.h',
+            'libANGLE/LoggingAnnotator.cpp',
+            'libANGLE/LoggingAnnotator.h',
             'libANGLE/Path.h',
             'libANGLE/Path.cpp',
             'libANGLE/Platform.cpp',

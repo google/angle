@@ -42,49 +42,6 @@ constexpr LogSeverity LOG_WARN           = 1;
 constexpr LogSeverity LOG_ERR            = 2;
 constexpr LogSeverity LOG_NUM_SEVERITIES = 3;
 
-// Wraps the D3D9/D3D11 debug annotation functions.
-class DebugAnnotator : angle::NonCopyable
-{
-  public:
-    DebugAnnotator() { };
-    virtual ~DebugAnnotator() { };
-    virtual void beginEvent(const wchar_t *eventName) = 0;
-    virtual void endEvent() = 0;
-    virtual void setMarker(const wchar_t *markerName) = 0;
-    virtual bool getStatus() = 0;
-    // Log Message Handler that gets passed every log message before
-    // it's sent to other log destinations (if any).
-    // Returns true to signal that it handled the message and the message
-    // should not be sent to other log destinations.
-    virtual bool logMessage(LogSeverity severity,
-                            const char *function,
-                            int line,
-                            size_t message_start,
-                            const std::string &str)
-    {
-        return false;
-    }
-};
-
-void InitializeDebugAnnotations(DebugAnnotator *debugAnnotator);
-void UninitializeDebugAnnotations();
-bool DebugAnnotationsActive();
-
-namespace priv
-{
-// This class is used to explicitly ignore values in the conditional logging macros. This avoids
-// compiler warnings like "value computed is not used" and "statement has no effect".
-class LogMessageVoidify
-{
-  public:
-    LogMessageVoidify() {}
-    // This has to be an operator with a precedence lower than << but higher than ?:
-    void operator&(std::ostream &) {}
-};
-
-// Used by ANGLE_LOG_IS_ON to lazy-evaluate stream arguments.
-bool ShouldCreateLogMessage(LogSeverity severity);
-
 // This class more or less represents a particular log message.  You
 // create an instance of LogMessage and then stream stuff to it.
 // When you finish streaming to it, ~LogMessage is called and the
@@ -99,17 +56,55 @@ class LogMessage : angle::NonCopyable
     LogMessage(const char *function, int line, LogSeverity severity);
     ~LogMessage();
     std::ostream &stream() { return mStream; }
+    void trace() const;
+
+    LogSeverity getSeverity() const;
+    std::string getMessage() const;
 
   private:
-    void init(const char *function, int line);
-
-    LogSeverity mSeverity;
-    std::ostringstream mStream;
-    size_t mMessageStart;  // Offset of the start of the message (past prefix info).
-    // The function and line information passed in to the constructor.
     const char *mFunction;
     const int mLine;
+    const LogSeverity mSeverity;
+
+    std::ostringstream mStream;
 };
+
+// Wraps the D3D9/D3D11 debug annotation functions.
+// Also handles redirecting logging destination.
+class DebugAnnotator : angle::NonCopyable
+{
+  public:
+    DebugAnnotator(){};
+    virtual ~DebugAnnotator() { };
+    virtual void beginEvent(const wchar_t *eventName) = 0;
+    virtual void endEvent() = 0;
+    virtual void setMarker(const wchar_t *markerName) = 0;
+    virtual bool getStatus() = 0;
+    // Log Message Handler that gets passed every log message,
+    // when debug annotations are initialized,
+    // replacing default handling by LogMessage.
+    virtual void logMessage(const LogMessage &msg) const = 0;
+};
+
+void InitializeDebugAnnotations(DebugAnnotator *debugAnnotator);
+void UninitializeDebugAnnotations();
+bool DebugAnnotationsActive();
+bool DebugAnnotationsInitialized();
+
+namespace priv
+{
+// This class is used to explicitly ignore values in the conditional logging macros. This avoids
+// compiler warnings like "value computed is not used" and "statement has no effect".
+class LogMessageVoidify
+{
+  public:
+    LogMessageVoidify() {}
+    // This has to be an operator with a precedence lower than << but higher than ?:
+    void operator&(std::ostream &) {}
+};
+
+// Used by ANGLE_LOG_IS_ON to lazy-evaluate stream arguments.
+bool ShouldCreatePlatformLogMessage(LogSeverity severity);
 
 template <int N, typename T>
 std::ostream &FmtHex(std::ostream &os, T value)
@@ -157,17 +152,17 @@ std::ostream &FmtHexInt(std::ostream &os, T value)
 // by ANGLE_LOG(). Since these are used all over our code, it's
 // better to have compact code for these operations.
 #define COMPACT_ANGLE_LOG_EX_EVENT(ClassName, ...) \
-    ::gl::priv::ClassName(__FUNCTION__, __LINE__, ::gl::LOG_EVENT, ##__VA_ARGS__)
+    ::gl::ClassName(__FUNCTION__, __LINE__, ::gl::LOG_EVENT, ##__VA_ARGS__)
 #define COMPACT_ANGLE_LOG_EX_WARN(ClassName, ...) \
-    ::gl::priv::ClassName(__FUNCTION__, __LINE__, ::gl::LOG_WARN, ##__VA_ARGS__)
+    ::gl::ClassName(__FUNCTION__, __LINE__, ::gl::LOG_WARN, ##__VA_ARGS__)
 #define COMPACT_ANGLE_LOG_EX_ERR(ClassName, ...) \
-    ::gl::priv::ClassName(__FUNCTION__, __LINE__, ::gl::LOG_ERR, ##__VA_ARGS__)
+    ::gl::ClassName(__FUNCTION__, __LINE__, ::gl::LOG_ERR, ##__VA_ARGS__)
 
 #define COMPACT_ANGLE_LOG_EVENT COMPACT_ANGLE_LOG_EX_EVENT(LogMessage)
 #define COMPACT_ANGLE_LOG_WARN COMPACT_ANGLE_LOG_EX_WARN(LogMessage)
 #define COMPACT_ANGLE_LOG_ERR COMPACT_ANGLE_LOG_EX_ERR(LogMessage)
 
-#define ANGLE_LOG_IS_ON(severity) (::gl::priv::ShouldCreateLogMessage(::gl::LOG_##severity))
+#define ANGLE_LOG_IS_ON(severity) (::gl::priv::ShouldCreatePlatformLogMessage(::gl::LOG_##severity))
 
 // Helper macro which avoids evaluating the arguments to a stream if the condition doesn't hold.
 // Condition is evaluated once and only once.

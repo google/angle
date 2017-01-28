@@ -591,8 +591,6 @@ bool ProgramGL::checkLinkStatus(gl::InfoLog &infoLog)
         GLint infoLogLength = 0;
         mFunctions->getProgramiv(mProgramID, GL_INFO_LOG_LENGTH, &infoLogLength);
 
-        std::string warning;
-
         // Info log length includes the null terminator, so 1 means that the info log is an empty
         // string.
         if (infoLogLength > 1)
@@ -605,14 +603,12 @@ bool ProgramGL::checkLinkStatus(gl::InfoLog &infoLog)
 
             infoLog << buf.data();
 
-            warning = FormatString("Program link failed unexpectedly: %s", buf.data());
+            WARN() << "Program link failed unexpectedly: " << buf.data();
         }
         else
         {
-            warning = "Program link failed unexpectedly with no info log.";
+            WARN() << "Program link failed unexpectedly with no info log.";
         }
-        ANGLEPlatformCurrent()->logWarning(warning.c_str());
-        WARN() << std::endl << warning;
 
         // TODO, return GL_OUT_OF_MEMORY or just fail the link? This is an unexpected case
         return false;

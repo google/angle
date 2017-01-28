@@ -346,9 +346,8 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
     mHasRobustness = mFunctionsGL->getGraphicsResetStatus != nullptr;
     if (hasWGLCreateContextRobustness != mHasRobustness)
     {
-        ANGLEPlatformCurrent()->logWarning(
-            "WGL_ARB_create_context_robustness exists but unable to OpenGL context with "
-            "robustness.");
+        WARN() << "WGL_ARB_create_context_robustness exists but unable to OpenGL context with "
+                  "robustness.";
     }
 
     // Intel OpenGL ES drivers are not currently supported due to bugs in the driver and ANGLE

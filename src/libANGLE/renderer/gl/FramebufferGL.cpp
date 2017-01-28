@@ -382,7 +382,7 @@ bool FramebufferGL::checkStatus() const
     GLenum status = mFunctions->checkFramebufferStatus(GL_FRAMEBUFFER);
     if (status != GL_FRAMEBUFFER_COMPLETE)
     {
-        ANGLEPlatformCurrent()->logWarning("GL framebuffer returned incomplete.");
+        WARN() << "GL framebuffer returned incomplete.";
     }
     return (status == GL_FRAMEBUFFER_COMPLETE);
 }

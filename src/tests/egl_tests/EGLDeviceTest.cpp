@@ -317,6 +317,9 @@ TEST_F(EGLDeviceCreationTest, D3D11DeviceRecovery)
     // eglSwapBuffers, so we must call eglSwapBuffers before we lose the device.
     ASSERT_EGL_TRUE(eglSwapBuffers(mDisplay, mSurface));
 
+    // Ignore expected error messages
+    IgnoreANGLEPlatformMessages();
+
     // Trigger a lost device
     trigger9_3DeviceLost();
 
@@ -333,6 +336,9 @@ TEST_F(EGLDeviceCreationTest, D3D11DeviceRecovery)
     mSurface = eglCreateWindowSurface(mDisplay, mConfig, mOSWindow->getNativeWindow(), nullptr);
     ASSERT_EQ(EGL_NO_SURFACE, mSurface);
     ASSERT_EGL_ERROR(EGL_BAD_ALLOC);
+
+    // No more error messages expected
+    EnableANGLEPlatformMessages();
 
     // Get the D3D11 device out of the EGLDisplay again. It should be the same one as above.
     EGLAttrib device       = 0;

@@ -584,8 +584,10 @@ GLuint DisplayOzone::makeShader(GLuint type, const char *src)
     gl->getShaderiv(shader, GL_COMPILE_STATUS, &compiled);
     if (compiled != GL_TRUE)
     {
-        ANGLEPlatformCurrent()->logError("DisplayOzone shader compilation error:");
-        ANGLEPlatformCurrent()->logError(buf);
+        // This code is solely for internal debugging of shaders in drawWithTexture(),
+        // used when putting pixels on screen when running tests on ChromeOS device.
+        // Error will not propagate beyond ASSERT(linked) there.
+        ERR() << "DisplayOzone shader compilation error: " << buf;
     }
 
     return shader;
