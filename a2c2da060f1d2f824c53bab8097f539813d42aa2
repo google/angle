@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "489ca395_e6628645",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-28T06:13:05Z",
+      "side": 1,
+      "message": "you can probably make this UNREACHABLE(). At least, it should be if possible - don\u0027t think we need to process EVENTs through the platform.",
+      "range": {
+        "startLine": 59,
+        "startChar": 8,
+        "endLine": 59,
+        "endChar": 23
+      },
+      "revId": "a2c2da060f1d2f824c53bab8097f539813d42aa2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dfc1e1ec_f1b41061",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-28T06:13:05Z",
+      "side": 1,
+      "message": "UNREACHABLE()?",
+      "range": {
+        "startLine": 68,
+        "startChar": 8,
+        "endLine": 68,
+        "endChar": 15
+      },
+      "revId": "a2c2da060f1d2f824c53bab8097f539813d42aa2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7d3af4a1_6ef6bfb8",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-28T06:13:05Z",
+      "side": 1,
+      "message": "I don\u0027t think this is what I had in mind. I was more thinking that there would be a common base class for DebugAnnotator like LoggingAnnotator, that the 11/9/GL classes inherit from. The Logging class would implement the logging handling methods, and the 11/9/GL classes would be untouched except for the new base class. Please contact me offline or in email if you need clarification. Maybe try that and we can revisit the rest of the changes in this file.",
+      "range": {
+        "startLine": 130,
+        "startChar": 0,
+        "endLine": 130,
+        "endChar": 73
+      },
+      "revId": "a2c2da060f1d2f824c53bab8097f539813d42aa2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b0cca1d3_6221aa31",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-28T06:13:05Z",
+      "side": 1,
+      "message": "Thanks for fixing this - a separate patch would also be good for this small change.",
+      "range": {
+        "startLine": 272,
+        "startChar": 4,
+        "endLine": 276,
+        "endChar": 5
+      },
+      "revId": "a2c2da060f1d2f824c53bab8097f539813d42aa2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4253aa90_f290b686",
+        "filename": "src/common/debug.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-28T06:13:05Z",
+      "side": 1,
+      "message": "nit: if we treat this as a system include, would be before any \"\" includes.",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 30
+      },
+      "revId": "a2c2da060f1d2f824c53bab8097f539813d42aa2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1879d8fd_6381a6b9",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-28T06:13:05Z",
+      "side": 1,
+      "message": "here is where I would implement the cerr stuff as a fallback if the full-featured platform is not available.",
+      "range": {
+        "startLine": 68,
+        "startChar": 6,
+        "endLine": 68,
+        "endChar": 21
+      },
+      "revId": "a2c2da060f1d2f824c53bab8097f539813d42aa2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "24a76004_7f5d0874",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-28T06:13:05Z",
+      "side": 1,
+      "message": "maybe add a TODO to filter into WARN and INFO if we ever choose to implement INFO",
+      "range": {
+        "startLine": 96,
+        "startChar": 16,
+        "endLine": 96,
+        "endChar": 35
+      },
+      "revId": "a2c2da060f1d2f824c53bab8097f539813d42aa2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7107eb7d_648f5465",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 587,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-28T06:13:05Z",
+      "side": 1,
+      "message": "this is a bit odd- feels like we should have piped the error down, can you add a TODO here to pipe this? not to put on your plate, but something we should fix at some point.",
+      "range": {
+        "startLine": 587,
+        "startChar": 8,
+        "endLine": 587,
+        "endChar": 66
+      },
+      "revId": "a2c2da060f1d2f824c53bab8097f539813d42aa2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d3818bc5_bc726195",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-28T06:13:05Z",
+      "side": 1,
+      "message": "can you open a separate bug for this? Feels like maybe we should fix the validation.",
+      "range": {
+        "startLine": 196,
+        "startChar": 81,
+        "endLine": 196,
+        "endChar": 84
+      },
+      "revId": "a2c2da060f1d2f824c53bab8097f539813d42aa2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
