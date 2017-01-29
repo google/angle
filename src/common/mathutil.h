@@ -807,9 +807,9 @@ inline uint32_t BitfieldReverse(uint32_t value)
 // Count the 1 bits.
 inline int BitCount(unsigned int bits)
 {
-#if defined(ANGLE_PLATFORM_WINDOWS)
+#if defined(_MSC_VER)
     return static_cast<int>(__popcnt(bits));
-#elif defined(ANGLE_PLATFORM_POSIX)
+#elif defined(__GNUC__)
     return __builtin_popcount(bits);
 #else
 #error Please implement bit count for your platform!
