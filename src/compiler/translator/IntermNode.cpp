@@ -821,6 +821,8 @@ void TIntermUnary::promote()
         case EOpPackSnorm2x16:
         case EOpPackUnorm2x16:
         case EOpPackHalf2x16:
+        case EOpPackUnorm4x8:
+        case EOpPackSnorm4x8:
             setType(TType(EbtUInt, EbpHigh, resultQualifier));
             break;
         case EOpUnpackSnorm2x16:
@@ -829,6 +831,10 @@ void TIntermUnary::promote()
             break;
         case EOpUnpackHalf2x16:
             setType(TType(EbtFloat, EbpMedium, resultQualifier, 2));
+            break;
+        case EOpUnpackUnorm4x8:
+        case EOpUnpackSnorm4x8:
+            setType(TType(EbtFloat, EbpMedium, resultQualifier, 4));
             break;
         case EOpAny:
         case EOpAll:
@@ -1315,6 +1321,10 @@ TIntermTyped *TIntermUnary::fold(TDiagnostics *diagnostics)
         case EOpUnpackUnorm2x16:
         case EOpPackHalf2x16:
         case EOpUnpackHalf2x16:
+        case EOpPackUnorm4x8:
+        case EOpPackSnorm4x8:
+        case EOpUnpackUnorm4x8:
+        case EOpUnpackSnorm4x8:
             constArray = operandConstant->foldUnaryNonComponentWise(mOp);
             break;
         default:
@@ -1865,6 +1875,49 @@ TConstantUnion *TIntermConstantUnion::foldUnaryNonComponentWise(TOperator op)
             gl::unpackHalf2x16(operandArray[0].getUConst(), &f1, &f2);
             resultArray[0].setFConst(f1);
             resultArray[1].setFConst(f2);
+            break;
+        }
+
+        case EOpPackUnorm4x8:
+        {
+            ASSERT(getType().getBasicType() == EbtFloat);
+            resultArray = new TConstantUnion();
+            resultArray->setUConst(
+                gl::PackUnorm4x8(operandArray[0].getFConst(), operandArray[1].getFConst(),
+                                 operandArray[2].getFConst(), operandArray[3].getFConst()));
+            break;
+        }
+        case EOpPackSnorm4x8:
+        {
+            ASSERT(getType().getBasicType() == EbtFloat);
+            resultArray = new TConstantUnion();
+            resultArray->setUConst(
+                gl::PackSnorm4x8(operandArray[0].getFConst(), operandArray[1].getFConst(),
+                                 operandArray[2].getFConst(), operandArray[3].getFConst()));
+            break;
+        }
+        case EOpUnpackUnorm4x8:
+        {
+            ASSERT(getType().getBasicType() == EbtUInt);
+            resultArray = new TConstantUnion[4];
+            float f[4];
+            gl::UnpackUnorm4x8(operandArray[0].getUConst(), f);
+            for (size_t i = 0; i < 4; ++i)
+            {
+                resultArray[i].setFConst(f[i]);
+            }
+            break;
+        }
+        case EOpUnpackSnorm4x8:
+        {
+            ASSERT(getType().getBasicType() == EbtUInt);
+            resultArray = new TConstantUnion[4];
+            float f[4];
+            gl::UnpackSnorm4x8(operandArray[0].getUConst(), f);
+            for (size_t i = 0; i < 4; ++i)
+            {
+                resultArray[i].setFConst(f[i]);
+            }
             break;
         }
 

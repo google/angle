@@ -1353,3 +1353,59 @@ TEST_F(ConstantFoldingExpressionTest, FoldFindMSBMinusOne)
     evaluateInt(intString);
     ASSERT_TRUE(constantFoundInAST(-1));
 }
+
+// Test that packUnorm4x8 is folded correctly for a vector of zeroes.
+TEST_F(ConstantFoldingExpressionTest, FoldPackUnorm4x8Zero)
+{
+    const std::string &intString = "packUnorm4x8(vec4(0.0))";
+    evaluateUint(intString);
+    ASSERT_TRUE(constantFoundInAST(0u));
+}
+
+// Test that packUnorm4x8 is folded correctly for a vector of ones.
+TEST_F(ConstantFoldingExpressionTest, FoldPackUnorm4x8One)
+{
+    const std::string &intString = "packUnorm4x8(vec4(1.0))";
+    evaluateUint(intString);
+    ASSERT_TRUE(constantFoundInAST(0xffffffffu));
+}
+
+// Test that packSnorm4x8 is folded correctly for a vector of zeroes.
+TEST_F(ConstantFoldingExpressionTest, FoldPackSnorm4x8Zero)
+{
+    const std::string &intString = "packSnorm4x8(vec4(0.0))";
+    evaluateUint(intString);
+    ASSERT_TRUE(constantFoundInAST(0u));
+}
+
+// Test that packSnorm4x8 is folded correctly for a vector of ones.
+TEST_F(ConstantFoldingExpressionTest, FoldPackSnorm4x8One)
+{
+    const std::string &intString = "packSnorm4x8(vec4(1.0))";
+    evaluateUint(intString);
+    ASSERT_TRUE(constantFoundInAST(0x7f7f7f7fu));
+}
+
+// Test that packSnorm4x8 is folded correctly for a vector of minus ones.
+TEST_F(ConstantFoldingExpressionTest, FoldPackSnorm4x8MinusOne)
+{
+    const std::string &intString = "packSnorm4x8(vec4(-1.0))";
+    evaluateUint(intString);
+    ASSERT_TRUE(constantFoundInAST(0x81818181u));
+}
+
+// Test that unpackSnorm4x8 is folded correctly when it needs to clamp the result.
+TEST_F(ConstantFoldingExpressionTest, FoldUnpackSnorm4x8Clamp)
+{
+    const std::string &floatString = "unpackSnorm4x8(0x00000080u).x";
+    evaluateFloat(floatString);
+    ASSERT_TRUE(constantFoundInAST(-1.0f));
+}
+
+// Test that unpackUnorm4x8 is folded correctly.
+TEST_F(ConstantFoldingExpressionTest, FoldUnpackUnorm4x8)
+{
+    const std::string &floatString = "unpackUnorm4x8(0x007bbeefu).z";
+    evaluateFloat(floatString);
+    ASSERT_TRUE(constantFoundInAST(123.0f / 255.0f));
+}

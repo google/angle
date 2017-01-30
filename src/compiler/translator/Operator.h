@@ -150,6 +150,11 @@ enum TOperator
     EOpUnpackUnorm2x16,
     EOpUnpackHalf2x16,
 
+    EOpPackUnorm4x8,
+    EOpPackSnorm4x8,
+    EOpUnpackUnorm4x8,
+    EOpUnpackSnorm4x8,
+
     EOpLength,
     EOpDistance,
     EOpDot,

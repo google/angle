@@ -210,6 +210,15 @@ const char *GetOperatorString(TOperator op)
         case EOpUnpackHalf2x16:
             return "unpackHalf2x16";
 
+        case EOpPackUnorm4x8:
+            return "packUnorm4x8";
+        case EOpPackSnorm4x8:
+            return "packSnorm4x8";
+        case EOpUnpackUnorm4x8:
+            return "unpackUnorm4x8";
+        case EOpUnpackSnorm4x8:
+            return "unpackSnorm4x8";
+
         case EOpLength:
             return "length";
         case EOpDistance:

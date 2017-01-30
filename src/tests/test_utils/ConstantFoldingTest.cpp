@@ -18,7 +18,7 @@ using namespace sh;
 void ConstantFoldingExpressionTest::evaluateFloat(const std::string &floatExpression)
 {
     std::stringstream shaderStream;
-    shaderStream << "#version 300 es\n"
+    shaderStream << "#version 310 es\n"
                     "precision mediump float;\n"
                     "out float my_FragColor;\n"
                     "void main()\n"

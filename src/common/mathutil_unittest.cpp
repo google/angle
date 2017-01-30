@@ -142,6 +142,56 @@ TEST(MathUtilTest, packAndUnpackHalf2x16)
     }
 }
 
+// Test the correctness of packUnorm4x8 and unpackUnorm4x8 functions.
+// For floats f1 to f4, unpackUnorm4x8(packUnorm4x8(f1, f2, f3, f4)) should be same as f1 to f4.
+TEST(MathUtilTest, packAndUnpackUnorm4x8)
+{
+    const float input[5][4] = {{0.0f, 0.0f, 0.0f, 0.0f},
+                               {1.0f, 1.0f, 1.0f, 1.0f},
+                               {-1.0f, 1.0f, -1.0f, 1.0f},
+                               {-1.0f, -1.0f, -1.0f, -1.0f},
+                               {64.0f / 255.0f, 128.0f / 255.0f, 32.0f / 255.0f, 16.0f / 255.0f}};
+
+    const float floatFaultTolerance = 0.005f;
+    float outputVals[4];
+
+    for (size_t i = 0; i < 5; i++)
+    {
+        UnpackUnorm4x8(PackUnorm4x8(input[i][0], input[i][1], input[i][2], input[i][3]),
+                       outputVals);
+        for (size_t j = 0; j < 4; j++)
+        {
+            float expected = input[i][j] < 0.0f ? 0.0f : input[i][j];
+            EXPECT_NEAR(expected, outputVals[j], floatFaultTolerance);
+        }
+    }
+}
+
+// Test the correctness of packSnorm4x8 and unpackSnorm4x8 functions.
+// For floats f1 to f4, unpackSnorm4x8(packSnorm4x8(f1, f2, f3, f4)) should be same as f1 to f4.
+TEST(MathUtilTest, packAndUnpackSnorm4x8)
+{
+    const float input[5][4] = {{0.0f, 0.0f, 0.0f, 0.0f},
+                               {1.0f, 1.0f, 1.0f, 1.0f},
+                               {-1.0f, 1.0f, -1.0f, 1.0f},
+                               {-1.0f, -1.0f, -1.0f, -1.0f},
+                               {64.0f / 127.0f, -8.0f / 127.0f, 32.0f / 127.0f, 16.0f / 127.0f}};
+
+    const float floatFaultTolerance = 0.01f;
+    float outputVals[4];
+
+    for (size_t i = 0; i < 5; i++)
+    {
+        UnpackSnorm4x8(PackSnorm4x8(input[i][0], input[i][1], input[i][2], input[i][3]),
+                       outputVals);
+        for (size_t j = 0; j < 4; j++)
+        {
+            float expected = input[i][j];
+            EXPECT_NEAR(expected, outputVals[j], floatFaultTolerance);
+        }
+    }
+}
+
 // Test the correctness of gl::isNaN function.
 TEST(MathUtilTest, isNaN)
 {

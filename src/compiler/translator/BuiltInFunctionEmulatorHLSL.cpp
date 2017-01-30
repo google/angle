@@ -297,23 +297,23 @@ void InitBuiltInFunctionEmulatorForHLSL(BuiltInFunctionEmulator *emu)
         "}\n");
 
     emu->addEmulatedFunction(EOpPackSnorm2x16, float2,
-                             "int webgl_toSnorm(in float x) {\n"
+                             "int webgl_toSnorm16(in float x) {\n"
                              "    return int(round(clamp(x, -1.0, 1.0) * 32767.0));\n"
                              "}\n"
                              "\n"
                              "uint webgl_packSnorm2x16_emu(in float2 v) {\n"
-                             "    int x = webgl_toSnorm(v.x);\n"
-                             "    int y = webgl_toSnorm(v.y);\n"
+                             "    int x = webgl_toSnorm16(v.x);\n"
+                             "    int y = webgl_toSnorm16(v.y);\n"
                              "    return (asuint(y) << 16) | (asuint(x) & 0xffffu);\n"
                              "}\n");
     emu->addEmulatedFunction(EOpPackUnorm2x16, float2,
-                             "uint webgl_toUnorm(in float x) {\n"
+                             "uint webgl_toUnorm16(in float x) {\n"
                              "    return uint(round(clamp(x, 0.0, 1.0) * 65535.0));\n"
                              "}\n"
                              "\n"
                              "uint webgl_packUnorm2x16_emu(in float2 v) {\n"
-                             "    uint x = webgl_toUnorm(v.x);\n"
-                             "    uint y = webgl_toUnorm(v.y);\n"
+                             "    uint x = webgl_toUnorm16(v.x);\n"
+                             "    uint y = webgl_toUnorm16(v.y);\n"
                              "    return (y << 16) | x;\n"
                              "}\n");
     emu->addEmulatedFunction(EOpPackHalf2x16, float2,
@@ -324,7 +324,7 @@ void InitBuiltInFunctionEmulatorForHLSL(BuiltInFunctionEmulator *emu)
                              "}\n");
 
     emu->addEmulatedFunction(EOpUnpackSnorm2x16, uint1,
-                             "float webgl_fromSnorm(in uint x) {\n"
+                             "float webgl_fromSnorm16(in uint x) {\n"
                              "    int xi = asint(x & 0x7fffu) - asint(x & 0x8000u);\n"
                              "    return clamp(float(xi) / 32767.0, -1.0, 1.0);\n"
                              "}\n"
@@ -332,23 +332,77 @@ void InitBuiltInFunctionEmulatorForHLSL(BuiltInFunctionEmulator *emu)
                              "float2 webgl_unpackSnorm2x16_emu(in uint u) {\n"
                              "    uint y = (u >> 16);\n"
                              "    uint x = u;\n"
-                             "    return float2(webgl_fromSnorm(x), webgl_fromSnorm(y));\n"
+                             "    return float2(webgl_fromSnorm16(x), webgl_fromSnorm16(y));\n"
                              "}\n");
     emu->addEmulatedFunction(EOpUnpackUnorm2x16, uint1,
-                             "float webgl_fromUnorm(in uint x) {\n"
+                             "float webgl_fromUnorm16(in uint x) {\n"
                              "    return float(x) / 65535.0;\n"
                              "}\n"
                              "\n"
                              "float2 webgl_unpackUnorm2x16_emu(in uint u) {\n"
                              "    uint y = (u >> 16);\n"
                              "    uint x = u & 0xffffu;\n"
-                             "    return float2(webgl_fromUnorm(x), webgl_fromUnorm(y));\n"
+                             "    return float2(webgl_fromUnorm16(x), webgl_fromUnorm16(y));\n"
                              "}\n");
     emu->addEmulatedFunction(EOpUnpackHalf2x16, uint1,
                              "float2 webgl_unpackHalf2x16_emu(in uint u) {\n"
                              "    uint y = (u >> 16);\n"
                              "    uint x = u & 0xffffu;\n"
                              "    return float2(f16tof32(x), f16tof32(y));\n"
+                             "}\n");
+
+    emu->addEmulatedFunction(EOpPackSnorm4x8, float4,
+                             "int webgl_toSnorm8(in float x) {\n"
+                             "    return int(round(clamp(x, -1.0, 1.0) * 127.0));\n"
+                             "}\n"
+                             "\n"
+                             "uint webgl_packSnorm4x8_emu(in float4 v) {\n"
+                             "    int x = webgl_toSnorm8(v.x);\n"
+                             "    int y = webgl_toSnorm8(v.y);\n"
+                             "    int z = webgl_toSnorm8(v.z);\n"
+                             "    int w = webgl_toSnorm8(v.w);\n"
+                             "    return ((asuint(w) & 0xffu) << 24) | ((asuint(z) & 0xffu) << 16) "
+                             "| ((asuint(y) & 0xffu) << 8) | (asuint(x) & 0xffu);\n"
+                             "}\n");
+    emu->addEmulatedFunction(EOpPackUnorm4x8, float4,
+                             "uint webgl_toUnorm8(in float x) {\n"
+                             "    return uint(round(clamp(x, 0.0, 1.0) * 255.0));\n"
+                             "}\n"
+                             "\n"
+                             "uint webgl_packUnorm4x8_emu(in float4 v) {\n"
+                             "    uint x = webgl_toUnorm8(v.x);\n"
+                             "    uint y = webgl_toUnorm8(v.y);\n"
+                             "    uint z = webgl_toUnorm8(v.z);\n"
+                             "    uint w = webgl_toUnorm8(v.w);\n"
+                             "    return (w << 24) | (z << 16) | (y << 8) | x;\n"
+                             "}\n");
+
+    emu->addEmulatedFunction(EOpUnpackSnorm4x8, uint1,
+                             "float webgl_fromSnorm8(in uint x) {\n"
+                             "    int xi = asint(x & 0x7fu) - asint(x & 0x80u);\n"
+                             "    return clamp(float(xi) / 127.0, -1.0, 1.0);\n"
+                             "}\n"
+                             "\n"
+                             "float4 webgl_unpackSnorm4x8_emu(in uint u) {\n"
+                             "    uint w = (u >> 24);\n"
+                             "    uint z = (u >> 16);\n"
+                             "    uint y = (u >> 8);\n"
+                             "    uint x = u;\n"
+                             "    return float4(webgl_fromSnorm8(x), webgl_fromSnorm8(y), "
+                             "webgl_fromSnorm8(z), webgl_fromSnorm8(w));\n"
+                             "}\n");
+    emu->addEmulatedFunction(EOpUnpackUnorm4x8, uint1,
+                             "float webgl_fromUnorm8(in uint x) {\n"
+                             "    return float(x) / 255.0;\n"
+                             "}\n"
+                             "\n"
+                             "float4 webgl_unpackUnorm4x8_emu(in uint u) {\n"
+                             "    uint w = (u >> 24) & 0xffu;\n"
+                             "    uint z = (u >> 16) & 0xffu;\n"
+                             "    uint y = (u >> 8) & 0xffu;\n"
+                             "    uint x = u & 0xffu;\n"
+                             "    return float4(webgl_fromUnorm8(x), webgl_fromUnorm8(y), "
+                             "webgl_fromUnorm8(z), webgl_fromUnorm8(w));\n"
                              "}\n");
 
     // The matrix resulting from outer product needs to be transposed

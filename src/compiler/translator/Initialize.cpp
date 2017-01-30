@@ -128,6 +128,11 @@ void InsertBuiltInFunctions(sh::GLenum type,
     symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpUnpackUnorm2x16, float2, uint1);
     symbolTable.insertBuiltInOp(ESSL3_BUILTINS, EOpUnpackHalf2x16, float2, uint1);
 
+    symbolTable.insertBuiltInOp(ESSL3_1_BUILTINS, EOpPackUnorm4x8, uint1, float4);
+    symbolTable.insertBuiltInOp(ESSL3_1_BUILTINS, EOpPackSnorm4x8, uint1, float4);
+    symbolTable.insertBuiltInOp(ESSL3_1_BUILTINS, EOpUnpackUnorm4x8, float4, uint1);
+    symbolTable.insertBuiltInOp(ESSL3_1_BUILTINS, EOpUnpackSnorm4x8, float4, uint1);
+
     //
     // Geometric Functions.
     //
