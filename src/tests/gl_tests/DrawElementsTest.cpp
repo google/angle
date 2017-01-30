@@ -8,6 +8,7 @@
 //
 
 #include "test_utils/ANGLETest.h"
+#include "test_utils/gl_raii.h"
 
 using namespace angle;
 
@@ -62,6 +63,47 @@ class DrawElementsTest : public ANGLETest
     std::vector<GLuint> mVertexBuffers;
     GLuint mProgram;
 };
+
+// Test no error is generated when using client-side arrays, indices = nullptr and count = 0
+TEST_P(DrawElementsTest, ClientSideNullptrArrayZeroCount)
+{
+    const std::string &vert =
+        "attribute vec3 a_pos;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(a_pos, 1.0);\n"
+        "}\n";
+
+    const std::string &frag =
+        "precision highp float;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vec4(1.0);\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, vert, frag);
+
+    GLint posLocation = glGetAttribLocation(program.get(), "a_pos");
+    ASSERT_NE(-1, posLocation);
+    glUseProgram(program.get());
+
+    const auto &vertices = GetQuadVertices();
+
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.get());
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * vertices.size(), vertices.data(),
+                 GL_STATIC_DRAW);
+
+    glVertexAttribPointer(posLocation, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(posLocation);
+    ASSERT_GL_NO_ERROR();
+
+    glDrawElements(GL_TRIANGLES, 1, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glDrawElements(GL_TRIANGLES, 0, GL_UNSIGNED_BYTE, nullptr);
+    ASSERT_GL_NO_ERROR();
+}
 
 // Test a state desync that can occur when using a streaming index buffer in GL in concert with
 // deleting the applied index buffer.

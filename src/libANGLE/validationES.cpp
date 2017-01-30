@@ -3463,16 +3463,38 @@ bool ValidateDrawElements(ValidationContext *context,
     const gl::VertexArray *vao     = state.getVertexArray();
     gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
 
+    GLuint typeBytes = gl::GetTypeInfo(type).bytes;
+
+    if (context->getExtensions().webglCompatibility)
+    {
+        ASSERT(isPow2(typeBytes) && typeBytes > 0);
+        if ((reinterpret_cast<uintptr_t>(indices) & static_cast<uintptr_t>(typeBytes - 1)) != 0)
+        {
+            // [WebGL 1.0] Section 6.4 Buffer Offset and Stride Requirements
+            // The offset arguments to drawElements and [...], must be a multiple of the size of the
+            // data type passed to the call, or an INVALID_OPERATION error is generated.
+            context->handleError(Error(GL_INVALID_OPERATION,
+                                       "indices must be a multiple of the element type size."));
+            return false;
+        }
+        if (!elementArrayBuffer && count > 0)
+        {
+            // [WebGL 1.0] Section 6.2 No Client Side Arrays
+            // If drawElements is called with a count greater than zero, and no WebGLBuffer is bound
+            // to the ELEMENT_ARRAY_BUFFER binding point, an INVALID_OPERATION error is generated.
+            context->handleError(Error(GL_INVALID_OPERATION,
+                                       "There is no element array buffer bound and count > 0."));
+            return false;
+        }
+    }
+
     if (elementArrayBuffer)
     {
-        const gl::Type &typeInfo = gl::GetTypeInfo(type);
-
         GLint64 offset = reinterpret_cast<GLint64>(indices);
-        GLint64 byteCount =
-            static_cast<GLint64>(typeInfo.bytes) * static_cast<GLint64>(count) + offset;
+        GLint64 byteCount = static_cast<GLint64>(typeBytes) * static_cast<GLint64>(count) + offset;
 
         // check for integer overflows
-        if (static_cast<GLuint>(count) > (std::numeric_limits<GLuint>::max() / typeInfo.bytes) ||
+        if (static_cast<GLuint>(count) > (std::numeric_limits<GLuint>::max() / typeBytes) ||
             byteCount > static_cast<GLint64>(std::numeric_limits<GLuint>::max()))
         {
             context->handleError(Error(GL_OUT_OF_MEMORY));
@@ -3486,16 +3508,7 @@ bool ValidateDrawElements(ValidationContext *context,
             return false;
         }
     }
-    else if (context->getExtensions().webglCompatibility && count > 0)
-    {
-        // [WebGL 1.0] Section 6.2 No Client Side Arrays
-        // If drawElements is called with a count greater than zero, and no WebGLBuffer is bound
-        // to the ELEMENT_ARRAY_BUFFER binding point, an INVALID_OPERATION error is generated.
-        context->handleError(
-            Error(GL_INVALID_OPERATION, "There is no element array buffer bound and count > 0."));
-        return false;
-    }
-    else if (!indices)
+    else if (!indices && count > 0)
     {
         // This is an application error that would normally result in a crash,
         // but we catch it and return an error
