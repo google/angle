@@ -253,6 +253,7 @@ class Blit11 : angle::NonCopyable
 
     void clearShaderMap();
     void releaseResolveDepthStencilResources();
+    gl::Error initResolveDepthOnly(const d3d11::Format &format, const gl::Extents &extents);
     gl::Error initResolveDepthStencil(const gl::Extents &extents);
 
     Renderer11 *mRenderer;
@@ -287,6 +288,8 @@ class Blit11 : angle::NonCopyable
     angle::ComPtr<ID3D11ShaderResourceView> mStencilSRV;
     TextureHelper11 mResolvedDepthStencil;
     angle::ComPtr<ID3D11RenderTargetView> mResolvedDepthStencilRTView;
+    TextureHelper11 mResolvedDepth;
+    angle::ComPtr<ID3D11DepthStencilView> mResolvedDepthDSView;
 };
 
 }  // namespace rx
