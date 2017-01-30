@@ -48,6 +48,52 @@
     },
     {
       "key": {
+        "uuid": "961facdf_a3dd3ac7",
+        "filename": "src/libANGLE/ContextState.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-30T18:01:26Z",
+      "side": 1,
+      "message": "Yea, me too.. I usually don\u0027t add them unless the compiler complains because I don\u0027t fully understand when they\u0027re needed.",
+      "range": {
+        "startLine": 24,
+        "startChar": 67,
+        "endLine": 24,
+        "endChar": 85
+      },
+      "revId": "7142994ec48ae2249fcb43dfb9bac597944ea192",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a7563ff9_1bf25849",
+        "filename": "src/libANGLE/ContextState.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-30T18:01:26Z",
+      "side": 1,
+      "message": "Done",
+      "range": {
+        "startLine": 24,
+        "startChar": 3,
+        "endLine": 24,
+        "endChar": 27
+      },
+      "revId": "7142994ec48ae2249fcb43dfb9bac597944ea192",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6854da0e_ee9ff74c",
         "filename": "src/libANGLE/ResourceManager.cpp",
         "patchSetId": 5
@@ -71,6 +117,29 @@
     },
     {
       "key": {
+        "uuid": "c2ac2e43_ffb24d69",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-30T18:01:26Z",
+      "side": 1,
+      "message": "I wanted to avoid having a template method on the class that just wouldn\u0027t compile if it was instantiated.  This felt like a more explicit approach.",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 13
+      },
+      "revId": "7142994ec48ae2249fcb43dfb9bac597944ea192",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6854da0e_718aca01",
         "filename": "src/libANGLE/ResourceManager.cpp",
         "patchSetId": 5
@@ -82,6 +151,29 @@
       "writtenOn": "2017-01-21T01:11:23Z",
       "side": 1,
       "message": "this particular guy (DeletObject) can be simplified as a template class member that calls release, as every instantiation calls this member, it\u0027s used in every template, and it\u0027s the only place you use a lambda. I tested this locally. I know it gives up on some future flexiblity for object types that don\u0027t use a release() method but I would appreciate the code simplification. You could even make it a header template and change all the deleteBuffer()/deleteTexture()/deleteRenderbuffer() etc to just deleteObject.",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 63,
+        "endChar": 10
+      },
+      "revId": "7142994ec48ae2249fcb43dfb9bac597944ea192",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e334041d_0c3df707",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-30T18:01:26Z",
+      "side": 1,
+      "message": "It was really hard to find a common function for deletion.  Most object types so far use the release method but already the PathManager and ShaderProgramManager classes use custom deleters.  When I get to them, Framebuffer, TransformFeedback and Query managers will too because they call delete.",
       "range": {
         "startLine": 46,
         "startChar": 0,
