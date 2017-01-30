@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "081b1b88_af71a041",
+        "filename": "src/image_util/loadimage.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-30T22:10:54Z",
+      "side": 1,
+      "message": "Would it be viable to just put this line in common/platform.h next to the sse includes?",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 26
+      },
+      "revId": "a697c6f340f26e535b2dc02d3d44ee9c73bc6f42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
