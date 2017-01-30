@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a428e57_f360d2dc",
+        "filename": "src/compiler/translator/EmulatePrecision.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 642,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-30T18:30:29Z",
+      "side": 1,
+      "message": "nit: Grammar is weird on \"this relies on that calculations producing\"",
+      "revId": "32cc646e12017c4e804a56899ebe40ecfa49356e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
