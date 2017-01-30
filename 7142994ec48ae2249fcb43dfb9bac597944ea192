@@ -183,6 +183,29 @@
       "revId": "7142994ec48ae2249fcb43dfb9bac597944ea192",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e9c8ced_373fe2ee",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-30T18:19:22Z",
+      "side": 1,
+      "message": "I merged part of the deletion logic into the TypedResourceManager class.  It helps pipeline the parameters a bit better.",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 63,
+        "endChar": 10
+      },
+      "revId": "7142994ec48ae2249fcb43dfb9bac597944ea192",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
