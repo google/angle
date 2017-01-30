@@ -1,0 +1,182 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f7f56223_a2e2b83c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 13
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-30T17:55:55Z",
+      "side": 1,
+      "message": "nit: can you describe what this extension is/ whats it\u0027s for?",
+      "revId": "7665c67ab3b0a22d2091ec906f49d6a32f7ce122",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0fad0ad_1497ccb1",
+        "filename": "src/tests/deqp_support/deqp_egl_test_expectations.txt",
+        "patchSetId": 13
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-30T17:55:55Z",
+      "side": 1,
+      "message": "just wondering, do these tests go through every config? or are they somehow getting a floating point config by default?",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 53
+      },
+      "revId": "7665c67ab3b0a22d2091ec906f49d6a32f7ce122",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a48c9f9a_97642aa2",
+        "filename": "src/tests/gl_tests/FloatingPointSurfaceTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-30T17:55:55Z",
+      "side": 1,
+      "message": "micro-nit: 2017",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 17
+      },
+      "revId": "7665c67ab3b0a22d2091ec906f49d6a32f7ce122",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c65e2152_f85ce899",
+        "filename": "src/tests/gl_tests/FloatingPointSurfaceTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-30T17:55:55Z",
+      "side": 1,
+      "message": "top level comment",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 2
+      },
+      "revId": "7665c67ab3b0a22d2091ec906f49d6a32f7ce122",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e88ca1cf_053923bf",
+        "filename": "src/tests/gl_tests/FloatingPointSurfaceTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-30T17:55:55Z",
+      "side": 1,
+      "message": "override",
+      "range": {
+        "startLine": 25,
+        "startChar": 4,
+        "endLine": 25,
+        "endChar": 11
+      },
+      "revId": "7665c67ab3b0a22d2091ec906f49d6a32f7ce122",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a78f235b_c8564db5",
+        "filename": "src/tests/gl_tests/FloatingPointSurfaceTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-30T17:55:55Z",
+      "side": 1,
+      "message": "ASSERT_NE(0u, mProgram);",
+      "range": {
+        "startLine": 45,
+        "startChar": 8,
+        "endLine": 48,
+        "endChar": 9
+      },
+      "revId": "7665c67ab3b0a22d2091ec906f49d6a32f7ce122",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a2ff554d_d13b8a96",
+        "filename": "src/tests/gl_tests/FloatingPointSurfaceTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-30T17:55:55Z",
+      "side": 1,
+      "message": "override",
+      "range": {
+        "startLine": 53,
+        "startChar": 4,
+        "endLine": 53,
+        "endChar": 11
+      },
+      "revId": "7665c67ab3b0a22d2091ec906f49d6a32f7ce122",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "20091278_4d72f854",
+        "filename": "src/tests/gl_tests/FloatingPointSurfaceTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-30T17:55:55Z",
+      "side": 1,
+      "message": "what happens in this test if the extension is not present? Will it fail?",
+      "range": {
+        "startLine": 86,
+        "startChar": 23,
+        "endLine": 86,
+        "endChar": 32
+      },
+      "revId": "7665c67ab3b0a22d2091ec906f49d6a32f7ce122",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
