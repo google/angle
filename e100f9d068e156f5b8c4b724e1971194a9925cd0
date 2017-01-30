@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a47f6bd3_d79996ee",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 39
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-30T20:30:15Z",
+      "side": 1,
+      "message": "From what I understand, this is because ProgramVK needs access to RendererVk for Glslang. Can\u0027t ContextVk give itself as a parameter to the constructor in ContextVk::createProgram?",
+      "revId": "e100f9d068e156f5b8c4b724e1971194a9925cd0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a9ba9768_b8617205",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
+        "patchSetId": 39
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-30T20:30:15Z",
+      "side": 1,
+      "message": "nit: the std::array seems unnecessary, see [1]",
+      "revId": "e100f9d068e156f5b8c4b724e1971194a9925cd0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1767d0a3_eaf2619d",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.cpp",
+        "patchSetId": 39
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-30T20:30:15Z",
+      "side": 1,
+      "message": "[1]: use vertexSource.c_str(), vertexSource.size() instead of the arrays. Same for fragmentShader below.",
+      "revId": "e100f9d068e156f5b8c4b724e1971194a9925cd0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c5ec7a5_7031eeab",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 39
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-30T20:30:15Z",
+      "side": 1,
+      "message": "nit: shouldn\u0027t this go in the config, or the config be folded inside :glslang?",
+      "range": {
+        "startLine": 325,
+        "startChar": 0,
+        "endLine": 332,
+        "endChar": 5
+      },
+      "revId": "e100f9d068e156f5b8c4b724e1971194a9925cd0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
