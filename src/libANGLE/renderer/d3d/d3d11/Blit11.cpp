@@ -2129,6 +2129,8 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(RenderTarget11 *depthS
         {
             mStencilSRV.Reset();
         }
+
+        SafeRelease(priorResource);
     }
 
     if (mStencilSRV == nullptr)

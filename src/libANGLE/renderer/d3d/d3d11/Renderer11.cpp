@@ -4018,9 +4018,8 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRectIn,
     RenderTarget11 *drawRenderTarget11 = GetAs<RenderTarget11>(drawRenderTarget);
     if (!drawRenderTarget11)
     {
-        return gl::Error(
-            GL_OUT_OF_MEMORY,
-            "Failed to retrieve the internal draw render target from the draw framebuffer.");
+        return gl::OutOfMemory()
+               << "Failed to retrieve the internal draw render target from the draw framebuffer.";
     }
 
     TextureHelper11 drawTexture = TextureHelper11::MakeAndReference(
@@ -4032,9 +4031,8 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRectIn,
     RenderTarget11 *readRenderTarget11 = GetAs<RenderTarget11>(readRenderTarget);
     if (!readRenderTarget11)
     {
-        return gl::Error(
-            GL_OUT_OF_MEMORY,
-            "Failed to retrieve the internal read render target from the read framebuffer.");
+        return gl::OutOfMemory()
+               << "Failed to retrieve the internal read render target from the read framebuffer.";
     }
 
     TextureHelper11 readTexture;
@@ -4043,8 +4041,8 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRectIn,
 
     if (readRenderTarget->getSamples() > 1)
     {
-        auto readRT11 = GetAs<RenderTarget11>(readRenderTarget);
-        ANGLE_TRY_RESULT(resolveMultisampledTexture(readRT11, depthBlit, stencilBlit), readTexture);
+        ANGLE_TRY_RESULT(resolveMultisampledTexture(readRenderTarget11, depthBlit, stencilBlit),
+                         readTexture);
 
         if (!stencilBlit)
         {
@@ -4060,9 +4058,9 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRectIn,
                 mDevice->CreateShaderResourceView(readTexture.getResource(), &viewDesc, &readSRV);
             if (FAILED(hresult))
             {
-                return gl::Error(
-                    GL_OUT_OF_MEMORY,
-                    "Renderer11::blitRenderbufferRect: Failed to create temporary SRV.");
+                return gl::OutOfMemory()
+                       << "Renderer11::blitRenderbufferRect: Failed to create temporary SRV, "
+                       << hresult;
             }
         }
     }
