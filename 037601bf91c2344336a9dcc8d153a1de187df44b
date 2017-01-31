@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "43dae863_ea45fbb8",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3471,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-31T15:16:28Z",
+      "side": 1,
+      "message": "this might generate a cast warning with uintptr_t, since GLuint could be 32-bits. better static cast it before ANDing.",
+      "range": {
+        "startLine": 3471,
+        "startChar": 52,
+        "endLine": 3471,
+        "endChar": 67
+      },
+      "revId": "037601bf91c2344336a9dcc8d153a1de187df44b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2f99f5b8_84ebfebc",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3518,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-31T15:16:28Z",
+      "side": 1,
+      "message": "we should amend this and possibly merge it with the above check. it\u0027s actually not correct, since it doesn\u0027t check for count \u003e 0. can you add a test for count \u003d\u003d 0?",
+      "range": {
+        "startLine": 3511,
+        "startChar": 0,
+        "endLine": 3518,
+        "endChar": 5
+      },
+      "revId": "037601bf91c2344336a9dcc8d153a1de187df44b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
