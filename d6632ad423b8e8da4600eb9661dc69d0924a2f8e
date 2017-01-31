@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "73b553a1_90dde152",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-31T17:05:51Z",
+      "side": 1,
+      "message": "you can revert the name back to mFloatClearShader for this guy",
+      "range": {
+        "startLine": 127,
+        "startChar": 6,
+        "endLine": 127,
+        "endChar": 33
+      },
+      "revId": "d6632ad423b8e8da4600eb9661dc69d0924a2f8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f93e59e_877951b5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Clear11.hlsl",
+        "patchSetId": 14
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-31T17:05:51Z",
+      "side": 1,
+      "message": "// for these",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 3
+      },
+      "revId": "d6632ad423b8e8da4600eb9661dc69d0924a2f8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "35dc75e9_df1c34da",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Clear11.hlsl",
+        "patchSetId": 14
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-31T17:05:51Z",
+      "side": 1,
+      "message": "nit: //",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 3
+      },
+      "revId": "d6632ad423b8e8da4600eb9661dc69d0924a2f8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "06ab33cc_173f8510",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Clear11.hlsl",
+        "patchSetId": 14
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-31T17:05:51Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 101,
+        "startChar": 0,
+        "endLine": 101,
+        "endChar": 3
+      },
+      "revId": "d6632ad423b8e8da4600eb9661dc69d0924a2f8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "38e80062_323607dc",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/generate_shaders.bat",
+        "patchSetId": 14
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-31T17:05:51Z",
+      "side": 1,
+      "message": "if we\u0027re only using one clear shader style for float now, can we revert to the old naming scheme?",
+      "range": {
+        "startLine": 37,
+        "startChar": 41,
+        "endLine": 41,
+        "endChar": 63
+      },
+      "revId": "d6632ad423b8e8da4600eb9661dc69d0924a2f8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
