@@ -25,6 +25,23 @@
     },
     {
       "key": {
+        "uuid": "fcdef489_2a1c5c30",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3471,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-31T16:13:48Z",
+      "side": 1,
+      "message": "Done",
+      "revId": "037601bf91c2344336a9dcc8d153a1de187df44b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2f99f5b8_84ebfebc",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 1
@@ -42,6 +59,23 @@
         "endLine": 3518,
         "endChar": 5
       },
+      "revId": "037601bf91c2344336a9dcc8d153a1de187df44b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ad725851_8622790a",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3518,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-31T16:13:48Z",
+      "side": 1,
+      "message": "I\u0027m not sure with which check it could be merged. Added count \u003e 0 and a test for the new validation.",
       "revId": "037601bf91c2344336a9dcc8d153a1de187df44b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
