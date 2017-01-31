@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eb7678e2_39843ff2",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-31T17:57:02Z",
+      "side": 1,
+      "message": "We may want a new impl method for this since some backends may do different things if they know it\u0027s for a surfaceless framebuffer.",
+      "range": {
+        "startLine": 310,
+        "startChar": 12,
+        "endLine": 310,
+        "endChar": 46
+      },
+      "revId": "1c5cc006d855f8c2b15a2d1a62c1cf538778e487",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
