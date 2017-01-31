@@ -48,6 +48,29 @@
     },
     {
       "key": {
+        "uuid": "95ae6b96_cdfbf425",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Clear11.hlsl",
+        "patchSetId": 14
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-01-31T18:36:59Z",
+      "side": 1,
+      "message": "Done",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 3
+      },
+      "revId": "d6632ad423b8e8da4600eb9661dc69d0924a2f8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "35dc75e9_df1c34da",
         "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Clear11.hlsl",
         "patchSetId": 14
@@ -71,6 +94,29 @@
     },
     {
       "key": {
+        "uuid": "e4efd860_bbc63d67",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Clear11.hlsl",
+        "patchSetId": 14
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-01-31T18:36:59Z",
+      "side": 1,
+      "message": "Done",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 3
+      },
+      "revId": "d6632ad423b8e8da4600eb9661dc69d0924a2f8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "06ab33cc_173f8510",
         "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Clear11.hlsl",
         "patchSetId": 14
@@ -82,6 +128,29 @@
       "writtenOn": "2017-01-31T17:05:51Z",
       "side": 1,
       "message": "same",
+      "range": {
+        "startLine": 101,
+        "startChar": 0,
+        "endLine": 101,
+        "endChar": 3
+      },
+      "revId": "d6632ad423b8e8da4600eb9661dc69d0924a2f8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "12b8cfa3_9d552804",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Clear11.hlsl",
+        "patchSetId": 14
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-01-31T18:36:59Z",
+      "side": 1,
+      "message": "Done",
       "range": {
         "startLine": 101,
         "startChar": 0,
