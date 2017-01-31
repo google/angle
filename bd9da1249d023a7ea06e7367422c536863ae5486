@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8670edcd_a7f67e3e",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.h",
+        "patchSetId": 42
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-31T20:57:48Z",
+      "side": 1,
+      "message": "I\u0027d say just make a non-copyable raii wrapper to store in RendererVK.",
+      "range": {
+        "startLine": 21,
+        "startChar": 4,
+        "endLine": 24,
+        "endChar": 35
+      },
+      "revId": "bd9da1249d023a7ea06e7367422c536863ae5486",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
