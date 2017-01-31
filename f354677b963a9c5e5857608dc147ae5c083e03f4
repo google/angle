@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "23b6cc1c_e3f78089",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1073,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-31T16:57:09Z",
+      "side": 1,
+      "message": "oopsie",
+      "range": {
+        "startLine": 1073,
+        "startChar": 0,
+        "endLine": 1073,
+        "endChar": 7
+      },
+      "revId": "f354677b963a9c5e5857608dc147ae5c083e03f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fb9d6685_0f6bdafc",
+        "filename": "src/libANGLE/renderer/gl/DisplayGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-31T16:57:09Z",
+      "side": 1,
+      "message": "I don\u0027t think you should expose the extensions in GL / EGL if you can\u0027t support this on Windows/Android/etc.",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 109,
+        "endChar": 26
+      },
+      "revId": "f354677b963a9c5e5857608dc147ae5c083e03f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
