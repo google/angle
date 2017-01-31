@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "f6e047cc_73647b1e",
+        "filename": "src/libANGLE/renderer/gl/DisplayGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-31T18:09:24Z",
+      "side": 1,
+      "message": "Does mCurrentDrawSurface need to be set to null?",
+      "range": {
+        "startLine": 102,
+        "startChar": 8,
+        "endLine": 102,
+        "endChar": 47
+      },
+      "revId": "f354677b963a9c5e5857608dc147ae5c083e03f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fb9d6685_0f6bdafc",
         "filename": "src/libANGLE/renderer/gl/DisplayGL.cpp",
         "patchSetId": 5
@@ -64,6 +87,29 @@
         "startChar": 0,
         "endLine": 109,
         "endChar": 26
+      },
+      "revId": "f354677b963a9c5e5857608dc147ae5c083e03f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ebf55583_ebb53542",
+        "filename": "src/libANGLE/renderer/gl/DisplayGL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-01-31T18:09:24Z",
+      "side": 1,
+      "message": "So far this is only called by the makeCurrent function.  Should it be made private?",
+      "range": {
+        "startLine": 47,
+        "startChar": 4,
+        "endLine": 47,
+        "endChar": 68
       },
       "revId": "f354677b963a9c5e5857608dc147ae5c083e03f4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
