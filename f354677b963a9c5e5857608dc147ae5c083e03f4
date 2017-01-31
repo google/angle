@@ -45,6 +45,29 @@
       "revId": "f354677b963a9c5e5857608dc147ae5c083e03f4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2d0a9b48_228fbb9b",
+        "filename": "src/libANGLE/renderer/gl/DisplayGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-31T17:00:15Z",
+      "side": 1,
+      "message": "Nevermind, I see you handle it on the EGL side somewhere else. I\u0027m not sure on exposing the GL extension though if EGL doesn\u0027t support it.",
+      "range": {
+        "startLine": 108,
+        "startChar": 0,
+        "endLine": 109,
+        "endChar": 26
+      },
+      "revId": "f354677b963a9c5e5857608dc147ae5c083e03f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
