@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7249fda1_a3f39985",
+        "filename": "src/tests/egl_tests/EGLSurfacelessContextTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-31T17:02:28Z",
+      "side": 1,
+      "message": "nit: ASSERT_EGL_TRUE (also a few others in this file)",
+      "range": {
+        "startLine": 49,
+        "startChar": 8,
+        "endLine": 49,
+        "endChar": 19
+      },
+      "revId": "8f98856e5c0c2ab9756cc921a1310929f0d4e0ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6b5f27d0_0afbf06a",
+        "filename": "src/tests/egl_tests/EGLSurfacelessContextTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-31T17:02:28Z",
+      "side": 1,
+      "message": "nit: const auto \u0026?",
+      "range": {
+        "startLine": 53,
+        "startChar": 13,
+        "endLine": 53,
+        "endChar": 17
+      },
+      "revId": "8f98856e5c0c2ab9756cc921a1310929f0d4e0ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e2928878_3ca198c4",
+        "filename": "src/tests/egl_tests/EGLSurfacelessContextTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-01-31T17:02:28Z",
+      "side": 1,
+      "message": "nit: expected, actual.",
+      "range": {
+        "startLine": 63,
+        "startChar": 8,
+        "endLine": 63,
+        "endChar": 17
+      },
+      "revId": "8f98856e5c0c2ab9756cc921a1310929f0d4e0ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
