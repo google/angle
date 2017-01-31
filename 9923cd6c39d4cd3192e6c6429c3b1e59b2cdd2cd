@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "31dcf082_165b6b61",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-01-31T02:54:22Z",
+      "side": 1,
+      "message": "nit: \"Fix comment introduced in \u003chash\u003e\"\nBUG\u003d\u003csame as old commit\u003e",
+      "revId": "9923cd6c39d4cd3192e6c6429c3b1e59b2cdd2cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
