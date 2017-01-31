@@ -23,17 +23,29 @@ vulkan_gypi =
                 "scope",
                 [ "vulkan.gypi" ])
 
+# Subdirectory to place data files (e.g. layer JSON files).
+data_dir = "angledata"
+
+vulkan_gen_json_files_outputs = [
+  "$root_out_dir/$data_dir/VkLayer_core_validation.json",
+  "$root_out_dir/$data_dir/VkLayer_image.json",
+  "$root_out_dir/$data_dir/VkLayer_object_tracker.json",
+  "$root_out_dir/$data_dir/VkLayer_parameter_validation.json",
+  "$root_out_dir/$data_dir/VkLayer_swapchain.json",
+  "$root_out_dir/$data_dir/VkLayer_threading.json",
+  "$root_out_dir/$data_dir/VkLayer_unique_objects.json",
+]
+
 # Vulkan loader
 # -------------
 
 vulkan_gen_dir = "$target_gen_dir/angle/vulkan"
 raw_vulkan_gen_dir = rebase_path(vulkan_gen_dir)
-relative_vulkan_gen_dir = rebase_path(vulkan_gen_dir, root_build_dir)
 
 config("vulkan_loader_config") {
   include_dirs = rebase_path(vulkan_gypi.vulkan_loader_include_dirs, ".", "src")
   defines = [
-    "LAYERS_SOURCE_PATH=\"$relative_vulkan_gen_dir/json\"",
+    "LAYERS_SOURCE_PATH=\"$data_dir\"",
     "DEFAULT_VK_LAYERS_PATH=\".\"",
     "API_NAME=\"Vulkan\"",
   ]
@@ -196,12 +208,11 @@ action("vulkan_gen_json_files") {
       rebase_path(vulkan_gypi.vulkan_gen_json_files_sources_win, ".", "src")
 
   # The layer JSON files are part of the necessary data deps.
-  data = rebase_path(vulkan_gypi.vulkan_gen_json_files_sources_win, ".", "src")
-  outputs = vulkan_gypi.vulkan_gen_json_files_outputs
+  outputs = vulkan_gen_json_files_outputs
+  data = vulkan_gen_json_files_outputs
   args = [
     "$raw_vulkan_layers_dir/layers/windows",
-    "$raw_vulkan_gen_dir/json",
-    rebase_path(root_build_dir),
+    rebase_path("$root_out_dir/$data_dir"),
   ]
 }
 

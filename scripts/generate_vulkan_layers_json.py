@@ -10,7 +10,7 @@
 
 import os, sys, json, glob
 
-if len(sys.argv) < 3:
+if len(sys.argv) != 3:
     print("Usage: " + sys.argv[0] + " <source_dir> <target_dir>")
     sys.exit(1)
 
