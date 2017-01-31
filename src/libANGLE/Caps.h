@@ -154,14 +154,14 @@ struct Extensions
     bool textureRG;
 
     // GL_EXT_texture_compression_dxt1, GL_ANGLE_texture_compression_dxt3 and GL_ANGLE_texture_compression_dxt5
-    // Implies that TextureCaps for GL_COMPRESSED_RGB_S3TC_DXT1_EXT, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT
+    // Implies that TextureCaps exist for GL_COMPRESSED_RGB_S3TC_DXT1_EXT, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT
     // GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE and GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE
     bool textureCompressionDXT1;
     bool textureCompressionDXT3;
     bool textureCompressionDXT5;
 
     // GL_EXT_texture_compression_s3tc_srgb
-    // Implies that TextureCaps for GL_COMPRESSED_SRGB_S3TC_DXT1_EXT,
+    // Implies that TextureCaps exist for GL_COMPRESSED_SRGB_S3TC_DXT1_EXT,
     // GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT, GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT3_EXT, and
     // GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT5_EXT
     bool textureCompressionS3TCsRGB;
