@@ -3456,7 +3456,7 @@ bool ValidateDrawElements(ValidationContext *context,
     // Check for mapped buffers
     if (state.hasMappedBuffer(GL_ELEMENT_ARRAY_BUFFER))
     {
-        context->handleError(Error(GL_INVALID_OPERATION));
+        context->handleError(Error(GL_INVALID_OPERATION, "Index buffer is mapped."));
         return false;
     }
 
@@ -3488,33 +3488,38 @@ bool ValidateDrawElements(ValidationContext *context,
         }
     }
 
-    if (elementArrayBuffer)
+    if (count > 0)
     {
-        GLint64 offset = reinterpret_cast<GLint64>(indices);
-        GLint64 byteCount = static_cast<GLint64>(typeBytes) * static_cast<GLint64>(count) + offset;
-
-        // check for integer overflows
-        if (static_cast<GLuint>(count) > (std::numeric_limits<GLuint>::max() / typeBytes) ||
-            byteCount > static_cast<GLint64>(std::numeric_limits<GLuint>::max()))
+        if (elementArrayBuffer)
         {
-            context->handleError(Error(GL_OUT_OF_MEMORY));
+            GLint64 offset = reinterpret_cast<GLint64>(indices);
+            GLint64 byteCount =
+                static_cast<GLint64>(typeBytes) * static_cast<GLint64>(count) + offset;
+
+            // check for integer overflows
+            if (static_cast<GLuint>(count) > (std::numeric_limits<GLuint>::max() / typeBytes) ||
+                byteCount > static_cast<GLint64>(std::numeric_limits<GLuint>::max()))
+            {
+                context->handleError(Error(GL_OUT_OF_MEMORY, "Integer overflow."));
+                return false;
+            }
+
+            // Check for reading past the end of the bound buffer object
+            if (byteCount > elementArrayBuffer->getSize())
+            {
+                context->handleError(
+                    Error(GL_INVALID_OPERATION, "Index buffer is not big enough for the draw."));
+                return false;
+            }
+        }
+        else if (!indices)
+        {
+            // This is an application error that would normally result in a crash,
+            // but we catch it and return an error
+            context->handleError(
+                Error(GL_INVALID_OPERATION, "No element array buffer and no pointer."));
             return false;
         }
-
-        // Check for reading past the end of the bound buffer object
-        if (byteCount > elementArrayBuffer->getSize())
-        {
-            context->handleError(Error(GL_INVALID_OPERATION));
-            return false;
-        }
-    }
-    else if (!indices && count > 0)
-    {
-        // This is an application error that would normally result in a crash,
-        // but we catch it and return an error
-        context->handleError(
-            Error(GL_INVALID_OPERATION, "No element array buffer and no pointer."));
-        return false;
     }
 
     if (!ValidateDrawBase(context, mode, count))

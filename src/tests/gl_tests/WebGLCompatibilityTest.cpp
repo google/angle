@@ -361,37 +361,56 @@ TEST_P(WebGLCompatibilityTest, DrawArraysBufferOutOfBoundsNonInstanced)
     ASSERT_GL_NO_ERROR();
 }
 
-// Tests that NPOT is not enabled by default in WebGL 1 and that it can be enabled
-TEST_P(WebGLCompatibilityTest, NPOT)
+// Test the checks for OOB reads in the index buffer
+TEST_P(WebGLCompatibilityTest, DrawElementsBufferOutOfBoundsInIndexBuffer)
 {
-    EXPECT_FALSE(extensionEnabled("GL_OES_texture_npot"));
+    const std::string &vert =
+        "attribute float a_pos;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(a_pos, a_pos, a_pos, 1.0);\n"
+        "}\n";
 
-    // Create a texture and set an NPOT mip 0, should always be acceptable.
-    GLTexture texture;
-    glBindTexture(GL_TEXTURE_2D, texture.get());
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 10, 10, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    const std::string &frag =
+        "precision highp float;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vec4(1.0);\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, vert, frag);
+
+    GLint posLocation = glGetAttribLocation(program.get(), "a_pos");
+    ASSERT_NE(-1, posLocation);
+    glUseProgram(program.get());
+
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.get());
+    glBufferData(GL_ARRAY_BUFFER, 16, nullptr, GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(posLocation);
+
+    const uint8_t *zeroOffset   = nullptr;
+    const uint8_t zeroIndices[] = {0, 0, 0, 0, 0, 0, 0, 0};
+
+    glVertexAttribPointer(0, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset);
+
+    GLBuffer indexBuffer;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer.get());
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(zeroIndices), zeroIndices, GL_STATIC_DRAW);
     ASSERT_GL_NO_ERROR();
 
-    // Try setting an NPOT mip 1 and verify the error if WebGL 1
-    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, 5, 5, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-    if (getClientMajorVersion() < 3)
-    {
-        ASSERT_GL_ERROR(GL_INVALID_VALUE);
-    }
-    else
-    {
-        ASSERT_GL_NO_ERROR();
-    }
+    // Test touching the last index is valid
+    glDrawElements(GL_POINTS, 4, GL_UNSIGNED_BYTE, zeroOffset + 4);
+    ASSERT_GL_NO_ERROR();
 
-    if (extensionRequestable("GL_OES_texture_npot"))
-    {
-        glRequestExtensionANGLE("GL_OES_texture_npot");
-        ASSERT_GL_NO_ERROR();
+    // Test touching the last + 1 element is invalid
+    glDrawElements(GL_POINTS, 4, GL_UNSIGNED_BYTE, zeroOffset + 5);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
-        // Try again to set NPOT mip 1
-        glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, 5, 5, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-        ASSERT_GL_NO_ERROR();
-    }
+    // Test any offset if valid if count is zero
+    glDrawElements(GL_POINTS, 0, GL_UNSIGNED_BYTE, zeroOffset + 42);
+    ASSERT_GL_NO_ERROR();
 }
 
 // Test the checks for OOB reads in the vertex buffers, instanced version
@@ -450,6 +469,39 @@ TEST_P(WebGL2CompatibilityTest, DrawArraysBufferOutOfBoundsInstanced)
     glVertexAttribPointer(0, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, zeroOffset + 32);
     glDrawArraysInstanced(GL_POINTS, 0, 1, 0);
     ASSERT_GL_NO_ERROR();
+}
+
+// Tests that NPOT is not enabled by default in WebGL 1 and that it can be enabled
+TEST_P(WebGLCompatibilityTest, NPOT)
+{
+    EXPECT_FALSE(extensionEnabled("GL_OES_texture_npot"));
+
+    // Create a texture and set an NPOT mip 0, should always be acceptable.
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture.get());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 10, 10, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    // Try setting an NPOT mip 1 and verify the error if WebGL 1
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, 5, 5, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    if (getClientMajorVersion() < 3)
+    {
+        ASSERT_GL_ERROR(GL_INVALID_VALUE);
+    }
+    else
+    {
+        ASSERT_GL_NO_ERROR();
+    }
+
+    if (extensionRequestable("GL_OES_texture_npot"))
+    {
+        glRequestExtensionANGLE("GL_OES_texture_npot");
+        ASSERT_GL_NO_ERROR();
+
+        // Try again to set NPOT mip 1
+        glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, 5, 5, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        ASSERT_GL_NO_ERROR();
+    }
 }
 
 // Tests that a rendering feedback loop triggers a GL error under WebGL.
