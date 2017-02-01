@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d2b57ad5_97215632",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3447,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-02-01T17:59:00Z",
+      "side": 1,
+      "message": "Here we could cast the indices to int and check if negative (not allowed). If negative, throw GL_INVALID_OPERATION. The check is only for WebGL and could behind the extension flag.",
+      "revId": "a69e8e89d3b3c2f087bf39a57c568288c3ffffa0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
