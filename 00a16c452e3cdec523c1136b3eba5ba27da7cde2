@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c845440f_863dd265",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 685,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-01T15:39:52Z",
+      "side": 1,
+      "message": "I\u0027m not sure using an anonymous namespace in a header does what you want. Introduce a new namespace \"priv\" for these. Note that we could potentially use these helpers in other places in ANGLE code (replace the ANGLETest.cpp function ColorNorm(), which is a simplified version of the first method).",
+      "range": {
+        "startLine": 672,
+        "startChar": 0,
+        "endLine": 685,
+        "endChar": 25
+      },
+      "revId": "00a16c452e3cdec523c1136b3eba5ba27da7cde2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
