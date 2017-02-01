@@ -1409,3 +1409,11 @@ TEST_F(ConstantFoldingExpressionTest, FoldUnpackUnorm4x8)
     evaluateFloat(floatString);
     ASSERT_TRUE(constantFoundInAST(123.0f / 255.0f));
 }
+
+// Test that ldexp is folded correctly.
+TEST_F(ConstantFoldingExpressionTest, FoldLdexp)
+{
+    const std::string &floatString = "ldexp(0.625, 1)";
+    evaluateFloat(floatString);
+    ASSERT_TRUE(constantFoundInAST(1.25f));
+}

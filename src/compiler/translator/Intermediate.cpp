@@ -273,6 +273,7 @@ TIntermTyped *TIntermediate::foldAggregateBuiltIn(TIntermAggregate *aggregate,
         case EOpMix:
         case EOpStep:
         case EOpSmoothStep:
+        case EOpLdexp:
         case EOpMulMatrixComponentWise:
         case EOpOuterProduct:
         case EOpEqualComponentWise:

@@ -3012,6 +3012,25 @@ TConstantUnion *TIntermConstantUnion::FoldAggregateBuiltIn(TIntermAggregate *agg
             break;
         }
 
+        case EOpLdexp:
+        {
+            resultArray = new TConstantUnion[maxObjectSize];
+            for (size_t i = 0; i < maxObjectSize; i++)
+            {
+                float x = unionArrays[0][i].getFConst();
+                int exp = unionArrays[1][i].getIConst();
+                if (exp > 128)
+                {
+                    UndefinedConstantFoldingError(loc, op, basicType, diagnostics, &resultArray[i]);
+                }
+                else
+                {
+                    resultArray[i].setFConst(gl::Ldexp(x, exp));
+                }
+            }
+            break;
+        }
+
         case EOpFaceForward:
         {
             ASSERT(basicType == EbtFloat);

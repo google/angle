@@ -1993,6 +1993,11 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
         case EOpSmoothStep:
             outputTriplet(out, visit, "smoothstep(", ", ", ")");
             break;
+        case EOpFrexp:
+        case EOpLdexp:
+            ASSERT(node->getUseEmulatedFunction());
+            writeEmulatedFunctionTriplet(out, visit, node->getOp());
+            break;
         case EOpDistance:
             outputTriplet(out, visit, "distance(", ", ", ")");
             break;

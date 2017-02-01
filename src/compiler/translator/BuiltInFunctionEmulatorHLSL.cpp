@@ -126,6 +126,68 @@ void InitBuiltInFunctionEmulatorForHLSL(BuiltInFunctionEmulator *emu)
                              "}\n"
                              "\n");
 
+    emu->addEmulatedFunction(EOpFrexp, float1, int1,
+                             "float webgl_frexp_emu(float x, out int exp)\n"
+                             "{\n"
+                             "    float fexp;\n"
+                             "    float mantissa = frexp(abs(x), fexp) * sign(x);\n"
+                             "    exp = int(fexp);\n"
+                             "    return mantissa;\n"
+                             "}\n"
+                             "\n");
+    emu->addEmulatedFunction(EOpFrexp, float2, int2,
+                             "float2 webgl_frexp_emu(float2 x, out int2 exp)\n"
+                             "{\n"
+                             "    float2 fexp;\n"
+                             "    float2 mantissa = frexp(abs(x), fexp) * sign(x);\n"
+                             "    exp = int2(fexp);\n"
+                             "    return mantissa;\n"
+                             "}\n"
+                             "\n");
+    emu->addEmulatedFunction(EOpFrexp, float3, int3,
+                             "float3 webgl_frexp_emu(float3 x, out int3 exp)\n"
+                             "{\n"
+                             "    float3 fexp;\n"
+                             "    float3 mantissa = frexp(abs(x), fexp) * sign(x);\n"
+                             "    exp = int3(fexp);\n"
+                             "    return mantissa;\n"
+                             "}\n"
+                             "\n");
+    emu->addEmulatedFunction(EOpFrexp, float4, int4,
+                             "float4 webgl_frexp_emu(float4 x, out int4 exp)\n"
+                             "{\n"
+                             "    float4 fexp;\n"
+                             "    float4 mantissa = frexp(abs(x), fexp) * sign(x);\n"
+                             "    exp = int4(fexp);\n"
+                             "    return mantissa;\n"
+                             "}\n"
+                             "\n");
+
+    emu->addEmulatedFunction(EOpLdexp, float1, int1,
+                             "float webgl_ldexp_emu(float x, int exp)\n"
+                             "{\n"
+                             "    return ldexp(x, float(exp));\n"
+                             "}\n"
+                             "\n");
+    emu->addEmulatedFunction(EOpLdexp, float2, int2,
+                             "float2 webgl_ldexp_emu(float2 x, int2 exp)\n"
+                             "{\n"
+                             "    return ldexp(x, float2(exp));\n"
+                             "}\n"
+                             "\n");
+    emu->addEmulatedFunction(EOpLdexp, float3, int3,
+                             "float3 webgl_ldexp_emu(float3 x, int3 exp)\n"
+                             "{\n"
+                             "    return ldexp(x, float3(exp));\n"
+                             "}\n"
+                             "\n");
+    emu->addEmulatedFunction(EOpLdexp, float4, int4,
+                             "float4 webgl_ldexp_emu(float4 x, int4 exp)\n"
+                             "{\n"
+                             "    return ldexp(x, float4(exp));\n"
+                             "}\n"
+                             "\n");
+
     emu->addEmulatedFunction(EOpFaceForward, float1, float1, float1,
                              "float webgl_faceforward_emu(float N, float I, float Nref)\n"
                              "{\n"

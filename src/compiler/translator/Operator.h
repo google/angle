@@ -143,6 +143,9 @@ enum TOperator
     EOpIntBitsToFloat,
     EOpUintBitsToFloat,
 
+    EOpFrexp,
+    EOpLdexp,
+
     EOpPackSnorm2x16,
     EOpPackUnorm2x16,
     EOpPackHalf2x16,

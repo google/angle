@@ -197,6 +197,11 @@ const char *GetOperatorString(TOperator op)
         case EOpUintBitsToFloat:
             return "uintBitsToFloat";
 
+        case EOpFrexp:
+            return "frexp";
+        case EOpLdexp:
+            return "ldexp";
+
         case EOpPackSnorm2x16:
             return "packSnorm2x16";
         case EOpPackUnorm2x16:
