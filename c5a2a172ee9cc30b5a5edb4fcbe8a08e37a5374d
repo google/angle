@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e1765a0b_25d31844",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 15
+      },
+      "lineNbr": 771,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-01T15:12:53Z",
+      "side": 0,
+      "message": "micro-nit: you can omit these whitespace changes if you like",
+      "revId": "c5a2a172ee9cc30b5a5edb4fcbe8a08e37a5374d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

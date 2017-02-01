@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9fe1350e_d2c23470",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-01T15:12:53Z",
+      "side": 1,
+      "message": "I didn\u0027t notice this earlier - can you rename this to remove the FL9 designation if we\u0027re using this for 10+ as well? same with the shader header name and the entry point name.",
+      "range": {
+        "startLine": 232,
+        "startChar": 26,
+        "endLine": 232,
+        "endChar": 47
+      },
+      "revId": "ec5f8c17f7baad0f5573f04227ad4b2aa5a5d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3afed26e_d112f95f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-01T15:12:53Z",
+      "side": 1,
+      "message": "nit: you can tag yourself in this TODO just to record who added it.",
+      "range": {
+        "startLine": 583,
+        "startChar": 15,
+        "endLine": 583,
+        "endChar": 19
+      },
+      "revId": "ec5f8c17f7baad0f5573f04227ad4b2aa5a5d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "001bc5cb_96a32b3c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/generate_shaders.bat",
+        "patchSetId": 15
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-01T15:12:53Z",
+      "side": 1,
+      "message": "can rename this to VS_ClearAnyType (same for compiled header)",
+      "range": {
+        "startLine": 37,
+        "startChar": 40,
+        "endLine": 37,
+        "endChar": 59
+      },
+      "revId": "ec5f8c17f7baad0f5573f04227ad4b2aa5a5d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
