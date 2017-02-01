@@ -25,6 +25,23 @@
     },
     {
       "key": {
+        "uuid": "799f267f_056ead5d",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1073,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-01T22:23:00Z",
+      "side": 1,
+      "message": "Done",
+      "revId": "f354677b963a9c5e5857608dc147ae5c083e03f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f6e047cc_73647b1e",
         "filename": "src/libANGLE/renderer/gl/DisplayGL.cpp",
         "patchSetId": 5
@@ -42,6 +59,23 @@
         "endLine": 102,
         "endChar": 47
       },
+      "revId": "f354677b963a9c5e5857608dc147ae5c083e03f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f1b69f24_546e4f40",
+        "filename": "src/libANGLE/renderer/gl/DisplayGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-01T22:23:00Z",
+      "side": 1,
+      "message": "It is already done above (line 82)",
       "revId": "f354677b963a9c5e5857608dc147ae5c083e03f4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -111,6 +145,23 @@
         "endLine": 47,
         "endChar": 68
       },
+      "revId": "f354677b963a9c5e5857608dc147ae5c083e03f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c0d95363_1701143c",
+        "filename": "src/libANGLE/renderer/gl/DisplayGL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-01T22:23:00Z",
+      "side": 1,
+      "message": "Done",
       "revId": "f354677b963a9c5e5857608dc147ae5c083e03f4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
