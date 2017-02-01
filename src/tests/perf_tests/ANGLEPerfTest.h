@@ -27,9 +27,14 @@
 
 class Event;
 
-#ifndef ASSERT_GL_NO_ERROR
+#if !defined(ASSERT_GL_NO_ERROR)
 #define ASSERT_GL_NO_ERROR() ASSERT_EQ(static_cast<GLenum>(GL_NO_ERROR), glGetError())
-#endif
+#endif  // !defined(ASSERT_GL_NO_ERROR)
+
+#if !defined(ASSERT_GLENUM_EQ)
+#define ASSERT_GLENUM_EQ(expected, actual) \
+    ASSERT_EQ(static_cast<GLenum>(expected), static_cast<GLenum>(actual))
+#endif  // !defined(ASSERT_GLENUM_EQ)
 
 class ANGLEPerfTest : public testing::Test, angle::NonCopyable
 {
