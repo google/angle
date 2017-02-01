@@ -3503,6 +3503,15 @@ bool ValidateDrawElements(ValidationContext *context,
                                        "indices must be a multiple of the element type size."));
             return false;
         }
+
+        // [WebGL 1.0] Section 6.4 Buffer Offset and Stride Requirements
+        // In addition the offset argument to drawElements must be non-negative or an INVALID_VALUE
+        // error is generated.
+        if (reinterpret_cast<intptr_t>(indices) < 0)
+        {
+            context->handleError(Error(GL_INVALID_VALUE, "Offset < 0."));
+            return false;
+        }
     }
 
     if (context->getExtensions().webglCompatibility ||
@@ -3523,20 +3532,31 @@ bool ValidateDrawElements(ValidationContext *context,
     {
         if (elementArrayBuffer)
         {
-            GLint64 offset = reinterpret_cast<GLint64>(indices);
-            GLint64 byteCount =
-                static_cast<GLint64>(typeBytes) * static_cast<GLint64>(count) + offset;
+            // The max possible type size is 8 and count is on 32 bits so doing the multiplication
+            // in a 64 bit integer is safe. Also we are guaranteed that here count > 0.
+            static_assert(std::is_same<int, GLsizei>::value, "GLsizei isn't the expected type");
+            constexpr uint64_t kMaxTypeSize = 8;
+            constexpr uint64_t kIntMax      = std::numeric_limits<int>::max();
+            constexpr uint64_t kUint64Max   = std::numeric_limits<uint64_t>::max();
+            static_assert(kIntMax < kUint64Max / kMaxTypeSize, "");
 
-            // check for integer overflows
-            if (static_cast<GLuint>(count) > (std::numeric_limits<GLuint>::max() / typeBytes) ||
-                byteCount > static_cast<GLint64>(std::numeric_limits<GLuint>::max()))
+            uint64_t typeSize     = typeBytes;
+            uint64_t elementCount = static_cast<uint64_t>(count);
+            ASSERT(elementCount > 0 && typeSize <= kMaxTypeSize);
+
+            // Doing the multiplication here is overflow-safe
+            uint64_t elementDataSizeNoOffset = typeSize * elementCount;
+
+            // The offset can be any value, check for overflows
+            uint64_t offset = static_cast<uint64_t>(reinterpret_cast<uintptr_t>(indices));
+            if (elementDataSizeNoOffset > kUint64Max - offset)
             {
-                context->handleError(Error(GL_OUT_OF_MEMORY, "Integer overflow."));
+                context->handleError(Error(GL_INVALID_OPERATION, "Integer overflow."));
                 return false;
             }
 
-            // Check for reading past the end of the bound buffer object
-            if (byteCount > elementArrayBuffer->getSize())
+            uint64_t elementDataSizeWithOffset = elementDataSizeNoOffset + offset;
+            if (elementDataSizeWithOffset > static_cast<uint64_t>(elementArrayBuffer->getSize()))
             {
                 context->handleError(
                     Error(GL_INVALID_OPERATION, "Index buffer is not big enough for the draw."));

@@ -445,6 +445,16 @@ TEST_P(WebGLCompatibilityTest, DrawElementsBufferOutOfBoundsInIndexBuffer)
     // Test any offset if valid if count is zero
     glDrawElements(GL_POINTS, 0, GL_UNSIGNED_BYTE, zeroOffset + 42);
     ASSERT_GL_NO_ERROR();
+
+    // Test touching the first index is valid
+    glDrawElements(GL_POINTS, 4, GL_UNSIGNED_BYTE, zeroOffset + 4);
+    ASSERT_GL_NO_ERROR();
+
+    // Test touching the first - 1 index is invalid
+    // The error ha been specified to be INVALID_VALUE instead of INVALID_OPERATION because it was
+    // the historic behavior of WebGL implementations
+    glDrawElements(GL_POINTS, 4, GL_UNSIGNED_BYTE, zeroOffset - 1);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
 }
 
 // Test depth range with 'near' more or less than 'far.'
