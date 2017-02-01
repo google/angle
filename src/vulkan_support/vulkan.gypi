@@ -700,7 +700,7 @@
                                     'action':
                                     [
                                         'python', '<(angle_path)/scripts/generate_vulkan_layers_json.py',
-                                        '<(vulkan_layers_path)/layers/windows', '<(angle_gen_path)/vulkan/json', '<(PRODUCT_DIR)',
+                                        '<(vulkan_layers_path)/layers/windows', '<(angle_gen_path)/vulkan/json',
                                     ],
                                 }],
                             ],
