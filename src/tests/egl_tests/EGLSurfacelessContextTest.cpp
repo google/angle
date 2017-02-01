@@ -84,7 +84,7 @@ class EGLSurfacelessContextTest : public ANGLETest
     {
         const EGLint contextAttribs[] = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE};
 
-        EGLContext mContext = eglCreateContext(mDisplay, mConfig, EGL_NO_CONTEXT, contextAttribs);
+        mContext = eglCreateContext(mDisplay, mConfig, EGL_NO_CONTEXT, contextAttribs);
         EXPECT_TRUE(mContext != EGL_NO_CONTEXT);
         return mContext;
     }
@@ -94,7 +94,7 @@ class EGLSurfacelessContextTest : public ANGLETest
         const EGLint pbufferAttribs[] = {
             EGL_WIDTH, 500, EGL_HEIGHT, 500, EGL_NONE,
         };
-        EGLSurface mPbuffer = eglCreatePbufferSurface(mDisplay, mConfig, pbufferAttribs);
+        mPbuffer = eglCreatePbufferSurface(mDisplay, mConfig, pbufferAttribs);
         EXPECT_TRUE(mPbuffer != EGL_NO_SURFACE);
         return mPbuffer;
     }
