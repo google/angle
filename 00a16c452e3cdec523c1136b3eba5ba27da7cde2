@@ -22,6 +22,29 @@
       "revId": "00a16c452e3cdec523c1136b3eba5ba27da7cde2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0564b6b3_9a382bbb",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 685,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-02-01T22:47:03Z",
+      "side": 1,
+      "message": "Ah, of course. I named the namespace. Not doing further refactorings right now, but that could certainly be done in the future.",
+      "range": {
+        "startLine": 672,
+        "startChar": 0,
+        "endLine": 685,
+        "endChar": 25
+      },
+      "revId": "00a16c452e3cdec523c1136b3eba5ba27da7cde2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
