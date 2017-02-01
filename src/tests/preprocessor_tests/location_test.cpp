@@ -267,6 +267,36 @@ TEST_F(LocationTest, LineDirectiveMissingNewline)
     mPreprocessor.lex(&token);
 }
 
+// Test for an error being generated when the line number overflows - regular version
+TEST_F(LocationTest, LineOverflowRegular)
+{
+    const char *str = "#line 2147483647\n\n";
+
+    ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
+
+    using testing::_;
+    // Error reported about EOF.
+    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::PP_TOKENIZER_ERROR, _, _));
+
+    pp::Token token;
+    mPreprocessor.lex(&token);
+}
+
+// Test for an error being generated when the line number overflows - inside /* */ comment version
+TEST_F(LocationTest, LineOverflowInComment)
+{
+    const char *str = "#line 2147483647\n/*\n*/";
+
+    ASSERT_TRUE(mPreprocessor.init(1, &str, NULL));
+
+    using testing::_;
+    // Error reported about EOF.
+    EXPECT_CALL(mDiagnostics, print(pp::Diagnostics::PP_TOKENIZER_ERROR, _, _));
+
+    pp::Token token;
+    mPreprocessor.lex(&token);
+}
+
 struct LineTestParam
 {
     const char* str;
