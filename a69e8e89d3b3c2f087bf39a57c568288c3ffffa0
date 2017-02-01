@@ -16,6 +16,23 @@
       "revId": "a69e8e89d3b3c2f087bf39a57c568288c3ffffa0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c876f918_e7f1ce37",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3447,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-01T22:18:40Z",
+      "side": 1,
+      "message": "The problem is we cast to GLint64 and don\u0027t do overflow checks correctly. I will fix that in a follow up patch. Thanks for the report!",
+      "revId": "a69e8e89d3b3c2f087bf39a57c568288c3ffffa0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
