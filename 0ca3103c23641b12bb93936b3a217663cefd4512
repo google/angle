@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "14789dad_48d1aef4",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3451,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-02-01T00:31:27Z",
+      "side": 1,
+      "message": "Could we check if the indices are negative here (it could AV, otherwise)?",
+      "revId": "0ca3103c23641b12bb93936b3a217663cefd4512",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
