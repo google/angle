@@ -2,6 +2,167 @@
   "comments": [
     {
       "key": {
+        "uuid": "6ecf02d8_f4c8520e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-01T16:55:36Z",
+      "side": 1,
+      "message": "Can you add a static_assert on the size of this struct?  Don\u0027t want to risk having the compiler align it unexpectedly.",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 2
+      },
+      "revId": "ec5f8c17f7baad0f5573f04227ad4b2aa5a5d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a1489de0_f4da00c0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-01T16:55:36Z",
+      "side": 1,
+      "message": "These functions should be put in an anonymous namespace",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 88,
+        "endChar": 1
+      },
+      "revId": "ec5f8c17f7baad0f5573f04227ad4b2aa5a5d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "28e80a22_b7d7e249",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-01T16:55:36Z",
+      "side": 1,
+      "message": "Can this go in the initializer list?",
+      "range": {
+        "startLine": 98,
+        "startChar": 4,
+        "endLine": 99,
+        "endChar": 26
+      },
+      "revId": "ec5f8c17f7baad0f5573f04227ad4b2aa5a5d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f46a8ed8_72f5ee74",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-01T16:55:36Z",
+      "side": 1,
+      "message": "I think this can be constexpr now, even hoisted from this class and then inputLayout can be put in the initializer list.",
+      "range": {
+        "startLine": 112,
+        "startChar": 4,
+        "endLine": 113,
+        "endChar": 90
+      },
+      "revId": "ec5f8c17f7baad0f5573f04227ad4b2aa5a5d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bd517b0d_f64526a5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-01T16:55:36Z",
+      "side": 1,
+      "message": "Can just do sizeof(vbData)",
+      "range": {
+        "startLine": 201,
+        "startChar": 42,
+        "endLine": 201,
+        "endChar": 75
+      },
+      "revId": "ec5f8c17f7baad0f5573f04227ad4b2aa5a5d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b1f8d52c_aa721560",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-01T16:55:36Z",
+      "side": 1,
+      "message": "Can be just vbData",
+      "range": {
+        "startLine": 204,
+        "startChar": 35,
+        "endLine": 204,
+        "endChar": 45
+      },
+      "revId": "ec5f8c17f7baad0f5573f04227ad4b2aa5a5d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59a494b4_f26c2ba6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-01T16:55:36Z",
+      "side": 1,
+      "message": "If this ended up rounding up, it would read out of bounds of vbData.  Maybe just assert that vbSize is 16 instead of rounding.",
+      "range": {
+        "startLine": 208,
+        "startChar": 37,
+        "endLine": 208,
+        "endChar": 43
+      },
+      "revId": "ec5f8c17f7baad0f5573f04227ad4b2aa5a5d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9fe1350e_d2c23470",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 15
@@ -41,6 +202,29 @@
         "startChar": 15,
         "endLine": 583,
         "endChar": 19
+      },
+      "revId": "ec5f8c17f7baad0f5573f04227ad4b2aa5a5d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2749c4e0_6a3419be",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Clear11.hlsl",
+        "patchSetId": 15
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-01T16:55:36Z",
+      "side": 1,
+      "message": "I don\u0027t think you can claim copyright for Intel here, signing the CLA means copyright is granted to google/ANGLE.",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 3,
+        "endChar": 61
       },
       "revId": "ec5f8c17f7baad0f5573f04227ad4b2aa5a5d6d4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
