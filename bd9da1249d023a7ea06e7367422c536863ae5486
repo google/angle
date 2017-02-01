@@ -22,6 +22,29 @@
       "revId": "bd9da1249d023a7ea06e7367422c536863ae5486",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5e775349_f5395994",
+        "filename": "src/libANGLE/renderer/vulkan/GlslangWrapper.h",
+        "patchSetId": 42
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-01T23:02:12Z",
+      "side": 1,
+      "message": "Well, if we ever wanted to support multiple simultaneous Renderers (say in multithreading world of some kind, not sure really if we\u0027ll ever need to, but theoretically) then this would end up calling ShInitialize/ShFinalize in the wrong order. I do like this approach but it will need to use a lock of some kind in some scenarios.",
+      "range": {
+        "startLine": 21,
+        "startChar": 4,
+        "endLine": 24,
+        "endChar": 35
+      },
+      "revId": "bd9da1249d023a7ea06e7367422c536863ae5486",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
