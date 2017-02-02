@@ -78,9 +78,11 @@ class GLProgram
         mHandle = LoadBinaryProgramES3(binary, binaryFormat);
     }
 
+    bool valid() const { return mHandle != 0; }
+
     GLuint get()
     {
-        ASSERT(mHandle != 0);
+        ASSERT(valid());
         return mHandle;
     }
 
@@ -92,22 +94,22 @@ class GLProgram
 #define ANGLE_GL_PROGRAM(name, vertex, fragment) \
     priv::GLProgram name;                        \
     name.makeRaster(vertex, fragment);           \
-    ASSERT_NE(0u, name.get());
+    ASSERT_TRUE(name.valid());
 
 #define ANGLE_GL_COMPUTE_PROGRAM(name, compute) \
     priv::GLProgram name;                       \
     name.makeCompute(compute);                  \
-    ASSERT_NE(0u, name.get());
+    ASSERT_TRUE(name.valid());
 
 #define ANGLE_GL_BINARY_OES_PROGRAM(name, binary, binaryFormat) \
     priv::GLProgram name;                                       \
     name.makeBinaryOES(binary, binaryFormat);                   \
-    ASSERT_NE(0u, name.get());
+    ASSERT_TRUE(name.valid());
 
 #define ANGLE_GL_BINARY_ES3_PROGRAM(name, binary, binaryFormat) \
     priv::GLProgram name;                                       \
     name.makeBinaryES3(binary, binaryFormat);                   \
-    ASSERT_NE(0u, name.get());
+    ASSERT_TRUE(name.valid());
 
 }  // namespace angle
 

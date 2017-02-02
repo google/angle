@@ -36,6 +36,11 @@ class WebGLCompatibilityTest : public ANGLETest
 
     void TearDown() override { ANGLETest::TearDown(); }
 
+    // Called from RenderingFeedbackLoopWithDrawBuffersEXT.
+    void drawBuffersEXTFeedbackLoop(GLuint program,
+                                    const std::array<GLenum, 2> &drawBuffers,
+                                    GLenum expectedError);
+
     PFNGLREQUESTEXTENSIONANGLEPROC glRequestExtensionANGLE = nullptr;
 };
 
@@ -504,6 +509,27 @@ TEST_P(WebGLCompatibilityTest, NPOT)
     }
 }
 
+template <typename T>
+void FillTexture2D(GLuint texture,
+                   GLsizei width,
+                   GLsizei height,
+                   const T &onePixelData,
+                   GLint level,
+                   GLint internalFormat,
+                   GLenum format,
+                   GLenum type)
+{
+    std::vector<T> allPixelsData(width * height, onePixelData);
+
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, level, internalFormat, width, height, 0, format, type,
+                 allPixelsData.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+}
+
 // Tests that a rendering feedback loop triggers a GL error under WebGL.
 // Based on WebGL test conformance/renderbuffers/feedback-loop.html.
 TEST_P(WebGLCompatibilityTest, RenderingFeedbackLoop)
@@ -526,12 +552,7 @@ TEST_P(WebGLCompatibilityTest, RenderingFeedbackLoop)
         "}\n";
 
     GLTexture texture;
-    glBindTexture(GL_TEXTURE_2D, texture.get());
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::red);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    FillTexture2D(texture.get(), 1, 1, GLColor::red, 0, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE);
 
     ASSERT_GL_NO_ERROR();
 
@@ -565,12 +586,7 @@ TEST_P(WebGLCompatibilityTest, RenderingFeedbackLoop)
 
     // Drawing when texture is bound to an inactive uniform should succeed
     GLTexture texture2;
-    glBindTexture(GL_TEXTURE_2D, texture2.get());
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::green);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    FillTexture2D(texture2.get(), 1, 1, GLColor::green, 0, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE);
 
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.get());
     glActiveTexture(GL_TEXTURE1);
@@ -756,6 +772,94 @@ TEST_P(WebGLCompatibilityTest, VertexAttribPointerOffsetRestriction)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 3, zeroOffset);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
+void WebGLCompatibilityTest::drawBuffersEXTFeedbackLoop(GLuint program,
+                                                        const std::array<GLenum, 2> &drawBuffers,
+                                                        GLenum expectedError)
+{
+    glDrawBuffersEXT(2, drawBuffers.data());
+
+    // Make sure framebuffer is complete before feedback loop detection
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    drawQuad(program, "aPosition", 0.5f, 1.0f, true);
+
+    // "Rendering to a texture where it samples from should geneates INVALID_OPERATION. Otherwise,
+    // it should be NO_ERROR"
+    EXPECT_GL_ERROR(expectedError);
+}
+
+// This tests that rendering feedback loops works as expected with GL_EXT_draw_buffers.
+// Based on WebGL test conformance/extensions/webgl-draw-buffers-feedback-loop.html
+TEST_P(WebGLCompatibilityTest, RenderingFeedbackLoopWithDrawBuffersEXT)
+{
+    const std::string vertexShader =
+        "attribute vec4 aPosition;\n"
+        "varying vec2 texCoord;\n"
+        "void main() {\n"
+        "    gl_Position = aPosition;\n"
+        "    texCoord = (aPosition.xy * 0.5) + 0.5;\n"
+        "}\n";
+
+    const std::string fragmentShader =
+        "#extension GL_EXT_draw_buffers : require\n"
+        "precision mediump float;\n"
+        "uniform sampler2D tex;\n"
+        "varying vec2 texCoord;\n"
+        "void main() {\n"
+        "    gl_FragData[0] = texture2D(tex, texCoord);\n"
+        "    gl_FragData[1] = texture2D(tex, texCoord);\n"
+        "}\n";
+
+    GLsizei width  = 8;
+    GLsizei height = 8;
+
+    // This shader cannot be run in ES3, because WebGL 2 does not expose the draw buffers
+    // extension and gl_FragData semantics are changed to enforce indexing by zero always.
+    // TODO(jmadill): This extension should be disabled in WebGL 2 contexts.
+    if (/*!extensionEnabled("GL_EXT_draw_buffers")*/ getClientMajorVersion() != 2)
+    {
+        // No WEBGL_draw_buffers support -- this is legal.
+        return;
+    }
+
+    GLint maxDrawBuffers = 0;
+    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
+
+    if (maxDrawBuffers < 2)
+    {
+        std::cout << "Test skipped because MAX_DRAW_BUFFERS is too small." << std::endl;
+        return;
+    }
+
+    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+    glUseProgram(program.get());
+    glViewport(0, 0, width, height);
+
+    GLTexture tex0;
+    GLTexture tex1;
+    GLFramebuffer fbo;
+    FillTexture2D(tex0.get(), width, height, GLColor::red, 0, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE);
+    FillTexture2D(tex1.get(), width, height, GLColor::green, 0, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE);
+    ASSERT_GL_NO_ERROR();
+
+    glBindTexture(GL_TEXTURE_2D, tex1.get());
+    GLint texLoc = glGetUniformLocation(program.get(), "tex");
+    ASSERT_NE(-1, texLoc);
+    glUniform1i(texLoc, 0);
+    ASSERT_GL_NO_ERROR();
+
+    // The sampling texture is bound to COLOR_ATTACHMENT1 during resource allocation
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo.get());
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex0.get(), 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, tex1.get(), 0);
+
+    drawBuffersEXTFeedbackLoop(program.get(), {{GL_NONE, GL_COLOR_ATTACHMENT1}},
+                               GL_INVALID_OPERATION);
+    drawBuffersEXTFeedbackLoop(program.get(), {{GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1}},
+                               GL_INVALID_OPERATION);
+    drawBuffersEXTFeedbackLoop(program.get(), {{GL_COLOR_ATTACHMENT0, GL_NONE}}, GL_NO_ERROR);
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
