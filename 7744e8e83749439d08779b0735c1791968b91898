@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e540fde1_44de67f2",
+        "filename": "src/tests/gl_tests/UniformTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-02T16:12:44Z",
+      "side": 1,
+      "message": "use ANGLE_GL_PROGRAM",
+      "range": {
+        "startLine": 526,
+        "startChar": 3,
+        "endLine": 528,
+        "endChar": 0
+      },
+      "revId": "7744e8e83749439d08779b0735c1791968b91898",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b632be7d_d33afec7",
+        "filename": "src/tests/gl_tests/UniformTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-02T16:12:44Z",
+      "side": 1,
+      "message": "nit: ASSERT_NE(expected, actual)",
+      "range": {
+        "startLine": 530,
+        "startChar": 4,
+        "endLine": 530,
+        "endChar": 28
+      },
+      "revId": "7744e8e83749439d08779b0735c1791968b91898",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d594d754_d858ce4d",
+        "filename": "src/tests/gl_tests/UniformTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 581,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-02T16:12:44Z",
+      "side": 1,
+      "message": "you can use constexpr for these guys.",
+      "range": {
+        "startLine": 581,
+        "startChar": 4,
+        "endLine": 581,
+        "endChar": 10
+      },
+      "revId": "7744e8e83749439d08779b0735c1791968b91898",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
