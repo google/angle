@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7715c6fd_7bdc3820",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3514,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-02-02T00:19:08Z",
+      "side": 1,
+      "message": "Looks like the \"draw-elements-out-of-bounds\" conformance test expects INVALID_VALUE for neg. offset. Not sure why, but to be compatible the return value can\u0027t be GL_INVALID_OPERATION.",
+      "revId": "7d5ee4d78ef9ae12951c0cd7c981518015adcd12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
