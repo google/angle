@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4345b5ec_52089817",
+        "filename": "include/platform/Platform.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-02T16:24:14Z",
+      "side": 1,
+      "message": "I don\u0027t see you calling hasLogging anywhere.",
+      "range": {
+        "startLine": 156,
+        "startChar": 17,
+        "endLine": 156,
+        "endChar": 27
+      },
+      "revId": "84a8a11eb610c7d5f9847664f5ad10871fc86678",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d9a4dfe7_f29cc954",
+        "filename": "include/platform/Platform.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-02T16:24:14Z",
+      "side": 1,
+      "message": "don\u0027t move these for now. I\u0027ll handle this class.",
+      "range": {
+        "startLine": 145,
+        "startChar": 4,
+        "endLine": 158,
+        "endChar": 34
+      },
+      "revId": "84a8a11eb610c7d5f9847664f5ad10871fc86678",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "446ff5f3_ad82077a",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-02T16:24:14Z",
+      "side": 1,
+      "message": "nit: DebugAnnotationsInitialized()",
+      "range": {
+        "startLine": 124,
+        "startChar": 8,
+        "endLine": 124,
+        "endChar": 35
+      },
+      "revId": "84a8a11eb610c7d5f9847664f5ad10871fc86678",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cff2ed08_d338372b",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-02T16:24:14Z",
+      "side": 1,
+      "message": "make this owned by the Display.",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 63
+      },
+      "revId": "84a8a11eb610c7d5f9847664f5ad10871fc86678",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a5b3edc8_ea65ed3b",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-02T16:24:14Z",
+      "side": 1,
+      "message": "move to the Display init.",
+      "range": {
+        "startLine": 106,
+        "startChar": 8,
+        "endLine": 106,
+        "endChar": 34
+      },
+      "revId": "84a8a11eb610c7d5f9847664f5ad10871fc86678",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eec768d1_1c4e4415",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-02T16:24:14Z",
+      "side": 1,
+      "message": "nit: again leave these as before.",
+      "range": {
+        "startLine": 56,
+        "startChar": 4,
+        "endLine": 59,
+        "endChar": 31
+      },
+      "revId": "84a8a11eb610c7d5f9847664f5ad10871fc86678",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
