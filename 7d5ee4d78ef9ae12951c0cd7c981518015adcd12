@@ -16,6 +16,23 @@
       "revId": "7d5ee4d78ef9ae12951c0cd7c981518015adcd12",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab26c0e9_2c2b94a6",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3514,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-02T03:45:02Z",
+      "side": 1,
+      "message": "It seems that this error code requirement was added in this commit https://github.com/KhronosGroup/WebGL/commit/7980f486de20ed486371c345c43e6eefbbdc3b36 but I didn\u0027t find anything related to it in the WebGL specification or in the OpenGL ES 2 specification. Do you know where it comes from and why it isn\u0027t GL_INVALID_OPERATION instead?",
+      "revId": "7d5ee4d78ef9ae12951c0cd7c981518015adcd12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
