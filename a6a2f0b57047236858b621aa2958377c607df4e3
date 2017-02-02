@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "be436a62_213ec538",
+        "filename": "src/tests/gl_tests/DrawBuffersTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 474,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-02T23:34:11Z",
+      "side": 1,
+      "message": "Seems like it should be safe to just call glDrawBuffers here.",
+      "range": {
+        "startLine": 474,
+        "startChar": 4,
+        "endLine": 474,
+        "endChar": 18
+      },
+      "revId": "a6a2f0b57047236858b621aa2958377c607df4e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f83994da_dfc75aef",
+        "filename": "src/tests/gl_tests/DrawBuffersTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-02T23:34:11Z",
+      "side": 1,
+      "message": "And here.",
+      "range": {
+        "startLine": 511,
+        "startChar": 4,
+        "endLine": 511,
+        "endChar": 18
+      },
+      "revId": "a6a2f0b57047236858b621aa2958377c607df4e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
