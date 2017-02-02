@@ -117,6 +117,29 @@
     },
     {
       "key": {
+        "uuid": "8d31e18f_aa2b15e4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-02T21:49:39Z",
+      "side": 1,
+      "message": "you\u0027ll need to include the headers for the logging annotators here and in the 9 class.",
+      "range": {
+        "startLine": 17,
+        "startChar": 39,
+        "endLine": 17,
+        "endChar": 55
+      },
+      "revId": "84a8a11eb610c7d5f9847664f5ad10871fc86678",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a9438abe_5ef4112b",
         "filename": "src/tests/gl_tests/StateChangeTest.cpp",
         "patchSetId": 2
