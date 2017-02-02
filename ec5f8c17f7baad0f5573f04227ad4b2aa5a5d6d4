@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "aaa5d7c9_2c4ea6ef",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-02-02T01:27:21Z",
+      "side": 1,
+      "message": "Done",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 2
+      },
+      "revId": "ec5f8c17f7baad0f5573f04227ad4b2aa5a5d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a1489de0_f4da00c0",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 15
@@ -36,6 +59,29 @@
       "writtenOn": "2017-02-01T16:55:36Z",
       "side": 1,
       "message": "These functions should be put in an anonymous namespace",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 88,
+        "endChar": 1
+      },
+      "revId": "ec5f8c17f7baad0f5573f04227ad4b2aa5a5d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e97a42e_14a536df",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-02-02T01:27:21Z",
+      "side": 1,
+      "message": "Done",
       "range": {
         "startLine": 40,
         "startChar": 0,
@@ -71,6 +117,29 @@
     },
     {
       "key": {
+        "uuid": "1bbd6f66_0c60a7f2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-02-02T01:27:21Z",
+      "side": 1,
+      "message": "Done",
+      "range": {
+        "startLine": 98,
+        "startChar": 4,
+        "endLine": 99,
+        "endChar": 26
+      },
+      "revId": "ec5f8c17f7baad0f5573f04227ad4b2aa5a5d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f46a8ed8_72f5ee74",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 15
@@ -82,6 +151,29 @@
       "writtenOn": "2017-02-01T16:55:36Z",
       "side": 1,
       "message": "I think this can be constexpr now, even hoisted from this class and then inputLayout can be put in the initializer list.",
+      "range": {
+        "startLine": 112,
+        "startChar": 4,
+        "endLine": 113,
+        "endChar": 90
+      },
+      "revId": "ec5f8c17f7baad0f5573f04227ad4b2aa5a5d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2444361e_420a725e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-02-02T01:27:21Z",
+      "side": 1,
+      "message": "Done",
       "range": {
         "startLine": 112,
         "startChar": 4,
@@ -117,6 +209,29 @@
     },
     {
       "key": {
+        "uuid": "7d09ce4c_703bd377",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-02-02T01:27:21Z",
+      "side": 1,
+      "message": "Done",
+      "range": {
+        "startLine": 201,
+        "startChar": 42,
+        "endLine": 201,
+        "endChar": 75
+      },
+      "revId": "ec5f8c17f7baad0f5573f04227ad4b2aa5a5d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b1f8d52c_aa721560",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 15
@@ -128,6 +243,29 @@
       "writtenOn": "2017-02-01T16:55:36Z",
       "side": 1,
       "message": "Can be just vbData",
+      "range": {
+        "startLine": 204,
+        "startChar": 35,
+        "endLine": 204,
+        "endChar": 45
+      },
+      "revId": "ec5f8c17f7baad0f5573f04227ad4b2aa5a5d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6dfcb856_f30bd532",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-02-02T01:27:21Z",
+      "side": 1,
+      "message": "Done",
       "range": {
         "startLine": 204,
         "startChar": 35,
@@ -163,6 +301,29 @@
     },
     {
       "key": {
+        "uuid": "50b291ad_05d69fba",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-02-02T01:27:21Z",
+      "side": 1,
+      "message": "Done",
+      "range": {
+        "startLine": 208,
+        "startChar": 37,
+        "endLine": 208,
+        "endChar": 43
+      },
+      "revId": "ec5f8c17f7baad0f5573f04227ad4b2aa5a5d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9fe1350e_d2c23470",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 15
@@ -186,6 +347,29 @@
     },
     {
       "key": {
+        "uuid": "88dd3133_e06e7ac3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-02-02T01:27:21Z",
+      "side": 1,
+      "message": "Done",
+      "range": {
+        "startLine": 232,
+        "startChar": 26,
+        "endLine": 232,
+        "endChar": 47
+      },
+      "revId": "ec5f8c17f7baad0f5573f04227ad4b2aa5a5d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3afed26e_d112f95f",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 15
@@ -197,6 +381,29 @@
       "writtenOn": "2017-02-01T15:12:53Z",
       "side": 1,
       "message": "nit: you can tag yourself in this TODO just to record who added it.",
+      "range": {
+        "startLine": 583,
+        "startChar": 15,
+        "endLine": 583,
+        "endChar": 19
+      },
+      "revId": "ec5f8c17f7baad0f5573f04227ad4b2aa5a5d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "27228099_96e12b53",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-02-02T01:27:21Z",
+      "side": 1,
+      "message": "Done",
       "range": {
         "startLine": 583,
         "startChar": 15,
