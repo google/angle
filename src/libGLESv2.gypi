@@ -232,6 +232,7 @@
             'libANGLE/validationES31.h',
             'third_party/murmurhash/MurmurHash3.cpp',
             'third_party/murmurhash/MurmurHash3.h',
+            'third_party/trace_event/trace_event.h',
         ],
         'libangle_d3d_shared_sources':
         [
