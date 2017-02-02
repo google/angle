@@ -25,6 +25,23 @@
     },
     {
       "key": {
+        "uuid": "d53e603a_9dab72a9",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-02T05:15:45Z",
+      "side": 1,
+      "message": "Done",
+      "revId": "a2c2da060f1d2f824c53bab8097f539813d42aa2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dfc1e1ec_f1b41061",
         "filename": "src/common/debug.cpp",
         "patchSetId": 1
@@ -42,6 +59,23 @@
         "endLine": 68,
         "endChar": 15
       },
+      "revId": "a2c2da060f1d2f824c53bab8097f539813d42aa2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0fc4652c_4eecef17",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-02T05:15:45Z",
+      "side": 1,
+      "message": "Done",
       "revId": "a2c2da060f1d2f824c53bab8097f539813d42aa2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -71,6 +105,23 @@
     },
     {
       "key": {
+        "uuid": "7e662b8c_fa9e46d4",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-02T05:15:45Z",
+      "side": 1,
+      "message": "Done",
+      "revId": "a2c2da060f1d2f824c53bab8097f539813d42aa2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b0cca1d3_6221aa31",
         "filename": "src/common/debug.cpp",
         "patchSetId": 1
@@ -88,6 +139,23 @@
         "endLine": 276,
         "endChar": 5
       },
+      "revId": "a2c2da060f1d2f824c53bab8097f539813d42aa2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "95a7b7a1_11a08cca",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-02T05:15:45Z",
+      "side": 1,
+      "message": "Ack",
       "revId": "a2c2da060f1d2f824c53bab8097f539813d42aa2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -117,6 +185,23 @@
     },
     {
       "key": {
+        "uuid": "53b2d764_81b2dccb",
+        "filename": "src/common/debug.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-02T05:15:45Z",
+      "side": 1,
+      "message": "Done",
+      "revId": "a2c2da060f1d2f824c53bab8097f539813d42aa2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1879d8fd_6381a6b9",
         "filename": "src/libANGLE/Display.cpp",
         "patchSetId": 1
@@ -134,6 +219,23 @@
         "endLine": 68,
         "endChar": 21
       },
+      "revId": "a2c2da060f1d2f824c53bab8097f539813d42aa2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "967e8827_c57b8056",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-02T05:15:45Z",
+      "side": 1,
+      "message": "As discussed offline, cerr fallback is in LogMessage::trace().",
       "revId": "a2c2da060f1d2f824c53bab8097f539813d42aa2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -163,6 +265,23 @@
     },
     {
       "key": {
+        "uuid": "83d84126_3e29aa70",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-02T05:15:45Z",
+      "side": 1,
+      "message": "Done",
+      "revId": "a2c2da060f1d2f824c53bab8097f539813d42aa2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7107eb7d_648f5465",
         "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
         "patchSetId": 1
@@ -186,6 +305,23 @@
     },
     {
       "key": {
+        "uuid": "eea8c34b_b43de9da",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 587,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-02T05:15:45Z",
+      "side": 1,
+      "message": "As I understand, this code if for debugging \"getting pixels on screen during tests\" path. Is adding UNREACHABLE() here good enough?",
+      "revId": "a2c2da060f1d2f824c53bab8097f539813d42aa2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d3818bc5_bc726195",
         "filename": "src/tests/gl_tests/StateChangeTest.cpp",
         "patchSetId": 1
@@ -203,6 +339,23 @@
         "endLine": 196,
         "endChar": 84
       },
+      "revId": "a2c2da060f1d2f824c53bab8097f539813d42aa2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f7234434_3cc0ef64",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-02T05:15:45Z",
+      "side": 1,
+      "message": "anglebug.com/1826",
       "revId": "a2c2da060f1d2f824c53bab8097f539813d42aa2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false

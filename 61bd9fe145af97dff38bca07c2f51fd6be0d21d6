@@ -22,6 +22,23 @@
       "revId": "61bd9fe145af97dff38bca07c2f51fd6be0d21d6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "64e09471_eb6784cb",
+        "filename": "include/platform/Platform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-02T05:15:45Z",
+      "side": 0,
+      "message": "Does that mean that you want other platforms to inherit from DefaultPlatform?\nOtherwise, a platform can leave log functions doing nothing, and all the logs will disappear. Like CapturePlatform.\nAnd a Platform implementer would not have any idea of this side effect taking place.",
+      "revId": "61bd9fe145af97dff38bca07c2f51fd6be0d21d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
