@@ -39,6 +39,24 @@
       "revId": "5cd57cc0a1d042bc509ac8899aa420bd338d2da0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "449ff68d_ae1b9b05",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2441,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-02T23:34:11Z",
+      "side": 1,
+      "message": "I\u0027m a bit worried about \"compiler forces gl_MaxDrawBuffers to 1 when the extension isn\u0027t present\" - on Nexus 5X GLES3 extension is not present but GL_MAX_DRAW_BUFFERS is 8.",
+      "parentUuid": "0408ff93_2833c221",
+      "revId": "5cd57cc0a1d042bc509ac8899aa420bd338d2da0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
