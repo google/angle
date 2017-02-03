@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "415c4d19_05403365",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-03T22:22:05Z",
+      "side": 1,
+      "message": "just call gl::InitializeDebugAnnotations(). This will happen before any overriding in the Renderer class.",
+      "range": {
+        "startLine": 416,
+        "startChar": 4,
+        "endLine": 425,
+        "endChar": 0
+      },
+      "revId": "7cd2bce89961392e7512025462f7802e7184c06f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c1bd8b4c_05baa32a",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-03T22:22:05Z",
+      "side": 1,
+      "message": "I forget.. do we have a pipe for gl::Error that works? If so, one for egl::Error might be nice too if you feel like it.",
+      "range": {
+        "startLine": 440,
+        "startChar": 52,
+        "endLine": 440,
+        "endChar": 98
+      },
+      "revId": "7cd2bce89961392e7512025462f7802e7184c06f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7bf29840_aa54e737",
+        "filename": "src/libANGLE/Display.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-03T22:22:05Z",
+      "side": 1,
+      "message": "store this by value.",
+      "range": {
+        "startLine": 174,
+        "startChar": 11,
+        "endLine": 174,
+        "endChar": 28
+      },
+      "revId": "7cd2bce89961392e7512025462f7802e7184c06f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c57d0008_2d57cdb6",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 587,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-03T22:22:05Z",
+      "side": 1,
+      "message": "this should probably be piped up.. maybe add a TODO there.",
+      "range": {
+        "startLine": 587,
+        "startChar": 18,
+        "endLine": 587,
+        "endChar": 31
+      },
+      "revId": "7cd2bce89961392e7512025462f7802e7184c06f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
