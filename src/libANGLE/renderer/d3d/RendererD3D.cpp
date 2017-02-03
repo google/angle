@@ -182,10 +182,8 @@ bool RendererD3D::skipDraw(const gl::ContextState &data, GLenum drawMode)
         // undefined when not written, just skip drawing to avoid unexpected results.
         if (!usesPointSize && !state.isTransformFeedbackActiveUnpaused())
         {
-            // This is stictly speaking not an error, but developers should be
-            // notified of risking undefined behavior.
-            ERR() << "Point rendering without writing to gl_PointSize.";
-
+            // Notify developers of risking undefined behavior.
+            WARN() << "Point rendering without writing to gl_PointSize.";
             return true;
         }
     }
