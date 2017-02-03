@@ -1113,13 +1113,15 @@
                     'dependencies':
                     [
                         'glslang',
-                        'VkLayer_core_validation',
-                        'VkLayer_image',
-                        'VkLayer_object_tracker',
-                        'VkLayer_parameter_validation',
-                        'VkLayer_swapchain',
-                        'VkLayer_threading',
-                        'VkLayer_unique_objects',
+                        # Need to disable these to prevent multiply defined symbols with ninja.
+                        # TODO(jmadill): Figure out how to implement data_deps in gyp.
+                        # 'VkLayer_core_validation',
+                        # 'VkLayer_image',
+                        # 'VkLayer_object_tracker',
+                        # 'VkLayer_parameter_validation',
+                        # 'VkLayer_swapchain',
+                        # 'VkLayer_threading',
+                        # 'VkLayer_unique_objects',
                         'vulkan_loader',
                     ],
                     'export_dependent_settings':
