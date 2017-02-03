@@ -5,6 +5,7 @@
 //
 
 #include "test_utils/ANGLETest.h"
+#include "test_utils/gl_raii.h"
 
 #include <array>
 #include <cmath>
@@ -505,6 +506,87 @@ TEST_P(UniformTestES3, OverflowArray)
     glUniform1fv(floatLocationOffset, kOverflowSize, &values[0]);
     glUniformMatrix3x2fv(matLocationOffset, kOverflowSize, GL_FALSE, &values[0]);
     glUniformMatrix3x2fv(matLocationOffset, kOverflowSize, GL_TRUE, &values[0]);
+}
+
+// Check setting a sampler uniform
+TEST_P(UniformTest, Sampler)
+{
+    const std::string &vertShader =
+        "uniform sampler2D tex2D;\n"
+        "void main() {\n"
+        "  gl_Position = vec4(0, 0, 0, 1);\n"
+        "}";
+
+    const std::string &fragShader =
+        "precision mediump float;\n"
+        "uniform sampler2D tex2D;\n"
+        "void main() {\n"
+        "  gl_FragColor = texture2D(tex2D, vec2(0, 0));\n"
+        "}";
+
+    ANGLE_GL_PROGRAM(program, vertShader, fragShader);
+
+    GLint location = glGetUniformLocation(program.get(), "tex2D");
+    ASSERT_NE(-1, location);
+
+    const GLint sampler[] = {0, 0, 0, 0};
+
+    // before UseProgram
+    glUniform1i(location, sampler[0]);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glUseProgram(program.get());
+
+    // Uniform1i
+    glUniform1i(location, sampler[0]);
+    glUniform1iv(location, 1, sampler);
+    EXPECT_GL_NO_ERROR();
+
+    // Uniform{234}i
+    glUniform2i(location, sampler[0], sampler[0]);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    glUniform3i(location, sampler[0], sampler[0], sampler[0]);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    glUniform4i(location, sampler[0], sampler[0], sampler[0], sampler[0]);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    glUniform2iv(location, 1, sampler);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    glUniform3iv(location, 1, sampler);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    glUniform4iv(location, 1, sampler);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Uniform{1234}f
+    const GLfloat f[] = {0, 0, 0, 0};
+    glUniform1f(location, f[0]);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    glUniform2f(location, f[0], f[0]);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    glUniform3f(location, f[0], f[0], f[0]);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    glUniform4f(location, f[0], f[0], f[0], f[0]);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    glUniform1fv(location, 1, f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    glUniform2fv(location, 1, f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    glUniform3fv(location, 1, f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    glUniform4fv(location, 1, f);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // < 0 or >= max
+    GLint tooHigh;
+    glGetIntegerv(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS, &tooHigh);
+    constexpr GLint tooLow[] = {-1};
+    glUniform1i(location, tooLow[0]);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+    glUniform1iv(location, 1, tooLow);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+    glUniform1i(location, tooHigh);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+    glUniform1iv(location, 1, &tooHigh);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
 }
 
 // Check that sampler uniforms only show up one time in the list

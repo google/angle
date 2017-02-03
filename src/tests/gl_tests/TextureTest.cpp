@@ -3218,41 +3218,6 @@ TEST_P(TextureLimitsTest, TextureTypeConflict)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
-// Negative test for rendering with texture outside the valid range.
-// TODO(jmadill): Possibly adjust the test according to the spec:
-// GLES 3.0.4 section 2.12.7 mentions that specifying an out-of-range sampler uniform value
-// generates an INVALID_VALUE error - GLES 2.0 doesn't yet have this mention.
-TEST_P(TextureLimitsTest, DrawWithTexturePastMaximum)
-{
-    const std::string &vertexShader =
-        "attribute vec2 position;\n"
-        "varying float color;\n"
-        "uniform sampler2D tex2D;\n"
-        "void main() {\n"
-        "  gl_Position = vec4(position, 0, 1);\n"
-        "  vec2 texCoord = (position * 0.5) + 0.5;\n"
-        "  color = texture2D(tex2D, texCoord).x;\n"
-        "}";
-    const std::string &fragmentShader =
-        "varying mediump float color;\n"
-        "void main() {\n"
-        "  gl_FragColor = vec4(color, 0, 0, 1);\n"
-        "}";
-
-    mProgram = CompileProgram(vertexShader, fragmentShader);
-    ASSERT_NE(0u, mProgram);
-
-    glUseProgram(mProgram);
-    GLint tex2DLocation = glGetUniformLocation(mProgram, "tex2D");
-    ASSERT_NE(-1, tex2DLocation);
-
-    glUniform1i(tex2DLocation, mMaxCombinedTextures);
-    ASSERT_GL_NO_ERROR();
-
-    drawQuad(mProgram, "position", 0.5f);
-    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
-}
-
 class Texture2DNorm16TestES3 : public Texture2DTestES3
 {
   protected:

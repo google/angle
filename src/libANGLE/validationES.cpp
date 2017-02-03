@@ -1417,7 +1417,7 @@ bool ValidateUniformCommonBase(gl::Context *context,
     return true;
 }
 
-bool ValidateUniform1ivValue(gl::Context *context,
+bool ValidateUniform1ivValue(ValidationContext *context,
                              GLenum uniformType,
                              GLsizei count,
                              const GLint *value)
@@ -1432,7 +1432,16 @@ bool ValidateUniform1ivValue(gl::Context *context,
 
     if (IsSamplerType(uniformType))
     {
-        // TODO(fjhenigman): check values against GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS
+        // Check that the values are in range.
+        const GLint max = context->getCaps().maxCombinedTextureImageUnits;
+        for (GLsizei i = 0; i < count; ++i)
+        {
+            if (value[i] < 0 || value[i] >= max)
+            {
+                context->handleError(Error(GL_INVALID_VALUE, "sampler uniform value out of range"));
+                return false;
+            }
+        }
         return true;
     }
 
