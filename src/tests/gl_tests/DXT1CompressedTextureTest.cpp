@@ -5,6 +5,7 @@
 //
 
 #include "test_utils/ANGLETest.h"
+#include "test_utils/gl_raii.h"
 
 #include "media/pixel.inl"
 
@@ -172,6 +173,29 @@ TEST_P(DXT1CompressedTextureTest, CompressedTexStorage)
     glDeleteTextures(1, &texture);
 
     EXPECT_GL_NO_ERROR();
+}
+
+// Test validation of glCompressedTexSubImage2D with DXT formats
+TEST_P(DXT1CompressedTextureTest, CompressedTexSubImageValidation)
+{
+    if (!extensionEnabled("GL_EXT_texture_compression_dxt1"))
+    {
+        std::cout << "Test skipped due to missing GL_EXT_texture_compression_dxt1" << std::endl;
+        return;
+    }
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture.get());
+
+    // Size mip 0 to a large size
+    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, pixel_0_width,
+                           pixel_0_height, 0, pixel_0_size, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    // Set a sub image with an offset that isn't a multiple of the block size
+    glCompressedTexSubImage2D(GL_TEXTURE_2D, 0, 1, 3, pixel_1_width, pixel_1_height,
+                              GL_COMPRESSED_RGBA_S3TC_DXT1_EXT, pixel_1_size, pixel_1_data);
+    ASSERT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
 class DXT1CompressedTextureTestES3 : public DXT1CompressedTextureTest { };

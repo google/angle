@@ -188,7 +188,8 @@ bool ValidateES3TexImageParametersBase(Context *context,
             return false;
         }
 
-        if (!ValidCompressedImageSize(context, actualInternalFormat, width, height))
+        if (!ValidCompressedImageSize(context, actualInternalFormat, xoffset, yoffset, width,
+                                      height))
         {
             context->handleError(Error(GL_INVALID_OPERATION));
             return false;

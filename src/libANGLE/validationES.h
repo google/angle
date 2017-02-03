@@ -49,6 +49,8 @@ bool ValidImageSizeParameters(const ValidationContext *context,
                               bool isSubImage);
 bool ValidCompressedImageSize(const ValidationContext *context,
                               GLenum internalFormat,
+                              GLint xoffset,
+                              GLint yoffset,
                               GLsizei width,
                               GLsizei height);
 bool ValidImageDataSize(ValidationContext *context,

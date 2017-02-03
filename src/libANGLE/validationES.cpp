@@ -1718,6 +1718,8 @@ bool CompressedTextureFormatRequiresExactSize(GLenum internalFormat)
 
 bool ValidCompressedImageSize(const ValidationContext *context,
                               GLenum internalFormat,
+                              GLint xoffset,
+                              GLint yoffset,
                               GLsizei width,
                               GLsizei height)
 {
@@ -1727,14 +1729,16 @@ bool ValidCompressedImageSize(const ValidationContext *context,
         return false;
     }
 
-    if (width < 0 || height < 0)
+    if (xoffset < 0 || yoffset < 0 || width < 0 || height < 0)
     {
         return false;
     }
 
     if (CompressedTextureFormatRequiresExactSize(internalFormat))
     {
-        if ((static_cast<GLuint>(width) > formatInfo.compressedBlockWidth &&
+        if (xoffset % formatInfo.compressedBlockWidth != 0 ||
+            yoffset % formatInfo.compressedBlockHeight != 0 ||
+            (static_cast<GLuint>(width) > formatInfo.compressedBlockWidth &&
              width % formatInfo.compressedBlockWidth != 0) ||
             (static_cast<GLuint>(height) > formatInfo.compressedBlockHeight &&
              height % formatInfo.compressedBlockHeight != 0))
@@ -3143,7 +3147,8 @@ bool ValidateCopyTexImageParametersBase(ValidationContext *context,
         return false;
     }
 
-    if (formatInfo.compressed && !ValidCompressedImageSize(context, internalformat, width, height))
+    if (formatInfo.compressed &&
+        !ValidCompressedImageSize(context, internalformat, xoffset, yoffset, width, height))
     {
         context->handleError(Error(GL_INVALID_OPERATION));
         return false;

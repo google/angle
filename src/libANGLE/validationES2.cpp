@@ -467,7 +467,8 @@ bool ValidateES2TexImageParameters(Context *context,
                           "internalformat is not a supported compressed internal format"));
                 return false;
         }
-        if (!ValidCompressedImageSize(context, actualInternalFormat, width, height))
+        if (!ValidCompressedImageSize(context, actualInternalFormat, xoffset, yoffset, width,
+                                      height))
         {
             context->handleError(Error(GL_INVALID_OPERATION));
             return false;
