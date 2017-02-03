@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d19b4b62_dab58ac8",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-03T14:42:49Z",
+      "side": 0,
+      "message": "this is not the right fix for these problems.",
+      "range": {
+        "startLine": 237,
+        "startChar": 74,
+        "endLine": 237,
+        "endChar": 84
+      },
+      "revId": "7e24bfd332215266161c286f0f904857af52f342",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f2d956a7_f955de98",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2656,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-03T14:42:49Z",
+      "side": 0,
+      "message": "this certainly isn\u0027t the right fix for this.",
+      "range": {
+        "startLine": 2656,
+        "startChar": 38,
+        "endLine": 2656,
+        "endChar": 48
+      },
+      "revId": "7e24bfd332215266161c286f0f904857af52f342",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ae3b9990_74bc5a4d",
+        "filename": "src/tests/gl_tests/BlitFramebufferANGLETest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 767,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-03T14:42:49Z",
+      "side": 1,
+      "message": "I don\u0027t think this is the correct fix. Likely we should change the ERR to WARN in these cases rather than just hacking off the platform.",
+      "range": {
+        "startLine": 767,
+        "startChar": 4,
+        "endLine": 767,
+        "endChar": 31
+      },
+      "revId": "28f89c0d6ad56dde62a4e2dd4c5cda05c371c6f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94a7141a_8ec4bab5",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-03T14:42:49Z",
+      "side": 1,
+      "message": "At one point in our discussions I mentioned but maybe you missed it - make this gl_PointSize behaviour a WARN instead of an ERR, instead of modifying these tests. Chromium uses this behaviour quite a bit, it\u0027s not really an error.",
+      "range": {
+        "startLine": 325,
+        "startChar": 13,
+        "endLine": 325,
+        "endChar": 26
+      },
+      "revId": "28f89c0d6ad56dde62a4e2dd4c5cda05c371c6f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
