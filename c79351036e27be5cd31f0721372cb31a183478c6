@@ -22,6 +22,24 @@
       "revId": "c79351036e27be5cd31f0721372cb31a183478c6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d724cd4_5ebd7891",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-03T20:48:03Z",
+      "side": 1,
+      "message": "Right, what Geoff said, pass a bool. You can also pass this to the initCaps function I think instead of making it a member. Not sure if I\u0027m missing a place it\u0027s called outside of Context.cpp.",
+      "parentUuid": "7571a69f_82f7ecf5",
+      "revId": "c79351036e27be5cd31f0721372cb31a183478c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
