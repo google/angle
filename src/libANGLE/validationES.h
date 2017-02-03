@@ -196,6 +196,11 @@ bool ValidateProgramUniform(Context *context,
                             GLuint program,
                             GLint location,
                             GLsizei count);
+bool ValidateProgramUniform1iv(Context *context,
+                               GLuint program,
+                               GLint location,
+                               GLsizei count,
+                               const GLint *value);
 bool ValidateProgramUniformMatrix(Context *context,
                                   GLenum matrixType,
                                   GLuint program,
@@ -204,6 +209,7 @@ bool ValidateProgramUniformMatrix(Context *context,
                                   GLboolean transpose);
 
 bool ValidateUniform(Context *context, GLenum uniformType, GLint location, GLsizei count);
+bool ValidateUniform1iv(Context *context, GLint location, GLsizei count, const GLint *value);
 bool ValidateUniformMatrix(Context *context,
                            GLenum matrixType,
                            GLint location,

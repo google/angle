@@ -417,7 +417,7 @@ void GL_APIENTRY ProgramUniform1iv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateProgramUniform(context, GL_INT, program, location, count))
+        if (!ValidateProgramUniform1iv(context, program, location, count, value))
         {
             return;
         }
