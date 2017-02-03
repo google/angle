@@ -20,23 +20,24 @@ if "%1" == "release" (
 )
 
 :: Shaders for OpenGL ES 2.0 and OpenGL ES 3.0+
-::              | Input file           | Entry point            | Type            | Output file                        | Debug |
-call:BuildShader Passthrough2D11.hlsl   VS_Passthrough2D         vs_4_0_level_9_3  compiled\passthrough2d11vs.h         %debug%
-call:BuildShader Passthrough2D11.hlsl   PS_PassthroughRGBA2D     ps_4_0_level_9_3  compiled\passthroughrgba2d11ps.h     %debug%
-call:BuildShader Passthrough2D11.hlsl   PS_PassthroughRGB2D      ps_4_0_level_9_3  compiled\passthroughrgb2d11ps.h      %debug%
-call:BuildShader Passthrough2D11.hlsl   PS_PassthroughRG2D       ps_4_0_level_9_3  compiled\passthroughrg2d11ps.h       %debug%
-call:BuildShader Passthrough2D11.hlsl   PS_PassthroughR2D        ps_4_0_level_9_3  compiled\passthroughr2d11ps.h        %debug%
-call:BuildShader Passthrough2D11.hlsl   PS_PassthroughLum2D      ps_4_0_level_9_3  compiled\passthroughlum2d11ps.h      %debug%
-call:BuildShader Passthrough2D11.hlsl   PS_PassthroughLumAlpha2D ps_4_0_level_9_3  compiled\passthroughlumalpha2d11ps.h %debug%
+::              | Input file         | Entry point            | Type            | Output file                        | Debug |
+call:BuildShader Passthrough2D11.hlsl VS_Passthrough2D         vs_4_0_level_9_3  compiled\passthrough2d11vs.h         %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGBA2D     ps_4_0_level_9_3  compiled\passthroughrgba2d11ps.h     %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGB2D      ps_4_0_level_9_3  compiled\passthroughrgb2d11ps.h      %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughRG2D       ps_4_0_level_9_3  compiled\passthroughrg2d11ps.h       %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughR2D        ps_4_0_level_9_3  compiled\passthroughr2d11ps.h        %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughLum2D      ps_4_0_level_9_3  compiled\passthroughlum2d11ps.h      %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughLumAlpha2D ps_4_0_level_9_3  compiled\passthroughlumalpha2d11ps.h %debug%
 
-call:BuildShader Passthrough2D11.hlsl   PS_PassthroughRGBAPremultiply2D ps_4_0_level_9_3 compiled\passthroughrgbapremultiply2d11ps.h %debug%
-call:BuildShader Passthrough2D11.hlsl   PS_PassthroughRGBAUnmultiply2D  ps_4_0_level_9_3 compiled\passthroughrgbaunmultiply2d11ps.h  %debug%
-call:BuildShader Passthrough2D11.hlsl   PS_PassthroughRGBPremultiply2D  ps_4_0_level_9_3 compiled\passthroughrgbpremultiply2d11ps.h  %debug%
-call:BuildShader Passthrough2D11.hlsl   PS_PassthroughRGBUnmultiply2D   ps_4_0_level_9_3 compiled\passthroughrgbunmultiply2d11ps.h   %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGBAPremultiply2D ps_4_0_level_9_3 compiled\passthroughrgbapremultiply2d11ps.h %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGBAUnmultiply2D  ps_4_0_level_9_3 compiled\passthroughrgbaunmultiply2d11ps.h  %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGBPremultiply2D  ps_4_0_level_9_3 compiled\passthroughrgbpremultiply2d11ps.h  %debug%
+call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGBUnmultiply2D   ps_4_0_level_9_3 compiled\passthroughrgbunmultiply2d11ps.h   %debug%
 
-call:BuildShader Clear11.hlsl           VS_ClearAnyType          vs_4_0_level_9_3  compiled\clearanytype11vs.h          %debug%
-call:BuildShader Clear11.hlsl           PS_ClearFloat_FL9        ps_4_0_level_9_3  compiled\clearfloat11_fl9ps.h        %debug%
-call:BuildShader Clear11.hlsl           PS_ClearFloat            ps_4_0            compiled\clearfloat11ps.h            %debug%
+call:BuildShader Clear11.hlsl         VS_ClearFloat            vs_4_0_level_9_3  compiled\clearfloat11vs.h            %debug%
+call:BuildShader Clear11.hlsl         PS_ClearFloat_FL9        ps_4_0_level_9_3  compiled\clearfloat11_fl9ps.h        %debug%
+call:BuildShader Clear11.hlsl         PS_ClearFloat            ps_4_0            compiled\clearfloat11ps.h            %debug%
+
 
 :: Shaders for OpenGL ES 3.0+ only
 ::              | Input file               | Entry point            | Type   | Output file                        | Debug |
@@ -79,7 +80,10 @@ call:BuildShader Swizzle11.hlsl             PS_SwizzleF2DArray       ps_4_0   co
 call:BuildShader Swizzle11.hlsl             PS_SwizzleI2DArray       ps_4_0   compiled\swizzlei2darrayps.h         %debug%
 call:BuildShader Swizzle11.hlsl             PS_SwizzleUI2DArray      ps_4_0   compiled\swizzleui2darrayps.h        %debug%
 
+call:BuildShader Clear11.hlsl               VS_ClearUint             vs_4_0   compiled\clearuint11vs.h             %debug%
 call:BuildShader Clear11.hlsl               PS_ClearUint             ps_4_0   compiled\clearuint11ps.h             %debug%
+
+call:BuildShader Clear11.hlsl               VS_ClearSint             vs_4_0   compiled\clearsint11vs.h             %debug%
 call:BuildShader Clear11.hlsl               PS_ClearSint             ps_4_0   compiled\clearsint11ps.h             %debug%
 
 call:BuildShader BufferToTexture11.hlsl     VS_BufferToTexture       vs_4_0   compiled/buffertotexture11_vs.h      %debug%

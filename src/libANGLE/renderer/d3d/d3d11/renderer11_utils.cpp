@@ -1886,17 +1886,14 @@ LazyInputLayout::LazyInputLayout(const D3D11_INPUT_ELEMENT_DESC *inputDesc,
       mByteCode(byteCode),
       mDebugName(debugName)
 {
-    if (inputDesc)
-    {
-        memcpy(&mInputDesc[0], inputDesc, sizeof(D3D11_INPUT_ELEMENT_DESC) * inputDescLen);
-    }
+    memcpy(&mInputDesc[0], inputDesc, sizeof(D3D11_INPUT_ELEMENT_DESC) * inputDescLen);
 }
 
 ID3D11InputLayout *LazyInputLayout::resolve(ID3D11Device *device)
 {
     checkAssociatedDevice(device);
 
-    if (mByteCode != nullptr && mResource == nullptr)
+    if (mResource == nullptr)
     {
         HRESULT result =
             device->CreateInputLayout(&mInputDesc[0], static_cast<UINT>(mInputDesc.size()),
