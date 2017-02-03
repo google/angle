@@ -320,6 +320,14 @@ TEST_P(TimerQueriesTest, TimeElapsedMulticontextTest)
         return;
     }
 
+    if (IsAMD() && IsOSX())
+    {
+        // TODO(cwallez): Figure out why this test is flaky on OSX/AMD.
+        // http://anglebug.com/1866
+        std::cout << "Test skipped on Mac AMD." << std::endl;
+        return;
+    }
+
     if (!extensionEnabled("GL_EXT_disjoint_timer_query"))
     {
         std::cout << "Test skipped because GL_EXT_disjoint_timer_query is not available."
