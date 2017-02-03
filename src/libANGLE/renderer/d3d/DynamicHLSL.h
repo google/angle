@@ -40,10 +40,19 @@ class ShaderD3D;
 
 struct PixelShaderOutputVariable
 {
-    GLenum type;
+    PixelShaderOutputVariable() {}
+    PixelShaderOutputVariable(GLenum typeIn,
+                              const std::string &nameIn,
+                              const std::string &sourceIn,
+                              size_t outputIndexIn)
+        : type(typeIn), name(nameIn), source(sourceIn), outputIndex(outputIndexIn)
+    {
+    }
+
+    GLenum type = GL_NONE;
     std::string name;
     std::string source;
-    size_t outputIndex;
+    size_t outputIndex = 0;
 };
 
 struct BuiltinVarying final : angle::NonCopyable

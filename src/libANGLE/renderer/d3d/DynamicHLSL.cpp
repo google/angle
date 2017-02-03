@@ -267,16 +267,21 @@ std::string DynamicHLSL::generatePixelShaderForOutputSignature(
     declarationStream << "struct PS_OUTPUT\n"
                          "{\n";
 
-    for (size_t layoutIndex = 0; layoutIndex < outputLayout.size(); ++layoutIndex)
+    // Workaround for HLSL 3.x: We can't do a depth/stencil only render, the runtime will complain.
+    size_t numOutputs = outputLayout.empty() ? 1u : outputLayout.size();
+    const PixelShaderOutputVariable defaultOutput(GL_FLOAT_VEC4, "dummy", "float4(0, 0, 0, 1)", 0);
+
+    for (size_t layoutIndex = 0; layoutIndex < numOutputs; ++layoutIndex)
     {
-        GLenum binding = outputLayout[layoutIndex];
+        GLenum binding = outputLayout.empty() ? GL_COLOR_ATTACHMENT0 : outputLayout[layoutIndex];
 
         if (binding != GL_NONE)
         {
             unsigned int location = (binding - GL_COLOR_ATTACHMENT0);
 
             const PixelShaderOutputVariable *outputVariable =
-                FindOutputAtLocation(outputVariables, location);
+                outputLayout.empty() ? &defaultOutput
+                                     : FindOutputAtLocation(outputVariables, location);
 
             // OpenGL ES 3.0 spec $4.2.1
             // If [...] not all user-defined output variables are written, the values of fragment
