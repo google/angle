@@ -33,6 +33,24 @@
       "revId": "7d5ee4d78ef9ae12951c0cd7c981518015adcd12",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "80d339cd_7b117880",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3514,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-03T20:09:35Z",
+      "side": 1,
+      "message": "INVALID_VALUE is usually thrown when a value out of a range defined in the spec (like a GLsizei being negative).  I\u0027d say it\u0027s fine to use INVALID_VALUE as long as the tests are happy.",
+      "parentUuid": "ab26c0e9_2c2b94a6",
+      "revId": "7d5ee4d78ef9ae12951c0cd7c981518015adcd12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
