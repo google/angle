@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "3e1138fa_be26d746",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3497,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-03T20:31:38Z",
+      "side": 1,
+      "message": "nit: can put in a trivial message.",
+      "range": {
+        "startLine": 3497,
+        "startChar": 61,
+        "endLine": 3497,
+        "endChar": 62
+      },
+      "revId": "7d5ee4d78ef9ae12951c0cd7c981518015adcd12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7715c6fd_7bdc3820",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 1
@@ -51,6 +74,24 @@
       "revId": "7d5ee4d78ef9ae12951c0cd7c981518015adcd12",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75dceb8c_31b9cb52",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3514,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-03T20:31:38Z",
+      "side": 1,
+      "message": "I\u0027m pretty unclear on this. Feels like a minor bug in the WebGL test - at what point does a large enough offset switch from invalid_operation (below) to invalid_value (here). Would be worth checking, that test is very old. I\u0027m not sure how javascript converts -1 from \"JavascriptDoubleWhatever\" to GLsize in C.",
+      "parentUuid": "80d339cd_7b117880",
+      "revId": "7d5ee4d78ef9ae12951c0cd7c981518015adcd12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
