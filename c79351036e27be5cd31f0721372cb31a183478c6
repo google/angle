@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7571a69f_82f7ecf5",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-03T20:06:45Z",
+      "side": 1,
+      "message": "Remove this parameter if you can, it can be grabbed by calling display-\u003egetImplementation.  That or just pass a bool to the context constructor to signal it supporting surface-less.",
+      "range": {
+        "startLine": 238,
+        "startChar": 17,
+        "endLine": 238,
+        "endChar": 49
+      },
+      "revId": "c79351036e27be5cd31f0721372cb31a183478c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
