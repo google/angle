@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "75d98b63_e1aed816",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 53
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-03T11:41:48Z",
+      "side": 1,
+      "message": "Actually I think it is redundant to store both bindingIndex and the pointer to AttributeBinding, since we can access the AttributeBinding by the bindingIndex in VAO. Furthermore, we have to add validations against the mismatch between the bindingIndex and the pointer to the AttributeBinding.\n\nIn my current implementation, I store the const pointer to all AttributeBindings in the struct VertexAttribute, then we can access the AttributeBinding only by bindingIndex, so it is enough just to update bindingIndex here:\n// VertexAttribute.h#60\nconst AttributeBinding \u0026getBinding() const { return (*bindings)[format.bindingIndex]; }\n\nDo you agree with this design?",
+      "parentUuid": "a9d91f82_37e8892b",
+      "revId": "90f68dbddae542948446456f1a80a5eb5f22579a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "98f9d7ba_12f11236",
         "filename": "src/libANGLE/VertexArray.h",
         "patchSetId": 53
@@ -232,6 +250,24 @@
     },
     {
       "key": {
+        "uuid": "17424dd4_06074e98",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 53
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-03T11:41:48Z",
+      "side": 1,
+      "message": "According to https://www.opengl.org/registry/specs/ARB/vertex_attrib_binding.txt, there is \u0027a reference to one of the new buffer binding points above\u0027 in each \u0027vertex attribute format information record\u0027, so I put bindingIndex in AttributeFormat.\n \nFurthermore, I should add a vector\u003cGLuint\u003ebindingIndexes in VertexArrayGL to store the cache of bindingIndex in GL drivers because in my current implementation I don\u0027t store the cache of pointer and stride in VertexArrayGL because they won\u0027t be set into GL drivers.",
+      "parentUuid": "9e1971b5_1de91033",
+      "revId": "90f68dbddae542948446456f1a80a5eb5f22579a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "11a9ffe7_58abe6f5",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 53
@@ -249,6 +285,24 @@
         "endLine": 1218,
         "endChar": 93
       },
+      "revId": "90f68dbddae542948446456f1a80a5eb5f22579a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2f5a1b52_9221ba42",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 53
+      },
+      "lineNbr": 1218,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-03T11:41:48Z",
+      "side": 1,
+      "message": "Got it. I will do that in this patch.",
+      "parentUuid": "11a9ffe7_58abe6f5",
       "revId": "90f68dbddae542948446456f1a80a5eb5f22579a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
