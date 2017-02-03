@@ -1036,7 +1036,35 @@ bool Framebuffer::formsRenderingFeedbackLoopWith(const State &state) const
         }
     }
 
-    // TODO(jmadill): Validate depth-stencil feedback loop.
+    // Validate depth-stencil feedback loop.
+    const auto &dsState = state.getDepthStencilState();
+
+    // We can skip the feedback loop checks if depth/stencil is masked out or disabled.
+    const FramebufferAttachment *depth = getDepthbuffer();
+    if (depth && depth->type() == GL_TEXTURE && dsState.depthTest && dsState.depthMask)
+    {
+        if (program->samplesFromTexture(state, depth->id()))
+        {
+            return true;
+        }
+    }
+
+    // Note: we assume the front and back masks are the same for WebGL.
+    const FramebufferAttachment *stencil = getStencilbuffer();
+    ASSERT(dsState.stencilBackWritemask == dsState.stencilWritemask);
+    if (stencil && stencil->type() == GL_TEXTURE && dsState.stencilTest &&
+        dsState.stencilWritemask != 0)
+    {
+        // Skip the feedback loop check if depth/stencil point to the same resource.
+        if (!depth || *stencil != *depth)
+        {
+            if (program->samplesFromTexture(state, stencil->id()))
+            {
+                return true;
+            }
+        }
+    }
+
     return false;
 }
 

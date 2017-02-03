@@ -942,6 +942,101 @@ TEST_P(WebGL2CompatibilityTest, RenderingFeedbackLoopWithDrawBuffers)
     drawBuffersFeedbackLoop(program.get(), {{GL_COLOR_ATTACHMENT0, GL_NONE}}, GL_NO_ERROR);
 }
 
+// This test covers detection of rendering feedback loops between the FBO and a depth Texture.
+// Based on WebGL test conformance2/rendering/depth-stencil-feedback-loop.html
+TEST_P(WebGL2CompatibilityTest, RenderingFeedbackLoopWithDepthStencil)
+{
+    const std::string vertexShader =
+        "#version 300 es\n"
+        "in vec4 aPosition;\n"
+        "out vec2 texCoord;\n"
+        "void main() {\n"
+        "    gl_Position = aPosition;\n"
+        "    texCoord = (aPosition.xy * 0.5) + 0.5;\n"
+        "}\n";
+
+    const std::string fragmentShader =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "uniform sampler2D tex;\n"
+        "in vec2 texCoord;\n"
+        "out vec4 oColor;\n"
+        "void main() {\n"
+        "    oColor = texture(tex, texCoord);\n"
+        "}\n";
+
+    GLsizei width  = 8;
+    GLsizei height = 8;
+
+    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+    glUseProgram(program.get());
+
+    glViewport(0, 0, width, height);
+
+    GLint texLoc = glGetUniformLocation(program.get(), "tex");
+    glUniform1i(texLoc, 0);
+
+    // Create textures and allocate storage
+    GLTexture tex0;
+    GLTexture tex1;
+    GLRenderbuffer rb;
+    FillTexture2D(tex0.get(), width, height, GLColor::black, 0, GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE);
+    FillTexture2D(tex1.get(), width, height, 0x80, 0, GL_DEPTH_COMPONENT16, GL_DEPTH_COMPONENT,
+                  GL_UNSIGNED_INT);
+    glBindRenderbuffer(GL_RENDERBUFFER, rb.get());
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_STENCIL_INDEX8, width, height);
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo.get());
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex0.get(), 0);
+
+    // Test rendering and sampling feedback loop for depth buffer
+    glBindTexture(GL_TEXTURE_2D, tex1.get());
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, tex1.get(), 0);
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    // The same image is used as depth buffer during rendering.
+    glEnable(GL_DEPTH_TEST);
+    drawQuad(program.get(), "aPosition", 0.5f, 1.0f, true);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // The same image is used as depth buffer. But depth mask is false.
+    glDepthMask(GL_FALSE);
+    drawQuad(program.get(), "aPosition", 0.5f, 1.0f, true);
+    EXPECT_GL_NO_ERROR();
+
+    // The same image is used as depth buffer. But depth test is not enabled during rendering.
+    glDepthMask(GL_TRUE);
+    glDisable(GL_DEPTH_TEST);
+    drawQuad(program.get(), "aPosition", 0.5f, 1.0f, true);
+    EXPECT_GL_NO_ERROR();
+
+    // Test rendering and sampling feedback loop for stencil buffer
+    glBindTexture(GL_RENDERBUFFER, rb.get());
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, 0, 0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rb.get());
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    constexpr GLint stencilClearValue = 0x40;
+    glClearBufferiv(GL_STENCIL, 0, &stencilClearValue);
+
+    // The same image is used as stencil buffer during rendering.
+    glEnable(GL_STENCIL_TEST);
+    drawQuad(program.get(), "aPosition", 0.5f, 1.0f, true);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // The same image is used as stencil buffer. But stencil mask is zero.
+    glStencilMask(0x0);
+    drawQuad(program.get(), "aPosition", 0.5f, 1.0f, true);
+    EXPECT_GL_NO_ERROR();
+
+    // The same image is used as stencil buffer. But stencil test is not enabled during rendering.
+    glStencilMask(0xffff);
+    glDisable(GL_STENCIL_TEST);
+    drawQuad(program.get(), "aPosition", 0.5f, 1.0f, true);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(WebGLCompatibilityTest,
