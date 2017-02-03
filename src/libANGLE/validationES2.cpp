@@ -1910,9 +1910,9 @@ bool ValidateBlitFramebufferANGLE(Context *context,
                                   dstX0, dstY0, dstX1, dstY1))
                 {
                     // only whole-buffer copies are permitted
-                    ERR() << "Only whole-buffer depth and stencil blits are supported by this "
-                             "implementation.";
-                    context->handleError(Error(GL_INVALID_OPERATION));
+                    context->handleError(Error(GL_INVALID_OPERATION,
+                                               "Only whole-buffer depth and stencil blits are "
+                                               "supported by this extension."));
                     return false;
                 }
 
