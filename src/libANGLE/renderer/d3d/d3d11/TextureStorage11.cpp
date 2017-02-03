@@ -2797,59 +2797,57 @@ gl::Error TextureStorage11_3D::getRenderTarget(const gl::ImageIndex &index, Rend
         *outRT = mLevelRenderTargets[mipLevel];
         return gl::NoError();
     }
-    else
+
+    const int layer = index.layerIndex;
+
+    LevelLayerKey key(mipLevel, layer);
+    if (mLevelLayerRenderTargets.find(key) == mLevelLayerRenderTargets.end())
     {
-        const int layer = index.layerIndex;
+        ID3D11Device *device = mRenderer->getDevice();
+        HRESULT result;
 
-        LevelLayerKey key(mipLevel, layer);
-        if (mLevelLayerRenderTargets.find(key) == mLevelLayerRenderTargets.end())
+        ID3D11Resource *texture = nullptr;
+        ANGLE_TRY(getResource(&texture));
+
+        // TODO, what kind of SRV is expected here?
+        ID3D11ShaderResourceView *srv     = nullptr;
+        ID3D11ShaderResourceView *blitSRV = nullptr;
+
+        D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
+        rtvDesc.Format                = mFormatInfo.rtvFormat;
+        rtvDesc.ViewDimension         = D3D11_RTV_DIMENSION_TEXTURE3D;
+        rtvDesc.Texture3D.MipSlice    = mTopLevel + mipLevel;
+        rtvDesc.Texture3D.FirstWSlice = layer;
+        rtvDesc.Texture3D.WSize       = 1;
+
+        ID3D11RenderTargetView *rtv;
+        result = device->CreateRenderTargetView(texture, &rtvDesc, &rtv);
+
+        ASSERT(result == E_OUTOFMEMORY || SUCCEEDED(result));
+        if (FAILED(result))
         {
-            ID3D11Device *device = mRenderer->getDevice();
-            HRESULT result;
-
-            ID3D11Resource *texture = nullptr;
-            ANGLE_TRY(getResource(&texture));
-
-            // TODO, what kind of SRV is expected here?
-            ID3D11ShaderResourceView *srv     = nullptr;
-            ID3D11ShaderResourceView *blitSRV = nullptr;
-
-            D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
-            rtvDesc.Format                = mFormatInfo.rtvFormat;
-            rtvDesc.ViewDimension         = D3D11_RTV_DIMENSION_TEXTURE3D;
-            rtvDesc.Texture3D.MipSlice    = mTopLevel + mipLevel;
-            rtvDesc.Texture3D.FirstWSlice = layer;
-            rtvDesc.Texture3D.WSize       = 1;
-
-            ID3D11RenderTargetView *rtv;
-            result = device->CreateRenderTargetView(texture, &rtvDesc, &rtv);
-
-            ASSERT(result == E_OUTOFMEMORY || SUCCEEDED(result));
-            if (FAILED(result))
-            {
-                SafeRelease(srv);
-                SafeRelease(blitSRV);
-                return gl::Error(GL_OUT_OF_MEMORY,
-                                 "Failed to create internal render target view for texture "
-                                 "storage, result: 0x%X.",
-                                 result);
-            }
-            ASSERT(SUCCEEDED(result));
-
-            d3d11::SetDebugName(rtv, "TexStorage3D.LayerRTV");
-
-            mLevelLayerRenderTargets[key] = new TextureRenderTarget11(
-                rtv, texture, srv, blitSRV, mFormatInfo.internalFormat, getFormatSet(),
-                getLevelWidth(mipLevel), getLevelHeight(mipLevel), 1, 0);
-
-            // RenderTarget will take ownership of these resources
-            SafeRelease(rtv);
+            SafeRelease(srv);
+            SafeRelease(blitSRV);
+            return gl::Error(GL_OUT_OF_MEMORY,
+                             "Failed to create internal render target view for texture "
+                             "storage, result: 0x%X.",
+                             result);
         }
+        ASSERT(SUCCEEDED(result));
 
-        ASSERT(outRT);
-        *outRT = mLevelLayerRenderTargets[key];
-        return gl::NoError();
+        d3d11::SetDebugName(rtv, "TexStorage3D.LayerRTV");
+
+        mLevelLayerRenderTargets[key] = new TextureRenderTarget11(
+            rtv, texture, srv, blitSRV, mFormatInfo.internalFormat, getFormatSet(),
+            getLevelWidth(mipLevel), getLevelHeight(mipLevel), 1, 0);
+
+        // RenderTarget will take ownership of these resources
+        SafeRelease(rtv);
     }
+
+    ASSERT(outRT);
+    *outRT = mLevelLayerRenderTargets[key];
+    return gl::NoError();
 }
 
 gl::Error TextureStorage11_3D::getSwizzleTexture(ID3D11Resource **outTexture)

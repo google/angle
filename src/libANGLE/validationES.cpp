@@ -3195,7 +3195,7 @@ bool ValidateCopyTexImageParametersBase(ValidationContext *context,
     // Detect texture copying feedback loops for WebGL.
     if (context->getExtensions().webglCompatibility)
     {
-        if (readFramebuffer->formsCopyingFeedbackLoopWith(texture->id(), level))
+        if (readFramebuffer->formsCopyingFeedbackLoopWith(texture->id(), level, zoffset))
         {
             context->handleError(Error(GL_INVALID_OPERATION,
                                        "Texture copying feedback loop formed between Framebuffer "

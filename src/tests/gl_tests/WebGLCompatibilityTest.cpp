@@ -1037,6 +1037,63 @@ TEST_P(WebGL2CompatibilityTest, RenderingFeedbackLoopWithDepthStencil)
     EXPECT_GL_NO_ERROR();
 }
 
+// The source and the target for CopyTexSubImage3D are the same 3D texture.
+// But the level of the 3D texture != the level of the read attachment.
+TEST_P(WebGL2CompatibilityTest, NoTextureCopyingFeedbackLoopBetween3DLevels)
+{
+    GLTexture texture;
+    GLFramebuffer framebuffer;
+
+    glBindTexture(GL_TEXTURE_3D, texture.get());
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.get());
+
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 2, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage3D(GL_TEXTURE_3D, 1, GL_RGBA8, 2, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture.get(), 0, 0);
+    ASSERT_GL_NO_ERROR();
+
+    glCopyTexSubImage3D(GL_TEXTURE_3D, 1, 0, 0, 0, 0, 0, 2, 2);
+    EXPECT_GL_NO_ERROR();
+}
+
+// The source and the target for CopyTexSubImage3D are the same 3D texture.
+// But the zoffset of the 3D texture != the layer of the read attachment.
+TEST_P(WebGL2CompatibilityTest, NoTextureCopyingFeedbackLoopBetween3DLayers)
+{
+    GLTexture texture;
+    GLFramebuffer framebuffer;
+
+    glBindTexture(GL_TEXTURE_3D, texture.get());
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.get());
+
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 2, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture.get(), 0, 1);
+    ASSERT_GL_NO_ERROR();
+
+    glCopyTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, 0, 0, 2, 2);
+    EXPECT_GL_NO_ERROR();
+}
+
+// The source and the target for CopyTexSubImage3D are the same 3D texture.
+// And the level / zoffset of the 3D texture is equal to the level / layer of the read attachment.
+TEST_P(WebGL2CompatibilityTest, TextureCopyingFeedbackLoop3D)
+{
+    GLTexture texture;
+    GLFramebuffer framebuffer;
+
+    glBindTexture(GL_TEXTURE_3D, texture.get());
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.get());
+
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 4, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage3D(GL_TEXTURE_3D, 1, GL_RGBA8, 2, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage3D(GL_TEXTURE_3D, 2, GL_RGBA8, 1, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture.get(), 1, 0);
+    ASSERT_GL_NO_ERROR();
+
+    glCopyTexSubImage3D(GL_TEXTURE_3D, 1, 0, 0, 0, 0, 0, 2, 2);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(WebGLCompatibilityTest,

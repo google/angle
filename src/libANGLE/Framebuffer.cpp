@@ -1068,7 +1068,9 @@ bool Framebuffer::formsRenderingFeedbackLoopWith(const State &state) const
     return false;
 }
 
-bool Framebuffer::formsCopyingFeedbackLoopWith(GLuint copyTextureID, GLint copyTextureLevel) const
+bool Framebuffer::formsCopyingFeedbackLoopWith(GLuint copyTextureID,
+                                               GLint copyTextureLevel,
+                                               GLint copyTextureLayer) const
 {
     if (mId == 0)
     {
@@ -1081,10 +1083,13 @@ bool Framebuffer::formsCopyingFeedbackLoopWith(GLuint copyTextureID, GLint copyT
 
     if (readAttachment->isTextureWithId(copyTextureID))
     {
-        // TODO(jmadill): 3D/Array texture layers.
-        if (readAttachment->getTextureImageIndex().mipIndex == copyTextureLevel)
+        const auto &imageIndex = readAttachment->getTextureImageIndex();
+        if (imageIndex.mipIndex == copyTextureLevel)
         {
-            return true;
+            // Check 3D/Array texture layers.
+            return imageIndex.layerIndex == ImageIndex::ENTIRE_LEVEL ||
+                   copyTextureLayer == ImageIndex::ENTIRE_LEVEL ||
+                   imageIndex.layerIndex == copyTextureLayer;
         }
     }
     return false;

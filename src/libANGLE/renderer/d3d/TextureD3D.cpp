@@ -490,27 +490,26 @@ gl::Error TextureD3D::ensureRenderTarget()
 {
     ANGLE_TRY(initializeStorage(true));
 
+    // initializeStorage can fail with NoError if the texture is not complete. This is not
+    // an error for incomplete sampling, but it is a big problem for rendering.
+    if (!mTexStorage)
+    {
+        UNREACHABLE();
+        return gl::InternalError() << "Cannot render to incomplete texture.";
+    }
+
     if (!isBaseImageZeroSize())
     {
         ASSERT(mTexStorage);
         if (!mTexStorage->isRenderTarget())
         {
-            TextureStorage *newRenderTargetStorage = NULL;
+            TextureStorage *newRenderTargetStorage = nullptr;
             ANGLE_TRY(createCompleteStorage(true, &newRenderTargetStorage));
 
-            gl::Error error = mTexStorage->copyToStorage(newRenderTargetStorage);
-            if (error.isError())
-            {
-                SafeDelete(newRenderTargetStorage);
-                return error;
-            }
-
-            error = setCompleteTexStorage(newRenderTargetStorage);
-            if (error.isError())
-            {
-                SafeDelete(newRenderTargetStorage);
-                return error;
-            }
+            std::unique_ptr<TextureStorage> newStorageRef(newRenderTargetStorage);
+            ANGLE_TRY(mTexStorage->copyToStorage(newRenderTargetStorage));
+            ANGLE_TRY(setCompleteTexStorage(newRenderTargetStorage));
+            newStorageRef.release();
         }
     }
 
@@ -2256,24 +2255,29 @@ gl::Error TextureD3D_3D::copySubImage(ContextImpl *contextImpl,
     ASSERT(target == GL_TEXTURE_3D);
 
     GLint level          = static_cast<GLint>(imageLevel);
-    gl::ImageIndex index = gl::ImageIndex::Make3D(level);
 
-    if (canCreateRenderTargetForImage(index))
+    // Currently, 3D single-layer blits are broken because we don't know how to make an SRV
+    // for a single layer of a 3D texture.
+    // TODO(jmadill): Investigate 3D blits in D3D11.
+    // gl::ImageIndex index = gl::ImageIndex::Make3D(level);
+
+    // if (!canCreateRenderTargetForImage(index))
     {
         ANGLE_TRY(mImageArray[level]->copyFromFramebuffer(destOffset, sourceArea, source));
         mDirtyImages = true;
     }
-    else
-    {
-        ANGLE_TRY(ensureRenderTarget());
-        if (isValidLevel(level))
-        {
-            ANGLE_TRY(updateStorageLevel(level));
-            ANGLE_TRY(mRenderer->copyImage3D(
-                source, sourceArea, gl::GetInternalFormatInfo(getBaseLevelInternalFormat()).format,
-                destOffset, mTexStorage, level));
-        }
-    }
+    // else
+    //{
+    //    ANGLE_TRY(ensureRenderTarget());
+    //    if (isValidLevel(level))
+    //    {
+    //        ANGLE_TRY(updateStorageLevel(level));
+    //        ANGLE_TRY(mRenderer->copyImage3D(
+    //            source, sourceArea,
+    //            gl::GetInternalFormatInfo(getBaseLevelInternalFormat()).format,
+    //            destOffset, mTexStorage, level));
+    //    }
+    //}
 
     return gl::NoError();
 }
@@ -2793,7 +2797,7 @@ gl::Error TextureD3D_2DArray::copySubImage(ContextImpl *contextImpl,
     GLint level          = static_cast<GLint>(imageLevel);
     gl::ImageIndex index = gl::ImageIndex::Make2DArray(level, destOffset.z);
 
-    if (canCreateRenderTargetForImage(index))
+    if (!canCreateRenderTargetForImage(index))
     {
         gl::Offset destLayerOffset(destOffset.x, destOffset.y, 0);
         ANGLE_TRY(mImageArray[level][destOffset.z]->copyFromFramebuffer(destLayerOffset, sourceArea,
