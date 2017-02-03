@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9f92ced1_4fe7d636",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramVk.cpp",
+        "patchSetId": 38
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-03T22:37:50Z",
+      "side": 1,
+      "message": "This is intentional, if bad. The wrapper class for Pipeline layout will destroy the old object. This is for the theoretical possiblity the layout changes between draws. If it changes, recreating it every frame is easier than intelligently flushing the cached object.  Sorry for the slowness, it\u0027s a temporary hackish thing.",
+      "parentUuid": "f5ee2ce7_5b7265b2",
+      "revId": "39d1cafe7e095d0c75ddeae2e6a323b7fcdaf764",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "841b59ff_d14f4cbc",
         "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
         "patchSetId": 38
