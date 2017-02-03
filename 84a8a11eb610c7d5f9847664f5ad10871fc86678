@@ -43,6 +43,24 @@
     },
     {
       "key": {
+        "uuid": "4d4ef95a_c58c7bc8",
+        "filename": "include/platform/Platform.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-03T14:42:49Z",
+      "side": 1,
+      "message": "Right.. can you make that just plat !\u003d nullptr? You can remove hasLogging.",
+      "parentUuid": "b5e90fc4_bf56be76",
+      "revId": "84a8a11eb610c7d5f9847664f5ad10871fc86678",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d9a4dfe7_f29cc954",
         "filename": "include/platform/Platform.h",
         "patchSetId": 2
@@ -166,6 +184,24 @@
     },
     {
       "key": {
+        "uuid": "8ed98ac4_c030603b",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-03T14:42:49Z",
+      "side": 1,
+      "message": "I\u0027m not sure why it would be easier to initialize it from the global method.",
+      "parentUuid": "ccbf8ef4_b8f50ba8",
+      "revId": "84a8a11eb610c7d5f9847664f5ad10871fc86678",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a5b3edc8_ea65ed3b",
         "filename": "src/libANGLE/Display.cpp",
         "patchSetId": 2
@@ -201,6 +237,24 @@
       "side": 1,
       "message": "Doesn\u0027t it make sense to initialize Annotator every time Platform is initialized? There are 2 more places, in addition to Display::initialize()",
       "parentUuid": "a5b3edc8_ea65ed3b",
+      "revId": "84a8a11eb610c7d5f9847664f5ad10871fc86678",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ee01b42_be8b5e47",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-03T14:42:49Z",
+      "side": 1,
+      "message": "The Platform init is moving to the Display init, so if you can move the annotator init there, it would be helpful. Which are the two other places you\u0027re talking about? Not sure if you mean the Renderer9/11 annotator init, or two other places where the platform is initialized.",
+      "parentUuid": "a7896ef9_19b6655f",
       "revId": "84a8a11eb610c7d5f9847664f5ad10871fc86678",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
