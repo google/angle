@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "b5e90fc4_bf56be76",
+        "filename": "include/platform/Platform.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-03T04:06:14Z",
+      "side": 1,
+      "message": "void LoggingAnnotator::logMessage(const gl::LogMessage \u0026msg) const\n{\n    angle::Platform *plat \u003d ANGLEPlatformCurrent();\n    if (plat !\u003d nullptr \u0026\u0026 plat-\u003ehasLogging())",
+      "parentUuid": "4345b5ec_52089817",
+      "revId": "84a8a11eb610c7d5f9847664f5ad10871fc86678",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d9a4dfe7_f29cc954",
         "filename": "include/platform/Platform.h",
         "patchSetId": 2
@@ -45,6 +63,24 @@
       "revId": "84a8a11eb610c7d5f9847664f5ad10871fc86678",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "594d72f0_22d93717",
+        "filename": "include/platform/Platform.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-03T04:06:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9a4dfe7_f29cc954",
+      "revId": "84a8a11eb610c7d5f9847664f5ad10871fc86678",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +107,24 @@
     },
     {
       "key": {
+        "uuid": "de50e600_840fbf67",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-03T04:06:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "446ff5f3_ad82077a",
+      "revId": "84a8a11eb610c7d5f9847664f5ad10871fc86678",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cff2ed08_d338372b",
         "filename": "src/libANGLE/Display.cpp",
         "patchSetId": 2
@@ -88,6 +142,24 @@
         "endLine": 77,
         "endChar": 63
       },
+      "revId": "84a8a11eb610c7d5f9847664f5ad10871fc86678",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ccbf8ef4_b8f50ba8",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-03T04:06:14Z",
+      "side": 1,
+      "message": "Would be easier to use it from InitDefaultPlatformAndAnnotator if it\u0027s not owned by Display, but let\u0027s see how you answer next question.",
+      "parentUuid": "cff2ed08_d338372b",
       "revId": "84a8a11eb610c7d5f9847664f5ad10871fc86678",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -117,6 +189,24 @@
     },
     {
       "key": {
+        "uuid": "a7896ef9_19b6655f",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-03T04:06:14Z",
+      "side": 1,
+      "message": "Doesn\u0027t it make sense to initialize Annotator every time Platform is initialized? There are 2 more places, in addition to Display::initialize()",
+      "parentUuid": "a5b3edc8_ea65ed3b",
+      "revId": "84a8a11eb610c7d5f9847664f5ad10871fc86678",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8d31e18f_aa2b15e4",
         "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h",
         "patchSetId": 2
@@ -137,6 +227,24 @@
       "revId": "84a8a11eb610c7d5f9847664f5ad10871fc86678",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ffd05c52_269f743f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-03T04:06:14Z",
+      "side": 1,
+      "message": "Yeah, my workstation is Linux, so missed those.",
+      "parentUuid": "8d31e18f_aa2b15e4",
+      "revId": "84a8a11eb610c7d5f9847664f5ad10871fc86678",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -163,6 +271,24 @@
     },
     {
       "key": {
+        "uuid": "be0e36ee_8978adbb",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-03T04:06:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a9438abe_5ef4112b",
+      "revId": "84a8a11eb610c7d5f9847664f5ad10871fc86678",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eec768d1_1c4e4415",
         "filename": "src/tests/test_utils/ANGLETest.cpp",
         "patchSetId": 2
@@ -183,6 +309,24 @@
       "revId": "84a8a11eb610c7d5f9847664f5ad10871fc86678",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1d90ddc0_8b8909cc",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-03T04:06:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eec768d1_1c4e4415",
+      "revId": "84a8a11eb610c7d5f9847664f5ad10871fc86678",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
