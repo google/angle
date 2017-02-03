@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cc07c0b7_994dbcd1",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1437,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-03T14:26:23Z",
+      "side": 1,
+      "message": "use the caps here, from the ValidationContext.",
+      "range": {
+        "startLine": 1436,
+        "startChar": 7,
+        "endLine": 1437,
+        "endChar": 72
+      },
+      "revId": "c042e9c3e056dca47e81d7580ba36a7abb30ff2d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
