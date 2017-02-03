@@ -232,21 +232,6 @@ ANGLETest::ANGLETest()
 {
     mEGLWindow =
         new EGLWindow(GetParam().majorVersion, GetParam().minorVersion, GetParam().eglParameters);
-}
-
-ANGLETest::~ANGLETest()
-{
-    if (mQuadVertexBuffer)
-    {
-        glDeleteBuffers(1, &mQuadVertexBuffer);
-    }
-    SafeDelete(mEGLWindow);
-}
-
-void ANGLETest::SetUp()
-{
-    angle::g_testPlatformInstance.enableMessages();
-    angle::g_testPlatformInstance.setCurrentTest(this);
 
     // Default vulkan layers to enabled.
     EGLint renderer = GetParam().getRenderer();
@@ -265,10 +250,25 @@ void ANGLETest::SetUp()
         DestroyTestWindow();
         if (!InitTestWindow())
         {
-            FAIL() << "Failed to create ANGLE test window.";
+            std::cerr << "Failed to create ANGLE test window.";
         }
     }
     mLastRendererType = renderer;
+}
+
+ANGLETest::~ANGLETest()
+{
+    if (mQuadVertexBuffer)
+    {
+        glDeleteBuffers(1, &mQuadVertexBuffer);
+    }
+    SafeDelete(mEGLWindow);
+}
+
+void ANGLETest::SetUp()
+{
+    angle::g_testPlatformInstance.enableMessages();
+    angle::g_testPlatformInstance.setCurrentTest(this);
 
     // Resize the window before creating the context so that the first make current
     // sets the viewport and scissor box to the right size.
