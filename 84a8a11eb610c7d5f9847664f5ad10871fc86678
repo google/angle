@@ -61,6 +61,24 @@
     },
     {
       "key": {
+        "uuid": "01bf36e0_d1f0b8bf",
+        "filename": "include/platform/Platform.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-03T22:09:24Z",
+      "side": 1,
+      "message": "OK. This would mean that Platform which doesn\u0027t define logError and logWarning will swallow them. I hope this is the behavior you want.",
+      "parentUuid": "4d4ef95a_c58c7bc8",
+      "revId": "84a8a11eb610c7d5f9847664f5ad10871fc86678",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d9a4dfe7_f29cc954",
         "filename": "include/platform/Platform.h",
         "patchSetId": 2
@@ -202,6 +220,24 @@
     },
     {
       "key": {
+        "uuid": "b67b12b0_cabf26cb",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-03T22:09:24Z",
+      "side": 1,
+      "message": "It would have been if it needed to be global. Nevermind.",
+      "parentUuid": "8ed98ac4_c030603b",
+      "revId": "84a8a11eb610c7d5f9847664f5ad10871fc86678",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a5b3edc8_ea65ed3b",
         "filename": "src/libANGLE/Display.cpp",
         "patchSetId": 2
@@ -258,6 +294,24 @@
       "revId": "84a8a11eb610c7d5f9847664f5ad10871fc86678",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a64a6ac5_e66bbb2a",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-03T22:09:24Z",
+      "side": 1,
+      "message": "I\u0027ve meant Display::GetDisplayFromNativeDisplay() and Display::GetDisplayFromDevice(). Per offline discussion, it is enough to initialize Annotator in Display::initialize(), since \"you can\u0027t access angle without Display::initialize\".",
+      "parentUuid": "1ee01b42_be8b5e47",
+      "revId": "84a8a11eb610c7d5f9847664f5ad10871fc86678",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
