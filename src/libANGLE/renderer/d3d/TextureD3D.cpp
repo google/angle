@@ -587,12 +587,10 @@ TextureD3D_2DMultisample::TextureD3D_2DMultisample(const gl::TextureState &state
                                                    RendererD3D *renderer)
     : TextureD3D(state, renderer)
 {
-    UNIMPLEMENTED();
 }
 
 TextureD3D_2DMultisample::~TextureD3D_2DMultisample()
 {
-    UNIMPLEMENTED();
 }
 
 ImageD3D *TextureD3D_2DMultisample::getImage(const gl::ImageIndex &index) const
@@ -782,7 +780,7 @@ TextureD3D_2D::~TextureD3D_2D()
     // If TextureStorage is deleted before the Images, then their data will be wastefully copied back from the GPU before we delete the Images.
     for (int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++i)
     {
-        delete mImageArray[i];
+        SafeDelete(mImageArray[i]);
     }
 
     SafeDelete(mTexStorage);
