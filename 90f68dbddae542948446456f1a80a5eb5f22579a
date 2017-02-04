@@ -66,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "6f4891e2_4172cdd9",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 53
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-04T13:28:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "98f9d7ba_12f11236",
+      "revId": "90f68dbddae542948446456f1a80a5eb5f22579a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2b1ee3b1_5df2f2ed",
         "filename": "src/libANGLE/VertexArray.h",
         "patchSetId": 53
@@ -83,6 +101,24 @@
         "endLine": 51,
         "endChar": 58
       },
+      "revId": "90f68dbddae542948446456f1a80a5eb5f22579a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6f88c49_a5310c2e",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 53
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-04T13:28:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2b1ee3b1_5df2f2ed",
       "revId": "90f68dbddae542948446456f1a80a5eb5f22579a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -112,6 +148,24 @@
     },
     {
       "key": {
+        "uuid": "65bb6b91_32958bee",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 53
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-04T13:28:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4902e734_e95067a1",
+      "revId": "90f68dbddae542948446456f1a80a5eb5f22579a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aee75e33_dc9eb51f",
         "filename": "src/libANGLE/VertexArray.h",
         "patchSetId": 53
@@ -129,6 +183,24 @@
         "endLine": 61,
         "endChar": 49
       },
+      "revId": "90f68dbddae542948446456f1a80a5eb5f22579a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fe8efe14_1f1b54ba",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 53
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-04T13:28:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aee75e33_dc9eb51f",
       "revId": "90f68dbddae542948446456f1a80a5eb5f22579a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -158,6 +230,24 @@
     },
     {
       "key": {
+        "uuid": "d3982e6b_b86fdd5e",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 53
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-04T13:28:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "24879d94_43af3d88",
+      "revId": "90f68dbddae542948446456f1a80a5eb5f22579a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ab46dc3b_7c238ca4",
         "filename": "src/libANGLE/VertexArray.h",
         "patchSetId": 53
@@ -175,6 +265,24 @@
         "endLine": 77,
         "endChar": 44
       },
+      "revId": "90f68dbddae542948446456f1a80a5eb5f22579a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4c380531_2556baf7",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 53
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-04T13:28:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ab46dc3b_7c238ca4",
       "revId": "90f68dbddae542948446456f1a80a5eb5f22579a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -221,6 +329,24 @@
         "endLine": 35,
         "endChar": 22
       },
+      "revId": "90f68dbddae542948446456f1a80a5eb5f22579a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "640b82c3_b2d1e71c",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 53
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-04T13:28:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f09a8fc5_8e22db24",
       "revId": "90f68dbddae542948446456f1a80a5eb5f22579a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
@@ -326,6 +452,24 @@
         "endLine": 515,
         "endChar": 83
       },
+      "revId": "90f68dbddae542948446456f1a80a5eb5f22579a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c27d82c8_a8dec8f5",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 53
+      },
+      "lineNbr": 515,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-04T13:28:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0475da83_5080eb77",
       "revId": "90f68dbddae542948446456f1a80a5eb5f22579a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
