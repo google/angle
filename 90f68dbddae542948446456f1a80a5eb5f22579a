@@ -435,6 +435,24 @@
     },
     {
       "key": {
+        "uuid": "e8ceaad7_b4ef3616",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 53
+      },
+      "lineNbr": 1218,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-04T15:42:27Z",
+      "side": 1,
+      "message": "According to my investigation, in D3D11, caps-\u003emaxVertexAttribStride should be 2048, and there should not be obvious limit on caps-\u003emaxVertexAttribRelativeOffset. \n\n1. According to MSDN https://msdn.microsoft.com/en-us/library/windows/desktop/ff819065(v\u003dvs.85).aspx, the maximum stride in D3D11 should be 2048 (D3D11_REQ_MULTI_ELEMENT_STRUCTURE_SIZE_IN_BYTES), and I don\u0027t find any limit on offset in that document.\n\n2. I find some sample code about the validation on stride and offset from a Microsoft repo on Github: (https://github.com/Microsoft/DirectXMesh)\na. One example using D3D11_REQ_MULTI_ELEMENT_STRUCTURE_SIZE_IN_BYTES to verify stride:\nhttps://github.com/Microsoft/DirectXMesh/blob/master/DirectXMesh/DirectXMeshRemap.cpp#L160 \nb. One example to verify offset:\nhttps://github.com/Microsoft/DirectXMesh/blob/master/DirectXMesh/DirectXMeshOptimize.cpp#L177\n\n3. I did a simple experiment to find out the limits on stride and offset in D3D11:\nThe program is to draw a triangle. Some key code as follows:\n\nstruct SimpleVertex\n{\n    XMFLOAT3 Pos;\n};\n......\nSimpleVertex *vertices \u003d new SimpleVertex[offset1 + 3*stride1];\nvertices[offset1].Pos \u003d XMFLOAT3(0.0f, 0.5f, 0.5f);\nvertices[offset1 + stride1].Pos \u003d XMFLOAT3(0.5f, -0.5f, 0.5f);\nvertices[offset1 + 2*stride1].Pos \u003d XMFLOAT3(-0.5f, -0.5f, 0.5f);\n......\nD3D11_BUFFER_DESC bd;\nbd.ByteWidth      \u003d sizeof(SimpleVertex) * (offset1 + 3 * stride1);\nbd.BindFlags      \u003d D3D11_BIND_VERTEX_BUFFER;\nbd.CPUAccessFlags \u003d 0;\nD3D11_SUBRESOURCE_DATA InitData;\nZeroMemory(\u0026InitData, sizeof(InitData));\nInitData.pSysMem \u003d vertices;\nhr               \u003d g_pd3dDevice-\u003eCreateBuffer(\u0026bd, \u0026InitData, \u0026g_pVertexBuffer);\n......\nUINT stride \u003d sizeof(SimpleVertex) * stride1;\nUINT offset \u003d sizeof(SimpleVertex) * offset1;\ng_pImmediateContext-\u003eIASetVertexBuffers(0, 1, \u0026g_pVertexBuffer, \u0026stride, \u0026offset);\n......\n// sizeof(SimpleVertex) \u003d\u003d 12\na. offset1 \u003d\u003d 0 \n   stride1 \u003c 2048 / 12 *2 + 2: we can see a complete triangle (as stride1 \u003d\u003d 1 and offset1 \u003d\u003d 0)\n   stride1 \u003d\u003d 2048 / 12 *2 + 2:we can see a triangle with only the first vertex available\n   stride1 \u003e 2048 / 12 *2 + 2: we cannot see any triangles\nb. stride1 \u003d\u003d 1\n   We can always see a complete triangle whatever offset1 is (offset1 \u003e 0).",
+      "parentUuid": "2f5a1b52_9221ba42",
+      "revId": "90f68dbddae542948446456f1a80a5eb5f22579a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0475da83_5080eb77",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 53
