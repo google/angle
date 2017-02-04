@@ -25,6 +25,24 @@
     },
     {
       "key": {
+        "uuid": "514737ba_6d0d8df6",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-04T01:58:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "415c4d19_05403365",
+      "revId": "7cd2bce89961392e7512025462f7802e7184c06f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c1bd8b4c_05baa32a",
         "filename": "src/libANGLE/Display.cpp",
         "patchSetId": 5
@@ -45,6 +63,24 @@
       "revId": "7cd2bce89961392e7512025462f7802e7184c06f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0acecf10_f6319c01",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-04T01:58:51Z",
+      "side": 1,
+      "message": "We don\u0027t have it. Only \u003c\u003c printing error codes.",
+      "parentUuid": "c1bd8b4c_05baa32a",
+      "revId": "7cd2bce89961392e7512025462f7802e7184c06f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +107,24 @@
     },
     {
       "key": {
+        "uuid": "270c7b86_b477097c",
+        "filename": "src/libANGLE/Display.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-04T01:58:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7bf29840_aa54e737",
+      "revId": "7cd2bce89961392e7512025462f7802e7184c06f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c57d0008_2d57cdb6",
         "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
         "patchSetId": 5
@@ -91,6 +145,24 @@
       "revId": "7cd2bce89961392e7512025462f7802e7184c06f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7dd63193_ab68e739",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 587,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-04T01:58:51Z",
+      "side": 1,
+      "message": "I\u0027ve added a comment explaining why there is no need to pipe up this error. I don\u0027t think there is anything TODO here, except removing debugging code and replacing it with ASSERT(compiled \u003d\u003d GL_TRUE).",
+      "parentUuid": "c57d0008_2d57cdb6",
+      "revId": "7cd2bce89961392e7512025462f7802e7184c06f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
