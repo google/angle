@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "cca2deda_bfa3ebcb",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1110,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-02-06T05:51:23Z",
+      "side": 1,
+      "message": "I write a native test case and it shows that  the default parameters are variables of a specific fbo and as long as binding the fbo to READ or DRAW framebuffer by bindFramebuffer api, the default parameters are consistent for the same fbo no matter the target is READ_FRAMEBUFFER or DRAW_FRAMEBUFFER, but they may be different if the fbo is changed.",
+      "parentUuid": "6845ba83_92682c9d",
+      "revId": "f68ee6710f287b8e5ddcb138d25c283b7ff2b3dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a8509249_62e307ec",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 9
