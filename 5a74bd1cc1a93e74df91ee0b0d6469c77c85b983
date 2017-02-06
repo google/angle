@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "409cf298_cb28747f",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 60
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-06T13:42:54Z",
+      "side": 1,
+      "message": "In OpenGL ES 3.1 SPEC (November 3, 2016), Chapter 10.3.1\n\nif (the default vertex array object is bound and no buffer is bound to ARRAY_BUFFER) {\n        vertex_buffer \u003d temporary buffer\n        offset \u003d 0;\n} else {\n       vertex_buffer \u003d \u003cbuffer bound to ARRAY_BUFFER\u003e\n       offset \u003d (char *)pointer - (char *)NULL;\n}\n\nA temporary buffer is not needed here because it should be handled in each backend.",
+      "revId": "5a74bd1cc1a93e74df91ee0b0d6469c77c85b983",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "957bf70b_38af3705",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 60
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-06T13:42:54Z",
+      "side": 1,
+      "message": "I think enabled should not be a member of format, so I move it to VertexAttribute scope.\n\nWe can access AttributeBinding by (*bindings)[format.bindingIndex] to avoid using a redundant pointer to the binding object.\nOr we have to add ASSERTs to assure there is no mismatch between format.bindingIndex and the pointer to the binding object.",
+      "revId": "5a74bd1cc1a93e74df91ee0b0d6469c77c85b983",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9e45e861_e123c78f",
+        "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 60
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-06T13:42:54Z",
+      "side": 1,
+      "message": "The reasons here are the same as: \nhttps://chromium-review.googlesource.com/c/418880/60/src/libANGLE/renderer/gl/VertexArrayGL.cpp#482",
+      "revId": "5a74bd1cc1a93e74df91ee0b0d6469c77c85b983",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "75b6e7e2_93e1a976",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 60
+      },
+      "lineNbr": 1221,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-06T13:42:54Z",
+      "side": 1,
+      "message": "I did some investigation on this:\nhttps://chromium-review.googlesource.com/c/418880/53/src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp#1218",
+      "revId": "5a74bd1cc1a93e74df91ee0b0d6469c77c85b983",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "78a302b2_d6daadaf",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 60
+      },
+      "lineNbr": 2885,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-06T13:42:54Z",
+      "side": 1,
+      "message": "We can put these after the if-statement to improve performance.",
+      "revId": "5a74bd1cc1a93e74df91ee0b0d6469c77c85b983",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "72c1a619_2eb821d1",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 60
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-06T13:42:54Z",
+      "side": 1,
+      "message": "In https://www.opengl.org/registry/specs/ARB/vertex_attrib_binding.txt:\n\nAttributes using client memory ignore the VERTEX_ATTRIB_BINDING state.\nThat is, the logic for computing the address of the base of a vertex array is:\n\nbindingIndex \u003d VERTEX_ATTRIB_BINDING[attribIndex];\nbuffer \u003d VERTEX_BINDING_BUFFER[bindingIndex];\n\nif (buffer-\u003ename !\u003d 0) {\n        address \u003d buffer-\u003ebaseAddress + \n                  VERTEX_BINDING_OFFSET[bindingIndex] + \n                  VERTEX_ATTRIB_RELATIVE_OFFSET[attribIndex];\n} else {\n        address \u003d VERTEX_ATTRIB_ARRAY_POINTER[attribIndex];\n}\n\nSo attrib.pointer should be stored and maintained in the GL backend.",
+      "revId": "5a74bd1cc1a93e74df91ee0b0d6469c77c85b983",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88fac1a8_f19f1e76",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 60
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-06T13:42:54Z",
+      "side": 1,
+      "message": "Without this the ASSERTs I add in the constructor of VertexArray will fail.",
+      "revId": "5a74bd1cc1a93e74df91ee0b0d6469c77c85b983",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
