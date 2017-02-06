@@ -36,10 +36,34 @@ T *AllocateOrGetSharedResourceManager(const ContextState *shareContextState,
     }
 }
 
+TextureManager *AllocateOrGetSharedTextureManager(const ContextState *shareContextState,
+                                                  TextureManager *shareTextures,
+                                                  ContextStateMember<TextureManager> member)
+{
+    if (shareContextState)
+    {
+        TextureManager *textureManager = (*shareContextState).*member;
+        ASSERT(shareTextures == nullptr || textureManager == shareTextures);
+        textureManager->addRef();
+        return textureManager;
+    }
+    else if (shareTextures)
+    {
+        TextureManager *textureManager = shareTextures;
+        textureManager->addRef();
+        return textureManager;
+    }
+    else
+    {
+        return new TextureManager();
+    }
+}
+
 }  // anonymous namespace
 
 ContextState::ContextState(uintptr_t contextIn,
                            const ContextState *shareContextState,
+                           TextureManager *shareTextures,
                            const Version &clientVersion,
                            State *stateIn,
                            const Caps &capsIn,
@@ -56,7 +80,9 @@ ContextState::ContextState(uintptr_t contextIn,
       mBuffers(AllocateOrGetSharedResourceManager(shareContextState, &ContextState::mBuffers)),
       mShaderPrograms(
           AllocateOrGetSharedResourceManager(shareContextState, &ContextState::mShaderPrograms)),
-      mTextures(AllocateOrGetSharedResourceManager(shareContextState, &ContextState::mTextures)),
+      mTextures(AllocateOrGetSharedTextureManager(shareContextState,
+                                                  shareTextures,
+                                                  &ContextState::mTextures)),
       mRenderbuffers(
           AllocateOrGetSharedResourceManager(shareContextState, &ContextState::mRenderbuffers)),
       mSamplers(AllocateOrGetSharedResourceManager(shareContextState, &ContextState::mSamplers)),
@@ -85,6 +111,7 @@ const TextureCaps &ContextState::getTextureCap(GLenum internalFormat) const
 }
 
 ValidationContext::ValidationContext(const ValidationContext *shareContext,
+                                     TextureManager *shareTextures,
                                      const Version &clientVersion,
                                      State *state,
                                      const Caps &caps,
@@ -94,13 +121,15 @@ ValidationContext::ValidationContext(const ValidationContext *shareContext,
                                      bool skipValidation)
     : mState(reinterpret_cast<uintptr_t>(this),
              shareContext ? &shareContext->mState : nullptr,
+             shareTextures,
              clientVersion,
              state,
              caps,
              textureCaps,
              extensions,
              limitations),
-      mSkipValidation(skipValidation)
+      mSkipValidation(skipValidation),
+      mDisplayTextureShareGroup(shareTextures != nullptr)
 {
 }
 
@@ -671,6 +700,11 @@ bool ValidationContext::isRenderbufferGenerated(GLuint renderbuffer) const
 bool ValidationContext::isFramebufferGenerated(GLuint framebuffer) const
 {
     return mState.mFramebuffers->isFramebufferGenerated(framebuffer);
+}
+
+bool ValidationContext::usingDisplayTextureShareGroup() const
+{
+    return mDisplayTextureShareGroup;
 }
 
 }  // namespace gl

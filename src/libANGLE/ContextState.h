@@ -35,6 +35,7 @@ class ContextState final : public angle::NonCopyable
   public:
     ContextState(uintptr_t context,
                  const ContextState *shareContextState,
+                 TextureManager *shareTextures,
                  const Version &clientVersion,
                  State *state,
                  const Caps &caps,
@@ -54,6 +55,8 @@ class ContextState final : public angle::NonCopyable
     const Limitations &getLimitations() const { return mLimitations; }
 
     const TextureCaps &getTextureCap(GLenum internalFormat) const;
+
+    bool usingDisplayTextureShareGroup() const;
 
   private:
     friend class Context;
@@ -81,6 +84,7 @@ class ValidationContext : angle::NonCopyable
 {
   public:
     ValidationContext(const ValidationContext *shareContext,
+                      TextureManager *shareTextures,
                       const Version &clientVersion,
                       State *state,
                       const Caps &caps,
@@ -115,9 +119,12 @@ class ValidationContext : angle::NonCopyable
     bool isRenderbufferGenerated(GLuint renderbuffer) const;
     bool isFramebufferGenerated(GLuint framebuffer) const;
 
+    bool usingDisplayTextureShareGroup() const;
+
   protected:
     ContextState mState;
     bool mSkipValidation;
+    bool mDisplayTextureShareGroup;
 };
 }  // namespace gl
 

@@ -236,10 +236,12 @@ namespace gl
 Context::Context(rx::EGLImplFactory *implFactory,
                  const egl::Config *config,
                  const Context *shareContext,
+                 TextureManager *shareTextures,
                  const egl::AttributeMap &attribs,
                  const egl::DisplayExtensions &displayExtensions)
 
     : ValidationContext(shareContext,
+                        shareTextures,
                         GetClientVersion(attribs),
                         &mGLState,
                         mCaps,

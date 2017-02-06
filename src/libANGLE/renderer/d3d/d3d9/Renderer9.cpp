@@ -540,6 +540,9 @@ void Renderer9::generateDisplayExtensions(egl::DisplayExtensions *outExtensions)
     outExtensions->glRenderbufferImage = true;
 
     outExtensions->flexibleSurfaceCompatibility = true;
+
+    // Contexts are virtualized so textures can be shared globally
+    outExtensions->displayTextureShareGroup = true;
 }
 
 void Renderer9::startScene()

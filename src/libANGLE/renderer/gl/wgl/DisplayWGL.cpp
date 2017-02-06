@@ -660,6 +660,9 @@ void DisplayWGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
     outExtensions->createContextRobustness = mHasRobustness;
 
     outExtensions->d3dTextureClientBuffer = mFunctionsWGL->hasExtension("WGL_NV_DX_interop2");
+
+    // Contexts are virtualized so textures can be shared globally
+    outExtensions->displayTextureShareGroup = true;
 }
 
 void DisplayWGL::generateCaps(egl::Caps *outCaps) const

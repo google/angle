@@ -246,6 +246,9 @@ const FunctionsGL *DisplayCGL::getFunctionsGL() const
 void DisplayCGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
     outExtensions->surfacelessContext = true;
+
+    // Contexts are virtualized so textures can be shared globally
+    outExtensions->displayTextureShareGroup = true;
 }
 
 void DisplayCGL::generateCaps(egl::Caps *outCaps) const

@@ -24,6 +24,7 @@
 namespace gl
 {
 class Context;
+class TextureManager;
 }
 
 namespace rx
@@ -172,6 +173,8 @@ class Display final : angle::NonCopyable
     Device *mDevice;
     EGLenum mPlatform;
     angle::LoggingAnnotator mAnnotator;
+
+    gl::TextureManager *mTextureManager;
 };
 
 }

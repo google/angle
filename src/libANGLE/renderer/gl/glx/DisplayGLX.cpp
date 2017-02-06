@@ -891,6 +891,9 @@ const FunctionsGL *DisplayGLX::getFunctionsGL() const
 void DisplayGLX::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
     outExtensions->createContextRobustness = mHasARBCreateContextRobustness;
+
+    // Contexts are virtualized so textures can be shared globally
+    outExtensions->displayTextureShareGroup = true;
 }
 
 void DisplayGLX::generateCaps(egl::Caps *outCaps) const

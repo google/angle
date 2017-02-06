@@ -61,6 +61,7 @@ class Context final : public ValidationContext
     Context(rx::EGLImplFactory *implFactory,
             const egl::Config *config,
             const Context *shareContext,
+            TextureManager *shareTextures,
             const egl::AttributeMap &attribs,
             const egl::DisplayExtensions &displayExtensions);
 

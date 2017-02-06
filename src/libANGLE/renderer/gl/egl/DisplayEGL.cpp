@@ -102,6 +102,9 @@ void DisplayEGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
         mEGL->hasExtension("EGL_EXT_create_context_robustness");
 
     outExtensions->postSubBuffer = false;  // Since SurfaceEGL::postSubBuffer is not implemented
+
+    // Contexts are virtualized so textures can be shared globally
+    outExtensions->displayTextureShareGroup = true;
 }
 
 void DisplayEGL::generateCaps(egl::Caps *outCaps) const

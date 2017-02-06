@@ -31,6 +31,7 @@ class MockValidationContext : public ValidationContext
 {
   public:
     MockValidationContext(const ValidationContext *shareContext,
+                          TextureManager *shareTextures,
                           const Version &version,
                           State *state,
                           const Caps &caps,
@@ -39,6 +40,7 @@ class MockValidationContext : public ValidationContext
                           const Limitations &limitations,
                           bool skipValidation)
         : ValidationContext(shareContext,
+                            shareTextures,
                             version,
                             state,
                             caps,
@@ -97,8 +99,8 @@ TEST(ValidationESTest, DrawElementsWithMaxIndexGivesError)
     state.setDrawFramebufferBinding(framebuffer);
     state.setProgram(program);
 
-    NiceMock<MockValidationContext> testContext(nullptr, Version(3, 0), &state, caps, textureCaps,
-                                                extensions, limitations, false);
+    NiceMock<MockValidationContext> testContext(nullptr, nullptr, Version(3, 0), &state, caps,
+                                                textureCaps, extensions, limitations, false);
 
     // Set the expectation for the validation error here.
     Error expectedError(GL_INVALID_OPERATION, g_ExceedsMaxElementErrorMessage);

@@ -29,6 +29,7 @@
 #include "libANGLE/Image.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/Stream.h"
+#include "libANGLE/ResourceManager.h"
 #include "libANGLE/renderer/DisplayImpl.h"
 #include "libANGLE/renderer/ImageImpl.h"
 #include "third_party/trace_event/trace_event.h"
@@ -358,7 +359,8 @@ Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDe
       mDisplayExtensionString(),
       mVendorString(),
       mDevice(eglDevice),
-      mPlatform(platform)
+      mPlatform(platform),
+      mTextureManager(nullptr)
 {
 }
 
@@ -462,6 +464,9 @@ Error Display::initialize()
         ASSERT(mDevice != nullptr);
     }
 
+    ASSERT(mTextureManager == nullptr);
+    mTextureManager = new gl::TextureManager();
+
     mInitialized = true;
 
     return egl::Error(EGL_SUCCESS);
@@ -469,6 +474,12 @@ Error Display::initialize()
 
 void Display::terminate()
 {
+    if (mTextureManager)
+    {
+        mTextureManager->release();
+        mTextureManager = nullptr;
+    }
+
     makeCurrent(nullptr, nullptr, nullptr);
 
     while (!mContextSet.empty())
@@ -673,8 +684,12 @@ Error Display::createContext(const Config *configuration, gl::Context *shareCont
         ANGLE_TRY(restoreLostDevice());
     }
 
-    gl::Context *context =
-        new gl::Context(mImplementation, configuration, shareContext, attribs, mDisplayExtensions);
+    bool usingDisplayTextureShareGroup =
+        attribs.get(EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE, EGL_FALSE) == EGL_TRUE;
+    gl::TextureManager *shareTextures = usingDisplayTextureShareGroup ? mTextureManager : nullptr;
+
+    gl::Context *context = new gl::Context(mImplementation, configuration, shareContext,
+                                           shareTextures, attribs, mDisplayExtensions);
 
     ASSERT(context != nullptr);
     mContextSet.insert(context);

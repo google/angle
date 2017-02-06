@@ -21,6 +21,11 @@
 #include "shader_utils.h"
 #include "system_utils.h"
 
+#define ASSERT_GL_TRUE(a) ASSERT_EQ(static_cast<GLboolean>(GL_TRUE), (a))
+#define ASSERT_GL_FALSE(a) ASSERT_EQ(static_cast<GLboolean>(GL_FALSE), (a))
+#define EXPECT_GL_TRUE(a) EXPECT_EQ(static_cast<GLboolean>(GL_TRUE), (a))
+#define EXPECT_GL_FALSE(a) EXPECT_EQ(static_cast<GLboolean>(GL_FALSE), (a))
+
 #define EXPECT_GL_ERROR(err) EXPECT_EQ(static_cast<GLenum>(err), glGetError())
 #define EXPECT_GL_NO_ERROR() EXPECT_EQ(static_cast<GLenum>(GL_NO_ERROR), glGetError())
 

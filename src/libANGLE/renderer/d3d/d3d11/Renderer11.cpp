@@ -1099,6 +1099,9 @@ void Renderer11::generateDisplayExtensions(egl::DisplayExtensions *outExtensions
 
     outExtensions->flexibleSurfaceCompatibility = true;
     outExtensions->directComposition            = !!mDCompModule;
+
+    // Contexts are virtualized so textures can be shared globally
+    outExtensions->displayTextureShareGroup = true;
 }
 
 gl::Error Renderer11::flush()

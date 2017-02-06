@@ -646,6 +646,9 @@ struct DisplayExtensions
 
     // EGL_KHR_surfaceless_context
     bool surfacelessContext;
+
+    // EGL_ANGLE_display_texture_share_group
+    bool displayTextureShareGroup;
 };
 
 struct DeviceExtensions

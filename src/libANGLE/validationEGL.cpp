@@ -427,8 +427,30 @@ Error ValidateCreateContext(Display *display, Config *configuration, gl::Context
               }
               break;
 
+          case EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE:
+              if (!display->getExtensions().displayTextureShareGroup)
+              {
+                  return Error(EGL_BAD_ATTRIBUTE,
+                               "Attribute EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE requires "
+                               "EGL_ANGLE_display_texture_share_group.");
+              }
+              if (value != EGL_TRUE && value != EGL_FALSE)
+              {
+                  return Error(
+                      EGL_BAD_ATTRIBUTE,
+                      "EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE must be EGL_TRUE or EGL_FALSE.");
+              }
+              if (shareContext &&
+                  (shareContext->usingDisplayTextureShareGroup() != (value == EGL_TRUE)))
+              {
+                  return Error(EGL_BAD_ATTRIBUTE,
+                               "All contexts within a share group must be created with the same "
+                               "value of EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE.");
+              }
+              break;
+
           default:
-            return Error(EGL_BAD_ATTRIBUTE);
+              return Error(EGL_BAD_ATTRIBUTE, "Unknown attribute.");
         }
     }
 
