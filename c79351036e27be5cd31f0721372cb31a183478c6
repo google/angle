@@ -40,6 +40,24 @@
       "revId": "c79351036e27be5cd31f0721372cb31a183478c6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45fc83fe_1bb3af5d",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-06T17:47:56Z",
+      "side": 1,
+      "message": "Done by passing displayExtensions to initCaps, and not storing display anymore.",
+      "parentUuid": "2d724cd4_5ebd7891",
+      "revId": "c79351036e27be5cd31f0721372cb31a183478c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
