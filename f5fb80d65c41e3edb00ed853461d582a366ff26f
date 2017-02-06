@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "7f78d790_7bca95c8",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 395,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-06T18:58:41Z",
+      "side": 1,
+      "message": "we should move this to terminate()",
+      "range": {
+        "startLine": 395,
+        "startChar": 8,
+        "endLine": 395,
+        "endChar": 36
+      },
+      "revId": "f5fb80d65c41e3edb00ed853461d582a366ff26f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d2af9ace_a7e34a39",
         "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
         "patchSetId": 7
