@@ -755,10 +755,14 @@ gl::Error StateManagerGL::onMakeCurrent(const gl::ContextState &data)
         }
     }
 
+    // Seamless cubemaps are required for ES3 and higher contexts. It should be the cheapest to set
+    // this state here since MakeCurrent is expected to be called less frequently than draw calls.
+    setTextureCubemapSeamlessEnabled(data.getClientMajorVersion() >= 3);
+
     return gl::NoError();
 }
 
-gl::Error StateManagerGL::setGenericDrawState(const gl::ContextState &data)
+void StateManagerGL::setGenericShaderState(const gl::ContextState &data)
 {
     const gl::State &state = data.getState();
 
@@ -832,13 +836,17 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::ContextState &data)
             }
         }
     }
+}
+
+gl::Error StateManagerGL::setGenericDrawState(const gl::ContextState &data)
+{
+    setGenericShaderState(data);
+
+    const gl::State &state = data.getState();
 
     const gl::Framebuffer *framebuffer = state.getDrawFramebuffer();
     const FramebufferGL *framebufferGL = GetImplAs<FramebufferGL>(framebuffer);
     bindFramebuffer(GL_DRAW_FRAMEBUFFER, framebufferGL->getFramebufferID());
-
-    // Seamless cubemaps are required for ES3 and higher contexts.
-    setTextureCubemapSeamlessEnabled(data.getClientMajorVersion() >= 3);
 
     // Set the current transform feedback state
     gl::TransformFeedback *transformFeedback = state.getCurrentTransformFeedback();

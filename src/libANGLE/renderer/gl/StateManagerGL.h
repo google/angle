@@ -163,6 +163,10 @@ class StateManagerGL final : angle::NonCopyable
     GLuint getBoundBuffer(GLenum type);
 
   private:
+    // Set state that's common among draw commands and compute invocations.
+    void setGenericShaderState(const gl::ContextState &data);
+
+    // Set state that's common among draw commands.
     gl::Error setGenericDrawState(const gl::ContextState &data);
 
     void setTextureCubemapSeamlessEnabled(bool enabled);
