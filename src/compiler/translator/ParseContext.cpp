@@ -686,8 +686,12 @@ bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
         for (TIntermNode *const &argNode : *arguments)
         {
             const TType &argType = argNode->getAsTyped()->getType();
-            // It has already been checked that the argument is not an array.
-            ASSERT(!argType.isArray());
+            // It has already been checked that the argument is not an array, but we can arrive
+            // here due to prior error conditions.
+            if (argType.isArray())
+            {
+                return false;
+            }
             if (!argType.sameElementType(type))
             {
                 error(line, "Array constructor argument has an incorrect type", "constructor");

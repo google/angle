@@ -3447,3 +3447,20 @@ TEST_F(FragmentShaderValidationTest, SamplerFieldStructUnsizedArrayEmptyConstruc
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// Checks that odd array initialization syntax is an error, and does not produce
+// an ASSERT failure.
+TEST_F(VertexShaderValidationTest, InvalidArrayConstruction)
+{
+    const std::string &shaderString =
+        "struct S { mediump float i; mediump int ggb; };\n"
+        "void main() {\n"
+        "  S s[2];\n"
+        "  s = S[](s.x, 0.0);\n"
+        "  gl_Position = vec4(1, 0, 0, 1);\n"
+        "}";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
