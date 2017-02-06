@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e4d95b8e_d1fef7e4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-06T21:06:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d2f80703_02e1217a",
+      "revId": "bdeb4c48e89801f4d1fdf613cc986fd9a6d0d933",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2da4dc72_be590f03",
         "filename": "/COMMIT_MSG",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2017-02-06T19:45:22Z",
       "side": 1,
       "message": "nit: missing BUG\u003d",
+      "revId": "bdeb4c48e89801f4d1fdf613cc986fd9a6d0d933",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1169a8a7_7b00803d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-06T21:06:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2da4dc72_be590f03",
       "revId": "bdeb4c48e89801f4d1fdf613cc986fd9a6d0d933",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
