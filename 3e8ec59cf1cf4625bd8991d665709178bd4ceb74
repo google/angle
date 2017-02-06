@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "96cb7412_01dfdc90",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 760,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-06T21:02:58Z",
+      "side": 1,
+      "message": "I think the general policy for state sync is to be as lazy as possible. Hence it should go in one or either of the state setting methods, instead of eagerly being set on context switch. A future optimization can use a dirty bit approach internally.",
+      "range": {
+        "startLine": 760,
+        "startChar": 4,
+        "endLine": 760,
+        "endChar": 36
+      },
+      "revId": "3e8ec59cf1cf4625bd8991d665709178bd4ceb74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
