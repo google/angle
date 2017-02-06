@@ -59,28 +59,63 @@ class TextureGL : public TextureImpl
               BlitGL *blitter);
     ~TextureGL() override;
 
-    gl::Error setImage(GLenum target, size_t level, GLenum internalFormat, const gl::Extents &size, GLenum format, GLenum type,
-                       const gl::PixelUnpackState &unpack, const uint8_t *pixels) override;
-    gl::Error setSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format, GLenum type,
-                          const gl::PixelUnpackState &unpack, const uint8_t *pixels) override;
+    gl::Error setImage(ContextImpl *contextImpl,
+                       GLenum target,
+                       size_t level,
+                       GLenum internalFormat,
+                       const gl::Extents &size,
+                       GLenum format,
+                       GLenum type,
+                       const gl::PixelUnpackState &unpack,
+                       const uint8_t *pixels) override;
+    gl::Error setSubImage(ContextImpl *contextImpl,
+                          GLenum target,
+                          size_t level,
+                          const gl::Box &area,
+                          GLenum format,
+                          GLenum type,
+                          const gl::PixelUnpackState &unpack,
+                          const uint8_t *pixels) override;
 
-    gl::Error setCompressedImage(GLenum target, size_t level, GLenum internalFormat, const gl::Extents &size,
-                                 const gl::PixelUnpackState &unpack, size_t imageSize, const uint8_t *pixels) override;
-    gl::Error setCompressedSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format,
-                                    const gl::PixelUnpackState &unpack, size_t imageSize, const uint8_t *pixels) override;
+    gl::Error setCompressedImage(ContextImpl *contextImpl,
+                                 GLenum target,
+                                 size_t level,
+                                 GLenum internalFormat,
+                                 const gl::Extents &size,
+                                 const gl::PixelUnpackState &unpack,
+                                 size_t imageSize,
+                                 const uint8_t *pixels) override;
+    gl::Error setCompressedSubImage(ContextImpl *contextImpl,
+                                    GLenum target,
+                                    size_t level,
+                                    const gl::Box &area,
+                                    GLenum format,
+                                    const gl::PixelUnpackState &unpack,
+                                    size_t imageSize,
+                                    const uint8_t *pixels) override;
 
-    gl::Error copyImage(GLenum target, size_t level, const gl::Rectangle &sourceArea, GLenum internalFormat,
+    gl::Error copyImage(ContextImpl *contextImpl,
+                        GLenum target,
+                        size_t level,
+                        const gl::Rectangle &sourceArea,
+                        GLenum internalFormat,
                         const gl::Framebuffer *source) override;
-    gl::Error copySubImage(GLenum target, size_t level, const gl::Offset &destOffset, const gl::Rectangle &sourceArea,
+    gl::Error copySubImage(ContextImpl *contextImpl,
+                           GLenum target,
+                           size_t level,
+                           const gl::Offset &destOffset,
+                           const gl::Rectangle &sourceArea,
                            const gl::Framebuffer *source) override;
 
-    gl::Error copyTexture(GLenum internalFormat,
+    gl::Error copyTexture(ContextImpl *contextImpl,
+                          GLenum internalFormat,
                           GLenum type,
                           bool unpackFlipY,
                           bool unpackPremultiplyAlpha,
                           bool unpackUnmultiplyAlpha,
                           const gl::Texture *source) override;
-    gl::Error copySubTexture(const gl::Offset &destOffset,
+    gl::Error copySubTexture(ContextImpl *contextImpl,
+                             const gl::Offset &destOffset,
                              const gl::Rectangle &sourceArea,
                              bool unpackFlipY,
                              bool unpackPremultiplyAlpha,
@@ -94,9 +129,14 @@ class TextureGL : public TextureImpl
                                    bool unpackUnmultiplyAlpha,
                                    const gl::Texture *source);
 
-    gl::Error setStorage(GLenum target, size_t levels, GLenum internalFormat, const gl::Extents &size) override;
+    gl::Error setStorage(ContextImpl *contextImpl,
+                         GLenum target,
+                         size_t levels,
+                         GLenum internalFormat,
+                         const gl::Extents &size) override;
 
-    gl::Error setStorageMultisample(GLenum target,
+    gl::Error setStorageMultisample(ContextImpl *contextImpl,
+                                    GLenum target,
                                     GLsizei samples,
                                     GLint internalFormat,
                                     const gl::Extents &size,
@@ -106,7 +146,7 @@ class TextureGL : public TextureImpl
                                egl::Stream *stream,
                                const egl::Stream::GLTextureDescription &desc) override;
 
-    gl::Error generateMipmap() override;
+    gl::Error generateMipmap(ContextImpl *contextImpl) override;
 
     void bindTexImage(egl::Surface *surface) override;
     void releaseTexImage() override;

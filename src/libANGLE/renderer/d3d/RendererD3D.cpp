@@ -256,19 +256,19 @@ gl::Texture *RendererD3D::getIncompleteTexture(GLImplFactory *implFactory, GLenu
         // Skip the API layer to avoid needing to pass the Context and mess with dirty bits.
         gl::Texture *t =
             new gl::Texture(implFactory, std::numeric_limits<GLuint>::max(), createType);
-        t->setStorage(createType, 1, GL_RGBA8, colorSize);
+        t->setStorage(nullptr, createType, 1, GL_RGBA8, colorSize);
         if (type == GL_TEXTURE_CUBE_MAP)
         {
             for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X; face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z; face++)
             {
-                t->getImplementation()->setSubImage(face, 0, area, GL_RGBA8, GL_UNSIGNED_BYTE,
-                                                    unpack, color);
+                t->getImplementation()->setSubImage(nullptr, face, 0, area, GL_RGBA8,
+                                                    GL_UNSIGNED_BYTE, unpack, color);
             }
         }
         else
         {
-            t->getImplementation()->setSubImage(createType, 0, area, GL_RGBA8, GL_UNSIGNED_BYTE, unpack,
-                                                color);
+            t->getImplementation()->setSubImage(nullptr, createType, 0, area, GL_RGBA8,
+                                                GL_UNSIGNED_BYTE, unpack, color);
         }
         mIncompleteTextures[type].set(t);
     }

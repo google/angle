@@ -649,7 +649,7 @@ void GL_APIENTRY TexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalf
 
         Extents size(width, height, 1);
         Texture *texture = context->getTargetTexture(target);
-        Error error = texture->setStorage(target, levels, internalformat, size);
+        Error error      = texture->setStorage(context, target, levels, internalformat, size);
         if (error.isError())
         {
             context->handleError(error);

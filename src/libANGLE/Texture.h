@@ -263,7 +263,8 @@ class Texture final : public egl::ImageSibling,
 
     bool isMipmapComplete() const;
 
-    Error setImage(const PixelUnpackState &unpackState,
+    Error setImage(const Context *context,
+                   const PixelUnpackState &unpackState,
                    GLenum target,
                    size_t level,
                    GLenum internalFormat,
@@ -271,7 +272,8 @@ class Texture final : public egl::ImageSibling,
                    GLenum format,
                    GLenum type,
                    const uint8_t *pixels);
-    Error setSubImage(const PixelUnpackState &unpackState,
+    Error setSubImage(const Context *context,
+                      const PixelUnpackState &unpackState,
                       GLenum target,
                       size_t level,
                       const Box &area,
@@ -279,14 +281,16 @@ class Texture final : public egl::ImageSibling,
                       GLenum type,
                       const uint8_t *pixels);
 
-    Error setCompressedImage(const PixelUnpackState &unpackState,
+    Error setCompressedImage(const Context *context,
+                             const PixelUnpackState &unpackState,
                              GLenum target,
                              size_t level,
                              GLenum internalFormat,
                              const Extents &size,
                              size_t imageSize,
                              const uint8_t *pixels);
-    Error setCompressedSubImage(const PixelUnpackState &unpackState,
+    Error setCompressedSubImage(const Context *context,
+                                const PixelUnpackState &unpackState,
                                 GLenum target,
                                 size_t level,
                                 const Box &area,
@@ -294,34 +298,43 @@ class Texture final : public egl::ImageSibling,
                                 size_t imageSize,
                                 const uint8_t *pixels);
 
-    Error copyImage(GLenum target,
+    Error copyImage(const Context *context,
+                    GLenum target,
                     size_t level,
                     const Rectangle &sourceArea,
                     GLenum internalFormat,
                     const Framebuffer *source);
-    Error copySubImage(GLenum target,
+    Error copySubImage(const Context *context,
+                       GLenum target,
                        size_t level,
                        const Offset &destOffset,
                        const Rectangle &sourceArea,
                        const Framebuffer *source);
 
-    Error copyTexture(GLenum internalFormat,
+    Error copyTexture(const Context *context,
+                      GLenum internalFormat,
                       GLenum type,
                       bool unpackFlipY,
                       bool unpackPremultiplyAlpha,
                       bool unpackUnmultiplyAlpha,
                       const Texture *source);
-    Error copySubTexture(const Offset &destOffset,
+    Error copySubTexture(const Context *context,
+                         const Offset &destOffset,
                          const Rectangle &sourceArea,
                          bool unpackFlipY,
                          bool unpackPremultiplyAlpha,
                          bool unpackUnmultiplyAlpha,
                          const Texture *source);
-    Error copyCompressedTexture(const Texture *source);
+    Error copyCompressedTexture(const Context *context, const Texture *source);
 
-    Error setStorage(GLenum target, GLsizei levels, GLenum internalFormat, const Extents &size);
+    Error setStorage(const Context *context,
+                     GLenum target,
+                     GLsizei levels,
+                     GLenum internalFormat,
+                     const Extents &size);
 
-    Error setStorageMultisample(GLenum target,
+    Error setStorageMultisample(const Context *context,
+                                GLenum target,
                                 GLsizei samples,
                                 GLint internalformat,
                                 const Extents &size,
@@ -329,7 +342,7 @@ class Texture final : public egl::ImageSibling,
 
     Error setEGLImageTarget(GLenum target, egl::Image *imageTarget);
 
-    Error generateMipmap();
+    Error generateMipmap(const Context *context);
 
     egl::Surface *getBoundSurface() const;
     egl::Stream *getBoundStream() const;

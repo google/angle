@@ -144,7 +144,8 @@ GLenum TextureD3D::getBaseLevelInternalFormat() const
     return (baseImage ? baseImage->getInternalFormat() : GL_NONE);
 }
 
-gl::Error TextureD3D::setStorageMultisample(GLenum target,
+gl::Error TextureD3D::setStorageMultisample(ContextImpl *contextImpl,
+                                            GLenum target,
                                             GLsizei samples,
                                             GLint internalFormat,
                                             const gl::Extents &size,
@@ -361,7 +362,7 @@ gl::Error TextureD3D::setImageExternal(GLenum target,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error TextureD3D::generateMipmap()
+gl::Error TextureD3D::generateMipmap(ContextImpl *contextImpl)
 {
     const GLuint baseLevel = mState.getEffectiveBaseLevel();
     const GLuint maxLevel = mState.getMipmapMaxLevel();
@@ -599,7 +600,8 @@ ImageD3D *TextureD3D_2DMultisample::getImage(const gl::ImageIndex &index) const
     return nullptr;
 }
 
-gl::Error TextureD3D_2DMultisample::setImage(GLenum target,
+gl::Error TextureD3D_2DMultisample::setImage(ContextImpl *contextImpl,
+                                             GLenum target,
                                              size_t level,
                                              GLenum internalFormat,
                                              const gl::Extents &size,
@@ -612,7 +614,8 @@ gl::Error TextureD3D_2DMultisample::setImage(GLenum target,
     return gl::InternalError();
 }
 
-gl::Error TextureD3D_2DMultisample::setSubImage(GLenum target,
+gl::Error TextureD3D_2DMultisample::setSubImage(ContextImpl *contextImpl,
+                                                GLenum target,
                                                 size_t level,
                                                 const gl::Box &area,
                                                 GLenum format,
@@ -624,7 +627,8 @@ gl::Error TextureD3D_2DMultisample::setSubImage(GLenum target,
     return gl::InternalError();
 }
 
-gl::Error TextureD3D_2DMultisample::setCompressedImage(GLenum target,
+gl::Error TextureD3D_2DMultisample::setCompressedImage(ContextImpl *contextImpl,
+                                                       GLenum target,
                                                        size_t level,
                                                        GLenum internalFormat,
                                                        const gl::Extents &size,
@@ -636,7 +640,8 @@ gl::Error TextureD3D_2DMultisample::setCompressedImage(GLenum target,
     return gl::InternalError();
 }
 
-gl::Error TextureD3D_2DMultisample::setCompressedSubImage(GLenum target,
+gl::Error TextureD3D_2DMultisample::setCompressedSubImage(ContextImpl *contextImpl,
+                                                          GLenum target,
                                                           size_t level,
                                                           const gl::Box &area,
                                                           GLenum format,
@@ -648,7 +653,8 @@ gl::Error TextureD3D_2DMultisample::setCompressedSubImage(GLenum target,
     return gl::InternalError();
 }
 
-gl::Error TextureD3D_2DMultisample::copyImage(GLenum target,
+gl::Error TextureD3D_2DMultisample::copyImage(ContextImpl *contextImpl,
+                                              GLenum target,
                                               size_t level,
                                               const gl::Rectangle &sourceArea,
                                               GLenum internalFormat,
@@ -658,7 +664,8 @@ gl::Error TextureD3D_2DMultisample::copyImage(GLenum target,
     return gl::InternalError();
 }
 
-gl::Error TextureD3D_2DMultisample::copySubImage(GLenum target,
+gl::Error TextureD3D_2DMultisample::copySubImage(ContextImpl *contextImpl,
+                                                 GLenum target,
                                                  size_t level,
                                                  const gl::Offset &destOffset,
                                                  const gl::Rectangle &sourceArea,
@@ -668,7 +675,8 @@ gl::Error TextureD3D_2DMultisample::copySubImage(GLenum target,
     return gl::InternalError();
 }
 
-gl::Error TextureD3D_2DMultisample::setStorage(GLenum target,
+gl::Error TextureD3D_2DMultisample::setStorage(ContextImpl *contextImpl,
+                                               GLenum target,
                                                size_t levels,
                                                GLenum internalFormat,
                                                const gl::Extents &size)
@@ -836,7 +844,8 @@ bool TextureD3D_2D::isDepth(GLint level) const
     return gl::GetInternalFormatInfo(getInternalFormat(level)).depthBits > 0;
 }
 
-gl::Error TextureD3D_2D::setImage(GLenum target,
+gl::Error TextureD3D_2D::setImage(ContextImpl *contextImpl,
+                                  GLenum target,
                                   size_t imageLevel,
                                   GLenum internalFormat,
                                   const gl::Extents &size,
@@ -882,7 +891,8 @@ gl::Error TextureD3D_2D::setImage(GLenum target,
     return gl::NoError();
 }
 
-gl::Error TextureD3D_2D::setSubImage(GLenum target,
+gl::Error TextureD3D_2D::setSubImage(ContextImpl *contextImpl,
+                                     GLenum target,
                                      size_t imageLevel,
                                      const gl::Box &area,
                                      GLenum format,
@@ -908,7 +918,8 @@ gl::Error TextureD3D_2D::setSubImage(GLenum target,
     }
 }
 
-gl::Error TextureD3D_2D::setCompressedImage(GLenum target,
+gl::Error TextureD3D_2D::setCompressedImage(ContextImpl *contextImpl,
+                                            GLenum target,
                                             size_t imageLevel,
                                             GLenum internalFormat,
                                             const gl::Extents &size,
@@ -925,8 +936,14 @@ gl::Error TextureD3D_2D::setCompressedImage(GLenum target,
     return setCompressedImageImpl(gl::ImageIndex::Make2D(level), unpack, pixels, 0);
 }
 
-gl::Error TextureD3D_2D::setCompressedSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format,
-                                               const gl::PixelUnpackState &unpack, size_t imageSize, const uint8_t *pixels)
+gl::Error TextureD3D_2D::setCompressedSubImage(ContextImpl *contextImpl,
+                                               GLenum target,
+                                               size_t level,
+                                               const gl::Box &area,
+                                               GLenum format,
+                                               const gl::PixelUnpackState &unpack,
+                                               size_t imageSize,
+                                               const uint8_t *pixels)
 {
     ASSERT(target == GL_TEXTURE_2D && area.depth == 1 && area.z == 0);
 
@@ -936,7 +953,8 @@ gl::Error TextureD3D_2D::setCompressedSubImage(GLenum target, size_t level, cons
     return commitRegion(index, area);
 }
 
-gl::Error TextureD3D_2D::copyImage(GLenum target,
+gl::Error TextureD3D_2D::copyImage(ContextImpl *contextImpl,
+                                   GLenum target,
                                    size_t imageLevel,
                                    const gl::Rectangle &sourceArea,
                                    GLenum internalFormat,
@@ -974,7 +992,8 @@ gl::Error TextureD3D_2D::copyImage(GLenum target,
     return gl::NoError();
 }
 
-gl::Error TextureD3D_2D::copySubImage(GLenum target,
+gl::Error TextureD3D_2D::copySubImage(ContextImpl *contextImpl,
+                                      GLenum target,
                                       size_t imageLevel,
                                       const gl::Offset &destOffset,
                                       const gl::Rectangle &sourceArea,
@@ -1011,7 +1030,8 @@ gl::Error TextureD3D_2D::copySubImage(GLenum target,
     return gl::NoError();
 }
 
-gl::Error TextureD3D_2D::copyTexture(GLenum internalFormat,
+gl::Error TextureD3D_2D::copyTexture(ContextImpl *contextImpl,
+                                     GLenum internalFormat,
                                      GLenum type,
                                      bool unpackFlipY,
                                      bool unpackPremultiplyAlpha,
@@ -1044,7 +1064,8 @@ gl::Error TextureD3D_2D::copyTexture(GLenum internalFormat,
     return gl::NoError();
 }
 
-gl::Error TextureD3D_2D::copySubTexture(const gl::Offset &destOffset,
+gl::Error TextureD3D_2D::copySubTexture(ContextImpl *contextImpl,
+                                        const gl::Offset &destOffset,
                                         const gl::Rectangle &sourceArea,
                                         bool unpackFlipY,
                                         bool unpackPremultiplyAlpha,
@@ -1068,7 +1089,7 @@ gl::Error TextureD3D_2D::copySubTexture(const gl::Offset &destOffset,
     return gl::NoError();
 }
 
-gl::Error TextureD3D_2D::copyCompressedTexture(const gl::Texture *source)
+gl::Error TextureD3D_2D::copyCompressedTexture(ContextImpl *contextImpl, const gl::Texture *source)
 {
     GLenum sourceTarget = source->getTarget();
     GLint sourceLevel   = 0;
@@ -1088,7 +1109,11 @@ gl::Error TextureD3D_2D::copyCompressedTexture(const gl::Texture *source)
     return gl::NoError();
 }
 
-gl::Error TextureD3D_2D::setStorage(GLenum target, size_t levels, GLenum internalFormat, const gl::Extents &size)
+gl::Error TextureD3D_2D::setStorage(ContextImpl *contextImpl,
+                                    GLenum target,
+                                    size_t levels,
+                                    GLenum internalFormat,
+                                    const gl::Extents &size)
 {
     ASSERT(GL_TEXTURE_2D && size.depth == 1);
 
@@ -1442,7 +1467,8 @@ void TextureD3D_2D::markAllImagesDirty()
     mDirtyImages = true;
 }
 
-gl::Error TextureD3D_2D::setStorageMultisample(GLenum target,
+gl::Error TextureD3D_2D::setStorageMultisample(ContextImpl *contextImpl,
+                                               GLenum target,
                                                GLsizei samples,
                                                GLint internalFormat,
                                                const gl::Extents &size,
@@ -1519,8 +1545,15 @@ gl::Error TextureD3D_Cube::setEGLImageTarget(GLenum target, egl::Image *image)
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error TextureD3D_Cube::setImage(GLenum target, size_t level, GLenum internalFormat, const gl::Extents &size, GLenum format, GLenum type,
-                                    const gl::PixelUnpackState &unpack, const uint8_t *pixels)
+gl::Error TextureD3D_Cube::setImage(ContextImpl *contextImpl,
+                                    GLenum target,
+                                    size_t level,
+                                    GLenum internalFormat,
+                                    const gl::Extents &size,
+                                    GLenum format,
+                                    GLenum type,
+                                    const gl::PixelUnpackState &unpack,
+                                    const uint8_t *pixels)
 {
     ASSERT(size.depth == 1);
 
@@ -1532,8 +1565,14 @@ gl::Error TextureD3D_Cube::setImage(GLenum target, size_t level, GLenum internal
     return setImageImpl(index, type, unpack, pixels, 0);
 }
 
-gl::Error TextureD3D_Cube::setSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format, GLenum type,
-                                       const gl::PixelUnpackState &unpack, const uint8_t *pixels)
+gl::Error TextureD3D_Cube::setSubImage(ContextImpl *contextImpl,
+                                       GLenum target,
+                                       size_t level,
+                                       const gl::Box &area,
+                                       GLenum format,
+                                       GLenum type,
+                                       const gl::PixelUnpackState &unpack,
+                                       const uint8_t *pixels)
 {
     ASSERT(area.depth == 1 && area.z == 0);
 
@@ -1541,8 +1580,14 @@ gl::Error TextureD3D_Cube::setSubImage(GLenum target, size_t level, const gl::Bo
     return TextureD3D::subImage(index, area, format, type, unpack, pixels, 0);
 }
 
-gl::Error TextureD3D_Cube::setCompressedImage(GLenum target, size_t level, GLenum internalFormat, const gl::Extents &size,
-                                              const gl::PixelUnpackState &unpack, size_t imageSize, const uint8_t *pixels)
+gl::Error TextureD3D_Cube::setCompressedImage(ContextImpl *contextImpl,
+                                              GLenum target,
+                                              size_t level,
+                                              GLenum internalFormat,
+                                              const gl::Extents &size,
+                                              const gl::PixelUnpackState &unpack,
+                                              size_t imageSize,
+                                              const uint8_t *pixels)
 {
     ASSERT(size.depth == 1);
 
@@ -1555,8 +1600,14 @@ gl::Error TextureD3D_Cube::setCompressedImage(GLenum target, size_t level, GLenu
     return setCompressedImageImpl(index, unpack, pixels, 0);
 }
 
-gl::Error TextureD3D_Cube::setCompressedSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format,
-                                                 const gl::PixelUnpackState &unpack, size_t imageSize, const uint8_t *pixels)
+gl::Error TextureD3D_Cube::setCompressedSubImage(ContextImpl *contextImpl,
+                                                 GLenum target,
+                                                 size_t level,
+                                                 const gl::Box &area,
+                                                 GLenum format,
+                                                 const gl::PixelUnpackState &unpack,
+                                                 size_t imageSize,
+                                                 const uint8_t *pixels)
 {
     ASSERT(area.depth == 1 && area.z == 0);
 
@@ -1566,7 +1617,8 @@ gl::Error TextureD3D_Cube::setCompressedSubImage(GLenum target, size_t level, co
     return commitRegion(index, area);
 }
 
-gl::Error TextureD3D_Cube::copyImage(GLenum target,
+gl::Error TextureD3D_Cube::copyImage(ContextImpl *contextImpl,
+                                     GLenum target,
                                      size_t imageLevel,
                                      const gl::Rectangle &sourceArea,
                                      GLenum internalFormat,
@@ -1608,7 +1660,8 @@ gl::Error TextureD3D_Cube::copyImage(GLenum target,
     return gl::NoError();
 }
 
-gl::Error TextureD3D_Cube::copySubImage(GLenum target,
+gl::Error TextureD3D_Cube::copySubImage(ContextImpl *contextImpl,
+                                        GLenum target,
                                         size_t imageLevel,
                                         const gl::Offset &destOffset,
                                         const gl::Rectangle &sourceArea,
@@ -1647,7 +1700,11 @@ gl::Error TextureD3D_Cube::copySubImage(GLenum target,
     return gl::NoError();
 }
 
-gl::Error TextureD3D_Cube::setStorage(GLenum target, size_t levels, GLenum internalFormat, const gl::Extents &size)
+gl::Error TextureD3D_Cube::setStorage(ContextImpl *contextImpl,
+                                      GLenum target,
+                                      size_t levels,
+                                      GLenum internalFormat,
+                                      const gl::Extents &size)
 {
     ASSERT(size.width == size.height);
     ASSERT(size.depth == 1);
@@ -2068,7 +2125,8 @@ gl::Error TextureD3D_3D::setEGLImageTarget(GLenum target, egl::Image *image)
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error TextureD3D_3D::setImage(GLenum target,
+gl::Error TextureD3D_3D::setImage(ContextImpl *contextImpl,
+                                  GLenum target,
                                   size_t imageLevel,
                                   GLenum internalFormat,
                                   const gl::Extents &size,
@@ -2113,7 +2171,8 @@ gl::Error TextureD3D_3D::setImage(GLenum target,
     return gl::NoError();
 }
 
-gl::Error TextureD3D_3D::setSubImage(GLenum target,
+gl::Error TextureD3D_3D::setSubImage(ContextImpl *contextImpl,
+                                     GLenum target,
                                      size_t imageLevel,
                                      const gl::Box &area,
                                      GLenum format,
@@ -2141,7 +2200,8 @@ gl::Error TextureD3D_3D::setSubImage(GLenum target,
     }
 }
 
-gl::Error TextureD3D_3D::setCompressedImage(GLenum target,
+gl::Error TextureD3D_3D::setCompressedImage(ContextImpl *contextImpl,
+                                            GLenum target,
                                             size_t imageLevel,
                                             GLenum internalFormat,
                                             const gl::Extents &size,
@@ -2159,8 +2219,14 @@ gl::Error TextureD3D_3D::setCompressedImage(GLenum target,
     return setCompressedImageImpl(index, unpack, pixels, 0);
 }
 
-gl::Error TextureD3D_3D::setCompressedSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format,
-                                               const gl::PixelUnpackState &unpack, size_t imageSize, const uint8_t *pixels)
+gl::Error TextureD3D_3D::setCompressedSubImage(ContextImpl *contextImpl,
+                                               GLenum target,
+                                               size_t level,
+                                               const gl::Box &area,
+                                               GLenum format,
+                                               const gl::PixelUnpackState &unpack,
+                                               size_t imageSize,
+                                               const uint8_t *pixels)
 {
     ASSERT(target == GL_TEXTURE_3D);
 
@@ -2169,14 +2235,19 @@ gl::Error TextureD3D_3D::setCompressedSubImage(GLenum target, size_t level, cons
     return commitRegion(index, area);
 }
 
-gl::Error TextureD3D_3D::copyImage(GLenum target, size_t level, const gl::Rectangle &sourceArea, GLenum internalFormat,
+gl::Error TextureD3D_3D::copyImage(ContextImpl *contextImpl,
+                                   GLenum target,
+                                   size_t level,
+                                   const gl::Rectangle &sourceArea,
+                                   GLenum internalFormat,
                                    const gl::Framebuffer *source)
 {
     UNIMPLEMENTED();
     return gl::Error(GL_INVALID_OPERATION, "Copying 3D textures is unimplemented.");
 }
 
-gl::Error TextureD3D_3D::copySubImage(GLenum target,
+gl::Error TextureD3D_3D::copySubImage(ContextImpl *contextImpl,
+                                      GLenum target,
                                       size_t imageLevel,
                                       const gl::Offset &destOffset,
                                       const gl::Rectangle &sourceArea,
@@ -2207,7 +2278,11 @@ gl::Error TextureD3D_3D::copySubImage(GLenum target,
     return gl::NoError();
 }
 
-gl::Error TextureD3D_3D::setStorage(GLenum target, size_t levels, GLenum internalFormat, const gl::Extents &size)
+gl::Error TextureD3D_3D::setStorage(ContextImpl *contextImpl,
+                                    GLenum target,
+                                    size_t levels,
+                                    GLenum internalFormat,
+                                    const gl::Extents &size)
 {
     ASSERT(target == GL_TEXTURE_3D);
 
@@ -2565,7 +2640,8 @@ gl::Error TextureD3D_2DArray::setEGLImageTarget(GLenum target, egl::Image *image
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error TextureD3D_2DArray::setImage(GLenum target,
+gl::Error TextureD3D_2DArray::setImage(ContextImpl *contextImpl,
+                                       GLenum target,
                                        size_t imageLevel,
                                        GLenum internalFormat,
                                        const gl::Extents &size,
@@ -2597,7 +2673,8 @@ gl::Error TextureD3D_2DArray::setImage(GLenum target,
     return gl::NoError();
 }
 
-gl::Error TextureD3D_2DArray::setSubImage(GLenum target,
+gl::Error TextureD3D_2DArray::setSubImage(ContextImpl *contextImpl,
+                                          GLenum target,
                                           size_t imageLevel,
                                           const gl::Box &area,
                                           GLenum format,
@@ -2628,7 +2705,8 @@ gl::Error TextureD3D_2DArray::setSubImage(GLenum target,
     return gl::NoError();
 }
 
-gl::Error TextureD3D_2DArray::setCompressedImage(GLenum target,
+gl::Error TextureD3D_2DArray::setCompressedImage(ContextImpl *contextImpl,
+                                                 GLenum target,
                                                  size_t imageLevel,
                                                  GLenum internalFormat,
                                                  const gl::Extents &size,
@@ -2659,8 +2737,14 @@ gl::Error TextureD3D_2DArray::setCompressedImage(GLenum target,
     return gl::NoError();
 }
 
-gl::Error TextureD3D_2DArray::setCompressedSubImage(GLenum target, size_t level, const gl::Box &area, GLenum format,
-                                                    const gl::PixelUnpackState &unpack, size_t imageSize, const uint8_t *pixels)
+gl::Error TextureD3D_2DArray::setCompressedSubImage(ContextImpl *contextImpl,
+                                                    GLenum target,
+                                                    size_t level,
+                                                    const gl::Box &area,
+                                                    GLenum format,
+                                                    const gl::PixelUnpackState &unpack,
+                                                    size_t imageSize,
+                                                    const uint8_t *pixels)
 {
     ASSERT(target == GL_TEXTURE_2D_ARRAY);
 
@@ -2686,14 +2770,19 @@ gl::Error TextureD3D_2DArray::setCompressedSubImage(GLenum target, size_t level,
     return gl::NoError();
 }
 
-gl::Error TextureD3D_2DArray::copyImage(GLenum target, size_t level, const gl::Rectangle &sourceArea, GLenum internalFormat,
+gl::Error TextureD3D_2DArray::copyImage(ContextImpl *contextImpl,
+                                        GLenum target,
+                                        size_t level,
+                                        const gl::Rectangle &sourceArea,
+                                        GLenum internalFormat,
                                         const gl::Framebuffer *source)
 {
     UNIMPLEMENTED();
     return gl::Error(GL_INVALID_OPERATION, "Copying 2D array textures is unimplemented.");
 }
 
-gl::Error TextureD3D_2DArray::copySubImage(GLenum target,
+gl::Error TextureD3D_2DArray::copySubImage(ContextImpl *contextImpl,
+                                           GLenum target,
                                            size_t imageLevel,
                                            const gl::Offset &destOffset,
                                            const gl::Rectangle &sourceArea,
@@ -2727,7 +2816,11 @@ gl::Error TextureD3D_2DArray::copySubImage(GLenum target,
     return gl::NoError();
 }
 
-gl::Error TextureD3D_2DArray::setStorage(GLenum target, size_t levels, GLenum internalFormat, const gl::Extents &size)
+gl::Error TextureD3D_2DArray::setStorage(ContextImpl *contextImpl,
+                                         GLenum target,
+                                         size_t levels,
+                                         GLenum internalFormat,
+                                         const gl::Extents &size)
 {
     ASSERT(target == GL_TEXTURE_2D_ARRAY);
 
@@ -3108,7 +3201,8 @@ GLsizei TextureD3D_External::getLayerCount(int level) const
     return 1;
 }
 
-gl::Error TextureD3D_External::setImage(GLenum target,
+gl::Error TextureD3D_External::setImage(ContextImpl *contextImpl,
+                                        GLenum target,
                                         size_t imageLevel,
                                         GLenum internalFormat,
                                         const gl::Extents &size,
@@ -3122,7 +3216,8 @@ gl::Error TextureD3D_External::setImage(GLenum target,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error TextureD3D_External::setSubImage(GLenum target,
+gl::Error TextureD3D_External::setSubImage(ContextImpl *contextImpl,
+                                           GLenum target,
                                            size_t imageLevel,
                                            const gl::Box &area,
                                            GLenum format,
@@ -3134,7 +3229,8 @@ gl::Error TextureD3D_External::setSubImage(GLenum target,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error TextureD3D_External::setCompressedImage(GLenum target,
+gl::Error TextureD3D_External::setCompressedImage(ContextImpl *contextImpl,
+                                                  GLenum target,
                                                   size_t imageLevel,
                                                   GLenum internalFormat,
                                                   const gl::Extents &size,
@@ -3146,7 +3242,8 @@ gl::Error TextureD3D_External::setCompressedImage(GLenum target,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error TextureD3D_External::setCompressedSubImage(GLenum target,
+gl::Error TextureD3D_External::setCompressedSubImage(ContextImpl *contextImpl,
+                                                     GLenum target,
                                                      size_t level,
                                                      const gl::Box &area,
                                                      GLenum format,
@@ -3158,7 +3255,8 @@ gl::Error TextureD3D_External::setCompressedSubImage(GLenum target,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error TextureD3D_External::copyImage(GLenum target,
+gl::Error TextureD3D_External::copyImage(ContextImpl *contextImpl,
+                                         GLenum target,
                                          size_t imageLevel,
                                          const gl::Rectangle &sourceArea,
                                          GLenum internalFormat,
@@ -3168,7 +3266,8 @@ gl::Error TextureD3D_External::copyImage(GLenum target,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error TextureD3D_External::copySubImage(GLenum target,
+gl::Error TextureD3D_External::copySubImage(ContextImpl *contextImpl,
+                                            GLenum target,
                                             size_t imageLevel,
                                             const gl::Offset &destOffset,
                                             const gl::Rectangle &sourceArea,
@@ -3178,7 +3277,8 @@ gl::Error TextureD3D_External::copySubImage(GLenum target,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error TextureD3D_External::setStorage(GLenum target,
+gl::Error TextureD3D_External::setStorage(ContextImpl *contextImpl,
+                                          GLenum target,
                                           size_t levels,
                                           GLenum internalFormat,
                                           const gl::Extents &size)
