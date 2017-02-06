@@ -1142,8 +1142,11 @@ gl::Error Renderer11::finish()
                              result);
         }
 
-        // Keep polling, but allow other threads to do something useful first
-        ScheduleYield();
+        if (result == S_FALSE)
+        {
+            // Keep polling, but allow other threads to do something useful first
+            ScheduleYield();
+        }
 
         if (testDeviceLost())
         {
