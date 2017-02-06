@@ -45,6 +45,24 @@
       "revId": "f5fb80d65c41e3edb00ed853461d582a366ff26f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6f217b7_fe021d6b",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 589,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-06T18:25:15Z",
+      "side": 1,
+      "message": "I see. Yes, that policy does make sense. This code is part of eglSwapBuffers. I guess we can return EGL_FALSE from there.\nThis can become relevant if we auto run these tests on ChromeOS devices.\nHowever, delivering pixels to monitor is not necessary for auto testing.\nAnd, this process is very slow, which makes end2end tests run for about an hour, I think.\nThus, all this code will probably be disabled on bots anyway.\nI\u0027ll amend anglebug.com/1423 with this info.",
+      "parentUuid": "d2af9ace_a7e34a39",
+      "revId": "f5fb80d65c41e3edb00ed853461d582a366ff26f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
