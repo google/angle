@@ -55,4 +55,4 @@ const egl::Caps &DisplayImpl::getCaps() const
     return mCaps;
 }
 
-}
+}  // namespace rx

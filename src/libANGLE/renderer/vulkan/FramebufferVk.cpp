@@ -300,6 +300,7 @@ gl::Error FramebufferVk::readPixels(ContextImpl *context,
 
     PackPixels(params, angleFormat, inputPitch, mapPointer, reinterpret_cast<uint8_t *>(pixels));
 
+    stagingImage.getImage().destroy(renderer->getDevice());
     stagingImage.getDeviceMemory().unmap();
 
     return vk::NoError();

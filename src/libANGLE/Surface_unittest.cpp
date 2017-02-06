@@ -26,8 +26,9 @@ class MockSurfaceImpl : public rx::SurfaceImpl
 {
   public:
     MockSurfaceImpl() : SurfaceImpl(mockState), mockState(nullptr) {}
-    virtual ~MockSurfaceImpl() { destroy(); }
+    virtual ~MockSurfaceImpl() { destructor(); }
 
+    MOCK_METHOD1(destroy, void(const DisplayImpl *));
     MOCK_METHOD1(initialize, egl::Error(const DisplayImpl *));
     MOCK_METHOD1(createDefaultFramebuffer, rx::FramebufferImpl *(const gl::FramebufferState &data));
     MOCK_METHOD1(swap, egl::Error(const DisplayImpl *));
@@ -43,7 +44,7 @@ class MockSurfaceImpl : public rx::SurfaceImpl
     MOCK_CONST_METHOD0(getSwapBehavior, EGLint(void));
     MOCK_METHOD2(getAttachmentRenderTarget, gl::Error(const gl::FramebufferAttachment::Target &, rx::FramebufferAttachmentRenderTarget **));
 
-    MOCK_METHOD0(destroy, void());
+    MOCK_METHOD0(destructor, void());
 
     egl::SurfaceState mockState;
 };
@@ -59,9 +60,10 @@ TEST(SurfaceTest, DestructionDeletesImpl)
     egl::Surface *surface = new egl::WindowSurface(
         &factory, &config, static_cast<EGLNativeWindowType>(0), egl::AttributeMap());
 
-    EXPECT_CALL(*impl, destroy()).Times(1).RetiresOnSaturation();
+    EXPECT_CALL(*impl, destroy(_)).Times(1).RetiresOnSaturation();
+    EXPECT_CALL(*impl, destructor()).Times(1).RetiresOnSaturation();
 
-    surface->onDestroy();
+    surface->onDestroy(nullptr);
 
     // Only needed because the mock is leaked if bugs are present,
     // which logs an error, but does not cause the test to fail.

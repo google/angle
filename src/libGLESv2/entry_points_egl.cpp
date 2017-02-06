@@ -571,7 +571,7 @@ EGLBoolean EGLAPIENTRY MakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface r
     // destroyed surfaces to delete themselves.
     if (previousContext != nullptr && context != previousContext)
     {
-        previousContext->releaseSurface();
+        previousContext->releaseSurface(display);
     }
 
     thread->setError(Error(EGL_SUCCESS));

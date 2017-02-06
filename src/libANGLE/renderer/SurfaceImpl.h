@@ -36,6 +36,7 @@ class SurfaceImpl : public FramebufferAttachmentObjectImpl
   public:
     SurfaceImpl(const egl::SurfaceState &surfaceState);
     virtual ~SurfaceImpl();
+    virtual void destroy(const DisplayImpl *displayImpl) {}
 
     virtual egl::Error initialize(const DisplayImpl *displayImpl)                        = 0;
     virtual FramebufferImpl *createDefaultFramebuffer(const gl::FramebufferState &state) = 0;

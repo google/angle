@@ -381,7 +381,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
     handleError(mImplementation->initialize());
 }
 
-Context::~Context()
+void Context::destroy(egl::Display *display)
 {
     mGLState.reset();
 
@@ -419,12 +419,16 @@ Context::~Context()
 
     SafeDelete(mSurfacelessFramebuffer);
 
-    releaseSurface();
+    releaseSurface(display);
 
     SafeDelete(mCompiler);
 }
 
-void Context::makeCurrent(egl::Surface *surface)
+Context::~Context()
+{
+}
+
+void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
 {
     if (!mHasBeenCurrent)
     {
@@ -449,12 +453,12 @@ void Context::makeCurrent(egl::Surface *surface)
     // TODO(jmadill): Rework this when we support ContextImpl
     mGLState.setAllDirtyBits();
 
-    releaseSurface();
+    releaseSurface(display);
 
     Framebuffer *newDefault = nullptr;
     if (surface != nullptr)
     {
-        surface->setIsCurrent(true);
+        surface->setIsCurrent(display, true);
         mCurrentSurface = surface;
         newDefault      = surface->getDefaultFramebuffer();
     }
@@ -486,7 +490,7 @@ void Context::makeCurrent(egl::Surface *surface)
     mImplementation->onMakeCurrent(mState);
 }
 
-void Context::releaseSurface()
+void Context::releaseSurface(egl::Display *display)
 {
     // Remove the default framebuffer
     Framebuffer *currentDefault = nullptr;
@@ -511,7 +515,7 @@ void Context::releaseSurface()
 
     if (mCurrentSurface)
     {
-        mCurrentSurface->setIsCurrent(false);
+        mCurrentSurface->setIsCurrent(display, false);
         mCurrentSurface = nullptr;
     }
 }

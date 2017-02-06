@@ -166,6 +166,12 @@ class Image final : public WrappedObject<VkImage>
     explicit Image(VkImage image);
     Image(Image &&other);
 
+    // Called on shutdown when the helper class *doesn't* own the handle to the image resource.
+    void reset();
+
+    // Called on shutdown when the helper class *does* own the handle to the image resource.
+    void destroy(VkDevice device);
+
     Image &operator=(Image &&other);
 
     ~Image() override;
@@ -198,6 +204,8 @@ class ImageView final : public WrappedObject<VkImageView>
     ImageView();
     explicit ImageView(VkDevice device);
     ImageView(ImageView &&other);
+
+    void destroy(VkDevice device);
 
     ImageView &operator=(ImageView &&other);
 

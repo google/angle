@@ -104,28 +104,35 @@ Error Surface::initialize(const Display &display)
     return Error(EGL_SUCCESS);
 }
 
-void Surface::setIsCurrent(bool isCurrent)
+void Surface::setIsCurrent(Display *display, bool isCurrent)
 {
     if (isCurrent)
     {
         mCurrentCount++;
+        return;
     }
-    else
+
+    ASSERT(mCurrentCount > 0);
+    mCurrentCount--;
+    if (mCurrentCount == 0 && mDestroyed)
     {
-        ASSERT(mCurrentCount > 0);
-        mCurrentCount--;
-        if (mCurrentCount == 0 && mDestroyed)
+        if (mImplementation)
         {
-            delete this;
+            mImplementation->destroy(rx::SafeGetImpl(display));
         }
+        delete this;
     }
 }
 
-void Surface::onDestroy()
+void Surface::onDestroy(Display *display)
 {
     mDestroyed = true;
     if (mCurrentCount == 0)
     {
+        if (mImplementation)
+        {
+            mImplementation->destroy(rx::SafeGetImpl(display));
+        }
         delete this;
     }
 }

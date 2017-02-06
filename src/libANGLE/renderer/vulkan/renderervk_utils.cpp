@@ -419,10 +419,20 @@ Image &Image::operator=(Image &&other)
 
 Image::~Image()
 {
-    // If the device handle is null, we aren't managing the handle.
+    ASSERT(mHandle == VK_NULL_HANDLE);
+}
+
+void Image::reset()
+{
+    mHandle = VK_NULL_HANDLE;
+}
+
+void Image::destroy(VkDevice device)
+{
     if (valid())
     {
-        vkDestroyImage(mDevice, mHandle, nullptr);
+        vkDestroyImage(device, mHandle, nullptr);
+        mHandle = VK_NULL_HANDLE;
     }
 }
 
@@ -532,10 +542,15 @@ ImageView &ImageView::operator=(ImageView &&other)
 
 ImageView::~ImageView()
 {
-    if (mHandle != VK_NULL_HANDLE)
+    ASSERT(mHandle == VK_NULL_HANDLE);
+}
+
+void ImageView::destroy(VkDevice device)
+{
+    if (valid())
     {
-        ASSERT(validDevice());
-        vkDestroyImageView(mDevice, mHandle, nullptr);
+        vkDestroyImageView(device, mHandle, nullptr);
+        mHandle = VK_NULL_HANDLE;
     }
 }
 

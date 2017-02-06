@@ -121,8 +121,6 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState,
       mNativeWindowType(window),
       mSurface(VK_NULL_HANDLE),
       mSwapchain(VK_NULL_HANDLE),
-      mDevice(VK_NULL_HANDLE),
-      mInstance(VK_NULL_HANDLE),
       mRenderTarget(),
       mCurrentSwapchainImageIndex(0)
 {
@@ -133,17 +131,43 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState,
 
 WindowSurfaceVk::~WindowSurfaceVk()
 {
+    ASSERT(mSurface == VK_NULL_HANDLE);
+    ASSERT(mSwapchain == VK_NULL_HANDLE);
+    ASSERT(mSwapchainImages.empty());
+    ASSERT(mSwapchainImageViews.empty());
+}
+
+void WindowSurfaceVk::destroy(const DisplayImpl *displayImpl)
+{
+    const DisplayVk *displayVk = GetAs<DisplayVk>(displayImpl);
+    RendererVk *rendererVk     = displayVk->getRenderer();
+    VkDevice device            = rendererVk->getDevice();
+    VkInstance instance        = rendererVk->getInstance();
+
+    for (auto &imageView : mSwapchainImageViews)
+    {
+        imageView.destroy(device);
+    }
+
+    mSwapchainImageViews.clear();
+
+    // Although we don't own the swapchain image handles, we need to keep our shutdown clean.
+    for (auto &image : mSwapchainImages)
+    {
+        image.reset();
+    }
+
     mSwapchainImages.clear();
 
     if (mSwapchain)
     {
-        vkDestroySwapchainKHR(mDevice, mSwapchain, nullptr);
+        vkDestroySwapchainKHR(device, mSwapchain, nullptr);
         mSwapchain = VK_NULL_HANDLE;
     }
 
     if (mSurface)
     {
-        vkDestroySurfaceKHR(mInstance, mSurface, nullptr);
+        vkDestroySurfaceKHR(instance, mSurface, nullptr);
         mSurface = VK_NULL_HANDLE;
     }
 }
@@ -156,11 +180,6 @@ egl::Error WindowSurfaceVk::initialize(const DisplayImpl *displayImpl)
 
 vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
 {
-    // These are needed for resource deallocation.
-    // TODO(jmadill): Don't cache these.
-    mDevice   = renderer->getDevice();
-    mInstance = renderer->getInstance();
-
     // TODO(jmadill): Make this platform-specific.
     VkWin32SurfaceCreateInfoKHR createInfo;
 

@@ -59,6 +59,8 @@ class WindowSurfaceVk : public SurfaceImpl
                     EGLint height);
     ~WindowSurfaceVk() override;
 
+    void destroy(const DisplayImpl *contextImpl) override;
+
     egl::Error initialize(const DisplayImpl *displayImpl) override;
     FramebufferImpl *createDefaultFramebuffer(const gl::FramebufferState &state) override;
     egl::Error swap(const DisplayImpl *displayImpl) override;
@@ -91,10 +93,6 @@ class WindowSurfaceVk : public SurfaceImpl
     EGLNativeWindowType mNativeWindowType;
     VkSurfaceKHR mSurface;
     VkSwapchainKHR mSwapchain;
-    // These are needed for resource deallocation.
-    // TODO(jmadill): Don't store these here.
-    VkDevice mDevice;
-    VkInstance mInstance;
 
     RenderTargetVk mRenderTarget;
     vk::Semaphore mPresentCompleteSemaphore;
