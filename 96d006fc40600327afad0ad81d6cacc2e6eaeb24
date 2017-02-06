@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ab18fc6e_e3e12fca",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-06T19:10:04Z",
+      "side": 1,
+      "message": "drat... I wonder if you could pass the extensions as another argument? Just trying to avoid the layering of display being fed into Context. Certainly is better without the member pointer. Passing the factory is also potentially great for mocking.",
+      "range": {
+        "startLine": 238,
+        "startChar": 16,
+        "endLine": 238,
+        "endChar": 45
+      },
+      "revId": "96d006fc40600327afad0ad81d6cacc2e6eaeb24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
