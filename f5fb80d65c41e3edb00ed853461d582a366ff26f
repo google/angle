@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "217a8bd9_c8a1a6c0",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-06T16:08:38Z",
+      "side": 1,
+      "message": "The destructor feels like an awkward place to put this logic, is there a more explicit way to \"flush\" the message?",
+      "range": {
+        "startLine": 124,
+        "startChar": 4,
+        "endLine": 131,
+        "endChar": 5
+      },
+      "revId": "f5fb80d65c41e3edb00ed853461d582a366ff26f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
