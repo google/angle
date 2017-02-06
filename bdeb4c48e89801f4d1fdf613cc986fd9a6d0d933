@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d2f80703_02e1217a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-06T19:45:22Z",
+      "side": 1,
+      "message": "nit: which entrypoint is this for?",
+      "revId": "bdeb4c48e89801f4d1fdf613cc986fd9a6d0d933",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2da4dc72_be590f03",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-06T19:45:22Z",
+      "side": 1,
+      "message": "nit: missing BUG\u003d",
+      "revId": "bdeb4c48e89801f4d1fdf613cc986fd9a6d0d933",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
