@@ -48,6 +48,24 @@
     },
     {
       "key": {
+        "uuid": "3842dcf8_b7ef0f18",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1150,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-02-07T09:25:09Z",
+      "side": 1,
+      "message": "Talked with Yizhou, the implementation class in gl need to call into driver with \u0027target\u0027 parameter, so the \u0027target\u0027 parameter is necessary for setter. \nStill, it is weird that you have got the fbo, and call into driver upon that fbo with \u0027target\u0027 parameter. I mean the API FramebufferParameteri is per context, not per fbo. Maybe we should move the setters to Context class.",
+      "parentUuid": "b5431fb7_4573f645",
+      "revId": "7b5fdd730d1c3ed1c1b566ef0023eb36c10a1006",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "edca0df5_91a4d902",
         "filename": "src/libANGLE/queryutils.h",
         "patchSetId": 12
