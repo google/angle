@@ -732,7 +732,7 @@ egl::Error Renderer11::initializeD3DDevice()
 
         if (!mDevice || FAILED(result))
         {
-            ERR() << "Failed creating Debug D3D11 device - falling back to release runtime.";
+            WARN() << "Failed creating Debug D3D11 device - falling back to release runtime.";
         }
 
         if (!mDevice || FAILED(result))
