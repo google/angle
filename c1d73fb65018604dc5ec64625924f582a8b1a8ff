@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b10fcbe0_6c65ddad",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-07T14:35:04Z",
+      "side": 1,
+      "message": "sorry, this wasn\u0027t what I meant by internal dirty bit. The GL-level dirty bits have to map to things in the GLES 2.0/3.0/3.1 spec, and this seamless boolean is a GL desktop specific flag. the dirty bits sometimes work in a two-tier method - the top level GL dirty bits are then applied or translated into internal renderer back-end specific dirty bits, which is what would happen with the cube map thing. for now can we leave it in one of the sync methods?",
+      "range": {
+        "startLine": 490,
+        "startChar": 13,
+        "endLine": 490,
+        "endChar": 38
+      },
+      "revId": "c1d73fb65018604dc5ec64625924f582a8b1a8ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
