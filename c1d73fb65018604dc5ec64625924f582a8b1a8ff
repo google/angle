@@ -40,6 +40,24 @@
       "revId": "c1d73fb65018604dc5ec64625924f582a8b1a8ff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9a848309_d7aa1ded",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-07T19:12:12Z",
+      "side": 1,
+      "message": "Right right. I think it\u0027s worth at least discussing, even for a small thing.\n\nYou\u0027re right this setting is pretty weird, because of the interaction to virtual and ANGLE\u0027s real GL context. I think I would like it best if you put it back in first way you had it, in onMakeCurrent. I think a dirty bit approach would work pretty similarly, except it could skip the if statement entirely sometimes at the cost of one bit to iterate in the local dirty bits. Not a big deal.",
+      "parentUuid": "7aabce2d_57ee23da",
+      "revId": "c1d73fb65018604dc5ec64625924f582a8b1a8ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
