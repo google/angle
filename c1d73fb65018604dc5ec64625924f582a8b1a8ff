@@ -22,6 +22,24 @@
       "revId": "c1d73fb65018604dc5ec64625924f582a8b1a8ff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7aabce2d_57ee23da",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-02-07T15:38:31Z",
+      "side": 1,
+      "message": "Right, I think I now get the idea, but I\u0027m not sure if it\u0027s the right way forward.\n\nThe state setting needs to be optimized so that we won\u0027t end up with significantly worse draw call performance after adding new features from ESSL 3.10. It seems like the architecture needed to support the kind of scheme that you describe doesn\u0027t exist in the code yet. Is something like two more clearly separated tiers of dirty bits actually possible to implement without regressing overall performance? Is a design like that justified in the GL backend considering the number of cases that need it? To me it looks like the seamless cube map state is a rare exception, and it would be reasonable to handle it in a slightly unusual way just to get handling it out of the hot path.\n\nThis is a fairly small thing of course, and I wouldn\u0027t want to get too hung up on it. Optimizing binding textures for shaders is a more important task, after that is done it would be easy to add optimized support for binding images following the same pattern.",
+      "parentUuid": "b10fcbe0_6c65ddad",
+      "revId": "c1d73fb65018604dc5ec64625924f582a8b1a8ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
