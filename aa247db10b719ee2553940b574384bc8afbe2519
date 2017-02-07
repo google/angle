@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ef1ea855_8300b99c",
+        "filename": "src/libANGLE/VertexAttribute.inl",
+        "patchSetId": 65
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-07T13:09:42Z",
+      "side": 1,
+      "message": "The member bindingIndex specifies the relative location of the binding in its vector\u003cAttributeBinding\u003e. We will lose this information from the struct VertexAttribute if we only have the pointer to the Attributebinding.\n\nThus, I find it hard to implement operator\u003d\u003d(const VertexAttribute \u0026a, const VertexAttribute \u0026b) if there is no bindingIndex in VertexAttribute:\n1. We cannot simply compare a.binding and b.binding, because a and b may belong to different VAO, it is impossible for a.binding\u003d\u003db.binding.\n2. We can only compare the content of the AttributeBinding through the binding pointer, but we cannot compare the relative location of the AttributeBinding object in their VAO because we cannot compute the relative offset just through the pointer.\n\nSo even the operator\u003d\u003d is true, we still cannot say the VertexAttribute a logically equals to b.\nSee https://chromium-review.googlesource.com/c/418880/65/src/libANGLE/renderer/gl/VertexArrayGL.cpp#449 for more details.",
+      "revId": "aa247db10b719ee2553940b574384bc8afbe2519",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01a93668_6d13c2ee",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 65
+      },
+      "lineNbr": 1223,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-07T13:09:42Z",
+      "side": 1,
+      "message": "Since this patch mainly focus on refactoring VertexArray and these constants are actually not used, can I add these constants and all related angle_end2end_test to another independent patch? I think it will make it easier to review.",
+      "revId": "aa247db10b719ee2553940b574384bc8afbe2519",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7226315_9cfe8f8b",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 65
+      },
+      "lineNbr": 449,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-07T13:09:42Z",
+      "side": 1,
+      "message": "In ES31 vertexAttribPointer changes the bindingIndex of the VertexAttribute to attribIndex, so we should use driver to update this information if the bindingIndex is changed. \n\nHere it is obvious that attrib.binding !\u003d mAppliedAttributes[attribIndex]; and even mAppliedAttributes[attribIndex] \u003d\u003d attrib we still need to compute the bindingIndex to check if the attribute should be assigned another binding. \ne.g. Currently attrib 0 -\u003e binding 1; and we call vertexAttribPointer on attrib 0, with binding 0 and binding 1 all having default values; we cannot early return here and we should update this status in driver. \n\nCompared with PatchSet 60 (with bindingIndex), I think it strange that even mAppliedAttributes[attribIndex] \u003d\u003d attrib is true it is still possible the these two objects are logically different.",
+      "revId": "aa247db10b719ee2553940b574384bc8afbe2519",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b95a325d_84120ad3",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 65
+      },
+      "lineNbr": 509,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-07T13:09:42Z",
+      "side": 1,
+      "message": "Here is another issue when we use binding pointer instead of bindingIndex in VertexAttribute. It gives a chance that a VertexAttribute may be assigned an AttributeBinding from another VAO, which may cause potential bugs.\n\nIn PatchSet 60 I add a constant pointer to vector\u003cbinding\u003e in VertexAttribute. This design can ensure that the AttributeBinding of a VertexAttribute can only belong to the same VAO as the VertexAttribute\u0027s.",
+      "revId": "aa247db10b719ee2553940b574384bc8afbe2519",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
