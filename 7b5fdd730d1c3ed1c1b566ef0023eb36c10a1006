@@ -1,0 +1,118 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "455068a4_98533a2e",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1125,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-02-07T08:45:14Z",
+      "side": 1,
+      "message": "All getters can get parameters from the cache (FramebufferState) directly. So, in the implementation classes of d3d and gl, all getters are not necessary.",
+      "range": {
+        "startLine": 1107,
+        "startChar": 0,
+        "endLine": 1125,
+        "endChar": 1
+      },
+      "revId": "7b5fdd730d1c3ed1c1b566ef0023eb36c10a1006",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b5431fb7_4573f645",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1150,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-02-07T08:45:14Z",
+      "side": 1,
+      "message": "The parameter target are not necessary in all setters and their implementation classes.",
+      "range": {
+        "startLine": 1127,
+        "startChar": 0,
+        "endLine": 1150,
+        "endChar": 1
+      },
+      "revId": "7b5fdd730d1c3ed1c1b566ef0023eb36c10a1006",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "edca0df5_91a4d902",
+        "filename": "src/libANGLE/queryutils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-02-07T08:45:14Z",
+      "side": 1,
+      "message": "The parameter target is not necessary.",
+      "revId": "7b5fdd730d1c3ed1c1b566ef0023eb36c10a1006",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc01689d_249d6921",
+        "filename": "src/libANGLE/queryutils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-02-07T08:45:14Z",
+      "side": 1,
+      "message": "The same as above",
+      "revId": "7b5fdd730d1c3ed1c1b566ef0023eb36c10a1006",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b4e7b49d_a6b3d374",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-02-07T08:45:14Z",
+      "side": 1,
+      "message": "You have get the appropriate framebuffer, so the parameter \u0027target\u0027 is not necessary now.",
+      "revId": "7b5fdd730d1c3ed1c1b566ef0023eb36c10a1006",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "97ca4580_3472b603",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-02-07T08:45:14Z",
+      "side": 1,
+      "message": "The same as above",
+      "revId": "7b5fdd730d1c3ed1c1b566ef0023eb36c10a1006",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
