@@ -63,6 +63,24 @@
       "revId": "3b347b19c2d902a39c19fb1c62e9cc76d2f3f3c8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "94d7b5f2_c9a084cd",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 915,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-07T14:36:22Z",
+      "side": 1,
+      "message": "Thanks. It was FRAMEBUFFER_INCOMPLETE_ATTACHMENT, which was likely due to defaulting to mipmapping enabled and missing the top level. Added the top level and it works.",
+      "parentUuid": "43c7f965_efc6fd47",
+      "revId": "3b347b19c2d902a39c19fb1c62e9cc76d2f3f3c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
