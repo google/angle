@@ -22,6 +22,24 @@
       "revId": "3e8ec59cf1cf4625bd8991d665709178bd4ceb74",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4cc9717d_7540d55b",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 760,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-02-07T14:32:58Z",
+      "side": 1,
+      "message": "I\u0027d expect that the dirty bit approach may actually end up being more costly in many cases than just having this call here, but maybe the difference isn\u0027t significant enough that it warrants making an exception from the common pattern. I updated the patch to use dirty bits.",
+      "parentUuid": "96cb7412_01dfdc90",
+      "revId": "3e8ec59cf1cf4625bd8991d665709178bd4ceb74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
