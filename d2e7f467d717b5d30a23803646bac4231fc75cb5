@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "01baa007_fd3798de",
+        "filename": "extensions/EGL_ANGLE_display_texture_share_group.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-07T20:17:39Z",
+      "side": 1,
+      "message": "nit: explicitly mention lack of conventional share group, or how it\u0027s an alternative to conventional sharing.",
+      "range": {
+        "startLine": 36,
+        "startChar": 65,
+        "endLine": 36,
+        "endChar": 66
+      },
+      "revId": "d2e7f467d717b5d30a23803646bac4231fc75cb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3fce15bc_ee0857e2",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 935,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-07T20:17:39Z",
+      "side": 1,
+      "message": "I\u0027m not sure this will be true on Vulkan. Can we enable this per back-end?",
+      "range": {
+        "startLine": 934,
+        "startChar": 4,
+        "endLine": 935,
+        "endChar": 55
+      },
+      "revId": "d2e7f467d717b5d30a23803646bac4231fc75cb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8031b009_0b5c7ab9",
+        "filename": "src/tests/egl_tests/EGLContextSharingTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-07T20:17:39Z",
+      "side": 1,
+      "message": "nit: not sure this is a bool return, I think it\u0027s GLboolean. Same with the others.",
+      "range": {
+        "startLine": 151,
+        "startChar": 4,
+        "endLine": 151,
+        "endChar": 15
+      },
+      "revId": "d2e7f467d717b5d30a23803646bac4231fc75cb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
