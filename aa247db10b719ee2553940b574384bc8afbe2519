@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7b804037_03f4a838",
+        "filename": "src/libANGLE/VertexAttribute.inl",
+        "patchSetId": 65
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-07T14:55:19Z",
+      "side": 1,
+      "message": "We don\u0027t lose the information. It\u0027s still in the pointer. We can recover the binding index by subtracting the address of the zero-index VertexBinding.",
+      "parentUuid": "ef1ea855_8300b99c",
+      "revId": "aa247db10b719ee2553940b574384bc8afbe2519",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "01a93668_6d13c2ee",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 65
@@ -53,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "dfa0ebbd_ad12a627",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 65
+      },
+      "lineNbr": 449,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-07T14:55:19Z",
+      "side": 1,
+      "message": "The spec does not define the equality operator, it\u0027s entirely up to ANGLE how it works. I say it\u0027s fine if two VertexAttributes have the same bidingIndex and they are not the same. In fact, I prefer it, if they\u0027re from different VertexArrays.",
+      "parentUuid": "d7226315_9cfe8f8b",
+      "revId": "aa247db10b719ee2553940b574384bc8afbe2519",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b95a325d_84120ad3",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 65
@@ -64,6 +100,47 @@
       "writtenOn": "2017-02-07T13:09:42Z",
       "side": 1,
       "message": "Here is another issue when we use binding pointer instead of bindingIndex in VertexAttribute. It gives a chance that a VertexAttribute may be assigned an AttributeBinding from another VAO, which may cause potential bugs.\n\nIn PatchSet 60 I add a constant pointer to vector\u003cbinding\u003e in VertexAttribute. This design can ensure that the AttributeBinding of a VertexAttribute can only belong to the same VAO as the VertexAttribute\u0027s.",
+      "revId": "aa247db10b719ee2553940b574384bc8afbe2519",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c709e51a_1208ec96",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 65
+      },
+      "lineNbr": 509,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-07T14:55:19Z",
+      "side": 1,
+      "message": "I\u0027m not too worried about it. I think I still like my idea. Not sure what you mean about the constant pointer though.",
+      "parentUuid": "b95a325d_84120ad3",
+      "revId": "aa247db10b719ee2553940b574384bc8afbe2519",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eed25d9b_e0553129",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 65
+      },
+      "lineNbr": 516,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-07T14:55:19Z",
+      "side": 1,
+      "message": "this method should be Capitalized if it\u0027s static.",
+      "range": {
+        "startLine": 516,
+        "startChar": 36,
+        "endLine": 516,
+        "endChar": 50
+      },
       "revId": "aa247db10b719ee2553940b574384bc8afbe2519",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
