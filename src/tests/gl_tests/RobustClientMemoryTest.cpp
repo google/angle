@@ -345,6 +345,13 @@ TEST_P(RobustClientMemoryTest, ReadPixels)
         return;
     }
 
+    // TODO(ynovikov): Looks like a driver bug on Intel HD 530 http://anglebug.com/1877
+    if (IsLinux() && IsIntel() && IsDesktopOpenGL())
+    {
+        std::cout << "Test skipped on Intel OpenGL on Linux." << std::endl;
+        return;
+    }
+
     GLsizei dataDimension = 16;
     std::vector<GLubyte> rgbaData(dataDimension * dataDimension * 4);
 
