@@ -28,7 +28,6 @@ namespace
 {
 
 // Scan /etc/ati/amdpcsdb.default for "ReleaseVersion".
-// Return empty string on failing.
 egl::Error GetAMDDriverVersion(std::string *version)
 {
     *version = "";

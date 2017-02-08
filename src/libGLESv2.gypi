@@ -63,6 +63,24 @@
             'image_util/loadimage.inl',
             'image_util/loadimage_etc.cpp',
         ],
+        'libangle_gpu_info_util_sources':
+        [
+            'gpu_info_util/SystemInfo.cpp',
+            'gpu_info_util/SystemInfo.h',
+            'gpu_info_util/SystemInfo_internal.h',
+        ],
+        'libangle_gpu_info_util_linux_sources':
+        [
+            'gpu_info_util/SystemInfo_linux.cpp',
+        ],
+        'libangle_gpu_info_util_libpci_sources':
+        [
+            'gpu_info_util/SystemInfo_libpci.cpp',
+        ],
+        'libangle_gpu_info_util_x11_sources':
+        [
+            'gpu_info_util/SystemInfo_x11.cpp',
+        ],
         'libangle_includes':
         [
             '../include/angle_gl.h',
@@ -829,6 +847,7 @@
                 'commit_id',
                 'angle_common',
                 'angle_image_util',
+                'angle_gpu_info_util',
                 'libANGLE_d3d11_config',
                 'libANGLE_renderer_config',
             ],
