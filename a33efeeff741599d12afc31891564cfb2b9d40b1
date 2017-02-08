@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2c5a3392_81d6e4ec",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 573,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-08T23:57:13Z",
+      "side": 1,
+      "message": "as discussed, I think you should make this capture gl_Position in a non-gl_Position varying, then test vs zero and write red or green. you could do the test either in the vertex shader or the fragment shader. if you do it in the vertex, sampling in the center of the texture will guarantee interpolation will not mask the results. if you do in the fragment, you can sample from multiple vertex centers if you\u0027re worried about interpolation.",
+      "range": {
+        "startLine": 546,
+        "startChar": 0,
+        "endLine": 573,
+        "endChar": 14
+      },
+      "revId": "a33efeeff741599d12afc31891564cfb2b9d40b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
