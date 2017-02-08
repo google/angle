@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a394e46_409b6137",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 69
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-08T13:30:12Z",
+      "side": 1,
+      "message": "bindingIndex should be cached in mAppliedAttributes[attribIndex].bindingIndex when Vertex Attrib Binding is ready.",
+      "revId": "d38551fa9a02fa3c824ed78a406504711213c912",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a2f17469_38c251d1",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 69
+      },
+      "lineNbr": 531,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-08T13:30:12Z",
+      "side": 1,
+      "message": "bindingIndex should be cached in mAppliedAttributes[attribIndex].bindingIndex when Vertex Attrib Binding is ready.",
+      "revId": "d38551fa9a02fa3c824ed78a406504711213c912",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
