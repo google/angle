@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a45edf5_810f216f",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 68
+      },
+      "lineNbr": 455,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-08T06:13:29Z",
+      "side": 1,
+      "message": "Now we can avoid using \u0027\u003d\u003d\u0027 on VertexAttribute objects here.",
+      "revId": "3481ef8a83028021ecdec0dbbfcca347f4c6ce32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf1e6498_b5c91cef",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.h",
+        "patchSetId": 68
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-08T06:13:29Z",
+      "side": 1,
+      "message": "AppliedVertexAttribute is designed to store all the snapshots of the data that should be set to driver. It is designed only to be used in the scope of VertexArrayGL.\n\nCompared to VertexAttribute:\n1. VertexAttribute.stride is dropped because it won\u0027t be set to driver. We always use binding.stride instead.\n2. VerteXAttribute.binding is replaced with bindingIndex because the bindingIndex is the real one to be set to driver.",
+      "revId": "3481ef8a83028021ecdec0dbbfcca347f4c6ce32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
