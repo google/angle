@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5fabf193_ee2ebee7",
+        "filename": "src/gpu_info_util/SystemInfo.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-08T19:51:53Z",
+      "side": 1,
+      "message": "For thought: typedef these instead of using an enum?",
+      "range": {
+        "startLine": 21,
+        "startChar": 4,
+        "endLine": 21,
+        "endChar": 12
+      },
+      "revId": "79df5017952613c229e683bd70112bbd6b2e6c32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d01c5ad4_e64058ee",
+        "filename": "src/gpu_info_util/SystemInfo_libpci.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-08T19:51:53Z",
+      "side": 1,
+      "message": "For thought: since this is non-copyable, this can go in the constructor and add an operator bool or isValid method",
+      "range": {
+        "startLine": 35,
+        "startChar": 4,
+        "endLine": 60,
+        "endChar": 5
+      },
+      "revId": "79df5017952613c229e683bd70112bbd6b2e6c32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "47c5cb18_4b6e9375",
+        "filename": "src/libANGLE/renderer/driver_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-08T19:51:53Z",
+      "side": 1,
+      "message": "nit: newline change, probably not intended?",
+      "range": {
+        "startLine": 73,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 44
+      },
+      "revId": "79df5017952613c229e683bd70112bbd6b2e6c32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
