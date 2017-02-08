@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cdf0cab0_85964512",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-02-08T06:22:58Z",
+      "side": 1,
+      "message": "I couldn\u0027t get fbo target here, I\u0027m not sure if using GL_FRAMEBUFFER instead of target is proper here.",
+      "range": {
+        "startLine": 434,
+        "startChar": 0,
+        "endLine": 434,
+        "endChar": 50
+      },
+      "revId": "9d8985a56d4914e429a82b0c466048d6ad730c71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
