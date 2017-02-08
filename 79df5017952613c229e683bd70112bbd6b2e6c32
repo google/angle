@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "aefcc844_539769bc",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-08T20:01:09Z",
+      "side": 1,
+      "message": "maybe we can add extra_warnings?",
+      "range": {
+        "startLine": 192,
+        "startChar": 17,
+        "endLine": 192,
+        "endChar": 32
+      },
+      "revId": "79df5017952613c229e683bd70112bbd6b2e6c32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d722ca4_45255fe6",
+        "filename": "src/angle.gyp",
+        "patchSetId": 2
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-08T20:01:09Z",
+      "side": 1,
+      "message": "nit: indentation (and below)",
+      "range": {
+        "startLine": 240,
+        "startChar": 37,
+        "endLine": 240,
+        "endChar": 38
+      },
+      "revId": "79df5017952613c229e683bd70112bbd6b2e6c32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5fabf193_ee2ebee7",
         "filename": "src/gpu_info_util/SystemInfo.h",
         "patchSetId": 2
@@ -25,6 +71,29 @@
     },
     {
       "key": {
+        "uuid": "3f47a7f0_a8275e69",
+        "filename": "src/gpu_info_util/SystemInfo.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-08T20:01:09Z",
+      "side": 1,
+      "message": "worth discussing: pros/cons vs storing this as a quad of integers?",
+      "range": {
+        "startLine": 25,
+        "startChar": 4,
+        "endLine": 25,
+        "endChar": 30
+      },
+      "revId": "79df5017952613c229e683bd70112bbd6b2e6c32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d01c5ad4_e64058ee",
         "filename": "src/gpu_info_util/SystemInfo_libpci.cpp",
         "patchSetId": 2
@@ -41,6 +110,70 @@
         "startChar": 4,
         "endLine": 60,
         "endChar": 5
+      },
+      "revId": "79df5017952613c229e683bd70112bbd6b2e6c32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "91132010_ead30f1e",
+        "filename": "src/gpu_info_util/SystemInfo_libpci.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-08T20:01:09Z",
+      "side": 1,
+      "message": "Whichever method is better for mocking.",
+      "parentUuid": "d01c5ad4_e64058ee",
+      "revId": "79df5017952613c229e683bd70112bbd6b2e6c32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "48edecd0_5e2abb5d",
+        "filename": "src/gpu_info_util/SystemInfo_linux.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-08T20:01:09Z",
+      "side": 1,
+      "message": "is this based on Chromium code or original?",
+      "range": {
+        "startLine": 72,
+        "startChar": 5,
+        "endLine": 72,
+        "endChar": 18
+      },
+      "revId": "79df5017952613c229e683bd70112bbd6b2e6c32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1bd72259_5ddcbb2c",
+        "filename": "src/gpu_info_util/SystemInfo_linux.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-08T20:01:09Z",
+      "side": 1,
+      "message": "can we just call this AMD? :)",
+      "range": {
+        "startLine": 119,
+        "startChar": 37,
+        "endLine": 119,
+        "endChar": 47
       },
       "revId": "79df5017952613c229e683bd70112bbd6b2e6c32",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
