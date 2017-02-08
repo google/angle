@@ -58,6 +58,24 @@
       "revId": "c1d73fb65018604dc5ec64625924f582a8b1a8ff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d77e8c08_d9078961",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 490,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-02-08T11:08:21Z",
+      "side": 1,
+      "message": "I took one more stab at it. Now the dirty bit is set in onMakeCurrent inside StateManagerGL. It\u0027s a bit messy but doesn\u0027t mess up with the code closer to the front end in the same way as the previous patch. Do you think that this is better, or should we go back to the original patch?",
+      "parentUuid": "9a848309_d7aa1ded",
+      "revId": "c1d73fb65018604dc5ec64625924f582a8b1a8ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
