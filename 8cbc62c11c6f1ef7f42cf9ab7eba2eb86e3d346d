@@ -307,6 +307,24 @@
     },
     {
       "key": {
+        "uuid": "4532fd9d_889f5cc8",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-08T18:47:59Z",
+      "side": 1,
+      "message": "Not sure, using the caps would certainly be faster than making a GL call.",
+      "parentUuid": "037501b9_7f517a76",
+      "revId": "8cbc62c11c6f1ef7f42cf9ab7eba2eb86e3d346d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "037501b9_ff2b4ae5",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 29
