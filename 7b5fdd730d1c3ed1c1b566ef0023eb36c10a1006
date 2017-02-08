@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "64bd2875_eefcc3e6",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1125,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-02-08T06:22:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "455068a4_98533a2e",
+      "range": {
+        "startLine": 1107,
+        "startChar": 0,
+        "endLine": 1125,
+        "endChar": 1
+      },
+      "revId": "7b5fdd730d1c3ed1c1b566ef0023eb36c10a1006",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b5431fb7_4573f645",
         "filename": "src/libANGLE/Framebuffer.cpp",
         "patchSetId": 12
@@ -66,6 +90,24 @@
     },
     {
       "key": {
+        "uuid": "d339f721_c1020239",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1150,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-02-08T06:22:58Z",
+      "side": 1,
+      "message": "I moved the setters to Context class, and setDirtyBit so that it will sync state in later rendering, but I couldn\u0027t keep the target till sync state.",
+      "parentUuid": "3842dcf8_b7ef0f18",
+      "revId": "7b5fdd730d1c3ed1c1b566ef0023eb36c10a1006",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "edca0df5_91a4d902",
         "filename": "src/libANGLE/queryutils.h",
         "patchSetId": 12
@@ -77,6 +119,24 @@
       "writtenOn": "2017-02-07T08:45:14Z",
       "side": 1,
       "message": "The parameter target is not necessary.",
+      "revId": "7b5fdd730d1c3ed1c1b566ef0023eb36c10a1006",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7fa87c68_71eea819",
+        "filename": "src/libANGLE/queryutils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-02-08T06:22:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "edca0df5_91a4d902",
       "revId": "7b5fdd730d1c3ed1c1b566ef0023eb36c10a1006",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -100,6 +160,24 @@
     },
     {
       "key": {
+        "uuid": "66d0e7a7_1dfdb761",
+        "filename": "src/libANGLE/queryutils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-02-08T06:22:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fc01689d_249d6921",
+      "revId": "7b5fdd730d1c3ed1c1b566ef0023eb36c10a1006",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b4e7b49d_a6b3d374",
         "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
         "patchSetId": 12
@@ -117,6 +195,24 @@
     },
     {
       "key": {
+        "uuid": "686d4a1c_ea2d9775",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-02-08T06:22:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b4e7b49d_a6b3d374",
+      "revId": "7b5fdd730d1c3ed1c1b566ef0023eb36c10a1006",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "97ca4580_3472b603",
         "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
         "patchSetId": 12
@@ -128,6 +224,24 @@
       "writtenOn": "2017-02-07T08:45:14Z",
       "side": 1,
       "message": "The same as above",
+      "revId": "7b5fdd730d1c3ed1c1b566ef0023eb36c10a1006",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c479586_53edcb7b",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-02-08T06:22:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "97ca4580_3472b603",
       "revId": "7b5fdd730d1c3ed1c1b566ef0023eb36c10a1006",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
