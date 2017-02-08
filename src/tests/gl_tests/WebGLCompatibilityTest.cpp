@@ -535,6 +535,39 @@ void FillTexture2D(GLuint texture,
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 }
 
+// Test that unset gl_Position defaults to (0,0,0,0).
+TEST_P(WebGLCompatibilityTest, DefaultPosition)
+{
+    // Draw a quad where each vertex is red if gl_Position is (0,0,0,0) before it is set,
+    // and green otherwise.  The center of each quadrant will be red if and only if all
+    // four corners are red.
+    const std::string vertexShader =
+        "attribute vec3 pos;\n"
+        "varying vec4 color;\n"
+        "void main() {\n"
+        "    if (gl_Position == vec4(0,0,0,0)) {\n"
+        "        color = vec4(1,0,0,1);\n"
+        "    } else {\n"
+        "        color = vec4(0,1,0,1);\n"
+        "    }\n"
+        "    gl_Position = vec4(pos,1);\n"
+        "}\n";
+
+    const std::string fragmentShader =
+        "precision mediump float;\n"
+        "varying vec4 color;\n"
+        "void main() {\n"
+        "    gl_FragColor = color;\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+    drawQuad(program.get(), "pos", 0.0f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() * 1 / 4, getWindowHeight() * 1 / 4, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() * 1 / 4, getWindowHeight() * 3 / 4, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() * 3 / 4, getWindowHeight() * 1 / 4, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() * 3 / 4, getWindowHeight() * 3 / 4, GLColor::red);
+}
+
 // Tests that a rendering feedback loop triggers a GL error under WebGL.
 // Based on WebGL test conformance/renderbuffers/feedback-loop.html.
 TEST_P(WebGLCompatibilityTest, RenderingFeedbackLoop)
