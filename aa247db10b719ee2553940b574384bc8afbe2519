@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "dad072eb_2bf824bb",
+        "filename": "src/libANGLE/VertexAttribute.inl",
+        "patchSetId": 65
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-08T06:13:29Z",
+      "side": 1,
+      "message": "Actually in the scope of VertexAttribute, there is no \u0027address of the zero-index VertexBinding\u0027 stored, so we cannot get the bindingIndex directly from the struct VertexAttribute. \n\nI suggest we delete this equality operator overload because logically we cannot judge whether two VertexAttribute objects are same without some extra information beyond the scope of VertexAttribute itself (the address of the zero-index VertexBinding).",
+      "parentUuid": "7b804037_03f4a838",
+      "revId": "aa247db10b719ee2553940b574384bc8afbe2519",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "01a93668_6d13c2ee",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 65
@@ -48,6 +66,24 @@
       "writtenOn": "2017-02-07T13:09:42Z",
       "side": 1,
       "message": "Since this patch mainly focus on refactoring VertexArray and these constants are actually not used, can I add these constants and all related angle_end2end_test to another independent patch? I think it will make it easier to review.",
+      "revId": "aa247db10b719ee2553940b574384bc8afbe2519",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0a14fa7e_f60da37c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 65
+      },
+      "lineNbr": 1223,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-08T06:13:29Z",
+      "side": 1,
+      "message": "Since this patch is complex enough, shall we discuss this issue in another patch?",
+      "parentUuid": "01a93668_6d13c2ee",
       "revId": "aa247db10b719ee2553940b574384bc8afbe2519",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -124,6 +160,24 @@
     },
     {
       "key": {
+        "uuid": "d1078a3b_cffd593d",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 65
+      },
+      "lineNbr": 509,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-08T06:13:29Z",
+      "side": 1,
+      "message": "OK I reserve my opinion here.",
+      "parentUuid": "c709e51a_1208ec96",
+      "revId": "aa247db10b719ee2553940b574384bc8afbe2519",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "eed25d9b_e0553129",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 65
@@ -144,6 +198,23 @@
       "revId": "aa247db10b719ee2553940b574384bc8afbe2519",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "29dc5ea9_f798dfac",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 65
+      },
+      "lineNbr": 516,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-08T06:13:29Z",
+      "side": 1,
+      "message": "Done",
+      "revId": "aa247db10b719ee2553940b574384bc8afbe2519",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
