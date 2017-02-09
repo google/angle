@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a975e5e1_0fc4b595",
+        "filename": "src/libANGLE/ResourceManager.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-09T18:03:45Z",
+      "side": 1,
+      "message": "CRTP!!!!",
+      "revId": "e34246228c1ecf778079d24961ba214b4862bcac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
