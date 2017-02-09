@@ -325,6 +325,24 @@
     },
     {
       "key": {
+        "uuid": "c71a3450_22fd1586",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-09T07:20:35Z",
+      "side": 1,
+      "message": "Then should I directly use caps instead of GL calls here?",
+      "parentUuid": "4532fd9d_889f5cc8",
+      "revId": "8cbc62c11c6f1ef7f42cf9ab7eba2eb86e3d346d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "037501b9_ff2b4ae5",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 29
