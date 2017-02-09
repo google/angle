@@ -16,6 +16,52 @@
       "revId": "e34246228c1ecf778079d24961ba214b4862bcac",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "69a4f71f_8d994dff",
+        "filename": "src/libANGLE/ResourceManager.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-09T19:13:57Z",
+      "side": 1,
+      "message": "Move these definitions to the cpp file? There should be instantiations of each template type there.",
+      "range": {
+        "startLine": 64,
+        "startChar": 4,
+        "endLine": 78,
+        "endChar": 5
+      },
+      "revId": "e34246228c1ecf778079d24961ba214b4862bcac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ae3b5d8_e46e77e4",
+        "filename": "src/libANGLE/ResourceManager.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-09T19:13:57Z",
+      "side": 1,
+      "message": "private with friend class?",
+      "range": {
+        "startLine": 122,
+        "startChar": 4,
+        "endLine": 123,
+        "endChar": 45
+      },
+      "revId": "e34246228c1ecf778079d24961ba214b4862bcac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
