@@ -1621,6 +1621,12 @@ bool ValidateCompressedTexSubImage3D(Context *context,
     }
 
     const InternalFormat &formatInfo = GetInternalFormatInfo(format);
+    if (!formatInfo.compressed)
+    {
+        context->handleError(Error(GL_INVALID_ENUM, "Not a valid compressed texture format"));
+        return false;
+    }
+
     auto blockSizeOrErr =
         formatInfo.computeCompressedImageSize(GL_UNSIGNED_BYTE, gl::Extents(width, height, depth));
     if (blockSizeOrErr.isError())
