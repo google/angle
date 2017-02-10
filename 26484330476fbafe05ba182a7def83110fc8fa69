@@ -19,6 +19,23 @@
     },
     {
       "key": {
+        "uuid": "a8347b49_66c7dc63",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 72
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-10T11:53:37Z",
+      "side": 1,
+      "message": "In ES3.1 SPEC Chapter 10.6:\nQueries of VERTEX_ATTRIB_ARRAY_BUFFER_BINDING and VERTEX_ATTRIB_ARRAY_DIVISOR map the requested attribute index to a binding index via the VERTEX_ATTRIB_BINDING state, and then return the value of VERTEX_BINDING_BUFFER or VERTEX_BINDING_DIVISOR, respectively.\n\nVERTEX_ATTRIB_ARRAY_STRIDE does not match VERTEX_BINDING_STRIDE. See \nhttps://chromium-review.googlesource.com/c/418880/72/src/libANGLE/VertexArray.cpp#206 for more details.",
+      "revId": "26484330476fbafe05ba182a7def83110fc8fa69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e889309e_44db6bd4",
         "filename": "src/libANGLE/queryutils.h",
         "patchSetId": 72
