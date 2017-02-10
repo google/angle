@@ -380,6 +380,8 @@ bool ValidateVertexAttribPointer(ValidationContext *context,
                                  GLsizei stride,
                                  const GLvoid *ptr);
 
+bool ValidateDepthRangef(ValidationContext *context, GLclampf zNear, GLclampf zFar);
+
 }  // namespace gl
 
 #endif // LIBANGLE_VALIDATION_ES2_H_

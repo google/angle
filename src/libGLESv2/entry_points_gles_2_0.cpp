@@ -687,6 +687,11 @@ void GL_APIENTRY DepthRangef(GLclampf zNear, GLclampf zFar)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        if (!context->skipValidation() && !ValidateDepthRangef(context, zNear, zFar))
+        {
+            return;
+        }
+
         context->depthRangef(zNear, zFar);
     }
 }

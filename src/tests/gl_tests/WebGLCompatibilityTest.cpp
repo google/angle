@@ -423,6 +423,19 @@ TEST_P(WebGLCompatibilityTest, DrawElementsBufferOutOfBoundsInIndexBuffer)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test depth range with 'near' more or less than 'far.'
+TEST_P(WebGLCompatibilityTest, DepthRange)
+{
+    glDepthRangef(0, 1);
+    ASSERT_GL_NO_ERROR();
+
+    glDepthRangef(.5, .5);
+    ASSERT_GL_NO_ERROR();
+
+    glDepthRangef(1, 0);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
 // Test the checks for OOB reads in the vertex buffers, instanced version
 TEST_P(WebGL2CompatibilityTest, DrawArraysBufferOutOfBoundsInstanced)
 {

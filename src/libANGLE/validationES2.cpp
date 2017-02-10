@@ -4015,4 +4015,15 @@ bool ValidateVertexAttribPointer(ValidationContext *context,
     return true;
 }
 
+bool ValidateDepthRangef(ValidationContext *context, GLclampf zNear, GLclampf zFar)
+{
+    if (context->getExtensions().webglCompatibility && zNear > zFar)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Depth near > far."));
+        return false;
+    }
+
+    return true;
+}
+
 }  // namespace gl
