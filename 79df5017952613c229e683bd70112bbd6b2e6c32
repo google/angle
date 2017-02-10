@@ -94,6 +94,47 @@
     },
     {
       "key": {
+        "uuid": "5f924a60_e1a87c90",
+        "filename": "src/gpu_info_util/SystemInfo.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2017-02-10T19:14:32Z",
+      "side": 1,
+      "message": "I think string is better because the driver version string contains more info than just digits.",
+      "parentUuid": "3f47a7f0_a8275e69",
+      "range": {
+        "startLine": 25,
+        "startChar": 4,
+        "endLine": 25,
+        "endChar": 30
+      },
+      "revId": "79df5017952613c229e683bd70112bbd6b2e6c32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1421703c_232cfe4b",
+        "filename": "src/gpu_info_util/SystemInfo.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2017-02-10T19:14:32Z",
+      "side": 1,
+      "message": "I think you also want activeGPUIndex because we definitely want to know which GPU is currently in use.\n\nTogether with the logic to identify the active GPU (this can be done in a separate CL).",
+      "revId": "79df5017952613c229e683bd70112bbd6b2e6c32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d01c5ad4_e64058ee",
         "filename": "src/gpu_info_util/SystemInfo_libpci.cpp",
         "patchSetId": 2
@@ -158,6 +199,29 @@
     },
     {
       "key": {
+        "uuid": "e2f151db_a962ba4a",
+        "filename": "src/gpu_info_util/SystemInfo_linux.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2017-02-10T19:14:32Z",
+      "side": 1,
+      "message": "You mean !empty()?\n\nI think it\u0027s clearer you get rid of this and add \"break;\" inside \"if (IsIntel(gpu-\u003evendorId) \u0026\u0026 info-\u003egpus.size() \u003d\u003d 1)\"",
+      "range": {
+        "startLine": 109,
+        "startChar": 17,
+        "endLine": 109,
+        "endChar": 29
+      },
+      "revId": "79df5017952613c229e683bd70112bbd6b2e6c32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1bd72259_5ddcbb2c",
         "filename": "src/gpu_info_util/SystemInfo_linux.cpp",
         "patchSetId": 2
@@ -169,6 +233,30 @@
       "writtenOn": "2017-02-08T20:01:09Z",
       "side": 1,
       "message": "can we just call this AMD? :)",
+      "range": {
+        "startLine": 119,
+        "startChar": 37,
+        "endLine": 119,
+        "endChar": 47
+      },
+      "revId": "79df5017952613c229e683bd70112bbd6b2e6c32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e7f885b_7e95f573",
+        "filename": "src/gpu_info_util/SystemInfo_linux.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2017-02-10T19:14:32Z",
+      "side": 1,
+      "message": "Yeah, I think it\u0027s time we drop ATI.",
+      "parentUuid": "1bd72259_5ddcbb2c",
       "range": {
         "startLine": 119,
         "startChar": 37,
