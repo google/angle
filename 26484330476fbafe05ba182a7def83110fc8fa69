@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ee3ef759_09efac18",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 72
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-10T11:50:42Z",
+      "side": 1,
+      "message": "This piece of code refers to ES3.1 SPEC Chapter 10.3.1 the definition of VertexAttribPointer.\n\nYou can see the argument \u0027stride\u0027 passed into VertexAttribPointer should be assigned to VERTEX_ATTRIB_ARRAY_STRIDE, and the real stride should be computed by attrib.type if stride \u003d\u003d 0 and be assigned to VERTEX_BINDING_STRIDE (binding.stride). Then, we should get 0 through queries on VERTEX_ATTRIB_ARRAY_STRIDE; and get the real stride through queries on VERTEX_BINDING_STRIDE.\n\nI named VERTEX_ATTRIB_ARRAY_STRIDE as \u0027attrib.vertexAttribArrayStride\u0027 to show this difference.  \n\nI think we should always use binding.stride in rendering since binding.stride can be used both in VertexAttribPointer and BindVertexBuffer, while attrib.vertexAttribArrayStride cannot be used in BindVertexBuffer and is of no value to be maintained as cache in GL backend.\n\nIn dEQP:\n1. The VertexAttributeStrideCase in es3fShaderStateQueryTests.cpp contains tests passing 0 as stride into VertexAttribPointer, and testing if we can get 0 through queries on VERTEX_ATTRIB_ARRAY_STRIDE;\n2. The MixedVertexBindingStrideCase in es31fVertexAttributeBindingStateQueryTests.cpp tests passing different strides into BindVertexBuffer and testing if we can get the set value through queries on VERTEX_BINDING_STRIDE.",
+      "revId": "26484330476fbafe05ba182a7def83110fc8fa69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e889309e_44db6bd4",
+        "filename": "src/libANGLE/queryutils.h",
+        "patchSetId": 72
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-10T11:50:42Z",
+      "side": 1,
+      "message": "I leave this comment on all functions that need both VertexAttribute and VertexBinding.as arguments.",
+      "revId": "26484330476fbafe05ba182a7def83110fc8fa69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7d00bc44_ebf97d20",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 72
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-10T11:50:42Z",
+      "side": 1,
+      "message": "Shall we remove these GL calls and use caps directly here?",
+      "revId": "26484330476fbafe05ba182a7def83110fc8fa69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
