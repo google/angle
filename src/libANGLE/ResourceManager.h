@@ -54,28 +54,60 @@ class ResourceManagerBase : angle::NonCopyable
     size_t mRefCount;
 };
 
-template <typename ResourceType, typename HandleAllocatorType>
+template <typename ResourceType, typename HandleAllocatorType, typename ImplT>
 class TypedResourceManager : public ResourceManagerBase<HandleAllocatorType>
 {
   public:
     TypedResourceManager() {}
 
+    void deleteObject(GLuint handle);
+
   protected:
     ~TypedResourceManager() override;
 
-    void deleteObject(GLuint handle);
+    // Inlined in the header for performance.
+    template <typename... ArgTypes>
+    ResourceType *checkObjectAllocation(rx::GLImplFactory *factory, GLuint handle, ArgTypes... args)
+    {
+        auto objectMapIter = mObjectMap.find(handle);
+
+        if (objectMapIter != mObjectMap.end() && objectMapIter->second != nullptr)
+        {
+            return objectMapIter->second;
+        }
+
+        if (handle == 0)
+        {
+            return nullptr;
+        }
+
+        return allocateObject<ArgTypes...>(objectMapIter, factory, handle, args...);
+    }
+
+    template <typename... ArgTypes>
+    ResourceType *allocateObject(typename ResourceMap<ResourceType>::iterator &objectMapIter,
+                                 rx::GLImplFactory *factory,
+                                 GLuint handle,
+                                 ArgTypes... args);
 
     ResourceMap<ResourceType> mObjectMap;
 };
 
-class BufferManager : public TypedResourceManager<Buffer, HandleAllocator>
+class BufferManager : public TypedResourceManager<Buffer, HandleAllocator, BufferManager>
 {
   public:
     GLuint createBuffer();
-    void deleteBuffer(GLuint buffer);
     Buffer *getBuffer(GLuint handle) const;
-    Buffer *checkBufferAllocation(rx::GLImplFactory *factory, GLuint handle);
     bool isBufferGenerated(GLuint buffer) const;
+
+    Buffer *checkBufferAllocation(rx::GLImplFactory *factory, GLuint handle)
+    {
+        return checkObjectAllocation(factory, handle);
+    }
+
+    // TODO(jmadill): Investigate design which doesn't expose these methods publicly.
+    static Buffer *AllocateNewObject(rx::GLImplFactory *factory, GLuint handle);
+    static void DeleteObject(Buffer *buffer);
 
   protected:
     ~BufferManager() override {}
@@ -105,51 +137,71 @@ class ShaderProgramManager : public ResourceManagerBase<HandleAllocator>
     ResourceMap<Program> mPrograms;
 };
 
-class TextureManager : public TypedResourceManager<Texture, HandleAllocator>
+class TextureManager : public TypedResourceManager<Texture, HandleAllocator, TextureManager>
 {
   public:
     GLuint createTexture();
-    void deleteTexture(GLuint texture);
     Texture *getTexture(GLuint handle) const;
-    Texture *checkTextureAllocation(rx::GLImplFactory *factory, GLuint handle, GLenum type);
     bool isTextureGenerated(GLuint texture) const;
+
+    Texture *checkTextureAllocation(rx::GLImplFactory *factory, GLuint handle, GLenum target)
+    {
+        return checkObjectAllocation(factory, handle, target);
+    }
+
+    static Texture *AllocateNewObject(rx::GLImplFactory *factory, GLuint handle, GLenum target);
+    static void DeleteObject(Texture *texture);
 
   protected:
     ~TextureManager() override {}
 };
 
-class RenderbufferManager : public TypedResourceManager<Renderbuffer, HandleAllocator>
+class RenderbufferManager
+    : public TypedResourceManager<Renderbuffer, HandleAllocator, RenderbufferManager>
 {
   public:
     GLuint createRenderbuffer();
-    void deleteRenderbuffer(GLuint renderbuffer);
     Renderbuffer *getRenderbuffer(GLuint handle);
-    Renderbuffer *checkRenderbufferAllocation(rx::GLImplFactory *factory, GLuint handle);
     bool isRenderbufferGenerated(GLuint renderbuffer) const;
+
+    Renderbuffer *checkRenderbufferAllocation(rx::GLImplFactory *factory, GLuint handle)
+    {
+        return checkObjectAllocation(factory, handle);
+    }
+
+    static Renderbuffer *AllocateNewObject(rx::GLImplFactory *factory, GLuint handle);
+    static void DeleteObject(Renderbuffer *renderbuffer);
 
   protected:
     ~RenderbufferManager() override {}
 };
 
-class SamplerManager : public TypedResourceManager<Sampler, HandleAllocator>
+class SamplerManager : public TypedResourceManager<Sampler, HandleAllocator, SamplerManager>
 {
   public:
     GLuint createSampler();
-    void deleteSampler(GLuint sampler);
     Sampler *getSampler(GLuint handle);
-    Sampler *checkSamplerAllocation(rx::GLImplFactory *factory, GLuint handle);
     bool isSampler(GLuint sampler);
+
+    Sampler *checkSamplerAllocation(rx::GLImplFactory *factory, GLuint handle)
+    {
+        return checkObjectAllocation(factory, handle);
+    }
+
+    static Sampler *AllocateNewObject(rx::GLImplFactory *factory, GLuint handle);
+    static void DeleteObject(Sampler *sampler);
 
   protected:
     ~SamplerManager() override {}
 };
 
-class FenceSyncManager : public TypedResourceManager<FenceSync, HandleAllocator>
+class FenceSyncManager : public TypedResourceManager<FenceSync, HandleAllocator, FenceSyncManager>
 {
   public:
     GLuint createFenceSync(rx::GLImplFactory *factory);
-    void deleteFenceSync(GLuint fenceSync);
     FenceSync *getFenceSync(GLuint handle);
+
+    static void DeleteObject(FenceSync *fenceSync);
 
   protected:
     ~FenceSyncManager() override {}
@@ -170,23 +222,29 @@ class PathManager : public ResourceManagerBase<HandleRangeAllocator>
     ResourceMap<Path> mPaths;
 };
 
-class FramebufferManager : public ResourceManagerBase<HandleAllocator>
+class FramebufferManager
+    : public TypedResourceManager<Framebuffer, HandleAllocator, FramebufferManager>
 {
   public:
     GLuint createFramebuffer();
-    void deleteFramebuffer(GLuint framebuffer);
-    Framebuffer *checkFramebufferAllocation(rx::GLImplFactory *factory,
-                                            const Caps &caps,
-                                            GLuint handle);
     Framebuffer *getFramebuffer(GLuint handle) const;
     void setDefaultFramebuffer(Framebuffer *framebuffer);
     bool isFramebufferGenerated(GLuint framebuffer);
 
-  protected:
-    ~FramebufferManager() override;
+    Framebuffer *checkFramebufferAllocation(rx::GLImplFactory *factory,
+                                            const Caps &caps,
+                                            GLuint handle)
+    {
+        return checkObjectAllocation<const Caps &>(factory, handle, caps);
+    }
 
-  private:
-    ResourceMap<Framebuffer> mFramebuffers;
+    static Framebuffer *AllocateNewObject(rx::GLImplFactory *factory,
+                                          GLuint handle,
+                                          const Caps &caps);
+    static void DeleteObject(Framebuffer *framebuffer);
+
+  protected:
+    ~FramebufferManager() override {}
 };
 
 }  // namespace gl

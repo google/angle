@@ -33,37 +33,6 @@ GLuint AllocateEmptyObject(HandleAllocator *handleAllocator, ResourceMap<Resourc
     return handle;
 }
 
-template <typename ResourceType, typename CreationFunction>
-GLuint InsertObject(HandleAllocator *handleAllocator,
-                    ResourceMap<ResourceType> *objectMap,
-                    const CreationFunction &func)
-{
-    GLuint handle        = handleAllocator->allocate();
-    (*objectMap)[handle] = func(handle);
-    return handle;
-}
-
-template <typename ResourceType, typename DeletionFunction>
-void DeleteObject(HandleAllocator *handleAllocator,
-                  ResourceMap<ResourceType> *objectMap,
-                  GLuint handle,
-                  const DeletionFunction &deletionFunc)
-{
-    auto objectIter = objectMap->find(handle);
-    if (objectIter == objectMap->end())
-    {
-        return;
-    }
-
-    if (objectIter->second != nullptr)
-    {
-        deletionFunc(objectIter->second);
-    }
-
-    handleAllocator->release(objectIter->first);
-    objectMap->erase(objectIter);
-}
-
 template <typename ResourceType>
 ResourceType *GetObject(const ResourceMap<ResourceType> &objectMap, GLuint handle)
 {
@@ -93,8 +62,8 @@ void ResourceManagerBase<HandleAllocatorType>::release()
     }
 }
 
-template <typename ResourceType, typename HandleAllocatorType>
-TypedResourceManager<ResourceType, HandleAllocatorType>::~TypedResourceManager()
+template <typename ResourceType, typename HandleAllocatorType, typename ImplT>
+TypedResourceManager<ResourceType, HandleAllocatorType, ImplT>::~TypedResourceManager()
 {
     while (!mObjectMap.empty())
     {
@@ -102,30 +71,100 @@ TypedResourceManager<ResourceType, HandleAllocatorType>::~TypedResourceManager()
     }
 }
 
-template <typename ResourceType, typename HandleAllocatorType>
-void TypedResourceManager<ResourceType, HandleAllocatorType>::deleteObject(GLuint handle)
+template <typename ResourceType, typename HandleAllocatorType, typename ImplT>
+void TypedResourceManager<ResourceType, HandleAllocatorType, ImplT>::deleteObject(GLuint handle)
 {
-    DeleteObject(&this->mHandleAllocator, &mObjectMap, handle,
-                 [](ResourceType *object) { object->release(); });
+    auto objectIter = mObjectMap.find(handle);
+    if (objectIter == mObjectMap.end())
+    {
+        return;
+    }
+
+    if (objectIter->second != nullptr)
+    {
+        ImplT::DeleteObject(objectIter->second);
+    }
+
+    // Requires an explicit this-> because of C++ template rules.
+    this->mHandleAllocator.release(objectIter->first);
+    mObjectMap.erase(objectIter);
 }
 
-// Instantiations of ResourceManager
+template <typename ResourceType, typename HandleAllocatorType, typename ImplT>
+template <typename... ArgTypes>
+ResourceType *TypedResourceManager<ResourceType, HandleAllocatorType, ImplT>::allocateObject(
+    typename ResourceMap<ResourceType>::iterator &objectMapIter,
+    rx::GLImplFactory *factory,
+    GLuint handle,
+    ArgTypes... args)
+{
+    ResourceType *object = ImplT::AllocateNewObject(factory, handle, args...);
+
+    if (objectMapIter != mObjectMap.end())
+    {
+        objectMapIter->second = object;
+    }
+    else
+    {
+        this->mHandleAllocator.reserve(handle);
+        mObjectMap[handle] = object;
+    }
+
+    return object;
+}
+
 template class ResourceManagerBase<HandleAllocator>;
 template class ResourceManagerBase<HandleRangeAllocator>;
-template class TypedResourceManager<Buffer, HandleAllocator>;
-template class TypedResourceManager<Texture, HandleAllocator>;
-template class TypedResourceManager<Renderbuffer, HandleAllocator>;
-template class TypedResourceManager<Sampler, HandleAllocator>;
-template class TypedResourceManager<FenceSync, HandleAllocator>;
+template class TypedResourceManager<Buffer, HandleAllocator, BufferManager>;
+template Buffer *TypedResourceManager<Buffer, HandleAllocator, BufferManager>::allocateObject(
+    ResourceMap<Buffer>::iterator &,
+    rx::GLImplFactory *,
+    GLuint);
+template class TypedResourceManager<Texture, HandleAllocator, TextureManager>;
+template Texture *TypedResourceManager<Texture, HandleAllocator, TextureManager>::allocateObject(
+    ResourceMap<Texture>::iterator &,
+    rx::GLImplFactory *,
+    GLuint,
+    GLenum);
+template class TypedResourceManager<Renderbuffer, HandleAllocator, RenderbufferManager>;
+template Renderbuffer *
+TypedResourceManager<Renderbuffer, HandleAllocator, RenderbufferManager>::allocateObject(
+    ResourceMap<Renderbuffer>::iterator &,
+    rx::GLImplFactory *,
+    GLuint);
+template class TypedResourceManager<Sampler, HandleAllocator, SamplerManager>;
+template Sampler *TypedResourceManager<Sampler, HandleAllocator, SamplerManager>::allocateObject(
+    ResourceMap<Sampler>::iterator &,
+    rx::GLImplFactory *,
+    GLuint);
+template class TypedResourceManager<FenceSync, HandleAllocator, FenceSyncManager>;
+template class TypedResourceManager<Framebuffer, HandleAllocator, FramebufferManager>;
+template Framebuffer *
+TypedResourceManager<Framebuffer, HandleAllocator, FramebufferManager>::allocateObject(
+    ResourceMap<Framebuffer>::iterator &,
+    rx::GLImplFactory *,
+    GLuint,
+    const Caps &);
+
+// BufferManager Implementation.
+
+// static
+Buffer *BufferManager::AllocateNewObject(rx::GLImplFactory *factory, GLuint handle)
+{
+    Buffer *buffer = new Buffer(factory, handle);
+    buffer->addRef();
+    return buffer;
+}
+
+// static
+void BufferManager::DeleteObject(Buffer *buffer)
+{
+    buffer->release();
+}
 
 GLuint BufferManager::createBuffer()
 {
     return AllocateEmptyObject(&mHandleAllocator, &mObjectMap);
-}
-
-void BufferManager::deleteBuffer(GLuint buffer)
-{
-    deleteObject(buffer);
 }
 
 Buffer *BufferManager::getBuffer(GLuint handle) const
@@ -133,41 +172,12 @@ Buffer *BufferManager::getBuffer(GLuint handle) const
     return GetObject(mObjectMap, handle);
 }
 
-Buffer *BufferManager::checkBufferAllocation(rx::GLImplFactory *factory, GLuint handle)
-{
-    if (handle == 0)
-    {
-        return nullptr;
-    }
-
-    auto objectMapIter   = mObjectMap.find(handle);
-    bool handleAllocated = (objectMapIter != mObjectMap.end());
-
-    if (handleAllocated && objectMapIter->second != nullptr)
-    {
-        return objectMapIter->second;
-    }
-
-    Buffer *object = new Buffer(factory, handle);
-    object->addRef();
-
-    if (handleAllocated)
-    {
-        objectMapIter->second = object;
-    }
-    else
-    {
-        mHandleAllocator.reserve(handle);
-        mObjectMap[handle] = object;
-    }
-
-    return object;
-}
-
 bool BufferManager::isBufferGenerated(GLuint buffer) const
 {
     return buffer == 0 || mObjectMap.find(buffer) != mObjectMap.end();
 }
+
+// ShaderProgramManager Implementation.
 
 ShaderProgramManager::~ShaderProgramManager()
 {
@@ -240,14 +250,25 @@ void ShaderProgramManager::deleteObject(ResourceMap<ObjectType> *objectMap, GLui
     }
 }
 
+// TextureManager Implementation.
+
+// static
+Texture *TextureManager::AllocateNewObject(rx::GLImplFactory *factory, GLuint handle, GLenum target)
+{
+    Texture *texture = new Texture(factory, handle, target);
+    texture->addRef();
+    return texture;
+}
+
+// static
+void TextureManager::DeleteObject(Texture *texture)
+{
+    texture->release();
+}
+
 GLuint TextureManager::createTexture()
 {
     return AllocateEmptyObject(&mHandleAllocator, &mObjectMap);
-}
-
-void TextureManager::deleteTexture(GLuint texture)
-{
-    deleteObject(texture);
 }
 
 Texture *TextureManager::getTexture(GLuint handle) const
@@ -256,42 +277,25 @@ Texture *TextureManager::getTexture(GLuint handle) const
     return GetObject(mObjectMap, handle);
 }
 
-Texture *TextureManager::checkTextureAllocation(rx::GLImplFactory *factory,
-                                                GLuint handle,
-                                                GLenum type)
-{
-    if (handle == 0)
-    {
-        return nullptr;
-    }
-
-    auto objectMapIter   = mObjectMap.find(handle);
-    bool handleAllocated = (objectMapIter != mObjectMap.end());
-
-    if (handleAllocated && objectMapIter->second != nullptr)
-    {
-        return objectMapIter->second;
-    }
-
-    Texture *object = new Texture(factory, handle, type);
-    object->addRef();
-
-    if (handleAllocated)
-    {
-        objectMapIter->second = object;
-    }
-    else
-    {
-        mHandleAllocator.reserve(handle);
-        mObjectMap[handle] = object;
-    }
-
-    return object;
-}
-
 bool TextureManager::isTextureGenerated(GLuint texture) const
 {
     return texture == 0 || mObjectMap.find(texture) != mObjectMap.end();
+}
+
+// RenderbufferManager Implementation.
+
+// static
+Renderbuffer *RenderbufferManager::AllocateNewObject(rx::GLImplFactory *factory, GLuint handle)
+{
+    Renderbuffer *renderbuffer = new Renderbuffer(factory->createRenderbuffer(), handle);
+    renderbuffer->addRef();
+    return renderbuffer;
+}
+
+// static
+void RenderbufferManager::DeleteObject(Renderbuffer *renderbuffer)
+{
+    renderbuffer->release();
 }
 
 GLuint RenderbufferManager::createRenderbuffer()
@@ -299,46 +303,9 @@ GLuint RenderbufferManager::createRenderbuffer()
     return AllocateEmptyObject(&mHandleAllocator, &mObjectMap);
 }
 
-void RenderbufferManager::deleteRenderbuffer(GLuint renderbuffer)
-{
-    deleteObject(renderbuffer);
-}
-
 Renderbuffer *RenderbufferManager::getRenderbuffer(GLuint handle)
 {
     return GetObject(mObjectMap, handle);
-}
-
-Renderbuffer *RenderbufferManager::checkRenderbufferAllocation(rx::GLImplFactory *factory,
-                                                               GLuint handle)
-{
-    if (handle == 0)
-    {
-        return nullptr;
-    }
-
-    auto objectMapIter   = mObjectMap.find(handle);
-    bool handleAllocated = (objectMapIter != mObjectMap.end());
-
-    if (handleAllocated && objectMapIter->second != nullptr)
-    {
-        return objectMapIter->second;
-    }
-
-    Renderbuffer *object = new Renderbuffer(factory->createRenderbuffer(), handle);
-    object->addRef();
-
-    if (handleAllocated)
-    {
-        objectMapIter->second = object;
-    }
-    else
-    {
-        mHandleAllocator.reserve(handle);
-        mObjectMap[handle] = object;
-    }
-
-    return object;
 }
 
 bool RenderbufferManager::isRenderbufferGenerated(GLuint renderbuffer) const
@@ -346,14 +313,25 @@ bool RenderbufferManager::isRenderbufferGenerated(GLuint renderbuffer) const
     return renderbuffer == 0 || mObjectMap.find(renderbuffer) != mObjectMap.end();
 }
 
+// SamplerManager Implementation.
+
+// static
+Sampler *SamplerManager::AllocateNewObject(rx::GLImplFactory *factory, GLuint handle)
+{
+    Sampler *sampler = new Sampler(factory, handle);
+    sampler->addRef();
+    return sampler;
+}
+
+// static
+void SamplerManager::DeleteObject(Sampler *sampler)
+{
+    sampler->release();
+}
+
 GLuint SamplerManager::createSampler()
 {
     return AllocateEmptyObject(&mHandleAllocator, &mObjectMap);
-}
-
-void SamplerManager::deleteSampler(GLuint sampler)
-{
-    deleteObject(sampler);
 }
 
 Sampler *SamplerManager::getSampler(GLuint handle)
@@ -361,70 +339,34 @@ Sampler *SamplerManager::getSampler(GLuint handle)
     return GetObject(mObjectMap, handle);
 }
 
-Sampler *SamplerManager::checkSamplerAllocation(rx::GLImplFactory *factory, GLuint handle)
-{
-    if (handle == 0)
-    {
-        return nullptr;
-    }
-
-    auto objectMapIter   = mObjectMap.find(handle);
-    bool handleAllocated = (objectMapIter != mObjectMap.end());
-
-    if (handleAllocated && objectMapIter->second != nullptr)
-    {
-        return objectMapIter->second;
-    }
-
-    Sampler *object = new Sampler(factory, handle);
-    object->addRef();
-
-    if (handleAllocated)
-    {
-        objectMapIter->second = object;
-    }
-    else
-    {
-        mHandleAllocator.reserve(handle);
-        mObjectMap[handle] = object;
-    }
-
-    return object;
-}
-
 bool SamplerManager::isSampler(GLuint sampler)
 {
     return mObjectMap.find(sampler) != mObjectMap.end();
 }
 
-GLuint FenceSyncManager::createFenceSync(rx::GLImplFactory *factory)
+// FenceSyncManager Implementation.
+
+// static
+void FenceSyncManager::DeleteObject(FenceSync *fenceSync)
 {
-    struct fenceSyncAllocator
-    {
-        fenceSyncAllocator(rx::GLImplFactory *factory) : factory(factory) {}
-
-        rx::GLImplFactory *factory;
-
-        FenceSync *operator()(GLuint handle) const
-        {
-            FenceSync *fenceSync = new FenceSync(factory->createFenceSync(), handle);
-            fenceSync->addRef();
-            return fenceSync;
-        }
-    };
-
-    return InsertObject(&mHandleAllocator, &mObjectMap, fenceSyncAllocator(factory));
+    fenceSync->release();
 }
 
-void FenceSyncManager::deleteFenceSync(GLuint fenceSync)
+GLuint FenceSyncManager::createFenceSync(rx::GLImplFactory *factory)
 {
-    deleteObject(fenceSync);
+    GLuint handle        = mHandleAllocator.allocate();
+    FenceSync *fenceSync = new FenceSync(factory->createFenceSync(), handle);
+    fenceSync->addRef();
+    mObjectMap[handle] = fenceSync;
+    return handle;
 }
 
 FenceSync *FenceSyncManager::getFenceSync(GLuint handle)
 {
     return GetObject(mObjectMap, handle);
 }
+
+// PathManager Implementation.
 
 ErrorOrResult<GLuint> PathManager::createPaths(rx::GLImplFactory *factory, GLsizei range)
 {
@@ -485,70 +427,46 @@ PathManager::~PathManager()
     }
 }
 
-FramebufferManager::~FramebufferManager()
+// FramebufferManager Implementation.
+
+// static
+Framebuffer *FramebufferManager::AllocateNewObject(rx::GLImplFactory *factory,
+                                                   GLuint handle,
+                                                   const Caps &caps)
 {
-    for (auto framebuffer : mFramebuffers)
+    return new Framebuffer(caps, factory, handle);
+}
+
+// static
+void FramebufferManager::DeleteObject(Framebuffer *framebuffer)
+{
+    // Default framebuffer are owned by their respective Surface
+    if (framebuffer->id() != 0)
     {
-        // Default framebuffer are owned by their respective Surface
-        if (framebuffer.second != nullptr && framebuffer.second->id() != 0)
-        {
-            SafeDelete(framebuffer.second);
-        }
+        delete framebuffer;
     }
 }
 
 GLuint FramebufferManager::createFramebuffer()
 {
-    return AllocateEmptyObject(&mHandleAllocator, &mFramebuffers);
-}
-
-void FramebufferManager::deleteFramebuffer(GLuint framebuffer)
-{
-    DeleteObject(&mHandleAllocator, &mFramebuffers, framebuffer, [](Framebuffer *framebuffer) {
-        ASSERT(framebuffer->id() != 0);
-        delete framebuffer;
-    });
-}
-
-Framebuffer *FramebufferManager::checkFramebufferAllocation(rx::GLImplFactory *factory,
-                                                            const Caps &caps,
-                                                            GLuint handle)
-{
-    // Can be called from Bind without a prior call to Gen.
-    auto framebufferIt = mFramebuffers.find(handle);
-    bool neverCreated  = framebufferIt == mFramebuffers.end();
-    if (neverCreated || framebufferIt->second == nullptr)
-    {
-        ASSERT(handle != 0);
-        Framebuffer *newFBO = new Framebuffer(caps, factory, handle);
-        if (neverCreated)
-        {
-            mHandleAllocator.reserve(handle);
-            mFramebuffers[handle] = newFBO;
-            return newFBO;
-        }
-
-        framebufferIt->second = newFBO;
-    }
-
-    return framebufferIt->second;
+    return AllocateEmptyObject(&mHandleAllocator, &mObjectMap);
 }
 
 Framebuffer *FramebufferManager::getFramebuffer(GLuint handle) const
 {
-    return GetObject(mFramebuffers, handle);
+    return GetObject(mObjectMap, handle);
 }
 
 void FramebufferManager::setDefaultFramebuffer(Framebuffer *framebuffer)
 {
     ASSERT(framebuffer == nullptr || framebuffer->id() == 0);
-    mFramebuffers[0] = framebuffer;
+    mObjectMap[0] = framebuffer;
 }
 
 bool FramebufferManager::isFramebufferGenerated(GLuint framebuffer)
 {
-    ASSERT(mFramebuffers.find(0) != mFramebuffers.end());
-    return mFramebuffers.find(framebuffer) != mFramebuffers.end();
+    ASSERT(mObjectMap.find(0) != mObjectMap.end());
+    return mObjectMap.find(framebuffer) != mObjectMap.end();
 }
 
 }  // namespace gl
