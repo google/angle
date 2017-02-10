@@ -250,16 +250,6 @@ bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsign
             *numParams = 1;
             return true;
         }
-        case GL_MAX_SAMPLES_ANGLE:
-        {
-            if (!getExtensions().framebufferMultisample)
-            {
-                return false;
-            }
-            *type      = GL_INT;
-            *numParams = 1;
-            return true;
-        }
         case GL_MAX_VIEWPORT_DIMS:
         {
             *type      = GL_INT;
@@ -474,6 +464,18 @@ bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsign
             *type      = GL_INT;
             *numParams = 1;
             return true;
+        case GL_MAX_SAMPLES:
+        {
+            static_assert(GL_MAX_SAMPLES_ANGLE == GL_MAX_SAMPLES,
+                          "GL_MAX_SAMPLES_ANGLE not equal to GL_MAX_SAMPLES");
+            if ((getClientMajorVersion() < 3) && !getExtensions().framebufferMultisample)
+            {
+                return false;
+            }
+            *type      = GL_INT;
+            *numParams = 1;
+            return true;
+        }
     }
 
     if (getClientVersion() < Version(3, 0))
