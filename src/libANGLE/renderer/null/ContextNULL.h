@@ -15,10 +15,25 @@
 namespace rx
 {
 
+class AllocationTrackerNULL : angle::NonCopyable
+{
+  public:
+    explicit AllocationTrackerNULL(size_t maxTotalAllocationSize);
+    ~AllocationTrackerNULL();
+
+    // Check if it is possible to change an allocation from oldSize to newSize.  If it is possible,
+    // the allocation is registered and true is returned else false is returned.
+    bool updateMemoryAllocation(size_t oldSize, size_t newSize);
+
+  private:
+    size_t mAllocatedBytes;
+    const size_t mMaxBytes;
+};
+
 class ContextNULL : public ContextImpl
 {
   public:
-    ContextNULL(const gl::ContextState &state);
+    ContextNULL(const gl::ContextState &state, AllocationTrackerNULL *allocationTracker);
     ~ContextNULL() override;
 
     gl::Error initialize() override;
@@ -168,6 +183,8 @@ class ContextNULL : public ContextImpl
     gl::TextureCapsMap mTextureCaps;
     gl::Extensions mExtensions;
     gl::Limitations mLimitations;
+
+    AllocationTrackerNULL *mAllocationTracker;
 };
 
 }  // namespace rx

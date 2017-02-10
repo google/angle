@@ -30,11 +30,16 @@ DisplayNULL::~DisplayNULL()
 egl::Error DisplayNULL::initialize(egl::Display *display)
 {
     mDevice = new DeviceNULL();
+
+    constexpr size_t kMaxTotalAllocationSize = 1 << 28;  // 256MB
+    mAllocationTracker.reset(new AllocationTrackerNULL(kMaxTotalAllocationSize));
+
     return egl::NoError();
 }
 
 void DisplayNULL::terminate()
 {
+    mAllocationTracker.reset();
     SafeDelete(mDevice);
 }
 
@@ -168,7 +173,7 @@ ImageImpl *DisplayNULL::createImage(EGLenum target,
 
 ContextImpl *DisplayNULL::createContext(const gl::ContextState &state)
 {
-    return new ContextNULL(state);
+    return new ContextNULL(state, mAllocationTracker.get());
 }
 
 StreamProducerImpl *DisplayNULL::createStreamProducerD3DTextureNV12(

@@ -12,16 +12,21 @@
 #include "common/debug.h"
 #include "common/utilities.h"
 #include "libANGLE/angletypes.h"
+#include "libANGLE/renderer/null/ContextNULL.h"
 
 namespace rx
 {
 
-BufferNULL::BufferNULL(const gl::BufferState &state) : BufferImpl(state)
+BufferNULL::BufferNULL(const gl::BufferState &state, AllocationTrackerNULL *allocationTracker)
+    : BufferImpl(state), mAllocationTracker(allocationTracker)
 {
+    ASSERT(mAllocationTracker != nullptr);
 }
 
 BufferNULL::~BufferNULL()
 {
+    bool memoryReleaseResult = mAllocationTracker->updateMemoryAllocation(mData.size(), 0);
+    ASSERT(memoryReleaseResult);
 }
 
 gl::Error BufferNULL::setData(ContextImpl *context,
@@ -30,6 +35,11 @@ gl::Error BufferNULL::setData(ContextImpl *context,
                               size_t size,
                               GLenum usage)
 {
+    if (!mAllocationTracker->updateMemoryAllocation(mData.size(), size))
+    {
+        return gl::OutOfMemory() << "Unable to allocate internal buffer storage.";
+    }
+
     mData.resize(size, 0);
     if (size > 0 && data != nullptr)
     {

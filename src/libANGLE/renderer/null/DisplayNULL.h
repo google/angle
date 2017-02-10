@@ -15,6 +15,8 @@
 namespace rx
 {
 
+class AllocationTrackerNULL;
+
 class DisplayNULL : public DisplayImpl
 {
   public:
@@ -73,6 +75,8 @@ class DisplayNULL : public DisplayImpl
     void generateCaps(egl::Caps *outCaps) const override;
 
     DeviceImpl *mDevice;
+
+    std::unique_ptr<AllocationTrackerNULL> mAllocationTracker;
 };
 
 }  // namespace rx

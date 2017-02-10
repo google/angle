@@ -15,10 +15,12 @@
 namespace rx
 {
 
+class AllocationTrackerNULL;
+
 class BufferNULL : public BufferImpl
 {
   public:
-    BufferNULL(const gl::BufferState &state);
+    BufferNULL(const gl::BufferState &state, AllocationTrackerNULL *allocationTracker);
     ~BufferNULL() override;
 
     gl::Error setData(ContextImpl *context,
@@ -52,6 +54,8 @@ class BufferNULL : public BufferImpl
 
   private:
     std::vector<uint8_t> mData;
+
+    AllocationTrackerNULL *mAllocationTracker;
 };
 
 }  // namespace rx
