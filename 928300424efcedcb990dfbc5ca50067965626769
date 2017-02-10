@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f74fc57f_ff8f9698",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-10T15:53:57Z",
+      "side": 1,
+      "message": "Can\u0027t we just call release(this) ?",
+      "revId": "928300424efcedcb990dfbc5ca50067965626769",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "074833e5_398be9b5",
+        "filename": "src/libANGLE/ContextState.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-10T15:53:57Z",
+      "side": 1,
+      "message": "Maybe add asserts that the Context actually did release the handles.",
+      "revId": "928300424efcedcb990dfbc5ca50067965626769",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
