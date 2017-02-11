@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "933203a7_145685fa",
+        "filename": "src/libGLESv2/entry_points_gles_2_0.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 690,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-11T00:49:31Z",
+      "side": 1,
+      "message": "nit: ValidateDepthRangef to match the API entry point.",
+      "range": {
+        "startLine": 690,
+        "startChar": 43,
+        "endLine": 690,
+        "endChar": 61
+      },
+      "revId": "143adf7bf6becc34ee9e8c3af7872b154eca33fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "14907189_4330764f",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-11T00:49:31Z",
+      "side": 1,
+      "message": "nit: add a test for equal values?",
+      "range": {
+        "startLine": 432,
+        "startChar": 4,
+        "endLine": 432,
+        "endChar": 17
+      },
+      "revId": "143adf7bf6becc34ee9e8c3af7872b154eca33fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
