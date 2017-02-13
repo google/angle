@@ -2519,7 +2519,7 @@ TEST_F(FragmentShaderValidationTest, ImageR32FNoMemoryQualifier)
 // Images which do not have r32f, r32i or r32ui as internal format, must have readonly or writeonly
 // specified.
 // GLSL ES 3.10, Revision 4, 4.9 Memory Access Qualifiers
-TEST_F(FragmentShaderValidationTest, ImageR32FWithCorrectMemoryQualifier)
+TEST_F(FragmentShaderValidationTest, ImageRGBA32FWithIncorrectMemoryQualifier)
 {
     const std::string &shaderString =
         "#version 310 es\n"
@@ -3551,6 +3551,157 @@ TEST_F(VertexShaderValidationTest, InvalidArrayConstruction)
         "  s = S[](s.x, 0.0);\n"
         "  gl_Position = vec4(1, 0, 0, 1);\n"
         "}";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Correct usage of image binding layout qualifier.
+TEST_F(ComputeShaderValidationTest, CorrectImageBindingLayoutQualifier)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "precision mediump image2D;\n"
+        "layout(local_size_x = 5) in;\n"
+        "layout(binding = 1, rgba32f) writeonly uniform image2D myImage;\n"
+        "void main()\n"
+        "{\n"
+        "   imageStore(myImage, ivec2(gl_LocalInvocationID.xy), vec4(1.0));\n"
+        "}\n";
+
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success " << mInfoLog;
+    }
+}
+
+// Incorrect use of "binding" on a global layout qualifier.
+TEST_F(ComputeShaderValidationTest, IncorrectGlobalBindingLayoutQualifier)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "layout(local_size_x = 5, binding = 0) in;\n"
+        "void main() {}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Incorrect use of "binding" on a struct field layout qualifier.
+TEST_F(ComputeShaderValidationTest, IncorrectStructFieldBindingLayoutQualifier)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "layout(local_size_x = 1) in;\n"
+        "struct S\n"
+        "{\n"
+        "  layout(binding = 0) float f;\n"
+        "};\n"
+        "void main() {}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Variable binding layout qualifier is set to a negative value. 0xffffffff wraps around to -1
+// according to the integer parsing rules.
+TEST_F(FragmentShaderValidationTest, ImageBindingUnitNegative)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "layout(rgba32f, binding = 0xffffffff) writeonly uniform mediump image2D myImage;\n"
+        "out vec4 outFrag;\n"
+        "void main()\n"
+        "{\n"
+        "   outFrag = vec4(0.0);\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Image binding layout qualifier value is greater than the maximum image binding.
+TEST_F(FragmentShaderValidationTest, ImageBindingUnitTooBig)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "layout(rgba32f, binding = 9999) writeonly uniform mediump image2D myImage;\n"
+        "out vec4 outFrag;\n"
+        "void main()\n"
+        "{\n"
+        "   outFrag = vec4(0.0);\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Uniform variable binding is set on a non-opaque type.
+TEST_F(FragmentShaderValidationTest, NonOpaqueUniformBinding)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "layout(binding = 0) uniform float myFloat;\n"
+        "out vec4 outFrag;\n"
+        "void main()\n"
+        "{\n"
+        "   outFrag = vec4(myFloat);\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Uniform variable binding is set on a sampler type.
+// ESSL 3.10 section 4.4.5 Opaque Uniform Layout Qualifiers.
+TEST_F(FragmentShaderValidationTest, SamplerUniformBinding)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "layout(binding = 0) uniform mediump sampler2D mySampler;\n"
+        "out vec4 outFrag;\n"
+        "void main()\n"
+        "{\n"
+        "   outFrag = vec4(0.0);\n"
+        "}\n";
+
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success " << mInfoLog;
+    }
+}
+
+// Uniform variable binding is set on a sampler type in an ESSL 3.00 shader.
+// The binding layout qualifier was added in ESSL 3.10, so this is incorrect.
+TEST_F(FragmentShaderValidationTest, SamplerUniformBindingESSL300)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "layout(binding = 0) uniform mediump sampler2D mySampler;\n"
+        "out vec4 outFrag;\n"
+        "void main()\n"
+        "{\n"
+        "   outFrag = vec4(0.0);\n"
+        "}\n";
+
     if (compile(shaderString))
     {
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;

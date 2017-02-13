@@ -93,7 +93,8 @@ void CheckImageDeclaration(TIntermNode *astRoot,
                            bool writeonly,
                            bool coherent,
                            bool restrictQualifier,
-                           bool volatileQualifier)
+                           bool volatileQualifier,
+                           int binding)
 {
     const TIntermSymbol *myImageNode = FindSymbolNode(astRoot, imageName, imageType);
     ASSERT_NE(nullptr, myImageNode);
@@ -107,6 +108,7 @@ void CheckImageDeclaration(TIntermNode *astRoot,
     ASSERT_EQ(coherent, myImageMemoryQualifier.coherent);
     ASSERT_EQ(restrictQualifier, myImageMemoryQualifier.restrictQualifier);
     ASSERT_EQ(volatileQualifier, myImageMemoryQualifier.volatileQualifier);
+    ASSERT_EQ(binding, myImageType.getLayoutQualifier().binding);
 }
 
 }  // namespace
@@ -133,7 +135,7 @@ TEST_F(ShaderImageTest, Image2DDeclaration)
     const std::string &shaderString =
         "#version 310 es\n"
         "layout(local_size_x = 4) in;\n"
-        "layout(rgba32f) uniform highp readonly image2D myImage;\n"
+        "layout(rgba32f, binding = 1) uniform highp readonly image2D myImage;\n"
         "void main() {\n"
         "   ivec2 sz = imageSize(myImage);\n"
         "}";
@@ -144,7 +146,7 @@ TEST_F(ShaderImageTest, Image2DDeclaration)
 
     CheckExportedImageUniform(getUniforms(), 0, GL_IMAGE_2D, "myImage");
     CheckImageDeclaration(mASTRoot, "myImage", EbtImage2D, EiifRGBA32F, true, false, false, false,
-                          false);
+                          false, 1);
 }
 
 // Test that an image3D is properly parsed and exported as a uniform.
@@ -153,7 +155,7 @@ TEST_F(ShaderImageTest, Image3DDeclaration)
     const std::string &shaderString =
         "#version 310 es\n"
         "layout(local_size_x = 4) in;\n"
-        "layout(rgba32ui) uniform highp writeonly readonly uimage3D myImage;\n"
+        "layout(rgba32ui, binding = 3) uniform highp writeonly readonly uimage3D myImage;\n"
         "void main() {\n"
         "   ivec3 sz = imageSize(myImage);\n"
         "}";
@@ -164,7 +166,7 @@ TEST_F(ShaderImageTest, Image3DDeclaration)
 
     CheckExportedImageUniform(getUniforms(), 0, GL_UNSIGNED_INT_IMAGE_3D, "myImage");
     CheckImageDeclaration(mASTRoot, "myImage", EbtUImage3D, EiifRGBA32UI, true, true, false, false,
-                          false);
+                          false, 3);
 }
 
 // Check that imageLoad calls get correctly parsed.
@@ -232,9 +234,9 @@ TEST_F(ShaderImageTest, ImageMemoryQualifiers)
     }
 
     CheckImageDeclaration(mASTRoot, "image1", EbtImage2D, EiifRGBA32F, true, false, true, false,
-                          false);
+                          false, -1);
     CheckImageDeclaration(mASTRoot, "image2", EbtImage2D, EiifRGBA32F, false, true, true, false,
-                          true);
-    CheckImageDeclaration(mASTRoot, "image3", EbtImage2D, EiifRGBA32F, true, true, true, true,
-                          true);
+                          true, -1);
+    CheckImageDeclaration(mASTRoot, "image3", EbtImage2D, EiifRGBA32F, true, true, true, true, true,
+                          -1);
 }

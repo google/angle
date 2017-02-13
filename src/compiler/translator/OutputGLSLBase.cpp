@@ -72,11 +72,41 @@ bool NeedsToWriteLayoutQualifier(const TType &type)
     {
         return true;
     }
+
+    if (IsOpaqueType(type.getBasicType()) && layoutQualifier.binding != -1)
+    {
+        return true;
+    }
+
     if (IsImage(type.getBasicType()) && layoutQualifier.imageInternalFormat != EiifUnspecified)
     {
         return true;
     }
     return false;
+}
+
+class CommaSeparatedListItemPrefixGenerator
+{
+  public:
+    CommaSeparatedListItemPrefixGenerator() : mFirst(true) {}
+  private:
+    bool mFirst;
+
+    friend TInfoSinkBase &operator<<(TInfoSinkBase &out,
+                                     CommaSeparatedListItemPrefixGenerator &gen);
+};
+
+TInfoSinkBase &operator<<(TInfoSinkBase &out, CommaSeparatedListItemPrefixGenerator &gen)
+{
+    if (gen.mFirst)
+    {
+        gen.mFirst = false;
+    }
+    else
+    {
+        out << ", ";
+    }
+    return out;
 }
 
 }  // namespace
@@ -174,18 +204,32 @@ void TOutputGLSLBase::writeLayoutQualifier(const TType &type)
     const TLayoutQualifier &layoutQualifier = type.getLayoutQualifier();
     out << "layout(";
 
+    CommaSeparatedListItemPrefixGenerator listItemPrefix;
+
     if (type.getQualifier() == EvqFragmentOut || type.getQualifier() == EvqVertexIn)
     {
         if (layoutQualifier.location >= 0)
         {
-            out << "location = " << layoutQualifier.location;
+            out << listItemPrefix << "location = " << layoutQualifier.location;
         }
     }
 
-    if (IsImage(type.getBasicType()) && layoutQualifier.imageInternalFormat != EiifUnspecified)
+    if (IsOpaqueType(type.getBasicType()))
     {
-        ASSERT(type.getQualifier() == EvqTemporary || type.getQualifier() == EvqUniform);
-        out << getImageInternalFormatString(layoutQualifier.imageInternalFormat);
+        if (layoutQualifier.binding >= 0)
+        {
+            out << listItemPrefix << "binding = " << layoutQualifier.binding;
+        }
+    }
+
+    if (IsImage(type.getBasicType()))
+    {
+        if (layoutQualifier.imageInternalFormat != EiifUnspecified)
+        {
+            ASSERT(type.getQualifier() == EvqTemporary || type.getQualifier() == EvqUniform);
+            out << listItemPrefix
+                << getImageInternalFormatString(layoutQualifier.imageInternalFormat);
+        }
     }
 
     out << ") ";

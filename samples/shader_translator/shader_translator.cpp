@@ -226,6 +226,8 @@ int main(int argc, char *argv[])
             if (spec != SH_GLES2_SPEC && spec != SH_WEBGL_SPEC)
             {
                 resources.MaxDrawBuffers = 8;
+                resources.MaxVertexTextureImageUnits = 16;
+                resources.MaxTextureImageUnits       = 16;
             }
             ShHandle compiler = 0;
             switch (FindShaderType(argv[0]))

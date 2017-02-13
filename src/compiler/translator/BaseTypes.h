@@ -609,6 +609,8 @@ struct TLayoutQualifier
     // Compute shader layout qualifiers.
     sh::WorkGroupSize localSize;
 
+    int binding;
+
     // Image format layout qualifier
     TLayoutImageInternalFormat imageInternalFormat;
 
@@ -625,6 +627,7 @@ struct TLayoutQualifier
         layoutQualifier.blockStorage       = EbsUnspecified;
 
         layoutQualifier.localSize.fill(-1);
+        layoutQualifier.binding  = -1;
         layoutQualifier.numViews = -1;
 
         layoutQualifier.imageInternalFormat = EiifUnspecified;
@@ -633,9 +636,9 @@ struct TLayoutQualifier
 
     bool isEmpty() const
     {
-        return location == -1 && numViews == -1 && matrixPacking == EmpUnspecified &&
-               blockStorage == EbsUnspecified && !localSize.isAnyValueSet() &&
-               imageInternalFormat == EiifUnspecified;
+        return location == -1 && binding == -1 && numViews == -1 &&
+               matrixPacking == EmpUnspecified && blockStorage == EbsUnspecified &&
+               !localSize.isAnyValueSet() && imageInternalFormat == EiifUnspecified;
     }
 
     bool isCombinationValid() const
@@ -643,8 +646,8 @@ struct TLayoutQualifier
         bool workSizeSpecified = localSize.isAnyValueSet();
         bool numViewsSet       = (numViews != -1);
         bool otherLayoutQualifiersSpecified =
-            (location != -1 || matrixPacking != EmpUnspecified || blockStorage != EbsUnspecified ||
-             imageInternalFormat != EiifUnspecified);
+            (location != -1 || binding != -1 || matrixPacking != EmpUnspecified ||
+             blockStorage != EbsUnspecified || imageInternalFormat != EiifUnspecified);
 
         // we can have either the work group size specified, or number of views, or the other layout
         // qualifiers.
