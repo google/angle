@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9b2bbccc_6b063f8f",
+        "filename": "src/libANGLE/Platform.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-13T20:11:04Z",
+      "side": 1,
+      "message": "nit: can use the X macro here too",
+      "revId": "72f823d1f5e602251a5b60a42011381e08db6f3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
