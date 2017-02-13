@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "af0de6f2_f706d042",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 72
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-13T14:54:20Z",
+      "side": 1,
+      "message": "Good find, it\u0027s good that divisor doesn\u0027t need to be duplicated too.",
+      "parentUuid": "a8347b49_66c7dc63",
+      "revId": "26484330476fbafe05ba182a7def83110fc8fa69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e889309e_44db6bd4",
         "filename": "src/libANGLE/queryutils.h",
         "patchSetId": 72
@@ -53,6 +71,24 @@
     },
     {
       "key": {
+        "uuid": "829d9417_3204f828",
+        "filename": "src/libANGLE/queryutils.h",
+        "patchSetId": 72
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-13T14:54:20Z",
+      "side": 1,
+      "message": "Thanks",
+      "parentUuid": "e889309e_44db6bd4",
+      "revId": "26484330476fbafe05ba182a7def83110fc8fa69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7d00bc44_ebf97d20",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 72
@@ -64,6 +100,47 @@
       "writtenOn": "2017-02-10T11:50:42Z",
       "side": 1,
       "message": "Shall we remove these GL calls and use caps directly here?",
+      "revId": "26484330476fbafe05ba182a7def83110fc8fa69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e1a5592e_bfb1582a",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 72
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-13T14:54:20Z",
+      "side": 1,
+      "message": "Yes, we should update it because otherwise it will require the driver to support vertex attrib bindings for this query to work.\n\nI think it should be something like:\n\n   GLint maxVertexBindings \u003d max(caps.maxVertexBindings, maxVertexAttribs)\n\nso that if vertex attrib bindings aren\u0027t supported, we still have enough to support the old style.",
+      "parentUuid": "7d00bc44_ebf97d20",
+      "revId": "26484330476fbafe05ba182a7def83110fc8fa69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c6688dfd_aa83ff98",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 72
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-13T14:54:20Z",
+      "side": 1,
+      "message": "Can you put this into a new block?\n\n    if (functions-\u003eisAtLeastGL(gl::Version(4, 3)) || functions-\u003ehasGLExtension(\"GL_ARB_vertex_attrib_binding\") ||\n        functions-\u003eisAtLeastGLES(gl::Version(3, 1)))\n    {\n        caps-\u003emaxVertexAttribBindings \u003d QuerySingleGLInt(functions, GL_MAX_VERTEX_ATTRIB_BINDINGS);\n    }\n    else\n    {\n        LimitVersion(maxSupportedESVersion, gl::Version(3, 0));\n    }",
+      "range": {
+        "startLine": 376,
+        "startChar": 8,
+        "endLine": 376,
+        "endChar": 69
+      },
       "revId": "26484330476fbafe05ba182a7def83110fc8fa69",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
