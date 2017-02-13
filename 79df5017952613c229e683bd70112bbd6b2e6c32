@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9e383294_b0793fc8",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-13T18:00:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aefcc844_539769bc",
+      "range": {
+        "startLine": 192,
+        "startChar": 17,
+        "endLine": 192,
+        "endChar": 32
+      },
+      "revId": "79df5017952613c229e683bd70112bbd6b2e6c32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d722ca4_45255fe6",
         "filename": "src/angle.gyp",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "09fe0186_7e103d48",
+        "filename": "src/angle.gyp",
+        "patchSetId": 2
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-13T18:00:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d722ca4_45255fe6",
+      "range": {
+        "startLine": 240,
+        "startChar": 37,
+        "endLine": 240,
+        "endChar": 38
+      },
+      "revId": "79df5017952613c229e683bd70112bbd6b2e6c32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5fabf193_ee2ebee7",
         "filename": "src/gpu_info_util/SystemInfo.h",
         "patchSetId": 2
@@ -59,6 +107,30 @@
       "writtenOn": "2017-02-08T19:51:53Z",
       "side": 1,
       "message": "For thought: typedef these instead of using an enum?",
+      "range": {
+        "startLine": 21,
+        "startChar": 4,
+        "endLine": 21,
+        "endChar": 12
+      },
+      "revId": "79df5017952613c229e683bd70112bbd6b2e6c32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d49adb2_8c091686",
+        "filename": "src/gpu_info_util/SystemInfo.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-13T18:00:40Z",
+      "side": 1,
+      "message": "Makes sense, done.",
+      "parentUuid": "5fabf193_ee2ebee7",
       "range": {
         "startLine": 21,
         "startChar": 4,
@@ -118,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "bcf6e0cc_3b53bc1a",
+        "filename": "src/gpu_info_util/SystemInfo.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-13T18:00:40Z",
+      "side": 1,
+      "message": "+1, there will functions like \"IntelDriverVersion ParseIntelDriverVersion(VendorID vendor, const std::string \u0026version)\" that check the vendor ID is intel.",
+      "parentUuid": "5f924a60_e1a87c90",
+      "range": {
+        "startLine": 25,
+        "startChar": 4,
+        "endLine": 25,
+        "endChar": 30
+      },
+      "revId": "79df5017952613c229e683bd70112bbd6b2e6c32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1421703c_232cfe4b",
         "filename": "src/gpu_info_util/SystemInfo.h",
         "patchSetId": 2
@@ -129,6 +225,24 @@
       "writtenOn": "2017-02-10T19:14:32Z",
       "side": 1,
       "message": "I think you also want activeGPUIndex because we definitely want to know which GPU is currently in use.\n\nTogether with the logic to identify the active GPU (this can be done in a separate CL).",
+      "revId": "79df5017952613c229e683bd70112bbd6b2e6c32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "254d7ef4_f3598c80",
+        "filename": "src/gpu_info_util/SystemInfo.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-13T18:00:40Z",
+      "side": 1,
+      "message": "Make sense, I will add it to the OSX CL as it is the only place where it makes sense.",
+      "parentUuid": "1421703c_232cfe4b",
       "revId": "79df5017952613c229e683bd70112bbd6b2e6c32",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -176,6 +290,30 @@
     },
     {
       "key": {
+        "uuid": "71ecd952_fb9d610c",
+        "filename": "src/gpu_info_util/SystemInfo_libpci.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-13T18:00:40Z",
+      "side": 1,
+      "message": "Went with what Geoff suggested: making this class mockable would require a bit more work than just that though.",
+      "parentUuid": "91132010_ead30f1e",
+      "range": {
+        "startLine": 35,
+        "startChar": 4,
+        "endLine": 60,
+        "endChar": 5
+      },
+      "revId": "79df5017952613c229e683bd70112bbd6b2e6c32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "48edecd0_5e2abb5d",
         "filename": "src/gpu_info_util/SystemInfo_linux.cpp",
         "patchSetId": 2
@@ -199,6 +337,30 @@
     },
     {
       "key": {
+        "uuid": "67936ee0_de2be76f",
+        "filename": "src/gpu_info_util/SystemInfo_linux.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-13T18:00:40Z",
+      "side": 1,
+      "message": "This is the same logic as in https://cs.chromium.org/chromium/src/gpu/config/gpu_info_collector_linux.cc?l\u003d208",
+      "parentUuid": "48edecd0_5e2abb5d",
+      "range": {
+        "startLine": 72,
+        "startChar": 5,
+        "endLine": 72,
+        "endChar": 18
+      },
+      "revId": "79df5017952613c229e683bd70112bbd6b2e6c32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e2f151db_a962ba4a",
         "filename": "src/gpu_info_util/SystemInfo_linux.cpp",
         "patchSetId": 2
@@ -210,6 +372,30 @@
       "writtenOn": "2017-02-10T19:14:32Z",
       "side": 1,
       "message": "You mean !empty()?\n\nI think it\u0027s clearer you get rid of this and add \"break;\" inside \"if (IsIntel(gpu-\u003evendorId) \u0026\u0026 info-\u003egpus.size() \u003d\u003d 1)\"",
+      "range": {
+        "startLine": 109,
+        "startChar": 17,
+        "endLine": 109,
+        "endChar": 29
+      },
+      "revId": "79df5017952613c229e683bd70112bbd6b2e6c32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "47629af6_de146275",
+        "filename": "src/gpu_info_util/SystemInfo_linux.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-13T18:00:40Z",
+      "side": 1,
+      "message": "Done. I\u0027d rather not put a break inside the \"if\" in case we are on a system with an AMD card and an (Intel + NVIDIA) combo.",
+      "parentUuid": "e2f151db_a962ba4a",
       "range": {
         "startLine": 109,
         "startChar": 17,
@@ -269,6 +455,30 @@
     },
     {
       "key": {
+        "uuid": "c591b1a5_84b12059",
+        "filename": "src/gpu_info_util/SystemInfo_linux.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-13T18:00:40Z",
+      "side": 1,
+      "message": "Done. Double checked that the JSON workaround files in Chrome don\u0027t use ATI to match the driver vendor.",
+      "parentUuid": "7e7f885b_7e95f573",
+      "range": {
+        "startLine": 119,
+        "startChar": 37,
+        "endLine": 119,
+        "endChar": 47
+      },
+      "revId": "79df5017952613c229e683bd70112bbd6b2e6c32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "47c5cb18_4b6e9375",
         "filename": "src/libANGLE/renderer/driver_utils.h",
         "patchSetId": 2
@@ -280,6 +490,30 @@
       "writtenOn": "2017-02-08T19:51:53Z",
       "side": 1,
       "message": "nit: newline change, probably not intended?",
+      "range": {
+        "startLine": 73,
+        "startChar": 0,
+        "endLine": 73,
+        "endChar": 44
+      },
+      "revId": "79df5017952613c229e683bd70112bbd6b2e6c32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f6c3bf0c_10dc5728",
+        "filename": "src/libANGLE/renderer/driver_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-13T18:00:40Z",
+      "side": 1,
+      "message": "C++ files should end with a newline, which vim added. If that\u0027s ok I\u0027ll keep it.",
+      "parentUuid": "47c5cb18_4b6e9375",
       "range": {
         "startLine": 73,
         "startChar": 0,
