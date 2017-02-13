@@ -449,6 +449,21 @@ Error ValidateCreateContext(Display *display, Config *configuration, gl::Context
               }
               break;
 
+          case EGL_CONTEXT_CLIENT_ARRAYS_ENABLED_ANGLE:
+              if (!display->getExtensions().createContextClientArrays)
+              {
+                  return Error(EGL_BAD_ATTRIBUTE,
+                               "Attribute EGL_CONTEXT_CLIENT_ARRAYS_ENABLED_ANGLE requires "
+                               "EGL_ANGLE_create_context_client_arrays.");
+              }
+              if (value != EGL_TRUE && value != EGL_FALSE)
+              {
+                  return Error(EGL_BAD_ATTRIBUTE,
+                               "EGL_CONTEXT_CLIENT_ARRAYS_ENABLED_ANGLE must be EGL_TRUE or "
+                               "EGL_FALSE.");
+              }
+              break;
+
           default:
               return Error(EGL_BAD_ATTRIBUTE, "Unknown attribute.");
         }

@@ -78,7 +78,7 @@ TEST(ValidationESTest, DrawElementsWithMaxIndexGivesError)
     caps.maxElementIndex     = 100;
     caps.maxDrawBuffers      = 1;
     caps.maxColorAttachments = 1;
-    state.initialize(caps, extensions, Version(3, 0), false, true);
+    state.initialize(caps, extensions, Version(3, 0), false, true, true);
 
     NiceMock<MockTextureImpl> *textureImpl = new NiceMock<MockTextureImpl>();
     EXPECT_CALL(mockFactory, createTexture(_)).WillOnce(Return(textureImpl));

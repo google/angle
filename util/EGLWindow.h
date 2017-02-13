@@ -79,6 +79,7 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
         mBindGeneratesResource = bindGeneratesResource;
     }
     void setVulkanLayersEnabled(bool enabled) { mVulkanLayersEnabled = enabled; }
+    void setClientArraysEnabled(bool enabled) { mClientArraysEnabled = enabled; }
     void setSwapInterval(EGLint swapInterval) { mSwapInterval = swapInterval; }
 
     static EGLBoolean FindEGLConfig(EGLDisplay dpy, const EGLint *attrib_list, EGLConfig *config);
@@ -127,6 +128,7 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     bool mNoError;
     bool mWebGLCompatibility;
     bool mBindGeneratesResource;
+    bool mClientArraysEnabled;
     EGLint mSwapInterval;
     Optional<bool> mVulkanLayersEnabled;
 };

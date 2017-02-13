@@ -660,6 +660,11 @@ EGLAPI EGLBoolean EGLAPIENTRY eglStreamPostD3DTextureNV12ANGLE(EGLDisplay dpy, E
 #define EGL_CONTEXT_BIND_GENERATES_RESOURCE_CHROMIUM 0x3AAD
 #endif /* EGL_CHROMIUM_create_context_bind_generates_resource */
 
+#ifndef EGL_ANGLE_create_context_client_arrays
+#define EGL_ANGLE_create_context_client_arrays 1
+#define EGL_CONTEXT_CLIENT_ARRAYS_ENABLED_ANGLE 0x3452
+#endif /* EGL_ANGLE_create_context_client_arrays */
+
 #ifndef EGL_ARM_implicit_external_sync
 #define EGL_ARM_implicit_external_sync 1
 #define EGL_SYNC_PRIOR_COMMANDS_IMPLICIT_EXTERNAL_ARM 0x328A

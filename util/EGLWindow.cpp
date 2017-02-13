@@ -113,6 +113,7 @@ EGLWindow::EGLWindow(EGLint glesMajorVersion,
       mNoError(false),
       mWebGLCompatibility(false),
       mBindGeneratesResource(true),
+      mClientArraysEnabled(true),
       mSwapInterval(-1)
 {
 }
@@ -234,6 +235,15 @@ bool EGLWindow::initializeGL(OSWindow *osWindow)
         return false;
     }
 
+    bool hasClientArraysExtension =
+        strstr(displayExtensions, "EGL_ANGLE_create_context_client_arrays") != nullptr;
+    if (!mClientArraysEnabled && !hasClientArraysExtension)
+    {
+        // Non-default state requested without the extension present
+        destroyGL();
+        return false;
+    }
+
     eglBindAPI(EGL_OPENGL_ES_API);
     if (eglGetError() != EGL_SUCCESS)
     {
@@ -326,6 +336,12 @@ bool EGLWindow::initializeGL(OSWindow *osWindow)
         {
             contextAttributes.push_back(EGL_CONTEXT_BIND_GENERATES_RESOURCE_CHROMIUM);
             contextAttributes.push_back(mBindGeneratesResource ? EGL_TRUE : EGL_FALSE);
+        }
+
+        if (hasClientArraysExtension)
+        {
+            contextAttributes.push_back(EGL_CONTEXT_CLIENT_ARRAYS_ENABLED_ANGLE);
+            contextAttributes.push_back(mClientArraysEnabled ? EGL_TRUE : EGL_FALSE);
         }
     }
     contextAttributes.push_back(EGL_NONE);

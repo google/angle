@@ -198,6 +198,11 @@ bool GetBindGeneratesResource(const egl::AttributeMap &attribs)
     return (attribs.get(EGL_CONTEXT_BIND_GENERATES_RESOURCE_CHROMIUM, EGL_TRUE) == EGL_TRUE);
 }
 
+bool GetClientArraysEnabled(const egl::AttributeMap &attribs)
+{
+    return (attribs.get(EGL_CONTEXT_CLIENT_ARRAYS_ENABLED_ANGLE, EGL_TRUE) == EGL_TRUE);
+}
+
 std::string GetObjectLabelFromPointer(GLsizei length, const GLchar *label)
 {
     std::string labelName;
@@ -271,7 +276,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
     initWorkarounds();
 
     mGLState.initialize(mCaps, mExtensions, getClientVersion(), GetDebug(attribs),
-                        GetBindGeneratesResource(attribs));
+                        GetBindGeneratesResource(attribs), GetClientArraysEnabled(attribs));
 
     mFenceNVHandleAllocator.setBaseHandle(0);
 
@@ -2429,6 +2434,7 @@ void Context::initCaps(bool webGLContext, const egl::DisplayExtensions &displayE
     mExtensions.bindUniformLocation = true;
     mExtensions.vertexArrayObject   = true;
     mExtensions.bindGeneratesResource = true;
+    mExtensions.clientArrays          = true;
     mExtensions.requestExtension      = true;
 
     // Enable the no error extension if the context was created with the flag.

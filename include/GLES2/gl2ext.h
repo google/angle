@@ -867,6 +867,11 @@ GL_APICALL GLboolean GL_APIENTRY glRequestExtensionANGLE (const GLchar *name);
 #endif
 #endif /* GL_ANGLE_webgl_compatibility */
 
+#ifndef GL_ANGLE_client_arrays
+#define GL_ANGLE_client_arrays 1
+#define GL_CLIENT_ARRAYS_ANGLE            0x93AA
+#endif /* GL_ANGLE_client_arrays */
+
 #ifndef GL_CHROMIUM_framebuffer_mixed_samples
 #define GL_CHROMIUM_frambuffer_mixed_samples 1
 #define GL_COVERAGE_MODULATION_CHROMIUM 0x9332

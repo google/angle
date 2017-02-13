@@ -44,7 +44,8 @@ class State : angle::NonCopyable
                     const Extensions &extensions,
                     const Version &clientVersion,
                     bool debug,
-                    bool bindGeneratesResource);
+                    bool bindGeneratesResource,
+                    bool clientArraysEnabled);
     void reset(const Context *context);
 
     // State chunk getters
@@ -151,6 +152,9 @@ class State : angle::NonCopyable
 
     // GL_CHROMIUM_bind_generates_resource
     bool isBindGeneratesResourceEnabled() const;
+
+    // GL_ANGLE_client_arrays
+    bool areClientArraysEnabled() const;
 
     // Viewport state setter/getter
     void setViewportParams(GLint x, GLint y, GLsizei width, GLsizei height);
@@ -433,6 +437,7 @@ class State : angle::NonCopyable
     GLenum mFragmentShaderDerivativeHint;
 
     bool mBindGeneratesResource;
+    bool mClientArraysEnabled;
 
     Rectangle mViewport;
     float mNearZ;

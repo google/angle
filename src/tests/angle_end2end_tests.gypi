@@ -22,6 +22,7 @@
             '<(angle_path)/src/tests/gl_tests/BufferDataTest.cpp',
             '<(angle_path)/src/tests/gl_tests/BuiltinVariableTest.cpp',
             '<(angle_path)/src/tests/gl_tests/ClearTest.cpp',
+            '<(angle_path)/src/tests/gl_tests/ClientArraysTest.cpp',
             '<(angle_path)/src/tests/gl_tests/ColorMaskTest.cpp',
             '<(angle_path)/src/tests/gl_tests/ComputeShaderTest.cpp',
             '<(angle_path)/src/tests/gl_tests/CopyCompressedTextureTest.cpp',

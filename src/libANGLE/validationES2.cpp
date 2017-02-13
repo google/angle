@@ -3957,8 +3957,9 @@ bool ValidateVertexAttribPointer(ValidationContext *context,
     // An INVALID_OPERATION error is generated when a non-zero vertex array object
     // is bound, zero is bound to the ARRAY_BUFFER buffer object binding point,
     // and the pointer argument is not NULL.
-    if (context->getGLState().getVertexArray()->id() != 0 &&
-        context->getGLState().getArrayBufferId() == 0 && ptr != NULL)
+    bool nullBufferAllowed = context->getGLState().areClientArraysEnabled() &&
+                             context->getGLState().getVertexArray()->id() == 0;
+    if (!nullBufferAllowed && context->getGLState().getArrayBufferId() == 0 && ptr != NULL)
     {
         context->handleError(
             Error(GL_INVALID_OPERATION,

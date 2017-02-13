@@ -701,6 +701,11 @@ void ANGLETest::setVulkanLayersEnabled(bool enabled)
     mEGLWindow->setVulkanLayersEnabled(enabled);
 }
 
+void ANGLETest::setClientArraysEnabled(bool enabled)
+{
+    mEGLWindow->setClientArraysEnabled(enabled);
+}
+
 int ANGLETest::getClientMajorVersion() const
 {
     return mEGLWindow->getClientMajorVersion();

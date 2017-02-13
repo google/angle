@@ -59,7 +59,7 @@ bool ValidateDrawAttribs(ValidationContext *context,
         gl::Buffer *buffer = attrib.buffer.get();
         if (!buffer)
         {
-            if (webglCompatibility)
+            if (webglCompatibility || !state.areClientArraysEnabled())
             {
                 // [WebGL 1.0] Section 6.5 Enabled Vertex Attributes and Range Checking
                 // If a vertex attribute is enabled as an array via enableVertexAttribArray but
@@ -204,6 +204,9 @@ bool ValidCap(const Context *context, GLenum cap, bool queryOnly)
 
         case GL_BIND_GENERATES_RESOURCE_CHROMIUM:
             return queryOnly && context->getExtensions().bindGeneratesResource;
+
+        case GL_CLIENT_ARRAYS_ANGLE:
+            return queryOnly && context->getExtensions().clientArrays;
 
         case GL_FRAMEBUFFER_SRGB_EXT:
             return context->getExtensions().sRGBWriteControl;
@@ -3484,6 +3487,11 @@ bool ValidateDrawElements(ValidationContext *context,
                                        "indices must be a multiple of the element type size."));
             return false;
         }
+    }
+
+    if (context->getExtensions().webglCompatibility ||
+        !context->getGLState().areClientArraysEnabled())
+    {
         if (!elementArrayBuffer && count > 0)
         {
             // [WebGL 1.0] Section 6.2 No Client Side Arrays

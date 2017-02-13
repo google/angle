@@ -237,6 +237,7 @@ class ANGLETest : public ::testing::TestWithParam<angle::PlatformParameters>
     void setWebGLCompatibilityEnabled(bool webglCompatibility);
     void setBindGeneratesResource(bool bindGeneratesResource);
     void setVulkanLayersEnabled(bool enabled);
+    void setClientArraysEnabled(bool enabled);
 
     int getClientMajorVersion() const;
     int getClientMinorVersion() const;

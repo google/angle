@@ -213,7 +213,8 @@ Extensions::Extensions()
       framebufferMixedSamples(false),
       textureNorm16(false),
       pathRendering(false),
-      surfacelessContext(false)
+      surfacelessContext(false),
+      clientArrays(false)
 {
 }
 
@@ -646,6 +647,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_EXT_texture_norm16"] = esOnlyExtension(&Extensions::textureNorm16);
         map["GL_CHROMIUM_path_rendering"] = esOnlyExtension(&Extensions::pathRendering);
         map["GL_OES_surfaceless_context"] = esOnlyExtension(&Extensions::surfacelessContext);
+        map["GL_ANGLE_client_arrays"] = esOnlyExtension(&Extensions::clientArrays);
         // clang-format on
 
         return map;
@@ -1034,7 +1036,8 @@ DisplayExtensions::DisplayExtensions()
       swapBuffersWithDamage(false),
       pixelFormatFloat(false),
       surfacelessContext(false),
-      displayTextureShareGroup(false)
+      displayTextureShareGroup(false),
+      createContextClientArrays(false)
 {
 }
 
@@ -1074,7 +1077,8 @@ std::vector<std::string> DisplayExtensions::getStrings() const
     InsertExtensionString("EGL_EXT_swap_buffers_with_damage",                    swapBuffersWithDamage,              &extensionStrings);
     InsertExtensionString("EGL_EXT_pixel_format_float",                          pixelFormatFloat,                   &extensionStrings);
     InsertExtensionString("EGL_KHR_surfaceless_context",                         surfacelessContext,                 &extensionStrings);
-    InsertExtensionString("EGL_ANGLE_display_texture_share_group",               displayTextureShareGroup,            &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_display_texture_share_group",               displayTextureShareGroup,           &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_create_context_client_arrays",              createContextClientArrays,          &extensionStrings);
     // TODO(jmadill): Enable this when complete.
     //InsertExtensionString("KHR_create_context_no_error",                       createContextNoError,               &extensionStrings);
     // clang-format on

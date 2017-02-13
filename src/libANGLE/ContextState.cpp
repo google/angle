@@ -406,6 +406,17 @@ bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsign
         }
     }
 
+    if (getExtensions().clientArrays)
+    {
+        switch (pname)
+        {
+            case GL_CLIENT_ARRAYS_ANGLE:
+                *type      = GL_BOOL;
+                *numParams = 1;
+                return true;
+        }
+    }
+
     if (getExtensions().sRGBWriteControl)
     {
         switch (pname)

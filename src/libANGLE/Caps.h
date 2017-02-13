@@ -351,6 +351,9 @@ struct Extensions
 
     // GL_OES_surfaceless_context
     bool surfacelessContext;
+
+    // GL_ANGLE_client_arrays
+    bool clientArrays;
 };
 
 struct ExtensionInfo
@@ -649,6 +652,9 @@ struct DisplayExtensions
 
     // EGL_ANGLE_display_texture_share_group
     bool displayTextureShareGroup;
+
+    // EGL_ANGLE_create_context_client_arrays
+    bool createContextClientArrays;
 };
 
 struct DeviceExtensions
