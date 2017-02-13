@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8724e8e1_3234c31d",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 618,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-13T15:51:47Z",
+      "side": 1,
+      "message": "The OpenGL ES 2 and OpenGL ES 3 specifications do not specify a limit on the stride. WebGL defines it to 255, probably because ANGLE can\u0027t support more on some configurations of the D3D backend.\n\nI suggest making this test ES 3.1 only by making a VertexAtttributeTest_ES31 class that inherits from VertexAttributeTest instead.",
+      "revId": "4f8a9a44236476fbfdd5d7add5e9f206cc33021c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ddb3705_979755c6",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 624,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-13T15:51:47Z",
+      "side": 1,
+      "message": "When this test is ES 3.1 specific, query the value from ANGLE and ASSERT it is bigger than the minimum value required in the ES3.1 spec.",
+      "revId": "4f8a9a44236476fbfdd5d7add5e9f206cc33021c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c06a9ab3_0a985236",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 642,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-13T15:51:47Z",
+      "side": 1,
+      "message": "super-nit: STATIC_DRAW",
+      "revId": "4f8a9a44236476fbfdd5d7add5e9f206cc33021c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d86c58b_deed4816",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 668,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-13T15:51:47Z",
+      "side": 1,
+      "message": "Same comments as the test above.",
+      "revId": "4f8a9a44236476fbfdd5d7add5e9f206cc33021c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
