@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b5671d5e_ca759912",
+        "filename": "src/tests/third_party/gpu_test_expectations/angle-mods.patch",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-13T18:37:39Z",
+      "side": 1,
+      "message": "I think we should exclude angle-mods.patch from the diff itself. (Another annoying thing will be fixed with unified expectations code eventually!)",
+      "range": {
+        "startLine": 71,
+        "startChar": 45,
+        "endLine": 71,
+        "endChar": 50
+      },
+      "revId": "83b00c1b18156a2793a9663473f01096d8f128db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
