@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "acb2f65f_a183314b",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 3741,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-13T15:13:31Z",
+      "side": 1,
+      "message": "Could you make new functions in queryutils.h:\n\n    void QueryFramebufferiv(const Framebuffer *framebuffer, GLenum pname, GLint *params);\n    void SetFramebufferiv(Framebuffer *framebuffer, GLenum pname, GLint param);\n\nand move these switch statements into there?",
+      "range": {
+        "startLine": 3721,
+        "startChar": 4,
+        "endLine": 3741,
+        "endChar": 5
+      },
+      "revId": "d1dd6b03d70f716ebdcd68a0db26aacfbec435d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45d0c60f_a28fc9d0",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-13T15:13:31Z",
+      "side": 1,
+      "message": "nit: GL_FALSE",
+      "range": {
+        "startLine": 51,
+        "startChar": 35,
+        "endLine": 51,
+        "endChar": 36
+      },
+      "revId": "d1dd6b03d70f716ebdcd68a0db26aacfbec435d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "042218a6_2ef90f48",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-13T15:13:31Z",
+      "side": 1,
+      "message": "nit: GL_FALSE",
+      "range": {
+        "startLine": 65,
+        "startChar": 35,
+        "endLine": 65,
+        "endChar": 36
+      },
+      "revId": "d1dd6b03d70f716ebdcd68a0db26aacfbec435d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "903403e8_ce0632c0",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-13T15:13:31Z",
+      "side": 1,
+      "message": "These probably aren\u0027t needed, they can be set directly by the Framebuffer class.",
+      "range": {
+        "startLine": 89,
+        "startChar": 4,
+        "endLine": 92,
+        "endChar": 79
+      },
+      "revId": "d1dd6b03d70f716ebdcd68a0db26aacfbec435d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a246a1ba_dd428c47",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-13T15:13:31Z",
+      "side": 1,
+      "message": "These can just return the values instead of errors, it is not possible to generate an error here.",
+      "range": {
+        "startLine": 174,
+        "startChar": 3,
+        "endLine": 177,
+        "endChar": 77
+      },
+      "revId": "d1dd6b03d70f716ebdcd68a0db26aacfbec435d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bea6febe_acfaea7b",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 486,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-13T15:13:31Z",
+      "side": 1,
+      "message": "nit: turn this into a simple switch:\n\n    switch (pname)\n    {\n    case A:\n    case B:\n    case C:\n        break;\n\n    default:\n        generate error\n    }\n\nmakes it a bit more readable and easier to add cases later.",
+      "range": {
+        "startLine": 484,
+        "startChar": 4,
+        "endLine": 486,
+        "endChar": 63
+      },
+      "revId": "d1dd6b03d70f716ebdcd68a0db26aacfbec435d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
