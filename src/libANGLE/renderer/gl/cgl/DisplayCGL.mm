@@ -270,12 +270,6 @@ egl::Error DisplayCGL::waitNative(EGLint engine,
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error DisplayCGL::getDriverVersion(std::string *version) const
-{
-    *version = "";
-    return egl::Error(EGL_SUCCESS);
-}
-
 egl::Error DisplayCGL::makeCurrentSurfaceless(gl::Context *context)
 {
     // We have nothing to do as mContext is always current, and that CGL is surfaceless by

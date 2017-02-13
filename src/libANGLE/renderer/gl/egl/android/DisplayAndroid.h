@@ -58,8 +58,6 @@ class DisplayAndroid : public DisplayEGL
                           egl::Surface *drawSurface,
                           egl::Surface *readSurface) const override;
 
-    egl::Error getDriverVersion(std::string *version) const override;
-
   private:
     template <typename T>
     void getConfigAttrib(EGLConfig config, EGLint attribute, T *value) const;

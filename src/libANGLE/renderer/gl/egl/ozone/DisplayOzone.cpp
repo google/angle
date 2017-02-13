@@ -915,12 +915,6 @@ bool DisplayOzone::isValidNativeWindow(EGLNativeWindowType window) const
     return true;
 }
 
-egl::Error DisplayOzone::getDriverVersion(std::string *version) const
-{
-    *version = "";
-    return egl::Error(EGL_SUCCESS);
-}
-
 egl::Error DisplayOzone::waitClient() const
 {
     // TODO(fjhenigman) Implement this.

@@ -994,10 +994,6 @@
                             [
                                 'ANGLE_USE_X11',
                             ],
-                            'dependencies':
-                            [
-                                '<(angle_path)/src/third_party/libXNVCtrl/libXNVCtrl.gyp:libXNVCtrl',
-                            ],
                             'sources':
                             [
                                 '<@(libangle_gl_glx_sources)',

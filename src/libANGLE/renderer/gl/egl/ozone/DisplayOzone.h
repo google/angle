@@ -146,8 +146,6 @@ class DisplayOzone final : public DisplayEGL
     // one required so that the subsequent swapBuffers acts as expected.
     void setSwapInterval(EGLSurface drawable, SwapControlData *data);
 
-    egl::Error getDriverVersion(std::string *version) const override;
-
   private:
     GLuint makeShader(GLuint type, const char *src);
     void drawBuffer(Buffer *buffer);

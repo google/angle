@@ -55,8 +55,6 @@ class DisplayCGL : public DisplayGL
                           egl::Surface *drawSurface,
                           egl::Surface *readSurface) const override;
 
-    egl::Error getDriverVersion(std::string *version) const override;
-
   private:
     const FunctionsGL *getFunctionsGL() const override;
     egl::Error makeCurrentSurfaceless(gl::Context *context) override;

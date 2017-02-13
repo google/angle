@@ -394,19 +394,4 @@ egl::Error DisplayAndroid::waitNative(EGLint engine,
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error DisplayAndroid::getDriverVersion(std::string *version) const
-{
-    VendorID vendor = GetVendorID(mFunctionsGL);
-
-    switch (vendor)
-    {
-        case VENDOR_ID_QUALCOMM:
-            *version = reinterpret_cast<const char *>(mFunctionsGL->getString(GL_VERSION));
-            return egl::Error(EGL_SUCCESS);
-        default:
-            *version = "";
-            return egl::Error(EGL_SUCCESS);
-    }
-}
-
 }  // namespace rx

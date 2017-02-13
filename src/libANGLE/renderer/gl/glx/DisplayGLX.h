@@ -73,8 +73,6 @@ class DisplayGLX : public DisplayGL
                           egl::Surface *drawSurface,
                           egl::Surface *readSurface) const override;
 
-    egl::Error getDriverVersion(std::string *version) const override;
-
     // Synchronizes with the X server, if the display has been opened by ANGLE.
     // Calling this is required at the end of every functions that does buffered
     // X calls (not for glX calls) otherwise there might be race conditions
@@ -104,8 +102,6 @@ class DisplayGLX : public DisplayGL
                                     const Optional<gl::Version> &version,
                                     int profileMask,
                                     glx::Context *context) const;
-
-    egl::Error getNVIDIADriverVersion(std::string *version) const;
 
     FunctionsGL *mFunctionsGL;
 
