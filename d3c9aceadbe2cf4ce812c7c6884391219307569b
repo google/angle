@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e375ada7_f7b5a6b1",
+        "filename": "include/platform/Platform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-13T19:59:59Z",
+      "side": 1,
+      "message": "It\u0027s true that the inline is not a performance optimization in this case, but it\u0027s possible (though unlikely) for other code to call these methods without using a pointer from multiple linked object files, leading to a linker multiply defined error. The inline will prevent this. Granted this is a very unlikely scenario, but I felt better leaving it.",
+      "parentUuid": "c5f7770d_54430c79",
+      "revId": "d3c9aceadbe2cf4ce812c7c6884391219307569b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "451713d3_28c072a0",
         "filename": "include/platform/Platform.h",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "7a03b2ec_edc6d459",
+        "filename": "include/platform/Platform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-13T19:59:59Z",
+      "side": 1,
+      "message": "Done. I liked the method I have here as it needs one fewer X macro to reset the methods, but not a big deal.",
+      "parentUuid": "451713d3_28c072a0",
+      "revId": "d3c9aceadbe2cf4ce812c7c6884391219307569b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e67649f3_f0cb4fbd",
         "filename": "include/platform/Platform.h",
         "patchSetId": 1
@@ -47,6 +83,24 @@
       "writtenOn": "2017-02-13T19:07:31Z",
       "side": 1,
       "message": "You might want to use an X macro that has all of the methods names and use that both in PlatformMethods and g_PlatformMethodNames.",
+      "revId": "d3c9aceadbe2cf4ce812c7c6884391219307569b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bfd29f8e_546bb1a6",
+        "filename": "include/platform/Platform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-13T19:59:59Z",
+      "side": 1,
+      "message": "Done, thanks Geoff for helping me find this pattern.",
+      "parentUuid": "e67649f3_f0cb4fbd",
       "revId": "d3c9aceadbe2cf4ce812c7c6884391219307569b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
