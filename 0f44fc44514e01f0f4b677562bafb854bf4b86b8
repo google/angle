@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "97b2f9d0_f0463d65",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 677,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-13T08:24:01Z",
+      "side": 1,
+      "message": "It seems that there is no explicit limit on offset on both OpenGL and D3D.\nThe case sometimes fail when largeOffset is 248000. I suspect it mostly because GPU is out of memory.",
+      "revId": "0f44fc44514e01f0f4b677562bafb854bf4b86b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
