@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c5f7770d_54430c79",
+        "filename": "include/platform/Platform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-13T19:07:31Z",
+      "side": 1,
+      "message": "All these functions are used through function pointers so marking them as inline will have no effect.",
+      "revId": "d3c9aceadbe2cf4ce812c7c6884391219307569b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "451713d3_28c072a0",
+        "filename": "include/platform/Platform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-13T19:07:31Z",
+      "side": 1,
+      "message": "nit: make this nullptr instead of ANGLE_##Name and put the creation of a PlatformMethods with the ANGLE_* inside of Platform.cpp since the inlining isn\u0027t useful.",
+      "revId": "d3c9aceadbe2cf4ce812c7c6884391219307569b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e67649f3_f0cb4fbd",
+        "filename": "include/platform/Platform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-13T19:07:31Z",
+      "side": 1,
+      "message": "You might want to use an X macro that has all of the methods names and use that both in PlatformMethods and g_PlatformMethodNames.",
+      "revId": "d3c9aceadbe2cf4ce812c7c6884391219307569b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
