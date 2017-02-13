@@ -1988,7 +1988,8 @@ angle::WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps
     }
 
     // Call platform hooks for testing overrides.
-    ANGLEPlatformCurrent()->overrideWorkaroundsD3D(&workarounds);
+    auto *platform = ANGLEPlatformCurrent();
+    platform->overrideWorkaroundsD3D(platform, &workarounds);
 
     return workarounds;
 }

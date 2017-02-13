@@ -15,16 +15,16 @@ namespace angle
 
 void LoggingAnnotator::logMessage(const gl::LogMessage &msg) const
 {
-    angle::Platform *plat = ANGLEPlatformCurrent();
+    auto *plat = ANGLEPlatformCurrent();
     if (plat != nullptr)
     {
         switch (msg.getSeverity())
         {
             case gl::LOG_ERR:
-                plat->logError(msg.getMessage().c_str());
+                plat->logError(plat, msg.getMessage().c_str());
                 break;
             case gl::LOG_WARN:
-                plat->logWarning(msg.getMessage().c_str());
+                plat->logWarning(plat, msg.getMessage().c_str());
                 break;
             default:
                 UNREACHABLE();

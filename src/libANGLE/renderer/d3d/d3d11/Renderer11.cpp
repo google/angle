@@ -387,7 +387,8 @@ Renderer11::Renderer11(egl::Display *display)
     : RendererD3D(display),
       mStateCache(this),
       mStateManager(this),
-      mLastHistogramUpdateTime(ANGLEPlatformCurrent()->monotonicallyIncreasingTime()),
+      mLastHistogramUpdateTime(
+          ANGLEPlatformCurrent()->monotonicallyIncreasingTime(ANGLEPlatformCurrent())),
       mDebug(nullptr),
       mScratchMemoryBufferResetCounter(0),
       mAnnotator(nullptr)
@@ -4294,7 +4295,8 @@ void Renderer11::onSwap()
     // Send histogram updates every half hour
     const double kHistogramUpdateInterval = 30 * 60;
 
-    const double currentTime         = ANGLEPlatformCurrent()->monotonicallyIncreasingTime();
+    auto *platform                   = ANGLEPlatformCurrent();
+    const double currentTime         = platform->monotonicallyIncreasingTime(platform);
     const double timeSinceLastUpdate = currentTime - mLastHistogramUpdateTime;
 
     if (timeSinceLastUpdate > kHistogramUpdateInterval)

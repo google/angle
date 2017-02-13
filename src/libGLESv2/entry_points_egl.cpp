@@ -1773,6 +1773,8 @@ __eglMustCastToProperFunctionPointerType EGLAPIENTRY GetProcAddress(const char *
         // angle::Platform related entry points
         INSERT_PROC_ADDRESS_NO_NS("ANGLEPlatformInitialize", ANGLEPlatformInitialize);
         INSERT_PROC_ADDRESS_NO_NS("ANGLEPlatformShutdown", ANGLEPlatformShutdown);
+        INSERT_PROC_ADDRESS_NO_NS("ANGLEGetDisplayPlatform", ANGLEGetDisplayPlatform);
+        INSERT_PROC_ADDRESS_NO_NS("ANGLEResetDisplayPlatform", ANGLEResetDisplayPlatform);
 
 #undef INSERT_PROC_ADDRESS
 #undef INSERT_PROC_ADDRESS_NO_NS
