@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "32101024_3531dd8b",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 615,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-02-13T08:45:16Z",
+      "side": 1,
+      "message": "DrawArraysWithLargeBufferStride -\u003e DrawArraysWithMaxBufferStride",
+      "revId": "0f44fc44514e01f0f4b677562bafb854bf4b86b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f3c113a9_bd0c43d1",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 7
@@ -19,6 +36,23 @@
     },
     {
       "key": {
+        "uuid": "37c28690_00843695",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 668,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-02-13T08:45:16Z",
+      "side": 1,
+      "message": "DrawArraysWithLargeBufferOffset -\u003e DrawArraysWithMaxBufferOffset",
+      "revId": "0f44fc44514e01f0f4b677562bafb854bf4b86b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "97b2f9d0_f0463d65",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 7
@@ -30,6 +64,24 @@
       "writtenOn": "2017-02-13T08:24:01Z",
       "side": 1,
       "message": "It seems that there is no explicit limit on offset on both OpenGL and D3D.\nThe case sometimes fail when largeOffset is 248000. I suspect it mostly because GPU is out of memory.",
+      "revId": "0f44fc44514e01f0f4b677562bafb854bf4b86b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f335263_ad7e1d14",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 677,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-02-13T08:45:16Z",
+      "side": 1,
+      "message": "largeOffset -\u003e maxOffset\nUse max offset specified in OpenGL ES 3.1 to avoid potential flaky failure on different platforms.",
+      "parentUuid": "97b2f9d0_f0463d65",
       "revId": "0f44fc44514e01f0f4b677562bafb854bf4b86b8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
