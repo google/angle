@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d4707820_c9ff3460",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 429,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-13T18:38:37Z",
+      "side": 1,
+      "message": "nit: can you reference or quote where the spec defines an opaque type?",
+      "range": {
+        "startLine": 425,
+        "startChar": 0,
+        "endLine": 429,
+        "endChar": 1
+      },
+      "revId": "fc960029053115a9d9d13b11afef6d42e8601071",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
