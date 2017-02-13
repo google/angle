@@ -146,7 +146,7 @@ void ANGLE_APIENTRY ANGLEPlatformShutdown()
 bool ANGLE_APIENTRY ANGLEGetDisplayPlatform(angle::EGLDisplayType display,
                                             const char *const methodNames[],
                                             unsigned int methodNameCount,
-                                            uintptr_t context,
+                                            void *context,
                                             angle::PlatformMethods **platformMethodsOut)
 {
     // We allow for a lower input count of impl platform methods if the subset is correct.

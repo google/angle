@@ -351,12 +351,13 @@ struct PlatformMethods
     ANGLE_PLATFORM_OP(ANGLE_PLATFORM_METHOD_DEF);
 
     // User data pointer for any implementation specific members.
-    uintptr_t context = 0;
+    void *context = 0;
 };
 
 #undef ANGLE_PLATFORM_METHOD_DEF
 
-constexpr unsigned int g_NumPlatformMethods = sizeof(PlatformMethods) / sizeof(uintptr_t);
+// Subtrace one to account for the context pointer.
+constexpr unsigned int g_NumPlatformMethods = (sizeof(PlatformMethods) / sizeof(uintptr_t)) - 1;
 
 #define ANGLE_PLATFORM_METHOD_STRING(Name) #Name
 #define ANGLE_PLATFORM_METHOD_STRING2(Name) ANGLE_PLATFORM_METHOD_STRING(Name),
@@ -379,7 +380,7 @@ ANGLE_PLATFORM_EXPORT bool ANGLE_APIENTRY
 ANGLEGetDisplayPlatform(angle::EGLDisplayType display,
                         const char *const methodNames[],
                         unsigned int methodNameCount,
-                        uintptr_t context,
+                        void *context,
                         angle::PlatformMethods **platformMethodsOut);
 
 // Sets the platform methods back to their defaults.
