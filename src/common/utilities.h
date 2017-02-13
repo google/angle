@@ -30,6 +30,8 @@ GLenum VariableBoolVectorType(GLenum type);
 int VariableRowCount(GLenum type);
 int VariableColumnCount(GLenum type);
 bool IsSamplerType(GLenum type);
+bool IsImageType(GLenum type);
+bool IsOpaqueType(GLenum type);
 GLenum SamplerTypeToTextureType(GLenum samplerType);
 bool IsMatrixType(GLenum type);
 GLenum TransposeMatrixType(GLenum type);

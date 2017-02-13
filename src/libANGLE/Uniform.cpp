@@ -99,6 +99,11 @@ bool LinkedUniform::isSampler() const
     return IsSamplerType(type);
 }
 
+bool LinkedUniform::isImage() const
+{
+    return IsImageType(type);
+}
+
 bool LinkedUniform::isField() const
 {
     return name.find('.') != std::string::npos;

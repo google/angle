@@ -33,6 +33,7 @@ struct LinkedUniform : public sh::Uniform
     uint8_t *data();
     const uint8_t *data() const;
     bool isSampler() const;
+    bool isImage() const;
     bool isInDefaultBlock() const;
     bool isField() const;
     size_t getElementSize() const;
