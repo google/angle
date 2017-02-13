@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "f3c113a9_bd0c43d1",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 624,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-13T08:38:06Z",
+      "side": 1,
+      "message": "The maximum stride on OpenGL is actually 2048 (\u003d\u003dmaxStride * TypeStride(GL_FLOAT)). If maxStride \u003e 512 then a GL error occurs.\n\nOn the Windows 10 using HD530 the maxStride can reach 1023, as it does on all trybots (I test this in Patchset 6).",
+      "revId": "0f44fc44514e01f0f4b677562bafb854bf4b86b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "97b2f9d0_f0463d65",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 7
