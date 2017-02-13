@@ -1,6 +1,6 @@
-diff -rupN gpu_test_expectations_reverted/angle_config.h gpu_test_expectations/angle_config.h
+diff -u -rupN gpu_test_expectations_reverted/angle_config.h gpu_test_expectations/angle_config.h
 --- gpu_test_expectations_reverted/angle_config.h	1969-12-31 19:00:00.000000000 -0500
-+++ gpu_test_expectations/angle_config.h	2016-08-23 13:50:18.282742505 -0400
++++ gpu_test_expectations/angle_config.h	2016-08-24 13:18:58.877015665 -0400
 @@ -0,0 +1,66 @@
 +//
 +// Copyright 2015 The ANGLE Project Authors. All rights reserved.
@@ -68,9 +68,9 @@ diff -rupN gpu_test_expectations_reverted/angle_config.h gpu_test_expectations/a
 +// clang-format on
 +
 +#endif
-diff -rupN gpu_test_expectations_reverted/gpu_info.cc gpu_test_expectations/gpu_info.cc
---- gpu_test_expectations_reverted/gpu_info.cc	2016-08-12 21:23:54.884132405 -0400
-+++ gpu_test_expectations/gpu_info.cc	2015-11-30 21:54:30.239267635 -0500
+diff -u -rupN gpu_test_expectations_reverted/gpu_info.cc gpu_test_expectations/gpu_info.cc
+--- gpu_test_expectations_reverted/gpu_info.cc	2017-02-13 11:15:30.922221193 -0500
++++ gpu_test_expectations/gpu_info.cc	2015-11-25 15:47:24.575592261 -0500
 @@ -2,7 +2,7 @@
  // Use of this source code is governed by a BSD-style license that can be
  // found in the LICENSE file.
@@ -180,9 +180,9 @@ diff -rupN gpu_test_expectations_reverted/gpu_info.cc gpu_test_expectations/gpu_
    enumerator->AddBool("jpegDecodeAcceleratorSupported",
        jpeg_decode_accelerator_supported);
    enumerator->EndAuxAttributes();
-diff -rupN gpu_test_expectations_reverted/gpu_info.h gpu_test_expectations/gpu_info.h
---- gpu_test_expectations_reverted/gpu_info.h	2016-08-12 21:23:54.884132405 -0400
-+++ gpu_test_expectations/gpu_info.h	2015-11-30 21:54:30.239267635 -0500
+diff -u -rupN gpu_test_expectations_reverted/gpu_info.h gpu_test_expectations/gpu_info.h
+--- gpu_test_expectations_reverted/gpu_info.h	2017-02-13 11:15:30.922221193 -0500
++++ gpu_test_expectations/gpu_info.h	2015-11-25 15:47:24.575592261 -0500
 @@ -11,13 +11,7 @@
  #include <string>
  #include <vector>
@@ -273,9 +273,9 @@ diff -rupN gpu_test_expectations_reverted/gpu_info.h gpu_test_expectations/gpu_i
  
      // Markers indicating that a GPUDevice is being described.
      virtual void BeginGPUDevice() = 0;
-diff -rupN gpu_test_expectations_reverted/gpu_test_config.cc gpu_test_expectations/gpu_test_config.cc
---- gpu_test_expectations_reverted/gpu_test_config.cc	2016-08-12 21:23:54.884132405 -0400
-+++ gpu_test_expectations/gpu_test_config.cc	2016-09-09 16:40:05.597864465 -0400
+diff -u -rupN gpu_test_expectations_reverted/gpu_test_config.cc gpu_test_expectations/gpu_test_config.cc
+--- gpu_test_expectations_reverted/gpu_test_config.cc	2017-02-13 11:15:30.922221193 -0500
++++ gpu_test_expectations/gpu_test_config.cc	2016-09-14 14:55:40.134685526 -0400
 @@ -2,20 +2,205 @@
  // Use of this source code is governed by a BSD-style license that can be
  // found in the LICENSE file.
@@ -578,9 +578,9 @@ diff -rupN gpu_test_expectations_reverted/gpu_test_config.cc gpu_test_expectatio
 -
  }  // namespace gpu
  
-diff -rupN gpu_test_expectations_reverted/gpu_test_config.h gpu_test_expectations/gpu_test_config.h
---- gpu_test_expectations_reverted/gpu_test_config.h	2016-08-12 21:23:54.884132405 -0400
-+++ gpu_test_expectations/gpu_test_config.h	2015-11-30 21:54:30.239267635 -0500
+diff -u -rupN gpu_test_expectations_reverted/gpu_test_config.h gpu_test_expectations/gpu_test_config.h
+--- gpu_test_expectations_reverted/gpu_test_config.h	2017-02-13 11:15:30.922221193 -0500
++++ gpu_test_expectations/gpu_test_config.h	2015-11-25 15:47:24.575592261 -0500
 @@ -8,9 +8,7 @@
  #include <string>
  #include <vector>
@@ -602,9 +602,9 @@ diff -rupN gpu_test_expectations_reverted/gpu_test_config.h gpu_test_expectation
  };
  
  }  // namespace gpu
-diff -rupN gpu_test_expectations_reverted/gpu_test_config_mac.h gpu_test_expectations/gpu_test_config_mac.h
+diff -u -rupN gpu_test_expectations_reverted/gpu_test_config_mac.h gpu_test_expectations/gpu_test_config_mac.h
 --- gpu_test_expectations_reverted/gpu_test_config_mac.h	1969-12-31 19:00:00.000000000 -0500
-+++ gpu_test_expectations/gpu_test_config_mac.h	2015-11-30 21:54:30.239267635 -0500
++++ gpu_test_expectations/gpu_test_config_mac.h	2015-09-16 16:05:45.788950024 -0400
 @@ -0,0 +1,28 @@
 +//
 +// Copyright 2015 The ANGLE Project Authors. All rights reserved.
@@ -634,10 +634,10 @@ diff -rupN gpu_test_expectations_reverted/gpu_test_config_mac.h gpu_test_expecta
 +gpu::GPUInfo::GPUDevice GetActiveGPU();
 +
 +#endif // GPU_TEST_EXPECTATIONS_GPU_TEST_CONFIG_MAC_H_
-diff -rupN gpu_test_expectations_reverted/gpu_test_config_mac.mm gpu_test_expectations/gpu_test_config_mac.mm
+diff -u -rupN gpu_test_expectations_reverted/gpu_test_config_mac.mm gpu_test_expectations/gpu_test_config_mac.mm
 --- gpu_test_expectations_reverted/gpu_test_config_mac.mm	1969-12-31 19:00:00.000000000 -0500
-+++ gpu_test_expectations/gpu_test_config_mac.mm	2015-11-30 21:54:30.239267635 -0500
-@@ -0,0 +1,67 @@
++++ gpu_test_expectations/gpu_test_config_mac.mm	2017-02-13 11:20:54.656424702 -0500
+@@ -0,0 +1,75 @@
 +// Copyright (c) 2012 The Chromium Authors. All rights reserved.
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
@@ -650,6 +650,14 @@ diff -rupN gpu_test_expectations_reverted/gpu_test_config_mac.mm gpu_test_expect
 +#import <Cocoa/Cocoa.h>
 +
 +namespace base {
++
++// OSX 10.8 deprecates Gestalt but doesn't make the operatingSystemVersion property part of the
++// public interface of NSProcessInfo until 10.10. Add a forward declaration.
++#if !defined(MAC_OS_X_VERSION_10_10) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_10
++@interface NSProcessInfo (YosemiteSDK)
++@property(readonly) NSOperatingSystemVersion operatingSystemVersion;
++@end
++#endif
 +
 +void SysInfo::OperatingSystemVersionNumbers(
 +    int32 *major_version, int32 *minor_version, int32 *bugfix_version)
@@ -705,9 +713,9 @@ diff -rupN gpu_test_expectations_reverted/gpu_test_config_mac.mm gpu_test_expect
 +  return gpu;
 +}
 +
-diff -rupN gpu_test_expectations_reverted/gpu_test_expectations_parser.cc gpu_test_expectations/gpu_test_expectations_parser.cc
---- gpu_test_expectations_reverted/gpu_test_expectations_parser.cc	2016-08-12 21:23:54.884132405 -0400
-+++ gpu_test_expectations/gpu_test_expectations_parser.cc	2015-11-30 21:54:30.239267635 -0500
+diff -u -rupN gpu_test_expectations_reverted/gpu_test_expectations_parser.cc gpu_test_expectations/gpu_test_expectations_parser.cc
+--- gpu_test_expectations_reverted/gpu_test_expectations_parser.cc	2017-02-13 11:15:30.922221193 -0500
++++ gpu_test_expectations/gpu_test_expectations_parser.cc	2015-11-25 15:47:24.575592261 -0500
 @@ -2,14 +2,43 @@
  // Use of this source code is governed by a BSD-style license that can be
  // found in the LICENSE file.
@@ -815,9 +823,9 @@ diff -rupN gpu_test_expectations_reverted/gpu_test_expectations_parser.cc gpu_te
        break;
    }
    return true;
-diff -rupN gpu_test_expectations_reverted/gpu_test_expectations_parser.h gpu_test_expectations/gpu_test_expectations_parser.h
---- gpu_test_expectations_reverted/gpu_test_expectations_parser.h	2016-08-12 21:23:54.884132405 -0400
-+++ gpu_test_expectations/gpu_test_expectations_parser.h	2015-11-30 21:54:30.239267635 -0500
+diff -u -rupN gpu_test_expectations_reverted/gpu_test_expectations_parser.h gpu_test_expectations/gpu_test_expectations_parser.h
+--- gpu_test_expectations_reverted/gpu_test_expectations_parser.h	2017-02-13 11:15:30.922221193 -0500
++++ gpu_test_expectations/gpu_test_expectations_parser.h	2015-06-30 09:40:06.654788989 -0400
 @@ -8,10 +8,8 @@
  #include <string>
  #include <vector>
@@ -840,9 +848,9 @@ diff -rupN gpu_test_expectations_reverted/gpu_test_expectations_parser.h gpu_tes
  
    // Query error messages from the last LoadTestExpectations() call.
    const std::vector<std::string>& GetErrorMessages() const;
-diff -rupN gpu_test_expectations_reverted/HowToMakeChanges.md gpu_test_expectations/HowToMakeChanges.md
+diff -u -rupN gpu_test_expectations_reverted/HowToMakeChanges.md gpu_test_expectations/HowToMakeChanges.md
 --- gpu_test_expectations_reverted/HowToMakeChanges.md	1969-12-31 19:00:00.000000000 -0500
-+++ gpu_test_expectations/HowToMakeChanges.md	2016-09-09 16:27:56.575809921 -0400
++++ gpu_test_expectations/HowToMakeChanges.md	2016-09-14 14:55:40.134685526 -0400
 @@ -0,0 +1,22 @@
 +Because the ```gpu_test_expectations``` directory is based on parts of Chromium's ```gpu/config```
 +directory, we want to keep a patch of the changes added to make it compile with ANGLE. This

@@ -11,6 +11,14 @@
 
 namespace base {
 
+// OSX 10.8 deprecates Gestalt but doesn't make the operatingSystemVersion property part of the
+// public interface of NSProcessInfo until 10.10. Add a forward declaration.
+#if !defined(MAC_OS_X_VERSION_10_10) || MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_10
+@interface NSProcessInfo (YosemiteSDK)
+@property(readonly) NSOperatingSystemVersion operatingSystemVersion;
+@end
+#endif
+
 void SysInfo::OperatingSystemVersionNumbers(
     int32 *major_version, int32 *minor_version, int32 *bugfix_version)
 {
