@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "dbf0f2ea_d388d45c",
+        "filename": "include/platform/Platform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-13T21:01:32Z",
+      "side": 1,
+      "message": "Yes, that probably explains your original question. They\u0027re used for the decltype of the platform methods, since I didn\u0027t want to make typedef macros for everything.",
+      "parentUuid": "e3d60633_8d5a930a",
+      "revId": "d3c9aceadbe2cf4ce812c7c6884391219307569b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "451713d3_28c072a0",
         "filename": "include/platform/Platform.h",
         "patchSetId": 1
