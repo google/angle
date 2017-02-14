@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ff8f957a_86d1b98d",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 75
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-14T06:36:55Z",
+      "side": 1,
+      "message": "I cannot get caps neither in functions nor in stateManager.\nCan I use state.getMaxBindings() and state.getMaxAttribs() to do initialization?\nI see there is such code in D3D backends:\nhttps://chromium-review.googlesource.com/c/418880/75/src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp#24",
+      "revId": "f105565cb229d4e2513398e2f7afb85b495caa30",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
