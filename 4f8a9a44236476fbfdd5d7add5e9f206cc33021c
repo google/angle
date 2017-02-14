@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "efc1ce49_c63a6c4e",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 618,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-14T14:11:58Z",
+      "side": 1,
+      "message": "I tested D3D11 actually has the limit on max stride (2048). If stride \u003e 2048 then rendering cannot be correctly performed;\nand if ANGLE is run on OpenGL \u003e 4.3, passing a stride \u003e GL_MAX_VERTEX_ATTRIB_STRIDE will cause driver throw an INVALID_VALUE error and make ANGLE crash.\n\nI suggest we add this limit to avoid such unsafe operation.",
+      "parentUuid": "d21ac491_953fa337",
+      "revId": "4f8a9a44236476fbfdd5d7add5e9f206cc33021c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8ddb3705_979755c6",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 9
