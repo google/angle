@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "409dc53d_c7f981ac",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-14T22:33:42Z",
+      "side": 1,
+      "message": "Done, sorta odd, had to add a virtual method, but I think it\u0027s nicer.",
+      "parentUuid": "f74fc57f_ff8f9698",
+      "revId": "928300424efcedcb990dfbc5ca50067965626769",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "074833e5_398be9b5",
         "filename": "src/libANGLE/ContextState.cpp",
         "patchSetId": 14
@@ -33,6 +51,24 @@
       "revId": "928300424efcedcb990dfbc5ca50067965626769",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7cf553d3_e1170a0e",
+        "filename": "src/libANGLE/ContextState.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-14T22:33:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "074833e5_398be9b5",
+      "revId": "928300424efcedcb990dfbc5ca50067965626769",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
