@@ -76,19 +76,12 @@ Program *GetValidProgram(ValidationContext *context, GLuint id);
 Shader *GetValidShader(ValidationContext *context, GLuint id);
 
 bool ValidateAttachmentTarget(Context *context, GLenum attachment);
-bool ValidateRenderbufferStorageParametersBase(Context *context,
+bool ValidateRenderbufferStorageParametersBase(ValidationContext *context,
                                                GLenum target,
                                                GLsizei samples,
                                                GLenum internalformat,
                                                GLsizei width,
                                                GLsizei height);
-bool ValidateRenderbufferStorageParametersANGLE(Context *context,
-                                                GLenum target,
-                                                GLsizei samples,
-                                                GLenum internalformat,
-                                                GLsizei width,
-                                                GLsizei height);
-
 bool ValidateFramebufferRenderbufferParameters(Context *context,
                                                GLenum target,
                                                GLenum attachment,

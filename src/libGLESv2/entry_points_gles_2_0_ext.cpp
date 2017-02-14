@@ -538,19 +538,14 @@ void GL_APIENTRY RenderbufferStorageMultisampleANGLE(GLenum target, GLsizei samp
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateRenderbufferStorageParametersANGLE(context, target, samples, internalformat,
-            width, height))
+        if (!context->skipValidation() &&
+            !ValidateRenderbufferStorageMultisampleANGLE(context, target, samples, internalformat,
+                                                         width, height))
         {
             return;
         }
 
-        Renderbuffer *renderbuffer = context->getGLState().getCurrentRenderbuffer();
-        Error error = renderbuffer->setStorageMultisample(samples, internalformat, width, height);
-        if (error.isError())
-        {
-            context->handleError(error);
-            return;
-        }
+        context->renderbufferStorageMultisample(target, samples, internalformat, width, height);
     }
 }
 

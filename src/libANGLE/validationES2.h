@@ -381,6 +381,17 @@ bool ValidateVertexAttribPointer(ValidationContext *context,
                                  const GLvoid *ptr);
 
 bool ValidateDepthRangef(ValidationContext *context, GLclampf zNear, GLclampf zFar);
+bool ValidateRenderbufferStorage(ValidationContext *context,
+                                 GLenum target,
+                                 GLenum internalformat,
+                                 GLsizei width,
+                                 GLsizei height);
+bool ValidateRenderbufferStorageMultisampleANGLE(ValidationContext *context,
+                                                 GLenum target,
+                                                 GLsizei samples,
+                                                 GLenum internalformat,
+                                                 GLsizei width,
+                                                 GLsizei height);
 
 }  // namespace gl
 

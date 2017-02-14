@@ -4026,4 +4026,55 @@ bool ValidateDepthRangef(ValidationContext *context, GLclampf zNear, GLclampf zF
     return true;
 }
 
+bool ValidateRenderbufferStorage(ValidationContext *context,
+                                 GLenum target,
+                                 GLenum internalformat,
+                                 GLsizei width,
+                                 GLsizei height)
+{
+    return ValidateRenderbufferStorageParametersBase(context, target, 0, internalformat, width,
+                                                     height);
+}
+
+bool ValidateRenderbufferStorageMultisampleANGLE(ValidationContext *context,
+                                                 GLenum target,
+                                                 GLsizei samples,
+                                                 GLenum internalformat,
+                                                 GLsizei width,
+                                                 GLsizei height)
+{
+    if (!context->getExtensions().framebufferMultisample)
+    {
+        context->handleError(
+            Error(GL_INVALID_OPERATION, "GL_ANGLE_framebuffer_multisample not available"));
+        return false;
+    }
+
+    // ANGLE_framebuffer_multisample states that the value of samples must be less than or equal
+    // to MAX_SAMPLES_ANGLE (Context::getCaps().maxSamples) otherwise GL_INVALID_OPERATION is
+    // generated.
+    if (static_cast<GLuint>(samples) > context->getCaps().maxSamples)
+    {
+        context->handleError(Error(GL_INVALID_VALUE));
+        return false;
+    }
+
+    // ANGLE_framebuffer_multisample states GL_OUT_OF_MEMORY is generated on a failure to create
+    // the specified storage. This is different than ES 3.0 in which a sample number higher
+    // than the maximum sample number supported by this format generates a GL_INVALID_VALUE.
+    // The TextureCaps::getMaxSamples method is only guarenteed to be valid when the context is ES3.
+    if (context->getClientMajorVersion() >= 3)
+    {
+        const TextureCaps &formatCaps = context->getTextureCaps().get(internalformat);
+        if (static_cast<GLuint>(samples) > formatCaps.getMaxSamples())
+        {
+            context->handleError(Error(GL_OUT_OF_MEMORY));
+            return false;
+        }
+    }
+
+    return ValidateRenderbufferStorageParametersBase(context, target, samples, internalformat,
+                                                     width, height);
+}
+
 }  // namespace gl

@@ -508,6 +508,12 @@ class Context final : public ValidationContext
     void popGroupMarker();
 
     void bindUniformLocation(GLuint program, GLint location, const GLchar *name);
+    void renderbufferStorage(GLenum target, GLenum internalformat, GLsizei width, GLsizei height);
+    void renderbufferStorageMultisample(GLenum target,
+                                        GLsizei samples,
+                                        GLenum internalformat,
+                                        GLsizei width,
+                                        GLsizei height);
 
     // CHROMIUM_framebuffer_mixed_samples
     void setCoverageModulation(GLenum components);

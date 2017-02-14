@@ -490,19 +490,14 @@ void GL_APIENTRY RenderbufferStorageMultisample(GLenum target, GLsizei samples, 
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
-        {
-            context->handleError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        if (!ValidateES3RenderbufferStorageParameters(context, target, samples, internalformat, width, height))
+        if (!context->skipValidation() &&
+            !ValidateRenderbufferStorageMultisample(context, target, samples, internalformat, width,
+                                                    height))
         {
             return;
         }
 
-        Renderbuffer *renderbuffer = context->getGLState().getCurrentRenderbuffer();
-        renderbuffer->setStorageMultisample(samples, internalformat, width, height);
+        context->renderbufferStorageMultisample(target, samples, internalformat, width, height);
     }
 }
 

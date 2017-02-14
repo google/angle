@@ -3716,4 +3716,24 @@ void Context::getMultisamplefv(GLenum pname, GLuint index, GLfloat *val)
     }
 }
 
+void Context::renderbufferStorage(GLenum target,
+                                  GLenum internalformat,
+                                  GLsizei width,
+                                  GLsizei height)
+{
+    Renderbuffer *renderbuffer = mGLState.getCurrentRenderbuffer();
+    handleError(renderbuffer->setStorage(internalformat, width, height));
+}
+
+void Context::renderbufferStorageMultisample(GLenum target,
+                                             GLsizei samples,
+                                             GLenum internalformat,
+                                             GLsizei width,
+                                             GLsizei height)
+{
+
+    Renderbuffer *renderbuffer = mGLState.getCurrentRenderbuffer();
+    handleError(renderbuffer->setStorageMultisample(samples, internalformat, width, height));
+}
+
 }  // namespace gl

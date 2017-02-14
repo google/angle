@@ -156,9 +156,6 @@ bool ValidateGetQueryObjectuiv(Context *context, GLuint id, GLenum pname, GLuint
 bool ValidateFramebufferTextureLayer(Context *context, GLenum target, GLenum attachment,
                                      GLuint texture, GLint level, GLint layer);
 
-bool ValidateES3RenderbufferStorageParameters(Context *context, GLenum target, GLsizei samples,
-                                              GLenum internalformat, GLsizei width, GLsizei height);
-
 bool ValidateInvalidateFramebuffer(Context *context, GLenum target, GLsizei numAttachments,
                                    const GLenum *attachments);
 
@@ -365,6 +362,12 @@ bool ValidateCopyBufferSubData(ValidationContext *context,
                                GLsizeiptr size);
 
 bool ValidateGetStringi(Context *context, GLenum name, GLuint index);
+bool ValidateRenderbufferStorageMultisample(ValidationContext *context,
+                                            GLenum target,
+                                            GLsizei samples,
+                                            GLenum internalformat,
+                                            GLsizei width,
+                                            GLsizei height);
 
 }  // namespace gl
 

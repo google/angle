@@ -1966,19 +1966,13 @@ void GL_APIENTRY RenderbufferStorage(GLenum target, GLenum internalformat, GLsiz
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateRenderbufferStorageParametersANGLE(context, target, 0, internalformat,
-                                                        width, height))
+        if (!context->skipValidation() &&
+            !ValidateRenderbufferStorage(context, target, internalformat, width, height))
         {
             return;
         }
 
-        Renderbuffer *renderbuffer = context->getGLState().getCurrentRenderbuffer();
-        Error error = renderbuffer->setStorage(internalformat, width, height);
-        if (error.isError())
-        {
-            context->handleError(error);
-            return;
-        }
+        context->renderbufferStorage(target, internalformat, width, height);
     }
 }
 

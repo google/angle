@@ -990,42 +990,6 @@ bool ValidateFramebufferTextureLayer(Context *context,
     return true;
 }
 
-bool ValidateES3RenderbufferStorageParameters(gl::Context *context,
-                                              GLenum target,
-                                              GLsizei samples,
-                                              GLenum internalformat,
-                                              GLsizei width,
-                                              GLsizei height)
-{
-    if (!ValidateRenderbufferStorageParametersBase(context, target, samples, internalformat, width,
-                                                   height))
-    {
-        return false;
-    }
-
-    // The ES3 spec(section 4.4.2) states that the internal format must be sized and not an integer
-    // format if samples is greater than zero.
-    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalformat);
-    if ((formatInfo.componentType == GL_UNSIGNED_INT || formatInfo.componentType == GL_INT) &&
-        samples > 0)
-    {
-        context->handleError(Error(GL_INVALID_OPERATION));
-        return false;
-    }
-
-    // The behavior is different than the ANGLE version, which would generate a GL_OUT_OF_MEMORY.
-    const TextureCaps &formatCaps = context->getTextureCaps().get(internalformat);
-    if (static_cast<GLuint>(samples) > formatCaps.getMaxSamples())
-    {
-        context->handleError(
-            Error(GL_INVALID_OPERATION,
-                  "Samples must not be greater than maximum supported value for the format."));
-        return false;
-    }
-
-    return true;
-}
-
 bool ValidateInvalidateFramebuffer(Context *context,
                                    GLenum target,
                                    GLsizei numAttachments,
@@ -2101,6 +2065,48 @@ bool ValidateGetStringi(Context *context, GLenum name, GLuint index)
         default:
             context->handleError(Error(GL_INVALID_ENUM, "Invalid name."));
             return false;
+    }
+
+    return true;
+}
+
+bool ValidateRenderbufferStorageMultisample(ValidationContext *context,
+                                            GLenum target,
+                                            GLsizei samples,
+                                            GLenum internalformat,
+                                            GLsizei width,
+                                            GLsizei height)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION));
+        return false;
+    }
+
+    if (!ValidateRenderbufferStorageParametersBase(context, target, samples, internalformat, width,
+                                                   height))
+    {
+        return false;
+    }
+
+    // The ES3 spec(section 4.4.2) states that the internal format must be sized and not an integer
+    // format if samples is greater than zero.
+    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalformat);
+    if ((formatInfo.componentType == GL_UNSIGNED_INT || formatInfo.componentType == GL_INT) &&
+        samples > 0)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION));
+        return false;
+    }
+
+    // The behavior is different than the ANGLE version, which would generate a GL_OUT_OF_MEMORY.
+    const TextureCaps &formatCaps = context->getTextureCaps().get(internalformat);
+    if (static_cast<GLuint>(samples) > formatCaps.getMaxSamples())
+    {
+        context->handleError(
+            Error(GL_INVALID_OPERATION,
+                  "Samples must not be greater than maximum supported value for the format."));
+        return false;
     }
 
     return true;
