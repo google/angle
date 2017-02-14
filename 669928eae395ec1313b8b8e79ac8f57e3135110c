@@ -43,6 +43,30 @@
     },
     {
       "key": {
+        "uuid": "4a96da09_212a4264",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-14T13:54:19Z",
+      "side": 1,
+      "message": "Can\u0027 you make a stream operator?\n\nTInfoSinkBase \u0026operator\u003c\u003c(TInfoSinkBase \u0026out, CommaPrefixGenerator \u0026gen) {\n  if (gen.first) {\n    gen.first \u003d false;\n  } else {\n    out \u003c\u003c \", \";\n  }\n  return out;\n}",
+      "parentUuid": "850c8e03_ab9ba269",
+      "range": {
+        "startLine": 93,
+        "startChar": 0,
+        "endLine": 101,
+        "endChar": 5
+      },
+      "revId": "669928eae395ec1313b8b8e79ac8f57e3135110c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "afd667d9_b2a2dc1a",
         "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
         "patchSetId": 1
