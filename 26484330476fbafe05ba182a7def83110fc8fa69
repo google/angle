@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "1c8f2ef6_682a9af9",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 72
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-14T15:14:47Z",
+      "side": 1,
+      "message": "This should be updated to be std::max(maxAttribs, maxAttribBindings) to support non-ES3.1 contexts where maxAttribBindings may not be initialized.",
+      "range": {
+        "startLine": 18,
+        "startChar": 32,
+        "endLine": 18,
+        "endChar": 49
+      },
+      "revId": "26484330476fbafe05ba182a7def83110fc8fa69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ee3ef759_09efac18",
         "filename": "src/libANGLE/VertexArray.cpp",
         "patchSetId": 72
@@ -159,6 +182,30 @@
       "side": 1,
       "message": "I find this block already exists here:\nhttps://chromium-review.googlesource.com/#/c/418880/72/src/libANGLE/renderer/gl/renderergl_utils.cpp@634\n\nSo I can remove this redundant statement here.",
       "parentUuid": "c6688dfd_aa83ff98",
+      "range": {
+        "startLine": 376,
+        "startChar": 8,
+        "endLine": 376,
+        "endChar": 69
+      },
+      "revId": "26484330476fbafe05ba182a7def83110fc8fa69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "610c9b27_0025aa57",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 72
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-14T15:14:47Z",
+      "side": 1,
+      "message": "Ok, this line can be removed then.  We need to make sure that we don\u0027t depend on an ES 3.1 cap for contexts that are not ES 3.1",
+      "parentUuid": "c242530c_2e655176",
       "range": {
         "startLine": 376,
         "startChar": 8,
