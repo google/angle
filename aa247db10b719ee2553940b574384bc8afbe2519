@@ -108,6 +108,24 @@
     },
     {
       "key": {
+        "uuid": "d747f79e_887f24ef",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 65
+      },
+      "lineNbr": 1223,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-14T15:14:47Z",
+      "side": 1,
+      "message": "Works for me.",
+      "parentUuid": "234c6c1b_759ae62f",
+      "revId": "aa247db10b719ee2553940b574384bc8afbe2519",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d7226315_9cfe8f8b",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 65
