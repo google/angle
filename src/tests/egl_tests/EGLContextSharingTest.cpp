@@ -199,6 +199,51 @@ TEST_P(EGLContextSharingTest, DisplayShareGroupObjectSharing)
     ASSERT_GL_NO_ERROR();
 }
 
+// Tests that shared textures using EGL_ANGLE_display_texture_share_group are released when the last
+// context is destroyed
+TEST_P(EGLContextSharingTest, DisplayShareGroupReleasedWithLastContext)
+{
+    EGLDisplay display = getEGLWindow()->getDisplay();
+    if (!ANGLETest::eglDisplayExtensionEnabled(display, "EGL_ANGLE_display_texture_share_group"))
+    {
+        std::cout << "Test skipped because EGL_ANGLE_display_texture_share_group is not present."
+                  << std::endl;
+        return;
+    }
+
+    EGLConfig config   = getEGLWindow()->getConfig();
+    EGLSurface surface = getEGLWindow()->getSurface();
+
+    const EGLint inShareGroupContextAttribs[] = {
+        EGL_CONTEXT_CLIENT_VERSION, 2, EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE, EGL_TRUE, EGL_NONE};
+
+    // Create two contexts in the global share group but not in the same context share group
+    mContexts[0] = eglCreateContext(display, config, nullptr, inShareGroupContextAttribs);
+    mContexts[1] = eglCreateContext(display, config, nullptr, inShareGroupContextAttribs);
+
+    // Create a texture and buffer in ctx 0
+    ASSERT_EGL_TRUE(eglMakeCurrent(display, surface, surface, mContexts[0]));
+    GLuint textureFromCtx0 = 0;
+    glGenTextures(1, &textureFromCtx0);
+    glBindTexture(GL_TEXTURE_2D, textureFromCtx0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    ASSERT_GL_TRUE(glIsTexture(textureFromCtx0));
+
+    // Switch to context 1 and verify that the texture is accessible
+    ASSERT_EGL_TRUE(eglMakeCurrent(display, surface, surface, mContexts[1]));
+    ASSERT_GL_TRUE(glIsTexture(textureFromCtx0));
+
+    // Destroy both contexts, the texture should be cleaned up automatically
+    ASSERT_EGL_TRUE(eglDestroyContext(display, mContexts[0]));
+    ASSERT_EGL_TRUE(eglDestroyContext(display, mContexts[1]));
+
+    // Create a new context and verify it cannot access the texture previously created
+    mContexts[0] = eglCreateContext(display, config, nullptr, inShareGroupContextAttribs);
+
+    ASSERT_GL_FALSE(glIsTexture(textureFromCtx0));
+}
+
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST(EGLContextSharingTest,

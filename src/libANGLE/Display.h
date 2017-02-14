@@ -175,6 +175,7 @@ class Display final : angle::NonCopyable
     angle::LoggingAnnotator mAnnotator;
 
     gl::TextureManager *mTextureManager;
+    size_t mGlobalTextureShareGroupUsers;
 };
 
 }

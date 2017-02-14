@@ -360,7 +360,8 @@ Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDe
       mVendorString(),
       mDevice(eglDevice),
       mPlatform(platform),
-      mTextureManager(nullptr)
+      mTextureManager(nullptr),
+      mGlobalTextureShareGroupUsers(0)
 {
 }
 
@@ -464,9 +465,6 @@ Error Display::initialize()
         ASSERT(mDevice != nullptr);
     }
 
-    ASSERT(mTextureManager == nullptr);
-    mTextureManager = new gl::TextureManager();
-
     mInitialized = true;
 
     return egl::Error(EGL_SUCCESS);
@@ -474,18 +472,15 @@ Error Display::initialize()
 
 void Display::terminate()
 {
-    if (mTextureManager)
-    {
-        mTextureManager->release();
-        mTextureManager = nullptr;
-    }
-
     makeCurrent(nullptr, nullptr, nullptr);
 
     while (!mContextSet.empty())
     {
         destroyContext(*mContextSet.begin());
     }
+
+    // The global texture manager should be deleted with the last context that uses it.
+    ASSERT(mGlobalTextureShareGroupUsers == 0 && mTextureManager == nullptr);
 
     while (!mImageSet.empty())
     {
@@ -686,7 +681,19 @@ Error Display::createContext(const Config *configuration, gl::Context *shareCont
 
     bool usingDisplayTextureShareGroup =
         attribs.get(EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE, EGL_FALSE) == EGL_TRUE;
-    gl::TextureManager *shareTextures = usingDisplayTextureShareGroup ? mTextureManager : nullptr;
+    gl::TextureManager *shareTextures = nullptr;
+
+    if (usingDisplayTextureShareGroup)
+    {
+        ASSERT((mTextureManager == nullptr) == (mGlobalTextureShareGroupUsers == 0));
+        if (mTextureManager == nullptr)
+        {
+            mTextureManager = new gl::TextureManager();
+        }
+
+        mGlobalTextureShareGroupUsers++;
+        shareTextures = mTextureManager;
+    }
 
     gl::Context *context = new gl::Context(mImplementation, configuration, shareContext,
                                            shareTextures, attribs, mDisplayExtensions);
@@ -767,6 +774,19 @@ void Display::destroyStream(egl::Stream *stream)
 
 void Display::destroyContext(gl::Context *context)
 {
+    if (context->usingDisplayTextureShareGroup())
+    {
+        ASSERT(mGlobalTextureShareGroupUsers >= 1 && mTextureManager != nullptr);
+        if (mGlobalTextureShareGroupUsers == 1)
+        {
+            // If this is the last context using the global share group, destroy the global texture
+            // manager so that the textures can be destroyed while a context still exists
+            mTextureManager->release();
+            mTextureManager = nullptr;
+        }
+        mGlobalTextureShareGroupUsers--;
+    }
+
     context->destroy(this);
     mContextSet.erase(context);
     SafeDelete(context);

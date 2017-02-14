@@ -66,7 +66,16 @@ Additions to the EGL 1.5 Specification
 
 Issues
 
-    None
+    (1) What happens to the shared textures when a context in the global share
+        group is destroyed?
+
+    RESOLOVED: When the last context in the global texture share group is
+    destroyed, all textures in the global texture share group are released. If
+    a new context is created in the global texture share group, no textures
+    will exist.
+
+    This mirrors how regular share groups work, releasing all objects when the
+    last context is destroyed.
 
 Revision History
 
