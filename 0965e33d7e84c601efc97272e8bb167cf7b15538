@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6600eec0_b204a4fc",
+        "filename": "include/platform/Platform.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-14T16:23:56Z",
+      "side": 1,
+      "message": "Can you fix the subtract typo in this patch?",
+      "revId": "0965e33d7e84c601efc97272e8bb167cf7b15538",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
