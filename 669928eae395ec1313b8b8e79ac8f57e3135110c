@@ -67,6 +67,30 @@
     },
     {
       "key": {
+        "uuid": "2602c7f3_62703bd1",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-02-14T15:17:35Z",
+      "side": 1,
+      "message": "Ah, I think this was what you were suggesting all along, should\u0027ve gotten it right the first time. Done now.",
+      "parentUuid": "4a96da09_212a4264",
+      "range": {
+        "startLine": 93,
+        "startChar": 0,
+        "endLine": 101,
+        "endChar": 5
+      },
+      "revId": "669928eae395ec1313b8b8e79ac8f57e3135110c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "afd667d9_b2a2dc1a",
         "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
         "patchSetId": 1
