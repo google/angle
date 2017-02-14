@@ -49,7 +49,7 @@ angle::TraceEventHandle AddTraceEvent(char phase,
         return handle;
     }
 
-    return static_cast<Platform::TraceEventHandle>(0);
+    return static_cast<angle::TraceEventHandle>(0);
 }
 
 }  // namespace angle

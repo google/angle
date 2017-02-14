@@ -42,72 +42,42 @@ GLubyte ColorDenorm(float colorValue)
     return static_cast<GLubyte>(colorValue * 255.0f);
 }
 
-// Use a custom ANGLE platform class to capture and report internal errors.
-class TestPlatform : public angle::Platform
+void TestPlatform_logError(angle::PlatformMethods *platform, const char *errorMessage)
 {
-  public:
-    void logError(const char *errorMessage) override;
-    void logWarning(const char *warningMessage) override;
-    void logInfo(const char *infoMessage) override;
-    void overrideWorkaroundsD3D(WorkaroundsD3D *workaroundsD3D) override;
-
-    void ignoreMessages();
-    void enableMessages();
-    void setCurrentTest(ANGLETest *currentTest);
-
-  private:
-    bool mIgnoreMessages    = false;
-    ANGLETest *mCurrentTest = nullptr;
-};
-
-void TestPlatform::logError(const char *errorMessage)
-{
-    if (mIgnoreMessages)
+    auto *testPlatformContext = static_cast<TestPlatformContext *>(platform->context);
+    if (testPlatformContext->ignoreMessages)
         return;
 
     FAIL() << errorMessage;
 }
 
-void TestPlatform::logWarning(const char *warningMessage)
+void TestPlatform_logWarning(angle::PlatformMethods *platform, const char *warningMessage)
 {
-    if (mIgnoreMessages)
+    auto *testPlatformContext = static_cast<TestPlatformContext *>(platform->context);
+    if (testPlatformContext->ignoreMessages)
         return;
 
     std::cerr << "Warning: " << warningMessage << std::endl;
 }
 
-void TestPlatform::logInfo(const char *infoMessage)
+void TestPlatform_logInfo(angle::PlatformMethods *platform, const char *infoMessage)
 {
-    if (mIgnoreMessages)
+    auto *testPlatformContext = static_cast<TestPlatformContext *>(platform->context);
+    if (testPlatformContext->ignoreMessages)
         return;
 
     angle::WriteDebugMessage("%s\n", infoMessage);
 }
 
-void TestPlatform::overrideWorkaroundsD3D(WorkaroundsD3D *workaroundsD3D)
+void TestPlatform_overrideWorkaroundsD3D(angle::PlatformMethods *platform,
+                                         WorkaroundsD3D *workaroundsD3D)
 {
-    if (mCurrentTest)
+    auto *testPlatformContext = static_cast<TestPlatformContext *>(platform->context);
+    if (testPlatformContext->currentTest)
     {
-        mCurrentTest->overrideWorkaroundsD3D(workaroundsD3D);
+        testPlatformContext->currentTest->overrideWorkaroundsD3D(workaroundsD3D);
     }
 }
-
-void TestPlatform::ignoreMessages()
-{
-    mIgnoreMessages = true;
-}
-
-void TestPlatform::enableMessages()
-{
-    mIgnoreMessages = false;
-}
-
-void TestPlatform::setCurrentTest(ANGLETest *currentTest)
-{
-    mCurrentTest = currentTest;
-}
-
-TestPlatform g_testPlatformInstance;
 
 std::array<angle::Vector3, 4> GetIndexedQuadVertices()
 {
@@ -267,8 +237,8 @@ ANGLETest::~ANGLETest()
 
 void ANGLETest::SetUp()
 {
-    EnableANGLEPlatformMessages();
-    angle::g_testPlatformInstance.setCurrentTest(this);
+    mPlatformContext.ignoreMessages = false;
+    mPlatformContext.currentTest    = this;
 
     // Resize the window before creating the context so that the first make current
     // sets the viewport and scissor box to the right size.
@@ -285,6 +255,22 @@ void ANGLETest::SetUp()
     if (!createEGLContext())
     {
         FAIL() << "egl context creation failed.";
+    }
+
+    if (mGLESLibrary)
+    {
+        auto initFunc = reinterpret_cast<angle::GetDisplayPlatformFunc>(
+            mGLESLibrary->getSymbol("ANGLEGetDisplayPlatform"));
+        if (initFunc)
+        {
+            angle::PlatformMethods *platformMethods = nullptr;
+            initFunc(mEGLWindow->getDisplay(), angle::g_PlatformMethodNames,
+                     angle::g_NumPlatformMethods, &mPlatformContext, &platformMethods);
+            platformMethods->overrideWorkaroundsD3D = angle::TestPlatform_overrideWorkaroundsD3D;
+            platformMethods->logError               = angle::TestPlatform_logError;
+            platformMethods->logWarning             = angle::TestPlatform_logWarning;
+            platformMethods->logInfo                = angle::TestPlatform_logInfo;
+        }
     }
 
     if (needSwap)
@@ -306,7 +292,7 @@ void ANGLETest::SetUp()
 
 void ANGLETest::TearDown()
 {
-    angle::g_testPlatformInstance.setCurrentTest(nullptr);
+    mPlatformContext.currentTest = nullptr;
     checkD3D11SDKLayersMessages();
 
     const auto &info = testing::UnitTest::GetInstance()->current_test_info();
@@ -756,6 +742,7 @@ bool ANGLETest::destroyEGLContext()
     return true;
 }
 
+// static
 bool ANGLETest::InitTestWindow()
 {
     mOSWindow = CreateOSWindow();
@@ -766,9 +753,12 @@ bool ANGLETest::InitTestWindow()
 
     mOSWindow->setVisible(true);
 
+    mGLESLibrary.reset(angle::loadLibrary("libGLESv2"));
+
     return true;
 }
 
+// static
 bool ANGLETest::DestroyTestWindow()
 {
     if (mOSWindow)
@@ -777,6 +767,8 @@ bool ANGLETest::DestroyTestWindow()
         delete mOSWindow;
         mOSWindow = NULL;
     }
+
+    mGLESLibrary.reset(nullptr);
 
     return true;
 }
@@ -927,20 +919,10 @@ void ANGLETest::ignoreD3D11SDKLayersWarnings()
 
 OSWindow *ANGLETest::mOSWindow = nullptr;
 Optional<EGLint> ANGLETest::mLastRendererType;
+std::unique_ptr<angle::Library> ANGLETest::mGLESLibrary;
 
 void ANGLETestEnvironment::SetUp()
 {
-    mGLESLibrary.reset(angle::loadLibrary("libGLESv2"));
-    if (mGLESLibrary)
-    {
-        auto initFunc = reinterpret_cast<ANGLEPlatformInitializeFunc>(
-            mGLESLibrary->getSymbol("ANGLEPlatformInitialize"));
-        if (initFunc)
-        {
-            initFunc(&angle::g_testPlatformInstance);
-        }
-    }
-
     if (!ANGLETest::InitTestWindow())
     {
         FAIL() << "Failed to create ANGLE test window.";
@@ -950,25 +932,4 @@ void ANGLETestEnvironment::SetUp()
 void ANGLETestEnvironment::TearDown()
 {
     ANGLETest::DestroyTestWindow();
-
-    if (mGLESLibrary)
-    {
-        auto shutdownFunc = reinterpret_cast<ANGLEPlatformShutdownFunc>(
-            mGLESLibrary->getSymbol("ANGLEPlatformShutdown"));
-        if (shutdownFunc)
-        {
-            shutdownFunc();
-        }
-    }
-}
-
-void IgnoreANGLEPlatformMessages()
-{
-    // Negative tests may trigger expected errors/warnings in the ANGLE Platform.
-    angle::g_testPlatformInstance.ignoreMessages();
-}
-
-void EnableANGLEPlatformMessages()
-{
-    angle::g_testPlatformInstance.enableMessages();
 }
