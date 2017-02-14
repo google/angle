@@ -16,6 +16,24 @@
       "revId": "f105565cb229d4e2513398e2f7afb85b495caa30",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad1a07c2_f745ff70",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 75
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-14T15:14:47Z",
+      "side": 1,
+      "message": "You would add it as a parameter to VertexArrayGL\u0027s constructor which gets called in RendererGL.cpp, you can pass in RendererGL::getNativeCaps().",
+      "parentUuid": "ff8f957a_86d1b98d",
+      "revId": "f105565cb229d4e2513398e2f7afb85b495caa30",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
