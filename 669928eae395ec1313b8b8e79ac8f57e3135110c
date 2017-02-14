@@ -123,6 +123,24 @@
       "revId": "669928eae395ec1313b8b8e79ac8f57e3135110c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "045f4167_db677e33",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3522,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-14T20:18:10Z",
+      "side": 1,
+      "message": "Sounds good, thanks",
+      "parentUuid": "96497210_a288866b",
+      "revId": "669928eae395ec1313b8b8e79ac8f57e3135110c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
