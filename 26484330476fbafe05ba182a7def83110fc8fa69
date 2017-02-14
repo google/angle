@@ -144,6 +144,30 @@
       "revId": "26484330476fbafe05ba182a7def83110fc8fa69",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c242530c_2e655176",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 72
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-14T06:36:55Z",
+      "side": 1,
+      "message": "I find this block already exists here:\nhttps://chromium-review.googlesource.com/#/c/418880/72/src/libANGLE/renderer/gl/renderergl_utils.cpp@634\n\nSo I can remove this redundant statement here.",
+      "parentUuid": "c6688dfd_aa83ff98",
+      "range": {
+        "startLine": 376,
+        "startChar": 8,
+        "endLine": 376,
+        "endChar": 69
+      },
+      "revId": "26484330476fbafe05ba182a7def83110fc8fa69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
