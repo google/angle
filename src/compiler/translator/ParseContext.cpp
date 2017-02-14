@@ -66,6 +66,24 @@ bool ContainsImage(const TType &type)
     return false;
 }
 
+// Get a token from an image argument to use as an error message token.
+const char *GetImageArgumentToken(TIntermTyped *imageNode)
+{
+    ASSERT(IsImage(imageNode->getBasicType()));
+    while (imageNode->getAsBinaryNode() &&
+           (imageNode->getAsBinaryNode()->getOp() == EOpIndexIndirect ||
+            imageNode->getAsBinaryNode()->getOp() == EOpIndexDirect))
+    {
+        imageNode = imageNode->getAsBinaryNode()->getLeft();
+    }
+    TIntermSymbol *imageSymbol = imageNode->getAsSymbolNode();
+    if (imageSymbol)
+    {
+        return imageSymbol->getSymbol().c_str();
+    }
+    return "image";
+}
+
 }  // namespace
 
 TParseContext::TParseContext(TSymbolTable &symt,
@@ -4184,10 +4202,9 @@ void TParseContext::checkImageMemoryAccessForBuiltinFunctions(TIntermAggregate *
     if (name.compare(0, 5, "image") == 0)
     {
         TIntermSequence *arguments = functionCall->getSequence();
-        TIntermNode *imageNode     = (*arguments)[0];
-        TIntermSymbol *imageSymbol = imageNode->getAsSymbolNode();
+        TIntermTyped *imageNode    = (*arguments)[0]->getAsTyped();
 
-        const TMemoryQualifier &memoryQualifier = imageSymbol->getMemoryQualifier();
+        const TMemoryQualifier &memoryQualifier = imageNode->getMemoryQualifier();
 
         if (name.compare(5, 5, "Store") == 0)
         {
@@ -4195,7 +4212,7 @@ void TParseContext::checkImageMemoryAccessForBuiltinFunctions(TIntermAggregate *
             {
                 error(imageNode->getLine(),
                       "'imageStore' cannot be used with images qualified as 'readonly'",
-                      imageSymbol->getSymbol().c_str());
+                      GetImageArgumentToken(imageNode));
             }
         }
         else if (name.compare(5, 4, "Load") == 0)
@@ -4204,7 +4221,7 @@ void TParseContext::checkImageMemoryAccessForBuiltinFunctions(TIntermAggregate *
             {
                 error(imageNode->getLine(),
                       "'imageLoad' cannot be used with images qualified as 'writeonly'",
-                      imageSymbol->getSymbol().c_str());
+                      GetImageArgumentToken(imageNode));
             }
         }
     }
@@ -4223,7 +4240,8 @@ void TParseContext::checkImageMemoryAccessForUserDefinedFunctions(
 
     for (size_t i = 0; i < arguments.size(); ++i)
     {
-        const TType &functionArgumentType  = arguments[i]->getAsTyped()->getType();
+        TIntermTyped *typedArgument        = arguments[i]->getAsTyped();
+        const TType &functionArgumentType  = typedArgument->getType();
         const TType &functionParameterType = *functionDefinition->getParam(i).type;
         ASSERT(functionArgumentType.getBasicType() == functionParameterType.getBasicType());
 
@@ -4238,7 +4256,7 @@ void TParseContext::checkImageMemoryAccessForUserDefinedFunctions(
             {
                 error(functionCall->getLine(),
                       "Function call discards the 'readonly' qualifier from image",
-                      arguments[i]->getAsSymbolNode()->getSymbol().c_str());
+                      GetImageArgumentToken(typedArgument));
             }
 
             if (functionArgumentMemoryQualifier.writeonly &&
@@ -4246,7 +4264,7 @@ void TParseContext::checkImageMemoryAccessForUserDefinedFunctions(
             {
                 error(functionCall->getLine(),
                       "Function call discards the 'writeonly' qualifier from image",
-                      arguments[i]->getAsSymbolNode()->getSymbol().c_str());
+                      GetImageArgumentToken(typedArgument));
             }
 
             if (functionArgumentMemoryQualifier.coherent &&
@@ -4254,7 +4272,7 @@ void TParseContext::checkImageMemoryAccessForUserDefinedFunctions(
             {
                 error(functionCall->getLine(),
                       "Function call discards the 'coherent' qualifier from image",
-                      arguments[i]->getAsSymbolNode()->getSymbol().c_str());
+                      GetImageArgumentToken(typedArgument));
             }
 
             if (functionArgumentMemoryQualifier.volatileQualifier &&
@@ -4262,7 +4280,7 @@ void TParseContext::checkImageMemoryAccessForUserDefinedFunctions(
             {
                 error(functionCall->getLine(),
                       "Function call discards the 'volatile' qualifier from image",
-                      arguments[i]->getAsSymbolNode()->getSymbol().c_str());
+                      GetImageArgumentToken(typedArgument));
             }
         }
     }

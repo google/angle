@@ -2576,6 +2576,52 @@ TEST_F(FragmentShaderValidationTest, LoadFromWriteOnlyImage)
     }
 }
 
+// It is a compile-time error to call imageStore when the image is qualified as readonly.
+// Test to make sure this is validated correctly for images in arrays.
+// GLSL ES 3.10 Revision 4, 4.9 Memory Access Qualifiers
+TEST_F(FragmentShaderValidationTest, StoreInReadOnlyImageArray)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "precision mediump image2D;\n"
+        "in vec4 myInput;\n"
+        "layout(r32f) uniform readonly image2D myImage[2];\n"
+        "void main() {\n"
+        "   imageStore(myImage[0], ivec2(0), vec4(1.0));\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// It is a compile-time error to call imageStore when the image is qualified as readonly.
+// Test to make sure that checking this doesn't crash when validating an image in a struct.
+// Image in a struct in itself isn't accepted by the parser, but error recovery still results in
+// an image in the struct.
+// GLSL ES 3.10 Revision 4, 4.9 Memory Access Qualifiers
+TEST_F(FragmentShaderValidationTest, StoreInReadOnlyImageInStruct)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "precision mediump image2D;\n"
+        "in vec4 myInput;\n"
+        "uniform struct S {\n"
+        "    layout(r32f) readonly image2D myImage;\n"
+        "} s;\n"
+        "void main() {\n"
+        "   imageStore(s.myImage, ivec2(0), vec4(1.0));\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
 // A valid declaration and usage of an image3D.
 TEST_F(FragmentShaderValidationTest, ValidImage3D)
 {
@@ -2683,6 +2729,52 @@ TEST_F(FragmentShaderValidationTest, ReadOnlyQualifierMissingInFunctionArgument)
         "void myFunc(in image2D someImage) {}\n"
         "void main() {\n"
         "   myFunc(myImage);\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Passing an image qualifier to a function should not be able to discard the readonly qualifier.
+// Test with an image from an array.
+// GLSL ES 3.10 Revision 4, 4.9 Memory Access Qualifiers
+TEST_F(FragmentShaderValidationTest, ReadOnlyQualifierMissingInFunctionArgumentArray)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "precision mediump image2D;\n"
+        "layout(rgba32f) uniform readonly image2D myImage[2];\n"
+        "void myFunc(in image2D someImage) {}\n"
+        "void main() {\n"
+        "   myFunc(myImage[0]);\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Passing an image qualifier to a function should not be able to discard the readonly qualifier.
+// Test that validation doesn't crash on this for an image in a struct.
+// Image in a struct in itself isn't accepted by the parser, but error recovery still results in
+// an image in the struct.
+// GLSL ES 3.10 Revision 4, 4.9 Memory Access Qualifiers
+TEST_F(FragmentShaderValidationTest, ReadOnlyQualifierMissingInFunctionArgumentStruct)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "precision mediump image2D;\n"
+        "uniform struct S {\n"
+        "    layout(r32f) readonly image2D myImage;\n"
+        "} s;\n"
+        "void myFunc(in image2D someImage) {}\n"
+        "void main() {\n"
+        "   myFunc(s.myImage);\n"
         "}\n";
 
     if (compile(shaderString))
