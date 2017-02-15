@@ -14,6 +14,7 @@
 #include "common/utilities.h"
 #include "libANGLE/Config.h"
 #include "libANGLE/Context.h"
+#include "libANGLE/Display.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Renderbuffer.h"
 #include "libANGLE/Surface.h"
@@ -320,6 +321,16 @@ Framebuffer::Framebuffer(rx::GLImplFactory *factory)
 Framebuffer::~Framebuffer()
 {
     SafeDelete(mImpl);
+}
+
+void Framebuffer::destroy(const Context *context)
+{
+    mImpl->destroy(rx::SafeGetImpl(context));
+}
+
+void Framebuffer::destroyDefault(const egl::Display *display)
+{
+    mImpl->destroyDefault(rx::SafeGetImpl(display));
 }
 
 void Framebuffer::setLabel(const std::string &label)

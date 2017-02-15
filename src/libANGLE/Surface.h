@@ -141,6 +141,9 @@ class Surface : public gl::FramebufferAttachmentObject
 
     gl::Format mBackFormat;
     gl::Format mDSFormat;
+
+  private:
+    void destroy(const egl::Display *display);
 };
 
 class WindowSurface final : public Surface

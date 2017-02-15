@@ -18,6 +18,11 @@
 
 #include <cstddef>
 
+namespace gl
+{
+class Context;
+}
+
 class RefCountObjectNoID : angle::NonCopyable
 {
   public:
@@ -35,10 +40,22 @@ class RefCountObjectNoID : angle::NonCopyable
         }
     }
 
+    // A specialized release method for objects which need a destroy context.
+    void release(const gl::Context *context)
+    {
+        ASSERT(mRefCount > 0);
+        if (--mRefCount == 0)
+        {
+            destroy(context);
+            delete this;
+        }
+    }
+
     size_t getRefCount() const { return mRefCount; }
 
   protected:
     virtual ~RefCountObjectNoID() { ASSERT(mRefCount == 0); }
+    virtual void destroy(const gl::Context *context) {}
 
   private:
     mutable std::size_t mRefCount;

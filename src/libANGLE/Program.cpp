@@ -254,20 +254,7 @@ ProgramState::ProgramState()
 
 ProgramState::~ProgramState()
 {
-    if (mAttachedVertexShader != nullptr)
-    {
-        mAttachedVertexShader->release();
-    }
-
-    if (mAttachedFragmentShader != nullptr)
-    {
-        mAttachedFragmentShader->release();
-    }
-
-    if (mAttachedComputeShader != nullptr)
-    {
-        mAttachedComputeShader->release();
-    }
+    ASSERT(!mAttachedVertexShader && !mAttachedFragmentShader && !mAttachedComputeShader);
 }
 
 const std::string &ProgramState::getLabel()
@@ -397,9 +384,32 @@ Program::Program(rx::GLImplFactory *factory, ShaderProgramManager *manager, GLui
 
 Program::~Program()
 {
-    unlink(true);
-
+    ASSERT(!mState.mAttachedVertexShader && !mState.mAttachedFragmentShader &&
+           !mState.mAttachedComputeShader);
     SafeDelete(mProgram);
+}
+
+void Program::destroy(const Context *context)
+{
+    if (mState.mAttachedVertexShader != nullptr)
+    {
+        mState.mAttachedVertexShader->release(context);
+        mState.mAttachedVertexShader = nullptr;
+    }
+
+    if (mState.mAttachedFragmentShader != nullptr)
+    {
+        mState.mAttachedFragmentShader->release(context);
+        mState.mAttachedFragmentShader = nullptr;
+    }
+
+    if (mState.mAttachedComputeShader != nullptr)
+    {
+        mState.mAttachedComputeShader->release(context);
+        mState.mAttachedComputeShader = nullptr;
+    }
+
+    mProgram->destroy(rx::SafeGetImpl(context));
 }
 
 void Program::setLabel(const std::string &label)
@@ -442,7 +452,7 @@ void Program::attachShader(Shader *shader)
     }
 }
 
-bool Program::detachShader(Shader *shader)
+bool Program::detachShader(const Context *context, Shader *shader)
 {
     switch (shader->getType())
     {
@@ -453,7 +463,7 @@ bool Program::detachShader(Shader *shader)
                 return false;
             }
 
-            shader->release();
+            shader->release(context);
             mState.mAttachedVertexShader = nullptr;
             break;
         }
@@ -464,7 +474,7 @@ bool Program::detachShader(Shader *shader)
                 return false;
             }
 
-            shader->release();
+            shader->release(context);
             mState.mAttachedFragmentShader = nullptr;
             break;
         }
@@ -475,7 +485,7 @@ bool Program::detachShader(Shader *shader)
                 return false;
             }
 
-            shader->release();
+            shader->release(context);
             mState.mAttachedComputeShader = nullptr;
             break;
         }
@@ -586,7 +596,7 @@ Error Program::link(const gl::Context *context)
 {
     const auto &data = context->getContextState();
 
-    unlink(false);
+    unlink();
 
     mInfoLog.reset();
     resetUniformBlockBindings();
@@ -724,29 +734,8 @@ Error Program::link(const gl::Context *context)
 }
 
 // Returns the program object to an unlinked state, before re-linking, or at destruction
-void Program::unlink(bool destroy)
+void Program::unlink()
 {
-    if (destroy)   // Object being destructed
-    {
-        if (mState.mAttachedFragmentShader)
-        {
-            mState.mAttachedFragmentShader->release();
-            mState.mAttachedFragmentShader = nullptr;
-        }
-
-        if (mState.mAttachedVertexShader)
-        {
-            mState.mAttachedVertexShader->release();
-            mState.mAttachedVertexShader = nullptr;
-        }
-
-        if (mState.mAttachedComputeShader)
-        {
-            mState.mAttachedComputeShader->release();
-            mState.mAttachedComputeShader = nullptr;
-        }
-    }
-
     mState.mAttributes.clear();
     mState.mActiveAttribLocationsMask.reset();
     mState.mTransformFeedbackVaryingVars.clear();
@@ -772,7 +761,7 @@ Error Program::loadBinary(const Context *context,
                           const void *binary,
                           GLsizei length)
 {
-    unlink(false);
+    unlink();
 
 #if ANGLE_PROGRAM_BINARY_LOAD != ANGLE_ENABLED
     return NoError();
@@ -1103,13 +1092,13 @@ bool Program::getBinaryRetrievableHint() const
     return mState.mBinaryRetrieveableHint;
 }
 
-void Program::release()
+void Program::release(const Context *context)
 {
     mRefCount--;
 
     if (mRefCount == 0 && mDeleteStatus)
     {
-        mResourceManager->deleteProgram(mHandle);
+        mResourceManager->deleteProgram(context, mHandle);
     }
 }
 

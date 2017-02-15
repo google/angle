@@ -715,7 +715,7 @@ void GL_APIENTRY DetachShader(GLuint program, GLuint shader)
             return;
         }
 
-        if (!programObject->detachShader(shaderObject))
+        if (!programObject->detachShader(context, shaderObject))
         {
             context->handleError(Error(GL_INVALID_OPERATION));
             return;

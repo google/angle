@@ -95,14 +95,7 @@ ContextState::ContextState(uintptr_t contextIn,
 
 ContextState::~ContextState()
 {
-    mBuffers->release();
-    mShaderPrograms->release();
-    mTextures->release();
-    mRenderbuffers->release();
-    mSamplers->release();
-    mFenceSyncs->release();
-    mPaths->release();
-    mFramebuffers->release();
+    // Handles are released by the Context.
 }
 
 const TextureCaps &ContextState::getTextureCap(GLenum internalFormat) const

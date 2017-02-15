@@ -178,6 +178,6 @@ class Display final : angle::NonCopyable
     size_t mGlobalTextureShareGroupUsers;
 };
 
-}
+}  // namespace egl
 
 #endif   // LIBANGLE_DISPLAY_H_

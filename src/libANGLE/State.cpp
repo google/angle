@@ -67,7 +67,6 @@ State::State()
 
 State::~State()
 {
-    reset();
 }
 
 void State::initialize(const Caps &caps,
@@ -212,7 +211,7 @@ void State::initialize(const Caps &caps,
     mPathStencilMask = std::numeric_limits<GLuint>::max();
 }
 
-void State::reset()
+void State::reset(const Context *context)
 {
     for (TextureBindingMap::iterator bindingVec = mSamplerTextures.begin(); bindingVec != mSamplerTextures.end(); bindingVec++)
     {
@@ -233,7 +232,7 @@ void State::reset()
 
     if (mProgram)
     {
-        mProgram->release();
+        mProgram->release(context);
     }
     mProgram = NULL;
 
@@ -1018,13 +1017,13 @@ bool State::removeVertexArrayBinding(GLuint vertexArray)
     return false;
 }
 
-void State::setProgram(Program *newProgram)
+void State::setProgram(const Context *context, Program *newProgram)
 {
     if (mProgram != newProgram)
     {
         if (mProgram)
         {
-            mProgram->release();
+            mProgram->release(context);
         }
 
         mProgram = newProgram;

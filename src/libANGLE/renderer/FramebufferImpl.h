@@ -24,12 +24,15 @@ struct Rectangle;
 
 namespace rx
 {
+class DisplayImpl;
 
 class FramebufferImpl : angle::NonCopyable
 {
   public:
     explicit FramebufferImpl(const gl::FramebufferState &state) : mState(state) {}
     virtual ~FramebufferImpl() { }
+    virtual void destroy(ContextImpl *contextImpl) {}
+    virtual void destroyDefault(DisplayImpl *displayImpl) {}
 
     virtual gl::Error discard(size_t count, const GLenum *attachments) = 0;
     virtual gl::Error invalidate(size_t count, const GLenum *attachments) = 0;

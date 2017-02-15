@@ -26,6 +26,7 @@ namespace gl
 {
 class Buffer;
 struct Caps;
+class Context;
 class FenceSync;
 class Framebuffer;
 struct Limitations;
@@ -43,9 +44,10 @@ class ResourceManagerBase : angle::NonCopyable
     ResourceManagerBase();
 
     void addRef();
-    void release();
+    void release(const Context *context);
 
   protected:
+    virtual void reset(const Context *context) = 0;
     virtual ~ResourceManagerBase() {}
 
     HandleAllocatorType mHandleAllocator;
@@ -60,7 +62,7 @@ class TypedResourceManager : public ResourceManagerBase<HandleAllocatorType>
   public:
     TypedResourceManager() {}
 
-    void deleteObject(GLuint handle);
+    void deleteObject(const Context *context, GLuint handle);
 
   protected:
     ~TypedResourceManager() override;
@@ -90,6 +92,8 @@ class TypedResourceManager : public ResourceManagerBase<HandleAllocatorType>
                                  GLuint handle,
                                  ArgTypes... args);
 
+    void reset(const Context *context) override;
+
     ResourceMap<ResourceType> mObjectMap;
 };
 
@@ -117,13 +121,13 @@ class ShaderProgramManager : public ResourceManagerBase<HandleAllocator>
 {
   public:
     GLuint createShader(rx::GLImplFactory *factory,
-                        const gl::Limitations &rendererLimitations,
+                        const Limitations &rendererLimitations,
                         GLenum type);
-    void deleteShader(GLuint shader);
+    void deleteShader(const Context *context, GLuint shader);
     Shader *getShader(GLuint handle) const;
 
     GLuint createProgram(rx::GLImplFactory *factory);
-    void deleteProgram(GLuint program);
+    void deleteProgram(const Context *context, GLuint program);
     Program *getProgram(GLuint handle) const;
 
   protected:
@@ -131,7 +135,9 @@ class ShaderProgramManager : public ResourceManagerBase<HandleAllocator>
 
   private:
     template <typename ObjectType>
-    void deleteObject(ResourceMap<ObjectType> *objectMap, GLuint id);
+    void deleteObject(const Context *context, ResourceMap<ObjectType> *objectMap, GLuint id);
+
+    void reset(const Context *context) override;
 
     ResourceMap<Shader> mShaders;
     ResourceMap<Program> mPrograms;
@@ -217,6 +223,7 @@ class PathManager : public ResourceManagerBase<HandleRangeAllocator>
 
   protected:
     ~PathManager() override;
+    void reset(const Context *context) override;
 
   private:
     ResourceMap<Path> mPaths;

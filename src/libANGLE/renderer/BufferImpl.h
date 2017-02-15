@@ -29,6 +29,7 @@ class BufferImpl : angle::NonCopyable
   public:
     BufferImpl(const gl::BufferState &state) : mState(state) {}
     virtual ~BufferImpl() { }
+    virtual void destroy(ContextImpl *contextImpl) {}
 
     virtual gl::Error setData(ContextImpl *context,
                               GLenum target,

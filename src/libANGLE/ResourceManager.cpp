@@ -54,10 +54,11 @@ void ResourceManagerBase<HandleAllocatorType>::addRef()
 }
 
 template <typename HandleAllocatorType>
-void ResourceManagerBase<HandleAllocatorType>::release()
+void ResourceManagerBase<HandleAllocatorType>::release(const Context *context)
 {
     if (--mRefCount == 0)
     {
+        reset(context);
         delete this;
     }
 }
@@ -65,14 +66,23 @@ void ResourceManagerBase<HandleAllocatorType>::release()
 template <typename ResourceType, typename HandleAllocatorType, typename ImplT>
 TypedResourceManager<ResourceType, HandleAllocatorType, ImplT>::~TypedResourceManager()
 {
-    while (!mObjectMap.empty())
-    {
-        deleteObject(mObjectMap.begin()->first);
-    }
+    ASSERT(mObjectMap.empty());
 }
 
 template <typename ResourceType, typename HandleAllocatorType, typename ImplT>
-void TypedResourceManager<ResourceType, HandleAllocatorType, ImplT>::deleteObject(GLuint handle)
+void TypedResourceManager<ResourceType, HandleAllocatorType, ImplT>::reset(const Context *context)
+{
+    while (!mObjectMap.empty())
+    {
+        deleteObject(context, mObjectMap.begin()->first);
+    }
+    mObjectMap.clear();
+}
+
+template <typename ResourceType, typename HandleAllocatorType, typename ImplT>
+void TypedResourceManager<ResourceType, HandleAllocatorType, ImplT>::deleteObject(
+    const Context *context,
+    GLuint handle)
 {
     auto objectIter = mObjectMap.find(handle);
     if (objectIter == mObjectMap.end())
@@ -82,6 +92,7 @@ void TypedResourceManager<ResourceType, HandleAllocatorType, ImplT>::deleteObjec
 
     if (objectIter->second != nullptr)
     {
+        objectIter->second->destroy(context);
         ImplT::DeleteObject(objectIter->second);
     }
 
@@ -181,14 +192,22 @@ bool BufferManager::isBufferGenerated(GLuint buffer) const
 
 ShaderProgramManager::~ShaderProgramManager()
 {
+    ASSERT(mPrograms.empty());
+    ASSERT(mShaders.empty());
+}
+
+void ShaderProgramManager::reset(const Context *context)
+{
     while (!mPrograms.empty())
     {
-        deleteProgram(mPrograms.begin()->first);
+        deleteProgram(context, mPrograms.begin()->first);
     }
+    mPrograms.clear();
     while (!mShaders.empty())
     {
-        deleteShader(mShaders.begin()->first);
+        deleteShader(context, mShaders.begin()->first);
     }
+    mShaders.clear();
 }
 
 GLuint ShaderProgramManager::createShader(rx::GLImplFactory *factory,
@@ -201,9 +220,9 @@ GLuint ShaderProgramManager::createShader(rx::GLImplFactory *factory,
     return handle;
 }
 
-void ShaderProgramManager::deleteShader(GLuint shader)
+void ShaderProgramManager::deleteShader(const Context *context, GLuint shader)
 {
-    deleteObject(&mShaders, shader);
+    deleteObject(context, &mShaders, shader);
 }
 
 Shader *ShaderProgramManager::getShader(GLuint handle) const
@@ -218,9 +237,9 @@ GLuint ShaderProgramManager::createProgram(rx::GLImplFactory *factory)
     return handle;
 }
 
-void ShaderProgramManager::deleteProgram(GLuint program)
+void ShaderProgramManager::deleteProgram(const gl::Context *context, GLuint program)
 {
-    deleteObject(&mPrograms, program);
+    deleteObject(context, &mPrograms, program);
 }
 
 Program *ShaderProgramManager::getProgram(GLuint handle) const
@@ -229,7 +248,9 @@ Program *ShaderProgramManager::getProgram(GLuint handle) const
 }
 
 template <typename ObjectType>
-void ShaderProgramManager::deleteObject(ResourceMap<ObjectType> *objectMap, GLuint id)
+void ShaderProgramManager::deleteObject(const Context *context,
+                                        ResourceMap<ObjectType> *objectMap,
+                                        GLuint id)
 {
     auto iter = objectMap->find(id);
     if (iter == objectMap->end())
@@ -241,6 +262,7 @@ void ShaderProgramManager::deleteObject(ResourceMap<ObjectType> *objectMap, GLui
     if (object->getRefCount() == 0)
     {
         mHandleAllocator.release(id);
+        object->destroy(context);
         SafeDelete(object);
         objectMap->erase(iter);
     }
@@ -421,10 +443,16 @@ bool PathManager::hasPath(GLuint handle) const
 
 PathManager::~PathManager()
 {
+    ASSERT(mPaths.empty());
+}
+
+void PathManager::reset(const Context *context)
+{
     for (auto path : mPaths)
     {
         SafeDelete(path.second);
     }
+    mPaths.clear();
 }
 
 // FramebufferManager Implementation.

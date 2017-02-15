@@ -385,7 +385,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
 
 void Context::destroy(egl::Display *display)
 {
-    mGLState.reset();
+    mGLState.reset(this);
 
     for (auto fence : mFenceNVMap)
     {
@@ -409,7 +409,7 @@ void Context::destroy(egl::Display *display)
     {
         if (transformFeedback.second != nullptr)
         {
-            transformFeedback.second->release();
+            transformFeedback.second->release(this);
         }
     }
 
@@ -424,6 +424,15 @@ void Context::destroy(egl::Display *display)
     releaseSurface(display);
 
     SafeDelete(mCompiler);
+
+    mState.mBuffers->release(this);
+    mState.mShaderPrograms->release(this);
+    mState.mTextures->release(this);
+    mState.mRenderbuffers->release(this);
+    mState.mSamplers->release(this);
+    mState.mFenceSyncs->release(this);
+    mState.mPaths->release(this);
+    mState.mFramebuffers->release(this);
 }
 
 Context::~Context()
@@ -616,17 +625,17 @@ void Context::deleteBuffer(GLuint buffer)
         detachBuffer(buffer);
     }
 
-    mState.mBuffers->deleteObject(buffer);
+    mState.mBuffers->deleteObject(this, buffer);
 }
 
 void Context::deleteShader(GLuint shader)
 {
-    mState.mShaderPrograms->deleteShader(shader);
+    mState.mShaderPrograms->deleteShader(this, shader);
 }
 
 void Context::deleteProgram(GLuint program)
 {
-    mState.mShaderPrograms->deleteProgram(program);
+    mState.mShaderPrograms->deleteProgram(this, program);
 }
 
 void Context::deleteTexture(GLuint texture)
@@ -636,7 +645,7 @@ void Context::deleteTexture(GLuint texture)
         detachTexture(texture);
     }
 
-    mState.mTextures->deleteObject(texture);
+    mState.mTextures->deleteObject(this, texture);
 }
 
 void Context::deleteRenderbuffer(GLuint renderbuffer)
@@ -646,7 +655,7 @@ void Context::deleteRenderbuffer(GLuint renderbuffer)
         detachRenderbuffer(renderbuffer);
     }
 
-    mState.mRenderbuffers->deleteObject(renderbuffer);
+    mState.mRenderbuffers->deleteObject(this, renderbuffer);
 }
 
 void Context::deleteFenceSync(GLsync fenceSync)
@@ -655,7 +664,8 @@ void Context::deleteFenceSync(GLsync fenceSync)
     // wait commands finish. However, since the name becomes invalid, we cannot query the fence,
     // and since our API is currently designed for being called from a single thread, we can delete
     // the fence immediately.
-    mState.mFenceSyncs->deleteObject(static_cast<GLuint>(reinterpret_cast<uintptr_t>(fenceSync)));
+    mState.mFenceSyncs->deleteObject(this,
+                                     static_cast<GLuint>(reinterpret_cast<uintptr_t>(fenceSync)));
 }
 
 void Context::deletePaths(GLuint first, GLsizei range)
@@ -772,7 +782,7 @@ void Context::deleteSampler(GLuint sampler)
         detachSampler(sampler);
     }
 
-    mState.mSamplers->deleteObject(sampler);
+    mState.mSamplers->deleteObject(this, sampler);
 }
 
 void Context::deleteTransformFeedback(GLuint transformFeedback)
@@ -784,7 +794,7 @@ void Context::deleteTransformFeedback(GLuint transformFeedback)
         if (transformFeedbackObject != nullptr)
         {
             detachTransformFeedback(transformFeedback);
-            transformFeedbackObject->release();
+            transformFeedbackObject->release(this);
         }
 
         mTransformFeedbackMap.erase(iter);
@@ -799,7 +809,7 @@ void Context::deleteFramebuffer(GLuint framebuffer)
         detachFramebuffer(framebuffer);
     }
 
-    mState.mFramebuffers->deleteObject(framebuffer);
+    mState.mFramebuffers->deleteObject(this, framebuffer);
 }
 
 void Context::deleteFenceNV(GLuint fence)
@@ -1068,7 +1078,7 @@ void Context::bindPixelUnpackBuffer(GLuint bufferHandle)
 
 void Context::useProgram(GLuint program)
 {
-    mGLState.setProgram(getProgram(program));
+    mGLState.setProgram(this, getProgram(program));
 }
 
 void Context::bindTransformFeedback(GLuint transformFeedbackHandle)
@@ -2378,7 +2388,7 @@ void Context::beginTransformFeedback(GLenum primitiveMode)
     ASSERT(transformFeedback != nullptr);
     ASSERT(!transformFeedback->isPaused());
 
-    transformFeedback->begin(primitiveMode, mGLState.getProgram());
+    transformFeedback->begin(this, primitiveMode, mGLState.getProgram());
 }
 
 bool Context::hasActiveTransformFeedback(GLuint program) const

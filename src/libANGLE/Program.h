@@ -263,6 +263,7 @@ class Program final : angle::NonCopyable, public LabeledObject
   public:
     Program(rx::GLImplFactory *factory, ShaderProgramManager *manager, GLuint handle);
     ~Program();
+    void destroy(const Context *context);
 
     GLuint id() const { return mHandle; }
 
@@ -272,7 +273,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     rx::ProgramImpl *getImplementation() const { return mProgram; }
 
     void attachShader(Shader *shader);
-    bool detachShader(Shader *shader);
+    bool detachShader(const Context *context, Shader *shader);
     int getAttachedShadersCount() const;
 
     const Shader *getAttachedVertexShader() const { return mState.mAttachedVertexShader; }
@@ -384,7 +385,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     static bool linkValidateInterfaceBlockFields(InfoLog &infoLog, const std::string &uniformName, const sh::InterfaceBlockField &vertexUniform, const sh::InterfaceBlockField &fragmentUniform);
 
     void addRef();
-    void release();
+    void release(const Context *context);
     unsigned int getRefCount() const;
     void flagForDeletion();
     bool isFlaggedForDeletion() const;
@@ -430,7 +431,7 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     using MergedVaryings = std::map<std::string, VaryingRef>;
 
-    void unlink(bool destroy = false);
+    void unlink();
     void resetUniformBlockBindings();
 
     bool linkAttributes(const ContextState &data, InfoLog &infoLog);

@@ -97,7 +97,7 @@ TEST(ValidationESTest, DrawElementsWithMaxIndexGivesError)
 
     state.setVertexArrayBinding(vertexArray);
     state.setDrawFramebufferBinding(framebuffer);
-    state.setProgram(program);
+    state.setProgram(nullptr, program);
 
     NiceMock<MockValidationContext> testContext(nullptr, nullptr, Version(3, 0), &state, caps,
                                                 textureCaps, extensions, limitations, false);
@@ -119,7 +119,7 @@ TEST(ValidationESTest, DrawElementsWithMaxIndexGivesError)
 
     state.setVertexArrayBinding(nullptr);
     state.setDrawFramebufferBinding(nullptr);
-    state.setProgram(nullptr);
+    state.setProgram(nullptr, nullptr);
 
     SafeDelete(vertexArray);
     SafeDelete(framebuffer);

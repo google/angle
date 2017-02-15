@@ -21,7 +21,7 @@ class MockFramebufferImpl : public rx::FramebufferImpl
 {
   public:
     MockFramebufferImpl() : rx::FramebufferImpl(gl::FramebufferState()) {}
-    virtual ~MockFramebufferImpl() { destroy(); }
+    virtual ~MockFramebufferImpl() { destructor(); }
 
     MOCK_METHOD2(discard, gl::Error(size_t, const GLenum *));
     MOCK_METHOD2(invalidate, gl::Error(size_t, const GLenum *));
@@ -48,7 +48,7 @@ class MockFramebufferImpl : public rx::FramebufferImpl
 
     MOCK_METHOD1(syncState, void(const gl::Framebuffer::DirtyBits &));
 
-    MOCK_METHOD0(destroy, void());
+    MOCK_METHOD0(destructor, void());
 };
 
 inline ::testing::NiceMock<MockFramebufferImpl> *MakeFramebufferMock()
@@ -59,7 +59,7 @@ inline ::testing::NiceMock<MockFramebufferImpl> *MakeFramebufferMock()
     ON_CALL(*framebufferImpl, checkStatus()).WillByDefault(::testing::Return(true));
 
     // We must mock the destructor since NiceMock doesn't work for destructors.
-    EXPECT_CALL(*framebufferImpl, destroy()).Times(1).RetiresOnSaturation();
+    EXPECT_CALL(*framebufferImpl, destructor()).Times(1).RetiresOnSaturation();
 
     return framebufferImpl;
 }

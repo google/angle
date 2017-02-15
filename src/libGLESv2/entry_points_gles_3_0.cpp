@@ -692,7 +692,7 @@ void GL_APIENTRY EndTransformFeedback(void)
             return;
         }
 
-        transformFeedback->end();
+        transformFeedback->end(context);
     }
 }
 

@@ -45,7 +45,7 @@ class State : angle::NonCopyable
                     const Version &clientVersion,
                     bool debug,
                     bool bindGeneratesResource);
-    void reset();
+    void reset(const Context *context);
 
     // State chunk getters
     const RasterizerState &getRasterizerState() const;
@@ -194,7 +194,7 @@ class State : angle::NonCopyable
     bool removeVertexArrayBinding(GLuint vertexArray);
 
     // Program binding manipulation
-    void setProgram(Program *newProgram);
+    void setProgram(const Context *context, Program *newProgram);
     Program *getProgram() const;
 
     // Transform feedback object (not buffer) binding manipulation

@@ -89,6 +89,19 @@ Surface::~Surface()
     SafeDelete(mImplementation);
 }
 
+void Surface::destroy(const Display *display)
+{
+    if (mState.defaultFramebuffer)
+    {
+        mState.defaultFramebuffer->destroyDefault(display);
+    }
+    if (mImplementation)
+    {
+        mImplementation->destroy(rx::SafeGetImpl(display));
+    }
+    delete this;
+}
+
 Error Surface::initialize(const Display &display)
 {
     ANGLE_TRY(mImplementation->initialize(display.getImplementation()));
@@ -116,11 +129,7 @@ void Surface::setIsCurrent(Display *display, bool isCurrent)
     mCurrentCount--;
     if (mCurrentCount == 0 && mDestroyed)
     {
-        if (mImplementation)
-        {
-            mImplementation->destroy(rx::SafeGetImpl(display));
-        }
-        delete this;
+        destroy(display);
     }
 }
 
@@ -129,11 +138,7 @@ void Surface::onDestroy(Display *display)
     mDestroyed = true;
     if (mCurrentCount == 0)
     {
-        if (mImplementation)
-        {
-            mImplementation->destroy(rx::SafeGetImpl(display));
-        }
-        delete this;
+        destroy(display);
     }
 }
 

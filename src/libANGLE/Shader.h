@@ -89,6 +89,7 @@ class Shader final : angle::NonCopyable, public LabeledObject
            GLenum type,
            GLuint handle);
 
+    void destroy(const Context *context) {}
     virtual ~Shader();
 
     void setLabel(const std::string &label) override;
@@ -115,7 +116,7 @@ class Shader final : angle::NonCopyable, public LabeledObject
     bool isCompiled() const { return mCompiled; }
 
     void addRef();
-    void release();
+    void release(const Context *context);
     unsigned int getRefCount() const;
     bool isFlaggedForDeletion() const;
     void flagForDeletion();

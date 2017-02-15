@@ -33,13 +33,12 @@ class ContextImpl;
 
 using LinkResult = gl::ErrorOrResult<bool>;
 
-class ContextImpl;
-
 class ProgramImpl : angle::NonCopyable
 {
   public:
     ProgramImpl(const gl::ProgramState &state) : mState(state) {}
     virtual ~ProgramImpl() {}
+    virtual void destroy(const ContextImpl *contextImpl) {}
 
     virtual LinkResult load(const ContextImpl *contextImpl,
                             gl::InfoLog &infoLog,

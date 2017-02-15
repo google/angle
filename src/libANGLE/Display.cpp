@@ -646,6 +646,7 @@ Error Display::createContext(const Config *configuration, gl::Context *shareCont
         ANGLE_TRY(restoreLostDevice());
     }
 
+    // This display texture sharing will allow the first context to create the texture share group.
     bool usingDisplayTextureShareGroup =
         attribs.get(EGL_DISPLAY_TEXTURE_SHARE_GROUP_ANGLE, EGL_FALSE) == EGL_TRUE;
     gl::TextureManager *shareTextures = nullptr;
@@ -748,7 +749,7 @@ void Display::destroyContext(gl::Context *context)
         {
             // If this is the last context using the global share group, destroy the global texture
             // manager so that the textures can be destroyed while a context still exists
-            mTextureManager->release();
+            mTextureManager->release(context);
             mTextureManager = nullptr;
         }
         mGlobalTextureShareGroupUsers--;

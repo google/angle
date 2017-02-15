@@ -32,9 +32,9 @@ class ResourceManagerTest : public testing::Test
 
     void TearDown() override
     {
-        mTextureManager->release();
-        mBufferManager->release();
-        mRenderbuffermanager->release();
+        mTextureManager->release(nullptr);
+        mBufferManager->release(nullptr);
+        mRenderbuffermanager->release(nullptr);
     }
 
     MockGLFactory mMockFactory;
