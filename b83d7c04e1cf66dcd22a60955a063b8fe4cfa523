@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "908cd479_9f10cd32",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-15T23:02:08Z",
+      "side": 1,
+      "message": "Maybe you meant \"nor\"? I don\u0027t think the code adds a newline on the end of a severity prefix.",
+      "range": {
+        "startLine": 9,
+        "startChar": 37,
+        "endLine": 9,
+        "endChar": 39
+      },
+      "revId": "b83d7c04e1cf66dcd22a60955a063b8fe4cfa523",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
