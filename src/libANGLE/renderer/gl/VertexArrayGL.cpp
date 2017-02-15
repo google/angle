@@ -319,6 +319,10 @@ gl::Error VertexArrayGL::streamAttributes(const gl::AttributesMask &activeAttrib
             const size_t sourceStride = ComputeVertexAttributeStride(attrib);
             const size_t destStride   = ComputeVertexAttributeTypeSize(attrib);
 
+            // Vertices do not apply the 'start' offset when the divisor is non-zero even when doing
+            // a non-instanced draw call
+            const size_t firstIndex = attrib.divisor == 0 ? indexRange.start : 0;
+
             const uint8_t *inputPointer = reinterpret_cast<const uint8_t *>(attrib.pointer);
 
             // Pack the data when copying it, user could have supplied a very large stride that
@@ -326,8 +330,7 @@ gl::Error VertexArrayGL::streamAttributes(const gl::AttributesMask &activeAttrib
             if (destStride == sourceStride)
             {
                 // Can copy in one go, the data is packed
-                memcpy(bufferPointer + curBufferOffset,
-                       inputPointer + (sourceStride * indexRange.start),
+                memcpy(bufferPointer + curBufferOffset, inputPointer + (sourceStride * firstIndex),
                        destStride * streamedVertexCount);
             }
             else
@@ -336,14 +339,13 @@ gl::Error VertexArrayGL::streamAttributes(const gl::AttributesMask &activeAttrib
                 for (size_t vertexIdx = 0; vertexIdx < streamedVertexCount; vertexIdx++)
                 {
                     uint8_t *out = bufferPointer + curBufferOffset + (destStride * vertexIdx);
-                    const uint8_t *in =
-                        inputPointer + sourceStride * (vertexIdx + indexRange.start);
+                    const uint8_t *in = inputPointer + sourceStride * (vertexIdx + firstIndex);
                     memcpy(out, in, destStride);
                 }
             }
 
             // Compute where the 0-index vertex would be.
-            const size_t vertexStartOffset = curBufferOffset - (indexRange.start * destStride);
+            const size_t vertexStartOffset = curBufferOffset - (firstIndex * destStride);
 
             if (attrib.pureInteger)
             {
