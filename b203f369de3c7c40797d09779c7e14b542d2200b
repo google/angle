@@ -1,0 +1,257 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8c5699fc_01b92104",
+        "filename": "extensions/ANGLE_client_arrays.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-15T16:01:49Z",
+      "side": 1,
+      "message": "Is there ever a case where a null client pointer is valid? just wondering if this is even necessary to mention. (maybe for disabling pointers?)",
+      "range": {
+        "startLine": 62,
+        "startChar": 33,
+        "endLine": 62,
+        "endChar": 65
+      },
+      "revId": "b203f369de3c7c40797d09779c7e14b542d2200b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0473072f_1f7f797b",
+        "filename": "extensions/EGL_ANGLE_create_context_client_arrays.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-15T16:01:49Z",
+      "side": 1,
+      "message": "maybe it would be good to require it explicitly?",
+      "range": {
+        "startLine": 35,
+        "startChar": 4,
+        "endLine": 36,
+        "endChar": 14
+      },
+      "revId": "b203f369de3c7c40797d09779c7e14b542d2200b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "18dbd4c9_47fe02c0",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 689,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-15T16:01:49Z",
+      "side": 1,
+      "message": "micro-nit: areClientArraysEnabled? the grammar was bothering me. :)",
+      "range": {
+        "startLine": 689,
+        "startChar": 17,
+        "endLine": 689,
+        "endChar": 38
+      },
+      "revId": "b203f369de3c7c40797d09779c7e14b542d2200b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2e60466e_98a2820e",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-15T16:01:49Z",
+      "side": 1,
+      "message": "I guess I would lean towards requiring the extension if there is a hard dep here.",
+      "range": {
+        "startLine": 456,
+        "startChar": 82,
+        "endLine": 456,
+        "endChar": 90
+      },
+      "revId": "b203f369de3c7c40797d09779c7e14b542d2200b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7eab3414_c2048848",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3960,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-15T16:01:49Z",
+      "side": 1,
+      "message": "nit: can we change this to a positive condition? nullBufferAllowed?",
+      "range": {
+        "startLine": 3960,
+        "startChar": 9,
+        "endLine": 3960,
+        "endChar": 29
+      },
+      "revId": "b203f369de3c7c40797d09779c7e14b542d2200b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aea1cae1_9cf72767",
+        "filename": "src/tests/gl_tests/ClientArraysTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-15T16:01:49Z",
+      "side": 1,
+      "message": "2017",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 17
+      },
+      "revId": "b203f369de3c7c40797d09779c7e14b542d2200b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5f46f486_6c86d3a5",
+        "filename": "src/tests/gl_tests/ClientArraysTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-15T16:01:49Z",
+      "side": 1,
+      "message": "nit: can remove these",
+      "range": {
+        "startLine": 30,
+        "startChar": 3,
+        "endLine": 32,
+        "endChar": 55
+      },
+      "revId": "b203f369de3c7c40797d09779c7e14b542d2200b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ab13d61_72778c33",
+        "filename": "src/tests/gl_tests/ClientArraysTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-15T16:01:49Z",
+      "side": 1,
+      "message": "nit: EXPECT_GL_FALSE",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 48,
+        "endChar": 13
+      },
+      "revId": "b203f369de3c7c40797d09779c7e14b542d2200b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe219a4d_9119e1a8",
+        "filename": "src/tests/gl_tests/ClientArraysTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-15T16:01:49Z",
+      "side": 1,
+      "message": "nit: swap expected, actual",
+      "range": {
+        "startLine": 53,
+        "startChar": 4,
+        "endLine": 53,
+        "endChar": 13
+      },
+      "revId": "b203f369de3c7c40797d09779c7e14b542d2200b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f687b7cd_6f722a2c",
+        "filename": "src/tests/gl_tests/ClientArraysTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-15T16:01:49Z",
+      "side": 1,
+      "message": "EXPECT_GL_FALSE",
+      "range": {
+        "startLine": 58,
+        "startChar": 4,
+        "endLine": 58,
+        "endChar": 13
+      },
+      "revId": "b203f369de3c7c40797d09779c7e14b542d2200b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "99222808_76e10896",
+        "filename": "src/tests/gl_tests/ClientArraysTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-15T16:01:49Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 62,
+        "startChar": 4,
+        "endLine": 62,
+        "endChar": 13
+      },
+      "revId": "b203f369de3c7c40797d09779c7e14b542d2200b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
