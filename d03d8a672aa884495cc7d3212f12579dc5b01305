@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "dda099ff_f8befc9f",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 80
+      },
+      "lineNbr": 2455,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-15T15:12:30Z",
+      "side": 1,
+      "message": "Sorry, it should initialize it to mCaps.maxVertexAttributes, not MAX_VERTEX_ATTRIBS.",
+      "parentUuid": "dfebe2e4_e7555791",
+      "range": {
+        "startLine": 2454,
+        "startChar": 4,
+        "endLine": 2455,
+        "endChar": 84
+      },
+      "revId": "d03d8a672aa884495cc7d3212f12579dc5b01305",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dfe6d875_bfb6e389",
         "filename": "src/libANGLE/VertexArray.cpp",
         "patchSetId": 80
