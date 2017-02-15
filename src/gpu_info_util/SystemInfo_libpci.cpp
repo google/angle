@@ -27,13 +27,13 @@ namespace
 
 struct LibPCI : angle::NonCopyable
 {
-    static bool IsSupported()
+    LibPCI()
     {
-        return access("/sys/bus/pci/", F_OK) == 0 || access("/sys/bs/pci_express/", F_OK) == 0;
-    }
+        if (access("/sys/bus/pci/", F_OK) != 0 && access("/sys/bs/pci_express/", F_OK) != 0)
+        {
+            return;
+        }
 
-    bool Load()
-    {
         mHandle = dlopen("libpci.so.3", RTLD_LAZY);
 
         if (mHandle == nullptr)
@@ -43,21 +43,23 @@ struct LibPCI : angle::NonCopyable
 
         if (mHandle == nullptr)
         {
-            return false;
+            return;
         }
 
-        return (Alloc = reinterpret_cast<decltype(Alloc)>(dlsym(mHandle, "pci_alloc"))) !=
-                   nullptr &&
-               (Init = reinterpret_cast<decltype(Init)>(dlsym(mHandle, "pci_init"))) != nullptr &&
-               (Cleanup = reinterpret_cast<decltype(Cleanup)>(dlsym(mHandle, "pci_cleanup"))) !=
-                   nullptr &&
-               (ScanBus = reinterpret_cast<decltype(ScanBus)>(dlsym(mHandle, "pci_scan_bus"))) !=
-                   nullptr &&
-               (FillInfo = reinterpret_cast<decltype(FillInfo)>(dlsym(mHandle, "pci_fill_info"))) !=
-                   nullptr &&
-               (LookupName = reinterpret_cast<decltype(LookupName)>(
-                    dlsym(mHandle, "pci_lookup_name"))) != nullptr;
+        mValid =
+            (Alloc = reinterpret_cast<decltype(Alloc)>(dlsym(mHandle, "pci_alloc"))) != nullptr &&
+            (Init = reinterpret_cast<decltype(Init)>(dlsym(mHandle, "pci_init"))) != nullptr &&
+            (Cleanup = reinterpret_cast<decltype(Cleanup)>(dlsym(mHandle, "pci_cleanup"))) !=
+                nullptr &&
+            (ScanBus = reinterpret_cast<decltype(ScanBus)>(dlsym(mHandle, "pci_scan_bus"))) !=
+                nullptr &&
+            (FillInfo = reinterpret_cast<decltype(FillInfo)>(dlsym(mHandle, "pci_fill_info"))) !=
+                nullptr &&
+            (LookupName = reinterpret_cast<decltype(LookupName)>(
+                 dlsym(mHandle, "pci_lookup_name"))) != nullptr;
     }
+
+    bool IsValid() const { return mValid; }
 
     ~LibPCI()
     {
@@ -76,6 +78,7 @@ struct LibPCI : angle::NonCopyable
 
   private:
     void *mHandle = nullptr;
+    bool mValid   = false;
 };
 
 }  // anonymous namespace
@@ -83,13 +86,8 @@ struct LibPCI : angle::NonCopyable
 // Adds an entry per PCI GPU found and fills the device and vendor ID.
 bool GetPCIDevicesWithLibPCI(std::vector<GPUDeviceInfo> *devices)
 {
-    if (!LibPCI::IsSupported())
-    {
-        return false;
-    }
-
     LibPCI pci;
-    if (!pci.Load())
+    if (!pci.IsValid())
     {
         return false;
     }

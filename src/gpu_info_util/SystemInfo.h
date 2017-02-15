@@ -16,10 +16,18 @@
 namespace angle
 {
 
+using VendorID = uint32_t;
+using DeviceID = uint32_t;
+
+constexpr VendorID kVendorID_AMD      = 0x1002;
+constexpr VendorID kVendorID_Intel    = 0x8086;
+constexpr VendorID kVendorID_Nvidia   = 0x10DE;
+constexpr VendorID kVendorID_Qualcomm = 0x5143;
+
 struct GPUDeviceInfo
 {
-    uint32_t vendorId;
-    uint32_t deviceId;
+    VendorID vendorId;
+    DeviceID deviceId;
 
     std::string driverVendor;
     std::string driverVersion;
@@ -39,21 +47,10 @@ struct SystemInfo
 
 bool GetSystemInfo(SystemInfo *info);
 
-enum VendorID : uint32_t
-{
-    VENDOR_ID_UNKNOWN = 0x0,
-    VENDOR_ID_AMD     = 0x1002,
-    VENDOR_ID_INTEL   = 0x8086,
-    VENDOR_ID_NVIDIA  = 0x10DE,
-    // This is Qualcomm PCI Vendor ID.
-    // Android doesn't have a PCI bus, but all we need is a unique id.
-    VENDOR_ID_QUALCOMM = 0x5143,
-};
-
-bool IsAMD(uint32_t vendorId);
-bool IsIntel(uint32_t vendorId);
-bool IsNvidia(uint32_t vendorId);
-bool IsQualcomm(uint32_t vendorId);
+bool IsAMD(VendorID vendorId);
+bool IsIntel(VendorID vendorId);
+bool IsNvidia(VendorID vendorId);
+bool IsQualcomm(VendorID vendorId);
 
 }  // namespace angle
 

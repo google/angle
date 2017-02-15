@@ -237,7 +237,8 @@
                     [
                         '<(angle_path)/src/third_party/libXNVCtrl/libXNVCtrl.gyp:libXNVCtrl',
                     ],
-                    'link_settings': {
+                    'link_settings':
+                    {
                         'ldflags':
                         [
                             '<!@(<(pkg-config) --libs-only-L --libs-only-other x11 xi xext)',
@@ -258,7 +259,8 @@
                     [
                         'GPU_INFO_USE_LIBPCI',
                     ],
-                    'link_settings': {
+                    'link_settings':
+                    {
                         'ldflags':
                         [
                             '<!@(<(pkg-config) --libs-only-L --libs-only-other libpci)',

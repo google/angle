@@ -171,7 +171,10 @@ static_library("angle_image_util") {
   sources = rebase_path(gles_gypi.libangle_image_util_sources, ".", "src")
 
   configs -= angle_undefine_configs
-  configs += [ ":internal_config" ]
+  configs += [
+    ":internal_config",
+    ":extra_warnings",
+  ]
 
   public_configs = [ ":angle_image_util_config" ]
 
@@ -189,7 +192,10 @@ config("angle_gpu_info_util_config") {
 
 static_library("angle_gpu_info_util") {
   configs -= angle_undefine_configs
-  configs += [ ":internal_config" ]
+  configs += [
+    ":internal_config",
+    ":extra_warnings",
+  ]
 
   public_configs = [ ":angle_gpu_info_util_config" ]
 
@@ -207,9 +213,8 @@ static_library("angle_gpu_info_util") {
         rebase_path(gles_gypi.libangle_gpu_info_util_linux_sources, ".", "src")
 
     if (use_x11) {
-      sources += rebase_path(gles_gypi.libangle_gpu_info_util_x11_sources,
-                             ".",
-                             "src")
+      sources +=
+          rebase_path(gles_gypi.libangle_gpu_info_util_x11_sources, ".", "src")
       deps += [ "src/third_party/libXNVCtrl:libXNVCtrl" ]
       defines += [ "GPU_INFO_USE_X11" ]
       libs += [
@@ -369,8 +374,8 @@ static_library("libANGLE") {
     ":angle_common",
   ]
   deps = [
-    ":angle_image_util",
     ":angle_gpu_info_util",
+    ":angle_image_util",
     ":commit_id",
     ":includes",
     ":translator",

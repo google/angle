@@ -14,24 +14,24 @@
 namespace angle
 {
 
-bool IsAMD(uint32_t vendorId)
+bool IsAMD(VendorID vendorId)
 {
-    return vendorId == VENDOR_ID_AMD;
+    return vendorId == kVendorID_AMD;
 }
 
-bool IsIntel(uint32_t vendorId)
+bool IsIntel(VendorID vendorId)
 {
-    return vendorId == VENDOR_ID_INTEL;
+    return vendorId == kVendorID_Intel;
 }
 
-bool IsNvidia(uint32_t vendorId)
+bool IsNvidia(VendorID vendorId)
 {
-    return vendorId == VENDOR_ID_NVIDIA;
+    return vendorId == kVendorID_Nvidia;
 }
 
-bool IsQualcomm(uint32_t vendorId)
+bool IsQualcomm(VendorID vendorId)
 {
-    return vendorId == VENDOR_ID_QUALCOMM;
+    return vendorId == kVendorID_Qualcomm;
 }
 
 bool ParseAMDBrahmaDriverVersion(const std::string &content, std::string *version)

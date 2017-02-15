@@ -106,7 +106,7 @@ bool GetSystemInfo(SystemInfo *info)
         GPUDeviceInfo *gpu = &info->gpus[i];
 
         // New GPUs might be added inside this loop, don't query for their driver version again
-        if (gpu->driverVendor.empty())
+        if (!gpu->driverVendor.empty())
         {
             continue;
         }
@@ -116,12 +116,12 @@ bool GetSystemInfo(SystemInfo *info)
             std::string version;
             if (GetAMDBrahmaDriverVersion(&version))
             {
-                gpu->driverVendor  = "ATI / AMD (Brahma)";
+                gpu->driverVendor  = "AMD (Brahma)";
                 gpu->driverVersion = std::move(version);
             }
             else if (GetAMDCatalystDriverVersion(&version))
             {
-                gpu->driverVendor  = "ATI / AMD (Catalyst)";
+                gpu->driverVendor  = "AMD (Catalyst)";
                 gpu->driverVersion = std::move(version);
             }
         }
@@ -145,7 +145,7 @@ bool GetSystemInfo(SystemInfo *info)
             if (GetNvidiaDriverVersionWithXNVCtrl(&version))
             {
                 GPUDeviceInfo nvidiaInfo;
-                nvidiaInfo.vendorId = VENDOR_ID_NVIDIA;
+                nvidiaInfo.vendorId = kVendorID_Nvidia;
                 nvidiaInfo.deviceId = 0;
                 gpu->driverVendor   = "Nvidia";
                 gpu->driverVersion  = std::move(version);
