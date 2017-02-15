@@ -21,6 +21,7 @@
 
 namespace gl
 {
+struct VertexAttribute;
 
 struct FormatType final
 {

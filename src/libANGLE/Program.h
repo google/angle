@@ -44,6 +44,7 @@ class Context;
 class ContextState;
 class Shader;
 class ShaderProgramManager;
+class State;
 class InfoLog;
 class Buffer;
 class Framebuffer;

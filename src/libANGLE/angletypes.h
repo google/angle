@@ -20,10 +20,6 @@
 namespace gl
 {
 class Buffer;
-class State;
-class Program;
-struct VertexAttribute;
-struct VertexAttribCurrentValueData;
 
 enum PrimitiveType
 {

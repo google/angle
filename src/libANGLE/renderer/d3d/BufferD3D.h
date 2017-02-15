@@ -15,6 +15,11 @@
 #include <stdint.h>
 #include <vector>
 
+namespace gl
+{
+struct VertexAttribute;
+}
+
 namespace rx
 {
 class BufferFactoryD3D;
