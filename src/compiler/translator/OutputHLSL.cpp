@@ -1790,7 +1790,11 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             {
                 TString name = TFunction::unmangleName(node->getFunctionSymbolInfo()->getName());
                 TBasicType samplerType = (*arguments)[0]->getAsTyped()->getType().getBasicType();
-                int coords             = (*arguments)[1]->getAsTyped()->getNominalSize();
+                int coords = 0;  // textureSize(gsampler2DMS) doesn't have a second argument.
+                if (arguments->size() > 1)
+                {
+                    coords = (*arguments)[1]->getAsTyped()->getNominalSize();
+                }
                 TString textureFunctionName = mTextureFunctionHLSL->useTextureFunction(
                     name, samplerType, coords, arguments->size(), lod0, mShaderType);
                 out << textureFunctionName << "(";

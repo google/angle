@@ -235,6 +235,19 @@ inline bool IsIntegerSampler(TBasicType type)
     return false;
 }
 
+inline bool IsSampler2DMS(TBasicType type)
+{
+    switch (type)
+    {
+        case EbtSampler2DMS:
+        case EbtISampler2DMS:
+        case EbtUSampler2DMS:
+            return true;
+        default:
+            return false;
+    }
+}
+
 inline bool IsFloatImage(TBasicType type)
 {
     switch (type)
