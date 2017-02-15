@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7a433653_15122307",
+        "filename": "src/libANGLE/Constants.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-15T10:29:19Z",
+      "side": 1,
+      "message": "I  just want to use MAX_VERTEX_ATTRIB_RELATIVE_OFFSET to initialize caps-\u003emaxVertexAttribRelativeOffset on D3D11 backends as Vertex Attrib Binding does not exists on D3D11.",
+      "parentUuid": "c7a04873_3ccf59a5",
+      "range": {
+        "startLine": 19,
+        "startChar": 4,
+        "endLine": 20,
+        "endChar": 45
+      },
+      "revId": "5afd87b41668f63d82ec9107a5cbbb8de4205f07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c826f21a_c4ff2291",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 11
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "70f7f777_7a0fc685",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1398,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-15T10:29:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c826f21a_c4ff2291",
+      "range": {
+        "startLine": 1397,
+        "startChar": 10,
+        "endLine": 1398,
+        "endChar": 96
+      },
+      "revId": "5afd87b41668f63d82ec9107a5cbbb8de4205f07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "46de20f1_4747a9f7",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 11
@@ -59,6 +107,30 @@
       "writtenOn": "2017-02-14T14:21:04Z",
       "side": 1,
       "message": "can you comment here where you determined this value?",
+      "range": {
+        "startLine": 657,
+        "startChar": 19,
+        "endLine": 657,
+        "endChar": 23
+      },
+      "revId": "5afd87b41668f63d82ec9107a5cbbb8de4205f07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "938d123e_43d0ede8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 657,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-15T10:29:19Z",
+      "side": 1,
+      "message": "I failed to find the limit on stride on D3D9.\nAs ES3.1 won\u0027t run on D3D9, I just leave this value to 0.",
+      "parentUuid": "46de20f1_4747a9f7",
       "range": {
         "startLine": 657,
         "startChar": 19,
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "a2c55b88_cce3b0dc",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 629,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-15T10:29:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4c4fc4fb_1e696d98",
+      "range": {
+        "startLine": 624,
+        "startChar": 4,
+        "endLine": 629,
+        "endChar": 5
+      },
+      "revId": "5afd87b41668f63d82ec9107a5cbbb8de4205f07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5d1ae0eb_66870e14",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 11
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "e98957f8_62966198",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 639,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-15T10:29:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5d1ae0eb_66870e14",
+      "range": {
+        "startLine": 639,
+        "startChar": 4,
+        "endLine": 639,
+        "endChar": 11
+      },
+      "revId": "5afd87b41668f63d82ec9107a5cbbb8de4205f07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ddb090b9_7625121a",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 11
@@ -128,6 +248,30 @@
       "writtenOn": "2017-02-14T14:21:04Z",
       "side": 1,
       "message": "these two tests share a lot of code - can you make them share a helper function to avoid duplication?",
+      "range": {
+        "startLine": 642,
+        "startChar": 5,
+        "endLine": 665,
+        "endChar": 17
+      },
+      "revId": "5afd87b41668f63d82ec9107a5cbbb8de4205f07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eead627a_8c5919e1",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 665,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-15T10:29:19Z",
+      "side": 1,
+      "message": "Done\nI put these common code in function DrawArraysWithStrideAndOffset() in VertexAttributeTestES31.",
+      "parentUuid": "ddb090b9_7625121a",
       "range": {
         "startLine": 642,
         "startChar": 5,
@@ -160,6 +304,30 @@
       "revId": "5afd87b41668f63d82ec9107a5cbbb8de4205f07",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "26d8f174_300354ae",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 700,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-15T10:29:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "07b78d40_437f1976",
+      "range": {
+        "startLine": 700,
+        "startChar": 4,
+        "endLine": 700,
+        "endChar": 12
+      },
+      "revId": "5afd87b41668f63d82ec9107a5cbbb8de4205f07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
