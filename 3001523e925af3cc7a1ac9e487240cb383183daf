@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "8329d3fa_411faea5",
+        "filename": "extensions/ANGLE_client_arrays.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-15T15:54:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5abe1ca7_0d9da2d0",
+      "revId": "3001523e925af3cc7a1ac9e487240cb383183daf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e6c38ada_c9122aaf",
         "filename": "extensions/ANGLE_client_arrays.txt",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2017-02-15T15:28:27Z",
       "side": 1,
       "message": "I think we are running out of enum space, should we request a new range from Khronos?",
+      "revId": "3001523e925af3cc7a1ac9e487240cb383183daf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "74b6cd6e_cfa38c2f",
+        "filename": "extensions/ANGLE_client_arrays.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-15T15:54:16Z",
+      "side": 1,
+      "message": "Looks like we have 12 GLES enums left, I think we\u0027ll be ok for a while longer.",
+      "parentUuid": "e6c38ada_c9122aaf",
       "revId": "3001523e925af3cc7a1ac9e487240cb383183daf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
