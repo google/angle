@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7ab41aa4_8668fd4a",
+        "filename": "extensions/ANGLE_client_arrays.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-15T16:15:09Z",
+      "side": 1,
+      "message": "I took this language from the ES3 spec where it disables client data for non-default VAOs. I think that this allows resetting the binding to the default state where no buffer is bound and there is a null pointer.",
+      "parentUuid": "8c5699fc_01b92104",
+      "range": {
+        "startLine": 62,
+        "startChar": 33,
+        "endLine": 62,
+        "endChar": 65
+      },
+      "revId": "b203f369de3c7c40797d09779c7e14b542d2200b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0473072f_1f7f797b",
         "filename": "extensions/EGL_ANGLE_create_context_client_arrays.txt",
         "patchSetId": 3
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "0e6c2952_a5cb54e4",
+        "filename": "extensions/EGL_ANGLE_create_context_client_arrays.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-15T16:15:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0473072f_1f7f797b",
+      "range": {
+        "startLine": 35,
+        "startChar": 4,
+        "endLine": 36,
+        "endChar": 14
+      },
+      "revId": "b203f369de3c7c40797d09779c7e14b542d2200b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "18dbd4c9_47fe02c0",
         "filename": "src/libANGLE/State.cpp",
         "patchSetId": 3
@@ -59,6 +107,30 @@
       "writtenOn": "2017-02-15T16:01:49Z",
       "side": 1,
       "message": "micro-nit: areClientArraysEnabled? the grammar was bothering me. :)",
+      "range": {
+        "startLine": 689,
+        "startChar": 17,
+        "endLine": 689,
+        "endChar": 38
+      },
+      "revId": "b203f369de3c7c40797d09779c7e14b542d2200b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c387798_bf24add2",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 689,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-15T16:15:09Z",
+      "side": 1,
+      "message": "Yea, these names trigger OCD for sticking with the \"is\" convention we have or making it sound correct.",
+      "parentUuid": "18dbd4c9_47fe02c0",
       "range": {
         "startLine": 689,
         "startChar": 17,
@@ -117,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "6f923244_b9d293cd",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3960,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-15T16:15:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7eab3414_c2048848",
+      "range": {
+        "startLine": 3960,
+        "startChar": 9,
+        "endLine": 3960,
+        "endChar": 29
+      },
+      "revId": "b203f369de3c7c40797d09779c7e14b542d2200b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aea1cae1_9cf72767",
         "filename": "src/tests/gl_tests/ClientArraysTest.cpp",
         "patchSetId": 3
@@ -140,6 +236,30 @@
     },
     {
       "key": {
+        "uuid": "9d6b7f47_e3e0a665",
+        "filename": "src/tests/gl_tests/ClientArraysTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-15T16:15:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aea1cae1_9cf72767",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 17
+      },
+      "revId": "b203f369de3c7c40797d09779c7e14b542d2200b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f46f486_6c86d3a5",
         "filename": "src/tests/gl_tests/ClientArraysTest.cpp",
         "patchSetId": 3
@@ -160,6 +280,30 @@
       "revId": "b203f369de3c7c40797d09779c7e14b542d2200b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "99b6e5f5_7aa4e77e",
+        "filename": "src/tests/gl_tests/ClientArraysTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-15T16:15:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5f46f486_6c86d3a5",
+      "range": {
+        "startLine": 30,
+        "startChar": 3,
+        "endLine": 32,
+        "endChar": 55
+      },
+      "revId": "b203f369de3c7c40797d09779c7e14b542d2200b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -209,6 +353,30 @@
     },
     {
       "key": {
+        "uuid": "d5c0ca54_878c52ca",
+        "filename": "src/tests/gl_tests/ClientArraysTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-15T16:15:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fe219a4d_9119e1a8",
+      "range": {
+        "startLine": 53,
+        "startChar": 4,
+        "endLine": 53,
+        "endChar": 13
+      },
+      "revId": "b203f369de3c7c40797d09779c7e14b542d2200b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f687b7cd_6f722a2c",
         "filename": "src/tests/gl_tests/ClientArraysTest.cpp",
         "patchSetId": 3
@@ -232,6 +400,30 @@
     },
     {
       "key": {
+        "uuid": "1d4a8726_1280ed4e",
+        "filename": "src/tests/gl_tests/ClientArraysTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-15T16:15:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f687b7cd_6f722a2c",
+      "range": {
+        "startLine": 58,
+        "startChar": 4,
+        "endLine": 58,
+        "endChar": 13
+      },
+      "revId": "b203f369de3c7c40797d09779c7e14b542d2200b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "99222808_76e10896",
         "filename": "src/tests/gl_tests/ClientArraysTest.cpp",
         "patchSetId": 3
@@ -252,6 +444,30 @@
       "revId": "b203f369de3c7c40797d09779c7e14b542d2200b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e2521c86_65e8d1e9",
+        "filename": "src/tests/gl_tests/ClientArraysTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-15T16:15:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "99222808_76e10896",
+      "range": {
+        "startLine": 62,
+        "startChar": 4,
+        "endLine": 62,
+        "endChar": 13
+      },
+      "revId": "b203f369de3c7c40797d09779c7e14b542d2200b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
