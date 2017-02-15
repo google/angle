@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7e4f7229_fc54258f",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 628,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-15T21:24:15Z",
+      "side": 1,
+      "message": "nit: replace ANGLE_TRY by a return",
+      "revId": "e44fff3e2889a9a87c0b11407c5b3cadeacedec9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25332e10_3044b8f5",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-15T21:24:15Z",
+      "side": 1,
+      "message": "nit: this include doesn\u0027t seem used",
+      "revId": "e44fff3e2889a9a87c0b11407c5b3cadeacedec9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8aa61dec_8cc42eb5",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-15T21:24:15Z",
+      "side": 1,
+      "message": "*this is WrappedObject\u003cDerivedT, HandleT\u003e so I think this will fail to compile if it is used.",
+      "revId": "e44fff3e2889a9a87c0b11407c5b3cadeacedec9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
