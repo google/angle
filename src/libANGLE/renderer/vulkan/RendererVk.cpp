@@ -93,7 +93,6 @@ RendererVk::RendererVk()
       mQueue(VK_NULL_HANDLE),
       mCurrentQueueFamilyIndex(std::numeric_limits<uint32_t>::max()),
       mDevice(VK_NULL_HANDLE),
-      mCommandPool(VK_NULL_HANDLE),
       mHostVisibleMemoryIndex(std::numeric_limits<uint32_t>::max()),
       mGlslangWrapper(nullptr)
 {
@@ -108,12 +107,7 @@ RendererVk::~RendererVk()
     }
 
     mCommandBuffer.reset(nullptr);
-
-    if (mCommandPool)
-    {
-        vkDestroyCommandPool(mDevice, mCommandPool, nullptr);
-        mCommandPool = VK_NULL_HANDLE;
-    }
+    mCommandPool.reset(nullptr);
 
     if (mDevice)
     {
@@ -423,9 +417,10 @@ vk::Error RendererVk::initializeDevice(uint32_t queueFamilyIndex)
     commandPoolInfo.flags            = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
     commandPoolInfo.queueFamilyIndex = mCurrentQueueFamilyIndex;
 
-    ANGLE_VK_TRY(vkCreateCommandPool(mDevice, &commandPoolInfo, nullptr, &mCommandPool));
+    mCommandPool.reset(new vk::CommandPool(mDevice));
+    ANGLE_TRY(mCommandPool->init(commandPoolInfo));
 
-    mCommandBuffer.reset(new vk::CommandBuffer(mDevice, mCommandPool));
+    mCommandBuffer.reset(new vk::CommandBuffer(mDevice, mCommandPool.get()));
 
     return vk::NoError();
 }

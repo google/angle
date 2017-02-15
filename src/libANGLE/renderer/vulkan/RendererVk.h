@@ -90,7 +90,7 @@ class RendererVk : angle::NonCopyable
     VkQueue mQueue;
     uint32_t mCurrentQueueFamilyIndex;
     VkDevice mDevice;
-    VkCommandPool mCommandPool;
+    std::unique_ptr<vk::CommandPool> mCommandPool;
     std::unique_ptr<vk::CommandBuffer> mCommandBuffer;
     uint32_t mHostVisibleMemoryIndex;
     GlslangWrapper *mGlslangWrapper;

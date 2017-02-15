@@ -217,8 +217,29 @@ bool Error::isError() const
     return (mResult != VK_SUCCESS);
 }
 
+// CommandPool implementation.
+CommandPool::CommandPool(VkDevice device) : WrappedObject(device)
+{
+}
+
+CommandPool::~CommandPool()
+{
+    if (mHandle)
+    {
+        ASSERT(validDevice());
+        vkDestroyCommandPool(mDevice, mHandle, nullptr);
+    }
+}
+
+Error CommandPool::init(const VkCommandPoolCreateInfo &createInfo)
+{
+    ASSERT(!valid() && validDevice());
+    ANGLE_VK_TRY(vkCreateCommandPool(mDevice, &createInfo, nullptr, &mHandle));
+    return NoError();
+}
+
 // CommandBuffer implementation.
-CommandBuffer::CommandBuffer(VkDevice device, VkCommandPool commandPool)
+CommandBuffer::CommandBuffer(VkDevice device, CommandPool *commandPool)
     : WrappedObject(device), mCommandPool(commandPool)
 {
 }
@@ -231,7 +252,7 @@ Error CommandBuffer::begin()
         VkCommandBufferAllocateInfo commandBufferInfo;
         commandBufferInfo.sType              = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
         commandBufferInfo.pNext              = nullptr;
-        commandBufferInfo.commandPool        = mCommandPool;
+        commandBufferInfo.commandPool        = mCommandPool->getHandle();
         commandBufferInfo.level              = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
         commandBufferInfo.commandBufferCount = 1;
 
@@ -282,8 +303,8 @@ CommandBuffer::~CommandBuffer()
 {
     if (mHandle)
     {
-        ASSERT(validDevice());
-        vkFreeCommandBuffers(mDevice, mCommandPool, 1, &mHandle);
+        ASSERT(validDevice() && mCommandPool->valid());
+        vkFreeCommandBuffers(mDevice, mCommandPool->getHandle(), 1, &mHandle);
     }
 }
 

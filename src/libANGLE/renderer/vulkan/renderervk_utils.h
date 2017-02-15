@@ -114,11 +114,20 @@ class WrappedObject : angle::NonCopyable
     HandleT mHandle;
 };
 
+class CommandPool final : public WrappedObject<VkCommandPool>
+{
+  public:
+    CommandPool(VkDevice device);
+    ~CommandPool() override;
+
+    Error init(const VkCommandPoolCreateInfo &createInfo);
+};
+
 // Helper class that wraps a Vulkan command buffer.
 class CommandBuffer final : public WrappedObject<VkCommandBuffer>
 {
   public:
-    CommandBuffer(VkDevice device, VkCommandPool commandPool);
+    CommandBuffer(VkDevice device, CommandPool *commandPool);
     ~CommandBuffer() override;
 
     Error begin();
@@ -154,7 +163,7 @@ class CommandBuffer final : public WrappedObject<VkCommandBuffer>
                            const std::vector<VkDeviceSize> &offsets);
 
   private:
-    VkCommandPool mCommandPool;
+    CommandPool *mCommandPool;
 };
 
 class Image final : public WrappedObject<VkImage>
