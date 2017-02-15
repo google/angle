@@ -22,6 +22,30 @@
       "revId": "83060219a3b1af4854a695be62ecc973f0dc7724",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9dea1228_0d58e132",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 1446,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-02-15T14:41:51Z",
+      "side": 1,
+      "message": "There are only additions. Previously compilation failed in the negative tests since the compiler didn\u0027t support the features. Now the compilation step succeeds but the linking checks aren\u0027t yet in place, so the negative linking tests fail.",
+      "parentUuid": "70439804_a6a44c5f",
+      "range": {
+        "startLine": 1439,
+        "startChar": 0,
+        "endLine": 1446,
+        "endChar": 115
+      },
+      "revId": "83060219a3b1af4854a695be62ecc973f0dc7724",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
