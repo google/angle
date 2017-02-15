@@ -14,6 +14,9 @@
 
 #include "angle_gl.h"
 
+// Returns program ID. The program is left in use, no uniforms.
+GLuint SetupSimpleDrawProgram();
+
 // Returns program ID. The program is left in use and the uniforms are set to default values:
 // uScale = 0.5, uOffset = -0.5
 GLuint SetupSimpleScaleAndOffsetProgram();

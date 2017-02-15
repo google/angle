@@ -76,3 +76,11 @@ DrawCallPerfParams DrawCallPerfValidationOnly()
     params.runTimeSeconds = 5.0;
     return params;
 }
+
+DrawCallPerfParams DrawCallPerfVulkanParams(bool renderToTexture)
+{
+    DrawCallPerfParams params;
+    params.eglParameters = VULKAN();
+    params.useFBO        = renderToTexture;
+    return params;
+}

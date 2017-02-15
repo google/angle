@@ -89,6 +89,8 @@ std::string RenderTestParams::suffix() const
             return "_gles";
         case EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE:
             return "_default";
+        case EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE:
+            return "_vulkan";
         default:
             assert(0);
             return "_unk";

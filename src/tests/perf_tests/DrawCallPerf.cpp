@@ -43,7 +43,7 @@ void DrawCallPerfBenchmark::initializeBenchmark()
 
     ASSERT_LT(0u, params.iterations);
 
-    mProgram = SetupSimpleScaleAndOffsetProgram();
+    mProgram = SetupSimpleDrawProgram();
     ASSERT_NE(0u, mProgram);
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -109,6 +109,7 @@ ANGLE_INSTANTIATE_TEST(DrawCallPerfBenchmark,
                        DrawCallPerfOpenGLParams(false, false),
                        DrawCallPerfOpenGLParams(true, false),
                        DrawCallPerfOpenGLParams(true, true),
-                       DrawCallPerfValidationOnly());
+                       DrawCallPerfValidationOnly(),
+                       DrawCallPerfVulkanParams(false));
 
 } // namespace

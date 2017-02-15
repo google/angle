@@ -32,6 +32,23 @@ const char *SimpleScaleAndOffsetVertexShaderSource()
     // clang-format on
 }
 
+const char *SimpleDrawVertexShaderSource()
+{
+    // clang-format off
+    return SHADER_SOURCE
+    (
+        attribute vec2 vPosition;
+        const float scale = 0.5;
+        const float offset = -0.5;
+
+        void main()
+        {
+            gl_Position = vec4(vPosition * vec2(scale) + vec2(offset), 0, 1);
+        }
+    );
+    // clang-format on
+}
+
 const char *SimpleFragmentShaderSource()
 {
     // clang-format off
@@ -81,6 +98,22 @@ GLuint SetupSimpleScaleAndOffsetProgram()
 
     glUniform1f(glGetUniformLocation(program, "uScale"), scale);
     glUniform1f(glGetUniformLocation(program, "uOffset"), offset);
+    return program;
+}
+
+GLuint SetupSimpleDrawProgram()
+{
+    const std::string vs = SimpleDrawVertexShaderSource();
+    const std::string fs = SimpleFragmentShaderSource();
+    GLuint program       = CompileProgram(vs, fs);
+    if (program == 0u)
+    {
+        return program;
+    }
+
+    // Use the program object
+    glUseProgram(program);
+
     return program;
 }
 
