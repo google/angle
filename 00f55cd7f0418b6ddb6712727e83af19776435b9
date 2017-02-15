@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "42850d03_52891ded",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-15T10:29:19Z",
+      "side": 1,
+      "message": "Without these this patch will fail on Android trybots.",
+      "revId": "00f55cd7f0418b6ddb6712727e83af19776435b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
