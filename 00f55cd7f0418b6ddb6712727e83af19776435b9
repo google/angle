@@ -16,6 +16,24 @@
       "revId": "00f55cd7f0418b6ddb6712727e83af19776435b9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f55d1ca_26b69d5e",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-15T15:20:06Z",
+      "side": 1,
+      "message": "This sounds like a bug in the Android driver, it would be interesting to know what value it returns for MAX_VERTEX_ATTRIB_RELATIVE_OFFSET and see if there is a better fix that putting the minimum maximum required by the spec.",
+      "parentUuid": "42850d03_52891ded",
+      "revId": "00f55cd7f0418b6ddb6712727e83af19776435b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
