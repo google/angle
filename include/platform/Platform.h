@@ -240,12 +240,15 @@ extern "C" {
 // match the compiled signature for this ANGLE, false is returned. On success true is returned.
 // The application should set any platform methods it cares about on the returned pointer.
 // If display is not valid, behaviour is undefined.
-ANGLE_PLATFORM_EXPORT bool ANGLE_APIENTRY
-ANGLEGetDisplayPlatform(angle::EGLDisplayType display,
-                        const char *const methodNames[],
-                        unsigned int methodNameCount,
-                        void *context,
-                        angle::PlatformMethods **platformMethodsOut);
+//
+// Use a void * here to silence a sanitizer limitation with decltype.
+// TODO(jmadill): Use angle::PlatformMethods ** if UBSAN is fixed to handle decltype.
+
+ANGLE_PLATFORM_EXPORT bool ANGLE_APIENTRY ANGLEGetDisplayPlatform(angle::EGLDisplayType display,
+                                                                  const char *const methodNames[],
+                                                                  unsigned int methodNameCount,
+                                                                  void *context,
+                                                                  void *platformMethodsOut);
 
 // Sets the platform methods back to their defaults.
 // If display is not valid, behaviour is undefined.
@@ -255,8 +258,14 @@ ANGLE_PLATFORM_EXPORT void ANGLE_APIENTRY ANGLEResetDisplayPlatform(angle::EGLDi
 
 namespace angle
 {
-using GetDisplayPlatformFunc   = decltype(&ANGLEGetDisplayPlatform);
-using ResetDisplayPlatformFunc = decltype(&ANGLEResetDisplayPlatform);
+// Use typedefs here instead of decltype to work around sanitizer limitations.
+// TODO(jmadill): Use decltype here if UBSAN is fixed.
+typedef bool(ANGLE_APIENTRY *GetDisplayPlatformFunc)(angle::EGLDisplayType,
+                                                     const char *const *,
+                                                     unsigned int,
+                                                     void *,
+                                                     void *);
+typedef void(ANGLE_APIENTRY *ResetDisplayPlatformFunc)(angle::EGLDisplayType);
 }  // namespace angle
 
 // This function is not exported

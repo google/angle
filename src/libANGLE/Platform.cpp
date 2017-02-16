@@ -27,8 +27,11 @@ bool ANGLE_APIENTRY ANGLEGetDisplayPlatform(angle::EGLDisplayType display,
                                             const char *const methodNames[],
                                             unsigned int methodNameCount,
                                             void *context,
-                                            angle::PlatformMethods **platformMethodsOut)
+                                            void *platformMethods)
 {
+    angle::PlatformMethods **platformMethodsOut =
+        reinterpret_cast<angle::PlatformMethods **>(platformMethods);
+
     // We allow for a lower input count of impl platform methods if the subset is correct.
     if (methodNameCount > angle::g_NumPlatformMethods)
     {
