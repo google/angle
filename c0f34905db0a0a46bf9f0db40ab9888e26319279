@@ -187,6 +187,30 @@
       "revId": "c0f34905db0a0a46bf9f0db40ab9888e26319279",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "24bd80ea_8435df89",
+        "filename": "src/libANGLE/queryutils.h",
+        "patchSetId": 20
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-02-16T05:55:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "17298485_67625a8e",
+      "range": {
+        "startLine": 79,
+        "startChar": 33,
+        "endLine": 79,
+        "endChar": 57
+      },
+      "revId": "c0f34905db0a0a46bf9f0db40ab9888e26319279",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
