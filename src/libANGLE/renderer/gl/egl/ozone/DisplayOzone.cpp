@@ -894,6 +894,8 @@ egl::ConfigSet DisplayOzone::generateConfigs()
     config.bindToTextureRGBA = EGL_TRUE;
     config.renderableType    = EGL_OPENGL_ES2_BIT;
     config.surfaceType       = EGL_WINDOW_BIT | EGL_PBUFFER_BIT;
+    config.renderTargetFormat = GL_RGBA8;
+    config.depthStencilFormat = GL_DEPTH24_STENCIL8;
 
     configs.add(config);
     return configs;
