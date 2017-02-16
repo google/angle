@@ -70,6 +70,24 @@
       "revId": "00f55cd7f0418b6ddb6712727e83af19776435b9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3b5e9e4b_b995989c",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-16T01:46:51Z",
+      "side": 1,
+      "message": "Hi, Yuly, thanks for pointing out the math overflow issue. I will fix it.\n\nThis test is for enabling ES3.1 feature Vertex Attrib Binding. In ES3.1 dEQP there is a test which requires the minimum value of GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET to be 2047 and GL_MAX_VERTEX_ATTRIB_STRIDE to be 2048:\nhttps://chromium.googlesource.com/external/deqp/+/lollipop-mr1-dev/modules/gles31/functional/es31fIntegerStateQueryTests.cpp#641\n\nSoI think it is legal on Nexus 5X, and these restrictions are necessary to fit all platforms.",
+      "parentUuid": "eb52843f_3968d410",
+      "revId": "00f55cd7f0418b6ddb6712727e83af19776435b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
