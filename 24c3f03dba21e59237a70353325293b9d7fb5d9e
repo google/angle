@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "74ced2ba_c8735520",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 82
+      },
+      "lineNbr": 2461,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-16T15:08:01Z",
+      "side": 1,
+      "message": "use ES_3_1, defined in ContextState.h.",
+      "range": {
+        "startLine": 2461,
+        "startChar": 8,
+        "endLine": 2461,
+        "endChar": 42
+      },
+      "revId": "24c3f03dba21e59237a70353325293b9d7fb5d9e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dae65489_9e2b1eaf",
+        "filename": "src/libANGLE/VertexArray_unittest.cpp",
+        "patchSetId": 82
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-16T15:08:01Z",
+      "side": 1,
+      "message": "nit: top-level file comment, similar to other files in ANGLE.",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 2
+      },
+      "revId": "24c3f03dba21e59237a70353325293b9d7fb5d9e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9abf9621_e63c827b",
+        "filename": "src/libANGLE/VertexArray_unittest.cpp",
+        "patchSetId": 82
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-16T15:08:01Z",
+      "side": 1,
+      "message": "nit: comment before the test.",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 4
+      },
+      "revId": "24c3f03dba21e59237a70353325293b9d7fb5d9e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c909e083_a8c210a8",
+        "filename": "src/libANGLE/VertexArray_unittest.cpp",
+        "patchSetId": 82
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-16T15:08:01Z",
+      "side": 1,
+      "message": "nit: switch the order of these parameters, it should be \n\nEXPECT_EQ(expected, actual).\n\nSame for below",
+      "range": {
+        "startLine": 31,
+        "startChar": 12,
+        "endLine": 31,
+        "endChar": 21
+      },
+      "revId": "24c3f03dba21e59237a70353325293b9d7fb5d9e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2f9c9972_0966fb04",
+        "filename": "src/libANGLE/VertexArray_unittest.cpp",
+        "patchSetId": 82
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-16T15:08:01Z",
+      "side": 1,
+      "message": "ASSERT_TRUE(false); or other similar thing, don\u0027t use ASSERT() or UNREACHABLE() in tests.",
+      "range": {
+        "startLine": 54,
+        "startChar": 12,
+        "endLine": 54,
+        "endChar": 23
+      },
+      "revId": "24c3f03dba21e59237a70353325293b9d7fb5d9e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
