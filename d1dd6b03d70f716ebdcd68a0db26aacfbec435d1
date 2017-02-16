@@ -237,6 +237,29 @@
     },
     {
       "key": {
+        "uuid": "cbe41a10_3d242443",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 18
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-16T15:11:31Z",
+      "side": 1,
+      "message": "nit: you can leave the comma",
+      "range": {
+        "startLine": 241,
+        "startChar": 24,
+        "endLine": 241,
+        "endChar": 41
+      },
+      "revId": "d1dd6b03d70f716ebdcd68a0db26aacfbec435d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bea6febe_acfaea7b",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 18
