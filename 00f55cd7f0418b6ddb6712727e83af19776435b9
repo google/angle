@@ -106,6 +106,24 @@
       "revId": "00f55cd7f0418b6ddb6712727e83af19776435b9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "68cc4388_efc8069f",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-16T02:18:57Z",
+      "side": 1,
+      "message": "Or do you think there are platforms which don\u0027t conform to ES3.1 spec, and on these platforms GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET \u003c 2047 || GL_MAX_VERTEX_ATTRIB_STRIDE \u003c 2048?\nIn that case:\n1. This should be std::max() and not std::min().\n2. This is not enough, you need to emulate in ANGLE the correct behavior for strides and offsets which are not supported natively.",
+      "parentUuid": "c382b6e5_15d191d7",
+      "revId": "00f55cd7f0418b6ddb6712727e83af19776435b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
