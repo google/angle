@@ -142,6 +142,24 @@
       "revId": "00f55cd7f0418b6ddb6712727e83af19776435b9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "68540e59_364e0742",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-16T14:52:46Z",
+      "side": 1,
+      "message": "No no. I don\u0027t think a platform that supports ES3.1 will fail this basic dEQP test.\nI just want to know if we should set a unified value for these queries.",
+      "parentUuid": "68cc4388_efc8069f",
+      "revId": "00f55cd7f0418b6ddb6712727e83af19776435b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
