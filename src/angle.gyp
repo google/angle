@@ -151,6 +151,14 @@
                     [
                         '<@(libangle_common_mac_sources)',
                     ],
+                    'link_settings':
+                    {
+                        'libraries':
+                        [
+                            '$(SDKROOT)/System/Library/Frameworks/IOKit.framework',
+                            '$(SDKROOT)/System/Library/Frameworks/CoreFoundation.framework',
+                        ],
+                    },
                 }],
                 ['OS=="linux"',
                 {
@@ -270,6 +278,13 @@
                             '<!@(<(pkg-config) --libs-only-l libpci)',
                         ],
                     },
+                }],
+                ['OS=="mac"',
+                {
+                    'sources':
+                    [
+                        '<@(libangle_gpu_info_util_mac_sources)',
+                    ],
                 }],
             ],
         },

@@ -81,6 +81,10 @@
         [
             'gpu_info_util/SystemInfo_x11.cpp',
         ],
+        'libangle_gpu_info_util_mac_sources':
+        [
+            'gpu_info_util/SystemInfo_mac.mm',
+        ],
         'libangle_includes':
         [
             '../include/angle_gl.h',

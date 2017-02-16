@@ -15,6 +15,7 @@
     {
         'angle_white_box_tests_sources':
         [
+            '<(angle_path)/src/tests/util_tests/PrintSystemInfoTest.cpp',
             '<(angle_path)/src/tests/test_utils/angle_test_configs.cpp',
             '<(angle_path)/src/tests/test_utils/angle_test_configs.h',
             '<(angle_path)/src/tests/test_utils/angle_test_instantiate.cpp',

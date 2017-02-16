@@ -235,6 +235,15 @@ static_library("angle_gpu_info_util") {
     defines += [ "GPU_INFO_USE_LIBPCI" ]
     libs += [ "pci" ]
   }
+
+  if (is_mac) {
+    sources +=
+        rebase_path(gles_gypi.libangle_gpu_info_util_mac_sources, ".", "src")
+    libs += [
+      "IOKit.framework",
+      "CoreFoundation.framework",
+    ]
+  }
 }
 
 static_library("translator") {

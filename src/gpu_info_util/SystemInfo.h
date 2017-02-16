@@ -26,8 +26,8 @@ constexpr VendorID kVendorID_Qualcomm = 0x5143;
 
 struct GPUDeviceInfo
 {
-    VendorID vendorId;
-    DeviceID deviceId;
+    VendorID vendorId = 0;
+    DeviceID deviceId = 0;
 
     std::string driverVendor;
     std::string driverVersion;
@@ -37,12 +37,14 @@ struct GPUDeviceInfo
 struct SystemInfo
 {
     std::vector<GPUDeviceInfo> gpus;
-    int primaryGPUIndex;
+    int primaryGPUIndex = -1;
+    int activeGPUIndex  = -1;
 
-    bool isOptimus;
-    bool isAMDSwitchable;
+    bool isOptimus       = false;
+    bool isAMDSwitchable = false;
 
     std::string machineModelName;
+    std::string machineModelVersion;
 };
 
 bool GetSystemInfo(SystemInfo *info);

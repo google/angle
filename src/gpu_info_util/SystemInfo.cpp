@@ -11,6 +11,8 @@
 #include <cstring>
 #include <sstream>
 
+#include "common/debug.h"
+
 namespace angle
 {
 
@@ -73,6 +75,71 @@ bool ParseAMDCatalystDriverVersion(const std::string &content, std::string *vers
         }
     }
     return false;
+}
+
+bool ParseMacMachineModel(const std::string &identifier,
+                          std::string *type,
+                          int32_t *major,
+                          int32_t *minor)
+{
+    size_t numberLoc = identifier.find_first_of("0123456789");
+    if (numberLoc == std::string::npos)
+    {
+        return false;
+    }
+
+    size_t commaLoc = identifier.find(',', numberLoc);
+    if (commaLoc == std::string::npos || commaLoc >= identifier.size())
+    {
+        return false;
+    }
+
+    const char *numberPtr = &identifier[numberLoc];
+    const char *commaPtr  = &identifier[commaLoc + 1];
+    char *endPtr          = nullptr;
+
+    int32_t majorTmp = std::strtol(numberPtr, &endPtr, 10);
+    if (endPtr == numberPtr)
+    {
+        return false;
+    }
+
+    int32_t minorTmp = std::strtol(commaPtr, &endPtr, 10);
+    if (endPtr == commaPtr)
+    {
+        return false;
+    }
+
+    *major = majorTmp;
+    *minor = minorTmp;
+    *type  = identifier.substr(0, numberLoc);
+
+    return true;
+}
+
+void FindPrimaryGPU(SystemInfo *info)
+{
+    ASSERT(!info->gpus.empty());
+
+    // On dual-GPU systems we assume the non-Intel GPU is the primary one.
+    int primary   = 0;
+    bool hasIntel = false;
+    for (size_t i = 0; i < info->gpus.size(); ++i)
+    {
+        if (IsIntel(info->gpus[i].vendorId))
+        {
+            hasIntel = true;
+        }
+        if (IsIntel(info->gpus[primary].vendorId))
+        {
+            primary = static_cast<int>(i);
+        }
+    }
+
+    // Assume that a combination of AMD or Nvidia with Intel means Optimus or AMD Switchable
+    info->primaryGPUIndex = primary;
+    info->isOptimus       = hasIntel && IsNvidia(info->gpus[primary].vendorId);
+    info->isAMDSwitchable = hasIntel && IsAMD(info->gpus[primary].vendorId);
 }
 
 }  // namespace angle

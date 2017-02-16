@@ -81,25 +81,7 @@ bool GetSystemInfo(SystemInfo *info)
         return false;
     }
 
-    // On dual-GPU systems we assume the non-Intel GPU is the primary one.
-    int primary   = 0;
-    bool hasIntel = false;
-    for (size_t i = 0; i < info->gpus.size(); ++i)
-    {
-        if (IsIntel(info->gpus[i].vendorId))
-        {
-            hasIntel = true;
-        }
-        if (IsIntel(info->gpus[primary].vendorId))
-        {
-            primary = i;
-        }
-    }
-
-    // Assume that a combination of AMD or Nvidia with Intel means Optimus or AMD Switchable
-    info->primaryGPUIndex = primary;
-    info->isOptimus       = hasIntel && IsNvidia(info->gpus[primary].vendorId);
-    info->isAMDSwitchable = hasIntel && IsAMD(info->gpus[primary].vendorId);
+    FindPrimaryGPU(info);
 
     for (size_t i = 0; i < info->gpus.size(); ++i)
     {
