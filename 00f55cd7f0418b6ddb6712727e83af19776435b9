@@ -124,6 +124,24 @@
       "revId": "00f55cd7f0418b6ddb6712727e83af19776435b9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ac90589_74f1b570",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-16T05:16:17Z",
+      "side": 1,
+      "message": "Should we make ANGLE return unified values for thes queries regardless of the actual backend? Or just leave them having different values on different platforms?",
+      "parentUuid": "68cc4388_efc8069f",
+      "revId": "00f55cd7f0418b6ddb6712727e83af19776435b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
