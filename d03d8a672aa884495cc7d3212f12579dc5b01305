@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "629a2422_e841e78b",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 80
+      },
+      "lineNbr": 2455,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-16T14:05:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dda099ff_f8befc9f",
+      "range": {
+        "startLine": 2454,
+        "startChar": 4,
+        "endLine": 2455,
+        "endChar": 84
+      },
+      "revId": "d03d8a672aa884495cc7d3212f12579dc5b01305",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dfe6d875_bfb6e389",
         "filename": "src/libANGLE/VertexArray.cpp",
         "patchSetId": 80
@@ -60,6 +84,30 @@
       "writtenOn": "2017-02-15T14:55:53Z",
       "side": 1,
       "message": "don\u0027t use std::max like this - set it to maxAttribBindings then ASSERT in the function body if you want to make an assumption.",
+      "range": {
+        "startLine": 18,
+        "startChar": 16,
+        "endLine": 18,
+        "endChar": 72
+      },
+      "revId": "d03d8a672aa884495cc7d3212f12579dc5b01305",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7ba31b9_1f5e92cd",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 80
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-16T14:05:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dfe6d875_bfb6e389",
       "range": {
         "startLine": 18,
         "startChar": 16,
@@ -95,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "55091eb0_ad91b8b0",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 80
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-16T14:05:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "27de3c80_a27d2ec5",
+      "range": {
+        "startLine": 95,
+        "startChar": 0,
+        "endLine": 100,
+        "endChar": 1
+      },
+      "revId": "d03d8a672aa884495cc7d3212f12579dc5b01305",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6d392b80_b3ed28f7",
         "filename": "src/libANGLE/VertexAttribute.cpp",
         "patchSetId": 80
@@ -106,6 +178,30 @@
       "writtenOn": "2017-02-15T14:55:53Z",
       "side": 1,
       "message": "nit: although technically correct and good for sharing code, I think this function would be faster to use initialization list syntax.",
+      "range": {
+        "startLine": 54,
+        "startChar": 4,
+        "endLine": 54,
+        "endChar": 30
+      },
+      "revId": "d03d8a672aa884495cc7d3212f12579dc5b01305",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d1c5e6af_8dcd40a1",
+        "filename": "src/libANGLE/VertexAttribute.cpp",
+        "patchSetId": 80
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-16T14:05:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d392b80_b3ed28f7",
       "range": {
         "startLine": 54,
         "startChar": 4,
@@ -141,6 +237,30 @@
     },
     {
       "key": {
+        "uuid": "c16d3de4_faf05f02",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 80
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-16T14:05:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5976c037_fab093f8",
+      "range": {
+        "startLine": 24,
+        "startChar": 4,
+        "endLine": 24,
+        "endChar": 17
+      },
+      "revId": "d03d8a672aa884495cc7d3212f12579dc5b01305",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "02a7217a_57c8f2b7",
         "filename": "src/libANGLE/VertexAttribute.h",
         "patchSetId": 80
@@ -152,6 +272,30 @@
       "writtenOn": "2017-02-15T14:55:53Z",
       "side": 1,
       "message": "nit: explicit",
+      "range": {
+        "startLine": 40,
+        "startChar": 4,
+        "endLine": 40,
+        "endChar": 19
+      },
+      "revId": "d03d8a672aa884495cc7d3212f12579dc5b01305",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "33193fa2_40efa4b1",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 80
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-16T14:05:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "02a7217a_57c8f2b7",
       "range": {
         "startLine": 40,
         "startChar": 4,
@@ -187,6 +331,30 @@
     },
     {
       "key": {
+        "uuid": "18d58c2a_62f18836",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 80
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-16T14:05:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dcee471a_35b4a326",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 21
+      },
+      "revId": "d03d8a672aa884495cc7d3212f12579dc5b01305",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "29191c2b_4cebd0c8",
         "filename": "src/libANGLE/renderer/d3d/VertexBuffer.h",
         "patchSetId": 80
@@ -198,6 +366,30 @@
       "writtenOn": "2017-02-15T14:55:53Z",
       "side": 1,
       "message": "nit: I liked this warning initially, but it seems redundant to place it seven times in the same header. maybe restrict yourself to one or two times per file.",
+      "range": {
+        "startLine": 170,
+        "startChar": 8,
+        "endLine": 171,
+        "endChar": 20
+      },
+      "revId": "d03d8a672aa884495cc7d3212f12579dc5b01305",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49ca2e77_4578846f",
+        "filename": "src/libANGLE/renderer/d3d/VertexBuffer.h",
+        "patchSetId": 80
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-16T14:05:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29191c2b_4cebd0c8",
       "range": {
         "startLine": 170,
         "startChar": 8,
@@ -233,6 +425,30 @@
     },
     {
       "key": {
+        "uuid": "70323bfe_7fd76241",
+        "filename": "src/libANGLE/renderer/gl/ContextGL.cpp",
+        "patchSetId": 80
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-16T14:05:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "69116c6e_fa17407d",
+      "range": {
+        "startLine": 86,
+        "startChar": 28,
+        "endLine": 86,
+        "endChar": 45
+      },
+      "revId": "d03d8a672aa884495cc7d3212f12579dc5b01305",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "32a7b664_98322a71",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 80
@@ -244,6 +460,30 @@
       "writtenOn": "2017-02-15T14:55:53Z",
       "side": 1,
       "message": "I suggest you initialize maxVertexAttribBindings so it\u0027s never zero, and remove this conditional expression.",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 54
+      },
+      "revId": "d03d8a672aa884495cc7d3212f12579dc5b01305",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "63e26bb1_cd0f5b86",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 80
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-16T14:05:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "32a7b664_98322a71",
       "range": {
         "startLine": 60,
         "startChar": 0,
@@ -279,6 +519,30 @@
     },
     {
       "key": {
+        "uuid": "a0aca42a_b93a25cf",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 80
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-16T14:05:40Z",
+      "side": 1,
+      "message": "Got it. \nES3.1 requires attribIndex \u003d\u003d bindingIndex to call VertexAttribDivisor, so I can directly use getVertexBinding(attribIndex) here.\n\nI have updated other places that can use getBindingFromAttribIndex, such as:\nVertexArray11::updateVertexAttribStorage(size_t attribIndex)\nVertexArrayGL::updateNeedsStreaming(size_t attribIndex)",
+      "parentUuid": "a9aaedb3_0cc5d45b",
+      "range": {
+        "startLine": 512,
+        "startChar": 36,
+        "endLine": 512,
+        "endChar": 74
+      },
+      "revId": "d03d8a672aa884495cc7d3212f12579dc5b01305",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "725a2157_0bd70bbf",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 80
@@ -290,6 +554,30 @@
       "writtenOn": "2017-02-15T14:55:53Z",
       "side": 1,
       "message": "nit: we don\u0027t need to compute this for the element array buffer. I suggest you put a continue; in the first \"if\" and then move this below that block.",
+      "range": {
+        "startLine": 531,
+        "startChar": 8,
+        "endLine": 531,
+        "endChar": 61
+      },
+      "revId": "d03d8a672aa884495cc7d3212f12579dc5b01305",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6399155a_5d0462fb",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 80
+      },
+      "lineNbr": 531,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-16T14:05:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "725a2157_0bd70bbf",
       "range": {
         "startLine": 531,
         "startChar": 8,
