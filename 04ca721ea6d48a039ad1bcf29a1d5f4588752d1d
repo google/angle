@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "429b723a_c3336ab6",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 2463,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-16T14:52:46Z",
+      "side": 1,
+      "message": "Add this to unify these values on all backends that can support ES3.1",
+      "revId": "04ca721ea6d48a039ad1bcf29a1d5f4588752d1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "377f9b72_828737b5",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 627,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-16T14:52:46Z",
+      "side": 1,
+      "message": "Add this to avoid overflow.",
+      "revId": "04ca721ea6d48a039ad1bcf29a1d5f4588752d1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
