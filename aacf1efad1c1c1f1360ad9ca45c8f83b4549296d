@@ -22,6 +22,30 @@
       "revId": "aacf1efad1c1c1f1360ad9ca45c8f83b4549296d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e73c1bb7_def2b699",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-16T20:00:00Z",
+      "side": 1,
+      "message": "Right, good catch. Fixed.",
+      "parentUuid": "0848f182_035dbb3b",
+      "range": {
+        "startLine": 150,
+        "startChar": 41,
+        "endLine": 150,
+        "endChar": 53
+      },
+      "revId": "aacf1efad1c1c1f1360ad9ca45c8f83b4549296d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
