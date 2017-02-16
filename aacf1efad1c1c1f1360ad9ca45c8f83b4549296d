@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0848f182_035dbb3b",
+        "filename": "src/common/debug.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-16T19:54:27Z",
+      "side": 1,
+      "message": "I think this will have double end line now. And unneeded endline in setMarker and OutputDebugString?\nMaybe have \"if \" only for !LOG_EVENT, and then always \u003c\u003c mStream.str().",
+      "range": {
+        "startLine": 150,
+        "startChar": 41,
+        "endLine": 150,
+        "endChar": 53
+      },
+      "revId": "aacf1efad1c1c1f1360ad9ca45c8f83b4549296d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
