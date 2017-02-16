@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5b744d8b_d56e7a88",
+        "filename": "src/libANGLE/renderer/gl/ContextGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-16T23:57:20Z",
+      "side": 1,
+      "message": "nit: mState. And don\u0027t pass \"state\" any more, it\u0027s redundant since it\u0027s a member of mState.",
+      "range": {
+        "startLine": 333,
+        "startChar": 44,
+        "endLine": 333,
+        "endChar": 61
+      },
+      "revId": "07a346c07d89db95bd8a854ecb8dab374aec7b4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
