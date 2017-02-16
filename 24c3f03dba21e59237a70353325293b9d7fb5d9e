@@ -114,6 +114,29 @@
       "revId": "24c3f03dba21e59237a70353325293b9d7fb5d9e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2ed1159b_7aa8ab99",
+        "filename": "src/tests/angle_unittests.gypi",
+        "patchSetId": 82
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-16T15:56:53Z",
+      "side": 1,
+      "message": "also the sorting here is case-sensitive, put this up near varyingpack_unittest.",
+      "range": {
+        "startLine": 47,
+        "startChar": 40,
+        "endLine": 47,
+        "endChar": 60
+      },
+      "revId": "24c3f03dba21e59237a70353325293b9d7fb5d9e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
