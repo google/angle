@@ -86,8 +86,8 @@ class FramebufferGL : public FramebufferImpl
     bool isDefault() const;
 
   private:
-    void syncClearState(GLbitfield mask);
-    void syncClearBufferState(GLenum buffer, GLint drawBuffer);
+    void syncClearState(ContextImpl *context, GLbitfield mask);
+    void syncClearBufferState(ContextImpl *context, GLenum buffer, GLint drawBuffer);
 
     gl::Error readPixelsRowByRowWorkaround(const gl::Rectangle &area,
                                            GLenum format,

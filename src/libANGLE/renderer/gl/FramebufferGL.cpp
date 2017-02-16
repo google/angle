@@ -167,7 +167,7 @@ Error FramebufferGL::invalidateSub(size_t count,
 
 Error FramebufferGL::clear(ContextImpl *context, GLbitfield mask)
 {
-    syncClearState(mask);
+    syncClearState(context, mask);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
     mFunctions->clear(mask);
 
@@ -179,7 +179,7 @@ Error FramebufferGL::clearBufferfv(ContextImpl *context,
                                    GLint drawbuffer,
                                    const GLfloat *values)
 {
-    syncClearBufferState(buffer, drawbuffer);
+    syncClearBufferState(context, buffer, drawbuffer);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
     mFunctions->clearBufferfv(buffer, drawbuffer, values);
 
@@ -191,7 +191,7 @@ Error FramebufferGL::clearBufferuiv(ContextImpl *context,
                                     GLint drawbuffer,
                                     const GLuint *values)
 {
-    syncClearBufferState(buffer, drawbuffer);
+    syncClearBufferState(context, buffer, drawbuffer);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
     mFunctions->clearBufferuiv(buffer, drawbuffer, values);
 
@@ -203,7 +203,7 @@ Error FramebufferGL::clearBufferiv(ContextImpl *context,
                                    GLint drawbuffer,
                                    const GLint *values)
 {
-    syncClearBufferState(buffer, drawbuffer);
+    syncClearBufferState(context, buffer, drawbuffer);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
     mFunctions->clearBufferiv(buffer, drawbuffer, values);
 
@@ -216,7 +216,7 @@ Error FramebufferGL::clearBufferfi(ContextImpl *context,
                                    GLfloat depth,
                                    GLint stencil)
 {
-    syncClearBufferState(buffer, drawbuffer);
+    syncClearBufferState(context, buffer, drawbuffer);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
     mFunctions->clearBufferfi(buffer, drawbuffer, depth, stencil);
 
@@ -343,7 +343,7 @@ Error FramebufferGL::blit(ContextImpl *context,
     }
 
     // Enable FRAMEBUFFER_SRGB if needed
-    mStateManager->setFramebufferSRGBEnabledForFramebuffer(true, this);
+    mStateManager->setFramebufferSRGBEnabledForFramebuffer(context->getContextState(), true, this);
 
     GLenum blitMask = mask;
     if (needManualColorBlit && (mask & GL_COLOR_BUFFER_BIT) && readAttachmentSamples <= 1)
@@ -461,7 +461,7 @@ bool FramebufferGL::isDefault() const
     return mIsDefault;
 }
 
-void FramebufferGL::syncClearState(GLbitfield mask)
+void FramebufferGL::syncClearState(ContextImpl *context, GLbitfield mask)
 {
     if (mFunctions->standard == STANDARD_GL_DESKTOP)
     {
@@ -478,16 +478,16 @@ void FramebufferGL::syncClearState(GLbitfield mask)
                 }
             }
 
-            mStateManager->setFramebufferSRGBEnabled(hasSRGBAttachment);
+            mStateManager->setFramebufferSRGBEnabled(context->getContextState(), hasSRGBAttachment);
         }
         else
         {
-            mStateManager->setFramebufferSRGBEnabled(!mIsDefault);
+            mStateManager->setFramebufferSRGBEnabled(context->getContextState(), !mIsDefault);
         }
     }
 }
 
-void FramebufferGL::syncClearBufferState(GLenum buffer, GLint drawBuffer)
+void FramebufferGL::syncClearBufferState(ContextImpl *context, GLenum buffer, GLint drawBuffer)
 {
     if (mFunctions->standard == STANDARD_GL_DESKTOP)
     {
@@ -510,12 +510,13 @@ void FramebufferGL::syncClearBufferState(GLenum buffer, GLint drawBuffer)
 
             if (attachment != nullptr)
             {
-                mStateManager->setFramebufferSRGBEnabled(attachment->getColorEncoding() == GL_SRGB);
+                mStateManager->setFramebufferSRGBEnabled(context->getContextState(),
+                                                         attachment->getColorEncoding() == GL_SRGB);
             }
         }
         else
         {
-            mStateManager->setFramebufferSRGBEnabled(!mIsDefault);
+            mStateManager->setFramebufferSRGBEnabled(context->getContextState(), !mIsDefault);
         }
     }
 }

@@ -123,8 +123,10 @@ class StateManagerGL final : angle::NonCopyable
                            GLint skipPixels,
                            GLuint packBuffer);
 
-    void setFramebufferSRGBEnabled(bool enabled);
-    void setFramebufferSRGBEnabledForFramebuffer(bool enabled, const FramebufferGL *framebuffer);
+    void setFramebufferSRGBEnabled(const gl::ContextState &data, bool enabled);
+    void setFramebufferSRGBEnabledForFramebuffer(const gl::ContextState &data,
+                                                 bool enabled,
+                                                 const FramebufferGL *framebuffer);
 
     void setDitherEnabled(bool enabled);
 
@@ -158,7 +160,7 @@ class StateManagerGL final : angle::NonCopyable
     void resumeQuery(GLenum type);
     gl::Error onMakeCurrent(const gl::ContextState &data);
 
-    void syncState(const gl::State &state, const gl::State::DirtyBits &glDirtyBits);
+    void syncState(const gl::ContextState &data, const gl::State::DirtyBits &glDirtyBits);
 
     GLuint getBoundBuffer(GLenum type);
 
