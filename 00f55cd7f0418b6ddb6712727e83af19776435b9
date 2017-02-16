@@ -88,6 +88,24 @@
       "revId": "00f55cd7f0418b6ddb6712727e83af19776435b9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c382b6e5_15d191d7",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-16T02:09:47Z",
+      "side": 1,
+      "message": "Not sure why you mention this dEQP test. It makes sure that GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET \u003e\u003d 2047 \u0026\u0026 GL_MAX_VERTEX_ATTRIB_STRIDE \u003e\u003d 2048, which is what ES3.1 spec requires. This check is certainly true for 2147483647.\n\nThese 2 lines should be removed.",
+      "parentUuid": "3b5e9e4b_b995989c",
+      "revId": "00f55cd7f0418b6ddb6712727e83af19776435b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
