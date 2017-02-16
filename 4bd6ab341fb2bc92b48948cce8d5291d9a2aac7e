@@ -22,6 +22,30 @@
       "revId": "4bd6ab341fb2bc92b48948cce8d5291d9a2aac7e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ac62604_a769d68b",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1677,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-16T19:30:21Z",
+      "side": 1,
+      "message": "I think we should probably check for the write control extension here. Not really sure what the deal is with the default - Geoff could clarify?",
+      "parentUuid": "51c64815_d97cbb89",
+      "range": {
+        "startLine": 1676,
+        "startChar": 80,
+        "endLine": 1677,
+        "endChar": 44
+      },
+      "revId": "4bd6ab341fb2bc92b48948cce8d5291d9a2aac7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
