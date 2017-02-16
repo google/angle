@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "51c64815_d97cbb89",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1677,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-16T18:51:59Z",
+      "side": 1,
+      "message": "The way I understand this comment, is that framebuffer sRGB state for blending should be always obeyed on GLES, and on Desktop GL it should be obeyed except for the default framebuffer.\nSeems like this is not correct, but your code is not correct either, as it ignores the extensions which can add GL_FRAMEBUFFER_SRGB, and also it\u0027s inconsistent with the comment.\n\nSo, from what I\u0027ve found, FRAMEBUFFER_SRGB is a feature of GL \u003e\u003d 3.0, or ARB_framebuffer_sRGB or EXT_sRGB_write_control. I guess this is what the upper level if should check.\nAnd, I find it hard to understand why the default framebuffer has a special handling. As I understand this code, it will never enable sRGB blending for default framebuffer? Because if it were enabled, default framebuffer will use sRGB blending even if used with format which does not support it? Then how is this supposed to work if ANGLE would like to implement EXT_sRGB_write_control? The way I understand it, there should be some place where ANGLE checks if used format is sRGB capable and enables FRAMEBUFFER_SRGB based on that info? So, this framebuffer-\u003eisDefault() is a temporary hack until sRGB is properly supported?\n\nI wish this comment would better explain what\u0027s going on.",
+      "range": {
+        "startLine": 1676,
+        "startChar": 80,
+        "endLine": 1677,
+        "endChar": 44
+      },
+      "revId": "4bd6ab341fb2bc92b48948cce8d5291d9a2aac7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
