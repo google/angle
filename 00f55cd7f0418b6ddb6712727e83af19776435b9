@@ -34,6 +34,24 @@
       "revId": "00f55cd7f0418b6ddb6712727e83af19776435b9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "765b1a68_e991879f",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-16T01:25:40Z",
+      "side": 1,
+      "message": "Nexus 5X returns 2147483647 for both GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET and GL_MAX_VERTEX_ATTRIB_STRIDE.\nSeems legit.",
+      "parentUuid": "4f55d1ca_26b69d5e",
+      "revId": "00f55cd7f0418b6ddb6712727e83af19776435b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
