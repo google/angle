@@ -24,6 +24,13 @@ BufferVk::~BufferVk()
 {
 }
 
+void BufferVk::destroy(ContextImpl *contextImpl)
+{
+    VkDevice device = GetAs<ContextVk>(contextImpl)->getDevice();
+
+    mBuffer.destroy(device);
+}
+
 gl::Error BufferVk::setData(ContextImpl *context,
                             GLenum target,
                             const void *data,
@@ -45,8 +52,8 @@ gl::Error BufferVk::setData(ContextImpl *context,
     createInfo.queueFamilyIndexCount = 0;
     createInfo.pQueueFamilyIndices   = nullptr;
 
-    vk::Buffer newBuffer(device);
-    ANGLE_TRY(newBuffer.init(createInfo));
+    vk::Buffer newBuffer;
+    ANGLE_TRY(newBuffer.init(device, createInfo));
 
     // Find a compatible memory pool index. If the index doesn't change, we could cache it.
     // Not finding a valid memory pool means an out-of-spec driver, or internal error.
@@ -73,14 +80,14 @@ gl::Error BufferVk::setData(ContextImpl *context,
     allocInfo.memoryTypeIndex = memoryTypeIndex.value();
     allocInfo.allocationSize  = memoryRequirements.size;
 
-    ANGLE_TRY(newBuffer.getMemory().allocate(allocInfo));
-    ANGLE_TRY(newBuffer.bindMemory());
+    ANGLE_TRY(newBuffer.getMemory().allocate(device, allocInfo));
+    ANGLE_TRY(newBuffer.bindMemory(device));
 
-    mBuffer = std::move(newBuffer);
+    mBuffer.retain(device, std::move(newBuffer));
 
     if (data)
     {
-        ANGLE_TRY(setDataImpl(static_cast<const uint8_t *>(data), size, 0));
+        ANGLE_TRY(setDataImpl(device, static_cast<const uint8_t *>(data), size, 0));
     }
 
     return gl::NoError();
@@ -95,7 +102,9 @@ gl::Error BufferVk::setSubData(ContextImpl *context,
     ASSERT(mBuffer.getHandle() != VK_NULL_HANDLE);
     ASSERT(mBuffer.getMemory().getHandle() != VK_NULL_HANDLE);
 
-    ANGLE_TRY(setDataImpl(static_cast<const uint8_t *>(data), size, offset));
+    VkDevice device = GetAs<ContextVk>(context)->getDevice();
+
+    ANGLE_TRY(setDataImpl(device, static_cast<const uint8_t *>(data), size, offset));
 
     return gl::NoError();
 }
@@ -115,8 +124,10 @@ gl::Error BufferVk::map(ContextImpl *context, GLenum access, GLvoid **mapPtr)
     ASSERT(mBuffer.getHandle() != VK_NULL_HANDLE);
     ASSERT(mBuffer.getMemory().getHandle() != VK_NULL_HANDLE);
 
-    ANGLE_TRY(
-        mBuffer.getMemory().map(0, mState.getSize(), 0, reinterpret_cast<uint8_t **>(mapPtr)));
+    VkDevice device = GetAs<ContextVk>(context)->getDevice();
+
+    ANGLE_TRY(mBuffer.getMemory().map(device, 0, mState.getSize(), 0,
+                                      reinterpret_cast<uint8_t **>(mapPtr)));
 
     return gl::NoError();
 }
@@ -130,7 +141,10 @@ gl::Error BufferVk::mapRange(ContextImpl *context,
     ASSERT(mBuffer.getHandle() != VK_NULL_HANDLE);
     ASSERT(mBuffer.getMemory().getHandle() != VK_NULL_HANDLE);
 
-    ANGLE_TRY(mBuffer.getMemory().map(offset, length, 0, reinterpret_cast<uint8_t **>(mapPtr)));
+    VkDevice device = GetAs<ContextVk>(context)->getDevice();
+
+    ANGLE_TRY(
+        mBuffer.getMemory().map(device, offset, length, 0, reinterpret_cast<uint8_t **>(mapPtr)));
 
     return gl::NoError();
 }
@@ -140,7 +154,9 @@ gl::Error BufferVk::unmap(ContextImpl *context, GLboolean *result)
     ASSERT(mBuffer.getHandle() != VK_NULL_HANDLE);
     ASSERT(mBuffer.getMemory().getHandle() != VK_NULL_HANDLE);
 
-    mBuffer.getMemory().unmap();
+    VkDevice device = GetAs<ContextVk>(context)->getDevice();
+
+    mBuffer.getMemory().unmap(device);
 
     return gl::NoError();
 }
@@ -155,15 +171,15 @@ gl::Error BufferVk::getIndexRange(GLenum type,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-vk::Error BufferVk::setDataImpl(const uint8_t *data, size_t size, size_t offset)
+vk::Error BufferVk::setDataImpl(VkDevice device, const uint8_t *data, size_t size, size_t offset)
 {
     uint8_t *mapPointer = nullptr;
-    ANGLE_TRY(mBuffer.getMemory().map(offset, size, 0, &mapPointer));
+    ANGLE_TRY(mBuffer.getMemory().map(device, offset, size, 0, &mapPointer));
     ASSERT(mapPointer);
 
     memcpy(mapPointer, data, size);
 
-    mBuffer.getMemory().unmap();
+    mBuffer.getMemory().unmap(device);
 
     return vk::NoError();
 }

@@ -41,6 +41,7 @@ ContextVk::ContextVk(const gl::ContextState &state, RendererVk *renderer)
 
 ContextVk::~ContextVk()
 {
+    mCurrentPipeline.destroy(getDevice());
 }
 
 gl::Error ContextVk::initialize()
@@ -259,10 +260,10 @@ gl::Error ContextVk::drawArrays(GLenum mode, GLint first, GLsizei count)
     pipelineInfo.basePipelineHandle  = VK_NULL_HANDLE;
     pipelineInfo.basePipelineIndex   = 0;
 
-    vk::Pipeline newPipeline(device);
-    ANGLE_TRY(newPipeline.initGraphics(pipelineInfo));
+    vk::Pipeline newPipeline;
+    ANGLE_TRY(newPipeline.initGraphics(device, pipelineInfo));
 
-    mCurrentPipeline = std::move(newPipeline);
+    mCurrentPipeline.retain(device, std::move(newPipeline));
 
     vk::CommandBuffer *commandBuffer = mRenderer->getCommandBuffer();
     ANGLE_TRY(vkFBO->beginRenderPass(device, commandBuffer, state));

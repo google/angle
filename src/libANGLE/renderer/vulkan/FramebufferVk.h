@@ -31,6 +31,8 @@ class FramebufferVk : public FramebufferImpl
                                            WindowSurfaceVk *backbuffer);
 
     ~FramebufferVk() override;
+    void destroy(ContextImpl *contextImpl) override;
+    void destroyDefault(DisplayImpl *displayImpl) override;
 
     gl::Error discard(size_t count, const GLenum *attachments) override;
     gl::Error invalidate(size_t count, const GLenum *attachments) override;
@@ -93,6 +95,8 @@ class FramebufferVk : public FramebufferImpl
 
     vk::RenderPass mRenderPass;
     vk::Framebuffer mFramebuffer;
+    bool mDirtyRenderPass;
+    bool mDirtyFramebuffer;
 };
 
 }  // namespace rx

@@ -25,6 +25,15 @@ ProgramVk::~ProgramVk()
 {
 }
 
+void ProgramVk::destroy(const ContextImpl *contextImpl)
+{
+    VkDevice device = GetAs<ContextVk>(contextImpl)->getDevice();
+
+    mLinkedFragmentModule.destroy(device);
+    mLinkedVertexModule.destroy(device);
+    mPipelineLayout.destroy(device);
+}
+
 LinkResult ProgramVk::load(const ContextImpl *contextImpl,
                            gl::InfoLog &infoLog,
                            gl::BinaryInputStream *stream)
@@ -66,8 +75,9 @@ LinkResult ProgramVk::link(ContextImpl *contextImpl,
         return false;
     }
 
-    vk::ShaderModule vertexModule(renderer->getDevice());
-    vk::ShaderModule fragmentModule(renderer->getDevice());
+    vk::ShaderModule vertexModule;
+    vk::ShaderModule fragmentModule;
+    VkDevice device = renderer->getDevice();
 
     {
         VkShaderModuleCreateInfo vertexShaderInfo;
@@ -76,7 +86,7 @@ LinkResult ProgramVk::link(ContextImpl *contextImpl,
         vertexShaderInfo.flags    = 0;
         vertexShaderInfo.codeSize = vertexCode.size() * sizeof(uint32_t);
         vertexShaderInfo.pCode    = vertexCode.data();
-        ANGLE_TRY(vertexModule.init(vertexShaderInfo));
+        ANGLE_TRY(vertexModule.init(device, vertexShaderInfo));
     }
 
     {
@@ -87,11 +97,11 @@ LinkResult ProgramVk::link(ContextImpl *contextImpl,
         fragmentShaderInfo.codeSize = fragmentCode.size() * sizeof(uint32_t);
         fragmentShaderInfo.pCode    = fragmentCode.data();
 
-        ANGLE_TRY(fragmentModule.init(fragmentShaderInfo));
+        ANGLE_TRY(fragmentModule.init(device, fragmentShaderInfo));
     }
 
-    mLinkedVertexModule   = std::move(vertexModule);
-    mLinkedFragmentModule = std::move(fragmentModule);
+    mLinkedVertexModule.retain(device, std::move(vertexModule));
+    mLinkedFragmentModule.retain(device, std::move(fragmentModule));
 
     return true;
 }
@@ -274,7 +284,7 @@ const vk::ShaderModule &ProgramVk::getLinkedFragmentModule() const
 
 gl::ErrorOrResult<vk::PipelineLayout *> ProgramVk::getPipelineLayout(VkDevice device)
 {
-    vk::PipelineLayout newLayout(device);
+    vk::PipelineLayout newLayout;
 
     // TODO(jmadill): Descriptor sets.
     VkPipelineLayoutCreateInfo createInfo;
@@ -286,9 +296,8 @@ gl::ErrorOrResult<vk::PipelineLayout *> ProgramVk::getPipelineLayout(VkDevice de
     createInfo.pushConstantRangeCount = 0;
     createInfo.pPushConstantRanges    = nullptr;
 
-    ANGLE_TRY(newLayout.init(createInfo));
-
-    mPipelineLayout = std::move(newLayout);
+    ANGLE_TRY(newLayout.init(device, createInfo));
+    mPipelineLayout.retain(device, std::move(newLayout));
 
     return &mPipelineLayout;
 }

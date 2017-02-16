@@ -21,6 +21,7 @@ class BufferVk : public BufferImpl
   public:
     BufferVk(const gl::BufferState &state);
     ~BufferVk() override;
+    void destroy(ContextImpl *contextImpl) override;
 
     gl::Error setData(ContextImpl *context,
                       GLenum target,
@@ -54,7 +55,7 @@ class BufferVk : public BufferImpl
     const vk::Buffer &getVkBuffer() const;
 
   private:
-    vk::Error setDataImpl(const uint8_t *data, size_t size, size_t offset);
+    vk::Error setDataImpl(VkDevice device, const uint8_t *data, size_t size, size_t offset);
 
     vk::Buffer mBuffer;
     size_t mRequiredSize;

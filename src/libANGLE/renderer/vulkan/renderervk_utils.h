@@ -12,6 +12,7 @@
 
 #include <vulkan/vulkan.h>
 
+#include "common/debug.h"
 #include "common/Optional.h"
 #include "libANGLE/Error.h"
 
@@ -86,51 +87,56 @@ inline Error NoError()
     return Error(VK_SUCCESS);
 }
 
-template <typename HandleT>
+template <typename DerivedT, typename HandleT>
 class WrappedObject : angle::NonCopyable
 {
   public:
-    WrappedObject() : mDevice(VK_NULL_HANDLE), mHandle(VK_NULL_HANDLE) {}
-    explicit WrappedObject(VkDevice device) : mDevice(device), mHandle(VK_NULL_HANDLE) {}
-    WrappedObject(WrappedObject &&other) : mDevice(other.mDevice), mHandle(other.mHandle)
-    {
-        other.mDevice = VK_NULL_HANDLE;
-        other.mHandle = VK_NULL_HANDLE;
-    }
-    virtual ~WrappedObject() {}
-
     HandleT getHandle() const { return mHandle; }
-    bool validDevice() const { return (mDevice != VK_NULL_HANDLE); }
-    bool valid() const { return (mHandle != VK_NULL_HANDLE) && validDevice(); }
+    bool valid() const { return (mHandle != VK_NULL_HANDLE); }
 
   protected:
-    void assignOpBase(WrappedObject &&other)
+    WrappedObject() : mHandle(VK_NULL_HANDLE) {}
+    WrappedObject(HandleT handle) : mHandle(handle) {}
+    ~WrappedObject() { ASSERT(!valid()); }
+
+    // Only works to initialize empty objects, since we don't have the device handle.
+    WrappedObject(WrappedObject &&other) : mHandle(other.mHandle)
     {
-        std::swap(mDevice, other.mDevice);
+        other.mHandle = VK_NULL_HANDLE;
+    }
+
+    void retain(VkDevice device, DerivedT &&other)
+    {
+        if (valid())
+        {
+            static_cast<DerivedT *>(this)->destroy(device);
+        }
         std::swap(mHandle, other.mHandle);
     }
 
-    VkDevice mDevice;
     HandleT mHandle;
 };
 
-class CommandPool final : public WrappedObject<VkCommandPool>
+class CommandPool final : public WrappedObject<CommandPool, VkCommandPool>
 {
   public:
-    CommandPool(VkDevice device);
-    ~CommandPool() override;
+    CommandPool();
 
-    Error init(const VkCommandPoolCreateInfo &createInfo);
+    void destroy(VkDevice device);
+
+    Error init(VkDevice device, const VkCommandPoolCreateInfo &createInfo);
 };
 
 // Helper class that wraps a Vulkan command buffer.
-class CommandBuffer final : public WrappedObject<VkCommandBuffer>
+class CommandBuffer final : public WrappedObject<CommandBuffer, VkCommandBuffer>
 {
   public:
-    CommandBuffer(VkDevice device, CommandPool *commandPool);
-    ~CommandBuffer() override;
+    CommandBuffer();
 
-    Error begin();
+    void destroy(VkDevice device);
+
+    void setCommandPool(CommandPool *commandPool);
+    Error begin(VkDevice device);
     Error end();
     Error reset();
 
@@ -166,14 +172,12 @@ class CommandBuffer final : public WrappedObject<VkCommandBuffer>
     CommandPool *mCommandPool;
 };
 
-class Image final : public WrappedObject<VkImage>
+class Image final : public WrappedObject<Image, VkImage>
 {
   public:
     // Use this constructor if the lifetime of the image is not controlled by ANGLE. (SwapChain)
     Image();
-    Image(VkDevice device);
     explicit Image(VkImage image);
-    Image(Image &&other);
 
     // Called on shutdown when the helper class *doesn't* own the handle to the image resource.
     void reset();
@@ -181,11 +185,9 @@ class Image final : public WrappedObject<VkImage>
     // Called on shutdown when the helper class *does* own the handle to the image resource.
     void destroy(VkDevice device);
 
-    Image &operator=(Image &&other);
+    void retain(VkDevice device, Image &&other);
 
-    ~Image() override;
-
-    Error init(const VkImageCreateInfo &createInfo);
+    Error init(VkDevice device, const VkImageCreateInfo &createInfo);
 
     void changeLayoutTop(VkImageAspectFlags aspectMask,
                          VkImageLayout newLayout,
@@ -197,8 +199,8 @@ class Image final : public WrappedObject<VkImage>
                                 VkPipelineStageFlags dstStageMask,
                                 CommandBuffer *commandBuffer);
 
-    void getMemoryRequirements(VkMemoryRequirements *requirementsOut) const;
-    Error bindMemory(const vk::DeviceMemory &deviceMemory);
+    void getMemoryRequirements(VkDevice device, VkMemoryRequirements *requirementsOut) const;
+    Error bindMemory(VkDevice device, const vk::DeviceMemory &deviceMemory);
 
     VkImageLayout getCurrentLayout() const { return mCurrentLayout; }
     void updateLayout(VkImageLayout layout) { mCurrentLayout = layout; }
@@ -207,82 +209,71 @@ class Image final : public WrappedObject<VkImage>
     VkImageLayout mCurrentLayout;
 };
 
-class ImageView final : public WrappedObject<VkImageView>
+class ImageView final : public WrappedObject<ImageView, VkImageView>
 {
   public:
     ImageView();
-    explicit ImageView(VkDevice device);
-    ImageView(ImageView &&other);
-
     void destroy(VkDevice device);
+    using WrappedObject::retain;
 
-    ImageView &operator=(ImageView &&other);
-
-    ~ImageView() override;
-
-    Error init(const VkImageViewCreateInfo &createInfo);
+    Error init(VkDevice device, const VkImageViewCreateInfo &createInfo);
 };
 
-class Semaphore final : public WrappedObject<VkSemaphore>
+class Semaphore final : public WrappedObject<Semaphore, VkSemaphore>
 {
   public:
     Semaphore();
-    Semaphore(VkDevice device);
-    Semaphore(Semaphore &&other);
-    ~Semaphore();
-    Semaphore &operator=(Semaphore &&other);
+    void destroy(VkDevice device);
+    using WrappedObject::retain;
 
-    Error init();
+    Error init(VkDevice device);
 };
 
-class Framebuffer final : public WrappedObject<VkFramebuffer>
+class Framebuffer final : public WrappedObject<Framebuffer, VkFramebuffer>
 {
   public:
     Framebuffer();
-    Framebuffer(VkDevice device);
-    Framebuffer(Framebuffer &&other);
-    ~Framebuffer();
-    Framebuffer &operator=(Framebuffer &&other);
+    void destroy(VkDevice device);
+    using WrappedObject::retain;
 
-    Error init(const VkFramebufferCreateInfo &createInfo);
+    Error init(VkDevice device, const VkFramebufferCreateInfo &createInfo);
 };
 
-class DeviceMemory final : public WrappedObject<VkDeviceMemory>
+class DeviceMemory final : public WrappedObject<DeviceMemory, VkDeviceMemory>
 {
   public:
     DeviceMemory();
-    DeviceMemory(VkDevice device);
-    DeviceMemory(DeviceMemory &&other);
-    ~DeviceMemory();
-    DeviceMemory &operator=(DeviceMemory &&other);
+    void destroy(VkDevice device);
+    using WrappedObject::retain;
 
-    Error allocate(const VkMemoryAllocateInfo &allocInfo);
-    Error map(VkDeviceSize offset, VkDeviceSize size, VkMemoryMapFlags flags, uint8_t **mapPointer);
-    void unmap();
+    Error allocate(VkDevice device, const VkMemoryAllocateInfo &allocInfo);
+    Error map(VkDevice device,
+              VkDeviceSize offset,
+              VkDeviceSize size,
+              VkMemoryMapFlags flags,
+              uint8_t **mapPointer);
+    void unmap(VkDevice device);
 };
 
-class RenderPass final : public WrappedObject<VkRenderPass>
+class RenderPass final : public WrappedObject<RenderPass, VkRenderPass>
 {
   public:
     RenderPass();
-    RenderPass(VkDevice device);
-    RenderPass(RenderPass &&other);
-    ~RenderPass();
-    RenderPass &operator=(RenderPass &&other);
+    void destroy(VkDevice device);
+    using WrappedObject::retain;
 
-    Error init(const VkRenderPassCreateInfo &createInfo);
+    Error init(VkDevice device, const VkRenderPassCreateInfo &createInfo);
 };
 
 class StagingImage final : angle::NonCopyable
 {
   public:
     StagingImage();
-    StagingImage(VkDevice device);
-    StagingImage(StagingImage &&other);
-    ~StagingImage();
-    StagingImage &operator=(StagingImage &&other);
+    void destroy(VkDevice device);
+    void retain(VkDevice device, StagingImage &&other);
 
-    vk::Error init(uint32_t queueFamilyIndex,
+    vk::Error init(VkDevice device,
+                   uint32_t queueFamilyIndex,
                    uint32_t hostVisibleMemoryIndex,
                    TextureDimension dimension,
                    VkFormat format,
@@ -300,17 +291,15 @@ class StagingImage final : angle::NonCopyable
     VkDeviceSize mSize;
 };
 
-class Buffer final : public WrappedObject<VkBuffer>
+class Buffer final : public WrappedObject<Buffer, VkBuffer>
 {
   public:
     Buffer();
-    Buffer(VkDevice device);
-    Buffer(Buffer &&other);
-    ~Buffer();
-    Buffer &operator=(Buffer &&other);
+    void destroy(VkDevice device);
+    void retain(VkDevice device, Buffer &&other);
 
-    Error init(const VkBufferCreateInfo &createInfo);
-    Error bindMemory();
+    Error init(VkDevice device, const VkBufferCreateInfo &createInfo);
+    Error bindMemory(VkDevice device);
 
     DeviceMemory &getMemory() { return mMemory; }
     const DeviceMemory &getMemory() const { return mMemory; }
@@ -319,40 +308,34 @@ class Buffer final : public WrappedObject<VkBuffer>
     DeviceMemory mMemory;
 };
 
-class ShaderModule final : public WrappedObject<VkShaderModule>
+class ShaderModule final : public WrappedObject<ShaderModule, VkShaderModule>
 {
   public:
     ShaderModule();
-    ShaderModule(VkDevice device);
-    ShaderModule(ShaderModule &&other);
-    ~ShaderModule() override;
-    ShaderModule &operator=(ShaderModule &&other);
+    void destroy(VkDevice device);
+    using WrappedObject::retain;
 
-    Error init(const VkShaderModuleCreateInfo &createInfo);
+    Error init(VkDevice device, const VkShaderModuleCreateInfo &createInfo);
 };
 
-class Pipeline final : public WrappedObject<VkPipeline>
+class Pipeline final : public WrappedObject<Pipeline, VkPipeline>
 {
   public:
     Pipeline();
-    Pipeline(VkDevice device);
-    Pipeline(Pipeline &&other);
-    ~Pipeline();
-    Pipeline &operator=(Pipeline &&other);
+    void destroy(VkDevice device);
+    using WrappedObject::retain;
 
-    Error initGraphics(const VkGraphicsPipelineCreateInfo &createInfo);
+    Error initGraphics(VkDevice device, const VkGraphicsPipelineCreateInfo &createInfo);
 };
 
-class PipelineLayout final : public WrappedObject<VkPipelineLayout>
+class PipelineLayout final : public WrappedObject<PipelineLayout, VkPipelineLayout>
 {
   public:
     PipelineLayout();
-    PipelineLayout(VkDevice device);
-    PipelineLayout(PipelineLayout &&other);
-    ~PipelineLayout();
-    PipelineLayout &operator=(PipelineLayout &&other);
+    void destroy(VkDevice device);
+    using WrappedObject::retain;
 
-    Error init(const VkPipelineLayoutCreateInfo &createInfo);
+    Error init(VkDevice device, const VkPipelineLayoutCreateInfo &createInfo);
 };
 
 }  // namespace vk

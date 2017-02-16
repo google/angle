@@ -21,6 +21,7 @@ class ProgramVk : public ProgramImpl
   public:
     ProgramVk(const gl::ProgramState &state);
     ~ProgramVk() override;
+    void destroy(const ContextImpl *contextImpl) override;
 
     LinkResult load(const ContextImpl *contextImpl,
                     gl::InfoLog &infoLog,

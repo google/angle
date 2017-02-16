@@ -106,8 +106,15 @@ RendererVk::~RendererVk()
         mGlslangWrapper = nullptr;
     }
 
-    mCommandBuffer.reset(nullptr);
-    mCommandPool.reset(nullptr);
+    if (mCommandBuffer.valid())
+    {
+        mCommandBuffer.destroy(mDevice);
+    }
+
+    if (mCommandPool.valid())
+    {
+        mCommandPool.destroy(mDevice);
+    }
 
     if (mDevice)
     {
@@ -417,10 +424,9 @@ vk::Error RendererVk::initializeDevice(uint32_t queueFamilyIndex)
     commandPoolInfo.flags            = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
     commandPoolInfo.queueFamilyIndex = mCurrentQueueFamilyIndex;
 
-    mCommandPool.reset(new vk::CommandPool(mDevice));
-    ANGLE_TRY(mCommandPool->init(commandPoolInfo));
+    ANGLE_TRY(mCommandPool.init(mDevice, commandPoolInfo));
 
-    mCommandBuffer.reset(new vk::CommandBuffer(mDevice, mCommandPool.get()));
+    mCommandBuffer.setCommandPool(&mCommandPool);
 
     return vk::NoError();
 }
@@ -553,7 +559,7 @@ const gl::Limitations &RendererVk::getNativeLimitations() const
 
 vk::CommandBuffer *RendererVk::getCommandBuffer()
 {
-    return mCommandBuffer.get();
+    return &mCommandBuffer;
 }
 
 vk::Error RendererVk::submitAndFinishCommandBuffer(const vk::CommandBuffer &commandBuffer)
@@ -612,17 +618,17 @@ vk::Error RendererVk::waitThenFinishCommandBuffer(const vk::CommandBuffer &comma
     return vk::NoError();
 }
 
-vk::ErrorOrResult<vk::StagingImage> RendererVk::createStagingImage(TextureDimension dimension,
-                                                                   const vk::Format &format,
-                                                                   const gl::Extents &extent)
+vk::Error RendererVk::createStagingImage(TextureDimension dimension,
+                                         const vk::Format &format,
+                                         const gl::Extents &extent,
+                                         vk::StagingImage *imageOut)
 {
     ASSERT(mHostVisibleMemoryIndex != std::numeric_limits<uint32_t>::max());
 
-    vk::StagingImage stagingImage(mDevice);
-    ANGLE_TRY(stagingImage.init(mCurrentQueueFamilyIndex, mHostVisibleMemoryIndex, dimension,
-                                format.native, extent));
+    ANGLE_TRY(imageOut->init(mDevice, mCurrentQueueFamilyIndex, mHostVisibleMemoryIndex, dimension,
+                             format.native, extent));
 
-    return std::move(stagingImage);
+    return vk::NoError();
 }
 
 GlslangWrapper *RendererVk::getGlslangWrapper()

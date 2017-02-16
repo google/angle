@@ -133,8 +133,6 @@ WindowSurfaceVk::~WindowSurfaceVk()
 {
     ASSERT(mSurface == VK_NULL_HANDLE);
     ASSERT(mSwapchain == VK_NULL_HANDLE);
-    ASSERT(mSwapchainImages.empty());
-    ASSERT(mSwapchainImageViews.empty());
 }
 
 void WindowSurfaceVk::destroy(const DisplayImpl *displayImpl)
@@ -144,12 +142,12 @@ void WindowSurfaceVk::destroy(const DisplayImpl *displayImpl)
     VkDevice device            = rendererVk->getDevice();
     VkInstance instance        = rendererVk->getInstance();
 
+    mPresentCompleteSemaphore.destroy(device);
+
     for (auto &imageView : mSwapchainImageViews)
     {
         imageView.destroy(device);
     }
-
-    mSwapchainImageViews.clear();
 
     // Although we don't own the swapchain image handles, we need to keep our shutdown clean.
     for (auto &image : mSwapchainImages)
@@ -157,7 +155,10 @@ void WindowSurfaceVk::destroy(const DisplayImpl *displayImpl)
         image.reset();
     }
 
-    mSwapchainImages.clear();
+    for (auto &framebuffer : mSwapchainFramebuffers)
+    {
+        framebuffer.destroy(device);
+    }
 
     if (mSwapchain)
     {
@@ -331,7 +332,7 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
 
     // CommandBuffer is a singleton in the Renderer.
     vk::CommandBuffer *commandBuffer = renderer->getCommandBuffer();
-    ANGLE_TRY(commandBuffer->begin());
+    ANGLE_TRY(commandBuffer->begin(device));
 
     VkClearColorValue transparentBlack;
     transparentBlack.float32[0] = 0.0f;
@@ -339,8 +340,13 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
     transparentBlack.float32[2] = 0.0f;
     transparentBlack.float32[3] = 0.0f;
 
-    for (auto swapchainImage : swapchainImages)
+    mSwapchainImages.resize(imageCount);
+    mSwapchainImageViews.resize(imageCount);
+
+    for (uint32_t imageIndex = 0; imageIndex < imageCount; ++imageIndex)
     {
+        VkImage swapchainImage = swapchainImages[imageIndex];
+
         VkImageViewCreateInfo imageViewInfo;
         imageViewInfo.sType                           = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
         imageViewInfo.pNext                           = nullptr;
@@ -359,16 +365,16 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
         imageViewInfo.subresourceRange.layerCount     = 1;
 
         vk::Image image(swapchainImage);
-        vk::ImageView imageView(device);
-        ANGLE_TRY(imageView.init(imageViewInfo));
+        vk::ImageView imageView;
+        ANGLE_TRY(imageView.init(device, imageViewInfo));
 
         // Set transfer dest layout, and clear the image to black.
         image.changeLayoutTop(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
                               commandBuffer);
         commandBuffer->clearSingleColorImage(image, transparentBlack);
 
-        mSwapchainImages.push_back(std::move(image));
-        mSwapchainImageViews.push_back(std::move(imageView));
+        mSwapchainImages[imageIndex].retain(device, std::move(image));
+        mSwapchainImageViews[imageIndex].retain(device, std::move(imageView));
     }
 
     ANGLE_TRY(commandBuffer->end());
@@ -397,7 +403,7 @@ vk::Error WindowSurfaceVk::swapImpl(RendererVk *renderer)
 
     auto *image = &mSwapchainImages[mCurrentSwapchainImageIndex];
 
-    currentCB->begin();
+    currentCB->begin(renderer->getDevice());
     image->changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
                                   VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
                                   VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, currentCB);
@@ -427,14 +433,14 @@ vk::Error WindowSurfaceVk::nextSwapchainImage(RendererVk *renderer)
 {
     VkDevice device = renderer->getDevice();
 
-    vk::Semaphore presentComplete(device);
-    ANGLE_TRY(presentComplete.init());
+    vk::Semaphore presentComplete;
+    ANGLE_TRY(presentComplete.init(device));
 
     ANGLE_VK_TRY(vkAcquireNextImageKHR(device, mSwapchain, std::numeric_limits<uint64_t>::max(),
                                        presentComplete.getHandle(), VK_NULL_HANDLE,
                                        &mCurrentSwapchainImageIndex));
 
-    mPresentCompleteSemaphore = std::move(presentComplete);
+    mPresentCompleteSemaphore.retain(device, std::move(presentComplete));
 
     // Update RenderTarget pointers.
     mRenderTarget.image     = &mSwapchainImages[mCurrentSwapchainImageIndex];
@@ -522,15 +528,17 @@ gl::ErrorOrResult<vk::Framebuffer *> WindowSurfaceVk::getCurrentFramebuffer(
     framebufferInfo.height          = static_cast<uint32_t>(mRenderTarget.extents.height);
     framebufferInfo.layers          = 1;
 
-    for (const auto &imageView : mSwapchainImageViews)
+    mSwapchainFramebuffers.resize(mSwapchainImageViews.size());
+    for (size_t imageIndex = 0; imageIndex < mSwapchainFramebuffers.size(); ++imageIndex)
     {
+        const auto &imageView        = mSwapchainImageViews[imageIndex];
         VkImageView imageViewHandle  = imageView.getHandle();
         framebufferInfo.pAttachments = &imageViewHandle;
 
-        vk::Framebuffer framebuffer(device);
-        ANGLE_TRY(framebuffer.init(framebufferInfo));
+        vk::Framebuffer framebuffer;
+        ANGLE_TRY(framebuffer.init(device, framebufferInfo));
 
-        mSwapchainFramebuffers.push_back(std::move(framebuffer));
+        mSwapchainFramebuffers[imageIndex].retain(device, std::move(framebuffer));
     }
 
     // We should only initialize framebuffers on the first swap.
