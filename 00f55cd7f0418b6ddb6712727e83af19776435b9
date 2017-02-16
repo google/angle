@@ -160,6 +160,24 @@
       "revId": "00f55cd7f0418b6ddb6712727e83af19776435b9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4fecf769_4484db68",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-16T19:46:09Z",
+      "side": 1,
+      "message": "I think that if native supports more than minimum, why restrict this to minimum in ANGLE? Sounds to me, the bigger offset / stride GL supports, the better it is for users.\nBut if native doesn\u0027t support the minimum required by ES 3.1 (I saw some earlier comments that \"WebGL defines it to 255, probably because ANGLE can\u0027t support more on some configurations of the D3D backend.\"), then ANGLE needs to emulate it in order to support the required minimum.\nOtherwise, ANGLE will not pass dEQP 3.1 tests.",
+      "parentUuid": "68540e59_364e0742",
+      "revId": "00f55cd7f0418b6ddb6712727e83af19776435b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
