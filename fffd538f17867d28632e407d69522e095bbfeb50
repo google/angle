@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b7ca47bf_0f0186ba",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3741,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-17T15:50:37Z",
+      "side": 1,
+      "message": "typo: missing r in convertedInternalFormat\n\nsame in renderbufferStorageMultisample",
+      "revId": "fffd538f17867d28632e407d69522e095bbfeb50",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "509e7a86_c26d8f7d",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1956,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-17T15:50:37Z",
+      "side": 1,
+      "message": "nit: same typo",
+      "revId": "fffd538f17867d28632e407d69522e095bbfeb50",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1739b311_77d9a613",
+        "filename": "src/tests/gl_tests/WebGLFramebufferTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-17T15:50:37Z",
+      "side": 1,
+      "message": "nit: 2017",
+      "revId": "fffd538f17867d28632e407d69522e095bbfeb50",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d9476deb_2ca8da54",
+        "filename": "src/tests/gl_tests/WebGLFramebufferTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-17T15:50:37Z",
+      "side": 1,
+      "message": "nit: update this line",
+      "revId": "fffd538f17867d28632e407d69522e095bbfeb50",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e2dd88ab_5264c5a8",
+        "filename": "src/tests/gl_tests/WebGLFramebufferTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-17T15:50:37Z",
+      "side": 1,
+      "message": "Can you add a test for the GL_RENDERBUFFER_INTERNAL_FORMAT query with GL_DEPTH_STENCIL?",
+      "revId": "fffd538f17867d28632e407d69522e095bbfeb50",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
