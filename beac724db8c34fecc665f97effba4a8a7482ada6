@@ -22,6 +22,30 @@
       "revId": "beac724db8c34fecc665f97effba4a8a7482ada6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "53b171c8_79e6164c",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-02-17T04:05:55Z",
+      "side": 1,
+      "message": "why should these go through context entry points, aren\u0027t these queries in accordance with GetFramebufferParameteriv?",
+      "parentUuid": "4982bb72_455d8c49",
+      "range": {
+        "startLine": 98,
+        "startChar": 0,
+        "endLine": 99,
+        "endChar": 60
+      },
+      "revId": "beac724db8c34fecc665f97effba4a8a7482ada6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
