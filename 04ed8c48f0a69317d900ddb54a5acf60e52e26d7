@@ -117,6 +117,30 @@
     },
     {
       "key": {
+        "uuid": "ce4e97e0_0ea5b958",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 5
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-17T15:14:13Z",
+      "side": 1,
+      "message": "Looks like maybe you just forgot to remove these.\n\nimage_util is necessary because of SixteenBppColorTest.\n\nNote: angle_white_box_tests currently only runs on Windows - you\u0027ll need to post a Chromium CL to update this:\n\nhttps://cs.chromium.org/chromium/src/content/test/gpu/generate_buildbot_json.py?type\u003dcs\u0026q\u003dangle_white_box_tests+package:%5Echromium$\u0026l\u003d1172",
+      "parentUuid": "9f4a05e2_73381fb0",
+      "range": {
+        "startLine": 95,
+        "startChar": 21,
+        "endLine": 95,
+        "endChar": 46
+      },
+      "revId": "04ed8c48f0a69317d900ddb54a5acf60e52e26d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b19cf4d5_5e6b84c7",
         "filename": "src/tests/angle_end2end_tests.gypi",
         "patchSetId": 5
