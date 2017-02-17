@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "529951ee_c3208e70",
+        "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 737,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-02-17T06:52:04Z",
+      "side": 1,
+      "message": "If the context is GLES 3.0, I suppose that you should generate GL_INVALID_OPERATION here. \n\nGeneral speaking, this feature is a new feature in GLES 3.1, but you implemented it in GLES 3.0 entry point, so you should be careful about some exceptions like generating INVALID_OPERATION for GLES 3.0 profile (I noticed that the glENUM ATOMIC_COUNTER_BUFFER has been added into gles 3.0 entry point in previous commit by Geoff, but you should take care of it when you implement this feature).",
+      "revId": "6cf8ddd2beb9f2a3841a47bdaa387f4dbfe39112",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01c1bcf3_54d0b4d7",
+        "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 905,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-02-17T06:52:04Z",
+      "side": 1,
+      "message": "Same here, generate INVALID_OPERATION for GLES 3.0 profile.",
+      "revId": "6cf8ddd2beb9f2a3841a47bdaa387f4dbfe39112",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
