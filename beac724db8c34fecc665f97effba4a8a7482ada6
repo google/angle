@@ -46,6 +46,30 @@
       "revId": "beac724db8c34fecc665f97effba4a8a7482ada6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5be5560c_1774890f",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-17T14:45:28Z",
+      "side": 1,
+      "message": "Every single entry point should go through context, for a few reasons, but chief among which is that I\u0027d like to be able to auto-generate the entry_points_gles_* files with a script.",
+      "parentUuid": "53b171c8_79e6164c",
+      "range": {
+        "startLine": 98,
+        "startChar": 0,
+        "endLine": 99,
+        "endChar": 60
+      },
+      "revId": "beac724db8c34fecc665f97effba4a8a7482ada6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
