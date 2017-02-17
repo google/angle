@@ -1297,7 +1297,7 @@ void GL_APIENTRY GetRenderbufferParameteriv(GLenum target, GLenum pname, GLint* 
         }
 
         Renderbuffer *renderbuffer = context->getGLState().getCurrentRenderbuffer();
-        QueryRenderbufferiv(renderbuffer, pname, params);
+        QueryRenderbufferiv(context, renderbuffer, pname, params);
     }
 }
 

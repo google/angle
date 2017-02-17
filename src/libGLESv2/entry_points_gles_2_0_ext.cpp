@@ -2151,7 +2151,7 @@ ANGLE_EXPORT void GL_APIENTRY GetRenderbufferParameterivRobustANGLE(GLenum targe
         }
 
         Renderbuffer *renderbuffer = context->getGLState().getCurrentRenderbuffer();
-        QueryRenderbufferiv(renderbuffer, pname, params);
+        QueryRenderbufferiv(context, renderbuffer, pname, params);
         SetRobustLengthParam(length, numParams);
     }
 }

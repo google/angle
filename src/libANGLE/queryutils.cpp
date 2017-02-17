@@ -12,6 +12,7 @@
 
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Config.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/Renderbuffer.h"
@@ -610,7 +611,10 @@ void QueryProgramiv(const Program *program, GLenum pname, GLint *params)
     }
 }
 
-void QueryRenderbufferiv(const Renderbuffer *renderbuffer, GLenum pname, GLint *params)
+void QueryRenderbufferiv(const Context *context,
+                         const Renderbuffer *renderbuffer,
+                         GLenum pname,
+                         GLint *params)
 {
     ASSERT(renderbuffer != nullptr);
 
@@ -623,7 +627,17 @@ void QueryRenderbufferiv(const Renderbuffer *renderbuffer, GLenum pname, GLint *
             *params = renderbuffer->getHeight();
             break;
         case GL_RENDERBUFFER_INTERNAL_FORMAT:
-            *params = renderbuffer->getFormat().info->internalFormat;
+            // Special case the WebGL 1 DEPTH_STENCIL format.
+            if (context->getExtensions().webglCompatibility &&
+                context->getClientMajorVersion() == 2 &&
+                renderbuffer->getFormat().info->internalFormat == GL_DEPTH24_STENCIL8)
+            {
+                *params = GL_DEPTH_STENCIL;
+            }
+            else
+            {
+                *params = renderbuffer->getFormat().info->internalFormat;
+            }
             break;
         case GL_RENDERBUFFER_RED_SIZE:
             *params = renderbuffer->getRedSize();

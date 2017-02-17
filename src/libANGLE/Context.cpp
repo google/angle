@@ -266,14 +266,15 @@ Context::Context(rx::EGLImplFactory *implFactory,
       mResetStrategy(GetResetStrategy(attribs)),
       mRobustAccess(GetRobustAccess(attribs)),
       mCurrentSurface(nullptr),
-      mSurfacelessFramebuffer(nullptr)
+      mSurfacelessFramebuffer(nullptr),
+      mWebGLContext(GetWebGLContext(attribs))
 {
     if (mRobustAccess)
     {
         UNIMPLEMENTED();
     }
 
-    initCaps(GetWebGLContext(attribs), displayExtensions);
+    initCaps(displayExtensions);
     initWorkarounds();
 
     mGLState.initialize(mCaps, mExtensions, getClientVersion(), GetDebug(attribs),
@@ -2410,7 +2411,7 @@ bool Context::hasActiveTransformFeedback(GLuint program) const
     return false;
 }
 
-void Context::initCaps(bool webGLContext, const egl::DisplayExtensions &displayExtensions)
+void Context::initCaps(const egl::DisplayExtensions &displayExtensions)
 {
     mCaps = mImplementation->getNativeCaps();
 
@@ -2468,11 +2469,11 @@ void Context::initCaps(bool webGLContext, const egl::DisplayExtensions &displayE
     mCaps.maxFragmentInputComponents = std::min<GLuint>(mCaps.maxFragmentInputComponents, IMPLEMENTATION_MAX_VARYING_VECTORS * 4);
 
     // WebGL compatibility
-    mExtensions.webglCompatibility = webGLContext;
+    mExtensions.webglCompatibility = mWebGLContext;
     for (const auto &extensionInfo : GetExtensionInfoMap())
     {
         // If this context is for WebGL, disable all enableable extensions
-        if (webGLContext && extensionInfo.second.Requestable)
+        if (mWebGLContext && extensionInfo.second.Requestable)
         {
             mExtensions.*(extensionInfo.second.ExtensionsMember) = false;
         }
@@ -2487,11 +2488,10 @@ void Context::updateCaps()
     mCaps.compressedTextureFormats.clear();
     mTextureCaps.clear();
 
-    const TextureCapsMap &rendererFormats = mImplementation->getNativeTextureCaps();
-    for (TextureCapsMap::const_iterator i = rendererFormats.begin(); i != rendererFormats.end(); i++)
+    for (auto capsIt : mImplementation->getNativeTextureCaps())
     {
-        GLenum format = i->first;
-        TextureCaps formatCaps = i->second;
+        GLenum format          = capsIt.first;
+        TextureCaps formatCaps = capsIt.second;
 
         const InternalFormat &formatInfo = GetInternalFormatInfo(format);
 
@@ -3786,8 +3786,11 @@ void Context::renderbufferStorage(GLenum target,
                                   GLsizei width,
                                   GLsizei height)
 {
+    // Hack for the special WebGL 1 "DEPTH_STENCIL" internal format.
+    GLenum convertedInternalFormat = getConvertedRenderbufferFormat(internalformat);
+
     Renderbuffer *renderbuffer = mGLState.getCurrentRenderbuffer();
-    handleError(renderbuffer->setStorage(internalformat, width, height));
+    handleError(renderbuffer->setStorage(convertedInternalFormat, width, height));
 }
 
 void Context::renderbufferStorageMultisample(GLenum target,
@@ -3796,9 +3799,12 @@ void Context::renderbufferStorageMultisample(GLenum target,
                                              GLsizei width,
                                              GLsizei height)
 {
+    // Hack for the special WebGL 1 "DEPTH_STENCIL" internal format.
+    GLenum convertedInternalFormat = getConvertedRenderbufferFormat(internalformat);
 
     Renderbuffer *renderbuffer = mGLState.getCurrentRenderbuffer();
-    handleError(renderbuffer->setStorageMultisample(samples, internalformat, width, height));
+    handleError(
+        renderbuffer->setStorageMultisample(samples, convertedInternalFormat, width, height));
 }
 
 }  // namespace gl

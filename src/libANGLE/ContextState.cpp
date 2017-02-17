@@ -713,4 +713,12 @@ bool ValidationContext::usingDisplayTextureShareGroup() const
     return mDisplayTextureShareGroup;
 }
 
+GLenum ValidationContext::getConvertedRenderbufferFormat(GLenum internalformat) const
+{
+    return mState.mExtensions.webglCompatibility && mState.mClientVersion.major == 2 &&
+                   internalformat == GL_DEPTH_STENCIL
+               ? GL_DEPTH24_STENCIL8
+               : internalformat;
+}
+
 }  // namespace gl

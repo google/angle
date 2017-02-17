@@ -38,6 +38,8 @@ class GLWrapper
         return mHandle;
     }
 
+    operator GLuint() { return get(); }
+
   private:
     GLuint mHandle = 0;
 };

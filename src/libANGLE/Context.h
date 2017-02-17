@@ -655,7 +655,7 @@ class Context final : public ValidationContext
     void initVersionStrings();
     void initExtensionStrings();
 
-    void initCaps(bool webGLContext, const egl::DisplayExtensions &displayExtensions);
+    void initCaps(const egl::DisplayExtensions &displayExtensions);
     void updateCaps();
     void initWorkarounds();
 
@@ -713,6 +713,7 @@ class Context final : public ValidationContext
     bool mRobustAccess;
     egl::Surface *mCurrentSurface;
     Framebuffer *mSurfacelessFramebuffer;
+    bool mWebGLContext;
 
     State::DirtyBits mTexImageDirtyBits;
     State::DirtyObjects mTexImageDirtyObjects;

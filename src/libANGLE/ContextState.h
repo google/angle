@@ -121,6 +121,9 @@ class ValidationContext : angle::NonCopyable
 
     bool usingDisplayTextureShareGroup() const;
 
+    // Hack for the special WebGL 1 "DEPTH_STENCIL" internal format.
+    GLenum getConvertedRenderbufferFormat(GLenum internalformat) const;
+
   protected:
     ContextState mState;
     bool mSkipValidation;
