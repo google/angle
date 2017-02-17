@@ -250,7 +250,7 @@ void ContextNULL::popGroupMarker()
 {
 }
 
-void ContextNULL::syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits)
+void ContextNULL::syncState(const gl::State::DirtyBits &dirtyBits)
 {
 }
 

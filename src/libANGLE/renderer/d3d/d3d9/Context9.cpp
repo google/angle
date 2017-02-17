@@ -228,9 +228,9 @@ void Context9::popGroupMarker()
     mRenderer->getAnnotator()->endEvent();
 }
 
-void Context9::syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits)
+void Context9::syncState(const gl::State::DirtyBits &dirtyBits)
 {
-    mRenderer->getStateManager()->syncState(state, dirtyBits);
+    mRenderer->getStateManager()->syncState(mState.getState(), dirtyBits);
 }
 
 GLint Context9::getGPUDisjoint()

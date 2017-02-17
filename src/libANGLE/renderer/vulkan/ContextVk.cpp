@@ -382,7 +382,7 @@ void ContextVk::popGroupMarker()
     UNIMPLEMENTED();
 }
 
-void ContextVk::syncState(const gl::State & /*state*/, const gl::State::DirtyBits & /*dirtyBits*/)
+void ContextVk::syncState(const gl::State::DirtyBits & /*dirtyBits*/)
 {
     // TODO(jmadill): Vulkan dirty bits.
 }

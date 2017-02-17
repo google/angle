@@ -2526,7 +2526,7 @@ void Context::initWorkarounds()
 void Context::syncRendererState()
 {
     const State::DirtyBits &dirtyBits = mGLState.getDirtyBits();
-    mImplementation->syncState(mGLState, dirtyBits);
+    mImplementation->syncState(dirtyBits);
     mGLState.clearDirtyBits();
     mGLState.syncDirtyObjects();
 }
@@ -2535,7 +2535,7 @@ void Context::syncRendererState(const State::DirtyBits &bitMask,
                                 const State::DirtyObjects &objectMask)
 {
     const State::DirtyBits &dirtyBits = (mGLState.getDirtyBits() & bitMask);
-    mImplementation->syncState(mGLState, dirtyBits);
+    mImplementation->syncState(dirtyBits);
     mGLState.clearDirtyBits(dirtyBits);
 
     mGLState.syncDirtyObjects(objectMask);

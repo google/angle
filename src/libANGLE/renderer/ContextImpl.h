@@ -123,7 +123,7 @@ class ContextImpl : public GLImplFactory
     virtual void popGroupMarker() = 0;
 
     // State sync with dirty bits.
-    virtual void syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits) = 0;
+    virtual void syncState(const gl::State::DirtyBits &dirtyBits) = 0;
 
     // Disjoint timer queries
     virtual GLint getGPUDisjoint() = 0;
