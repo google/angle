@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0821b0af_7b325f91",
+        "filename": "src/gpu_info_util/SystemInfo_mac.mm",
+        "patchSetId": 5
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-17T14:55:08Z",
+      "side": 1,
+      "message": "super-nit: just 2017 is fine.",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 26
+      },
+      "revId": "04ed8c48f0a69317d900ddb54a5acf60e52e26d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed4abe04_4eaad44b",
+        "filename": "src/gpu_info_util/SystemInfo_mac.mm",
+        "patchSetId": 5
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-17T14:55:08Z",
+      "side": 1,
+      "message": "presumably you want to test this method, is why it\u0027s not anonymous?",
+      "range": {
+        "startLine": 132,
+        "startChar": 8,
+        "endLine": 132,
+        "endChar": 28
+      },
+      "revId": "04ed8c48f0a69317d900ddb54a5acf60e52e26d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92eee24f_6e49183a",
+        "filename": "src/gpu_info_util/SystemInfo_unittest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-17T14:55:08Z",
+      "side": 1,
+      "message": "nit: expected, actual (and below)",
+      "range": {
+        "startLine": 92,
+        "startChar": 4,
+        "endLine": 92,
+        "endChar": 31
+      },
+      "revId": "04ed8c48f0a69317d900ddb54a5acf60e52e26d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "288e6370_40037de2",
+        "filename": "src/gpu_info_util/SystemInfo_unittest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-17T14:55:08Z",
+      "side": 1,
+      "message": "nit: closing namespace comment.",
+      "range": {
+        "startLine": 102,
+        "startChar": 0,
+        "endLine": 102,
+        "endChar": 1
+      },
+      "revId": "04ed8c48f0a69317d900ddb54a5acf60e52e26d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f4a05e2_73381fb0",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 5
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-17T14:55:08Z",
+      "side": 1,
+      "message": "I\u0027m going to build a local copy and figure out why you have these here.",
+      "range": {
+        "startLine": 95,
+        "startChar": 21,
+        "endLine": 95,
+        "endChar": 46
+      },
+      "revId": "04ed8c48f0a69317d900ddb54a5acf60e52e26d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b19cf4d5_5e6b84c7",
+        "filename": "src/tests/angle_end2end_tests.gypi",
+        "patchSetId": 5
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-17T14:55:08Z",
+      "side": 1,
+      "message": "This should probably be removed - I\u0027m not sure how the design is going to end up, but if we do something like use gpu info in chromium before the sandbox starts up by calling into ANGLE though the shared library, end2end_tests should do the same, not link a second copy in.",
+      "range": {
+        "startLine": 120,
+        "startChar": 8,
+        "endLine": 120,
+        "endChar": 58
+      },
+      "revId": "04ed8c48f0a69317d900ddb54a5acf60e52e26d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b7bfd2e9_6b0759ea",
+        "filename": "src/tests/util_tests/PrintSystemInfoTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-17T14:55:08Z",
+      "side": 1,
+      "message": "nit: comment before test",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 4
+      },
+      "revId": "04ed8c48f0a69317d900ddb54a5acf60e52e26d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
