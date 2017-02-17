@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ab416891_0eba136b",
+        "filename": "src/libANGLE/Constants.h",
+        "patchSetId": 25
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-17T17:25:31Z",
+      "side": 1,
+      "message": "this should not be defined in a header here - these are for implementation compile-time constants, stuff like array sizes.",
+      "range": {
+        "startLine": 18,
+        "startChar": 4,
+        "endLine": 18,
+        "endChar": 38
+      },
+      "revId": "b2bfbb48523727e0831794a3f230ef51a4a5e8bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3dc40100_32e14eb5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 1251,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-17T17:25:31Z",
+      "side": 1,
+      "message": "unclear why this comment is here - we will support binding in D3D11 at some point I think?",
+      "range": {
+        "startLine": 1251,
+        "startChar": 4,
+        "endLine": 1251,
+        "endChar": 43
+      },
+      "revId": "b2bfbb48523727e0831794a3f230ef51a4a5e8bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57bb4049_f139752a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 1252,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-17T17:25:31Z",
+      "side": 1,
+      "message": "how did you determine the number 2047? If it was thought testing and experimentation, please comment explaining why, and hard code it here. If it was not tested, please use the tests you added to pick as large a maximum as we can support.",
+      "range": {
+        "startLine": 1252,
+        "startChar": 46,
+        "endLine": 1252,
+        "endChar": 79
+      },
+      "revId": "b2bfbb48523727e0831794a3f230ef51a4a5e8bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad2bb74d_891824f2",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 694,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-17T17:25:31Z",
+      "side": 1,
+      "message": "you need to ASSERT_GT that the returned value is greater than the spec minimum values. Zero is not spec-compliant. You can do this for testing, to find the best D3D value, but not in production code. same for the above test.",
+      "range": {
+        "startLine": 694,
+        "startChar": 18,
+        "endLine": 694,
+        "endChar": 30
+      },
+      "revId": "b2bfbb48523727e0831794a3f230ef51a4a5e8bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
