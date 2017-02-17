@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fa684290_a67afcce",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 82
+      },
+      "lineNbr": 2461,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-17T01:48:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "74ced2ba_c8735520",
+      "range": {
+        "startLine": 2461,
+        "startChar": 8,
+        "endLine": 2461,
+        "endChar": 42
+      },
+      "revId": "24c3f03dba21e59237a70353325293b9d7fb5d9e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dae65489_9e2b1eaf",
         "filename": "src/libANGLE/VertexArray_unittest.cpp",
         "patchSetId": 82
@@ -36,6 +60,30 @@
       "writtenOn": "2017-02-16T15:08:01Z",
       "side": 1,
       "message": "nit: top-level file comment, similar to other files in ANGLE.",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 2
+      },
+      "revId": "24c3f03dba21e59237a70353325293b9d7fb5d9e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f790a01_f0d64cdc",
+        "filename": "src/libANGLE/VertexArray_unittest.cpp",
+        "patchSetId": 82
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-17T01:48:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dae65489_9e2b1eaf",
       "range": {
         "startLine": 5,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "f61e6e46_3e74d614",
+        "filename": "src/libANGLE/VertexArray_unittest.cpp",
+        "patchSetId": 82
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-17T01:48:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9abf9621_e63c827b",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 16,
+        "endChar": 4
+      },
+      "revId": "24c3f03dba21e59237a70353325293b9d7fb5d9e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c909e083_a8c210a8",
         "filename": "src/libANGLE/VertexArray_unittest.cpp",
         "patchSetId": 82
@@ -82,6 +154,30 @@
       "writtenOn": "2017-02-16T15:08:01Z",
       "side": 1,
       "message": "nit: switch the order of these parameters, it should be \n\nEXPECT_EQ(expected, actual).\n\nSame for below",
+      "range": {
+        "startLine": 31,
+        "startChar": 12,
+        "endLine": 31,
+        "endChar": 21
+      },
+      "revId": "24c3f03dba21e59237a70353325293b9d7fb5d9e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e34a85f_70d0f429",
+        "filename": "src/libANGLE/VertexArray_unittest.cpp",
+        "patchSetId": 82
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-17T01:48:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c909e083_a8c210a8",
       "range": {
         "startLine": 31,
         "startChar": 12,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "67d0ebca_4963abc3",
+        "filename": "src/libANGLE/VertexArray_unittest.cpp",
+        "patchSetId": 82
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-17T01:48:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2f9c9972_0966fb04",
+      "range": {
+        "startLine": 54,
+        "startChar": 12,
+        "endLine": 54,
+        "endChar": 23
+      },
+      "revId": "24c3f03dba21e59237a70353325293b9d7fb5d9e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2ed1159b_7aa8ab99",
         "filename": "src/tests/angle_unittests.gypi",
         "patchSetId": 82
@@ -128,6 +248,30 @@
       "writtenOn": "2017-02-16T15:56:53Z",
       "side": 1,
       "message": "also the sorting here is case-sensitive, put this up near varyingpack_unittest.",
+      "range": {
+        "startLine": 47,
+        "startChar": 40,
+        "endLine": 47,
+        "endChar": 60
+      },
+      "revId": "24c3f03dba21e59237a70353325293b9d7fb5d9e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c7448464_64f11b60",
+        "filename": "src/tests/angle_unittests.gypi",
+        "patchSetId": 82
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-17T01:48:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2ed1159b_7aa8ab99",
       "range": {
         "startLine": 47,
         "startChar": 40,
