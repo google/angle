@@ -117,6 +117,11 @@ ScopedPerfEventHelper::~ScopedPerfEventHelper()
 LogMessage::LogMessage(const char *function, int line, LogSeverity severity)
     : mFunction(function), mLine(line), mSeverity(severity)
 {
+    // EVENT() does not require additional function(line) info.
+    if (mSeverity != LOG_EVENT)
+    {
+        mStream << mFunction << "(" << mLine << "): ";
+    }
 }
 
 LogMessage::~LogMessage()
@@ -127,32 +132,24 @@ LogMessage::~LogMessage()
     }
     else
     {
-        trace();
+        Trace(getSeverity(), getMessage().c_str());
     }
 }
 
-void LogMessage::trace() const
+void Trace(LogSeverity severity, const char *message)
 {
-    if (!ShouldCreateLogMessage(mSeverity))
+    if (!ShouldCreateLogMessage(severity))
     {
         return;
     }
 
-    std::ostringstream stream;
-    // EVENT() does not require additional function(line) info.
-    if (mSeverity != LOG_EVENT)
-    {
-        stream << LogSeverityName(mSeverity) << ": " << mFunction << "(" << mLine << "): ";
-    }
-    stream << mStream.str();
-
-    std::string str(stream.str());
+    std::string str(message);
 
     if (DebugAnnotationsActive())
     {
         std::wstring formattedWideMessage(str.begin(), str.end());
 
-        switch (mSeverity)
+        switch (severity)
         {
             case LOG_EVENT:
                 g_debugAnnotator->beginEvent(formattedWideMessage.c_str());
@@ -163,15 +160,15 @@ void LogMessage::trace() const
         }
     }
 
-    if (mSeverity == LOG_ERR)
+    if (severity == LOG_ERR)
     {
-        std::cerr << str << std::endl;
+        std::cerr << LogSeverityName(severity) << ": " << str << std::endl;
     }
 
 #if defined(ANGLE_PLATFORM_WINDOWS) && \
     (defined(ANGLE_ENABLE_DEBUG_TRACE_TO_DEBUGGER) || !defined(NDEBUG))
 #if !defined(ANGLE_ENABLE_DEBUG_TRACE_TO_DEBUGGER)
-    if (mSeverity == LOG_ERR)
+    if (severity == LOG_ERR)
 #endif  // !defined(ANGLE_ENABLE_DEBUG_TRACE_TO_DEBUGGER)
     {
         OutputDebugStringA(str.c_str());
@@ -180,7 +177,7 @@ void LogMessage::trace() const
 
 #if defined(ANGLE_ENABLE_DEBUG_TRACE)
 #if defined(NDEBUG)
-    if (mSeverity == LOG_EVENT || mSeverity == LOG_WARN)
+    if (severity == LOG_EVENT || severity == LOG_WARN)
     {
         return;
     }
@@ -188,7 +185,7 @@ void LogMessage::trace() const
     static std::ofstream file(TRACE_OUTPUT_FILE, std::ofstream::app);
     if (file)
     {
-        file << str << std::endl;
+        file << LogSeverityName(severity) << ": " << str << std::endl;
         file.flush();
     }
 #endif  // defined(ANGLE_ENABLE_DEBUG_TRACE)
@@ -201,9 +198,7 @@ LogSeverity LogMessage::getSeverity() const
 
 std::string LogMessage::getMessage() const
 {
-    std::ostringstream stream;
-    stream << mFunction << "(" << mLine << "): " << mStream.str() << std::endl;
-    return stream.str();
+    return mStream.str();
 }
 
 #if defined(ANGLE_PLATFORM_WINDOWS)

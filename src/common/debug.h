@@ -42,6 +42,8 @@ constexpr LogSeverity LOG_WARN           = 1;
 constexpr LogSeverity LOG_ERR            = 2;
 constexpr LogSeverity LOG_NUM_SEVERITIES = 3;
 
+void Trace(LogSeverity severity, const char *message);
+
 // This class more or less represents a particular log message.  You
 // create an instance of LogMessage and then stream stuff to it.
 // When you finish streaming to it, ~LogMessage is called and the
@@ -56,7 +58,6 @@ class LogMessage : angle::NonCopyable
     LogMessage(const char *function, int line, LogSeverity severity);
     ~LogMessage();
     std::ostream &stream() { return mStream; }
-    void trace() const;
 
     LogSeverity getSeverity() const;
     std::string getMessage() const;

@@ -223,6 +223,37 @@ rx::DisplayImpl *CreateDisplayFromAttribs(const AttributeMap &attribMap, const D
     return impl;
 }
 
+void Display_logError(angle::PlatformMethods *platform, const char *errorMessage)
+{
+    gl::Trace(gl::LOG_ERR, errorMessage);
+}
+
+void Display_logWarning(angle::PlatformMethods *platform, const char *warningMessage)
+{
+    gl::Trace(gl::LOG_WARN, warningMessage);
+}
+
+void Display_logInfo(angle::PlatformMethods *platform, const char *infoMessage)
+{
+    // Uncomment to get info spam
+    // gl::Trace(gl::LOG_WARN, infoMessage);
+}
+
+void ANGLESetDefaultDisplayPlatform(angle::EGLDisplayType display)
+{
+    angle::PlatformMethods *platformMethods = ANGLEPlatformCurrent();
+    if (platformMethods->logError != angle::ANGLE_logError)
+    {
+        // Don't reset pre-set Platform to Default
+        return;
+    }
+
+    ANGLEResetDisplayPlatform(display);
+    platformMethods->logError   = Display_logError;
+    platformMethods->logWarning = Display_logWarning;
+    platformMethods->logInfo    = Display_logInfo;
+}
+
 }  // anonymous namespace
 
 Display *Display::GetDisplayFromNativeDisplay(EGLNativeDisplayType nativeDisplay,
@@ -376,7 +407,7 @@ void Display::setAttributes(rx::DisplayImpl *impl, const AttributeMap &attribMap
 Error Display::initialize()
 {
     // TODO(jmadill): Store Platform in Display and init here.
-    ANGLEResetDisplayPlatform(this);
+    ANGLESetDefaultDisplayPlatform(this);
 
     gl::InitializeDebugAnnotations(&mAnnotator);
 
