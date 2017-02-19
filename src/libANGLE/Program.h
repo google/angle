@@ -447,8 +447,8 @@ class Program final : angle::NonCopyable, public LabeledObject
     bool linkUniformBlocks(InfoLog &infoLog, const Caps &caps);
     bool linkVaryings(InfoLog &infoLog) const;
     bool validateVertexAndFragmentUniforms(InfoLog &infoLog) const;
-    bool linkUniforms(InfoLog &infoLog, const Caps &caps, const Bindings &uniformBindings);
-    bool indexUniforms(InfoLog &infoLog, const Caps &caps, const Bindings &uniformBindings);
+    bool linkUniforms(InfoLog &infoLog, const Caps &caps, const Bindings &uniformLocationBindings);
+    bool indexUniforms(InfoLog &infoLog, const Caps &caps, const Bindings &uniformLocationBindings);
     bool areMatchingInterfaceBlocks(InfoLog &infoLog,
                                     const sh::InterfaceBlock &vertexInterfaceBlock,
                                     const sh::InterfaceBlock &fragmentInterfaceBlock) const;
@@ -536,7 +536,10 @@ class Program final : angle::NonCopyable, public LabeledObject
     bool mValidated;
 
     Bindings mAttributeBindings;
-    Bindings mUniformBindings;
+
+    // Note that this has nothing to do with binding layout qualifiers that can be set for some
+    // uniforms in GLES3.1+. It is used to pre-set the location of uniforms.
+    Bindings mUniformLocationBindings;
 
     // CHROMIUM_path_rendering
     Bindings mFragmentInputBindings;

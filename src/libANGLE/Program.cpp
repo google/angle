@@ -510,7 +510,7 @@ void Program::bindAttributeLocation(GLuint index, const char *name)
 void Program::bindUniformLocation(GLuint index, const char *name)
 {
     // Bind the base uniform name only since array indices other than 0 cannot be bound
-    mUniformBindings.bindLocation(index, ParseUniformName(name, nullptr));
+    mUniformLocationBindings.bindLocation(index, ParseUniformName(name, nullptr));
 }
 
 void Program::bindFragmentInputLocation(GLint index, const char *name)
@@ -637,7 +637,7 @@ Error Program::link(const gl::Context *context)
             return NoError();
         }
 
-        if (!linkUniforms(mInfoLog, caps, mUniformBindings))
+        if (!linkUniforms(mInfoLog, caps, mUniformLocationBindings))
         {
             return NoError();
         }
@@ -685,7 +685,7 @@ Error Program::link(const gl::Context *context)
             return NoError();
         }
 
-        if (!linkUniforms(mInfoLog, caps, mUniformBindings))
+        if (!linkUniforms(mInfoLog, caps, mUniformLocationBindings))
         {
             return NoError();
         }
@@ -1951,7 +1951,9 @@ bool Program::validateVertexAndFragmentUniforms(InfoLog &infoLog) const
     return true;
 }
 
-bool Program::linkUniforms(InfoLog &infoLog, const Caps &caps, const Bindings &uniformBindings)
+bool Program::linkUniforms(InfoLog &infoLog,
+                           const Caps &caps,
+                           const Bindings &uniformLocationBindings)
 {
     if (mState.mAttachedVertexShader && mState.mAttachedFragmentShader)
     {
@@ -1969,7 +1971,7 @@ bool Program::linkUniforms(InfoLog &infoLog, const Caps &caps, const Bindings &u
         return false;
     }
 
-    if (!indexUniforms(infoLog, caps, uniformBindings))
+    if (!indexUniforms(infoLog, caps, uniformLocationBindings))
     {
         return false;
     }
@@ -1977,14 +1979,15 @@ bool Program::linkUniforms(InfoLog &infoLog, const Caps &caps, const Bindings &u
     return true;
 }
 
-bool Program::indexUniforms(InfoLog &infoLog, const Caps &caps, const Bindings &uniformBindings)
+bool Program::indexUniforms(InfoLog &infoLog,
+                            const Caps &caps,
+                            const Bindings &uniformLocationBindings)
 {
-    // Uniforms awaiting a location
-    std::vector<VariableLocation> unboundUniforms;
-    std::map<GLuint, VariableLocation> boundUniforms;
+    std::vector<VariableLocation> unlocatedUniforms;
+    std::map<GLuint, VariableLocation> preLocatedUniforms;
     int maxUniformLocation = -1;
 
-    // Gather bound and unbound uniforms
+    // Gather uniforms that have their location pre-set and uniforms that don't yet have a location.
     for (size_t uniformIndex = 0; uniformIndex < mState.mUniforms.size(); uniformIndex++)
     {
         const LinkedUniform &uniform = mState.mUniforms[uniformIndex];
@@ -1994,12 +1997,13 @@ bool Program::indexUniforms(InfoLog &infoLog, const Caps &caps, const Bindings &
             continue;
         }
 
-        int bindingLocation = uniformBindings.getBinding(uniform.name);
+        int preSetLocation = uniformLocationBindings.getBinding(uniform.name);
 
-        // Verify that this location isn't bound twice
-        if (bindingLocation != -1 && boundUniforms.find(bindingLocation) != boundUniforms.end())
+        // Verify that this location isn't used twice
+        if (preSetLocation != -1 &&
+            preLocatedUniforms.find(preSetLocation) != preLocatedUniforms.end())
         {
-            infoLog << "Multiple uniforms bound to location " << bindingLocation << ".";
+            infoLog << "Multiple uniforms bound to location " << preSetLocation << ".";
             return false;
         }
 
@@ -2008,40 +2012,40 @@ bool Program::indexUniforms(InfoLog &infoLog, const Caps &caps, const Bindings &
             VariableLocation location(uniform.name, arrayIndex,
                                       static_cast<unsigned int>(uniformIndex));
 
-            if (arrayIndex == 0 && bindingLocation != -1)
+            if (arrayIndex == 0 && preSetLocation != -1)
             {
-                boundUniforms[bindingLocation] = location;
-                maxUniformLocation             = std::max(maxUniformLocation, bindingLocation);
+                preLocatedUniforms[preSetLocation] = location;
+                maxUniformLocation                 = std::max(maxUniformLocation, preSetLocation);
             }
             else
             {
-                unboundUniforms.push_back(location);
+                unlocatedUniforms.push_back(location);
             }
         }
     }
 
-    // Gather the reserved bindings, ones that are bound but not referenced.  Other uniforms should
+    // Gather the reserved locations, ones that are bound but not referenced.  Other uniforms should
     // not be assigned to those locations.
     std::set<GLuint> reservedLocations;
-    for (const auto &binding : uniformBindings)
+    for (const auto &locationBinding : uniformLocationBindings)
     {
-        GLuint location = binding.second;
-        if (boundUniforms.find(location) == boundUniforms.end())
+        GLuint location = locationBinding.second;
+        if (preLocatedUniforms.find(location) == preLocatedUniforms.end())
         {
             reservedLocations.insert(location);
             maxUniformLocation = std::max(maxUniformLocation, static_cast<int>(location));
         }
     }
 
-    // Make enough space for all uniforms, bound and unbound
+    // Make enough space for all uniforms, with pre-set locations or not.
     mState.mUniformLocations.resize(
-        std::max(unboundUniforms.size() + boundUniforms.size() + reservedLocations.size(),
+        std::max(unlocatedUniforms.size() + preLocatedUniforms.size() + reservedLocations.size(),
                  static_cast<size_t>(maxUniformLocation + 1)));
 
-    // Assign bound uniforms
-    for (const auto &boundUniform : boundUniforms)
+    // Assign uniforms with pre-set locations
+    for (const auto &uniform : preLocatedUniforms)
     {
-        mState.mUniformLocations[boundUniform.first] = boundUniform.second;
+        mState.mUniformLocations[uniform.first] = uniform.second;
     }
 
     // Assign reserved uniforms
@@ -2050,9 +2054,9 @@ bool Program::indexUniforms(InfoLog &infoLog, const Caps &caps, const Bindings &
         mState.mUniformLocations[reservedLocation].ignored = true;
     }
 
-    // Assign unbound uniforms
+    // Automatically assign locations for the rest of the uniforms
     size_t nextUniformLocation = 0;
-    for (const auto &unboundUniform : unboundUniforms)
+    for (const auto &unlocatedUniform : unlocatedUniforms)
     {
         while (mState.mUniformLocations[nextUniformLocation].used ||
                mState.mUniformLocations[nextUniformLocation].ignored)
@@ -2061,7 +2065,7 @@ bool Program::indexUniforms(InfoLog &infoLog, const Caps &caps, const Bindings &
         }
 
         ASSERT(nextUniformLocation < mState.mUniformLocations.size());
-        mState.mUniformLocations[nextUniformLocation] = unboundUniform;
+        mState.mUniformLocations[nextUniformLocation] = unlocatedUniform;
         nextUniformLocation++;
     }
 
