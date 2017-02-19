@@ -445,6 +445,36 @@ size_t TType::getObjectSize() const
     return totalSize;
 }
 
+int TType::getLocationCount() const
+{
+    int count = 1;
+
+    if (getBasicType() == EbtStruct)
+    {
+        count = structure->getLocationCount();
+    }
+
+    if (isArray())
+    {
+        if (count == 0)
+        {
+            return 0;
+        }
+
+        unsigned int currentArraySize = getArraySize();
+        if (currentArraySize > static_cast<unsigned int>(std::numeric_limits<int>::max() / count))
+        {
+            count = std::numeric_limits<int>::max();
+        }
+        else
+        {
+            count *= static_cast<int>(currentArraySize);
+        }
+    }
+
+    return count;
+}
+
 TStructure::TStructure(const TString *name, TFieldList *fields)
     : TFieldListCollection(name, fields),
       mDeepestNesting(0),
@@ -583,15 +613,33 @@ TString TFieldListCollection::buildMangledName(const TString &mangledNamePrefix)
 size_t TFieldListCollection::calculateObjectSize() const
 {
     size_t size = 0;
-    for (size_t i = 0; i < mFields->size(); ++i)
+    for (const TField *field : *mFields)
     {
-        size_t fieldSize = (*mFields)[i]->type()->getObjectSize();
+        size_t fieldSize = field->type()->getObjectSize();
         if (fieldSize > INT_MAX - size)
             size = INT_MAX;
         else
             size += fieldSize;
     }
     return size;
+}
+
+int TFieldListCollection::getLocationCount() const
+{
+    int count = 0;
+    for (const TField *field : *mFields)
+    {
+        int fieldCount = field->type()->getLocationCount();
+        if (fieldCount > std::numeric_limits<int>::max() - count)
+        {
+            count = std::numeric_limits<int>::max();
+        }
+        else
+        {
+            count += fieldCount;
+        }
+    }
+    return count;
 }
 
 int TStructure::calculateDeepestNesting() const

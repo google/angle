@@ -189,20 +189,20 @@ Uniform::~Uniform()
 {
 }
 
-Uniform::Uniform(const Uniform &other) : ShaderVariable(other), binding(other.binding)
+Uniform::Uniform(const Uniform &other) : VariableWithLocation(other), binding(other.binding)
 {
 }
 
 Uniform &Uniform::operator=(const Uniform &other)
 {
-    ShaderVariable::operator=(other);
+    VariableWithLocation::operator=(other);
     binding                 = other.binding;
     return *this;
 }
 
 bool Uniform::operator==(const Uniform &other) const
 {
-    return ShaderVariable::operator==(other) && binding == other.binding;
+    return VariableWithLocation::operator==(other) && binding == other.binding;
 }
 
 bool Uniform::isSameUniformAtLinkTime(const Uniform &other) const
@@ -211,30 +211,34 @@ bool Uniform::isSameUniformAtLinkTime(const Uniform &other) const
     {
         return false;
     }
-    return ShaderVariable::isSameVariableAtLinkTime(other, true);
+    if (location != -1 && other.location != -1 && location != other.location)
+    {
+        return false;
+    }
+    return VariableWithLocation::isSameVariableAtLinkTime(other, true);
 }
 
-InterfaceVariable::InterfaceVariable() : location(-1)
+VariableWithLocation::VariableWithLocation() : location(-1)
 {
 }
 
-InterfaceVariable::~InterfaceVariable()
+VariableWithLocation::~VariableWithLocation()
 {
 }
 
-InterfaceVariable::InterfaceVariable(const InterfaceVariable &other)
+VariableWithLocation::VariableWithLocation(const VariableWithLocation &other)
     : ShaderVariable(other), location(other.location)
 {
 }
 
-InterfaceVariable &InterfaceVariable::operator=(const InterfaceVariable &other)
+VariableWithLocation &VariableWithLocation::operator=(const VariableWithLocation &other)
 {
     ShaderVariable::operator=(other);
     location                = other.location;
     return *this;
 }
 
-bool InterfaceVariable::operator==(const InterfaceVariable &other) const
+bool VariableWithLocation::operator==(const VariableWithLocation &other) const
 {
     return (ShaderVariable::operator==(other) && location == other.location);
 }
@@ -247,19 +251,19 @@ Attribute::~Attribute()
 {
 }
 
-Attribute::Attribute(const Attribute &other) : InterfaceVariable(other)
+Attribute::Attribute(const Attribute &other) : VariableWithLocation(other)
 {
 }
 
 Attribute &Attribute::operator=(const Attribute &other)
 {
-    InterfaceVariable::operator=(other);
+    VariableWithLocation::operator=(other);
     return *this;
 }
 
 bool Attribute::operator==(const Attribute &other) const
 {
-    return InterfaceVariable::operator==(other);
+    return VariableWithLocation::operator==(other);
 }
 
 OutputVariable::OutputVariable()
@@ -270,19 +274,19 @@ OutputVariable::~OutputVariable()
 {
 }
 
-OutputVariable::OutputVariable(const OutputVariable &other) : InterfaceVariable(other)
+OutputVariable::OutputVariable(const OutputVariable &other) : VariableWithLocation(other)
 {
 }
 
 OutputVariable &OutputVariable::operator=(const OutputVariable &other)
 {
-    InterfaceVariable::operator=(other);
+    VariableWithLocation::operator=(other);
     return *this;
 }
 
 bool OutputVariable::operator==(const OutputVariable &other) const
 {
-    return InterfaceVariable::operator==(other);
+    return VariableWithLocation::operator==(other);
 }
 
 InterfaceBlockField::InterfaceBlockField() : isRowMajorLayout(false)

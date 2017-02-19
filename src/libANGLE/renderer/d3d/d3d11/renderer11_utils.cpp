@@ -1260,6 +1260,9 @@ void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, cons
     caps->maxUniformBufferBindings = caps->maxVertexUniformBlocks + caps->maxFragmentUniformBlocks;
     caps->maxUniformBlockSize = GetMaximumConstantBufferSize(featureLevel);
 
+    // TODO(oetuaho): Get a more accurate limit. For now using the minimum requirement for GLES 3.1.
+    caps->maxUniformLocations = 1024;
+
     // With DirectX 11.1, constant buffer offset and size must be a multiple of 16 constants of 16 bytes each.
     // https://msdn.microsoft.com/en-us/library/windows/desktop/hh404649%28v=vs.85%29.aspx
     // With DirectX 11.0, we emulate UBO offsets using copies of ranges of the UBO however

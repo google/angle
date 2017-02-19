@@ -752,6 +752,136 @@ TEST_P(UniformTestES3, ReturnsOnlyOneArrayElement)
     }
 }
 
+class UniformTestES31 : public ANGLETest
+{
+  protected:
+    UniformTestES31() : mProgram(0) {}
+
+    void SetUp() override { ANGLETest::SetUp(); }
+
+    void TearDown() override
+    {
+        if (mProgram != 0)
+        {
+            glDeleteProgram(mProgram);
+            mProgram = 0;
+        }
+    }
+
+    GLuint mProgram;
+};
+
+// Test that uniform locations get set correctly for structure members.
+// ESSL 3.10.4 section 4.4.3.
+TEST_P(UniformTestES31, StructLocationLayoutQualifier)
+{
+    const std::string &vertShader =
+        "#version 310 es\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(0);\n"
+        "}";
+
+    const std::string &fragShader =
+        "#version 310 es\n"
+        "out highp vec4 my_FragColor;\n"
+        "struct S\n"
+        "{\n"
+        "    highp float f;\n"
+        "    highp float f2;\n"
+        "};\n"
+        "uniform layout(location=12) S uS;\n"
+        "void main()\n"
+        "{\n"
+        "    my_FragColor = vec4(uS.f, uS.f2, 0, 1);\n"
+        "}";
+
+    ANGLE_GL_PROGRAM(program, vertShader, fragShader);
+
+    EXPECT_EQ(12, glGetUniformLocation(program.get(), "uS.f"));
+    EXPECT_EQ(13, glGetUniformLocation(program.get(), "uS.f2"));
+}
+
+// Set uniform location with a layout qualifier in the fragment shader. The same uniform exists in
+// the vertex shader, but doesn't have a location specified there.
+TEST_P(UniformTestES31, UniformLocationInFragmentShader)
+{
+    const std::string &vertShader =
+        "#version 310 es\n"
+        "uniform highp sampler2D tex2D;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = texture(tex2D, vec2(0));\n"
+        "}";
+
+    const std::string &fragShader =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "uniform layout(location=12) highp sampler2D tex2D;\n"
+        "void main()\n"
+        "{\n"
+        "    my_FragColor = texture(tex2D, vec2(0));\n"
+        "}";
+
+    ANGLE_GL_PROGRAM(program, vertShader, fragShader);
+
+    EXPECT_EQ(12, glGetUniformLocation(program.get(), "tex2D"));
+}
+
+// Test two unused uniforms that have the same location.
+// ESSL 3.10.4 section 4.4.3: "No two default-block uniform variables in the program can have the
+// same location, even if they are unused, otherwise a compiler or linker error will be generated."
+TEST_P(UniformTestES31, UnusedUniformsConflictingLocation)
+{
+    const std::string &vertShader =
+        "#version 310 es\n"
+        "uniform layout(location=12) highp sampler2D texA;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(0);\n"
+        "}";
+
+    const std::string &fragShader =
+        "#version 310 es\n"
+        "out highp vec4 my_FragColor;\n"
+        "uniform layout(location=12) highp sampler2D texB;\n"
+        "void main()\n"
+        "{\n"
+        "    my_FragColor = vec4(0);\n"
+        "}";
+
+    mProgram = CompileProgram(vertShader, fragShader);
+    EXPECT_EQ(0u, mProgram);
+}
+
+// Test two unused uniforms that have overlapping locations once all array elements are taken into
+// account.
+// ESSL 3.10.4 section 4.4.3: "No two default-block uniform variables in the program can have the
+// same location, even if they are unused, otherwise a compiler or linker error will be generated."
+TEST_P(UniformTestES31, UnusedUniformArraysConflictingLocation)
+{
+    const std::string &vertShader =
+        "#version 310 es\n"
+        "uniform layout(location=11) highp vec4 uA[2];\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(0);\n"
+        "}";
+
+    const std::string &fragShader =
+        "#version 310 es\n"
+        "out highp vec4 my_FragColor;\n"
+        "uniform layout(location=12) highp vec4 uB;\n"
+        "void main()\n"
+        "{\n"
+        "    my_FragColor = vec4(0);\n"
+        "}";
+
+    mProgram = CompileProgram(vertShader, fragShader);
+    EXPECT_EQ(0u, mProgram);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(UniformTest,
                        ES2_D3D9(),
@@ -760,5 +890,6 @@ ANGLE_INSTANTIATE_TEST(UniformTest,
                        ES2_OPENGL(),
                        ES2_OPENGLES());
 ANGLE_INSTANTIATE_TEST(UniformTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(UniformTestES31, ES31_D3D11(), ES31_OPENGL(), ES31_OPENGLES());
 
 } // namespace

@@ -62,7 +62,10 @@ class TFieldListCollection : angle::NonCopyable
         if (mObjectSize == 0)
             mObjectSize = calculateObjectSize();
         return mObjectSize;
-    };
+    }
+
+    // How many locations the field list consumes as a uniform.
+    int getLocationCount() const;
 
   protected:
     TFieldListCollection(const TString *name, TFieldList *fields)
@@ -331,6 +334,9 @@ class TType
 
     // Full size of single instance of type
     size_t getObjectSize() const;
+
+    // Get how many locations this type consumes as a uniform.
+    int getLocationCount() const;
 
     bool isMatrix() const { return primarySize > 1 && secondarySize > 1; }
     bool isNonSquareMatrix() const { return isMatrix() && primarySize != secondarySize; }

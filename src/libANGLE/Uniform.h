@@ -23,7 +23,14 @@ namespace gl
 struct LinkedUniform : public sh::Uniform
 {
     LinkedUniform();
-    LinkedUniform(GLenum type, GLenum precision, const std::string &name, unsigned int arraySize, const int blockIndex, const sh::BlockMemberInfo &blockInfo);
+    LinkedUniform(GLenum type,
+                  GLenum precision,
+                  const std::string &name,
+                  unsigned int arraySize,
+                  const int binding,
+                  const int location,
+                  const int blockIndex,
+                  const sh::BlockMemberInfo &blockInfo);
     LinkedUniform(const sh::Uniform &uniform);
     LinkedUniform(const LinkedUniform &uniform);
     LinkedUniform &operator=(const LinkedUniform &uniform);

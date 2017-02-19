@@ -82,13 +82,14 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const ContextState &state)
     mResources.MinProgramTexelOffset   = caps.minProgramTexelOffset;
     mResources.MaxProgramTexelOffset   = caps.maxProgramTexelOffset;
 
-    // GLSL ES 3.1 compute shader constants
+    // GLSL ES 3.1 constants
     mResources.MaxImageUnits                    = caps.maxImageUnits;
     mResources.MaxVertexImageUniforms           = caps.maxVertexImageUniforms;
     mResources.MaxFragmentImageUniforms         = caps.maxFragmentImageUniforms;
     mResources.MaxComputeImageUniforms          = caps.maxComputeImageUniforms;
     mResources.MaxCombinedImageUniforms         = caps.maxCombinedImageUniforms;
     mResources.MaxCombinedShaderOutputResources = caps.maxCombinedShaderOutputResources;
+    mResources.MaxUniformLocations              = caps.maxUniformLocations;
 
     for (size_t index = 0u; index < 3u; ++index)
     {

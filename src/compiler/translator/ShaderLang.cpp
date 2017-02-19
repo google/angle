@@ -196,6 +196,8 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     resources->MaxComputeImageUniforms  = 4;
     resources->MaxCombinedImageUniforms = 4;
 
+    resources->MaxUniformLocations = 1024;
+
     resources->MaxCombinedShaderOutputResources = 4;
 
     resources->MaxComputeWorkGroupCount[0] = 65535;

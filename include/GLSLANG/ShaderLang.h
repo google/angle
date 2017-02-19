@@ -25,7 +25,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 172
+#define ANGLE_SH_VERSION 173
 
 enum ShShaderSpec
 {
@@ -328,6 +328,9 @@ struct ShBuiltInResources
 
     // maximum total number of image uniforms in a program
     int MaxCombinedImageUniforms;
+
+    // maximum number of uniform locations
+    int MaxUniformLocations;
 
     // maximum number of ssbos and images in a shader
     int MaxCombinedShaderOutputResources;

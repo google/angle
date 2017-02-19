@@ -395,6 +395,10 @@ class TParseContext : angle::NonCopyable
     void checkImageBindingIsValid(const TSourceLoc &location, int binding, int arraySize);
     void checkSamplerBindingIsValid(const TSourceLoc &location, int binding, int arraySize);
 
+    void checkUniformLocationInRange(const TSourceLoc &location,
+                                     int objectLocationCount,
+                                     const TLayoutQualifier &layoutQualifier);
+
     TIntermTyped *addBinaryMathInternal(TOperator op,
                                         TIntermTyped *left,
                                         TIntermTyped *right,
@@ -469,6 +473,7 @@ class TParseContext : angle::NonCopyable
     int mMaxNumViews;
     int mMaxImageUnits;
     int mMaxCombinedTextureImageUnits;
+    int mMaxUniformLocations;
     // keeps track whether we are declaring / defining a function
     bool mDeclaringFunction;
 };

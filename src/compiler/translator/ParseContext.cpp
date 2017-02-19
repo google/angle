@@ -130,6 +130,7 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mMaxNumViews(resources.MaxViewsOVR),
       mMaxImageUnits(resources.MaxImageUnits),
       mMaxCombinedTextureImageUnits(resources.MaxCombinedTextureImageUnits),
+      mMaxUniformLocations(resources.MaxUniformLocations),
       mDeclaringFunction(false)
 {
     mComputeShaderLocalSize.fill(-1);
@@ -845,8 +846,13 @@ void TParseContext::checkLocationIsNotSpecified(const TSourceLoc &location,
 {
     if (layoutQualifier.location != -1)
     {
-        error(location, "invalid layout qualifier: only valid on program inputs and outputs",
-              "location");
+        const char *errorMsg = "invalid layout qualifier: only valid on program inputs and outputs";
+        if (mShaderVersion >= 310)
+        {
+            errorMsg =
+                "invalid layout qualifier: only valid on program inputs, outputs, and uniforms";
+        }
+        error(location, errorMsg, "location");
     }
 }
 
@@ -1199,7 +1205,23 @@ void TParseContext::singleDeclarationErrorCheck(const TPublicType &publicType,
         return;
     }
 
-    if (publicType.qualifier != EvqVertexIn && publicType.qualifier != EvqFragmentOut)
+    bool canHaveLocation =
+        publicType.qualifier == EvqVertexIn || publicType.qualifier == EvqFragmentOut;
+
+    if (mShaderVersion >= 310 && publicType.qualifier == EvqUniform)
+    {
+        canHaveLocation = true;
+
+        // Valid uniform declarations can't be unsized arrays since uniforms can't be initialized.
+        // But invalid shaders may still reach here with an unsized array declaration.
+        if (!publicType.isUnsizedArray())
+        {
+            TType type(publicType);
+            checkUniformLocationInRange(identifierLocation, type.getLocationCount(),
+                                        publicType.layoutQualifier);
+        }
+    }
+    if (!canHaveLocation)
     {
         checkLocationIsNotSpecified(identifierLocation, publicType.layoutQualifier);
     }
@@ -1366,6 +1388,17 @@ void TParseContext::checkSamplerBindingIsValid(const TSourceLoc &location,
     if (binding >= 0 && binding + arraySize > mMaxCombinedTextureImageUnits)
     {
         error(location, "sampler binding greater than maximum texture units", "binding");
+    }
+}
+
+void TParseContext::checkUniformLocationInRange(const TSourceLoc &location,
+                                                int objectLocationCount,
+                                                const TLayoutQualifier &layoutQualifier)
+{
+    int loc = layoutQualifier.location;
+    if (loc >= 0 && loc + objectLocationCount > mMaxUniformLocations)
+    {
+        error(location, "Uniform location out of range", "location");
     }
 }
 

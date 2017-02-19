@@ -70,6 +70,14 @@ Issues
     If you need to set individual elements of a uniform array you must query the
     location of the each element you wish to set.
 
+    If a uniform has its location explicitly set within the shader text and a
+    different location set via the API, the assignment in the shader text is
+    used.
+
+    If the location of a statically used uniform set via the API conflicts with
+    the location of a different uniform set in the shader text, linking must
+    fail.
+
 New Tokens
 
     None
@@ -129,3 +137,5 @@ Revision History
                  are bound to the same location.
     11/6/2015    Require inactive and non-existing, bound uniform locations
                  to behave like location -1.
+    3/9/2017     Locations set in the shader override ones set by the binding
+                 API.

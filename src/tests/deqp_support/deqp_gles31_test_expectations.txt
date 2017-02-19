@@ -1373,13 +1373,9 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.query.geometry_shader_invocations = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.vertex_attribute_binding.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.separate_shader.* = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.uniform_location.basic.* = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.uniform_location.array.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.uniform_location.nested_array.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.uniform_location.struct.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.uniform_location.nested_struct.* = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.uniform_location.min_max.* = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.uniform_location.link.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.error_filters.case_11 = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.error_groups.case_11 = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.callbacks.buffer.bind_buffer_range = FAIL
