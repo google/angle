@@ -92,6 +92,7 @@ void QueryActiveUniformBlockiv(const Program *program,
                                GLint *params);
 
 void QueryInternalFormativ(const TextureCaps &format, GLenum pname, GLsizei bufSize, GLint *params);
+
 void QueryFramebufferParameteriv(const Framebuffer *framebuffer, GLenum pname, GLint *params);
 
 void SetTexParameterf(Texture *texture, GLenum pname, GLfloat param);
@@ -103,6 +104,7 @@ void SetSamplerParameterf(Sampler *sampler, GLenum pname, GLfloat param);
 void SetSamplerParameterfv(Sampler *sampler, GLenum pname, const GLfloat *params);
 void SetSamplerParameteri(Sampler *sampler, GLenum pname, GLint param);
 void SetSamplerParameteriv(Sampler *sampler, GLenum pname, const GLint *params);
+
 void SetFramebufferParameteri(Framebuffer *framebuffer, GLenum pname, GLint param);
 
 }  // namespace gl
