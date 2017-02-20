@@ -1,0 +1,326 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5601162b_e8d01831",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-20T15:43:02Z",
+      "side": 1,
+      "message": "initialize the blendstate cache to null here",
+      "range": {
+        "startLine": 88,
+        "startChar": 9,
+        "endLine": 88,
+        "endChar": 16
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dcf63952_2d016485",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-20T15:43:02Z",
+      "side": 1,
+      "message": "size_t.. try to avoid using the Windows types until you get to the API call itself.",
+      "range": {
+        "startLine": 220,
+        "startChar": 9,
+        "endLine": 220,
+        "endChar": 14
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "75d9cbf5_89b64ed7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-20T15:43:02Z",
+      "side": 1,
+      "message": "fboData.getDepthOrStencilAttachment is what you\u0027re looking for here I think.",
+      "range": {
+        "startLine": 231,
+        "startChar": 4,
+        "endLine": 235,
+        "endChar": 55
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ecca38a_993fc434",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-20T15:43:02Z",
+      "side": 1,
+      "message": "nit: init to false and remove the else.",
+      "range": {
+        "startLine": 281,
+        "startChar": 9,
+        "endLine": 281,
+        "endChar": 27
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c867214b_0d22d217",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-20T15:43:02Z",
+      "side": 1,
+      "message": "std::array. I do like making this stack-allocated.\n\naside: a stack-allocated version of std::vector with a maximum size. would be useful for these kinds of things (I implemented this at one point but never saw it through).",
+      "range": {
+        "startLine": 304,
+        "startChar": 28,
+        "endLine": 304,
+        "endChar": 38
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "877afa5a_26f7292b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-20T15:43:02Z",
+      "side": 1,
+      "message": "nit: check the attachment for nullptr to reduce if checks to one instead of two",
+      "range": {
+        "startLine": 432,
+        "startChar": 8,
+        "endLine": 432,
+        "endChar": 58
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c75d621f_af309dfc",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-20T15:43:02Z",
+      "side": 1,
+      "message": "nit: gl::OutOfMemory, see examples in Blit11.",
+      "range": {
+        "startLine": 549,
+        "startChar": 23,
+        "endLine": 549,
+        "endChar": 28
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "15d55830_80a84434",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 572,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-20T15:43:02Z",
+      "side": 1,
+      "message": "nit: redundant, remove",
+      "range": {
+        "startLine": 572,
+        "startChar": 34,
+        "endLine": 572,
+        "endChar": 42
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "14888f29_b2dd43bc",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-20T15:43:02Z",
+      "side": 1,
+      "message": "setOneTimeRenderTargets.. but this function is a bit limited to std::vector. Easiest fix is to take a pointer and count, instead of a const std::vector\u003c\u003e \u0026.",
+      "range": {
+        "startLine": 595,
+        "startChar": 19,
+        "endLine": 595,
+        "endChar": 37
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19446a8c_6135f120",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 607,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-20T15:43:02Z",
+      "side": 1,
+      "message": "if you can, make this return a gl::Error when the creation fails. you can pass a pointer pointer as the out argument, and use ANGLE_TRY in the calling code. gl::OutOfMemory would probably apply for the internal error.",
+      "range": {
+        "startLine": 607,
+        "startChar": 0,
+        "endLine": 607,
+        "endChar": 64
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f1e83f5_71fb5969",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 621,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-20T15:43:02Z",
+      "side": 1,
+      "message": "nit: flatten the else, it\u0027s not necessary.",
+      "range": {
+        "startLine": 619,
+        "startChar": 3,
+        "endLine": 621,
+        "endChar": 5
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df0ebffe_817236a7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-20T15:43:02Z",
+      "side": 1,
+      "message": "use std::array here, then initialize to an empty initializer ({}) and you\u0027ll null out the values of the cache on start more easily.",
+      "range": {
+        "startLine": 68,
+        "startChar": 38,
+        "endLine": 68,
+        "endChar": 42
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1c50a3c2_2a5160a4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-20T15:43:02Z",
+      "side": 1,
+      "message": "Avoid using anonymous unions. I think using MemoryBuffer and reinterpret_cast in the code would be nicer. Unions in general are prone to undefined behaviour and warnings - probably best to avoid them. Alternately a std::vector with uint32_t type is fine, with the static_asserts you have.",
+      "range": {
+        "startLine": 81,
+        "startChar": 3,
+        "endLine": 85,
+        "endChar": 25
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8f8014de_5e6f7461",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/RenderStateCache.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-20T15:43:02Z",
+      "side": 1,
+      "message": "if you want you can make this a split patch just to land it quickly.",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 45,
+        "endChar": 67
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
