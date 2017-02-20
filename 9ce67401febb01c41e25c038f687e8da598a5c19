@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a61c3da_67771a2e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-02-20T05:16:50Z",
+      "side": 1,
+      "message": "Add the motivation of this CL such as \u0027 Follow-up of your CL to fix Jamie\u0027s comments\u0027.\nAlso, add bug id here.",
+      "revId": "9ce67401febb01c41e25c038f687e8da598a5c19",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
