@@ -642,7 +642,7 @@ class VertexAttributeTestES31 : public VertexAttributeTestES3
             static_cast<GLsizeiptr>(quadVertices.size() * sizeof(quadVertices[0]));
         glGenBuffers(1, &mQuadBuffer);
         glBindBuffer(GL_ARRAY_BUFFER, mQuadBuffer);
-        glBufferData(GL_ARRAY_BUFFER, quadVerticesSize, nullptr, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, quadVerticesSize, nullptr, GL_STATIC_DRAW);
         glBufferSubData(GL_ARRAY_BUFFER, 0, quadVerticesSize, quadVertices.data());
 
         GLint positionLocation = glGetAttribLocation(mProgram, "position");
@@ -682,6 +682,17 @@ TEST_P(VertexAttributeTestES31, MaxVertexAttribStride)
     ASSERT_GL_NO_ERROR();
 
     EXPECT_GE(maxStride, 2048);
+}
+
+// Verify that GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET is no less than the minimum required value
+// (2047) in ES3.1.
+TEST_P(VertexAttributeTestES31, MaxVertexAttribRelativeOffset)
+{
+    GLint maxRelativeOffset;
+    glGetIntegerv(GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET, &maxRelativeOffset);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_GE(maxRelativeOffset, 2047);
 }
 
 // Verify using MAX_VERTEX_ATTRIB_STRIDE as stride doesn't mess up the draw.

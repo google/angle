@@ -994,7 +994,7 @@ void Context::bindDrawIndirectBuffer(GLuint bufferHandle)
 void Context::bindElementArrayBuffer(GLuint bufferHandle)
 {
     Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
-    mGLState.getVertexArray()->setElementArrayBuffer(buffer);
+    mGLState.setElementArrayBuffer(buffer);
 }
 
 void Context::bindTexture(GLenum target, GLuint handle)
@@ -1032,6 +1032,15 @@ void Context::bindVertexArray(GLuint vertexArrayHandle)
 {
     VertexArray *vertexArray = checkVertexArrayAllocation(vertexArrayHandle);
     mGLState.setVertexArrayBinding(vertexArray);
+}
+
+void Context::bindVertexBuffer(GLuint bindingIndex,
+                               GLuint bufferHandle,
+                               GLintptr offset,
+                               GLsizei stride)
+{
+    Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
+    mGLState.bindVertexBuffer(bindingIndex, buffer, offset, stride);
 }
 
 void Context::bindSampler(GLuint textureUnit, GLuint samplerHandle)
@@ -3579,6 +3588,34 @@ void Context::vertexAttribPointer(GLuint index,
 {
     mGLState.setVertexAttribState(index, mGLState.getTargetBuffer(GL_ARRAY_BUFFER), size, type,
                                   normalized == GL_TRUE, false, stride, ptr);
+}
+
+void Context::vertexAttribFormat(GLuint attribIndex,
+                                 GLint size,
+                                 GLenum type,
+                                 GLboolean normalized,
+                                 GLuint relativeOffset)
+{
+    mGLState.setVertexAttribFormat(attribIndex, size, type, normalized == GL_TRUE, false,
+                                   relativeOffset);
+}
+
+void Context::vertexAttribIFormat(GLuint attribIndex,
+                                  GLint size,
+                                  GLenum type,
+                                  GLuint relativeOffset)
+{
+    mGLState.setVertexAttribFormat(attribIndex, size, type, false, true, relativeOffset);
+}
+
+void Context::vertexAttribBinding(GLuint attribIndex, GLuint bindingIndex)
+{
+    mGLState.setVertexAttribBinding(attribIndex, bindingIndex);
+}
+
+void Context::setVertexBindingDivisor(GLuint bindingIndex, GLuint divisor)
+{
+    mGLState.setVertexBindingDivisor(bindingIndex, divisor);
 }
 
 void Context::viewport(GLint x, GLint y, GLsizei width, GLsizei height)

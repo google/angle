@@ -100,6 +100,18 @@ class VertexArray final : public LabeledObject
                            bool pureInteger,
                            GLsizei stride,
                            const void *pointer);
+    void setVertexAttribFormat(size_t attribIndex,
+                               GLint size,
+                               GLenum type,
+                               bool normalized,
+                               bool pureInteger,
+                               GLintptr relativeOffset);
+    void bindVertexBuffer(size_t bindingIndex,
+                          Buffer *boundBuffer,
+                          GLintptr offset,
+                          GLsizei stride);
+    void setVertexAttribBinding(size_t attribIndex, size_t bindingIndex);
+    void setVertexBindingDivisor(size_t bindingIndex, GLuint divisor);
 
     void setElementArrayBuffer(Buffer *buffer);
 
@@ -164,21 +176,6 @@ class VertexArray final : public LabeledObject
     bool hasAnyDirtyBit() const { return mDirtyBits.any(); }
 
   private:
-    // TODO(jiawei.shao@intel.com): make these functions public when Vertex Attrib Binding entries
-    // are ready.
-    void setVertexAttribFormat(size_t attribIndex,
-                               GLint size,
-                               GLenum type,
-                               bool normalized,
-                               bool pureInteger,
-                               GLintptr relativeOffset);
-    void bindVertexBuffer(size_t bindingIndex,
-                          Buffer *boundBuffer,
-                          GLintptr offset,
-                          GLsizei stride);
-    void setVertexAttribBinding(size_t attribIndex, size_t bindingIndex);
-    void setVertexBindingDivisor(size_t bindingIndex, GLuint divisor);
-
     GLuint mId;
 
     VertexArrayState mState;

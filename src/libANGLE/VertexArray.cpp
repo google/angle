@@ -96,8 +96,8 @@ size_t VertexArray::GetAttribIndex(unsigned long dirtyBit)
 {
     static_assert(gl::MAX_VERTEX_ATTRIBS == gl::MAX_VERTEX_ATTRIB_BINDINGS,
                   "The stride of vertex attributes should equal to that of vertex bindings.");
-    ASSERT(dirtyBit > gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER);
-    return (dirtyBit - gl::VertexArray::DIRTY_BIT_ATTRIB_0_ENABLED) % gl::MAX_VERTEX_ATTRIBS;
+    ASSERT(dirtyBit > DIRTY_BIT_ELEMENT_ARRAY_BUFFER);
+    return (dirtyBit - DIRTY_BIT_ATTRIB_0_ENABLED) % gl::MAX_VERTEX_ATTRIBS;
 }
 
 void VertexArray::bindVertexBuffer(size_t bindingIndex,
@@ -119,8 +119,7 @@ void VertexArray::setVertexAttribBinding(size_t attribIndex, size_t bindingIndex
 {
     ASSERT(attribIndex < getMaxAttribs() && bindingIndex < getMaxBindings());
 
-    // TODO(jiawei.shao@intel.com): Vertex Attrib Bindings
-    ASSERT(attribIndex == bindingIndex);
+    mState.mVertexAttributes[attribIndex].bindingIndex = static_cast<GLuint>(bindingIndex);
     mDirtyBits.set(DIRTY_BIT_ATTRIB_0_BINDING + attribIndex);
 }
 
@@ -162,6 +161,7 @@ void VertexArray::setVertexAttribDivisor(size_t index, GLuint divisor)
 void VertexArray::enableAttribute(size_t attribIndex, bool enabledState)
 {
     ASSERT(attribIndex < getMaxAttribs());
+
     mState.mVertexAttributes[attribIndex].enabled = enabledState;
     mDirtyBits.set(DIRTY_BIT_ATTRIB_0_ENABLED + attribIndex);
 

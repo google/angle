@@ -1227,6 +1227,8 @@ void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, cons
 
     // Vertex Attribute Bindings are emulated on D3D11.
     caps->maxVertexAttribBindings = caps->maxVertexAttributes;
+    // Experimental testing confirmed there is no explicit limit on maximum buffer offset in D3D11.
+    caps->maxVertexAttribRelativeOffset = std::numeric_limits<GLint>::max();
     // Experimental testing confirmed 2048 is the maximum stride that D3D11 can support on all
     // platforms.
     caps->maxVertexAttribStride = 2048;

@@ -33,6 +33,7 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.array_size.vertex_fragment.default_block_struct_member = SKIP
 1442 OPENGL D3D11 : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.name_length.vertex_fragment.default_block_struct_member = SKIP
 1442 OPENGL D3D11 : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.type.vertex_fragment.struct.* = SKIP
+1442 OPENGL D3D11 : dEQP-GLES31.functional.vertex_attribute_binding.* = SKIP
 1442 D3D11 : dEQP-GLES31.functional.stencil_texturing.* = SKIP
 1442 D3D11 : dEQP-GLES31.functional.state_query.shader.sampler_type = SKIP
 
@@ -108,9 +109,6 @@
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_color_texture_samples_* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_depth_texture_samples_* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_integer_samples_* = FAIL
-1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_vertex_attrib_relative_offset_* = FAIL
-1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_vertex_attrib_bindings_* = FAIL
-1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_vertex_attrib_stride_* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_sample_mask_words_* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_framebuffer_width_* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_framebuffer_height_* = FAIL
@@ -1360,7 +1358,6 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.internal_format.texture_2d_multisample.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.internal_format.partial_query.num_sample_counts = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.internal_format.partial_query.samples = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.vertex_attribute_binding.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.program.program_separable_get_programiv = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.program.compute_work_group_size_get_programiv = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.program.active_atomic_counter_buffers_get_programiv = FAIL
@@ -1370,7 +1367,6 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.query.geometry_linked_input_type = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.query.geometry_linked_output_type = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.geometry_shading.query.geometry_shader_invocations = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.vertex_attribute_binding.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.separate_shader.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.uniform_location.nested_array.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.error_filters.case_11 = FAIL
@@ -1408,8 +1404,6 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.compressedtexsubimage3d = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.compressedtexsubimage3d_invalid_buffer_target = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.shader.compile_compute_shader = SKIP
-1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.vertex_array.vertex_attrib_format = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.vertex_array.vertex_attrib_i_format = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.vertex_array.draw_range_elements = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.vertex_array.draw_range_elements_incomplete_primitive = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.shader_directive.primitive_bounding_box = FAIL

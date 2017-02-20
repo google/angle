@@ -1119,11 +1119,13 @@ void GL_APIENTRY BindVertexBuffer(GLuint bindingindex,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation())
+        if (!context->skipValidation() &&
+            !ValidateBindVertexBuffer(context, bindingindex, buffer, offset, stride))
         {
-            context->handleError(Error(GL_INVALID_OPERATION, "Entry point not implemented"));
+            return;
         }
-        UNIMPLEMENTED();
+
+        context->bindVertexBuffer(bindingindex, buffer, offset, stride);
     }
 }
 
@@ -1140,11 +1142,13 @@ void GL_APIENTRY VertexAttribFormat(GLuint attribindex,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation())
+        if (!context->skipValidation() &&
+            !ValidateVertexAttribFormat(context, attribindex, size, type, relativeoffset, false))
         {
-            context->handleError(Error(GL_INVALID_OPERATION, "Entry point not implemented"));
+            return;
         }
-        UNIMPLEMENTED();
+
+        context->vertexAttribFormat(attribindex, size, type, normalized, relativeoffset);
     }
 }
 
@@ -1160,11 +1164,13 @@ void GL_APIENTRY VertexAttribIFormat(GLuint attribindex,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation())
+        if (!context->skipValidation() &&
+            !ValidateVertexAttribFormat(context, attribindex, size, type, relativeoffset, true))
         {
-            context->handleError(Error(GL_INVALID_OPERATION, "Entry point not implemented"));
+            return;
         }
-        UNIMPLEMENTED();
+
+        context->vertexAttribIFormat(attribindex, size, type, relativeoffset);
     }
 }
 
@@ -1174,11 +1180,13 @@ void GL_APIENTRY VertexAttribBinding(GLuint attribindex, GLuint bindingindex)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation())
+        if (!context->skipValidation() &&
+            !ValidateVertexAttribBinding(context, attribindex, bindingindex))
         {
-            context->handleError(Error(GL_INVALID_OPERATION, "Entry point not implemented"));
+            return;
         }
-        UNIMPLEMENTED();
+
+        context->vertexAttribBinding(attribindex, bindingindex);
     }
 }
 
@@ -1188,11 +1196,13 @@ void GL_APIENTRY VertexBindingDivisor(GLuint bindingindex, GLuint divisor)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation())
+        if (!context->skipValidation() &&
+            !ValidateVertexBindingDivisor(context, bindingindex, divisor))
         {
-            context->handleError(Error(GL_INVALID_OPERATION, "Entry point not implemented"));
+            return;
         }
-        UNIMPLEMENTED();
+
+        context->setVertexBindingDivisor(bindingindex, divisor);
     }
 }
 }  // namespace gl

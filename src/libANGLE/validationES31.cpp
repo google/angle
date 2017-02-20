@@ -550,6 +550,153 @@ bool ValidateGetProgramResourceIndex(Context *context,
             Error(GL_INVALID_ENUM, "Invalid program interface: 0x%X", programInterface));
         return false;
     }
+
+    return true;
+}
+
+bool ValidateBindVertexBuffer(ValidationContext *context,
+                              GLuint bindingIndex,
+                              GLuint buffer,
+                              GLintptr offset,
+                              GLsizei stride)
+{
+    if (context->getClientVersion() < ES_3_1)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3.1."));
+        return false;
+    }
+
+    if (!context->isBufferGenerated(buffer))
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Buffer is not generated."));
+        return false;
+    }
+
+    const Caps &caps = context->getCaps();
+    if (bindingIndex >= caps.maxVertexAttribBindings)
+    {
+        context->handleError(Error(
+            GL_INVALID_VALUE, "bindingindex must be smaller than MAX_VERTEX_ATTRIB_BINDINGS."));
+        return false;
+    }
+
+    if (offset < 0)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "offset cannot be negative."));
+        return false;
+    }
+
+    if (stride < 0 || stride > caps.maxVertexAttribStride)
+    {
+        context->handleError(
+            Error(GL_INVALID_VALUE, "stride must be between 0 and MAX_VERTEX_ATTRIB_STRIDE."));
+        return false;
+    }
+
+    // [OpenGL ES 3.1] Section 10.3.1 page 244:
+    // An INVALID_OPERATION error is generated if the default vertex array object is bound.
+    if (context->getGLState().getVertexArrayId() == 0)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Default vertex array buffer is bound."));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateVertexBindingDivisor(ValidationContext *context, GLuint bindingIndex, GLuint divisor)
+{
+    if (context->getClientVersion() < ES_3_1)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3.1."));
+        return false;
+    }
+
+    const Caps &caps = context->getCaps();
+    if (bindingIndex >= caps.maxVertexAttribBindings)
+    {
+        context->handleError(Error(
+            GL_INVALID_VALUE, "bindingindex must be smaller than MAX_VERTEX_ATTRIB_BINDINGS."));
+        return false;
+    }
+
+    // [OpenGL ES 3.1] Section 10.3.1 page 243:
+    // An INVALID_OPERATION error is generated if the default vertex array object is bound.
+    if (context->getGLState().getVertexArrayId() == 0)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Default vertex array object is bound."));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateVertexAttribFormat(ValidationContext *context,
+                                GLuint attribIndex,
+                                GLint size,
+                                GLenum type,
+                                GLuint relativeOffset,
+                                GLboolean pureInteger)
+{
+    if (context->getClientVersion() < ES_3_1)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3.1."));
+        return false;
+    }
+
+    const Caps &caps = context->getCaps();
+    if (relativeOffset > static_cast<GLuint>(caps.maxVertexAttribRelativeOffset))
+    {
+        context->handleError(
+            Error(GL_INVALID_VALUE,
+                  "relativeOffset cannot be greater than MAX_VERTEX_ATTRIB_RELATIVE_OFFSET."));
+        return false;
+    }
+
+    // [OpenGL ES 3.1] Section 10.3.1 page 243:
+    // An INVALID_OPERATION error is generated if the default vertex array object is bound.
+    if (context->getGLState().getVertexArrayId() == 0)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Default vertex array object is bound."));
+        return false;
+    }
+
+    return ValidateVertexFormatBase(context, attribIndex, size, type, pureInteger);
+}
+
+bool ValidateVertexAttribBinding(ValidationContext *context,
+                                 GLuint attribIndex,
+                                 GLuint bindingIndex)
+{
+    if (context->getClientVersion() < ES_3_1)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3.1."));
+        return false;
+    }
+
+    // [OpenGL ES 3.1] Section 10.3.1 page 243:
+    // An INVALID_OPERATION error is generated if the default vertex array object is bound.
+    if (context->getGLState().getVertexArrayId() == 0)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Default vertex array object is bound."));
+        return false;
+    }
+
+    const Caps &caps = context->getCaps();
+    if (attribIndex >= caps.maxVertexAttributes)
+    {
+        context->handleError(
+            Error(GL_INVALID_VALUE, "attribindex must be smaller than MAX_VERTEX_ATTRIBS."));
+        return false;
+    }
+
+    if (bindingIndex >= caps.maxVertexAttribBindings)
+    {
+        context->handleError(Error(GL_INVALID_VALUE,
+                                   "bindingindex must be smaller than MAX_VERTEX_ATTRIB_BINDINGS"));
+        return false;
+    }
+
     return true;
 }
 

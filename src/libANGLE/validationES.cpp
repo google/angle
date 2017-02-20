@@ -1111,7 +1111,18 @@ bool ValidateGetVertexAttribBase(Context *context,
             case GL_VERTEX_ATTRIB_ARRAY_INTEGER:
                 if (context->getClientMajorVersion() < 3)
                 {
-                    context->handleError(Error(GL_INVALID_ENUM, "pname requires OpenGL ES 3.0."));
+                    context->handleError(Error(
+                        GL_INVALID_ENUM, "GL_VERTEX_ATTRIB_ARRAY_INTEGER requires OpenGL ES 3.0."));
+                    return false;
+                }
+                break;
+
+            case GL_VERTEX_ATTRIB_BINDING:
+            case GL_VERTEX_ATTRIB_RELATIVE_OFFSET:
+                if (context->getClientVersion() < ES_3_1)
+                {
+                    context->handleError(
+                        Error(GL_INVALID_ENUM, "Vertex Attrib Bindings require OpenGL ES 3.1."));
                     return false;
                 }
                 break;
@@ -5730,6 +5741,96 @@ bool ValidateGetInternalFormativRobustANGLE(Context *context,
     if (!ValidateRobustBufferSize(context, bufSize, *length))
     {
         return false;
+    }
+
+    return true;
+}
+
+bool ValidateVertexFormatBase(ValidationContext *context,
+                              GLuint attribIndex,
+                              GLint size,
+                              GLenum type,
+                              GLboolean pureInteger)
+{
+    const Caps &caps = context->getCaps();
+    if (attribIndex >= caps.maxVertexAttributes)
+    {
+        context->handleError(
+            Error(GL_INVALID_VALUE, "attribindex must be smaller than MAX_VERTEX_ATTRIBS."));
+        return false;
+    }
+
+    if (size < 1 || size > 4)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "size must be between one and four."));
+    }
+
+    switch (type)
+    {
+        case GL_BYTE:
+        case GL_UNSIGNED_BYTE:
+        case GL_SHORT:
+        case GL_UNSIGNED_SHORT:
+            break;
+
+        case GL_INT:
+        case GL_UNSIGNED_INT:
+            if (context->getClientMajorVersion() < 3)
+            {
+                context->handleError(
+                    Error(GL_INVALID_ENUM, "Vertex type not supported before OpenGL ES 3.0."));
+                return false;
+            }
+            break;
+
+        case GL_FIXED:
+        case GL_FLOAT:
+            if (pureInteger)
+            {
+                context->handleError(Error(GL_INVALID_ENUM, "Type is not integer."));
+                return false;
+            }
+            break;
+
+        case GL_HALF_FLOAT:
+            if (context->getClientMajorVersion() < 3)
+            {
+                context->handleError(
+                    Error(GL_INVALID_ENUM, "Vertex type not supported before OpenGL ES 3.0."));
+                return false;
+            }
+            if (pureInteger)
+            {
+                context->handleError(Error(GL_INVALID_ENUM, "Type is not integer."));
+                return false;
+            }
+            break;
+
+        case GL_INT_2_10_10_10_REV:
+        case GL_UNSIGNED_INT_2_10_10_10_REV:
+            if (context->getClientMajorVersion() < 3)
+            {
+                context->handleError(
+                    Error(GL_INVALID_ENUM, "Vertex type not supported before OpenGL ES 3.0."));
+                return false;
+            }
+            if (pureInteger)
+            {
+                context->handleError(Error(GL_INVALID_ENUM, "Type is not integer."));
+                return false;
+            }
+            if (size != 4)
+            {
+                context->handleError(Error(GL_INVALID_OPERATION,
+                                           "Type is INT_2_10_10_10_REV or "
+                                           "UNSIGNED_INT_2_10_10_10_REV and size is not 4."));
+                return false;
+            }
+            break;
+
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Invalid vertex type."));
+            return false;
     }
 
     return true;
