@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f052d691_7a80b808",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 610,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-02-20T04:47:01Z",
+      "side": 1,
+      "message": "The -\u003e the",
+      "revId": "309c85044ac9eb5f5609c924d12234c161f2b3f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "075b1b54_59bb373e",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 787,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-02-20T04:47:01Z",
+      "side": 1,
+      "message": "What about the situation for defaultWidth \u003d\u003d 0 \u0026\u0026 defaultHeight !\u003d 0?",
+      "revId": "309c85044ac9eb5f5609c924d12234c161f2b3f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7b1b5a0b_df3d3494",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 796,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-02-20T04:47:01Z",
+      "side": 1,
+      "message": "You can put this check in above for loop. It will return early once this requirement isn\u0027t satified.",
+      "revId": "309c85044ac9eb5f5609c924d12234c161f2b3f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "349a0aa1_e85f876a",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 798,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-02-20T04:47:01Z",
+      "side": 1,
+      "message": "I prefer !fixedSampleLocations here",
+      "revId": "309c85044ac9eb5f5609c924d12234c161f2b3f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "454d991e_c310a893",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 426,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-02-20T04:47:01Z",
+      "side": 1,
+      "message": "What about Major \u003d\u003d 4, Minor \u003d\u003d 0?",
+      "revId": "309c85044ac9eb5f5609c924d12234c161f2b3f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f7282062_7166d468",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-02-20T04:47:01Z",
+      "side": 1,
+      "message": "Also check following combinations:\n1. width \u003d\u003d 0, height !\u003d 0\n2. width !\u003d 0, height \u003d\u003d0\n3. width !\u003d 0, height !\u003d 0",
+      "revId": "309c85044ac9eb5f5609c924d12234c161f2b3f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f13fc7cb_f92fa8bd",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-02-20T04:47:01Z",
+      "side": 1,
+      "message": "The incomplete status may be caused by the same reason as the first GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE. You should do this test in a clean state.",
+      "revId": "309c85044ac9eb5f5609c924d12234c161f2b3f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
