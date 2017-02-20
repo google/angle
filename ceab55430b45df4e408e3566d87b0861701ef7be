@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "815c322d_daa937a2",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3832,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-20T18:40:15Z",
+      "side": 1,
+      "message": "you can keep the QueryFramebuffer methods - I\u0027m not really sure if there\u0027s a real need to, but I think it keeps the code consistent.",
+      "range": {
+        "startLine": 3812,
+        "startChar": 2,
+        "endLine": 3832,
+        "endChar": 5
+      },
+      "revId": "ceab55430b45df4e408e3566d87b0861701ef7be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
