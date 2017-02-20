@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "32ac5074_982857c9",
+        "filename": "src/libANGLE/Constants.h",
+        "patchSetId": 25
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-20T07:12:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ab416891_0eba136b",
+      "range": {
+        "startLine": 18,
+        "startChar": 4,
+        "endLine": 18,
+        "endChar": 38
+      },
+      "revId": "b2bfbb48523727e0831794a3f230ef51a4a5e8bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3dc40100_32e14eb5",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 25
@@ -36,6 +60,30 @@
       "writtenOn": "2017-02-17T17:25:31Z",
       "side": 1,
       "message": "unclear why this comment is here - we will support binding in D3D11 at some point I think?",
+      "range": {
+        "startLine": 1251,
+        "startChar": 4,
+        "endLine": 1251,
+        "endChar": 43
+      },
+      "revId": "b2bfbb48523727e0831794a3f230ef51a4a5e8bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f05395a0_c6ebb08b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 1251,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-20T07:12:00Z",
+      "side": 1,
+      "message": "Vertex Attrib Binding is an OpenGL feature. What I want to comment here is that there is no such concept in D3D11, so here maxVertexAttribBindings and maxVertexAttribRelativeOffset are not the real driver capabilities as OpenGL drivers, but the emulated values.\n\nMaybe a better comment is \u0027Vertex Attrib Binding is not available in D3D11\u0027 ?",
+      "parentUuid": "3dc40100_32e14eb5",
       "range": {
         "startLine": 1251,
         "startChar": 4,
@@ -71,6 +119,47 @@
     },
     {
       "key": {
+        "uuid": "b82809f4_dfc0197b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 1252,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-20T07:12:00Z",
+      "side": 1,
+      "message": "It is just an emulated value.\n\nWith Vertex Attrib Binding enabled, an offset should be divided into attrib.relativeOffset and binding.offset.\n\nHowever in D3D11 as I know we can only use IASetVertexBuffers(StartSlot, NumBuffers, const *ppVertexBuffers, *pStrides, *pOffsets) to update the vertex buffers, where each offset should be attrib.relativeOffset + binding.offset. \n\nI do not find any restriction on offset in D3D11, and ES3.1 only has a limit on attrib.relativeOffset (MAX_VERTEX_ATTRIB_RELATIVE_OFFSET, at least 2047). So I emulate caps-\u003emaxVertexAttribRelativeOffset as 2047 in D3D11 for the queries on these values in this patch.",
+      "parentUuid": "57bb4049_f139752a",
+      "range": {
+        "startLine": 1252,
+        "startChar": 46,
+        "endLine": 1252,
+        "endChar": 79
+      },
+      "revId": "b2bfbb48523727e0831794a3f230ef51a4a5e8bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19b87d91_470a6db0",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 682,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-20T07:12:00Z",
+      "side": 1,
+      "message": "I tested that on my Win8 notebook using HD Graphics 5500 the max attrib stride is truly 2048 or the rendering will go wrong. However on our Win10 workstation using Nvidia GFX this value can reach 4095.\n\nYou can directly change largeAttribStride here to perform the tests.",
+      "revId": "b2bfbb48523727e0831794a3f230ef51a4a5e8bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ad2bb74d_891824f2",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 25
@@ -82,6 +171,30 @@
       "writtenOn": "2017-02-17T17:25:31Z",
       "side": 1,
       "message": "you need to ASSERT_GT that the returned value is greater than the spec minimum values. Zero is not spec-compliant. You can do this for testing, to find the best D3D value, but not in production code. same for the above test.",
+      "range": {
+        "startLine": 694,
+        "startChar": 18,
+        "endLine": 694,
+        "endChar": 30
+      },
+      "revId": "b2bfbb48523727e0831794a3f230ef51a4a5e8bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "956b47cc_d79381c2",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 694,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-20T07:12:00Z",
+      "side": 1,
+      "message": "I added this statement to avoid failures on Android trybots.\n\nYuly told us on Nexus 5X returns 2147483647 for both GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET and GL_MAX_VERTEX_ATTRIB_STRIDE, which is a valid value according to SPEC but cannot be directly used as a real offset and stride because it will cause math overflows:\nhttps://chromium-review.googlesource.com/#/c/441308/20/src/libANGLE/renderer/gl/renderergl_utils.cpp@636 \n\nSo I add code to check if the input offset and stride may cause math overflow in DrawArraysWithStrideAndOffset and rename the case from \u0027xxxMaxBufferxxx\u0027 to \u0027xxxLargeBufferxxx\u0027.\n\nI tested our Win10 using Nvidia GTX 1060 and Win10 using HD530, the maximum offset that can keep rendering correct seems to be 2147483548 (~2G), but the test fails on Win8 notebook using HD Graphics 5500. I suspect the failure is mainly caused by the shortage of memory, not the limit directly applied on the argument \u0027offset\u0027 by D3D11 drivers.\n\nShall we also initialize caps-\u003emaxVertexAttribRelativeOffset to 2147483647 in D3D 11 backends as it seems that there is no such limit in D3D 11 drivers?",
+      "parentUuid": "ad2bb74d_891824f2",
       "range": {
         "startLine": 694,
         "startChar": 18,
