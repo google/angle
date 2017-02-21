@@ -415,6 +415,24 @@
     },
     {
       "key": {
+        "uuid": "e9f6e658_f46f09a3",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 682,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-21T14:07:47Z",
+      "side": 1,
+      "message": "I do the test on D3D11 renderers. \n\nYes the code to achieve maximum stride before is wrong, and I have correct it. \n\nI suspect it a driver-specific value as although the feature level is same, the maximum supported strides are different.",
+      "parentUuid": "a9846dd9_2495ece5",
+      "revId": "b2bfbb48523727e0831794a3f230ef51a4a5e8bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ad2bb74d_891824f2",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 25
