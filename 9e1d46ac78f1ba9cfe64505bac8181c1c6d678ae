@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "b7ff16dc_15c963e3",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2741,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-21T20:45:21Z",
+      "side": 1,
+      "message": "nit: is this necessary? (below too)",
+      "range": {
+        "startLine": 2741,
+        "startChar": 35,
+        "endLine": 2741,
+        "endChar": 41
+      },
+      "revId": "9e1d46ac78f1ba9cfe64505bac8181c1c6d678ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f8cece01_7b2cf5de",
+        "filename": "src/libANGLE/ContextState.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-21T20:45:21Z",
+      "side": 1,
+      "message": "nit: move to cpp? It isn\u0027t a simple member getter.",
+      "range": {
+        "startLine": 128,
+        "startChar": 4,
+        "endLine": 130,
+        "endChar": 5
+      },
+      "revId": "9e1d46ac78f1ba9cfe64505bac8181c1c6d678ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dc41d8d3_56f42056",
         "filename": "src/libANGLE/Framebuffer.cpp",
         "patchSetId": 5
@@ -47,6 +93,29 @@
       "writtenOn": "2017-02-21T20:37:37Z",
       "side": 1,
       "message": "nit: this could get a const Context* like the other entrypoints.\nnvm, I saw the code in Surface.cpp",
+      "revId": "9e1d46ac78f1ba9cfe64505bac8181c1c6d678ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c98c51dc_65013402",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-21T20:45:21Z",
+      "side": 1,
+      "message": "What about putting this bool into the Framebuffer constructor and keeping it as a member?",
+      "range": {
+        "startLine": 138,
+        "startChar": 23,
+        "endLine": 138,
+        "endChar": 36
+      },
       "revId": "9e1d46ac78f1ba9cfe64505bac8181c1c6d678ae",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
