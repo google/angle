@@ -51,6 +51,7 @@ class RendererVk : angle::NonCopyable
 
     // TODO(jmadill): Use ContextImpl for command buffers to enable threaded contexts.
     vk::CommandBuffer *getCommandBuffer();
+    vk::Error submitCommandBuffer(const vk::CommandBuffer &commandBuffer);
     vk::Error submitAndFinishCommandBuffer(const vk::CommandBuffer &commandBuffer);
     vk::Error waitThenFinishCommandBuffer(const vk::CommandBuffer &commandBuffer,
                                           const vk::Semaphore &waitSemaphore);
@@ -69,6 +70,13 @@ class RendererVk : angle::NonCopyable
     GlslangWrapper *getGlslangWrapper();
 
     Serial getCurrentQueueSerial() const;
+
+    template <typename T>
+    void enqueueGarbage(Serial serial, T &&object)
+    {
+        mGarbage.emplace_back(std::unique_ptr<vk::GarbageObject<T>>(
+            new vk::GarbageObject<T>(serial, std::move(object))));
+    }
 
   private:
     void ensureCapsInitialized() const;
@@ -103,6 +111,7 @@ class RendererVk : angle::NonCopyable
     Serial mCurrentQueueSerial;
     Serial mLastCompletedQueueSerial;
     std::vector<vk::FenceAndCommandBuffer> mInFlightCommands;
+    std::vector<std::unique_ptr<vk::IGarbageObject>> mGarbage;
 };
 
 }  // namespace rx

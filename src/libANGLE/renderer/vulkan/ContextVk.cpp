@@ -280,7 +280,7 @@ gl::Error ContextVk::drawArrays(GLenum mode, GLint first, GLsizei count)
     commandBuffer->endRenderPass();
     ANGLE_TRY(commandBuffer->end());
 
-    ANGLE_TRY(mRenderer->submitAndFinishCommandBuffer(*commandBuffer));
+    ANGLE_TRY(mRenderer->submitCommandBuffer(*commandBuffer));
 
     return gl::NoError();
 }
@@ -338,8 +338,7 @@ vk::CommandBuffer *ContextVk::getCommandBuffer()
 
 vk::Error ContextVk::submitCommands(const vk::CommandBuffer &commandBuffer)
 {
-    // TODO(jmadill): Command queuing.
-    ANGLE_TRY(mRenderer->submitAndFinishCommandBuffer(commandBuffer));
+    ANGLE_TRY(mRenderer->submitCommandBuffer(commandBuffer));
     return vk::NoError();
 }
 

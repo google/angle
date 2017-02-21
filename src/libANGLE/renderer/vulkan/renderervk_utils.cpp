@@ -664,6 +664,14 @@ StagingImage::StagingImage() : mSize(0)
 {
 }
 
+StagingImage::StagingImage(StagingImage &&other)
+    : mImage(std::move(other.mImage)),
+      mDeviceMemory(std::move(other.mDeviceMemory)),
+      mSize(other.mSize)
+{
+    other.mSize = 0;
+}
+
 void StagingImage::destroy(VkDevice device)
 {
     mImage.destroy(device);

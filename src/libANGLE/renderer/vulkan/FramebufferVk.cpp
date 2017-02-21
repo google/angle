@@ -322,8 +322,10 @@ gl::Error FramebufferVk::readPixels(ContextImpl *context,
 
     PackPixels(params, angleFormat, inputPitch, mapPointer, reinterpret_cast<uint8_t *>(pixels));
 
-    stagingImage.getImage().destroy(renderer->getDevice());
     stagingImage.getDeviceMemory().unmap(device);
+    renderer->enqueueGarbage(renderer->getCurrentQueueSerial(), std::move(stagingImage));
+
+    stagingImage.getImage().destroy(renderer->getDevice());
 
     stagingImage.destroy(device);
 
