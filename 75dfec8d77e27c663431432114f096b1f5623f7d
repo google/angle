@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e4bf67a6_398f4a83",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-02-21T07:28:05Z",
+      "side": 1,
+      "message": "I would like to put the pair of getter/setter in the same file. It is weird to put them into different file. The existed getters/setters in ANGLE indeed follow this rule. But the existed getters/setters have two implementations to be called by entry point: \n1) entry point -\u003e Context -\u003e queryutil (for example, SamplerParameter). In this situation, the getter/setter in Context are quite simple. It is just a wrapper to queryutil. \n2) entry point -\u003e queryutil directly (for example, TexParameter, BufferParameter). \n\nNow, the setter in this patch-set follows 1), while the getter follows 2). It is not good, I think. \n\nGeoff (and Jamie), what would you like to make this kind of code to be consistent throughout ANGLE? Yizhou, please don\u0027t upload new patch set before we get consensus. IMHO, it is just a preference issue to make code consistent.",
+      "revId": "75dfec8d77e27c663431432114f096b1f5623f7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
