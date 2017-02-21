@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9d557425_f18ca372",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 648,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-21T14:07:47Z",
+      "side": 1,
+      "message": "I am sorry that I find this value is a limit on D3D structure buffer, not on vertex buffer, which is not the same concept, so I delete it. But I once see someone from Microsoft use this value to check the stride on Github:\nhttps://github.com/Microsoft/DirectXMesh/blob/master/DirectXMesh/DirectXMeshRemap.cpp#L160. Could you give me some suggestions? \n\nI use the angle test DrawArraysWithLargeStride to test the maximum stride: on my Win8 notebook using HD Graphics 5500 the maximum stride is really 2048, and on the Win10 workstation using HD530 and Nvidia GeForce 1060 the maximum stride is 4095. If the stride is larger than the maximum values on each platform, the rendering will be wrong.\n\n(You may choose at least 2052 because 2049 will be truncated to 2048 in that case)",
+      "revId": "fe5871536be04a99bbb473ffd848fc2604e86cae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
