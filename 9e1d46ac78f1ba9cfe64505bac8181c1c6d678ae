@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dc41d8d3_56f42056",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 774,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-21T20:37:37Z",
+      "side": 1,
+      "message": "nit: isWebGL1 could be added to state and Context::isWebGL1 be a proxy for it.",
+      "revId": "9e1d46ac78f1ba9cfe64505bac8181c1c6d678ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5746250e_9f81e3bf",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1062,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-21T20:37:37Z",
+      "side": 1,
+      "message": "uber-nit make this an \"else if\" like for the stencil to make the condition chain more consistent.",
+      "revId": "9e1d46ac78f1ba9cfe64505bac8181c1c6d678ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "71294b3d_97db0b93",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-21T20:37:37Z",
+      "side": 1,
+      "message": "nit: this could get a const Context* like the other entrypoints.\nnvm, I saw the code in Surface.cpp",
+      "revId": "9e1d46ac78f1ba9cfe64505bac8181c1c6d678ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "db395843_9c3d3757",
+        "filename": "src/tests/gl_tests/WebGLFramebufferTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 519,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-21T20:37:37Z",
+      "side": 1,
+      "message": "nit: make the arguments pointer to show they are outputs of the function. Same for tryDepth.",
+      "revId": "9e1d46ac78f1ba9cfe64505bac8181c1c6d678ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
