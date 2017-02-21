@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "931ea386_37b08f9f",
+        "filename": "src/gpu_info_util/SystemInfo_mac.mm",
+        "patchSetId": 6
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-21T20:57:52Z",
+      "side": 1,
+      "message": "Should we return false if the active GPU was not found?",
+      "range": {
+        "startLine": 155,
+        "startChar": 8,
+        "endLine": 162,
+        "endChar": 9
+      },
+      "revId": "b1308768556e7e7ff2a45b0bc4b8707106004fe6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
