@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0ba871ea_f705d487",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 565,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-02-21T07:22:16Z",
+      "side": 1,
+      "message": "Its default value is GL_TRUE. I suggest that you set it to the default value.",
+      "revId": "365d247de64ba9aba5ebf849c26c1be0095814c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df7cb847_77292074",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 610,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-02-21T07:22:16Z",
+      "side": 1,
+      "message": "What about \"ES 3.1 (section 9.4) requires that .... should(or must) be the same for all attached textures? Please apply it to the other comments.",
+      "revId": "365d247de64ba9aba5ebf849c26c1be0095814c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df623c61_d867f2d0",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-02-21T07:22:16Z",
+      "side": 1,
+      "message": "I prefer to combine these two ifs",
+      "revId": "365d247de64ba9aba5ebf849c26c1be0095814c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
