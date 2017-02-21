@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "cac4f781_23a63ba7",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1986,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-02-21T10:58:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e9bf301e_140a6125",
+      "range": {
+        "startLine": 1986,
+        "startChar": 34,
+        "endLine": 1986,
+        "endChar": 58
+      },
+      "revId": "840940094588dccafca4fb6c1cbe5d855a04f0bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aad279cb_ded2548e",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2017-02-20T18:38:38Z",
       "side": 1,
       "message": "how about: locatedUniforms",
+      "range": {
+        "startLine": 1987,
+        "startChar": 39,
+        "endLine": 1987,
+        "endChar": 65
+      },
+      "revId": "840940094588dccafca4fb6c1cbe5d855a04f0bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bb34c367_e6df91d2",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1987,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-02-21T10:58:38Z",
+      "side": 1,
+      "message": "Made this into preLocatedUniforms. In the future we\u0027ll also have shaderLocatedUniforms or something similar.",
+      "parentUuid": "aad279cb_ded2548e",
       "range": {
         "startLine": 1987,
         "startChar": 39,
