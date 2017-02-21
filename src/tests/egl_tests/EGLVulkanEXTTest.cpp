@@ -24,7 +24,7 @@ class VulkanEXTTest : public ANGLETest
 };
 
 // ANGLE requires that the vulkan validation layers are available.
-TEST_P(VulkanEXTTest, ValidationLayersAvaialable)
+TEST_P(VulkanEXTTest, ValidationLayersAvailable)
 {
     setVulkanLayersEnabled(true);
     ASSERT_TRUE(getEGLWindow()->initializeGL(GetOSWindow()));

@@ -28,6 +28,29 @@ const vk::Format &GetVkFormatFromConfig(const egl::Config &config)
     return vk::Format::Get(GL_BGRA8_EXT);
 }
 
+VkPresentModeKHR GetDesiredPresentMode(const std::vector<VkPresentModeKHR> &presentModes,
+                                       EGLint minSwapInterval,
+                                       EGLint maxSwapInterval)
+{
+    ASSERT(!presentModes.empty());
+
+    // Use FIFO mode for v-sync, since it throttles you to the display rate. Mailbox is more
+    // similar to triple-buffering. For now we hard-code Mailbox for perf tseting.
+    // TODO(jmadill): Properly select present mode and re-create display if changed.
+    VkPresentModeKHR bestChoice = VK_PRESENT_MODE_MAILBOX_KHR;
+
+    for (auto presentMode : presentModes)
+    {
+        if (presentMode == bestChoice)
+        {
+            return bestChoice;
+        }
+    }
+
+    ERR() << "Desired present mode not available. Falling back to " << presentModes[0];
+    return presentModes[0];
+}
+
 }  // namespace
 
 OffscreenSurfaceVk::OffscreenSurfaceVk(const egl::SurfaceState &surfaceState,
@@ -236,23 +259,15 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
     ANGLE_VK_TRY(vkGetPhysicalDeviceSurfacePresentModesKHR(physicalDevice, mSurface,
                                                            &presentModeCount, presentModes.data()));
 
-    // Use FIFO mode if available, since it throttles you to the display rate. Mailbox can lead
-    // to rendering frames which are never seen by the user, wasting power.
-    VkPresentModeKHR swapchainPresentMode = presentModes[0];
-    for (auto presentMode : presentModes)
-    {
-        if (presentMode == VK_PRESENT_MODE_FIFO_KHR)
-        {
-            swapchainPresentMode = VK_PRESENT_MODE_FIFO_KHR;
-            break;
-        }
+    // Select appropriate present mode based on vsync parameter.
+    // TODO(jmadill): More complete implementation, which allows for changing and more values.
+    const EGLint minSwapInterval = mState.config->minSwapInterval;
+    const EGLint maxSwapInterval = mState.config->maxSwapInterval;
+    ASSERT(minSwapInterval == 0 || minSwapInterval == 1);
+    ASSERT(maxSwapInterval == 0 || maxSwapInterval == 1);
 
-        // Fallback to immediate mode if FIFO is unavailable.
-        if (presentMode == VK_PRESENT_MODE_IMMEDIATE_KHR)
-        {
-            swapchainPresentMode = VK_PRESENT_MODE_IMMEDIATE_KHR;
-        }
-    }
+    VkPresentModeKHR swapchainPresentMode =
+        GetDesiredPresentMode(presentModes, minSwapInterval, maxSwapInterval);
 
     // Determine number of swapchain images. Aim for one more than the minimum.
     uint32_t minImageCount = surfaceCaps.minImageCount + 1;
@@ -423,7 +438,7 @@ vk::Error WindowSurfaceVk::swapImpl(RendererVk *renderer)
 
     ANGLE_VK_TRY(vkQueuePresentKHR(renderer->getQueue(), &presentInfo));
 
-    // Get the next available swapchain iamge.
+    // Get the next available swapchain image.
     ANGLE_TRY(nextSwapchainImage(renderer));
 
     return vk::NoError();
