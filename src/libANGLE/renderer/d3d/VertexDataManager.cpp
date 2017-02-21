@@ -256,7 +256,7 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state,
             case VertexStorageType::STATIC:
             {
                 // Store static attribute.
-                ANGLE_TRY(StoreStaticAttrib(translated, count, instances));
+                ANGLE_TRY(StoreStaticAttrib(translated));
                 break;
             }
             case VertexStorageType::DYNAMIC:
@@ -313,9 +313,7 @@ void VertexDataManager::StoreDirectAttrib(TranslatedAttribute *directAttrib)
 }
 
 // static
-gl::Error VertexDataManager::StoreStaticAttrib(TranslatedAttribute *translated,
-                                               GLsizei count,
-                                               GLsizei instances)
+gl::Error VertexDataManager::StoreStaticAttrib(TranslatedAttribute *translated)
 {
     const auto &attrib  = *translated->attribute;
     const auto &binding = *translated->binding;

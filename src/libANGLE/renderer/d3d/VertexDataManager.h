@@ -95,9 +95,7 @@ class VertexDataManager : angle::NonCopyable
 
     static void StoreDirectAttrib(TranslatedAttribute *directAttrib);
 
-    static gl::Error StoreStaticAttrib(TranslatedAttribute *translated,
-                                       GLsizei count,
-                                       GLsizei instances);
+    static gl::Error StoreStaticAttrib(TranslatedAttribute *translated);
 
     gl::Error storeDynamicAttribs(std::vector<TranslatedAttribute> *translatedAttribs,
                                   const gl::AttributesMask &dynamicAttribsMask,
