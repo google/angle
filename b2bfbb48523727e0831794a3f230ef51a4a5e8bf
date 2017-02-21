@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "37d95986_2d107c86",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 1251,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-21T08:58:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b399dd75_94828f9a",
+      "range": {
+        "startLine": 1251,
+        "startChar": 4,
+        "endLine": 1251,
+        "endChar": 43
+      },
+      "revId": "b2bfbb48523727e0831794a3f230ef51a4a5e8bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "57bb4049_f139752a",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 25
@@ -191,6 +215,30 @@
     },
     {
       "key": {
+        "uuid": "ff389bcf_2ca83b84",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 1252,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-21T08:58:39Z",
+      "side": 1,
+      "message": "On Nvidia OpenGL this value is 2047, so shall we choose 2047 here?",
+      "parentUuid": "ecbe7679_09aeed87",
+      "range": {
+        "startLine": 1252,
+        "startChar": 46,
+        "endLine": 1252,
+        "endChar": 79
+      },
+      "revId": "b2bfbb48523727e0831794a3f230ef51a4a5e8bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d4a7dc8c_b6ba23ef",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 25
@@ -202,6 +250,30 @@
       "writtenOn": "2017-02-20T15:52:11Z",
       "side": 1,
       "message": "nit: lower-case first letter since it\u0027s not static.",
+      "range": {
+        "startLine": 620,
+        "startChar": 9,
+        "endLine": 620,
+        "endChar": 38
+      },
+      "revId": "b2bfbb48523727e0831794a3f230ef51a4a5e8bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5f798ea7_2589a922",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 620,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-21T08:58:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d4a7dc8c_b6ba23ef",
       "range": {
         "startLine": 620,
         "startChar": 9,
@@ -237,6 +309,30 @@
     },
     {
       "key": {
+        "uuid": "10545a28_f840776a",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 622,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-21T08:58:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "753ef957_ca8e1614",
+      "range": {
+        "startLine": 622,
+        "startChar": 34,
+        "endLine": 622,
+        "endChar": 63
+      },
+      "revId": "b2bfbb48523727e0831794a3f230ef51a4a5e8bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e56e9bde_87501b56",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 25
@@ -248,6 +344,30 @@
       "writtenOn": "2017-02-20T15:52:11Z",
       "side": 1,
       "message": "nit: ASSERT_GE",
+      "range": {
+        "startLine": 627,
+        "startChar": 8,
+        "endLine": 627,
+        "endChar": 14
+      },
+      "revId": "b2bfbb48523727e0831794a3f230ef51a4a5e8bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9380ab7a_9cce5e46",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 627,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-21T08:58:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e56e9bde_87501b56",
       "range": {
         "startLine": 627,
         "startChar": 8,
@@ -354,6 +474,30 @@
       "side": 1,
       "message": "I think that makes a good default value for D3D11, yes.\n\nCan you add a simple test that checks the value for MAX_VERTEX_ATTRUB_RELATIVE_OFFSET and verifies it\u0027s GE the spec minimum?\n\nI see why you are choosing this offset now. I think you should update the comment above too, to explain that we can\u0027t test with MAX because it can cause buffers to be too large and math overflows.",
       "parentUuid": "956b47cc_d79381c2",
+      "range": {
+        "startLine": 694,
+        "startChar": 18,
+        "endLine": 694,
+        "endChar": 30
+      },
+      "revId": "b2bfbb48523727e0831794a3f230ef51a4a5e8bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6419d828_439fcf2a",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 694,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-21T08:58:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "229dc485_41163325",
       "range": {
         "startLine": 694,
         "startChar": 18,
