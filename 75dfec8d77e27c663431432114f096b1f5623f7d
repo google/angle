@@ -16,6 +16,24 @@
       "revId": "75dfec8d77e27c663431432114f096b1f5623f7d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8537a3d3_059d17d7",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-21T14:17:37Z",
+      "side": 1,
+      "message": "Thank you Yunchao, yes, this is something in ANGLE that we have not had time to change the old code to the new style. Every method in entry_pointes_gles_*.cpp should use style 1). Feel free to update some of these entry points if you have the time.",
+      "parentUuid": "e4bf67a6_398f4a83",
+      "revId": "75dfec8d77e27c663431432114f096b1f5623f7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
