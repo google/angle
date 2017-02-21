@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "fdb4fd01_3ec32f89",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 565,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-02-21T09:58:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0ba871ea_f705d487",
+      "revId": "365d247de64ba9aba5ebf849c26c1be0095814c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df7cb847_77292074",
         "filename": "src/libANGLE/Framebuffer.cpp",
         "patchSetId": 8
@@ -30,6 +48,24 @@
       "writtenOn": "2017-02-21T07:22:16Z",
       "side": 1,
       "message": "What about \"ES 3.1 (section 9.4) requires that .... should(or must) be the same for all attached textures? Please apply it to the other comments.",
+      "revId": "365d247de64ba9aba5ebf849c26c1be0095814c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c1ffabca_42392ef9",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 610,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-02-21T09:58:30Z",
+      "side": 1,
+      "message": "I put the other part of the statement in line 661.",
+      "parentUuid": "df7cb847_77292074",
       "revId": "365d247de64ba9aba5ebf849c26c1be0095814c6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
