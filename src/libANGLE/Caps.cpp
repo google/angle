@@ -599,7 +599,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_EXT_texture_storage"] = esOnlyExtension(&Extensions::textureStorage);
         map["GL_OES_texture_npot"] = enableableExtension(&Extensions::textureNPOT);
         map["GL_EXT_draw_buffers"] = enableableExtension(&Extensions::drawBuffers);
-        map["GL_EXT_texture_filter_anisotropic"] = esOnlyExtension(&Extensions::textureFilterAnisotropic);
+        map["GL_EXT_texture_filter_anisotropic"] = enableableExtension(&Extensions::textureFilterAnisotropic);
         map["GL_EXT_occlusion_query_boolean"] = esOnlyExtension(&Extensions::occlusionQueryBoolean);
         map["GL_NV_fence"] = esOnlyExtension(&Extensions::fence);
         map["GL_ANGLE_timer_query"] = esOnlyExtension(&Extensions::timerQuery);

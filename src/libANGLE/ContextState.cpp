@@ -312,7 +312,7 @@ bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsign
             return true;
         }
         case GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT:
-            if (!getExtensions().maxTextureAnisotropy)
+            if (!getExtensions().textureFilterAnisotropic)
             {
                 return false;
             }

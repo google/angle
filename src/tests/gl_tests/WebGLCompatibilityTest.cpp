@@ -149,6 +149,45 @@ TEST_P(WebGLCompatibilityTest, EnableExtensionUintIndices)
     }
 }
 
+// Test enabling the GL_EXT_texture_filter_anisotropic extension
+TEST_P(WebGLCompatibilityTest, EnableExtensionTextureFilterAnisotropic)
+{
+    EXPECT_FALSE(extensionEnabled("GL_EXT_texture_filter_anisotropic"));
+
+    GLfloat maxAnisotropy = 0.0f;
+    glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAnisotropy);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture.get());
+    ASSERT_GL_NO_ERROR();
+
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 1.0f);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    GLfloat currentAnisotropy = 0.0f;
+    glGetTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, &currentAnisotropy);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    if (extensionRequestable("GL_EXT_texture_filter_anisotropic"))
+    {
+        glRequestExtensionANGLE("GL_EXT_texture_filter_anisotropic");
+        EXPECT_GL_NO_ERROR();
+        EXPECT_TRUE(extensionEnabled("GL_EXT_texture_filter_anisotropic"));
+
+        glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAnisotropy);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_GE(maxAnisotropy, 2.0f);
+
+        glGetTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, &currentAnisotropy);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_EQ(1.0f, currentAnisotropy);
+
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 2.0f);
+        ASSERT_GL_NO_ERROR();
+    }
+}
+
 // Verify that shaders are of a compatible spec when the extension is enabled.
 TEST_P(WebGLCompatibilityTest, ExtensionCompilerSpec)
 {
