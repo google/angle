@@ -278,6 +278,30 @@
     },
     {
       "key": {
+        "uuid": "7703001a_09ef803b",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-22T15:09:21Z",
+      "side": 1,
+      "message": "Whoops, you\u0027re right about the last part.  I still don\u0027t see the reason to have it as a parameter though when it\u0027s constant per-framebuffer.  It\u0027s also has to be queried from the context for checkStatusImpl when it could just be a member check.",
+      "parentUuid": "f08fe098_21a32175",
+      "range": {
+        "startLine": 138,
+        "startChar": 23,
+        "endLine": 138,
+        "endChar": 36
+      },
+      "revId": "9e1d46ac78f1ba9cfe64505bac8181c1c6d678ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "db395843_9c3d3757",
         "filename": "src/tests/gl_tests/WebGLFramebufferTest.cpp",
         "patchSetId": 5
