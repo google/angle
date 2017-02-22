@@ -274,28 +274,7 @@ GLuint Surface::getId() const
 
 gl::Framebuffer *Surface::createDefaultFramebuffer()
 {
-    gl::Framebuffer *framebuffer = new gl::Framebuffer(mImplementation);
-
-    GLenum drawBufferState = GL_BACK;
-    framebuffer->setDrawBuffers(1, &drawBufferState);
-    framebuffer->setReadBuffer(GL_BACK);
-
-    framebuffer->setAttachment(GL_FRAMEBUFFER_DEFAULT, GL_BACK, gl::ImageIndex::MakeInvalid(),
-                               this);
-
-    if (mState.config->depthSize > 0)
-    {
-        framebuffer->setAttachment(GL_FRAMEBUFFER_DEFAULT, GL_DEPTH, gl::ImageIndex::MakeInvalid(),
-                                   this);
-    }
-
-    if (mState.config->stencilSize > 0)
-    {
-        framebuffer->setAttachment(GL_FRAMEBUFFER_DEFAULT, GL_STENCIL,
-                                   gl::ImageIndex::MakeInvalid(), this);
-    }
-
-    return framebuffer;
+    return new gl::Framebuffer(this);
 }
 
 WindowSurface::WindowSurface(rx::EGLImplFactory *implFactory,

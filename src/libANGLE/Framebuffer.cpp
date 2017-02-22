@@ -41,17 +41,17 @@ void BindResourceChannel(ChannelBinding *binding, FramebufferAttachmentObject *r
 
 }  // anonymous namespace
 
+// This constructor is only used for default framebuffers.
 FramebufferState::FramebufferState()
     : mLabel(),
       mColorAttachments(1),
-      mDrawBufferStates(1, GL_NONE),
-      mReadBufferState(GL_COLOR_ATTACHMENT0_EXT),
+      mDrawBufferStates(1, GL_BACK),
+      mReadBufferState(GL_BACK),
       mDefaultWidth(0),
       mDefaultHeight(0),
       mDefaultSamples(0),
       mDefaultFixedSampleLocations(GL_FALSE)
 {
-    mDrawBufferStates[0] = GL_COLOR_ATTACHMENT0_EXT;
     mEnabledDrawBuffers.set(0);
 }
 
@@ -301,9 +301,9 @@ Framebuffer::Framebuffer(const Caps &caps, rx::GLImplFactory *factory, GLuint id
     }
 }
 
-Framebuffer::Framebuffer(rx::SurfaceImpl *surface)
+Framebuffer::Framebuffer(egl::Surface *surface)
     : mState(),
-      mImpl(surface->createDefaultFramebuffer(mState)),
+      mImpl(surface->getImplementation()->createDefaultFramebuffer(mState)),
       mId(0),
       mCachedStatus(GL_FRAMEBUFFER_COMPLETE),
       mDirtyDepthAttachmentBinding(this, DIRTY_BIT_DEPTH_ATTACHMENT),
@@ -312,6 +312,18 @@ Framebuffer::Framebuffer(rx::SurfaceImpl *surface)
     ASSERT(mImpl != nullptr);
     mDirtyColorAttachmentBindings.push_back(
         ChannelBinding(this, static_cast<SignalToken>(DIRTY_BIT_COLOR_ATTACHMENT_0)));
+
+    setAttachment(GL_FRAMEBUFFER_DEFAULT, GL_BACK, gl::ImageIndex::MakeInvalid(), surface);
+
+    if (surface->getConfig()->depthSize > 0)
+    {
+        setAttachment(GL_FRAMEBUFFER_DEFAULT, GL_DEPTH, gl::ImageIndex::MakeInvalid(), surface);
+    }
+
+    if (surface->getConfig()->stencilSize > 0)
+    {
+        setAttachment(GL_FRAMEBUFFER_DEFAULT, GL_STENCIL, gl::ImageIndex::MakeInvalid(), surface);
+    }
 }
 
 Framebuffer::Framebuffer(rx::GLImplFactory *factory)

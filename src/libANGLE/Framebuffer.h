@@ -113,7 +113,7 @@ class Framebuffer final : public LabeledObject, public angle::SignalReceiver
     // Constructor to build application-defined framebuffers
     Framebuffer(const Caps &caps, rx::GLImplFactory *factory, GLuint id);
     // Constructor to build default framebuffers for a surface
-    Framebuffer(rx::SurfaceImpl *surface);
+    Framebuffer(egl::Surface *surface);
     // Constructor to build a fake default framebuffer when surfaceless
     Framebuffer(rx::GLImplFactory *factory);
 
