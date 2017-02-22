@@ -254,6 +254,30 @@
     },
     {
       "key": {
+        "uuid": "f08fe098_21a32175",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-22T14:58:54Z",
+      "side": 1,
+      "message": "That last part doesn\u0027t make sense, sorry. I\u0027d rather not store it as a member if it\u0027s OK with you.",
+      "parentUuid": "1ab20218_918aeec5",
+      "range": {
+        "startLine": 138,
+        "startChar": 23,
+        "endLine": 138,
+        "endChar": 36
+      },
+      "revId": "9e1d46ac78f1ba9cfe64505bac8181c1c6d678ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "db395843_9c3d3757",
         "filename": "src/tests/gl_tests/WebGLFramebufferTest.cpp",
         "patchSetId": 5
