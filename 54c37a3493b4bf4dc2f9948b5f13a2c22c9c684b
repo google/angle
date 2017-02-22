@@ -33,6 +33,24 @@
       "revId": "54c37a3493b4bf4dc2f9948b5f13a2c22c9c684b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "41a21fe2_17961666",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 708,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-22T21:16:21Z",
+      "side": 1,
+      "message": "The test you refer to is NegativeApiCase. It checks that using offset bigger than GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET fails. The test returns early for GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET \u003d\u003d 0x7FFFFFFF because it is not possible to test offset bigger than that.\nThus, I do not agree.\n\nBTW, I don\u0027t see dEQP testing that using offset \u003d\u003d GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET actually works.\nHere\nhttps://android.googlesource.com/platform/external/deqp/+/master/modules/gles31/functional/es31fVertexAttributeBindingTests.cpp#378\nthey only test 32 or 19.\n\nI don\u0027t mind (can\u0027t speak on others\u0027 behalf though) if you leave offset \u003d\u003d GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET untested, I was just pointing out that since your previous version of the test will always test offset \u003d\u003d 2047, might as well have it hard-coded, and not hidden inside ?: operator.\n\nCurrent version is equivalent to skipping this test on Nexus 5X, which seems unnecessary, you can just test with some smaller than 0x7FFFFFFF offset.",
+      "parentUuid": "7d1b0f6e_bf2958ca",
+      "revId": "54c37a3493b4bf4dc2f9948b5f13a2c22c9c684b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
