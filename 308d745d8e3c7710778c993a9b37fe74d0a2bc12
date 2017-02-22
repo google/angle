@@ -22,6 +22,30 @@
       "revId": "308d745d8e3c7710778c993a9b37fe74d0a2bc12",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f15d170b_a8e9257d",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 919,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-02-22T02:43:04Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "6d7f2b92_ab257d28",
+      "range": {
+        "startLine": 919,
+        "startChar": 5,
+        "endLine": 919,
+        "endChar": 29
+      },
+      "revId": "308d745d8e3c7710778c993a9b37fe74d0a2bc12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
