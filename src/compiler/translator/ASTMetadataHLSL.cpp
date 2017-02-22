@@ -32,6 +32,19 @@ class PullGradient : public TIntermTraverser
           mDag(dag)
     {
         ASSERT(index < metadataList->size());
+
+        // ESSL 100 builtin gradient functions
+        mGradientBuiltinFunctions.insert("texture2D");
+        mGradientBuiltinFunctions.insert("texture2DProj");
+        mGradientBuiltinFunctions.insert("textureCube");
+
+        // ESSL 300 builtin gradient functions
+        mGradientBuiltinFunctions.insert("texture");
+        mGradientBuiltinFunctions.insert("textureProj");
+        mGradientBuiltinFunctions.insert("textureOffset");
+        mGradientBuiltinFunctions.insert("textureProjOffset");
+
+        // ESSL 310 doesn't add builtin gradient functions
     }
 
     void traverse(TIntermFunctionDefinition *node)
@@ -89,6 +102,7 @@ class PullGradient : public TIntermTraverser
             {
                 case EOpDFdx:
                 case EOpDFdy:
+                case EOpFwidth:
                     onGradient();
                 default:
                     break;
@@ -116,7 +130,7 @@ class PullGradient : public TIntermTraverser
             {
                 TString name = TFunction::unmangleName(node->getFunctionSymbolInfo()->getName());
 
-                if (name == "texture2D" || name == "texture2DProj" || name == "textureCube")
+                if (mGradientBuiltinFunctions.find(name) != mGradientBuiltinFunctions.end())
                 {
                     onGradient();
                 }
@@ -135,6 +149,9 @@ class PullGradient : public TIntermTraverser
     // Contains a stack of the control flow nodes that are parents of the node being
     // currently visited. It is used to mark control flows using a gradient.
     std::vector<TIntermNode *> mParents;
+
+    // A list of builtin functions that use gradients
+    std::set<TString> mGradientBuiltinFunctions;
 };
 
 // Traverses the AST of a function definition to compute the the discontinuous loops
