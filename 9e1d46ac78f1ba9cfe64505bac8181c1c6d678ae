@@ -302,6 +302,30 @@
     },
     {
       "key": {
+        "uuid": "b0051d1e_c57f15f3",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-22T23:54:27Z",
+      "side": 1,
+      "message": "Well, I like when we don\u0027t have to store redundant state in multiple places. WebGL 1-ness isn\u0027t a Framebuffer property. I know it seems trivial, but there\u0027s a memory savings to not storing the bool. But you\u0027re right that the way the bool was handled differently for setAttachment was ugly. With the previous patch now this is quite a bit cleaner, PTAL.",
+      "parentUuid": "7703001a_09ef803b",
+      "range": {
+        "startLine": 138,
+        "startChar": 23,
+        "endLine": 138,
+        "endChar": 36
+      },
+      "revId": "9e1d46ac78f1ba9cfe64505bac8181c1c6d678ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "db395843_9c3d3757",
         "filename": "src/tests/gl_tests/WebGLFramebufferTest.cpp",
         "patchSetId": 5
