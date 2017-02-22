@@ -70,6 +70,30 @@
       "revId": "b1308768556e7e7ff2a45b0bc4b8707106004fe6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dc24653c_90a19fc4",
+        "filename": "src/gpu_info_util/SystemInfo_mac.mm",
+        "patchSetId": 6
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-22T21:06:10Z",
+      "side": 1,
+      "message": "Sounds good, made it an error to not find the active GPU.",
+      "parentUuid": "a99c61d0_a136def8",
+      "range": {
+        "startLine": 155,
+        "startChar": 8,
+        "endLine": 162,
+        "endChar": 9
+      },
+      "revId": "b1308768556e7e7ff2a45b0bc4b8707106004fe6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
