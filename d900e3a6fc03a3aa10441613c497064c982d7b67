@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c4451751_92950966",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-22T15:03:55Z",
+      "side": 1,
+      "message": "a complete",
+      "range": {
+        "startLine": 104,
+        "startChar": 85,
+        "endLine": 104,
+        "endChar": 89
+      },
+      "revId": "d900e3a6fc03a3aa10441613c497064c982d7b67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c6743fe9_a6ecc6c3",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-22T15:03:55Z",
+      "side": 1,
+      "message": "the dEQP tests",
+      "range": {
+        "startLine": 104,
+        "startChar": 110,
+        "endLine": 104,
+        "endChar": 115
+      },
+      "revId": "d900e3a6fc03a3aa10441613c497064c982d7b67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa72b08c_f6be4a64",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-22T15:03:55Z",
+      "side": 1,
+      "message": "nit: the runner or the test runner",
+      "range": {
+        "startLine": 104,
+        "startChar": 128,
+        "endLine": 104,
+        "endChar": 135
+      },
+      "revId": "d900e3a6fc03a3aa10441613c497064c982d7b67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c1ed5ab0_9d8e9767",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-22T15:03:55Z",
+      "side": 1,
+      "message": "nit: the APK, test data and test expectations",
+      "range": {
+        "startLine": 104,
+        "startChar": 245,
+        "endLine": 104,
+        "endChar": 249
+      },
+      "revId": "d900e3a6fc03a3aa10441613c497064c982d7b67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6acdabf1_8c477321",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-22T15:03:55Z",
+      "side": 1,
+      "message": "nit: the runner",
+      "range": {
+        "startLine": 104,
+        "startChar": 323,
+        "endLine": 104,
+        "endChar": 330
+      },
+      "revId": "d900e3a6fc03a3aa10441613c497064c982d7b67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0be5b90_7ca74018",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-22T15:03:55Z",
+      "side": 1,
+      "message": "available on the device ?",
+      "range": {
+        "startLine": 104,
+        "startChar": 192,
+        "endLine": 104,
+        "endChar": 209
+      },
+      "revId": "d900e3a6fc03a3aa10441613c497064c982d7b67",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
