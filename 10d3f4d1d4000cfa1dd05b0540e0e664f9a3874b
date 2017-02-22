@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "54c03c70_6f491c25",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 645,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-22T20:34:12Z",
+      "side": 1,
+      "message": "with a dequeue, this becomes as simple as checking the first element.",
+      "revId": "10d3f4d1d4000cfa1dd05b0540e0e664f9a3874b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "20c8883a_740183eb",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-22T20:34:12Z",
+      "side": 1,
+      "message": "nit: Consider making this a uint64_t to make sure we never wrap around.",
+      "revId": "10d3f4d1d4000cfa1dd05b0540e0e664f9a3874b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed3ae337_58f25ca2",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-22T20:34:12Z",
+      "side": 1,
+      "message": "nit: it should be possible for this to be a dequeue, as command buffers are first-submitted, first-completed.",
+      "revId": "10d3f4d1d4000cfa1dd05b0540e0e664f9a3874b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a9beb06f_659cc980",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-22T20:34:12Z",
+      "side": 1,
+      "message": "this branch of the || implies the other branch so it could be removed.",
+      "range": {
+        "startLine": 59,
+        "startChar": 12,
+        "endLine": 59,
+        "endChar": 40
+      },
+      "revId": "10d3f4d1d4000cfa1dd05b0540e0e664f9a3874b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
