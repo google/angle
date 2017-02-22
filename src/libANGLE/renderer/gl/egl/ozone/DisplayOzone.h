@@ -152,6 +152,7 @@ class DisplayOzone final : public DisplayEGL
     void drawWithBlit(Buffer *buffer);
     void drawWithTexture(Buffer *buffer);
     void flushGL();
+    bool hasUsableScreen(int fd);
     void presentScreen();
     static void pageFlipHandler(int fd,
                                 unsigned int sequence,
