@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "93082a60_e8449a79",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 857,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-02-22T05:45:39Z",
+      "side": 0,
+      "message": "Could you please give back this ASSERT? You can remove the corresponding ASSERT in Context. Considering that we have multiple callers of QueryFramebufferParameteriv, then we don\u0027t need multiple ASSERT in every callers. We only need to put one ASSERT before it really access to the memory of the pointer.",
+      "revId": "f5bb220f93797e009388245bd2e29f5760c3e0c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d4f9685_85d155ae",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 921,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-02-22T05:45:39Z",
+      "side": 0,
+      "message": "Same here, please give back the ASSERT.",
+      "revId": "f5bb220f93797e009388245bd2e29f5760c3e0c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
