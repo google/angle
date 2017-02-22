@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63a7a996_158fd3bf",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 600,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-22T16:25:41Z",
+      "side": 1,
+      "message": "Please make a separate function for bindBufferBase.  We want to eventually auto-generate the functions in entry_points_* so we want them to use consistent names.",
+      "range": {
+        "startLine": 600,
+        "startChar": 9,
+        "endLine": 600,
+        "endChar": 24
+      },
+      "revId": "9ac10c64d25ab84102f43ce9a8abd2fe6d4b6ef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23c1239c_cd08011c",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1931,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-22T16:25:41Z",
+      "side": 1,
+      "message": "nit: can you change this and the other cases (here and getInteger64i_v) to ASSERT this instead of the if check?  It should be validated already.",
+      "range": {
+        "startLine": 1931,
+        "startChar": 10,
+        "endLine": 1931,
+        "endChar": 72
+      },
+      "revId": "9ac10c64d25ab84102f43ce9a8abd2fe6d4b6ef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e7f96a6_655c5bc7",
+        "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-22T16:25:41Z",
+      "side": 1,
+      "message": "Thanks for moving these into Context!",
+      "revId": "9ac10c64d25ab84102f43ce9a8abd2fe6d4b6ef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e15bacc2_4c98448d",
+        "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 728,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-22T16:25:41Z",
+      "side": 1,
+      "message": "Remember to update this once the new Context function exists.",
+      "range": {
+        "startLine": 728,
+        "startChar": 17,
+        "endLine": 728,
+        "endChar": 32
+      },
+      "revId": "9ac10c64d25ab84102f43ce9a8abd2fe6d4b6ef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ad27fee_6015462b",
+        "filename": "src/tests/gl_tests/AtomicCounterBufferTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-22T16:25:41Z",
+      "side": 1,
+      "message": "Maybe ASSERT_EQ(3, getClientMajorVersion()) instead?  This test requires ES3 to call glBindBufferBase.",
+      "range": {
+        "startLine": 48,
+        "startChar": 8,
+        "endLine": 48,
+        "endChar": 36
+      },
+      "revId": "9ac10c64d25ab84102f43ce9a8abd2fe6d4b6ef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e951920_63426c16",
+        "filename": "src/tests/gl_tests/AtomicCounterBufferTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-02-22T16:25:41Z",
+      "side": 1,
+      "message": "nit: bring this above the if statement and remove from the else.",
+      "range": {
+        "startLine": 50,
+        "startChar": 8,
+        "endLine": 50,
+        "endChar": 76
+      },
+      "revId": "9ac10c64d25ab84102f43ce9a8abd2fe6d4b6ef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
