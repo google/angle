@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fd6b041a_ff5a3d04",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 1231,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-22T12:40:59Z",
+      "side": 1,
+      "message": "According to the experiment results, the maximum stride should be 2048:\nOn Win10 machines this value can reach 4095, but the value does not work on the Windows trybots or my Win8 Broadwell notebook using HD Graphics 5500.\n\nI agree with Yuly that we should support as large relative offset as possible. As this value is emulated on D3D and there is no explicit limit on offset both in D3D and OpenGL, I suggest we choose std::numeric_limits\u003cGLint\u003e::max() in D3D11.",
+      "revId": "54c37a3493b4bf4dc2f9948b5f13a2c22c9c684b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7d1b0f6e_bf2958ca",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 708,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-22T12:40:59Z",
+      "side": 1,
+      "message": "Here I refer some dEQP code. In dEQP code if the max stride or max relative offset is 0x7FFFFFFF the test directly returns:\nhttps://android.googlesource.com/platform/external/deqp/+/master/modules/gles31/functional/es31fVertexAttributeBindingTests.cpp#1464\n\nYuly, do you agree with this?",
+      "revId": "54c37a3493b4bf4dc2f9948b5f13a2c22c9c684b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
