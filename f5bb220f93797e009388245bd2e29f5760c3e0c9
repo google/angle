@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d357c265_89b15f10",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 857,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-02-22T06:04:36Z",
+      "side": 0,
+      "message": "Ok. Remove ASSERT in the context.",
+      "parentUuid": "93082a60_e8449a79",
+      "revId": "f5bb220f93797e009388245bd2e29f5760c3e0c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d4f9685_85d155ae",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 5
@@ -33,6 +51,24 @@
       "revId": "f5bb220f93797e009388245bd2e29f5760c3e0c9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f755023_367f1bb3",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 921,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-02-22T06:04:36Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "6d4f9685_85d155ae",
+      "revId": "f5bb220f93797e009388245bd2e29f5760c3e0c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
