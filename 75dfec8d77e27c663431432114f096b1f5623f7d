@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "6d394fb6_1d9fbdf8",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-02-22T10:10:25Z",
+      "side": 1,
+      "message": "That\u0027s fine. I will try to do a code refactoring to make it clean in these two days when I have time.",
+      "parentUuid": "ed170b07_04e1e3c5",
+      "revId": "75dfec8d77e27c663431432114f096b1f5623f7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b05017e2_f6cf0c5a",
         "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
         "patchSetId": 4
