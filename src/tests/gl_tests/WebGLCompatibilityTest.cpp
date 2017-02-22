@@ -929,6 +929,37 @@ void WebGLCompatibilityTest::drawBuffersFeedbackLoop(GLuint program,
     EXPECT_GL_ERROR(expectedError);
 }
 
+// Tests invariance matching rules between built in varyings.
+// Based on WebGL test conformance/glsl/misc/shaders-with-invariance.html.
+TEST_P(WebGLCompatibilityTest, BuiltInInvariant)
+{
+    const std::string vertexShaderVariant =
+        "varying vec4 v_varying;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_PointSize = 1.0;\n"
+        "    gl_Position = v_varying;\n"
+        "}";
+    const std::string fragmentShaderInvariantGlFragCoord =
+        "invariant gl_FragCoord;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = gl_FragCoord;\n"
+        "}";
+    const std::string fragmentShaderInvariantGlPointCoord =
+        "invariant gl_PointCoord;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vec4(gl_PointCoord, 0.0, 0.0);\n"
+        "}";
+
+    GLuint program = CompileProgram(vertexShaderVariant, fragmentShaderInvariantGlFragCoord);
+    EXPECT_EQ(0u, program);
+
+    program = CompileProgram(vertexShaderVariant, fragmentShaderInvariantGlPointCoord);
+    EXPECT_EQ(0u, program);
+}
+
 // This tests that rendering feedback loops works as expected with WebGL 2.
 // Based on WebGL test conformance2/rendering/rendering-sampling-feedback-loop.html
 TEST_P(WebGL2CompatibilityTest, RenderingFeedbackLoopWithDrawBuffers)

@@ -1917,6 +1917,11 @@ bool Program::linkVaryings(InfoLog &infoLog) const
         }
     }
 
+    if (!linkValidateBuiltInVaryings(infoLog))
+    {
+        return false;
+    }
+
     // TODO(jmadill): verify no unmatched vertex varyings?
 
     return true;
@@ -2439,6 +2444,77 @@ bool Program::linkValidateVaryings(InfoLog &infoLog,
     {
         infoLog << "Invariance for " << varyingName
                 << " differs between vertex and fragment shaders.";
+        return false;
+    }
+
+    return true;
+}
+
+bool Program::linkValidateBuiltInVaryings(InfoLog &infoLog) const
+{
+    const Shader *vertexShader                       = mState.mAttachedVertexShader;
+    const Shader *fragmentShader                     = mState.mAttachedFragmentShader;
+    const std::vector<sh::Varying> &vertexVaryings   = vertexShader->getVaryings();
+    const std::vector<sh::Varying> &fragmentVaryings = fragmentShader->getVaryings();
+    int shaderVersion                                = vertexShader->getShaderVersion();
+
+    if (shaderVersion != 100)
+    {
+        // Only ESSL 1.0 has restrictions on matching input and output invariance
+        return true;
+    }
+
+    bool glPositionIsInvariant   = false;
+    bool glPointSizeIsInvariant  = false;
+    bool glFragCoordIsInvariant  = false;
+    bool glPointCoordIsInvariant = false;
+
+    for (const sh::Varying &varying : vertexVaryings)
+    {
+        if (!varying.isBuiltIn())
+        {
+            continue;
+        }
+        if (varying.name.compare("gl_Position") == 0)
+        {
+            glPositionIsInvariant = varying.isInvariant;
+        }
+        else if (varying.name.compare("gl_PointSize") == 0)
+        {
+            glPointSizeIsInvariant = varying.isInvariant;
+        }
+    }
+
+    for (const sh::Varying &varying : fragmentVaryings)
+    {
+        if (!varying.isBuiltIn())
+        {
+            continue;
+        }
+        if (varying.name.compare("gl_FragCoord") == 0)
+        {
+            glFragCoordIsInvariant = varying.isInvariant;
+        }
+        else if (varying.name.compare("gl_PointCoord") == 0)
+        {
+            glPointCoordIsInvariant = varying.isInvariant;
+        }
+    }
+
+    // There is some ambiguity in ESSL 1.00.17 paragraph 4.6.4 interpretation,
+    // for example, https://cvs.khronos.org/bugzilla/show_bug.cgi?id=13842.
+    // Not requiring invariance to match is supported by:
+    // dEQP, WebGL CTS, Nexus 5X GLES
+    if (glFragCoordIsInvariant && !glPositionIsInvariant)
+    {
+        infoLog << "gl_FragCoord can only be declared invariant if and only if gl_Position is "
+                   "declared invariant.";
+        return false;
+    }
+    if (glPointCoordIsInvariant && !glPointSizeIsInvariant)
+    {
+        infoLog << "gl_PointCoord can only be declared invariant if and only if gl_PointSize is "
+                   "declared invariant.";
         return false;
     }
 

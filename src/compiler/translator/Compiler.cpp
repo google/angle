@@ -407,9 +407,6 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
              (outputType == SH_GLSL_COMPATIBILITY_OUTPUT)))
             initializeGLPosition(root);
 
-        if (success && RemoveInvariant(shaderType, shaderVersion, outputType, compileOptions))
-            sh::RemoveInvariantDeclaration(root);
-
         // This pass might emit short circuits so keep it before the short circuit unfolding
         if (success && (compileOptions & SH_REWRITE_DO_WHILE_LOOPS))
             RewriteDoWhile(root, getTemporaryIndex());
@@ -449,6 +446,11 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
                 initializeOutputVariables(root);
             }
         }
+
+        // Removing invariant declarations must be done after collecting variables.
+        // Otherwise, built-in invariant declarations don't apply.
+        if (success && RemoveInvariant(shaderType, shaderVersion, outputType, compileOptions))
+            sh::RemoveInvariantDeclaration(root);
 
         if (success && (compileOptions & SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS))
         {

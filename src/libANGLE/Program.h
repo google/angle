@@ -464,6 +464,7 @@ class Program final : angle::NonCopyable, public LabeledObject
                                      const sh::Varying &vertexVarying,
                                      const sh::Varying &fragmentVarying,
                                      int shaderVersion);
+    bool linkValidateBuiltInVaryings(InfoLog &infoLog) const;
     bool linkValidateTransformFeedback(InfoLog &infoLog,
                                        const MergedVaryings &linkedVaryings,
                                        const Caps &caps) const;
