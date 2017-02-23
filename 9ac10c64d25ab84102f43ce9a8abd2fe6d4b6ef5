@@ -49,6 +49,54 @@
     },
     {
       "key": {
+        "uuid": "abd1079e_f502e3f8",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 600,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-02-23T06:41:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63a7a996_158fd3bf",
+      "range": {
+        "startLine": 600,
+        "startChar": 9,
+        "endLine": 600,
+        "endChar": 24
+      },
+      "revId": "9ac10c64d25ab84102f43ce9a8abd2fe6d4b6ef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ab6a05d_501d7592",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 600,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-02-23T06:41:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3bda3efe_9914efab",
+      "range": {
+        "startLine": 600,
+        "startChar": 9,
+        "endLine": 600,
+        "endChar": 24
+      },
+      "revId": "9ac10c64d25ab84102f43ce9a8abd2fe6d4b6ef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "681f40a8_e68ce3af",
         "filename": "src/libANGLE/State.cpp",
         "patchSetId": 7
@@ -72,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "adf7f0a3_a65c7881",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-02-23T06:41:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "681f40a8_e68ce3af",
+      "range": {
+        "startLine": 264,
+        "startChar": 4,
+        "endLine": 268,
+        "endChar": 5
+      },
+      "revId": "9ac10c64d25ab84102f43ce9a8abd2fe6d4b6ef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "03b16d59_86eb5526",
         "filename": "src/libANGLE/State.cpp",
         "patchSetId": 7
@@ -83,6 +155,30 @@
       "writtenOn": "2017-02-22T21:34:28Z",
       "side": 1,
       "message": "nit: ASSERT the index is in range.",
+      "range": {
+        "startLine": 1179,
+        "startChar": 4,
+        "endLine": 1179,
+        "endChar": 25
+      },
+      "revId": "9ac10c64d25ab84102f43ce9a8abd2fe6d4b6ef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "462ebde1_b82d7ab0",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1179,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-02-23T06:41:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "03b16d59_86eb5526",
       "range": {
         "startLine": 1179,
         "startChar": 4,
@@ -142,6 +238,30 @@
     },
     {
       "key": {
+        "uuid": "7034dece_60b862e3",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1931,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-02-23T06:41:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "23c1239c_cd08011c",
+      "range": {
+        "startLine": 1931,
+        "startChar": 10,
+        "endLine": 1931,
+        "endChar": 72
+      },
+      "revId": "9ac10c64d25ab84102f43ce9a8abd2fe6d4b6ef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e41b4a6d_d9e606e7",
         "filename": "src/libANGLE/validationES3.cpp",
         "patchSetId": 7
@@ -165,6 +285,30 @@
     },
     {
       "key": {
+        "uuid": "8e5f5764_02e6ddae",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1233,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-02-23T06:41:15Z",
+      "side": 1,
+      "message": "Thanks. I will follow this rule in future and still keep the current style since you have reviewed it.",
+      "parentUuid": "e41b4a6d_d9e606e7",
+      "range": {
+        "startLine": 1233,
+        "startChar": 12,
+        "endLine": 1233,
+        "endChar": 36
+      },
+      "revId": "9ac10c64d25ab84102f43ce9a8abd2fe6d4b6ef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a12e139e_0287f7fc",
         "filename": "src/libANGLE/validationES3.cpp",
         "patchSetId": 7
@@ -176,6 +320,30 @@
       "writtenOn": "2017-02-22T21:34:28Z",
       "side": 1,
       "message": "there\u0027s no guarantee we\u0027re on an ES 3.0 context, it could be 2.0 with extensions for instance. Please update the wording to something more general like \"Atomic Counter buffers are not supported in this version of GL\".",
+      "range": {
+        "startLine": 1987,
+        "startChar": 75,
+        "endLine": 1987,
+        "endChar": 82
+      },
+      "revId": "9ac10c64d25ab84102f43ce9a8abd2fe6d4b6ef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eb8b2eb3_d3803533",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1987,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-02-23T06:41:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a12e139e_0287f7fc",
       "range": {
         "startLine": 1987,
         "startChar": 75,
@@ -246,6 +414,30 @@
     },
     {
       "key": {
+        "uuid": "5e98b163_3d87c6bc",
+        "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 728,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-02-23T06:41:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e15bacc2_4c98448d",
+      "range": {
+        "startLine": 728,
+        "startChar": 17,
+        "endLine": 728,
+        "endChar": 32
+      },
+      "revId": "9ac10c64d25ab84102f43ce9a8abd2fe6d4b6ef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ccc99292_eea60bae",
         "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
         "patchSetId": 7
@@ -257,6 +449,30 @@
       "writtenOn": "2017-02-22T21:34:28Z",
       "side": 1,
       "message": "these pass on OpenGL? That\u0027s surprising. Why would they fail on D3D11 but not OpenGL?",
+      "range": {
+        "startLine": 147,
+        "startChar": 0,
+        "endLine": 147,
+        "endChar": 86
+      },
+      "revId": "9ac10c64d25ab84102f43ce9a8abd2fe6d4b6ef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b026794_3acbbb2d",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-02-23T06:41:15Z",
+      "side": 1,
+      "message": "It hasn\u0027t involved the shader part implementation for atomic counter. So the deqp cases can pass on OpenGL. For D3D11, it hasn\u0027t implemented caps.maxAtomicCounterBufferBindings. So it will fail in Validation part.",
+      "parentUuid": "ccc99292_eea60bae",
       "range": {
         "startLine": 147,
         "startChar": 0,
@@ -292,6 +508,30 @@
     },
     {
       "key": {
+        "uuid": "260e1eda_f72f7e51",
+        "filename": "src/tests/gl_tests/AtomicCounterBufferTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-02-23T06:41:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "de56ddcc_281a1c68",
+      "range": {
+        "startLine": 5,
+        "startChar": 2,
+        "endLine": 5,
+        "endChar": 0
+      },
+      "revId": "9ac10c64d25ab84102f43ce9a8abd2fe6d4b6ef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "46569f52_6905b607",
         "filename": "src/tests/gl_tests/AtomicCounterBufferTest.cpp",
         "patchSetId": 7
@@ -303,6 +543,30 @@
       "writtenOn": "2017-02-22T21:34:28Z",
       "side": 1,
       "message": "instead of using a member buffer, use a GLBuffer from gl_raii.h inside the test.",
+      "range": {
+        "startLine": 42,
+        "startChar": 4,
+        "endLine": 42,
+        "endChar": 32
+      },
+      "revId": "9ac10c64d25ab84102f43ce9a8abd2fe6d4b6ef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f573687_d53f0a96",
+        "filename": "src/tests/gl_tests/AtomicCounterBufferTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-02-23T06:41:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "46569f52_6905b607",
       "range": {
         "startLine": 42,
         "startChar": 4,
@@ -338,6 +602,30 @@
     },
     {
       "key": {
+        "uuid": "10606a0f_f836ef95",
+        "filename": "src/tests/gl_tests/AtomicCounterBufferTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-02-23T06:41:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6ad27fee_6015462b",
+      "range": {
+        "startLine": 48,
+        "startChar": 8,
+        "endLine": 48,
+        "endChar": 36
+      },
+      "revId": "9ac10c64d25ab84102f43ce9a8abd2fe6d4b6ef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4e951920_63426c16",
         "filename": "src/tests/gl_tests/AtomicCounterBufferTest.cpp",
         "patchSetId": 7
@@ -349,6 +637,30 @@
       "writtenOn": "2017-02-22T16:25:41Z",
       "side": 1,
       "message": "nit: bring this above the if statement and remove from the else.",
+      "range": {
+        "startLine": 50,
+        "startChar": 8,
+        "endLine": 50,
+        "endChar": 76
+      },
+      "revId": "9ac10c64d25ab84102f43ce9a8abd2fe6d4b6ef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b7a249b_61fe3ffd",
+        "filename": "src/tests/gl_tests/AtomicCounterBufferTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-02-23T06:41:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4e951920_63426c16",
       "range": {
         "startLine": 50,
         "startChar": 8,
