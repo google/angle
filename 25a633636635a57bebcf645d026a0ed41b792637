@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "661d4dfa_0cec48e6",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-23T15:28:12Z",
+      "side": 1,
+      "message": "these should return egl::Error",
+      "range": {
+        "startLine": 554,
+        "startChar": 12,
+        "endLine": 554,
+        "endChar": 16
+      },
+      "revId": "25a633636635a57bebcf645d026a0ed41b792637",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3e7116f_bf0e95f0",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 574,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-23T15:28:12Z",
+      "side": 1,
+      "message": "these should return egl::Error",
+      "range": {
+        "startLine": 574,
+        "startChar": 16,
+        "endLine": 574,
+        "endChar": 20
+      },
+      "revId": "25a633636635a57bebcf645d026a0ed41b792637",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "54d9187f_806dd822",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 581,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-23T15:28:12Z",
+      "side": 1,
+      "message": "these should return egl::Error",
+      "range": {
+        "startLine": 581,
+        "startChar": 12,
+        "endLine": 581,
+        "endChar": 16
+      },
+      "revId": "25a633636635a57bebcf645d026a0ed41b792637",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b21eaf89_cfcdd18c",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 602,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-23T15:28:12Z",
+      "side": 1,
+      "message": "same comment as below",
+      "range": {
+        "startLine": 602,
+        "startChar": 8,
+        "endLine": 602,
+        "endChar": 12
+      },
+      "revId": "25a633636635a57bebcf645d026a0ed41b792637",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c7330484_673f4175",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 661,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-23T15:28:12Z",
+      "side": 1,
+      "message": "can you add a TODO here to pipe an Error up to the API for this?",
+      "range": {
+        "startLine": 657,
+        "startChar": 0,
+        "endLine": 661,
+        "endChar": 9
+      },
+      "revId": "25a633636635a57bebcf645d026a0ed41b792637",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
