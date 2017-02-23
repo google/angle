@@ -50,7 +50,8 @@ FramebufferState::FramebufferState()
       mDefaultWidth(0),
       mDefaultHeight(0),
       mDefaultSamples(0),
-      mDefaultFixedSampleLocations(GL_FALSE)
+      mDefaultFixedSampleLocations(GL_FALSE),
+      mWebGLDepthStencilConsistent(true)
 {
     mEnabledDrawBuffers.set(0);
 }
@@ -63,7 +64,8 @@ FramebufferState::FramebufferState(const Caps &caps)
       mDefaultWidth(0),
       mDefaultHeight(0),
       mDefaultSamples(0),
-      mDefaultFixedSampleLocations(GL_FALSE)
+      mDefaultFixedSampleLocations(GL_FALSE),
+      mWebGLDepthStencilConsistent(true)
 {
     ASSERT(mDrawBufferStates.size() > 0);
     mDrawBufferStates[0] = GL_COLOR_ATTACHMENT0_EXT;
@@ -313,16 +315,17 @@ Framebuffer::Framebuffer(egl::Surface *surface)
     mDirtyColorAttachmentBindings.push_back(
         ChannelBinding(this, static_cast<SignalToken>(DIRTY_BIT_COLOR_ATTACHMENT_0)));
 
-    setAttachment(GL_FRAMEBUFFER_DEFAULT, GL_BACK, gl::ImageIndex::MakeInvalid(), surface);
+    setAttachmentImpl(GL_FRAMEBUFFER_DEFAULT, GL_BACK, gl::ImageIndex::MakeInvalid(), surface);
 
     if (surface->getConfig()->depthSize > 0)
     {
-        setAttachment(GL_FRAMEBUFFER_DEFAULT, GL_DEPTH, gl::ImageIndex::MakeInvalid(), surface);
+        setAttachmentImpl(GL_FRAMEBUFFER_DEFAULT, GL_DEPTH, gl::ImageIndex::MakeInvalid(), surface);
     }
 
     if (surface->getConfig()->stencilSize > 0)
     {
-        setAttachment(GL_FRAMEBUFFER_DEFAULT, GL_STENCIL, gl::ImageIndex::MakeInvalid(), surface);
+        setAttachmentImpl(GL_FRAMEBUFFER_DEFAULT, GL_STENCIL, gl::ImageIndex::MakeInvalid(),
+                          surface);
     }
 }
 
@@ -363,17 +366,17 @@ const std::string &Framebuffer::getLabel() const
     return mState.mLabel;
 }
 
-void Framebuffer::detachTexture(GLuint textureId)
+void Framebuffer::detachTexture(const Context *context, GLuint textureId)
 {
-    detachResourceById(GL_TEXTURE, textureId);
+    detachResourceById(context, GL_TEXTURE, textureId);
 }
 
-void Framebuffer::detachRenderbuffer(GLuint renderbufferId)
+void Framebuffer::detachRenderbuffer(const Context *context, GLuint renderbufferId)
 {
-    detachResourceById(GL_RENDERBUFFER, renderbufferId);
+    detachResourceById(context, GL_RENDERBUFFER, renderbufferId);
 }
 
-void Framebuffer::detachResourceById(GLenum resourceType, GLuint resourceId)
+void Framebuffer::detachResourceById(const Context *context, GLenum resourceType, GLuint resourceId)
 {
     for (size_t colorIndex = 0; colorIndex < mState.mColorAttachments.size(); ++colorIndex)
     {
@@ -381,10 +384,27 @@ void Framebuffer::detachResourceById(GLenum resourceType, GLuint resourceId)
                                  DIRTY_BIT_COLOR_ATTACHMENT_0 + colorIndex);
     }
 
-    detachMatchingAttachment(&mState.mDepthAttachment, resourceType, resourceId,
-                             DIRTY_BIT_DEPTH_ATTACHMENT);
-    detachMatchingAttachment(&mState.mStencilAttachment, resourceType, resourceId,
-                             DIRTY_BIT_STENCIL_ATTACHMENT);
+    if (context->isWebGL1())
+    {
+        const std::array<FramebufferAttachment *, 3> attachments = {
+            {&mState.mWebGLDepthStencilAttachment, &mState.mWebGLDepthAttachment,
+             &mState.mWebGLStencilAttachment}};
+        for (FramebufferAttachment *attachment : attachments)
+        {
+            if (attachment->isAttached() && attachment->type() == resourceType &&
+                attachment->id() == resourceId)
+            {
+                resetAttachment(context, attachment->getBinding());
+            }
+        }
+    }
+    else
+    {
+        detachMatchingAttachment(&mState.mDepthAttachment, resourceType, resourceId,
+                                 DIRTY_BIT_DEPTH_ATTACHMENT);
+        detachMatchingAttachment(&mState.mStencilAttachment, resourceType, resourceId,
+                                 DIRTY_BIT_STENCIL_ATTACHMENT);
+    }
 }
 
 void Framebuffer::detachMatchingAttachment(FramebufferAttachment *attachment,
@@ -763,6 +783,34 @@ GLenum Framebuffer::checkStatusImpl(const ContextState &state)
         }
     }
 
+    // Special additional validation for WebGL 1 DEPTH/STENCIL/DEPTH_STENCIL.
+    if (state.isWebGL1())
+    {
+        if (!mState.mWebGLDepthStencilConsistent)
+        {
+            return GL_FRAMEBUFFER_UNSUPPORTED;
+        }
+
+        if (mState.mWebGLDepthStencilAttachment.isAttached())
+        {
+            if (mState.mWebGLDepthStencilAttachment.getDepthSize() == 0 ||
+                mState.mWebGLDepthStencilAttachment.getStencilSize() == 0)
+            {
+                return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
+            }
+        }
+        else if (mState.mStencilAttachment.isAttached() &&
+                 mState.mStencilAttachment.getDepthSize() > 0)
+        {
+            return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
+        }
+        else if (mState.mDepthAttachment.isAttached() &&
+                 mState.mDepthAttachment.getStencilSize() > 0)
+        {
+            return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
+        }
+    }
+
     // we need to have at least one attachment to be complete
     if (missingAttachment)
     {
@@ -951,10 +999,96 @@ bool Framebuffer::hasValidDepthStencil() const
     return mState.getDepthStencilAttachment() != nullptr;
 }
 
-void Framebuffer::setAttachment(GLenum type,
+void Framebuffer::setAttachment(const Context *context,
+                                GLenum type,
                                 GLenum binding,
                                 const ImageIndex &textureIndex,
                                 FramebufferAttachmentObject *resource)
+{
+    // Context may be null in unit tests.
+    if (!context || !context->isWebGL1())
+    {
+        setAttachmentImpl(type, binding, textureIndex, resource);
+        return;
+    }
+
+    switch (binding)
+    {
+        case GL_DEPTH_STENCIL:
+        case GL_DEPTH_STENCIL_ATTACHMENT:
+            mState.mWebGLDepthStencilAttachment.attach(type, binding, textureIndex, resource);
+            break;
+        case GL_DEPTH:
+        case GL_DEPTH_ATTACHMENT:
+            mState.mWebGLDepthAttachment.attach(type, binding, textureIndex, resource);
+            break;
+        case GL_STENCIL:
+        case GL_STENCIL_ATTACHMENT:
+            mState.mWebGLStencilAttachment.attach(type, binding, textureIndex, resource);
+            break;
+        default:
+            setAttachmentImpl(type, binding, textureIndex, resource);
+            return;
+    }
+
+    commitWebGL1DepthStencilIfConsistent();
+}
+
+void Framebuffer::commitWebGL1DepthStencilIfConsistent()
+{
+    int count = 0;
+
+    std::array<FramebufferAttachment *, 3> attachments = {{&mState.mWebGLDepthStencilAttachment,
+                                                           &mState.mWebGLDepthAttachment,
+                                                           &mState.mWebGLStencilAttachment}};
+    for (FramebufferAttachment *attachment : attachments)
+    {
+        if (attachment->isAttached())
+        {
+            count++;
+        }
+    }
+
+    mState.mWebGLDepthStencilConsistent = (count <= 1);
+    if (!mState.mWebGLDepthStencilConsistent)
+    {
+        // Inconsistent.
+        return;
+    }
+
+    if (mState.mWebGLDepthAttachment.isAttached())
+    {
+        const auto &depth = mState.mWebGLDepthAttachment;
+        setAttachmentImpl(depth.type(), GL_DEPTH_ATTACHMENT, ImageIndex::MakeInvalid(),
+                          depth.getResource());
+        setAttachmentImpl(GL_NONE, GL_STENCIL_ATTACHMENT, ImageIndex::MakeInvalid(), nullptr);
+    }
+    else if (mState.mWebGLStencilAttachment.isAttached())
+    {
+        const auto &stencil = mState.mWebGLStencilAttachment;
+        setAttachmentImpl(GL_NONE, GL_DEPTH_ATTACHMENT, ImageIndex::MakeInvalid(), nullptr);
+        setAttachmentImpl(stencil.type(), GL_STENCIL_ATTACHMENT, ImageIndex::MakeInvalid(),
+                          stencil.getResource());
+    }
+    else if (mState.mWebGLDepthStencilAttachment.isAttached())
+    {
+        const auto &depthStencil = mState.mWebGLDepthStencilAttachment;
+        setAttachmentImpl(depthStencil.type(), GL_DEPTH_ATTACHMENT, ImageIndex::MakeInvalid(),
+                          depthStencil.getResource());
+        setAttachmentImpl(depthStencil.type(), GL_STENCIL_ATTACHMENT, ImageIndex::MakeInvalid(),
+                          depthStencil.getResource());
+    }
+    else
+    {
+        setAttachmentImpl(GL_NONE, GL_DEPTH_ATTACHMENT, ImageIndex::MakeInvalid(), nullptr);
+        setAttachmentImpl(GL_NONE, GL_STENCIL_ATTACHMENT, ImageIndex::MakeInvalid(), nullptr);
+    }
+}
+
+void Framebuffer::setAttachmentImpl(GLenum type,
+                                    GLenum binding,
+                                    const ImageIndex &textureIndex,
+                                    FramebufferAttachmentObject *resource)
 {
     if (binding == GL_DEPTH_STENCIL || binding == GL_DEPTH_STENCIL_ATTACHMENT)
     {
@@ -977,47 +1111,46 @@ void Framebuffer::setAttachment(GLenum type,
         mDirtyBits.set(DIRTY_BIT_STENCIL_ATTACHMENT);
         BindResourceChannel(&mDirtyDepthAttachmentBinding, resource);
         BindResourceChannel(&mDirtyStencilAttachmentBinding, resource);
+        return;
     }
-    else
-    {
-        switch (binding)
-        {
-            case GL_DEPTH:
-            case GL_DEPTH_ATTACHMENT:
-                mState.mDepthAttachment.attach(type, binding, textureIndex, resource);
-                mDirtyBits.set(DIRTY_BIT_DEPTH_ATTACHMENT);
-                BindResourceChannel(&mDirtyDepthAttachmentBinding, resource);
-                break;
-            case GL_STENCIL:
-            case GL_STENCIL_ATTACHMENT:
-                mState.mStencilAttachment.attach(type, binding, textureIndex, resource);
-                mDirtyBits.set(DIRTY_BIT_STENCIL_ATTACHMENT);
-                BindResourceChannel(&mDirtyStencilAttachmentBinding, resource);
-                break;
-            case GL_BACK:
-                mState.mColorAttachments[0].attach(type, binding, textureIndex, resource);
-                mDirtyBits.set(DIRTY_BIT_COLOR_ATTACHMENT_0);
-                // No need for a resource binding for the default FBO, it's always complete.
-                break;
-            default:
-            {
-                size_t colorIndex = binding - GL_COLOR_ATTACHMENT0;
-                ASSERT(colorIndex < mState.mColorAttachments.size());
-                mState.mColorAttachments[colorIndex].attach(type, binding, textureIndex, resource);
-                mDirtyBits.set(DIRTY_BIT_COLOR_ATTACHMENT_0 + colorIndex);
-                BindResourceChannel(&mDirtyColorAttachmentBindings[colorIndex], resource);
 
-                bool enabled = (type != GL_NONE && getDrawBufferState(colorIndex) != GL_NONE);
-                mState.mEnabledDrawBuffers.set(colorIndex, enabled);
-            }
+    switch (binding)
+    {
+        case GL_DEPTH:
+        case GL_DEPTH_ATTACHMENT:
+            mState.mDepthAttachment.attach(type, binding, textureIndex, resource);
+            mDirtyBits.set(DIRTY_BIT_DEPTH_ATTACHMENT);
+            BindResourceChannel(&mDirtyDepthAttachmentBinding, resource);
             break;
+        case GL_STENCIL:
+        case GL_STENCIL_ATTACHMENT:
+            mState.mStencilAttachment.attach(type, binding, textureIndex, resource);
+            mDirtyBits.set(DIRTY_BIT_STENCIL_ATTACHMENT);
+            BindResourceChannel(&mDirtyStencilAttachmentBinding, resource);
+            break;
+        case GL_BACK:
+            mState.mColorAttachments[0].attach(type, binding, textureIndex, resource);
+            mDirtyBits.set(DIRTY_BIT_COLOR_ATTACHMENT_0);
+            // No need for a resource binding for the default FBO, it's always complete.
+            break;
+        default:
+        {
+            size_t colorIndex = binding - GL_COLOR_ATTACHMENT0;
+            ASSERT(colorIndex < mState.mColorAttachments.size());
+            mState.mColorAttachments[colorIndex].attach(type, binding, textureIndex, resource);
+            mDirtyBits.set(DIRTY_BIT_COLOR_ATTACHMENT_0 + colorIndex);
+            BindResourceChannel(&mDirtyColorAttachmentBindings[colorIndex], resource);
+
+            bool enabled = (type != GL_NONE && getDrawBufferState(colorIndex) != GL_NONE);
+            mState.mEnabledDrawBuffers.set(colorIndex, enabled);
         }
+        break;
     }
 }
 
-void Framebuffer::resetAttachment(GLenum binding)
+void Framebuffer::resetAttachment(const Context *context, GLenum binding)
 {
-    setAttachment(GL_NONE, binding, ImageIndex::MakeInvalid(), nullptr);
+    setAttachment(context, GL_NONE, binding, ImageIndex::MakeInvalid(), nullptr);
 }
 
 void Framebuffer::syncState()

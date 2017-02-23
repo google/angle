@@ -779,7 +779,7 @@ GLuint State::getSamplerTextureId(unsigned int sampler, GLenum type) const
     return it->second[sampler].id();
 }
 
-void State::detachTexture(const TextureMap &zeroTextures, GLuint texture)
+void State::detachTexture(const Context *context, const TextureMap &zeroTextures, GLuint texture)
 {
     // Textures have a detach method on State rather than a simple
     // removeBinding, because the zero/null texture objects are managed
@@ -814,12 +814,12 @@ void State::detachTexture(const TextureMap &zeroTextures, GLuint texture)
 
     if (mReadFramebuffer)
     {
-        mReadFramebuffer->detachTexture(texture);
+        mReadFramebuffer->detachTexture(context, texture);
     }
 
     if (mDrawFramebuffer)
     {
-        mDrawFramebuffer->detachTexture(texture);
+        mDrawFramebuffer->detachTexture(context, texture);
     }
 }
 
@@ -883,7 +883,7 @@ Renderbuffer *State::getCurrentRenderbuffer() const
     return mRenderbuffer.get();
 }
 
-void State::detachRenderbuffer(GLuint renderbuffer)
+void State::detachRenderbuffer(const Context *context, GLuint renderbuffer)
 {
     // [OpenGL ES 2.0.24] section 4.4 page 109:
     // If a renderbuffer that is currently bound to RENDERBUFFER is deleted, it is as though BindRenderbuffer
@@ -904,12 +904,12 @@ void State::detachRenderbuffer(GLuint renderbuffer)
 
     if (readFramebuffer)
     {
-        readFramebuffer->detachRenderbuffer(renderbuffer);
+        readFramebuffer->detachRenderbuffer(context, renderbuffer);
     }
 
     if (drawFramebuffer && drawFramebuffer != readFramebuffer)
     {
-        drawFramebuffer->detachRenderbuffer(renderbuffer);
+        drawFramebuffer->detachRenderbuffer(context, renderbuffer);
     }
 
 }

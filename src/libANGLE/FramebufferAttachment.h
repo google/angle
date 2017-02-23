@@ -126,6 +126,7 @@ class FramebufferAttachment final
     Renderbuffer *getRenderbuffer() const;
     Texture *getTexture() const;
     const egl::Surface *getSurface() const;
+    FramebufferAttachmentObject *getResource() const;
 
     // "T" must be static_castable from FramebufferAttachmentRenderTarget
     template <typename T>
@@ -177,22 +178,26 @@ class FramebufferAttachmentObject
 
 inline Extents FramebufferAttachment::getSize() const
 {
+    ASSERT(mResource);
     return mResource->getAttachmentSize(mTarget);
 }
 
 inline const Format &FramebufferAttachment::getFormat() const
 {
+    ASSERT(mResource);
     return mResource->getAttachmentFormat(mTarget);
 }
 
 inline GLsizei FramebufferAttachment::getSamples() const
 {
+    ASSERT(mResource);
     return mResource->getAttachmentSamples(mTarget);
 }
 
 inline gl::Error FramebufferAttachment::getRenderTargetImpl(
     rx::FramebufferAttachmentRenderTarget **rtOut) const
 {
+    ASSERT(mResource);
     return mResource->getAttachmentRenderTarget(mTarget, rtOut);
 }
 

@@ -91,7 +91,8 @@ TEST(ValidationESTest, DrawElementsWithMaxIndexGivesError)
 
     VertexArray *vertexArray = new VertexArray(&mockFactory, 0, 1, 1);
     Framebuffer *framebuffer = new Framebuffer(caps, &mockFactory, 1);
-    framebuffer->setAttachment(GL_FRAMEBUFFER_DEFAULT, GL_BACK, ImageIndex::Make2D(0), texture);
+    framebuffer->setAttachment(nullptr, GL_FRAMEBUFFER_DEFAULT, GL_BACK, ImageIndex::Make2D(0),
+                               texture);
 
     Program *program = new Program(&mockFactory, nullptr, 1);
 

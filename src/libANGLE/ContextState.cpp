@@ -98,6 +98,11 @@ ContextState::~ContextState()
     // Handles are released by the Context.
 }
 
+bool ContextState::isWebGL1() const
+{
+    return (mExtensions.webglCompatibility && mClientVersion.major == 2);
+}
+
 const TextureCaps &ContextState::getTextureCap(GLenum internalFormat) const
 {
     return mTextureCaps.get(internalFormat);

@@ -628,8 +628,7 @@ void QueryRenderbufferiv(const Context *context,
             break;
         case GL_RENDERBUFFER_INTERNAL_FORMAT:
             // Special case the WebGL 1 DEPTH_STENCIL format.
-            if (context->getExtensions().webglCompatibility &&
-                context->getClientMajorVersion() == 2 &&
+            if (context->isWebGL1() &&
                 renderbuffer->getFormat().info->internalFormat == GL_DEPTH24_STENCIL8)
             {
                 *params = GL_DEPTH_STENCIL;

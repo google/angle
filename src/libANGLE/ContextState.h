@@ -58,6 +58,8 @@ class ContextState final : public angle::NonCopyable
 
     bool usingDisplayTextureShareGroup() const;
 
+    bool isWebGL1() const;
+
   private:
     friend class Context;
     friend class ValidationContext;
@@ -123,6 +125,8 @@ class ValidationContext : angle::NonCopyable
 
     // Hack for the special WebGL 1 "DEPTH_STENCIL" internal format.
     GLenum getConvertedRenderbufferFormat(GLenum internalformat) const;
+
+    bool isWebGL1() const { return mState.isWebGL1(); }
 
   protected:
     ContextState mState;

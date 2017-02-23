@@ -167,7 +167,7 @@ class State : angle::NonCopyable
     Texture *getTargetTexture(GLenum target) const;
     Texture *getSamplerTexture(unsigned int sampler, GLenum type) const;
     GLuint getSamplerTextureId(unsigned int sampler, GLenum type) const;
-    void detachTexture(const TextureMap &zeroTextures, GLuint texture);
+    void detachTexture(const Context *context, const TextureMap &zeroTextures, GLuint texture);
     void initializeZeroTextures(const TextureMap &zeroTextures);
 
     // Sampler object binding manipulation
@@ -180,7 +180,7 @@ class State : angle::NonCopyable
     void setRenderbufferBinding(Renderbuffer *renderbuffer);
     GLuint getRenderbufferId() const;
     Renderbuffer *getCurrentRenderbuffer() const;
-    void detachRenderbuffer(GLuint renderbuffer);
+    void detachRenderbuffer(const Context *context, GLuint renderbuffer);
 
     // Framebuffer binding manipulation
     void setReadFramebufferBinding(Framebuffer *framebuffer);

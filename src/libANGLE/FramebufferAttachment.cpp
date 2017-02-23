@@ -210,6 +210,11 @@ const egl::Surface *FramebufferAttachment::getSurface() const
     return rx::GetAs<egl::Surface>(mResource);
 }
 
+FramebufferAttachmentObject *FramebufferAttachment::getResource() const
+{
+    return mResource;
+}
+
 bool FramebufferAttachment::operator==(const FramebufferAttachment &other) const
 {
     if (mResource != other.mResource || mType != other.mType)

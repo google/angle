@@ -105,6 +105,13 @@ class FramebufferState final : angle::NonCopyable
     GLint mDefaultHeight;
     GLint mDefaultSamples;
     GLboolean mDefaultFixedSampleLocations;
+
+    // It's necessary to store all this extra state so we can restore attachments
+    // when DEPTH_STENCIL/DEPTH/STENCIL is unbound in WebGL 1.
+    FramebufferAttachment mWebGLDepthStencilAttachment;
+    FramebufferAttachment mWebGLDepthAttachment;
+    FramebufferAttachment mWebGLStencilAttachment;
+    bool mWebGLDepthStencilConsistent;
 };
 
 class Framebuffer final : public LabeledObject, public angle::SignalReceiver
@@ -128,14 +135,15 @@ class Framebuffer final : public LabeledObject, public angle::SignalReceiver
 
     GLuint id() const { return mId; }
 
-    void setAttachment(GLenum type,
+    void setAttachment(const Context *context,
+                       GLenum type,
                        GLenum binding,
                        const ImageIndex &textureIndex,
                        FramebufferAttachmentObject *resource);
-    void resetAttachment(GLenum binding);
+    void resetAttachment(const Context *context, GLenum binding);
 
-    void detachTexture(GLuint texture);
-    void detachRenderbuffer(GLuint renderbuffer);
+    void detachTexture(const Context *context, GLuint texture);
+    void detachRenderbuffer(const Context *context, GLuint renderbuffer);
 
     const FramebufferAttachment *getColorbuffer(size_t colorAttachment) const;
     const FramebufferAttachment *getDepthbuffer() const;
@@ -254,12 +262,18 @@ class Framebuffer final : public LabeledObject, public angle::SignalReceiver
                                       GLint copyTextureLayer) const;
 
   private:
-    void detachResourceById(GLenum resourceType, GLuint resourceId);
+    void detachResourceById(const Context *context, GLenum resourceType, GLuint resourceId);
     void detachMatchingAttachment(FramebufferAttachment *attachment,
                                   GLenum matchType,
                                   GLuint matchId,
                                   size_t dirtyBit);
     GLenum checkStatusImpl(const ContextState &state);
+    void commitWebGL1DepthStencilIfConsistent();
+
+    void setAttachmentImpl(GLenum type,
+                           GLenum binding,
+                           const ImageIndex &textureIndex,
+                           FramebufferAttachmentObject *resource);
 
     FramebufferState mState;
     rx::FramebufferImpl *mImpl;
