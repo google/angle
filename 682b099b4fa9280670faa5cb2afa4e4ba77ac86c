@@ -22,6 +22,30 @@
       "revId": "682b099b4fa9280670faa5cb2afa4e4ba77ac86c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c7e451be_5ea446e4",
+        "filename": "src/libANGLE/renderer/gl/egl/ozone/DisplayOzone.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-02-23T03:28:13Z",
+      "side": 1,
+      "message": "I made this (and some others) a WARN() since they are just issues with display.  Tests still work, they just won\u0027t appear on screen.",
+      "parentUuid": "0cf6edb7_4cbee969",
+      "range": {
+        "startLine": 298,
+        "startChar": 12,
+        "endLine": 298,
+        "endChar": 21
+      },
+      "revId": "682b099b4fa9280670faa5cb2afa4e4ba77ac86c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
