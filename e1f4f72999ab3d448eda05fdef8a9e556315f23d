@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9df1f9b3_ebed6314",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 33
+      },
+      "lineNbr": 729,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-23T05:40:29Z",
+      "side": 1,
+      "message": "Hi Yuly, thanks for your suggestions. \n\nI agree with you that it is unnecessary to skip the test on the Android trybots. I have updated here if largeOffset is a maximum unsigned or signed value we use 2047 instead, and so does DrawArraysWithLargeStride.\n\nPTAL. Thanks!",
+      "revId": "e1f4f72999ab3d448eda05fdef8a9e556315f23d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
