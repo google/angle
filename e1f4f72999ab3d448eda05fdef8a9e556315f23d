@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "e2e704de_aecd1da6",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 33
+      },
+      "lineNbr": 704,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-23T16:00:01Z",
+      "side": 1,
+      "message": "this is a bug if we see a negative value. any overlarge values should be clamped to MAX_SINT. Already in the MaxVertexAttribStride test we ASSERT that it is GE 2048 so you can remove the -1 check.",
+      "range": {
+        "startLine": 703,
+        "startChar": 3,
+        "endLine": 704,
+        "endChar": 32
+      },
+      "revId": "e1f4f72999ab3d448eda05fdef8a9e556315f23d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de1c7bec_2210d370",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 33
+      },
+      "lineNbr": 706,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-23T16:00:01Z",
+      "side": 1,
+      "message": "this is not robust... what if the stride was MAX_SINT - 1? This test would probably crash. Please pick a sensible maximum... something that will pass no matter what platform, and use testStride \u003d std::min(glMaxStride, testMaxStride)",
+      "range": {
+        "startLine": 706,
+        "startChar": 4,
+        "endLine": 706,
+        "endChar": 74
+      },
+      "revId": "e1f4f72999ab3d448eda05fdef8a9e556315f23d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0a53b9b4_fde24056",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 33
+      },
+      "lineNbr": 727,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-23T16:00:01Z",
+      "side": 1,
+      "message": "exact same comments here as above.",
+      "range": {
+        "startLine": 722,
+        "startChar": 4,
+        "endLine": 727,
+        "endChar": 27
+      },
+      "revId": "e1f4f72999ab3d448eda05fdef8a9e556315f23d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9df1f9b3_ebed6314",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 33
