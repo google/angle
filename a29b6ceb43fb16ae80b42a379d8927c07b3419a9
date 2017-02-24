@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "dd199787_89cf671f",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1030,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-24T08:51:05Z",
+      "side": 1,
+      "message": "Here I refer Context::setVertexAttribDivisor and Context::vertexAttribPointer. \n\nI need to investigate why bindElementArrayBuffer uses different style from other vertex array related code.",
+      "parentUuid": "a708011e_26e30c18",
+      "range": {
+        "startLine": 1030,
+        "startChar": 4,
+        "endLine": 1030,
+        "endChar": 29
+      },
+      "revId": "a29b6ceb43fb16ae80b42a379d8927c07b3419a9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "160e2000_453cb996",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 9
