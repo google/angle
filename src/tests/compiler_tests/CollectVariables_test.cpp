@@ -740,3 +740,63 @@ TEST_F(CollectHashedVertexVariablesTest, StructUniform)
     EXPECT_EQ("webgl_5", field.mappedName);
     EXPECT_TRUE(field.fields.empty());
 }
+
+// Test a uniform declaration with multiple declarators.
+TEST_F(CollectFragmentVariablesTest, MultiDeclaration)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 out_fragColor;\n"
+        "uniform float uA, uB;\n"
+        "void main()\n"
+        "{\n"
+        "    vec4 color = vec4(uA, uA, uA, uB);\n"
+        "    out_fragColor = color;\n"
+        "}\n";
+
+    compile(shaderString);
+
+    const auto &uniforms = mTranslator->getUniforms();
+    ASSERT_EQ(2u, uniforms.size());
+
+    const Uniform &uniform = uniforms[0];
+    EXPECT_EQ(0u, uniform.arraySize);
+    EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, uniform.precision);
+    EXPECT_TRUE(uniform.staticUse);
+    EXPECT_GLENUM_EQ(GL_FLOAT, uniform.type);
+    EXPECT_EQ("uA", uniform.name);
+
+    const Uniform &uniformB = uniforms[1];
+    EXPECT_EQ(0u, uniformB.arraySize);
+    EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, uniformB.precision);
+    EXPECT_TRUE(uniformB.staticUse);
+    EXPECT_GLENUM_EQ(GL_FLOAT, uniformB.type);
+    EXPECT_EQ("uB", uniformB.name);
+}
+
+// Test a uniform declaration starting with an empty declarator.
+TEST_F(CollectFragmentVariablesTest, EmptyDeclarator)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 out_fragColor;\n"
+        "uniform float /* empty declarator */, uB;\n"
+        "void main()\n"
+        "{\n"
+        "    out_fragColor = vec4(uB, uB, uB, uB);\n"
+        "}\n";
+
+    compile(shaderString);
+
+    const auto &uniforms = mTranslator->getUniforms();
+    ASSERT_EQ(1u, uniforms.size());
+
+    const Uniform &uniformB = uniforms[0];
+    EXPECT_EQ(0u, uniformB.arraySize);
+    EXPECT_GLENUM_EQ(GL_MEDIUM_FLOAT, uniformB.precision);
+    EXPECT_TRUE(uniformB.staticUse);
+    EXPECT_GLENUM_EQ(GL_FLOAT, uniformB.type);
+    EXPECT_EQ("uB", uniformB.name);
+}

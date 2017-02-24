@@ -45,30 +45,6 @@ TType GetShaderVariableBasicType(const sh::ShaderVariable &var);
 
 TOperator TypeToConstructorOperator(const TType &type);
 
-class GetVariableTraverser : angle::NonCopyable
-{
-  public:
-    GetVariableTraverser(const TSymbolTable &symbolTable);
-    virtual ~GetVariableTraverser() {}
-
-    template <typename VarT>
-    void traverse(const TType &type, const TString &name, std::vector<VarT> *output);
-
-  protected:
-    // May be overloaded
-    virtual void visitVariable(ShaderVariable *newVar) {}
-
-  private:
-    // Helper function called by traverse() to fill specific fields
-    // for attributes/varyings/uniforms.
-    template <typename VarT>
-    void setTypeSpecificInfo(const TType &type, const TString &name, VarT *variable)
-    {
-    }
-
-    const TSymbolTable &mSymbolTable;
-};
-
 bool IsBuiltinOutputVariable(TQualifier qualifier);
 bool IsBuiltinFragmentInputVariable(TQualifier qualifier);
 bool CanBeInvariantESSL1(TQualifier qualifier);

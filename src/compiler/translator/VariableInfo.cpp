@@ -448,79 +448,106 @@ void CollectVariables::visitSymbol(TIntermSymbol *symbol)
     }
 }
 
-class NameHashingTraverser : public GetVariableTraverser
+void CollectVariables::setCommonVariableProperties(const TType &type,
+                                                   const TString &name,
+                                                   ShaderVariable *variableOut) const
 {
-  public:
-    NameHashingTraverser(ShHashFunction64 hashFunction, const TSymbolTable &symbolTable)
-        : GetVariableTraverser(symbolTable), mHashFunction(hashFunction)
+    ASSERT(variableOut);
+
+    const TStructure *structure = type.getStruct();
+
+    if (!structure)
     {
+        variableOut->type      = GLVariableType(type);
+        variableOut->precision = GLVariablePrecision(type);
     }
-
-  private:
-    void visitVariable(ShaderVariable *variable) override
+    else
     {
-        TString stringName   = TString(variable->name.c_str());
-        variable->mappedName = TIntermTraverser::hash(stringName, mHashFunction).c_str();
+        // Note: this enum value is not exposed outside ANGLE
+        variableOut->type       = GL_STRUCT_ANGLEX;
+        variableOut->structName = structure->name().c_str();
+
+        const TFieldList &fields = structure->fields();
+
+        for (TField *field : fields)
+        {
+            // Regardless of the variable type (uniform, in/out etc.) its fields are always plain
+            // ShaderVariable objects.
+            ShaderVariable fieldVariable;
+            setCommonVariableProperties(*field->type(), field->name(), &fieldVariable);
+            variableOut->fields.push_back(fieldVariable);
+        }
     }
+    variableOut->name       = name.c_str();
+    variableOut->mappedName = TIntermTraverser::hash(name, mHashFunction).c_str();
+    variableOut->arraySize  = type.getArraySize();
+}
 
-    ShHashFunction64 mHashFunction;
-};
-
-// Attributes, which cannot have struct fields, are a special case
-template <>
-void CollectVariables::visitVariable(const TIntermSymbol *variable,
-                                     std::vector<Attribute> *infoList) const
+Attribute CollectVariables::recordAttribute(const TIntermSymbol &variable) const
 {
-    ASSERT(variable);
-    const TType &type = variable->getType();
+    const TType &type = variable.getType();
     ASSERT(!type.getStruct());
 
     Attribute attribute;
+    setCommonVariableProperties(type, variable.getSymbol(), &attribute);
 
-    attribute.type       = GLVariableType(type);
-    attribute.precision  = GLVariablePrecision(type);
-    attribute.name       = variable->getSymbol().c_str();
-    attribute.arraySize  = type.getArraySize();
-    attribute.mappedName = TIntermTraverser::hash(variable->getSymbol(), mHashFunction).c_str();
-    attribute.location   = variable->getType().getLayoutQualifier().location;
-
-    infoList->push_back(attribute);
+    attribute.location = type.getLayoutQualifier().location;
+    return attribute;
 }
 
-template <>
-void CollectVariables::visitVariable(const TIntermSymbol *variable,
-                                     std::vector<OutputVariable> *infoList) const
+OutputVariable CollectVariables::recordOutputVariable(const TIntermSymbol &variable) const
 {
-    ASSERT(variable);
-    const TType &type = variable->getType();
+    const TType &type = variable.getType();
     ASSERT(!type.getStruct());
 
-    OutputVariable attribute;
+    OutputVariable outputVariable;
+    setCommonVariableProperties(type, variable.getSymbol(), &outputVariable);
 
-    attribute.type       = GLVariableType(type);
-    attribute.precision  = GLVariablePrecision(type);
-    attribute.name       = variable->getSymbol().c_str();
-    attribute.arraySize  = type.getArraySize();
-    attribute.mappedName = TIntermTraverser::hash(variable->getSymbol(), mHashFunction).c_str();
-    attribute.location   = variable->getType().getLayoutQualifier().location;
-
-    infoList->push_back(attribute);
+    outputVariable.location = type.getLayoutQualifier().location;
+    return outputVariable;
 }
 
-template <>
-void CollectVariables::visitVariable(const TIntermSymbol *variable,
-                                     std::vector<InterfaceBlock> *infoList) const
+Varying CollectVariables::recordVarying(const TIntermSymbol &variable) const
 {
-    InterfaceBlock interfaceBlock;
-    const TInterfaceBlock *blockType = variable->getType().getInterfaceBlock();
+    const TType &type = variable.getType();
+
+    Varying varying;
+    setCommonVariableProperties(type, variable.getSymbol(), &varying);
+
+    switch (type.getQualifier())
+    {
+        case EvqVaryingIn:
+        case EvqVaryingOut:
+        case EvqVertexOut:
+        case EvqSmoothOut:
+        case EvqFlatOut:
+        case EvqCentroidOut:
+            if (mSymbolTable.isVaryingInvariant(std::string(variable.getSymbol().c_str())) ||
+                type.isInvariant())
+            {
+                varying.isInvariant = true;
+            }
+            break;
+        default:
+            break;
+    }
+
+    varying.interpolation = GetInterpolationType(type.getQualifier());
+    return varying;
+}
+
+InterfaceBlock CollectVariables::recordInterfaceBlock(const TIntermSymbol &variable) const
+{
+    const TInterfaceBlock *blockType = variable.getType().getInterfaceBlock();
     ASSERT(blockType);
 
+    InterfaceBlock interfaceBlock;
     interfaceBlock.name = blockType->name().c_str();
     interfaceBlock.mappedName =
         TIntermTraverser::hash(blockType->name().c_str(), mHashFunction).c_str();
     interfaceBlock.instanceName =
         (blockType->hasInstanceName() ? blockType->instanceName().c_str() : "");
-    interfaceBlock.arraySize        = variable->getArraySize();
+    interfaceBlock.arraySize        = variable.getArraySize();
     interfaceBlock.isRowMajorLayout = (blockType->matrixPacking() == EmpRowMajor);
     interfaceBlock.layout           = GetBlockLayoutType(blockType->blockStorage());
 
@@ -529,39 +556,20 @@ void CollectVariables::visitVariable(const TIntermSymbol *variable,
     {
         const TType &fieldType = *field->type();
 
-        NameHashingTraverser traverser(mHashFunction, mSymbolTable);
-        traverser.traverse(fieldType, field->name(), &interfaceBlock.fields);
-
-        interfaceBlock.fields.back().isRowMajorLayout =
+        InterfaceBlockField fieldVariable;
+        setCommonVariableProperties(fieldType, field->name(), &fieldVariable);
+        fieldVariable.isRowMajorLayout =
             (fieldType.getLayoutQualifier().matrixPacking == EmpRowMajor);
+        interfaceBlock.fields.push_back(fieldVariable);
     }
-
-    infoList->push_back(interfaceBlock);
+    return interfaceBlock;
 }
 
-template <typename VarT>
-void CollectVariables::visitVariable(const TIntermSymbol *variable,
-                                     std::vector<VarT> *infoList) const
+Uniform CollectVariables::recordUniform(const TIntermSymbol &variable) const
 {
-    NameHashingTraverser traverser(mHashFunction, mSymbolTable);
-    traverser.traverse(variable->getType(), variable->getSymbol(), infoList);
-}
-
-template <typename VarT>
-void CollectVariables::visitInfoList(const TIntermSequence &sequence,
-                                     std::vector<VarT> *infoList) const
-{
-    for (size_t seqIndex = 0; seqIndex < sequence.size(); seqIndex++)
-    {
-        const TIntermSymbol *variable = sequence[seqIndex]->getAsSymbolNode();
-        // The only case in which the sequence will not contain a
-        // TIntermSymbol node is initialization. It will contain a
-        // TInterBinary node in that case. Since attributes, uniforms,
-        // and varyings cannot be initialized in a shader, we must have
-        // only TIntermSymbol nodes in the sequence.
-        ASSERT(variable != NULL);
-        visitVariable(variable, infoList);
-    }
+    Uniform uniform;
+    setCommonVariableProperties(variable.getType(), variable.getSymbol(), &uniform);
+    return uniform;
 }
 
 bool CollectVariables::visitDeclaration(Visit, TIntermDeclaration *node)
@@ -572,35 +580,50 @@ bool CollectVariables::visitDeclaration(Visit, TIntermDeclaration *node)
     const TIntermTyped &typedNode = *(sequence.front()->getAsTyped());
     TQualifier qualifier          = typedNode.getQualifier();
 
-    if (typedNode.getBasicType() == EbtInterfaceBlock)
+    bool isShaderVariable = qualifier == EvqAttribute || qualifier == EvqVertexIn ||
+                            qualifier == EvqFragmentOut || qualifier == EvqUniform ||
+                            IsVarying(qualifier);
+
+    if (typedNode.getBasicType() != EbtInterfaceBlock && !isShaderVariable)
     {
-        visitInfoList(sequence, mInterfaceBlocks);
-        return false;
+        return true;
     }
-    else if (qualifier == EvqAttribute || qualifier == EvqVertexIn || qualifier == EvqFragmentOut ||
-             qualifier == EvqUniform || IsVarying(qualifier))
+
+    for (TIntermNode *variableNode : sequence)
     {
-        switch (qualifier)
+        // The only case in which the sequence will not contain a TIntermSymbol node is
+        // initialization. It will contain a TInterBinary node in that case. Since attributes,
+        // uniforms, varyings, outputs and interface blocks cannot be initialized in a shader, we
+        // must have only TIntermSymbol nodes in the sequence in the cases we are interested in.
+        const TIntermSymbol &variable = *variableNode->getAsSymbolNode();
+        if (typedNode.getBasicType() == EbtInterfaceBlock)
         {
-            case EvqAttribute:
-            case EvqVertexIn:
-                visitInfoList(sequence, mAttribs);
-                break;
-            case EvqFragmentOut:
-                visitInfoList(sequence, mOutputVariables);
-                break;
-            case EvqUniform:
-                visitInfoList(sequence, mUniforms);
-                break;
-            default:
-                visitInfoList(sequence, mVaryings);
-                break;
+            mInterfaceBlocks->push_back(recordInterfaceBlock(variable));
         }
-
-        return false;
+        else
+        {
+            switch (qualifier)
+            {
+                case EvqAttribute:
+                case EvqVertexIn:
+                    mAttribs->push_back(recordAttribute(variable));
+                    break;
+                case EvqFragmentOut:
+                    mOutputVariables->push_back(recordOutputVariable(variable));
+                    break;
+                case EvqUniform:
+                    mUniforms->push_back(recordUniform(variable));
+                    break;
+                default:
+                    mVaryings->push_back(recordVarying(variable));
+                    break;
+            }
+        }
     }
 
-    return true;
+    // None of the recorded variables can have initializers, so we don't need to traverse the
+    // declarators.
+    return false;
 }
 
 bool CollectVariables::visitBinary(Visit, TIntermBinary *binaryNode)

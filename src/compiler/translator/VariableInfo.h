@@ -35,11 +35,15 @@ class CollectVariables : public TIntermTraverser
     bool visitBinary(Visit visit, TIntermBinary *binaryNode) override;
 
   private:
-    template <typename VarT>
-    void visitVariable(const TIntermSymbol *variable, std::vector<VarT> *infoList) const;
+    void setCommonVariableProperties(const TType &type,
+                                     const TString &name,
+                                     ShaderVariable *variableOut) const;
 
-    template <typename VarT>
-    void visitInfoList(const TIntermSequence &sequence, std::vector<VarT> *infoList) const;
+    Attribute recordAttribute(const TIntermSymbol &variable) const;
+    OutputVariable recordOutputVariable(const TIntermSymbol &variable) const;
+    Varying recordVarying(const TIntermSymbol &variable) const;
+    InterfaceBlock recordInterfaceBlock(const TIntermSymbol &variable) const;
+    Uniform recordUniform(const TIntermSymbol &variable) const;
 
     std::vector<Attribute> *mAttribs;
     std::vector<OutputVariable> *mOutputVariables;
