@@ -119,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "2e65634d_ee453737",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-24T19:36:14Z",
+      "side": 1,
+      "message": "Yes, Jamie, I agree with you that testing a maximum supported value which wouldn\u0027t cause math overflows is desired.\nHowever, I had a hard time conveying this through review iterations, thus was willing to settle for at least testing the minimum maximum values above.",
+      "parentUuid": "63980524_51039b65",
+      "range": {
+        "startLine": 675,
+        "startChar": 0,
+        "endLine": 676,
+        "endChar": 55
+      },
+      "revId": "ea1427bf1346cc4ef155144d631fc69de09da5ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "419c55ae_caad5110",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 35
