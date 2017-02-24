@@ -533,6 +533,30 @@
     },
     {
       "key": {
+        "uuid": "9a6dc012_7951f1c5",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-24T15:47:15Z",
+      "side": 1,
+      "message": "Thank you for pointing that out.",
+      "parentUuid": "09347be8_331c9b50",
+      "range": {
+        "startLine": 147,
+        "startChar": 0,
+        "endLine": 147,
+        "endChar": 86
+      },
+      "revId": "9ac10c64d25ab84102f43ce9a8abd2fe6d4b6ef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "de56ddcc_281a1c68",
         "filename": "src/tests/gl_tests/AtomicCounterBufferTest.cpp",
         "patchSetId": 7
