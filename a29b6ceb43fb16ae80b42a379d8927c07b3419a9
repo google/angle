@@ -124,6 +124,24 @@
       "revId": "a29b6ceb43fb16ae80b42a379d8927c07b3419a9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c567a2ed_6bdd7c5e",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 3907,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-24T08:17:42Z",
+      "side": 1,
+      "message": "Because there are more limits in ES3.1.\nI just refer ES3.1 SPEC: Chapter 10.3.1 Page 245:\n...\nIn addition, any of the errors defined by VertexAttrib*Format and VertexAttribBinding\nmay be generated if the parameters passed to those commands\nin the equivalent code above would generate those errors.",
+      "parentUuid": "b4d9e67a_1ce56909",
+      "revId": "a29b6ceb43fb16ae80b42a379d8927c07b3419a9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
