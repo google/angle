@@ -416,74 +416,67 @@ egl::Error DisplayGLX::initializeContext(glx::FBConfig config,
         return createContextAttribs(config, requestedVersion, profileMask, context);
     }
 
-    // It is commonly assumed that glXCreateContextAttrib will create a context
-    // of the highest version possible but it is not specified in the spec and
-    // is not true on the Mesa drivers. On Mesa, Instead we try to create a
-    // context per GL version until we succeed, starting from newer version.
-    // On both Mesa and other drivers we try to create a desktop context and fall
-    // back to ES context.
-    // The code could be simpler if the Mesa code path was used for all drivers,
-    // however the cost of failing a context creation can be high (3 milliseconds
-    // for the NVIDIA driver). The good thing is that failed context creation only
-    // takes 0.1 milliseconds on Mesa.
+    // The only way to get a core profile context of the highest version using
+    // glXCreateContextAttrib is to try creationg contexts in decreasing version
+    // numbers. It might look that asking for a core context of version (0, 0)
+    // works on some driver but it create a _compatibility_ context of the highest
+    // version instead. The cost of failing a context creation is small (< 0.1 ms)
+    // on Mesa but is unfortunately a bit expensive on the Nvidia driver (~3ms).
+    // Also try to get any Desktop GL context, but if that fails fallback to
+    // asking for OpenGL ES contexts.
 
     struct ContextCreationInfo
     {
+        ContextCreationInfo(EGLint displayType, int profileFlag, gl::Version version)
+            : displayType(displayType), profileFlag(profileFlag), version(version)
+        {
+        }
+
         EGLint displayType;
         int profileFlag;
-        Optional<gl::Version> version;
+        gl::Version version;
     };
 
     // clang-format off
-    // For regular drivers we try to create a core, compatibility, then ES context.
-    // Without requiring any specific version (the Optional version is undefined).
-    const ContextCreationInfo contextsToTry[] = {
-        { EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, GLX_CONTEXT_CORE_PROFILE_BIT_ARB, {} },
-        { EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, 0, {} },
-        { EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE, GLX_CONTEXT_ES2_PROFILE_BIT_EXT, {} },
-    };
+    std::vector<ContextCreationInfo> contextsToTry;
+    contextsToTry.emplace_back(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, GLX_CONTEXT_CORE_PROFILE_BIT_ARB, gl::Version(4, 5));
+    contextsToTry.emplace_back(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, GLX_CONTEXT_CORE_PROFILE_BIT_ARB, gl::Version(4, 4));
+    contextsToTry.emplace_back(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, GLX_CONTEXT_CORE_PROFILE_BIT_ARB, gl::Version(4, 3));
+    contextsToTry.emplace_back(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, GLX_CONTEXT_CORE_PROFILE_BIT_ARB, gl::Version(4, 2));
+    contextsToTry.emplace_back(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, GLX_CONTEXT_CORE_PROFILE_BIT_ARB, gl::Version(4, 1));
+    contextsToTry.emplace_back(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, GLX_CONTEXT_CORE_PROFILE_BIT_ARB, gl::Version(4, 0));
+    contextsToTry.emplace_back(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, GLX_CONTEXT_CORE_PROFILE_BIT_ARB, gl::Version(3, 3));
+    contextsToTry.emplace_back(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, GLX_CONTEXT_CORE_PROFILE_BIT_ARB, gl::Version(3, 2));
+    contextsToTry.emplace_back(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, 0, gl::Version(3, 3));
 
-    // On Mesa we try to create a core context, except for versions below 3.2
-    // where it is not applicable. (and fallback to ES as well)
-    const ContextCreationInfo mesaContextsToTry[] = {
-        { EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, GLX_CONTEXT_CORE_PROFILE_BIT_ARB, { gl::Version(4, 5) } },
-        { EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, GLX_CONTEXT_CORE_PROFILE_BIT_ARB, { gl::Version(4, 4) } },
-        { EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, GLX_CONTEXT_CORE_PROFILE_BIT_ARB, { gl::Version(4, 3) } },
-        { EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, GLX_CONTEXT_CORE_PROFILE_BIT_ARB, { gl::Version(4, 2) } },
-        { EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, GLX_CONTEXT_CORE_PROFILE_BIT_ARB, { gl::Version(4, 1) } },
-        { EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, GLX_CONTEXT_CORE_PROFILE_BIT_ARB, { gl::Version(4, 0) } },
-        { EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, GLX_CONTEXT_CORE_PROFILE_BIT_ARB, { gl::Version(3, 3) } },
-        { EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, GLX_CONTEXT_CORE_PROFILE_BIT_ARB, { gl::Version(3, 2) } },
-        { EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, 0, { gl::Version(3, 1) } },
-        { EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, 0, { gl::Version(3, 0) } },
-        { EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, 0, { gl::Version(2, 0) } },
-        { EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, 0, { gl::Version(1, 5) } },
-        { EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, 0, { gl::Version(1, 4) } },
-        { EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, 0, { gl::Version(1, 3) } },
-        { EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, 0, { gl::Version(1, 2) } },
-        { EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, 0, { gl::Version(1, 1) } },
-        { EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, 0, { gl::Version(1, 0) } },
-        { EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE, GLX_CONTEXT_ES2_PROFILE_BIT_EXT, { gl::Version(3, 2) } },
-        { EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE, GLX_CONTEXT_ES2_PROFILE_BIT_EXT, { gl::Version(3, 1) } },
-        { EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE, GLX_CONTEXT_ES2_PROFILE_BIT_EXT, { gl::Version(3, 0) } },
-        { EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE, GLX_CONTEXT_ES2_PROFILE_BIT_EXT, { gl::Version(2, 0) } },
-    };
-    // clang-format on
-
-    const ContextCreationInfo *toTry = contextsToTry;
-    size_t toTryLength = ArraySize(contextsToTry);
-    if (mIsMesa)
+    // On Mesa, do not try to create OpenGL context versions between 3.0 and
+    // 3.2 because of compatibility problems. See crbug.com/659030
+    if (!mIsMesa)
     {
-        toTry       = mesaContextsToTry;
-        toTryLength = ArraySize(mesaContextsToTry);
+        contextsToTry.emplace_back(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, 0, gl::Version(3, 2));
+        contextsToTry.emplace_back(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, 0, gl::Version(3, 1));
+        contextsToTry.emplace_back(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, 0, gl::Version(3, 0));
     }
+
+    contextsToTry.emplace_back(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, 0, gl::Version(2, 1));
+    contextsToTry.emplace_back(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, 0, gl::Version(2, 0));
+    contextsToTry.emplace_back(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, 0, gl::Version(1, 5));
+    contextsToTry.emplace_back(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, 0, gl::Version(1, 4));
+    contextsToTry.emplace_back(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, 0, gl::Version(1, 3));
+    contextsToTry.emplace_back(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, 0, gl::Version(1, 2));
+    contextsToTry.emplace_back(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, 0, gl::Version(1, 1));
+    contextsToTry.emplace_back(EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE, 0, gl::Version(1, 0));
+    contextsToTry.emplace_back(EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE, GLX_CONTEXT_ES2_PROFILE_BIT_EXT, gl::Version(3, 2));
+    contextsToTry.emplace_back(EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE, GLX_CONTEXT_ES2_PROFILE_BIT_EXT, gl::Version(3, 1));
+    contextsToTry.emplace_back(EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE, GLX_CONTEXT_ES2_PROFILE_BIT_EXT, gl::Version(3, 0));
+    contextsToTry.emplace_back(EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE, GLX_CONTEXT_ES2_PROFILE_BIT_EXT, gl::Version(2, 0));
+    // clang-format on
 
     // NOTE: below we return as soon as we're able to create a context so the
     // "error" variable is EGL_SUCCESS when returned contrary to the common idiom
     // of returning "error" when there is an actual error.
-    for (size_t i = 0; i < toTryLength; ++i)
+    for (const auto &info : contextsToTry)
     {
-        const ContextCreationInfo &info = toTry[i];
         if (requestedDisplayType != EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE &&
             requestedDisplayType != info.displayType)
         {
