@@ -1,0 +1,129 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a708011e_26e30c18",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1030,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-02-24T07:34:06Z",
+      "side": 1,
+      "message": "mGLState.getVertexArray()-\u003ebindVertexBuffer(bindingIndex, buffer, offset, stride); Don\u0027t need to define bindVertexBuffer in mGLState. Similar function is bindElementArrayBuffer",
+      "range": {
+        "startLine": 1030,
+        "startChar": 4,
+        "endLine": 1030,
+        "endChar": 29
+      },
+      "revId": "a29b6ceb43fb16ae80b42a379d8927c07b3419a9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "160e2000_453cb996",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 3502,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-02-24T07:34:06Z",
+      "side": 1,
+      "message": "same",
+      "revId": "a29b6ceb43fb16ae80b42a379d8927c07b3419a9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "42385fdf_32cfd03b",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 3511,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-02-24T07:34:06Z",
+      "side": 1,
+      "message": "same",
+      "revId": "a29b6ceb43fb16ae80b42a379d8927c07b3419a9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e244e21_b05da2a3",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 3516,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-02-24T07:34:06Z",
+      "side": 1,
+      "message": "same",
+      "revId": "a29b6ceb43fb16ae80b42a379d8927c07b3419a9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "31ab59c5_09500b48",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 3521,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-02-24T07:34:06Z",
+      "side": 1,
+      "message": "same",
+      "revId": "a29b6ceb43fb16ae80b42a379d8927c07b3419a9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f962e91f_a92d9dbf",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-02-24T07:34:06Z",
+      "side": 1,
+      "message": "Move vertexAttribIFormat here since these two are both to define the attrib format.",
+      "revId": "a29b6ceb43fb16ae80b42a379d8927c07b3419a9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b4d9e67a_1ce56909",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 3907,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-02-24T07:34:06Z",
+      "side": 1,
+      "message": "Why not directly use currently Validation function and add the difference in it?  VertexAttribPointer is not ES31 new added API, so keep it here.",
+      "revId": "a29b6ceb43fb16ae80b42a379d8927c07b3419a9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
