@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a893f90b_7e14ddbc",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 643,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-02-24T08:15:53Z",
+      "side": 1,
+      "message": "Do you need to check GL version  \u003e\u003d ES_3_1?",
+      "revId": "21eba61d6589ad510999e8ee983eb0d280a446e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b06cc523_46904ec1",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-02-24T08:15:53Z",
+      "side": 1,
+      "message": "Is there any way to get fixed sample locations directly from texture? It seems that only texture has this feature.",
+      "revId": "21eba61d6589ad510999e8ee983eb0d280a446e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ac9147c1_b5fb1f11",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 695,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-02-24T08:15:53Z",
+      "side": 1,
+      "message": "Same: Do you need to check GL version  \u003e\u003d ES_3_1?",
+      "revId": "21eba61d6589ad510999e8ee983eb0d280a446e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b783597_cf271c5e",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 428,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-02-24T08:15:53Z",
+      "side": 1,
+      "message": "It seems that \u0027getClientMajorVersion() \u003c 3\u0027 won\u0027t happen. \nUse ASSERT_EQ(3, getClientMajorVersion());\n      if (getClientMinorVersion() \u003d\u003d 0)",
+      "revId": "21eba61d6589ad510999e8ee983eb0d280a446e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
