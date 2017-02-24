@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b2cd9884_3cdcde93",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 620,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-24T03:03:01Z",
+      "side": 1,
+      "message": "Done\nI have combined DrawArraysWithLargeOffset and DrawArraysWithLargeStride into one case.",
+      "parentUuid": "842788ca_73cc85d6",
+      "range": {
+        "startLine": 620,
+        "startChar": 39,
+        "endLine": 620,
+        "endChar": 65
+      },
+      "revId": "ea1427bf1346cc4ef155144d631fc69de09da5ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ac68c8ea_2dcdd87a",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 35
@@ -36,6 +60,30 @@
       "writtenOn": "2017-02-24T02:33:51Z",
       "side": 1,
       "message": "This no longer seems necessary, since you are not going to use stride \u003e 2048 and offset \u003e 2047.\nPS.\nI think \"offset\" is clearer than \"dataOffset * TypeStride(GL_FLOAT)\"\nThis way it\u0027s easier to see that this assert would fail to catch offset \u003d\u003d 0, stride \u003d\u003d LONG_MAX overflowing for some values of mVertexCount.",
+      "range": {
+        "startLine": 627,
+        "startChar": 8,
+        "endLine": 627,
+        "endChar": 64
+      },
+      "revId": "ea1427bf1346cc4ef155144d631fc69de09da5ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6a566f4b_71c70d9e",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 627,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-24T03:03:01Z",
+      "side": 1,
+      "message": "Done\nGot it. Thanks!",
+      "parentUuid": "ac68c8ea_2dcdd87a",
       "range": {
         "startLine": 627,
         "startChar": 8,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "88e2919a_75387947",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 679,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-24T03:03:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "419c55ae_caad5110",
+      "range": {
+        "startLine": 679,
+        "startChar": 55,
+        "endLine": 679,
+        "endChar": 56
+      },
+      "revId": "ea1427bf1346cc4ef155144d631fc69de09da5ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0a695c62_4707ecd0",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 35
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "aad03c0a_9687871d",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 711,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-24T03:03:01Z",
+      "side": 1,
+      "message": "Done\nThanks to point out this.",
+      "parentUuid": "0a695c62_4707ecd0",
+      "range": {
+        "startLine": 711,
+        "startChar": 34,
+        "endLine": 711,
+        "endChar": 45
+      },
+      "revId": "ea1427bf1346cc4ef155144d631fc69de09da5ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b26f1fb5_3a125dd0",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 35
@@ -105,6 +201,30 @@
       "writtenOn": "2017-02-24T02:33:51Z",
       "side": 1,
       "message": "I think passing ES31_MAX_ATTRIB_RELATIVE_OFFSET here has the same effect.\nEverything above is unnecessary.",
+      "range": {
+        "startLine": 725,
+        "startChar": 37,
+        "endLine": 725,
+        "endChar": 48
+      },
+      "revId": "ea1427bf1346cc4ef155144d631fc69de09da5ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2e9d8b92_47b6e8e8",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 725,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-24T03:03:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b26f1fb5_3a125dd0",
       "range": {
         "startLine": 725,
         "startChar": 37,
