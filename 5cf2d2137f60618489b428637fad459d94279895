@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ef710f4c_ef3285d4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 13
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-24T22:51:47Z",
+      "side": 1,
+      "message": "please clamp the first line of the description to \u003c\u003d 65 chars, and the second paragraph of the description to \u003c\u003d 71 characters. Gerrit should warn you of this when you upload.",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 26
+      },
+      "revId": "5cf2d2137f60618489b428637fad459d94279895",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d80cdd8_90e74759",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 598,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-24T22:51:47Z",
+      "side": 1,
+      "message": "make fixedSampleLocations an Optional\u003cGLboolean\u003e and rmeove hasTexture.",
+      "range": {
+        "startLine": 597,
+        "startChar": 4,
+        "endLine": 598,
+        "endChar": 43
+      },
+      "revId": "5cf2d2137f60618489b428637fad459d94279895",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a7164a34_4f65bcad",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 646,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-24T22:51:47Z",
+      "side": 1,
+      "message": "check fixedSampleLocations.valid()",
+      "range": {
+        "startLine": 646,
+        "startChar": 24,
+        "endLine": 646,
+        "endChar": 34
+      },
+      "revId": "5cf2d2137f60618489b428637fad459d94279895",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "56ba2eb3_7e5b90cb",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 707,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-24T22:51:47Z",
+      "side": 1,
+      "message": "you can move this out of the for loop. and replace hasTexture with fixedSampleLocations.valid()",
+      "range": {
+        "startLine": 700,
+        "startChar": 12,
+        "endLine": 707,
+        "endChar": 13
+      },
+      "revId": "5cf2d2137f60618489b428637fad459d94279895",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "be4859e8_f30e24a7",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 859,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-24T22:51:47Z",
+      "side": 1,
+      "message": "this comment does not make sense. the spec states that if this is not true, an error condition is generated, but the comment does not explain that situation.\n\nplease rephrase.",
+      "range": {
+        "startLine": 857,
+        "startChar": 8,
+        "endLine": 859,
+        "endChar": 67
+      },
+      "revId": "5cf2d2137f60618489b428637fad459d94279895",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "75e7f409_bae5a5f8",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-24T22:51:47Z",
+      "side": 1,
+      "message": "instead of making these part of the test fixture, use the gl_raii classes.",
+      "range": {
+        "startLine": 416,
+        "startChar": 0,
+        "endLine": 418,
+        "endChar": 24
+      },
+      "revId": "5cf2d2137f60618489b428637fad459d94279895",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0a5d7682_07fd9267",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 428,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-24T22:51:47Z",
+      "side": 1,
+      "message": "can we use the version helper methods somehow?",
+      "range": {
+        "startLine": 427,
+        "startChar": 8,
+        "endLine": 428,
+        "endChar": 71
+      },
+      "revId": "5cf2d2137f60618489b428637fad459d94279895",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2dd7e35f_e5e4c8de",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-24T22:51:47Z",
+      "side": 1,
+      "message": "return here and flatten the else.",
+      "range": {
+        "startLine": 430,
+        "startChar": 8,
+        "endLine": 430,
+        "endChar": 24
+      },
+      "revId": "5cf2d2137f60618489b428637fad459d94279895",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0fed0088_6a15a490",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-24T22:51:47Z",
+      "side": 1,
+      "message": "check for a GL Error",
+      "range": {
+        "startLine": 479,
+        "startChar": 4,
+        "endLine": 479,
+        "endChar": 20
+      },
+      "revId": "5cf2d2137f60618489b428637fad459d94279895",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c16fdf3_600f2398",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 495,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-24T22:51:47Z",
+      "side": 1,
+      "message": "check for error, same for below.",
+      "range": {
+        "startLine": 495,
+        "startChar": 4,
+        "endLine": 495,
+        "endChar": 20
+      },
+      "revId": "5cf2d2137f60618489b428637fad459d94279895",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
