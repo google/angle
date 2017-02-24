@@ -96,6 +96,29 @@
     },
     {
       "key": {
+        "uuid": "63980524_51039b65",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 35
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-24T15:50:11Z",
+      "side": 1,
+      "message": "Sorry, this is not what I wanted. These values are the \"minimum maximum\", the smallest possible maximums allowed by GL. It is possible the API returns values much bigger. I want the test to use values that are larger than the minimum, but not too large, so they won\u0027t crash if the API returns very large values. Does that make sense?\n\nYuly, do you understand as well?",
+      "range": {
+        "startLine": 675,
+        "startChar": 0,
+        "endLine": 676,
+        "endChar": 55
+      },
+      "revId": "ea1427bf1346cc4ef155144d631fc69de09da5ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "419c55ae_caad5110",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 35
