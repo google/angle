@@ -107,6 +107,24 @@
     },
     {
       "key": {
+        "uuid": "180da6fe_65de9d62",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 695,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-02-24T14:19:49Z",
+      "side": 1,
+      "message": "hasTexture will not be true if it is lower than ES31. So the original code is correct too.",
+      "parentUuid": "d20183aa_0ac19320",
+      "revId": "21eba61d6589ad510999e8ee983eb0d280a446e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0b783597_cf271c5e",
         "filename": "src/tests/gl_tests/FramebufferTest.cpp",
         "patchSetId": 12
