@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "0ca0b8cd_45d4a231",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 645,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-24T16:54:03Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "54c03c70_6f491c25",
+      "revId": "10d3f4d1d4000cfa1dd05b0540e0e664f9a3874b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "20c8883a_740183eb",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
         "patchSetId": 12
@@ -30,6 +48,24 @@
       "writtenOn": "2017-02-22T20:34:12Z",
       "side": 1,
       "message": "nit: Consider making this a uint64_t to make sure we never wrap around.",
+      "revId": "10d3f4d1d4000cfa1dd05b0540e0e664f9a3874b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e86cda48_4d7e6227",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-24T16:54:03Z",
+      "side": 1,
+      "message": "I made this a hermetic type, with checks for overflow,and left a TODO to verify it\u0027s safe. Will bring it up next meeting.",
+      "parentUuid": "20c8883a_740183eb",
       "revId": "10d3f4d1d4000cfa1dd05b0540e0e664f9a3874b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "727c9553_53461542",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-24T16:54:03Z",
+      "side": 1,
+      "message": "I did consider this - but I\u0027m suspicious of deque for a couple reasons. \n\n1) random access is a nice thing to have. I\u0027m not sure if I use it, but it could come in handy.\n2) I don\u0027t know if STL makes any guarantees for performance with deque or how it is implemented. it could be slow on any platform.\n3) we can erase ranges of items from vector, making it a bit better than individual erase. I think I have this fixed in an upcoming patch.\n\nWe could also consider making our own type of heap for this, or using a blocked allocator with indexes in the deque type structure. Basically some custom fast implementation.",
+      "parentUuid": "ed3ae337_58f25ca2",
+      "revId": "10d3f4d1d4000cfa1dd05b0540e0e664f9a3874b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a9beb06f_659cc980",
         "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
         "patchSetId": 12
@@ -64,6 +118,30 @@
       "writtenOn": "2017-02-22T20:34:12Z",
       "side": 1,
       "message": "this branch of the || implies the other branch so it could be removed.",
+      "range": {
+        "startLine": 59,
+        "startChar": 12,
+        "endLine": 59,
+        "endChar": 40
+      },
+      "revId": "10d3f4d1d4000cfa1dd05b0540e0e664f9a3874b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f250d6d3_d29d1823",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-24T16:54:03Z",
+      "side": 1,
+      "message": "Good point. Done.",
+      "parentUuid": "a9beb06f_659cc980",
       "range": {
         "startLine": 59,
         "startChar": 12,
