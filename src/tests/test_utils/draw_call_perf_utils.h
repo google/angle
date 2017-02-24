@@ -24,8 +24,8 @@ GLuint SetupSimpleScaleAndOffsetProgram();
 // Returns buffer ID filled with 2-component triangle coordinates. The buffer is left as bound.
 // Generates triangles like this with 2-component coordinates:
 //    A
-//   / \
-//  /   \
+//   / \.
+//  /   \.
 // B-----C
 GLuint Create2DTriangleBuffer(size_t numTris, GLenum usage);
 
