@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "765b8e10_e6060a9a",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 643,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-02-24T11:27:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a893f90b_7e14ddbc",
+      "revId": "21eba61d6589ad510999e8ee983eb0d280a446e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b06cc523_46904ec1",
         "filename": "src/libANGLE/Framebuffer.cpp",
         "patchSetId": 12
@@ -30,6 +48,24 @@
       "writtenOn": "2017-02-24T08:15:53Z",
       "side": 1,
       "message": "Is there any way to get fixed sample locations directly from texture? It seems that only texture has this feature.",
+      "revId": "21eba61d6589ad510999e8ee983eb0d280a446e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a7323fd_c2676a07",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-02-24T11:27:13Z",
+      "side": 1,
+      "message": "Thank you, Jiajia. I have found a way to get fixed sample locations directly from texture, remove redundant getFixedSampleLocations() from other files.\nfixedSampleLocations \u003d colorAttachment.getTexture()-\u003egetFixedSampleLocations(colorAttachment.getTextureImageIndex().type, 0);",
+      "parentUuid": "b06cc523_46904ec1",
       "revId": "21eba61d6589ad510999e8ee983eb0d280a446e6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "d20183aa_0ac19320",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 695,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-02-24T11:27:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ac9147c1_b5fb1f11",
+      "revId": "21eba61d6589ad510999e8ee983eb0d280a446e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0b783597_cf271c5e",
         "filename": "src/tests/gl_tests/FramebufferTest.cpp",
         "patchSetId": 12
@@ -64,6 +118,24 @@
       "writtenOn": "2017-02-24T08:15:53Z",
       "side": 1,
       "message": "It seems that \u0027getClientMajorVersion() \u003c 3\u0027 won\u0027t happen. \nUse ASSERT_EQ(3, getClientMajorVersion());\n      if (getClientMinorVersion() \u003d\u003d 0)",
+      "revId": "21eba61d6589ad510999e8ee983eb0d280a446e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d9ae4f34_36bc6f53",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 428,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-02-24T11:27:13Z",
+      "side": 1,
+      "message": "I think version \u003c\u003d 3.1 is more explicit but I couldn\u0027t find a short expression like getClientVersion() \u003c Version(3,1).",
+      "parentUuid": "0b783597_cf271c5e",
       "revId": "21eba61d6589ad510999e8ee983eb0d280a446e6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
