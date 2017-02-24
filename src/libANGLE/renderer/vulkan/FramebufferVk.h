@@ -18,7 +18,7 @@ namespace rx
 class RenderTargetVk;
 class WindowSurfaceVk;
 
-class FramebufferVk : public FramebufferImpl
+class FramebufferVk : public FramebufferImpl, public ResourceVk
 {
   public:
     // Factory methods so we don't have to use constructors with overloads.
@@ -81,6 +81,7 @@ class FramebufferVk : public FramebufferImpl
 
     gl::Error beginRenderPass(VkDevice device,
                               vk::CommandBuffer *commandBuffer,
+                              Serial queueSerial,
                               const gl::State &glState);
 
     gl::ErrorOrResult<vk::RenderPass *> getRenderPass(VkDevice device);

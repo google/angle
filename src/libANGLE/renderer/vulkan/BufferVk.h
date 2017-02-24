@@ -16,7 +16,7 @@
 namespace rx
 {
 
-class BufferVk : public BufferImpl
+class BufferVk : public BufferImpl, public ResourceVk
 {
   public:
     BufferVk(const gl::BufferState &state);

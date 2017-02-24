@@ -177,7 +177,7 @@ gl::Error Error::toGL(GLenum glErrorCode) const
     }
 
     // TODO(jmadill): Set extended error code to 'vulkan internal error'.
-    const std::string &message = getExtendedMessage();
+    const std::string &message = toString();
     return gl::Error(glErrorCode, message.c_str());
 }
 
@@ -189,11 +189,11 @@ egl::Error Error::toEGL(EGLint eglErrorCode) const
     }
 
     // TODO(jmadill): Set extended error code to 'vulkan internal error'.
-    const std::string &message = getExtendedMessage();
+    const std::string &message = toString();
     return egl::Error(eglErrorCode, message.c_str());
 }
 
-std::string Error::getExtendedMessage() const
+std::string Error::toString() const
 {
     std::stringstream errorStream;
     errorStream << "Internal Vulkan error: " << VulkanResultString(mResult) << ", in " << mFile
@@ -827,6 +827,73 @@ Error PipelineLayout::init(VkDevice device, const VkPipelineLayoutCreateInfo &cr
     return NoError();
 }
 
+// Fence implementation.
+Fence::Fence()
+{
+}
+
+void Fence::destroy(VkDevice device)
+{
+    if (valid())
+    {
+        vkDestroyFence(device, mHandle, nullptr);
+        mHandle = VK_NULL_HANDLE;
+    }
+}
+
+Error Fence::init(VkDevice device, const VkFenceCreateInfo &createInfo)
+{
+    ASSERT(!valid());
+    ANGLE_VK_TRY(vkCreateFence(device, &createInfo, nullptr, &mHandle));
+    return NoError();
+}
+
+VkResult Fence::getStatus(VkDevice device) const
+{
+    return vkGetFenceStatus(device, mHandle);
+}
+
+// FenceAndCommandBuffer implementation.
+FenceAndCommandBuffer::FenceAndCommandBuffer(Serial queueSerial,
+                                             Fence &&fence,
+                                             CommandBuffer &&commandBuffer)
+    : mQueueSerial(queueSerial), mFence(std::move(fence)), mCommandBuffer(std::move(commandBuffer))
+{
+}
+
+FenceAndCommandBuffer::FenceAndCommandBuffer(FenceAndCommandBuffer &&other)
+    : mQueueSerial(std::move(other.mQueueSerial)),
+      mFence(std::move(other.mFence)),
+      mCommandBuffer(std::move(other.mCommandBuffer))
+{
+}
+
+void FenceAndCommandBuffer::destroy(VkDevice device)
+{
+    mFence.destroy(device);
+    mCommandBuffer.destroy(device);
+}
+
+vk::ErrorOrResult<bool> FenceAndCommandBuffer::finished(VkDevice device) const
+{
+    VkResult result = mFence.getStatus(device);
+    // Should this be a part of ANGLE_VK_TRY?
+    if (result == VK_NOT_READY)
+    {
+        return false;
+    }
+    ANGLE_VK_TRY(result);
+    return true;
+}
+
+FenceAndCommandBuffer &FenceAndCommandBuffer::operator=(FenceAndCommandBuffer &&other)
+{
+    std::swap(mQueueSerial, other.mQueueSerial);
+    mFence         = std::move(other.mFence);
+    mCommandBuffer = std::move(other.mCommandBuffer);
+    return *this;
+}
+
 }  // namespace vk
 
 Optional<uint32_t> FindMemoryType(const VkPhysicalDeviceMemoryProperties &memoryProps,
@@ -912,3 +979,9 @@ VkFrontFace GetFrontFace(GLenum frontFace)
 }  // namespace gl_vk
 
 }  // namespace rx
+
+std::ostream &operator<<(std::ostream &stream, const rx::vk::Error &error)
+{
+    stream << error.toString();
+    return stream;
+}

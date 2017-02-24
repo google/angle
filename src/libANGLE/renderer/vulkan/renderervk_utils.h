@@ -39,6 +39,71 @@ enum class TextureDimension
     TEX_2D_ARRAY,
 };
 
+enum DeleteSchedule
+{
+    NOW,
+    LATER,
+};
+
+// A serial supports a few operations - comparison, increment, and assignment.
+// TODO(jmadill): Verify it's not easy to overflow the queue serial.
+class Serial final
+{
+  public:
+    Serial() : mValue(0) {}
+    Serial(const Serial &other) : mValue(other.mValue) {}
+    Serial(Serial &&other) : mValue(other.mValue) { other.mValue = 0; }
+    Serial &operator=(const Serial &other)
+    {
+        mValue = other.mValue;
+        return *this;
+    }
+    bool operator>=(Serial other) const { return mValue >= other.mValue; }
+    bool operator>(Serial other) const { return mValue > other.mValue; }
+
+    // This function fails if we're at the limits of our counting.
+    bool operator++()
+    {
+        if (mValue == std::numeric_limits<uint32_t>::max())
+            return false;
+        mValue++;
+        return true;
+    }
+
+  private:
+    uint32_t mValue;
+};
+
+// This is a small helper mixin for any GL object used in Vk command buffers. It records a serial
+// at command submission times indicating it's order in the queue. We will use Fences to detect
+// when commands are finished, and then handle lifetime management for the resources.
+// Note that we use a queue order serial instead of a command buffer id serial since a queue can
+// submit multiple command buffers in one API call.
+class ResourceVk
+{
+  public:
+    void setQueueSerial(Serial queueSerial)
+    {
+        ASSERT(queueSerial >= mStoredQueueSerial);
+        mStoredQueueSerial = queueSerial;
+    }
+
+    DeleteSchedule getDeleteSchedule(Serial lastCompletedQueueSerial)
+    {
+        if (lastCompletedQueueSerial >= mStoredQueueSerial)
+        {
+            return DeleteSchedule::NOW;
+        }
+        else
+        {
+            return DeleteSchedule::LATER;
+        }
+    }
+
+  private:
+    Serial mStoredQueueSerial;
+};
+
 namespace vk
 {
 class DeviceMemory;
@@ -70,9 +135,9 @@ class Error final
 
     bool isError() const;
 
-  private:
-    std::string getExtendedMessage() const;
+    std::string toString() const;
 
+  private:
     VkResult mResult;
     const char *mFile;
     unsigned int mLine;
@@ -99,10 +164,17 @@ class WrappedObject : angle::NonCopyable
     WrappedObject(HandleT handle) : mHandle(handle) {}
     ~WrappedObject() { ASSERT(!valid()); }
 
-    // Only works to initialize empty objects, since we don't have the device handle.
     WrappedObject(WrappedObject &&other) : mHandle(other.mHandle)
     {
         other.mHandle = VK_NULL_HANDLE;
+    }
+
+    // Only works to initialize empty objects, since we don't have the device handle.
+    WrappedObject &operator=(WrappedObject &&other)
+    {
+        ASSERT(!valid());
+        std::swap(mHandle, other.mHandle);
+        return *this;
     }
 
     void retain(VkDevice device, DerivedT &&other)
@@ -134,6 +206,7 @@ class CommandBuffer final : public WrappedObject<CommandBuffer, VkCommandBuffer>
     CommandBuffer();
 
     void destroy(VkDevice device);
+    using WrappedObject::operator=;
 
     void setCommandPool(CommandPool *commandPool);
     Error begin(VkDevice device);
@@ -338,6 +411,36 @@ class PipelineLayout final : public WrappedObject<PipelineLayout, VkPipelineLayo
     Error init(VkDevice device, const VkPipelineLayoutCreateInfo &createInfo);
 };
 
+class Fence final : public WrappedObject<Fence, VkFence>
+{
+  public:
+    Fence();
+    void destroy(VkDevice fence);
+    using WrappedObject::retain;
+    using WrappedObject::operator=;
+
+    Error init(VkDevice device, const VkFenceCreateInfo &createInfo);
+    VkResult getStatus(VkDevice device) const;
+};
+
+class FenceAndCommandBuffer final : angle::NonCopyable
+{
+  public:
+    FenceAndCommandBuffer(Serial queueSerial, Fence &&fence, CommandBuffer &&commandBuffer);
+    FenceAndCommandBuffer(FenceAndCommandBuffer &&other);
+    FenceAndCommandBuffer &operator=(FenceAndCommandBuffer &&other);
+
+    void destroy(VkDevice device);
+    vk::ErrorOrResult<bool> finished(VkDevice device) const;
+
+    Serial queueSerial() const { return mQueueSerial; }
+
+  private:
+    Serial mQueueSerial;
+    Fence mFence;
+    CommandBuffer mCommandBuffer;
+};
+
 }  // namespace vk
 
 Optional<uint32_t> FindMemoryType(const VkPhysicalDeviceMemoryProperties &memoryProps,
@@ -364,5 +467,7 @@ VkFrontFace GetFrontFace(GLenum frontFace);
     ANGLE_EMPTY_STATEMENT
 
 #define ANGLE_VK_CHECK(test, error) ANGLE_VK_TRY(test ? VK_SUCCESS : error)
+
+std::ostream &operator<<(std::ostream &stream, const rx::vk::Error &error);
 
 #endif  // LIBANGLE_RENDERER_VULKAN_RENDERERVK_UTILS_H_

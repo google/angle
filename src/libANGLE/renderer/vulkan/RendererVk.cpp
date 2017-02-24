@@ -94,12 +94,25 @@ RendererVk::RendererVk()
       mCurrentQueueFamilyIndex(std::numeric_limits<uint32_t>::max()),
       mDevice(VK_NULL_HANDLE),
       mHostVisibleMemoryIndex(std::numeric_limits<uint32_t>::max()),
-      mGlslangWrapper(nullptr)
+      mGlslangWrapper(nullptr),
+      mCurrentQueueSerial(),
+      mLastCompletedQueueSerial(),
+      mInFlightCommands()
 {
+    ++mCurrentQueueSerial;
 }
 
 RendererVk::~RendererVk()
 {
+    if (!mInFlightCommands.empty())
+    {
+        vk::Error error = finish();
+        if (error.isError())
+        {
+            ERR() << "Error during VK shutdown: " << error;
+        }
+    }
+
     if (mGlslangWrapper)
     {
         GlslangWrapper::ReleaseReference();
@@ -584,10 +597,10 @@ vk::Error RendererVk::submitAndFinishCommandBuffer(const vk::CommandBuffer &comm
     submitInfo.pSignalSemaphores    = nullptr;
 
     // TODO(jmadill): Investigate how to properly submit command buffers.
-    ANGLE_VK_TRY(vkQueueSubmit(mQueue, 1, &submitInfo, VK_NULL_HANDLE));
+    ANGLE_TRY(submit(submitInfo));
 
     // Wait indefinitely for the queue to finish.
-    ANGLE_VK_TRY(vkQueueWaitIdle(mQueue));
+    ANGLE_TRY(finish());
 
     return vk::NoError();
 }
@@ -611,11 +624,71 @@ vk::Error RendererVk::waitThenFinishCommandBuffer(const vk::CommandBuffer &comma
     submitInfo.pSignalSemaphores    = nullptr;
 
     // TODO(jmadill): Investigate how to properly queue command buffer work.
-    ANGLE_VK_TRY(vkQueueSubmit(mQueue, 1, &submitInfo, VK_NULL_HANDLE));
+    ANGLE_TRY(submit(submitInfo));
 
     // Wait indefinitely for the queue to finish.
-    ANGLE_VK_TRY(vkQueueWaitIdle(mQueue));
+    ANGLE_TRY(finish());
 
+    return vk::NoError();
+}
+
+vk::Error RendererVk::finish()
+{
+    ASSERT(mQueue != VK_NULL_HANDLE);
+    checkInFlightCommands();
+    ANGLE_VK_TRY(vkQueueWaitIdle(mQueue));
+    return vk::NoError();
+}
+
+vk::Error RendererVk::checkInFlightCommands()
+{
+    // Check if any in-flight command buffers are finished.
+    for (size_t index = 0; index < mInFlightCommands.size();)
+    {
+        auto *inFlightCommand = &mInFlightCommands[index];
+
+        bool done = false;
+        ANGLE_TRY_RESULT(inFlightCommand->finished(mDevice), done);
+        if (done)
+        {
+            ASSERT(inFlightCommand->queueSerial() > mLastCompletedQueueSerial);
+            mLastCompletedQueueSerial = inFlightCommand->queueSerial();
+            inFlightCommand->destroy(mDevice);
+            mInFlightCommands.erase(mInFlightCommands.begin() + index);
+        }
+        else
+        {
+            ++index;
+        }
+    }
+
+    return vk::NoError();
+}
+
+vk::Error RendererVk::submit(const VkSubmitInfo &submitInfo)
+{
+    checkInFlightCommands();
+
+    // Start a Fence to record when this command buffer finishes.
+    VkFenceCreateInfo fenceInfo;
+    fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+    fenceInfo.pNext = nullptr;
+    fenceInfo.flags = 0;
+
+    vk::Fence fence;
+    ANGLE_TRY(fence.init(mDevice, fenceInfo));
+
+    ANGLE_VK_TRY(vkQueueSubmit(mQueue, 1, &submitInfo, fence.getHandle()));
+
+    // Store this command buffer in the in-flight list.
+    mInFlightCommands.emplace_back(vk::FenceAndCommandBuffer(mCurrentQueueSerial, std::move(fence),
+                                                             std::move(mCommandBuffer)));
+
+    // Sanity check.
+    ASSERT(mInFlightCommands.size() < 1000u);
+
+    // Increment the command buffer serial. If this fails, we need to restart ANGLE.
+    ANGLE_VK_CHECK(++mCurrentQueueSerial, VK_ERROR_OUT_OF_HOST_MEMORY);
     return vk::NoError();
 }
 
@@ -635,6 +708,11 @@ vk::Error RendererVk::createStagingImage(TextureDimension dimension,
 GlslangWrapper *RendererVk::getGlslangWrapper()
 {
     return mGlslangWrapper;
+}
+
+Serial RendererVk::getCurrentQueueSerial() const
+{
+    return mCurrentQueueSerial;
 }
 
 }  // namespace rx

@@ -72,6 +72,7 @@ gl::Error ContextVk::drawArrays(GLenum mode, GLint first, GLsizei count)
     const auto &programVk = GetImplAs<ProgramVk>(programGL);
     const auto *drawFBO   = state.getDrawFramebuffer();
     FramebufferVk *vkFBO  = GetImplAs<FramebufferVk>(drawFBO);
+    Serial queueSerial    = mRenderer->getCurrentQueueSerial();
 
     // { vertex, fragment }
     VkPipelineShaderStageCreateInfo shaderStages[2];
@@ -129,6 +130,8 @@ gl::Error ContextVk::drawArrays(GLenum mode, GLint first, GLsizei count)
             BufferVk *bufferVk = GetImplAs<BufferVk>(bufferGL);
             vertexHandles.push_back(bufferVk->getVkBuffer().getHandle());
             vertexOffsets.push_back(0);
+
+            bufferVk->setQueueSerial(queueSerial);
         }
         else
         {
@@ -269,7 +272,7 @@ gl::Error ContextVk::drawArrays(GLenum mode, GLint first, GLsizei count)
     mCurrentPipeline.retain(device, std::move(newPipeline));
 
     vk::CommandBuffer *commandBuffer = mRenderer->getCommandBuffer();
-    ANGLE_TRY(vkFBO->beginRenderPass(device, commandBuffer, state));
+    ANGLE_TRY(vkFBO->beginRenderPass(device, commandBuffer, queueSerial, state));
 
     commandBuffer->bindPipeline(VK_PIPELINE_BIND_POINT_GRAPHICS, mCurrentPipeline);
     commandBuffer->bindVertexBuffers(0, vertexHandles, vertexOffsets);

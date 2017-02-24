@@ -54,6 +54,7 @@ class RendererVk : angle::NonCopyable
     vk::Error submitAndFinishCommandBuffer(const vk::CommandBuffer &commandBuffer);
     vk::Error waitThenFinishCommandBuffer(const vk::CommandBuffer &commandBuffer,
                                           const vk::Semaphore &waitSemaphore);
+    vk::Error finish();
 
     const gl::Caps &getNativeCaps() const;
     const gl::TextureCapsMap &getNativeTextureCaps() const;
@@ -67,12 +68,16 @@ class RendererVk : angle::NonCopyable
 
     GlslangWrapper *getGlslangWrapper();
 
+    Serial getCurrentQueueSerial() const;
+
   private:
     void ensureCapsInitialized() const;
     void generateCaps(gl::Caps *outCaps,
                       gl::TextureCapsMap *outTextureCaps,
                       gl::Extensions *outExtensions,
                       gl::Limitations *outLimitations) const;
+    vk::Error submit(const VkSubmitInfo &submitInfo);
+    vk::Error checkInFlightCommands();
 
     mutable bool mCapsInitialized;
     mutable gl::Caps mNativeCaps;
@@ -95,6 +100,9 @@ class RendererVk : angle::NonCopyable
     vk::CommandBuffer mCommandBuffer;
     uint32_t mHostVisibleMemoryIndex;
     GlslangWrapper *mGlslangWrapper;
+    Serial mCurrentQueueSerial;
+    Serial mLastCompletedQueueSerial;
+    std::vector<vk::FenceAndCommandBuffer> mInFlightCommands;
 };
 
 }  // namespace rx

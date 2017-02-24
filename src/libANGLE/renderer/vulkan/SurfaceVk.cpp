@@ -150,6 +150,7 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState,
     mRenderTarget.extents.width  = static_cast<GLint>(width);
     mRenderTarget.extents.height = static_cast<GLint>(height);
     mRenderTarget.extents.depth  = 1;
+    mRenderTarget.resource       = this;
 }
 
 WindowSurfaceVk::~WindowSurfaceVk()

@@ -16,6 +16,7 @@
 
 namespace rx
 {
+class ResourceVk;
 
 namespace vk
 {
@@ -37,6 +38,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
     vk::ImageView *imageView;
     gl::Extents extents;
     VkSampleCountFlagBits samples;
+    ResourceVk *resource;
 };
 
 }  // namespace rx

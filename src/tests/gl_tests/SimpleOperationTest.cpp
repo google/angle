@@ -278,6 +278,7 @@ TEST_P(SimpleOperationTest, DrawQuadAndSwap)
     {
         drawQuad(program.get(), "position", 0.5f, 1.0f, true);
         EXPECT_GL_NO_ERROR();
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
         swapBuffers();
     }
 
