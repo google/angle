@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2e229db8_3aad0023",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1030,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-02-24T08:19:22Z",
+      "side": 1,
+      "message": "I think we should change bindElementArrayBuffer to use this style. Jiawei can you investigate why bindElementArrayBuffer did like that before?",
+      "parentUuid": "a708011e_26e30c18",
+      "range": {
+        "startLine": 1030,
+        "startChar": 4,
+        "endLine": 1030,
+        "endChar": 29
+      },
+      "revId": "a29b6ceb43fb16ae80b42a379d8927c07b3419a9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "160e2000_453cb996",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 9
@@ -139,6 +163,92 @@
       "side": 1,
       "message": "Because there are more limits in ES3.1.\nI just refer ES3.1 SPEC: Chapter 10.3.1 Page 245:\n...\nIn addition, any of the errors defined by VertexAttrib*Format and VertexAttribBinding\nmay be generated if the parameters passed to those commands\nin the equivalent code above would generate those errors.",
       "parentUuid": "b4d9e67a_1ce56909",
+      "revId": "a29b6ceb43fb16ae80b42a379d8927c07b3419a9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f400004_9a988b9a",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 3907,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-02-24T08:19:22Z",
+      "side": 1,
+      "message": "Maybe this validation function can be rewritten with the new helper funciton added in validationES31.cpp to avoid some duplicate code. Such that VertexAttribPointer and VertexAttribIPointer can share some common validations.  Also we should check if the webgl part in this validation is still available in ES31.",
+      "parentUuid": "b4d9e67a_1ce56909",
+      "revId": "a29b6ceb43fb16ae80b42a379d8927c07b3419a9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9f22424_34863f08",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2189,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-02-24T08:19:22Z",
+      "side": 1,
+      "message": "nullptr",
+      "revId": "a29b6ceb43fb16ae80b42a379d8927c07b3419a9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0843b052_817ad3c0",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2191,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-02-24T08:19:22Z",
+      "side": 1,
+      "message": "Add error message",
+      "revId": "a29b6ceb43fb16ae80b42a379d8927c07b3419a9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b016b42d_3ccc7735",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 593,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-02-24T08:19:22Z",
+      "side": 1,
+      "message": "It\u0027s better to use text in spec as much as possible when you rewrite old code. Here and other possible places.",
+      "revId": "a29b6ceb43fb16ae80b42a379d8927c07b3419a9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f7899d3_cc53e882",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 774,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-02-24T08:19:22Z",
+      "side": 1,
+      "message": "It\u0027s better to be consistent with the name for this argument.",
       "revId": "a29b6ceb43fb16ae80b42a379d8927c07b3419a9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
