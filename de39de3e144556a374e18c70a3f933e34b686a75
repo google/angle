@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f87bdc9_8163985b",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 512,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-27T19:39:27Z",
+      "side": 1,
+      "message": "is there any need to use pointers here? I think you can change all of these const * to const \u0026. This will allow you to remove the ASSERT.",
+      "range": {
+        "startLine": 512,
+        "startChar": 40,
+        "endLine": 512,
+        "endChar": 69
+      },
+      "revId": "de39de3e144556a374e18c70a3f933e34b686a75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4816ad0_366d24c6",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 588,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-27T19:39:27Z",
+      "side": 1,
+      "message": "for some reason the grammar on this was confusing me - how about just isShaderVariable?",
+      "range": {
+        "startLine": 588,
+        "startChar": 9,
+        "endLine": 588,
+        "endChar": 29
+      },
+      "revId": "de39de3e144556a374e18c70a3f933e34b686a75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "72954804_0ffd0404",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-27T19:39:27Z",
+      "side": 1,
+      "message": "you can put this in the if statement condition.",
+      "range": {
+        "startLine": 592,
+        "startChar": 4,
+        "endLine": 592,
+        "endChar": 91
+      },
+      "revId": "de39de3e144556a374e18c70a3f933e34b686a75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "865431ab_42ac0290",
+        "filename": "src/tests/compiler_tests/CollectVariables_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 744,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-27T19:39:27Z",
+      "side": 1,
+      "message": "please add a comment before the test.",
+      "range": {
+        "startLine": 744,
+        "startChar": 0,
+        "endLine": 744,
+        "endChar": 6
+      },
+      "revId": "de39de3e144556a374e18c70a3f933e34b686a75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "20f72d4e_ad94b286",
+        "filename": "src/tests/compiler_tests/CollectVariables_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 777,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-27T19:39:27Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 777,
+        "startChar": 0,
+        "endLine": 777,
+        "endChar": 6
+      },
+      "revId": "de39de3e144556a374e18c70a3f933e34b686a75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
