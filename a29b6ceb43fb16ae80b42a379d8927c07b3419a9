@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "29089c1d_d8c3a17d",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1030,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-27T13:48:08Z",
+      "side": 1,
+      "message": "Other functions all have its unique dirty bit and should be set by the correspond GL function (such as gl.bindVertexBuffer here).\n\nElementArrayBuffers are set by BufferData() and bound to GL_ELEMENT_ARRAY_BUFFER every time before drawElements(). It is not updated by a specific GL function.",
+      "parentUuid": "2e229db8_3aad0023",
+      "range": {
+        "startLine": 1030,
+        "startChar": 4,
+        "endLine": 1030,
+        "endChar": 29
+      },
+      "revId": "a29b6ceb43fb16ae80b42a379d8927c07b3419a9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "160e2000_453cb996",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 9
@@ -222,6 +246,24 @@
       "writtenOn": "2017-02-24T08:19:22Z",
       "side": 1,
       "message": "Maybe this validation function can be rewritten with the new helper funciton added in validationES31.cpp to avoid some duplicate code. Such that VertexAttribPointer and VertexAttribIPointer can share some common validations.  Also we should check if the webgl part in this validation is still available in ES31.",
+      "parentUuid": "b4d9e67a_1ce56909",
+      "revId": "a29b6ceb43fb16ae80b42a379d8927c07b3419a9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "273e86b0_ed9e8ba8",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 3907,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-27T13:48:08Z",
+      "side": 1,
+      "message": "I have added the new limits directly in this function instead of using this one.",
       "parentUuid": "b4d9e67a_1ce56909",
       "revId": "a29b6ceb43fb16ae80b42a379d8927c07b3419a9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
