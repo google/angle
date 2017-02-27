@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "47a78cfd_1cecd723",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 594,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-27T12:51:58Z",
+      "side": 1,
+      "message": "nit: if (!isRecorded) {return true;} then have the rest of the code dedented.",
+      "revId": "7ead1b8f7b93fdae80aa8fd08cdfbcdbc8ed19eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "08ab3d84_aec96670",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 603,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-27T12:51:58Z",
+      "side": 1,
+      "message": "nit: re-wrap that comment.",
+      "revId": "7ead1b8f7b93fdae80aa8fd08cdfbcdbc8ed19eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
