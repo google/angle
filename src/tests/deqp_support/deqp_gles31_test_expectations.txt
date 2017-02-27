@@ -1434,12 +1434,3 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.layout_binding.ssbo.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.layout_binding.image.image2d.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.layout_binding.image.image3d.* = FAIL
-
-1893 OPENGL D3D11 : dEQP-GLES31.functional.layout_binding.negative.sampler.sampler2d.binding_contradictory = FAIL
-1893 OPENGL D3D11 : dEQP-GLES31.functional.layout_binding.negative.sampler.sampler2d.binding_contradictory_array = FAIL
-1893 OPENGL D3D11 : dEQP-GLES31.functional.layout_binding.negative.sampler.sampler3d.binding_contradictory = FAIL
-1893 OPENGL D3D11 : dEQP-GLES31.functional.layout_binding.negative.sampler.sampler3d.binding_contradictory_array = FAIL
-1893 OPENGL D3D11 : dEQP-GLES31.functional.layout_binding.negative.image.image2d.binding_contradictory = FAIL
-1893 OPENGL D3D11 : dEQP-GLES31.functional.layout_binding.negative.image.image2d.binding_contradictory_array = FAIL
-1893 OPENGL D3D11 : dEQP-GLES31.functional.layout_binding.negative.image.image3d.binding_contradictory = FAIL
-1893 OPENGL D3D11 : dEQP-GLES31.functional.layout_binding.negative.image.image3d.binding_contradictory_array = FAIL

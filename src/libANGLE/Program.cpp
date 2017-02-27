@@ -2391,6 +2391,8 @@ bool Program::linkValidateVariablesBase(InfoLog &infoLog, const std::string &var
     return true;
 }
 
+// GLSL ES Spec 3.00.3, section 4.3.5.
+// GLSL ES Spec 3.10.4, section 4.4.5.
 bool Program::linkValidateUniforms(InfoLog &infoLog, const std::string &uniformName, const sh::Uniform &vertexUniform, const sh::Uniform &fragmentUniform)
 {
 #if ANGLE_PROGRAM_LINK_VALIDATE_UNIFORM_PRECISION == ANGLE_ENABLED
@@ -2401,6 +2403,14 @@ bool Program::linkValidateUniforms(InfoLog &infoLog, const std::string &uniformN
 
     if (!linkValidateVariablesBase(infoLog, uniformName, vertexUniform, fragmentUniform, validatePrecision))
     {
+        return false;
+    }
+
+    if (vertexUniform.binding != -1 && fragmentUniform.binding != -1 &&
+        vertexUniform.binding != fragmentUniform.binding)
+    {
+        infoLog << "Binding layout qualifiers for " << uniformName
+                << " differ between vertex and fragment shaders.";
         return false;
     }
 
