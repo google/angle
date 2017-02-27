@@ -1,0 +1,192 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dfaa0d23_3cf65eb2",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 643,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-27T13:36:16Z",
+      "side": 1,
+      "message": "This condition isn\u0027t needed as fixed sample locations will default to true on non-ES31 contexts.",
+      "revId": "cd60d5bb97c6cdde4103e003167784aea8f0cfa4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5412dd9e_7eb22eaa",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 645,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-27T13:36:16Z",
+      "side": 1,
+      "message": "nit: hoist colorAttachment.getTexture()-\u003egetFixedSampleLocations(colorAttachment.getTextureImageIndex().type, 0) outside of the if.",
+      "revId": "cd60d5bb97c6cdde4103e003167784aea8f0cfa4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9abf579c_e2758671",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 704,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-27T13:36:16Z",
+      "side": 1,
+      "message": "This block should be put outside of the loop.",
+      "range": {
+        "startLine": 698,
+        "startChar": 1,
+        "endLine": 704,
+        "endChar": 13
+      },
+      "revId": "cd60d5bb97c6cdde4103e003167784aea8f0cfa4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dccfc20b_ec9ca6b0",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 852,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-27T13:36:16Z",
+      "side": 1,
+      "message": "this side of the condition isn\u0027t needed because the DefaultWidth and DefaultHeight default to 0.",
+      "range": {
+        "startLine": 845,
+        "startChar": 1,
+        "endLine": 852,
+        "endChar": 8
+      },
+      "revId": "cd60d5bb97c6cdde4103e003167784aea8f0cfa4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2e8eb359_479a7b35",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-27T13:36:16Z",
+      "side": 1,
+      "message": "these two aren\u0027t needed.",
+      "range": {
+        "startLine": 405,
+        "startChar": 0,
+        "endLine": 406,
+        "endChar": 33
+      },
+      "revId": "cd60d5bb97c6cdde4103e003167784aea8f0cfa4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d3a26fd_5f5c9322",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 409,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-27T13:36:16Z",
+      "side": 1,
+      "message": "nit: Test that without attachment, if either the value of ___ or ___ is zero, the framebuffer is incomplete.",
+      "revId": "cd60d5bb97c6cdde4103e003167784aea8f0cfa4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c69f4c32_52347178",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-27T13:36:16Z",
+      "side": 1,
+      "message": "This condition will always be true after the change in [1]",
+      "revId": "cd60d5bb97c6cdde4103e003167784aea8f0cfa4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a37f1e04_2c2ecad1",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 445,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-27T13:36:16Z",
+      "side": 1,
+      "message": "[1] instantiate the test only for ES31 contexts since it tests ES31 specific functionality.",
+      "revId": "cd60d5bb97c6cdde4103e003167784aea8f0cfa4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2eb4ed73_6f8407ee",
+        "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-27T13:36:16Z",
+      "side": 1,
+      "message": "TextureMultisampleTestES31 always runs in ES31 mode, see ANGLE_INSTANTIATE_TEST at the bottom of the file. This condition could be removed and only the else clause kept.",
+      "revId": "cd60d5bb97c6cdde4103e003167784aea8f0cfa4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "99e7c817_03653a03",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-27T13:36:16Z",
+      "side": 1,
+      "message": "All changes to ANGLETest won\u0027t be needed anymore so you don\u0027t need to fix this. But FYI anyway. To use Version.h you should move it to common/ to avoid the relative include. Also you could move the ES_*_* definitions from ContextState.h to common/Version.h.",
+      "revId": "cd60d5bb97c6cdde4103e003167784aea8f0cfa4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
