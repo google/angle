@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "bb828f2e_299a4b5b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-02-27T21:48:36Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "5601162b_e8d01831",
+      "range": {
+        "startLine": 88,
+        "startChar": 9,
+        "endLine": 88,
+        "endChar": 16
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dcf63952_2d016485",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "212e3416_984bbd05",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-02-27T21:48:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dcf63952_2d016485",
+      "range": {
+        "startLine": 220,
+        "startChar": 9,
+        "endLine": 220,
+        "endChar": 14
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "75d9cbf5_89b64ed7",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 2
@@ -59,6 +107,30 @@
       "writtenOn": "2017-02-20T15:43:02Z",
       "side": 1,
       "message": "fboData.getDepthOrStencilAttachment is what you\u0027re looking for here I think.",
+      "range": {
+        "startLine": 231,
+        "startChar": 4,
+        "endLine": 235,
+        "endChar": 55
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "06c4ce91_33b663b5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-02-27T21:48:36Z",
+      "side": 1,
+      "message": "Normally i\u0027d agree, but in this case we need the component values anyway so this saves us an unnecessary call with all it\u0027s nested indirection to get data we already have locally.",
+      "parentUuid": "75d9cbf5_89b64ed7",
       "range": {
         "startLine": 231,
         "startChar": 4,
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "d2e8c8a6_c043e9bf",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-02-27T21:48:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3ecca38a_993fc434",
+      "range": {
+        "startLine": 281,
+        "startChar": 9,
+        "endLine": 281,
+        "endChar": 27
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c867214b_0d22d217",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 2
@@ -105,6 +201,30 @@
       "writtenOn": "2017-02-20T15:43:02Z",
       "side": 1,
       "message": "std::array. I do like making this stack-allocated.\n\naside: a stack-allocated version of std::vector with a maximum size. would be useful for these kinds of things (I implemented this at one point but never saw it through).",
+      "range": {
+        "startLine": 304,
+        "startChar": 28,
+        "endLine": 304,
+        "endChar": 38
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3961856c_2869a2a0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-02-27T21:48:36Z",
+      "side": 1,
+      "message": "I kept it like this since there is no real need for the additional functionality added by std::array and it makes the code more difficult to read unnecessarily.",
+      "parentUuid": "c867214b_0d22d217",
       "range": {
         "startLine": 304,
         "startChar": 28,
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "fbe4d548_e694a111",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-02-27T21:48:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "877afa5a_26f7292b",
+      "range": {
+        "startLine": 432,
+        "startChar": 8,
+        "endLine": 432,
+        "endChar": 58
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c75d621f_af309dfc",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 2
@@ -160,6 +304,30 @@
       "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "636485ae_f092b865",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-02-27T21:48:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c75d621f_af309dfc",
+      "range": {
+        "startLine": 549,
+        "startChar": 23,
+        "endLine": 549,
+        "endChar": 28
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -186,6 +354,30 @@
     },
     {
       "key": {
+        "uuid": "000f23e3_09a3a6a4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 572,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-02-27T21:48:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "15d55830_80a84434",
+      "range": {
+        "startLine": 572,
+        "startChar": 34,
+        "endLine": 572,
+        "endChar": 42
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "14888f29_b2dd43bc",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 2
@@ -197,6 +389,30 @@
       "writtenOn": "2017-02-20T15:43:02Z",
       "side": 1,
       "message": "setOneTimeRenderTargets.. but this function is a bit limited to std::vector. Easiest fix is to take a pointer and count, instead of a const std::vector\u003c\u003e \u0026.",
+      "range": {
+        "startLine": 595,
+        "startChar": 19,
+        "endLine": 595,
+        "endChar": 37
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "335f0ce4_dd7828ab",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-02-27T21:48:36Z",
+      "side": 1,
+      "message": "It would be inconsistent with the rest of the function to use a helper like setOneTimeRenderTargets or something similar here. For the rest of the function, the D3D11 context APIs are called directly so I am not sure why this would be any different. In any case, the dirty state is set below using the markAllStateDirty call.",
+      "parentUuid": "14888f29_b2dd43bc",
       "range": {
         "startLine": 595,
         "startChar": 19,
@@ -232,6 +448,30 @@
     },
     {
       "key": {
+        "uuid": "f29360c4_435de121",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 607,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-02-27T21:48:36Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "19446a8c_6135f120",
+      "range": {
+        "startLine": 607,
+        "startChar": 0,
+        "endLine": 607,
+        "endChar": 64
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0f1e83f5_71fb5969",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 2
@@ -243,6 +483,30 @@
       "writtenOn": "2017-02-20T15:43:02Z",
       "side": 1,
       "message": "nit: flatten the else, it\u0027s not necessary.",
+      "range": {
+        "startLine": 619,
+        "startChar": 3,
+        "endLine": 621,
+        "endChar": 5
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "73b513c3_3dc75f1f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 621,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-02-27T21:48:36Z",
+      "side": 1,
+      "message": "I can do that. Just was following how this was handled before and with items like getDepthStencilState also used for fetching cached state. Will adjust those too for consistency.",
+      "parentUuid": "0f1e83f5_71fb5969",
       "range": {
         "startLine": 619,
         "startChar": 3,

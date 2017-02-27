@@ -22,6 +22,30 @@
       "revId": "4e0e6f8acf8b56898add4facb3af6ffa409cc1d0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "64f62947_e3a9a159",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-02-27T21:48:36Z",
+      "side": 0,
+      "message": "Ack",
+      "parentUuid": "0917c1f1_5dd58916",
+      "range": {
+        "startLine": 88,
+        "startChar": 4,
+        "endLine": 88,
+        "endChar": 32
+      },
+      "revId": "4e0e6f8acf8b56898add4facb3af6ffa409cc1d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
