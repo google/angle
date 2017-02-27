@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5b31a78b_2eda9c73",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-27T13:12:15Z",
+      "side": 1,
+      "message": "nit: How about having mRenderer-\u003egetCommandBuffer() always be in the begin state and have mRenderer-\u003esubmit end it? It would remove most of the need for being() and end() outside of Renderer.",
+      "revId": "3dad1946e3349d827ca9b842ddf75da3ffec42ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95f4a2a2_5021d028",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-27T13:12:15Z",
+      "side": 1,
+      "message": "Why are there two granularities? On the CPU side we can only do things at queue submit granularity so it seems it would be more efficient to have a std::vector\u003cInFlightQueueSubmit\u003e with In FlightQueueSubmit having a serial, a fence and a vector of command buffers.",
+      "revId": "3dad1946e3349d827ca9b842ddf75da3ffec42ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e49ac435_53d31b98",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-02-27T13:12:15Z",
+      "side": 1,
+      "message": "mGarbage is never written to and is dead code.",
+      "revId": "3dad1946e3349d827ca9b842ddf75da3ffec42ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
