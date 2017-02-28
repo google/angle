@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "05b7daa1_bb0cac01",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2395,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-02-28T14:13:13Z",
+      "side": 1,
+      "message": "I looked in this section but didn\u0027t see any mention of linking errors - I saw the table in section 9.2.1 and this seems to indicate that binding qualifiers must match - ie, it would be an error to have one unspecified and one with a location. Currently in your code this is allowed. Can you confirm this and check there\u0027s a test for this, adding one if absent?",
+      "range": {
+        "startLine": 2395,
+        "startChar": 0,
+        "endLine": 2395,
+        "endChar": 38
+      },
+      "revId": "f8c17bc9c262367614af6355d151e8bcb710e35c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
