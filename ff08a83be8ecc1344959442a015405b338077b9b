@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a1132c07_22d3b25d",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1964,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-02-28T08:13:25Z",
+      "side": 1,
+      "message": "Use ASSERT(static_cast\u003csize_t\u003e(index) \u003c mVertexArray-\u003egetMaxBindings()); Same to below cases.",
+      "range": {
+        "startLine": 1964,
+        "startChar": 10,
+        "endLine": 1964,
+        "endChar": 74
+      },
+      "revId": "ff08a83be8ecc1344959442a015405b338077b9b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a2d49df7_9323ff19",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-02-28T08:13:25Z",
+      "side": 1,
+      "message": "Does anywhere use this function?",
+      "revId": "ff08a83be8ecc1344959442a015405b338077b9b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35f321ec_fcb8ff1a",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3905,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-02-28T08:13:25Z",
+      "side": 1,
+      "message": "Put ValidateVertexAttribFormatBase function definition in this file. Don\u0027t call high version\u0027s function in lower version file.",
+      "range": {
+        "startLine": 3905,
+        "startChar": 9,
+        "endLine": 3905,
+        "endChar": 39
+      },
+      "revId": "ff08a83be8ecc1344959442a015405b338077b9b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2bbefac5_43e1b17b",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 13
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-02-28T08:13:25Z",
+      "side": 1,
+      "message": "Why it is \u0027SKIP\u0027?",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 70
+      },
+      "revId": "ff08a83be8ecc1344959442a015405b338077b9b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
