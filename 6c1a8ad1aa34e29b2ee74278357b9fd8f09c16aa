@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a794464_0f6ce7b6",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 41
+      },
+      "lineNbr": 714,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-28T00:05:21Z",
+      "side": 1,
+      "message": "This is not what Jamie and I wanted.\nI have tried to figure out what\u0027s the largest possible size that can be tested, and:\n1) [dataOffset + count * dataStride] array index is limited by size_t,\n2) glBufferData() and glBufferSubData() inputSize parameter is limited by GLsizeiptr.\nOn 64 bit Nexus 5X std::numeric_limits\u003cstd::size_t\u003e::max() is 0xFFFFFFFFFFFFFFFF,\nand std::numeric_limits\u003cGLsizeiptr\u003e::max() is 0x7FFFFFFFFFFFFFFF.\nWhich means GL_MAX_VERTEX_ATTRIB_STRIDE which is 0x7FFFFFFF could be used easily.\nSo, you just need to change the types you use in drawArraysWithStrideAndOffset so that they can hold such big values.\n\nTo be on the safe side on other platforms, I think std::numeric_limits\u003cGLsizeiptr\u003e::max() / mVertexCount / TypeStride(GL_FLOAT) is the maximum stride you could use when offset is 0. You should compare GL_MAX_VERTEX_ATTRIB_STRIDE to that, and if GL_MAX_VERTEX_ATTRIB_STRIDE is bigger, use the formula above.",
+      "range": {
+        "startLine": 714,
+        "startChar": 24,
+        "endLine": 714,
+        "endChar": 88
+      },
+      "revId": "6c1a8ad1aa34e29b2ee74278357b9fd8f09c16aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23f57653_17a0f653",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 41
+      },
+      "lineNbr": 727,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-02-28T00:05:21Z",
+      "side": 1,
+      "message": "Here I think std::numeric_limits\u003cGLsizeiptr\u003e::max() / TypeStride(GL_FLOAT) is the maximal possible offset. Same logic as above should be applied.",
+      "range": {
+        "startLine": 726,
+        "startChar": 24,
+        "endLine": 727,
+        "endChar": 86
+      },
+      "revId": "6c1a8ad1aa34e29b2ee74278357b9fd8f09c16aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
