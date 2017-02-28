@@ -22,6 +22,30 @@
       "revId": "f8c17bc9c262367614af6355d151e8bcb710e35c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "21905b61_00c1dfc3",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2395,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-02-28T14:24:46Z",
+      "side": 1,
+      "message": "Spec quote: \"A link-time error will result if two shaders in a program specify different integer-constant bindings for the same opaque-uniform name.  However, it is not an error to specify a binding on some but not all declarations for the same name, as shown in the examples below. \" Are you looking at the newest revision of the spec?",
+      "parentUuid": "05b7daa1_bb0cac01",
+      "range": {
+        "startLine": 2395,
+        "startChar": 0,
+        "endLine": 2395,
+        "endChar": 38
+      },
+      "revId": "f8c17bc9c262367614af6355d151e8bcb710e35c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
