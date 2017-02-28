@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d82eec8a_2def82b6",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 41
+      },
+      "lineNbr": 714,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-28T02:31:44Z",
+      "side": 1,
+      "message": "A stride should be GLisizei in vertexAttribPointer. std::numeric_limits\u003cGLsizeiptr\u003e::max() / mVertexCount is overflow in type GLint, so I don\u0027t think it suitable to be used as the maximum value of stride.",
+      "parentUuid": "0a794464_0f6ce7b6",
+      "range": {
+        "startLine": 714,
+        "startChar": 24,
+        "endLine": 714,
+        "endChar": 88
+      },
+      "revId": "6c1a8ad1aa34e29b2ee74278357b9fd8f09c16aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "23f57653_17a0f653",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 41
@@ -36,6 +60,30 @@
       "writtenOn": "2017-02-28T00:05:21Z",
       "side": 1,
       "message": "Here I think std::numeric_limits\u003cGLsizeiptr\u003e::max() / TypeStride(GL_FLOAT) is the maximal possible offset. Same logic as above should be applied.",
+      "range": {
+        "startLine": 726,
+        "startChar": 24,
+        "endLine": 727,
+        "endChar": 86
+      },
+      "revId": "6c1a8ad1aa34e29b2ee74278357b9fd8f09c16aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "927e5028_0e9f87b9",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 41
+      },
+      "lineNbr": 727,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-02-28T02:31:44Z",
+      "side": 1,
+      "message": "The offset should be translated into a void *pointer in vertexAttribPointer, so I agree with you here.\n\nSo what we should do here is to prevent using too large offset and stride from having math overflow in computing dataOffset + count * dataStride, am I right?",
+      "parentUuid": "23f57653_17a0f653",
       "range": {
         "startLine": 726,
         "startChar": 24,
