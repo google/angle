@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a476ffb_bb5a95df",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-01T16:47:06Z",
+      "side": 1,
+      "message": "Can remove all of these I think.  It can just be:\n\n   class FramebufferTest_ES31 : public ANGLETest\n   {\n   };",
+      "range": {
+        "startLine": 397,
+        "startChar": 0,
+        "endLine": 402,
+        "endChar": 55
+      },
+      "revId": "95d551718dbf1b6ff0b701b07ff5a8680a7bc0a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "54e18011_5ed3d56f",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 404,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-01T16:47:06Z",
+      "side": 1,
+      "message": "Can you put these in the tests themselves as local variables?  When the ANGLETest destructs, there may not be a context.",
+      "range": {
+        "startLine": 404,
+        "startChar": 4,
+        "endLine": 404,
+        "endChar": 31
+      },
+      "revId": "95d551718dbf1b6ff0b701b07ff5a8680a7bc0a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "34673681_4c71198d",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 444,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-01T16:47:06Z",
+      "side": 1,
+      "message": "Same comment about the locals, can remove this whole class and just use FramebufferTest_ES31.",
+      "range": {
+        "startLine": 437,
+        "startChar": 0,
+        "endLine": 444,
+        "endChar": 2
+      },
+      "revId": "95d551718dbf1b6ff0b701b07ff5a8680a7bc0a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
