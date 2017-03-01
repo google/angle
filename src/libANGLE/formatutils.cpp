@@ -618,7 +618,12 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
     AddDepthStencilFormat(&map, GL_STENCIL_INDEX8, 0, 8, 0, GL_STENCIL, GL_UNSIGNED_BYTE, GL_UNSIGNED_NORMALIZED, RequireES<2, 0>, RequireES<2, 0>, NeverSupported);
 
     // From GL_ANGLE_lossy_etc_decode
-    map.insert(InternalFormatInfoPair(GL_ETC1_RGB8_LOSSY_DECODE_ANGLE, CompressedFormat(4, 4, 64, 3, GL_ETC1_RGB8_LOSSY_DECODE_ANGLE, GL_UNSIGNED_BYTE, false, RequireExt<&Extensions::lossyETCDecode>, NeverSupported, AlwaysSupported)));
+    //                               | Internal format                                                |                |W |H |BS |CC| Format                                                         | Type            | SRGB | Supported                                                                                     | Renderable     | Filterable    |
+    map.insert(InternalFormatInfoPair(GL_ETC1_RGB8_LOSSY_DECODE_ANGLE,                                 CompressedFormat(4, 4, 64, 3, GL_ETC1_RGB8_LOSSY_DECODE_ANGLE,                                 GL_UNSIGNED_BYTE, false, RequireExt<&Extensions::lossyETCDecode>, NeverSupported, AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_COMPRESSED_RGB8_LOSSY_DECODE_ETC2_ANGLE,                      CompressedFormat(4, 4, 64, 3, GL_COMPRESSED_RGB8_LOSSY_DECODE_ETC2_ANGLE,                      GL_UNSIGNED_BYTE, false, RequireExt<&Extensions::lossyETCDecode>, NeverSupported, AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_COMPRESSED_SRGB8_LOSSY_DECODE_ETC2_ANGLE,                     CompressedFormat(4, 4, 64, 3, GL_COMPRESSED_SRGB8_LOSSY_DECODE_ETC2_ANGLE,                     GL_UNSIGNED_BYTE, true,  RequireExt<&Extensions::lossyETCDecode>, NeverSupported, AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_LOSSY_DECODE_ETC2_ANGLE,  CompressedFormat(4, 4, 64, 3, GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_LOSSY_DECODE_ETC2_ANGLE,  GL_UNSIGNED_BYTE, false, RequireExt<&Extensions::lossyETCDecode>, NeverSupported, AlwaysSupported)));
+    map.insert(InternalFormatInfoPair(GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_LOSSY_DECODE_ETC2_ANGLE, CompressedFormat(4, 4, 64, 3, GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_LOSSY_DECODE_ETC2_ANGLE, GL_UNSIGNED_BYTE, true,  RequireExt<&Extensions::lossyETCDecode>, NeverSupported, AlwaysSupported)));
 
     // From GL_EXT_texture_norm16
     //                 | Internal format     | R | G | B | A |S | Format         | Type                           | Component type        | SRGB | Texture supported                        | Renderable                               | Filterable    |
