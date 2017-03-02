@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c25e98bb_ea58a738",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2525,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-02T17:11:35Z",
+      "side": 1,
+      "message": "Should this be validated in the compiler instead?",
+      "range": {
+        "startLine": 2521,
+        "startChar": 8,
+        "endLine": 2525,
+        "endChar": 9
+      },
+      "revId": "162843766fc5fe31a027c39ca855faf2fcd4ef6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1536efae_66502b0e",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2533,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-02T17:11:35Z",
+      "side": 1,
+      "message": "Same as above.",
+      "range": {
+        "startLine": 2529,
+        "startChar": 8,
+        "endLine": 2533,
+        "endChar": 9
+      },
+      "revId": "162843766fc5fe31a027c39ca855faf2fcd4ef6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
