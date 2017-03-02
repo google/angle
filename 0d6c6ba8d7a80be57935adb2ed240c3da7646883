@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "917dca04_16c81a7a",
+        "filename": "src/image_util/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1198,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2017-03-02T22:49:09Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "b3cdeca7_837cf9aa",
+      "revId": "0d6c6ba8d7a80be57935adb2ed240c3da7646883",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bed11e68_a93b3a28",
         "filename": "src/image_util/loadimage_etc.cpp",
         "patchSetId": 1
@@ -33,6 +51,24 @@
       "revId": "0d6c6ba8d7a80be57935adb2ed240c3da7646883",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f0a8fd81_7deaa9b9",
+        "filename": "src/image_util/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1237,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2017-03-02T22:49:09Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "bed11e68_a93b3a28",
+      "revId": "0d6c6ba8d7a80be57935adb2ed240c3da7646883",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "e6fe1553_920f2f83",
+        "filename": "src/image_util/loadimage_etc.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1244,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2017-03-02T22:49:09Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "c748d374_8b4cd18d",
+      "revId": "0d6c6ba8d7a80be57935adb2ed240c3da7646883",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b244fca8_5fb93a48",
         "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_map.json",
         "patchSetId": 1
@@ -67,6 +121,24 @@
       "revId": "0d6c6ba8d7a80be57935adb2ed240c3da7646883",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "756cf469_8f9f3d13",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_map.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2017-03-02T22:49:09Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "b244fca8_5fb93a48",
+      "revId": "0d6c6ba8d7a80be57935adb2ed240c3da7646883",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "b9401fbe_1f6dfa08",
+        "filename": "src/libANGLE/renderer/load_functions_data.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2017-03-02T22:49:09Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "35dd422d_80aa398c",
+      "revId": "0d6c6ba8d7a80be57935adb2ed240c3da7646883",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5a780a9b_6a4efdf6",
         "filename": "src/libANGLE/renderer/load_functions_data.json",
         "patchSetId": 1
@@ -101,6 +191,24 @@
       "revId": "0d6c6ba8d7a80be57935adb2ed240c3da7646883",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a9a865d6_9a6813c2",
+        "filename": "src/libANGLE/renderer/load_functions_data.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 533,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2017-03-02T22:49:09Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "5a780a9b_6a4efdf6",
+      "revId": "0d6c6ba8d7a80be57935adb2ed240c3da7646883",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "8cafe35a_8db06613",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1717,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2017-03-02T22:49:09Z",
+      "side": 1,
+      "message": "It suppose to be implemented in my next CL. I\u0027ll take those formats out.",
+      "parentUuid": "a80d24d3_3580f932",
+      "revId": "0d6c6ba8d7a80be57935adb2ed240c3da7646883",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e954e8be_74ca0802",
         "filename": "src/tests/gl_tests/ETCTextureTest.cpp",
         "patchSetId": 1
@@ -135,6 +261,24 @@
       "revId": "0d6c6ba8d7a80be57935adb2ed240c3da7646883",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "953c6ab5_fef1ab6d",
+        "filename": "src/tests/gl_tests/ETCTextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1123696
+      },
+      "writtenOn": "2017-03-02T22:49:09Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "e954e8be_74ca0802",
+      "revId": "0d6c6ba8d7a80be57935adb2ed240c3da7646883",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
