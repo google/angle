@@ -225,10 +225,12 @@ static_library("angle_gpu_info_util") {
     }
   }
 
-  # Taken from gpu/config/BUILD.gn
-  # TODO(cwallez): this should be in a shared location
-  use_libpci = is_linux && (!is_chromecast || is_cast_desktop_build) &&
-               (use_x11 || use_ozone)
+  if (!defined(use_lipci)) {
+    # Use the PCI lib to collect GPU information on Linux.
+    use_libpci = is_linux && (!is_chromecast || is_cast_desktop_build) &&
+                 (use_x11 || use_ozone)
+  }
+
   if (use_libpci) {
     sources +=
         rebase_path(gles_gypi.libangle_gpu_info_util_libpci_sources, ".", "src")
