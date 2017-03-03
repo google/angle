@@ -1,0 +1,130 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dedafcee_5695b6b7",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-03T15:58:47Z",
+      "side": 1,
+      "message": "nit: Invalid could be more specific - maybe UsesConstantColorAndAlphaBlend()",
+      "range": {
+        "startLine": 16,
+        "startChar": 5,
+        "endLine": 16,
+        "endChar": 26
+      },
+      "revId": "807ffc2b1e28a9a35fa079d1d29b9944bc73300e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "34ed1b53_ffe4d96c",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-03T15:58:47Z",
+      "side": 1,
+      "message": "nit: I would call these something generic like first, second to reflect how they\u0027re called symetrically",
+      "range": {
+        "startLine": 16,
+        "startChar": 34,
+        "endLine": 16,
+        "endChar": 39
+      },
+      "revId": "807ffc2b1e28a9a35fa079d1d29b9944bc73300e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6994b5c9_9904195a",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-03T15:58:47Z",
+      "side": 1,
+      "message": "nit: extra space",
+      "revId": "807ffc2b1e28a9a35fa079d1d29b9944bc73300e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d2d31e91_f2e120f9",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 463,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-03T15:58:47Z",
+      "side": 1,
+      "message": "can you elaborate a bit to indicate what\u0027s a failure in webgl?",
+      "range": {
+        "startLine": 463,
+        "startChar": 0,
+        "endLine": 463,
+        "endChar": 47
+      },
+      "revId": "807ffc2b1e28a9a35fa079d1d29b9944bc73300e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7f38b42c_0ce8e7f8",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-03T15:58:47Z",
+      "side": 1,
+      "message": "nit: extra space",
+      "revId": "807ffc2b1e28a9a35fa079d1d29b9944bc73300e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5d25f211_56435ff5",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 495,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-03T15:58:47Z",
+      "side": 1,
+      "message": "nit: it\u0027s fine to go \n\n for (GLenum src : srcFunc)\n\nand below",
+      "range": {
+        "startLine": 495,
+        "startChar": 9,
+        "endLine": 495,
+        "endChar": 23
+      },
+      "revId": "807ffc2b1e28a9a35fa079d1d29b9944bc73300e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
