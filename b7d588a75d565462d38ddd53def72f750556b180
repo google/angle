@@ -46,6 +46,30 @@
       "revId": "b7d588a75d565462d38ddd53def72f750556b180",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "41e12e80_57b3355f",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-03T22:03:33Z",
+      "side": 1,
+      "message": "I guess you could deduce that yeah, but this just seems clearer. Thanks for fixing.",
+      "parentUuid": "eea3e616_f850d090",
+      "range": {
+        "startLine": 464,
+        "startChar": 57,
+        "endLine": 464,
+        "endChar": 62
+      },
+      "revId": "b7d588a75d565462d38ddd53def72f750556b180",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
