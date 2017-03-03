@@ -1149,8 +1149,7 @@ void GL_APIENTRY GetBufferParameteriv(GLenum target, GLenum pname, GLint* params
             return;
         }
 
-        Buffer *buffer = context->getGLState().getTargetBuffer(target);
-        QueryBufferParameteriv(buffer, pname, params);
+        context->getBufferParameteriv(target, pname, params);
     }
 }
 
@@ -1209,8 +1208,7 @@ void GL_APIENTRY GetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
             return;
         }
 
-        const Framebuffer *framebuffer = context->getGLState().getTargetFramebuffer(target);
-        QueryFramebufferAttachmentParameteriv(framebuffer, attachment, pname, params);
+        context->getFramebufferAttachmentParameteriv(target, attachment, pname, params);
     }
 }
 
@@ -1296,8 +1294,7 @@ void GL_APIENTRY GetRenderbufferParameteriv(GLenum target, GLenum pname, GLint* 
             return;
         }
 
-        Renderbuffer *renderbuffer = context->getGLState().getCurrentRenderbuffer();
-        QueryRenderbufferiv(context, renderbuffer, pname, params);
+        context->getRenderbufferParameteriv(target, pname, params);
     }
 }
 
@@ -1472,8 +1469,7 @@ void GL_APIENTRY GetTexParameterfv(GLenum target, GLenum pname, GLfloat* params)
             return;
         }
 
-        Texture *texture = context->getTargetTexture(target);
-        QueryTexParameterfv(texture, pname, params);
+        context->getTexParameterfv(target, pname, params);
     }
 }
 
@@ -1490,8 +1486,7 @@ void GL_APIENTRY GetTexParameteriv(GLenum target, GLenum pname, GLint* params)
             return;
         }
 
-        Texture *texture = context->getTargetTexture(target);
-        QueryTexParameteriv(texture, pname, params);
+        context->getTexParameteriv(target, pname, params);
     }
 }
 
@@ -2226,8 +2221,7 @@ void GL_APIENTRY TexParameterf(GLenum target, GLenum pname, GLfloat param)
             return;
         }
 
-        Texture *texture = context->getTargetTexture(target);
-        SetTexParameterf(texture, pname, param);
+        context->texParameterf(target, pname, param);
     }
 }
 
@@ -2244,8 +2238,7 @@ void GL_APIENTRY TexParameterfv(GLenum target, GLenum pname, const GLfloat *para
             return;
         }
 
-        Texture *texture = context->getTargetTexture(target);
-        SetTexParameterfv(texture, pname, params);
+        context->texParameterfv(target, pname, params);
     }
 }
 
@@ -2261,8 +2254,7 @@ void GL_APIENTRY TexParameteri(GLenum target, GLenum pname, GLint param)
             return;
         }
 
-        Texture *texture = context->getTargetTexture(target);
-        SetTexParameteri(texture, pname, param);
+        context->texParameteri(target, pname, param);
     }
 }
 
@@ -2279,8 +2271,7 @@ void GL_APIENTRY TexParameteriv(GLenum target, GLenum pname, const GLint *params
             return;
         }
 
-        Texture *texture = context->getTargetTexture(target);
-        SetTexParameteriv(texture, pname, params);
+        context->texParameteriv(target, pname, params);
     }
 }
 

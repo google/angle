@@ -1652,6 +1652,62 @@ void Context::getBooleani_v(GLenum target, GLuint index, GLboolean *data)
     }
 }
 
+void Context::getBufferParameteriv(GLenum target, GLenum pname, GLint *params)
+{
+    Buffer *buffer = mGLState.getTargetBuffer(target);
+    QueryBufferParameteriv(buffer, pname, params);
+}
+
+void Context::getFramebufferAttachmentParameteriv(GLenum target,
+                                                  GLenum attachment,
+                                                  GLenum pname,
+                                                  GLint *params)
+{
+    const Framebuffer *framebuffer = mGLState.getTargetFramebuffer(target);
+    QueryFramebufferAttachmentParameteriv(framebuffer, attachment, pname, params);
+}
+
+void Context::getRenderbufferParameteriv(GLenum target, GLenum pname, GLint *params)
+{
+    Renderbuffer *renderbuffer = mGLState.getCurrentRenderbuffer();
+    QueryRenderbufferiv(this, renderbuffer, pname, params);
+}
+
+void Context::getTexParameterfv(GLenum target, GLenum pname, GLfloat *params)
+{
+    Texture *texture = getTargetTexture(target);
+    QueryTexParameterfv(texture, pname, params);
+}
+
+void Context::getTexParameteriv(GLenum target, GLenum pname, GLint *params)
+{
+    Texture *texture = getTargetTexture(target);
+    QueryTexParameteriv(texture, pname, params);
+}
+void Context::texParameterf(GLenum target, GLenum pname, GLfloat param)
+{
+    Texture *texture = getTargetTexture(target);
+    SetTexParameterf(texture, pname, param);
+}
+
+void Context::texParameterfv(GLenum target, GLenum pname, const GLfloat *params)
+{
+    Texture *texture = getTargetTexture(target);
+    SetTexParameterfv(texture, pname, params);
+}
+
+void Context::texParameteri(GLenum target, GLenum pname, GLint param)
+{
+    Texture *texture = getTargetTexture(target);
+    SetTexParameteri(texture, pname, param);
+}
+
+void Context::texParameteriv(GLenum target, GLenum pname, const GLint *params)
+{
+    Texture *texture = getTargetTexture(target);
+    SetTexParameteriv(texture, pname, params);
+}
+
 void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
 {
     syncRendererState();

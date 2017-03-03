@@ -163,6 +163,20 @@ class Context final : public ValidationContext
 
     void setVertexAttribDivisor(GLuint index, GLuint divisor);
 
+    void getBufferParameteriv(GLenum target, GLenum pname, GLint *params);
+    void getFramebufferAttachmentParameteriv(GLenum target,
+                                             GLenum attachment,
+                                             GLenum pname,
+                                             GLint *params);
+    void getRenderbufferParameteriv(GLenum target, GLenum pname, GLint *params);
+
+    void getTexParameterfv(GLenum target, GLenum pname, GLfloat *params);
+    void getTexParameteriv(GLenum target, GLenum pname, GLint *params);
+    void texParameterf(GLenum target, GLenum pname, GLfloat param);
+    void texParameterfv(GLenum target, GLenum pname, const GLfloat *params);
+    void texParameteri(GLenum target, GLenum pname, GLint param);
+    void texParameteriv(GLenum target, GLenum pname, const GLint *params);
+
     void samplerParameteri(GLuint sampler, GLenum pname, GLint param);
     void samplerParameteriv(GLuint sampler, GLenum pname, const GLint *param);
     void samplerParameterf(GLuint sampler, GLenum pname, GLfloat param);
