@@ -84,6 +84,24 @@
     },
     {
       "key": {
+        "uuid": "6cfc6262_611b617a",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-03T05:15:29Z",
+      "side": 1,
+      "message": "Thanks.",
+      "parentUuid": "caa51d97_055b4a25",
+      "revId": "ff08a83be8ecc1344959442a015405b338077b9b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "35f321ec_fcb8ff1a",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 13
@@ -131,6 +149,30 @@
     },
     {
       "key": {
+        "uuid": "c01e6df0_9e219a8c",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3905,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-03T05:15:29Z",
+      "side": 1,
+      "message": "ValidateVertexAttribFormatBase is just a naming problem. Currently, you used it in three places: ValidateVertexAttribPointer in validationES2.cpp, ValidateVertexAttribIPointer in validationES2.cpp, and ValidateVertexAttribFormat in validationES31.cpp.  Since all these three places can use it, I think ValidateVertexAttribCommon maybe  a better name and not cause the controversy that it\u0027s only for VertexAttribFormat or it\u0027s a concept in ES3.1.\n\nHowever, this issue is not a block issue. I reserve my opinion.",
+      "parentUuid": "e7b6ff67_28637e6e",
+      "range": {
+        "startLine": 3905,
+        "startChar": 9,
+        "endLine": 3905,
+        "endChar": 39
+      },
+      "revId": "ff08a83be8ecc1344959442a015405b338077b9b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2bbefac5_43e1b17b",
         "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
         "patchSetId": 13
@@ -166,6 +208,30 @@
       "side": 1,
       "message": "OpenGL part has not been included in this patch, so there are still some ASSERT(attribIndex \u003d\u003d bindingIndex) statements in VertexArrayGL.cpp. We will meet these ASSERT failures if we do not skip these tests.",
       "parentUuid": "2bbefac5_43e1b17b",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 70
+      },
+      "revId": "ff08a83be8ecc1344959442a015405b338077b9b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "878e20c7_0426fe2f",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 13
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-03T05:15:29Z",
+      "side": 1,
+      "message": "OK, thanks for pointing it out.",
+      "parentUuid": "7a9124be_8488cc05",
       "range": {
         "startLine": 38,
         "startChar": 0,
