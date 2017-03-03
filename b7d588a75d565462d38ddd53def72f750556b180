@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5bf8cb03_e010fe4f",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-03T21:48:54Z",
+      "side": 1,
+      "message": "nit: .. in WebGL.",
+      "range": {
+        "startLine": 464,
+        "startChar": 57,
+        "endLine": 464,
+        "endChar": 62
+      },
+      "revId": "b7d588a75d565462d38ddd53def72f750556b180",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
