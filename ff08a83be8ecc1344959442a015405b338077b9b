@@ -173,6 +173,30 @@
     },
     {
       "key": {
+        "uuid": "02d8f136_a048ed57",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3905,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-03T06:31:52Z",
+      "side": 1,
+      "message": "Thanks for your suggestion.  \n\nI will leave a comment here to ask ANGLE team for their idea about this.",
+      "parentUuid": "c01e6df0_9e219a8c",
+      "range": {
+        "startLine": 3905,
+        "startChar": 9,
+        "endLine": 3905,
+        "endChar": 39
+      },
+      "revId": "ff08a83be8ecc1344959442a015405b338077b9b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2bbefac5_43e1b17b",
         "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
         "patchSetId": 13
