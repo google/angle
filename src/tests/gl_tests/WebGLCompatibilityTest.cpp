@@ -10,6 +10,30 @@
 
 #include "test_utils/gl_raii.h"
 
+namespace
+{
+
+bool ConstantColorAndAlphaBlendFunctions(GLenum first, GLenum second)
+{
+    return (first == GL_CONSTANT_COLOR || first == GL_ONE_MINUS_CONSTANT_COLOR) &&
+           (second == GL_CONSTANT_ALPHA || second == GL_ONE_MINUS_CONSTANT_ALPHA);
+}
+
+void CheckBlendFunctions(GLenum src, GLenum dst)
+{
+    if (ConstantColorAndAlphaBlendFunctions(src, dst) ||
+        ConstantColorAndAlphaBlendFunctions(dst, src))
+    {
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    }
+    else
+    {
+        ASSERT_GL_NO_ERROR();
+    }
+}
+
+}  // namespace
+
 namespace angle
 {
 
@@ -434,6 +458,50 @@ TEST_P(WebGLCompatibilityTest, DepthRange)
 
     glDepthRangef(1, 0);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
+// Test all blend function combinations.
+// In WebGL it is invalid to combine constant color with constant alpha.
+TEST_P(WebGLCompatibilityTest, BlendWithConstantColor)
+{
+    constexpr GLenum srcFunc[] = {
+        GL_ZERO,
+        GL_ONE,
+        GL_SRC_COLOR,
+        GL_ONE_MINUS_SRC_COLOR,
+        GL_DST_COLOR,
+        GL_ONE_MINUS_DST_COLOR,
+        GL_SRC_ALPHA,
+        GL_ONE_MINUS_SRC_ALPHA,
+        GL_DST_ALPHA,
+        GL_ONE_MINUS_DST_ALPHA,
+        GL_CONSTANT_COLOR,
+        GL_ONE_MINUS_CONSTANT_COLOR,
+        GL_CONSTANT_ALPHA,
+        GL_ONE_MINUS_CONSTANT_ALPHA,
+        GL_SRC_ALPHA_SATURATE,
+    };
+
+    constexpr GLenum dstFunc[] = {
+        GL_ZERO,           GL_ONE,
+        GL_SRC_COLOR,      GL_ONE_MINUS_SRC_COLOR,
+        GL_DST_COLOR,      GL_ONE_MINUS_DST_COLOR,
+        GL_SRC_ALPHA,      GL_ONE_MINUS_SRC_ALPHA,
+        GL_DST_ALPHA,      GL_ONE_MINUS_DST_ALPHA,
+        GL_CONSTANT_COLOR, GL_ONE_MINUS_CONSTANT_COLOR,
+        GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA,
+    };
+
+    for (GLenum src : srcFunc)
+    {
+        for (GLenum dst : dstFunc)
+        {
+            glBlendFunc(src, dst);
+            CheckBlendFunctions(src, dst);
+            glBlendFuncSeparate(src, dst, GL_ONE, GL_ONE);
+            CheckBlendFunctions(src, dst);
+        }
+    }
 }
 
 // Test the checks for OOB reads in the vertex buffers, instanced version

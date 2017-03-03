@@ -3848,7 +3848,8 @@ bool ValidateBlendFuncSeparate(ValidationContext *context,
         return false;
     }
 
-    if (context->getLimitations().noSimultaneousConstantColorAndAlphaBlendFunc)
+    if (context->getLimitations().noSimultaneousConstantColorAndAlphaBlendFunc ||
+        context->getExtensions().webglCompatibility)
     {
         bool constantColorUsed =
             (srcRGB == GL_CONSTANT_COLOR || srcRGB == GL_ONE_MINUS_CONSTANT_COLOR ||
@@ -3860,14 +3861,22 @@ bool ValidateBlendFuncSeparate(ValidationContext *context,
 
         if (constantColorUsed && constantAlphaUsed)
         {
-            ERR() << "Simultaneous use of GL_CONSTANT_ALPHA/GL_ONE_MINUS_CONSTANT_ALPHA and "
-                     "GL_CONSTANT_COLOR/GL_ONE_MINUS_CONSTANT_COLOR not supported by this "
-                     "implementation.";
-            context->handleError(Error(GL_INVALID_OPERATION,
-                                       "Simultaneous use of "
-                                       "GL_CONSTANT_ALPHA/GL_ONE_MINUS_CONSTANT_ALPHA and "
-                                       "GL_CONSTANT_COLOR/GL_ONE_MINUS_CONSTANT_COLOR not "
-                                       "supported by this implementation."));
+            const char *msg;
+            if (context->getExtensions().webglCompatibility)
+            {
+                msg =
+                    "Invalid simultaneous use of GL_CONSTANT_ALPHA/GL_ONE_MINUS_CONSTANT_ALPHA and "
+                    "GL_CONSTANT_COLOR/GL_ONE_MINUS_CONSTANT_COLOR.";
+            }
+            else
+            {
+                msg =
+                    "Simultaneous use of GL_CONSTANT_ALPHA/GL_ONE_MINUS_CONSTANT_ALPHA and "
+                    "GL_CONSTANT_COLOR/GL_ONE_MINUS_CONSTANT_COLOR not supported by this "
+                    "implementation.";
+                ERR() << msg;
+            }
+            context->handleError(Error(GL_INVALID_OPERATION, msg));
             return false;
         }
     }
