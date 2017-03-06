@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "763ea1ef_436fec4a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-06T18:55:41Z",
+      "side": 1,
+      "message": "I\u0027m not sure I agree. \"we need the component values anyway\" - I don\u0027t see where you use depthAttachment or stencilAttachment. I think you can just remove them.",
+      "parentUuid": "06c4ce91_33b663b5",
+      "range": {
+        "startLine": 231,
+        "startChar": 4,
+        "endLine": 235,
+        "endChar": 55
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3ecca38a_993fc434",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 2
@@ -225,6 +249,30 @@
       "side": 1,
       "message": "I kept it like this since there is no real need for the additional functionality added by std::array and it makes the code more difficult to read unnecessarily.",
       "parentUuid": "c867214b_0d22d217",
+      "range": {
+        "startLine": 304,
+        "startChar": 28,
+        "endLine": 304,
+        "endChar": 38
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c68ef65_102f0b03",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-06T18:55:41Z",
+      "side": 1,
+      "message": "d\u0027oh. can you do it anyway, and we can try to fix where it makes the code harder to read? You should be able to use c++11 initializer syntax to zero-init. Also it should work pretty much the same.",
+      "parentUuid": "3961856c_2869a2a0",
       "range": {
         "startLine": 304,
         "startChar": 28,
@@ -425,6 +473,30 @@
     },
     {
       "key": {
+        "uuid": "ba6df053_2fa2e821",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-06T18:55:41Z",
+      "side": 1,
+      "message": "sorry for the lack of explanation. ANGLE has a tendency to implement new idioms and not refactor the old ones out completely - in this case it was my unfinished intent to replace all the direct calls to context with StateManager11 calls and remove the markAllStateDirty call (eventually). If someone had the time to implement that, your change would add one extra place where they\u0027d have to fix the code. Can you replace the method you were removing to prevent extra work in the future? Alternately we could give up on that plan but I would prefer to keep the code as similar to it is now as possible.",
+      "parentUuid": "335f0ce4_dd7828ab",
+      "range": {
+        "startLine": 595,
+        "startChar": 19,
+        "endLine": 595,
+        "endChar": 37
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "19446a8c_6135f120",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 2
@@ -507,6 +579,30 @@
       "side": 1,
       "message": "I can do that. Just was following how this was handled before and with items like getDepthStencilState also used for fetching cached state. Will adjust those too for consistency.",
       "parentUuid": "0f1e83f5_71fb5969",
+      "range": {
+        "startLine": 619,
+        "startChar": 3,
+        "endLine": 621,
+        "endChar": 5
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46dba101_cf9b60b7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 621,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-06T18:55:41Z",
+      "side": 1,
+      "message": "Thanks!",
+      "parentUuid": "73b513c3_3dc75f1f",
       "range": {
         "startLine": 619,
         "startChar": 3,

@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e1a539fa_21cdb444",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-06T18:55:41Z",
+      "side": 1,
+      "message": "can we make an equality op for these?",
+      "range": {
+        "startLine": 44,
+        "startChar": 8,
+        "endLine": 44,
+        "endChar": 62
+      },
+      "revId": "0351cfc639ade033125d6679704cbb46af47cffa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a54c4d5_2a59f17f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-06T18:55:41Z",
+      "side": 1,
+      "message": "gl::OutOfMemory",
+      "range": {
+        "startLine": 357,
+        "startChar": 27,
+        "endLine": 357,
+        "endChar": 32
+      },
+      "revId": "0351cfc639ade033125d6679704cbb46af47cffa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "05f6bfbd_d1a45441",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-06T18:55:41Z",
+      "side": 1,
+      "message": "!",
+      "range": {
+        "startLine": 369,
+        "startChar": 16,
+        "endLine": 370,
+        "endChar": 22
+      },
+      "revId": "0351cfc639ade033125d6679704cbb46af47cffa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "47b107ae_bb2e2346",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-06T18:55:41Z",
+      "side": 1,
+      "message": "did you leave this in intentionally? debug code should not be in final cls.",
+      "range": {
+        "startLine": 379,
+        "startChar": 17,
+        "endLine": 386,
+        "endChar": 18
+      },
+      "revId": "0351cfc639ade033125d6679704cbb46af47cffa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1e884a43_b8c86e2b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-06T18:55:41Z",
+      "side": 1,
+      "message": "is this still necessary?",
+      "range": {
+        "startLine": 66,
+        "startChar": 4,
+        "endLine": 66,
+        "endChar": 40
+      },
+      "revId": "0351cfc639ade033125d6679704cbb46af47cffa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f18817e3_103b153b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-06T18:55:41Z",
+      "side": 1,
+      "message": "Try to avoid using unions in general, especially anonymous ones. Can you redesign this to not use a union and still use the same amount of memory?",
+      "range": {
+        "startLine": 78,
+        "startChar": 4,
+        "endLine": 78,
+        "endChar": 10
+      },
+      "revId": "0351cfc639ade033125d6679704cbb46af47cffa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
