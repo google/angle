@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7dc6c607_21d6fcfe",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2032,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-06T22:00:11Z",
+      "side": 1,
+      "message": "make this one line - Buffer11 *buffer11 \u003d GetImplAs\u003cBuffer11\u003e(drawIndirectBuffer)",
+      "range": {
+        "startLine": 2031,
+        "startChar": 4,
+        "endLine": 2032,
+        "endChar": 54
+      },
+      "revId": "a69b3141683f42ffd4b55c11c380f3c3222737db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b6b2ff2f_3fd7c4da",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2046,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-06T22:00:11Z",
+      "side": 1,
+      "message": "remove the brackets \u003d\u003d \n\nif !vertexArray11-\u003ehasDynamicAttrib \u0026\u0026 mode !\u003d LINE_LOOP \u0026\u0026 mode !\u003d TRIANGLE_FAN. I think the test is wrong as written.",
+      "range": {
+        "startLine": 2037,
+        "startChar": 4,
+        "endLine": 2046,
+        "endChar": 5
+      },
+      "revId": "a69b3141683f42ffd4b55c11c380f3c3222737db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "696277bc_76622db0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2080,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-06T22:00:11Z",
+      "side": 1,
+      "message": "I don\u0027t know why you would need to make a translated indirect buffer. Just call DrawInstanced directly with the data that you read back from the native buffer above with count/instances/first. Does this make sense? I think it would save a lot of work and you can remove extra code from Buffer11 if I am correct.",
+      "range": {
+        "startLine": 2080,
+        "startChar": 20,
+        "endLine": 2080,
+        "endChar": 41
+      },
+      "revId": "a69b3141683f42ffd4b55c11c380f3c3222737db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "65d8c9f3_687abd75",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-06T22:00:11Z",
+      "side": 1,
+      "message": "nit: hasDynamicAttrib. \"hasDynamicAttribs\" is plural which implies more than one.",
+      "range": {
+        "startLine": 136,
+        "startChar": 20,
+        "endLine": 136,
+        "endChar": 37
+      },
+      "revId": "a69b3141683f42ffd4b55c11c380f3c3222737db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "30587fbf_d9dd9814",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-06T22:00:11Z",
+      "side": 1,
+      "message": "nit: call this method flushAttribUpdates",
+      "range": {
+        "startLine": 148,
+        "startChar": 4,
+        "endLine": 148,
+        "endChar": 30
+      },
+      "revId": "a69b3141683f42ffd4b55c11c380f3c3222737db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5def959f_464f2f0a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-06T22:00:11Z",
+      "side": 1,
+      "message": "comment here that this will flush any pending attrib updates.",
+      "range": {
+        "startLine": 27,
+        "startChar": 9,
+        "endLine": 27,
+        "endChar": 26
+      },
+      "revId": "a69b3141683f42ffd4b55c11c380f3c3222737db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
