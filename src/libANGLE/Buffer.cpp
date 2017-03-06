@@ -107,12 +107,8 @@ Error Buffer::map(const Context *context, GLenum access)
 {
     ASSERT(!mState.mMapped);
 
-    Error error = mImpl->map(rx::SafeGetImpl(context), access, &mState.mMapPointer);
-    if (error.isError())
-    {
-        mState.mMapPointer = nullptr;
-        return error;
-    }
+    mState.mMapPointer = nullptr;
+    ANGLE_TRY(mImpl->map(rx::SafeGetImpl(context), access, &mState.mMapPointer));
 
     ASSERT(access == GL_WRITE_ONLY_OES);
 
@@ -123,7 +119,7 @@ Error Buffer::map(const Context *context, GLenum access)
     mState.mAccessFlags = GL_MAP_WRITE_BIT;
     mIndexRangeCache.clear();
 
-    return error;
+    return NoError();
 }
 
 Error Buffer::mapRange(const Context *context,
@@ -134,13 +130,9 @@ Error Buffer::mapRange(const Context *context,
     ASSERT(!mState.mMapped);
     ASSERT(offset + length <= mState.mSize);
 
-    Error error =
-        mImpl->mapRange(rx::SafeGetImpl(context), offset, length, access, &mState.mMapPointer);
-    if (error.isError())
-    {
-        mState.mMapPointer = nullptr;
-        return error;
-    }
+    mState.mMapPointer = nullptr;
+    ANGLE_TRY(
+        mImpl->mapRange(rx::SafeGetImpl(context), offset, length, access, &mState.mMapPointer));
 
     mState.mMapped      = GL_TRUE;
     mState.mMapOffset   = static_cast<GLint64>(offset);
@@ -158,19 +150,15 @@ Error Buffer::mapRange(const Context *context,
         mIndexRangeCache.invalidateRange(static_cast<unsigned int>(offset), static_cast<unsigned int>(length));
     }
 
-    return error;
+    return NoError();
 }
 
 Error Buffer::unmap(const Context *context, GLboolean *result)
 {
     ASSERT(mState.mMapped);
 
-    Error error = mImpl->unmap(rx::SafeGetImpl(context), result);
-    if (error.isError())
-    {
-        *result = GL_FALSE;
-        return error;
-    }
+    *result = GL_FALSE;
+    ANGLE_TRY(mImpl->unmap(rx::SafeGetImpl(context), result));
 
     mState.mMapped      = GL_FALSE;
     mState.mMapPointer  = nullptr;
@@ -179,7 +167,7 @@ Error Buffer::unmap(const Context *context, GLboolean *result)
     mState.mAccess      = GL_WRITE_ONLY_OES;
     mState.mAccessFlags = 0;
 
-    return error;
+    return NoError();
 }
 
 void Buffer::onTransformFeedback()
