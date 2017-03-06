@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "d452644c_0e1e9e7a",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3854,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-06T19:26:07Z",
+      "side": 1,
+      "message": "Can you update this error message to state that it\u0027s an error rather than unsupported? \"invalid combination of  blah..\"",
+      "range": {
+        "startLine": 3851,
+        "startChar": 39,
+        "endLine": 3854,
+        "endChar": 74
+      },
+      "revId": "b7d588a75d565462d38ddd53def72f750556b180",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5bf8cb03_e010fe4f",
         "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
         "patchSetId": 2
