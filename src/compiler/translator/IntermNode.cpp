@@ -602,6 +602,7 @@ TIntermSwizzle::TIntermSwizzle(const TIntermSwizzle &node) : TIntermTyped(node)
     TIntermTyped *operandCopy = node.mOperand->deepCopy();
     ASSERT(operandCopy != nullptr);
     mOperand = operandCopy;
+    mSwizzleOffsets = node.mSwizzleOffsets;
 }
 
 TIntermBinary::TIntermBinary(const TIntermBinary &node)

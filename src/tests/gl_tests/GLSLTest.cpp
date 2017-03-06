@@ -2638,6 +2638,55 @@ TEST_P(GLSLTest_ES31, FindMSBAndFindLSBCornerCases)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that writing into a swizzled vector that is dynamically indexed succeeds.
+TEST_P(GLSLTest_ES3, WriteIntoDynamicIndexingOfSwizzledVector)
+{
+    if (IsNVIDIA() && IsOpenGL())
+    {
+        // http://anglebug.com/1924
+        std::cout << "Test skipped on NVIDIA OpenGL because it has incorrect results" << std::endl;
+        return;
+    }
+
+    if (IsAMD() && IsOpenGL())
+    {
+        std::cout << "Test skipped on AMD OpenGL because it has incorrect results" << std::endl;
+        return;
+    }
+
+    if (IsAndroid())
+    {
+        std::cout << "Test skipped on Android because it has incorrect results" << std::endl;
+        return;
+    }
+
+    if (IsOSX())
+    {
+        std::cout << "Test skipped on Mac OSX because it has incorrect results" << std::endl;
+        return;
+    }
+
+    // The shader first assigns v.x to v.z (1.0)
+    // Then v.y to v.y (2.0)
+    // Then v.z to v.x (1.0)
+    const std::string &fragmentShader =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "    vec3 v = vec3(1.0, 2.0, 3.0);\n"
+        "    for (int i = 0; i < 3; i++) {\n"
+        "        v.zyx[i] = v[i];\n"
+        "    }\n"
+        "    my_FragColor = distance(v, vec3(1.0, 2.0, 1.0)) < 0.01 ? vec4(0, 1, 0, 1) : vec4(1, "
+        "0, 0, 1);\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest,
                        ES2_D3D9(),
