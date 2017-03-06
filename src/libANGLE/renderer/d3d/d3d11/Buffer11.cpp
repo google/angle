@@ -205,8 +205,8 @@ class Buffer11::EmulatedIndexedStorage : public Buffer11::BufferStorage
 
   private:
     ID3D11Buffer *mNativeStorage;       // contains expanded data for use by D3D
-    MemoryBuffer mMemoryBuffer;         // original data (not expanded)
-    MemoryBuffer mIndicesMemoryBuffer;  // indices data
+    angle::MemoryBuffer mMemoryBuffer;  // original data (not expanded)
+    angle::MemoryBuffer mIndicesMemoryBuffer;  // indices data
 };
 
 // Pack storage represents internal storage for pack buffers. We implement pack buffers
@@ -237,7 +237,7 @@ class Buffer11::PackStorage : public Buffer11::BufferStorage
     gl::Error flushQueuedPackCommand();
 
     TextureHelper11 mStagingTexture;
-    MemoryBuffer mMemoryBuffer;
+    angle::MemoryBuffer mMemoryBuffer;
     std::unique_ptr<PackPixelsParams> mQueuedPackCommand;
     PackPixelsParams mPackParams;
     bool mDataModified;
@@ -265,10 +265,10 @@ class Buffer11::SystemMemoryStorage : public Buffer11::BufferStorage
                   uint8_t **mapPointerOut) override;
     void unmap() override;
 
-    MemoryBuffer *getSystemCopy() { return &mSystemCopy; }
+    angle::MemoryBuffer *getSystemCopy() { return &mSystemCopy; }
 
   protected:
-    MemoryBuffer mSystemCopy;
+    angle::MemoryBuffer mSystemCopy;
 };
 
 Buffer11::Buffer11(const gl::BufferState &state, Renderer11 *renderer)
@@ -1274,7 +1274,7 @@ gl::ErrorOrResult<ID3D11Buffer *> Buffer11::EmulatedIndexedStorage::getNativeSto
         // Expand the memory storage upon request and cache the results.
         unsigned int expandedDataSize =
             static_cast<unsigned int>((indexInfo->srcCount * attribute.stride) + offset);
-        MemoryBuffer expandedData;
+        angle::MemoryBuffer expandedData;
         if (!expandedData.resize(expandedDataSize))
         {
             return gl::Error(

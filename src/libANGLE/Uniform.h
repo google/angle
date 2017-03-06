@@ -45,7 +45,7 @@ struct LinkedUniform : public sh::Uniform
     sh::BlockMemberInfo blockInfo;
 
   private:
-    mutable rx::MemoryBuffer mLazyData;
+    mutable angle::MemoryBuffer mLazyData;
 };
 
 // Helper struct representing a single shader uniform block

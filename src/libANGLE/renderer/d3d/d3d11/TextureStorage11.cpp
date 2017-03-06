@@ -654,7 +654,7 @@ gl::Error TextureStorage11::setData(const gl::ImageIndex &index,
     UINT bufferDepthPitch = bufferRowPitch * height;
 
     const size_t neededSize        = bufferDepthPitch * depth;
-    MemoryBuffer *conversionBuffer = nullptr;
+    angle::MemoryBuffer *conversionBuffer = nullptr;
     const uint8_t *data            = nullptr;
 
     LoadImageFunctionInfo loadFunctionInfo = d3d11Format.getLoadFunctions()(type);

@@ -376,10 +376,7 @@ int GetWrapBits(GLenum wrap)
     }
 }
 
-// If we request a scratch buffer requesting a smaller size this many times,
-// release and recreate the scratch buffer. This ensures we don't have a
-// degenerate case where we are stuck hogging memory.
-const int ScratchMemoryBufferLifetime = 1000;
+const uint32_t ScratchMemoryBufferLifetime = 1000;
 
 }  // anonymous namespace
 
@@ -390,7 +387,7 @@ Renderer11::Renderer11(egl::Display *display)
       mLastHistogramUpdateTime(
           ANGLEPlatformCurrent()->monotonicallyIncreasingTime(ANGLEPlatformCurrent())),
       mDebug(nullptr),
-      mScratchMemoryBufferResetCounter(0),
+      mScratchMemoryBuffer(ScratchMemoryBufferLifetime),
       mAnnotator(nullptr)
 {
     mVertexDataManager = NULL;
@@ -2717,7 +2714,7 @@ void Renderer11::release()
 {
     RendererD3D::cleanup();
 
-    mScratchMemoryBuffer.resize(0);
+    mScratchMemoryBuffer.clear();
 
     if (mAnnotator != nullptr)
     {
@@ -4589,33 +4586,12 @@ FramebufferImpl *Renderer11::createDefaultFramebuffer(const gl::FramebufferState
     return new Framebuffer11(state, this);
 }
 
-gl::Error Renderer11::getScratchMemoryBuffer(size_t requestedSize, MemoryBuffer **bufferOut)
+gl::Error Renderer11::getScratchMemoryBuffer(size_t requestedSize, angle::MemoryBuffer **bufferOut)
 {
-    if (mScratchMemoryBuffer.size() == requestedSize)
+    if (!mScratchMemoryBuffer.get(requestedSize, bufferOut))
     {
-        mScratchMemoryBufferResetCounter = ScratchMemoryBufferLifetime;
-        *bufferOut                       = &mScratchMemoryBuffer;
-        return gl::NoError();
+        return gl::OutOfMemory() << "Failed to allocate internal buffer.";
     }
-
-    if (mScratchMemoryBuffer.size() > requestedSize)
-    {
-        mScratchMemoryBufferResetCounter--;
-    }
-
-    if (mScratchMemoryBufferResetCounter <= 0 || mScratchMemoryBuffer.size() < requestedSize)
-    {
-        mScratchMemoryBuffer.resize(0);
-        if (!mScratchMemoryBuffer.resize(requestedSize))
-        {
-            return gl::Error(GL_OUT_OF_MEMORY, "Failed to allocate internal buffer.");
-        }
-        mScratchMemoryBufferResetCounter = ScratchMemoryBufferLifetime;
-    }
-
-    ASSERT(mScratchMemoryBuffer.size() >= requestedSize);
-
-    *bufferOut = &mScratchMemoryBuffer;
     return gl::NoError();
 }
 

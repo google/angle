@@ -54,7 +54,7 @@ class Buffer9 : public BufferD3D
     gl::Error markTransformFeedbackUsage() override;
 
   private:
-    MemoryBuffer mMemory;
+    angle::MemoryBuffer mMemory;
     size_t mSize;
 };
 

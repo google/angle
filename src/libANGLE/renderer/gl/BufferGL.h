@@ -63,7 +63,7 @@ class BufferGL : public BufferImpl
     size_t mMapSize;
 
     bool mShadowBufferData;
-    MemoryBuffer mShadowCopy;
+    angle::MemoryBuffer mShadowCopy;
 
     size_t mBufferSize;
 
@@ -73,6 +73,6 @@ class BufferGL : public BufferImpl
     GLuint mBufferID;
 };
 
-}
+}  // namespace rx
 
 #endif // LIBANGLE_RENDERER_GL_BUFFERGL_H_

@@ -370,7 +370,7 @@ gl::Error Image11::copyFromFramebuffer(const gl::Offset &destOffset,
     if (loadFunction.requiresConversion)
     {
         size_t bufferSize = destFormatInfo.pixelBytes * sourceArea.width * sourceArea.height;
-        MemoryBuffer *memoryBuffer = nullptr;
+        angle::MemoryBuffer *memoryBuffer = nullptr;
         mRenderer->getScratchMemoryBuffer(bufferSize, &memoryBuffer);
         GLuint memoryBufferRowPitch = destFormatInfo.pixelBytes * sourceArea.width;
 
