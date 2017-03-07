@@ -1,0 +1,257 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1941e2e3_8b0be428",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-07T22:04:09Z",
+      "side": 1,
+      "message": "Use T instead?  Since it always has to fit in the same cbuffer size in the shader, we need to guarantee the size is 16 for all types used.",
+      "range": {
+        "startLine": 52,
+        "startChar": 34,
+        "endLine": 52,
+        "endChar": 39
+      },
+      "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0e21609b_fa860060",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-07T22:04:09Z",
+      "side": 1,
+      "message": "Any reason to upload initial data if it hasn\u0027t been initialized yet?",
+      "range": {
+        "startLine": 221,
+        "startChar": 0,
+        "endLine": 226,
+        "endChar": 0
+      },
+      "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "090773f8_a4a9bd52",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-07T22:04:09Z",
+      "side": 1,
+      "message": "auto\u0026 blendState : mBlendStates (or discarded if comptrs are used)",
+      "range": {
+        "startLine": 308,
+        "startChar": 9,
+        "endLine": 308,
+        "endChar": 31
+      },
+      "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "527b29c3_cace4cc4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-07T22:04:09Z",
+      "side": 1,
+      "message": "Let\u0027s update this to gl::InternalError",
+      "range": {
+        "startLine": 370,
+        "startChar": 19,
+        "endLine": 370,
+        "endChar": 51
+      },
+      "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0fdd6dc7_6d51a485",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-07T22:04:09Z",
+      "side": 1,
+      "message": "Can you expand this acronym?",
+      "range": {
+        "startLine": 402,
+        "startChar": 9,
+        "endLine": 402,
+        "endChar": 14
+      },
+      "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cbfdf31e_1cbb0146",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-07T22:04:09Z",
+      "side": 1,
+      "message": "This used to use the lazy input layout, can it stay that way?",
+      "range": {
+        "startLine": 64,
+        "startChar": 22,
+        "endLine": 64,
+        "endChar": 39
+      },
+      "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f39ad884_ae0368df",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-07T22:04:09Z",
+      "side": 1,
+      "message": "angle::ComPtr\u003cID3D11BlendState\u003e",
+      "range": {
+        "startLine": 80,
+        "startChar": 15,
+        "endLine": 80,
+        "endChar": 33
+      },
+      "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96f05c7c_5a3ac05a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-07T22:04:09Z",
+      "side": 1,
+      "message": "std::unique_ptr?",
+      "range": {
+        "startLine": 85,
+        "startChar": 4,
+        "endLine": 85,
+        "endChar": 31
+      },
+      "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f7731576_4a7b2991",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/RenderStateCache.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-07T22:04:09Z",
+      "side": 1,
+      "message": "I think it\u0027s very reasonable to drastically reduce these numbers if it makes our life easier in other code.  Even 1024 would likely be fine.",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 54
+      },
+      "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4f323f8_c965cf2d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-07T22:04:09Z",
+      "side": 1,
+      "message": "Prefer that this isn\u0027t inlined, it would not be called too much and we build with LTO anyways.",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 1
+      },
+      "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cdc9ee31_09a58a97",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Clear11.hlsl",
+        "patchSetId": 10
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-07T22:04:09Z",
+      "side": 1,
+      "message": "nit: extra whitespace (and below)",
+      "range": {
+        "startLine": 7,
+        "startChar": 72,
+        "endLine": 7,
+        "endChar": 73
+      },
+      "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
