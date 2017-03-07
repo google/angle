@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "eb17db8f_c5513ea2",
+        "filename": "extensions/ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-07T22:12:03Z",
+      "side": 1,
+      "message": "maybe add glIsEnabled here too.  Would match functionality of a bunch of other extensions that do similar things.",
+      "revId": "e75ae5d0ee734755c3495453a1e013b0d4b6edad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "03171026_84dea8f2",
         "filename": "extensions/ANGLE_robust_resource_initialization.txt",
         "patchSetId": 1
@@ -13,6 +30,30 @@
       "writtenOn": "2017-03-07T18:07:29Z",
       "side": 1,
       "message": "it isn\u0027t specced what happens when the context isn\u0027t created with robust resource init - should querying the value return FALSE or should this extension be hidden and we return INVALID_OPERATION?",
+      "range": {
+        "startLine": 133,
+        "startChar": 22,
+        "endLine": 133,
+        "endChar": 30
+      },
+      "revId": "e75ae5d0ee734755c3495453a1e013b0d4b6edad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6e5a79f7_22151640",
+        "filename": "extensions/ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-07T22:12:03Z",
+      "side": 1,
+      "message": "I think the context would always expose the extension and return GL_FALSE if it was not created with this flag.",
+      "parentUuid": "03171026_84dea8f2",
       "range": {
         "startLine": 133,
         "startChar": 22,
@@ -48,6 +89,30 @@
     },
     {
       "key": {
+        "uuid": "2ab1884d_3eca46e4",
+        "filename": "extensions/EGL_ANGLE_create_context_robust_resource_initialization.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-07T22:12:03Z",
+      "side": 1,
+      "message": "Agreed.",
+      "parentUuid": "26c2fc71_e09d1761",
+      "range": {
+        "startLine": 56,
+        "startChar": 8,
+        "endLine": 56,
+        "endChar": 63
+      },
+      "revId": "e75ae5d0ee734755c3495453a1e013b0d4b6edad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3f1ced87_2ac96886",
         "filename": "include/GLES2/gl2ext.h",
         "patchSetId": 1
@@ -71,6 +136,29 @@
     },
     {
       "key": {
+        "uuid": "6ce413ca_6abd8317",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1598,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-07T22:12:03Z",
+      "side": 1,
+      "message": "If we decide to support glIsEnabled too then State::getEnableFeature and ValidCap in validationES.cpp need to be updated.",
+      "range": {
+        "startLine": 1596,
+        "startChar": 6,
+        "endLine": 1598,
+        "endChar": 16
+      },
+      "revId": "e75ae5d0ee734755c3495453a1e013b0d4b6edad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c1979e14_c773b536",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 1
@@ -87,6 +175,29 @@
         "startChar": 19,
         "endLine": 1107,
         "endChar": 61
+      },
+      "revId": "e75ae5d0ee734755c3495453a1e013b0d4b6edad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bfa35b97_f6dd25ab",
+        "filename": "util/EGLWindow.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-07T22:12:03Z",
+      "side": 1,
+      "message": "Can pipe this through ANGLETest like the others too.",
+      "range": {
+        "startLine": 83,
+        "startChar": 9,
+        "endLine": 83,
+        "endChar": 30
       },
       "revId": "e75ae5d0ee734755c3495453a1e013b0d4b6edad",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
