@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "b0b2b16f_9029d2bb",
+        "filename": "extensions/CHROMIUM_bind_uniform_location.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-07T19:05:15Z",
+      "side": 1,
+      "message": "probably should document the revision history. it\u0027s worth mentioning that this will put this out-of-sync with Chromium unless you upload a fix to the Chromium repo.",
+      "range": {
+        "startLine": 73,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 36
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0a5c2bd2_ecb73a35",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-07T19:05:15Z",
+      "side": 1,
+      "message": "maybe we should rename this to be more clearly some type of variable that has a location, instead of some abstract Interface property.",
+      "range": {
+        "startLine": 97,
+        "startChar": 0,
+        "endLine": 100,
+        "endChar": 48
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "63a4f004_70f8d12e",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-07T19:05:15Z",
+      "side": 1,
+      "message": "rename this: FindUniform",
+      "range": {
+        "startLine": 128,
+        "startChar": 15,
+        "endLine": 128,
+        "endChar": 28
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "223a8978_6a6d8e22",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 7
@@ -31,6 +100,75 @@
       "side": 1,
       "message": "We might have large uniform location limits on some platforms. For that reason I\u0027d maybe rather use a set, it has better worst-case performance.",
       "parentUuid": "223a8978_6a6d8e22",
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "65e541d9_f9d3be59",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1995,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-07T19:05:15Z",
+      "side": 1,
+      "message": "nit: apiBoundLocation .. preSet just is an odd term that we don\u0027t use anywhere else",
+      "range": {
+        "startLine": 1995,
+        "startChar": 12,
+        "endLine": 1995,
+        "endChar": 27
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "abe1d9c5_cfa4d33c",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2001,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-07T19:05:15Z",
+      "side": 1,
+      "message": "i think generally using API-bound location is clearer as you do here.",
+      "range": {
+        "startLine": 2001,
+        "startChar": 19,
+        "endLine": 2001,
+        "endChar": 22
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "006b9933_8061fe8a",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2045,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-07T19:05:15Z",
+      "side": 1,
+      "message": "did we do this before? does this even work with nested structs? makes me worry we\u0027re missing something.",
+      "range": {
+        "startLine": 2033,
+        "startChar": 0,
+        "endLine": 2045,
+        "endChar": 5
+      },
       "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -154,6 +292,24 @@
     },
     {
       "key": {
+        "uuid": "f391c8bc_60c8809c",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2136,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-07T19:05:15Z",
+      "side": 1,
+      "message": "If that\u0027s true you can ASSERT instead. is that true though?",
+      "parentUuid": "09fab668_4511c060",
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1df7fd26_3067fefa",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 7
@@ -186,6 +342,190 @@
       "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "621e8562_0e5d3510",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2902,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-07T19:05:15Z",
+      "side": 1,
+      "message": "I\u0027m not a big fan of passing the staticUse around, it feels like a hack to workaround the bug in ANGLE where we don\u0027t track staticUse properly for nested structs. can you instead fix that on the translator side if you want to prune unused uniforms? maybe this should be done in a split patch.",
+      "range": {
+        "startLine": 2900,
+        "startChar": 55,
+        "endLine": 2902,
+        "endChar": 68
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "66530c2b_23450057",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2934,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-07T19:05:15Z",
+      "side": 1,
+      "message": "nit: can you rename this?",
+      "range": {
+        "startLine": 2934,
+        "startChar": 19,
+        "endLine": 2934,
+        "endChar": 33
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a085555e_3ce56e27",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1260,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-07T19:05:15Z",
+      "side": 1,
+      "message": "can you comment here how you picked this number?",
+      "range": {
+        "startLine": 1260,
+        "startChar": 3,
+        "endLine": 1260,
+        "endChar": 37
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "690f4d73_94983d50",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 526,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-07T19:05:15Z",
+      "side": 1,
+      "message": "you should EXPECT_NE(0u, vs) and same for fs, and the other test.",
+      "range": {
+        "startLine": 526,
+        "startChar": 16,
+        "endLine": 526,
+        "endChar": 29
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad1cf610_16bb188d",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-07T19:05:15Z",
+      "side": 1,
+      "message": "ASSERT_GL_TRUE",
+      "range": {
+        "startLine": 532,
+        "startChar": 4,
+        "endLine": 532,
+        "endChar": 13
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "302e3b85_faad91ff",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 575,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-07T19:05:15Z",
+      "side": 1,
+      "message": "EXPECT_GL_FALSE",
+      "range": {
+        "startLine": 575,
+        "startChar": 4,
+        "endLine": 575,
+        "endChar": 13
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b64d5694_8d1de383",
+        "filename": "src/tests/gl_tests/UniformTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 800,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-07T19:05:15Z",
+      "side": 1,
+      "message": "this doesn\u0027t seem correct. use ANGLE_GL_PROGRAM here.",
+      "range": {
+        "startLine": 800,
+        "startChar": 4,
+        "endLine": 800,
+        "endChar": 28
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "73f21641_8c991f9b",
+        "filename": "src/tests/gl_tests/UniformTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 828,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-07T19:05:15Z",
+      "side": 1,
+      "message": "same, don\u0027t use the mProgram for these.",
+      "range": {
+        "startLine": 828,
+        "startChar": 4,
+        "endLine": 828,
+        "endChar": 13
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
