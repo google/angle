@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "65bb9830_3994b3ba",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1980,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-03-07T18:55:12Z",
+      "side": 1,
+      "message": "We might have large uniform location limits on some platforms. For that reason I\u0027d maybe rather use a set, it has better worst-case performance.",
+      "parentUuid": "223a8978_6a6d8e22",
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9f393094_7b4ec0bb",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 7
@@ -30,6 +48,30 @@
       "writtenOn": "2017-03-07T17:47:08Z",
       "side": 1,
       "message": "This could be folded in the loop above under if (uniform.staticUse)",
+      "range": {
+        "startLine": 2068,
+        "startChar": 0,
+        "endLine": 2082,
+        "endChar": 9
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "48ce631e_a7fd040a",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2082,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-03-07T18:55:12Z",
+      "side": 1,
+      "message": "It\u0027s in this separate loop because this stores the uniformIndex values, and the uniformIndex values change when unused uniforms are pruned from the list after the first loop.",
+      "parentUuid": "9f393094_7b4ec0bb",
       "range": {
         "startLine": 2068,
         "startChar": 0,
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "70f04c3a_e89d1a73",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2085,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-03-07T18:55:12Z",
+      "side": 1,
+      "message": "Changed the comment.",
+      "parentUuid": "7438d8db_d56d6edc",
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "09fab668_4511c060",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 7
@@ -76,6 +136,24 @@
     },
     {
       "key": {
+        "uuid": "82b38059_18da4b0a",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2136,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-03-07T18:55:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "09fab668_4511c060",
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1df7fd26_3067fefa",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 7
@@ -90,6 +168,24 @@
       "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8504d176_a79022cc",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2827,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-03-07T18:55:12Z",
+      "side": 1,
+      "message": "Good idea, done.",
+      "parentUuid": "1df7fd26_3067fefa",
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
