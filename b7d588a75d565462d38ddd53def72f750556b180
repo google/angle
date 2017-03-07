@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "e3380283_2064ba48",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3854,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-07T00:42:52Z",
+      "side": 1,
+      "message": "Yea, we could do that too.  I think eventually we may expose these messages in Chrome\u0027s console for WebGL errors and I want them to make sense in that context.",
+      "parentUuid": "0f4f8a06_bcc9344e",
+      "range": {
+        "startLine": 3851,
+        "startChar": 39,
+        "endLine": 3854,
+        "endChar": 74
+      },
+      "revId": "b7d588a75d565462d38ddd53def72f750556b180",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5bf8cb03_e010fe4f",
         "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
         "patchSetId": 2
