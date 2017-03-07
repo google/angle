@@ -137,6 +137,30 @@
       "revId": "c76c74ee45a1b333d441db86ed80eac1b3f494d0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4de4e28e_810deaa8",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 57
+      },
+      "lineNbr": 720,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-07T21:06:30Z",
+      "side": 1,
+      "message": "I asked him to leave these in. Maybe add a comment like \"uncomment for debugging\". removing is also fine.",
+      "parentUuid": "8b845c6e_271e1003",
+      "range": {
+        "startLine": 720,
+        "startChar": 4,
+        "endLine": 720,
+        "endChar": 92
+      },
+      "revId": "c76c74ee45a1b333d441db86ed80eac1b3f494d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
