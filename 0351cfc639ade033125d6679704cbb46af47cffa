@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "01e7906a_ef5be2c8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-07T02:42:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4a54c4d5_2a59f17f",
+      "range": {
+        "startLine": 357,
+        "startChar": 27,
+        "endLine": 357,
+        "endChar": 32
+      },
+      "revId": "0351cfc639ade033125d6679704cbb46af47cffa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "05f6bfbd_d1a45441",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 8
@@ -59,6 +83,30 @@
       "writtenOn": "2017-03-06T18:55:41Z",
       "side": 1,
       "message": "!",
+      "range": {
+        "startLine": 369,
+        "startChar": 16,
+        "endLine": 370,
+        "endChar": 22
+      },
+      "revId": "0351cfc639ade033125d6679704cbb46af47cffa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d3f68e08_34503d50",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-07T02:42:58Z",
+      "side": 1,
+      "message": "I left it in to highlight how to repro/fix the other issue",
+      "parentUuid": "05f6bfbd_d1a45441",
       "range": {
         "startLine": 369,
         "startChar": 16,
@@ -94,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "291d98eb_690a7425",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-07T02:42:58Z",
+      "side": 1,
+      "message": "I left it in to highlight how to repro/fix the other issue. I will remove in the final CL",
+      "parentUuid": "47b107ae_bb2e2346",
+      "range": {
+        "startLine": 379,
+        "startChar": 17,
+        "endLine": 386,
+        "endChar": 18
+      },
+      "revId": "0351cfc639ade033125d6679704cbb46af47cffa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1e884a43_b8c86e2b",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
         "patchSetId": 8
@@ -117,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "e49a90fc_2ca05799",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-07T02:42:58Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1e884a43_b8c86e2b",
+      "range": {
+        "startLine": 66,
+        "startChar": 4,
+        "endLine": 66,
+        "endChar": 40
+      },
+      "revId": "0351cfc639ade033125d6679704cbb46af47cffa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f18817e3_103b153b",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
         "patchSetId": 8
@@ -137,6 +233,30 @@
       "revId": "0351cfc639ade033125d6679704cbb46af47cffa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a06c99d8_78e0ad9d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-07T02:42:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f18817e3_103b153b",
+      "range": {
+        "startLine": 78,
+        "startChar": 4,
+        "endLine": 78,
+        "endChar": 10
+      },
+      "revId": "0351cfc639ade033125d6679704cbb46af47cffa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

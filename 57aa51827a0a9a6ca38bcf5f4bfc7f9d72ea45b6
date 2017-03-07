@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "b9a06c97_d7698cab",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-07T02:42:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb828f2e_299a4b5b",
+      "range": {
+        "startLine": 88,
+        "startChar": 9,
+        "endLine": 88,
+        "endChar": 16
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dcf63952_2d016485",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 2
@@ -84,6 +108,30 @@
       "side": 1,
       "message": "Done",
       "parentUuid": "dcf63952_2d016485",
+      "range": {
+        "startLine": 220,
+        "startChar": 9,
+        "endLine": 220,
+        "endChar": 14
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4bcee3da_ecf5e99c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-07T02:42:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "212e3416_984bbd05",
       "range": {
         "startLine": 220,
         "startChar": 9,
@@ -155,6 +203,30 @@
       "side": 1,
       "message": "I\u0027m not sure I agree. \"we need the component values anyway\" - I don\u0027t see where you use depthAttachment or stencilAttachment. I think you can just remove them.",
       "parentUuid": "06c4ce91_33b663b5",
+      "range": {
+        "startLine": 231,
+        "startChar": 4,
+        "endLine": 235,
+        "endChar": 55
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d3a0c65a_1ac8ce63",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-07T02:42:58Z",
+      "side": 1,
+      "message": "I misspoke, we need the stencilAttachment value later on. I made use of getDepthOrStencilAttachment  here and getStencilAttachment below where it is explicitly checked against.",
+      "parentUuid": "763ea1ef_436fec4a",
       "range": {
         "startLine": 231,
         "startChar": 4,
@@ -282,6 +354,30 @@
       "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6a30ed51_7a824600",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-07T02:42:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8c68ef65_102f0b03",
+      "range": {
+        "startLine": 304,
+        "startChar": 28,
+        "endLine": 304,
+        "endChar": 38
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -497,6 +593,30 @@
     },
     {
       "key": {
+        "uuid": "2c6a7233_5eaca562",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-07T02:42:58Z",
+      "side": 1,
+      "message": "At the moment there are at least 12 other places in this function where the D3D11 context functions are called directly so right now using something else would stick out as inconsistent with everything else and be unnecessarily cumbersome (with the added indirection).  To others inspecting the code, it would really beg the question as to why RTVs/DSV sets are treated so differently than everything else. I believe we really have to do it one way or the other and given how everything else is done here, using OMSetRendertargets makes sense to me to us here, at least for now.",
+      "parentUuid": "ba6df053_2fa2e821",
+      "range": {
+        "startLine": 595,
+        "startChar": 19,
+        "endLine": 595,
+        "endChar": 37
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "19446a8c_6135f120",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 2
@@ -638,6 +758,30 @@
     },
     {
       "key": {
+        "uuid": "ef5ce423_9bd1fa89",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-07T02:42:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df0ebffe_817236a7",
+      "range": {
+        "startLine": 68,
+        "startChar": 38,
+        "endLine": 68,
+        "endChar": 42
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1c50a3c2_2a5160a4",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
         "patchSetId": 2
@@ -658,6 +802,30 @@
       "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ac1a420c_2c1538ab",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-07T02:42:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1c50a3c2_2a5160a4",
+      "range": {
+        "startLine": 81,
+        "startChar": 3,
+        "endLine": 85,
+        "endChar": 25
+      },
+      "revId": "57aa51827a0a9a6ca38bcf5f4bfc7f9d72ea45b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
