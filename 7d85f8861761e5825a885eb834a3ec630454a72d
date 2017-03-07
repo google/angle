@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a89cb68e_9d3f4310",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/NativeWindow11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-03-07T00:22:42Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "dded9bf9_301a3020",
+      "range": {
+        "startLine": 34,
+        "startChar": 3,
+        "endLine": 34,
+        "endChar": 77
+      },
+      "revId": "7d85f8861761e5825a885eb834a3ec630454a72d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "91005ae9_35c87c0d",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 1
@@ -45,6 +69,30 @@
       "revId": "7d85f8861761e5825a885eb834a3ec630454a72d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d6c49b49_448900d2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1232,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-03-07T00:22:42Z",
+      "side": 1,
+      "message": "It is not needed and will be removed.",
+      "parentUuid": "91005ae9_35c87c0d",
+      "range": {
+        "startLine": 1226,
+        "startChar": 8,
+        "endLine": 1232,
+        "endChar": 9
+      },
+      "revId": "7d85f8861761e5825a885eb834a3ec630454a72d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
