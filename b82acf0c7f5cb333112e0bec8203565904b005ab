@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c848d3a2_1fe98600",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2543,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-07T19:38:01Z",
+      "side": 1,
+      "message": "I\u0027m not sure - see comment I left on the spec text. I think we can easily expose this extension and the query if the EGL extension is exposed, so the user can query the status of the flag in the context and get FALSE. But either is fine.",
+      "parentUuid": "dd613f4d_4408575a",
+      "revId": "b82acf0c7f5cb333112e0bec8203565904b005ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3da016fb_c9206376",
         "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
         "patchSetId": 2
