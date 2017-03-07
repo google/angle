@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "03171026_84dea8f2",
+        "filename": "extensions/ANGLE_robust_resource_initialization.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-07T18:07:29Z",
+      "side": 1,
+      "message": "it isn\u0027t specced what happens when the context isn\u0027t created with robust resource init - should querying the value return FALSE or should this extension be hidden and we return INVALID_OPERATION?",
+      "range": {
+        "startLine": 133,
+        "startChar": 22,
+        "endLine": 133,
+        "endChar": 30
+      },
+      "revId": "e75ae5d0ee734755c3495453a1e013b0d4b6edad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "26c2fc71_e09d1761",
+        "filename": "extensions/EGL_ANGLE_create_context_robust_resource_initialization.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-07T18:07:29Z",
+      "side": 1,
+      "message": "it\u0027s possible we might want to rename this to just EGL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE, it seems like the OPENGL is a bit redundant.",
+      "range": {
+        "startLine": 56,
+        "startChar": 8,
+        "endLine": 56,
+        "endChar": 63
+      },
+      "revId": "e75ae5d0ee734755c3495453a1e013b0d4b6edad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f1ced87_2ac96886",
+        "filename": "include/GLES2/gl2ext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 847,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-07T18:07:29Z",
+      "side": 1,
+      "message": "this is moved to re-establish sort order.",
+      "range": {
+        "startLine": 844,
+        "startChar": 0,
+        "endLine": 847,
+        "endChar": 35
+      },
+      "revId": "e75ae5d0ee734755c3495453a1e013b0d4b6edad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c1979e14_c773b536",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1107,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-07T18:07:29Z",
+      "side": 1,
+      "message": "I know this isn\u0027t implemented yet, but I wanted to be able to test the case where the extension was available on the bots. Also for follow-up CLs.",
+      "range": {
+        "startLine": 1107,
+        "startChar": 19,
+        "endLine": 1107,
+        "endChar": 61
+      },
+      "revId": "e75ae5d0ee734755c3495453a1e013b0d4b6edad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
