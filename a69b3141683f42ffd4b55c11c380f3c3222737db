@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4fa69c66_f626f541",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2032,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-07T08:21:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7dc6c607_21d6fcfe",
+      "range": {
+        "startLine": 2031,
+        "startChar": 4,
+        "endLine": 2032,
+        "endChar": 54
+      },
+      "revId": "a69b3141683f42ffd4b55c11c380f3c3222737db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b6b2ff2f_3fd7c4da",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2017-03-06T22:00:11Z",
       "side": 1,
       "message": "remove the brackets \u003d\u003d \n\nif !vertexArray11-\u003ehasDynamicAttrib \u0026\u0026 mode !\u003d LINE_LOOP \u0026\u0026 mode !\u003d TRIANGLE_FAN. I think the test is wrong as written.",
+      "range": {
+        "startLine": 2037,
+        "startChar": 4,
+        "endLine": 2046,
+        "endChar": 5
+      },
+      "revId": "a69b3141683f42ffd4b55c11c380f3c3222737db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "591db7a5_a9e4ad06",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2046,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-07T08:21:45Z",
+      "side": 1,
+      "message": "I have removed the brackets. But what do you mean \u0027I think the test is wrong as written\u0027?",
+      "parentUuid": "b6b2ff2f_3fd7c4da",
       "range": {
         "startLine": 2037,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "d6b99253_13ccc82d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2080,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-07T08:21:45Z",
+      "side": 1,
+      "message": "Yes, you are right. I fell into a pit to implement this feature using DrawInstancedIndirect. Since we can\u0027t find better way to use DrawInstancedIndirect for dynamic buffer, I think directly calling DrawInstanced is a good way to do it. Thanks for pointing it out.",
+      "parentUuid": "696277bc_76622db0",
+      "range": {
+        "startLine": 2080,
+        "startChar": 20,
+        "endLine": 2080,
+        "endChar": 41
+      },
+      "revId": "a69b3141683f42ffd4b55c11c380f3c3222737db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "65d8c9f3_687abd75",
         "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
         "patchSetId": 3
@@ -82,6 +154,30 @@
       "writtenOn": "2017-03-06T22:00:11Z",
       "side": 1,
       "message": "nit: hasDynamicAttrib. \"hasDynamicAttribs\" is plural which implies more than one.",
+      "range": {
+        "startLine": 136,
+        "startChar": 20,
+        "endLine": 136,
+        "endChar": 37
+      },
+      "revId": "a69b3141683f42ffd4b55c11c380f3c3222737db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed16eddd_e99c35fe",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-07T08:21:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "65d8c9f3_687abd75",
       "range": {
         "startLine": 136,
         "startChar": 20,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "4198ba83_0849e74c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-07T08:21:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "30587fbf_d9dd9814",
+      "range": {
+        "startLine": 148,
+        "startChar": 4,
+        "endLine": 148,
+        "endChar": 30
+      },
+      "revId": "a69b3141683f42ffd4b55c11c380f3c3222737db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5def959f_464f2f0a",
         "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.h",
         "patchSetId": 3
@@ -128,6 +248,30 @@
       "writtenOn": "2017-03-06T22:00:11Z",
       "side": 1,
       "message": "comment here that this will flush any pending attrib updates.",
+      "range": {
+        "startLine": 27,
+        "startChar": 9,
+        "endLine": 27,
+        "endChar": 26
+      },
+      "revId": "a69b3141683f42ffd4b55c11c380f3c3222737db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c083ff13_e69d82f0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-07T08:21:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5def959f_464f2f0a",
       "range": {
         "startLine": 27,
         "startChar": 9,
