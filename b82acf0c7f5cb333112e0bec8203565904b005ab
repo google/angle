@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dd613f4d_4408575a",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2543,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-07T18:58:50Z",
+      "side": 1,
+      "message": "Shouldn\u0027t it be exposed only if the context was created with the flag?",
+      "revId": "b82acf0c7f5cb333112e0bec8203565904b005ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3da016fb_c9206376",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-07T18:58:50Z",
+      "side": 1,
+      "message": "The test after this line should be spun up in a new test to check the behavior when the display supports the extension, but it hasn\u0027t been enabled on the context.",
+      "revId": "b82acf0c7f5cb333112e0bec8203565904b005ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
