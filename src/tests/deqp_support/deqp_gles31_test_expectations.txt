@@ -104,9 +104,6 @@
 1442 OPENGL : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_4_texture_uint_2d_array = FAIL
 
 // D3D11 Failing Tests
-1595 D3D11 : dEQP-GLES31.functional.draw_indirect.draw_elements_indirect.* = FAIL
-1595 D3D11 : dEQP-GLES31.functional.draw_indirect.instancing.* = FAIL
-1595 D3D11 : dEQP-GLES31.functional.draw_indirect.random.* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_color_texture_samples_* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_depth_texture_samples_* = FAIL

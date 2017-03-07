@@ -137,6 +137,52 @@ IndexDataManager::~IndexDataManager()
     SafeDelete(mStreamingBufferInt);
 }
 
+bool IndexDataManager::usePrimitiveRestartWorkaround(bool primitiveRestartFixedIndexEnabled,
+                                                     GLenum type)
+{
+    // We should never have to deal with primitive restart workaround issue with GL_UNSIGNED_INT
+    // indices, since we restrict it via MAX_ELEMENT_INDEX.
+    return (!primitiveRestartFixedIndexEnabled && type == GL_UNSIGNED_SHORT &&
+            mRendererClass == RENDERER_D3D11);
+}
+
+bool IndexDataManager::isStreamingIndexData(bool primitiveRestartWorkaround,
+                                            GLenum srcType,
+                                            gl::Buffer *glBuffer)
+{
+    BufferD3D *buffer = glBuffer ? GetImplAs<BufferD3D>(glBuffer) : nullptr;
+
+    // Case 1: the indices are passed by pointer, which forces the streaming of index data
+    if (glBuffer == nullptr)
+    {
+        return true;
+    }
+
+    const GLenum dstType = (srcType == GL_UNSIGNED_INT || primitiveRestartWorkaround)
+                               ? GL_UNSIGNED_INT
+                               : GL_UNSIGNED_SHORT;
+
+    // Case 2a: the buffer can be used directly
+    if (buffer->supportsDirectBinding() && dstType == srcType)
+    {
+        return false;
+    }
+
+    // Case 2b: use a static translated copy or fall back to streaming
+    StaticIndexBufferInterface *staticBuffer = buffer->getStaticIndexBuffer();
+    if (staticBuffer == nullptr)
+    {
+        return true;
+    }
+
+    if ((staticBuffer->getBufferSize() != 0) && (staticBuffer->getIndexType() != dstType))
+    {
+        return true;
+    }
+
+    return false;
+}
+
 // This function translates a GL-style indices into DX-style indices, with their description
 // returned in translated.
 // GL can specify vertex data in immediate mode (pointer to CPU array of indices), which is not
@@ -157,9 +203,9 @@ gl::Error IndexDataManager::prepareIndexData(GLenum srcType,
     bool hasPrimitiveRestartIndex =
         translated->indexRange.vertexIndexCount < static_cast<size_t>(count) ||
         translated->indexRange.end == gl::GetPrimitiveRestartIndex(srcType);
-    bool primitiveRestartWorkaround = mRendererClass == RENDERER_D3D11 &&
-                                      !primitiveRestartFixedIndexEnabled &&
-                                      hasPrimitiveRestartIndex && srcType == GL_UNSIGNED_SHORT;
+    bool primitiveRestartWorkaround =
+        usePrimitiveRestartWorkaround(primitiveRestartFixedIndexEnabled, srcType) &&
+        hasPrimitiveRestartIndex;
 
     // We should never have to deal with MAX_UINT indices, since we restrict it via
     // MAX_ELEMENT_INDEX.
@@ -202,8 +248,7 @@ gl::Error IndexDataManager::prepareIndexData(GLenum srcType,
     }
 
     // Case 2a: the buffer can be used directly
-    if (offsetAligned && buffer->supportsDirectBinding() &&
-        dstType == srcType && !primitiveRestartWorkaround)
+    if (offsetAligned && buffer->supportsDirectBinding() && dstType == srcType)
     {
         translated->storage = buffer;
         translated->indexBuffer = nullptr;

@@ -411,6 +411,9 @@ class Renderer11 : public RendererD3D
                                        GLenum type,
                                        const GLvoid *indirect);
 
+    // Support directly using indirect draw buffer.
+    bool supportsFastIndirectDraw(const gl::State &state, GLenum mode, GLenum type);
+
     void generateCaps(gl::Caps *outCaps,
                       gl::TextureCapsMap *outTextureCaps,
                       gl::Extensions *outExtensions,
