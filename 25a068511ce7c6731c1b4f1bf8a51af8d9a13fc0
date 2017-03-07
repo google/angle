@@ -1,0 +1,95 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "223a8978_6a6d8e22",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1980,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-07T17:47:08Z",
+      "side": 1,
+      "message": "nit: have you considered using a vector\u003cbool\u003e resized to MaxUniformLocations? (I\u0027m not 100% sure it would be better than a set)",
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f393094_7b4ec0bb",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2082,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-07T17:47:08Z",
+      "side": 1,
+      "message": "This could be folded in the loop above under if (uniform.staticUse)",
+      "range": {
+        "startLine": 2068,
+        "startChar": 0,
+        "endLine": 2082,
+        "endChar": 9
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7438d8db_d56d6edc",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2085,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-07T17:47:08Z",
+      "side": 1,
+      "message": "nit: gather the reserved but unused locations...",
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "09fab668_4511c060",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2136,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-07T17:47:08Z",
+      "side": 1,
+      "message": "nit this condition is not needed, nothing happens if mUniform is empty.",
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1df7fd26_3067fefa",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2827,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-07T17:47:08Z",
+      "side": 1,
+      "message": "This is the only non-recursive call to flattenUniform. How about making flattenUniform take only uniform and samplerUniforms, then have it extract information and call a flattenUniformImpl. It would allow hiding the pointer to location that\u0027s used to keep state inside the recursive calls.",
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
