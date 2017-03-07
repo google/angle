@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "26c3c8cb_58128e85",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 57
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-03-07T21:02:15Z",
+      "side": 1,
+      "message": "I\u0027d reword it \"Maximum tested stride and offset are limited\"",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 51
+      },
+      "revId": "c76c74ee45a1b333d441db86ed80eac1b3f494d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "775ef14d_765ef45c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 57
+      },
+      "lineNbr": 1230,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-03-07T21:02:15Z",
+      "side": 1,
+      "message": "So, D3D11 can support any offset?\nI saw your data on strides supported by different platforms, was there something on offsets as well?",
+      "range": {
+        "startLine": 1230,
+        "startChar": 42,
+        "endLine": 1230,
+        "endChar": 75
+      },
+      "revId": "c76c74ee45a1b333d441db86ed80eac1b3f494d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ca57f4aa_9efc5a1a",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 57
+      },
+      "lineNbr": 699,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-03-07T21:02:15Z",
+      "side": 1,
+      "message": "update",
+      "range": {
+        "startLine": 699,
+        "startChar": 16,
+        "endLine": 699,
+        "endChar": 57
+      },
+      "revId": "c76c74ee45a1b333d441db86ed80eac1b3f494d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ed601d9_444c5c61",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 57
+      },
+      "lineNbr": 706,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-03-07T21:02:15Z",
+      "side": 1,
+      "message": "remove",
+      "range": {
+        "startLine": 706,
+        "startChar": 4,
+        "endLine": 706,
+        "endChar": 75
+      },
+      "revId": "c76c74ee45a1b333d441db86ed80eac1b3f494d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "787bc373_b3efa324",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 57
+      },
+      "lineNbr": 712,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-03-07T21:02:15Z",
+      "side": 1,
+      "message": "update",
+      "range": {
+        "startLine": 712,
+        "startChar": 16,
+        "endLine": 712,
+        "endChar": 66
+      },
+      "revId": "c76c74ee45a1b333d441db86ed80eac1b3f494d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b845c6e_271e1003",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 57
+      },
+      "lineNbr": 720,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-03-07T21:02:15Z",
+      "side": 1,
+      "message": "remove",
+      "range": {
+        "startLine": 720,
+        "startChar": 4,
+        "endLine": 720,
+        "endChar": 92
+      },
+      "revId": "c76c74ee45a1b333d441db86ed80eac1b3f494d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
