@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "91b6e153_c0efb9d4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2046,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-07T19:12:58Z",
+      "side": 1,
+      "message": "I mean the if statement was not making the correct check because of the brackets. It is good in the latest patch set.",
+      "parentUuid": "591db7a5_a9e4ad06",
+      "range": {
+        "startLine": 2037,
+        "startChar": 4,
+        "endLine": 2046,
+        "endChar": 5
+      },
+      "revId": "a69b3141683f42ffd4b55c11c380f3c3222737db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "696277bc_76622db0",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 3

@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "09a33a3b_cb352b2b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-07T19:12:58Z",
+      "side": 1,
+      "message": "nit: check the dynamic attribs mask",
+      "range": {
+        "startLine": 27,
+        "startChar": 63,
+        "endLine": 27,
+        "endChar": 71
+      },
+      "revId": "b3f39172b628550252770551bc6db159fd990278",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "897bd5b8_6b0b97ca",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-07T19:12:58Z",
+      "side": 1,
+      "message": "nit: This",
+      "range": {
+        "startLine": 27,
+        "startChar": 7,
+        "endLine": 27,
+        "endChar": 10
+      },
+      "revId": "b3f39172b628550252770551bc6db159fd990278",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
