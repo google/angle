@@ -517,6 +517,10 @@ EGLAPI EGLBoolean EGLAPIENTRY eglPresentationTimeANDROID (EGLDisplay dpy, EGLSur
 #define EGL_RECORDABLE_ANDROID            0x3142
 #endif /* EGL_ANDROID_recordable */
 
+#ifndef EGL_ANGLE_create_context_robust_resource_initialization
+#define EGL_ANGLE_create_context_robust_resource_initialization 1
+#define EGL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE 0x320F
+#endif /* EGL_ANGLE_create_context_robust_resource_initialization */
 
 #ifndef EGL_ANGLE_d3d_share_handle_client_buffer
 #define EGL_ANGLE_d3d_share_handle_client_buffer 1

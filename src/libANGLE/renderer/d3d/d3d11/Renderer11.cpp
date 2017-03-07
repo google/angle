@@ -1103,6 +1103,8 @@ void Renderer11::generateDisplayExtensions(egl::DisplayExtensions *outExtensions
 
     // Contexts are virtualized so textures can be shared globally
     outExtensions->displayTextureShareGroup = true;
+
+    outExtensions->createContextRobustResourceInitialization = true;
 }
 
 gl::Error Renderer11::flush()

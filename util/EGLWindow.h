@@ -80,6 +80,7 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     }
     void setVulkanLayersEnabled(bool enabled) { mVulkanLayersEnabled = enabled; }
     void setClientArraysEnabled(bool enabled) { mClientArraysEnabled = enabled; }
+    void setRobustResourceInit(bool enabled) { mRobustResourceInit = enabled; }
     void setSwapInterval(EGLint swapInterval) { mSwapInterval = swapInterval; }
 
     static EGLBoolean FindEGLConfig(EGLDisplay dpy, const EGLint *attrib_list, EGLConfig *config);
@@ -103,7 +104,15 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     bool isDebugEnabled() const { return mDebug; }
     EGLint getSwapInterval() const { return mSwapInterval; }
 
+    // Internally initializes the Display, Surface and Context.
     bool initializeGL(OSWindow *osWindow);
+
+    // Only initializes the Display and Surface.
+    bool initializeDisplayAndSurface(OSWindow *osWindow);
+
+    // Only initializes the Context.
+    bool initializeContext();
+
     void destroyGL();
     bool isGLInitialized() const;
 
@@ -115,6 +124,8 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
 
     EGLint mClientMajorVersion;
     EGLint mClientMinorVersion;
+    EGLint mEGLMajorVersion;
+    EGLint mEGLMinorVersion;
     EGLPlatformParameters mPlatform;
     int mRedBits;
     int mGreenBits;
@@ -129,6 +140,7 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     bool mWebGLCompatibility;
     bool mBindGeneratesResource;
     bool mClientArraysEnabled;
+    bool mRobustResourceInit;
     EGLint mSwapInterval;
     Optional<bool> mVulkanLayersEnabled;
 };

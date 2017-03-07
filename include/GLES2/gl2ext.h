@@ -841,6 +841,11 @@ GL_APICALL void GL_APIENTRY glGetPerfMonitorCounterDataAMD (GLuint monitor, GLen
 #define GL_ANDROID_extension_pack_es31a 1
 #endif /* GL_ANDROID_extension_pack_es31a */
 
+#ifndef GL_ANGLE_client_arrays
+#define GL_ANGLE_client_arrays 1
+#define GL_CLIENT_ARRAYS_ANGLE 0x93AA
+#endif /* GL_ANGLE_client_arrays */
+
 #ifndef GL_ANGLE_depth_texture
 #define GL_ANGLE_depth_texture 1
 #endif /* GL_ANGLE_depth_texture */
@@ -867,10 +872,10 @@ GL_APICALL GLboolean GL_APIENTRY glRequestExtensionANGLE (const GLchar *name);
 #endif
 #endif /* GL_ANGLE_webgl_compatibility */
 
-#ifndef GL_ANGLE_client_arrays
-#define GL_ANGLE_client_arrays 1
-#define GL_CLIENT_ARRAYS_ANGLE            0x93AA
-#endif /* GL_ANGLE_client_arrays */
+#ifndef GL_ANGLE_robust_resource_initialization
+#define GL_ANGLE_robust_resource_initialization 1
+#define GL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE 0x93A7
+#endif /* GL_ANGLE_robust_resource_initialization */
 
 #ifndef GL_CHROMIUM_framebuffer_mixed_samples
 #define GL_CHROMIUM_frambuffer_mixed_samples 1

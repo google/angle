@@ -45,7 +45,8 @@ class State : angle::NonCopyable
                     const Version &clientVersion,
                     bool debug,
                     bool bindGeneratesResource,
-                    bool clientArraysEnabled);
+                    bool clientArraysEnabled,
+                    bool robustResourceInit);
     void reset(const Context *context);
 
     // State chunk getters
@@ -508,6 +509,9 @@ class State : angle::NonCopyable
 
     // GL_EXT_sRGB_write_control
     bool mFramebufferSRGB;
+
+    // GL_ANGLE_robust_resource_intialization
+    bool mRobustResourceInit;
 
     DirtyBits mDirtyBits;
     DirtyObjects mDirtyObjects;

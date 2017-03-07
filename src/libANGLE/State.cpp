@@ -62,7 +62,8 @@ State::State()
       mPrimitiveRestart(false),
       mMultiSampling(false),
       mSampleAlphaToOne(false),
-      mFramebufferSRGB(true)
+      mFramebufferSRGB(true),
+      mRobustResourceInit(false)
 {
 }
 
@@ -75,7 +76,8 @@ void State::initialize(const Caps &caps,
                        const Version &clientVersion,
                        bool debug,
                        bool bindGeneratesResource,
-                       bool clientArraysEnabled)
+                       bool clientArraysEnabled,
+                       bool robustResourceInit)
 {
     mMaxDrawBuffers = caps.maxDrawBuffers;
     mMaxCombinedTextureImageUnits = caps.maxCombinedTextureImageUnits;
@@ -214,6 +216,8 @@ void State::initialize(const Caps &caps,
     mPathStencilFunc = GL_ALWAYS;
     mPathStencilRef  = 0;
     mPathStencilMask = std::numeric_limits<GLuint>::max();
+
+    mRobustResourceInit = robustResourceInit;
 }
 
 void State::reset(const Context *context)
@@ -697,6 +701,8 @@ bool State::getEnableFeature(GLenum feature) const
           return areClientArraysEnabled();
       case GL_FRAMEBUFFER_SRGB_EXT:
           return getFramebufferSRGB();
+      case GL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
+          return mRobustResourceInit;
       default:                               UNREACHABLE(); return false;
     }
 }
@@ -1588,6 +1594,9 @@ void State::getBooleanv(GLenum pname, GLboolean *params)
           break;
       case GL_FRAMEBUFFER_SRGB_EXT:
           *params = getFramebufferSRGB() ? GL_TRUE : GL_FALSE;
+          break;
+      case GL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
+          *params = mRobustResourceInit ? GL_TRUE : GL_FALSE;
           break;
       default:
         UNREACHABLE();

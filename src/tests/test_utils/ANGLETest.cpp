@@ -198,7 +198,8 @@ ANGLETest::ANGLETest()
       mWidth(16),
       mHeight(16),
       mIgnoreD3D11SDKLayersWarnings(false),
-      mQuadVertexBuffer(0)
+      mQuadVertexBuffer(0),
+      mDeferContextInit(false)
 {
     mEGLWindow =
         new EGLWindow(GetParam().majorVersion, GetParam().minorVersion, GetParam().eglParameters);
@@ -252,9 +253,14 @@ void ANGLETest::SetUp()
         needSwap = true;
     }
 
-    if (!createEGLContext())
+    if (!mEGLWindow->initializeDisplayAndSurface(mOSWindow))
     {
-        FAIL() << "egl context creation failed.";
+        FAIL() << "egl display or surface init failed.";
+    }
+
+    if (!mDeferContextInit && !mEGLWindow->initializeContext())
+    {
+        FAIL() << "GL Context init failed.";
     }
 
     if (mGLESLibrary)
@@ -706,6 +712,16 @@ void ANGLETest::setClientArraysEnabled(bool enabled)
     mEGLWindow->setClientArraysEnabled(enabled);
 }
 
+void ANGLETest::setRobustResourceInit(bool enabled)
+{
+    mEGLWindow->setRobustResourceInit(enabled);
+}
+
+void ANGLETest::setDeferContextInit(bool enabled)
+{
+    mDeferContextInit = enabled;
+}
+
 int ANGLETest::getClientMajorVersion() const
 {
     return mEGLWindow->getClientMajorVersion();
@@ -734,11 +750,6 @@ int ANGLETest::getWindowHeight() const
 bool ANGLETest::isMultisampleEnabled() const
 {
     return mEGLWindow->isMultisample();
-}
-
-bool ANGLETest::createEGLContext()
-{
-    return mEGLWindow->initializeGL(mOSWindow);
 }
 
 bool ANGLETest::destroyEGLContext()

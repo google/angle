@@ -100,6 +100,8 @@ EGLWindow::EGLWindow(EGLint glesMajorVersion,
       mContext(EGL_NO_CONTEXT),
       mClientMajorVersion(glesMajorVersion),
       mClientMinorVersion(glesMinorVersion),
+      mEGLMajorVersion(0),
+      mEGLMinorVersion(0),
       mPlatform(platform),
       mRedBits(-1),
       mGreenBits(-1),
@@ -114,6 +116,7 @@ EGLWindow::EGLWindow(EGLint glesMajorVersion,
       mWebGLCompatibility(false),
       mBindGeneratesResource(true),
       mClientArraysEnabled(true),
+      mRobustResourceInit(false),
       mSwapInterval(-1)
 {
 }
@@ -149,6 +152,13 @@ EGLContext EGLWindow::getContext() const
 }
 
 bool EGLWindow::initializeGL(OSWindow *osWindow)
+{
+    if (!initializeDisplayAndSurface(osWindow))
+        return false;
+    return initializeContext();
+}
+
+bool EGLWindow::initializeDisplayAndSurface(OSWindow *osWindow)
 {
     PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT = reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(eglGetProcAddress("eglGetPlatformDisplayEXT"));
     if (!eglGetPlatformDisplayEXT)
@@ -202,54 +212,13 @@ bool EGLWindow::initializeGL(OSWindow *osWindow)
         return false;
     }
 
-    EGLint majorVersion, minorVersion;
-    if (eglInitialize(mDisplay, &majorVersion, &minorVersion) == EGL_FALSE)
+    if (eglInitialize(mDisplay, &mEGLMajorVersion, &mEGLMinorVersion) == EGL_FALSE)
     {
         destroyGL();
         return false;
     }
 
     const char *displayExtensions = eglQueryString(mDisplay, EGL_EXTENSIONS);
-
-    // EGL_KHR_create_context is required to request a non-ES2 context.
-    bool hasKHRCreateContext = strstr(displayExtensions, "EGL_KHR_create_context") != nullptr;
-    if (majorVersion != 2 && minorVersion != 0 && !hasKHRCreateContext)
-    {
-        destroyGL();
-        return false;
-    }
-
-    bool hasWebGLCompatibility =
-        strstr(displayExtensions, "EGL_ANGLE_create_context_webgl_compatibility") != nullptr;
-    if (mWebGLCompatibility && !hasWebGLCompatibility)
-    {
-        destroyGL();
-        return false;
-    }
-
-    bool hasBindGeneratesResource =
-        strstr(displayExtensions, "EGL_CHROMIUM_create_context_bind_generates_resource") != nullptr;
-    if (!mBindGeneratesResource && !hasBindGeneratesResource)
-    {
-        destroyGL();
-        return false;
-    }
-
-    bool hasClientArraysExtension =
-        strstr(displayExtensions, "EGL_ANGLE_create_context_client_arrays") != nullptr;
-    if (!mClientArraysEnabled && !hasClientArraysExtension)
-    {
-        // Non-default state requested without the extension present
-        destroyGL();
-        return false;
-    }
-
-    eglBindAPI(EGL_OPENGL_ES_API);
-    if (eglGetError() != EGL_SUCCESS)
-    {
-        destroyGL();
-        return false;
-    }
 
     std::vector<EGLint> configAttributes = {
         EGL_RED_SIZE,       (mRedBits >= 0) ? mRedBits : EGL_DONT_CARE,
@@ -306,6 +275,63 @@ bool EGLWindow::initializeGL(OSWindow *osWindow)
         return false;
     }
     ASSERT(mSurface != EGL_NO_SURFACE);
+    return true;
+}
+
+bool EGLWindow::initializeContext()
+{
+    const char *displayExtensions = eglQueryString(mDisplay, EGL_EXTENSIONS);
+
+    // EGL_KHR_create_context is required to request a ES3+ context.
+    bool hasKHRCreateContext = strstr(displayExtensions, "EGL_KHR_create_context") != nullptr;
+    if (mClientMajorVersion > 2 && !(mEGLMajorVersion > 1 || mEGLMinorVersion >= 5) &&
+        !hasKHRCreateContext)
+    {
+        destroyGL();
+        return false;
+    }
+
+    bool hasWebGLCompatibility =
+        strstr(displayExtensions, "EGL_ANGLE_create_context_webgl_compatibility") != nullptr;
+    if (mWebGLCompatibility && !hasWebGLCompatibility)
+    {
+        destroyGL();
+        return false;
+    }
+
+    bool hasBindGeneratesResource =
+        strstr(displayExtensions, "EGL_CHROMIUM_create_context_bind_generates_resource") != nullptr;
+    if (!mBindGeneratesResource && !hasBindGeneratesResource)
+    {
+        destroyGL();
+        return false;
+    }
+
+    bool hasClientArraysExtension =
+        strstr(displayExtensions, "EGL_ANGLE_create_context_client_arrays") != nullptr;
+    if (!mClientArraysEnabled && !hasClientArraysExtension)
+    {
+        // Non-default state requested without the extension present
+        destroyGL();
+        return false;
+    }
+
+    bool hasRobustResourceInit =
+        strstr(displayExtensions, "EGL_ANGLE_create_context_robust_resource_initialization") !=
+        nullptr;
+    if (mRobustResourceInit && !hasRobustResourceInit)
+    {
+        // Non-default state requested without the extension present
+        destroyGL();
+        return false;
+    }
+
+    eglBindAPI(EGL_OPENGL_ES_API);
+    if (eglGetError() != EGL_SUCCESS)
+    {
+        destroyGL();
+        return false;
+    }
 
     std::vector<EGLint> contextAttributes;
     if (hasKHRCreateContext)
@@ -342,6 +368,12 @@ bool EGLWindow::initializeGL(OSWindow *osWindow)
         {
             contextAttributes.push_back(EGL_CONTEXT_CLIENT_ARRAYS_ENABLED_ANGLE);
             contextAttributes.push_back(mClientArraysEnabled ? EGL_TRUE : EGL_FALSE);
+        }
+
+        if (hasRobustResourceInit)
+        {
+            contextAttributes.push_back(EGL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE);
+            contextAttributes.push_back(mRobustResourceInit ? EGL_TRUE : EGL_FALSE);
         }
     }
     contextAttributes.push_back(EGL_NONE);

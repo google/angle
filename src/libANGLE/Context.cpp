@@ -204,6 +204,11 @@ bool GetClientArraysEnabled(const egl::AttributeMap &attribs)
     return (attribs.get(EGL_CONTEXT_CLIENT_ARRAYS_ENABLED_ANGLE, EGL_TRUE) == EGL_TRUE);
 }
 
+bool GetRobustResourceInit(const egl::AttributeMap &attribs)
+{
+    return (attribs.get(EGL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE, EGL_FALSE) == EGL_TRUE);
+}
+
 std::string GetObjectLabelFromPointer(GLsizei length, const GLchar *label)
 {
     std::string labelName;
@@ -278,7 +283,8 @@ Context::Context(rx::EGLImplFactory *implFactory,
     initWorkarounds();
 
     mGLState.initialize(mCaps, mExtensions, getClientVersion(), GetDebug(attribs),
-                        GetBindGeneratesResource(attribs), GetClientArraysEnabled(attribs));
+                        GetBindGeneratesResource(attribs), GetClientArraysEnabled(attribs),
+                        GetRobustResourceInit(attribs));
 
     mFenceNVHandleAllocator.setBaseHandle(0);
 
@@ -2532,6 +2538,10 @@ void Context::initCaps(const egl::DisplayExtensions &displayExtensions)
 
     // Explicitly enable GL_ANGLE_robust_client_memory
     mExtensions.robustClientMemory = true;
+
+    // Determine robust resource init availability from EGL.
+    mExtensions.robustResourceInitialization =
+        displayExtensions.createContextRobustResourceInitialization;
 
     // Apply implementation limits
     mCaps.maxVertexAttributes = std::min<GLuint>(mCaps.maxVertexAttributes, MAX_VERTEX_ATTRIBS);

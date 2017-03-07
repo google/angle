@@ -464,6 +464,21 @@ Error ValidateCreateContext(Display *display, Config *configuration, gl::Context
               }
               break;
 
+          case EGL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
+              if (!display->getExtensions().createContextRobustResourceInitialization)
+              {
+                  return Error(EGL_BAD_ATTRIBUTE,
+                               "Attribute EGL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE "
+                               "requires EGL_ANGLE_create_context_robust_resource_initialization.");
+              }
+              if (value != EGL_TRUE && value != EGL_FALSE)
+              {
+                  return Error(EGL_BAD_ATTRIBUTE,
+                               "EGL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE must be "
+                               "either EGL_TRUE or EGL_FALSE.");
+              }
+              break;
+
           default:
               return Error(EGL_BAD_ATTRIBUTE, "Unknown attribute.");
         }

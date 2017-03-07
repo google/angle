@@ -34,8 +34,8 @@ Dependencies
     This extension is written against the wording of the OpenGL ES
     3.1 specification.
 
-    EGL_EXT_create_context_robust_initialization is used to request a
-    context supporting this extension to perform resource initialization.
+    EGL_ANGLE_create_context_robust_initialization is required to request a
+    context that supports this extension, and resource initialization.
 
 Overview
 
@@ -55,10 +55,9 @@ New Procedures and Functions
 New Tokens
 
     Accepted by the <value> parameter of GetBooleanv, GetIntegerv,
-    GetFloatv, GetDoublev, and GetInteger54v:
+    GetFloatv, GetDoublev, GetInteger64v, and IsEnabled:
 
         CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE    0x93A7
-
 
 Additions to Chapter 6 of the OpenGL ES 3.1 Specification (Buffer
 Objects)
@@ -121,17 +120,18 @@ and Framebuffer Objects)
     channel of each sample; otherwise, the contents of the data store
     are undefined.
 
-Interactions with EGL_ANGLE_create_context_robust_resource
+Interactions with EGL_ANGLE_create_context_robust_resource_initialization
 
     If the EGL window-system binding API is used to create a context,
     the EGL_ANGLE_create_context_robust_initialization extension is
     supported, and the attribute
-    EGL_CONTEXT_OPENGL_ROBUST_INITIALIZATION_ANGLE is set to
+    EGL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE is set to
     EGL_TRUE when eglCreateContext is called, the resulting context
     will perform robust resource initialization as described above in
     section <section>, and the
     CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE
     query will return GL_TRUE as described above in section 2.6.1.1.
+    Otherwise queries will return GL_FALSE.
 
 Issues
 
@@ -140,3 +140,4 @@ Issues
 Revision History
 
     Version 1, 2015/01/07 - first draft.
+    Version 2, 2017/03/07 - fixed EGL naming and added IsEnabled.
