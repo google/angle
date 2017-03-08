@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "c5d2a803_b199ad31",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-08T18:26:20Z",
+      "side": 1,
+      "message": "Yep, it will do the assertion for each instantiated version of the function.",
+      "parentUuid": "ea030d01_ce6c5625",
+      "range": {
+        "startLine": 52,
+        "startChar": 34,
+        "endLine": 52,
+        "endChar": 39
+      },
+      "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0e21609b_fa860060",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 10
@@ -284,6 +308,30 @@
     },
     {
       "key": {
+        "uuid": "183d6f0d_33435db9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-08T18:26:20Z",
+      "side": 1,
+      "message": "Ok, should be fine.",
+      "parentUuid": "b7c84a2a_4da9a99a",
+      "range": {
+        "startLine": 64,
+        "startChar": 22,
+        "endLine": 64,
+        "endChar": 39
+      },
+      "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f39ad884_ae0368df",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
         "patchSetId": 10
@@ -425,6 +473,30 @@
     },
     {
       "key": {
+        "uuid": "ad5cf5cb_2544ef13",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/RenderStateCache.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-08T18:26:20Z",
+      "side": 1,
+      "message": "I\u0027d say let\u0027s only do one for now so that if we encounter issues we can pin them down more easily.  Let\u0027s start with a safer limit of 2048 blend states.\n\nWe can address the other states after, no need to put them in this patch.",
+      "parentUuid": "eb39b760_0dbd4b75",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 54
+      },
+      "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e4f323f8_c965cf2d",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.h",
         "patchSetId": 10
@@ -460,6 +532,30 @@
       "side": 1,
       "message": "It is just a hint to the compiler which can be ignored but if the preference is to have it removed, I can remove it.",
       "parentUuid": "e4f323f8_c965cf2d",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 1
+      },
+      "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7423128b_6f677cb8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-08T18:26:20Z",
+      "side": 1,
+      "message": "My general rule is to not mark things as inline until we notice that there are perf issues, it can slow compile time or increase the binary size.",
+      "parentUuid": "762bc16c_2536d1cf",
       "range": {
         "startLine": 58,
         "startChar": 0,
