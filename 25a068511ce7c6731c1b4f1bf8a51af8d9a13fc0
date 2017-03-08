@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "203f4eef_bd8229c5",
+        "filename": "extensions/CHROMIUM_bind_uniform_location.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-03-08T10:56:57Z",
+      "side": 1,
+      "message": "Thanks for the heads-up, I will update Chromium as well. Is one of the copies of this document considered more authoritative than the other, or does it otherwise matter which one is updated first?",
+      "parentUuid": "b0b2b16f_9029d2bb",
+      "range": {
+        "startLine": 73,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 36
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0a5c2bd2_ecb73a35",
         "filename": "include/GLSLANG/ShaderVars.h",
         "patchSetId": 7
@@ -36,6 +60,30 @@
       "writtenOn": "2017-03-07T19:05:15Z",
       "side": 1,
       "message": "maybe we should rename this to be more clearly some type of variable that has a location, instead of some abstract Interface property.",
+      "range": {
+        "startLine": 97,
+        "startChar": 0,
+        "endLine": 100,
+        "endChar": 48
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b896444_eb1c53ec",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-03-08T10:56:57Z",
+      "side": 1,
+      "message": "Changed to \"VariableWithLocation\"",
+      "parentUuid": "0a5c2bd2_ecb73a35",
       "range": {
         "startLine": 97,
         "startChar": 0,
@@ -68,6 +116,30 @@
       "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "806b1f7f_0d054814",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-03-08T10:56:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63a4f004_70f8d12e",
+      "range": {
+        "startLine": 128,
+        "startChar": 15,
+        "endLine": 128,
+        "endChar": 28
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -129,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "d8b94214_0ca8978a",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1995,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-03-08T10:56:57Z",
+      "side": 1,
+      "message": "Not sure if I agree with this. preSetLocation may also get set to shaderLocation below so that the inner loop is simpler.",
+      "parentUuid": "65e541d9_f9d3be59",
+      "range": {
+        "startLine": 1995,
+        "startChar": 12,
+        "endLine": 1995,
+        "endChar": 27
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "abe1d9c5_cfa4d33c",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 7
@@ -163,6 +259,30 @@
       "writtenOn": "2017-03-07T19:05:15Z",
       "side": 1,
       "message": "did we do this before? does this even work with nested structs? makes me worry we\u0027re missing something.",
+      "range": {
+        "startLine": 2033,
+        "startChar": 0,
+        "endLine": 2045,
+        "endChar": 5
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "12d0aa87_01599d07",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2045,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-03-08T10:56:57Z",
+      "side": 1,
+      "message": "Before, the non-statically used uniforms were not added to the linked uniforms list in the first place. See the changes to flattenUniformsAndCheckCapsForShader().\n\nNow they need to be in the list initially to check for all possible conflicts, but need to be removed at this point because code further down the line relies on all the recorded uniforms being statically used. It took me a while to get it right, but the code should work with nested structs the same as before.",
+      "parentUuid": "006b9933_8061fe8a",
       "range": {
         "startLine": 2033,
         "startChar": 0,
@@ -310,6 +430,24 @@
     },
     {
       "key": {
+        "uuid": "59187a48_43060036",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2136,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-03-08T10:56:57Z",
+      "side": 1,
+      "message": "It\u0027s not ncessarily true. This was just a simple mistake.",
+      "parentUuid": "f391c8bc_60c8809c",
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1df7fd26_3067fefa",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 7
@@ -368,6 +506,30 @@
     },
     {
       "key": {
+        "uuid": "74c5e95d_abb08391",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2902,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-03-08T10:56:57Z",
+      "side": 1,
+      "message": "I\u0027d rather leave that to be considered separately later. It\u0027s a fairly substantial change to the translator, and I\u0027m not sure if the reduction in complexity here is worth the added complexity in the translator.",
+      "parentUuid": "621e8562_0e5d3510",
+      "range": {
+        "startLine": 2900,
+        "startChar": 55,
+        "endLine": 2902,
+        "endChar": 68
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "66530c2b_23450057",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 7
@@ -379,6 +541,30 @@
       "writtenOn": "2017-03-07T19:05:15Z",
       "side": 1,
       "message": "nit: can you rename this?",
+      "range": {
+        "startLine": 2934,
+        "startChar": 19,
+        "endLine": 2934,
+        "endChar": 33
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "932e62b9_336f6296",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2934,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-03-08T10:56:57Z",
+      "side": 1,
+      "message": "Renamed to existingUniform.",
+      "parentUuid": "66530c2b_23450057",
       "range": {
         "startLine": 2934,
         "startChar": 19,
@@ -414,6 +600,30 @@
     },
     {
       "key": {
+        "uuid": "b5a04de4_f71274e8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1260,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-03-08T10:56:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a085555e_3ce56e27",
+      "range": {
+        "startLine": 1260,
+        "startChar": 3,
+        "endLine": 1260,
+        "endChar": 37
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "690f4d73_94983d50",
         "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
         "patchSetId": 7
@@ -434,6 +644,30 @@
       "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "63f496a9_224de69c",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 526,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-03-08T10:56:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "690f4d73_94983d50",
+      "range": {
+        "startLine": 526,
+        "startChar": 16,
+        "endLine": 526,
+        "endChar": 29
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -460,6 +694,30 @@
     },
     {
       "key": {
+        "uuid": "d523491e_9a133a44",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-03-08T10:56:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad1cf610_16bb188d",
+      "range": {
+        "startLine": 532,
+        "startChar": 4,
+        "endLine": 532,
+        "endChar": 13
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "302e3b85_faad91ff",
         "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
         "patchSetId": 7
@@ -483,6 +741,30 @@
     },
     {
       "key": {
+        "uuid": "0ed2d821_c8a9373e",
+        "filename": "src/tests/gl_tests/BindUniformLocationTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 575,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-03-08T10:56:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "302e3b85_faad91ff",
+      "range": {
+        "startLine": 575,
+        "startChar": 4,
+        "endLine": 575,
+        "endChar": 13
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b64d5694_8d1de383",
         "filename": "src/tests/gl_tests/UniformTest.cpp",
         "patchSetId": 7
@@ -494,6 +776,30 @@
       "writtenOn": "2017-03-07T19:05:15Z",
       "side": 1,
       "message": "this doesn\u0027t seem correct. use ANGLE_GL_PROGRAM here.",
+      "range": {
+        "startLine": 800,
+        "startChar": 4,
+        "endLine": 800,
+        "endChar": 28
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a194341c_23f434fc",
+        "filename": "src/tests/gl_tests/UniformTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 800,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-03-08T10:56:57Z",
+      "side": 1,
+      "message": "You\u0027re right, ANGLE_GL_PROGRAM is better, and this assertion is wrong.",
+      "parentUuid": "b64d5694_8d1de383",
       "range": {
         "startLine": 800,
         "startChar": 4,
@@ -526,6 +832,30 @@
       "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a87945ec_330df75a",
+        "filename": "src/tests/gl_tests/UniformTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 828,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-03-08T10:56:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "73f21641_8c991f9b",
+      "range": {
+        "startLine": 828,
+        "startChar": 4,
+        "endLine": 828,
+        "endChar": 13
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
