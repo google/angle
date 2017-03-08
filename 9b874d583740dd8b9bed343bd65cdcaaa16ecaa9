@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ea030d01_ce6c5625",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-08T07:14:32Z",
+      "side": 1,
+      "message": "I didn\u0027t realize that you could use template parameters for static_asserts. Yes, T seems to make sense here. I am guessing that in this case it will run this check against all variants of T that are used in the code as opposed to all possible types?",
+      "parentUuid": "1941e2e3_8b0be428",
+      "range": {
+        "startLine": 52,
+        "startChar": 34,
+        "endLine": 52,
+        "endChar": 39
+      },
+      "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0e21609b_fa860060",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 10
@@ -45,6 +69,30 @@
       "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e2b4f3b8_8c354d87",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-08T07:14:32Z",
+      "side": 1,
+      "message": "The contents of mCbCache are initialized to zero earlier on.",
+      "parentUuid": "0e21609b_fa860060",
+      "range": {
+        "startLine": 221,
+        "startChar": 0,
+        "endLine": 226,
+        "endChar": 0
+      },
+      "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "0870ec63_9eda9808",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 308,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-08T07:14:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "090773f8_a4a9bd52",
+      "range": {
+        "startLine": 308,
+        "startChar": 9,
+        "endLine": 308,
+        "endChar": 31
+      },
+      "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "527b29c3_cace4cc4",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 10
@@ -91,6 +163,30 @@
       "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "febacc28_45820d49",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-08T07:14:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "527b29c3_cace4cc4",
+      "range": {
+        "startLine": 370,
+        "startChar": 19,
+        "endLine": 370,
+        "endChar": 51
+      },
+      "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "789fe0b8_f116f5f4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-08T07:14:32Z",
+      "side": 1,
+      "message": "Yes. It is AlphaEmulation. Will expand it in the code as well.",
+      "parentUuid": "0fdd6dc7_6d51a485",
+      "range": {
+        "startLine": 402,
+        "startChar": 9,
+        "endLine": 402,
+        "endChar": 14
+      },
+      "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cbfdf31e_1cbb0146",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
         "patchSetId": 10
@@ -128,6 +248,30 @@
       "writtenOn": "2017-03-07T22:04:09Z",
       "side": 1,
       "message": "This used to use the lazy input layout, can it stay that way?",
+      "range": {
+        "startLine": 64,
+        "startChar": 22,
+        "endLine": 64,
+        "endChar": 39
+      },
+      "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b7c84a2a_4da9a99a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-08T07:14:32Z",
+      "side": 1,
+      "message": "I changed it because with LazyInputLayout, the parameters would include the input layout descriptor which would either have to be statically defined or created on the stack. Statically defining the input layout didn\u0027t seem like the right way to go and if the input layout were created on the stack, the LazyInputLayout would have to be allocated and initialized on the heap. My impression is that there isn\u0027t a huge amount of overhead with creating the input layout and so using a comptr here seemed like the better way to go in these circumstances.",
+      "parentUuid": "cbfdf31e_1cbb0146",
       "range": {
         "startLine": 64,
         "startChar": 22,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "b45d791a_bd82bd37",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-08T07:14:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f39ad884_ae0368df",
+      "range": {
+        "startLine": 80,
+        "startChar": 15,
+        "endLine": 80,
+        "endChar": 33
+      },
+      "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "96f05c7c_5a3ac05a",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
         "patchSetId": 10
@@ -183,6 +351,30 @@
       "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f38469f_1b704bc9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-08T07:14:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "96f05c7c_5a3ac05a",
+      "range": {
+        "startLine": 85,
+        "startChar": 4,
+        "endLine": 85,
+        "endChar": 31
+      },
+      "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "eb39b760_0dbd4b75",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/RenderStateCache.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-08T07:14:32Z",
+      "side": 1,
+      "message": "Glad to hear you say that :)  I have been contemplating doing so but didn\u0027t want to impact the rest of the code. I will adjust them all to 1024 and the existing warnings will let us know if we reach these thresholds, we can reconsider the cache sizes. In the meantime we should save some memory usage.\n\nJust to clarify, you meant reduce each cache size to 1024 elements, correct? Or was it just to reduce the blendstate cache to 1024 elements?",
+      "parentUuid": "f7731576_4a7b2991",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 54
+      },
+      "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e4f323f8_c965cf2d",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.h",
         "patchSetId": 10
@@ -232,6 +448,30 @@
     },
     {
       "key": {
+        "uuid": "762bc16c_2536d1cf",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-08T07:14:32Z",
+      "side": 1,
+      "message": "It is just a hint to the compiler which can be ignored but if the preference is to have it removed, I can remove it.",
+      "parentUuid": "e4f323f8_c965cf2d",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 1
+      },
+      "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cdc9ee31_09a58a97",
         "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Clear11.hlsl",
         "patchSetId": 10
@@ -252,6 +492,30 @@
       "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e47eec69_1371a44e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Clear11.hlsl",
+        "patchSetId": 10
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-08T07:14:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cdc9ee31_09a58a97",
+      "range": {
+        "startLine": 7,
+        "startChar": 72,
+        "endLine": 7,
+        "endChar": 73
+      },
+      "revId": "9b874d583740dd8b9bed343bd65cdcaaa16ecaa9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
