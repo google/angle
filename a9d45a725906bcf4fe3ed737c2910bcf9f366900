@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "c84b8404_07361f39",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 961,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-08T02:11:15Z",
+      "side": 1,
+      "message": "Yea, you\u0027re right.  We could make a helper function to generate a set that takes into account one of the formats being GL_NONE and generates a new set as the intersection.  I would prefer that to using a fixed array of samples that may not work for all the formats or not allow some multisample counts that the formats do support.\n\nAs for the D3D sample counts, 1 is a valid \"multisample\" count in GL and textures using 1 would still follow the multisample rules.  So we need to make sure we expose configs that have both 0 and 1 for the samples.  We can probably accomplish that by inserting a 0 into the intersection that we calculate.",
+      "parentUuid": "351f8644_1c5a05b8",
+      "range": {
+        "startLine": 961,
+        "startChar": 4,
+        "endLine": 961,
+        "endChar": 57
+      },
+      "revId": "a9d45a725906bcf4fe3ed737c2910bcf9f366900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2f182144_86577789",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 3
@@ -65,6 +89,29 @@
         "startChar": 16,
         "endLine": 996,
         "endChar": 0
+      },
+      "revId": "a9d45a725906bcf4fe3ed737c2910bcf9f366900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "effb09fc_a3dfbf1a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1051,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-08T02:11:15Z",
+      "side": 1,
+      "message": "Just checked the spec and we should be setting this to 1 if samples is not 0.  This parameter is just a boolean \"this config uses multisampling\".",
+      "range": {
+        "startLine": 1051,
+        "startChar": 39,
+        "endLine": 1051,
+        "endChar": 40
       },
       "revId": "a9d45a725906bcf4fe3ed737c2910bcf9f366900",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -142,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "67a4cdd1_b72dc959",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-08T02:11:15Z",
+      "side": 1,
+      "message": "I think that we probably don\u0027t need to store the multisampled quality at all.  For the texture buffer, there is no need to use it anywhere since we don\u0027t create a swap chain for that texture and when we do need to create a swap chain we can always choose the same quality (probably 0).",
+      "parentUuid": "9e70e81d_b35a519e",
+      "range": {
+        "startLine": 213,
+        "startChar": 0,
+        "endLine": 214,
+        "endChar": 65
+      },
+      "revId": "a9d45a725906bcf4fe3ed737c2910bcf9f366900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "32641862_5e81373f",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 3
@@ -177,6 +248,30 @@
       "side": 1,
       "message": "Perhaps it\u0027s best to always expose a egl::Config object with a sample count of 0, instead of only exposing egl::Config objects that had more than 0 samples. That way these \"no-MSAA\" GL checks require no change.",
       "parentUuid": "32641862_5e81373f",
+      "range": {
+        "startLine": 2108,
+        "startChar": 64,
+        "endLine": 2108,
+        "endChar": 67
+      },
+      "revId": "a9d45a725906bcf4fe3ed737c2910bcf9f366900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2b26b38d_5a151b79",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2108,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-08T02:11:15Z",
+      "side": 1,
+      "message": "Yes, we need to follow GL\u0027s rules for what\u0027s exposed.",
+      "parentUuid": "7c186925_3bac90f6",
       "range": {
         "startLine": 2108,
         "startChar": 64,
