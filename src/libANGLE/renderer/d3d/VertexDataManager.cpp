@@ -80,13 +80,19 @@ bool DirectStoragePossible(const gl::VertexAttribute &attrib, const gl::VertexBi
     // 4-byte boundary, whichever is smaller. (Undocumented, and experimentally confirmed)
     size_t alignment = 4;
 
+    // TODO(jmadill): add VertexFormatCaps
+    BufferFactoryD3D *factory = bufferD3D->getFactory();
+
+    gl::VertexFormatType vertexFormatType = gl::GetVertexFormatType(attrib);
+
+    // CPU-converted vertex data must be converted (naturally).
+    if ((factory->getVertexConversionType(vertexFormatType) & VERTEX_CONVERT_CPU) != 0)
+    {
+        return false;
+    }
+
     if (attrib.type != GL_FLOAT)
     {
-        gl::VertexFormatType vertexFormatType = gl::GetVertexFormatType(attrib);
-
-        // TODO(jmadill): add VertexFormatCaps
-        BufferFactoryD3D *factory = bufferD3D->getFactory();
-
         auto errorOrElementSize = factory->getVertexSpaceRequired(attrib, binding, 1, 0);
         if (errorOrElementSize.isError())
         {
@@ -95,12 +101,6 @@ bool DirectStoragePossible(const gl::VertexAttribute &attrib, const gl::VertexBi
         }
 
         alignment = std::min<size_t>(errorOrElementSize.getResult(), 4);
-
-        // CPU-converted vertex data must be converted (naturally).
-        if ((factory->getVertexConversionType(vertexFormatType) & VERTEX_CONVERT_CPU) != 0)
-        {
-            return false;
-        }
     }
 
     GLintptr offset = ComputeVertexAttributeOffset(attrib, binding);
