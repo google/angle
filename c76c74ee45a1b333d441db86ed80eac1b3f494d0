@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8f879072_11eceac5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 57
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-08T03:12:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "26c3c8cb_58128e85",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 51
+      },
+      "revId": "c76c74ee45a1b333d441db86ed80eac1b3f494d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "775ef14d_765ef45c",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 57
@@ -36,6 +60,30 @@
       "writtenOn": "2017-03-07T21:02:15Z",
       "side": 1,
       "message": "So, D3D11 can support any offset?\nI saw your data on strides supported by different platforms, was there something on offsets as well?",
+      "range": {
+        "startLine": 1230,
+        "startChar": 42,
+        "endLine": 1230,
+        "endChar": 75
+      },
+      "revId": "c76c74ee45a1b333d441db86ed80eac1b3f494d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7952ad87_f51713f9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 57
+      },
+      "lineNbr": 1230,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-08T03:12:22Z",
+      "side": 1,
+      "message": "I tested this value (2147483647) as offset on D3D11 on our Win10 machines, and DrawArraysWithLargeOffset can pass with this value. But the test fails on Windows trybots. (See trybot results on PatchSet 58 for more details) \n\nTherefore I think D3D11 has no limit on maximum offset, just as Nexus 5x does. That is why I choose this value here.",
+      "parentUuid": "775ef14d_765ef45c",
       "range": {
         "startLine": 1230,
         "startChar": 42,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "3610ccf7_77b87dc9",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 57
+      },
+      "lineNbr": 699,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-08T03:12:22Z",
+      "side": 1,
+      "message": "Done\nSorry for my carelessness.",
+      "parentUuid": "ca57f4aa_9efc5a1a",
+      "range": {
+        "startLine": 699,
+        "startChar": 16,
+        "endLine": 699,
+        "endChar": 57
+      },
+      "revId": "c76c74ee45a1b333d441db86ed80eac1b3f494d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0ed601d9_444c5c61",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 57
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "51290ce0_f3f9fc91",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 57
+      },
+      "lineNbr": 706,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-08T03:12:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0ed601d9_444c5c61",
+      "range": {
+        "startLine": 706,
+        "startChar": 4,
+        "endLine": 706,
+        "endChar": 75
+      },
+      "revId": "c76c74ee45a1b333d441db86ed80eac1b3f494d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "787bc373_b3efa324",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 57
@@ -105,6 +201,30 @@
       "writtenOn": "2017-03-07T21:02:15Z",
       "side": 1,
       "message": "update",
+      "range": {
+        "startLine": 712,
+        "startChar": 16,
+        "endLine": 712,
+        "endChar": 66
+      },
+      "revId": "c76c74ee45a1b333d441db86ed80eac1b3f494d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6a59daad_b8478fb2",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 57
+      },
+      "lineNbr": 712,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-08T03:12:22Z",
+      "side": 1,
+      "message": "Done\nSorry for my carelessness.",
+      "parentUuid": "787bc373_b3efa324",
       "range": {
         "startLine": 712,
         "startChar": 16,
@@ -151,6 +271,30 @@
       "writtenOn": "2017-03-07T21:06:30Z",
       "side": 1,
       "message": "I asked him to leave these in. Maybe add a comment like \"uncomment for debugging\". removing is also fine.",
+      "parentUuid": "8b845c6e_271e1003",
+      "range": {
+        "startLine": 720,
+        "startChar": 4,
+        "endLine": 720,
+        "endChar": 92
+      },
+      "revId": "c76c74ee45a1b333d441db86ed80eac1b3f494d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f6bb807_725a9cab",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 57
+      },
+      "lineNbr": 720,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-08T03:12:22Z",
+      "side": 1,
+      "message": "Done",
       "parentUuid": "8b845c6e_271e1003",
       "range": {
         "startLine": 720,
