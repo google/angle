@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6e561683_7425afef",
+        "filename": "extensions/CHROMIUM_bind_uniform_location.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-08T18:05:01Z",
+      "side": 1,
+      "message": "Maybe we should have this override the uniform location so that it matches the bindAttribLocation API?  Given that we already translate the uniform locations for the backends, the binding indirection added by this extension can still be tracked entirely in the gl layer.",
+      "range": {
+        "startLine": 73,
+        "startChar": 4,
+        "endLine": 75,
+        "endChar": 36
+      },
+      "revId": "0eb124a54609280c6fc882ac0aeeb9ec9fd58879",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d13abacf_0d97033b",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1983,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-08T18:05:01Z",
+      "side": 1,
+      "message": "This formatting really poorly :(  Can you put the comment above the declaration?",
+      "range": {
+        "startLine": 1980,
+        "startChar": 4,
+        "endLine": 1983,
+        "endChar": 88
+      },
+      "revId": "0eb124a54609280c6fc882ac0aeeb9ec9fd58879",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c521d88_ea0e6289",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1260,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-08T18:05:01Z",
+      "side": 1,
+      "message": "I think that since we just translate the locations internally, we could use any limit we want.",
+      "range": {
+        "startLine": 1260,
+        "startChar": 32,
+        "endLine": 1260,
+        "endChar": 36
+      },
+      "revId": "0eb124a54609280c6fc882ac0aeeb9ec9fd58879",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
