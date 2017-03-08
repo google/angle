@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "de7f04a3_e875e30a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-08T18:58:24Z",
+      "side": 1,
+      "message": "Can you add a comment: \"TODO: possibly share this buffer type with shader storage buffers\"",
+      "range": {
+        "startLine": 38,
+        "startChar": 4,
+        "endLine": 38,
+        "endChar": 25
+      },
+      "revId": "398dec07d0433e2c12595da02ce85aef75b9c1c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f65a72c5_97347591",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2049,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-08T18:58:24Z",
+      "side": 1,
+      "message": "Can you put a typedef of the GL struct into angletypes.h?\n\n    struct DrawElementsIndirectCommand\n    {\n        GLuint  count;\n        GLuint  primCount;\n        GLuint  firstIndex;\n        GLuint  baseVertex;\n        GLuint  baseInstance;\n    };\n    static_assert(sizeof(DrawElementsIndirectCommand) \u003d\u003d 20, \"Unexpected size of DrawElementsIndirectCommand\");\n\n    struct DrawArraysIndirectCommand\n    {\n        GLuint  count;\n        GLuint  instanceCount;\n        GLuint  first;\n        GLuint  baseInstance;\n    };\n    static_assert(sizeof(DrawElementsIndirectCommand) \u003d\u003d 16, \"Unexpected size of DrawArraysIndirectCommand\");\n\nThis will make it easier to reference the members of the structs.",
+      "range": {
+        "startLine": 2049,
+        "startChar": 4,
+        "endLine": 2049,
+        "endChar": 24
+      },
+      "revId": "398dec07d0433e2c12595da02ce85aef75b9c1c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
