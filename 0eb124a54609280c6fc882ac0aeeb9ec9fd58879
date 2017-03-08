@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7c089c4b_2f1a59f9",
+        "filename": "extensions/CHROMIUM_bind_uniform_location.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-08T18:20:11Z",
+      "side": 1,
+      "message": "I think that\u0027s more consistent with how bindings work with other things like attributes. And good point. I think we should handle this as much at the GL layer as possible.",
+      "parentUuid": "6e561683_7425afef",
+      "range": {
+        "startLine": 73,
+        "startChar": 4,
+        "endLine": 75,
+        "endChar": 36
+      },
+      "revId": "0eb124a54609280c6fc882ac0aeeb9ec9fd58879",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d13abacf_0d97033b",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 9

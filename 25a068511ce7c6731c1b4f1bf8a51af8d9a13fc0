@@ -530,6 +530,30 @@
     },
     {
       "key": {
+        "uuid": "d657be2e_4ba80055",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2902,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-08T18:20:11Z",
+      "side": 1,
+      "message": "My concern is that other devs have said this code is getting too complex to understand. We really need to organize the uniform handling into its own encapsulated section of code, possibly a helper class, or another file.\n\nIn any case, looking at the translator, this is doing similar to the same code as ExpandVariables is doing in the translator, so it seems OK. Please call the variable \"markStaticUse\" to mirror the translator variable.",
+      "parentUuid": "74c5e95d_abb08391",
+      "range": {
+        "startLine": 2900,
+        "startChar": 55,
+        "endLine": 2902,
+        "endChar": 68
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "66530c2b_23450057",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 7
