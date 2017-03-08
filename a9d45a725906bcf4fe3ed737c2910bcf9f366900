@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "351f8644_1c5a05b8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 961,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-03-08T01:25:50Z",
+      "side": 1,
+      "message": "It looks like the GL_NONE depth format will result in an empty set and does not generate a valid EGLConfig. Because of that, the EGLSurfaceTest fails when we use the intersection of the depth and color sample counts. Also, it looks like these use the D3D sample counts and would fail if used for the GL \"no-MSAA\" checks.",
+      "parentUuid": "0757d8f8_a16ef554",
+      "range": {
+        "startLine": 961,
+        "startChar": 4,
+        "endLine": 961,
+        "endChar": 57
+      },
+      "revId": "a9d45a725906bcf4fe3ed737c2910bcf9f366900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2f182144_86577789",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 3
@@ -94,6 +118,30 @@
     },
     {
       "key": {
+        "uuid": "9e70e81d_b35a519e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-03-08T01:25:50Z",
+      "side": 1,
+      "message": "It doesn\u0027t appear a similar \"quality\" parameter is kept in the EGL config nor does an existing EGL attribute exist for us to initialize from. I can pipe just the sample count but I\u0027m less certain about how to grab the quality outside of the D3D texture description.",
+      "parentUuid": "dd4a12a1_1399556d",
+      "range": {
+        "startLine": 213,
+        "startChar": 0,
+        "endLine": 214,
+        "endChar": 65
+      },
+      "revId": "a9d45a725906bcf4fe3ed737c2910bcf9f366900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "32641862_5e81373f",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 3
@@ -105,6 +153,30 @@
       "writtenOn": "2017-03-07T01:32:26Z",
       "side": 1,
       "message": "This should not be changed.",
+      "range": {
+        "startLine": 2108,
+        "startChar": 64,
+        "endLine": 2108,
+        "endChar": 67
+      },
+      "revId": "a9d45a725906bcf4fe3ed737c2910bcf9f366900",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7c186925_3bac90f6",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2108,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-03-08T01:25:50Z",
+      "side": 1,
+      "message": "Perhaps it\u0027s best to always expose a egl::Config object with a sample count of 0, instead of only exposing egl::Config objects that had more than 0 samples. That way these \"no-MSAA\" GL checks require no change.",
+      "parentUuid": "32641862_5e81373f",
       "range": {
         "startLine": 2108,
         "startChar": 64,
