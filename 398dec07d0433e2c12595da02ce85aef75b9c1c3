@@ -93,6 +93,30 @@
       "revId": "398dec07d0433e2c12595da02ce85aef75b9c1c3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6e406236_160001c1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2049,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-09T18:40:01Z",
+      "side": 1,
+      "message": "I would still like you to add the GL structures because they will likely be useful to the other backends too.  I think it makes more sense to use those names because that is what the data represents.\n\nAlso, use static_cast or reinterpret_cast instead of the c-style casts.",
+      "parentUuid": "454ea61d_c34d4e3e",
+      "range": {
+        "startLine": 2049,
+        "startChar": 4,
+        "endLine": 2049,
+        "endChar": 24
+      },
+      "revId": "398dec07d0433e2c12595da02ce85aef75b9c1c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
