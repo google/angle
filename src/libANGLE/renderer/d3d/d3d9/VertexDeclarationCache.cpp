@@ -232,7 +232,8 @@ gl::Error VertexDeclarationCache::applyDeclaration(
     HRESULT result = device->CreateVertexDeclaration(elements, &lastCache->vertexDeclaration);
     if (FAILED(result))
     {
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to create internal vertex declaration, result: 0x%X.", result);
+        return gl::OutOfMemory() << "Failed to create internal vertex declaration, "
+                                 << gl::FmtHR(result);
     }
 
     device->SetVertexDeclaration(lastCache->vertexDeclaration);

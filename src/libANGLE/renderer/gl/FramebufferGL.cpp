@@ -188,7 +188,7 @@ Error FramebufferGL::invalidateSub(size_t count,
                                              area.height);
     }
 
-    return NoError();
+    return gl::NoError();
 }
 
 Error FramebufferGL::clear(const gl::Context *context, GLbitfield mask)
@@ -197,7 +197,7 @@ Error FramebufferGL::clear(const gl::Context *context, GLbitfield mask)
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
     mFunctions->clear(mask);
 
-    return NoError();
+    return gl::NoError();
 }
 
 Error FramebufferGL::clearBufferfv(const gl::Context *context,
@@ -209,7 +209,7 @@ Error FramebufferGL::clearBufferfv(const gl::Context *context,
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
     mFunctions->clearBufferfv(buffer, drawbuffer, values);
 
-    return NoError();
+    return gl::NoError();
 }
 
 Error FramebufferGL::clearBufferuiv(const gl::Context *context,
@@ -221,7 +221,7 @@ Error FramebufferGL::clearBufferuiv(const gl::Context *context,
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
     mFunctions->clearBufferuiv(buffer, drawbuffer, values);
 
-    return NoError();
+    return gl::NoError();
 }
 
 Error FramebufferGL::clearBufferiv(const gl::Context *context,
@@ -233,7 +233,7 @@ Error FramebufferGL::clearBufferiv(const gl::Context *context,
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
     mFunctions->clearBufferiv(buffer, drawbuffer, values);
 
-    return NoError();
+    return gl::NoError();
 }
 
 Error FramebufferGL::clearBufferfi(const gl::Context *context,
@@ -246,7 +246,7 @@ Error FramebufferGL::clearBufferfi(const gl::Context *context,
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
     mFunctions->clearBufferfi(buffer, drawbuffer, depth, stencil);
 
-    return NoError();
+    return gl::NoError();
 }
 
 GLenum FramebufferGL::getImplementationColorReadFormat() const

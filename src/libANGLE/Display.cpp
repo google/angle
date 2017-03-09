@@ -442,7 +442,7 @@ Error Display::initialize()
 
     if (isInitialized())
     {
-        return egl::Error(EGL_SUCCESS);
+        return NoError();
     }
 
     Error error = mImplementation->initialize(this);
@@ -459,7 +459,7 @@ Error Display::initialize()
     if (mConfigSet.size() == 0)
     {
         mImplementation->terminate();
-        return Error(EGL_NOT_INITIALIZED);
+        return EglNotInitialized();
     }
 
     initDisplayExtensions();
@@ -488,7 +488,7 @@ Error Display::initialize()
 
     mInitialized = true;
 
-    return egl::Error(EGL_SUCCESS);
+    return NoError();
 }
 
 void Display::terminate()
@@ -564,7 +564,7 @@ Error Display::createWindowSurface(const Config *configuration, EGLNativeWindowT
     ASSERT(windowSurfaces && windowSurfaces->find(window) == windowSurfaces->end());
     windowSurfaces->insert(std::make_pair(window, *outSurface));
 
-    return egl::Error(EGL_SUCCESS);
+    return NoError();
 }
 
 Error Display::createPbufferSurface(const Config *configuration, const AttributeMap &attribs, Surface **outSurface)
@@ -583,7 +583,7 @@ Error Display::createPbufferSurface(const Config *configuration, const Attribute
     *outSurface = surface.release();
     mState.surfaceSet.insert(*outSurface);
 
-    return egl::Error(EGL_SUCCESS);
+    return NoError();
 }
 
 Error Display::createPbufferFromClientBuffer(const Config *configuration,
@@ -607,7 +607,7 @@ Error Display::createPbufferFromClientBuffer(const Config *configuration,
     *outSurface = surface.release();
     mState.surfaceSet.insert(*outSurface);
 
-    return egl::Error(EGL_SUCCESS);
+    return NoError();
 }
 
 Error Display::createPixmapSurface(const Config *configuration, NativePixmapType nativePixmap, const AttributeMap &attribs,
@@ -628,7 +628,7 @@ Error Display::createPixmapSurface(const Config *configuration, NativePixmapType
     *outSurface = surface.release();
     mState.surfaceSet.insert(*outSurface);
 
-    return egl::Error(EGL_SUCCESS);
+    return NoError();
 }
 
 Error Display::createImage(gl::Context *context,
@@ -671,7 +671,7 @@ Error Display::createImage(gl::Context *context,
     image->addRef();
     mImageSet.insert(image);
 
-    return egl::NoError();
+    return NoError();
 }
 
 Error Display::createStream(const AttributeMap &attribs, Stream **outStream)
@@ -686,7 +686,7 @@ Error Display::createStream(const AttributeMap &attribs, Stream **outStream)
     ASSERT(outStream != nullptr);
     *outStream = stream;
 
-    return Error(EGL_SUCCESS);
+    return NoError();
 }
 
 Error Display::createContext(const Config *configuration, gl::Context *shareContext, const AttributeMap &attribs,
@@ -725,7 +725,7 @@ Error Display::createContext(const Config *configuration, gl::Context *shareCont
 
     ASSERT(outContext != nullptr);
     *outContext = context;
-    return egl::Error(EGL_SUCCESS);
+    return NoError();
 }
 
 Error Display::makeCurrent(egl::Surface *drawSurface, egl::Surface *readSurface, gl::Context *context)
@@ -738,7 +738,7 @@ Error Display::makeCurrent(egl::Surface *drawSurface, egl::Surface *readSurface,
         context->makeCurrent(this, drawSurface);
     }
 
-    return egl::Error(EGL_SUCCESS);
+    return NoError();
 }
 
 Error Display::restoreLostDevice()
@@ -748,7 +748,7 @@ Error Display::restoreLostDevice()
         if ((*ctx)->isResetNotificationEnabled())
         {
             // If reset notifications have been requested, application must delete all contexts first
-            return Error(EGL_CONTEXT_LOST);
+            return EglContextLost();
         }
     }
 

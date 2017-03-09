@@ -114,7 +114,7 @@ Error Surface::initialize(const Display &display)
     mState.defaultFramebuffer = createDefaultFramebuffer();
     ASSERT(mState.defaultFramebuffer != nullptr);
 
-    return Error(EGL_SUCCESS);
+    return NoError();
 }
 
 void Surface::setIsCurrent(Display *display, bool isCurrent)
@@ -230,7 +230,7 @@ Error Surface::bindTexImage(gl::Texture *texture, EGLint buffer)
     texture->bindTexImageFromSurface(this);
     mTexture.set(texture);
 
-    return Error(EGL_SUCCESS);
+    return NoError();
 }
 
 Error Surface::releaseTexImage(EGLint buffer)
@@ -241,7 +241,7 @@ Error Surface::releaseTexImage(EGLint buffer)
     mTexture->releaseTexImageFromSurface();
     mTexture.set(nullptr);
 
-    return Error(EGL_SUCCESS);
+    return NoError();
 }
 
 Error Surface::getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR *sbc)

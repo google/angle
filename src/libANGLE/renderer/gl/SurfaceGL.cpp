@@ -32,11 +32,11 @@ FramebufferImpl *SurfaceGL::createDefaultFramebuffer(const gl::FramebufferState 
 egl::Error SurfaceGL::getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR *sbc)
 {
     UNREACHABLE();
-    return egl::Error(EGL_BAD_SURFACE);
+    return egl::EglBadSurface();
 }
 
 egl::Error SurfaceGL::unMakeCurrent()
 {
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 }

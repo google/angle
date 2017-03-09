@@ -83,7 +83,7 @@ TEST(ValidationESTest, DISABLED_DrawElementsWithMaxIndexGivesError)
 
     NiceMock<MockTextureImpl> *textureImpl = new NiceMock<MockTextureImpl>();
     EXPECT_CALL(mockFactory, createTexture(_)).WillOnce(Return(textureImpl));
-    EXPECT_CALL(*textureImpl, setStorage(_, _, _, _, _)).WillOnce(Return(NoError()));
+    EXPECT_CALL(*textureImpl, setStorage(_, _, _, _, _)).WillOnce(Return(gl::NoError()));
     EXPECT_CALL(*textureImpl, destructor()).Times(1).RetiresOnSaturation();
 
     Texture *texture = new Texture(&mockFactory, 0, GL_TEXTURE_2D);
@@ -105,7 +105,7 @@ TEST(ValidationESTest, DISABLED_DrawElementsWithMaxIndexGivesError)
                                                 textureCaps, extensions, limitations, false);
 
     // Set the expectation for the validation error here.
-    Error expectedError(GL_INVALID_OPERATION, g_ExceedsMaxElementErrorMessage);
+    Error expectedError(gl::InvalidOperation() << g_ExceedsMaxElementErrorMessage);
     EXPECT_CALL(testContext, handleError(expectedError)).Times(1);
 
     // Call once with maximum index, and once with an excessive index.

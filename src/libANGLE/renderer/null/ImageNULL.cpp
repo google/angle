@@ -25,13 +25,13 @@ ImageNULL::~ImageNULL()
 egl::Error ImageNULL::initialize()
 {
     UNIMPLEMENTED();
-    return egl::Error(EGL_BAD_ACCESS);
+    return egl::EglBadAccess();
 }
 
 gl::Error ImageNULL::orphan(egl::ImageSibling *sibling)
 {
     UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 }  // namespace rx

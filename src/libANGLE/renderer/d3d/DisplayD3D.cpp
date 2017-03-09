@@ -148,7 +148,7 @@ egl::Error CreateRendererD3D(egl::Display *display, RendererD3D **outRenderer)
         SafeDelete(renderer);
     }
 
-    return egl::Error(EGL_NOT_INITIALIZED, "No available renderers.");
+    return egl::EglNotInitialized() << "No available renderers.";
 }
 
 DisplayD3D::DisplayD3D(const egl::DisplayState &state) : DisplayImpl(state), mRenderer(nullptr)
@@ -215,7 +215,7 @@ StreamProducerImpl *DisplayD3D::createStreamProducerD3DTextureNV12(
 
 egl::Error DisplayD3D::makeCurrent(egl::Surface *drawSurface, egl::Surface *readSurface, gl::Context *context)
 {
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 egl::Error DisplayD3D::initialize(egl::Display *display)
@@ -223,7 +223,7 @@ egl::Error DisplayD3D::initialize(egl::Display *display)
     ASSERT(mRenderer == nullptr && display != nullptr);
     mDisplay = display;
     ANGLE_TRY(CreateRendererD3D(display, &mRenderer));
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 void DisplayD3D::terminate()
@@ -258,7 +258,7 @@ egl::Error DisplayD3D::restoreLostDevice()
 
     if (!mRenderer->resetDevice())
     {
-        return egl::Error(EGL_BAD_ALLOC);
+        return egl::EglBadAlloc();
     }
 
     // Restore any surfaces that may have been lost
@@ -273,7 +273,7 @@ egl::Error DisplayD3D::restoreLostDevice()
         }
     }
 
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 bool DisplayD3D::isValidNativeWindow(EGLNativeWindowType window) const
@@ -333,7 +333,7 @@ egl::Error DisplayD3D::waitClient() const
         surfaceD3D->checkForOutOfDateSwapChain();
     }
 
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 egl::Error DisplayD3D::waitNative(EGLint engine,
@@ -352,7 +352,7 @@ egl::Error DisplayD3D::waitNative(EGLint engine,
         readurfaceD3D->checkForOutOfDateSwapChain();
     }
 
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 gl::Version DisplayD3D::getMaxSupportedESVersion() const

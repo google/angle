@@ -104,8 +104,8 @@ gl::ErrorOrResult<unsigned int> VertexBufferInterface::getSpaceRequired(
 
     if (alignedSpaceRequired < spaceRequired)
     {
-        return gl::Error(GL_OUT_OF_MEMORY,
-                         "Vertex buffer overflow in VertexBufferInterface::getSpaceRequired.");
+        return gl::OutOfMemory()
+               << "Vertex buffer overflow in VertexBufferInterface::getSpaceRequired.";
     }
 
     return alignedSpaceRequired;
@@ -167,7 +167,8 @@ gl::Error StreamingVertexBufferInterface::storeDynamicAttribute(const gl::Vertex
     checkedPosition += spaceRequired;
     if (!checkedPosition.IsValid())
     {
-        return gl::Error(GL_OUT_OF_MEMORY, "Internal error, new vertex buffer write position would overflow.");
+        return gl::OutOfMemory()
+               << "Internal error, new vertex buffer write position would overflow.";
     }
 
     ANGLE_TRY(reserveSpace(mReservedSpace));
@@ -202,10 +203,9 @@ gl::Error StreamingVertexBufferInterface::reserveVertexSpace(const gl::VertexAtt
     // Protect against integer overflow
     if (!alignedRequiredSpace.IsValid())
     {
-        return gl::Error(GL_OUT_OF_MEMORY,
-                         "Unable to reserve %u extra bytes in internal vertex buffer, "
-                         "it would result in an overflow.",
-                         requiredSpace);
+        return gl::OutOfMemory()
+               << "Unable to reserve " << requiredSpace
+               << " extra bytes in internal vertex buffer, it would result in an overflow.";
     }
 
     mReservedSpace = alignedRequiredSpace.ValueOrDie();

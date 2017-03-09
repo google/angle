@@ -37,7 +37,7 @@ gl::Error FenceSyncGL::set(GLenum condition, GLbitfield flags)
     if (mSyncObject == 0)
     {
         // if glFenceSync fails, it returns 0.
-        return gl::Error(GL_OUT_OF_MEMORY, "glFenceSync failed to create a GLsync object.");
+        return gl::OutOfMemory() << "glFenceSync failed to create a GLsync object.";
     }
 
     return gl::NoError();

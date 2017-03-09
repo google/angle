@@ -1310,7 +1310,7 @@ class ProgramD3D::GetExecutableTask : public Closure
 {
   public:
     GetExecutableTask(ProgramD3D *program)
-        : mProgram(program), mError(GL_NO_ERROR), mInfoLog(), mResult(nullptr)
+        : mProgram(program), mError(gl::NoError()), mInfoLog(), mResult(nullptr)
     {
     }
 

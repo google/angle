@@ -78,7 +78,7 @@ gl::Context *Thread::getValidContext() const
 {
     if (mContext && mContext->isContextLost())
     {
-        mContext->handleError(gl::Error(GL_OUT_OF_MEMORY, "Context has been lost."));
+        mContext->handleError(gl::OutOfMemory() << "Context has been lost.");
         return nullptr;
     }
 

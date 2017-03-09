@@ -177,20 +177,18 @@ gl::Error Error::toGL(GLenum glErrorCode) const
     }
 
     // TODO(jmadill): Set extended error code to 'vulkan internal error'.
-    const std::string &message = toString();
-    return gl::Error(glErrorCode, message.c_str());
+    return gl::Error(glErrorCode, glErrorCode, toString());
 }
 
 egl::Error Error::toEGL(EGLint eglErrorCode) const
 {
     if (!isError())
     {
-        return egl::Error(EGL_SUCCESS);
+        return egl::NoError();
     }
 
     // TODO(jmadill): Set extended error code to 'vulkan internal error'.
-    const std::string &message = toString();
-    return egl::Error(eglErrorCode, message.c_str());
+    return egl::Error(eglErrorCode, eglErrorCode, toString());
 }
 
 std::string Error::toString() const

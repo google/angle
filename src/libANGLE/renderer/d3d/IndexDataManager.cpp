@@ -92,9 +92,8 @@ gl::Error StreamInIndexBuffer(IndexBufferInterface *buffer,
 
     if (count > (std::numeric_limits<unsigned int>::max() >> dstTypeInfo.bytesShift))
     {
-        return gl::Error(GL_OUT_OF_MEMORY,
-                         "Reserving %u indices of %u bytes each exceeds the maximum buffer size.",
-                         count, dstTypeInfo.bytes);
+        return gl::OutOfMemory() << "Reserving " << count << " indices of " << dstTypeInfo.bytes
+                                 << " bytes each exceeds the maximum buffer size.";
     }
 
     unsigned int bufferSizeRequired = count << dstTypeInfo.bytesShift;

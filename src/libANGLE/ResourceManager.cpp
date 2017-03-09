@@ -406,13 +406,13 @@ ErrorOrResult<GLuint> PathManager::createPaths(rx::GLImplFactory *factory, GLsiz
     // Allocate client side handles.
     const GLuint client = mHandleAllocator.allocateRange(static_cast<GLuint>(range));
     if (client == HandleRangeAllocator::kInvalidHandle)
-        return Error(GL_OUT_OF_MEMORY, "Failed to allocate path handle range.");
+        return OutOfMemory() << "Failed to allocate path handle range.";
 
     const auto &paths = factory->createPaths(range);
     if (paths.empty())
     {
         mHandleAllocator.releaseRange(client, range);
-        return Error(GL_OUT_OF_MEMORY, "Failed to allocate path objects.");
+        return OutOfMemory() << "Failed to allocate path objects.";
     }
 
     auto hint = mPaths.begin();

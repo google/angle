@@ -348,7 +348,7 @@ gl::Error SyncQueryGL::end()
     else
     {
         ASSERT(false);
-        return gl::Error(GL_INVALID_OPERATION, "No native support for sync queries.");
+        return gl::InternalError() << "No native support for sync queries.";
     }
     return gl::NoError();
 }

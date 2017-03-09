@@ -229,12 +229,12 @@ egl::Error WindowSurfaceCGL::initialize(const egl::Display *display)
     mFunctions->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
                                         mDSRenderbuffer);
 
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 egl::Error WindowSurfaceCGL::makeCurrent()
 {
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 egl::Error WindowSurfaceCGL::swap(const egl::Display *display)
@@ -269,31 +269,31 @@ egl::Error WindowSurfaceCGL::swap(const egl::Display *display)
     mFunctions->framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
                                      mSwapState.beingRendered->texture, 0);
 
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 egl::Error WindowSurfaceCGL::postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height)
 {
     UNIMPLEMENTED();
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 egl::Error WindowSurfaceCGL::querySurfacePointerANGLE(EGLint attribute, void **value)
 {
     UNIMPLEMENTED();
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 egl::Error WindowSurfaceCGL::bindTexImage(gl::Texture *texture, EGLint buffer)
 {
     UNIMPLEMENTED();
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 egl::Error WindowSurfaceCGL::releaseTexImage(EGLint buffer)
 {
     UNIMPLEMENTED();
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 void WindowSurfaceCGL::setSwapInterval(EGLint interval)

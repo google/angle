@@ -39,7 +39,7 @@ EGLImageD3D::~EGLImageD3D()
 
 egl::Error EGLImageD3D::initialize()
 {
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 gl::Error EGLImageD3D::orphan(egl::ImageSibling *sibling)

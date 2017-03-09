@@ -157,7 +157,7 @@ Error Stream::createConsumerGLTextureExternal(const AttributeMap &attributes, gl
     mContext = context;
     mState   = EGL_STREAM_STATE_CONNECTING_KHR;
 
-    return Error(EGL_SUCCESS);
+    return NoError();
 }
 
 Error Stream::createProducerD3D11TextureNV12(const AttributeMap &attributes)
@@ -172,7 +172,7 @@ Error Stream::createProducerD3D11TextureNV12(const AttributeMap &attributes)
     mProducerType = ProducerType::D3D11TextureNV12;
     mState        = EGL_STREAM_STATE_EMPTY_KHR;
 
-    return Error(EGL_SUCCESS);
+    return NoError();
 }
 
 // Called when the consumer of this stream starts using the stream
@@ -197,7 +197,7 @@ Error Stream::consumerAcquire()
         }
     }
 
-    return Error(EGL_SUCCESS);
+    return NoError();
 }
 
 Error Stream::consumerRelease()
@@ -217,7 +217,7 @@ Error Stream::consumerRelease()
         }
     }
 
-    return Error(EGL_SUCCESS);
+    return NoError();
 }
 
 bool Stream::isConsumerBoundToContext(const gl::Context *context) const
@@ -247,7 +247,7 @@ Error Stream::postD3D11NV12Texture(void *texture, const AttributeMap &attributes
 
     mState = EGL_STREAM_STATE_NEW_FRAME_AVAILABLE_KHR;
 
-    return Error(EGL_SUCCESS);
+    return NoError();
 }
 
 // This is called when a texture object associated with this stream is destroyed. Even if multiple

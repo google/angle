@@ -51,8 +51,9 @@ gl::Error RenderbufferD3D::setStorageMultisample(size_t samples, GLenum internal
     const gl::TextureCaps &formatCaps = mRenderer->getNativeTextureCaps().get(creationFormat);
     if (samples > formatCaps.getMaxSamples())
     {
-        return gl::Error(GL_OUT_OF_MEMORY, "Renderbuffer format does not support %u samples, %u is the maximum.",
-                         samples, formatCaps.getMaxSamples());
+        return gl::OutOfMemory() << "Renderbuffer format does not support " << samples
+                                 << " samples, " << formatCaps.getMaxSamples()
+                                 << " is the maximum.";
     }
 
     RenderTargetD3D *newRT = nullptr;

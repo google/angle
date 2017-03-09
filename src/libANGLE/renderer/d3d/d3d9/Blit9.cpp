@@ -103,7 +103,8 @@ gl::Error Blit9::initialize()
     if (FAILED(result))
     {
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to create internal blit vertex shader, result: 0x%X.", result);
+        return gl::OutOfMemory() << "Failed to create internal blit vertex shader, "
+                                 << gl::FmtHR(result);
     }
 
     void *lockPtr = nullptr;
@@ -113,7 +114,8 @@ gl::Error Blit9::initialize()
     {
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
         SafeRelease(mQuadVertexBuffer);
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to lock internal blit vertex shader, result: 0x%X.", result);
+        return gl::OutOfMemory() << "Failed to lock internal blit vertex shader, "
+                                 << gl::FmtHR(result);
     }
 
     memcpy(lockPtr, quad, sizeof(quad));
@@ -131,7 +133,8 @@ gl::Error Blit9::initialize()
     {
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
         SafeRelease(mQuadVertexBuffer);
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to lock internal blit vertex declaration, result: 0x%X.", result);
+        return gl::OutOfMemory() << "Failed to lock internal blit vertex declaration, "
+                                 << gl::FmtHR(result);
     }
 
     mGeometryLoaded = true;
@@ -162,7 +165,7 @@ gl::Error Blit9::setShader(ShaderId source, const char *profile,
     HRESULT hr = (device->*setShader)(shader);
     if (FAILED(hr))
     {
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to set shader for blit operation, result: 0x%X.", hr);
+        return gl::OutOfMemory() << "Failed to set shader for blit operation, " << gl::FmtHR(hr);
     }
 
     return gl::NoError();
@@ -386,7 +389,8 @@ gl::Error Blit9::copy(IDirect3DSurface9 *source,
         if (FAILED(result))
         {
             ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-            return gl::Error(GL_OUT_OF_MEMORY, "Failed to blit between textures, StretchRect result: 0x%X.", result);
+            return gl::OutOfMemory()
+                   << "Failed to blit between textures, StretchRect " << gl::FmtHR(result);
         }
 
         return gl::NoError();
@@ -632,7 +636,8 @@ gl::Error Blit9::copySurfaceToTexture(IDirect3DSurface9 *surface,
     if (FAILED(result))
     {
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to allocate internal texture for blit, result: 0x%X.", result);
+        return gl::OutOfMemory() << "Failed to allocate internal texture for blit, "
+                                 << gl::FmtHR(result);
     }
 
     IDirect3DSurface9 *textureSurface;
@@ -642,7 +647,8 @@ gl::Error Blit9::copySurfaceToTexture(IDirect3DSurface9 *surface,
     {
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
         SafeRelease(texture);
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to query surface of internal blit texture, result: 0x%X.", result);
+        return gl::OutOfMemory() << "Failed to query surface of internal blit texture, "
+                                 << gl::FmtHR(result);
     }
 
     mRenderer->endScene();
@@ -654,7 +660,8 @@ gl::Error Blit9::copySurfaceToTexture(IDirect3DSurface9 *surface,
     {
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
         SafeRelease(texture);
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to copy between internal blit textures, result: 0x%X.", result);
+        return gl::OutOfMemory() << "Failed to copy between internal blit textures, "
+                                 << gl::FmtHR(result);
     }
 
     *outTexture = texture;

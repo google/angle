@@ -38,7 +38,7 @@ gl::Error FenceNV9::set(GLenum condition)
     {
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
         SafeRelease(mQuery);
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to end event query, result: 0x%X.", result);
+        return gl::OutOfMemory() << "Failed to end event query, " << gl::FmtHR(result);
     }
 
     return gl::NoError();
@@ -76,11 +76,11 @@ gl::Error FenceNV9::testHelper(bool flushCommandBuffer, GLboolean *outFinished)
     if (d3d9::isDeviceLostError(result))
     {
         mRenderer->notifyDeviceLost();
-        return gl::Error(GL_OUT_OF_MEMORY, "Device was lost while querying result of an event query.");
+        return gl::OutOfMemory() << "Device was lost while querying result of an event query.";
     }
     else if (FAILED(result))
     {
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to get query data, result: 0x%X.", result);
+        return gl::OutOfMemory() << "Failed to get query data, " << gl::FmtHR(result);
     }
 
     ASSERT(result == S_OK || result == S_FALSE);

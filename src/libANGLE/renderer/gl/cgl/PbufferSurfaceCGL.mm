@@ -72,40 +72,40 @@ egl::Error PbufferSurfaceCGL::initialize(const egl::Display *display)
     mFunctions->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
                                         GL_RENDERBUFFER, mDSRenderbuffer);
 
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 egl::Error PbufferSurfaceCGL::makeCurrent()
 {
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 egl::Error PbufferSurfaceCGL::swap(const egl::Display *display)
 {
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 egl::Error PbufferSurfaceCGL::postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height)
 {
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 egl::Error PbufferSurfaceCGL::querySurfacePointerANGLE(EGLint attribute, void **value)
 {
     UNIMPLEMENTED();
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 egl::Error PbufferSurfaceCGL::bindTexImage(gl::Texture *texture, EGLint buffer)
 {
     UNIMPLEMENTED();
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 egl::Error PbufferSurfaceCGL::releaseTexImage(EGLint buffer)
 {
     UNIMPLEMENTED();
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 void PbufferSurfaceCGL::setSwapInterval(EGLint interval)

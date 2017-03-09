@@ -117,7 +117,7 @@ gl::Error BufferVk::copySubData(const gl::Context *context,
                                 GLsizeiptr size)
 {
     UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 gl::Error BufferVk::map(const gl::Context *context, GLenum access, void **mapPtr)
@@ -169,7 +169,7 @@ gl::Error BufferVk::getIndexRange(GLenum type,
                                   gl::IndexRange *outRange)
 {
     UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 vk::Error BufferVk::setDataImpl(VkDevice device, const uint8_t *data, size_t size, size_t offset)

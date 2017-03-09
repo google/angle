@@ -1116,7 +1116,7 @@ Error Program::saveBinary(const Context *context,
         // TODO: This should be moved to the validation layer but computing the size of the binary before saving
         // it causes the save to happen twice.  It may be possible to write the binary to a separate buffer, validate
         // sizes and then copy it.
-        return Error(GL_INVALID_OPERATION);
+        return InternalError();
     }
 
     if (binary)

@@ -135,6 +135,16 @@ class FmtHR
     HRESULT mHR;
     friend std::ostream &operator<<(std::ostream &os, const FmtHR &fmt);
 };
+
+class FmtErr
+{
+  public:
+    explicit FmtErr(DWORD err) : mErr(err) {}
+
+  private:
+    DWORD mErr;
+    friend std::ostream &operator<<(std::ostream &os, const FmtErr &fmt);
+};
 #endif  // defined(ANGLE_PLATFORM_WINDOWS)
 
 template <typename T>

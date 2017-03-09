@@ -68,7 +68,7 @@ gl::Error BufferGL::setData(const gl::Context * /*context*/,
     {
         if (!mShadowCopy.resize(size))
         {
-            return gl::Error(GL_OUT_OF_MEMORY, "Failed to resize buffer data shadow copy.");
+            return gl::OutOfMemory() << "Failed to resize buffer data shadow copy.";
         }
 
         if (size > 0 && data != nullptr)

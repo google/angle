@@ -938,7 +938,7 @@ Error Framebuffer::clear(const gl::Context *context, GLbitfield mask)
 {
     if (context->getGLState().isRasterizerDiscardEnabled())
     {
-        return gl::NoError();
+        return NoError();
     }
 
     return mImpl->clear(context, mask);
@@ -951,7 +951,7 @@ Error Framebuffer::clearBufferfv(const gl::Context *context,
 {
     if (context->getGLState().isRasterizerDiscardEnabled())
     {
-        return gl::NoError();
+        return NoError();
     }
 
     return mImpl->clearBufferfv(context, buffer, drawbuffer, values);
@@ -964,7 +964,7 @@ Error Framebuffer::clearBufferuiv(const gl::Context *context,
 {
     if (context->getGLState().isRasterizerDiscardEnabled())
     {
-        return gl::NoError();
+        return NoError();
     }
 
     return mImpl->clearBufferuiv(context, buffer, drawbuffer, values);
@@ -977,7 +977,7 @@ Error Framebuffer::clearBufferiv(const gl::Context *context,
 {
     if (context->getGLState().isRasterizerDiscardEnabled())
     {
-        return gl::NoError();
+        return NoError();
     }
 
     return mImpl->clearBufferiv(context, buffer, drawbuffer, values);
@@ -991,7 +991,7 @@ Error Framebuffer::clearBufferfi(const gl::Context *context,
 {
     if (context->getGLState().isRasterizerDiscardEnabled())
     {
-        return gl::NoError();
+        return NoError();
     }
 
     return mImpl->clearBufferfi(context, buffer, drawbuffer, depth, stencil);
@@ -1077,7 +1077,7 @@ int Framebuffer::getSamples(const Context *context)
 Error Framebuffer::getSamplePosition(size_t index, GLfloat *xy) const
 {
     ANGLE_TRY(mImpl->getSamplePosition(index, xy));
-    return gl::NoError();
+    return NoError();
 }
 
 bool Framebuffer::hasValidDepthStencil() const

@@ -41,13 +41,13 @@ EGLBoolean EGLAPIENTRY QuerySurfacePointerANGLE(EGLDisplay dpy, EGLSurface surfa
 
     if (!display->getExtensions().querySurfacePointer)
     {
-        thread->setError(Error(EGL_SUCCESS));
+        thread->setError(NoError());
         return EGL_FALSE;
     }
 
     if (surface == EGL_NO_SURFACE)
     {
-        thread->setError(Error(EGL_BAD_SURFACE));
+        thread->setError(EglBadSurface());
         return EGL_FALSE;
     }
 
@@ -57,19 +57,19 @@ EGLBoolean EGLAPIENTRY QuerySurfacePointerANGLE(EGLDisplay dpy, EGLSurface surfa
       case EGL_D3D_TEXTURE_2D_SHARE_HANDLE_ANGLE:
         if (!display->getExtensions().surfaceD3DTexture2DShareHandle)
         {
-            thread->setError(Error(EGL_BAD_ATTRIBUTE));
+            thread->setError(EglBadAttribute());
             return EGL_FALSE;
         }
         break;
       case EGL_DXGI_KEYED_MUTEX_ANGLE:
         if (!display->getExtensions().keyedMutex)
         {
-            thread->setError(Error(EGL_BAD_ATTRIBUTE));
+            thread->setError(EglBadAttribute());
             return EGL_FALSE;
         }
         break;
       default:
-          thread->setError(Error(EGL_BAD_ATTRIBUTE));
+          thread->setError(EglBadAttribute());
           return EGL_FALSE;
     }
 
@@ -87,7 +87,7 @@ EGLBoolean EGLAPIENTRY PostSubBufferNV(EGLDisplay dpy, EGLSurface surface, EGLin
 
     if (x < 0 || y < 0 || width < 0 || height < 0)
     {
-        thread->setError(Error(EGL_BAD_PARAMETER));
+        thread->setError(EglBadParameter());
         return EGL_FALSE;
     }
 
@@ -103,20 +103,20 @@ EGLBoolean EGLAPIENTRY PostSubBufferNV(EGLDisplay dpy, EGLSurface surface, EGLin
 
     if (display->testDeviceLost())
     {
-        thread->setError(Error(EGL_CONTEXT_LOST));
+        thread->setError(EglContextLost());
         return EGL_FALSE;
     }
 
     if (surface == EGL_NO_SURFACE)
     {
-        thread->setError(Error(EGL_BAD_SURFACE));
+        thread->setError(EglBadSurface());
         return EGL_FALSE;
     }
 
     if (!display->getExtensions().postSubBuffer)
     {
         // Spec is not clear about how this should be handled.
-        thread->setError(Error(EGL_SUCCESS));
+        thread->setError(NoError());
         return EGL_TRUE;
     }
 
@@ -127,7 +127,7 @@ EGLBoolean EGLAPIENTRY PostSubBufferNV(EGLDisplay dpy, EGLSurface surface, EGLin
         return EGL_FALSE;
     }
 
-    thread->setError(Error(EGL_SUCCESS));
+    thread->setError(NoError());
     return EGL_TRUE;
 }
 
@@ -173,7 +173,7 @@ EGLBoolean EGLAPIENTRY QueryDeviceAttribEXT(EGLDeviceEXT device, EGLint attribut
     Device *dev = static_cast<Device*>(device);
     if (dev == EGL_NO_DEVICE_EXT || !Device::IsValidDevice(dev))
     {
-        thread->setError(Error(EGL_BAD_ACCESS));
+        thread->setError(EglBadAccess());
         return EGL_FALSE;
     }
 
@@ -182,13 +182,13 @@ EGLBoolean EGLAPIENTRY QueryDeviceAttribEXT(EGLDeviceEXT device, EGLint attribut
     Display *owningDisplay = dev->getOwningDisplay();
     if (owningDisplay != nullptr && !owningDisplay->getExtensions().deviceQuery)
     {
-        thread->setError(Error(EGL_BAD_ACCESS,
-                               "Device wasn't created using eglCreateDeviceANGLE, and the Display "
-                               "that created it doesn't support device querying"));
+        thread->setError(EglBadAccess() << "Device wasn't created using eglCreateDeviceANGLE, "
+                                           "and the Display that created it doesn't support "
+                                           "device querying");
         return EGL_FALSE;
     }
 
-    Error error(EGL_SUCCESS);
+    Error error(NoError());
 
     // validate the attribute parameter
     switch (attribute)
@@ -197,13 +197,13 @@ EGLBoolean EGLAPIENTRY QueryDeviceAttribEXT(EGLDeviceEXT device, EGLint attribut
       case EGL_D3D9_DEVICE_ANGLE:
         if (!dev->getExtensions().deviceD3D || dev->getType() != attribute)
         {
-            thread->setError(Error(EGL_BAD_ATTRIBUTE));
+            thread->setError(EglBadAttribute());
             return EGL_FALSE;
         }
         error = dev->getDevice(value);
         break;
       default:
-          thread->setError(Error(EGL_BAD_ATTRIBUTE));
+          thread->setError(EglBadAttribute());
           return EGL_FALSE;
     }
 
@@ -221,7 +221,7 @@ const char * EGLAPIENTRY QueryDeviceStringEXT(EGLDeviceEXT device, EGLint name)
     Device *dev = static_cast<Device*>(device);
     if (dev == EGL_NO_DEVICE_EXT || !Device::IsValidDevice(dev))
     {
-        thread->setError(Error(EGL_BAD_DEVICE_EXT));
+        thread->setError(EglBadDevice());
         return nullptr;
     }
 
@@ -232,11 +232,11 @@ const char * EGLAPIENTRY QueryDeviceStringEXT(EGLDeviceEXT device, EGLint name)
         result = dev->getExtensionString().c_str();
         break;
       default:
-          thread->setError(Error(EGL_BAD_DEVICE_EXT));
+          thread->setError(EglBadDevice());
           return nullptr;
     }
 
-    thread->setError(Error(EGL_SUCCESS));
+    thread->setError(NoError());
     return result;
 }
 
@@ -258,7 +258,7 @@ EGLBoolean EGLAPIENTRY QueryDisplayAttribEXT(EGLDisplay dpy, EGLint attribute, E
 
     if (!display->getExtensions().deviceQuery)
     {
-        thread->setError(Error(EGL_BAD_ACCESS));
+        thread->setError(EglBadAccess());
         return EGL_FALSE;
     }
 
@@ -270,7 +270,7 @@ EGLBoolean EGLAPIENTRY QueryDisplayAttribEXT(EGLDisplay dpy, EGLint attribute, E
         break;
 
       default:
-          thread->setError(Error(EGL_BAD_ATTRIBUTE));
+          thread->setError(EglBadAttribute());
           return EGL_FALSE;
     }
 

@@ -34,7 +34,7 @@ gl::Error CheckCompileStatus(const rx::FunctionsGL *functions, GLuint shader)
     ASSERT(compileStatus == GL_TRUE);
     if (compileStatus == GL_FALSE)
     {
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to compile internal blit shader.");
+        return gl::OutOfMemory() << "Failed to compile internal blit shader.";
     }
 
     return gl::NoError();
@@ -47,7 +47,7 @@ gl::Error CheckLinkStatus(const rx::FunctionsGL *functions, GLuint program)
     ASSERT(linkStatus == GL_TRUE);
     if (linkStatus == GL_FALSE)
     {
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to link internal blit program.");
+        return gl::OutOfMemory() << "Failed to link internal blit program.";
     }
 
     return gl::NoError();

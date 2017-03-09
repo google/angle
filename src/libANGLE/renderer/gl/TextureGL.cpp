@@ -891,7 +891,7 @@ gl::Error TextureGL::setImageExternal(GLenum target,
                                       const egl::Stream::GLTextureDescription &desc)
 {
     UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 gl::Error TextureGL::generateMipmap(const gl::Context *context)
@@ -939,7 +939,7 @@ void TextureGL::releaseTexImage()
 gl::Error TextureGL::setEGLImageTarget(GLenum target, egl::Image *image)
 {
     UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 void TextureGL::syncState(const gl::Texture::DirtyBits &dirtyBits)

@@ -249,7 +249,7 @@ void GL_APIENTRY DeleteFencesNV(GLsizei n, const GLuint *fences)
     {
         if (n < 0)
         {
-            context->handleError(Error(GL_INVALID_VALUE));
+            context->handleError(InvalidValue());
             return;
         }
 
@@ -318,13 +318,13 @@ void GL_APIENTRY FinishFenceNV(GLuint fence)
 
         if (fenceObject == nullptr)
         {
-            context->handleError(Error(GL_INVALID_OPERATION));
+            context->handleError(InvalidOperation());
             return;
         }
 
         if (fenceObject->isSet() != GL_TRUE)
         {
-            context->handleError(Error(GL_INVALID_OPERATION));
+            context->handleError(InvalidOperation());
             return;
         }
 
@@ -341,7 +341,7 @@ void GL_APIENTRY GenFencesNV(GLsizei n, GLuint *fences)
     {
         if (n < 0)
         {
-            context->handleError(Error(GL_INVALID_VALUE));
+            context->handleError(InvalidValue());
             return;
         }
 
@@ -364,13 +364,13 @@ void GL_APIENTRY GetFenceivNV(GLuint fence, GLenum pname, GLint *params)
 
         if (fenceObject == nullptr)
         {
-            context->handleError(Error(GL_INVALID_OPERATION));
+            context->handleError(InvalidOperation());
             return;
         }
 
         if (fenceObject->isSet() != GL_TRUE)
         {
-            context->handleError(Error(GL_INVALID_OPERATION));
+            context->handleError(InvalidOperation());
             return;
         }
 
@@ -404,7 +404,7 @@ void GL_APIENTRY GetFenceivNV(GLuint fence, GLenum pname, GLint *params)
 
             default:
             {
-                context->handleError(Error(GL_INVALID_ENUM));
+                context->handleError(InvalidEnum());
                 return;
             }
         }
@@ -440,7 +440,7 @@ void GL_APIENTRY GetTranslatedShaderSourceANGLE(GLuint shader,
     {
         if (bufsize < 0)
         {
-            context->handleError(Error(GL_INVALID_VALUE));
+            context->handleError(InvalidValue());
             return;
         }
 
@@ -448,7 +448,7 @@ void GL_APIENTRY GetTranslatedShaderSourceANGLE(GLuint shader,
 
         if (!shaderObject)
         {
-            context->handleError(Error(GL_INVALID_OPERATION));
+            context->handleError(InvalidOperation());
             return;
         }
 
@@ -583,7 +583,7 @@ void GL_APIENTRY SetFenceNV(GLuint fence, GLenum condition)
     {
         if (condition != GL_ALL_COMPLETED_NV)
         {
-            context->handleError(Error(GL_INVALID_ENUM));
+            context->handleError(InvalidEnum());
             return;
         }
 
@@ -591,7 +591,7 @@ void GL_APIENTRY SetFenceNV(GLuint fence, GLenum condition)
 
         if (fenceObject == nullptr)
         {
-            context->handleError(Error(GL_INVALID_OPERATION));
+            context->handleError(InvalidOperation());
             return;
         }
 
@@ -615,13 +615,13 @@ GLboolean GL_APIENTRY TestFenceNV(GLuint fence)
 
         if (fenceObject == nullptr)
         {
-            context->handleError(Error(GL_INVALID_OPERATION));
+            context->handleError(InvalidOperation());
             return GL_TRUE;
         }
 
         if (fenceObject->isSet() != GL_TRUE)
         {
-            context->handleError(Error(GL_INVALID_OPERATION));
+            context->handleError(InvalidOperation());
             return GL_TRUE;
         }
 
@@ -652,7 +652,7 @@ TexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalformat, GLsizei wi
     {
         if (!context->getExtensions().textureStorage)
         {
-            context->handleError(Error(GL_INVALID_OPERATION));
+            context->handleError(InvalidOperation());
             return;
         }
 
@@ -690,7 +690,7 @@ void GL_APIENTRY VertexAttribDivisorANGLE(GLuint index, GLuint divisor)
     {
         if (index >= MAX_VERTEX_ATTRIBS)
         {
-            context->handleError(Error(GL_INVALID_VALUE));
+            context->handleError(InvalidValue());
             return;
         }
 
@@ -703,7 +703,7 @@ void GL_APIENTRY VertexAttribDivisorANGLE(GLuint index, GLuint divisor)
                     "attribute with index zero. "
                     "Please reorder the attributes in your vertex shader so that attribute zero "
                     "can have a zero divisor.";
-                context->handleError(Error(GL_INVALID_OPERATION, errorMessage));
+                context->handleError(InvalidOperation() << errorMessage);
 
                 // We also output an error message to the debugger window if tracing is active, so
                 // that developers can see the error message.
@@ -973,7 +973,7 @@ void GL_APIENTRY InsertEventMarkerEXT(GLsizei length, const char *marker)
         {
             // The debug marker calls should not set error state
             // However, it seems reasonable to set an error state if the extension is not enabled
-            context->handleError(Error(GL_INVALID_OPERATION, "Extension not enabled"));
+            context->handleError(InvalidOperation() << "Extension not enabled");
             return;
         }
 
@@ -998,7 +998,7 @@ void GL_APIENTRY PushGroupMarkerEXT(GLsizei length, const char *marker)
         {
             // The debug marker calls should not set error state
             // However, it seems reasonable to set an error state if the extension is not enabled
-            context->handleError(Error(GL_INVALID_OPERATION, "Extension not enabled"));
+            context->handleError(InvalidOperation() << "Extension not enabled");
             return;
         }
 
@@ -1032,7 +1032,7 @@ void GL_APIENTRY PopGroupMarkerEXT()
         {
             // The debug marker calls should not set error state
             // However, it seems reasonable to set an error state if the extension is not enabled
-            context->handleError(Error(GL_INVALID_OPERATION, "Extension not enabled"));
+            context->handleError(InvalidOperation() << "Extension not enabled");
             return;
         }
 

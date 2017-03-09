@@ -112,13 +112,13 @@ void FramebufferVk::destroyDefault(const egl::Display *display)
 gl::Error FramebufferVk::discard(size_t count, const GLenum *attachments)
 {
     UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 gl::Error FramebufferVk::invalidate(size_t count, const GLenum *attachments)
 {
     UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 gl::Error FramebufferVk::invalidateSub(size_t count,
@@ -126,7 +126,7 @@ gl::Error FramebufferVk::invalidateSub(size_t count,
                                        const gl::Rectangle &area)
 {
     UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
@@ -188,7 +188,7 @@ gl::Error FramebufferVk::clearBufferfv(const gl::Context *context,
                                        const GLfloat *values)
 {
     UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 gl::Error FramebufferVk::clearBufferuiv(const gl::Context *context,
@@ -197,7 +197,7 @@ gl::Error FramebufferVk::clearBufferuiv(const gl::Context *context,
                                         const GLuint *values)
 {
     UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 gl::Error FramebufferVk::clearBufferiv(const gl::Context *context,
@@ -206,7 +206,7 @@ gl::Error FramebufferVk::clearBufferiv(const gl::Context *context,
                                        const GLint *values)
 {
     UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 gl::Error FramebufferVk::clearBufferfi(const gl::Context *context,
@@ -216,7 +216,7 @@ gl::Error FramebufferVk::clearBufferfi(const gl::Context *context,
                                        GLint stencil)
 {
     UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 GLenum FramebufferVk::getImplementationColorReadFormat() const
@@ -327,7 +327,7 @@ gl::Error FramebufferVk::blit(const gl::Context *context,
                               GLenum filter)
 {
     UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 bool FramebufferVk::checkStatus() const

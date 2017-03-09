@@ -451,7 +451,7 @@ egl::Error DisplayOzone::initialize(egl::Display *display)
 
     if (!mGBM)
     {
-        return egl::Error(EGL_NOT_INITIALIZED, "Could not open drm device.");
+        return egl::EglNotInitialized() << "Could not open drm device.";
     }
 
     // ANGLE builds its executables with an RPATH so they pull in ANGLE's libGL and libEGL.
@@ -470,7 +470,7 @@ egl::Error DisplayOzone::initialize(egl::Display *display)
     {
         if (!mEGL->hasExtension(ext))
         {
-            return egl::Error(EGL_NOT_INITIALIZED, "need %s", ext);
+            return egl::EglNotInitialized() << "need " << ext;
         }
     }
 
@@ -497,7 +497,7 @@ egl::Error DisplayOzone::initialize(egl::Display *display)
         EGLConfig config[1];
         if (!mEGL->chooseConfig(attrib, config, 1, &numConfig) || numConfig < 1)
         {
-            return egl::Error(EGL_NOT_INITIALIZED, "Could not get EGL config.");
+            return egl::EglNotInitialized() << "Could not get EGL config.";
         }
         mConfig = config[0];
     }
@@ -506,7 +506,7 @@ egl::Error DisplayOzone::initialize(egl::Display *display)
 
     if (!mEGL->makeCurrent(EGL_NO_SURFACE, mContext))
     {
-        return egl::Error(EGL_NOT_INITIALIZED, "Could not make context current.");
+        return egl::EglNotInitialized() << "Could not make context current.";
     }
 
     mFunctionsGL = mEGL->makeFunctionsGL();
@@ -897,7 +897,7 @@ SurfaceImpl *DisplayOzone::createPixmapSurface(const egl::SurfaceState &state,
 egl::Error DisplayOzone::getDevice(DeviceImpl **device)
 {
     UNIMPLEMENTED();
-    return egl::Error(EGL_BAD_DISPLAY);
+    return egl::EglBadDisplay();
 }
 
 egl::ConfigSet DisplayOzone::generateConfigs()
@@ -929,7 +929,7 @@ bool DisplayOzone::testDeviceLost()
 egl::Error DisplayOzone::restoreLostDevice()
 {
     UNIMPLEMENTED();
-    return egl::Error(EGL_BAD_DISPLAY);
+    return egl::EglBadDisplay();
 }
 
 bool DisplayOzone::isValidNativeWindow(EGLNativeWindowType window) const
@@ -940,7 +940,7 @@ bool DisplayOzone::isValidNativeWindow(EGLNativeWindowType window) const
 egl::Error DisplayOzone::waitClient() const
 {
     // TODO(fjhenigman) Implement this.
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 egl::Error DisplayOzone::waitNative(EGLint engine,
@@ -948,7 +948,7 @@ egl::Error DisplayOzone::waitNative(EGLint engine,
                                     egl::Surface *readSurface) const
 {
     // TODO(fjhenigman) Implement this.
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 void DisplayOzone::setSwapInterval(EGLSurface drawable, SwapControlData *data)

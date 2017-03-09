@@ -208,6 +208,13 @@ std::ostream &operator<<(std::ostream &os, const FmtHR &fmt)
     os << "HRESULT: ";
     return FmtHexInt(os, fmt.mHR);
 }
+
+std::ostream &operator<<(std::ostream &os, const FmtErr &fmt)
+{
+    os << "error: ";
+    return FmtHexInt(os, fmt.mErr);
+}
+
 #endif  // defined(ANGLE_PLATFORM_WINDOWS)
 
 }  // namespace gl

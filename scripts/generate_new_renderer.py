@@ -137,11 +137,11 @@ def generate_impl_definition(impl_stub, typed_impl):
     if return_type != 'void':
         # specialized return values for Errors, pointers, etc
         if return_type == 'gl::Error':
-            return_statement = '    return gl::Error(GL_INVALID_OPERATION);\n'
+            return_statement = '    return gl::InvalidOperation();\n'
         elif return_type == 'egl::Error':
-            return_statement = '    return egl::Error(EGL_BAD_ACCESS);\n'
+            return_statement = '    return egl::EglBadAccess();\n'
         elif return_type == 'LinkResult':
-            return_statement = '    return gl::Error(GL_INVALID_OPERATION);\n'
+            return_statement = '    return gl::InvalidOperation();\n'
         elif re.search(r'\*$', return_type):
             return_statement = '    return static_cast<' + return_type + '>(0);\n'
         elif re.search(r'const ([^ \&]+) \&$', return_type):

@@ -25,25 +25,25 @@ FenceSyncVk::~FenceSyncVk()
 gl::Error FenceSyncVk::set(GLenum condition, GLbitfield flags)
 {
     UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 gl::Error FenceSyncVk::clientWait(GLbitfield flags, GLuint64 timeout, GLenum *outResult)
 {
     UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 gl::Error FenceSyncVk::serverWait(GLbitfield flags, GLuint64 timeout)
 {
     UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 gl::Error FenceSyncVk::getStatus(GLint *outResult)
 {
     UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 }  // namespace rx

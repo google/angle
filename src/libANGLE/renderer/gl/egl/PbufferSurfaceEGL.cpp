@@ -33,7 +33,7 @@ egl::Error PbufferSurfaceEGL::initialize(const egl::Display *display)
         return egl::Error(mEGL->getError(), "eglCreatePbufferSurface failed");
     }
 
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 }  // namespace rx

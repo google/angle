@@ -562,9 +562,8 @@ egl::Error Renderer11::initialize()
             result = mDevice->QueryInterface(__uuidof(IDXGIDevice2), (void **)&dxgiDevice2);
             if (FAILED(result))
             {
-                return egl::Error(
-                    EGL_NOT_INITIALIZED, D3D11_INIT_INCOMPATIBLE_DXGI,
-                    "DXGI 1.2 required to present to HWNDs owned by another process.");
+                return egl::EglNotInitialized(D3D11_INIT_INCOMPATIBLE_DXGI)
+                       << "DXGI 1.2 required to present to HWNDs owned by another process.";
             }
             SafeRelease(dxgiDevice2);
         }
@@ -584,16 +583,15 @@ egl::Error Renderer11::initialize()
 
         if (FAILED(result))
         {
-            return egl::Error(EGL_NOT_INITIALIZED, D3D11_INIT_OTHER_ERROR,
-                              "Could not query DXGI device.");
+            return egl::EglNotInitialized(D3D11_INIT_OTHER_ERROR) << "Could not query DXGI device.";
         }
 
         result = dxgiDevice->GetParent(__uuidof(IDXGIAdapter), (void **)&mDxgiAdapter);
 
         if (FAILED(result))
         {
-            return egl::Error(EGL_NOT_INITIALIZED, D3D11_INIT_OTHER_ERROR,
-                              "Could not retrieve DXGI adapter");
+            return egl::EglNotInitialized(D3D11_INIT_OTHER_ERROR)
+                   << "Could not retrieve DXGI adapter";
         }
 
         SafeRelease(dxgiDevice);
@@ -633,8 +631,8 @@ egl::Error Renderer11::initialize()
 
         if (FAILED(result))
         {
-            return egl::Error(EGL_NOT_INITIALIZED, D3D11_INIT_OTHER_ERROR,
-                              "Could not read DXGI adaptor description.");
+            return egl::EglNotInitialized(D3D11_INIT_OTHER_ERROR)
+                   << "Could not read DXGI adaptor description.";
         }
 
         memset(mDescription, 0, sizeof(mDescription));
@@ -644,8 +642,8 @@ egl::Error Renderer11::initialize()
 
         if (!mDxgiFactory || FAILED(result))
         {
-            return egl::Error(EGL_NOT_INITIALIZED, D3D11_INIT_OTHER_ERROR,
-                              "Could not create DXGI factory.");
+            return egl::EglNotInitialized(D3D11_INIT_OTHER_ERROR)
+                   << "Could not create DXGI factory.";
         }
     }
 
@@ -677,7 +675,7 @@ egl::Error Renderer11::initialize()
 
     initializeDevice();
 
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 egl::Error Renderer11::initializeD3DDevice()
@@ -697,8 +695,8 @@ egl::Error Renderer11::initializeD3DDevice()
 
             if (mD3d11Module == nullptr || mDxgiModule == nullptr)
             {
-                return egl::Error(EGL_NOT_INITIALIZED, D3D11_INIT_MISSING_DEP,
-                                  "Could not load D3D11 or DXGI library.");
+                return egl::EglNotInitialized(D3D11_INIT_MISSING_DEP)
+                       << "Could not load D3D11 or DXGI library.";
             }
 
             // create the D3D11 device
@@ -708,8 +706,8 @@ egl::Error Renderer11::initializeD3DDevice()
 
             if (D3D11CreateDevice == nullptr)
             {
-                return egl::Error(EGL_NOT_INITIALIZED, D3D11_INIT_MISSING_DEP,
-                                  "Could not retrieve D3D11CreateDevice address.");
+                return egl::EglNotInitialized(D3D11_INIT_MISSING_DEP)
+                       << "Could not retrieve D3D11CreateDevice address.";
             }
         }
 #endif
@@ -745,8 +743,8 @@ egl::Error Renderer11::initializeD3DDevice()
             {
                 ANGLE_HISTOGRAM_SPARSE_SLOWLY("GPU.ANGLE.D3D11CreateDeviceError",
                                               static_cast<int>(result));
-                return egl::Error(EGL_NOT_INITIALIZED, D3D11_INIT_CREATEDEVICE_ERROR,
-                                  "Could not create D3D11 device.");
+                return egl::EglNotInitialized(D3D11_INIT_CREATEDEVICE_ERROR)
+                       << "Could not create D3D11 device.";
             }
         }
     }
@@ -759,13 +757,13 @@ egl::Error Renderer11::initializeD3DDevice()
         ID3D11Device *d3dDevice = reinterpret_cast<ID3D11Device *>(device);
         if (FAILED(d3dDevice->GetDeviceRemovedReason()))
         {
-            return egl::Error(EGL_NOT_INITIALIZED, "Inputted D3D11 device has been lost.");
+            return egl::EglNotInitialized() << "Inputted D3D11 device has been lost.";
         }
 
         if (d3dDevice->GetFeatureLevel() < D3D_FEATURE_LEVEL_9_3)
         {
-            return egl::Error(EGL_NOT_INITIALIZED,
-                              "Inputted D3D11 device must be Feature Level 9_3 or greater.");
+            return egl::EglNotInitialized()
+                   << "Inputted D3D11 device must be Feature Level 9_3 or greater.";
         }
 
         // The Renderer11 adds a ref to the inputted D3D11 device, like D3D11CreateDevice does.
@@ -777,7 +775,7 @@ egl::Error Renderer11::initializeD3DDevice()
 
     d3d11::SetDebugName(mDeviceContext, "DeviceContext");
 
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 // do any one-time device initialization
@@ -1180,8 +1178,7 @@ gl::Error Renderer11::finish()
         result = mDeviceContext->GetData(mSyncQuery.get(), nullptr, 0, flags);
         if (FAILED(result))
         {
-            return gl::Error(GL_OUT_OF_MEMORY, "Failed to get event query data, result: 0x%X.",
-                             result);
+            return gl::OutOfMemory() << "Failed to get event query data, " << gl::FmtHR(result);
         }
 
         if (result == S_FALSE)
@@ -1193,7 +1190,7 @@ gl::Error Renderer11::finish()
         if (testDeviceLost())
         {
             mDisplay->notifyDeviceLost();
-            return gl::Error(GL_OUT_OF_MEMORY, "Device was lost while waiting for sync.");
+            return gl::OutOfMemory() << "Device was lost while waiting for sync.";
         }
     } while (result == S_FALSE);
 
@@ -1232,7 +1229,7 @@ egl::Error Renderer11::getD3DTextureInfo(const egl::Config *configuration,
     ID3D11Texture2D *texture = d3d11::DynamicCastComObject<ID3D11Texture2D>(d3dTexture);
     if (texture == nullptr)
     {
-        return egl::Error(EGL_BAD_PARAMETER, "client buffer is not a ID3D11Texture2D");
+        return egl::EglBadParameter() << "client buffer is not a ID3D11Texture2D";
     }
 
     ID3D11Device *textureDevice = nullptr;
@@ -1240,7 +1237,7 @@ egl::Error Renderer11::getD3DTextureInfo(const egl::Config *configuration,
     if (textureDevice != mDevice)
     {
         SafeRelease(texture);
-        return egl::Error(EGL_BAD_PARAMETER, "Texture's device does not match.");
+        return egl::EglBadParameter() << "Texture's device does not match.";
     }
     SafeRelease(textureDevice);
 
@@ -1264,7 +1261,7 @@ egl::Error Renderer11::getD3DTextureInfo(const egl::Config *configuration,
         // not one.
         if (configuration->samples != 0 || desc.SampleDesc.Count != 1)
         {
-            return egl::Error(EGL_BAD_PARAMETER, "Texture's sample count does not match.");
+            return egl::EglBadParameter() << "Texture's sample count does not match.";
         }
     }
     // From table egl.restrictions in EGL_ANGLE_d3d_texture_client_buffer.
@@ -1279,8 +1276,8 @@ egl::Error Renderer11::getD3DTextureInfo(const egl::Config *configuration,
             break;
 
         default:
-            return egl::Error(EGL_BAD_PARAMETER, "Unknown client buffer texture format: %u.",
-                              desc.Format);
+            return egl::EglBadParameter()
+                   << "Unknown client buffer texture format: " << desc.Format;
     }
 
     if (fboFormat)
@@ -1289,7 +1286,7 @@ egl::Error Renderer11::getD3DTextureInfo(const egl::Config *configuration,
         *fboFormat                       = angleFormat.fboImplementationInternalFormat;
     }
 
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 egl::Error Renderer11::validateShareHandle(const egl::Config *config,
@@ -1298,7 +1295,7 @@ egl::Error Renderer11::validateShareHandle(const egl::Config *config,
 {
     if (shareHandle == nullptr)
     {
-        return egl::Error(EGL_BAD_PARAMETER, "NULL share handle.");
+        return egl::EglBadParameter() << "NULL share handle.";
     }
 
     ID3D11Resource *tempResource11 = nullptr;
@@ -1306,7 +1303,7 @@ egl::Error Renderer11::validateShareHandle(const egl::Config *config,
                                                  (void **)&tempResource11);
     if (FAILED(result))
     {
-        return egl::Error(EGL_BAD_PARAMETER, "Failed to open share handle, result: 0x%X.", result);
+        return egl::EglBadParameter() << "Failed to open share handle, " << gl::FmtHR(result);
     }
 
     ID3D11Texture2D *texture2D = d3d11::DynamicCastComObject<ID3D11Texture2D>(tempResource11);
@@ -1314,8 +1311,8 @@ egl::Error Renderer11::validateShareHandle(const egl::Config *config,
 
     if (texture2D == nullptr)
     {
-        return egl::Error(EGL_BAD_PARAMETER,
-                          "Failed to query ID3D11Texture2D object from share handle.");
+        return egl::EglBadParameter()
+               << "Failed to query ID3D11Texture2D object from share handle.";
     }
 
     D3D11_TEXTURE2D_DESC desc = {0};
@@ -1332,10 +1329,10 @@ egl::Error Renderer11::validateShareHandle(const egl::Config *config,
     if (desc.Width != static_cast<UINT>(width) || desc.Height != static_cast<UINT>(height) ||
         desc.Format != backbufferFormatInfo.texFormat || desc.MipLevels != 1 || desc.ArraySize != 1)
     {
-        return egl::Error(EGL_BAD_PARAMETER, "Invalid texture parameters in share handle texture.");
+        return egl::EglBadParameter() << "Invalid texture parameters in share handle texture.";
     }
 
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 SwapChainD3D *Renderer11::createSwapChain(NativeWindowD3D *nativeWindow,
@@ -1566,7 +1563,7 @@ gl::Error Renderer11::setUniformBuffers(const gl::ContextState &data,
 
         if (!constantBuffer)
         {
-            return gl::Error(GL_OUT_OF_MEMORY, "Error retrieving constant buffer");
+            return gl::OutOfMemory() << "Error retrieving constant buffer";
         }
 
         if (mCurrentConstantBufferVS[uniformBufferIndex] != bufferStorage->getSerial() ||
@@ -1626,7 +1623,7 @@ gl::Error Renderer11::setUniformBuffers(const gl::ContextState &data,
 
         if (!constantBuffer)
         {
-            return gl::Error(GL_OUT_OF_MEMORY, "Error retrieving constant buffer");
+            return gl::OutOfMemory() << "Error retrieving constant buffer";
         }
 
         if (mCurrentConstantBufferPS[uniformBufferIndex] != bufferStorage->getSerial() ||
@@ -2265,9 +2262,8 @@ gl::Error Renderer11::drawLineLoop(const gl::ContextState &data,
     if (static_cast<unsigned int>(count) + 1 >
         (std::numeric_limits<unsigned int>::max() / sizeof(unsigned int)))
     {
-        return gl::Error(GL_OUT_OF_MEMORY,
-                         "Failed to create a 32-bit looping index buffer for GL_LINE_LOOP, too "
-                         "many indices required.");
+        return gl::OutOfMemory() << "Failed to create a 32-bit looping index buffer for "
+                                    "GL_LINE_LOOP, too many indices required.";
     }
 
     GetLineLoopIndices(indices, type, static_cast<GLuint>(count),
@@ -2357,9 +2353,8 @@ gl::Error Renderer11::drawTriangleFan(const gl::ContextState &data,
 
     if (numTris > (std::numeric_limits<unsigned int>::max() / (sizeof(unsigned int) * 3)))
     {
-        return gl::Error(GL_OUT_OF_MEMORY,
-                         "Failed to create a scratch index buffer for GL_TRIANGLE_FAN, too many "
-                         "indices required.");
+        return gl::OutOfMemory() << "Failed to create a scratch index buffer for GL_TRIANGLE_FAN, "
+                                    "too many indices required.";
     }
 
     GetTriFanIndices(indexPointer, type, count, data.getState().isPrimitiveRestartEnabled(),
@@ -3691,7 +3686,7 @@ gl::Error Renderer11::loadExecutable(const uint8_t *function,
         break;
         default:
             UNREACHABLE();
-            return gl::Error(GL_INVALID_OPERATION);
+            return gl::InternalError();
     }
 
     return gl::NoError();
@@ -3723,7 +3718,7 @@ gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog,
             break;
         default:
             UNREACHABLE();
-            return gl::Error(GL_INVALID_OPERATION);
+            return gl::InternalError();
     }
 
     profileStream << "_" << getMajorShaderModel() << "_" << getMinorShaderModel()
@@ -4124,8 +4119,7 @@ gl::Error Renderer11::packPixels(const TextureHelper11 &textureHelper,
     if (FAILED(hr))
     {
         ASSERT(hr == E_OUTOFMEMORY);
-        return gl::Error(GL_OUT_OF_MEMORY,
-                         "Failed to map internal texture for reading, result: 0x%X.", hr);
+        return gl::OutOfMemory() << "Failed to map internal texture for reading, " << gl::FmtHR(hr);
     }
 
     uint8_t *source = static_cast<uint8_t *>(mapping.pData);
@@ -4556,7 +4550,7 @@ gl::ErrorOrResult<unsigned int> Renderer11::getVertexSpaceRequired(
     unsigned int elementSize = dxgiFormatInfo.pixelBytes;
     if (elementSize > std::numeric_limits<unsigned int>::max() / elementCount)
     {
-        return gl::Error(GL_OUT_OF_MEMORY, "New vertex buffer size would result in an overflow.");
+        return gl::OutOfMemory() << "New vertex buffer size would result in an overflow.";
     }
 
     return elementSize * elementCount;
@@ -4598,7 +4592,7 @@ egl::Error Renderer11::getEGLDevice(DeviceImpl **device)
     }
 
     *device = static_cast<DeviceImpl *>(mEGLDevice);
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 ContextImpl *Renderer11::createContext(const gl::ContextState &state)

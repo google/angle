@@ -926,7 +926,7 @@ egl::Error SwapChain11::getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLu
 {
     if (!mSwapChain)
     {
-        return egl::Error(EGL_NOT_INITIALIZED, "Swap chain uninitialized");
+        return egl::EglNotInitialized() << "Swap chain uninitialized";
     }
 
     DXGI_FRAME_STATISTICS stats = {};
@@ -934,7 +934,7 @@ egl::Error SwapChain11::getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLu
 
     if (FAILED(result))
     {
-        return egl::Error(EGL_BAD_ALLOC, "Failed to get frame statistics, result: 0x%X", result);
+        return egl::EglBadAlloc() << "Failed to get frame statistics, " << gl::FmtHR(result);
     }
 
     // Conversion from DXGI_FRAME_STATISTICS to the output values:
@@ -961,7 +961,7 @@ egl::Error SwapChain11::getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLu
                leftoverTicks * kMicrosecondsPerSecond / mQPCFrequency;
     }
 
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 UINT SwapChain11::getD3DSamples() const

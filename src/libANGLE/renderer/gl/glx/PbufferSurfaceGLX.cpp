@@ -61,7 +61,7 @@ egl::Error PbufferSurfaceGLX::initialize(const egl::Display *display)
     mPbuffer = mGLX.createPbuffer(mFBConfig, attribs);
     if (!mPbuffer)
     {
-        return egl::Error(EGL_BAD_ALLOC, "Failed to create a native GLX pbuffer.");
+        return egl::EglBadAlloc() << "Failed to create a native GLX pbuffer.";
     }
 
     if (mLargest)
@@ -70,44 +70,44 @@ egl::Error PbufferSurfaceGLX::initialize(const egl::Display *display)
         mGLX.queryDrawable(mPbuffer, GLX_HEIGHT, &mHeight);
     }
 
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 egl::Error PbufferSurfaceGLX::makeCurrent()
 {
     if (mGLX.makeCurrent(mPbuffer, mContext) != True)
     {
-        return egl::Error(EGL_BAD_DISPLAY);
+        return egl::EglBadDisplay();
     }
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 egl::Error PbufferSurfaceGLX::swap(const egl::Display *display)
 {
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 egl::Error PbufferSurfaceGLX::postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height)
 {
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 egl::Error PbufferSurfaceGLX::querySurfacePointerANGLE(EGLint attribute, void **value)
 {
     UNIMPLEMENTED();
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 egl::Error PbufferSurfaceGLX::bindTexImage(gl::Texture *texture, EGLint buffer)
 {
     UNIMPLEMENTED();
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 egl::Error PbufferSurfaceGLX::releaseTexImage(EGLint buffer)
 {
     UNIMPLEMENTED();
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 void PbufferSurfaceGLX::setSwapInterval(EGLint interval)
@@ -138,6 +138,6 @@ EGLint PbufferSurfaceGLX::getSwapBehavior() const
 egl::Error PbufferSurfaceGLX::checkForResize()
 {
     // The size of pbuffers never change
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 }  // namespace rx

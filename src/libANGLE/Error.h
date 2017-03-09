@@ -9,9 +9,10 @@
 #ifndef LIBANGLE_ERROR_H_
 #define LIBANGLE_ERROR_H_
 
+#include <EGL/egl.h>
+#include <EGL/eglext.h>
 #include "angle_gl.h"
 #include "common/angleutils.h"
-#include <EGL/egl.h>
 
 #include <memory>
 #include <ostream>
@@ -40,6 +41,33 @@ class ErrorOrResultBase
     ErrorT mError;
     ResultT mResult;
 };
+
+template <typename ErrorT, typename ErrorBaseT, ErrorBaseT NoErrorVal, typename CodeT, CodeT EnumT>
+class ErrorStreamBase : angle::NonCopyable
+{
+  public:
+    ErrorStreamBase() : mID(EnumT) {}
+    ErrorStreamBase(GLuint id) : mID(id) {}
+
+    template <typename T>
+    ErrorStreamBase &operator<<(T value)
+    {
+        mErrorStream << value;
+        return *this;
+    }
+
+    operator ErrorT() { return ErrorT(EnumT, mID, mErrorStream.str()); }
+
+    template <typename ResultT>
+    operator ErrorOrResultBase<ErrorT, ResultT, ErrorBaseT, NoErrorVal>()
+    {
+        return static_cast<ErrorT>(*this);
+    }
+
+  private:
+    GLuint mID;
+    std::ostringstream mErrorStream;
+};
 }  // namespace angle
 
 namespace gl
@@ -49,9 +77,8 @@ class Error final
 {
   public:
     explicit inline Error(GLenum errorCode);
-    Error(GLenum errorCode, std::string &&msg);
-    Error(GLenum errorCode, const char *msg, ...);
-    Error(GLenum errorCode, GLuint id, const char *msg, ...);
+    Error(GLenum errorCode, std::string &&message);
+    Error(GLenum errorCode, GLuint id, std::string &&message);
     inline Error(const Error &other);
     inline Error(Error &&other);
 
@@ -83,60 +110,21 @@ using ErrorOrResult = angle::ErrorOrResultBase<Error, ResultT, GLenum, GL_NO_ERR
 
 namespace priv
 {
-template <GLenum EnumT>
-class ErrorStream : angle::NonCopyable
-{
-  public:
-    ErrorStream();
-
-    template <typename T>
-    ErrorStream &operator<<(T value);
-
-    operator Error();
-
-    template <typename T>
-    operator ErrorOrResult<T>()
-    {
-        return static_cast<Error>(*this);
-    }
-
-  private:
-    std::ostringstream mErrorStream;
-};
-
-// These convience methods for HRESULTS (really long) are used all over the place in the D3D
-// back-ends.
-#if defined(ANGLE_PLATFORM_WINDOWS)
-template <>
-template <>
-inline ErrorStream<GL_OUT_OF_MEMORY> &ErrorStream<GL_OUT_OF_MEMORY>::operator<<(HRESULT hresult)
-{
-    mErrorStream << "HRESULT: 0x" << std::ios::hex << hresult;
-    return *this;
-}
-
-template <>
-template <>
-inline ErrorStream<GL_INVALID_OPERATION> &ErrorStream<GL_INVALID_OPERATION>::operator<<(
-    HRESULT hresult)
-{
-    mErrorStream << "HRESULT: 0x" << std::ios::hex << hresult;
-    return *this;
-}
-#endif  // defined(ANGLE_PLATFORM_WINDOWS)
 
 template <GLenum EnumT>
-template <typename T>
-ErrorStream<EnumT> &ErrorStream<EnumT>::operator<<(T value)
-{
-    mErrorStream << value;
-    return *this;
-}
+using ErrorStream = angle::ErrorStreamBase<Error, GLenum, GL_NO_ERROR, GLenum, EnumT>;
 
 }  // namespace priv
 
-using OutOfMemory   = priv::ErrorStream<GL_OUT_OF_MEMORY>;
 using InternalError = priv::ErrorStream<GL_INVALID_OPERATION>;
+
+using InvalidEnum                 = priv::ErrorStream<GL_INVALID_ENUM>;
+using InvalidValue                = priv::ErrorStream<GL_INVALID_VALUE>;
+using InvalidOperation            = priv::ErrorStream<GL_INVALID_OPERATION>;
+using StackOverflow               = priv::ErrorStream<GL_STACK_OVERFLOW>;
+using StackUnderflow              = priv::ErrorStream<GL_STACK_UNDERFLOW>;
+using OutOfMemory                 = priv::ErrorStream<GL_OUT_OF_MEMORY>;
+using InvalidFramebufferOperation = priv::ErrorStream<GL_INVALID_FRAMEBUFFER_OPERATION>;
 
 inline Error NoError()
 {
@@ -152,9 +140,8 @@ class Error final
 {
   public:
     explicit inline Error(EGLint errorCode);
-    Error(EGLint errorCode, const char *msg, ...);
-    Error(EGLint errorCode, EGLint id, const char *msg, ...);
-    Error(EGLint errorCode, EGLint id, const std::string &msg);
+    Error(EGLint errorCode, std::string &&message);
+    Error(EGLint errorCode, EGLint id, std::string &&message);
     inline Error(const Error &other);
     inline Error(Error &&other);
 
@@ -177,13 +164,38 @@ class Error final
     mutable std::unique_ptr<std::string> mMessage;
 };
 
+template <typename ResultT>
+using ErrorOrResult = angle::ErrorOrResultBase<Error, ResultT, EGLint, EGL_SUCCESS>;
+
+namespace priv
+{
+
+template <EGLint EnumT>
+using ErrorStream = angle::ErrorStreamBase<Error, EGLint, EGL_SUCCESS, EGLint, EnumT>;
+
+}  // namespace priv
+
+using EglNotInitialized    = priv::ErrorStream<EGL_NOT_INITIALIZED>;
+using EglBadAccess         = priv::ErrorStream<EGL_BAD_ACCESS>;
+using EglBadAlloc          = priv::ErrorStream<EGL_BAD_ALLOC>;
+using EglBadAttribute      = priv::ErrorStream<EGL_BAD_ATTRIBUTE>;
+using EglBadConfig         = priv::ErrorStream<EGL_BAD_CONFIG>;
+using EglBadContext        = priv::ErrorStream<EGL_BAD_CONTEXT>;
+using EglBadCurrentSurface = priv::ErrorStream<EGL_BAD_CURRENT_SURFACE>;
+using EglBadDisplay        = priv::ErrorStream<EGL_BAD_DISPLAY>;
+using EglBadMatch          = priv::ErrorStream<EGL_BAD_MATCH>;
+using EglBadNativeWindow   = priv::ErrorStream<EGL_BAD_NATIVE_WINDOW>;
+using EglBadParameter      = priv::ErrorStream<EGL_BAD_PARAMETER>;
+using EglBadSurface        = priv::ErrorStream<EGL_BAD_SURFACE>;
+using EglContextLost       = priv::ErrorStream<EGL_CONTEXT_LOST>;
+using EglBadStream         = priv::ErrorStream<EGL_BAD_STREAM_KHR>;
+using EglBadState          = priv::ErrorStream<EGL_BAD_STATE_KHR>;
+using EglBadDevice         = priv::ErrorStream<EGL_BAD_DEVICE_EXT>;
+
 inline Error NoError()
 {
     return Error(EGL_SUCCESS);
 }
-
-template <typename ResultT>
-using ErrorOrResult = angle::ErrorOrResultBase<Error, ResultT, EGLint, EGL_SUCCESS>;
 
 }  // namespace egl
 

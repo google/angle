@@ -97,7 +97,7 @@ gl::Error TextureStorage9::setData(const gl::ImageIndex &index, ImageD3D *image,
                                    const gl::PixelUnpackState &unpack, const uint8_t *pixelData)
 {
     UNREACHABLE();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 TextureStorage9_2D::TextureStorage9_2D(Renderer9 *renderer, SwapChain9 *swapchain)
@@ -168,7 +168,8 @@ gl::Error TextureStorage9_2D::getSurfaceLevel(GLenum target,
     ASSERT(SUCCEEDED(result));
     if (FAILED(result))
     {
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to get the surface from a texture, result: 0x%X.", result);
+        return gl::OutOfMemory() << "Failed to get the surface from a texture, "
+                                 << gl::FmtHR(result);
     }
 
     // With managed textures the driver needs to be informed of updates to the lower mipmap levels
@@ -258,7 +259,8 @@ gl::Error TextureStorage9_2D::getBaseTexture(IDirect3DBaseTexture9 **outTexture)
         if (FAILED(result))
         {
             ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-            return gl::Error(GL_OUT_OF_MEMORY, "Failed to create 2D storage texture, result: 0x%X.", result);
+            return gl::OutOfMemory()
+                   << "Failed to create 2D storage texture, " << gl::FmtHR(result);
         }
     }
 
@@ -370,7 +372,7 @@ gl::Error TextureStorage9_EGLImage::getBaseTexture(IDirect3DBaseTexture9 **outTe
 gl::Error TextureStorage9_EGLImage::generateMipmap(const gl::ImageIndex &, const gl::ImageIndex &)
 {
     UNREACHABLE();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 gl::Error TextureStorage9_EGLImage::copyToStorage(TextureStorage *destStorage)
@@ -393,8 +395,8 @@ gl::Error TextureStorage9_EGLImage::copyToStorage(TextureStorage *destStorage)
     HRESULT result = destTexture9->GetSurfaceLevel(destStorage->getTopLevel(), &destSurface);
     if (FAILED(result))
     {
-        return gl::Error(GL_OUT_OF_MEMORY,
-                         "Failed to get the surface from a texture, result: 0x%X.", result);
+        return gl::OutOfMemory() << "Failed to get the surface from a texture, "
+                                 << gl::FmtHR(result);
     }
 
     RenderTargetD3D *sourceRenderTarget = nullptr;
@@ -476,7 +478,8 @@ gl::Error TextureStorage9_Cube::getSurfaceLevel(GLenum target,
     ASSERT(SUCCEEDED(result));
     if (FAILED(result))
     {
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to get the surface from a texture, result: 0x%X.", result);
+        return gl::OutOfMemory() << "Failed to get the surface from a texture, "
+                                 << gl::FmtHR(result);
     }
 
     // With managed textures the driver needs to be informed of updates to the lower mipmap levels
@@ -564,7 +567,8 @@ gl::Error TextureStorage9_Cube::getBaseTexture(IDirect3DBaseTexture9 **outTextur
         if (FAILED(result))
         {
             ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-            return gl::Error(GL_OUT_OF_MEMORY, "Failed to create cube storage texture, result: 0x%X.", result);
+            return gl::OutOfMemory()
+                   << "Failed to create cube storage texture, " << gl::FmtHR(result);
         }
     }
 

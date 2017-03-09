@@ -45,7 +45,9 @@ gl::Error Image9::generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 
     ASSERT(SUCCEEDED(result));
     if (FAILED(result))
     {
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to query the source surface description for mipmap generation, result: 0x%X.", result);
+        return gl::OutOfMemory()
+               << "Failed to query the source surface description for mipmap generation, "
+               << gl::FmtHR(result);
     }
 
     D3DSURFACE_DESC sourceDesc;
@@ -53,7 +55,9 @@ gl::Error Image9::generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 
     ASSERT(SUCCEEDED(result));
     if (FAILED(result))
     {
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to query the destination surface description for mipmap generation, result: 0x%X.", result);
+        return gl::OutOfMemory()
+               << "Failed to query the destination surface description for mipmap generation, "
+               << gl::FmtHR(result);
     }
 
     ASSERT(sourceDesc.Format == destDesc.Format);
@@ -68,7 +72,8 @@ gl::Error Image9::generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 
     ASSERT(SUCCEEDED(result));
     if (FAILED(result))
     {
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to lock the source surface for mipmap generation, result: 0x%X.", result);
+        return gl::OutOfMemory() << "Failed to lock the source surface for mipmap generation, "
+                                 << gl::FmtHR(result);
     }
 
     D3DLOCKED_RECT destLocked = {0};
@@ -77,7 +82,8 @@ gl::Error Image9::generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 
     if (FAILED(result))
     {
         sourceSurface->UnlockRect();
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to lock the destination surface for mipmap generation, result: 0x%X.", result);
+        return gl::OutOfMemory() << "Failed to lock the destination surface for mipmap generation, "
+                                 << gl::FmtHR(result);
     }
 
     const uint8_t *sourceData = reinterpret_cast<const uint8_t*>(sourceLocked.pBits);
@@ -132,14 +138,14 @@ gl::Error Image9::copyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface
     result = source->LockRect(&sourceLock, nullptr, 0);
     if (FAILED(result))
     {
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to lock source surface for copy, result: 0x%X.", result);
+        return gl::OutOfMemory() << "Failed to lock source surface for copy, " << gl::FmtHR(result);
     }
 
     result = dest->LockRect(&destLock, nullptr, 0);
     if (FAILED(result))
     {
         source->UnlockRect();
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to lock source surface for copy, result: 0x%X.", result);
+        return gl::OutOfMemory() << "Failed to lock source surface for copy, " << gl::FmtHR(result);
     }
 
     ASSERT(sourceLock.pBits && destLock.pBits);
@@ -225,7 +231,7 @@ gl::Error Image9::createSurface()
         if (FAILED(result))
         {
             ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-            return gl::Error(GL_OUT_OF_MEMORY, "Failed to create image surface, result: 0x%X.", result);
+            return gl::OutOfMemory() << "Failed to create image surface, " << gl::FmtHR(result);
         }
 
         newTexture->GetSurfaceLevel(levelToFetch, &newSurface);
@@ -245,7 +251,7 @@ gl::Error Image9::createSurface()
             ASSERT(SUCCEEDED(result));
             if (FAILED(result))
             {
-                return gl::Error(GL_OUT_OF_MEMORY, "Failed to lock image surface, result: 0x%X.", result);
+                return gl::OutOfMemory() << "Failed to lock image surface, " << gl::FmtHR(result);
             }
 
             d3dFormatInfo.dataInitializerFunction(mWidth, mHeight, 1, reinterpret_cast<uint8_t*>(lockedRect.pBits),
@@ -255,7 +261,7 @@ gl::Error Image9::createSurface()
             ASSERT(SUCCEEDED(result));
             if (FAILED(result))
             {
-                return gl::Error(GL_OUT_OF_MEMORY, "Failed to unlock image surface, result: 0x%X.", result);
+                return gl::OutOfMemory() << "Failed to unlock image surface, " << gl::FmtHR(result);
             }
         }
     }
@@ -281,7 +287,7 @@ gl::Error Image9::lock(D3DLOCKED_RECT *lockedRect, const RECT &rect)
         ASSERT(SUCCEEDED(result));
         if (FAILED(result))
         {
-            return gl::Error(GL_OUT_OF_MEMORY, "Failed to lock image surface, result: 0x%X.", result);
+            return gl::OutOfMemory() << "Failed to lock image surface, " << gl::FmtHR(result);
         }
 
         mDirty = true;
@@ -448,7 +454,8 @@ gl::Error Image9::copyToSurface(IDirect3DSurface9 *destSurface, const gl::Box &a
                                                              D3DPOOL_SYSTEMMEM, &surf, nullptr);
         if (FAILED(result))
         {
-            return gl::Error(GL_OUT_OF_MEMORY, "Internal CreateOffscreenPlainSurface call failed, result: 0x%X.", result);
+            return gl::OutOfMemory()
+                   << "Internal CreateOffscreenPlainSurface call failed, " << gl::FmtHR(result);
         }
 
         copyLockableSurfaces(surf, sourceSurface);
@@ -457,7 +464,7 @@ gl::Error Image9::copyToSurface(IDirect3DSurface9 *destSurface, const gl::Box &a
         ASSERT(SUCCEEDED(result));
         if (FAILED(result))
         {
-            return gl::Error(GL_OUT_OF_MEMORY, "Internal UpdateSurface call failed, result: 0x%X.", result);
+            return gl::OutOfMemory() << "Internal UpdateSurface call failed, " << gl::FmtHR(result);
         }
     }
     else
@@ -467,7 +474,7 @@ gl::Error Image9::copyToSurface(IDirect3DSurface9 *destSurface, const gl::Box &a
         ASSERT(SUCCEEDED(result));
         if (FAILED(result))
         {
-            return gl::Error(GL_OUT_OF_MEMORY, "Internal UpdateSurface call failed, result: 0x%X.", result);
+            return gl::OutOfMemory() << "Internal UpdateSurface call failed, " << gl::FmtHR(result);
         }
     }
 
@@ -588,7 +595,8 @@ gl::Error Image9::copyFromRTInternal(const gl::Offset &destOffset,
     if (FAILED(result))
     {
         SafeRelease(surface);
-        return gl::Error(GL_OUT_OF_MEMORY, "Could not create matching destination surface, result: 0x%X.", result);
+        return gl::OutOfMemory() << "Could not create matching destination surface, "
+                                 << gl::FmtHR(result);
     }
 
     result = device->GetRenderTargetData(surface, renderTargetData);
@@ -597,7 +605,8 @@ gl::Error Image9::copyFromRTInternal(const gl::Offset &destOffset,
     {
         SafeRelease(renderTargetData);
         SafeRelease(surface);
-        return gl::Error(GL_OUT_OF_MEMORY, "GetRenderTargetData unexpectedly failed, result: 0x%X.", result);
+        return gl::OutOfMemory() << "GetRenderTargetData unexpectedly failed, "
+                                 << gl::FmtHR(result);
     }
 
     int width = sourceArea.width;
@@ -613,7 +622,9 @@ gl::Error Image9::copyFromRTInternal(const gl::Offset &destOffset,
     {
         SafeRelease(renderTargetData);
         SafeRelease(surface);
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to lock the source surface (rectangle might be invalid), result: 0x%X.", result);
+        return gl::OutOfMemory()
+               << "Failed to lock the source surface (rectangle might be invalid), "
+               << gl::FmtHR(result);
     }
 
     D3DLOCKED_RECT destLock = {0};

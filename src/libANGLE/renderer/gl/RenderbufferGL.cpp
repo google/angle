@@ -72,7 +72,7 @@ gl::Error RenderbufferGL::setStorageMultisample(size_t samples, GLenum internalf
             error = mFunctions->getError();
             if (error == GL_OUT_OF_MEMORY)
             {
-                return gl::Error(GL_OUT_OF_MEMORY);
+                return gl::OutOfMemory();
             }
 
             ASSERT(error == GL_NO_ERROR);
@@ -85,7 +85,7 @@ gl::Error RenderbufferGL::setStorageMultisample(size_t samples, GLenum internalf
 gl::Error RenderbufferGL::setStorageEGLImageTarget(egl::Image *image)
 {
     UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 GLuint RenderbufferGL::getRenderbufferID() const

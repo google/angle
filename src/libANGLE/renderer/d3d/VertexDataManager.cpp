@@ -362,8 +362,7 @@ gl::Error VertexDataManager::StoreStaticAttrib(TranslatedAttribute *translated)
 
     if (!checkedOffset.IsValid())
     {
-        return gl::Error(GL_INVALID_OPERATION,
-                         "Integer overflow in VertexDataManager::StoreStaticAttrib");
+        return gl::InternalError() << "Integer overflow in VertexDataManager::StoreStaticAttrib";
     }
 
     translated->vertexBuffer.set(vertexBuffer);

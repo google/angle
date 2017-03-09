@@ -79,7 +79,7 @@ egl::Error DisplayEGL::initializeContext(const egl::AttributeMap &eglAttributes)
     {
         if (initializeRequested && (requestedMajor != 2 || requestedMinor != 0))
         {
-            return egl::Error(EGL_BAD_ATTRIBUTE, "Unsupported requested context version");
+            return egl::EglBadAttribute() << "Unsupported requested context version";
         }
         contextAttribLists.push_back({EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE});
     }
@@ -89,7 +89,7 @@ egl::Error DisplayEGL::initializeContext(const egl::AttributeMap &eglAttributes)
         mContext = mEGL->createContext(mConfig, EGL_NO_CONTEXT, attribList.data());
         if (mContext != EGL_NO_CONTEXT)
         {
-            return egl::Error(EGL_SUCCESS);
+            return egl::NoError();
         }
     }
 

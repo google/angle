@@ -98,14 +98,14 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
         mXDisplay        = XOpenDisplay(nullptr);
         if (!mXDisplay)
         {
-            return egl::Error(EGL_NOT_INITIALIZED, "Could not open the default X display.");
+            return egl::EglNotInitialized() << "Could not open the default X display.";
         }
     }
 
     std::string glxInitError;
     if (!mGLX.initialize(mXDisplay, DefaultScreen(mXDisplay), &glxInitError))
     {
-        return egl::Error(EGL_NOT_INITIALIZED, glxInitError.c_str());
+        return egl::EglNotInitialized() << glxInitError;
     }
 
     mHasMultisample      = mGLX.minorVersion > 3 || mGLX.hasExtension("GLX_ARB_multisample");
@@ -175,7 +175,7 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
 
         if (mContextConfig == nullptr)
         {
-            return egl::Error(EGL_NOT_INITIALIZED, "Invalid visual ID requested.");
+            return egl::EglNotInitialized() << "Invalid visual ID requested.";
         }
     }
     else
@@ -214,7 +214,8 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
         if (nConfigs == 0)
         {
             XFree(candidates);
-            return egl::Error(EGL_NOT_INITIALIZED, "Could not find a decent GLX FBConfig to create the context.");
+            return egl::EglNotInitialized()
+                   << "Could not find a decent GLX FBConfig to create the context.";
         }
         mContextConfig = candidates[0];
         XFree(candidates);
@@ -235,9 +236,8 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
                               EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE) ==
             EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE)
         {
-            return egl::Error(EGL_NOT_INITIALIZED,
-                              "Cannot create an OpenGL ES platform on GLX without the "
-                              "GLX_ARB_create_context extension.");
+            return egl::EglNotInitialized() << "Cannot create an OpenGL ES platform on GLX without "
+                                               "the GLX_ARB_create_context extension.";
         }
 
         XVisualInfo visualTemplate;
@@ -248,8 +248,7 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
             XGetVisualInfo(mXDisplay, VisualIDMask, &visualTemplate, &numVisuals);
         if (numVisuals <= 0)
         {
-            return egl::Error(EGL_NOT_INITIALIZED,
-                              "Could not get the visual info from the fb config");
+            return egl::EglNotInitialized() << "Could not get the visual info from the fb config";
         }
         ASSERT(numVisuals == 1);
 
@@ -258,7 +257,7 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
 
         if (!mContext)
         {
-            return egl::Error(EGL_NOT_INITIALIZED, "Could not create GL context.");
+            return egl::EglNotInitialized() << "Could not create GL context.";
         }
     }
     ASSERT(mContext);
@@ -282,12 +281,12 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
     mDummyPbuffer = mGLX.createPbuffer(mContextConfig, dummyPbufferAttribs);
     if (!mDummyPbuffer)
     {
-        return egl::Error(EGL_NOT_INITIALIZED, "Could not create the dummy pbuffer.");
+        return egl::EglNotInitialized() << "Could not create the dummy pbuffer.";
     }
 
     if (!mGLX.makeCurrent(mDummyPbuffer, mContext))
     {
-        return egl::Error(EGL_NOT_INITIALIZED, "Could not make the dummy pbuffer current.");
+        return egl::EglNotInitialized() << "Could not make the dummy pbuffer current.";
     }
 
     mFunctionsGL = new FunctionsGLGLX(mGLX.getProc);
@@ -302,7 +301,7 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
         EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE;
     if (isOpenGLES && (IsIntel(vendor) || IsNvidia(vendor)))
     {
-        return egl::Error(EGL_NOT_INITIALIZED, "Intel or NVIDIA OpenGL ES drivers are not supported.");
+        return egl::EglNotInitialized() << "Intel or NVIDIA OpenGL ES drivers are not supported.";
     }
 
     syncXCommands();
@@ -376,7 +375,7 @@ SurfaceImpl *DisplayGLX::createPixmapSurface(const egl::SurfaceState &state,
 egl::Error DisplayGLX::getDevice(DeviceImpl **device)
 {
     UNIMPLEMENTED();
-    return egl::Error(EGL_BAD_DISPLAY);
+    return egl::EglBadDisplay();
 }
 
 egl::Error DisplayGLX::initializeContext(glx::FBConfig config,
@@ -391,9 +390,8 @@ egl::Error DisplayGLX::initializeContext(glx::FBConfig config,
     {
         if (!mHasEXTCreateContextES2Profile)
         {
-            return egl::Error(EGL_NOT_INITIALIZED,
-                              "Cannot create an OpenGL ES platform on GLX without the "
-                              "GLX_EXT_create_context_es_profile extension.");
+            return egl::EglNotInitialized() << "Cannot create an OpenGL ES platform on GLX without "
+                                               "the GLX_EXT_create_context_es_profile extension.";
         }
 
         ASSERT(mHasARBCreateContextProfile);
@@ -447,7 +445,7 @@ egl::Error DisplayGLX::initializeContext(glx::FBConfig config,
         }
     }
 
-    return egl::Error(EGL_NOT_INITIALIZED, "Could not create a backing OpenGL context.");
+    return egl::EglNotInitialized() << "Could not create a backing OpenGL context.";
 }
 
 egl::ConfigSet DisplayGLX::generateConfigs()
@@ -639,7 +637,7 @@ bool DisplayGLX::testDeviceLost()
 
 egl::Error DisplayGLX::restoreLostDevice()
 {
-    return egl::Error(EGL_BAD_DISPLAY);
+    return egl::EglBadDisplay();
 }
 
 bool DisplayGLX::isValidNativeWindow(EGLNativeWindowType window) const
@@ -673,7 +671,7 @@ std::string DisplayGLX::getVendorString() const
 egl::Error DisplayGLX::waitClient() const
 {
     mGLX.waitGL();
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 egl::Error DisplayGLX::waitNative(EGLint engine,
@@ -708,7 +706,7 @@ egl::Error DisplayGLX::waitNative(EGLint engine,
 
     // We still need to forward the resizing of the child window to the driver.
     mGLX.waitX();
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 void DisplayGLX::syncXCommands() const
@@ -834,9 +832,9 @@ egl::Error DisplayGLX::createContextAttribs(glx::FBConfig,
 
     if (!*context)
     {
-        return egl::Error(EGL_NOT_INITIALIZED, "Could not create GL context.");
+        return egl::EglNotInitialized() << "Could not create GL context.";
     }
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 }

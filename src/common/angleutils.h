@@ -207,10 +207,10 @@ std::string ToString(const T &value)
 // TODO(jmadill): Clean this up at some point.
 #define EGL_PLATFORM_ANGLE_PLATFORM_METHODS_ANGLEX 0x9999
 
-#define ANGLE_TRY_CHECKED_MATH(result)                               \
-    if (!result.IsValid())                                           \
-    {                                                                \
-        return gl::Error(GL_INVALID_OPERATION, "Integer overflow."); \
+#define ANGLE_TRY_CHECKED_MATH(result)                     \
+    if (!result.IsValid())                                 \
+    {                                                      \
+        return gl::InternalError() << "Integer overflow."; \
     }
 
 #endif // COMMON_ANGLEUTILS_H_

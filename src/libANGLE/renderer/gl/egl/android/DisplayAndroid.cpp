@@ -92,7 +92,8 @@ egl::Error DisplayAndroid::initialize(egl::Display *display)
     EGLBoolean success = mEGL->chooseConfig(mConfigAttribList.data(), &mConfig, 1, &numConfig);
     if (success == EGL_FALSE)
     {
-        return egl::Error(mEGL->getError(), "eglChooseConfig failed");
+        return egl::EglNotInitialized()
+               << "eglChooseConfig failed with " << egl::Error(mEGL->getError());
     }
 
     ANGLE_TRY(initializeContext(display->getAttributeMap()));
@@ -103,13 +104,15 @@ egl::Error DisplayAndroid::initialize(egl::Display *display)
     mDummyPbuffer = mEGL->createPbufferSurface(mConfig, dummyPbufferAttribs);
     if (mDummyPbuffer == EGL_NO_SURFACE)
     {
-        return egl::Error(mEGL->getError(), "eglCreatePbufferSurface failed");
+        return egl::EglNotInitialized()
+               << "eglCreatePbufferSurface failed with " << egl::Error(mEGL->getError());
     }
 
     success = mEGL->makeCurrent(mDummyPbuffer, mContext);
     if (success == EGL_FALSE)
     {
-        return egl::Error(mEGL->getError(), "eglMakeCurrent failed");
+        return egl::EglNotInitialized()
+               << "eglMakeCurrent failed with " << egl::Error(mEGL->getError());
     }
 
     mFunctionsGL = mEGL->makeFunctionsGL();
@@ -366,7 +369,7 @@ bool DisplayAndroid::testDeviceLost()
 egl::Error DisplayAndroid::restoreLostDevice()
 {
     UNIMPLEMENTED();
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 bool DisplayAndroid::isValidNativeWindow(EGLNativeWindowType window) const
@@ -377,13 +380,13 @@ bool DisplayAndroid::isValidNativeWindow(EGLNativeWindowType window) const
 egl::Error DisplayAndroid::getDevice(DeviceImpl **device)
 {
     UNIMPLEMENTED();
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 egl::Error DisplayAndroid::waitClient() const
 {
     UNIMPLEMENTED();
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 egl::Error DisplayAndroid::waitNative(EGLint engine,
@@ -391,7 +394,7 @@ egl::Error DisplayAndroid::waitNative(EGLint engine,
                                       egl::Surface *readSurface) const
 {
     UNIMPLEMENTED();
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 }  // namespace rx

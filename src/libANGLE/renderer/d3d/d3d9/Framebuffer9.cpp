@@ -105,7 +105,8 @@ gl::Error Framebuffer9::readPixelsImpl(const gl::Rectangle &area,
     {
         UNIMPLEMENTED();   // FIXME: Requires resolve using StretchRect into non-multisampled render target
         SafeRelease(surface);
-        return gl::Error(GL_OUT_OF_MEMORY, "ReadPixels is unimplemented for multisampled framebuffer attachments.");
+        return gl::OutOfMemory()
+               << "ReadPixels is unimplemented for multisampled framebuffer attachments.";
     }
 
     IDirect3DDevice9 *device = mRenderer->getDevice();
@@ -137,7 +138,7 @@ gl::Error Framebuffer9::readPixelsImpl(const gl::Rectangle &area,
         {
             ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
             SafeRelease(surface);
-            return gl::Error(GL_OUT_OF_MEMORY, "Failed to allocate internal texture for ReadPixels.");
+            return gl::OutOfMemory() << "Failed to allocate internal texture for ReadPixels.";
         }
     }
 
@@ -159,7 +160,7 @@ gl::Error Framebuffer9::readPixelsImpl(const gl::Rectangle &area,
             UNREACHABLE();
         }
 
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to read internal render target data.");
+        return gl::OutOfMemory() << "Failed to read internal render target data.";
     }
 
     if (directToPixels)
@@ -182,7 +183,7 @@ gl::Error Framebuffer9::readPixelsImpl(const gl::Rectangle &area,
         UNREACHABLE();
         SafeRelease(systemSurface);
 
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to lock internal render target.");
+        return gl::OutOfMemory() << "Failed to lock internal render target.";
     }
 
     uint8_t *source = reinterpret_cast<uint8_t *>(lock.pBits);
@@ -348,7 +349,7 @@ gl::Error Framebuffer9::blitImpl(const gl::Rectangle &sourceArea,
 
         if (FAILED(result))
         {
-            return gl::Error(GL_OUT_OF_MEMORY, "Internal blit failed, StretchRect returned 0x%X.", result);
+            return gl::OutOfMemory() << "Internal blit failed, StretchRect " << gl::FmtHR(result);
         }
     }
 
@@ -390,7 +391,7 @@ gl::Error Framebuffer9::blitImpl(const gl::Rectangle &sourceArea,
 
         if (FAILED(result))
         {
-            return gl::Error(GL_OUT_OF_MEMORY, "Internal blit failed, StretchRect returned 0x%X.", result);
+            return gl::OutOfMemory() << "Internal blit failed, StretchRect " << gl::FmtHR(result);
         }
     }
 

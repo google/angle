@@ -183,7 +183,7 @@ egl::Error Renderer9::initialize()
 
     if (mD3d9Module == nullptr)
     {
-        return egl::Error(EGL_NOT_INITIALIZED, D3D9_INIT_MISSING_DEP, "No D3D9 module found.");
+        return egl::EglNotInitialized(D3D9_INIT_MISSING_DEP) << "No D3D9 module found.";
     }
 
     typedef HRESULT(WINAPI * Direct3DCreate9ExFunc)(UINT, IDirect3D9Ex **);
@@ -210,8 +210,7 @@ egl::Error Renderer9::initialize()
 
     if (!mD3d9)
     {
-        return egl::Error(EGL_NOT_INITIALIZED, D3D9_INIT_MISSING_DEP,
-                          "Could not create D3D9 device.");
+        return egl::EglNotInitialized(D3D9_INIT_MISSING_DEP) << "Could not create D3D9 device.";
     }
 
     if (mDisplay->getNativeDisplayId() != nullptr)
@@ -240,8 +239,8 @@ egl::Error Renderer9::initialize()
                                       // D3DERR_INVALIDDEVICE, or another error we can't recover
                                       // from
             {
-                return egl::Error(EGL_NOT_INITIALIZED, D3D9_INIT_OTHER_ERROR,
-                                  "Failed to get device caps: Error code 0x%x\n", result);
+                return egl::EglNotInitialized(D3D9_INIT_OTHER_ERROR)
+                       << "Failed to get device caps, " << gl::FmtHR(result);
             }
         }
     }
@@ -254,8 +253,8 @@ egl::Error Renderer9::initialize()
 
     if (mDeviceCaps.PixelShaderVersion < D3DPS_VERSION(minShaderModel, 0))
     {
-        return egl::Error(EGL_NOT_INITIALIZED, D3D9_INIT_UNSUPPORTED_VERSION,
-                          "Renderer does not support PS %u.%u.aborting!", minShaderModel, 0);
+        return egl::EglNotInitialized(D3D9_INIT_UNSUPPORTED_VERSION)
+               << "Renderer does not support PS " << minShaderModel << ".0, aborting!";
     }
 
     // When DirectX9 is running with an older DirectX8 driver, a StretchRect from a regular texture
@@ -263,8 +262,8 @@ egl::Error Renderer9::initialize()
     // Texture2D::ensureRenderTarget.
     if ((mDeviceCaps.DevCaps2 & D3DDEVCAPS2_CAN_STRETCHRECT_FROM_TEXTURES) == 0)
     {
-        return egl::Error(EGL_NOT_INITIALIZED, D3D9_INIT_UNSUPPORTED_STRETCHRECT,
-                          "Renderer does not support StretctRect from textures.");
+        return egl::EglNotInitialized(D3D9_INIT_UNSUPPORTED_STRETCHRECT)
+               << "Renderer does not support StretctRect from textures.";
     }
 
     {
@@ -295,8 +294,8 @@ egl::Error Renderer9::initialize()
     }
     if (result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY || result == D3DERR_DEVICELOST)
     {
-        return egl::Error(EGL_BAD_ALLOC, D3D9_INIT_OUT_OF_MEMORY,
-                          "CreateDevice failed: device lost of out of memory");
+        return egl::EglBadAlloc(D3D9_INIT_OUT_OF_MEMORY)
+               << "CreateDevice failed: device lost of out of memory";
     }
 
     if (FAILED(result))
@@ -310,9 +309,8 @@ egl::Error Renderer9::initialize()
         {
             ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY ||
                    result == D3DERR_NOTAVAILABLE || result == D3DERR_DEVICELOST);
-            return egl::Error(
-                EGL_BAD_ALLOC, D3D9_INIT_OUT_OF_MEMORY,
-                "CreateDevice2 failed: device lost, not available, or of out of memory");
+            return egl::EglBadAlloc(D3D9_INIT_OUT_OF_MEMORY)
+                   << "CreateDevice2 failed: device lost, not available, or of out of memory";
         }
     }
 
@@ -342,7 +340,7 @@ egl::Error Renderer9::initialize()
 
     initializeDevice();
 
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 // do any one-time device initialization
@@ -608,7 +606,7 @@ gl::Error Renderer9::flush()
     if (FAILED(result))
     {
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to issue event query, result: 0x%X.", result);
+        return gl::OutOfMemory() << "Failed to issue event query, " << gl::FmtHR(result);
     }
 
     // Grab the query data once
@@ -621,7 +619,7 @@ gl::Error Renderer9::flush()
             notifyDeviceLost();
         }
 
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to get event query data, result: 0x%X.", result);
+        return gl::OutOfMemory() << "Failed to get event query data, " << gl::FmtHR(result);
     }
 
     return gl::NoError();
@@ -640,7 +638,7 @@ gl::Error Renderer9::finish()
     if (FAILED(result))
     {
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to issue event query, result: 0x%X.", result);
+        return gl::OutOfMemory() << "Failed to issue event query, " << gl::FmtHR(result);
     }
 
     // Grab the query data once
@@ -653,7 +651,7 @@ gl::Error Renderer9::finish()
         }
 
         freeEventQuery(query);
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to get event query data, result: 0x%X.", result);
+        return gl::OutOfMemory() << "Failed to get event query data, " << gl::FmtHR(result);
     }
 
     // Loop until the query completes
@@ -680,8 +678,7 @@ gl::Error Renderer9::finish()
             }
 
             freeEventQuery(query);
-            return gl::Error(GL_OUT_OF_MEMORY, "Failed to get event query data, result: 0x%X.",
-                             result);
+            return gl::OutOfMemory() << "Failed to get event query data, " << gl::FmtHR(result);
         }
     }
 
@@ -723,7 +720,7 @@ egl::Error Renderer9::getD3DTextureInfo(const egl::Config *config,
     IDirect3DTexture9 *texture = nullptr;
     if (FAILED(d3dTexture->QueryInterface(&texture)))
     {
-        return egl::Error(EGL_BAD_PARAMETER, "client buffer is not a IDirect3DTexture9");
+        return egl::EglBadParameter() << "Client buffer is not a IDirect3DTexture9";
     }
 
     IDirect3DDevice9 *textureDevice = nullptr;
@@ -731,7 +728,7 @@ egl::Error Renderer9::getD3DTextureInfo(const egl::Config *config,
     if (textureDevice != mDevice)
     {
         SafeRelease(texture);
-        return egl::Error(EGL_BAD_PARAMETER, "Texture's device does not match.");
+        return egl::EglBadParameter() << "Texture's device does not match.";
     }
     SafeRelease(textureDevice);
 
@@ -758,8 +755,8 @@ egl::Error Renderer9::getD3DTextureInfo(const egl::Config *config,
             break;
 
         default:
-            return egl::Error(EGL_BAD_PARAMETER, "Unknown client buffer texture format: %u.",
-                              desc.Format);
+            return egl::EglBadParameter()
+                   << "Unknown client buffer texture format: " << desc.Format;
     }
 
     if (fboFormat)
@@ -769,7 +766,7 @@ egl::Error Renderer9::getD3DTextureInfo(const egl::Config *config,
         *fboFormat = d3dFormatInfo.info().fboImplementationInternalFormat;
     }
 
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 egl::Error Renderer9::validateShareHandle(const egl::Config *config,
@@ -778,7 +775,7 @@ egl::Error Renderer9::validateShareHandle(const egl::Config *config,
 {
     if (shareHandle == nullptr)
     {
-        return egl::Error(EGL_BAD_PARAMETER, "NULL share handle.");
+        return egl::EglBadParameter() << "NULL share handle.";
     }
 
     EGLint width  = attribs.getAsInt(EGL_WIDTH, 0);
@@ -794,7 +791,7 @@ egl::Error Renderer9::validateShareHandle(const egl::Config *config,
                                             &texture, &shareHandle);
     if (FAILED(result))
     {
-        return egl::Error(EGL_BAD_PARAMETER, "Failed to open share handle, result: 0x%X.", result);
+        return egl::EglBadParameter() << "Failed to open share handle, " << gl::FmtHR(result);
     }
 
     DWORD levelCount = texture->GetLevelCount();
@@ -807,10 +804,10 @@ egl::Error Renderer9::validateShareHandle(const egl::Config *config,
         desc.Height != static_cast<UINT>(height) ||
         desc.Format != backBufferd3dFormatInfo.texFormat)
     {
-        return egl::Error(EGL_BAD_PARAMETER, "Invalid texture parameters in share handle texture.");
+        return egl::EglBadParameter() << "Invalid texture parameters in share handle texture.";
     }
 
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 ContextImpl *Renderer9::createContext(const gl::ContextState &state)
@@ -831,8 +828,7 @@ gl::Error Renderer9::allocateEventQuery(IDirect3DQuery9 **outQuery)
         if (FAILED(result))
         {
             ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-            return gl::Error(GL_OUT_OF_MEMORY, "Failed to allocate event query, result: 0x%X.",
-                             result);
+            return gl::OutOfMemory() << "Failed to allocate event query, " << gl::FmtHR(result);
         }
     }
     else
@@ -921,7 +917,7 @@ gl::Error Renderer9::fastCopyBufferToTexture(const gl::PixelUnpackState &unpack,
 {
     // Pixel buffer objects are not supported in D3D9, since D3D9 is ES2-only and PBOs are ES3.
     UNREACHABLE();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 gl::Error Renderer9::setSamplerState(gl::SamplerType type,
@@ -1224,7 +1220,7 @@ gl::Error Renderer9::applyRenderTarget(GLImplFactory *implFactory,
                                        const gl::FramebufferAttachment *depthStencilAttachment)
 {
     const gl::FramebufferAttachment *renderAttachment = colorAttachment;
-    gl::Error error(GL_NO_ERROR);
+    gl::Error error(gl::NoError());
 
     // if there is no color attachment we must synthesize a NULL colorattachment
     // to keep the D3D runtime happy.  This should only be possible if depth texturing.
@@ -1509,9 +1505,8 @@ gl::Error Renderer9::drawLineLoop(GLsizei count,
         if (static_cast<unsigned int>(count) + 1 >
             (std::numeric_limits<unsigned int>::max() / sizeof(unsigned int)))
         {
-            return gl::Error(GL_OUT_OF_MEMORY,
-                             "Failed to create a 32-bit looping index buffer for GL_LINE_LOOP, too "
-                             "many indices required.");
+            return gl::OutOfMemory() << "Failed to create a 32-bit looping index buffer for "
+                                        "GL_LINE_LOOP, too many indices required.";
         }
 
         const unsigned int spaceNeeded =
@@ -1593,9 +1588,8 @@ gl::Error Renderer9::drawLineLoop(GLsizei count,
         if (static_cast<unsigned int>(count) + 1 >
             (std::numeric_limits<unsigned short>::max() / sizeof(unsigned short)))
         {
-            return gl::Error(GL_OUT_OF_MEMORY,
-                             "Failed to create a 16-bit looping index buffer for GL_LINE_LOOP, too "
-                             "many indices required.");
+            return gl::OutOfMemory() << "Failed to create a 16-bit looping index buffer for "
+                                        "GL_LINE_LOOP, too many indices required.";
         }
 
         const unsigned int spaceNeeded =
@@ -1721,7 +1715,7 @@ gl::Error Renderer9::drawIndexedPoints(GLsizei count,
             return drawPoints<GLuint>(mDevice, count, indices, minIndex);
         default:
             UNREACHABLE();
-            return gl::Error(GL_INVALID_OPERATION);
+            return gl::InternalError();
     }
 }
 
@@ -1790,8 +1784,8 @@ gl::Error Renderer9::getCountingIB(size_t count, StaticIndexBufferInterface **ou
     }
     else
     {
-        return gl::Error(GL_OUT_OF_MEMORY,
-                         "Could not create a counting index buffer for glDrawArraysInstanced.");
+        return gl::OutOfMemory()
+               << "Could not create a counting index buffer for glDrawArraysInstanced.";
     }
 
     *outIB = mCountingIB;
@@ -1953,7 +1947,7 @@ gl::Error Renderer9::clear(const ClearParameters &clearParams,
     {
         // Clearing buffers with non-float values is not supported by Renderer9 and ES 2.0
         UNREACHABLE();
-        return gl::Error(GL_INVALID_OPERATION);
+        return gl::InternalError();
     }
 
     bool clearColor = clearParams.clearColor[0];
@@ -1964,7 +1958,7 @@ gl::Error Renderer9::clear(const ClearParameters &clearParams,
             // Clearing individual buffers other than buffer zero is not supported by Renderer9 and
             // ES 2.0
             UNREACHABLE();
-            return gl::Error(GL_INVALID_OPERATION);
+            return gl::InternalError();
         }
     }
 
@@ -2552,7 +2546,7 @@ gl::Error Renderer9::copyImage3D(const gl::Framebuffer *framebuffer,
 {
     // 3D textures are not available in the D3D9 backend.
     UNREACHABLE();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 gl::Error Renderer9::copyImage2DArray(const gl::Framebuffer *framebuffer,
@@ -2564,7 +2558,7 @@ gl::Error Renderer9::copyImage2DArray(const gl::Framebuffer *framebuffer,
 {
     // 2D array textures are not available in the D3D9 backend.
     UNREACHABLE();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 gl::Error Renderer9::copyTexture(const gl::Texture *source,
@@ -2596,7 +2590,7 @@ gl::Error Renderer9::copyCompressedTexture(const gl::Texture *source,
                                            GLint destLevel)
 {
     UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 gl::Error Renderer9::createRenderTarget(int width,
@@ -2648,8 +2642,7 @@ gl::Error Renderer9::createRenderTarget(int width,
         if (FAILED(result))
         {
             ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-            return gl::Error(GL_OUT_OF_MEMORY, "Failed to create render target, result: 0x%X.",
-                             result);
+            return gl::OutOfMemory() << "Failed to create render target, " << gl::FmtHR(result);
         }
 
         if (requiresInitialization)
@@ -2690,7 +2683,7 @@ gl::Error Renderer9::createRenderTargetCopy(RenderTargetD3D *source, RenderTarge
     if (FAILED(result))
     {
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to copy render target, result: 0x%X.", result);
+        return gl::OutOfMemory() << "Failed to copy render target, " << gl::FmtHR(result);
     }
 
     *outRT = newRT;
@@ -2733,7 +2726,7 @@ gl::Error Renderer9::loadExecutable(const uint8_t *function,
         break;
         default:
             UNREACHABLE();
-            return gl::Error(GL_INVALID_OPERATION);
+            return gl::InternalError();
     }
 
     return gl::NoError();
@@ -2762,7 +2755,7 @@ gl::Error Renderer9::compileToExecutable(gl::InfoLog &infoLog,
             break;
         default:
             UNREACHABLE();
-            return gl::Error(GL_INVALID_OPERATION);
+            return gl::InternalError();
     }
 
     profileStream << "_" << ((getMajorShaderModel() >= 3) ? 3 : 2);
@@ -2900,8 +2893,7 @@ gl::Error Renderer9::copyToRenderTarget(IDirect3DSurface9 *dest,
     if (FAILED(result))
     {
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to blit internal texture, result: 0x%X.",
-                         result);
+        return gl::OutOfMemory() << "Failed to blit internal texture, " << gl::FmtHR(result);
     }
 
     return gl::NoError();
@@ -3055,7 +3047,7 @@ gl::ErrorOrResult<unsigned int> Renderer9::getVertexSpaceRequired(const gl::Vert
 
     if (d3d9VertexInfo.outputElementSize > std::numeric_limits<unsigned int>::max() / elementCount)
     {
-        return gl::Error(GL_OUT_OF_MEMORY, "New vertex buffer size would result in an overflow.");
+        return gl::OutOfMemory() << "New vertex buffer size would result in an overflow.";
     }
 
     return static_cast<unsigned int>(d3d9VertexInfo.outputElementSize) * elementCount;
@@ -3107,7 +3099,7 @@ egl::Error Renderer9::getEGLDevice(DeviceImpl **device)
     }
 
     *device = static_cast<DeviceImpl *>(mEGLDevice);
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 Renderer9::CurSamplerState::CurSamplerState()

@@ -1297,7 +1297,7 @@ gl::Error TextureStorage11_External::getRenderTarget(const gl::ImageIndex &index
 {
     // Render targets are not supported for external textures
     UNREACHABLE();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 gl::Error TextureStorage11_External::createSRV(int baseLevel,
@@ -1329,14 +1329,14 @@ gl::Error TextureStorage11_External::createSRV(int baseLevel,
 gl::Error TextureStorage11_External::getSwizzleTexture(const TextureHelper11 **outTexture)
 {
     UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 gl::Error TextureStorage11_External::getSwizzleRenderTarget(int mipLevel,
                                                             const d3d11::RenderTargetView **outRTV)
 {
     UNIMPLEMENTED();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 TextureStorage11_EGLImage::TextureStorage11_EGLImage(Renderer11 *renderer,
@@ -1385,7 +1385,7 @@ gl::Error TextureStorage11_EGLImage::getMippedResource(const TextureHelper11 **)
     // This shouldn't be called unless the zero max LOD workaround is active.
     // EGL images are unavailable in this configuration.
     UNREACHABLE();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 gl::Error TextureStorage11_EGLImage::getRenderTarget(const gl::ImageIndex &index,
@@ -1437,7 +1437,7 @@ gl::Error TextureStorage11_EGLImage::releaseAssociatedImage(const gl::ImageIndex
 gl::Error TextureStorage11_EGLImage::useLevelZeroWorkaroundTexture(bool)
 {
     UNREACHABLE();
-    return gl::Error(GL_INVALID_OPERATION);
+    return gl::InternalError();
 }
 
 gl::Error TextureStorage11_EGLImage::getSwizzleTexture(const TextureHelper11 **outTexture)

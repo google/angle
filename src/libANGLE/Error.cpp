@@ -22,22 +22,9 @@ Error::Error(GLenum errorCode, std::string &&message)
 {
 }
 
-Error::Error(GLenum errorCode, const char *msg, ...) : mCode(errorCode), mID(errorCode)
+Error::Error(GLenum errorCode, GLuint id, std::string &&message)
+    : mCode(errorCode), mID(id), mMessage(new std::string(std::move(message)))
 {
-    va_list vararg;
-    va_start(vararg, msg);
-    createMessageString();
-    *mMessage = FormatString(msg, vararg);
-    va_end(vararg);
-}
-
-Error::Error(GLenum errorCode, GLuint id, const char *msg, ...) : mCode(errorCode), mID(id)
-{
-    va_list vararg;
-    va_start(vararg, msg);
-    createMessageString();
-    *mMessage = FormatString(msg, vararg);
-    va_end(vararg);
 }
 
 void Error::createMessageString() const
@@ -76,49 +63,18 @@ std::ostream &operator<<(std::ostream &os, const Error &err)
     return gl::FmtHexShort(os, err.getCode());
 }
 
-namespace priv
-{
-template <GLenum EnumT>
-ErrorStream<EnumT>::ErrorStream()
-{
-}
-
-template <GLenum EnumT>
-ErrorStream<EnumT>::operator gl::Error()
-{
-    return Error(EnumT, mErrorStream.str().c_str());
-}
-
-template class ErrorStream<GL_OUT_OF_MEMORY>;
-template class ErrorStream<GL_INVALID_OPERATION>;
-
-}  // namespace priv
-
 }  // namespace gl
 
 namespace egl
 {
 
-Error::Error(EGLint errorCode, const char *msg, ...) : mCode(errorCode), mID(0)
+Error::Error(EGLint errorCode, std::string &&message)
+    : mCode(errorCode), mID(errorCode), mMessage(new std::string(std::move(message)))
 {
-    va_list vararg;
-    va_start(vararg, msg);
-    createMessageString();
-    *mMessage = FormatString(msg, vararg);
-    va_end(vararg);
 }
 
-Error::Error(EGLint errorCode, EGLint id, const char *msg, ...) : mCode(errorCode), mID(id)
-{
-    va_list vararg;
-    va_start(vararg, msg);
-    createMessageString();
-    *mMessage = FormatString(msg, vararg);
-    va_end(vararg);
-}
-
-Error::Error(EGLint errorCode, EGLint id, const std::string &msg)
-    : mCode(errorCode), mID(id), mMessage(new std::string(msg))
+Error::Error(EGLint errorCode, EGLint id, std::string &&message)
+    : mCode(errorCode), mID(id), mMessage(new std::string(std::move(message)))
 {
 }
 
@@ -140,4 +96,5 @@ std::ostream &operator<<(std::ostream &os, const Error &err)
 {
     return gl::FmtHexShort(os, err.getCode());
 }
-}
+
+}  // namespace egl

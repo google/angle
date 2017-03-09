@@ -118,7 +118,7 @@ gl::Error GetQueryObjectParameter(gl::Query *query, GLenum pname, T *params)
         }
         default:
             UNREACHABLE();
-            return gl::Error(GL_INVALID_OPERATION, "Unreachable Error");
+            return gl::InternalError() << "Unreachable Error";
     }
 }
 
@@ -4099,9 +4099,9 @@ Error Context::getScratchBuffer(size_t requestedSize, angle::MemoryBuffer **scra
 {
     if (!mScratchBuffer.get(requestedSize, scratchBufferOut))
     {
-        return gl::OutOfMemory() << "Failed to allocate internal buffer.";
+        return OutOfMemory() << "Failed to allocate internal buffer.";
     }
-    return gl::NoError();
+    return NoError();
 }
 
 void Context::dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ)
