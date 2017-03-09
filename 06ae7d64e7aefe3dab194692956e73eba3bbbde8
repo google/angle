@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6662465e_bacabc5e",
+        "filename": "extensions/KHR_parallel_shader_compile.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-09T00:56:21Z",
+      "side": 1,
+      "message": "Done, removed all the KHR suffixes because this is written against desktop GL.",
+      "parentUuid": "bf0671af_55ce6ba4",
+      "range": {
+        "startLine": 59,
+        "startChar": 58,
+        "endLine": 59,
+        "endChar": 72
+      },
+      "revId": "06ae7d64e7aefe3dab194692956e73eba3bbbde8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a37ad040_8c832985",
         "filename": "extensions/KHR_parallel_shader_compile.txt",
         "patchSetId": 2
@@ -45,6 +69,30 @@
       "revId": "06ae7d64e7aefe3dab194692956e73eba3bbbde8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e43aaa00_27769808",
+        "filename": "extensions/KHR_parallel_shader_compile.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-09T00:56:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a37ad040_8c832985",
+      "range": {
+        "startLine": 67,
+        "startChar": 45,
+        "endLine": 67,
+        "endChar": 63
+      },
+      "revId": "06ae7d64e7aefe3dab194692956e73eba3bbbde8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
