@@ -14,13 +14,14 @@
 #include <string>
 
 #include "angle_gl.h"
+#include "common/MemoryBuffer.h"
 #include "common/angleutils.h"
-#include "libANGLE/RefCountObject.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/Constants.h"
 #include "libANGLE/ContextState.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/HandleAllocator.h"
+#include "libANGLE/RefCountObject.h"
 #include "libANGLE/VertexAttribute.h"
 #include "libANGLE/Workarounds.h"
 #include "libANGLE/angletypes.h"
@@ -661,6 +662,8 @@ class Context final : public ValidationContext
     void getFramebufferParameteriv(GLenum target, GLenum pname, GLint *params);
     void setFramebufferParameteri(GLenum target, GLenum pname, GLint param);
 
+    Error getScratchBuffer(size_t requestedSize, angle::MemoryBuffer **scratchBufferOut) const;
+
   private:
     void syncRendererState();
     void syncRendererState(const State::DirtyBits &bitMask, const State::DirtyObjects &objectMask);
@@ -753,6 +756,9 @@ class Context final : public ValidationContext
     State::DirtyObjects mBlitDirtyObjects;
 
     Workarounds mWorkarounds;
+
+    // Not really a property of context state. The size and contexts change per-api-call.
+    mutable angle::ScratchBuffer mScratchBuffer;
 };
 
 }  // namespace gl
