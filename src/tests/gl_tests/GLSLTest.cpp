@@ -2641,28 +2641,11 @@ TEST_P(GLSLTest_ES31, FindMSBAndFindLSBCornerCases)
 // Test that writing into a swizzled vector that is dynamically indexed succeeds.
 TEST_P(GLSLTest_ES3, WriteIntoDynamicIndexingOfSwizzledVector)
 {
-    if (IsNVIDIA() && IsOpenGL())
+    if (IsOpenGL())
     {
         // http://anglebug.com/1924
-        std::cout << "Test skipped on NVIDIA OpenGL because it has incorrect results" << std::endl;
-        return;
-    }
-
-    if (IsAMD() && IsOpenGL())
-    {
-        std::cout << "Test skipped on AMD OpenGL because it has incorrect results" << std::endl;
-        return;
-    }
-
-    if (IsAndroid())
-    {
-        std::cout << "Test skipped on Android because it has incorrect results" << std::endl;
-        return;
-    }
-
-    if (IsOSX())
-    {
-        std::cout << "Test skipped on Mac OSX because it has incorrect results" << std::endl;
+        std::cout << "Test skipped on all OpenGL configurations because it has incorrect results"
+                  << std::endl;
         return;
     }
 

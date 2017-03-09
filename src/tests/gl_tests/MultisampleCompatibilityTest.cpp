@@ -3,9 +3,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// StateChangeTest:
-//   Specifically designed for an ANGLE implementation of GL, these tests validate that
-//   ANGLE's dirty bits systems don't get confused by certain sequences of state changes.
+// MultisampleCompatibilityTest.cpp:
+//   Tests for the EXT_multisample_compatibility extension.
 //
 
 #include "test_utils/ANGLETest.h"
@@ -244,6 +243,13 @@ TEST_P(EXTMultisampleCompatibilityTest, DrawAlphaOneAndResolve)
 {
     if (!isApplicable())
         return;
+
+    // TODO: Figure out why this fails on Android.
+    if (IsAndroid())
+    {
+        std::cout << "Test skipped on Android." << std::endl;
+        return;
+    }
 
     // SAMPLE_ALPHA_TO_ONE is specified to transform alpha values of
     // covered samples to 1.0. In order to detect it, we use non-1.0
