@@ -240,6 +240,30 @@
     },
     {
       "key": {
+        "uuid": "b2cf2a15_7cf06afd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 57
+      },
+      "lineNbr": 1230,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-03-09T16:35:10Z",
+      "side": 1,
+      "message": "Thanks!",
+      "parentUuid": "cc056dcc_c06cf359",
+      "range": {
+        "startLine": 1230,
+        "startChar": 42,
+        "endLine": 1230,
+        "endChar": 75
+      },
+      "revId": "c76c74ee45a1b333d441db86ed80eac1b3f494d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ca57f4aa_9efc5a1a",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 57
