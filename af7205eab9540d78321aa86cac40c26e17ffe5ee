@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "544f4d67_7c429884",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 61
+      },
+      "lineNbr": 620,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-09T07:07:16Z",
+      "side": 1,
+      "message": "I leave this function for further use.",
+      "revId": "af7205eab9540d78321aa86cac40c26e17ffe5ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
