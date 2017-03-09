@@ -243,10 +243,12 @@ TEST_P(WebGLCompatibilityTest, ForbidsClientSideElementBuffer)
     glVertexAttribPointer(posLocation, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(posLocation);
 
-    const GLubyte indices[] = {0, 1, 2, 3, 4, 5};
-
     ASSERT_GL_NO_ERROR();
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, indices);
+
+    // Use the pointer with value of 1 for indices instead of an actual pointer because WebGL also
+    // enforces that the top bit of indices must be 0 (i.e. offset >= 0) and would generate
+    // GL_INVALID_VALUE in that case. Using a null pointer gets caught by another check.
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, reinterpret_cast<const void*>(intptr_t(1)));
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
