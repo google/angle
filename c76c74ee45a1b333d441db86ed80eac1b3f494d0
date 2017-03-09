@@ -192,6 +192,30 @@
     },
     {
       "key": {
+        "uuid": "59a4dadd_705e66f7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 57
+      },
+      "lineNbr": 1230,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-09T02:10:10Z",
+      "side": 1,
+      "message": "I write this patch to determine the suitable value for D3D11. In D3D11 there is no Vertex Attrib Binding feature, so the method to update vertex attributes in D3D11 backend is same whether Vertex Attrib Binding has been enabled or not. (all use IASetVertexBuffers, the offset argument should be attrib.relativeOffset + binding.offset). Since the feature Vertex Attrib Binding has not been ready, I think we can test the MAX_VERTEX_ATTRIB_RELATIVE_OFFSET by using it directly as offset in VertexAttribPointer in D3D11 backend.\n\nOr we can delete DrawArraysWithLargeOffset and just test the maximum stride in this patch and move the test on MAX_VERTEX_ATTRIB_RELATIVE_OFFSET to the next patch which implements Vertex Attrib Binding on D3D11 backends.",
+      "parentUuid": "543f4edb_41af03c8",
+      "range": {
+        "startLine": 1230,
+        "startChar": 42,
+        "endLine": 1230,
+        "endChar": 75
+      },
+      "revId": "c76c74ee45a1b333d441db86ed80eac1b3f494d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ca57f4aa_9efc5a1a",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 57
