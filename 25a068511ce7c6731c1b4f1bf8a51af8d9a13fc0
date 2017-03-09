@@ -554,6 +554,30 @@
     },
     {
       "key": {
+        "uuid": "77d94435_d238c04b",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2902,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-03-09T10:33:08Z",
+      "side": 1,
+      "message": "Changed name to \"markStaticUse\". I also split indexUniforms into a few helper functions to add a bit more structure to it.",
+      "parentUuid": "d657be2e_4ba80055",
+      "range": {
+        "startLine": 2900,
+        "startChar": 55,
+        "endLine": 2902,
+        "endChar": 68
+      },
+      "revId": "25a068511ce7c6731c1b4f1bf8a51af8d9a13fc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "66530c2b_23450057",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 7

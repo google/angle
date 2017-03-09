@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "1fe70f7d_694baa6d",
+        "filename": "extensions/CHROMIUM_bind_uniform_location.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-03-09T10:33:08Z",
+      "side": 1,
+      "message": "Yep, this is more consistent. Changed the spec so that the location set in the shader text overrides one from the API.",
+      "parentUuid": "7c089c4b_2f1a59f9",
+      "range": {
+        "startLine": 73,
+        "startChar": 4,
+        "endLine": 75,
+        "endChar": 36
+      },
+      "revId": "0eb124a54609280c6fc882ac0aeeb9ec9fd58879",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d13abacf_0d97033b",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 9
@@ -72,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "a151dcb1_b1bbe2a4",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1983,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-03-09T10:33:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d13abacf_0d97033b",
+      "range": {
+        "startLine": 1980,
+        "startChar": 4,
+        "endLine": 1983,
+        "endChar": 88
+      },
+      "revId": "0eb124a54609280c6fc882ac0aeeb9ec9fd58879",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c521d88_ea0e6289",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 9
@@ -83,6 +131,30 @@
       "writtenOn": "2017-03-08T18:05:01Z",
       "side": 1,
       "message": "I think that since we just translate the locations internally, we could use any limit we want.",
+      "range": {
+        "startLine": 1260,
+        "startChar": 32,
+        "endLine": 1260,
+        "endChar": 36
+      },
+      "revId": "0eb124a54609280c6fc882ac0aeeb9ec9fd58879",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "613953d7_0d41071e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1260,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-03-09T10:33:08Z",
+      "side": 1,
+      "message": "There\u0027s a cost to having a higher limit though - we have to store a vector with all the uniform locations. I can look into this more as follow-up.",
+      "parentUuid": "9c521d88_ea0e6289",
       "range": {
         "startLine": 1260,
         "startChar": 32,
