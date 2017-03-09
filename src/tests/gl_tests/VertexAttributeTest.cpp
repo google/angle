@@ -612,90 +612,6 @@ TEST_P(VertexAttributeTest, DrawArraysWithBufferOffset)
     EXPECT_GL_NO_ERROR();
 }
 
-class VertexAttributeTestES31 : public VertexAttributeTestES3
-{
-  protected:
-    VertexAttributeTestES31() {}
-
-    void drawArraysWithStrideAndOffset(GLint stride, GLsizeiptr offset)
-    {
-        GLint floatStride      = stride ? (stride / TypeStride(GL_FLOAT)) : 1;
-        GLsizeiptr floatOffset = offset / TypeStride(GL_FLOAT);
-
-        size_t floatCount    = static_cast<size_t>(floatOffset) + mVertexCount * floatStride;
-        GLsizeiptr inputSize = static_cast<GLsizeiptr>(floatCount) * TypeStride(GL_FLOAT);
-
-        initBasicProgram();
-        glUseProgram(mProgram);
-
-        std::vector<GLfloat> inputData(floatCount);
-        GLfloat expectedData[mVertexCount];
-
-        for (size_t count = 0; count < mVertexCount; ++count)
-        {
-            inputData[floatOffset + count * floatStride] = static_cast<GLfloat>(count);
-            expectedData[count]                          = static_cast<GLfloat>(count);
-        }
-
-        auto quadVertices = GetQuadVertices();
-        GLsizeiptr quadVerticesSize =
-            static_cast<GLsizeiptr>(quadVertices.size() * sizeof(quadVertices[0]));
-        glGenBuffers(1, &mQuadBuffer);
-        glBindBuffer(GL_ARRAY_BUFFER, mQuadBuffer);
-        glBufferData(GL_ARRAY_BUFFER, quadVerticesSize, nullptr, GL_DYNAMIC_DRAW);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, quadVerticesSize, quadVertices.data());
-
-        GLint positionLocation = glGetAttribLocation(mProgram, "position");
-        ASSERT_NE(-1, positionLocation);
-        glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
-        glEnableVertexAttribArray(positionLocation);
-
-        // Ensure inputSize, inputStride and inputOffset are multiples of TypeStride(GL_FLOAT).
-        GLsizei inputStride    = stride ? floatStride * TypeStride(GL_FLOAT) : 0;
-        GLsizeiptr inputOffset = floatOffset * TypeStride(GL_FLOAT);
-        glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
-        glBufferData(GL_ARRAY_BUFFER, inputSize, nullptr, GL_STATIC_DRAW);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, inputSize, &inputData[0]);
-        glVertexAttribPointer(mTestAttrib, 1, GL_FLOAT, GL_FALSE, inputStride,
-                              reinterpret_cast<const GLvoid *>(inputOffset));
-        glEnableVertexAttribArray(mTestAttrib);
-
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glVertexAttribPointer(mExpectedAttrib, 1, GL_FLOAT, GL_FALSE, 0, expectedData);
-        glEnableVertexAttribArray(mExpectedAttrib);
-
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-        checkPixels();
-
-        EXPECT_GL_NO_ERROR();
-    }
-
-    // Set the maximum value for stride if the stride is too large.
-    const GLint MAX_STRIDE_FOR_TEST = 4095;
-};
-
-// Verify that MAX_VERTEX_ATTRIB_STRIDE is no less than the minimum required value (2048) in ES3.1.
-TEST_P(VertexAttributeTestES31, MaxVertexAttribStride)
-{
-    GLint maxStride;
-    glGetIntegerv(GL_MAX_VERTEX_ATTRIB_STRIDE, &maxStride);
-    ASSERT_GL_NO_ERROR();
-
-    EXPECT_GE(maxStride, 2048);
-}
-
-// Verify using MAX_VERTEX_ATTRIB_STRIDE as stride doesn't mess up the draw.
-// Use default value if the value of MAX_VERTEX_ATTRIB_STRIDE is too large for this test.
-TEST_P(VertexAttributeTestES31, DrawArraysWithLargeStride)
-{
-    GLint maxStride;
-    glGetIntegerv(GL_MAX_VERTEX_ATTRIB_STRIDE, &maxStride);
-    ASSERT_GL_NO_ERROR();
-
-    GLint largeStride = (maxStride < MAX_STRIDE_FOR_TEST) ? maxStride : MAX_STRIDE_FOR_TEST;
-    drawArraysWithStrideAndOffset(largeStride, 0);
-}
-
 class VertexAttributeCachingTest : public VertexAttributeTest
 {
   protected:
@@ -968,8 +884,6 @@ ANGLE_INSTANTIATE_TEST(VertexAttributeTest,
                        ES3_OPENGLES());
 
 ANGLE_INSTANTIATE_TEST(VertexAttributeTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
-
-ANGLE_INSTANTIATE_TEST(VertexAttributeTestES31, ES31_D3D11(), ES31_OPENGL(), ES31_OPENGLES());
 
 ANGLE_INSTANTIATE_TEST(VertexAttributeCachingTest,
                        ES2_D3D9(),
