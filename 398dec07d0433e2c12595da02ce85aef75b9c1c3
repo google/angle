@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e83a1bd8_39d44bb3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-09T06:32:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "de7f04a3_e875e30a",
+      "range": {
+        "startLine": 38,
+        "startChar": 4,
+        "endLine": 38,
+        "endChar": 25
+      },
+      "revId": "398dec07d0433e2c12595da02ce85aef75b9c1c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f65a72c5_97347591",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2017-03-08T18:58:24Z",
       "side": 1,
       "message": "Can you put a typedef of the GL struct into angletypes.h?\n\n    struct DrawElementsIndirectCommand\n    {\n        GLuint  count;\n        GLuint  primCount;\n        GLuint  firstIndex;\n        GLuint  baseVertex;\n        GLuint  baseInstance;\n    };\n    static_assert(sizeof(DrawElementsIndirectCommand) \u003d\u003d 20, \"Unexpected size of DrawElementsIndirectCommand\");\n\n    struct DrawArraysIndirectCommand\n    {\n        GLuint  count;\n        GLuint  instanceCount;\n        GLuint  first;\n        GLuint  baseInstance;\n    };\n    static_assert(sizeof(DrawElementsIndirectCommand) \u003d\u003d 16, \"Unexpected size of DrawArraysIndirectCommand\");\n\nThis will make it easier to reference the members of the structs.",
+      "range": {
+        "startLine": 2049,
+        "startChar": 4,
+        "endLine": 2049,
+        "endChar": 24
+      },
+      "revId": "398dec07d0433e2c12595da02ce85aef75b9c1c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "454ea61d_c34d4e3e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2049,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-09T06:32:55Z",
+      "side": 1,
+      "message": "Done. Use D3D11_DRAW_INSTANCED_INDIRECT_ARGS to do what you said since D3D11 has already supported this struct.",
+      "parentUuid": "f65a72c5_97347591",
       "range": {
         "startLine": 2049,
         "startChar": 4,
