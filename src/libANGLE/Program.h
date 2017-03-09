@@ -381,7 +381,6 @@ class Program final : angle::NonCopyable, public LabeledObject
     GLsizei getTransformFeedbackVaryingMaxLength() const;
     GLenum getTransformFeedbackBufferMode() const;
 
-    static bool linkValidateUniforms(InfoLog &infoLog, const std::string &uniformName, const sh::Uniform &vertexUniform, const sh::Uniform &fragmentUniform);
     static bool linkValidateInterfaceBlockFields(InfoLog &infoLog, const std::string &uniformName, const sh::InterfaceBlockField &vertexUniform, const sh::InterfaceBlockField &fragmentUniform);
 
     void addRef();
@@ -406,7 +405,12 @@ class Program final : angle::NonCopyable, public LabeledObject
     }
     const ProgramState &getState() const { return mState; }
 
-  private:
+    static bool linkValidateVariablesBase(InfoLog &infoLog,
+                                          const std::string &variableName,
+                                          const sh::ShaderVariable &vertexVariable,
+                                          const sh::ShaderVariable &fragmentVariable,
+                                          bool validatePrecision);
+
     class Bindings final : angle::NonCopyable
     {
       public:
@@ -421,6 +425,7 @@ class Program final : angle::NonCopyable, public LabeledObject
         std::unordered_map<std::string, GLuint> mBindings;
     };
 
+  private:
     struct VaryingRef
     {
         const sh::Varying *get() const { return vertex ? vertex : fragment; }
@@ -447,26 +452,11 @@ class Program final : angle::NonCopyable, public LabeledObject
     bool linkVaryings(InfoLog &infoLog) const;
 
     bool linkUniforms(InfoLog &infoLog, const Caps &caps, const Bindings &uniformLocationBindings);
-    bool validateVertexAndFragmentUniforms(InfoLog &infoLog) const;
-    bool indexUniforms(InfoLog &infoLog, const Bindings &uniformLocationBindings);
-    bool gatherUniformLocationsAndCheckConflicts(InfoLog &infoLog,
-                                                 const Bindings &uniformLocationBindings,
-                                                 std::set<GLuint> *reservedLocations,
-                                                 std::set<GLuint> *ignoredLocations,
-                                                 int *maxUniformLocation);
-    void pruneUnusedUniforms();
-
     void updateSamplerBindings();
 
     bool areMatchingInterfaceBlocks(InfoLog &infoLog,
                                     const sh::InterfaceBlock &vertexInterfaceBlock,
                                     const sh::InterfaceBlock &fragmentInterfaceBlock) const;
-
-    static bool linkValidateVariablesBase(InfoLog &infoLog,
-                                          const std::string &variableName,
-                                          const sh::ShaderVariable &vertexVariable,
-                                          const sh::ShaderVariable &fragmentVariable,
-                                          bool validatePrecision);
 
     static bool linkValidateVaryings(InfoLog &infoLog,
                                      const std::string &varyingName,
@@ -483,43 +473,6 @@ class Program final : angle::NonCopyable, public LabeledObject
     MergedVaryings getMergedVaryings() const;
     std::vector<PackedVarying> getPackedVaryings(const MergedVaryings &mergedVaryings) const;
     void linkOutputVariables();
-
-    bool flattenUniformsAndCheckCapsForShader(const Shader &shader,
-                                              GLuint maxUniformComponents,
-                                              GLuint maxTextureImageUnits,
-                                              const std::string &componentsErrorMessage,
-                                              const std::string &samplerErrorMessage,
-                                              std::vector<LinkedUniform> &samplerUniforms,
-                                              InfoLog &infoLog);
-    bool flattenUniformsAndCheckCaps(const Caps &caps, InfoLog &infoLog);
-
-    struct VectorAndSamplerCount
-    {
-        VectorAndSamplerCount() : vectorCount(0), samplerCount(0) {}
-        VectorAndSamplerCount(const VectorAndSamplerCount &other) = default;
-        VectorAndSamplerCount &operator=(const VectorAndSamplerCount &other) = default;
-
-        VectorAndSamplerCount &operator+=(const VectorAndSamplerCount &other)
-        {
-            vectorCount += other.vectorCount;
-            samplerCount += other.samplerCount;
-            return *this;
-        }
-
-        unsigned int vectorCount;
-        unsigned int samplerCount;
-    };
-
-    VectorAndSamplerCount flattenUniform(const sh::Uniform &uniform,
-                                         std::vector<LinkedUniform> *samplerUniforms);
-
-    // staticUse is given as a separate parameter because it is tracked here at struct granularity.
-    VectorAndSamplerCount flattenUniformImpl(const sh::ShaderVariable &uniform,
-                                             const std::string &fullName,
-                                             std::vector<LinkedUniform> *samplerUniforms,
-                                             bool markStaticUse,
-                                             int binding,
-                                             int *location);
 
     void gatherInterfaceBlockInfo();
     template <typename VarT>

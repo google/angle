@@ -182,6 +182,8 @@
             'libANGLE/TransformFeedback.h',
             'libANGLE/Uniform.cpp',
             'libANGLE/Uniform.h',
+            'libANGLE/UniformLinker.cpp',
+            'libANGLE/UniformLinker.h',
             'libANGLE/VaryingPacking.cpp',
             'libANGLE/VaryingPacking.h',
             'libANGLE/Version.h',
