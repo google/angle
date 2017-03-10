@@ -1879,7 +1879,7 @@ gl::Error Renderer9::clear(const ClearParameters &clearParams,
                            const gl::FramebufferAttachment *colorBuffer,
                            const gl::FramebufferAttachment *depthStencilBuffer)
 {
-    if (clearParams.colorClearType != GL_FLOAT)
+    if (clearParams.colorType != GL_FLOAT)
     {
         // Clearing buffers with non-float values is not supported by Renderer9 and ES 2.0
         UNREACHABLE();
@@ -1897,8 +1897,8 @@ gl::Error Renderer9::clear(const ClearParameters &clearParams,
         }
     }
 
-    float depth = gl::clamp01(clearParams.depthClearValue);
-    DWORD stencil = clearParams.stencilClearValue & 0x000000FF;
+    float depth   = gl::clamp01(clearParams.depthValue);
+    DWORD stencil = clearParams.stencilValue & 0x000000FF;
 
     unsigned int stencilUnmasked = 0x0;
     if (clearParams.clearStencil && depthStencilBuffer->getStencilSize() > 0)
@@ -1944,16 +1944,16 @@ gl::Error Renderer9::clear(const ClearParameters &clearParams,
         color =
             D3DCOLOR_ARGB(gl::unorm<8>((formatInfo.alphaBits == 0 && d3dFormatInfo.alphaBits > 0)
                                            ? 1.0f
-                                           : clearParams.colorFClearValue.alpha),
+                                           : clearParams.colorF.alpha),
                           gl::unorm<8>((formatInfo.redBits == 0 && d3dFormatInfo.redBits > 0)
                                            ? 0.0f
-                                           : clearParams.colorFClearValue.red),
+                                           : clearParams.colorF.red),
                           gl::unorm<8>((formatInfo.greenBits == 0 && d3dFormatInfo.greenBits > 0)
                                            ? 0.0f
-                                           : clearParams.colorFClearValue.green),
+                                           : clearParams.colorF.green),
                           gl::unorm<8>((formatInfo.blueBits == 0 && d3dFormatInfo.blueBits > 0)
                                            ? 0.0f
-                                           : clearParams.colorFClearValue.blue));
+                                           : clearParams.colorF.blue));
 
         if ((formatInfo.redBits > 0 && !clearParams.colorMaskRed) ||
             (formatInfo.greenBits > 0 && !clearParams.colorMaskGreen) ||

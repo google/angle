@@ -34,20 +34,20 @@ class RenderTargetD3D;
 struct ClearParameters
 {
     bool clearColor[gl::IMPLEMENTATION_MAX_DRAW_BUFFERS];
-    gl::ColorF colorFClearValue;
-    gl::ColorI colorIClearValue;
-    gl::ColorUI colorUIClearValue;
-    GLenum colorClearType;
+    gl::ColorF colorF;
+    gl::ColorI colorI;
+    gl::ColorUI colorUI;
+    GLenum colorType;
     bool colorMaskRed;
     bool colorMaskGreen;
     bool colorMaskBlue;
     bool colorMaskAlpha;
 
     bool clearDepth;
-    float depthClearValue;
+    float depthValue;
 
     bool clearStencil;
-    GLint stencilClearValue;
+    GLint stencilValue;
     GLuint stencilWriteMask;
 
     bool scissorEnabled;

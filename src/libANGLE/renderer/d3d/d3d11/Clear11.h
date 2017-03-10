@@ -23,6 +23,14 @@ class Renderer11;
 class RenderTarget11;
 struct ClearParameters;
 
+template <typename T>
+struct RtvDsvClearInfo
+{
+    T r, g, b, a;
+    float z;
+    float c1padding[3];
+};
+
 class Clear11 : angle::NonCopyable
 {
   public:
@@ -34,32 +42,27 @@ class Clear11 : angle::NonCopyable
                                const gl::FramebufferState &fboData);
 
   private:
-    struct MaskedRenderTarget
+    class ShaderManager final : public angle::NonCopyable
     {
-        bool colorMask[4];
-        RenderTarget11 *renderTarget;
+      public:
+        ShaderManager();
+        ~ShaderManager();
+        void getShadersAndLayout(ID3D11Device *device,
+                                 D3D_FEATURE_LEVEL featureLevel,
+                                 const INT clearType,
+                                 ID3D11InputLayout **il,
+                                 ID3D11VertexShader **vs,
+                                 ID3D11PixelShader **ps);
+
+      private:
+        angle::ComPtr<ID3D11InputLayout> mIl9;
+        d3d11::LazyShader<ID3D11VertexShader> mVs9;
+        d3d11::LazyShader<ID3D11PixelShader> mPsFloat9;
+        d3d11::LazyShader<ID3D11VertexShader> mVs;
+        d3d11::LazyShader<ID3D11PixelShader> mPsFloat;
+        d3d11::LazyShader<ID3D11PixelShader> mPsUInt;
+        d3d11::LazyShader<ID3D11PixelShader> mPsSInt;
     };
-
-    ID3D11BlendState *getBlendState(const std::vector<MaskedRenderTarget> &rts);
-    ID3D11DepthStencilState *getDepthStencilState(const ClearParameters &clearParams);
-
-    struct ClearShader final : public angle::NonCopyable
-    {
-        ClearShader(DXGI_FORMAT colorType,
-                    const char *inputLayoutName,
-                    const BYTE *vsByteCode,
-                    size_t vsSize,
-                    const char *vsDebugName,
-                    const BYTE *psByteCode,
-                    size_t psSize,
-                    const char *psDebugName);
-        ~ClearShader();
-
-        d3d11::LazyInputLayout *inputLayout;
-        d3d11::LazyShader<ID3D11VertexShader> vertexShader;
-        d3d11::LazyShader<ID3D11PixelShader> pixelShader;
-    };
-
 
     Renderer11 *mRenderer;
 
@@ -69,11 +72,13 @@ class Clear11 : angle::NonCopyable
     gl::DepthStencilState mDepthStencilStateKey;
     d3d11::BlendStateKey mBlendStateKey;
 
-    // Shaders and Shader Resources
-    ClearShader *mFloatClearShader;
-    ClearShader *mUintClearShader;
-    ClearShader *mIntClearShader;
+    // Shaders and shader resources
+    ShaderManager mShaderManager;
+    angle::ComPtr<ID3D11Buffer> mConstantBuffer;
     angle::ComPtr<ID3D11Buffer> mVertexBuffer;
+
+    // Buffer data and draw parameters
+    RtvDsvClearInfo<float> mShaderData;
 };
 
 }

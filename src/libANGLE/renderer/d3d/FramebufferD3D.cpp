@@ -38,19 +38,19 @@ ClearParameters GetClearParameters(const gl::State &state, GLbitfield mask)
     {
         clearParams.clearColor[i] = false;
     }
-    clearParams.colorFClearValue = state.getColorClearValue();
-    clearParams.colorClearType = GL_FLOAT;
-    clearParams.colorMaskRed = blendState.colorMaskRed;
-    clearParams.colorMaskGreen = blendState.colorMaskGreen;
-    clearParams.colorMaskBlue = blendState.colorMaskBlue;
-    clearParams.colorMaskAlpha = blendState.colorMaskAlpha;
-    clearParams.clearDepth = false;
-    clearParams.depthClearValue =  state.getDepthClearValue();
-    clearParams.clearStencil = false;
-    clearParams.stencilClearValue = state.getStencilClearValue();
+    clearParams.colorF           = state.getColorClearValue();
+    clearParams.colorType        = GL_FLOAT;
+    clearParams.colorMaskRed     = blendState.colorMaskRed;
+    clearParams.colorMaskGreen   = blendState.colorMaskGreen;
+    clearParams.colorMaskBlue    = blendState.colorMaskBlue;
+    clearParams.colorMaskAlpha   = blendState.colorMaskAlpha;
+    clearParams.clearDepth       = false;
+    clearParams.depthValue       = state.getDepthClearValue();
+    clearParams.clearStencil     = false;
+    clearParams.stencilValue     = state.getStencilClearValue();
     clearParams.stencilWriteMask = state.getDepthStencilState().stencilWritemask;
-    clearParams.scissorEnabled = state.isScissorTestEnabled();
-    clearParams.scissor = state.getScissor();
+    clearParams.scissorEnabled   = state.isScissorTestEnabled();
+    clearParams.scissor          = state.getScissor();
 
     const gl::Framebuffer *framebufferObject = state.getDrawFramebuffer();
     if (mask & GL_COLOR_BUFFER_BIT)
@@ -116,14 +116,14 @@ gl::Error FramebufferD3D::clearBufferfv(ContextImpl *context,
         {
             clearParams.clearColor[i] = (drawbuffer == static_cast<int>(i));
         }
-        clearParams.colorFClearValue = gl::ColorF(values[0], values[1], values[2], values[3]);
-        clearParams.colorClearType = GL_FLOAT;
+        clearParams.colorF    = gl::ColorF(values[0], values[1], values[2], values[3]);
+        clearParams.colorType = GL_FLOAT;
     }
 
     if (buffer == GL_DEPTH)
     {
         clearParams.clearDepth = true;
-        clearParams.depthClearValue = values[0];
+        clearParams.depthValue = values[0];
     }
 
     return clearImpl(context, clearParams);
@@ -140,8 +140,8 @@ gl::Error FramebufferD3D::clearBufferuiv(ContextImpl *context,
     {
         clearParams.clearColor[i] = (drawbuffer == static_cast<int>(i));
     }
-    clearParams.colorUIClearValue = gl::ColorUI(values[0], values[1], values[2], values[3]);
-    clearParams.colorClearType = GL_UNSIGNED_INT;
+    clearParams.colorUI   = gl::ColorUI(values[0], values[1], values[2], values[3]);
+    clearParams.colorType = GL_UNSIGNED_INT;
 
     return clearImpl(context, clearParams);
 }
@@ -160,14 +160,14 @@ gl::Error FramebufferD3D::clearBufferiv(ContextImpl *context,
         {
             clearParams.clearColor[i] = (drawbuffer == static_cast<int>(i));
         }
-        clearParams.colorIClearValue = gl::ColorI(values[0], values[1], values[2], values[3]);
-        clearParams.colorClearType = GL_INT;
+        clearParams.colorI    = gl::ColorI(values[0], values[1], values[2], values[3]);
+        clearParams.colorType = GL_INT;
     }
 
     if (buffer == GL_STENCIL)
     {
         clearParams.clearStencil = true;
-        clearParams.stencilClearValue = values[1];
+        clearParams.stencilValue = values[1];
     }
 
     return clearImpl(context, clearParams);
@@ -181,10 +181,10 @@ gl::Error FramebufferD3D::clearBufferfi(ContextImpl *context,
 {
     // glClearBufferfi can only be called to clear a depth stencil buffer
     ClearParameters clearParams   = GetClearParameters(context->getGLState(), 0);
-    clearParams.clearDepth = true;
-    clearParams.depthClearValue = depth;
-    clearParams.clearStencil = true;
-    clearParams.stencilClearValue = stencil;
+    clearParams.clearDepth        = true;
+    clearParams.depthValue        = depth;
+    clearParams.clearStencil      = true;
+    clearParams.stencilValue      = stencil;
 
     return clearImpl(context, clearParams);
 }
