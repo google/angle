@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f89119ce_ba200cb1",
+        "filename": "src/libANGLE/UniformLinker.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-10T16:46:01Z",
+      "side": 1,
+      "message": "nit: typo \"in related\" -\u003e \"related\"",
+      "revId": "b40a876a1fbc98fc728564c8526951e513cb3227",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
