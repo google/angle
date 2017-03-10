@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a0dd1dde_1f97f192",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 639,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-10T02:28:36Z",
+      "side": 1,
+      "message": "In https://www.khronos.org/opengl/wiki/Vertex_Specification - Separate attribute format, there is a warning that:\n\nIf you\u0027re only using OpenGL 4.3, you are advised to observe this limitation anyway, even though you don\u0027t strictly have to and can\u0027t query it. Just keep your strides under 2048, which shouldn\u0027t be a problem for normal vertex data arrangements.\n\nSo I think it is reasonable to choose 2048 as maximum stride on OpenGL 4.3.",
+      "revId": "96baf3b17734b0eb757ea10a3a08f0385b872398",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cbe13d72_6e7bc772",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 643,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-10T02:28:36Z",
+      "side": 1,
+      "message": "If GL version is 4.4 and 4.5, then the values of MAX_VERTEX_ATTRIB_STRIDE must be available:\n\nOpenGL 4.4 (Core Profile) - March 19, 2014: Chapter 10.3.1 page 316;\nOpenGL 4.5 (Core Profile) - October 24, 2016: Chapter 10.3.1 page 339",
+      "revId": "96baf3b17734b0eb757ea10a3a08f0385b872398",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
