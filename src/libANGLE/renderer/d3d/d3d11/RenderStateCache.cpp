@@ -170,11 +170,13 @@ gl::Error RenderStateCache::getBlendState(const d3d11::BlendStateKey &key,
         // Create a new blend state and insert it into the cache
         D3D11_BLEND_DESC blendDesc;
         D3D11_RENDER_TARGET_BLEND_DESC &rtDesc0 = blendDesc.RenderTarget[0];
-        rtDesc0                                 = {};
         const gl::BlendState &blendState        = key.blendState;
 
         blendDesc.AlphaToCoverageEnable  = blendState.sampleAlphaToCoverage;
         blendDesc.IndependentBlendEnable = key.mrt ? TRUE : FALSE;
+
+        rtDesc0 = {};
+
         if (blendState.blend)
         {
             rtDesc0.BlendEnable    = true;

@@ -33,41 +33,24 @@
 namespace rx
 {
 
+static constexpr uint32_t g_VertexSize = sizeof(d3d11::PositionDepthColorVertex<float>);
+
 template <typename T>
-static void ApplyVertices(const gl::Extents &framebufferSize,
-                          const gl::Rectangle *scissor,
-                          const gl::Color<T> &color,
-                          float depth,
-                          void *buffer)
+static void ApplyVertices(const gl::Color<T> &color, const float depth, void *buffer)
 {
     d3d11::PositionDepthColorVertex<T> *vertices =
         reinterpret_cast<d3d11::PositionDepthColorVertex<T> *>(buffer);
 
-    float depthClear = gl::clamp01(depth);
-    float left       = -1.0f;
-    float right      = 1.0f;
-    float top        = -1.0f;
-    float bottom     = 1.0f;
+    const float z      = gl::clamp01(depth);
+    const float left   = -1.0f;
+    const float right  = 1.0f;
+    const float top    = -1.0f;
+    const float bottom = 1.0f;
 
-    // Clip the quad coordinates to the scissor if needed
-    if (scissor != nullptr)
-    {
-        left  = std::max(left, (scissor->x / float(framebufferSize.width)) * 2.0f - 1.0f);
-        right = std::min(
-            right, ((scissor->x + scissor->width) / float(framebufferSize.width)) * 2.0f - 1.0f);
-        top = std::max(top, ((framebufferSize.height - scissor->y - scissor->height) /
-                             float(framebufferSize.height)) *
-                                    2.0f -
-                                1.0f);
-        bottom = std::min(
-            bottom,
-            ((framebufferSize.height - scissor->y) / float(framebufferSize.height)) * 2.0f - 1.0f);
-    }
-
-    d3d11::SetPositionDepthColorVertex<T>(vertices + 0, left, bottom, depthClear, color);
-    d3d11::SetPositionDepthColorVertex<T>(vertices + 1, left, top, depthClear, color);
-    d3d11::SetPositionDepthColorVertex<T>(vertices + 2, right, bottom, depthClear, color);
-    d3d11::SetPositionDepthColorVertex<T>(vertices + 3, right, top, depthClear, color);
+    d3d11::SetPositionDepthColorVertex<T>(vertices + 0, left, bottom, z, color);
+    d3d11::SetPositionDepthColorVertex<T>(vertices + 1, left, top, z, color);
+    d3d11::SetPositionDepthColorVertex<T>(vertices + 2, right, bottom, z, color);
+    d3d11::SetPositionDepthColorVertex<T>(vertices + 3, right, top, z, color);
 }
 
 Clear11::ClearShader::ClearShader(DXGI_FORMAT colorType,
@@ -101,9 +84,7 @@ Clear11::Clear11(Renderer11 *renderer)
     : mRenderer(renderer),
       mFloatClearShader(nullptr),
       mUintClearShader(nullptr),
-      mIntClearShader(nullptr),
-      mVertexBuffer(nullptr),
-      mRasterizerState(nullptr)
+      mIntClearShader(nullptr)
 {
     TRACE_EVENT0("gpu.angle", "Clear11::Clear11");
 
@@ -111,14 +92,14 @@ Clear11::Clear11(Renderer11 *renderer)
     ID3D11Device *device = renderer->getDevice();
 
     D3D11_BUFFER_DESC vbDesc;
-    vbDesc.ByteWidth           = sizeof(d3d11::PositionDepthColorVertex<float>) * 4;
+    vbDesc.ByteWidth           = g_VertexSize * 4;
     vbDesc.Usage               = D3D11_USAGE_DYNAMIC;
     vbDesc.BindFlags           = D3D11_BIND_VERTEX_BUFFER;
     vbDesc.CPUAccessFlags      = D3D11_CPU_ACCESS_WRITE;
     vbDesc.MiscFlags           = 0;
     vbDesc.StructureByteStride = 0;
 
-    result = device->CreateBuffer(&vbDesc, nullptr, &mVertexBuffer);
+    result = device->CreateBuffer(&vbDesc, nullptr, mVertexBuffer.GetAddressOf());
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mVertexBuffer, "Clear11 masked clear vertex buffer");
 
@@ -134,9 +115,16 @@ Clear11::Clear11(Renderer11 *renderer)
     rsDesc.MultisampleEnable     = FALSE;
     rsDesc.AntialiasedLineEnable = FALSE;
 
-    result = device->CreateRasterizerState(&rsDesc, &mRasterizerState);
+    result = device->CreateRasterizerState(&rsDesc, mScissorDisabledRasterizerState.GetAddressOf());
     ASSERT(SUCCEEDED(result));
-    d3d11::SetDebugName(mRasterizerState, "Clear11 masked clear rasterizer state");
+    d3d11::SetDebugName(mScissorDisabledRasterizerState,
+                        "Clear11 Rasterizer State with scissor disabled");
+
+    rsDesc.ScissorEnable = TRUE;
+    result = device->CreateRasterizerState(&rsDesc, mScissorEnabledRasterizerState.GetAddressOf());
+    ASSERT(SUCCEEDED(result));
+    d3d11::SetDebugName(mScissorEnabledRasterizerState,
+                        "Clear11 Rasterizer State with scissor enabled");
 
     if (mRenderer->getRenderer11DeviceCaps().featureLevel <= D3D_FEATURE_LEVEL_9_3)
     {
@@ -202,8 +190,6 @@ Clear11::~Clear11()
     SafeDelete(mFloatClearShader);
     SafeDelete(mUintClearShader);
     SafeDelete(mIntClearShader);
-    SafeRelease(mVertexBuffer);
-    SafeRelease(mRasterizerState);
 }
 
 gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
@@ -211,10 +197,16 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
 {
     const auto &colorAttachments  = fboData.getColorAttachments();
     const auto &drawBufferStates  = fboData.getDrawBufferStates();
-    const auto *depthAttachment   = fboData.getDepthAttachment();
-    const auto *stencilAttachment = fboData.getStencilAttachment();
+    const gl::FramebufferAttachment *depthStencilAttachment = fboData.getDepthOrStencilAttachment();
+    RenderTarget11 *depthStencilRenderTarget                = nullptr;
 
     ASSERT(colorAttachments.size() <= drawBufferStates.size());
+
+    if (clearParams.clearDepth || clearParams.clearStencil)
+    {
+        ASSERT(depthStencilAttachment != nullptr);
+        ANGLE_TRY(depthStencilAttachment->getRenderTarget(&depthStencilRenderTarget));
+    }
 
     // Iterate over the color buffers which require clearing and determine if they can be
     // cleared with ID3D11DeviceContext::ClearRenderTargetView or ID3D11DeviceContext1::ClearView.
@@ -240,43 +232,45 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
 
     gl::Extents framebufferSize;
 
-    const gl::FramebufferAttachment *colorAttachment = fboData.getFirstColorAttachment();
-    if (colorAttachment != nullptr)
+    if (depthStencilRenderTarget != nullptr)
     {
-        framebufferSize = colorAttachment->getSize();
-    }
-    else if (depthAttachment != nullptr)
-    {
-        framebufferSize = depthAttachment->getSize();
-    }
-    else if (stencilAttachment != nullptr)
-    {
-        framebufferSize = stencilAttachment->getSize();
+        framebufferSize = depthStencilRenderTarget->getExtents();
     }
     else
     {
-        UNREACHABLE();
-        return gl::Error(GL_INVALID_OPERATION);
+        const auto colorAttachment = fboData.getFirstColorAttachment();
+
+        if (!colorAttachment)
+        {
+            UNREACHABLE();
+            return gl::InternalError();
+        }
+
+        framebufferSize = colorAttachment->getSize();
     }
 
-    if (clearParams.scissorEnabled && (clearParams.scissor.x >= framebufferSize.width ||
-                                       clearParams.scissor.y >= framebufferSize.height ||
-                                       clearParams.scissor.x + clearParams.scissor.width <= 0 ||
-                                       clearParams.scissor.y + clearParams.scissor.height <= 0))
+    bool needScissoredClear = false;
+
+    if (clearParams.scissorEnabled)
     {
-        // Scissor is enabled and the scissor rectangle is outside the renderbuffer
-        return gl::NoError();
-    }
+        if (clearParams.scissor.x >= framebufferSize.width ||
+            clearParams.scissor.y >= framebufferSize.height ||
+            clearParams.scissor.x + clearParams.scissor.width <= 0 ||
+            clearParams.scissor.y + clearParams.scissor.height <= 0 ||
+            clearParams.scissor.width == 0 || clearParams.scissor.height == 0)
+        {
+            // Scissor rect is outside the renderbuffer or is an empty rect
+            return gl::NoError();
+        }
 
-    bool needScissoredClear =
-        clearParams.scissorEnabled &&
-        (clearParams.scissor.x > 0 || clearParams.scissor.y > 0 ||
-         clearParams.scissor.x + clearParams.scissor.width < framebufferSize.width ||
-         clearParams.scissor.y + clearParams.scissor.height < framebufferSize.height);
+        needScissoredClear =
+            clearParams.scissor.x > 0 || clearParams.scissor.y > 0 ||
+            clearParams.scissor.x + clearParams.scissor.width < framebufferSize.width ||
+            clearParams.scissor.y + clearParams.scissor.height < framebufferSize.height;
+    }
 
     ID3D11DeviceContext *deviceContext   = mRenderer->getDeviceContext();
     ID3D11DeviceContext1 *deviceContext1 = mRenderer->getDeviceContext1IfSupported();
-    ID3D11Device *device                 = mRenderer->getDevice();
 
     std::array<ID3D11RenderTargetView *, D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT> rtvs;
     std::array<uint8_t, D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT> rtvMasks;
@@ -405,36 +399,30 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
         }
     }
 
-    if (clearParams.clearDepth || clearParams.clearStencil)
+    if (depthStencilRenderTarget)
     {
-        const gl::FramebufferAttachment *attachment =
-            (depthAttachment != nullptr) ? depthAttachment : stencilAttachment;
-        ASSERT(attachment != nullptr);
-
-        RenderTarget11 *renderTarget = nullptr;
-        ANGLE_TRY(attachment->getRenderTarget(&renderTarget));
-
-        const auto &nativeFormat = renderTarget->getFormatSet().format();
-
-        unsigned int stencilUnmasked =
-            (stencilAttachment != nullptr) ? (1 << nativeFormat.stencilBits) - 1 : 0;
-        bool needMaskedStencilClear =
-            clearParams.clearStencil &&
-            (clearParams.stencilWriteMask & stencilUnmasked) != stencilUnmasked;
-
-        dsv = renderTarget->getDepthStencilView();
+        dsv = depthStencilRenderTarget->getDepthStencilView();
 
         if (!dsv)
         {
             return gl::OutOfMemory() << "Clear11: Depth stencil view pointer unexpectedly null.";
         }
 
+        const auto &nativeFormat = depthStencilRenderTarget->getFormatSet().format();
+        const gl::FramebufferAttachment *stencilAttachment = fboData.getStencilAttachment();
+
+        uint32_t stencilUnmasked =
+            (stencilAttachment != nullptr) ? (1 << nativeFormat.stencilBits) - 1 : 0;
+        bool needMaskedStencilClear =
+            clearParams.clearStencil &&
+            (clearParams.stencilWriteMask & stencilUnmasked) != stencilUnmasked;
+
         if (!needScissoredClear && !needMaskedStencilClear)
         {
-            UINT clearFlags = (clearParams.clearDepth ? D3D11_CLEAR_DEPTH : 0) |
-                              (clearParams.clearStencil ? D3D11_CLEAR_STENCIL : 0);
-            FLOAT depthClear   = gl::clamp01(clearParams.depthClearValue);
-            UINT8 stencilClear = clearParams.stencilClearValue & 0xFF;
+            const UINT clearFlags = (clearParams.clearDepth ? D3D11_CLEAR_DEPTH : 0) |
+                                    (clearParams.clearStencil ? D3D11_CLEAR_STENCIL : 0);
+            const FLOAT depthClear   = gl::clamp01(clearParams.depthClearValue);
+            const UINT8 stencilClear = clearParams.stencilClearValue & 0xFF;
 
             deviceContext->ClearDepthStencilView(dsv, clearFlags, depthClear, stencilClear);
 
@@ -473,7 +461,6 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
     ASSERT(numRtvs <= mRenderer->getNativeCaps().maxDrawBuffers);
 
     const UINT sampleMask        = 0xFFFFFFFF;
-    const float blendFactors[4]  = {1.0f, 1.0f, 1.0f, 1.0f};
     ID3D11BlendState *blendState = nullptr;
 
     if (numRtvs > 0)
@@ -508,38 +495,32 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
     }
 
     // Set the vertices
-    UINT vertexStride   = 0;
-    const UINT startIdx = 0;
     ClearShader *shader = nullptr;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     HRESULT result =
-        deviceContext->Map(mVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+        deviceContext->Map(mVertexBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result))
     {
         return gl::OutOfMemory() << "Clear11: Failed to map internal VB, " << result;
     }
 
-    const gl::Rectangle *scissorPtr = clearParams.scissorEnabled ? &clearParams.scissor : nullptr;
     switch (clearParams.colorClearType)
     {
         case GL_FLOAT:
-            ApplyVertices(framebufferSize, scissorPtr, clearParams.colorFClearValue,
-                          clearParams.depthClearValue, mappedResource.pData);
-            vertexStride = sizeof(d3d11::PositionDepthColorVertex<float>);
+            ApplyVertices(clearParams.colorFClearValue, clearParams.depthClearValue,
+                          mappedResource.pData);
             shader       = mFloatClearShader;
             break;
 
         case GL_UNSIGNED_INT:
-            ApplyVertices(framebufferSize, scissorPtr, clearParams.colorUIClearValue,
-                          clearParams.depthClearValue, mappedResource.pData);
-            vertexStride = sizeof(d3d11::PositionDepthColorVertex<unsigned int>);
+            ApplyVertices(clearParams.colorUIClearValue, clearParams.depthClearValue,
+                          mappedResource.pData);
             shader       = mUintClearShader;
             break;
 
         case GL_INT:
-            ApplyVertices(framebufferSize, scissorPtr, clearParams.colorIClearValue,
-                          clearParams.depthClearValue, mappedResource.pData);
-            vertexStride = sizeof(d3d11::PositionDepthColorVertex<int>);
+            ApplyVertices(clearParams.colorIClearValue, clearParams.depthClearValue,
+                          mappedResource.pData);
             shader       = mIntClearShader;
             break;
 
@@ -548,7 +529,7 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
             break;
     }
 
-    deviceContext->Unmap(mVertexBuffer, 0);
+    deviceContext->Unmap(mVertexBuffer.Get(), 0);
 
     // Set the viewport to be the same size as the framebuffer
     D3D11_VIEWPORT viewport;
@@ -561,18 +542,31 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
     deviceContext->RSSetViewports(1, &viewport);
 
     // Apply state
-    deviceContext->RSSetState(mRasterizerState);
-    deviceContext->OMSetBlendState(blendState, blendFactors, sampleMask);
+    deviceContext->OMSetBlendState(blendState, nullptr, sampleMask);
     deviceContext->OMSetDepthStencilState(dsState, stencilValue);
 
+    if (needScissoredClear)
+    {
+        const D3D11_RECT scissorRect = {clearParams.scissor.x, clearParams.scissor.y,
+                                        clearParams.scissor.x1(), clearParams.scissor.y1()};
+        deviceContext->RSSetScissorRects(1, &scissorRect);
+        deviceContext->RSSetState(mScissorEnabledRasterizerState.Get());
+    }
+    else
+    {
+        deviceContext->RSSetState(mScissorDisabledRasterizerState.Get());
+    }
+
     // Apply shaders
+    ID3D11Device *device = mRenderer->getDevice();
     deviceContext->IASetInputLayout(shader->inputLayout->resolve(device));
     deviceContext->VSSetShader(shader->vertexShader.resolve(device), nullptr, 0);
     deviceContext->PSSetShader(shader->pixelShader.resolve(device), nullptr, 0);
     deviceContext->GSSetShader(nullptr, nullptr, 0);
 
     // Apply vertex buffer
-    deviceContext->IASetVertexBuffers(0, 1, &mVertexBuffer, &vertexStride, &startIdx);
+    const UINT offset = 0;
+    deviceContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), &g_VertexSize, &offset);
     deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
     // Apply render targets

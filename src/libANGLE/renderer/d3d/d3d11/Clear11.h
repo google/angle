@@ -63,16 +63,17 @@ class Clear11 : angle::NonCopyable
 
     Renderer11 *mRenderer;
 
-    // Cached cache Keys
+    // States
+    angle::ComPtr<ID3D11RasterizerState> mScissorEnabledRasterizerState;
+    angle::ComPtr<ID3D11RasterizerState> mScissorDisabledRasterizerState;
     gl::DepthStencilState mDepthStencilStateKey;
     d3d11::BlendStateKey mBlendStateKey;
 
+    // Shaders and Shader Resources
     ClearShader *mFloatClearShader;
     ClearShader *mUintClearShader;
     ClearShader *mIntClearShader;
-
-    ID3D11Buffer *mVertexBuffer;
-    ID3D11RasterizerState *mRasterizerState;
+    angle::ComPtr<ID3D11Buffer> mVertexBuffer;
 };
 
 }
