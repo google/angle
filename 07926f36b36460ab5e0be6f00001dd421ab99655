@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a43e8948_5fc141fd",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-03-10T19:57:46Z",
+      "side": 1,
+      "message": "My GL knowledge is minimal, so sorry if this is a stupid question.\nIsn\u0027t this an error even if client side element buffer is not forbidden?",
+      "range": {
+        "startLine": 250,
+        "startChar": 54,
+        "endLine": 250,
+        "endChar": 61
+      },
+      "revId": "07926f36b36460ab5e0be6f00001dd421ab99655",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
