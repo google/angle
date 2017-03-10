@@ -58,8 +58,6 @@ class WebGLCompatibilityTest : public ANGLETest
             eglGetProcAddress("glRequestExtensionANGLE"));
     }
 
-    void TearDown() override { ANGLETest::TearDown(); }
-
     // Called from RenderingFeedbackLoopWithDrawBuffersEXT.
     void drawBuffersEXTFeedbackLoop(GLuint program,
                                     const std::array<GLenum, 2> &drawBuffers,

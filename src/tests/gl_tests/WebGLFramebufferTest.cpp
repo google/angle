@@ -28,15 +28,6 @@ class WebGLFramebufferTest : public ANGLETest
         setWebGLCompatibilityEnabled(true);
     }
 
-    void SetUp() override
-    {
-        ANGLETest::SetUp();
-        glRequestExtensionANGLE = reinterpret_cast<PFNGLREQUESTEXTENSIONANGLEPROC>(
-            eglGetProcAddress("glRequestExtensionANGLE"));
-    }
-
-    void TearDown() override { ANGLETest::TearDown(); }
-
     void drawUByteColorQuad(GLuint program, GLint uniformLoc, const GLColor &color);
     void testDepthStencilDepthStencil(GLint width, GLint height);
     void testDepthStencilRenderbuffer(GLint width,
@@ -45,8 +36,6 @@ class WebGLFramebufferTest : public ANGLETest
                                       GLbitfield allowedStatuses);
     void testRenderingAndReading(GLuint program);
     void testUsingIncompleteFramebuffer(GLenum depthFormat, GLenum depthAttachment);
-
-    PFNGLREQUESTEXTENSIONANGLEPROC glRequestExtensionANGLE = nullptr;
 };
 
 constexpr GLint ALLOW_COMPLETE              = 0x1;
