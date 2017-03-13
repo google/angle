@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a0f0c051_11390f1d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-13T21:02:07Z",
+      "side": 0,
+      "message": "sorry to be stubborn but if you could leave this method intact (but slightly refactored) I\u0027d appreciate it. We do enforce consistency in ANGLE but we also relax that rule when we try to add ways to clean things up. I feel like at some point I\u0027d like to go and clean up the state tracking in ANGLE/D3D11 to not use markAllStateDirty() and this would add one more thing I\u0027d have to do (although a fairly minor one). Thanks for your understanding.",
+      "range": {
+        "startLine": 88,
+        "startChar": 0,
+        "endLine": 89,
+        "endChar": 71
+      },
+      "revId": "6627f5da7d66a636832e777b6a06537137ba51ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
