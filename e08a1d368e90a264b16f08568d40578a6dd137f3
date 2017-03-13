@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5adea882_05a87753",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/RenderStateCache.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-13T20:57:51Z",
+      "side": 0,
+      "message": "keep this method around as a helper, call it getBlendStateForFramebuffer, and refactor the code to internally call getBlendState. basically what you did but keep the code in RenderStateCache (please)",
+      "range": {
+        "startLine": 37,
+        "startChar": 4,
+        "endLine": 37,
+        "endChar": 132
+      },
+      "revId": "e08a1d368e90a264b16f08568d40578a6dd137f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

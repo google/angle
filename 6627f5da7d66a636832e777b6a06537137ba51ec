@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39dd2ff9_95b590a0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-13T20:57:51Z",
+      "side": 1,
+      "message": "this looks generally pretty good Shahmeer, but I think each of these bullet points could be a split CL.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 81
+      },
+      "revId": "6627f5da7d66a636832e777b6a06537137ba51ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d9378632_20cb733d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-13T20:57:51Z",
+      "side": 1,
+      "message": "gl::OutOfMemory",
+      "range": {
+        "startLine": 316,
+        "startChar": 27,
+        "endLine": 316,
+        "endChar": 32
+      },
+      "revId": "6627f5da7d66a636832e777b6a06537137ba51ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "79745287_d85cb526",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 419,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-13T20:57:51Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 419,
+        "startChar": 23,
+        "endLine": 419,
+        "endChar": 28
+      },
+      "revId": "6627f5da7d66a636832e777b6a06537137ba51ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7d7445cf_39ba27da",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-13T20:57:51Z",
+      "side": 1,
+      "message": "I believe this is not going to share blend states with the rest of ANGLE. The issue here is that sourceBlendRGB, destBlendRGB, sourceBlendAlpha, etc are all zero-initialized. Either that or I missed where you initialize them properly. Can you initialize them to sensible values like you do with depth/stencil states?",
+      "range": {
+        "startLine": 472,
+        "startChar": 8,
+        "endLine": 472,
+        "endChar": 41
+      },
+      "revId": "6627f5da7d66a636832e777b6a06537137ba51ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19d1733e_f95b0abc",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1713,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-13T20:57:51Z",
+      "side": 1,
+      "message": "where is this called again? I looked around a few minutes and couldn\u0027t place it.",
+      "range": {
+        "startLine": 1693,
+        "startChar": 0,
+        "endLine": 1713,
+        "endChar": 1
+      },
+      "revId": "6627f5da7d66a636832e777b6a06537137ba51ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
