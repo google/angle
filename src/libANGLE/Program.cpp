@@ -1140,7 +1140,7 @@ GLuint Program::getAttributeLocation(const std::string &name) const
 {
     for (const sh::Attribute &attribute : mState.mAttributes)
     {
-        if (attribute.name == name && attribute.staticUse)
+        if (attribute.name == name)
         {
             return attribute.location;
         }
@@ -1174,23 +1174,8 @@ void Program::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length,
         return;
     }
 
-    size_t attributeIndex = 0;
-
-    for (const sh::Attribute &attribute : mState.mAttributes)
-    {
-        // Skip over inactive attributes
-        if (attribute.staticUse)
-        {
-            if (static_cast<size_t>(index) == attributeIndex)
-            {
-                break;
-            }
-            attributeIndex++;
-        }
-    }
-
-    ASSERT(index == attributeIndex && attributeIndex < mState.mAttributes.size());
-    const sh::Attribute &attrib = mState.mAttributes[attributeIndex];
+    ASSERT(index < mState.mAttributes.size());
+    const sh::Attribute &attrib = mState.mAttributes[index];
 
     if (bufsize > 0)
     {
@@ -1217,14 +1202,7 @@ GLint Program::getActiveAttributeCount() const
         return 0;
     }
 
-    GLint count = 0;
-
-    for (const sh::Attribute &attrib : mState.mAttributes)
-    {
-        count += (attrib.staticUse ? 1 : 0);
-    }
-
-    return count;
+    return static_cast<GLint>(mState.mAttributes.size());
 }
 
 GLint Program::getActiveAttributeMaxLength() const
@@ -1238,10 +1216,7 @@ GLint Program::getActiveAttributeMaxLength() const
 
     for (const sh::Attribute &attrib : mState.mAttributes)
     {
-        if (attrib.staticUse)
-        {
-            maxLength = std::max(attrib.name.length() + 1, maxLength);
-        }
+        maxLength = std::max(attrib.name.length() + 1, maxLength);
     }
 
     return static_cast<GLint>(maxLength);
@@ -1983,9 +1958,6 @@ bool Program::linkAttributes(const ContextState &data, InfoLog &infoLog)
     // Link attributes that have a binding location
     for (sh::Attribute &attribute : mState.mAttributes)
     {
-        // TODO(jmadill): do staticUse filtering step here, or not at all
-        ASSERT(attribute.staticUse);
-
         int bindingLocation = mAttributeBindings.getBinding(attribute.name);
         if (attribute.location == -1 && bindingLocation != -1)
         {
@@ -2035,8 +2007,6 @@ bool Program::linkAttributes(const ContextState &data, InfoLog &infoLog)
     // Link attributes that don't have a binding location
     for (sh::Attribute &attribute : mState.mAttributes)
     {
-        ASSERT(attribute.staticUse);
-
         // Not set by glBindAttribLocation or by location layout qualifier
         if (attribute.location == -1)
         {
@@ -2055,7 +2025,6 @@ bool Program::linkAttributes(const ContextState &data, InfoLog &infoLog)
 
     for (const sh::Attribute &attribute : mState.mAttributes)
     {
-        ASSERT(attribute.staticUse);
         ASSERT(attribute.location != -1);
         int regs = VariableRegisterCount(attribute.type);
 
@@ -2551,8 +2520,6 @@ void Program::linkOutputVariables()
 
         // Since multiple output locations must be specified, use 0 for non-specified locations.
         int baseLocation = (outputVariable.location == -1 ? 0 : outputVariable.location);
-
-        ASSERT(outputVariable.staticUse);
 
         for (unsigned int elementIndex = 0; elementIndex < outputVariable.elementCount();
              elementIndex++)
