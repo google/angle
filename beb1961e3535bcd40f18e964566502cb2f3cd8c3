@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "21a78d71_2b2383b2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-14T15:38:01Z",
+      "side": 1,
+      "message": "don\u0027t use inline except where strictly necessary - in header files usually.",
+      "range": {
+        "startLine": 89,
+        "startChar": 21,
+        "endLine": 89,
+        "endChar": 27
+      },
+      "revId": "beb1961e3535bcd40f18e964566502cb2f3cd8c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "56af156c_83c0a3bc",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-14T15:38:01Z",
+      "side": 1,
+      "message": "were you not liking moving this into the RenderStateCache class? I think this code would be better situated for that file, since it\u0027s very render-state-cache-specific.",
+      "range": {
+        "startLine": 89,
+        "startChar": 28,
+        "endLine": 89,
+        "endChar": 44
+      },
+      "revId": "beb1961e3535bcd40f18e964566502cb2f3cd8c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85363e6f_44fc96c2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 540,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-14T15:38:01Z",
+      "side": 1,
+      "message": "nit: I think you can actually make this a const \u0026 type.",
+      "range": {
+        "startLine": 540,
+        "startChar": 17,
+        "endLine": 540,
+        "endChar": 30
+      },
+      "revId": "beb1961e3535bcd40f18e964566502cb2f3cd8c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5ce33395_7021f287",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-14T15:38:01Z",
+      "side": 1,
+      "message": "can you comment here as to what this function is for? (short, one line comment is all that I would like)",
+      "range": {
+        "startLine": 58,
+        "startChar": 6,
+        "endLine": 58,
+        "endChar": 18
+      },
+      "revId": "beb1961e3535bcd40f18e964566502cb2f3cd8c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
