@@ -78,7 +78,7 @@ std::size_t RenderStateCache::hashBlendState(const BlendStateKey &blendState)
     static const unsigned int seed = 0xABCDEF98;
 
     std::size_t hash = 0;
-    MurmurHash3_x86_32(&blendState, sizeof(gl::BlendState), seed, &hash);
+    MurmurHash3_x86_32(&blendState, sizeof(BlendStateKey), seed, &hash);
     return hash;
 }
 
