@@ -48,6 +48,54 @@
     },
     {
       "key": {
+        "uuid": "d08d4089_b6b590fd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-14T20:18:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "21a78d71_2b2383b2",
+      "range": {
+        "startLine": 89,
+        "startChar": 21,
+        "endLine": 89,
+        "endChar": 27
+      },
+      "revId": "beb1961e3535bcd40f18e964566502cb2f3cd8c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "43e8cf2b_8d35550e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-14T20:18:33Z",
+      "side": 1,
+      "message": "I am trying to keep the changes to RenderStateCache to a minimum and treat it as a cache server with a single well defined interface for each cache type (ie key input and state output). It would be up to the client to generate the appropriate input key and that is what Clear11 does so it seemed to make sense for Statemanager11 to do the same.",
+      "parentUuid": "56af156c_83c0a3bc",
+      "range": {
+        "startLine": 89,
+        "startChar": 28,
+        "endLine": 89,
+        "endChar": 44
+      },
+      "revId": "beb1961e3535bcd40f18e964566502cb2f3cd8c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85363e6f_44fc96c2",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 2
@@ -82,6 +130,30 @@
       "writtenOn": "2017-03-14T15:38:01Z",
       "side": 1,
       "message": "can you comment here as to what this function is for? (short, one line comment is all that I would like)",
+      "range": {
+        "startLine": 58,
+        "startChar": 6,
+        "endLine": 58,
+        "endChar": 18
+      },
+      "revId": "beb1961e3535bcd40f18e964566502cb2f3cd8c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3168b1f8_d9230011",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-14T20:18:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5ce33395_7021f287",
       "range": {
         "startLine": 58,
         "startChar": 6,
