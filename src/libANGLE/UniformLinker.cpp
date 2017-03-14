@@ -13,6 +13,7 @@
 #include "common/utilities.h"
 #include "libANGLE/Caps.h"
 #include "libANGLE/Shader.h"
+#include "libANGLE/features.h"
 
 namespace gl
 {
