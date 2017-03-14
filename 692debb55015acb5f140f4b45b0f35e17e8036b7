@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "292ffe21_18868ac8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-03-14T22:24:50Z",
+      "side": 1,
+      "message": "nit: it\u0027s intptr_t(1) now",
+      "range": {
+        "startLine": 11,
+        "startChar": 67,
+        "endLine": 12,
+        "endChar": 46
+      },
+      "revId": "692debb55015acb5f140f4b45b0f35e17e8036b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
