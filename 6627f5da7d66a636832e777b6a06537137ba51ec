@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "214fdf92_9d671ba5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-14T00:37:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "39dd2ff9_95b590a0",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 81
+      },
+      "revId": "6627f5da7d66a636832e777b6a06537137ba51ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d9378632_20cb733d",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2017-03-13T20:57:51Z",
       "side": 1,
       "message": "gl::OutOfMemory",
+      "range": {
+        "startLine": 316,
+        "startChar": 27,
+        "endLine": 316,
+        "endChar": 32
+      },
+      "revId": "6627f5da7d66a636832e777b6a06537137ba51ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "89fa9b92_cb2e9b56",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-14T00:37:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9378632_20cb733d",
       "range": {
         "startLine": 316,
         "startChar": 27,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "2f6cdc56_731419f8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 419,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-14T00:37:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "79745287_d85cb526",
+      "range": {
+        "startLine": 419,
+        "startChar": 23,
+        "endLine": 419,
+        "endChar": 28
+      },
+      "revId": "6627f5da7d66a636832e777b6a06537137ba51ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7d7445cf_39ba27da",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 1
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "8bd306dd_11bc1b31",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-14T00:37:12Z",
+      "side": 1,
+      "message": "Ok. I will set them to the default blendstate values. This will only affect the key itself not the actual blendstate since items like the blendfunctions are ignored when blending is disabled as it is for draw based clears.",
+      "parentUuid": "7d7445cf_39ba27da",
+      "range": {
+        "startLine": 472,
+        "startChar": 8,
+        "endLine": 472,
+        "endChar": 41
+      },
+      "revId": "6627f5da7d66a636832e777b6a06537137ba51ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19d1733e_f95b0abc",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 1
@@ -105,6 +201,30 @@
       "writtenOn": "2017-03-13T20:57:51Z",
       "side": 1,
       "message": "where is this called again? I looked around a few minutes and couldn\u0027t place it.",
+      "range": {
+        "startLine": 1693,
+        "startChar": 0,
+        "endLine": 1713,
+        "endChar": 1
+      },
+      "revId": "6627f5da7d66a636832e777b6a06537137ba51ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "972279c0_17c83813",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1713,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-14T00:37:12Z",
+      "side": 1,
+      "message": "It is called in Clear11::clearFrameBuffer and StateManager11::GetBlendStateKey to fetch the colormask for RTVs.",
+      "parentUuid": "19d1733e_f95b0abc",
       "range": {
         "startLine": 1693,
         "startChar": 0,
