@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "807fdee3_0efe7044",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-14T15:43:10Z",
+      "side": 1,
+      "message": "note: I think in ES these must be zero (reservedMustBeZero) but in desktop specs they are called baseInstance, so it\u0027s ok like this.",
+      "range": {
+        "startLine": 176,
+        "startChar": 11,
+        "endLine": 176,
+        "endChar": 23
+      },
+      "revId": "4ebfc50432a49bb90dc7ba3cd758118c9cd13d6f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
