@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e380eca6_e2deed71",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1245,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-03-14T05:37:29Z",
+      "side": 1,
+      "message": "Move this check to validation.",
+      "revId": "2d7c75591b4abb7351bc15ee1f9ae765a08cb080",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2f679384_e6a187e3",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1264,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-03-14T05:37:29Z",
+      "side": 1,
+      "message": "Same here",
+      "revId": "2d7c75591b4abb7351bc15ee1f9ae765a08cb080",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ac6dce5c_8bfef404",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1278,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-03-14T05:37:29Z",
+      "side": 1,
+      "message": "++outputVariableIndex",
+      "revId": "2d7c75591b4abb7351bc15ee1f9ae765a08cb080",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "856633b8_879dbfd0",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-03-14T05:37:29Z",
+      "side": 1,
+      "message": "Why do you need this? Is this added in your CL?",
+      "revId": "2d7c75591b4abb7351bc15ee1f9ae765a08cb080",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "731bdfce_e92b8de0",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-03-14T05:37:29Z",
+      "side": 1,
+      "message": "I suggest to use a switch-case block here and inline this validation because different APIs have different valid programInterface.",
+      "revId": "2d7c75591b4abb7351bc15ee1f9ae765a08cb080",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f85ad534_c07a6d44",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 535,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-03-14T05:37:29Z",
+      "side": 1,
+      "message": "Generate INVALID_OPERATION if (!programObject || !programObject-\u003eisLinked())",
+      "revId": "2d7c75591b4abb7351bc15ee1f9ae765a08cb080",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fff4349a_b64bf21f",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-03-14T05:37:29Z",
+      "side": 1,
+      "message": "ASSERT_NE(mProgram, 0u); is enough here.",
+      "revId": "2d7c75591b4abb7351bc15ee1f9ae765a08cb080",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
