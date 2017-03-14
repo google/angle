@@ -55,6 +55,8 @@ UINT ConvertMaxAnisotropy(float maxAnisotropy, D3D_FEATURE_LEVEL featureLevel);
 
 D3D11_QUERY ConvertQueryType(GLenum queryType);
 
+UINT8 GetColorMask(const gl::InternalFormat *formatInfo);
+
 }  // namespace gl_d3d11
 
 namespace d3d11_gl
@@ -131,6 +133,13 @@ void SetPositionDepthColorVertex(PositionDepthColorVertex<T>* vertex, float x, f
     vertex->b = color.blue;
     vertex->a = color.alpha;
 }
+
+struct BlendStateKey
+{
+    gl::BlendState blendState;
+    bool mrt;
+    uint8_t rtvMasks[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];
+};
 
 HRESULT SetDebugName(ID3D11DeviceChild *resource, const char *name);
 

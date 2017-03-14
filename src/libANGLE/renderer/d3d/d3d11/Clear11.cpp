@@ -99,11 +99,9 @@ Clear11::ClearShader::~ClearShader()
 
 Clear11::Clear11(Renderer11 *renderer)
     : mRenderer(renderer),
-      mClearBlendStates(StructLessThan<ClearBlendInfo>),
       mFloatClearShader(nullptr),
       mUintClearShader(nullptr),
       mIntClearShader(nullptr),
-      mClearDepthStencilStates(StructLessThan<ClearDepthStencilInfo>),
       mVertexBuffer(nullptr),
       mRasterizerState(nullptr)
 {
@@ -166,28 +164,44 @@ Clear11::Clear11(Renderer11 *renderer)
                             ArraySize(g_VS_ClearSint), "Clear11 SINT VS", g_PS_ClearSint,
                             ArraySize(g_PS_ClearSint), "Clear11 SINT PS");
     }
+
+    // Initialize DepthstencilStateKey with defaults
+    mDepthStencilStateKey.depthTest                = false;
+    mDepthStencilStateKey.depthMask                = false;
+    mDepthStencilStateKey.depthFunc                = GL_ALWAYS;
+    mDepthStencilStateKey.stencilWritemask         = static_cast<GLuint>(-1);
+    mDepthStencilStateKey.stencilBackWritemask     = static_cast<GLuint>(-1);
+    mDepthStencilStateKey.stencilBackMask          = static_cast<GLuint>(-1);
+    mDepthStencilStateKey.stencilTest              = false;
+    mDepthStencilStateKey.stencilMask              = static_cast<GLuint>(-1);
+    mDepthStencilStateKey.stencilFail              = GL_REPLACE;
+    mDepthStencilStateKey.stencilPassDepthFail     = GL_REPLACE;
+    mDepthStencilStateKey.stencilPassDepthPass     = GL_REPLACE;
+    mDepthStencilStateKey.stencilFunc              = GL_ALWAYS;
+    mDepthStencilStateKey.stencilBackFail          = GL_REPLACE;
+    mDepthStencilStateKey.stencilBackPassDepthFail = GL_REPLACE;
+    mDepthStencilStateKey.stencilBackPassDepthPass = GL_REPLACE;
+    mDepthStencilStateKey.stencilBackFunc          = GL_ALWAYS;
+
+    // Initialize BlendStateKey with defaults
+    mBlendStateKey.blendState.blend                 = false;
+    mBlendStateKey.blendState.sourceBlendRGB        = GL_ONE;
+    mBlendStateKey.blendState.sourceBlendAlpha      = GL_ONE;
+    mBlendStateKey.blendState.destBlendRGB          = GL_ZERO;
+    mBlendStateKey.blendState.destBlendAlpha        = GL_ZERO;
+    mBlendStateKey.blendState.blendEquationRGB      = GL_FUNC_ADD;
+    mBlendStateKey.blendState.blendEquationAlpha    = GL_FUNC_ADD;
+    mBlendStateKey.blendState.sampleAlphaToCoverage = false;
+    mBlendStateKey.blendState.dither                = true;
+    mBlendStateKey.mrt                              = false;
+    memset(mBlendStateKey.rtvMasks, 0, sizeof(mBlendStateKey.rtvMasks));
 }
 
 Clear11::~Clear11()
 {
-    for (ClearBlendStateMap::iterator i = mClearBlendStates.begin(); i != mClearBlendStates.end();
-         i++)
-    {
-        SafeRelease(i->second);
-    }
-    mClearBlendStates.clear();
-
     SafeDelete(mFloatClearShader);
     SafeDelete(mUintClearShader);
     SafeDelete(mIntClearShader);
-
-    for (ClearDepthStencilStateMap::iterator i = mClearDepthStencilStates.begin();
-         i != mClearDepthStencilStates.end(); i++)
-    {
-        SafeRelease(i->second);
-    }
-    mClearDepthStencilStates.clear();
-
     SafeRelease(mVertexBuffer);
     SafeRelease(mRasterizerState);
 }
@@ -206,8 +220,7 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
     // cleared with ID3D11DeviceContext::ClearRenderTargetView or ID3D11DeviceContext1::ClearView.
     // This requires:
     // 1) The render target is being cleared to a float value (will be cast to integer when clearing
-    // integer
-    //    render targets as expected but does not work the other way around)
+    // integer render targets as expected but does not work the other way around)
     // 2) The format of the render target has no color channels that are currently masked out.
     // Clear the easy-to-clear buffers on the spot and accumulate the ones that require special
     // work.
@@ -261,12 +274,17 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
          clearParams.scissor.x + clearParams.scissor.width < framebufferSize.width ||
          clearParams.scissor.y + clearParams.scissor.height < framebufferSize.height);
 
-    std::vector<MaskedRenderTarget> maskedClearRenderTargets;
-    RenderTarget11 *maskedClearDepthStencil = nullptr;
-
     ID3D11DeviceContext *deviceContext   = mRenderer->getDeviceContext();
     ID3D11DeviceContext1 *deviceContext1 = mRenderer->getDeviceContext1IfSupported();
     ID3D11Device *device                 = mRenderer->getDevice();
+
+    std::array<ID3D11RenderTargetView *, D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT> rtvs;
+    std::array<uint8_t, D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT> rtvMasks;
+    ID3D11DepthStencilView *dsv = nullptr;
+    uint32_t numRtvs            = 0;
+    const uint8_t colorMask =
+        gl_d3d11::ConvertColorMask(clearParams.colorMaskRed, clearParams.colorMaskGreen,
+                                   clearParams.colorMaskBlue, clearParams.colorMaskAlpha);
 
     for (size_t colorAttachmentIndex = 0; colorAttachmentIndex < colorAttachments.size();
          colorAttachmentIndex++)
@@ -301,36 +319,29 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
                 // Every channel either does not exist in the render target or is masked out
                 continue;
             }
-            else if ((!(mRenderer->getRenderer11DeviceCaps().supportsClearView) &&
-                      needScissoredClear) ||
-                     clearParams.colorClearType != GL_FLOAT ||
-                     (formatInfo.redBits > 0 && !clearParams.colorMaskRed) ||
-                     (formatInfo.greenBits > 0 && !clearParams.colorMaskGreen) ||
-                     (formatInfo.blueBits > 0 && !clearParams.colorMaskBlue) ||
-                     (formatInfo.alphaBits > 0 && !clearParams.colorMaskAlpha))
+
+            ID3D11RenderTargetView *framebufferRTV = renderTarget->getRenderTargetView();
+            if (!framebufferRTV)
             {
-                // A masked clear is required, or a scissored clear is required and
-                // ID3D11DeviceContext1::ClearView is unavailable
-                MaskedRenderTarget maskAndRt;
-                bool clearColor        = clearParams.clearColor[colorAttachmentIndex];
-                maskAndRt.colorMask[0] = (clearColor && clearParams.colorMaskRed);
-                maskAndRt.colorMask[1] = (clearColor && clearParams.colorMaskGreen);
-                maskAndRt.colorMask[2] = (clearColor && clearParams.colorMaskBlue);
-                maskAndRt.colorMask[3] = (clearColor && clearParams.colorMaskAlpha);
-                maskAndRt.renderTarget = renderTarget;
-                maskedClearRenderTargets.push_back(maskAndRt);
+                return gl::OutOfMemory()
+                       << "Clear11: Render target view pointer unexpectedly null.";
+            }
+
+            if ((!(mRenderer->getRenderer11DeviceCaps().supportsClearView) && needScissoredClear) ||
+                clearParams.colorClearType != GL_FLOAT ||
+                (formatInfo.redBits > 0 && !clearParams.colorMaskRed) ||
+                (formatInfo.greenBits > 0 && !clearParams.colorMaskGreen) ||
+                (formatInfo.blueBits > 0 && !clearParams.colorMaskBlue) ||
+                (formatInfo.alphaBits > 0 && !clearParams.colorMaskAlpha))
+            {
+                rtvs[numRtvs]     = framebufferRTV;
+                rtvMasks[numRtvs] = gl_d3d11::GetColorMask(&formatInfo) & colorMask;
+                numRtvs++;
             }
             else
             {
                 // ID3D11DeviceContext::ClearRenderTargetView or ID3D11DeviceContext1::ClearView is
                 // possible
-
-                ID3D11RenderTargetView *framebufferRTV = renderTarget->getRenderTargetView();
-                if (!framebufferRTV)
-                {
-                    return gl::Error(GL_OUT_OF_MEMORY,
-                                     "Internal render target view pointer unexpectedly null.");
-                }
 
                 const auto &nativeFormat = renderTarget->getFormatSet().format();
 
@@ -411,30 +422,27 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
             clearParams.clearStencil &&
             (clearParams.stencilWriteMask & stencilUnmasked) != stencilUnmasked;
 
-        if (needScissoredClear || needMaskedStencilClear)
-        {
-            maskedClearDepthStencil = renderTarget;
-        }
-        else
-        {
-            ID3D11DepthStencilView *framebufferDSV = renderTarget->getDepthStencilView();
-            if (!framebufferDSV)
-            {
-                return gl::Error(GL_OUT_OF_MEMORY,
-                                 "Internal depth stencil view pointer unexpectedly null.");
-            }
+        dsv = renderTarget->getDepthStencilView();
 
+        if (!dsv)
+        {
+            return gl::OutOfMemory() << "Clear11: Depth stencil view pointer unexpectedly null.";
+        }
+
+        if (!needScissoredClear && !needMaskedStencilClear)
+        {
             UINT clearFlags = (clearParams.clearDepth ? D3D11_CLEAR_DEPTH : 0) |
                               (clearParams.clearStencil ? D3D11_CLEAR_STENCIL : 0);
             FLOAT depthClear   = gl::clamp01(clearParams.depthClearValue);
             UINT8 stencilClear = clearParams.stencilClearValue & 0xFF;
 
-            deviceContext->ClearDepthStencilView(framebufferDSV, clearFlags, depthClear,
-                                                 stencilClear);
+            deviceContext->ClearDepthStencilView(dsv, clearFlags, depthClear, stencilClear);
+
+            dsv = nullptr;
         }
     }
 
-    if (maskedClearRenderTargets.empty() && !maskedClearDepthStencil)
+    if (numRtvs == 0 && !dsv)
     {
         return gl::NoError();
     }
@@ -462,30 +470,42 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
     // glClearBuffer* calls only clear a single renderbuffer at a time which is verified to
     // be a compatible clear type.
 
-    // Bind all the render targets which need clearing
-    ASSERT(maskedClearRenderTargets.size() <= mRenderer->getNativeCaps().maxDrawBuffers);
-    std::vector<ID3D11RenderTargetView *> rtvs(maskedClearRenderTargets.size());
-    for (unsigned int i = 0; i < maskedClearRenderTargets.size(); i++)
-    {
-        RenderTarget11 *renderTarget = maskedClearRenderTargets[i].renderTarget;
-        ID3D11RenderTargetView *rtv  = renderTarget->getRenderTargetView();
-        if (!rtv)
-        {
-            return gl::Error(GL_OUT_OF_MEMORY,
-                             "Internal render target view pointer unexpectedly null.");
-        }
+    ASSERT(numRtvs <= mRenderer->getNativeCaps().maxDrawBuffers);
 
-        rtvs[i] = rtv;
-    }
-    ID3D11DepthStencilView *dsv =
-        maskedClearDepthStencil ? maskedClearDepthStencil->getDepthStencilView() : nullptr;
-
-    ID3D11BlendState *blendState = getBlendState(maskedClearRenderTargets);
-    const FLOAT blendFactors[4]  = {1.0f, 1.0f, 1.0f, 1.0f};
     const UINT sampleMask        = 0xFFFFFFFF;
+    const float blendFactors[4]  = {1.0f, 1.0f, 1.0f, 1.0f};
+    ID3D11BlendState *blendState = nullptr;
 
-    ID3D11DepthStencilState *dsState = getDepthStencilState(clearParams);
-    const UINT stencilClear          = clearParams.stencilClearValue & 0xFF;
+    if (numRtvs > 0)
+    {
+        // Setup BlendStateKey parameters
+        mBlendStateKey.blendState.colorMaskRed   = clearParams.colorMaskRed;
+        mBlendStateKey.blendState.colorMaskGreen = clearParams.colorMaskGreen;
+        mBlendStateKey.blendState.colorMaskBlue  = clearParams.colorMaskBlue;
+        mBlendStateKey.blendState.colorMaskAlpha = clearParams.colorMaskAlpha;
+        mBlendStateKey.mrt                       = numRtvs > 1;
+        memcpy(mBlendStateKey.rtvMasks, &rtvMasks[0], sizeof(mBlendStateKey.rtvMasks));
+
+        // Get BlendState
+        ANGLE_TRY(mRenderer->getStateCache().getBlendState(mBlendStateKey, &blendState));
+    }
+
+    const UINT stencilValue          = clearParams.stencilClearValue & 0xFF;
+    ID3D11DepthStencilState *dsState = nullptr;
+    const float *zValue              = nullptr;
+
+    if (dsv)
+    {
+        // Setup DepthStencilStateKey
+        mDepthStencilStateKey.depthTest        = clearParams.clearDepth;
+        mDepthStencilStateKey.depthMask        = clearParams.clearDepth;
+        mDepthStencilStateKey.stencilWritemask = clearParams.stencilWriteMask;
+        mDepthStencilStateKey.stencilTest      = clearParams.clearStencil;
+
+        // Get DepthStencilState
+        ANGLE_TRY(mRenderer->getStateCache().getDepthStencilState(mDepthStencilStateKey, &dsState));
+        zValue = clearParams.clearDepth ? &clearParams.depthClearValue : nullptr;
+    }
 
     // Set the vertices
     UINT vertexStride   = 0;
@@ -496,9 +516,7 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
         deviceContext->Map(mVertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result))
     {
-        return gl::Error(GL_OUT_OF_MEMORY,
-                         "Failed to map internal masked clear vertex buffer, HRESULT: 0x%X.",
-                         result);
+        return gl::OutOfMemory() << "Clear11: Failed to map internal VB, " << result;
     }
 
     const gl::Rectangle *scissorPtr = clearParams.scissorEnabled ? &clearParams.scissor : nullptr;
@@ -543,9 +561,9 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
     deviceContext->RSSetViewports(1, &viewport);
 
     // Apply state
-    deviceContext->OMSetBlendState(blendState, blendFactors, sampleMask);
-    deviceContext->OMSetDepthStencilState(dsState, stencilClear);
     deviceContext->RSSetState(mRasterizerState);
+    deviceContext->OMSetBlendState(blendState, blendFactors, sampleMask);
+    deviceContext->OMSetDepthStencilState(dsState, stencilValue);
 
     // Apply shaders
     deviceContext->IASetInputLayout(shader->inputLayout->resolve(device));
@@ -558,7 +576,7 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
     deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
     // Apply render targets
-    mRenderer->getStateManager()->setOneTimeRenderTargets(rtvs, dsv);
+    mRenderer->getStateManager()->setOneTimeRenderTargets(&rtvs[0], numRtvs, dsv);
 
     // Draw the clear quad
     deviceContext->Draw(4, 0);
@@ -567,110 +585,5 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
     mRenderer->markAllStateDirty();
 
     return gl::NoError();
-}
-
-ID3D11BlendState *Clear11::getBlendState(const std::vector<MaskedRenderTarget> &rts)
-{
-    ClearBlendInfo blendKey = {};
-    for (unsigned int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; i++)
-    {
-        if (i < rts.size())
-        {
-            RenderTarget11 *rt = rts[i].renderTarget;
-            const gl::InternalFormat &formatInfo =
-                gl::GetInternalFormatInfo(rt->getInternalFormat());
-
-            blendKey.maskChannels[i][0] = (rts[i].colorMask[0] && formatInfo.redBits > 0);
-            blendKey.maskChannels[i][1] = (rts[i].colorMask[1] && formatInfo.greenBits > 0);
-            blendKey.maskChannels[i][2] = (rts[i].colorMask[2] && formatInfo.blueBits > 0);
-            blendKey.maskChannels[i][3] = (rts[i].colorMask[3] && formatInfo.alphaBits > 0);
-        }
-        else
-        {
-            blendKey.maskChannels[i][0] = false;
-            blendKey.maskChannels[i][1] = false;
-            blendKey.maskChannels[i][2] = false;
-            blendKey.maskChannels[i][3] = false;
-        }
-    }
-
-    ClearBlendStateMap::const_iterator i = mClearBlendStates.find(blendKey);
-    if (i != mClearBlendStates.end())
-    {
-        return i->second;
-    }
-    else
-    {
-        D3D11_BLEND_DESC blendDesc       = {0};
-        blendDesc.AlphaToCoverageEnable  = FALSE;
-        blendDesc.IndependentBlendEnable = (rts.size() > 1) ? TRUE : FALSE;
-
-        for (unsigned int j = 0; j < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; j++)
-        {
-            blendDesc.RenderTarget[j].BlendEnable           = FALSE;
-            blendDesc.RenderTarget[j].RenderTargetWriteMask = gl_d3d11::ConvertColorMask(
-                blendKey.maskChannels[j][0], blendKey.maskChannels[j][1],
-                blendKey.maskChannels[j][2], blendKey.maskChannels[j][3]);
-        }
-
-        ID3D11Device *device         = mRenderer->getDevice();
-        ID3D11BlendState *blendState = nullptr;
-        HRESULT result               = device->CreateBlendState(&blendDesc, &blendState);
-        if (FAILED(result) || !blendState)
-        {
-            ERR() << "Unable to create a ID3D11BlendState, " << gl::FmtHR(result) << ".";
-            return nullptr;
-        }
-
-        mClearBlendStates[blendKey] = blendState;
-
-        return blendState;
-    }
-}
-
-ID3D11DepthStencilState *Clear11::getDepthStencilState(const ClearParameters &clearParams)
-{
-    ClearDepthStencilInfo dsKey = {0};
-    dsKey.clearDepth            = clearParams.clearDepth;
-    dsKey.clearStencil          = clearParams.clearStencil;
-    dsKey.stencilWriteMask      = clearParams.stencilWriteMask & 0xFF;
-
-    ClearDepthStencilStateMap::const_iterator i = mClearDepthStencilStates.find(dsKey);
-    if (i != mClearDepthStencilStates.end())
-    {
-        return i->second;
-    }
-    else
-    {
-        D3D11_DEPTH_STENCIL_DESC dsDesc = {0};
-        dsDesc.DepthEnable              = dsKey.clearDepth ? TRUE : FALSE;
-        dsDesc.DepthWriteMask =
-            dsKey.clearDepth ? D3D11_DEPTH_WRITE_MASK_ALL : D3D11_DEPTH_WRITE_MASK_ZERO;
-        dsDesc.DepthFunc                    = D3D11_COMPARISON_ALWAYS;
-        dsDesc.StencilEnable                = dsKey.clearStencil ? TRUE : FALSE;
-        dsDesc.StencilReadMask              = 0;
-        dsDesc.StencilWriteMask             = dsKey.stencilWriteMask;
-        dsDesc.FrontFace.StencilFailOp      = D3D11_STENCIL_OP_REPLACE;
-        dsDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_REPLACE;
-        dsDesc.FrontFace.StencilPassOp      = D3D11_STENCIL_OP_REPLACE;
-        dsDesc.FrontFace.StencilFunc        = D3D11_COMPARISON_ALWAYS;
-        dsDesc.BackFace.StencilFailOp       = D3D11_STENCIL_OP_REPLACE;
-        dsDesc.BackFace.StencilDepthFailOp  = D3D11_STENCIL_OP_REPLACE;
-        dsDesc.BackFace.StencilPassOp       = D3D11_STENCIL_OP_REPLACE;
-        dsDesc.BackFace.StencilFunc         = D3D11_COMPARISON_ALWAYS;
-
-        ID3D11Device *device             = mRenderer->getDevice();
-        ID3D11DepthStencilState *dsState = nullptr;
-        HRESULT result                   = device->CreateDepthStencilState(&dsDesc, &dsState);
-        if (FAILED(result) || !dsState)
-        {
-            ERR() << "Unable to create a ID3D11DepthStencilState, " << gl::FmtHR(result) << ".";
-            return nullptr;
-        }
-
-        mClearDepthStencilStates[dsKey] = dsState;
-
-        return dsState;
-    }
 }
 }

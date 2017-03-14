@@ -496,7 +496,9 @@ gl::Error StateManager11::setBlendState(const gl::Framebuffer *framebuffer,
     }
 
     ID3D11BlendState *dxBlendState = nullptr;
-    ANGLE_TRY(mRenderer->getStateCache().getBlendState(framebuffer, blendState, &dxBlendState));
+    const d3d11::BlendStateKey &key = RenderStateCache::GetBlendStateKey(framebuffer, blendState);
+
+    ANGLE_TRY(mRenderer->getStateCache().getBlendState(key, &dxBlendState));
 
     ASSERT(dxBlendState != nullptr);
 
@@ -550,25 +552,41 @@ gl::Error StateManager11::setDepthStencilState(const gl::State &glState)
         return gl::NoError();
     }
 
-    const auto &depthStencilState = glState.getDepthStencilState();
-    int stencilRef                = glState.getStencilRef();
-    int stencilBackRef            = glState.getStencilBackRef();
+    mCurDepthStencilState = glState.getDepthStencilState();
+    mCurStencilRef        = glState.getStencilRef();
+    mCurStencilBackRef    = glState.getStencilBackRef();
+    mCurDisableDepth      = disableDepth;
+    mCurDisableStencil    = disableStencil;
 
     // get the maximum size of the stencil ref
     unsigned int maxStencil = 0;
-    if (depthStencilState.stencilTest && mCurStencilSize > 0)
+    if (mCurDepthStencilState.stencilTest && mCurStencilSize > 0)
     {
         maxStencil = (1 << mCurStencilSize) - 1;
     }
-    ASSERT((depthStencilState.stencilWritemask & maxStencil) ==
-           (depthStencilState.stencilBackWritemask & maxStencil));
-    ASSERT(stencilRef == stencilBackRef);
-    ASSERT((depthStencilState.stencilMask & maxStencil) ==
-           (depthStencilState.stencilBackMask & maxStencil));
+    ASSERT((mCurDepthStencilState.stencilWritemask & maxStencil) ==
+           (mCurDepthStencilState.stencilBackWritemask & maxStencil));
+    ASSERT(mCurStencilRef == mCurStencilBackRef);
+    ASSERT((mCurDepthStencilState.stencilMask & maxStencil) ==
+           (mCurDepthStencilState.stencilBackMask & maxStencil));
 
     ID3D11DepthStencilState *dxDepthStencilState = NULL;
-    ANGLE_TRY(mRenderer->getStateCache().getDepthStencilState(
-        depthStencilState, disableDepth, disableStencil, &dxDepthStencilState));
+    gl::DepthStencilState dsStateKey             = glState.getDepthStencilState();
+
+    if (disableDepth)
+    {
+        dsStateKey.depthTest = false;
+        dsStateKey.depthMask = false;
+    }
+
+    if (disableStencil)
+    {
+        dsStateKey.stencilWritemask     = 0;
+        dsStateKey.stencilBackWritemask = 0;
+        dsStateKey.stencilTest          = false;
+    }
+
+    ANGLE_TRY(mRenderer->getStateCache().getDepthStencilState(dsStateKey, &dxDepthStencilState));
 
     ASSERT(dxDepthStencilState);
 
@@ -580,15 +598,9 @@ gl::Error StateManager11::setDepthStencilState(const gl::State &glState)
                   "Unexpected value of D3D11_DEFAULT_STENCIL_READ_MASK");
     static_assert(D3D11_DEFAULT_STENCIL_WRITE_MASK == 0xFF,
                   "Unexpected value of D3D11_DEFAULT_STENCIL_WRITE_MASK");
-    UINT dxStencilRef = std::min<UINT>(stencilRef, 0xFFu);
+    UINT dxStencilRef = std::min<UINT>(mCurStencilRef, 0xFFu);
 
     mRenderer->getDeviceContext()->OMSetDepthStencilState(dxDepthStencilState, dxStencilRef);
-
-    mCurDepthStencilState = depthStencilState;
-    mCurStencilRef        = stencilRef;
-    mCurStencilBackRef    = stencilBackRef;
-    mCurDisableDepth      = disableDepth;
-    mCurDisableStencil    = disableStencil;
 
     mDepthStencilStateIsDirty = false;
 
@@ -803,21 +815,18 @@ void StateManager11::invalidateEverything()
     invalidateBoundViews();
 }
 
-void StateManager11::setOneTimeRenderTarget(ID3D11RenderTargetView *renderTarget,
-                                            ID3D11DepthStencilView *depthStencil)
+void StateManager11::setOneTimeRenderTarget(ID3D11RenderTargetView *rtv,
+                                            ID3D11DepthStencilView *dsv)
 {
-    mRenderer->getDeviceContext()->OMSetRenderTargets(1, &renderTarget, depthStencil);
+    mRenderer->getDeviceContext()->OMSetRenderTargets(1, &rtv, dsv);
     mRenderTargetIsDirty = true;
 }
 
-void StateManager11::setOneTimeRenderTargets(
-    const std::vector<ID3D11RenderTargetView *> &renderTargets,
-    ID3D11DepthStencilView *depthStencil)
+void StateManager11::setOneTimeRenderTargets(ID3D11RenderTargetView **rtvs,
+                                             UINT numRtvs,
+                                             ID3D11DepthStencilView *dsv)
 {
-    UINT count               = static_cast<UINT>(renderTargets.size());
-    auto renderTargetPointer = (!renderTargets.empty() ? renderTargets.data() : nullptr);
-
-    mRenderer->getDeviceContext()->OMSetRenderTargets(count, renderTargetPointer, depthStencil);
+    mRenderer->getDeviceContext()->OMSetRenderTargets(numRtvs, (numRtvs > 0) ? rtvs : nullptr, dsv);
     mRenderTargetIsDirty = true;
 }
 
