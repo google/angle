@@ -605,6 +605,9 @@ void QueryProgramiv(const Program *program, GLenum pname, GLint *params)
         case GL_PROGRAM_BINARY_RETRIEVABLE_HINT:
             *params = program->getBinaryRetrievableHint();
             break;
+        case GL_PROGRAM_SEPARABLE:
+            *params = program->isSeparable();
+            break;
         default:
             UNREACHABLE();
             break;
@@ -932,6 +935,24 @@ void SetFramebufferParameteri(Framebuffer *framebuffer, GLenum pname, GLint para
             break;
         case GL_FRAMEBUFFER_DEFAULT_FIXED_SAMPLE_LOCATIONS:
             framebuffer->setDefaultFixedSampleLocations(static_cast<GLboolean>(param));
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+}
+
+void SetProgramParameteri(Program *program, GLenum pname, GLint value)
+{
+    ASSERT(program);
+
+    switch (pname)
+    {
+        case GL_PROGRAM_BINARY_RETRIEVABLE_HINT:
+            program->setBinaryRetrievableHint(value != GL_FALSE);
+            break;
+        case GL_PROGRAM_SEPARABLE:
+            program->setSeparable(value != GL_FALSE);
             break;
         default:
             UNREACHABLE();

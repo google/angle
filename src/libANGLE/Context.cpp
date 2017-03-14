@@ -2340,10 +2340,7 @@ void Context::getSamplerParameterfv(GLuint sampler, GLenum pname, GLfloat *param
 void Context::programParameteri(GLuint program, GLenum pname, GLint value)
 {
     gl::Program *programObject = getProgram(program);
-    ASSERT(programObject != nullptr);
-
-    ASSERT(pname == GL_PROGRAM_BINARY_RETRIEVABLE_HINT);
-    programObject->setBinaryRetrievableHint(value != GL_FALSE);
+    SetProgramParameteri(programObject, pname, value);
 }
 
 void Context::initRendererString()

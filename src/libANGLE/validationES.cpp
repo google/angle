@@ -5191,6 +5191,14 @@ bool ValidateGetProgramiv(Context *context, GLuint program, GLenum pname, GLsize
             }
             break;
 
+        case GL_PROGRAM_SEPARABLE:
+            if (context->getClientVersion() < Version(3, 1))
+            {
+                context->handleError(Error(GL_INVALID_ENUM, "Querying requires at least ES 3.1."));
+                return false;
+            }
+            break;
+
         default:
             context->handleError(Error(GL_INVALID_ENUM, "Unknown parameter name."));
             return false;

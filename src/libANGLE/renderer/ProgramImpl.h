@@ -45,6 +45,7 @@ class ProgramImpl : angle::NonCopyable
                             gl::BinaryInputStream *stream)  = 0;
     virtual gl::Error save(gl::BinaryOutputStream *stream) = 0;
     virtual void setBinaryRetrievableHint(bool retrievable) = 0;
+    virtual void setSeparable(bool separable)               = 0;
 
     virtual LinkResult link(ContextImpl *contextImpl,
                             const gl::VaryingPacking &packing,

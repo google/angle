@@ -257,6 +257,7 @@ class ProgramState final : angle::NonCopyable
     std::map<int, VariableLocation> mOutputLocations;
 
     bool mBinaryRetrieveableHint;
+    bool mSeparable;
 };
 
 class Program final : angle::NonCopyable, public LabeledObject
@@ -307,6 +308,9 @@ class Program final : angle::NonCopyable, public LabeledObject
     GLint getBinaryLength() const;
     void setBinaryRetrievableHint(bool retrievable);
     bool getBinaryRetrievableHint() const;
+
+    void setSeparable(bool separable);
+    bool isSeparable() const;
 
     int getInfoLogLength() const;
     void getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog) const;

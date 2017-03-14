@@ -163,6 +163,7 @@ class ProgramD3D : public ProgramImpl
                     gl::BinaryInputStream *stream) override;
     gl::Error save(gl::BinaryOutputStream *stream) override;
     void setBinaryRetrievableHint(bool retrievable) override;
+    void setSeparable(bool separable) override;
 
     gl::Error getPixelExecutableForFramebuffer(const gl::Framebuffer *fbo,
                                                ShaderExecutableD3D **outExectuable);

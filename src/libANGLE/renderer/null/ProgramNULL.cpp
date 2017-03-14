@@ -38,6 +38,10 @@ void ProgramNULL::setBinaryRetrievableHint(bool retrievable)
 {
 }
 
+void ProgramNULL::setSeparable(bool separable)
+{
+}
+
 LinkResult ProgramNULL::link(ContextImpl *contextImpl,
                              const gl::VaryingPacking &packing,
                              gl::InfoLog &infoLog)

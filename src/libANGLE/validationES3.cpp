@@ -1309,8 +1309,8 @@ static bool ValidateBindBufferCommon(Context *context,
         {
             if (context->getClientVersion() < ES_3_1)
             {
-                context->handleError(
-                    Error(GL_INVALID_ENUM, "ATOMIC_COUNTER_BUFFER is not supported in GLES3."));
+                context->handleError(Error(
+                    GL_INVALID_ENUM, "ATOMIC_COUNTER_BUFFER is not supported before GLES 3.1"));
                 return false;
             }
             if (index >= caps.maxAtomicCounterBufferBindings)
@@ -1331,8 +1331,8 @@ static bool ValidateBindBufferCommon(Context *context,
         {
             if (context->getClientVersion() < ES_3_1)
             {
-                context->handleError(
-                    Error(GL_INVALID_ENUM, "ATOMIC_COUNTER_BUFFER is not supported in GLES3."));
+                context->handleError(Error(
+                    GL_INVALID_ENUM, "ATOMIC_COUNTER_BUFFER is not supported before GLES 3.1"));
                 return false;
             }
             break;
@@ -1413,6 +1413,22 @@ bool ValidateProgramParameteri(Context *context, GLuint program, GLenum pname, G
     switch (pname)
     {
         case GL_PROGRAM_BINARY_RETRIEVABLE_HINT:
+            if (value != GL_FALSE && value != GL_TRUE)
+            {
+                context->handleError(Error(
+                    GL_INVALID_VALUE, "Invalid value, expected GL_FALSE or GL_TRUE: %i", value));
+                return false;
+            }
+            break;
+
+        case GL_PROGRAM_SEPARABLE:
+            if (context->getClientVersion() < ES_3_1)
+            {
+                context->handleError(
+                    Error(GL_INVALID_ENUM, "PROGRAM_SEPARABLE is not supported before GLES 3.1"));
+                return false;
+            }
+
             if (value != GL_FALSE && value != GL_TRUE)
             {
                 context->handleError(Error(

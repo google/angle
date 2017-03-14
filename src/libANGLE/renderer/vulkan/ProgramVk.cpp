@@ -53,6 +53,11 @@ void ProgramVk::setBinaryRetrievableHint(bool retrievable)
     UNIMPLEMENTED();
 }
 
+void ProgramVk::setSeparable(bool separable)
+{
+    UNIMPLEMENTED();
+}
+
 LinkResult ProgramVk::link(ContextImpl *contextImpl,
                            const gl::VaryingPacking &packing,
                            gl::InfoLog &infoLog)

@@ -28,6 +28,7 @@ class ProgramVk : public ProgramImpl
                     gl::BinaryInputStream *stream) override;
     gl::Error save(gl::BinaryOutputStream *stream) override;
     void setBinaryRetrievableHint(bool retrievable) override;
+    void setSeparable(bool separable) override;
 
     LinkResult link(ContextImpl *contextImpl,
                     const gl::VaryingPacking &packing,

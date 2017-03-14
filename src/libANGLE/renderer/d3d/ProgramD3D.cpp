@@ -1128,6 +1128,10 @@ void ProgramD3D::setBinaryRetrievableHint(bool /* retrievable */)
 {
 }
 
+void ProgramD3D::setSeparable(bool /* separable */)
+{
+}
+
 gl::Error ProgramD3D::getPixelExecutableForFramebuffer(const gl::Framebuffer *fbo,
                                                        ShaderExecutableD3D **outExecutable)
 {
