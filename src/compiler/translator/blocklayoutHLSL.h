@@ -33,14 +33,13 @@ class HLSLBlockEncoder : public BlockLayoutEncoder
         ENCODE_LOOSE
     };
 
-    HLSLBlockEncoder(HLSLBlockEncoderStrategy strategy);
+    HLSLBlockEncoder(HLSLBlockEncoderStrategy strategy, bool transposeMatrices);
 
     virtual void enterAggregateType();
     virtual void exitAggregateType();
     void skipRegisters(unsigned int numRegisters);
 
     bool isPacked() const { return mEncoderStrategy == ENCODE_PACKED; }
-    void setTransposeMatrices(bool enabled) { mTransposeMatrices = enabled; }
 
     static HLSLBlockEncoderStrategy GetStrategyFor(ShShaderOutput outputType);
 
@@ -61,10 +60,8 @@ class HLSLBlockEncoder : public BlockLayoutEncoder
 };
 
 // This method returns the number of used registers for a ShaderVariable. It is dependent on the
-// HLSLBlockEncoder
-// class to count the number of used registers in a struct (which are individually packed according
-// to the same rules).
-unsigned int HLSLVariableRegisterCount(const Varying &variable, bool transposeMatrices);
+// HLSLBlockEncoder class to count the number of used registers in a struct (which are individually
+// packed according to the same rules).
 unsigned int HLSLVariableRegisterCount(const Uniform &variable, ShShaderOutput outputType);
 }
 
