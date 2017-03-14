@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ba93458_ca97bcfb",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-03-14T08:03:01Z",
+      "side": 1,
+      "message": "ANGLE_PROGRAM_LINK_VALIDATE_UNIFORM_PRECISION will be undefined with this header.",
+      "revId": "a05c1d961dfa587c869db0a262a0a16f04a9e378",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
