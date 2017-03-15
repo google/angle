@@ -296,7 +296,10 @@ void OutputTextureFunctionArgumentList(TInfoSinkBase &out,
         else
         {
             ASSERT(outputType == SH_HLSL_4_1_OUTPUT);
-            out << "const uint samplerIndex";
+            // A bug in the D3D compiler causes some nested sampling operations to fail.
+            // See http://anglebug.com/1923
+            // TODO(jmadill): Reinstate the const keyword when possible.
+            out << /*"const"*/ "uint samplerIndex";
         }
     }
 

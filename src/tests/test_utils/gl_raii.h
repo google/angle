@@ -88,6 +88,8 @@ class GLProgram
         return mHandle;
     }
 
+    operator GLuint() { return get(); }
+
   private:
     GLuint mHandle;
 };

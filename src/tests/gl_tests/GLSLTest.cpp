@@ -2670,6 +2670,106 @@ TEST_P(GLSLTest_ES3, WriteIntoDynamicIndexingOfSwizzledVector)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// This test covers a bug (and associated workaround) with nested sampling operations in the HLSL
+// compiler DLL.
+TEST_P(GLSLTest_ES3, NestedSamplingOperation)
+{
+    // This seems to be bugged on some version of Android. Might not affect the newest versions.
+    // TODO(jmadill): Lift suppression when Chromium bots are upgraded.
+    if (IsAndroid() && IsOpenGLES())
+    {
+        std::cout << "Test skipped on Android because of bug with Nexus 5X." << std::endl;
+        return;
+    }
+
+    const std::string &vertexShader =
+        "#version 300 es\n"
+        "out vec2 texCoord;\n"
+        "in vec2 position;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(position, 0, 1);\n"
+        "    texCoord = position * 0.5 + vec2(0.5);\n"
+        "}\n";
+
+    const std::string &simpleFragmentShader =
+        "#version 300 es\n"
+        "in mediump vec2 texCoord;\n"
+        "out mediump vec4 fragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    fragColor = vec4(texCoord, 0, 1);\n"
+        "}\n";
+
+    const std::string &nestedFragmentShader =
+        "#version 300 es\n"
+        "uniform mediump sampler2D samplerA;\n"
+        "uniform mediump sampler2D samplerB;\n"
+        "in mediump vec2 texCoord;\n"
+        "out mediump vec4 fragColor;\n"
+        "void main ()\n"
+        "{\n"
+        "    fragColor = texture(samplerB, texture(samplerA, texCoord).xy);\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(initProg, vertexShader, simpleFragmentShader);
+    ANGLE_GL_PROGRAM(nestedProg, vertexShader, nestedFragmentShader);
+
+    // Initialize a first texture with default texCoord data.
+    GLTexture texA;
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texA);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(), 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texA, 0);
+
+    drawQuad(initProg, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Initialize a second texture with a simple color pattern.
+    GLTexture texB;
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, texB);
+
+    std::array<GLColor, 4> simpleColors = {
+        {GLColor::red, GLColor::green, GLColor::blue, GLColor::yellow}};
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 simpleColors.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Draw with the nested program, using the first texture to index the second.
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glUseProgram(nestedProg);
+    GLint samplerALoc = glGetUniformLocation(nestedProg, "samplerA");
+    ASSERT_NE(-1, samplerALoc);
+    glUniform1i(samplerALoc, 0);
+    GLint samplerBLoc = glGetUniformLocation(nestedProg, "samplerB");
+    ASSERT_NE(-1, samplerBLoc);
+    glUniform1i(samplerBLoc, 1);
+
+    drawQuad(nestedProg, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Compute four texel centers.
+    Vector2 windowSize(getWindowWidth(), getWindowHeight());
+    Vector2 quarterWindowSize = windowSize / 4;
+    Vector2 ul                = quarterWindowSize;
+    Vector2 ur(windowSize.x() - quarterWindowSize.x(), quarterWindowSize.y());
+    Vector2 ll(quarterWindowSize.x(), windowSize.y() - quarterWindowSize.y());
+    Vector2 lr = windowSize - quarterWindowSize;
+
+    EXPECT_PIXEL_COLOR_EQ_VEC2(ul, simpleColors[0]);
+    EXPECT_PIXEL_COLOR_EQ_VEC2(ur, simpleColors[1]);
+    EXPECT_PIXEL_COLOR_EQ_VEC2(ll, simpleColors[2]);
+    EXPECT_PIXEL_COLOR_EQ_VEC2(lr, simpleColors[3]);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest,
                        ES2_D3D9(),

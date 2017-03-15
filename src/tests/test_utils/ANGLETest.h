@@ -136,6 +136,9 @@ GLColor32F ReadColor32F(GLint x, GLint y);
 #define EXPECT_PIXEL_ALPHA32F_EQ(x, y, a) EXPECT_EQ(a, angle::ReadColor32F(x, y).A)
 
 #define EXPECT_PIXEL_COLOR_EQ(x, y, angleColor) EXPECT_EQ(angleColor, angle::ReadColor(x, y))
+#define EXPECT_PIXEL_COLOR_EQ_VEC2(vec2, angleColor) \
+    EXPECT_EQ(angleColor,                            \
+              angle::ReadColor(static_cast<GLint>(vec2.x()), static_cast<GLint>(vec2.y())))
 
 #define EXPECT_PIXEL_COLOR32F_EQ(x, y, angleColor) EXPECT_EQ(angleColor, angle::ReadColor32F(x, y))
 
