@@ -48,6 +48,75 @@
     },
     {
       "key": {
+        "uuid": "659e18f9_f8fcb8dd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 930,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-15T15:18:31Z",
+      "side": 1,
+      "message": "this is going to need the std:: prefix.  Are we \u0027using namespace std\u0027 somewhere?",
+      "range": {
+        "startLine": 930,
+        "startChar": 4,
+        "endLine": 930,
+        "endChar": 20
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98ec7445_02577bc1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 943,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-15T15:18:31Z",
+      "side": 1,
+      "message": "Can you move this comment inside the if statement? It\u0027s a hard to read when there are empty lines before an \u0027else if\u0027",
+      "range": {
+        "startLine": 943,
+        "startChar": 4,
+        "endLine": 943,
+        "endChar": 78
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b3f987c_d25cf7d3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1268,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-15T15:18:31Z",
+      "side": 1,
+      "message": "Wouldn\u0027t this allow configurations with 0 samples and textures that are multisampled?",
+      "range": {
+        "startLine": 1267,
+        "startChar": 8,
+        "endLine": 1268,
+        "endChar": 76
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f663180a_6b280ff3",
         "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
         "patchSetId": 9
