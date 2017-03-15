@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "dab424fe_ec7c85c6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-15T17:29:28Z",
+      "side": 1,
+      "message": "That\u0027s fine, why don\u0027t you instead make a helper method (not a class member of RenderStateCache, but a static method defined in RenderStateCache.h) that acts as a helper to pull the blend state key out of the Framebuffer?",
+      "parentUuid": "43e8cf2b_8d35550e",
+      "range": {
+        "startLine": 89,
+        "startChar": 28,
+        "endLine": 89,
+        "endChar": 44
+      },
+      "revId": "beb1961e3535bcd40f18e964566502cb2f3cd8c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85363e6f_44fc96c2",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 2
