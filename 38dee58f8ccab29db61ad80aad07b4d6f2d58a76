@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "02a344e0_51ad8be3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-15T02:55:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37128cc4_c37f079c",
+      "revId": "38dee58f8ccab29db61ad80aad07b4d6f2d58a76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0e06abad_e4953af4",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 23
@@ -30,6 +48,24 @@
       "writtenOn": "2017-03-14T08:53:23Z",
       "side": 1,
       "message": "Do you need to specify it on Linux?",
+      "revId": "38dee58f8ccab29db61ad80aad07b4d6f2d58a76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da967b0e_09fe6a94",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 955,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-15T02:55:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0e06abad_e4953af4",
       "revId": "38dee58f8ccab29db61ad80aad07b4d6f2d58a76",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "e012bd09_f5de2432",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 564,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-15T02:55:37Z",
+      "side": 1,
+      "message": "I think we should ask ANGLE team how to deal with this.\nIf so, I will do this in another patch.",
+      "parentUuid": "de5e3b28_c212e06e",
+      "revId": "38dee58f8ccab29db61ad80aad07b4d6f2d58a76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6e728a2b_f629cf31",
         "filename": "src/libANGLE/validationES31.h",
         "patchSetId": 23
@@ -64,6 +118,24 @@
       "writtenOn": "2017-03-14T08:53:23Z",
       "side": 1,
       "message": "What about moving this base function to validationES.h/cpp? Then, you don\u0027t need to include validationES31.h to expose this helper function.",
+      "revId": "38dee58f8ccab29db61ad80aad07b4d6f2d58a76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0e1ad77e_edcc22fc",
+        "filename": "src/libANGLE/validationES31.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-15T02:55:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6e728a2b_f629cf31",
       "revId": "38dee58f8ccab29db61ad80aad07b4d6f2d58a76",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
