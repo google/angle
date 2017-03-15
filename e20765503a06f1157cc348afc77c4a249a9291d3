@@ -1,0 +1,504 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "99cc8c6d_25acc535",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-15T15:08:22Z",
+      "side": 1,
+      "message": "nit: wrap this description paragraph to 71 characters.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 128
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "320bb647_7f452926",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-15T15:08:22Z",
+      "side": 1,
+      "message": "We don\u0027t need to store this. It\u0027s available any time in mState.config-\u003esamples.",
+      "range": {
+        "startLine": 46,
+        "startChar": 6,
+        "endLine": 46,
+        "endChar": 40
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f663180a_6b280ff3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-15T15:08:22Z",
+      "side": 1,
+      "message": "nit: cache this and re-use",
+      "range": {
+        "startLine": 280,
+        "startChar": 8,
+        "endLine": 280,
+        "endChar": 91
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "553f73b7_eaa3bf51",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 667,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-15T15:08:22Z",
+      "side": 1,
+      "message": "nit: nullptr",
+      "range": {
+        "startLine": 667,
+        "startChar": 77,
+        "endLine": 667,
+        "endChar": 81
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "87153d62_3af9d115",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-15T15:08:22Z",
+      "side": 1,
+      "message": "nit: this should go in the cpp file.",
+      "range": {
+        "startLine": 70,
+        "startChar": 9,
+        "endLine": 70,
+        "endChar": 22
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9cccadc6_d15a6713",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Passthrough2D11.hlsl",
+        "patchSetId": 9
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-15T15:08:22Z",
+      "side": 1,
+      "message": "I would think we\u0027d want to average the total samples in the texture. Comments/concerns? We should have access to the sample count from GetDimensions. See https://msdn.microsoft.com/en-us/library/windows/desktop/bb509693(v\u003dvs.85).aspx",
+      "range": {
+        "startLine": 27,
+        "startChar": 4,
+        "endLine": 27,
+        "endChar": 47
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "86409544_76e79a75",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-15T15:08:22Z",
+      "side": 1,
+      "message": "can you ASSERT_* here to check that sampleCount and sampleQuality are inactive?",
+      "range": {
+        "startLine": 185,
+        "startChar": 17,
+        "endLine": 185,
+        "endChar": 28
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d787942b_63ec4368",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-15T15:08:22Z",
+      "side": 1,
+      "message": "I believe we can remove these lines. I meant to in a previous CL. At least the AMD should be tested on the bots.",
+      "range": {
+        "startLine": 222,
+        "startChar": 0,
+        "endLine": 232,
+        "endChar": 9
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e862dc6_38186a10",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-15T15:08:22Z",
+      "side": 1,
+      "message": "nit: I think valid() should fail if the OpenGL back-end is enabled. maybe for D3D9, do not include it in the list of test platforms (As you do currently). Is the reason we can\u0027t test D3D9 because the test needs specific D3D11 features, or because of some other limitation?",
+      "range": {
+        "startLine": 366,
+        "startChar": 8,
+        "endLine": 366,
+        "endChar": 69
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "285f0531_26f8b9e9",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-15T15:08:22Z",
+      "side": 1,
+      "message": "nit: you can make this constexpr",
+      "range": {
+        "startLine": 379,
+        "startChar": 4,
+        "endLine": 379,
+        "endChar": 10
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6dae755c_ba132895",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-15T15:08:22Z",
+      "side": 1,
+      "message": "nit: is this being passed as EGLint? This should be the native type I think, D3D11_STANDARD_MULTISAMPLE_QUALITY_LEVELS. We aren\u0027t actually sending this through EGL.",
+      "range": {
+        "startLine": 382,
+        "startChar": 39,
+        "endLine": 382,
+        "endChar": 73
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "833bb884_71e074f7",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-15T15:08:22Z",
+      "side": 1,
+      "message": "nit: cache this in a temporary variable",
+      "range": {
+        "startLine": 394,
+        "startChar": 20,
+        "endLine": 394,
+        "endChar": 54
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c90aa6f5_d5b6de4b",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-15T15:08:22Z",
+      "side": 1,
+      "message": "nit: use EXPECT_PIXEL_COLOR_EQ(x, y, GLColor::magenta) (add magenta to ANGLETest.cpp/h)",
+      "range": {
+        "startLine": 394,
+        "startChar": 4,
+        "endLine": 394,
+        "endChar": 19
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cbc1633b_cb04d7c0",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-15T15:08:22Z",
+      "side": 1,
+      "message": "nit: comment before every test",
+      "range": {
+        "startLine": 400,
+        "startChar": 0,
+        "endLine": 400,
+        "endChar": 6
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "24f64b30_d7f37894",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-15T15:08:22Z",
+      "side": 1,
+      "message": "same comments as above",
+      "range": {
+        "startLine": 402,
+        "startChar": 9,
+        "endLine": 402,
+        "endChar": 14
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "792fa573_cc212645",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 419,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-15T15:08:22Z",
+      "side": 1,
+      "message": "same comment",
+      "range": {
+        "startLine": 419,
+        "startChar": 4,
+        "endLine": 419,
+        "endChar": 10
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "416b9c7c_d5daf594",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-15T15:08:22Z",
+      "side": 1,
+      "message": "same nit here",
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2052d26c_b621d02e",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-15T15:08:22Z",
+      "side": 1,
+      "message": "same comments as above here",
+      "range": {
+        "startLine": 435,
+        "startChar": 4,
+        "endLine": 436,
+        "endChar": 30
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a39dc41d_b2a66673",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-15T15:08:22Z",
+      "side": 1,
+      "message": "use angle::GLTexture from gl_raii.h",
+      "range": {
+        "startLine": 443,
+        "startChar": 4,
+        "endLine": 443,
+        "endChar": 11
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "752dfcd9_cf36db0e",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-15T15:08:22Z",
+      "side": 1,
+      "message": "same comment",
+      "range": {
+        "startLine": 467,
+        "startChar": 4,
+        "endLine": 467,
+        "endChar": 19
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b3ad4f2_a1bb8406",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-15T15:08:22Z",
+      "side": 1,
+      "message": "same comments",
+      "range": {
+        "startLine": 476,
+        "startChar": 4,
+        "endLine": 489,
+        "endChar": 5
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8a5ca99e_d6d0cea3",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-15T15:08:22Z",
+      "side": 1,
+      "message": "I think you can include OpenGL here.",
+      "range": {
+        "startLine": 502,
+        "startChar": 41,
+        "endLine": 502,
+        "endChar": 50
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
