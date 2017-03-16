@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0397d960_cc80f699",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1243,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-16T18:00:35Z",
+      "side": 1,
+      "message": "This does the same thing as Program::getAttributeLocation.  You don\u0027t need to worry about checking if the program is linked first because mState is cleared when it is not linked.",
+      "range": {
+        "startLine": 1243,
+        "startChar": 16,
+        "endLine": 1243,
+        "endChar": 39
+      },
+      "revId": "8a1f15cca95ad840440c11be7b8d5e6dc11c9d4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8d43856a_5325a2d8",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1262,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-16T18:00:35Z",
+      "side": 1,
+      "message": "This does the same thing as Program::getFragDataLocation.  I don\u0027t think you need to handle the array index case because we there are no output variables with non-zero array indices.",
+      "range": {
+        "startLine": 1262,
+        "startChar": 7,
+        "endLine": 1262,
+        "endChar": 36
+      },
+      "revId": "8a1f15cca95ad840440c11be7b8d5e6dc11c9d4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b6aeacd_29e9eefb",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2975,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-16T18:00:35Z",
+      "side": 1,
+      "message": "You should probably add the cases with UNIMPLEMENTED (and return GL_INVALID_INDEX) so that the tests can pass, UNREACHABLE causes a crash but UNIMPLEMENTED will output warnings.",
+      "range": {
+        "startLine": 2975,
+        "startChar": 8,
+        "endLine": 2975,
+        "endChar": 38
+      },
+      "revId": "8a1f15cca95ad840440c11be7b8d5e6dc11c9d4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0e1ce0c7_6b057754",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-16T18:00:35Z",
+      "side": 1,
+      "message": "Instead of putting this method here, can you add a\n\n  GLuint QueryProgramiv(const Program *program, GLenum programInterface, const char * name);\n\nto queryutils.h and call that from Context::getProgramResourceIndex.  getActiveAttributeIndex and getActiveOutputIndex would need to be made public methods.  I prefer to keep the switches from GLenums to methods out of the classes when possible.",
+      "range": {
+        "startLine": 415,
+        "startChar": 4,
+        "endLine": 415,
+        "endChar": 79
+      },
+      "revId": "8a1f15cca95ad840440c11be7b8d5e6dc11c9d4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "10d11898_7763ddda",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-16T18:00:35Z",
+      "side": 1,
+      "message": "These can be removed.",
+      "range": {
+        "startLine": 30,
+        "startChar": 4,
+        "endLine": 37,
+        "endChar": 55
+      },
+      "revId": "8a1f15cca95ad840440c11be7b8d5e6dc11c9d4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
