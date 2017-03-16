@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b01ec1ea_61516f06",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-16T02:51:55Z",
+      "side": 1,
+      "message": "This entire helper function will be eliminated in CL 453882 so it is really irrelevant at this point. In any case the entire struct is still initialized here.",
+      "parentUuid": "b6598159_f2d9d0c2",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 51,
+        "endChar": 83
+      },
+      "revId": "d9958c1a68eafbeac28447aee7165bcb328296b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "13147dd7_610687ca",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "d9958c1a68eafbeac28447aee7165bcb328296b0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4aa2c75e_18905ef3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-16T02:51:55Z",
+      "side": 1,
+      "message": "Done. Also made mCbSize, which is in a subsequent CL, a static constexpr in the cpp file.",
+      "parentUuid": "13147dd7_610687ca",
+      "range": {
+        "startLine": 77,
+        "startChar": 4,
+        "endLine": 77,
+        "endChar": 25
+      },
+      "revId": "d9958c1a68eafbeac28447aee7165bcb328296b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
