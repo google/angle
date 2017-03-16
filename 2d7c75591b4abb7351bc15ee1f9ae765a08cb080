@@ -118,6 +118,24 @@
       "revId": "2d7c75591b4abb7351bc15ee1f9ae765a08cb080",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b54eae1_d1dc4353",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-03-16T07:54:01Z",
+      "side": 1,
+      "message": "nit: ASSERT_NE(program, 0u);",
+      "parentUuid": "fff4349a_b64bf21f",
+      "revId": "2d7c75591b4abb7351bc15ee1f9ae765a08cb080",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
