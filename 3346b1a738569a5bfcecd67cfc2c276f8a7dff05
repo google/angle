@@ -152,6 +152,24 @@
       "revId": "3346b1a738569a5bfcecd67cfc2c276f8a7dff05",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d6ea06bc_67ddd473",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 671,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-16T13:30:24Z",
+      "side": 1,
+      "message": "Vertex Attrib Binding, sorry.",
+      "parentUuid": "acd82a0b_7a18d4f3",
+      "revId": "3346b1a738569a5bfcecd67cfc2c276f8a7dff05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
