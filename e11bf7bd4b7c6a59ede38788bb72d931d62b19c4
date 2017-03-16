@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "261a180e_7270ed6f",
+        "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 824,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-16T13:26:47Z",
+      "side": 0,
+      "message": "I move these validations into ValidateVertexAttribIPointer().",
+      "revId": "e11bf7bd4b7c6a59ede38788bb72d931d62b19c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}

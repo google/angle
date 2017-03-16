@@ -1,0 +1,157 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9247650d_ab805195",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 25
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-16T13:26:47Z",
+      "side": 1,
+      "message": "VertexAttribFormat accepts GLuint as relativeOffset, so I think it is more convenient to make this a GLuint.",
+      "revId": "3346b1a738569a5bfcecd67cfc2c276f8a7dff05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "59091ad2_a133bdbb",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 1043,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-16T13:26:47Z",
+      "side": 1,
+      "message": "Here I refer the structure of Context::vertexAttribPointer(), but I see Context::bindElementArrayBuffer() uses another one:\n\nLine 994:\nvoid Context::bindElementArrayBuffer(GLuint bufferHandle)\n{\n    Buffer *buffer \u003d mState.mBuffers-\u003echeckBufferAllocation(mImplementation.get(), bufferHandle);\n    mGLState.getVertexArray()-\u003esetElementArrayBuffer(buffer);\n}\n\nShould we update all these functions like this?",
+      "revId": "3346b1a738569a5bfcecd67cfc2c276f8a7dff05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b449a5b1_6b11888c",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-16T13:26:47Z",
+      "side": 1,
+      "message": "They are used in VertexArray11::syncState().",
+      "revId": "3346b1a738569a5bfcecd67cfc2c276f8a7dff05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e52d93ed_6ad5a442",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 25
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-16T13:26:47Z",
+      "side": 1,
+      "message": "I feel it easier to implement GL backends when we use this order.",
+      "revId": "3346b1a738569a5bfcecd67cfc2c276f8a7dff05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "814dc6c1_7d2e57a7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-16T13:26:47Z",
+      "side": 1,
+      "message": "Although we can get bindingIndex, we still need to get all the attributes that uses this binding, so I decide to deal with bindings together by examming all attributes once.",
+      "revId": "3346b1a738569a5bfcecd67cfc2c276f8a7dff05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "04924e31_de6afff9",
+        "filename": "src/libANGLE/renderer/gl/WorkaroundsGL.h",
+        "patchSetId": 25
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-16T13:26:47Z",
+      "side": 1,
+      "message": "Since in ES3.1 we should confirm the stride should be less than maxVertexAttribStride both in VertexAttribPointer and bindVertexBuffer before using these functions, we have to emulate this value for AMD OpenGL drivers.\n\nHere I treated this emulation as a workaround and use it in generateCaps().",
+      "revId": "3346b1a738569a5bfcecd67cfc2c276f8a7dff05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5c3cbcc2_3268ee66",
+        "filename": "src/libANGLE/validationES.h",
+        "patchSetId": 25
+      },
+      "lineNbr": 619,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-16T13:26:47Z",
+      "side": 1,
+      "message": "This function can be shared in the validation of VertexAttribPointer, VertexAttribIPointer and VertexAttibFormat, so I put it here to reuse these code.",
+      "revId": "3346b1a738569a5bfcecd67cfc2c276f8a7dff05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83d4be03_100b9f9d",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 25
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-16T13:26:47Z",
+      "side": 1,
+      "message": "OpenGL part is not ready and there are many ASSERTs that ensure attribIndex is equal to bindingIndex, so I think it is better to skip these tests on OpenGL backends.",
+      "revId": "3346b1a738569a5bfcecd67cfc2c276f8a7dff05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "acd82a0b_7a18d4f3",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 671,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-16T13:26:47Z",
+      "side": 1,
+      "message": "I rewrite this function by Vertex Attrib Pointer APIs, so in this patch we cannot use this function on OpenGL backends.",
+      "revId": "3346b1a738569a5bfcecd67cfc2c276f8a7dff05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
