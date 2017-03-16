@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6a0cab7c_bf5e2e4c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-16T06:55:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ac9c8b2d_40fbdac0",
+      "revId": "dd5230afd7a59b50a984fa6a3ee70f034ebe0a35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "80e46637_a823d5cb",
         "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
         "patchSetId": 24
@@ -30,6 +48,24 @@
       "writtenOn": "2017-03-16T06:45:37Z",
       "side": 1,
       "message": "Move it to a proper place.",
+      "revId": "dd5230afd7a59b50a984fa6a3ee70f034ebe0a35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6f6a3f8d_729c2328",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-16T06:55:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "80e46637_a823d5cb",
       "revId": "dd5230afd7a59b50a984fa6a3ee70f034ebe0a35",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
