@@ -64,6 +64,7 @@
             '<(angle_path)/src/tests/gl_tests/ObjectAllocationTest.cpp',
             '<(angle_path)/src/tests/gl_tests/OcclusionQueriesTest.cpp',
             '<(angle_path)/src/tests/gl_tests/ProgramBinaryTest.cpp',
+            '<(angle_path)/src/tests/gl_tests/ProgramInterfaceTest.cpp',
             '<(angle_path)/src/tests/gl_tests/ReadPixelsTest.cpp',
             '<(angle_path)/src/tests/gl_tests/RendererTest.cpp',
             '<(angle_path)/src/tests/gl_tests/RobustClientMemoryTest.cpp',

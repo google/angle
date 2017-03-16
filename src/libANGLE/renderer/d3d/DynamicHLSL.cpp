@@ -1130,7 +1130,7 @@ void DynamicHLSL::getPixelShaderOutputKey(const gl::ContextState &data,
         const auto &shaderOutputVars =
             metadata.getFragmentShader()->getData().getActiveOutputVariables();
 
-        for (auto outputPair : programData.getOutputVariables())
+        for (auto outputPair : programData.getOutputLocations())
         {
             const VariableLocation &outputLocation   = outputPair.second;
             const sh::ShaderVariable &outputVariable = shaderOutputVars[outputLocation.index];

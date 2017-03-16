@@ -55,6 +55,12 @@ bool ValidationGetFramebufferParameteri(Context *context,
                                         GLenum target,
                                         GLenum pname,
                                         GLint *params);
+
+bool ValidateGetProgramResourceIndex(Context *context,
+                                     GLuint program,
+                                     GLenum programInterface,
+                                     const GLchar *name);
+
 }  // namespace gl
 
 #endif  // LIBANGLE_VALIDATION_ES31_H_

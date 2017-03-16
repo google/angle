@@ -145,11 +145,12 @@ GLuint GL_APIENTRY GetProgramResourceIndex(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation())
+        if (!context->skipValidation() &&
+            !ValidateGetProgramResourceIndex(context, program, programInterface, name))
         {
-            context->handleError(Error(GL_INVALID_OPERATION, "Entry point not implemented"));
+            return GL_INVALID_INDEX;
         }
-        UNIMPLEMENTED();
+        return context->getProgramResourceIndex(program, programInterface, name);
     }
     return 0u;
 }

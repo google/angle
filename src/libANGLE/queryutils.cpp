@@ -939,6 +939,33 @@ void SetFramebufferParameteri(Framebuffer *framebuffer, GLenum pname, GLint para
     }
 }
 
+GLuint QueryProgramResourceIndex(const Program *program,
+                                 GLenum programInterface,
+                                 const GLchar *name)
+{
+    switch (programInterface)
+    {
+        case GL_PROGRAM_INPUT:
+            return program->getInputResourceIndex(name);
+
+        case GL_PROGRAM_OUTPUT:
+            return program->getOutputResourceIndex(name);
+
+        // TODO(Jie): more interfaces.
+        case GL_UNIFORM:
+        case GL_UNIFORM_BLOCK:
+        case GL_TRANSFORM_FEEDBACK_VARYING:
+        case GL_BUFFER_VARIABLE:
+        case GL_SHADER_STORAGE_BLOCK:
+            UNIMPLEMENTED();
+            return GL_INVALID_INDEX;
+
+        default:
+            UNREACHABLE();
+            return GL_INVALID_INDEX;
+    }
+}
+
 }  // namespace gl
 
 namespace egl

@@ -21,6 +21,28 @@ using namespace angle;
 namespace gl
 {
 
+namespace
+{
+
+bool ValidateNamedProgramInterface(GLenum programInterface)
+{
+    switch (programInterface)
+    {
+        case GL_UNIFORM:
+        case GL_UNIFORM_BLOCK:
+        case GL_PROGRAM_INPUT:
+        case GL_PROGRAM_OUTPUT:
+        case GL_TRANSFORM_FEEDBACK_VARYING:
+        case GL_BUFFER_VARIABLE:
+        case GL_SHADER_STORAGE_BLOCK:
+            return true;
+        default:
+            return false;
+    }
+}
+
+}  // anonymous namespace
+
 bool ValidateGetBooleani_v(Context *context, GLenum target, GLuint index, GLboolean *data)
 {
     if (context->getClientVersion() < ES_3_1)
@@ -500,6 +522,32 @@ bool ValidationGetFramebufferParameteri(Context *context,
     {
         context->handleError(
             Error(GL_INVALID_OPERATION, "Default framebuffer is bound to target."));
+        return false;
+    }
+    return true;
+}
+
+bool ValidateGetProgramResourceIndex(Context *context,
+                                     GLuint program,
+                                     GLenum programInterface,
+                                     const GLchar *name)
+{
+    if (context->getClientVersion() < ES_3_1)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES 3.1."));
+        return false;
+    }
+
+    Program *programObject = GetValidProgram(context, program);
+    if (programObject == nullptr)
+    {
+        return false;
+    }
+
+    if (!ValidateNamedProgramInterface(programInterface))
+    {
+        context->handleError(
+            Error(GL_INVALID_ENUM, "Invalid program interface: 0x%X", programInterface));
         return false;
     }
     return true;

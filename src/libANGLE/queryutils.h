@@ -107,6 +107,10 @@ void SetSamplerParameteriv(Sampler *sampler, GLenum pname, const GLint *params);
 
 void SetFramebufferParameteri(Framebuffer *framebuffer, GLenum pname, GLint param);
 
+GLuint QueryProgramResourceIndex(const Program *program,
+                                 GLenum programInterface,
+                                 const GLchar *name);
+
 }  // namespace gl
 
 namespace egl

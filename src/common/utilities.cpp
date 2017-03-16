@@ -697,7 +697,7 @@ int VariableSortOrder(GLenum type)
     }
 }
 
-std::string ParseUniformName(const std::string &name, size_t *outSubscript)
+std::string ParseResourceName(const std::string &name, size_t *outSubscript)
 {
     // Strip any trailing array operator and retrieve the subscript
     size_t open = name.find_last_of('[');

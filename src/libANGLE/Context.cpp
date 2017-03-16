@@ -2038,6 +2038,12 @@ void Context::programPathFragmentInputGen(GLuint program,
     programObject->pathFragmentInputGen(location, genMode, components, coeffs);
 }
 
+GLuint Context::getProgramResourceIndex(GLuint program, GLenum programInterface, const GLchar *name)
+{
+    gl::Program *programObject = getProgram(program);
+    return QueryProgramResourceIndex(programObject, programInterface, name);
+}
+
 void Context::handleError(const Error &error)
 {
     if (error.isError())
