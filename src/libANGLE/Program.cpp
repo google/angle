@@ -711,6 +711,8 @@ Error Program::link(const gl::Context *context)
         gatherTransformFeedbackVaryings(mergedVaryings);
     }
 
+    setUniformValuesFromBindingQualifiers();
+
     gatherInterfaceBlockInfo();
 
     return NoError();
@@ -1933,12 +1935,12 @@ bool Program::linkUniforms(InfoLog &infoLog,
 
     linker.getResults(&mState.mUniforms, &mState.mUniformLocations);
 
-    updateSamplerBindings();
+    linkSamplerBindings();
 
     return true;
 }
 
-void Program::updateSamplerBindings()
+void Program::linkSamplerBindings()
 {
     mState.mSamplerUniformRange.end   = static_cast<unsigned int>(mState.mUniforms.size());
     mState.mSamplerUniformRange.start = mState.mSamplerUniformRange.end;
@@ -2570,6 +2572,28 @@ void Program::linkOutputVariables()
             unsigned int element = outputVariable.isArray() ? elementIndex : GL_INVALID_INDEX;
             mState.mOutputLocations[location] =
                 VariableLocation(outputVariable.name, element, outputVariableIndex);
+        }
+    }
+}
+
+void Program::setUniformValuesFromBindingQualifiers()
+{
+    for (unsigned int samplerIndex = mState.mSamplerUniformRange.start;
+         samplerIndex < mState.mSamplerUniformRange.end; ++samplerIndex)
+    {
+        const auto &samplerUniform = mState.mUniforms[samplerIndex];
+        if (samplerUniform.binding != -1)
+        {
+            GLint location = mState.getUniformLocation(samplerUniform.name);
+            ASSERT(location != -1);
+            std::vector<GLint> boundTextureUnits;
+            for (unsigned int elementIndex = 0; elementIndex < samplerUniform.elementCount();
+                 ++elementIndex)
+            {
+                boundTextureUnits.push_back(samplerUniform.binding + elementIndex);
+            }
+            setUniform1iv(location, static_cast<GLsizei>(boundTextureUnits.size()),
+                          boundTextureUnits.data());
         }
     }
 }

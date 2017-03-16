@@ -1422,8 +1422,6 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.fbo.no_attachments.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.fbo.completeness.no_attachments = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.program_interface_query.* = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.layout_binding.sampler.sampler2d.* = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.layout_binding.sampler.sampler3d.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.layout_binding.ubo.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.layout_binding.ssbo.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.layout_binding.image.image2d.* = FAIL

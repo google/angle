@@ -456,7 +456,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     bool linkVaryings(InfoLog &infoLog) const;
 
     bool linkUniforms(InfoLog &infoLog, const Caps &caps, const Bindings &uniformLocationBindings);
-    void updateSamplerBindings();
+    void linkSamplerBindings();
 
     bool areMatchingInterfaceBlocks(InfoLog &infoLog,
                                     const sh::InterfaceBlock &vertexInterfaceBlock,
@@ -477,6 +477,8 @@ class Program final : angle::NonCopyable, public LabeledObject
     MergedVaryings getMergedVaryings() const;
     std::vector<PackedVarying> getPackedVaryings(const MergedVaryings &mergedVaryings) const;
     void linkOutputVariables();
+
+    void setUniformValuesFromBindingQualifiers();
 
     void gatherInterfaceBlockInfo();
     template <typename VarT>
