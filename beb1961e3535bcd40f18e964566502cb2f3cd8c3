@@ -120,6 +120,54 @@
     },
     {
       "key": {
+        "uuid": "3c3b6d30_ee51cb9e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-16T02:49:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dab424fe_ec7c85c6",
+      "range": {
+        "startLine": 89,
+        "startChar": 28,
+        "endLine": 89,
+        "endChar": 44
+      },
+      "revId": "beb1961e3535bcd40f18e964566502cb2f3cd8c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ecdf17c3_290d4b71",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-16T02:49:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d08d4089_b6b590fd",
+      "range": {
+        "startLine": 89,
+        "startChar": 21,
+        "endLine": 89,
+        "endChar": 27
+      },
+      "revId": "beb1961e3535bcd40f18e964566502cb2f3cd8c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85363e6f_44fc96c2",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 2
@@ -131,6 +179,30 @@
       "writtenOn": "2017-03-14T15:38:01Z",
       "side": 1,
       "message": "nit: I think you can actually make this a const \u0026 type.",
+      "range": {
+        "startLine": 540,
+        "startChar": 17,
+        "endLine": 540,
+        "endChar": 30
+      },
+      "revId": "beb1961e3535bcd40f18e964566502cb2f3cd8c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "307a8749_9f75c744",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 540,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-16T02:49:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85363e6f_44fc96c2",
       "range": {
         "startLine": 540,
         "startChar": 17,
