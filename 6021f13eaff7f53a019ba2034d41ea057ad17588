@@ -137,6 +137,29 @@
       "revId": "6021f13eaff7f53a019ba2034d41ea057ad17588",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "abc2df21_a6f56c23",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 966,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-17T16:31:55Z",
+      "side": 1,
+      "message": "nit: move this into the default block.",
+      "range": {
+        "startLine": 966,
+        "startChar": 4,
+        "endLine": 966,
+        "endChar": 28
+      },
+      "revId": "6021f13eaff7f53a019ba2034d41ea057ad17588",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
