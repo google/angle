@@ -16,6 +16,24 @@
       "revId": "7a12ac7b01eaf522cc0f9d2bd134763d64d615dd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c34b639b_8e1d5155",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2114,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-17T08:18:57Z",
+      "side": 1,
+      "message": "If you use uint8_t *indices \u003d static_cast\u003cuint8_t *\u003e( firstIndex * typeInfo.bytes), it will have the below error:\nc:\\workspace\\jiajia\\angle\\src\\libangle\\renderer\\d3d\\d3d11\\renderer11.cpp(2115): error C2440: \u0027static_cast\u0027: cannot convert from \u0027GLuint\u0027 to \u0027uint8_t *\u0027\nc:\\workspace\\jiajia\\angle\\src\\libangle\\renderer\\d3d\\d3d11\\renderer11.cpp(2115): note: Conversion from integral type to pointer type requires reinterpret_cast, C-style cast or function-style cast\n\nIf you use uint8_t *indices \u003d reinterpret_cast\u003cuint8_t *\u003e( firstIndex * typeInfo.bytes), it will have the below error:\nc:\\workspace\\jiajia\\angle\\src\\libangle\\renderer\\d3d\\d3d11\\renderer11.cpp(2115): error C2220: warning treated as error - no \u0027object\u0027 file generated\nc:\\workspace\\jiajia\\angle\\src\\libangle\\renderer\\d3d\\d3d11\\renderer11.cpp(2115): warning C4312: \u0027reinterpret_cast\u0027: conversion from \u0027GLuint\u0027 to \u0027uint8_t *\u0027 of greater size",
+      "parentUuid": "ae667c45_165ed81c",
+      "revId": "7a12ac7b01eaf522cc0f9d2bd134763d64d615dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
