@@ -1085,26 +1085,39 @@ void Framebuffer::commitWebGL1DepthStencilIfConsistent()
         return;
     }
 
+    auto getImageIndexIfTextureAttachment = [](const FramebufferAttachment &attachment) {
+        if (attachment.type() == GL_TEXTURE)
+        {
+            return attachment.getTextureImageIndex();
+        }
+        else
+        {
+            return ImageIndex::MakeInvalid();
+        }
+    };
+
     if (mState.mWebGLDepthAttachment.isAttached())
     {
         const auto &depth = mState.mWebGLDepthAttachment;
-        setAttachmentImpl(depth.type(), GL_DEPTH_ATTACHMENT, ImageIndex::MakeInvalid(),
-                          depth.getResource());
+        setAttachmentImpl(depth.type(), GL_DEPTH_ATTACHMENT,
+                          getImageIndexIfTextureAttachment(depth), depth.getResource());
         setAttachmentImpl(GL_NONE, GL_STENCIL_ATTACHMENT, ImageIndex::MakeInvalid(), nullptr);
     }
     else if (mState.mWebGLStencilAttachment.isAttached())
     {
         const auto &stencil = mState.mWebGLStencilAttachment;
         setAttachmentImpl(GL_NONE, GL_DEPTH_ATTACHMENT, ImageIndex::MakeInvalid(), nullptr);
-        setAttachmentImpl(stencil.type(), GL_STENCIL_ATTACHMENT, ImageIndex::MakeInvalid(),
-                          stencil.getResource());
+        setAttachmentImpl(stencil.type(), GL_STENCIL_ATTACHMENT,
+                          getImageIndexIfTextureAttachment(stencil), stencil.getResource());
     }
     else if (mState.mWebGLDepthStencilAttachment.isAttached())
     {
         const auto &depthStencil = mState.mWebGLDepthStencilAttachment;
-        setAttachmentImpl(depthStencil.type(), GL_DEPTH_ATTACHMENT, ImageIndex::MakeInvalid(),
+        setAttachmentImpl(depthStencil.type(), GL_DEPTH_ATTACHMENT,
+                          getImageIndexIfTextureAttachment(depthStencil),
                           depthStencil.getResource());
-        setAttachmentImpl(depthStencil.type(), GL_STENCIL_ATTACHMENT, ImageIndex::MakeInvalid(),
+        setAttachmentImpl(depthStencil.type(), GL_STENCIL_ATTACHMENT,
+                          getImageIndexIfTextureAttachment(depthStencil),
                           depthStencil.getResource());
     }
     else
