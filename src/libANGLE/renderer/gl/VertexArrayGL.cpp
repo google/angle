@@ -467,32 +467,30 @@ void VertexArrayGL::updateAttribPointer(size_t attribIndex)
         return;
     }
 
-    mStateManager->bindVertexArray(mVertexArrayID, getAppliedElementArrayBufferID());
+    // Skip the attribute that is disabled and uses a client memory pointer.
     const Buffer *arrayBuffer = binding.buffer.get();
-    if (arrayBuffer != nullptr)
+    if (arrayBuffer == nullptr)
     {
-        const BufferGL *arrayBufferGL = GetImplAs<BufferGL>(arrayBuffer);
-        mStateManager->bindBuffer(GL_ARRAY_BUFFER, arrayBufferGL->getBufferID());
-    }
-    else
-    {
-        mStateManager->bindBuffer(GL_ARRAY_BUFFER, 0);
+        ASSERT(!attrib.enabled);
+
+        // Mark the applied attribute as dirty by setting an invalid size so that if it doesn't
+        // use a client memory pointer later, there is no chance that the caching will skip it.
+        mAppliedAttributes[attribIndex].size = static_cast<GLuint>(-1);
+        return;
     }
 
-    mAppliedBindings[bindingIndex].buffer = binding.buffer;
+    mStateManager->bindVertexArray(mVertexArrayID, getAppliedElementArrayBufferID());
 
-    const GLvoid *inputPointer = nullptr;
-    if (arrayBuffer != nullptr)
-    {
-        inputPointer = static_cast<const GLvoid *>(
-            reinterpret_cast<const uint8_t *>(binding.offset + attrib.relativeOffset));
-    }
-    else
-    {
-        // Attributes using client memory ignore the VERTEX_ATTRIB_BINDING state.
-        // https://www.opengl.org/registry/specs/ARB/vertex_attrib_binding
-        inputPointer = attrib.pointer;
-    }
+    // Since ANGLE always uses a non-zero VAO, we cannot use a client memory pointer on it:
+    // [OpenGL ES 3.0.2] Section 2.8 page 24:
+    // An INVALID_OPERATION error is generated when a non-zero vertex array object is bound,
+    // zero is bound to the ARRAY_BUFFER buffer object binding point, and the pointer argument
+    // is not NULL.
+    ASSERT(arrayBuffer != nullptr);
+    const BufferGL *arrayBufferGL = GetImplAs<BufferGL>(arrayBuffer);
+    mStateManager->bindBuffer(GL_ARRAY_BUFFER, arrayBufferGL->getBufferID());
+    const GLvoid *inputPointer =
+        reinterpret_cast<const uint8_t *>(binding.offset + attrib.relativeOffset);
 
     if (attrib.pureInteger)
     {
@@ -514,6 +512,7 @@ void VertexArrayGL::updateAttribPointer(size_t attribIndex)
 
     mAppliedBindings[bindingIndex].stride = binding.stride;
     mAppliedBindings[bindingIndex].offset = binding.offset;
+    mAppliedBindings[bindingIndex].buffer = binding.buffer;
 }
 
 void VertexArrayGL::updateAttribDivisor(size_t attribIndex)
