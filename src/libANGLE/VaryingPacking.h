@@ -24,7 +24,7 @@ class InfoLog;
 struct PackedVarying
 {
     PackedVarying(const sh::ShaderVariable &varyingIn, sh::InterpolationType interpolationIn)
-        : varying(&varyingIn), vertexOnly(false), interpolation(interpolationIn)
+        : PackedVarying(varyingIn, interpolationIn, "")
     {
     }
     PackedVarying(const sh::ShaderVariable &varyingIn,
@@ -33,11 +33,25 @@ struct PackedVarying
         : varying(&varyingIn),
           vertexOnly(false),
           interpolation(interpolationIn),
-          parentStructName(parentStructNameIn)
+          parentStructName(parentStructNameIn),
+          arrayIndex(GL_INVALID_INDEX)
     {
     }
 
     bool isStructField() const { return !parentStructName.empty(); }
+
+    bool isArrayElement() const { return arrayIndex != GL_INVALID_INDEX; }
+
+    std::string nameWithArrayIndex() const
+    {
+        std::stringstream fullNameStr;
+        fullNameStr << varying->name;
+        if (arrayIndex != GL_INVALID_INDEX)
+        {
+            fullNameStr << "[" << arrayIndex << "]";
+        }
+        return fullNameStr.str();
+    }
 
     const sh::ShaderVariable *varying;
 
@@ -49,6 +63,8 @@ struct PackedVarying
 
     // Struct name
     std::string parentStructName;
+
+    GLuint arrayIndex;
 };
 
 struct PackedVaryingRegister final

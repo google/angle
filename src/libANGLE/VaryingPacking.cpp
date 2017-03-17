@@ -48,7 +48,7 @@ bool VaryingPacking::packVarying(const PackedVarying &packedVarying)
     }
 
     // "Arrays of size N are assumed to take N times the size of the base type"
-    varyingRows *= varying.elementCount();
+    varyingRows *= (packedVarying.isArrayElement() ? 1 : varying.elementCount());
 
     unsigned int maxVaryingVectors = static_cast<unsigned int>(mRegisterMap.size());
 
@@ -142,7 +142,8 @@ bool VaryingPacking::packVarying(const PackedVarying &packedVarying)
                     registerInfo.packedVarying     = &packedVarying;
                     registerInfo.registerRow       = row + arrayIndex;
                     registerInfo.registerColumn    = bestColumn;
-                    registerInfo.varyingArrayIndex = arrayIndex;
+                    registerInfo.varyingArrayIndex =
+                        (packedVarying.isArrayElement() ? packedVarying.arrayIndex : arrayIndex);
                     registerInfo.varyingRowIndex   = 0;
                     // Do not record register info for builtins.
                     // TODO(jmadill): Clean this up.
@@ -201,6 +202,10 @@ void VaryingPacking::insert(unsigned int registerRow,
 
     for (unsigned int arrayElement = 0; arrayElement < varying.elementCount(); ++arrayElement)
     {
+        if (packedVarying.isArrayElement() && arrayElement != packedVarying.arrayIndex)
+        {
+            continue;
+        }
         for (unsigned int varyingRow = 0; varyingRow < varyingRows; ++varyingRow)
         {
             registerInfo.registerRow     = registerRow + (arrayElement * varyingRows) + varyingRow;
@@ -241,15 +246,15 @@ bool VaryingPacking::packUserVaryings(gl::InfoLog &infoLog,
         }
 
         ASSERT(!varying.isStruct());
-        ASSERT(uniqueVaryingNames.count(varying.name) == 0);
+        ASSERT(uniqueVaryingNames.count(packedVarying.nameWithArrayIndex()) == 0);
 
         if (packVarying(packedVarying))
         {
-            uniqueVaryingNames.insert(varying.name);
+            uniqueVaryingNames.insert(packedVarying.nameWithArrayIndex());
         }
         else
         {
-            infoLog << "Could not pack varying " << varying.name;
+            infoLog << "Could not pack varying " << packedVarying.nameWithArrayIndex();
             return false;
         }
     }
@@ -266,22 +271,25 @@ bool VaryingPacking::packUserVaryings(gl::InfoLog &infoLog,
         for (const PackedVarying &packedVarying : packedVaryings)
         {
             const auto &varying = *packedVarying.varying;
+            size_t subscript     = GL_INVALID_INDEX;
+            std::string baseName = ParseResourceName(transformFeedbackVaryingName, &subscript);
 
             // Make sure transform feedback varyings aren't optimized out.
-            if (uniqueVaryingNames.count(transformFeedbackVaryingName) > 0)
+            if (uniqueVaryingNames.count(transformFeedbackVaryingName) > 0 ||
+                uniqueVaryingNames.count(baseName) > 0)
             {
                 found = true;
                 break;
             }
 
-            if (transformFeedbackVaryingName == varying.name)
+            if (baseName == varying.name)
             {
                 if (!packVarying(packedVarying))
                 {
                     infoLog << "Could not pack varying " << varying.name;
                     return false;
                 }
-
+                uniqueVaryingNames.insert(packedVarying.nameWithArrayIndex());
                 found = true;
                 break;
             }

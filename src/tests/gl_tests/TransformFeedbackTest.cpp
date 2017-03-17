@@ -12,13 +12,10 @@ using namespace angle;
 namespace
 {
 
-class TransformFeedbackTest : public ANGLETest
+class TransformFeedbackTestBase : public ANGLETest
 {
   protected:
-    TransformFeedbackTest()
-        : mProgram(0),
-          mTransformFeedbackBuffer(0),
-          mTransformFeedback(0)
+    TransformFeedbackTestBase() : mProgram(0), mTransformFeedbackBuffer(0), mTransformFeedback(0)
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -65,6 +62,16 @@ class TransformFeedbackTest : public ANGLETest
         ANGLETest::TearDown();
     }
 
+    GLuint mProgram;
+
+    static const size_t mTransformFeedbackBufferSize = 1 << 24;
+    GLuint mTransformFeedbackBuffer;
+    GLuint mTransformFeedback;
+};
+
+class TransformFeedbackTest : public TransformFeedbackTestBase
+{
+  protected:
     void compileDefaultProgram(const std::vector<std::string> &tfVaryings, GLenum bufferMode)
     {
         ASSERT_EQ(0u, mProgram);
@@ -94,12 +101,6 @@ class TransformFeedbackTest : public ANGLETest
                                                        tfVaryings, bufferMode);
         ASSERT_NE(0u, mProgram);
     }
-
-    GLuint mProgram;
-
-    static const size_t mTransformFeedbackBufferSize = 1 << 24;
-    GLuint mTransformFeedbackBuffer;
-    GLuint mTransformFeedback;
 };
 
 TEST_P(TransformFeedbackTest, ZeroSizedViewport)
@@ -414,6 +415,7 @@ TEST_P(TransformFeedbackTest, VertexOnly)
     {
         EXPECT_EQ(attribData[cnt], mappedFloats[cnt]);
     }
+    glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
 
     EXPECT_GL_NO_ERROR();
 }
@@ -775,6 +777,7 @@ TEST_P(TransformFeedbackTest, PackingBug)
         EXPECT_EQ(attrib1Data[vectorIndex], vecPointer[stream1Index]);
         EXPECT_EQ(attrib2Data[vectorIndex], vecPointer[stream2Index]);
     }
+    glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
 
     ASSERT_GL_NO_ERROR();
 }
@@ -875,7 +878,7 @@ TEST_P(TransformFeedbackTest, TwoUnreferencedInFragShader)
     ASSERT_GL_NO_ERROR();
 
     const GLvoid *mapPointer =
-        glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, sizeof(Vector2) * 2 * 6, GL_MAP_READ_BIT);
+        glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, sizeof(Vector3) * 2 * 6, GL_MAP_READ_BIT);
     ASSERT_NE(nullptr, mapPointer);
 
     const auto &quadVertices = GetQuadVertices();
@@ -888,9 +891,11 @@ TEST_P(TransformFeedbackTest, TwoUnreferencedInFragShader)
         EXPECT_EQ(quadVertices[vectorIndex], vecPointer[stream1Index]);
         EXPECT_EQ(quadVertices[vectorIndex], vecPointer[stream2Index]);
     }
+    glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
 
     ASSERT_GL_NO_ERROR();
 }
+
 class TransformFeedbackLifetimeTest : public TransformFeedbackTest
 {
   protected:
@@ -979,8 +984,108 @@ TEST_P(TransformFeedbackLifetimeTest, DeletedBuffer)
     ASSERT_GL_NO_ERROR();
 }
 
+class TransformFeedbackTestES31 : public TransformFeedbackTestBase
+{
+};
+
+// Test that program link fails in case that transform feedback names including same array element.
+TEST_P(TransformFeedbackTestES31, SameArrayElementVaryings)
+{
+    const std::string &vertexShaderSource =
+        "#version 310 es\n"
+        "in vec3 position;\n"
+        "out vec3 outAttribs[3];\n"
+        "void main() {"
+        "  outAttribs[0] = position;\n"
+        "  outAttribs[1] = vec3(0, 0, 0);\n"
+        "  outAttribs[2] = position;\n"
+        "  gl_Position = vec4(position, 1);\n"
+        "}";
+
+    const std::string &fragmentShaderSource =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "out vec4 color;\n"
+        "in vec3 outAttribs[3];\n"
+        "void main() {\n"
+        "  color = vec4(0);\n"
+        "}";
+
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back("outAttribs");
+    tfVaryings.push_back("outAttribs[1]");
+
+    mProgram = CompileProgramWithTransformFeedback(vertexShaderSource, fragmentShaderSource,
+                                                   tfVaryings, GL_INTERLEAVED_ATTRIBS);
+    ASSERT_EQ(0u, mProgram);
+}
+
+// Test transform feedback names can be specified using array element.
+TEST_P(TransformFeedbackTestES31, DifferentArrayElementVaryings)
+{
+    const std::string &vertexShaderSource =
+        "#version 310 es\n"
+        "in vec3 position;\n"
+        "out vec3 outAttribs[3];\n"
+        "void main() {"
+        "  outAttribs[0] = position;\n"
+        "  outAttribs[1] = vec3(0, 0, 0);\n"
+        "  outAttribs[2] = position;\n"
+        "  gl_Position = vec4(position, 1);\n"
+        "}";
+
+    const std::string &fragmentShaderSource =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "out vec4 color;\n"
+        "in vec3 outAttribs[3];\n"
+        "void main() {\n"
+        "  color = vec4(0);\n"
+        "}";
+
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back("outAttribs[0]");
+    tfVaryings.push_back("outAttribs[2]");
+
+    mProgram = CompileProgramWithTransformFeedback(vertexShaderSource, fragmentShaderSource,
+                                                   tfVaryings, GL_INTERLEAVED_ATTRIBS);
+    ASSERT_NE(0u, mProgram);
+
+    glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, mTransformFeedbackBuffer);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, sizeof(Vector3) * 2 * 6, nullptr, GL_STREAM_DRAW);
+
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, mTransformFeedback);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
+
+    glUseProgram(mProgram);
+    glBeginTransformFeedback(GL_TRIANGLES);
+    drawQuad(mProgram, "position", 0.5f);
+    glEndTransformFeedback();
+    glUseProgram(0);
+    ASSERT_GL_NO_ERROR();
+
+    const GLvoid *mapPointer =
+        glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, sizeof(Vector3) * 2 * 6, GL_MAP_READ_BIT);
+    ASSERT_NE(nullptr, mapPointer);
+
+    const auto &quadVertices = GetQuadVertices();
+
+    const Vector3 *vecPointer = static_cast<const Vector3 *>(mapPointer);
+    for (unsigned int vectorIndex = 0; vectorIndex < 3; ++vectorIndex)
+    {
+        unsigned int stream1Index = vectorIndex * 2;
+        unsigned int stream2Index = vectorIndex * 2 + 1;
+        EXPECT_EQ(quadVertices[vectorIndex], vecPointer[stream1Index]);
+        EXPECT_EQ(quadVertices[vectorIndex], vecPointer[stream2Index]);
+    }
+    glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
+
+    ASSERT_GL_NO_ERROR();
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(TransformFeedbackTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(TransformFeedbackLifetimeTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(TransformFeedbackTestES31, ES31_D3D11(), ES31_OPENGL(), ES31_OPENGLES());
 
 }  // anonymous namespace

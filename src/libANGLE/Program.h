@@ -175,6 +175,29 @@ struct SamplerBinding
     std::vector<GLuint> boundTextureUnits;
 };
 
+// A varying with tranform feedback enabled. If it's an array, either the whole array or one of its
+// elements specified by 'arrayIndex' can set to be enabled.
+struct TransformFeedbackVarying : public sh::Varying
+{
+    TransformFeedbackVarying(const sh::Varying &varyingIn, GLuint index)
+        : sh::Varying(varyingIn), arrayIndex(index)
+    {
+    }
+    std::string nameWithArrayIndex() const
+    {
+        std::stringstream fullNameStr;
+        fullNameStr << name;
+        if (arrayIndex != GL_INVALID_INDEX)
+        {
+            fullNameStr << "[" << arrayIndex << "]";
+        }
+        return fullNameStr.str();
+    }
+    GLsizei size() const { return (arrayIndex == GL_INVALID_INDEX ? elementCount() : 1); }
+
+    GLuint arrayIndex;
+};
+
 class ProgramState final : angle::NonCopyable
 {
   public:
@@ -230,7 +253,7 @@ class ProgramState final : angle::NonCopyable
     Shader *mAttachedComputeShader;
 
     std::vector<std::string> mTransformFeedbackVaryingNames;
-    std::vector<sh::Varying> mTransformFeedbackVaryingVars;
+    std::vector<TransformFeedbackVarying> mLinkedTransformFeedbackVaryings;
     GLenum mTransformFeedbackBufferMode;
 
     std::array<GLuint, IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS> mUniformBlockBindings;
@@ -480,7 +503,8 @@ class Program final : angle::NonCopyable, public LabeledObject
                                      const sh::Varying &fragmentVarying,
                                      int shaderVersion);
     bool linkValidateBuiltInVaryings(InfoLog &infoLog) const;
-    bool linkValidateTransformFeedback(InfoLog &infoLog,
+    bool linkValidateTransformFeedback(const gl::Context *context,
+                                       InfoLog &infoLog,
                                        const MergedVaryings &linkedVaryings,
                                        const Caps &caps) const;
 
