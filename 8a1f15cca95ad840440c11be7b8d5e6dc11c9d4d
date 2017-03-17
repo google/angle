@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "54956944_b04984ae",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1262,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-17T15:45:31Z",
+      "side": 1,
+      "message": "Yes, I think you\u0027re right.  Sorry, I confused resource location with index and thought that these queries were the same.",
+      "parentUuid": "674f7c64_4adc849a",
+      "range": {
+        "startLine": 1262,
+        "startChar": 7,
+        "endLine": 1262,
+        "endChar": 36
+      },
+      "revId": "8a1f15cca95ad840440c11be7b8d5e6dc11c9d4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6b6aeacd_29e9eefb",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 2

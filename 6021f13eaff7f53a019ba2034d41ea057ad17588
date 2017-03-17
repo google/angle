@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "13a846f4_7d8f2bbe",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-17T15:45:31Z",
+      "side": 1,
+      "message": "nit: this doesn\u0027t need the word \u0027active\u0027, and global functions should be capitalized: GetResourceIndex",
+      "range": {
+        "startLine": 136,
+        "startChar": 7,
+        "endLine": 136,
+        "endChar": 29
+      },
+      "revId": "6021f13eaff7f53a019ba2034d41ea057ad17588",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b892b64_bf4e3490",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1249,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-17T15:45:31Z",
+      "side": 1,
+      "message": "I would name this to match the query more closely: getInputResourceIndex",
+      "range": {
+        "startLine": 1249,
+        "startChar": 16,
+        "endLine": 1249,
+        "endChar": 39
+      },
+      "revId": "6021f13eaff7f53a019ba2034d41ea057ad17588",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7499eee2_4d8317c7",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1252,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-17T15:45:31Z",
+      "side": 1,
+      "message": "Given that we need the index anyways, just use a for loop with an index.",
+      "range": {
+        "startLine": 1252,
+        "startChar": 4,
+        "endLine": 1252,
+        "endChar": 61
+      },
+      "revId": "6021f13eaff7f53a019ba2034d41ea057ad17588",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f68bb3fa_373c93cf",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1254,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-17T15:45:31Z",
+      "side": 1,
+      "message": "std::string has an \u003d\u003d operator for const char*.  You can do attribute.name \u003d\u003d name",
+      "range": {
+        "startLine": 1254,
+        "startChar": 12,
+        "endLine": 1254,
+        "endChar": 45
+      },
+      "revId": "6021f13eaff7f53a019ba2034d41ea057ad17588",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f788a28_8ca61f59",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1263,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-17T15:45:31Z",
+      "side": 1,
+      "message": "I would name this getOutputResourceIndex",
+      "range": {
+        "startLine": 1263,
+        "startChar": 16,
+        "endLine": 1263,
+        "endChar": 36
+      },
+      "revId": "6021f13eaff7f53a019ba2034d41ea057ad17588",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "72f2b68e_2f6e36e4",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2551,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-17T15:45:31Z",
+      "side": 1,
+      "message": "This will insert output variables that will eventually be removed by the\n\n        if (outputVariable.isBuiltIn())\n            continue;\n\nbelow.  You should not change this line but do mState.mOutputVariables.push_back(outputVariable) in the loop below after the builtin check.",
+      "range": {
+        "startLine": 2551,
+        "startChar": 4,
+        "endLine": 2551,
+        "endChar": 27
+      },
+      "revId": "6021f13eaff7f53a019ba2034d41ea057ad17588",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
