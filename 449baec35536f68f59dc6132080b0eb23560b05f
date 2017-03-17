@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "237e2410_835b3b9b",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-17T17:00:17Z",
+      "side": 1,
+      "message": "We use the types in the GL state tables for these.  In this case it is a \u0027Z\u0027 which is \u0027Integer\u0027.  I\u0027d prefer to keep it as a GLint because that is how it\u0027s queried.",
+      "parentUuid": "30ce278f_275804f2",
+      "revId": "449baec35536f68f59dc6132080b0eb23560b05f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3be6393f_831d3ee6",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 28
@@ -33,6 +51,70 @@
       "revId": "449baec35536f68f59dc6132080b0eb23560b05f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "787926db_e06f96e3",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 1044,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-17T17:00:17Z",
+      "side": 1,
+      "message": "We should probably make a State::bindVertexBuffer and update Context::bindElementArrayBuffer to do the same thing because the State class tracks that the VertexArray becomes dirty in these cases.  Jamie will know for sure if Context::bindElementArrayBuffer  is bugged.",
+      "parentUuid": "3be6393f_831d3ee6",
+      "revId": "449baec35536f68f59dc6132080b0eb23560b05f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "87865d34_02687ade",
+        "filename": "src/libANGLE/ContextState.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 689,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-17T17:00:17Z",
+      "side": 1,
+      "message": "These also need to be added to State::getIntegeri_v.",
+      "range": {
+        "startLine": 686,
+        "startChar": 8,
+        "endLine": 689,
+        "endChar": 38
+      },
+      "revId": "449baec35536f68f59dc6132080b0eb23560b05f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b7d97790_cddd2b05",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-17T17:00:17Z",
+      "side": 1,
+      "message": "nit: just merge these into one line:\n\n   mState.mVertexAttributes[attribIndex].bindingIndex \u003d static_cast\u003cGLuint\u003e(bindingIndex);",
+      "range": {
+        "startLine": 122,
+        "startChar": 4,
+        "endLine": 124,
+        "endChar": 61
+      },
+      "revId": "449baec35536f68f59dc6132080b0eb23560b05f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     },
     {
       "key": {
@@ -70,6 +152,52 @@
     },
     {
       "key": {
+        "uuid": "36c5e781_ecabaf63",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 641,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-17T17:00:17Z",
+      "side": 1,
+      "message": "Merge the workaround check with this instead.",
+      "range": {
+        "startLine": 641,
+        "startChar": 12,
+        "endLine": 641,
+        "endChar": 97
+      },
+      "revId": "449baec35536f68f59dc6132080b0eb23560b05f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f8dac16f_bda235ad",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-17T17:00:17Z",
+      "side": 1,
+      "message": "Pass this by const reference because it is not being modified.  Move it up to just after functions because it is not an output variable.",
+      "range": {
+        "startLine": 45,
+        "startChar": 18,
+        "endLine": 45,
+        "endChar": 50
+      },
+      "revId": "449baec35536f68f59dc6132080b0eb23560b05f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f8395ffa_b506de63",
         "filename": "src/libANGLE/validationES.h",
         "patchSetId": 28
@@ -87,6 +215,29 @@
     },
     {
       "key": {
+        "uuid": "aafda16a_bb00bc20",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 2320,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-17T17:00:17Z",
+      "side": 1,
+      "message": "Please add a comment to this statement because it\u0027s not obvious.  Something about this command being equivalent to calling glVertexAttribBinding and inheriting it\u0027s validation (spec pg 245)",
+      "range": {
+        "startLine": 2320,
+        "startChar": 8,
+        "endLine": 2320,
+        "endChar": 50
+      },
+      "revId": "449baec35536f68f59dc6132080b0eb23560b05f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4a66907c_49e17e1c",
         "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
         "patchSetId": 28
@@ -98,6 +249,24 @@
       "writtenOn": "2017-03-17T05:42:03Z",
       "side": 1,
       "message": "I move these validations into ValidateVertexAttribIPointer().",
+      "revId": "449baec35536f68f59dc6132080b0eb23560b05f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ab01a4ef_bfc79ae8",
+        "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 825,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-17T17:00:17Z",
+      "side": 1,
+      "message": "Thanks!",
+      "parentUuid": "4a66907c_49e17e1c",
       "revId": "449baec35536f68f59dc6132080b0eb23560b05f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
