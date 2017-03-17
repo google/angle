@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "30ce278f_275804f2",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-17T05:42:03Z",
+      "side": 1,
+      "message": "VertexAttribFormat accepts GLuint as relativeOffset, so I think it is more convenient to make this a GLuint.",
+      "revId": "449baec35536f68f59dc6132080b0eb23560b05f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3be6393f_831d3ee6",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 1044,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-17T05:42:03Z",
+      "side": 1,
+      "message": "Here I refer the structure of Context::vertexAttribPointer(), but I see Context::bindElementArrayBuffer() uses another one:\nLine 994:\nvoid Context::bindElementArrayBuffer(GLuint bufferHandle)\n{\n    Buffer *buffer \u003d mState.mBuffers-\u003echeckBufferAllocation(mImplementation.get(), bufferHandle);\n    mGLState.getVertexArray()-\u003esetElementArrayBuffer(buffer);\n}\nShould we update all these functions like this?",
+      "revId": "449baec35536f68f59dc6132080b0eb23560b05f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "19415831_f7f55fe1",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 557,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-17T05:42:03Z",
+      "side": 1,
+      "message": "I should use mWorkarounds to set maxVertexAttribStride for Linux AMD OpenGL drivers.",
+      "revId": "449baec35536f68f59dc6132080b0eb23560b05f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "06188eb0_3b652780",
+        "filename": "src/libANGLE/renderer/gl/WorkaroundsGL.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-17T05:42:03Z",
+      "side": 1,
+      "message": "In ES3.1 it is required that stride should be less than maxVertexAttribStride both in VertexAttribPointer and bindVertexBuffer, so we have to emulate this value for AMD OpenGL drivers.\nHere I treated this emulation as a workaround and use it in generateCaps().",
+      "revId": "449baec35536f68f59dc6132080b0eb23560b05f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f8395ffa_b506de63",
+        "filename": "src/libANGLE/validationES.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 619,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-17T05:42:03Z",
+      "side": 1,
+      "message": "This function can be shared as the validation of formats in  ValidateVertexAttribPointer, ValidateVertexAttribIPointer and ValidateVertexAttibFormat. \n\nI put it here to reuse this code.",
+      "revId": "449baec35536f68f59dc6132080b0eb23560b05f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4a66907c_49e17e1c",
+        "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 825,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-17T05:42:03Z",
+      "side": 1,
+      "message": "I move these validations into ValidateVertexAttribIPointer().",
+      "revId": "449baec35536f68f59dc6132080b0eb23560b05f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cefcc003_94d01921",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 28
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-17T05:42:03Z",
+      "side": 1,
+      "message": "We cannot use Vertex Attrib Binding to draw now because no backends are ready.",
+      "revId": "449baec35536f68f59dc6132080b0eb23560b05f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
