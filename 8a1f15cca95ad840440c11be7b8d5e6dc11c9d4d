@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e931b04d_81363b9b",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1243,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-03-17T01:48:25Z",
+      "side": 1,
+      "message": "This checking is redundant.",
+      "parentUuid": "0397d960_cc80f699",
+      "range": {
+        "startLine": 1243,
+        "startChar": 16,
+        "endLine": 1243,
+        "endChar": 39
+      },
+      "revId": "8a1f15cca95ad840440c11be7b8d5e6dc11c9d4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8d43856a_5325a2d8",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2017-03-16T18:00:35Z",
       "side": 1,
       "message": "This does the same thing as Program::getFragDataLocation.  I don\u0027t think you need to handle the array index case because we there are no output variables with non-zero array indices.",
+      "range": {
+        "startLine": 1262,
+        "startChar": 7,
+        "endLine": 1262,
+        "endChar": 36
+      },
+      "revId": "8a1f15cca95ad840440c11be7b8d5e6dc11c9d4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "674f7c64_4adc849a",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1262,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-03-17T01:48:25Z",
+      "side": 1,
+      "message": "There are some flaws in my array index handling. But the right way should be as ProgramState::getUniformIndexFromName.\nTaking the below outputs for example:\nout vec a[4];\nout vec b;\nPer my understanding:\nBoth \"a\" and \"a[0]\" match a[4].\nOnly \"b\" matches b, but \"b[0]\" doesn\u0027t.\nNone-zero array index like \"a[1]\" or \"b[1]\" matches nothing.\n\nAm I right now?",
+      "parentUuid": "8d43856a_5325a2d8",
       "range": {
         "startLine": 1262,
         "startChar": 7,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "de2689c6_6daabb29",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2975,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-03-17T01:48:25Z",
+      "side": 1,
+      "message": "Seems better, Thanks!",
+      "parentUuid": "6b6aeacd_29e9eefb",
+      "range": {
+        "startLine": 2975,
+        "startChar": 8,
+        "endLine": 2975,
+        "endChar": 38
+      },
+      "revId": "8a1f15cca95ad840440c11be7b8d5e6dc11c9d4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0e1ce0c7_6b057754",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 2
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "19980a34_4cc7487d",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-03-17T01:48:25Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "0e1ce0c7_6b057754",
+      "range": {
+        "startLine": 415,
+        "startChar": 4,
+        "endLine": 415,
+        "endChar": 79
+      },
+      "revId": "8a1f15cca95ad840440c11be7b8d5e6dc11c9d4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10d11898_7763ddda",
         "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
         "patchSetId": 2
@@ -114,6 +210,30 @@
       "revId": "8a1f15cca95ad840440c11be7b8d5e6dc11c9d4d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4399ff28_e316c580",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-03-17T01:48:25Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "10d11898_7763ddda",
+      "range": {
+        "startLine": 30,
+        "startChar": 4,
+        "endLine": 37,
+        "endChar": 55
+      },
+      "revId": "8a1f15cca95ad840440c11be7b8d5e6dc11c9d4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
