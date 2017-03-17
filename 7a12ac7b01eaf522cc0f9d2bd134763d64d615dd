@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ae667c45_165ed81c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2114,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-03-17T05:15:34Z",
+      "side": 1,
+      "message": "nit: Why not static_cast\u003cuint8_t *\u003e(firstIndex * typeInfo.bytes); ?",
+      "revId": "7a12ac7b01eaf522cc0f9d2bd134763d64d615dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
