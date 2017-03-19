@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "59cea2ee_411922dd",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-03-19T03:31:46Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "13a846f4_7d8f2bbe",
+      "range": {
+        "startLine": 136,
+        "startChar": 7,
+        "endLine": 136,
+        "endChar": 29
+      },
+      "revId": "6021f13eaff7f53a019ba2034d41ea057ad17588",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8b892b64_bf4e3490",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "6021f13eaff7f53a019ba2034d41ea057ad17588",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b5a5729c_5dd0fc25",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1249,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-03-19T03:31:46Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "8b892b64_bf4e3490",
+      "range": {
+        "startLine": 1249,
+        "startChar": 16,
+        "endLine": 1249,
+        "endChar": 39
+      },
+      "revId": "6021f13eaff7f53a019ba2034d41ea057ad17588",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "36390d4d_442e9489",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1252,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-03-19T03:31:46Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "7499eee2_4d8317c7",
+      "range": {
+        "startLine": 1252,
+        "startChar": 4,
+        "endLine": 1252,
+        "endChar": 61
+      },
+      "revId": "6021f13eaff7f53a019ba2034d41ea057ad17588",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f68bb3fa_373c93cf",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 3
@@ -91,6 +163,30 @@
       "revId": "6021f13eaff7f53a019ba2034d41ea057ad17588",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46a69c57_2da07ca4",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1254,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-03-19T03:31:46Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "f68bb3fa_373c93cf",
+      "range": {
+        "startLine": 1254,
+        "startChar": 12,
+        "endLine": 1254,
+        "endChar": 45
+      },
+      "revId": "6021f13eaff7f53a019ba2034d41ea057ad17588",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "fa9eef9d_1808f5b4",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1263,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-03-19T03:31:46Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "0f788a28_8ca61f59",
+      "range": {
+        "startLine": 1263,
+        "startChar": 16,
+        "endLine": 1263,
+        "endChar": 36
+      },
+      "revId": "6021f13eaff7f53a019ba2034d41ea057ad17588",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "72f2b68e_2f6e36e4",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 3
@@ -128,6 +248,30 @@
       "writtenOn": "2017-03-17T15:45:31Z",
       "side": 1,
       "message": "This will insert output variables that will eventually be removed by the\n\n        if (outputVariable.isBuiltIn())\n            continue;\n\nbelow.  You should not change this line but do mState.mOutputVariables.push_back(outputVariable) in the loop below after the builtin check.",
+      "range": {
+        "startLine": 2551,
+        "startChar": 4,
+        "endLine": 2551,
+        "endChar": 27
+      },
+      "revId": "6021f13eaff7f53a019ba2034d41ea057ad17588",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bbe3e78e_9bd53b4a",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2551,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-03-19T03:31:46Z",
+      "side": 1,
+      "message": "GLES 3.10 spec P78\n\"For the UNIFORM,PROGRAM_INPUT,PROGRAM_OUTPUT, and TRANSFORM_FEEDBACK_VARYING interfaces, the active resource list will include all active variables for the interface, including any active built-in variables.\"\n\nPer my understanding, we should keep all active build-in output variables.",
+      "parentUuid": "72f2b68e_2f6e36e4",
       "range": {
         "startLine": 2551,
         "startChar": 4,
@@ -160,6 +304,30 @@
       "revId": "6021f13eaff7f53a019ba2034d41ea057ad17588",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef10e549_f555470a",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 966,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-03-19T03:31:46Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "abc2df21_a6f56c23",
+      "range": {
+        "startLine": 966,
+        "startChar": 4,
+        "endLine": 966,
+        "endChar": 28
+      },
+      "revId": "6021f13eaff7f53a019ba2034d41ea057ad17588",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
