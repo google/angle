@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b80fbf1d_1d525144",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-20T14:36:01Z",
+      "side": 1,
+      "message": "nit: use \"ANGLE_GL_PROGRAM(program, vertexShaderSource, vertexShaderSource)\" instead",
+      "range": {
+        "startLine": 53,
+        "startChar": 4,
+        "endLine": 54,
+        "endChar": 27
+      },
+      "revId": "4fe4845f3c97fc46f9dac73173779574a16d5250",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
