@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6bf6aa0a_6c939826",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/RenderStateCache.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-20T14:27:03Z",
+      "side": 1,
+      "message": "nit: Capitalize for static functions.",
+      "range": {
+        "startLine": 38,
+        "startChar": 32,
+        "endLine": 38,
+        "endChar": 48
+      },
+      "revId": "4899584e0a494e81f464d3f773d56b1e1bdada99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

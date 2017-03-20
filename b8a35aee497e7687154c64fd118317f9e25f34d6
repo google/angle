@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "293fa962_fadd578d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 519,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-20T14:27:03Z",
+      "side": 1,
+      "message": "nit: this will actually print HRESULT: HRESULT: 0xFFFFF. Remove the \"HRESULT:\"",
+      "range": {
+        "startLine": 519,
+        "startChar": 73,
+        "endLine": 519,
+        "endChar": 82
+      },
+      "revId": "b8a35aee497e7687154c64fd118317f9e25f34d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c1d6989_7a635b11",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/RenderStateCache.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-20T14:27:03Z",
+      "side": 1,
+      "message": "nit: add a one line comment:\n\n// static\n\nbefore the method declaration. this is a style point that we use in Chromium code.",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 5
+      },
+      "revId": "b8a35aee497e7687154c64fd118317f9e25f34d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
