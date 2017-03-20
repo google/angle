@@ -48,6 +48,23 @@
     },
     {
       "key": {
+        "uuid": "5e50878f_e3c5bdc5",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 1128,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-20T17:39:03Z",
+      "side": 1,
+      "message": "super-nit: add an empty line before \"break\"",
+      "revId": "b281651d46053c6b338ea4602259635cbabf0d09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "61b34279_8521b465",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 31
@@ -88,6 +105,74 @@
         "endLine": 5756,
         "endChar": 73
       },
+      "revId": "b281651d46053c6b338ea4602259635cbabf0d09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d419370_60ae1418",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 2307,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-20T17:39:03Z",
+      "side": 1,
+      "message": "nit: \"stride \u003c 0\"",
+      "revId": "b281651d46053c6b338ea4602259635cbabf0d09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49da50b8_4ad4da91",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 2316,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-20T17:39:03Z",
+      "side": 1,
+      "message": "nit: stride \u003e GL_MAX_VERTEX_ATTRIB_STRIDE",
+      "revId": "b281651d46053c6b338ea4602259635cbabf0d09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa279eda_ee2900f8",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 2325,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-20T17:39:03Z",
+      "side": 1,
+      "message": "nit: \"index \u003e GL_MAX_VERTEX_ATTRIB_BINDINGS\"",
+      "revId": "b281651d46053c6b338ea4602259635cbabf0d09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af23fca8_5059e523",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 529,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-20T17:39:03Z",
+      "side": 1,
+      "message": "nit: here and in the rest of the file the \"Invalid ...\" errors could be more explicit.",
       "revId": "b281651d46053c6b338ea4602259635cbabf0d09",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
