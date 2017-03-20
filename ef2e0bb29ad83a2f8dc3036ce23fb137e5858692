@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "adfd2500_bbd445fa",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 957,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-20T15:53:11Z",
+      "side": 1,
+      "message": "nit: surround in braces.",
+      "range": {
+        "startLine": 957,
+        "startChar": 8,
+        "endLine": 957,
+        "endChar": 56
+      },
+      "revId": "ef2e0bb29ad83a2f8dc3036ce23fb137e5858692",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "02c5e42d_fcf65479",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 3
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-20T15:53:11Z",
+      "side": 1,
+      "message": "I don\u0027t think these should be reserved for ES2 or ES3 because they\u0027re added as an extension only.  I think they should be the same as the \"samplerExternalOES\" case.",
+      "range": {
+        "startLine": 197,
+        "startChar": 39,
+        "endLine": 197,
+        "endChar": 63
+      },
+      "revId": "ef2e0bb29ad83a2f8dc3036ce23fb137e5858692",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
