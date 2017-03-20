@@ -45,6 +45,76 @@
       "revId": "ef2e0bb29ad83a2f8dc3036ce23fb137e5858692",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79031720_ce967ea1",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 3
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-20T18:12:03Z",
+      "side": 1,
+      "message": "Actually I think samplerExternalOES isn\u0027t doing the right thing currently. It looks like it should be {return YUV_target_keyword_else_ident(context, SAMPLER...)} and YUV_target_keyword be a function in the style of ES2_ident_ES3_keyword.",
+      "parentUuid": "02c5e42d_fcf65479",
+      "range": {
+        "startLine": 197,
+        "startChar": 39,
+        "endLine": 197,
+        "endChar": 63
+      },
+      "revId": "ef2e0bb29ad83a2f8dc3036ce23fb137e5858692",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "171224b9_4773d86f",
+        "filename": "src/tests/compiler_tests/EXT_YUV_target_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-20T18:12:03Z",
+      "side": 1,
+      "message": "nit: Quialifier -\u003e Qualifier.\n\nHere and in other places in this file.",
+      "range": {
+        "startLine": 40,
+        "startChar": 23,
+        "endLine": 40,
+        "endChar": 26
+      },
+      "revId": "ef2e0bb29ad83a2f8dc3036ce23fb137e5858692",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94ad8745_052a63ae",
+        "filename": "src/tests/compiler_tests/EXT_YUV_target_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-20T18:12:03Z",
+      "side": 1,
+      "message": "These test multiple failures, if a single thing fails, the whole test will pass. It is ok to not test all corner cases, but if there are things you want to test individually they should be split up in their own shader.",
+      "range": {
+        "startLine": 125,
+        "startChar": 0,
+        "endLine": 155,
+        "endChar": 0
+      },
+      "revId": "ef2e0bb29ad83a2f8dc3036ce23fb137e5858692",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
