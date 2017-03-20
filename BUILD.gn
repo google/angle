@@ -10,6 +10,12 @@ import("//testing/libfuzzer/fuzzer_test.gni")
 import("//third_party/angle/gni/angle.gni")
 import("//ui/ozone/ozone.gni")
 
+declare_args() {
+  # Use the PCI lib to collect GPU information on Linux.
+  use_libpci = is_linux && (!is_chromecast || is_cast_desktop_build) &&
+               (use_x11 || use_ozone)
+}
+
 if (ozone_platform_gbm) {
   pkg_config("libdrm") {
     packages = [ "libdrm" ]
@@ -223,12 +229,6 @@ static_library("angle_gpu_info_util") {
         "Xext",
       ]
     }
-  }
-
-  if (!defined(use_lipci)) {
-    # Use the PCI lib to collect GPU information on Linux.
-    use_libpci = is_linux && (!is_chromecast || is_cast_desktop_build) &&
-                 (use_x11 || use_ozone)
   }
 
   if (use_libpci) {
