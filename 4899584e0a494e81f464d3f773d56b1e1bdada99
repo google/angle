@@ -22,6 +22,30 @@
       "revId": "4899584e0a494e81f464d3f773d56b1e1bdada99",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c79113a_266653ed",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/RenderStateCache.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-20T18:23:49Z",
+      "side": 1,
+      "message": "Done. Just as an FYI, the other pre-existing static functions in defined in this header are not capitalized either so I will capitalize them too.",
+      "parentUuid": "6bf6aa0a_6c939826",
+      "range": {
+        "startLine": 38,
+        "startChar": 32,
+        "endLine": 38,
+        "endChar": 48
+      },
+      "revId": "4899584e0a494e81f464d3f773d56b1e1bdada99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

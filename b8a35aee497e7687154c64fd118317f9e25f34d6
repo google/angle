@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9cc0bc1f_b80d5f3e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 519,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-20T18:23:49Z",
+      "side": 1,
+      "message": "This is removed in the subsequent CL and similarly structured output strings have the \"HRESULT:\" omitted already. So just going to leave this here for now.",
+      "parentUuid": "293fa962_fadd578d",
+      "range": {
+        "startLine": 519,
+        "startChar": 73,
+        "endLine": 519,
+        "endChar": 82
+      },
+      "revId": "b8a35aee497e7687154c64fd118317f9e25f34d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3c1d6989_7a635b11",
         "filename": "src/libANGLE/renderer/d3d/d3d11/RenderStateCache.cpp",
         "patchSetId": 4
@@ -45,6 +69,30 @@
       "revId": "b8a35aee497e7687154c64fd118317f9e25f34d6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27cc012a_91d16287",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/RenderStateCache.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-20T18:23:49Z",
+      "side": 1,
+      "message": "Ok, will do. None of the existing static function have it in this file so I didn\u0027t think it was a big deal. Will add it to them as well.",
+      "parentUuid": "3c1d6989_7a635b11",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 5
+      },
+      "revId": "b8a35aee497e7687154c64fd118317f9e25f34d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
