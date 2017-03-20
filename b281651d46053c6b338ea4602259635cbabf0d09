@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "289eeca9_bc306bdc",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-20T15:14:15Z",
+      "side": 1,
+      "message": "please add an ASSERT and comment here that attrib.relativeOffset should not be negative or greater than max GLuint.",
+      "range": {
+        "startLine": 397,
+        "startChar": 78,
+        "endLine": 397,
+        "endChar": 92
+      },
+      "revId": "b281651d46053c6b338ea4602259635cbabf0d09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ad0b353_f2eca28e",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 641,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-20T15:14:15Z",
+      "side": 1,
+      "message": "this workaround belongs in a separate patch. please split it off.",
+      "range": {
+        "startLine": 641,
+        "startChar": 24,
+        "endLine": 641,
+        "endChar": 52
+      },
+      "revId": "b281651d46053c6b338ea4602259635cbabf0d09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61b34279_8521b465",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 5750,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-20T15:14:15Z",
+      "side": 1,
+      "message": "attribindex must not be greater than GL_MAX_VERTEX_ATTRIBS.",
+      "range": {
+        "startLine": 5750,
+        "startChar": 54,
+        "endLine": 5750,
+        "endChar": 74
+      },
+      "revId": "b281651d46053c6b338ea4602259635cbabf0d09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "103619c2_30a49f7d",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 5756,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-20T15:14:15Z",
+      "side": 1,
+      "message": "size must be between one and four.",
+      "range": {
+        "startLine": 5756,
+        "startChar": 54,
+        "endLine": 5756,
+        "endChar": 73
+      },
+      "revId": "b281651d46053c6b338ea4602259635cbabf0d09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec32677b_67e414b5",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 31
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-20T15:14:15Z",
+      "side": 1,
+      "message": "why does this regress from FAIL to SKIP?",
+      "range": {
+        "startLine": 36,
+        "startChar": 72,
+        "endLine": 36,
+        "endChar": 76
+      },
+      "revId": "b281651d46053c6b338ea4602259635cbabf0d09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a06dec3d_7bd0cdf9",
+        "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 872,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-20T15:14:15Z",
+      "side": 0,
+      "message": "reminder: this kind of refactoring belongs in a separate patch, please.",
+      "range": {
+        "startLine": 830,
+        "startChar": 7,
+        "endLine": 872,
+        "endChar": 9
+      },
+      "revId": "8aeeed6ef9a430bc5bd8dfd7ef25bc137bc1fb90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
