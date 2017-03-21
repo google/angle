@@ -121,6 +121,30 @@
     },
     {
       "key": {
+        "uuid": "35d4a565_e37d38d4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 519,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-21T21:53:50Z",
+      "side": 1,
+      "message": "I know you\u0027re generally fast with iterations so that is not the issue. The issue was that since this code would be modified here and removed in the future CL, it would be yet another conflict to resolve (albeit a relatively simple one) and since the code is being removed anyway, any changes to it would effectively be irrelevant and unnecessary so I didn\u0027t see any good reason to make the change.",
+      "parentUuid": "81b806e5_f7889532",
+      "range": {
+        "startLine": 519,
+        "startChar": 73,
+        "endLine": 519,
+        "endChar": 82
+      },
+      "revId": "b8a35aee497e7687154c64fd118317f9e25f34d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3c1d6989_7a635b11",
         "filename": "src/libANGLE/renderer/d3d/d3d11/RenderStateCache.cpp",
         "patchSetId": 4
