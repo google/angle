@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "54f70619_f687e7b6",
+        "filename": "doc/ContributingCode.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1128439
+      },
+      "writtenOn": "2017-03-21T21:26:23Z",
+      "side": 1,
+      "message": "Is this the right URL? I tried navigating there and it timed out.",
+      "revId": "3cc8b0fa6a82338cd83284df0a9ff5f8b7b680dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a70bbab2_f1834a95",
+        "filename": "doc/ContributingCode.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1128439
+      },
+      "writtenOn": "2017-03-21T21:26:23Z",
+      "side": 1,
+      "message": "I\u0027m still unclear on how try jobs are started. Do they start automatically? If so then you should say that.",
+      "revId": "3cc8b0fa6a82338cd83284df0a9ff5f8b7b680dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
