@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "fe724bba_851e43f2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 519,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-21T21:17:22Z",
+      "side": 1,
+      "message": "Is there a reason not to remove it in this CL?",
+      "parentUuid": "9cc0bc1f_b80d5f3e",
+      "range": {
+        "startLine": 519,
+        "startChar": 73,
+        "endLine": 519,
+        "endChar": 82
+      },
+      "revId": "b8a35aee497e7687154c64fd118317f9e25f34d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3c1d6989_7a635b11",
         "filename": "src/libANGLE/renderer/d3d/d3d11/RenderStateCache.cpp",
         "patchSetId": 4
