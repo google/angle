@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "373c853a_b1dfc8fd",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 642,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-21T05:25:50Z",
+      "side": 1,
+      "message": "In ES3.1, the stride passed into VertexAttribPointer should not be larger than MAX_VERTEX_ATTRIB_STRIDE, so I must deal with this driver bug before implementing other Vertex Attrib Binding features.",
+      "revId": "a695e6afc8b44674b7466d330bbe7a127a1a14ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
