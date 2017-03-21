@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "575df3af_9f8536d5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2088,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-21T13:19:28Z",
+      "side": 1,
+      "message": "Yes, I missed to consider those cases. There are two main issues: One is workaround related to primitive restart, other is index data which need to dynamic translate. These two situations both need to call with proper parameters not zero.  I have added conditions type !\u003d GL_UNSIGNED_SHORT \u0026\u0026 indexBuffer-\u003esupportsDirectBinding() to check.",
+      "parentUuid": "06f0efa0_c91564ce",
+      "range": {
+        "startLine": 2084,
+        "startChar": 4,
+        "endLine": 2088,
+        "endChar": 74
+      },
+      "revId": "7a12ac7b01eaf522cc0f9d2bd134763d64d615dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ae667c45_165ed81c",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 2
@@ -71,6 +95,30 @@
       "writtenOn": "2017-03-20T14:29:19Z",
       "side": 1,
       "message": "If you call applyIndexBuffer with the correct parameters you can just use applyIndexBuffer.indexRange instead.",
+      "range": {
+        "startLine": 2116,
+        "startChar": 4,
+        "endLine": 2120,
+        "endChar": 99
+      },
+      "revId": "7a12ac7b01eaf522cc0f9d2bd134763d64d615dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d232dd8d_341ac2fc",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2120,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-21T13:19:28Z",
+      "side": 1,
+      "message": "I think that correct parameters is based on getIndexRange. Only call getIndexRange, then I can get the right indexRange.  At last, apply index buffer.  See the latest patch set.",
+      "parentUuid": "47cf5914_3fe167e6",
       "range": {
         "startLine": 2116,
         "startChar": 4,
