@@ -159,6 +159,18 @@ GLuint GetResourceIndexFromName(const std::vector<VarT> &list, const std::string
     return GL_INVALID_INDEX;
 }
 
+void CopyStringToBuffer(GLchar *buffer, const std::string &string, GLsizei bufSize, GLsizei *length)
+{
+    ASSERT(bufSize > 0);
+    strncpy(buffer, string.c_str(), bufSize);
+    buffer[bufSize - 1] = '\0';
+
+    if (length)
+    {
+        *length = static_cast<GLsizei>(strlen(buffer));
+    }
+}
+
 }  // anonymous namespace
 
 const char *const g_fakepath = "C:\\fakepath";
@@ -1196,7 +1208,12 @@ bool Program::isAttribLocationActive(size_t attribLocation) const
     return mState.mActiveAttribLocationsMask[attribLocation];
 }
 
-void Program::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length, GLint *size, GLenum *type, GLchar *name)
+void Program::getActiveAttribute(GLuint index,
+                                 GLsizei bufsize,
+                                 GLsizei *length,
+                                 GLint *size,
+                                 GLenum *type,
+                                 GLchar *name) const
 {
     if (!mLinked)
     {
@@ -1220,15 +1237,7 @@ void Program::getActiveAttribute(GLuint index, GLsizei bufsize, GLsizei *length,
 
     if (bufsize > 0)
     {
-        const char *string = attrib.name.c_str();
-
-        strncpy(name, string, bufsize);
-        name[bufsize - 1] = '\0';
-
-        if (length)
-        {
-            *length = static_cast<GLsizei>(strlen(name));
-        }
+        CopyStringToBuffer(name, attrib.name, bufsize, length);
     }
 
     // Always a single 'type' instance
@@ -1281,6 +1290,50 @@ GLuint Program::getOutputResourceIndex(const GLchar *name) const
     return GetResourceIndexFromName(mState.mOutputVariables, std::string(name));
 }
 
+size_t Program::getOutputResourceCount() const
+{
+    return (mLinked ? mState.mOutputVariables.size() : 0);
+}
+
+void Program::getInputResourceName(GLuint index,
+                                   GLsizei bufSize,
+                                   GLsizei *length,
+                                   GLchar *name) const
+{
+    GLint size;
+    GLenum type;
+    getActiveAttribute(index, bufSize, length, &size, &type, name);
+}
+
+void Program::getOutputResourceName(GLuint index,
+                                    GLsizei bufSize,
+                                    GLsizei *length,
+                                    GLchar *name) const
+{
+    if (length)
+    {
+        *length = 0;
+    }
+
+    if (!mLinked)
+    {
+        if (bufSize > 0)
+        {
+            name[0] = '\0';
+        }
+        return;
+    }
+    ASSERT(index < mState.mOutputVariables.size());
+    const auto &output = mState.mOutputVariables[index];
+
+    if (bufSize > 0)
+    {
+        std::string nameWithArray = (output.isArray() ? output.name + "[0]" : output.name);
+
+        CopyStringToBuffer(name, nameWithArray, bufSize, length);
+    }
+}
+
 GLint Program::getFragDataLocation(const std::string &name) const
 {
     std::string baseName(name);
@@ -1316,14 +1369,7 @@ void Program::getActiveUniform(GLuint index,
             {
                 string += "[0]";
             }
-
-            strncpy(name, string.c_str(), bufsize);
-            name[bufsize - 1] = '\0';
-
-            if (length)
-            {
-                *length = static_cast<GLsizei>(strlen(name));
-            }
+            CopyStringToBuffer(name, string, bufsize, length);
         }
 
         *size = uniform.elementCount();
@@ -1699,14 +1745,7 @@ void Program::getActiveUniformBlockName(GLuint uniformBlockIndex, GLsizei bufSiz
         {
             string += ArrayString(uniformBlock.arrayElement);
         }
-
-        strncpy(uniformBlockName, string.c_str(), bufSize);
-        uniformBlockName[bufSize - 1] = '\0';
-
-        if (length)
-        {
-            *length = static_cast<GLsizei>(strlen(uniformBlockName));
-        }
+        CopyStringToBuffer(uniformBlockName, string, bufSize, length);
     }
 }
 

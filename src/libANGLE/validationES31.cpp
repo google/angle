@@ -41,6 +41,33 @@ bool ValidateNamedProgramInterface(GLenum programInterface)
     }
 }
 
+bool ValidateProgramResourceIndex(const Program *programObject,
+                                  GLenum programInterface,
+                                  GLuint index)
+{
+    switch (programInterface)
+    {
+        case GL_PROGRAM_INPUT:
+            return (index < static_cast<GLuint>(programObject->getActiveAttributeCount()));
+
+        case GL_PROGRAM_OUTPUT:
+            return (index < static_cast<GLuint>(programObject->getOutputResourceCount()));
+
+        // TODO(Jie): more interfaces.
+        case GL_UNIFORM:
+        case GL_UNIFORM_BLOCK:
+        case GL_TRANSFORM_FEEDBACK_VARYING:
+        case GL_BUFFER_VARIABLE:
+        case GL_SHADER_STORAGE_BLOCK:
+            UNIMPLEMENTED();
+            return false;
+
+        default:
+            UNREACHABLE();
+            return false;
+    }
+}
+
 }  // anonymous namespace
 
 bool ValidateGetBooleani_v(Context *context, GLenum target, GLuint index, GLboolean *data)
@@ -694,6 +721,48 @@ bool ValidateVertexAttribBinding(ValidationContext *context,
     {
         context->handleError(Error(GL_INVALID_VALUE,
                                    "bindingindex must be smaller than MAX_VERTEX_ATTRIB_BINDINGS"));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetProgramResourceName(Context *context,
+                                    GLuint program,
+                                    GLenum programInterface,
+                                    GLuint index,
+                                    GLsizei bufSize,
+                                    GLsizei *length,
+                                    GLchar *name)
+{
+    if (context->getClientVersion() < ES_3_1)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Context does not support GLES3.1."));
+        return false;
+    }
+
+    Program *programObject = GetValidProgram(context, program);
+    if (programObject == nullptr)
+    {
+        return false;
+    }
+
+    if (!ValidateNamedProgramInterface(programInterface))
+    {
+        context->handleError(
+            Error(GL_INVALID_ENUM, "Invalid program interface: 0x%X", programInterface));
+        return false;
+    }
+
+    if (!ValidateProgramResourceIndex(programObject, programInterface, index))
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Invalid index: %d", index));
+        return false;
+    }
+
+    if (bufSize < 0)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Invalid bufSize: %d", bufSize));
         return false;
     }
 

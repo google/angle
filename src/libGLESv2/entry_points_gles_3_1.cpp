@@ -169,11 +169,13 @@ void GL_APIENTRY GetProgramResourceName(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation())
+        if (!context->skipValidation() &&
+            !ValidateGetProgramResourceName(context, program, programInterface, index, bufSize,
+                                            length, name))
         {
-            context->handleError(Error(GL_INVALID_OPERATION, "Entry point not implemented"));
+            return;
         }
-        UNIMPLEMENTED();
+        context->getProgramResourceName(program, programInterface, index, bufSize, length, name);
     }
 }
 
