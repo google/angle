@@ -75,7 +75,7 @@ Error FenceNV::finish()
 }
 
 FenceSync::FenceSync(rx::FenceSyncImpl *impl, GLuint id)
-    : RefCountObject(id), mFence(impl), mLabel(), mCondition(GL_NONE), mFlags(0)
+    : RefCountObject(id), mFence(impl), mLabel(), mCondition(GL_SYNC_GPU_COMMANDS_COMPLETE), mFlags(0)
 {
 }
 
