@@ -133,13 +133,6 @@ ValidationContext::ValidationContext(const ValidationContext *shareContext,
 
 bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsigned int *numParams)
 {
-    if (pname >= GL_DRAW_BUFFER0_EXT && pname <= GL_DRAW_BUFFER15_EXT)
-    {
-        *type      = GL_INT;
-        *numParams = 1;
-        return true;
-    }
-
     // Please note: the query type returned for DEPTH_CLEAR_VALUE in this implementation
     // is FLOAT rather than INT, as would be suggested by the GL ES 2.0 spec. This is due
     // to the fact that it is stored internally as a float, and so would require conversion
@@ -493,6 +486,17 @@ bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsign
             *numParams = 1;
             return true;
         }
+    }
+
+    if (pname >= GL_DRAW_BUFFER0_EXT && pname <= GL_DRAW_BUFFER15_EXT)
+    {
+        if ((getClientVersion() < Version(3, 0)) && !getExtensions().drawBuffers)
+        {
+            return false;
+        }
+        *type      = GL_INT;
+        *numParams = 1;
+        return true;
     }
 
     if (getClientVersion() < Version(3, 0))

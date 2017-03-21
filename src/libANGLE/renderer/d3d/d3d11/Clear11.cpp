@@ -200,7 +200,7 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
     const auto *depthAttachment   = fboData.getDepthAttachment();
     const auto *stencilAttachment = fboData.getStencilAttachment();
 
-    ASSERT(colorAttachments.size() == drawBufferStates.size());
+    ASSERT(colorAttachments.size() <= drawBufferStates.size());
 
     // Iterate over the color buffers which require clearing and determine if they can be
     // cleared with ID3D11DeviceContext::ClearRenderTargetView or ID3D11DeviceContext1::ClearView.

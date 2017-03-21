@@ -45,7 +45,7 @@ void BindResourceChannel(ChannelBinding *binding, FramebufferAttachmentObject *r
 FramebufferState::FramebufferState()
     : mLabel(),
       mColorAttachments(1),
-      mDrawBufferStates(1, GL_BACK),
+      mDrawBufferStates(IMPLEMENTATION_MAX_DRAW_BUFFERS, GL_NONE),
       mReadBufferState(GL_BACK),
       mDefaultWidth(0),
       mDefaultHeight(0),
@@ -53,6 +53,8 @@ FramebufferState::FramebufferState()
       mDefaultFixedSampleLocations(GL_FALSE),
       mWebGLDepthStencilConsistent(true)
 {
+    ASSERT(mDrawBufferStates.size() > 0);
+    mDrawBufferStates[0] = GL_BACK;
     mEnabledDrawBuffers.set(0);
 }
 
