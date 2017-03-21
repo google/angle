@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ee53132f_163c3e67",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-21T06:30:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "289eeca9_bc306bdc",
+      "range": {
+        "startLine": 397,
+        "startChar": 78,
+        "endLine": 397,
+        "endChar": 92
+      },
+      "revId": "b281651d46053c6b338ea4602259635cbabf0d09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0ad0b353_f2eca28e",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 31
@@ -36,6 +60,30 @@
       "writtenOn": "2017-03-20T15:14:15Z",
       "side": 1,
       "message": "this workaround belongs in a separate patch. please split it off.",
+      "range": {
+        "startLine": 641,
+        "startChar": 24,
+        "endLine": 641,
+        "endChar": 52
+      },
+      "revId": "b281651d46053c6b338ea4602259635cbabf0d09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e7cf23e_f173e665",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 641,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-21T06:30:54Z",
+      "side": 1,
+      "message": "Got it. I have put this change in another patch:\nhttps://chromium-review.googlesource.com/c/457254",
+      "parentUuid": "0ad0b353_f2eca28e",
       "range": {
         "startLine": 641,
         "startChar": 24,
@@ -65,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "bcfe8715_94d81c41",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 1128,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-21T06:30:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5e50878f_e3c5bdc5",
+      "revId": "b281651d46053c6b338ea4602259635cbabf0d09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "61b34279_8521b465",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 31
@@ -76,6 +142,30 @@
       "writtenOn": "2017-03-20T15:14:15Z",
       "side": 1,
       "message": "attribindex must not be greater than GL_MAX_VERTEX_ATTRIBS.",
+      "range": {
+        "startLine": 5750,
+        "startChar": 54,
+        "endLine": 5750,
+        "endChar": 74
+      },
+      "revId": "b281651d46053c6b338ea4602259635cbabf0d09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "36e0cf3e_763fe974",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 5750,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-21T06:30:54Z",
+      "side": 1,
+      "message": "I suggest we use MAX_VERTEX_ATTRIBS here because since GL_MAX_VERTEX_ATTRIBS is a constant value defined in gl31.h, it is more suitable to use MAX_VERTEX_ATTRIBS as the maximum number of vertex attributes in current platform.",
+      "parentUuid": "61b34279_8521b465",
       "range": {
         "startLine": 5750,
         "startChar": 54,
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "d856f50a_16cdccd3",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 5756,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-21T06:30:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "103619c2_30a49f7d",
+      "range": {
+        "startLine": 5756,
+        "startChar": 54,
+        "endLine": 5756,
+        "endChar": 73
+      },
+      "revId": "b281651d46053c6b338ea4602259635cbabf0d09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0d419370_60ae1418",
         "filename": "src/libANGLE/validationES3.cpp",
         "patchSetId": 31
@@ -125,6 +239,24 @@
       "revId": "b281651d46053c6b338ea4602259635cbabf0d09",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7bf2bb1e_ef916ca2",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 2307,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-21T06:30:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0d419370_60ae1418",
+      "revId": "b281651d46053c6b338ea4602259635cbabf0d09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -145,6 +277,24 @@
     },
     {
       "key": {
+        "uuid": "0ef4865e_6df76af3",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 2316,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-21T06:30:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "49da50b8_4ad4da91",
+      "revId": "b281651d46053c6b338ea4602259635cbabf0d09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fa279eda_ee2900f8",
         "filename": "src/libANGLE/validationES3.cpp",
         "patchSetId": 31
@@ -159,6 +309,24 @@
       "revId": "b281651d46053c6b338ea4602259635cbabf0d09",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "26d4d083_32360de6",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 2325,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-21T06:30:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa279eda_ee2900f8",
+      "revId": "b281651d46053c6b338ea4602259635cbabf0d09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -179,6 +347,48 @@
     },
     {
       "key": {
+        "uuid": "c697d7af_8194b764",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 529,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-21T06:30:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "af23fca8_5059e523",
+      "revId": "b281651d46053c6b338ea4602259635cbabf0d09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1d6b75dc_7b2d72ce",
+        "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 872,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-21T06:30:54Z",
+      "side": 1,
+      "message": "There are more validations for VertexAttribIPointer  in ES3.1, so I decide to put these together in this patch.",
+      "parentUuid": "a06dec3d_7bd0cdf9",
+      "range": {
+        "startLine": 830,
+        "startChar": 7,
+        "endLine": 872,
+        "endChar": 9
+      },
+      "revId": "b281651d46053c6b338ea4602259635cbabf0d09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ec32677b_67e414b5",
         "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
         "patchSetId": 31
@@ -190,6 +400,30 @@
       "writtenOn": "2017-03-20T15:14:15Z",
       "side": 1,
       "message": "why does this regress from FAIL to SKIP?",
+      "range": {
+        "startLine": 36,
+        "startChar": 72,
+        "endLine": 36,
+        "endChar": 76
+      },
+      "revId": "b281651d46053c6b338ea4602259635cbabf0d09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ebf0c9b4_49999e4b",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 31
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-21T06:30:54Z",
+      "side": 1,
+      "message": "There are no back-ends that support Vertex Attrib Binding now, so many ASSERT failures (attribIndex \u003d\u003d bindingIndex) will be met when we really use Vertex Attrib Binding in rendering, which will cause context crashes in ANGLE.",
+      "parentUuid": "ec32677b_67e414b5",
       "range": {
         "startLine": 36,
         "startChar": 72,
