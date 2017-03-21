@@ -4,7 +4,7 @@
 
  * Whether you're writing a new feature or fixing an existing bug, it pays to get a second opinion before you get too far. If it's a new feature idea, post to the discussion group ([angleproject](https://groups.google.com/forum/?fromgroups#!forum/angleproject)) and propose it or talk with the ANGLE team on IRC in the #ANGLEproject channel on FreeNode.
  * Not all bugs in our [bug system](https://code.google.com/p/angleproject/issues/list) are assigned, but if the one you're interested in fixing is, send a note to the person it's assigned to and ask if they would like a patch.
- * Behavior changes and anything nontrivial (i.e. anything other than simple cleanups and style fixes) should generally be tracked in the bug system. Please [file a bug](https://code.google.com/p/angleproject/issues/entry) and describe what you're doing if there isn't one already.
+ * Behavior changes and anything nontrivial (i.e. anything other than simple cleanups and style fixes) should generally be tracked in the bug system. Please [file a bug](http://anglebug.com/new) and describe what you're doing if there isn't one already.
 
 ## Get your code ready
 ### Code
@@ -22,19 +22,20 @@
     * If you modified `ExpressionParser.y` or `Tokenizer.l`, follow the same process by running `src/compiler/preprocessor/generate_parser.sh`.
 
 ### Testing
- * ANGLE uses trybots to test on a variety of platforms.  Please run your changes against our trybots and check the results before requesting a review.
-    * Upload your change (see [Making changes](ContributingCode.md#Making-changes)).
-    * Run `git try`.  If you are not part of the `angle-committers` group, you will need to either ask to be added or ask a member of the group to submit the tryjob for you.
-    * Wait for the bots to report the result on the code review page, this can take up to two hours for some of the debug bots.
-    * Sometimes the bots report failures that are not due to the patch being tested.  If a failure is unexpected, ask an ANGLE project member for advice.
-    * The `-b` flag can be used with `git try` to target individual bots.  Ex: `git try -b win_angle_rel_ng`.
+ * ANGLE uses trybots to test on a variety of platforms. Please run your changes against our bots and check the results before landing changes or requesting reviews.
+    * Upload your change (see [Making changes](ContributingCode.md#making-changes)).
+    * To kick of a try job, use the 'CQ Dry Run' button, or set the Commit-Queue +1 label to trigger a dry run of the CQ (will not land the change).
+    * If you are not part of the `angle-committers` group, you will need to either ask to be added or ask a member of the group to submit the tryjob for you. Add jmadill or geofflang as a reviewer for assistance.
+    * Wait for the bots to report the result on the code review page. The bot results should be visible in Gerrit as yellow (in-progress), green (passed), or red (failed). This can take up to two hours for some of the debug bots. Click on the colored rectangle to open the bot log to triage failed tests.
+    * If a failure is unexpected, or seems likely unrelated to your change, ask an ANGLE project member for advice.
+    * We do not currently have the capability to run individual bots or tests in a run.
  * Tests can also be run locally, ANGLE's main testing methods are:
-    * `angle_unittests` and `angle_end2end_tests` targets.
+    * `angle_unittests`, `angle_end2end_tests` and `angle_white_box_tests` targets.
     * The [Top-of-Tree WebGL Conformance tests](https://www.khronos.org/registry/webgl/sdk/tests/webgl-conformance-tests.html).
       * If you are a Chromium developer, see [Building ANGLE for Chromium Development](BuildingAngleForChromiumDevelopment.md) for instructions on building ANGLE within Chromium.
       * If you aren't a browser developer, you should be able to drop your compiled DLLs into a Chrome installation, in place of those distributed with Chrome, to check WebGL conformance. [Chrome Canary](https://www.google.com/chrome/browser/canary.html) is well-suited for this.
-      * Your failures must be a subset of the expected WebGL failures located in [`src/tests/WebGL-CTS-known-failures.txt`](../src/tests/WebGL-CTS-known-failures.txt). If you believe there are failing tests missing from the known failures file, please notify project members.
-   * If your code isn't covered by an existing test, you are *strongly encouraged* to add new test coverage. This both ensures that your code is correct and that new contributors won't break it in the future.
+    * If your code isn't covered by an existing test, you are *strongly encouraged* to add new test coverage. This both ensures that your code is correct and that new contributors won't break it in the future.
+    * Add new tests to `angle_end2end_tests` for OpenGL-based API tests, `angle_unittests` for cross-platform internal tests, and `angle_white_box_tests` for rendering tests which also need visibility into internal ANGLE classes.
    * If you are submitting a performance fix, test your code with `angle_perftests` and add a new performance test if it is not covered by the existing benchmarks.
    * The [Chromium GPU FYI bot waterfall](http://build.chromium.org/p/chromium.gpu.fyi/console) provides continuous integration for ANGLE patches that have been committed.  There may be hardware configurations that are not tested by the ANGLE trybots, if you notice breakage on this waterfall after landing a patch, please notify a project member.
    * ANGLE also includes the [drawElements Quality Program (dEQP)](dEQP.md) for additional testing. If you're working on a new feature, there may be some extensive tests for it already written.
@@ -62,7 +63,7 @@
      * Download the hook from [https://chromium-review.googlesource.com/tools/hooks/commit-msg](https://chromium-review.googlesource.com/tools/hooks/commit-msg) and copy this file to `.git/hooks/commit-msg` within your local repository. On non-Windows, platforms, ensure that permissions are set to allow execution.
      * *BE AWARE:* Some patch management tools, such as StGit, currently bypass git hooks. They should not currently be used with changes intended for review.
 
-### Making changes
+### Making changes {#making-changes}
  1. Commit your changes locally:
     * `git add src/../FileName.cpp`
     * `git commit`
