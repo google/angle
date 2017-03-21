@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "f918ec2e_ccb28640",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 957,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-21T18:01:32Z",
+      "side": 1,
+      "message": "Please do, we haven\u0027t gone through all the code to fix the coding convention, but we try to enforce it on new code.",
+      "parentUuid": "644a1924_3cdb3bba",
+      "range": {
+        "startLine": 957,
+        "startChar": 8,
+        "endLine": 957,
+        "endChar": 56
+      },
+      "revId": "ef2e0bb29ad83a2f8dc3036ce23fb137e5858692",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "02c5e42d_fcf65479",
         "filename": "src/compiler/translator/glslang.l",
         "patchSetId": 3
@@ -108,6 +132,30 @@
       "side": 1,
       "message": "I used \"ES2_reserved_ES3_keyword\" because as mentioned in \nhttp://khronos.org/registry/OpenGL/specs/es/2.0/GLSL_ES_Specification_1.00.pdf\nparagraph 3.7 \"Keywords\" (page 17)\n\nIn addition, all identifiers containing two consecutive underscores (__) are reserved as possible future keywords.\n\nSo it is not allowed to use \"__samplerExternal2DY2YEXT\" or any \"__xXx\" identifiers in ES2.\n\nPlease let me know if i misunderstood this part from specification.",
       "parentUuid": "79031720_ce967ea1",
+      "range": {
+        "startLine": 197,
+        "startChar": 39,
+        "endLine": 197,
+        "endChar": 63
+      },
+      "revId": "ef2e0bb29ad83a2f8dc3036ce23fb137e5858692",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bbc0167a_904a4afe",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 3
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-21T18:01:32Z",
+      "side": 1,
+      "message": "This sounds good for __samplerExternal2DY2YEXT but the same applies to the the yuvCscStandardEXT enum below.",
+      "parentUuid": "f4126aa9_585ba86f",
       "range": {
         "startLine": 197,
         "startChar": 39,
@@ -202,6 +250,30 @@
       "side": 1,
       "message": "I split them into separate failure tests",
       "parentUuid": "94ad8745_052a63ae",
+      "range": {
+        "startLine": 125,
+        "startChar": 0,
+        "endLine": 155,
+        "endChar": 0
+      },
+      "revId": "ef2e0bb29ad83a2f8dc3036ce23fb137e5858692",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b5d8fa9_18390171",
+        "filename": "src/tests/compiler_tests/EXT_YUV_target_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-21T18:01:32Z",
+      "side": 1,
+      "message": "Thanks",
+      "parentUuid": "d50bb5f6_f54efd61",
       "range": {
         "startLine": 125,
         "startChar": 0,
