@@ -26,6 +26,19 @@ namespace sh
 
 int TSymbolTable::uniqueIdCounter = 0;
 
+TSymbolUniqueId::TSymbolUniqueId() : mId(TSymbolTable::nextUniqueId())
+{
+}
+
+TSymbolUniqueId::TSymbolUniqueId(const TSymbol &symbol) : mId(symbol.getUniqueId())
+{
+}
+
+int TSymbolUniqueId::get() const
+{
+    return mId;
+}
+
 TSymbol::TSymbol(const TString *n) : uniqueId(TSymbolTable::nextUniqueId()), name(n)
 {
 }

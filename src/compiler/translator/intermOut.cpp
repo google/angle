@@ -17,7 +17,7 @@ void OutputFunction(TInfoSinkBase &out, const char *str, TFunctionSymbolInfo *in
 {
     const char *internal = info->getNameObj().isInternal() ? " (internal function)" : "";
     out << str << internal << ": " << info->getNameObj().getString() << " (symbol id "
-        << info->getId() << ")";
+        << info->getId().get() << ")";
 }
 
 //

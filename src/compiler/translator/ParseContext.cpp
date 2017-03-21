@@ -2490,7 +2490,8 @@ TIntermFunctionPrototype *TParseContext::createPrototypeNodeFromFunction(
     const TSourceLoc &location,
     bool insertParametersToSymbolTable)
 {
-    TIntermFunctionPrototype *prototype = new TIntermFunctionPrototype(function.getReturnType());
+    TIntermFunctionPrototype *prototype =
+        new TIntermFunctionPrototype(function.getReturnType(), TSymbolUniqueId(function));
     // TODO(oetuaho@nvidia.com): Instead of converting the function information here, the node could
     // point to the data that already exists in the symbol table.
     prototype->getFunctionSymbolInfo()->setFromFunction(function);
@@ -2803,9 +2804,8 @@ TIntermTyped *TParseContext::addConstructor(TIntermSequence *arguments,
         return TIntermTyped::CreateZero(type);
     }
 
-    TIntermAggregate *constructorNode = new TIntermAggregate(type, op, arguments);
+    TIntermAggregate *constructorNode = TIntermAggregate::CreateConstructor(type, op, arguments);
     constructorNode->setLine(line);
-    ASSERT(constructorNode->isConstructor());
 
     TIntermTyped *constConstructor =
         intermediate.foldAggregateBuiltIn(constructorNode, mDiagnostics);
@@ -4533,7 +4533,7 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(TFunction *fnCall,
                 else
                 {
                     TIntermAggregate *callNode =
-                        new TIntermAggregate(fnCandidate->getReturnType(), op, arguments);
+                        TIntermAggregate::Create(fnCandidate->getReturnType(), op, arguments);
                     callNode->setLine(loc);
 
                     // Some built-in functions have out parameters too.
@@ -4561,19 +4561,13 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(TFunction *fnCall,
                 // This needs to happen after the function info including name is set.
                 if (builtIn)
                 {
-                    callNode = new TIntermAggregate(fnCandidate->getReturnType(),
-                                                    EOpCallBuiltInFunction, arguments);
-                    // Note that name needs to be set before texture function type is determined.
-                    callNode->getFunctionSymbolInfo()->setFromFunction(*fnCandidate);
-                    callNode->setBuiltInFunctionPrecision();
+                    callNode = TIntermAggregate::CreateBuiltInFunctionCall(*fnCandidate, arguments);
                     checkTextureOffsetConst(callNode);
                     checkImageMemoryAccessForBuiltinFunctions(callNode);
                 }
                 else
                 {
-                    callNode = new TIntermAggregate(fnCandidate->getReturnType(),
-                                                    EOpCallFunctionInAST, arguments);
-                    callNode->getFunctionSymbolInfo()->setFromFunction(*fnCandidate);
+                    callNode = TIntermAggregate::CreateFunctionCall(*fnCandidate, arguments);
                     checkImageMemoryAccessForUserDefinedFunctions(fnCandidate, callNode);
                 }
 

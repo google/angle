@@ -50,9 +50,9 @@ TIntermAggregate *CreateReplacementCall(TIntermAggregate *originalCall,
         replacementArguments->push_back(arg);
     }
     replacementArguments->push_back(returnValueTarget);
-    TIntermAggregate *replacementCall =
-        new TIntermAggregate(TType(EbtVoid), EOpCallFunctionInAST, replacementArguments);
-    *replacementCall->getFunctionSymbolInfo() = *originalCall->getFunctionSymbolInfo();
+    TIntermAggregate *replacementCall = TIntermAggregate::CreateFunctionCall(
+        TType(EbtVoid), originalCall->getFunctionSymbolInfo()->getId(),
+        originalCall->getFunctionSymbolInfo()->getNameObj(), replacementArguments);
     replacementCall->setLine(originalCall->getLine());
     return replacementCall;
 }
@@ -110,7 +110,8 @@ bool ArrayReturnValueToOutParameterTraverser::visitFunctionPrototype(Visit visit
     {
         // Replace the whole prototype node with another node that has the out parameter
         // added. Also set the function to return void.
-        TIntermFunctionPrototype *replacement = new TIntermFunctionPrototype(TType(EbtVoid));
+        TIntermFunctionPrototype *replacement =
+            new TIntermFunctionPrototype(TType(EbtVoid), node->getFunctionSymbolInfo()->getId());
         CopyAggregateChildren(node, replacement);
         replacement->getSequence()->push_back(CreateReturnValueOutSymbol(node->getType()));
         *replacement->getFunctionSymbolInfo() = *node->getFunctionSymbolInfo();

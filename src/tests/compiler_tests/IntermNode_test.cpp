@@ -189,7 +189,7 @@ TEST_F(IntermNodeTest, DeepCopyAggregateNode)
     originalSeq->push_back(createTestSymbol());
     originalSeq->push_back(createTestSymbol());
     TIntermAggregate *original =
-        new TIntermAggregate(originalSeq->at(0)->getAsTyped()->getType(), EOpMix, originalSeq);
+        TIntermAggregate::Create(originalSeq->at(0)->getAsTyped()->getType(), EOpMix, originalSeq);
     original->setLine(getTestSourceLoc());
 
     TIntermTyped *copyTyped = original->deepCopy();

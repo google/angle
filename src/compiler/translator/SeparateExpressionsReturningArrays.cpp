@@ -55,16 +55,6 @@ TIntermBinary *CopyAssignmentNode(TIntermBinary *node)
     return new TIntermBinary(node->getOp(), node->getLeft(), node->getRight());
 }
 
-// Performs a shallow copy of a constructor/function call node.
-TIntermAggregate *CopyAggregateNode(TIntermAggregate *node)
-{
-    TIntermSequence *copySeq = new TIntermSequence();
-    copySeq->insert(copySeq->begin(), node->getSequence()->begin(), node->getSequence()->end());
-    TIntermAggregate *copyNode = new TIntermAggregate(node->getType(), node->getOp(), copySeq);
-    *copyNode->getFunctionSymbolInfo() = *node->getFunctionSymbolInfo();
-    return copyNode;
-}
-
 bool SeparateExpressionsTraverser::visitBinary(Visit visit, TIntermBinary *node)
 {
     if (mFoundArrayExpression)
@@ -104,7 +94,7 @@ bool SeparateExpressionsTraverser::visitAggregate(Visit visit, TIntermAggregate 
     mFoundArrayExpression = true;
 
     TIntermSequence insertions;
-    insertions.push_back(createTempInitDeclaration(CopyAggregateNode(node)));
+    insertions.push_back(createTempInitDeclaration(node->shallowCopy()));
     insertStatementsInParentBlock(insertions);
 
     queueReplacement(node, createTempSymbol(node->getType()), OriginalNode::IS_DROPPED);

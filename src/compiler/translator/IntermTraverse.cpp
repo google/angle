@@ -228,22 +228,23 @@ void TIntermTraverser::nextTemporaryIndex()
     ++(*mTemporaryIndex);
 }
 
-void TLValueTrackingTraverser::addToFunctionMap(const TName &name, TIntermSequence *paramSequence)
+void TLValueTrackingTraverser::addToFunctionMap(const TSymbolUniqueId &id,
+                                                TIntermSequence *paramSequence)
 {
-    mFunctionMap[name] = paramSequence;
+    mFunctionMap[id.get()] = paramSequence;
 }
 
 bool TLValueTrackingTraverser::isInFunctionMap(const TIntermAggregate *callNode) const
 {
     ASSERT(callNode->getOp() == EOpCallFunctionInAST);
-    return (mFunctionMap.find(callNode->getFunctionSymbolInfo()->getNameObj()) !=
+    return (mFunctionMap.find(callNode->getFunctionSymbolInfo()->getId().get()) !=
             mFunctionMap.end());
 }
 
 TIntermSequence *TLValueTrackingTraverser::getFunctionParameters(const TIntermAggregate *callNode)
 {
     ASSERT(isInFunctionMap(callNode));
-    return mFunctionMap[callNode->getFunctionSymbolInfo()->getNameObj()];
+    return mFunctionMap[callNode->getFunctionSymbolInfo()->getId().get()];
 }
 
 void TLValueTrackingTraverser::setInFunctionCallOutParameter(bool inOutParameter)
@@ -623,7 +624,7 @@ void TIntermTraverser::traverseAggregate(TIntermAggregate *node)
 void TLValueTrackingTraverser::traverseFunctionPrototype(TIntermFunctionPrototype *node)
 {
     TIntermSequence *sequence = node->getSequence();
-    addToFunctionMap(node->getFunctionSymbolInfo()->getNameObj(), sequence);
+    addToFunctionMap(node->getFunctionSymbolInfo()->getId(), sequence);
 
     TIntermTraverser::traverseFunctionPrototype(node);
 }

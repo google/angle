@@ -89,8 +89,7 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
         16, node->getFunctionSymbolInfo()->getName().length() - 20);
     TString newName           = "texelFetch" + newArgs;
     TSymbol *texelFetchSymbol = symbolTable->findBuiltIn(newName, shaderVersion);
-    ASSERT(texelFetchSymbol);
-    int uniqueId = texelFetchSymbol->getUniqueId();
+    ASSERT(texelFetchSymbol && texelFetchSymbol->isFunction());
 
     // Create new node that represents the call of function texelFetch.
     // Its argument list will be: texelFetch(sampler, Position+offset, lod).
@@ -117,8 +116,8 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
         TIntermTyped *zeroNode = TIntermTyped::CreateZero(TType(EbtInt));
         constructOffsetIvecArguments->push_back(zeroNode);
 
-        offsetNode = new TIntermAggregate(texCoordNode->getType(), EOpConstructIVec3,
-                                          constructOffsetIvecArguments);
+        offsetNode = TIntermAggregate::CreateConstructor(texCoordNode->getType(), EOpConstructIVec3,
+                                                         constructOffsetIvecArguments);
         offsetNode->setLine(texCoordNode->getLine());
     }
     else
@@ -136,10 +135,8 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
 
     ASSERT(texelFetchArguments->size() == 3u);
 
-    TIntermAggregate *texelFetchNode =
-        new TIntermAggregate(node->getType(), EOpCallBuiltInFunction, texelFetchArguments);
-    texelFetchNode->getFunctionSymbolInfo()->setName(newName);
-    texelFetchNode->getFunctionSymbolInfo()->setId(uniqueId);
+    TIntermAggregate *texelFetchNode = TIntermAggregate::CreateBuiltInFunctionCall(
+        *static_cast<const TFunction *>(texelFetchSymbol), texelFetchArguments);
     texelFetchNode->setLine(node->getLine());
 
     // Replace the old node by this new node.

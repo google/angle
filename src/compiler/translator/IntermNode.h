@@ -56,6 +56,7 @@ class TIntermRaw;
 class TIntermBranch;
 
 class TSymbolTable;
+class TSymbolUniqueId;
 class TFunction;
 
 // Encapsulate an identifier string and track whether it is coming from the original shader code
@@ -414,7 +415,7 @@ class TIntermOperator : public TIntermTyped
 
     TIntermOperator(const TIntermOperator &) = default;
 
-    TOperator mOp;
+    const TOperator mOp;
 };
 
 // Node for vector swizzles.
@@ -535,10 +536,11 @@ class TFunctionSymbolInfo
 {
   public:
     POOL_ALLOCATOR_NEW_DELETE();
-    TFunctionSymbolInfo() : mId(0) {}
+    TFunctionSymbolInfo(const TSymbolUniqueId &id);
+    TFunctionSymbolInfo() : mId(nullptr) {}
 
-    TFunctionSymbolInfo(const TFunctionSymbolInfo &) = default;
-    TFunctionSymbolInfo &operator=(const TFunctionSymbolInfo &) = default;
+    TFunctionSymbolInfo(const TFunctionSymbolInfo &info);
+    TFunctionSymbolInfo &operator=(const TFunctionSymbolInfo &info);
 
     void setFromFunction(const TFunction &function);
 
@@ -550,11 +552,12 @@ class TFunctionSymbolInfo
     void setName(const TString &name) { mName.setString(name); }
     bool isMain() const { return mName.getString() == "main("; }
 
-    void setId(int functionId) { mId = functionId; }
-    int getId() const { return mId; }
+    void setId(const TSymbolUniqueId &functionId);
+    const TSymbolUniqueId &getId() const;
+
   private:
     TName mName;
-    int mId;
+    TSymbolUniqueId *mId;
 };
 
 typedef TVector<TIntermNode *> TIntermSequence;
@@ -593,11 +596,27 @@ class TIntermAggregateBase
 class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
 {
   public:
-    TIntermAggregate(const TType &type, TOperator op, TIntermSequence *arguments);
+    static TIntermAggregate *CreateFunctionCall(const TFunction &func, TIntermSequence *arguments);
+
+    // If using this, ensure that there's a consistent function definition with the same symbol id
+    // added to the AST.
+    static TIntermAggregate *CreateFunctionCall(const TType &type,
+                                                const TSymbolUniqueId &id,
+                                                const TName &name,
+                                                TIntermSequence *arguments);
+
+    static TIntermAggregate *CreateBuiltInFunctionCall(const TFunction &func,
+                                                       TIntermSequence *arguments);
+    static TIntermAggregate *CreateConstructor(const TType &type,
+                                               TOperator op,
+                                               TIntermSequence *arguments);
+    static TIntermAggregate *Create(const TType &type, TOperator op, TIntermSequence *arguments);
     ~TIntermAggregate() {}
 
     // Note: only supported for nodes that can be a part of an expression.
     TIntermTyped *deepCopy() const override { return new TIntermAggregate(*this); }
+
+    TIntermAggregate *shallowCopy() const;
 
     TIntermAggregate *getAsAggregate() override { return this; }
     void traverse(TIntermTraverser *it) override;
@@ -619,10 +638,6 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
     TFunctionSymbolInfo *getFunctionSymbolInfo() { return &mFunctionInfo; }
     const TFunctionSymbolInfo *getFunctionSymbolInfo() const { return &mFunctionInfo; }
 
-    // Used for built-in functions under EOpCallBuiltInFunction. The function name in the symbol
-    // info needs to be set before calling this.
-    void setBuiltInFunctionPrecision();
-
   protected:
     TIntermSequence mArguments;
 
@@ -635,6 +650,8 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
     TFunctionSymbolInfo mFunctionInfo;
 
   private:
+    TIntermAggregate(const TType &type, TOperator op, TIntermSequence *arguments);
+
     TIntermAggregate(const TIntermAggregate &node);  // note: not deleted, just private!
 
     void setTypePrecisionAndQualifier(const TType &type);
@@ -647,6 +664,10 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
 
     // Returns true if precision was set according to special rules for this built-in.
     bool setPrecisionForSpecialBuiltInOp();
+
+    // Used for built-in functions under EOpCallBuiltInFunction. The function name in the symbol
+    // info needs to be set before calling this.
+    void setBuiltInFunctionPrecision();
 };
 
 // A list of statements. Either the root node which contains declarations and function definitions,
@@ -678,7 +699,10 @@ class TIntermFunctionPrototype : public TIntermTyped, public TIntermAggregateBas
   public:
     // TODO(oetuaho@nvidia.com): See if TFunctionSymbolInfo could be added to constructor
     // parameters.
-    TIntermFunctionPrototype(const TType &type) : TIntermTyped(type) {}
+    TIntermFunctionPrototype(const TType &type, const TSymbolUniqueId &id)
+        : TIntermTyped(type), mFunctionInfo(id)
+    {
+    }
     ~TIntermFunctionPrototype() {}
 
     TIntermFunctionPrototype *getAsFunctionPrototypeNode() override { return this; }
@@ -967,6 +991,20 @@ class TIntermTraverser : angle::NonCopyable
     // Start creating temporary symbols from the given temporary symbol index + 1.
     void useTemporaryIndex(unsigned int *temporaryIndex);
 
+    static TIntermFunctionPrototype *CreateInternalFunctionPrototypeNode(
+        const TType &returnType,
+        const char *name,
+        const TSymbolUniqueId &functionId);
+    static TIntermFunctionDefinition *CreateInternalFunctionDefinitionNode(
+        const TType &returnType,
+        const char *name,
+        TIntermBlock *functionBody,
+        const TSymbolUniqueId &functionId);
+    static TIntermAggregate *CreateInternalFunctionCallNode(const TType &returnType,
+                                                            const char *name,
+                                                            const TSymbolUniqueId &functionId,
+                                                            TIntermSequence *arguments);
+
   protected:
     // Should only be called from traverse*() functions
     void incrementDepth(TIntermNode *current)
@@ -1112,6 +1150,8 @@ class TIntermTraverser : angle::NonCopyable
     std::vector<NodeInsertMultipleEntry> mInsertions;
 
   private:
+    static TName GetInternalFunctionName(const char *name);
+
     // To replace a single node with another on the parent node
     struct NodeUpdateEntry
     {
@@ -1195,7 +1235,7 @@ class TLValueTrackingTraverser : public TIntermTraverser
     bool operatorRequiresLValue() const { return mOperatorRequiresLValue; }
 
     // Add a function encountered during traversal to the function map.
-    void addToFunctionMap(const TName &name, TIntermSequence *paramSequence);
+    void addToFunctionMap(const TSymbolUniqueId &id, TIntermSequence *paramSequence);
 
     // Return true if the prototype or definition of the function being called has been encountered
     // during traversal.
@@ -1211,20 +1251,8 @@ class TLValueTrackingTraverser : public TIntermTraverser
     bool mOperatorRequiresLValue;
     bool mInFunctionCallOutParameter;
 
-    struct TNameComparator
-    {
-        bool operator()(const TName &a, const TName &b) const
-        {
-            int compareResult = a.getString().compare(b.getString());
-            if (compareResult != 0)
-                return compareResult < 0;
-            // Internal functions may have same names as non-internal functions.
-            return !a.isInternal() && b.isInternal();
-        }
-    };
-
-    // Map from mangled function names to their parameter sequences
-    TMap<TName, TIntermSequence *, TNameComparator> mFunctionMap;
+    // Map from function symbol id values to their parameter sequences
+    TMap<int, TIntermSequence *> mFunctionMap;
 
     const TSymbolTable &mSymbolTable;
     const int mShaderVersion;

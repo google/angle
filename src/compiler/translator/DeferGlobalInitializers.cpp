@@ -21,43 +21,6 @@ namespace sh
 namespace
 {
 
-void SetInternalFunctionName(TFunctionSymbolInfo *functionInfo, const char *name)
-{
-    TString nameStr(name);
-    nameStr = TFunction::mangleName(nameStr);
-    TName nameObj(nameStr);
-    nameObj.setInternal(true);
-    functionInfo->setNameObj(nameObj);
-}
-
-TIntermFunctionPrototype *CreateFunctionPrototypeNode(const char *name, const int functionId)
-{
-    TType returnType(EbtVoid);
-    TIntermFunctionPrototype *functionNode = new TIntermFunctionPrototype(returnType);
-
-    SetInternalFunctionName(functionNode->getFunctionSymbolInfo(), name);
-    functionNode->getFunctionSymbolInfo()->setId(functionId);
-    return functionNode;
-}
-
-TIntermFunctionDefinition *CreateFunctionDefinitionNode(const char *name,
-                                                        TIntermBlock *functionBody,
-                                                        const int functionId)
-{
-    TIntermFunctionPrototype *prototypeNode = CreateFunctionPrototypeNode(name, functionId);
-    return new TIntermFunctionDefinition(prototypeNode, functionBody);
-}
-
-TIntermAggregate *CreateFunctionCallNode(const char *name, const int functionId)
-{
-    TType returnType(EbtVoid);
-    TIntermAggregate *functionNode =
-        new TIntermAggregate(returnType, EOpCallFunctionInAST, nullptr);
-    SetInternalFunctionName(functionNode->getFunctionSymbolInfo(), name);
-    functionNode->getFunctionSymbolInfo()->setId(functionId);
-    return functionNode;
-}
-
 class DeferGlobalInitializersTraverser : public TIntermTraverser
 {
   public:
@@ -132,13 +95,13 @@ void DeferGlobalInitializersTraverser::insertInitFunction(TIntermBlock *root)
     {
         return;
     }
-    const int initFunctionId = TSymbolTable::nextUniqueId();
+    TSymbolUniqueId initFunctionId;
 
     const char *functionName = "initializeDeferredGlobals";
 
     // Add function prototype to the beginning of the shader
     TIntermFunctionPrototype *functionPrototypeNode =
-        CreateFunctionPrototypeNode(functionName, initFunctionId);
+        CreateInternalFunctionPrototypeNode(TType(EbtVoid), functionName, initFunctionId);
     root->getSequence()->insert(root->getSequence()->begin(), functionPrototypeNode);
 
     // Add function definition to the end of the shader
@@ -148,8 +111,8 @@ void DeferGlobalInitializersTraverser::insertInitFunction(TIntermBlock *root)
     {
         functionBody->push_back(deferredInit);
     }
-    TIntermFunctionDefinition *functionDefinition =
-        CreateFunctionDefinitionNode(functionName, functionBodyNode, initFunctionId);
+    TIntermFunctionDefinition *functionDefinition = CreateInternalFunctionDefinitionNode(
+        TType(EbtVoid), functionName, functionBodyNode, initFunctionId);
     root->getSequence()->push_back(functionDefinition);
 
     // Insert call into main function
@@ -158,8 +121,8 @@ void DeferGlobalInitializersTraverser::insertInitFunction(TIntermBlock *root)
         TIntermFunctionDefinition *nodeFunction = node->getAsFunctionDefinition();
         if (nodeFunction != nullptr && nodeFunction->getFunctionSymbolInfo()->isMain())
         {
-            TIntermAggregate *functionCallNode =
-                CreateFunctionCallNode(functionName, initFunctionId);
+            TIntermAggregate *functionCallNode = CreateInternalFunctionCallNode(
+                TType(EbtVoid), functionName, initFunctionId, nullptr);
 
             TIntermBlock *mainBody = nodeFunction->getBody();
             ASSERT(mainBody != nullptr);

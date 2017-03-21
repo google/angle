@@ -41,6 +41,22 @@
 namespace sh
 {
 
+// Encapsulates a unique id for a symbol.
+class TSymbolUniqueId
+{
+  public:
+    POOL_ALLOCATOR_NEW_DELETE();
+    TSymbolUniqueId();
+    TSymbolUniqueId(const TSymbol &symbol);
+    TSymbolUniqueId(const TSymbolUniqueId &) = default;
+    TSymbolUniqueId &operator=(const TSymbolUniqueId &) = default;
+
+    int get() const;
+
+  private:
+    int mId;
+};
+
 // Symbol base class. (Can build functions or variables out of these...)
 class TSymbol : angle::NonCopyable
 {
