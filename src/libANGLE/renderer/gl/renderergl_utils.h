@@ -37,8 +37,12 @@ std::string GetDriverVersion(const FunctionsGL *functions);
 namespace nativegl_gl
 {
 
-void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsMap *textureCapsMap,
-                  gl::Extensions *extensions, gl::Version *maxSupportedESVersion);
+void GenerateCaps(const FunctionsGL *functions,
+                  const WorkaroundsGL &workarounds,
+                  gl::Caps *caps,
+                  gl::TextureCapsMap *textureCapsMap,
+                  gl::Extensions *extensions,
+                  gl::Version *maxSupportedESVersion);
 
 void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workarounds);
 }

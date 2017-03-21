@@ -183,8 +183,12 @@ static void LimitVersion(gl::Version *curVersion, const gl::Version &maxVersion)
     }
 }
 
-void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsMap *textureCapsMap,
-                  gl::Extensions *extensions, gl::Version *maxSupportedESVersion)
+void GenerateCaps(const FunctionsGL *functions,
+                  const WorkaroundsGL &workarounds,
+                  gl::Caps *caps,
+                  gl::TextureCapsMap *textureCapsMap,
+                  gl::Extensions *extensions,
+                  gl::Version *maxSupportedESVersion)
 {
     // Texture format support checks
     const gl::FormatSet &allFormats = gl::GetAllSizedInternalFormats();
@@ -634,7 +638,8 @@ void GenerateCaps(const FunctionsGL *functions, gl::Caps *caps, gl::TextureCapsM
 
         // OpenGL 4.3 has no limit on maximum value of stride.
         // [OpenGL 4.3 (Core Profile) - February 14, 2013] Chapter 10.3.1 Page 298
-        if (functions->standard == STANDARD_GL_DESKTOP && functions->version == gl::Version(4, 3))
+        if (workarounds.emulateMaxVertexAttribStride ||
+            (functions->standard == STANDARD_GL_DESKTOP && functions->version == gl::Version(4, 3)))
         {
             caps->maxVertexAttribStride = 2048;
         }
@@ -943,6 +948,11 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
 
     workarounds->doesSRGBClearsOnLinearFramebufferAttachments =
         functions->standard == STANDARD_GL_DESKTOP && (IsIntel(vendor) || IsAMD(vendor));
+
+#if defined(ANGLE_PLATFORM_LINUX)
+    workarounds->emulateMaxVertexAttribStride =
+        functions->standard == STANDARD_GL_DESKTOP && IsAMD(vendor);
+#endif
 
 #if defined(ANGLE_PLATFORM_APPLE)
     workarounds->doWhileGLSLCausesGPUHang = true;

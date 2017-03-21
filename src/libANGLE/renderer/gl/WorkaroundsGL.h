@@ -118,6 +118,12 @@ struct WorkaroundsGL
     // This only seems to affect AMD OpenGL drivers, and some Android devices.
     // http://anglebug.com/1637
     bool reapplyUBOBindingsAfterLoadingBinaryProgram = false;
+
+    // Some OpenGL drivers return 0 when we query MAX_VERTEX_ATTRIB_STRIDE in an OpenGL 4.4 or
+    // higher context.
+    // This only seems to affect AMD OpenGL drivers.
+    // Tracking bug: http://anglebug.com/1936
+    bool emulateMaxVertexAttribStride = false;
 };
 }  // namespace rx
 
