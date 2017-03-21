@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "644a1924_3cdb3bba",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 957,
+      "author": {
+        "id": 1185100
+      },
+      "writtenOn": "2017-03-21T08:05:32Z",
+      "side": 1,
+      "message": "I skiped braces to use the same code style as for any extension above \"OVR_multuview\".\nAnyway if it will needed i will add them.",
+      "parentUuid": "adfd2500_bbd445fa",
+      "range": {
+        "startLine": 957,
+        "startChar": 8,
+        "endLine": 957,
+        "endChar": 56
+      },
+      "revId": "ef2e0bb29ad83a2f8dc3036ce23fb137e5858692",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "02c5e42d_fcf65479",
         "filename": "src/compiler/translator/glslang.l",
         "patchSetId": 3
@@ -72,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "f4126aa9_585ba86f",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 3
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1185100
+      },
+      "writtenOn": "2017-03-21T08:05:32Z",
+      "side": 1,
+      "message": "I used \"ES2_reserved_ES3_keyword\" because as mentioned in \nhttp://khronos.org/registry/OpenGL/specs/es/2.0/GLSL_ES_Specification_1.00.pdf\nparagraph 3.7 \"Keywords\" (page 17)\n\nIn addition, all identifiers containing two consecutive underscores (__) are reserved as possible future keywords.\n\nSo it is not allowed to use \"__samplerExternal2DY2YEXT\" or any \"__xXx\" identifiers in ES2.\n\nPlease let me know if i misunderstood this part from specification.",
+      "parentUuid": "79031720_ce967ea1",
+      "range": {
+        "startLine": 197,
+        "startChar": 39,
+        "endLine": 197,
+        "endChar": 63
+      },
+      "revId": "ef2e0bb29ad83a2f8dc3036ce23fb137e5858692",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "171224b9_4773d86f",
         "filename": "src/tests/compiler_tests/EXT_YUV_target_test.cpp",
         "patchSetId": 3
@@ -95,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "5039cee6_ac57e5b7",
+        "filename": "src/tests/compiler_tests/EXT_YUV_target_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1185100
+      },
+      "writtenOn": "2017-03-21T08:05:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "171224b9_4773d86f",
+      "range": {
+        "startLine": 40,
+        "startChar": 23,
+        "endLine": 40,
+        "endChar": 26
+      },
+      "revId": "ef2e0bb29ad83a2f8dc3036ce23fb137e5858692",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "94ad8745_052a63ae",
         "filename": "src/tests/compiler_tests/EXT_YUV_target_test.cpp",
         "patchSetId": 3
@@ -106,6 +178,30 @@
       "writtenOn": "2017-03-20T18:12:03Z",
       "side": 1,
       "message": "These test multiple failures, if a single thing fails, the whole test will pass. It is ok to not test all corner cases, but if there are things you want to test individually they should be split up in their own shader.",
+      "range": {
+        "startLine": 125,
+        "startChar": 0,
+        "endLine": 155,
+        "endChar": 0
+      },
+      "revId": "ef2e0bb29ad83a2f8dc3036ce23fb137e5858692",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d50bb5f6_f54efd61",
+        "filename": "src/tests/compiler_tests/EXT_YUV_target_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1185100
+      },
+      "writtenOn": "2017-03-21T08:05:32Z",
+      "side": 1,
+      "message": "I split them into separate failure tests",
+      "parentUuid": "94ad8745_052a63ae",
       "range": {
         "startLine": 125,
         "startChar": 0,
