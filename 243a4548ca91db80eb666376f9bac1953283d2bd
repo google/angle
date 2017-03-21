@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1c30baf5_8d03fe1d",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2541,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-21T15:48:23Z",
+      "side": 1,
+      "message": "aside: it might be cool to have an iterator for Range. not required unless it comes up often.",
+      "range": {
+        "startLine": 2540,
+        "startChar": 3,
+        "endLine": 2541,
+        "endChar": 72
+      },
+      "revId": "243a4548ca91db80eb666376f9bac1953283d2bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
