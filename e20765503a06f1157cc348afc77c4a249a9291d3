@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "be681b78_a846f4af",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-03-22T00:24:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "99cc8c6d_25acc535",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 128
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "320bb647_7f452926",
         "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
         "patchSetId": 9
@@ -36,6 +60,30 @@
       "writtenOn": "2017-03-15T15:08:22Z",
       "side": 1,
       "message": "We don\u0027t need to store this. It\u0027s available any time in mState.config-\u003esamples.",
+      "range": {
+        "startLine": 46,
+        "startChar": 6,
+        "endLine": 46,
+        "endChar": 40
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f3760a95_5af013e7",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-03-22T00:24:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "320bb647_7f452926",
       "range": {
         "startLine": 46,
         "startChar": 6,
@@ -140,6 +188,30 @@
     },
     {
       "key": {
+        "uuid": "a662ea64_fb7182cd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-03-22T00:24:23Z",
+      "side": 1,
+      "message": "What is the motivation to only cache the `ViewDimension` in the RTV description? It seems like these are only computed and used during setup.",
+      "parentUuid": "f663180a_6b280ff3",
+      "range": {
+        "startLine": 280,
+        "startChar": 8,
+        "endLine": 280,
+        "endChar": 91
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "553f73b7_eaa3bf51",
         "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
         "patchSetId": 9
@@ -151,6 +223,30 @@
       "writtenOn": "2017-03-15T15:08:22Z",
       "side": 1,
       "message": "nit: nullptr",
+      "range": {
+        "startLine": 667,
+        "startChar": 77,
+        "endLine": 667,
+        "endChar": 81
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "771f6b9f_9c1224e3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 667,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-03-22T00:24:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "553f73b7_eaa3bf51",
       "range": {
         "startLine": 667,
         "startChar": 77,
@@ -209,6 +305,30 @@
     },
     {
       "key": {
+        "uuid": "de2dce32_419a2e85",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Passthrough2D11.hlsl",
+        "patchSetId": 9
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-03-22T00:24:23Z",
+      "side": 1,
+      "message": "My intention was to let the client deal with performing the resolve (e.g. ResolveSubresource). Could that be sufficient?",
+      "parentUuid": "9cccadc6_d15a6713",
+      "range": {
+        "startLine": 27,
+        "startChar": 4,
+        "endLine": 27,
+        "endChar": 47
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "86409544_76e79a75",
         "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
         "patchSetId": 9
@@ -220,6 +340,30 @@
       "writtenOn": "2017-03-15T15:08:22Z",
       "side": 1,
       "message": "can you ASSERT_* here to check that sampleCount and sampleQuality are inactive?",
+      "range": {
+        "startLine": 185,
+        "startChar": 17,
+        "endLine": 185,
+        "endChar": 28
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32cc72f5_74e3df11",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-03-22T00:24:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "86409544_76e79a75",
       "range": {
         "startLine": 185,
         "startChar": 17,
@@ -255,6 +399,30 @@
     },
     {
       "key": {
+        "uuid": "2f10bf47_c7c93fbe",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-03-22T00:24:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d787942b_63ec4368",
+      "range": {
+        "startLine": 222,
+        "startChar": 0,
+        "endLine": 232,
+        "endChar": 9
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4e862dc6_38186a10",
         "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
         "patchSetId": 9
@@ -266,6 +434,30 @@
       "writtenOn": "2017-03-15T15:08:22Z",
       "side": 1,
       "message": "nit: I think valid() should fail if the OpenGL back-end is enabled. maybe for D3D9, do not include it in the list of test platforms (As you do currently). Is the reason we can\u0027t test D3D9 because the test needs specific D3D11 features, or because of some other limitation?",
+      "range": {
+        "startLine": 366,
+        "startChar": 8,
+        "endLine": 366,
+        "endChar": 69
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2f05fef6_1c5d08cd",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-03-22T00:24:23Z",
+      "side": 1,
+      "message": "Correct - mutli-sample support is only enabled for the D3D11 renderer.",
+      "parentUuid": "4e862dc6_38186a10",
       "range": {
         "startLine": 366,
         "startChar": 8,
@@ -301,6 +493,30 @@
     },
     {
       "key": {
+        "uuid": "d2e890ff_d7d24181",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 379,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-03-22T00:24:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "285f0531_26f8b9e9",
+      "range": {
+        "startLine": 379,
+        "startChar": 4,
+        "endLine": 379,
+        "endChar": 10
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6dae755c_ba132895",
         "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
         "patchSetId": 9
@@ -312,6 +528,30 @@
       "writtenOn": "2017-03-15T15:08:22Z",
       "side": 1,
       "message": "nit: is this being passed as EGLint? This should be the native type I think, D3D11_STANDARD_MULTISAMPLE_QUALITY_LEVELS. We aren\u0027t actually sending this through EGL.",
+      "range": {
+        "startLine": 382,
+        "startChar": 39,
+        "endLine": 382,
+        "endChar": 73
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "170faa37_b471a9b1",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-03-22T00:24:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6dae755c_ba132895",
       "range": {
         "startLine": 382,
         "startChar": 39,
@@ -370,6 +610,30 @@
     },
     {
       "key": {
+        "uuid": "c71666c1_1e8e321c",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-03-22T00:24:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c90aa6f5_d5b6de4b",
+      "range": {
+        "startLine": 394,
+        "startChar": 4,
+        "endLine": 394,
+        "endChar": 19
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cbc1633b_cb04d7c0",
         "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
         "patchSetId": 9
@@ -381,6 +645,30 @@
       "writtenOn": "2017-03-15T15:08:22Z",
       "side": 1,
       "message": "nit: comment before every test",
+      "range": {
+        "startLine": 400,
+        "startChar": 0,
+        "endLine": 400,
+        "endChar": 6
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4219e5ab_224c4d55",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-03-22T00:24:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cbc1633b_cb04d7c0",
       "range": {
         "startLine": 400,
         "startChar": 0,
@@ -439,6 +727,30 @@
     },
     {
       "key": {
+        "uuid": "290d5ee3_6b237a43",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 419,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-03-22T00:24:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "792fa573_cc212645",
+      "range": {
+        "startLine": 419,
+        "startChar": 4,
+        "endLine": 419,
+        "endChar": 10
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "416b9c7c_d5daf594",
         "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
         "patchSetId": 9
@@ -456,6 +768,24 @@
     },
     {
       "key": {
+        "uuid": "c77f8628_74770719",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-03-22T00:24:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "416b9c7c_d5daf594",
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2052d26c_b621d02e",
         "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
         "patchSetId": 9
@@ -467,6 +797,30 @@
       "writtenOn": "2017-03-15T15:08:22Z",
       "side": 1,
       "message": "same comments as above here",
+      "range": {
+        "startLine": 435,
+        "startChar": 4,
+        "endLine": 436,
+        "endChar": 30
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19b5b7a2_123cb464",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-03-22T00:24:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2052d26c_b621d02e",
       "range": {
         "startLine": 435,
         "startChar": 4,
@@ -502,6 +856,30 @@
     },
     {
       "key": {
+        "uuid": "557f78e4_404b09b0",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-03-22T00:24:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a39dc41d_b2a66673",
+      "range": {
+        "startLine": 443,
+        "startChar": 4,
+        "endLine": 443,
+        "endChar": 11
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "752dfcd9_cf36db0e",
         "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
         "patchSetId": 9
@@ -513,6 +891,30 @@
       "writtenOn": "2017-03-15T15:08:22Z",
       "side": 1,
       "message": "same comment",
+      "range": {
+        "startLine": 467,
+        "startChar": 4,
+        "endLine": 467,
+        "endChar": 19
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d602b0b8_25475bb2",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-03-22T00:24:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "752dfcd9_cf36db0e",
       "range": {
         "startLine": 467,
         "startChar": 4,
@@ -548,6 +950,30 @@
     },
     {
       "key": {
+        "uuid": "d199acf1_ca49855d",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-03-22T00:24:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1b3ad4f2_a1bb8406",
+      "range": {
+        "startLine": 476,
+        "startChar": 4,
+        "endLine": 489,
+        "endChar": 5
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8a5ca99e_d6d0cea3",
         "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
         "patchSetId": 9
@@ -559,6 +985,30 @@
       "writtenOn": "2017-03-15T15:08:22Z",
       "side": 1,
       "message": "I think you can include OpenGL here.",
+      "range": {
+        "startLine": 502,
+        "startChar": 41,
+        "endLine": 502,
+        "endChar": 50
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2519b732_5b4fb827",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-03-22T00:24:23Z",
+      "side": 1,
+      "message": "No multi-sampled EGL config exists for GL. EGL init will fail without a valid config, thus the OGL renderer was not included in the test.",
+      "parentUuid": "8a5ca99e_d6d0cea3",
       "range": {
         "startLine": 502,
         "startChar": 41,
