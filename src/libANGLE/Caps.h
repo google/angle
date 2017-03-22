@@ -644,6 +644,9 @@ struct DisplayExtensions
     // EGL_CHROMIUM_create_context_bind_generates_resource
     bool createContextBindGeneratesResource;
 
+    // EGL_CHROMIUM_get_sync_values
+    bool getSyncValues;
+
     // EGL_EXT_swap_buffers_with_damage
     bool swapBuffersWithDamage;
 

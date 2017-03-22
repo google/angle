@@ -60,6 +60,12 @@ egl::Error SurfaceNULL::releaseTexImage(EGLint buffer)
     return egl::NoError();
 }
 
+egl::Error SurfaceNULL::getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR *sbc)
+{
+    UNIMPLEMENTED();
+    return egl::Error(EGL_BAD_ACCESS);
+}
+
 void SurfaceNULL::setSwapInterval(EGLint interval)
 {
 }

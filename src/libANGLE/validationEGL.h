@@ -98,6 +98,12 @@ Error ValidateStreamPostD3DTextureNV12ANGLE(const Display *display,
                                             void *texture,
                                             const AttributeMap &attribs);
 
+Error ValidateGetSyncValuesCHROMIUM(const Display *display,
+                                    const Surface *surface,
+                                    const EGLuint64KHR *ust,
+                                    const EGLuint64KHR *msc,
+                                    const EGLuint64KHR *sbc);
+
 Error ValidateSwapBuffersWithDamageEXT(const Display *display,
                                        const Surface *surface,
                                        EGLint *rects,

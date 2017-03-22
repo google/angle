@@ -57,7 +57,8 @@ EXPORTS
     eglStreamConsumerGLTextureExternalAttribsNV @63
     eglCreateStreamProducerD3DTextureNV12ANGLE  @64
     eglStreamPostD3DTextureNV12ANGLE            @65
-    eglSwapBuffersWithDamageEXT                 @66
+    eglGetSyncValuesCHROMIUM                    @66
+    eglSwapBuffersWithDamageEXT                 @67
 
     ; 1.5 entry points
     eglCreateSync                               @38

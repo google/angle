@@ -1105,6 +1105,9 @@ void Renderer11::generateDisplayExtensions(egl::DisplayExtensions *outExtensions
     outExtensions->displayTextureShareGroup = true;
 
     outExtensions->createContextRobustResourceInitialization = true;
+
+    // getSyncValues requires direct composition.
+    outExtensions->getSyncValues = outExtensions->directComposition;
 }
 
 gl::Error Renderer11::flush()

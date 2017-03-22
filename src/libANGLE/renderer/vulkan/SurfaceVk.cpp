@@ -104,6 +104,14 @@ egl::Error OffscreenSurfaceVk::releaseTexImage(EGLint /*buffer*/)
     return egl::Error(EGL_SUCCESS);
 }
 
+egl::Error OffscreenSurfaceVk::getSyncValues(EGLuint64KHR * /*ust*/,
+                                             EGLuint64KHR * /*msc*/,
+                                             EGLuint64KHR * /*sbc*/)
+{
+    UNIMPLEMENTED();
+    return egl::Error(EGL_BAD_ACCESS);
+}
+
 void OffscreenSurfaceVk::setSwapInterval(EGLint /*interval*/)
 {
 }
@@ -485,6 +493,14 @@ egl::Error WindowSurfaceVk::bindTexImage(gl::Texture *texture, EGLint buffer)
 egl::Error WindowSurfaceVk::releaseTexImage(EGLint buffer)
 {
     return egl::Error(EGL_SUCCESS);
+}
+
+egl::Error WindowSurfaceVk::getSyncValues(EGLuint64KHR * /*ust*/,
+                                          EGLuint64KHR * /*msc*/,
+                                          EGLuint64KHR * /*sbc*/)
+{
+    UNIMPLEMENTED();
+    return egl::Error(EGL_BAD_ACCESS);
 }
 
 void WindowSurfaceVk::setSwapInterval(EGLint interval)
