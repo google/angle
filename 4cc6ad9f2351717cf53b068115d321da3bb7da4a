@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5466251a_68869a5c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2098,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-22T21:05:26Z",
+      "side": 1,
+      "message": "I see what you\u0027re doing here, trying to find the fast path where we can simply apply the index buffer without reading it back but this code is very fragile and relies on a few assumptions.\n\nPlease refactor the code from IndexDataManager::prepareIndexData into functions to calculate it workarounds are needed or the buffer can be bound directly.  There are already mistakes in this check (it doesn\u0027t allow GL_UNSIGNED_INT index buffers and it doesn\u0027t check the state of primitive restart), we need to make sure the same code is used in both checks.",
+      "range": {
+        "startLine": 2090,
+        "startChar": 4,
+        "endLine": 2098,
+        "endChar": 24
+      },
+      "revId": "4cc6ad9f2351717cf53b068115d321da3bb7da4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
