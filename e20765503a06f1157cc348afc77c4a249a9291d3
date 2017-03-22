@@ -119,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "e8958890_c0463b2b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 930,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-03-22T00:26:24Z",
+      "side": 1,
+      "message": "It appears so. It wasn\u0027t obvious where std:: is being imported. I could file a separate issue or do some more digging, if concerning enough.",
+      "parentUuid": "659e18f9_f8fcb8dd",
+      "range": {
+        "startLine": 930,
+        "startChar": 4,
+        "endLine": 930,
+        "endChar": 20
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "98ec7445_02577bc1",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 9
