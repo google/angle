@@ -25,6 +25,40 @@
     },
     {
       "key": {
+        "uuid": "23908819_9a54fee6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 557,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-22T22:51:44Z",
+      "side": 1,
+      "message": "When MSAA is enabled and an offscreen RTV is required, we can probably get away with having a single sampled swap chain and instead of using the passthrough shader, use a resolve shader for copying from the offscreen RTV to the swapchain RTV.  This would cut the swap chain size in half (saving at least 8MB of memory at 1080p) and the resolve shader should be faster than a multisample copy or a passthrough shader as well.",
+      "revId": "c61e742f124a89e6b89f1f89fc64087daa4b2509",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ecc19c3_5e4323f5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 728,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-22T22:51:44Z",
+      "side": 1,
+      "message": "Map calls are generally expensive, even with resource renaming (ie mapDiscard) and should be avoided whenever possible. Perhaps fixed groups of vertices (covering all combinations of XY inversion) could be defined in advance along with scissoring to crop out the unwanted area and the draw call would pick the appropriate set of vertices based on the XY inversion required. Such a scheme would eliminate the need for the vertices to be calculated and the VB to mapped/updated for every copy.",
+      "revId": "c61e742f124a89e6b89f1f89fc64087daa4b2509",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1a4e1abf_20dfe3bc",
         "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
         "patchSetId": 10
