@@ -150,6 +150,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size)
         resources.EXT_shader_framebuffer_fetch    = 1;
         resources.NV_shader_framebuffer_fetch     = 1;
         resources.ARM_shader_framebuffer_fetch    = 1;
+        resources.EXT_YUV_target                  = 1;
         resources.MaxDualSourceDrawBuffers        = 1;
 
         if (!translator->Init(resources))

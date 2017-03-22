@@ -163,6 +163,7 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     resources->NV_shader_framebuffer_fetch     = 0;
     resources->ARM_shader_framebuffer_fetch    = 0;
     resources->OVR_multiview                   = 0;
+    resources->EXT_YUV_target                  = 0;
 
     resources->NV_draw_buffers = 0;
 

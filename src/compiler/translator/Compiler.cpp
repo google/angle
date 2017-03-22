@@ -571,6 +571,8 @@ bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources &resources)
     initSamplerDefaultPrecision(EbtSamplerCube);
     // SamplerExternalOES is specified in the extension to have default precision.
     initSamplerDefaultPrecision(EbtSamplerExternalOES);
+    // SamplerExternal2DY2YEXT is specified in the extension to have default precision.
+    initSamplerDefaultPrecision(EbtSamplerExternal2DY2YEXT);
     // It isn't specified whether Sampler2DRect has default precision.
     initSamplerDefaultPrecision(EbtSampler2DRect);
 
@@ -618,6 +620,7 @@ void TCompiler::setResourceString()
         << ":EXT_shader_framebuffer_fetch:" << compileResources.EXT_shader_framebuffer_fetch
         << ":NV_shader_framebuffer_fetch:" << compileResources.NV_shader_framebuffer_fetch
         << ":ARM_shader_framebuffer_fetch:" << compileResources.ARM_shader_framebuffer_fetch
+        << ":EXT_YUV_target:" << compileResources.EXT_YUV_target
         << ":MaxVertexOutputVectors:" << compileResources.MaxVertexOutputVectors
         << ":MaxFragmentInputVectors:" << compileResources.MaxFragmentInputVectors
         << ":MinProgramTexelOffset:" << compileResources.MinProgramTexelOffset

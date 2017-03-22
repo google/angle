@@ -29,10 +29,12 @@ class ValidateOutputs : public TIntermTraverser
   private:
     int mMaxDrawBuffers;
     bool mAllowUnspecifiedOutputLocationResolution;
+    bool mUsesFragDepth;
 
     typedef std::vector<TIntermSymbol *> OutputVector;
     OutputVector mOutputs;
     OutputVector mUnspecifiedLocationOutputs;
+    OutputVector mYuvOutputs;
     std::set<std::string> mVisitedSymbols;
 };
 

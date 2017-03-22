@@ -25,7 +25,8 @@ ValidateOutputs::ValidateOutputs(const TExtensionBehavior &extBehavior, int maxD
     : TIntermTraverser(true, false, false),
       mMaxDrawBuffers(maxDrawBuffers),
       mAllowUnspecifiedOutputLocationResolution(
-          IsExtensionEnabled(extBehavior, "GL_EXT_blend_func_extended"))
+          IsExtensionEnabled(extBehavior, "GL_EXT_blend_func_extended")),
+      mUsesFragDepth(false)
 {
 }
 
@@ -41,14 +42,22 @@ void ValidateOutputs::visitSymbol(TIntermSymbol *symbol)
 
     if (qualifier == EvqFragmentOut)
     {
-        if (symbol->getType().getLayoutQualifier().location == -1)
-        {
-            mUnspecifiedLocationOutputs.push_back(symbol);
-        }
-        else
+        if (symbol->getType().getLayoutQualifier().location != -1)
         {
             mOutputs.push_back(symbol);
         }
+        else if (symbol->getType().getLayoutQualifier().yuv == true)
+        {
+            mYuvOutputs.push_back(symbol);
+        }
+        else
+        {
+            mUnspecifiedLocationOutputs.push_back(symbol);
+        }
+    }
+    else if (qualifier == EvqFragDepth || qualifier == EvqFragDepthEXT)
+    {
+        mUsesFragDepth = true;
     }
 }
 
@@ -103,6 +112,18 @@ void ValidateOutputs::validate(TDiagnostics *diagnostics) const
         {
             error(*symbol,
                   "must explicitly specify all locations when using multiple fragment outputs",
+                  diagnostics);
+        }
+    }
+
+    if (!mYuvOutputs.empty() && (mYuvOutputs.size() > 1 || mUsesFragDepth || !mOutputs.empty() ||
+                                 !mUnspecifiedLocationOutputs.empty()))
+    {
+        for (const auto &symbol : mYuvOutputs)
+        {
+            error(*symbol,
+                  "not allowed to specify yuv qualifier when using depth or multiple color "
+                  "fragment outputs",
                   diagnostics);
         }
     }

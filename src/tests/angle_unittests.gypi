@@ -55,6 +55,7 @@
             '<(angle_path)/src/tests/compiler_tests/DebugShaderPrecision_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/EmulateGLFragColorBroadcast_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/ExpressionLimit_test.cpp',
+            '<(angle_path)/src/tests/compiler_tests/EXT_YUV_target_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/EXT_blend_func_extended_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/FloatLex_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/FragDepth_test.cpp',

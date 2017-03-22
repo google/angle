@@ -33,6 +33,8 @@ const char *getBasicString(TBasicType t)
             return "uint";
         case EbtBool:
             return "bool";
+        case EbtYuvCscStandardEXT:
+            return "yuvCscStandardEXT";
         case EbtSampler2D:
             return "sampler2D";
         case EbtSampler3D:
@@ -41,6 +43,8 @@ const char *getBasicString(TBasicType t)
             return "samplerCube";
         case EbtSamplerExternalOES:
             return "samplerExternalOES";
+        case EbtSamplerExternal2DY2YEXT:
+            return "__samplerExternal2DY2YEXT";
         case EbtSampler2DRect:
             return "sampler2DRect";
         case EbtSampler2DArray:
@@ -292,6 +296,9 @@ TString TType::buildMangledName() const
         case EbtBool:
             mangledName += 'b';
             break;
+        case EbtYuvCscStandardEXT:
+            mangledName += "ycs";
+            break;
         case EbtSampler2D:
             mangledName += "s2";
             break;
@@ -306,6 +313,9 @@ TString TType::buildMangledName() const
             break;
         case EbtSamplerExternalOES:
             mangledName += "sext";
+            break;
+        case EbtSamplerExternal2DY2YEXT:
+            mangledName += "sext2y2y";
             break;
         case EbtSampler2DRect:
             mangledName += "s2r";

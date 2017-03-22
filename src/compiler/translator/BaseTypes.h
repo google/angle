@@ -65,13 +65,15 @@ enum TBasicType
     EbtIVec,               // non type: represents ivec2, ivec3, and ivec4
     EbtUVec,               // non type: represents uvec2, uvec3, and uvec4
     EbtBVec,               // non type: represents bvec2, bvec3, and bvec4
+    EbtYuvCscStandardEXT,  // Only valid if EXT_YUV_target exists.
     EbtGuardSamplerBegin,  // non type: see implementation of IsSampler()
     EbtSampler2D,
     EbtSampler3D,
     EbtSamplerCube,
     EbtSampler2DArray,
-    EbtSamplerExternalOES,  // Only valid if OES_EGL_image_external exists.
-    EbtSampler2DRect,       // Only valid if GL_ARB_texture_rectangle exists.
+    EbtSamplerExternalOES,       // Only valid if OES_EGL_image_external exists.
+    EbtSamplerExternal2DY2YEXT,  // Only valid if GL_EXT_YUV_target exists.
+    EbtSampler2DRect,            // Only valid if GL_ARB_texture_rectangle exists.
     EbtSampler2DMS,
     EbtISampler2D,
     EbtISampler3D,
@@ -221,6 +223,7 @@ inline bool IsIntegerSampler(TBasicType type)
         case EbtSampler3D:
         case EbtSamplerCube:
         case EbtSamplerExternalOES:
+        case EbtSamplerExternal2DY2YEXT:
         case EbtSampler2DRect:
         case EbtSampler2DArray:
         case EbtSampler2DShadow:
@@ -310,6 +313,7 @@ inline bool IsSampler2D(TBasicType type)
         case EbtUSampler2DArray:
         case EbtSampler2DRect:
         case EbtSamplerExternalOES:
+        case EbtSamplerExternal2DY2YEXT:
         case EbtSampler2DShadow:
         case EbtSampler2DArrayShadow:
         case EbtSampler2DMS:
@@ -343,6 +347,7 @@ inline bool IsSamplerCube(TBasicType type)
         case EbtSampler2D:
         case EbtSampler3D:
         case EbtSamplerExternalOES:
+        case EbtSamplerExternal2DY2YEXT:
         case EbtSampler2DRect:
         case EbtSampler2DArray:
         case EbtSampler2DMS:
@@ -375,6 +380,7 @@ inline bool IsSampler3D(TBasicType type)
         case EbtSampler2D:
         case EbtSamplerCube:
         case EbtSamplerExternalOES:
+        case EbtSamplerExternal2DY2YEXT:
         case EbtSampler2DRect:
         case EbtSampler2DArray:
         case EbtSampler2DMS:
@@ -411,6 +417,7 @@ inline bool IsSamplerArray(TBasicType type)
         case EbtUSampler2D:
         case EbtSampler2DRect:
         case EbtSamplerExternalOES:
+        case EbtSamplerExternal2DY2YEXT:
         case EbtSampler3D:
         case EbtISampler3D:
         case EbtUSampler3D:
@@ -452,6 +459,7 @@ inline bool IsShadowSampler(TBasicType type)
         case EbtSampler3D:
         case EbtSamplerCube:
         case EbtSamplerExternalOES:
+        case EbtSamplerExternal2DY2YEXT:
         case EbtSampler2DRect:
         case EbtSampler2DArray:
         case EbtSampler2DMS:
@@ -599,6 +607,14 @@ enum TLayoutBlockStorage
     EbsStd140
 };
 
+enum TYuvCscStandardEXT
+{
+    EycsUndefined,
+    EycsItu601,
+    EycsItu601FullRange,
+    EycsItu709
+};
+
 struct TLayoutQualifier
 {
     int location;
@@ -617,6 +633,9 @@ struct TLayoutQualifier
     // OVR_multiview num_views.
     int numViews;
 
+    // EXT_YUV_target yuv layout qualifier.
+    bool yuv;
+
     static TLayoutQualifier create()
     {
         TLayoutQualifier layoutQualifier;
@@ -629,6 +648,7 @@ struct TLayoutQualifier
         layoutQualifier.localSize.fill(-1);
         layoutQualifier.binding  = -1;
         layoutQualifier.numViews = -1;
+        layoutQualifier.yuv      = false;
 
         layoutQualifier.imageInternalFormat = EiifUnspecified;
         return layoutQualifier;
@@ -636,7 +656,7 @@ struct TLayoutQualifier
 
     bool isEmpty() const
     {
-        return location == -1 && binding == -1 && numViews == -1 &&
+        return location == -1 && binding == -1 && numViews == -1 && yuv == false &&
                matrixPacking == EmpUnspecified && blockStorage == EbsUnspecified &&
                !localSize.isAnyValueSet() && imageInternalFormat == EiifUnspecified;
     }
@@ -649,9 +669,9 @@ struct TLayoutQualifier
             (location != -1 || binding != -1 || matrixPacking != EmpUnspecified ||
              blockStorage != EbsUnspecified || imageInternalFormat != EiifUnspecified);
 
-        // we can have either the work group size specified, or number of views, or the other layout
-        // qualifiers.
-        return (workSizeSpecified ? 1 : 0) + (numViewsSet ? 1 : 0) +
+        // we can have either the work group size specified, or number of views,
+        // or yuv layout qualifier, or the other layout qualifiers.
+        return (workSizeSpecified ? 1 : 0) + (numViewsSet ? 1 : 0) + (yuv ? 1 : 0) +
                    (otherLayoutQualifiersSpecified ? 1 : 0) <=
                1;
     }
@@ -839,6 +859,33 @@ inline const char *getImageInternalFormatString(TLayoutImageInternalFormat iifq)
         default:
             UNREACHABLE();
             return "unknown internal image format";
+    }
+}
+
+inline TYuvCscStandardEXT getYuvCscStandardEXT(const std::string &str)
+{
+    if (str == "itu_601")
+        return EycsItu601;
+    else if (str == "itu_601_full_range")
+        return EycsItu601FullRange;
+    else if (str == "itu_709")
+        return EycsItu709;
+    return EycsUndefined;
+}
+
+inline const char *getYuvCscStandardEXTString(TYuvCscStandardEXT ycsq)
+{
+    switch (ycsq)
+    {
+        case EycsItu601:
+            return "itu_601";
+        case EycsItu601FullRange:
+            return "itu_601_full_range";
+        case EycsItu709:
+            return "itu_709";
+        default:
+            UNREACHABLE();
+            return "unknown color space conversion standard";
     }
 }
 

@@ -399,6 +399,8 @@ class TParseContext : angle::NonCopyable
                                      int objectLocationCount,
                                      const TLayoutQualifier &layoutQualifier);
 
+    void checkYuvIsNotSpecified(const TSourceLoc &location, bool yuv);
+
     TIntermTyped *addBinaryMathInternal(TOperator op,
                                         TIntermTyped *left,
                                         TIntermTyped *right,

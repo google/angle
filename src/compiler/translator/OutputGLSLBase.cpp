@@ -73,6 +73,11 @@ bool NeedsToWriteLayoutQualifier(const TType &type)
         return true;
     }
 
+    if (type.getQualifier() == EvqFragmentOut && layoutQualifier.yuv == true)
+    {
+        return true;
+    }
+
     if (IsOpaqueType(type.getBasicType()) && layoutQualifier.binding != -1)
     {
         return true;
@@ -211,6 +216,14 @@ void TOutputGLSLBase::writeLayoutQualifier(const TType &type)
         if (layoutQualifier.location >= 0)
         {
             out << listItemPrefix << "location = " << layoutQualifier.location;
+        }
+    }
+
+    if (type.getQualifier() == EvqFragmentOut)
+    {
+        if (layoutQualifier.yuv == true)
+        {
+            out << listItemPrefix << "yuv";
         }
     }
 
@@ -413,6 +426,9 @@ const TConstantUnion *TOutputGLSLBase::writeConstantUnion(const TType &type,
                     break;
                 case EbtBool:
                     out << pConstUnion->getBConst();
+                    break;
+                case EbtYuvCscStandardEXT:
+                    out << getYuvCscStandardEXTString(pConstUnion->getYuvCscStandardEXTConst());
                     break;
                 default:
                     UNREACHABLE();

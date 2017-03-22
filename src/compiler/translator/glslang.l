@@ -79,10 +79,12 @@ static int ES2_ident_ES3_keyword(TParseContext *context, int token);
 static int ES2_ident_ES3_reserved_ES3_1_keyword(TParseContext *context, int token);
 static int ES2_and_ES3_reserved_ES3_1_keyword(TParseContext *context, int token);
 static int ES2_and_ES3_ident_ES3_1_keyword(TParseContext *context, int token);
+static int ES3_extension_keyword_else_ident(TParseContext *context, const char *extension, int token);
 static int uint_constant(TParseContext *context);
 static int int_constant(TParseContext *context);
 static int float_constant(yyscan_t yyscanner);
 static int floatsuffix_check(TParseContext* context);
+static int yuvcscstandardext_constant(TParseContext *context);
 %}
 
 %option noyywrap nounput never-interactive
@@ -194,10 +196,16 @@ O           [0-7]
 "sampler2DShadow"      { return ES2_reserved_ES3_keyword(context, SAMPLER2DSHADOW); }
 "samplerCubeShadow"    { return ES2_ident_ES3_keyword(context, SAMPLERCUBESHADOW); }
 "sampler2DArrayShadow" { return ES2_ident_ES3_keyword(context, SAMPLER2DARRAYSHADOW); }
+"__samplerExternal2DY2YEXT"   { return ES3_extension_keyword_else_ident(context, "GL_EXT_YUV_target", SAMPLEREXTERNAL2DY2YEXT); }
 
 "struct"       { return STRUCT; }
 
 "layout"  { return ES2_ident_ES3_keyword(context, LAYOUT); }
+
+"yuvCscStandardEXT"    { return ES3_extension_keyword_else_ident(context, "GL_EXT_YUV_target", YUVCSCSTANDARDEXT); }
+"itu_601"              { return yuvcscstandardext_constant(context); }
+"itu_601_full_range"   { return yuvcscstandardext_constant(context); }
+"itu_709"              { return yuvcscstandardext_constant(context); }
 
 "image2D" { return ES2_ident_ES3_reserved_ES3_1_keyword(context, IMAGE2D); }
 "iimage2D" { return ES2_ident_ES3_reserved_ES3_1_keyword(context, IIMAGE2D); }
@@ -533,6 +541,21 @@ int ES2_and_ES3_ident_ES3_1_keyword(TParseContext *context, int token)
     return token;
 }
 
+int ES3_extension_keyword_else_ident(TParseContext *context, const char* extension, int token)
+{
+    struct yyguts_t* yyg = (struct yyguts_t*) context->getScanner();
+    yyscan_t yyscanner = (yyscan_t) context->getScanner();
+
+    // a reserved word in GLSL ES 3.00 with enabled extension, otherwise could be used as an identifier/type name
+    if (context->getShaderVersion() >= 300 && context->isExtensionEnabled(extension))
+    {
+        return token;
+    }
+
+    yylval->lex.string = NewPoolTString(yytext);
+    return check_type(yyscanner);
+}
+
 int uint_constant(TParseContext *context)
 {
     struct yyguts_t* yyg = (struct yyguts_t*) context->getScanner();
@@ -592,6 +615,22 @@ int float_constant(yyscan_t yyscanner) {
     if (!strtof_clamp(yytext, &(yylval->lex.f)))
         yyextra->warning(*yylloc, "Float overflow", yytext);
     return FLOATCONSTANT;
+}
+
+int yuvcscstandardext_constant(TParseContext *context)
+{
+    struct yyguts_t* yyg = (struct yyguts_t*) context->getScanner();
+    yyscan_t yyscanner = (yyscan_t) context->getScanner();
+
+    // a reserved word in GLSL ES 3.00 with enabled extension, otherwise could be used as an identifier/type name
+    if (context->getShaderVersion() >= 300 && context->isExtensionEnabled("GL_EXT_YUV_target"))
+    {
+        yylval->lex.string = NewPoolTString(yytext);
+        return YUVCSCSTANDARDEXTCONSTANT;
+    }
+
+    yylval->lex.string = NewPoolTString(yytext);
+    return check_type(yyscanner);
 }
 
 int glslang_initialize(TParseContext* context) {
