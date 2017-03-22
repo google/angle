@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7ded7f56_4ac6aade",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-22T20:41:37Z",
+      "side": 1,
+      "message": "note, can be done when we revisit this with reordered command buffer etc: the layout here could be optimized to do less pointer chasing and copying of things if we had a struct GarbageObject as a combination of an object destruction fnptr and a vulkan handle. Then mGarbage could become queue\u003cpair\u003cSerial, vector\u003cGarbageObject\u003e\u003e\u003e.",
+      "revId": "b0fac5fa2d9248deccdd3ff707fe45143133aa81",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
