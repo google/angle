@@ -80,6 +80,8 @@
             'Common_Base':
             {
                 'abstract': 1,
+                # Require the version of the Windows 10 SDK installed on the local machine.
+                'msvs_windows_sdk_version': 'v10.0',
                 'msvs_configuration_attributes':
                 {
                     'OutputDirectory': '$(SolutionDir)$(ConfigurationName)_$(Platform)',

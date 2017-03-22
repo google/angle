@@ -25,7 +25,7 @@ deps = {
     Var('android_git') + '/platform/external/shaderc/glslang' + '@' + '1e275c8486325aaab34734ad9a650c0121c5efdb',
 
   'third_party/gyp':
-    Var('chromium_git') + '/external/gyp' + '@' + '81c2e5ff92af29bab61c982808076ddce3d200a2',
+    Var('chromium_git') + '/external/gyp' + '@' + 'aae1e3efb50786df20e9572621fb746865f0df53',
 
   'third_party/libpng':
     Var('android_git') + '/platform/external/libpng' + '@' + '094e181e79a3d6c23fd005679025058b7df1ad6c',

@@ -15,10 +15,12 @@ On all platforms:
 
 On Windows:
 
- * [Visual Studio Community 2015 Update 2](http://www.visualstudio.com/downloads/download-visual-studio-vs)
-     Required to build ANGLE on Windows and for the packaged Windows 8.1 SDK.
+ * [Visual Studio Community 2015 Update 3](https://www.visualstudio.com/en-us/news/releasenotes/vs2015-update3-vs)
+   * Required to build ANGLE on Windows and for the packaged Windows 10 SDK. Note: Chrome is in the process of upgrading to Visual Studio 2017. ANGLE will switch over once Chrome does.
+ * [Windows 10 Standalone SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk) (recommended)
+    * Not required to build, but comes with additional features that aid ANGLE development, such as the Debug runtime for D3D11.
  * [Cygwin's Bison, flex, and patch](https://cygwin.com/setup-x86_64.exe) (optional)
-     This is only required if you need to modify GLSL ES grammar files (`glslang.l` and `glslang.y` under `src/compiler/translator`, or `ExpressionParser.y` and `Tokenizer.l` in `src/compiler/preprocessor`).
+    * This is only required if you need to modify GLSL ES grammar files (`glslang.l` and `glslang.y` under `src/compiler/translator`, or `ExpressionParser.y` and `Tokenizer.l` in `src/compiler/preprocessor`).
      Use the latest versions of bison, flex and patch from the 64-bit cygwin distribution.
 
 On Linux:
@@ -38,7 +40,6 @@ Set the following environment variables as needed:
 On Windows:
 
  * `GYP_GENERATORS` to `msvs` (other options include `ninja` and `make`)
- * `GYP_DEFINES` to `windows_sdk_path=YOUR_WIN_SDK_INSTALL_DIR` if you did not install the Windows 8.1 SDK in the default location.
  * `GYP_MSVS_VERSION` to `2015`
 
 On Linux and MacOS:
