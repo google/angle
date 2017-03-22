@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "fc9c2546_a0aaae9f",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 957,
+      "author": {
+        "id": 1185100
+      },
+      "writtenOn": "2017-03-22T14:01:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f918ec2e_ccb28640",
+      "range": {
+        "startLine": 957,
+        "startChar": 8,
+        "endLine": 957,
+        "endChar": 56
+      },
+      "revId": "ef2e0bb29ad83a2f8dc3036ce23fb137e5858692",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "02c5e42d_fcf65479",
         "filename": "src/compiler/translator/glslang.l",
         "patchSetId": 3
@@ -156,6 +180,30 @@
       "side": 1,
       "message": "This sounds good for __samplerExternal2DY2YEXT but the same applies to the the yuvCscStandardEXT enum below.",
       "parentUuid": "f4126aa9_585ba86f",
+      "range": {
+        "startLine": 197,
+        "startChar": 39,
+        "endLine": 197,
+        "endChar": 63
+      },
+      "revId": "ef2e0bb29ad83a2f8dc3036ce23fb137e5858692",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "463444be_1875b0b8",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 3
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1185100
+      },
+      "writtenOn": "2017-03-22T14:01:36Z",
+      "side": 1,
+      "message": "I rewrote this code as you said, \"__samplerExternal2DY2YEXT\" and \" yuvCscStandardEXT\", plus enums will be  specified as keyword only if SL \u003e\u003d 300 and extension is enabled, otherwise they will be identifiers or type name.",
+      "parentUuid": "bbc0167a_904a4afe",
       "range": {
         "startLine": 197,
         "startChar": 39,
