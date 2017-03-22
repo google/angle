@@ -236,6 +236,30 @@
     },
     {
       "key": {
+        "uuid": "e248c303_9236b6ef",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-22T18:42:38Z",
+      "side": 1,
+      "message": "sorry, I don\u0027t mean to cache in the header file / class, but rather move this bit of code into a local temporary so you don\u0027t have to use this code more than once in this function: \n\n (mEGLSamples \u003c\u003d 1) ? D3D11_RTV_DIMENSION_TEXTURE2D : D3D11_RTV_DIMENSION_TEXTURE2DMS",
+      "parentUuid": "a662ea64_fb7182cd",
+      "range": {
+        "startLine": 280,
+        "startChar": 8,
+        "endLine": 280,
+        "endChar": 91
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "553f73b7_eaa3bf51",
         "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
         "patchSetId": 9

@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c6806f2a_c6b70010",
+        "filename": "extensions/EGL_ANGLE_d3d_texture_client_buffer.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-22T18:42:38Z",
+      "side": 1,
+      "message": "nit: \u0027the client is responsible for resolving the texture\u0027, or \u0027it is the client\u0027s responsibility to resolve the texture\u0027.",
+      "range": {
+        "startLine": 107,
+        "startChar": 4,
+        "endLine": 107,
+        "endChar": 52
+      },
+      "revId": "c61e742f124a89e6b89f1f89fc64087daa4b2509",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1a4e1abf_20dfe3bc",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-22T18:42:38Z",
+      "side": 1,
+      "message": "nit: use the GTEST ASSERT_LE, ASSERT_EQ(expected, actual) macros",
+      "range": {
+        "startLine": 189,
+        "startChar": 12,
+        "endLine": 189,
+        "endChar": 18
+      },
+      "revId": "c61e742f124a89e6b89f1f89fc64087daa4b2509",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "141fcc15_b331ab10",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-22T18:42:38Z",
+      "side": 1,
+      "message": "sorry, I think I was wrong. I don\u0027t think we want to disable this on OpenGL on all platforms - the test currently runs on NVIDIA OpenGL, and it should work on all platforms. I would suggest making a different valid() function for D3DTextureTestMS that filters only D3D11. really this should be validated somewhere in ANGLE and we should generate errors if that happens, it shouldn\u0027t be something the test has to filter out with a priori knoweldge.",
+      "range": {
+        "startLine": 227,
+        "startChar": 12,
+        "endLine": 227,
+        "endChar": 20
+      },
+      "revId": "c61e742f124a89e6b89f1f89fc64087daa4b2509",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
