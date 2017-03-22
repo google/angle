@@ -22,6 +22,30 @@
       "revId": "fdbb55876e9a9c197a2ba89474bb989d35a850e8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75764931_09a6cbd1",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-03-22T23:41:39Z",
+      "side": 1,
+      "message": "I had thought the rule is just for EXPECT_NE. Now I know it\u0027s a general rule for EXPECT_*. Sorry for my misunderstanding. Thanks much for your time.",
+      "parentUuid": "9faaf57e_0b17c60a",
+      "range": {
+        "startLine": 57,
+        "startChar": 14,
+        "endLine": 57,
+        "endChar": 30
+      },
+      "revId": "fdbb55876e9a9c197a2ba89474bb989d35a850e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
