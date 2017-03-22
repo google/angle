@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8e2c9b7b_8d323528",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1115871
+      },
+      "writtenOn": "2017-03-22T21:47:19Z",
+      "side": 1,
+      "message": "When building Chromium:\n\n[68/379] CXX obj/third_party/angle/src/vulkan_support/vulkan_layer_utils/vk_layer_config.obj\nFAILED: obj/third_party/angle/src/vulkan_support/vulkan_layer_utils/vk_layer_config.obj\nninja -t msvc -e environment.x64 -- \"C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Professional\\VC\\Tools\\MSVC\\14.10.25017\\bin\\HostX64\\x64/cl.exe\" /nologo /showIncludes /FC @obj/third_party/angle/src/vulkan_support/vulkan_layer_utils/vk_layer_config.obj.rsp /c ../../third_party/vulkan-validation-layers/src/layers/vk_layer_config.cpp /Foobj/third_party/angle/src/vulkan_support/vulkan_layer_utils/vk_layer_config.obj /Fd\"obj/third_party/angle/src/vulkan_support/vulkan_layer_utils_cc.pdb\"\nc:\\src\\chromium\\src\\third_party\\vulkan-validation-layers\\src\\include\\vulkan\\vk_layer.h(39): fatal error C1083: Cannot open include file: \u0027vk_layer_dispatch_table.h\u0027: No such file or directory\n\n\nit seems that angle\\src\\vulkcan_support\\BUILD.gn#vulkan_layer_utils needs to depend on this target (at least indirectly).  Maybe vulkan_layer_table or vulkan_loader? Note that this is a build race to create this file, so it might not always happen.",
+      "range": {
+        "startLine": 66,
+        "startChar": 4,
+        "endLine": 66,
+        "endChar": 32
+      },
+      "revId": "7df87887574c0debafc779ae0dcaf6573f9e1459",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3b2c388c_7f793167",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1115871
+      },
+      "writtenOn": "2017-03-22T21:47:19Z",
+      "side": 1,
+      "message": "Maybe you also need VK_USE_PLATFORM_WIN32_KHX (in addition to \u0027R\u0027)? I see it in the gypi, but not here.\n\n[252/266] CXX obj/third_party/angle/src/vulkan_support/VkLayer_swapchain/object_tracker.obj\nFAILED: obj/third_party/angle/src/vulkan_support/VkLayer_swapchain/object_tracker.obj\nninja -t msvc -e environment.x64 -- \"C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\Professional\\VC\\Tools\\MSVC\\14.10.25017\\bin\\HostX64\\x64/cl.exe\" /nologo /showIncludes /FC @obj/third_party/angle/src/vulkan_support/VkLayer_swapchain/object_tracker.obj.rsp /c ../../third_party/vulkan-validation-layers/src/layers/object_tracker.cpp /Foobj/third_party/angle/src/vulkan_support/VkLayer_swapchain/object_tracker.obj /Fd\"obj/third_party/angle/src/vulkan_support/VkLayer_swapchain_cc.pdb\"\nc:\\src\\chromium\\src\\third_party\\vulkan-validation-layers\\src\\layers\\object_tracker.cpp(4620): error C4430: missing type specifier - int assumed. Note: C++ does not support default-int\nc:\\src\\chromium\\src\\third_party\\vulkan-validation-layers\\src\\layers\\object_tracker.cpp(4620): error C2143: syntax error: missing \u0027,\u0027 before \u0027*\u0027\nc:\\src\\chromium\\src\\third_party\\vulkan-validation-layers\\src\\layers\\object_tracker.cpp(4631): error C2039: \u0027ImportSemaphoreWin32HandleKHX\u0027: is not a member of \u0027VkLayerDispatchTable_\u0027\nc:\\src\\chromium\\src\\out\\debug\\gen\\third_party\\angle\\src\\vulkan_support\\angle\\vulkan\\vk_layer_dispatch_table.h(176): note: see declaration of \u0027VkLayerDispatchTable_\u0027\nc:\\src\\chromium\\src\\third_party\\vulkan-validation-layers\\src\\layers\\object_tracker.cpp(4631): error C2065: \u0027pImportSemaphoreWin32HandleInfo\u0027: undeclared identifier\nc:\\src\\chromium\\src\\third_party\\vulkan-validation-layers\\src\\layers\\object_tracker.cpp(4646): error C2039: \u0027GetSemaphoreWin32HandleKHX\u0027: is not a member of \u0027VkLayerDispatchTable_\u0027\nc:\\src\\chromium\\src\\out\\debug\\gen\\third_party\\angle\\src\\vulkan_support\\angle\\vulkan\\vk_layer_dispatch_table.h(176): note: see declaration of \u0027VkLayerDispatchTable_\u0027\n[260/266] CXX obj/third_party/angle/src/vulkan_support/VkLayer_core_validation/core_validation.obj\nninja: build stopped: subcommand failed.",
+      "range": {
+        "startLine": 211,
+        "startChar": 17,
+        "endLine": 211,
+        "endChar": 44
+      },
+      "revId": "7df87887574c0debafc779ae0dcaf6573f9e1459",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
