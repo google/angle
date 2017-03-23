@@ -65,6 +65,13 @@ bool ValidImageDataSize(ValidationContext *context,
 
 bool ValidQueryType(const Context *context, GLenum queryType);
 
+bool ValidateWebGLVertexAttribPointer(ValidationContext *context,
+                                      GLenum type,
+                                      GLboolean normalized,
+                                      GLsizei stride,
+                                      const GLvoid *ptr,
+                                      bool pureInteger);
+
 // Returns valid program if id is a valid program name
 // Errors INVALID_OPERATION if valid shader is given and returns NULL
 // Errors INVALID_VALUE otherwise and returns NULL

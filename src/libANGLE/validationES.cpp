@@ -1867,6 +1867,53 @@ bool ValidQueryType(const Context *context, GLenum queryType)
     }
 }
 
+bool ValidateWebGLVertexAttribPointer(ValidationContext *context,
+                                      GLenum type,
+                                      GLboolean normalized,
+                                      GLsizei stride,
+                                      const GLvoid *ptr,
+                                      bool pureInteger)
+{
+    ASSERT(context->getExtensions().webglCompatibility);
+
+    // WebGL 1.0 [Section 6.11] Vertex Attribute Data Stride
+    // The WebGL API supports vertex attribute data strides up to 255 bytes. A call to
+    // vertexAttribPointer will generate an INVALID_VALUE error if the value for the stride
+    // parameter exceeds 255.
+    constexpr GLsizei kMaxWebGLStride = 255;
+    if (stride > kMaxWebGLStride)
+    {
+        context->handleError(
+            Error(GL_INVALID_VALUE, "Stride is over the maximum stride allowed by WebGL."));
+        return false;
+    }
+
+    // WebGL 1.0 [Section 6.4] Buffer Offset and Stride Requirements
+    // The offset arguments to drawElements and vertexAttribPointer, and the stride argument to
+    // vertexAttribPointer, must be a multiple of the size of the data type passed to the call,
+    // or an INVALID_OPERATION error is generated.
+    VertexFormatType internalType = GetVertexFormatType(type, normalized, 1, pureInteger);
+    size_t typeSize               = GetVertexFormatTypeSize(internalType);
+
+    ASSERT(isPow2(typeSize) && typeSize > 0);
+    size_t sizeMask = (typeSize - 1);
+    if ((reinterpret_cast<intptr_t>(ptr) & sizeMask) != 0)
+    {
+        context->handleError(
+            Error(GL_INVALID_OPERATION, "Offset is not a multiple of the type size."));
+        return false;
+    }
+
+    if ((stride & sizeMask) != 0)
+    {
+        context->handleError(
+            Error(GL_INVALID_OPERATION, "Stride is not a multiple of the type size."));
+        return false;
+    }
+
+    return true;
+}
+
 Program *GetValidProgram(ValidationContext *context, GLuint id)
 {
     // ES3 spec (section 2.11.1) -- "Commands that accept shader or program object names will
