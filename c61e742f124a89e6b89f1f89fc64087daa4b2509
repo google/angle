@@ -59,6 +59,23 @@
     },
     {
       "key": {
+        "uuid": "2530e4fc_f6458886",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Passthrough2D11.hlsl",
+        "patchSetId": 10
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-23T01:16:26Z",
+      "side": 1,
+      "message": "This shader will only be invoked once per pixel and output sample0 from the texture to all samples of the RTV which is not what we want here.  For a passthrough shader, you will need to make sure the PS is invoked per sample instead of per pixel. One way to do this is to pass in SV_SampleIndex as an input. Then for every invocation you\u0027ll also have the sample index and so you can output every sample of every pixel. \n\nFor example:\n\nfloat4 PS_PassthroughRGBA2DMS(in float4 pos: SV_Position, in float2 uv: TEXCOORD0; in uint sampleIdx: SV_SampleIndex) : SV_TARGET0\n{\n    return TextureM.sample[sampleIdx][uv].rgba;\n}",
+      "revId": "c61e742f124a89e6b89f1f89fc64087daa4b2509",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1a4e1abf_20dfe3bc",
         "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
         "patchSetId": 10

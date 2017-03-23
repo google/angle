@@ -377,6 +377,30 @@
     },
     {
       "key": {
+        "uuid": "660a636d_732495b3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Passthrough2D11.hlsl",
+        "patchSetId": 9
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-23T01:16:26Z",
+      "side": 1,
+      "message": "This shader does not passthrough all samples of the input multisampled surface (TextureM). It outputs sample0 from TextureM to all samples of the output and ignores any other samples from the input. See my comment in the latest revision on how this could be fixed.\n\nOn another note, making this a resolve shader instead of a passthrough shader along with a single sampled swap chain, as opposed to relying on the client to do a resolve, would save a lot of memory and perform better while still providing all the benefits of MSAA. This is because the compositor has to resolve the swap chain before displaying it anyway so might as well do it here so that the copy and resolve can be done in a single pass with half as many samples written out. It would also mean that half as much memory would be required for the swap chain which can be quite large especially at higher resolutions.",
+      "parentUuid": "de2dce32_419a2e85",
+      "range": {
+        "startLine": 27,
+        "startChar": 4,
+        "endLine": 27,
+        "endChar": 47
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "86409544_76e79a75",
         "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
         "patchSetId": 9
