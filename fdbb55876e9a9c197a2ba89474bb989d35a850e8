@@ -46,6 +46,30 @@
       "revId": "fdbb55876e9a9c197a2ba89474bb989d35a850e8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2924fb24_a11a59ca",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-23T15:48:40Z",
+      "side": 1,
+      "message": "I see. No, it is for both types of equality comparison, EQ (\u003d\u003d) and NE (!\u003d).",
+      "parentUuid": "75764931_09a6cbd1",
+      "range": {
+        "startLine": 57,
+        "startChar": 14,
+        "endLine": 57,
+        "endChar": 30
+      },
+      "revId": "fdbb55876e9a9c197a2ba89474bb989d35a850e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
