@@ -821,53 +821,9 @@ void GL_APIENTRY VertexAttribIPointer(GLuint index, GLint size, GLenum type, GLs
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
+        if (!context->skipValidation() &&
+            !ValidateVertexAttribIPointer(context, index, size, type, stride, pointer))
         {
-            context->handleError(Error(GL_INVALID_OPERATION));
-            return;
-        }
-
-        if (index >= MAX_VERTEX_ATTRIBS)
-        {
-            context->handleError(Error(GL_INVALID_VALUE));
-            return;
-        }
-
-        if (size < 1 || size > 4)
-        {
-            context->handleError(Error(GL_INVALID_VALUE));
-            return;
-        }
-
-        switch (type)
-        {
-          case GL_BYTE:
-          case GL_UNSIGNED_BYTE:
-          case GL_SHORT:
-          case GL_UNSIGNED_SHORT:
-          case GL_INT:
-          case GL_UNSIGNED_INT:
-            break;
-
-          default:
-              context->handleError(Error(GL_INVALID_ENUM));
-            return;
-        }
-
-        if (stride < 0)
-        {
-            context->handleError(Error(GL_INVALID_VALUE));
-            return;
-        }
-
-        // [OpenGL ES 3.0.2] Section 2.8 page 24:
-        // An INVALID_OPERATION error is generated when a non-zero vertex array object
-        // is bound, zero is bound to the ARRAY_BUFFER buffer object binding point,
-        // and the pointer argument is not NULL.
-        if (context->getGLState().getVertexArray()->id() != 0 &&
-            context->getGLState().getArrayBufferId() == 0 && pointer != NULL)
-        {
-            context->handleError(Error(GL_INVALID_OPERATION));
             return;
         }
 

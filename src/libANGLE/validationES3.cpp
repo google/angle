@@ -2266,4 +2266,68 @@ bool ValidateRenderbufferStorageMultisample(ValidationContext *context,
     return true;
 }
 
+bool ValidateVertexAttribIPointer(ValidationContext *context,
+                                  GLuint index,
+                                  GLint size,
+                                  GLenum type,
+                                  GLsizei stride,
+                                  const GLvoid *pointer)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION,
+                                   "glVertexAttribIPointer requires OpenGL ES 3.0 or higher."));
+        return false;
+    }
+
+    if (index >= MAX_VERTEX_ATTRIBS)
+    {
+        context->handleError(
+            Error(GL_INVALID_VALUE, "Index must be less than MAX_VERTEX_ATTRIBS."));
+        return false;
+    }
+
+    if (size < 1 || size > 4)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Size must be between 1 and 4."));
+        return false;
+    }
+
+    switch (type)
+    {
+        case GL_BYTE:
+        case GL_UNSIGNED_BYTE:
+        case GL_SHORT:
+        case GL_UNSIGNED_SHORT:
+        case GL_INT:
+        case GL_UNSIGNED_INT:
+            break;
+
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Unknown vertex attribute type."));
+            return false;
+    }
+
+    if (stride < 0)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Stride cannot be negative."));
+        return false;
+    }
+
+    // [OpenGL ES 3.0.2] Section 2.8 page 24:
+    // An INVALID_OPERATION error is generated when a non-zero vertex array object
+    // is bound, zero is bound to the ARRAY_BUFFER buffer object binding point,
+    // and the pointer argument is not NULL.
+    if (context->getGLState().getVertexArrayId() != 0 &&
+        context->getGLState().getArrayBufferId() == 0 && pointer != nullptr)
+    {
+        context->handleError(
+            Error(GL_INVALID_OPERATION,
+                  "Client data cannot be used with a non-default vertex array object."));
+        return false;
+    }
+
+    return true;
+}
+
 }  // namespace gl
