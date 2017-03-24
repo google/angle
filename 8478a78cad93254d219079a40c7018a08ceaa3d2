@@ -16,6 +16,24 @@
       "revId": "8478a78cad93254d219079a40c7018a08ceaa3d2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b5d5c37_345a3c2d",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-03-24T03:10:08Z",
+      "side": 1,
+      "message": "Good! I will add that.",
+      "parentUuid": "d4f57ca9_a2803b78",
+      "revId": "8478a78cad93254d219079a40c7018a08ceaa3d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
