@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5c0790c9_5dba5053",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-24T01:50:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "47cfda40_2d37ab2c",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 94
+      },
+      "revId": "1e48aea148f6e8654f650e846560a0a7fd44d539",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a085837a_385ff8e3",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 7
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "5c9c98dd_87d06be9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-24T01:50:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a085837a_385ff8e3",
+      "range": {
+        "startLine": 51,
+        "startChar": 1,
+        "endLine": 54,
+        "endChar": 83
+      },
+      "revId": "1e48aea148f6e8654f650e846560a0a7fd44d539",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b4571556_c584833b",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 7
@@ -59,6 +107,30 @@
       "writtenOn": "2017-03-22T18:06:34Z",
       "side": 1,
       "message": "nit: constexpr uint32_t for vertex size makes sense, but as ubiquitous as zero is, I still think we should make it a local temporary. :)",
+      "range": {
+        "startLine": 569,
+        "startChar": 90,
+        "endLine": 569,
+        "endChar": 96
+      },
+      "revId": "1e48aea148f6e8654f650e846560a0a7fd44d539",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "81c8bb37_3845e81a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-03-24T01:50:56Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "b4571556_c584833b",
       "range": {
         "startLine": 569,
         "startChar": 90,
