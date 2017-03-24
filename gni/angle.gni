@@ -15,8 +15,7 @@ if (is_win) {
   angle_enable_d3d9 = true
   angle_enable_d3d11 = true
   angle_enable_gl = true
-  # TODO(jmadill): Re-enable Vulkan after roll.
-  angle_enable_vulkan = false
+  angle_enable_vulkan = true
 
   import("//build/config/win/visual_studio_version.gni")
 } else if (is_linux && use_x11 && !is_chromeos) {
