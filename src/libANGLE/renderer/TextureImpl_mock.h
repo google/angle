@@ -72,16 +72,28 @@ class MockTextureImpl : public TextureImpl
                            const gl::Offset &,
                            const gl::Rectangle &,
                            const gl::Framebuffer *));
-    MOCK_METHOD7(copyTexture,
-                 gl::Error(ContextImpl *, GLenum, GLenum, bool, bool, bool, const gl::Texture *));
-    MOCK_METHOD7(copySubTexture,
-                 gl::Error(ContextImpl *,
-                           const gl::Offset &,
-                           const gl::Rectangle &,
-                           bool,
-                           bool,
-                           bool,
-                           const gl::Texture *));
+    MOCK_METHOD10(copyTexture,
+                  gl::Error(ContextImpl *,
+                            GLenum,
+                            size_t,
+                            GLenum,
+                            GLenum,
+                            size_t,
+                            bool,
+                            bool,
+                            bool,
+                            const gl::Texture *));
+    MOCK_METHOD10(copySubTexture,
+                  gl::Error(ContextImpl *,
+                            GLenum,
+                            size_t,
+                            const gl::Offset &,
+                            size_t,
+                            const gl::Rectangle &,
+                            bool,
+                            bool,
+                            bool,
+                            const gl::Texture *));
     MOCK_METHOD2(copyCompressedTexture, gl::Error(ContextImpl *, const gl::Texture *source));
     MOCK_METHOD5(setStorage, gl::Error(ContextImpl *, GLenum, size_t, GLenum, const gl::Extents &));
     MOCK_METHOD3(setImageExternal,

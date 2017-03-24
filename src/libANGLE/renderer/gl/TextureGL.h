@@ -108,20 +108,29 @@ class TextureGL : public TextureImpl
                            const gl::Framebuffer *source) override;
 
     gl::Error copyTexture(ContextImpl *contextImpl,
+                          GLenum target,
+                          size_t level,
                           GLenum internalFormat,
                           GLenum type,
+                          size_t sourceLevel,
                           bool unpackFlipY,
                           bool unpackPremultiplyAlpha,
                           bool unpackUnmultiplyAlpha,
                           const gl::Texture *source) override;
     gl::Error copySubTexture(ContextImpl *contextImpl,
+                             GLenum target,
+                             size_t level,
                              const gl::Offset &destOffset,
+                             size_t sourceLevel,
                              const gl::Rectangle &sourceArea,
                              bool unpackFlipY,
                              bool unpackPremultiplyAlpha,
                              bool unpackUnmultiplyAlpha,
                              const gl::Texture *source) override;
-    gl::Error copySubTextureHelper(const gl::Offset &destOffset,
+    gl::Error copySubTextureHelper(GLenum target,
+                                   size_t level,
+                                   const gl::Offset &destOffset,
+                                   size_t sourceLevel,
                                    const gl::Rectangle &sourceArea,
                                    GLenum destFormat,
                                    bool unpackFlipY,
@@ -156,10 +165,10 @@ class TextureGL : public TextureImpl
     GLuint getTextureID() const;
     GLenum getTarget() const;
 
-    void setBaseLevel(GLuint) override {}
-
     void syncState(const gl::Texture::DirtyBits &dirtyBits) override;
     bool hasAnyDirtyBit() const;
+
+    void setBaseLevel(GLuint baseLevel) override;
 
     void setMinFilter(GLenum filter);
     void setMagFilter(GLenum filter);

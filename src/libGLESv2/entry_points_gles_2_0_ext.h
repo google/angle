@@ -240,7 +240,10 @@ ANGLE_EXPORT void GL_APIENTRY ProgramPathFragmentInputGenCHROMIUM(GLuint program
 
 // GL_CHROMIUM_copy_texture
 ANGLE_EXPORT void GL_APIENTRY CopyTextureCHROMIUM(GLuint sourceId,
+                                                  GLint sourceLevel,
+                                                  GLenum destTarget,
                                                   GLuint destId,
+                                                  GLint destLevel,
                                                   GLint internalFormat,
                                                   GLenum destType,
                                                   GLboolean unpackFlipY,
@@ -248,7 +251,10 @@ ANGLE_EXPORT void GL_APIENTRY CopyTextureCHROMIUM(GLuint sourceId,
                                                   GLboolean unpackUnmultiplyAlpha);
 
 ANGLE_EXPORT void GL_APIENTRY CopySubTextureCHROMIUM(GLuint sourceId,
+                                                     GLint sourceLevel,
+                                                     GLenum destTarget,
                                                      GLuint destId,
+                                                     GLint destLevel,
                                                      GLint xoffset,
                                                      GLint yoffset,
                                                      GLint x,

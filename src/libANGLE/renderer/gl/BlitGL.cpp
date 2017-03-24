@@ -428,7 +428,10 @@ gl::Error BlitGL::blitColorBufferWithShader(const gl::Framebuffer *source,
 }
 
 gl::Error BlitGL::copySubTexture(TextureGL *source,
+                                 size_t sourceLevel,
                                  TextureGL *dest,
+                                 GLenum destTarget,
+                                 size_t destLevel,
                                  const gl::Extents &sourceSize,
                                  const gl::Rectangle &sourceArea,
                                  const gl::Offset &destOffset,
@@ -464,6 +467,7 @@ gl::Error BlitGL::copySubTexture(TextureGL *source,
     }
     source->setMinFilter(GL_NEAREST);
     source->setMagFilter(GL_NEAREST);
+    source->setBaseLevel(static_cast<GLuint>(sourceLevel));
 
     // Render to the destination texture, sampling from the source texture
     ScopedGLState scopedState(
@@ -500,8 +504,8 @@ gl::Error BlitGL::copySubTexture(TextureGL *source,
     }
 
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mScratchFBO);
-    mFunctions->framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, dest->getTarget(),
-                                     dest->getTextureID(), 0);
+    mFunctions->framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, destTarget,
+                                     dest->getTextureID(), static_cast<GLint>(destLevel));
 
     mStateManager->bindVertexArray(mVAO, 0);
     mFunctions->drawArrays(GL_TRIANGLES, 0, 3);

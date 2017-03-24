@@ -967,38 +967,52 @@ Error Texture::copySubImage(const Context *context,
 }
 
 Error Texture::copyTexture(const Context *context,
+                           GLenum target,
+                           size_t level,
                            GLenum internalFormat,
                            GLenum type,
+                           size_t sourceLevel,
                            bool unpackFlipY,
                            bool unpackPremultiplyAlpha,
                            bool unpackUnmultiplyAlpha,
                            const Texture *source)
 {
+    ASSERT(target == mState.mTarget ||
+           (mState.mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
+
     // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
     releaseTexImageInternal();
     orphanImages();
 
-    ANGLE_TRY(mTexture->copyTexture(rx::SafeGetImpl(context), internalFormat, type, unpackFlipY,
-                                    unpackPremultiplyAlpha, unpackUnmultiplyAlpha, source));
+    ANGLE_TRY(mTexture->copyTexture(rx::SafeGetImpl(context), target, level, internalFormat, type,
+                                    sourceLevel, unpackFlipY, unpackPremultiplyAlpha,
+                                    unpackUnmultiplyAlpha, source));
 
     const auto &sourceDesc   = source->mState.getImageDesc(source->getTarget(), 0);
     const GLenum sizedFormat = GetSizedInternalFormat(internalFormat, type);
-    mState.setImageDesc(getTarget(), 0, ImageDesc(sourceDesc.size, Format(sizedFormat)));
+    mState.setImageDesc(target, level, ImageDesc(sourceDesc.size, Format(sizedFormat)));
     mDirtyChannel.signal();
 
     return NoError();
 }
 
 Error Texture::copySubTexture(const Context *context,
+                              GLenum target,
+                              size_t level,
                               const Offset &destOffset,
+                              size_t sourceLevel,
                               const Rectangle &sourceArea,
                               bool unpackFlipY,
                               bool unpackPremultiplyAlpha,
                               bool unpackUnmultiplyAlpha,
                               const Texture *source)
 {
-    return mTexture->copySubTexture(rx::SafeGetImpl(context), destOffset, sourceArea, unpackFlipY,
-                                    unpackPremultiplyAlpha, unpackUnmultiplyAlpha, source);
+    ASSERT(target == mState.mTarget ||
+           (mState.mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
+
+    return mTexture->copySubTexture(rx::SafeGetImpl(context), target, level, destOffset,
+                                    sourceLevel, sourceArea, unpackFlipY, unpackPremultiplyAlpha,
+                                    unpackUnmultiplyAlpha, source);
 }
 
 Error Texture::copyCompressedTexture(const Context *context, const Texture *source)

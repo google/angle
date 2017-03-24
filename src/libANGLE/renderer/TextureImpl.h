@@ -95,14 +95,20 @@ class TextureImpl : public FramebufferAttachmentObjectImpl
                                    const gl::Framebuffer *source) = 0;
 
     virtual gl::Error copyTexture(ContextImpl *contextImpl,
+                                  GLenum target,
+                                  size_t level,
                                   GLenum internalFormat,
                                   GLenum type,
+                                  size_t sourceLevel,
                                   bool unpackFlipY,
                                   bool unpackPremultiplyAlpha,
                                   bool unpackUnmultiplyAlpha,
                                   const gl::Texture *source);
     virtual gl::Error copySubTexture(ContextImpl *contextImpl,
+                                     GLenum target,
+                                     size_t level,
                                      const gl::Offset &destOffset,
+                                     size_t sourceLevel,
                                      const gl::Rectangle &sourceArea,
                                      bool unpackFlipY,
                                      bool unpackPremultiplyAlpha,

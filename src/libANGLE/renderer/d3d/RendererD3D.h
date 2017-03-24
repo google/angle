@@ -178,6 +178,7 @@ class RendererD3D : public BufferFactoryD3D
                                   GLenum destFormat,
                                   const gl::Offset &destOffset,
                                   TextureStorage *storage,
+                                  GLenum destTarget,
                                   GLint destLevel,
                                   bool unpackFlipY,
                                   bool unpackPremultiplyAlpha,

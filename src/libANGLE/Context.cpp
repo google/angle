@@ -3150,7 +3150,10 @@ void Context::generateMipmap(GLenum target)
 }
 
 void Context::copyTextureCHROMIUM(GLuint sourceId,
+                                  GLint sourceLevel,
+                                  GLenum destTarget,
                                   GLuint destId,
+                                  GLint destLevel,
                                   GLint internalFormat,
                                   GLenum destType,
                                   GLboolean unpackFlipY,
@@ -3161,13 +3164,16 @@ void Context::copyTextureCHROMIUM(GLuint sourceId,
 
     gl::Texture *sourceTexture = getTexture(sourceId);
     gl::Texture *destTexture   = getTexture(destId);
-    handleError(destTexture->copyTexture(this, internalFormat, destType, unpackFlipY == GL_TRUE,
-                                         unpackPremultiplyAlpha == GL_TRUE,
-                                         unpackUnmultiplyAlpha == GL_TRUE, sourceTexture));
+    handleError(destTexture->copyTexture(
+        this, destTarget, destLevel, internalFormat, destType, sourceLevel, unpackFlipY == GL_TRUE,
+        unpackPremultiplyAlpha == GL_TRUE, unpackUnmultiplyAlpha == GL_TRUE, sourceTexture));
 }
 
 void Context::copySubTextureCHROMIUM(GLuint sourceId,
+                                     GLint sourceLevel,
+                                     GLenum destTarget,
                                      GLuint destId,
+                                     GLint destLevel,
                                      GLint xoffset,
                                      GLint yoffset,
                                      GLint x,
@@ -3190,9 +3196,9 @@ void Context::copySubTextureCHROMIUM(GLuint sourceId,
     gl::Texture *destTexture   = getTexture(destId);
     Offset offset(xoffset, yoffset, 0);
     Rectangle area(x, y, width, height);
-    handleError(destTexture->copySubTexture(this, offset, area, unpackFlipY == GL_TRUE,
-                                            unpackPremultiplyAlpha == GL_TRUE,
-                                            unpackUnmultiplyAlpha == GL_TRUE, sourceTexture));
+    handleError(destTexture->copySubTexture(
+        this, destTarget, destLevel, offset, sourceLevel, area, unpackFlipY == GL_TRUE,
+        unpackPremultiplyAlpha == GL_TRUE, unpackUnmultiplyAlpha == GL_TRUE, sourceTexture));
 }
 
 void Context::compressedCopyTextureCHROMIUM(GLuint sourceId, GLuint destId)

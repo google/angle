@@ -61,7 +61,10 @@ class BlitGL : public angle::NonCopyable
                                         GLenum filter);
 
     gl::Error copySubTexture(TextureGL *source,
+                             size_t sourceLevel,
                              TextureGL *dest,
+                             GLenum destTarget,
+                             size_t destLevel,
                              const gl::Extents &sourceSize,
                              const gl::Rectangle &sourceArea,
                              const gl::Offset &destOffset,

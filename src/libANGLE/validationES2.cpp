@@ -3171,7 +3171,10 @@ bool ValidateProgramPathFragmentInputGen(Context *context,
 
 bool ValidateCopyTextureCHROMIUM(Context *context,
                                  GLuint sourceId,
+                                 GLint sourceLevel,
+                                 GLenum destTarget,
                                  GLuint destId,
+                                 GLint destLevel,
                                  GLint internalFormat,
                                  GLenum destType,
                                  GLboolean unpackFlipY,
@@ -3249,7 +3252,10 @@ bool ValidateCopyTextureCHROMIUM(Context *context,
 
 bool ValidateCopySubTextureCHROMIUM(Context *context,
                                     GLuint sourceId,
+                                    GLint sourceLevel,
+                                    GLenum destTarget,
                                     GLuint destId,
+                                    GLint destLevel,
                                     GLint xoffset,
                                     GLint yoffset,
                                     GLint x,
@@ -3332,7 +3338,6 @@ bool ValidateCopySubTextureCHROMIUM(Context *context,
         return false;
     }
 
-    GLenum destTarget = dest->getTarget();
     ASSERT(destTarget != GL_TEXTURE_CUBE_MAP);
     if (dest->getWidth(sourceTarget, 0) == 0 || dest->getHeight(sourceTarget, 0) == 0)
     {

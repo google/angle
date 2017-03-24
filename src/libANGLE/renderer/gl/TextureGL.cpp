@@ -632,8 +632,11 @@ gl::Error TextureGL::copySubImage(ContextImpl *contextImpl,
 }
 
 gl::Error TextureGL::copyTexture(ContextImpl *contextImpl,
+                                 GLenum target,
+                                 size_t level,
                                  GLenum internalFormat,
                                  GLenum type,
+                                 size_t sourceLevel,
                                  bool unpackFlipY,
                                  bool unpackPremultiplyAlpha,
                                  bool unpackUnmultiplyAlpha,
@@ -647,12 +650,16 @@ gl::Error TextureGL::copyTexture(ContextImpl *contextImpl,
     reserveTexImageToBeFilled(getTarget(), 0, sizedInternalFormat, sourceImageDesc.size,
                               internalFormat, type);
 
-    return copySubTextureHelper(gl::Offset(0, 0, 0), sourceArea, internalFormat, unpackFlipY,
-                                unpackPremultiplyAlpha, unpackUnmultiplyAlpha, source);
+    return copySubTextureHelper(target, level, gl::Offset(0, 0, 0), sourceLevel, sourceArea,
+                                internalFormat, unpackFlipY, unpackPremultiplyAlpha,
+                                unpackUnmultiplyAlpha, source);
 }
 
 gl::Error TextureGL::copySubTexture(ContextImpl *contextImpl,
+                                    GLenum target,
+                                    size_t level,
                                     const gl::Offset &destOffset,
+                                    size_t sourceLevel,
                                     const gl::Rectangle &sourceArea,
                                     bool unpackFlipY,
                                     bool unpackPremultiplyAlpha,
@@ -660,11 +667,14 @@ gl::Error TextureGL::copySubTexture(ContextImpl *contextImpl,
                                     const gl::Texture *source)
 {
     GLenum destFormat = mState.getImageDesc(mState.mTarget, 0).format.format;
-    return copySubTextureHelper(destOffset, sourceArea, destFormat, unpackFlipY,
-                                unpackPremultiplyAlpha, unpackUnmultiplyAlpha, source);
+    return copySubTextureHelper(target, level, destOffset, sourceLevel, sourceArea, destFormat,
+                                unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha, source);
 }
 
-gl::Error TextureGL::copySubTextureHelper(const gl::Offset &destOffset,
+gl::Error TextureGL::copySubTextureHelper(GLenum target,
+                                          size_t level,
+                                          const gl::Offset &destOffset,
+                                          size_t sourceLevel,
                                           const gl::Rectangle &sourceArea,
                                           GLenum destFormat,
                                           bool unpackFlipY,
@@ -691,9 +701,10 @@ gl::Error TextureGL::copySubTextureHelper(const gl::Offset &destOffset,
     }
 
     // We can't use copyTexSubImage, do a manual copy
-    return mBlitter->copySubTexture(sourceGL, this, sourceImageDesc.size, sourceArea, destOffset,
-                                    needsLumaWorkaround, sourceGL->mLevelInfo[0].sourceFormat,
-                                    unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
+    return mBlitter->copySubTexture(
+        sourceGL, sourceLevel, this, target, level, sourceImageDesc.size, sourceArea, destOffset,
+        needsLumaWorkaround, sourceGL->mLevelInfo[sourceLevel].sourceFormat, unpackFlipY,
+        unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
 }
 
 gl::Error TextureGL::setStorage(ContextImpl *contextImpl,
@@ -1029,6 +1040,18 @@ void TextureGL::syncState(const gl::Texture::DirtyBits &dirtyBits)
 bool TextureGL::hasAnyDirtyBit() const
 {
     return mLocalDirtyBits.any();
+}
+
+void TextureGL::setBaseLevel(GLuint baseLevel)
+{
+    if (baseLevel != mAppliedBaseLevel)
+    {
+        mAppliedBaseLevel = baseLevel;
+        mLocalDirtyBits.set(gl::Texture::DIRTY_BIT_BASE_LEVEL);
+
+        mStateManager->bindTexture(getTarget(), mTextureID);
+        mFunctions->texParameteri(getTarget(), GL_TEXTURE_BASE_LEVEL, baseLevel);
+    }
 }
 
 void TextureGL::setMinFilter(GLenum filter)

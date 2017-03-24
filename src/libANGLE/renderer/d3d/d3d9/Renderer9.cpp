@@ -2463,11 +2463,14 @@ gl::Error Renderer9::copyTexture(const gl::Texture *source,
                                  GLenum destFormat,
                                  const gl::Offset &destOffset,
                                  TextureStorage *storage,
+                                 GLenum destTarget,
                                  GLint destLevel,
                                  bool unpackFlipY,
                                  bool unpackPremultiplyAlpha,
                                  bool unpackUnmultiplyAlpha)
 {
+    ASSERT(destTarget == GL_TEXTURE_2D);
+
     RECT rect;
     rect.left   = sourceRect.x;
     rect.top    = sourceRect.y;

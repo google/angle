@@ -219,6 +219,7 @@ class Renderer11 : public RendererD3D
                           GLenum destFormat,
                           const gl::Offset &destOffset,
                           TextureStorage *storage,
+                          GLenum destTarget,
                           GLint destLevel,
                           bool unpackFlipY,
                           bool unpackPremultiplyAlpha,
