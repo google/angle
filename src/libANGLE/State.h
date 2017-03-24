@@ -335,7 +335,7 @@ class State : angle::NonCopyable
     // State query functions
     void getBooleanv(GLenum pname, GLboolean *params);
     void getFloatv(GLenum pname, GLfloat *params);
-    void getIntegerv(const ContextState &data, GLenum pname, GLint *params);
+    void getIntegerv(const Context *context, GLenum pname, GLint *params);
     void getPointerv(GLenum pname, void **params) const;
     void getIntegeri_v(GLenum target, GLuint index, GLint *data);
     void getInteger64i_v(GLenum target, GLuint index, GLint64 *data);
@@ -434,9 +434,9 @@ class State : angle::NonCopyable
     typedef std::bitset<DIRTY_OBJECT_MAX> DirtyObjects;
     void clearDirtyObjects() { mDirtyObjects.reset(); }
     void setAllDirtyObjects() { mDirtyObjects.set(); }
-    void syncDirtyObjects();
-    void syncDirtyObjects(const DirtyObjects &bitset);
-    void syncDirtyObject(GLenum target);
+    void syncDirtyObjects(const Context *context);
+    void syncDirtyObjects(const Context *context, const DirtyObjects &bitset);
+    void syncDirtyObject(const Context *context, GLenum target);
     void setObjectDirty(GLenum target);
 
   private:

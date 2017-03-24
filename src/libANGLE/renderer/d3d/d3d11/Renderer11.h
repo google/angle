@@ -145,10 +145,9 @@ class Renderer11 : public RendererD3D
                                 const std::vector<GLint> &vertexUniformBuffers,
                                 const std::vector<GLint> &fragmentUniformBuffers) override;
 
-    gl::Error updateState(const gl::ContextState &data, GLenum drawMode);
+    gl::Error updateState(ContextImpl *contextImpl, GLenum drawMode);
 
     bool applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSize);
-    gl::Error applyRenderTarget(gl::Framebuffer *frameBuffer);
     gl::Error applyUniforms(const ProgramD3D &programD3D,
                             GLenum drawMode,
                             const std::vector<D3DUniform *> &uniformArray) override;

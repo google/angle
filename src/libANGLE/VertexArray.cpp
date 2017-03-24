@@ -8,6 +8,7 @@
 
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/Buffer.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/renderer/GLImplFactory.h"
 #include "libANGLE/renderer/VertexArrayImpl.h"
 
@@ -213,11 +214,11 @@ void VertexArray::setElementArrayBuffer(Buffer *buffer)
     mDirtyBits.set(DIRTY_BIT_ELEMENT_ARRAY_BUFFER);
 }
 
-void VertexArray::syncImplState()
+void VertexArray::syncImplState(const Context *context)
 {
     if (mDirtyBits.any())
     {
-        mVertexArray->syncState(mDirtyBits);
+        mVertexArray->syncState(rx::SafeGetImpl(context), mDirtyBits);
         mDirtyBits.reset();
     }
 }

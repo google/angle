@@ -407,7 +407,7 @@ bool FramebufferGL::checkStatus() const
     return (status == GL_FRAMEBUFFER_COMPLETE);
 }
 
-void FramebufferGL::syncState(const Framebuffer::DirtyBits &dirtyBits)
+void FramebufferGL::syncState(ContextImpl *contextImpl, const Framebuffer::DirtyBits &dirtyBits)
 {
     // Don't need to sync state for the default FBO.
     if (mIsDefault)

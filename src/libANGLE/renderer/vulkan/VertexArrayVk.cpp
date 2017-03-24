@@ -11,6 +11,8 @@
 
 #include "common/debug.h"
 
+#include "libANGLE/renderer/vulkan/ContextVk.h"
+
 namespace rx
 {
 
@@ -20,6 +22,11 @@ VertexArrayVk::VertexArrayVk(const gl::VertexArrayState &data) : VertexArrayImpl
 
 VertexArrayVk::~VertexArrayVk()
 {
+}
+
+void VertexArrayVk::syncState(ContextImpl *contextImpl, const gl::VertexArray::DirtyBits &dirtyBits)
+{
+    ASSERT(dirtyBits.any());
 }
 
 }  // namespace rx

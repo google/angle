@@ -80,7 +80,7 @@ class FramebufferGL : public FramebufferImpl
 
     bool checkStatus() const override;
 
-    void syncState(const gl::Framebuffer::DirtyBits &dirtyBits) override;
+    void syncState(ContextImpl *contextImpl, const gl::Framebuffer::DirtyBits &dirtyBits) override;
 
     GLuint getFramebufferID() const;
     bool isDefault() const;

@@ -377,7 +377,7 @@ void Framebuffer11::updateDepthStencilRenderTarget()
                              &mDepthStencilRenderTargetDirty);
 }
 
-void Framebuffer11::syncState(const gl::Framebuffer::DirtyBits &dirtyBits)
+void Framebuffer11::syncState(ContextImpl *contextImpl, const gl::Framebuffer::DirtyBits &dirtyBits)
 {
     mRenderer->getStateManager()->invalidateRenderTarget();
 
@@ -410,7 +410,7 @@ void Framebuffer11::syncState(const gl::Framebuffer::DirtyBits &dirtyBits)
     // We should not have dirtied any additional state during our sync.
     ASSERT(!mInternalDirtyBits.any());
 
-    FramebufferD3D::syncState(dirtyBits);
+    FramebufferD3D::syncState(contextImpl, dirtyBits);
 }
 
 void Framebuffer11::signal(SignalToken token)
@@ -439,9 +439,9 @@ bool Framebuffer11::hasAnyInternalDirtyBit() const
     return mInternalDirtyBits.any();
 }
 
-void Framebuffer11::syncInternalState()
+void Framebuffer11::syncInternalState(ContextImpl *contextImpl)
 {
-    syncState(gl::Framebuffer::DirtyBits());
+    syncState(contextImpl, gl::Framebuffer::DirtyBits());
 }
 
 }  // namespace rx

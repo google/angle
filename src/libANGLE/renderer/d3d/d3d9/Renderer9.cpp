@@ -1000,7 +1000,7 @@ gl::Error Renderer9::updateState(Context9 *context, GLenum drawMode)
     // Applies the render target surface, depth stencil surface, viewport rectangle and
     // scissor rectangle to the renderer
     gl::Framebuffer *framebuffer = glState.getDrawFramebuffer();
-    ASSERT(framebuffer && !framebuffer->hasAnyDirtyBit() && framebuffer->complete(data));
+    ASSERT(framebuffer && !framebuffer->hasAnyDirtyBit() && framebuffer->cachedComplete());
 
     ANGLE_TRY(applyRenderTarget(context, framebuffer));
 

@@ -524,7 +524,7 @@ void VertexArrayGL::updateAttribDivisor(size_t attribIndex)
     }
 }
 
-void VertexArrayGL::syncState(const VertexArray::DirtyBits &dirtyBits)
+void VertexArrayGL::syncState(ContextImpl *contextImpl, const VertexArray::DirtyBits &dirtyBits)
 {
     for (unsigned long dirtyBit : angle::IterateBitSet(dirtyBits))
     {

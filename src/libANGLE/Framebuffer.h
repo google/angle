@@ -39,13 +39,14 @@ class Surface;
 namespace gl
 {
 class Context;
+class ContextState;
 class Framebuffer;
 class Renderbuffer;
 class State;
 class Texture;
 class TextureCapsMap;
+class ValidationContext;
 struct Caps;
-class ContextState;
 struct Extensions;
 struct ImageIndex;
 struct Rectangle;
@@ -174,7 +175,7 @@ class Framebuffer final : public LabeledObject, public angle::SignalReceiver
     bool usingExtendedDrawBuffers() const;
 
     // This method calls checkStatus.
-    int getSamples(const ContextState &state);
+    int getSamples(const Context *context);
 
     Error getSamplePosition(size_t index, GLfloat *xy) const;
 
@@ -187,10 +188,15 @@ class Framebuffer final : public LabeledObject, public angle::SignalReceiver
     void setDefaultSamples(GLint defaultSamples);
     void setDefaultFixedSampleLocations(GLboolean defaultFixedSampleLocations);
 
-    GLenum checkStatus(const ContextState &state);
+    GLenum checkStatus(const Context *context);
+
+    // TODO(jmadill): Remove this kludge.
+    GLenum checkStatus(const ValidationContext *context);
+    int getSamples(const ValidationContext *context);
 
     // Helper for checkStatus == GL_FRAMEBUFFER_COMPLETE.
-    bool complete(const ContextState &state);
+    bool complete(const Context *context);
+    bool cachedComplete() const;
 
     bool hasValidDepthStencil() const;
 
@@ -251,7 +257,7 @@ class Framebuffer final : public LabeledObject, public angle::SignalReceiver
     typedef std::bitset<DIRTY_BIT_MAX> DirtyBits;
     bool hasAnyDirtyBit() const { return mDirtyBits.any(); }
 
-    void syncState();
+    void syncState(const Context *context);
 
     // angle::SignalReceiver implementation
     void signal(angle::SignalToken token) override;
@@ -267,7 +273,7 @@ class Framebuffer final : public LabeledObject, public angle::SignalReceiver
                                   GLenum matchType,
                                   GLuint matchId,
                                   size_t dirtyBit);
-    GLenum checkStatusImpl(const ContextState &state);
+    GLenum checkStatusImpl(const Context *context);
     void commitWebGL1DepthStencilIfConsistent();
 
     void setAttachmentImpl(GLenum type,

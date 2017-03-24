@@ -75,7 +75,7 @@ class FramebufferVk : public FramebufferImpl, public ResourceVk
 
     bool checkStatus() const override;
 
-    void syncState(const gl::Framebuffer::DirtyBits &dirtyBits) override;
+    void syncState(ContextImpl *contextImpl, const gl::Framebuffer::DirtyBits &dirtyBits) override;
 
     gl::Error getSamplePosition(size_t index, GLfloat *xy) const override;
 
@@ -96,8 +96,6 @@ class FramebufferVk : public FramebufferImpl, public ResourceVk
 
     vk::RenderPass mRenderPass;
     vk::Framebuffer mFramebuffer;
-    bool mDirtyRenderPass;
-    bool mDirtyFramebuffer;
 };
 
 }  // namespace rx

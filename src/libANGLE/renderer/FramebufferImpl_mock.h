@@ -46,7 +46,7 @@ class MockFramebufferImpl : public rx::FramebufferImpl
 
     MOCK_CONST_METHOD0(checkStatus, bool());
 
-    MOCK_METHOD1(syncState, void(const gl::Framebuffer::DirtyBits &));
+    MOCK_METHOD2(syncState, void(ContextImpl *, const gl::Framebuffer::DirtyBits &));
 
     MOCK_METHOD0(destructor, void());
 };

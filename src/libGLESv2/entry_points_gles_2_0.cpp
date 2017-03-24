@@ -278,7 +278,7 @@ GLenum GL_APIENTRY CheckFramebufferStatus(GLenum target)
         Framebuffer *framebuffer = context->getGLState().getTargetFramebuffer(target);
         ASSERT(framebuffer);
 
-        return framebuffer->checkStatus(context->getContextState());
+        return framebuffer->checkStatus(context);
     }
 
     return 0;

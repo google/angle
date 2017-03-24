@@ -23,7 +23,7 @@ class VertexArray11 : public VertexArrayImpl, public angle::SignalReceiver
     VertexArray11(const gl::VertexArrayState &data);
     ~VertexArray11() override;
 
-    void syncState(const gl::VertexArray::DirtyBits &dirtyBits) override;
+    void syncState(ContextImpl *contextImpl, const gl::VertexArray::DirtyBits &dirtyBits) override;
     // This will flush any pending attrib updates and then check the dynamic attribs mask.
     bool hasDynamicAttrib(const gl::State &state);
     gl::Error updateDirtyAndDynamicAttribs(VertexDataManager *vertexDataManager,

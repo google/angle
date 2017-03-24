@@ -30,7 +30,7 @@ class Framebuffer11 : public FramebufferD3D, public angle::SignalReceiver
     // Invalidate the cached swizzles of all bound texture attachments.
     gl::Error markAttachmentsDirty() const;
 
-    void syncState(const gl::Framebuffer::DirtyBits &dirtyBits) override;
+    void syncState(ContextImpl *contextImpl, const gl::Framebuffer::DirtyBits &dirtyBits) override;
 
     const RenderTargetArray &getCachedColorRenderTargets() const
     {
@@ -42,7 +42,7 @@ class Framebuffer11 : public FramebufferD3D, public angle::SignalReceiver
     }
 
     bool hasAnyInternalDirtyBit() const;
-    void syncInternalState();
+    void syncInternalState(ContextImpl *contextImpl);
 
     void signal(angle::SignalToken token) override;
 

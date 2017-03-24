@@ -128,7 +128,8 @@ bool FramebufferNULL::checkStatus() const
     return true;
 }
 
-void FramebufferNULL::syncState(const gl::Framebuffer::DirtyBits &dirtyBits)
+void FramebufferNULL::syncState(ContextImpl *contextImpl,
+                                const gl::Framebuffer::DirtyBits &dirtyBits)
 {
 }
 

@@ -172,7 +172,7 @@ class VertexArray final : public LabeledObject
 
     static size_t GetAttribIndex(unsigned long dirtyBit);
 
-    void syncImplState();
+    void syncImplState(const Context *context);
     bool hasAnyDirtyBit() const { return mDirtyBits.any(); }
 
   private:

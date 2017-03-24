@@ -1712,7 +1712,7 @@ void State::getFloatv(GLenum pname, GLfloat *params)
     }
 }
 
-void State::getIntegerv(const ContextState &data, GLenum pname, GLint *params)
+void State::getIntegerv(const Context *context, GLenum pname, GLint *params)
 {
     if (pname >= GL_DRAW_BUFFER0_EXT && pname <= GL_DRAW_BUFFER15_EXT)
     {
@@ -1799,14 +1799,14 @@ void State::getIntegerv(const ContextState &data, GLenum pname, GLint *params)
       case GL_SAMPLES:
         {
             gl::Framebuffer *framebuffer = mDrawFramebuffer;
-            if (framebuffer->checkStatus(data) == GL_FRAMEBUFFER_COMPLETE)
+            if (framebuffer->checkStatus(context) == GL_FRAMEBUFFER_COMPLETE)
             {
                 switch (pname)
                 {
                   case GL_SAMPLE_BUFFERS:
-                    if (framebuffer->getSamples(data) != 0)
-                    {
-                        *params = 1;
+                      if (framebuffer->getSamples(context) != 0)
+                      {
+                          *params = 1;
                     }
                     else
                     {
@@ -1814,8 +1814,8 @@ void State::getIntegerv(const ContextState &data, GLenum pname, GLint *params)
                     }
                     break;
                   case GL_SAMPLES:
-                    *params = framebuffer->getSamples(data);
-                    break;
+                      *params = framebuffer->getSamples(context);
+                      break;
                 }
             }
             else
@@ -2104,15 +2104,15 @@ bool State::hasMappedBuffer(GLenum target) const
     }
 }
 
-void State::syncDirtyObjects()
+void State::syncDirtyObjects(const Context *context)
 {
     if (!mDirtyObjects.any())
         return;
 
-    syncDirtyObjects(mDirtyObjects);
+    syncDirtyObjects(context, mDirtyObjects);
 }
 
-void State::syncDirtyObjects(const DirtyObjects &bitset)
+void State::syncDirtyObjects(const Context *context, const DirtyObjects &bitset)
 {
     for (auto dirtyObject : angle::IterateBitSet(bitset))
     {
@@ -2120,15 +2120,15 @@ void State::syncDirtyObjects(const DirtyObjects &bitset)
         {
             case DIRTY_OBJECT_READ_FRAMEBUFFER:
                 ASSERT(mReadFramebuffer);
-                mReadFramebuffer->syncState();
+                mReadFramebuffer->syncState(context);
                 break;
             case DIRTY_OBJECT_DRAW_FRAMEBUFFER:
                 ASSERT(mDrawFramebuffer);
-                mDrawFramebuffer->syncState();
+                mDrawFramebuffer->syncState(context);
                 break;
             case DIRTY_OBJECT_VERTEX_ARRAY:
                 ASSERT(mVertexArray);
-                mVertexArray->syncImplState();
+                mVertexArray->syncImplState(context);
                 break;
             case DIRTY_OBJECT_PROGRAM:
                 // TODO(jmadill): implement this
@@ -2142,7 +2142,7 @@ void State::syncDirtyObjects(const DirtyObjects &bitset)
     mDirtyObjects &= ~bitset;
 }
 
-void State::syncDirtyObject(GLenum target)
+void State::syncDirtyObject(const Context *context, GLenum target)
 {
     DirtyObjects localSet;
 
@@ -2166,7 +2166,7 @@ void State::syncDirtyObject(GLenum target)
             break;
     }
 
-    syncDirtyObjects(localSet);
+    syncDirtyObjects(context, localSet);
 }
 
 void State::setObjectDirty(GLenum target)

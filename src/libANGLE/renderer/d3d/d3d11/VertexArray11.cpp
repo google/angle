@@ -40,7 +40,7 @@ VertexArray11::~VertexArray11()
     }
 }
 
-void VertexArray11::syncState(const gl::VertexArray::DirtyBits &dirtyBits)
+void VertexArray11::syncState(ContextImpl *contextImpl, const gl::VertexArray::DirtyBits &dirtyBits)
 {
     for (auto dirtyBit : angle::IterateBitSet(dirtyBits))
     {

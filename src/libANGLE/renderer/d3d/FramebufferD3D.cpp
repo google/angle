@@ -296,7 +296,8 @@ bool FramebufferD3D::checkStatus() const
     return true;
 }
 
-void FramebufferD3D::syncState(const gl::Framebuffer::DirtyBits &dirtyBits)
+void FramebufferD3D::syncState(ContextImpl *contextImpl,
+                               const gl::Framebuffer::DirtyBits &dirtyBits)
 {
     bool invalidateColorAttachmentCache = false;
 
