@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "db429dfd_c9dfa7b7",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 969,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-24T09:04:55Z",
+      "side": 1,
+      "message": "Move this function to Program. So you can directly call program-\u003eIsValidResourceIndex() in Validation file. And the definition in context can also be removed.",
+      "revId": "995938844c879db0cd533643837bb66a0622ea94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "207708ab_efaf3815",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-24T09:04:55Z",
+      "side": 1,
+      "message": "You can call it directly by programObject-\u003eisValidResourceIndex() not through context. In that case, you don\u0027t need repeat define it in context.",
+      "range": {
+        "startLine": 583,
+        "startChar": 18,
+        "endLine": 583,
+        "endChar": 38
+      },
+      "revId": "995938844c879db0cd533643837bb66a0622ea94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b5e73d0f_cb55adb1",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-24T09:04:55Z",
+      "side": 1,
+      "message": "Do you know the expected index value? If yes, maybe use EXPECT_EQ(expected, index) is better. Same to below.",
+      "revId": "995938844c879db0cd533643837bb66a0622ea94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
