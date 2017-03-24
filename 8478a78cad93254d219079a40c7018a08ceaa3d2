@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d4f57ca9_a2803b78",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-03-24T02:34:33Z",
+      "side": 1,
+      "message": "One suggestion: add some more tests to cover that the length of \u0027name\u0027 is less than the real length you need to store the result. \nFor instance: GLchar limitedName[4];",
+      "revId": "8478a78cad93254d219079a40c7018a08ceaa3d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
