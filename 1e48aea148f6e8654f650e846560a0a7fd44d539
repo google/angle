@@ -140,6 +140,30 @@
       "revId": "1e48aea148f6e8654f650e846560a0a7fd44d539",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2e499f1a_600a32d7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-24T14:56:50Z",
+      "side": 1,
+      "message": "Sorry, can we make this a local temporary instead of a constexpr value? It just seems odd to me to have a global constexpr zero.",
+      "parentUuid": "81c8bb37_3845e81a",
+      "range": {
+        "startLine": 569,
+        "startChar": 90,
+        "endLine": 569,
+        "endChar": 96
+      },
+      "revId": "1e48aea148f6e8654f650e846560a0a7fd44d539",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
