@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "79a3044a_f683358f",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 38
+      },
+      "lineNbr": 645,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-24T03:30:13Z",
+      "side": 1,
+      "message": "The buffer does not need to be dynamic.",
+      "revId": "8797371d91771664a9af5d54c70cca7328265eb0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

@@ -22,6 +22,30 @@
       "revId": "8aeeed6ef9a430bc5bd8dfd7ef25bc137bc1fb90",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cb715f85_4fa2c698",
+        "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 872,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-24T03:30:13Z",
+      "side": 0,
+      "message": "Got it. \nI see Geoff has done this refactoring.",
+      "parentUuid": "a06dec3d_7bd0cdf9",
+      "range": {
+        "startLine": 830,
+        "startChar": 7,
+        "endLine": 872,
+        "endChar": 9
+      },
+      "revId": "8aeeed6ef9a430bc5bd8dfd7ef25bc137bc1fb90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
