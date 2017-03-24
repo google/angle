@@ -46,6 +46,30 @@
       "revId": "4cc6ad9f2351717cf53b068115d321da3bb7da4a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7fdf6986_1c123640",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2098,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-24T20:04:46Z",
+      "side": 1,
+      "message": "Sorry, it didn\u0027t handle GL_UNSIGNED_SHORT when primitive restart was disabled (the normal case).  The refactored function looks good.",
+      "parentUuid": "97b575be_3befef21",
+      "range": {
+        "startLine": 2090,
+        "startChar": 4,
+        "endLine": 2098,
+        "endChar": 24
+      },
+      "revId": "4cc6ad9f2351717cf53b068115d321da3bb7da4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
