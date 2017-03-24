@@ -99,6 +99,30 @@
     },
     {
       "key": {
+        "uuid": "d9f7ab2e_6efec815",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-03-24T20:23:24Z",
+      "side": 1,
+      "message": "The ASSERT_[EQ|LE] macro(s) require a matching return type. However, ASSERT or EXPECT_TRUE works.",
+      "parentUuid": "1a4e1abf_20dfe3bc",
+      "range": {
+        "startLine": 189,
+        "startChar": 12,
+        "endLine": 189,
+        "endChar": 18
+      },
+      "revId": "c61e742f124a89e6b89f1f89fc64087daa4b2509",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "141fcc15_b331ab10",
         "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
         "patchSetId": 10
@@ -110,6 +134,30 @@
       "writtenOn": "2017-03-22T18:42:38Z",
       "side": 1,
       "message": "sorry, I think I was wrong. I don\u0027t think we want to disable this on OpenGL on all platforms - the test currently runs on NVIDIA OpenGL, and it should work on all platforms. I would suggest making a different valid() function for D3DTextureTestMS that filters only D3D11. really this should be validated somewhere in ANGLE and we should generate errors if that happens, it shouldn\u0027t be something the test has to filter out with a priori knoweldge.",
+      "range": {
+        "startLine": 227,
+        "startChar": 12,
+        "endLine": 227,
+        "endChar": 20
+      },
+      "revId": "c61e742f124a89e6b89f1f89fc64087daa4b2509",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "88f8b910_cb21701b",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-03-24T20:23:24Z",
+      "side": 1,
+      "message": "If we remove `OpenGL()`, we see additional failures unrelated to the patch. This seems like a separate issue. The D3DTextureTestMS test will fail in ANGLETest::SetUp when no multi-sampled EGL config is available. EGL configs only exist for D3D11. We could fixup the test harness to check for error instead of FAIL().",
+      "parentUuid": "141fcc15_b331ab10",
       "range": {
         "startLine": 227,
         "startChar": 12,

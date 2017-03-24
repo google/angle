@@ -260,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "2f62ca94_13262467",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-03-24T20:23:24Z",
+      "side": 1,
+      "message": "That code runs once in the function and the one below is specific to SRV. The computed result for RTV cannot be reused for SRV. I could do a isMSAA local for the \"(mEGLSamples \u003c\u003d 1)\", if desired.",
+      "parentUuid": "e248c303_9236b6ef",
+      "range": {
+        "startLine": 280,
+        "startChar": 8,
+        "endLine": 280,
+        "endChar": 91
+      },
+      "revId": "e20765503a06f1157cc348afc77c4a249a9291d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "553f73b7_eaa3bf51",
         "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
         "patchSetId": 9
