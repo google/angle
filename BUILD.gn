@@ -214,6 +214,13 @@ static_library("angle_gpu_info_util") {
   libs = []
   defines = []
 
+  if (is_win) {
+    sources +=
+        rebase_path(gles_gypi.libangle_gpu_info_util_win_sources, ".", "src")
+    libs += [ "setupapi.lib" ]
+    defines += [ "GPU_INFO_USE_SETUPAPI" ]
+  }
+
   if (is_linux) {
     sources +=
         rebase_path(gles_gypi.libangle_gpu_info_util_linux_sources, ".", "src")

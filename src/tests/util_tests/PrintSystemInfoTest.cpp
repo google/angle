@@ -19,7 +19,8 @@ using namespace angle;
 namespace
 {
 
-#if defined(ANGLE_PLATFORM_LINUX) || defined(ANGLE_PLATFORM_APPLE)
+#if defined(ANGLE_PLATFORM_WINDOWS) || defined(ANGLE_PLATFORM_LINUX) || \
+    defined(ANGLE_PLATFORM_APPLE)
 #define SYSTEM_INFO_IMPLEMENTED
 #endif
 

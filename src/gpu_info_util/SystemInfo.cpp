@@ -12,6 +12,7 @@
 #include <sstream>
 
 #include "common/debug.h"
+#include "common/string_utils.h"
 
 namespace angle
 {
@@ -115,6 +116,19 @@ bool ParseMacMachineModel(const std::string &identifier,
     *type  = identifier.substr(0, numberLoc);
 
     return true;
+}
+
+bool CMDeviceIDToDeviceAndVendorID(const std::string &id, uint32_t *vendorId, uint32_t *deviceId)
+{
+    unsigned int vendor = 0;
+    unsigned int device = 0;
+
+    bool success = id.length() >= 21 && HexStringToUInt(id.substr(8, 4), &vendor) &&
+                   HexStringToUInt(id.substr(17, 4), &device);
+
+    *vendorId = vendor;
+    *deviceId = device;
+    return success;
 }
 
 void FindPrimaryGPU(SystemInfo *info)

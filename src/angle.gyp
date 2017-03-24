@@ -225,6 +225,52 @@
             },
             'conditions':
             [
+                ['OS=="win"',
+                {
+                    'sources':
+                    [
+                        '<@(libangle_gpu_info_util_win_sources)',
+                    ],
+                }],
+                ['OS=="win" and angle_build_winrt==0',
+                {
+                    'link_settings':
+                    {
+                        'msvs_settings':
+                        {
+                            'VCLinkerTool':
+                            {
+                                'AdditionalDependencies':
+                                [
+                                    'setupapi.lib'
+                                ]
+                            }
+                        }
+                    },
+                    'defines':
+                    [
+                        'GPU_INFO_USE_SETUPAPI',
+                    ],
+                },
+                {
+                    'link_settings':
+                    {
+                        'msvs_settings':
+                        {
+                            'VCLinkerTool':
+                            {
+                                'AdditionalDependencies':
+                                [
+                                    'dxgi.lib'
+                                ]
+                            }
+                        }
+                    },
+                    'defines':
+                    [
+                        'GPU_INFO_USE_DXGI',
+                    ],
+                }],
                 ['OS=="linux"',
                 {
                     'sources':

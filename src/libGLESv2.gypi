@@ -69,6 +69,10 @@
             'gpu_info_util/SystemInfo.h',
             'gpu_info_util/SystemInfo_internal.h',
         ],
+        'libangle_gpu_info_util_win_sources':
+        [
+            'gpu_info_util/SystemInfo_win.cpp',
+        ],
         'libangle_gpu_info_util_linux_sources':
         [
             'gpu_info_util/SystemInfo_linux.cpp',
