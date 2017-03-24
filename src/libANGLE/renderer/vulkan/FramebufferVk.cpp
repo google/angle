@@ -347,6 +347,9 @@ void FramebufferVk::syncState(ContextImpl *contextImpl, const gl::Framebuffer::D
     // TODO(jmadill): Smarter update.
     mRenderPass.destroy(contextVk->getDevice());
     mFramebuffer.destroy(contextVk->getDevice());
+
+    // TODO(jmadill): Use pipeline cache.
+    contextVk->invalidateCurrentPipeline();
 }
 
 gl::ErrorOrResult<vk::RenderPass *> FramebufferVk::getRenderPass(VkDevice device)

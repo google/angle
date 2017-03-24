@@ -88,7 +88,7 @@ class ResourceVk
         mStoredQueueSerial = queueSerial;
     }
 
-    DeleteSchedule getDeleteSchedule(Serial lastCompletedQueueSerial)
+    DeleteSchedule getDeleteSchedule(Serial lastCompletedQueueSerial) const
     {
         if (lastCompletedQueueSerial >= mStoredQueueSerial)
         {
@@ -99,6 +99,8 @@ class ResourceVk
             return DeleteSchedule::LATER;
         }
     }
+
+    Serial getStoredQueueSerial() const { return mStoredQueueSerial; }
 
   private:
     Serial mStoredQueueSerial;

@@ -19,7 +19,7 @@ namespace rx
 {
 class RendererVk;
 
-class ContextVk : public ContextImpl
+class ContextVk : public ContextImpl, public ResourceVk
 {
   public:
     ContextVk(const gl::ContextState &state, RendererVk *renderer);
@@ -128,9 +128,15 @@ class ContextVk : public ContextImpl
 
     RendererVk *getRenderer() { return mRenderer; }
 
+    // TODO(jmadill): Use pipeline cache.
+    void invalidateCurrentPipeline();
+
   private:
+    gl::Error initPipeline();
+
     RendererVk *mRenderer;
     vk::Pipeline mCurrentPipeline;
+    GLenum mCurrentDrawMode;
 };
 
 }  // namespace rx

@@ -108,6 +108,9 @@ LinkResult ProgramVk::link(ContextImpl *contextImpl,
     mLinkedVertexModule.retain(device, std::move(vertexModule));
     mLinkedFragmentModule.retain(device, std::move(fragmentModule));
 
+    // TODO(jmadill): Use pipeline cache.
+    context->invalidateCurrentPipeline();
+
     return true;
 }
 
