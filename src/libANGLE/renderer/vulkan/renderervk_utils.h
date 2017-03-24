@@ -209,6 +209,8 @@ class CommandBuffer final : public WrappedObject<CommandBuffer, VkCommandBuffer>
   public:
     CommandBuffer();
 
+    bool started() const { return mStarted; }
+
     void destroy(VkDevice device);
     using WrappedObject::operator=;
 
@@ -246,6 +248,7 @@ class CommandBuffer final : public WrappedObject<CommandBuffer, VkCommandBuffer>
                            const std::vector<VkDeviceSize> &offsets);
 
   private:
+    bool mStarted;
     CommandPool *mCommandPool;
 };
 
@@ -428,28 +431,45 @@ class Fence final : public WrappedObject<Fence, VkFence>
     VkResult getStatus(VkDevice device) const;
 };
 
-class FenceAndCommandBuffer final : angle::NonCopyable
+template <typename ObjT>
+class ObjectAndSerial final : angle::NonCopyable
 {
   public:
-    FenceAndCommandBuffer(Serial queueSerial, Fence &&fence, CommandBuffer &&commandBuffer);
-    FenceAndCommandBuffer(FenceAndCommandBuffer &&other);
-    FenceAndCommandBuffer &operator=(FenceAndCommandBuffer &&other);
+    ObjectAndSerial(ObjT &&object, Serial queueSerial)
+        : mObject(std::move(object)), mQueueSerial(queueSerial)
+    {
+    }
 
-    void destroy(VkDevice device);
-    vk::ErrorOrResult<bool> finished(VkDevice device) const;
+    ObjectAndSerial(ObjectAndSerial &&other)
+        : mObject(std::move(other.mObject)), mQueueSerial(std::move(other.mQueueSerial))
+    {
+    }
+    ObjectAndSerial &operator=(ObjectAndSerial &&other)
+    {
+        mObject      = std::move(other.mObject);
+        mQueueSerial = std::move(other.mQueueSerial);
+        return *this;
+    }
+
+    void destroy(VkDevice device) { mObject.destroy(device); }
 
     Serial queueSerial() const { return mQueueSerial; }
 
+    const ObjT &get() const { return mObject; }
+
   private:
+    ObjT mObject;
     Serial mQueueSerial;
-    Fence mFence;
-    CommandBuffer mCommandBuffer;
 };
+
+using CommandBufferAndSerial = ObjectAndSerial<CommandBuffer>;
+using FenceAndSerial         = ObjectAndSerial<Fence>;
 
 class IGarbageObject : angle::NonCopyable
 {
   public:
     virtual bool destroyIfComplete(VkDevice device, Serial completedSerial) = 0;
+    virtual void destroy(VkDevice device) = 0;
 };
 
 template <typename T>
@@ -468,6 +488,8 @@ class GarbageObject final : public IGarbageObject
 
         return false;
     }
+
+    void destroy(VkDevice device) override { mObject.destroy(device); }
 
   private:
     Serial mSerial;

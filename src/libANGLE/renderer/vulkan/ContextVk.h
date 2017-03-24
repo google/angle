@@ -123,8 +123,8 @@ class ContextVk : public ContextImpl, public ResourceVk
     std::vector<PathImpl *> createPaths(GLsizei) override;
 
     VkDevice getDevice() const;
-    vk::CommandBuffer *getCommandBuffer();
-    vk::Error submitCommands(const vk::CommandBuffer &commandBuffer);
+    vk::Error getStartedCommandBuffer(vk::CommandBuffer **commandBufferOut);
+    vk::Error submitCommands(vk::CommandBuffer *commandBuffer);
 
     RendererVk *getRenderer() { return mRenderer; }
 

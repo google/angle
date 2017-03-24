@@ -162,8 +162,8 @@ gl::Error FramebufferVk::clear(ContextImpl *context, GLbitfield mask)
     const auto &size = attachment->getSize();
     const gl::Rectangle renderArea(0, 0, size.width, size.height);
 
-    vk::CommandBuffer *commandBuffer = contextVk->getCommandBuffer();
-    ANGLE_TRY(commandBuffer->begin(contextVk->getDevice()));
+    vk::CommandBuffer *commandBuffer = nullptr;
+    ANGLE_TRY(contextVk->getStartedCommandBuffer(&commandBuffer));
 
     for (const auto &colorAttachment : mState.getColorAttachments())
     {
@@ -176,10 +176,6 @@ gl::Error FramebufferVk::clear(ContextImpl *context, GLbitfield mask)
             commandBuffer->clearSingleColorImage(*renderTarget->image, clearColorValue);
         }
     }
-
-    commandBuffer->end();
-
-    ANGLE_TRY(contextVk->submitCommands(*commandBuffer));
 
     return gl::NoError();
 }
@@ -271,8 +267,9 @@ gl::Error FramebufferVk::readPixels(ContextImpl *context,
     ANGLE_TRY(renderer->createStagingImage(TextureDimension::TEX_2D, *renderTarget->format,
                                            renderTarget->extents, &stagingImage));
 
-    vk::CommandBuffer *commandBuffer = contextVk->getCommandBuffer();
-    commandBuffer->begin(device);
+    vk::CommandBuffer *commandBuffer = nullptr;
+    ANGLE_TRY(contextVk->getStartedCommandBuffer(&commandBuffer));
+
     stagingImage.getImage().changeLayoutTop(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_GENERAL,
                                             commandBuffer);
 
@@ -288,9 +285,8 @@ gl::Error FramebufferVk::readPixels(ContextImpl *context,
                                commandBuffer);
     commandBuffer->copySingleImage(*readImage, stagingImage.getImage(), copyRegion,
                                    VK_IMAGE_ASPECT_COLOR_BIT);
-    commandBuffer->end();
 
-    ANGLE_TRY(renderer->submitAndFinishCommandBuffer(*commandBuffer));
+    ANGLE_TRY(renderer->submitAndFinishCommandBuffer(commandBuffer));
 
     // TODO(jmadill): parameters
     uint8_t *mapPointer = nullptr;
@@ -587,7 +583,6 @@ gl::Error FramebufferVk::beginRenderPass(VkDevice device,
     ANGLE_TRY(mState.getFirstColorAttachment()->getRenderTarget(&renderTarget));
     renderTarget->image->updateLayout(VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
 
-    ANGLE_TRY(commandBuffer->begin(device));
     commandBuffer->beginRenderPass(*renderPass, *framebuffer, glState.getViewport(),
                                    attachmentClearValues);
 

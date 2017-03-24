@@ -50,10 +50,10 @@ class RendererVk : angle::NonCopyable
     vk::ErrorOrResult<uint32_t> selectPresentQueueForSurface(VkSurfaceKHR surface);
 
     // TODO(jmadill): Use ContextImpl for command buffers to enable threaded contexts.
-    vk::CommandBuffer *getCommandBuffer();
-    vk::Error submitCommandBuffer(const vk::CommandBuffer &commandBuffer);
-    vk::Error submitAndFinishCommandBuffer(const vk::CommandBuffer &commandBuffer);
-    vk::Error submitCommandsWithSync(const vk::CommandBuffer &commandBuffer,
+    vk::Error getStartedCommandBuffer(vk::CommandBuffer **commandBufferOut);
+    vk::Error submitCommandBuffer(vk::CommandBuffer *commandBuffer);
+    vk::Error submitAndFinishCommandBuffer(vk::CommandBuffer *commandBuffer);
+    vk::Error submitCommandsWithSync(vk::CommandBuffer *commandBuffer,
                                      const vk::Semaphore &waitSemaphore,
                                      const vk::Semaphore &signalSemaphore);
     vk::Error finish();
@@ -99,7 +99,9 @@ class RendererVk : angle::NonCopyable
                       gl::Extensions *outExtensions,
                       gl::Limitations *outLimitations) const;
     vk::Error submit(const VkSubmitInfo &submitInfo);
+    vk::Error submitFrame(const VkSubmitInfo &submitInfo);
     vk::Error checkInFlightCommands();
+    void freeAllInFlightResources();
 
     mutable bool mCapsInitialized;
     mutable gl::Caps mNativeCaps;
@@ -124,7 +126,8 @@ class RendererVk : angle::NonCopyable
     GlslangWrapper *mGlslangWrapper;
     Serial mCurrentQueueSerial;
     Serial mLastCompletedQueueSerial;
-    std::vector<vk::FenceAndCommandBuffer> mInFlightCommands;
+    std::vector<vk::CommandBufferAndSerial> mInFlightCommands;
+    std::vector<vk::FenceAndSerial> mInFlightFences;
     std::vector<std::unique_ptr<vk::IGarbageObject>> mGarbage;
 };
 

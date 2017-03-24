@@ -358,8 +358,8 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
     ANGLE_VK_TRY(vkGetSwapchainImagesKHR(device, mSwapchain, &imageCount, swapchainImages.data()));
 
     // CommandBuffer is a singleton in the Renderer.
-    vk::CommandBuffer *commandBuffer = renderer->getCommandBuffer();
-    ANGLE_TRY(commandBuffer->begin(device));
+    vk::CommandBuffer *commandBuffer = nullptr;
+    ANGLE_TRY(renderer->getStartedCommandBuffer(&commandBuffer));
 
     VkClearColorValue transparentBlack;
     transparentBlack.float32[0] = 0.0f;
@@ -404,8 +404,7 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
         mSwapchainImageViews[imageIndex].retain(device, std::move(imageView));
     }
 
-    ANGLE_TRY(commandBuffer->end());
-    ANGLE_TRY(renderer->submitAndFinishCommandBuffer(*commandBuffer));
+    ANGLE_TRY(renderer->submitAndFinishCommandBuffer(commandBuffer));
 
     ANGLE_TRY(mImageAvailableSemaphore.init(device));
     ANGLE_TRY(mRenderingCompleteSemaphore.init(device));
@@ -429,17 +428,16 @@ egl::Error WindowSurfaceVk::swap(const DisplayImpl *displayImpl)
 
 vk::Error WindowSurfaceVk::swapImpl(RendererVk *renderer)
 {
-    vk::CommandBuffer *currentCB = renderer->getCommandBuffer();
+    vk::CommandBuffer *currentCB = nullptr;
+    ANGLE_TRY(renderer->getStartedCommandBuffer(&currentCB));
 
     auto *image = &mSwapchainImages[mCurrentSwapchainImageIndex];
 
-    currentCB->begin(renderer->getDevice());
     image->changeLayoutWithStages(VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
                                   VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
                                   VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, currentCB);
-    currentCB->end();
 
-    ANGLE_TRY(renderer->submitCommandsWithSync(*currentCB, mImageAvailableSemaphore,
+    ANGLE_TRY(renderer->submitCommandsWithSync(currentCB, mImageAvailableSemaphore,
                                                mRenderingCompleteSemaphore));
 
     VkPresentInfoKHR presentInfo;
