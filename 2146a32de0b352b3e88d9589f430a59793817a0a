@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "109dde1b_c70af3b7",
+        "filename": "src/tests/egl_tests/EGLSyncControlTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-24T14:55:17Z",
+      "side": 1,
+      "message": "make a top-level file comment as in most other files in ANGLE.",
+      "range": {
+        "startLine": 5,
+        "startChar": 2,
+        "endLine": 5,
+        "endChar": 0
+      },
+      "revId": "2146a32de0b352b3e88d9589f430a59793817a0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b0ac296_3de8068e",
+        "filename": "src/tests/egl_tests/EGLSyncControlTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-03-24T14:55:17Z",
+      "side": 1,
+      "message": "do you really need these defines?",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 0
+      },
+      "revId": "2146a32de0b352b3e88d9589f430a59793817a0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
