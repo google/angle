@@ -22,6 +22,30 @@
       "revId": "4cc6ad9f2351717cf53b068115d321da3bb7da4a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "97b575be_3befef21",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2098,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-24T08:02:18Z",
+      "side": 1,
+      "message": "\u003e I see what you\u0027re doing here, trying to find the fast path where we can simply apply the index buffer without reading it back but this code is very fragile and relies on a few assumptions.\n\nYes, I want to add a fast path which can apply the index buffer without reading it back. But seems that it only suit for none-dynamic data. For dynamic vertex data or streaming index data, we have to fall back to normal draw. I refactor these conditions to supportsFastIndirectDraw() so that DrawArraysIndirect and DrawElementsIndirect can share it.\n\n\u003e Please refactor the code from IndexDataManager::prepareIndexData into functions to calculate it workarounds are needed or the buffer can be bound directly.  \n\nIn the new patch set, I think it\u0027s not necessary to refactor IndexDataManager::prepareIndexData. But I added a new function isStreamingIndexData to check whether the index buffer is dynamic which follows prepareIndexData\u0027s logic.\n\n\u003eThere are already mistakes in this check (it doesn\u0027t allow GL_UNSIGNED_INT index buffers and it doesn\u0027t check the state of primitive restart), we need to make sure the same code is used in both checks.\n\nIt\u0027s not a error. For GL_UNSIGNED_INT, it doesn\u0027t need primitive restart workaround since MAX_ELEMENT_INDEX restrict it. This workaround is only for GL_UNSIGNED_SHORT. So if primitiveRestartWorkaround is true, type must not be GL_UNSIGNED_INT. It doesn\u0027t mean that it doesn\u0027t allow GL_UNSIGNED_INT index buffers.  Anyway, I have rewrite the condition test. Please check if it\u0027s what you want. Thanks.",
+      "parentUuid": "5466251a_68869a5c",
+      "range": {
+        "startLine": 2090,
+        "startChar": 4,
+        "endLine": 2098,
+        "endChar": 24
+      },
+      "revId": "4cc6ad9f2351717cf53b068115d321da3bb7da4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }

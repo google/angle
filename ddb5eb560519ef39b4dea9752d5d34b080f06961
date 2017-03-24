@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fe505fdd_b7f06163",
+        "filename": "src/libANGLE/renderer/d3d/IndexDataManager.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-24T08:02:18Z",
+      "side": 0,
+      "message": "I think \u0027!primitiveRestartWorkaround\u0027  is useless.  If dstType and srcType both are  GL_UNSIGNED_SHORT, primitiveRestartWorkaround must be false. If dstType and srcType both are  GL_UNSIGNED_ UINT, primitiveRestartWorkaround must be false. So there is no situation that dstType equals srcType, meanwhile primitiveRestartWorkaround is true.",
+      "range": {
+        "startLine": 206,
+        "startChar": 30,
+        "endLine": 206,
+        "endChar": 57
+      },
+      "revId": "ddb5eb560519ef39b4dea9752d5d34b080f06961",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
