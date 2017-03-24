@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "70d6b6f2_6a1d46e0",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 969,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-03-24T12:09:26Z",
+      "side": 1,
+      "message": "This was intentionally move out from Program, as the reviewers don\u0027t like to see too many switch-case lines in class.",
+      "parentUuid": "db429dfd_c9dfa7b7",
+      "revId": "995938844c879db0cd533643837bb66a0622ea94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "207708ab_efaf3815",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 2
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "787930dc_57b96e6b",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-03-24T12:09:26Z",
+      "side": 1,
+      "message": "Same above.",
+      "parentUuid": "207708ab_efaf3815",
+      "range": {
+        "startLine": 583,
+        "startChar": 18,
+        "endLine": 583,
+        "endChar": 38
+      },
+      "revId": "995938844c879db0cd533643837bb66a0622ea94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b5e73d0f_cb55adb1",
         "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
         "patchSetId": 2
@@ -53,6 +95,24 @@
       "writtenOn": "2017-03-24T09:04:55Z",
       "side": 1,
       "message": "Do you know the expected index value? If yes, maybe use EXPECT_EQ(expected, index) is better. Same to below.",
+      "revId": "995938844c879db0cd533643837bb66a0622ea94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "631d5618_88e72166",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-03-24T12:09:26Z",
+      "side": 1,
+      "message": "Index value is internally generated. We should not assume its exact value by reading and speculating form shader text.",
+      "parentUuid": "b5e73d0f_cb55adb1",
       "revId": "995938844c879db0cd533643837bb66a0622ea94",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
