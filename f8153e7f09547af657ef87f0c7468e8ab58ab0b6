@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd2d3103_ee9746ec",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1428,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-27T17:35:28Z",
+      "side": 1,
+      "message": "nit: not supported before GL ES 3.1",
+      "revId": "f8153e7f09547af657ef87f0c7468e8ab58ab0b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
