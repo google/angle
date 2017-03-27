@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "d6cd0126_c099e95f",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 969,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-03-27T07:42:03Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "cf54b79c_8f07e8fa",
+      "revId": "995938844c879db0cd533643837bb66a0622ea94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "207708ab_efaf3815",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 2
@@ -193,6 +211,30 @@
       "revId": "995938844c879db0cd533643837bb66a0622ea94",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bd5c2c5c_2b57d30e",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-03-27T07:42:03Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1ab35d4c_d9d073ce",
+      "range": {
+        "startLine": 124,
+        "startChar": 0,
+        "endLine": 131,
+        "endChar": 46
+      },
+      "revId": "995938844c879db0cd533643837bb66a0622ea94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
