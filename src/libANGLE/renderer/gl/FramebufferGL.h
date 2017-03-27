@@ -89,6 +89,11 @@ class FramebufferGL : public FramebufferImpl
     void syncClearState(ContextImpl *context, GLbitfield mask);
     void syncClearBufferState(ContextImpl *context, GLenum buffer, GLint drawBuffer);
 
+    bool modifyInvalidateAttachmentsForEmulatedDefaultFBO(
+        size_t count,
+        const GLenum *attachments,
+        std::vector<GLenum> *modifiedAttachments) const;
+
     gl::Error readPixelsRowByRowWorkaround(const gl::Rectangle &area,
                                            GLenum format,
                                            GLenum type,

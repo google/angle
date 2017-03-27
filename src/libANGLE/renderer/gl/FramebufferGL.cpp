@@ -135,16 +135,26 @@ Error FramebufferGL::discard(size_t count, const GLenum *attachments)
 
 Error FramebufferGL::invalidate(size_t count, const GLenum *attachments)
 {
+    const GLenum *finalAttachmentsPtr = attachments;
+
+    std::vector<GLenum> modifiedAttachments;
+    if (modifyInvalidateAttachmentsForEmulatedDefaultFBO(count, attachments, &modifiedAttachments))
+    {
+        finalAttachmentsPtr = modifiedAttachments.data();
+    }
+
     // Since this function is just a hint, only call a native function if it exists.
     if (mFunctions->invalidateFramebuffer)
     {
         mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
-        mFunctions->invalidateFramebuffer(GL_FRAMEBUFFER, static_cast<GLsizei>(count), attachments);
+        mFunctions->invalidateFramebuffer(GL_FRAMEBUFFER, static_cast<GLsizei>(count),
+                                          finalAttachmentsPtr);
     }
     else if (mFunctions->discardFramebuffer)
     {
         mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
-        mFunctions->discardFramebuffer(GL_FRAMEBUFFER, static_cast<GLsizei>(count), attachments);
+        mFunctions->discardFramebuffer(GL_FRAMEBUFFER, static_cast<GLsizei>(count),
+                                       finalAttachmentsPtr);
     }
 
     return gl::NoError();
@@ -154,12 +164,22 @@ Error FramebufferGL::invalidateSub(size_t count,
                                    const GLenum *attachments,
                                    const gl::Rectangle &area)
 {
+
+    const GLenum *finalAttachmentsPtr = attachments;
+
+    std::vector<GLenum> modifiedAttachments;
+    if (modifyInvalidateAttachmentsForEmulatedDefaultFBO(count, attachments, &modifiedAttachments))
+    {
+        finalAttachmentsPtr = modifiedAttachments.data();
+    }
+
     // Since this function is just a hint and not available until OpenGL 4.3, only call it if it is available.
     if (mFunctions->invalidateSubFramebuffer)
     {
         mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
         mFunctions->invalidateSubFramebuffer(GL_FRAMEBUFFER, static_cast<GLsizei>(count),
-                                             attachments, area.x, area.y, area.width, area.height);
+                                             finalAttachmentsPtr, area.x, area.y, area.width,
+                                             area.height);
     }
 
     return NoError();
@@ -520,6 +540,44 @@ void FramebufferGL::syncClearBufferState(ContextImpl *context, GLenum buffer, GL
         }
     }
 }
+
+bool FramebufferGL::modifyInvalidateAttachmentsForEmulatedDefaultFBO(
+    size_t count,
+    const GLenum *attachments,
+    std::vector<GLenum> *modifiedAttachments) const
+{
+    bool needsModification = mIsDefault && mFramebufferID != 0;
+    if (!needsModification)
+    {
+        return false;
+    }
+
+    modifiedAttachments->resize(count);
+    for (size_t i = 0; i < count; i++)
+    {
+        switch (attachments[i])
+        {
+            case GL_COLOR:
+                (*modifiedAttachments)[i] = GL_COLOR_ATTACHMENT0;
+                break;
+
+            case GL_DEPTH:
+                (*modifiedAttachments)[i] = GL_DEPTH_ATTACHMENT;
+                break;
+
+            case GL_STENCIL:
+                (*modifiedAttachments)[i] = GL_STENCIL_ATTACHMENT;
+                break;
+
+            default:
+                UNREACHABLE();
+                break;
+        }
+    }
+
+    return true;
+}
+
 gl::Error FramebufferGL::readPixelsRowByRowWorkaround(const gl::Rectangle &area,
                                                       GLenum format,
                                                       GLenum type,
