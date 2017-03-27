@@ -173,6 +173,23 @@
     },
     {
       "key": {
+        "uuid": "d22397cb_88957870",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 31
+      },
+      "lineNbr": 5744,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-27T08:55:53Z",
+      "side": 1,
+      "message": "relativeOffset is not needed in VertexAttribPointer and VertexAttribIPointer, so I get rid of it from this function in the latest patch.",
+      "revId": "b281651d46053c6b338ea4602259635cbabf0d09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "61b34279_8521b465",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 31
