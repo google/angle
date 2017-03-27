@@ -1,0 +1,152 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a00aace_25750d3a",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 643,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-27T05:02:06Z",
+      "side": 1,
+      "message": "This is a bug fixing and not related with dispatchCompute, right? Maybe you should put it in another patch and add the corresponding test case.",
+      "revId": "91bdf2aaffaeb02a8f2b47af7027f6f8a9bc7383",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "333e2316_c871fb96",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2500,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-27T05:02:06Z",
+      "side": 1,
+      "message": "You only apply compute uniforms not other uniforms. But here you cleared all uniform dirty bit. It there a potential error when render pipeline and compute pipeline both exist?",
+      "revId": "91bdf2aaffaeb02a8f2b47af7027f6f8a9bc7383",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec2beb24_fd441c92",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-27T05:02:06Z",
+      "side": 1,
+      "message": "typo error: mAppliedComputeShader?",
+      "range": {
+        "startLine": 434,
+        "startChar": 4,
+        "endLine": 434,
+        "endChar": 34
+      },
+      "revId": "91bdf2aaffaeb02a8f2b47af7027f6f8a9bc7383",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f2a5095f_a1461cdf",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4816,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-27T05:02:06Z",
+      "side": 1,
+      "message": "ASSERT(computeConstantBuffer)?",
+      "revId": "91bdf2aaffaeb02a8f2b47af7027f6f8a9bc7383",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aee385df_0d106844",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4840,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-27T05:02:06Z",
+      "side": 1,
+      "message": "Here add: uniform-\u003edirty \u003d false; You can\u0027t clear all dirty bit in uniformArray since you only update the compute uniform constant.  See my another comment in ProgramD3D.cpp",
+      "revId": "91bdf2aaffaeb02a8f2b47af7027f6f8a9bc7383",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e618fcaf_344373ed",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Context9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-27T05:02:06Z",
+      "side": 1,
+      "message": "gl::InternalError() \u003c\u003c \"error message\"",
+      "range": {
+        "startLine": 274,
+        "startChar": 11,
+        "endLine": 274,
+        "endChar": 42
+      },
+      "revId": "91bdf2aaffaeb02a8f2b47af7027f6f8a9bc7383",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4b597f7a_be384d10",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3067,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-27T05:02:06Z",
+      "side": 1,
+      "message": "gl::InternalError",
+      "revId": "91bdf2aaffaeb02a8f2b47af7027f6f8a9bc7383",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b145f439_904b46f0",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-27T05:02:06Z",
+      "side": 1,
+      "message": "Why you declare two similar functions not one?",
+      "revId": "91bdf2aaffaeb02a8f2b47af7027f6f8a9bc7383",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
