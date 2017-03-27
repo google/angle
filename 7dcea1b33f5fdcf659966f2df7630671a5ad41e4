@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b7ee6482_0ba5ca2e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-27T17:38:01Z",
+      "side": 1,
+      "message": "nit BUG\u003d?",
+      "revId": "7dcea1b33f5fdcf659966f2df7630671a5ad41e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
