@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "297ff869_2713c240",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 969,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-27T00:50:43Z",
+      "side": 1,
+      "message": "Though I still think put IsValidResourceIndex in Program will make this patch simple, you can keep this style if the reviewers like this.",
+      "parentUuid": "70d6b6f2_6a1d46e0",
+      "revId": "995938844c879db0cd533643837bb66a0622ea94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "207708ab_efaf3815",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 2
@@ -113,6 +131,24 @@
       "side": 1,
       "message": "Index value is internally generated. We should not assume its exact value by reading and speculating form shader text.",
       "parentUuid": "b5e73d0f_cb55adb1",
+      "revId": "995938844c879db0cd533643837bb66a0622ea94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0addcf73_0d41ba19",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-27T00:50:43Z",
+      "side": 1,
+      "message": "Ok. Thanks for pointing it out.",
+      "parentUuid": "631d5618_88e72166",
       "revId": "995938844c879db0cd533643837bb66a0622ea94",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
