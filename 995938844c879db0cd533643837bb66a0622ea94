@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "cf54b79c_8f07e8fa",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 969,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-03-27T03:17:09Z",
+      "side": 1,
+      "message": "Although I am not 100% sure about reviewers preference, but I think Jiajia\u0027s suggestion obey to the design, as well as review\u0027s preference.\n\nIsValidResourceIndex() is specific for a program, not a context. We only put all entry points (GLES APIs and extension APIs) and some per-context APIs like isContextLost() into Context. I think this one is just a helper for a entry point GetProgramResourceName, it should be in Program. In addition, we only put getters (Query****) and setters (Set****) into queryutil. A helper API to validate some parameter(s) should not put into queryutil too, I think. \n\nAs a result, I think put IsValidResourceIndex into Program is better.",
+      "parentUuid": "297ff869_2713c240",
+      "revId": "995938844c879db0cd533643837bb66a0622ea94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "207708ab_efaf3815",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 2
@@ -149,6 +167,29 @@
       "side": 1,
       "message": "Ok. Thanks for pointing it out.",
       "parentUuid": "631d5618_88e72166",
+      "revId": "995938844c879db0cd533643837bb66a0622ea94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ab35d4c_d9d073ce",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-03-27T03:17:09Z",
+      "side": 1,
+      "message": "What about set a limitted name for oColor too? Then it can test the output variable. And it can test the array too. \nFor instance, we get 8 chars from \"oColor[0]\", then \"oColor[\" is expected. \n\nBy the way, I misunderstood the API, I think we only need to set the bufSize (the 4th parameter), we don\u0027t need to re-allocate an array like limittedName.",
+      "range": {
+        "startLine": 124,
+        "startChar": 0,
+        "endLine": 131,
+        "endChar": 46
+      },
       "revId": "995938844c879db0cd533643837bb66a0622ea94",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
