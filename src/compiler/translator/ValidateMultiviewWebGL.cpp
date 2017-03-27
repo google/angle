@@ -363,7 +363,7 @@ bool ValidateMultiviewTraverser::visitAggregate(Visit visit, TIntermAggregate *n
             mValid = false;
         }
         else if (node->getOp() == EOpCallBuiltInFunction &&
-                 TFunction::unmangleName(node->getFunctionSymbolInfo()->getName()) == "imageStore")
+                 node->getFunctionSymbolInfo()->getName() == "imageStore")
         {
             // TODO(oetuaho@nvidia.com): Record which built-in functions have side effects in
             // the symbol info instead.

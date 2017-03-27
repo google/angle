@@ -28,7 +28,7 @@ class TOutputGLSL : public TOutputGLSLBase
   protected:
     bool writeVariablePrecision(TPrecision) override;
     void visitSymbol(TIntermSymbol *node) override;
-    TString translateTextureFunction(TString &name) override;
+    TString translateTextureFunction(const TString &name) override;
 };
 
 }  // namespace sh

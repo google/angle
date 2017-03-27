@@ -71,7 +71,7 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
         return true;
     }
 
-    if (node->getFunctionSymbolInfo()->getName().compare(0, 16, "texelFetchOffset") != 0)
+    if (node->getFunctionSymbolInfo()->getName() != "texelFetchOffset")
     {
         return true;
     }
@@ -80,16 +80,10 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
     const TIntermSequence *sequence = node->getSequence();
     ASSERT(sequence->size() == 4u);
 
-    // Decide if there is a 2DArray sampler.
-    bool is2DArray = node->getFunctionSymbolInfo()->getName().find("s2a1") != TString::npos;
-
-    // Create new argument list from node->getName().
-    // e.g. Get "(is2a1;vi3;i1;" from "texelFetchOffset(is2a1;vi3;i1;vi2;"
-    TString newArgs = node->getFunctionSymbolInfo()->getName().substr(
-        16, node->getFunctionSymbolInfo()->getName().length() - 20);
-    TString newName           = "texelFetch" + newArgs;
-    TSymbol *texelFetchSymbol = symbolTable->findBuiltIn(newName, shaderVersion);
-    ASSERT(texelFetchSymbol && texelFetchSymbol->isFunction());
+    // Decide if the sampler is a 2DArray sampler. In that case position is ivec3 and offset is
+    // ivec2.
+    bool is2DArray = sequence->at(1)->getAsTyped()->getNominalSize() == 3 &&
+                     sequence->at(3)->getAsTyped()->getNominalSize() == 2;
 
     // Create new node that represents the call of function texelFetch.
     // Its argument list will be: texelFetch(sampler, Position+offset, lod).
@@ -134,6 +128,11 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
     texelFetchArguments->push_back(sequence->at(2));
 
     ASSERT(texelFetchArguments->size() == 3u);
+
+    // Get the symbol of the texel fetch function to use.
+    TString mangledName = TFunction::GetMangledNameFromCall("texelFetch", *texelFetchArguments);
+    TSymbol *texelFetchSymbol = symbolTable->findBuiltIn(mangledName, shaderVersion);
+    ASSERT(texelFetchSymbol && texelFetchSymbol->isFunction());
 
     TIntermAggregate *texelFetchNode = TIntermAggregate::CreateBuiltInFunctionCall(
         *static_cast<const TFunction *>(texelFetchSymbol), texelFetchArguments);

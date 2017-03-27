@@ -630,7 +630,7 @@ TIntermConstantUnion::TIntermConstantUnion(const TIntermConstantUnion &node) : T
 
 void TFunctionSymbolInfo::setFromFunction(const TFunction &function)
 {
-    setName(function.getMangledName());
+    setName(function.getName());
     setId(TSymbolUniqueId(function));
 }
 
@@ -3379,7 +3379,6 @@ void TIntermTraverser::queueReplacementWithParent(TIntermNode *parent,
 TName TIntermTraverser::GetInternalFunctionName(const char *name)
 {
     TString nameStr(name);
-    nameStr = TFunction::mangleName(nameStr);
     TName nameObj(nameStr);
     nameObj.setInternal(true);
     return nameObj;

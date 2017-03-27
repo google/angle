@@ -1590,7 +1590,7 @@ bool OutputHLSL::visitFunctionDefinition(Visit visit, TIntermFunctionDefinition 
     }
     else
     {
-        out << DecorateFunctionIfNeeded(node->getFunctionSymbolInfo()->getNameObj())
+        out << DecorateIfNeeded(node->getFunctionSymbolInfo()->getNameObj())
             << DisambiguateFunctionName(parameters) << (mOutputLod0Function ? "Lod0(" : "(");
     }
 
@@ -1722,7 +1722,7 @@ bool OutputHLSL::visitFunctionPrototype(Visit visit, TIntermFunctionPrototype *n
 
     TIntermSequence *arguments = node->getSequence();
 
-    TString name = DecorateFunctionIfNeeded(node->getFunctionSymbolInfo()->getNameObj());
+    TString name = DecorateIfNeeded(node->getFunctionSymbolInfo()->getNameObj());
     out << TypeString(node->getType()) << " " << name << DisambiguateFunctionName(arguments)
         << (mOutputLod0Function ? "Lod0(" : "(");
 
@@ -1776,7 +1776,7 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                 ASSERT(index != CallDAG::InvalidIndex);
                 lod0 &= mASTMetadataList[index].mNeedsLod0;
 
-                out << DecorateFunctionIfNeeded(node->getFunctionSymbolInfo()->getNameObj());
+                out << DecorateIfNeeded(node->getFunctionSymbolInfo()->getNameObj());
                 out << DisambiguateFunctionName(node->getSequence());
                 out << (lod0 ? "Lod0(" : "(");
             }
@@ -1784,11 +1784,11 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
             {
                 // This path is used for internal functions that don't have their definitions in the
                 // AST, such as precision emulation functions.
-                out << DecorateFunctionIfNeeded(node->getFunctionSymbolInfo()->getNameObj()) << "(";
+                out << DecorateIfNeeded(node->getFunctionSymbolInfo()->getNameObj()) << "(";
             }
             else
             {
-                TString name = TFunction::unmangleName(node->getFunctionSymbolInfo()->getName());
+                const TString &name    = node->getFunctionSymbolInfo()->getName();
                 TBasicType samplerType = (*arguments)[0]->getAsTyped()->getType().getBasicType();
                 int coords = 0;  // textureSize(gsampler2DMS) doesn't have a second argument.
                 if (arguments->size() > 1)

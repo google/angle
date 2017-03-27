@@ -128,9 +128,8 @@ class PullGradient : public TIntermTraverser
             }
             else if (node->getOp() == EOpCallBuiltInFunction)
             {
-                TString name = TFunction::unmangleName(node->getFunctionSymbolInfo()->getName());
-
-                if (mGradientBuiltinFunctions.find(name) != mGradientBuiltinFunctions.end())
+                if (mGradientBuiltinFunctions.find(node->getFunctionSymbolInfo()->getName()) !=
+                    mGradientBuiltinFunctions.end())
                 {
                     onGradient();
                 }

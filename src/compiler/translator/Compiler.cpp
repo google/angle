@@ -760,7 +760,7 @@ bool TCompiler::tagUsedFunctions()
     // Search from main, starting from the end of the DAG as it usually is the root.
     for (size_t i = mCallDag.size(); i-- > 0;)
     {
-        if (mCallDag.getRecordFromIndex(i).name == "main(")
+        if (mCallDag.getRecordFromIndex(i).name == "main")
         {
             internalTagUsedFunction(i);
             return true;

@@ -175,10 +175,6 @@ class TFunction : public TSymbol
     bool isFunction() const override { return true; }
 
     static TString mangleName(const TString &name) { return name + '('; }
-    static TString unmangleName(const TString &mangledName)
-    {
-        return TString(mangledName.c_str(), mangledName.find_first_of('('));
-    }
 
     void addParameter(const TConstParameter &p)
     {

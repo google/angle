@@ -402,8 +402,11 @@ bool ValidateLimitations::validateFunctionCall(TIntermAggregate *node)
 
     bool valid                = true;
     TSymbolTable &symbolTable = GetGlobalParseContext()->symbolTable;
-    TSymbol *symbol           = symbolTable.find(node->getFunctionSymbolInfo()->getName(),
-                                       GetGlobalParseContext()->getShaderVersion());
+    // TODO(oetuaho@nvidia.com): It would be neater to leverage TIntermLValueTrackingTraverser to
+    // keep track of out parameters, rather than doing a symbol table lookup here.
+    TString mangledName = TFunction::GetMangledNameFromCall(
+        node->getFunctionSymbolInfo()->getName(), *node->getSequence());
+    TSymbol *symbol = symbolTable.find(mangledName, GetGlobalParseContext()->getShaderVersion());
     ASSERT(symbol && symbol->isFunction());
     TFunction *function = static_cast<TFunction *>(symbol);
     for (ParamIndex::const_iterator i = pIndex.begin(); i != pIndex.end(); ++i)

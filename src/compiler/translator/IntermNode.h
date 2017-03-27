@@ -550,7 +550,7 @@ class TFunctionSymbolInfo
 
     const TString &getName() const { return mName.getString(); }
     void setName(const TString &name) { mName.setString(name); }
-    bool isMain() const { return mName.getString() == "main("; }
+    bool isMain() const { return mName.getString() == "main"; }
 
     void setId(const TSymbolUniqueId &functionId);
     const TSymbolUniqueId &getId() const;

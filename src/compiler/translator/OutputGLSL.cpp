@@ -66,7 +66,7 @@ void TOutputGLSL::visitSymbol(TIntermSymbol *node)
     }
 }
 
-TString TOutputGLSL::translateTextureFunction(TString &name)
+TString TOutputGLSL::translateTextureFunction(const TString &name)
 {
     static const char *simpleRename[] = {"texture2DLodEXT",
                                          "texture2DLod",

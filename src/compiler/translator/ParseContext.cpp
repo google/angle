@@ -1443,11 +1443,9 @@ void TParseContext::functionCallLValueErrorCheck(const TFunction *fnCandidate,
             TIntermTyped *argument = (*(fnCall->getSequence()))[i]->getAsTyped();
             if (!checkCanBeLValue(argument->getLine(), "assign", argument))
             {
-                TString unmangledName =
-                    TFunction::unmangleName(fnCall->getFunctionSymbolInfo()->getName());
                 error(argument->getLine(),
                       "Constant value cannot be passed for 'out' or 'inout' parameters.",
-                      unmangledName.c_str());
+                      fnCall->getFunctionSymbolInfo()->getName().c_str());
                 return;
             }
         }
@@ -4277,16 +4275,13 @@ void TParseContext::checkTextureOffsetConst(TIntermAggregate *functionCall)
     const TString &name        = functionCall->getFunctionSymbolInfo()->getName();
     TIntermNode *offset        = nullptr;
     TIntermSequence *arguments = functionCall->getSequence();
-    if (name.compare(0, 16, "texelFetchOffset") == 0 ||
-        name.compare(0, 16, "textureLodOffset") == 0 ||
-        name.compare(0, 20, "textureProjLodOffset") == 0 ||
-        name.compare(0, 17, "textureGradOffset") == 0 ||
-        name.compare(0, 21, "textureProjGradOffset") == 0)
+    if (name == "texelFetchOffset" || name == "textureLodOffset" ||
+        name == "textureProjLodOffset" || name == "textureGradOffset" ||
+        name == "textureProjGradOffset")
     {
         offset = arguments->back();
     }
-    else if (name.compare(0, 13, "textureOffset") == 0 ||
-             name.compare(0, 17, "textureProjOffset") == 0)
+    else if (name == "textureOffset" || name == "textureProjOffset")
     {
         // A bias parameter might follow the offset parameter.
         ASSERT(arguments->size() >= 3);
@@ -4297,9 +4292,8 @@ void TParseContext::checkTextureOffsetConst(TIntermAggregate *functionCall)
         TIntermConstantUnion *offsetConstantUnion = offset->getAsConstantUnion();
         if (offset->getAsTyped()->getQualifier() != EvqConst || !offsetConstantUnion)
         {
-            TString unmangledName = TFunction::unmangleName(name);
             error(functionCall->getLine(), "Texture offset must be a constant expression",
-                  unmangledName.c_str());
+                  name.c_str());
         }
         else
         {

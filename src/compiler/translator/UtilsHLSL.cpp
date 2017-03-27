@@ -241,18 +241,6 @@ TString DecorateIfNeeded(const TName &name)
     }
 }
 
-TString DecorateFunctionIfNeeded(const TName &name)
-{
-    if (name.isInternal())
-    {
-        return TFunction::unmangleName(name.getString());
-    }
-    else
-    {
-        return Decorate(TFunction::unmangleName(name.getString()));
-    }
-}
-
 TString TypeString(const TType &type)
 {
     const TStructure *structure = type.getStruct();
