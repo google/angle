@@ -1331,8 +1331,22 @@ static bool ValidateBindBufferCommon(Context *context,
         {
             if (context->getClientVersion() < ES_3_1)
             {
+                context->handleError(
+                    Error(GL_INVALID_ENUM, "SHADER_STORAGE_BUFFER is not supported in GLES3."));
+                return false;
+            }
+            if (index >= caps.maxShaderStorageBufferBindings)
+            {
+                context->handleError(Error(GL_INVALID_VALUE,
+                                           "index is greater than or equal to the number of "
+                                           "SHADER_STORAGE_BUFFER indexed binding points."));
+                return false;
+            }
+            if (buffer != 0 && (offset % caps.shaderStorageBufferOffsetAlignment) != 0)
+            {
                 context->handleError(Error(
-                    GL_INVALID_ENUM, "ATOMIC_COUNTER_BUFFER is not supported before GLES 3.1"));
+                    GL_INVALID_VALUE,
+                    "offset must be multiple of value of SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT."));
                 return false;
             }
             break;
@@ -2043,6 +2057,25 @@ bool ValidateIndexedStateQuery(ValidationContext *context,
             }
             break;
 
+        case GL_SHADER_STORAGE_BUFFER_START:
+        case GL_SHADER_STORAGE_BUFFER_SIZE:
+        case GL_SHADER_STORAGE_BUFFER_BINDING:
+            if (context->getClientVersion() < ES_3_1)
+            {
+                context->handleError(
+                    Error(GL_INVALID_ENUM,
+                          "Shader storage buffers are not supported in this version of GL"));
+                return false;
+            }
+            if (index >= caps.maxShaderStorageBufferBindings)
+            {
+                context->handleError(
+                    Error(GL_INVALID_VALUE,
+                          "index is outside the valid range for GL_SHADER_STORAGE_BUFFER_BINDING"));
+                return false;
+            }
+            break;
+
         case GL_VERTEX_BINDING_BUFFER:
         case GL_VERTEX_BINDING_DIVISOR:
         case GL_VERTEX_BINDING_OFFSET:
@@ -2062,7 +2095,6 @@ bool ValidateIndexedStateQuery(ValidationContext *context,
                 return false;
             }
             break;
-
         default:
             context->handleError(Error(GL_INVALID_ENUM));
             return false;

@@ -236,6 +236,14 @@ class State : angle::NonCopyable
                                               GLsizeiptr size);
     const OffsetBindingPointer<Buffer> &getIndexedAtomicCounterBuffer(size_t index) const;
 
+    // GL_SHADER_STORAGE_BUFFER - Both indexed and generic targets
+    void setGenericShaderStorageBufferBinding(Buffer *buffer);
+    void setIndexedShaderStorageBufferBinding(GLuint index,
+                                              Buffer *buffer,
+                                              GLintptr offset,
+                                              GLsizeiptr size);
+    const OffsetBindingPointer<Buffer> &getIndexedShaderStorageBuffer(size_t index) const;
+
     // GL_COPY_[READ/WRITE]_BUFFER
     void setCopyReadBufferBinding(Buffer *buffer);
     void setCopyWriteBufferBinding(Buffer *buffer);
@@ -498,6 +506,9 @@ class State : angle::NonCopyable
 
     BindingPointer<Buffer> mGenericAtomicCounterBuffer;
     BufferVector mAtomicCounterBuffers;
+
+    BindingPointer<Buffer> mGenericShaderStorageBuffer;
+    BufferVector mShaderStorageBuffers;
 
     BindingPointer<Buffer> mCopyReadBuffer;
     BindingPointer<Buffer> mCopyWriteBuffer;

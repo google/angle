@@ -321,6 +321,12 @@ Context::Context(rx::EGLImplFactory *implFactory,
         {
             bindIndexedAtomicCounterBuffer(0, i, 0, 0);
         }
+
+        bindGenericShaderStorageBuffer(0);
+        for (unsigned int i = 0; i < mCaps.maxShaderStorageBufferBindings; i++)
+        {
+            bindIndexedShaderStorageBuffer(0, i, 0, 0);
+        }
     }
 
     if (mExtensions.eglImageExternal || mExtensions.eglStreamConsumerExternal)
@@ -1094,6 +1100,21 @@ void Context::bindIndexedAtomicCounterBuffer(GLuint bufferHandle,
 {
     Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
     mGLState.setIndexedAtomicCounterBufferBinding(index, buffer, offset, size);
+}
+
+void Context::bindGenericShaderStorageBuffer(GLuint bufferHandle)
+{
+    Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
+    mGLState.setGenericShaderStorageBufferBinding(buffer);
+}
+
+void Context::bindIndexedShaderStorageBuffer(GLuint bufferHandle,
+                                             GLuint index,
+                                             GLintptr offset,
+                                             GLsizeiptr size)
+{
+    Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
+    mGLState.setIndexedShaderStorageBufferBinding(index, buffer, offset, size);
 }
 
 void Context::bindCopyReadBuffer(GLuint bufferHandle)
@@ -3851,11 +3872,7 @@ void Context::bindBuffer(GLenum target, GLuint buffer)
             bindGenericAtomicCounterBuffer(buffer);
             break;
         case GL_SHADER_STORAGE_BUFFER:
-            if (buffer != 0)
-            {
-                // Binding buffers to this binding point is not implemented yet.
-                UNIMPLEMENTED();
-            }
+            bindGenericShaderStorageBuffer(buffer);
             break;
         case GL_DRAW_INDIRECT_BUFFER:
             bindDrawIndirectBuffer(buffer);
@@ -3900,11 +3917,8 @@ void Context::bindBufferRange(GLenum target,
             bindGenericAtomicCounterBuffer(buffer);
             break;
         case GL_SHADER_STORAGE_BUFFER:
-            if (buffer != 0)
-            {
-                // Binding buffers to this binding point is not implemented yet.
-                UNIMPLEMENTED();
-            }
+            bindIndexedShaderStorageBuffer(buffer, index, offset, size);
+            bindGenericShaderStorageBuffer(buffer);
             break;
         default:
             UNREACHABLE();

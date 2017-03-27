@@ -131,6 +131,7 @@
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_uniform_buffer_bindings_* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_combined_texture_image_units_* = FAIL
 1729 D3D11 : dEQP-GLES31.functional.state_query.indexed.atomic_counter_buffer_* = FAIL
+1951 D3D11 : dEQP-GLES31.functional.state_query.indexed.shader_storage_buffer_* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.internal_format.renderbuffer.* = FAIL
 1679 D3D11 : dEQP-GLES31.functional.state_query.texture_level.texture_2d_multisample.* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.texture.multisample.* = FAIL
@@ -1316,12 +1317,10 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.texture.gather.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.boolean.sample_mask_* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.integer.texture_binding_2d_multisample_* = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.integer.shader_storage_buffer_binding_* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.integer.dispatch_indirect_buffer_binding_* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.integer.program_pipeline_binding_* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.indexed.sample_mask_value_* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.indexed.image_binding* = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.indexed.shader_storage_buffer_* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.texture.texture_2d.depth_stencil_mode_* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.texture.texture_cube_map.depth_stencil_mode_* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.texture.texture_2d_array.depth_stencil_mode_* = FAIL

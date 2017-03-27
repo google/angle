@@ -635,6 +635,7 @@ bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsign
         case GL_MAX_COMBINED_IMAGE_UNIFORMS:
         case GL_MAX_SHADER_STORAGE_BUFFER_BINDINGS:
         case GL_MAX_COMBINED_SHADER_STORAGE_BLOCKS:
+        case GL_SHADER_STORAGE_BUFFER_BINDING:
         case GL_SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT:
             *type      = GL_INT;
             *numParams = 1;
@@ -687,6 +688,7 @@ bool ValidationContext::getIndexedQueryParameterInfo(GLenum target,
         case GL_MAX_COMPUTE_WORK_GROUP_COUNT:
         case GL_MAX_COMPUTE_WORK_GROUP_SIZE:
         case GL_ATOMIC_COUNTER_BUFFER_BINDING:
+        case GL_SHADER_STORAGE_BUFFER_BINDING:
         case GL_VERTEX_BINDING_BUFFER:
         case GL_VERTEX_BINDING_DIVISOR:
         case GL_VERTEX_BINDING_OFFSET:
@@ -698,6 +700,8 @@ bool ValidationContext::getIndexedQueryParameterInfo(GLenum target,
         }
         case GL_ATOMIC_COUNTER_BUFFER_START:
         case GL_ATOMIC_COUNTER_BUFFER_SIZE:
+        case GL_SHADER_STORAGE_BUFFER_START:
+        case GL_SHADER_STORAGE_BUFFER_SIZE:
         {
             *type      = GL_INT_64_ANGLEX;
             *numParams = 1;

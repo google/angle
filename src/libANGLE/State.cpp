@@ -179,6 +179,7 @@ void State::initialize(const Caps &caps,
         mSamplerTextures[GL_TEXTURE_2D_MULTISAMPLE].resize(caps.maxCombinedTextureImageUnits);
 
         mAtomicCounterBuffers.resize(caps.maxAtomicCounterBufferBindings);
+        mShaderStorageBuffers.resize(caps.maxShaderStorageBufferBindings);
     }
     if (extensions.eglImageExternal || extensions.eglStreamConsumerExternal)
     {
@@ -266,6 +267,12 @@ void State::reset(const Context *context)
 
     mGenericAtomicCounterBuffer.set(nullptr);
     for (auto &buf : mAtomicCounterBuffers)
+    {
+        buf.set(nullptr);
+    }
+
+    mGenericShaderStorageBuffer.set(nullptr);
+    for (auto &buf : mShaderStorageBuffers)
     {
         buf.set(nullptr);
     }
@@ -1230,6 +1237,26 @@ const OffsetBindingPointer<Buffer> &State::getIndexedAtomicCounterBuffer(size_t 
     return mAtomicCounterBuffers[index];
 }
 
+void State::setGenericShaderStorageBufferBinding(Buffer *buffer)
+{
+    mGenericShaderStorageBuffer.set(buffer);
+}
+
+void State::setIndexedShaderStorageBufferBinding(GLuint index,
+                                                 Buffer *buffer,
+                                                 GLintptr offset,
+                                                 GLsizeiptr size)
+{
+    ASSERT(static_cast<size_t>(index) < mShaderStorageBuffers.size());
+    mShaderStorageBuffers[index].set(buffer, offset, size);
+}
+
+const OffsetBindingPointer<Buffer> &State::getIndexedShaderStorageBuffer(size_t index) const
+{
+    ASSERT(static_cast<size_t>(index) < mShaderStorageBuffers.size());
+    return mShaderStorageBuffers[index];
+}
+
 void State::setCopyReadBufferBinding(Buffer *buffer)
 {
     mCopyReadBuffer.set(buffer);
@@ -1267,8 +1294,7 @@ Buffer *State::getTargetBuffer(GLenum target) const
       case GL_ATOMIC_COUNTER_BUFFER:
           return mGenericAtomicCounterBuffer.get();
       case GL_SHADER_STORAGE_BUFFER:
-          UNIMPLEMENTED();
-          return nullptr;
+          return mGenericShaderStorageBuffer.get();
       case GL_DRAW_INDIRECT_BUFFER:
           return mDrawIndirectBuffer.get();
       default: UNREACHABLE();            return NULL;
@@ -1277,10 +1303,10 @@ Buffer *State::getTargetBuffer(GLenum target) const
 
 void State::detachBuffer(GLuint bufferName)
 {
-    BindingPointer<Buffer> *buffers[] = {&mArrayBuffer,        &mGenericAtomicCounterBuffer,
-                                         &mCopyReadBuffer,     &mCopyWriteBuffer,
-                                         &mDrawIndirectBuffer, &mPack.pixelBuffer,
-                                         &mUnpack.pixelBuffer, &mGenericUniformBuffer};
+    BindingPointer<Buffer> *buffers[] = {
+        &mArrayBuffer,        &mGenericAtomicCounterBuffer, &mCopyReadBuffer,
+        &mCopyWriteBuffer,    &mDrawIndirectBuffer,         &mPack.pixelBuffer,
+        &mUnpack.pixelBuffer, &mGenericUniformBuffer,       &mGenericShaderStorageBuffer};
     for (auto buffer : buffers)
     {
         if (buffer->id() == bufferName)
@@ -1937,6 +1963,9 @@ void State::getIntegerv(const ContextState &data, GLenum pname, GLint *params)
       case GL_ATOMIC_COUNTER_BUFFER_BINDING:
           *params = mGenericAtomicCounterBuffer.id();
           break;
+      case GL_SHADER_STORAGE_BUFFER_BINDING:
+          *params = mGenericShaderStorageBuffer.id();
+          break;
       default:
         UNREACHABLE();
         break;
@@ -1974,6 +2003,10 @@ void State::getIntegeri_v(GLenum target, GLuint index, GLint *data)
       case GL_ATOMIC_COUNTER_BUFFER_BINDING:
           ASSERT(static_cast<size_t>(index) < mAtomicCounterBuffers.size());
           *data = mAtomicCounterBuffers[index].id();
+          break;
+      case GL_SHADER_STORAGE_BUFFER_BINDING:
+          ASSERT(static_cast<size_t>(index) < mShaderStorageBuffers.size());
+          *data = mShaderStorageBuffers[index].id();
           break;
       case GL_VERTEX_BINDING_BUFFER:
           ASSERT(static_cast<size_t>(index) < mVertexArray->getMaxBindings());
@@ -2024,6 +2057,14 @@ void State::getInteger64i_v(GLenum target, GLuint index, GLint64 *data)
       case GL_ATOMIC_COUNTER_BUFFER_SIZE:
           ASSERT(static_cast<size_t>(index) < mAtomicCounterBuffers.size());
           *data = mAtomicCounterBuffers[index].getSize();
+          break;
+      case GL_SHADER_STORAGE_BUFFER_START:
+          ASSERT(static_cast<size_t>(index) < mShaderStorageBuffers.size());
+          *data = mShaderStorageBuffers[index].getOffset();
+          break;
+      case GL_SHADER_STORAGE_BUFFER_SIZE:
+          ASSERT(static_cast<size_t>(index) < mShaderStorageBuffers.size());
+          *data = mShaderStorageBuffers[index].getSize();
           break;
       default:
           UNREACHABLE();
