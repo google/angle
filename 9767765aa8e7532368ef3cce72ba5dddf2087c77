@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f7656054_67b09505",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2020,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-27T23:29:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "20665047_c0751a5f",
+      "revId": "9767765aa8e7532368ef3cce72ba5dddf2087c77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e8d14968_f239bd2a",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 6
@@ -30,6 +48,24 @@
       "writtenOn": "2017-03-27T17:33:09Z",
       "side": 1,
       "message": "What happens here when the function is called by drawArraysIndirect? Is elementArrayBuffer not null?",
+      "revId": "9767765aa8e7532368ef3cce72ba5dddf2087c77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e74aa584_5e14cc4e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2022,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-27T23:29:18Z",
+      "side": 1,
+      "message": "Good question. I think it  maybe happen error if the function is called by drawArraysIndirect, but elementArrayBuffer is not null. So I changed the condition to check \u0027type !\u003dGL_NONE \u0027 which will ensure drawElements Indirect is called.",
+      "parentUuid": "e8d14968_f239bd2a",
       "revId": "9767765aa8e7532368ef3cce72ba5dddf2087c77",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -50,6 +86,24 @@
       "revId": "9767765aa8e7532368ef3cce72ba5dddf2087c77",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "18df1ea3_e84ebe8c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2025,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-27T23:29:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a4a9e83_9cb7b3e3",
+      "revId": "9767765aa8e7532368ef3cce72ba5dddf2087c77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
