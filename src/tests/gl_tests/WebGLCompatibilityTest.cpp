@@ -1288,6 +1288,94 @@ TEST_P(WebGL2CompatibilityTest, TextureCopyingFeedbackLoop3D)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Verify that errors are generated when there isn not a defined conversion between the clear type
+// and the buffer type.
+TEST_P(WebGL2CompatibilityTest, ClearBufferTypeCompatibity)
+{
+    if (IsD3D11())
+    {
+        std::cout << "Test skipped because it generates D3D11 runtime warnings." << std::endl;
+        return;
+    }
+
+    constexpr float clearFloat[]       = {0.0f, 0.0f, 0.0f, 0.0f};
+    constexpr int clearInt[]           = {0, 0, 0, 0};
+    constexpr unsigned int clearUint[] = {0, 0, 0, 0};
+
+    GLTexture texture;
+    GLFramebuffer framebuffer;
+
+    glBindTexture(GL_TEXTURE_2D, texture.get());
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.get());
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.get(), 0);
+    ASSERT_GL_NO_ERROR();
+
+    // Unsigned integer buffer
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32UI, 1, 1, 0, GL_RGBA_INTEGER, GL_UNSIGNED_INT, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    glClearBufferfv(GL_COLOR, 0, clearFloat);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glClearBufferiv(GL_COLOR, 0, clearInt);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glClearBufferuiv(GL_COLOR, 0, clearUint);
+    EXPECT_GL_NO_ERROR();
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Integer buffer
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32I, 1, 1, 0, GL_RGBA_INTEGER, GL_INT, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    glClearBufferfv(GL_COLOR, 0, clearFloat);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glClearBufferiv(GL_COLOR, 0, clearInt);
+    EXPECT_GL_NO_ERROR();
+
+    glClearBufferuiv(GL_COLOR, 0, clearUint);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Float buffer
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, 1, 1, 0, GL_RGBA, GL_FLOAT, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    glClearBufferfv(GL_COLOR, 0, clearFloat);
+    EXPECT_GL_NO_ERROR();
+
+    glClearBufferiv(GL_COLOR, 0, clearInt);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glClearBufferuiv(GL_COLOR, 0, clearUint);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_GL_NO_ERROR();
+
+    // Normalized uint buffer
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    glClearBufferfv(GL_COLOR, 0, clearFloat);
+    EXPECT_GL_NO_ERROR();
+
+    glClearBufferiv(GL_COLOR, 0, clearInt);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glClearBufferuiv(GL_COLOR, 0, clearUint);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(WebGLCompatibilityTest,

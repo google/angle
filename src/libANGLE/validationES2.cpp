@@ -1965,6 +1965,22 @@ bool ValidateClear(ValidationContext *context, GLbitfield mask)
         return false;
     }
 
+    if (context->getExtensions().webglCompatibility && (mask & GL_COLOR_BUFFER_BIT) != 0)
+    {
+        constexpr GLenum validComponentTypes[] = {GL_FLOAT, GL_UNSIGNED_NORMALIZED,
+                                                  GL_SIGNED_NORMALIZED};
+
+        for (GLuint drawBufferIdx = 0; drawBufferIdx < context->getCaps().maxDrawBuffers;
+             drawBufferIdx++)
+        {
+            if (!ValidateWebGLFramebufferAttachmentClearType(
+                    context, drawBufferIdx, validComponentTypes, ArraySize(validComponentTypes)))
+            {
+                return false;
+            }
+        }
+    }
+
     return true;
 }
 

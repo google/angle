@@ -1481,6 +1481,15 @@ bool ValidateClearBufferiv(ValidationContext *context,
                 context->handleError(Error(GL_INVALID_VALUE));
                 return false;
             }
+            if (context->getExtensions().webglCompatibility)
+            {
+                constexpr GLenum validComponentTypes[] = {GL_INT};
+                if (ValidateWebGLFramebufferAttachmentClearType(
+                        context, drawbuffer, validComponentTypes, ArraySize(validComponentTypes)))
+                {
+                    return false;
+                }
+            }
             break;
 
         case GL_STENCIL:
@@ -1513,6 +1522,15 @@ bool ValidateClearBufferuiv(ValidationContext *context,
                 context->handleError(Error(GL_INVALID_VALUE));
                 return false;
             }
+            if (context->getExtensions().webglCompatibility)
+            {
+                constexpr GLenum validComponentTypes[] = {GL_UNSIGNED_INT};
+                if (ValidateWebGLFramebufferAttachmentClearType(
+                        context, drawbuffer, validComponentTypes, ArraySize(validComponentTypes)))
+                {
+                    return false;
+                }
+            }
             break;
 
         default:
@@ -1536,6 +1554,16 @@ bool ValidateClearBufferfv(ValidationContext *context,
             {
                 context->handleError(Error(GL_INVALID_VALUE));
                 return false;
+            }
+            if (context->getExtensions().webglCompatibility)
+            {
+                constexpr GLenum validComponentTypes[] = {GL_FLOAT, GL_UNSIGNED_NORMALIZED,
+                                                          GL_SIGNED_NORMALIZED};
+                if (ValidateWebGLFramebufferAttachmentClearType(
+                        context, drawbuffer, validComponentTypes, ArraySize(validComponentTypes)))
+                {
+                    return false;
+                }
             }
             break;
 

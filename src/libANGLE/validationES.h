@@ -624,6 +624,11 @@ bool ValidateVertexFormatBase(ValidationContext *context,
                               GLenum type,
                               GLboolean pureInteger);
 
+bool ValidateWebGLFramebufferAttachmentClearType(ValidationContext *context,
+                                                 GLint drawbuffer,
+                                                 const GLenum *validComponentTypes,
+                                                 size_t validComponentTypeCount);
+
 // Error messages shared here for use in testing.
 extern const char *g_ExceedsMaxElementErrorMessage;
 }  // namespace gl
