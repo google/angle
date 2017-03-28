@@ -119,7 +119,7 @@ egl::Error WindowSurfaceWGL::postSubBuffer(EGLint x, EGLint y, EGLint width, EGL
 
 egl::Error WindowSurfaceWGL::querySurfacePointerANGLE(EGLint attribute, void **value)
 {
-    UNIMPLEMENTED();
+    *value = nullptr;
     return egl::Error(EGL_SUCCESS);
 }
 

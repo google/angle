@@ -27,15 +27,19 @@ class D3DTextureSurfaceWGL : public SurfaceGL
   public:
     D3DTextureSurfaceWGL(const egl::SurfaceState &state,
                          RendererGL *renderer,
+                         EGLenum buftype,
                          EGLClientBuffer clientBuffer,
                          DisplayWGL *display,
                          HGLRC wglContext,
                          HDC deviceContext,
+                         ID3D11Device *displayD3D11Device,
                          const FunctionsGL *functionsGL,
                          const FunctionsWGL *functionsWGL);
     ~D3DTextureSurfaceWGL() override;
 
-    static egl::Error ValidateD3DTextureClientBuffer(EGLClientBuffer clientBuffer);
+    static egl::Error ValidateD3DTextureClientBuffer(EGLenum buftype,
+                                                     EGLClientBuffer clientBuffer,
+                                                     ID3D11Device *d3d11Device);
 
     egl::Error initialize(const DisplayImpl *displayImpl) override;
     egl::Error makeCurrent() override;
@@ -57,9 +61,12 @@ class D3DTextureSurfaceWGL : public SurfaceGL
     FramebufferImpl *createDefaultFramebuffer(const gl::FramebufferState &data) override;
 
   private:
+    EGLenum mBuftype;
     EGLClientBuffer mClientBuffer;
 
     RendererGL *mRenderer;
+
+    ID3D11Device *mDisplayD3D11Device;
 
     DisplayWGL *mDisplay;
     StateManagerGL *mStateManager;
@@ -75,6 +82,7 @@ class D3DTextureSurfaceWGL : public SurfaceGL
 
     HANDLE mDeviceHandle;
     IUnknown *mObject;
+    IDXGIKeyedMutex *mKeyedMutex;
     HANDLE mBoundObjectTextureHandle;
     HANDLE mBoundObjectRenderbufferHandle;
 
