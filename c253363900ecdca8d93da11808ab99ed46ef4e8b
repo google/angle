@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4c42ebac_ebacb0dc",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-28T17:43:57Z",
+      "side": 1,
+      "message": "Why is this stored as a pointer instead of by-value? (and passed around as a const ref instead of by value).",
+      "revId": "c253363900ecdca8d93da11808ab99ed46ef4e8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
