@@ -52,6 +52,24 @@
       "revId": "1ba9f2e9c5a842020043ee4efde882e904a862e8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e67301c0_1367582f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2023,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-28T22:48:38Z",
+      "side": 1,
+      "message": "Sorry for the misunderstanding. Done.",
+      "parentUuid": "8468443a_f3f2966d",
+      "revId": "1ba9f2e9c5a842020043ee4efde882e904a862e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
