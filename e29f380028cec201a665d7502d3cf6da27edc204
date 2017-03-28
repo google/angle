@@ -2,6 +2,57 @@
   "comments": [
     {
       "key": {
+        "uuid": "1817ac57_ab1646b5",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2422,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-03-28T06:10:55Z",
+      "side": 1,
+      "message": "ES3 and ES 3.1 should have different conditions. Find a method to detect the gl context. \nYou may need to write a test for \"or include same array elements\".",
+      "revId": "e29f380028cec201a665d7502d3cf6da27edc204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "59d2e40c_2211b2be",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-03-28T06:10:55Z",
+      "side": 1,
+      "message": "Name it TransformFeedbackVarying?",
+      "revId": "e29f380028cec201a665d7502d3cf6da27edc204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bfb65a5f_effed8f0",
+        "filename": "src/libANGLE/VaryingPacking.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-03-28T06:10:55Z",
+      "side": 1,
+      "message": "I think this comment is useless.",
+      "revId": "e29f380028cec201a665d7502d3cf6da27edc204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "891cfe60_f710f4f3",
         "filename": "src/tests/gl_tests/TransformFeedbackTest.cpp",
         "patchSetId": 2
@@ -13,6 +64,23 @@
       "writtenOn": "2017-03-28T02:05:12Z",
       "side": 1,
       "message": "Fix in passing.",
+      "revId": "e29f380028cec201a665d7502d3cf6da27edc204",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95c78810_87cd03b4",
+        "filename": "src/tests/gl_tests/TransformFeedbackTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1033,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-03-28T06:10:55Z",
+      "side": 1,
+      "message": "Unmap buffer after using. Here and other places in this file.",
       "revId": "e29f380028cec201a665d7502d3cf6da27edc204",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
