@@ -29,12 +29,37 @@ data_dir = "angledata"
 
 vulkan_gen_json_files_outputs = [
   "$root_out_dir/$data_dir/VkLayer_core_validation.json",
+  "$root_out_dir/$data_dir/VkLayer_image.json",
   "$root_out_dir/$data_dir/VkLayer_object_tracker.json",
   "$root_out_dir/$data_dir/VkLayer_parameter_validation.json",
   "$root_out_dir/$data_dir/VkLayer_swapchain.json",
   "$root_out_dir/$data_dir/VkLayer_threading.json",
   "$root_out_dir/$data_dir/VkLayer_unique_objects.json",
 ]
+
+# Vulkan loader
+# -------------
+
+vulkan_gen_dir = "$target_gen_dir/angle/vulkan"
+raw_vulkan_gen_dir = rebase_path(vulkan_gen_dir)
+
+config("vulkan_loader_config") {
+  include_dirs = rebase_path(vulkan_gypi.vulkan_loader_include_dirs, ".", "src")
+  defines = [
+    "LAYERS_SOURCE_PATH=\"$data_dir\"",
+    "DEFAULT_VK_LAYERS_PATH=\".\"",
+    "API_NAME=\"Vulkan\"",
+  ]
+  if (is_win) {
+    defines += [ "VK_USE_PLATFORM_WIN32_KHR" ]
+  }
+}
+
+config("vulkan_loader_internal_config") {
+  if (is_clang || !is_win) {
+    cflags = [ "-Wno-unused-function" ]
+  }
+}
 
 vulkan_undefine_configs = []
 if (is_win) {
@@ -44,37 +69,41 @@ if (is_win) {
   ]
 }
 
-vulkan_gen_dir = "$target_gen_dir/angle/vulkan"
-raw_vulkan_gen_dir = rebase_path(vulkan_gen_dir)
+static_library("vulkan_loader") {
+  sources = rebase_path(vulkan_gypi.vulkan_loader_sources, ".", "src")
+  if (is_win) {
+    sources += rebase_path(vulkan_gypi.vulkan_loader_win_sources, ".", "src")
+    if (!is_clang) {
+      cflags = vulkan_gypi.vulkan_loader_cflags_win
+    }
+  }
+  configs += [ ":vulkan_loader_internal_config" ]
+  public_configs = [ ":vulkan_loader_config" ]
+  configs -= vulkan_undefine_configs
+}
 
-# Vulkan helper scripts
-# ---------------------
+# Vulkan layer helpers
+# --------------------
+
+source_set("vulkan_layer_utils") {
+  sources = rebase_path(vulkan_gypi.vulkan_layer_utils_sources, ".", "src")
+  public_configs = [
+    ":vulkan_loader_config",
+    ":vulkan_loader_internal_config",
+  ]
+  configs -= vulkan_undefine_configs
+}
 
 helper_script_and_deps = [
   [
-    "vulkan_gen_dispatch_table_helper_h",
+    "vulkan_gen_dispatch_table_helper",
     "vk_dispatch_table_helper.h",
-    "dispatch_table_helper_generator.py",
+    "dispatch_table_generator.py",
   ],
   [
     "vulkan_gen_enum_string_helper",
     "vk_enum_string_helper.h",
     "helper_file_generator.py",
-  ],
-  [
-    "vulkan_gen_layer_dispatch_table_h",
-    "vk_layer_dispatch_table.h",
-    "loader_extension_generator.py",
-  ],
-  [
-    "vulkan_gen_loader_extensions_c",
-    "vk_loader_extensions.c",
-    "loader_extension_generator.py",
-  ],
-  [
-    "vulkan_gen_loader_extensions_h",
-    "vk_loader_extensions.h",
-    "loader_extension_generator.py",
   ],
   [
     "vulkan_gen_safe_struct_cpp",
@@ -139,63 +168,53 @@ foreach(script_and_dep, helper_script_and_deps) {
   }
 }
 
-config("vulkan_generate_helper_files_config") {
+config("vulkan_layer_config") {
   include_dirs = [
     vulkan_gen_dir,
-    "$vulkan_layers_dir/include",
+    "$vulkan_layers_dir/layers",
   ]
 }
 
-group("vulkan_generate_helper_files") {
-  public_deps = []
-  public_configs = [ ":vulkan_generate_helper_files_config" ]
+source_set("vulkan_layer_table") {
+  configs -= vulkan_undefine_configs
+  public_deps = [
+    ":vulkan_layer_utils",
+  ]
   foreach(script_and_dep, helper_script_and_deps) {
     target_name = script_and_dep[0]
     public_deps += [ ":$target_name" ]
   }
-}
-
-# Vulkan loader
-# -------------
-
-config("vulkan_loader_config") {
-  include_dirs = rebase_path(vulkan_gypi.vulkan_loader_include_dirs, ".", "src")
-  include_dirs += [ vulkan_gen_dir ]
-  defines = [
-    "LAYERS_SOURCE_PATH=\"$data_dir\"",
-    "DEFAULT_VK_LAYERS_PATH=\".\"",
-    "API_NAME=\"Vulkan\"",
+  public_configs = [ ":vulkan_layer_config" ]
+  sources = [
+    "$target_gen_dir/angle/vulkan/vk_dispatch_table_helper.h",
+    "$target_gen_dir/angle/vulkan/vk_enum_string_helper.h",
+    "$vulkan_layers_dir/layers/vk_layer_table.cpp",
+    "$vulkan_layers_dir/layers/vk_layer_table.h",
   ]
-  if (is_win) {
-    defines += [
-      "VK_USE_PLATFORM_WIN32_KHR",
-      "VK_USE_PLATFORM_WIN32_KHX",
-    ]
-    cflags = [ "/wd4201" ]
-  }
 }
 
-config("vulkan_loader_internal_config") {
-  defines = [ "VULKAN_NON_CMAKE_BUILD" ]
-  if (is_clang || !is_win) {
-    cflags = [ "-Wno-unused-function" ]
-  }
-}
+layer_names = [
+  "core_validation",
+  "image",
+  "object_tracker",
+  "swapchain",
+  "threading",
+  "unique_objects",
+  "parameter_validation",
+]
 
-static_library("vulkan_loader") {
-  sources = rebase_path(vulkan_gypi.vulkan_loader_sources, ".", "src")
-  if (is_win) {
-    sources += rebase_path(vulkan_gypi.vulkan_loader_win_sources, ".", "src")
-    if (!is_clang) {
-      cflags = vulkan_gypi.vulkan_loader_cflags_win
-    }
-  }
-  deps = [
-    ":vulkan_generate_helper_files",
+action("vulkan_gen_json_files") {
+  script = "$third_party_dir/angle/scripts/generate_vulkan_layers_json.py"
+  sources =
+      rebase_path(vulkan_gypi.vulkan_gen_json_files_sources_win, ".", "src")
+
+  # The layer JSON files are part of the necessary data deps.
+  outputs = vulkan_gen_json_files_outputs
+  data = vulkan_gen_json_files_outputs
+  args = [
+    "$raw_vulkan_layers_dir/layers/windows",
+    rebase_path("$root_out_dir/$data_dir"),
   ]
-  configs += [ ":vulkan_loader_internal_config" ]
-  public_configs = [ ":vulkan_loader_config" ]
-  configs -= vulkan_undefine_configs
 }
 
 # SPIRV-tools
@@ -331,80 +350,6 @@ static_library("glslang") {
 # The validation layers
 # ---------------------
 
-config("vulkan_layer_config") {
-  include_dirs = [ "$vulkan_layers_dir/layers" ]
-}
-
-source_set("vulkan_layer_table") {
-  configs -= vulkan_undefine_configs
-  public_deps = [
-    ":vulkan_generate_helper_files",
-  ]
-  public_configs = [ ":vulkan_layer_config" ]
-  sources = [
-    "$target_gen_dir/angle/vulkan/vk_dispatch_table_helper.h",
-    "$target_gen_dir/angle/vulkan/vk_enum_string_helper.h",
-    "$vulkan_layers_dir/layers/vk_layer_table.cpp",
-    "$vulkan_layers_dir/layers/vk_layer_table.h",
-  ]
-}
-
-layers = [
-  [
-    "core_validation",
-    vulkan_gypi.VkLayer_core_validation_sources,
-    ":vulkan_core_validation_glslang",
-  ],
-  [
-    "object_tracker",
-    vulkan_gypi.VkLayer_object_tracker_sources,
-    "",
-  ],
-  [
-    "unique_objects",
-    vulkan_gypi.VkLayer_unique_objects_sources,
-    ":vulkan_gen_unique_objects_wrappers_helper",
-  ],
-  [
-    "parameter_validation",
-    vulkan_gypi.VkLayer_parameter_validation_sources,
-    ":vulkan_gen_parameter_validation_helper",
-  ],
-  [
-    "swapchain",
-    vulkan_gypi.VkLayer_swapchain_sources,
-    "",
-  ],
-  [
-    "threading",
-    vulkan_gypi.VkLayer_threading_sources,
-    ":vulkan_gen_thread_check_helper",
-  ],
-]
-
-action("vulkan_gen_json_files") {
-  script = "$third_party_dir/angle/scripts/generate_vulkan_layers_json.py"
-  sources =
-      rebase_path(vulkan_gypi.vulkan_gen_json_files_sources_win, ".", "src")
-
-  # The layer JSON files are part of the necessary data deps.
-  outputs = vulkan_gen_json_files_outputs
-  data = vulkan_gen_json_files_outputs
-  args = [
-    "$raw_vulkan_layers_dir/layers/windows",
-    rebase_path("$root_out_dir/$data_dir"),
-  ]
-}
-
-source_set("vulkan_layer_utils") {
-  sources = rebase_path(vulkan_gypi.vulkan_layer_utils_sources, ".", "src")
-  public_configs = [
-    ":vulkan_loader_config",
-    ":vulkan_loader_internal_config",
-  ]
-  configs -= vulkan_undefine_configs
-}
-
 config("vulkan_core_validation_config") {
   include_dirs = [ glslang_dir ]
 }
@@ -416,20 +361,47 @@ source_set("vulkan_core_validation_glslang") {
   public_configs = [ ":vulkan_core_validation_config" ]
 }
 
-foreach(layer_info, layers) {
-  name = layer_info[0]
-  shared_library("VkLayer_$name") {
+layer_indexes = [
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+]
+
+layer_sources = [
+  vulkan_gypi.VkLayer_core_validation_sources,
+  vulkan_gypi.VkLayer_image_sources,
+  vulkan_gypi.VkLayer_swapchain_sources,
+  vulkan_gypi.VkLayer_object_tracker_sources,
+  vulkan_gypi.VkLayer_unique_objects_sources,
+  vulkan_gypi.VkLayer_threading_sources,
+  vulkan_gypi.VkLayer_parameter_validation_sources,
+]
+
+layer_additional_deps = [
+  [ ":vulkan_core_validation_glslang" ],
+  [],
+  [],
+  [],
+  [ ":vulkan_gen_unique_objects_wrappers_helper" ],
+  [ ":vulkan_gen_thread_check_helper" ],
+  [ ":vulkan_gen_parameter_validation_helper" ],
+]
+
+foreach(index, layer_indexes) {
+  layer = layer_names[index]
+  shared_library("VkLayer_$layer") {
     configs -= vulkan_undefine_configs
     deps = [
       ":vulkan_layer_table",
-      ":vulkan_layer_utils",
     ]
-    if (layer_info[2] != "") {
-      deps += [ layer_info[2] ]
-    }
-    sources = rebase_path(layer_info[1], ".", "src")
+    deps += layer_additional_deps[index]
+    sources = rebase_path(layer_sources[index], ".", "src")
     if (is_win) {
-      sources += [ "$vulkan_layers_dir/layers/VKLayer_$name.def" ]
+      sources += [ "$vulkan_layers_dir/layers/VKLayer_$layer.def" ]
     }
   }
 }
