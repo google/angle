@@ -296,15 +296,14 @@ void Shader::compile(const Context *context)
     shaderStream << "// GLSL\n";
     shaderStream << "//\n";
 
-    size_t curPos = 0;
-    while (curPos != std::string::npos)
+    std::istringstream inputSourceStream(mState.mSource);
+    std::string line;
+    while (std::getline(inputSourceStream, line))
     {
-        size_t nextLine = mState.mSource.find("\n", curPos);
-        size_t len      = (nextLine == std::string::npos) ? std::string::npos : (nextLine - curPos + 1);
+        // Remove null characters from the source line
+        line.erase(std::remove(line.begin(), line.end(), '\0'), line.end());
 
-        shaderStream << "// " << mState.mSource.substr(curPos, len);
-
-        curPos = (nextLine == std::string::npos) ? std::string::npos : (nextLine + 1);
+        shaderStream << "// " << line;
     }
     shaderStream << "\n\n";
     shaderStream << mState.mTranslatedSource;
