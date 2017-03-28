@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "33fc5b7a_c57d5b5b",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 643,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-03-28T09:42:57Z",
+      "side": 1,
+      "message": "If use \"gl_NumWorkGroups\" built-in variable in compute shader, glDispatchCompute function must initialize this variable with its parameters, so I think it is reasonable to put these codes here. Do you think so?",
+      "parentUuid": "7a00aace_25750d3a",
+      "revId": "91bdf2aaffaeb02a8f2b47af7027f6f8a9bc7383",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "333e2316_c871fb96",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2017-03-27T05:02:06Z",
       "side": 1,
       "message": "You only apply compute uniforms not other uniforms. But here you cleared all uniform dirty bit. It there a potential error when render pipeline and compute pipeline both exist?",
+      "revId": "91bdf2aaffaeb02a8f2b47af7027f6f8a9bc7383",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd807b54_c3d677db",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2500,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-03-28T09:42:57Z",
+      "side": 1,
+      "message": "If a program contains to form a compute shader, it cannot contains objects to form any other type of shader, if so, link would be failure, please view P70 of es_spec_3.1",
+      "parentUuid": "333e2316_c871fb96",
       "revId": "91bdf2aaffaeb02a8f2b47af7027f6f8a9bc7383",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -59,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "90601807_fbb15b01",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-03-28T09:42:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ec2beb24_fd441c92",
+      "range": {
+        "startLine": 434,
+        "startChar": 4,
+        "endLine": 434,
+        "endChar": 34
+      },
+      "revId": "91bdf2aaffaeb02a8f2b47af7027f6f8a9bc7383",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f2a5095f_a1461cdf",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 2
@@ -70,6 +130,24 @@
       "writtenOn": "2017-03-27T05:02:06Z",
       "side": 1,
       "message": "ASSERT(computeConstantBuffer)?",
+      "revId": "91bdf2aaffaeb02a8f2b47af7027f6f8a9bc7383",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5fed9f27_83a17780",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4816,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-03-28T09:42:57Z",
+      "side": 1,
+      "message": "When creating \"computeUniformStorage\" object, it ensured that constant buffer was successfully created. Please view UniformStorage11::UniformStorage11 fucntion.",
+      "parentUuid": "f2a5095f_a1461cdf",
       "revId": "91bdf2aaffaeb02a8f2b47af7027f6f8a9bc7383",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -116,6 +194,30 @@
     },
     {
       "key": {
+        "uuid": "156281ba_1a3be216",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Context9.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-03-28T09:42:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e618fcaf_344373ed",
+      "range": {
+        "startLine": 274,
+        "startChar": 11,
+        "endLine": 274,
+        "endChar": 42
+      },
+      "revId": "91bdf2aaffaeb02a8f2b47af7027f6f8a9bc7383",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4b597f7a_be384d10",
         "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
         "patchSetId": 2
@@ -144,6 +246,24 @@
       "writtenOn": "2017-03-27T05:02:06Z",
       "side": 1,
       "message": "Why you declare two similar functions not one?",
+      "revId": "91bdf2aaffaeb02a8f2b47af7027f6f8a9bc7383",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf91bf4d_729bc9b2",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-03-28T09:42:57Z",
+      "side": 1,
+      "message": "I want to reserve it for DispatchComputeIndirect later, but I think you are right, setGenericDispatchState does not need so many parameters.",
+      "parentUuid": "b145f439_904b46f0",
       "revId": "91bdf2aaffaeb02a8f2b47af7027f6f8a9bc7383",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
