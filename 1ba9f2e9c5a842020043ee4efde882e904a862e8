@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a99dbfd3_0b206f6d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2023,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-28T15:01:52Z",
+      "side": 1,
+      "message": "nit: I think we require braces around all control-flow constructs.",
+      "revId": "1ba9f2e9c5a842020043ee4efde882e904a862e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
