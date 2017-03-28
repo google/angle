@@ -87,6 +87,15 @@ bool ValidateDispatchCompute(Context *context,
                              GLuint numGroupsY,
                              GLuint numGroupsZ);
 
+bool ValidateBindImageTexture(Context *context,
+                              GLuint unit,
+                              GLuint texture,
+                              GLint level,
+                              GLboolean layered,
+                              GLint layer,
+                              GLenum access,
+                              GLenum format);
+
 }  // namespace gl
 
 #endif  // LIBANGLE_VALIDATION_ES31_H_

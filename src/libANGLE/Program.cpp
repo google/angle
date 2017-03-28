@@ -1736,17 +1736,43 @@ bool Program::linkUniforms(const Context *context,
 
     linker.getResults(&mState.mUniforms, &mState.mUniformLocations);
 
-    linkSamplerBindings();
+    linkSamplerAndImageBindings();
 
     return true;
 }
 
-void Program::linkSamplerBindings()
+void Program::linkSamplerAndImageBindings()
 {
     unsigned int high = static_cast<unsigned int>(mState.mUniforms.size());
     unsigned int low  = high;
 
-    for (auto samplerIter = mState.mUniforms.rbegin();
+    for (auto imageIter = mState.mUniforms.rbegin();
+         imageIter != mState.mUniforms.rend() && imageIter->isImage(); ++imageIter)
+    {
+        --low;
+    }
+
+    mState.mImageUniformRange = RangeUI(low, high);
+
+    // If uniform is a image type, insert it into the mImageBindings array.
+    for (unsigned int imageIndex : mState.mImageUniformRange)
+    {
+        // ES3.1 (section 7.6.1) and GLSL ES3.1 (section 4.4.5), Uniform*i{v}
+        // commands cannot load values into a uniform defined as an image,
+        // if declare without a binding qualifier, the image variable is
+        // initially bound to unit zero.
+        auto &imageUniform = mState.mUniforms[imageIndex];
+        if (imageUniform.binding == -1)
+        {
+            imageUniform.binding = 0;
+        }
+        mState.mImageBindings.emplace_back(
+            ImageBinding(imageUniform.binding, imageUniform.elementCount()));
+    }
+
+    high = low;
+
+    for (auto samplerIter = mState.mUniforms.rbegin() + mState.mImageUniformRange.length();
          samplerIter != mState.mUniforms.rend() && samplerIter->isSampler(); ++samplerIter)
     {
         --low;

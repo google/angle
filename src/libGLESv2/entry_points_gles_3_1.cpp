@@ -964,11 +964,13 @@ void GL_APIENTRY BindImageTexture(GLuint unit,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (texture != 0)
+        if (!context->skipValidation() && !ValidateBindImageTexture(context, unit, texture, level,
+                                                                    layered, layer, access, format))
         {
-            // Binding non-zero image textures is not implemented yet.
-            UNIMPLEMENTED();
+            return;
         }
+
+        context->bindImageTexture(unit, texture, level, layered, layer, access, format);
     }
 }
 

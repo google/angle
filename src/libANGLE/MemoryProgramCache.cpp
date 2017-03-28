@@ -198,16 +198,26 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
                   "All bits of DrawBufferMask can be contained in an uint32_t");
     state->mActiveOutputVariables = stream.readInt<uint32_t>();
 
-    unsigned int low            = stream.readInt<unsigned int>();
-    unsigned int high           = stream.readInt<unsigned int>();
-    state->mSamplerUniformRange = RangeUI(low, high);
-
+    unsigned int samplerRangeLow  = stream.readInt<unsigned int>();
+    unsigned int samplerRangeHigh = stream.readInt<unsigned int>();
+    state->mSamplerUniformRange   = RangeUI(samplerRangeLow, samplerRangeHigh);
     unsigned int samplerCount = stream.readInt<unsigned int>();
     for (unsigned int samplerIndex = 0; samplerIndex < samplerCount; ++samplerIndex)
     {
         GLenum textureType  = stream.readInt<GLenum>();
         size_t bindingCount = stream.readInt<size_t>();
         state->mSamplerBindings.emplace_back(SamplerBinding(textureType, bindingCount));
+    }
+
+    unsigned int imageRangeLow  = stream.readInt<unsigned int>();
+    unsigned int imageRangeHigh = stream.readInt<unsigned int>();
+    state->mImageUniformRange   = RangeUI(imageRangeLow, imageRangeHigh);
+    unsigned int imageCount     = stream.readInt<unsigned int>();
+    for (unsigned int imageIndex = 0; imageIndex < imageCount; ++imageIndex)
+    {
+        GLuint boundImageUnit = stream.readInt<unsigned int>();
+        size_t elementCount   = stream.readInt<size_t>();
+        state->mImageBindings.emplace_back(ImageBinding(boundImageUnit, elementCount));
     }
 
     return program->getImplementation()->load(context, infoLog, &stream);
@@ -341,6 +351,16 @@ void MemoryProgramCache::Serialize(const Context *context,
     {
         stream.writeInt(samplerBinding.textureType);
         stream.writeInt(samplerBinding.boundTextureUnits.size());
+    }
+
+    stream.writeInt(state.getImageUniformRange().low());
+    stream.writeInt(state.getImageUniformRange().high());
+
+    stream.writeInt(state.getImageBindings().size());
+    for (const auto &imageBinding : state.getImageBindings())
+    {
+        stream.writeInt(imageBinding.boundImageUnit);
+        stream.writeInt(imageBinding.elementCount);
     }
 
     program->getImplementation()->save(&stream);

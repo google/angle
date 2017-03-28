@@ -243,6 +243,79 @@ TEST_P(ComputeShaderTest, DispatchCompute)
     EXPECT_GL_NO_ERROR();
 }
 
+// Use image uniform to write texture in compute shader, and verify the content is expected.
+TEST_P(ComputeShaderTest, BindImageTexture)
+{
+    if (IsD3D11())
+    {
+        std::cout << "Test skipped on D3D11 because it is not implemented yet." << std::endl;
+        return;
+    }
+
+    GLTexture mTexture[2];
+    GLFramebuffer mFramebuffer;
+    const std::string csSource =
+        "#version 310 es\n"
+        "layout(local_size_x=2, local_size_y=2, local_size_z=1) in;\n"
+        "layout(r32ui, binding = 0) writeonly uniform highp uimage2D uImage[2];"
+        "void main()\n"
+        "{\n"
+        "    imageStore(uImage[0], ivec2(gl_LocalInvocationIndex, gl_WorkGroupID.x), uvec4(100, 0, "
+        "0, 0));"
+        "    imageStore(uImage[1], ivec2(gl_LocalInvocationIndex, gl_WorkGroupID.x), uvec4(100, 0, "
+        "0, 0));"
+        "}\n";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, csSource);
+    glUseProgram(program.get());
+    int width = 4, height = 2;
+    GLuint inputValues[] = {200, 200, 200, 200, 200, 200, 200, 200};
+
+    glBindTexture(GL_TEXTURE_2D, mTexture[0]);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32UI, width, height);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RED_INTEGER, GL_UNSIGNED_INT,
+                    inputValues);
+    EXPECT_GL_NO_ERROR();
+
+    glBindImageTexture(0, mTexture[0], 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_R32UI);
+    EXPECT_GL_NO_ERROR();
+
+    glBindTexture(GL_TEXTURE_2D, mTexture[1]);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32UI, width, height);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_RED_INTEGER, GL_UNSIGNED_INT,
+                    inputValues);
+    EXPECT_GL_NO_ERROR();
+
+    glBindImageTexture(1, mTexture[1], 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_R32UI);
+    EXPECT_GL_NO_ERROR();
+
+    glDispatchCompute(2, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(0);
+    GLuint outputValues[2][8];
+    GLuint expectedValue = 100;
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, mFramebuffer);
+
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTexture[0],
+                           0);
+    EXPECT_GL_NO_ERROR();
+    glReadPixels(0, 0, width, height, GL_RED_INTEGER, GL_UNSIGNED_INT, outputValues[0]);
+    EXPECT_GL_NO_ERROR();
+
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTexture[1],
+                           0);
+    EXPECT_GL_NO_ERROR();
+    glReadPixels(0, 0, width, height, GL_RED_INTEGER, GL_UNSIGNED_INT, outputValues[1]);
+    EXPECT_GL_NO_ERROR();
+
+    for (int i = 0; i < width * height; i++)
+    {
+        EXPECT_EQ(expectedValue, outputValues[0][i]);
+        EXPECT_EQ(expectedValue, outputValues[1][i]);
+    }
+}
+
 // Check that it is not possible to create a compute shader when the context does not support ES
 // 3.10
 TEST_P(ComputeShaderTestES3, NotSupported)

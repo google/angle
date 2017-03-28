@@ -56,6 +56,13 @@ class StateManagerGL final : angle::NonCopyable
     void activeTexture(size_t unit);
     void bindTexture(GLenum type, GLuint texture);
     void bindSampler(size_t unit, GLuint sampler);
+    void bindImageTexture(GLuint unit,
+                          GLuint texture,
+                          GLint level,
+                          GLboolean layered,
+                          GLint layer,
+                          GLenum access,
+                          GLenum format);
     void bindFramebuffer(GLenum type, GLuint framebuffer);
     void bindRenderbuffer(GLenum type, GLuint renderbuffer);
     void bindTransformFeedback(GLenum type, GLuint transformFeedback);
@@ -195,6 +202,22 @@ class StateManagerGL final : angle::NonCopyable
     size_t mTextureUnitIndex;
     std::map<GLenum, std::vector<GLuint>> mTextures;
     std::vector<GLuint> mSamplers;
+
+    struct ImageUnitBinding
+    {
+        ImageUnitBinding()
+            : texture(0), level(0), layered(false), layer(0), access(GL_READ_ONLY), format(GL_R32UI)
+        {
+        }
+
+        GLuint texture;
+        GLint level;
+        GLboolean layered;
+        GLint layer;
+        GLenum access;
+        GLenum format;
+    };
+    std::vector<ImageUnitBinding> mImages;
 
     GLuint mTransformFeedback;
 

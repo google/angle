@@ -146,6 +146,7 @@ void State::initialize(const Context *context,
 
         mAtomicCounterBuffers.resize(caps.maxAtomicCounterBufferBindings);
         mShaderStorageBuffers.resize(caps.maxShaderStorageBufferBindings);
+        mImageUnits.resize(caps.maxImageUnits);
     }
     if (extensions.eglImageExternal || extensions.eglStreamConsumerExternal)
     {
@@ -200,6 +201,16 @@ void State::reset(const Context *context)
     for (size_t samplerIdx = 0; samplerIdx < mSamplers.size(); samplerIdx++)
     {
         mSamplers[samplerIdx].set(context, nullptr);
+    }
+
+    for (auto &imageUnit : mImageUnits)
+    {
+        imageUnit.texture.set(context, nullptr);
+        imageUnit.level   = 0;
+        imageUnit.layered = false;
+        imageUnit.layer   = 0;
+        imageUnit.access  = GL_READ_ONLY;
+        imageUnit.format  = GL_R32UI;
     }
 
     mArrayBuffer.set(context, nullptr);
@@ -791,6 +802,20 @@ void State::detachTexture(const Context *context, const TextureMap &zeroTextures
                 // Zero textures are the "default" textures instead of NULL
                 binding.set(context, it->second.get());
             }
+        }
+    }
+
+    for (auto &bindingImageUnit : mImageUnits)
+    {
+        if (bindingImageUnit.texture.id() == texture)
+        {
+            bindingImageUnit.texture.set(context, nullptr);
+            bindingImageUnit.level   = 0;
+            bindingImageUnit.layered = false;
+            bindingImageUnit.layer   = 0;
+            bindingImageUnit.access  = GL_READ_ONLY;
+            bindingImageUnit.format  = GL_R32UI;
+            break;
         }
     }
 
@@ -2172,6 +2197,28 @@ void State::setObjectDirty(GLenum target)
             mDirtyObjects.set(DIRTY_OBJECT_PROGRAM);
             break;
     }
+}
+
+void State::setImageUnit(const Context *context,
+                         GLuint unit,
+                         Texture *texture,
+                         GLint level,
+                         GLboolean layered,
+                         GLint layer,
+                         GLenum access,
+                         GLenum format)
+{
+    mImageUnits[unit].texture.set(context, texture);
+    mImageUnits[unit].level   = level;
+    mImageUnits[unit].layered = layered;
+    mImageUnits[unit].layer   = layer;
+    mImageUnits[unit].access  = access;
+    mImageUnits[unit].format  = format;
+}
+
+const ImageUnit &State::getImageUnit(GLuint unit) const
+{
+    return mImageUnits[unit];
 }
 
 }  // namespace gl

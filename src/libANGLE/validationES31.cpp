@@ -816,4 +816,83 @@ bool ValidateDispatchCompute(Context *context,
     return true;
 }
 
+bool ValidateBindImageTexture(Context *context,
+                              GLuint unit,
+                              GLuint texture,
+                              GLint level,
+                              GLboolean layered,
+                              GLint layer,
+                              GLenum access,
+                              GLenum format)
+{
+    GLuint maxImageUnits = context->getCaps().maxImageUnits;
+    if (unit >= maxImageUnits)
+    {
+        context->handleError(InvalidValue()
+                             << "unit cannot be greater than or equal than MAX_IMAGE_UNITS = "
+                             << maxImageUnits);
+        return false;
+    }
+
+    if (level < 0)
+    {
+        context->handleError(InvalidValue() << "level is negative.");
+        return false;
+    }
+
+    if (layer < 0)
+    {
+        context->handleError(InvalidValue() << "layer is negative.");
+        return false;
+    }
+
+    if (access != GL_READ_ONLY && access != GL_WRITE_ONLY && access != GL_READ_WRITE)
+    {
+        context->handleError(InvalidEnum() << "access is not one of the supported tokens.");
+        return false;
+    }
+
+    switch (format)
+    {
+        case GL_RGBA32F:
+        case GL_RGBA16F:
+        case GL_R32F:
+        case GL_RGBA32UI:
+        case GL_RGBA16UI:
+        case GL_RGBA8UI:
+        case GL_R32UI:
+        case GL_RGBA32I:
+        case GL_RGBA16I:
+        case GL_RGBA8I:
+        case GL_R32I:
+        case GL_RGBA8:
+        case GL_RGBA8_SNORM:
+            break;
+        default:
+            context->handleError(InvalidValue()
+                                 << "format is not one of supported image unit formats.");
+            return false;
+    }
+
+    if (texture != 0)
+    {
+        Texture *tex = context->getTexture(texture);
+
+        if (tex == nullptr)
+        {
+            context->handleError(InvalidValue()
+                                 << "texture is not the name of an existing texture object.");
+            return false;
+        }
+
+        if (!tex->getImmutableFormat())
+        {
+            context->handleError(InvalidOperation()
+                                 << "texture is not the name of an immutable texture object.");
+            return false;
+        }
+    }
+
+    return true;
+}
 }  // namespace gl

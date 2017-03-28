@@ -136,6 +136,13 @@ class Context final : public ValidationContext
                           GLintptr offset,
                           GLsizei stride);
     void bindSampler(GLuint textureUnit, GLuint samplerHandle);
+    void bindImageTexture(GLuint unit,
+                          GLuint texture,
+                          GLint level,
+                          GLboolean layered,
+                          GLint layer,
+                          GLenum access,
+                          GLenum format);
     void bindGenericUniformBuffer(GLuint bufferHandle);
     void bindIndexedUniformBuffer(GLuint bufferHandle,
                                   GLuint index,

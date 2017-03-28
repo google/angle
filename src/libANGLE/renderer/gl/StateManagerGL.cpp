@@ -50,6 +50,7 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions, const gl::Caps &ren
       mTextureUnitIndex(0),
       mTextures(),
       mSamplers(rendererCaps.maxCombinedTextureImageUnits, 0),
+      mImages(rendererCaps.maxImageUnits, ImageUnitBinding()),
       mTransformFeedback(0),
       mQueries(),
       mPrevDrawTransformFeedback(nullptr),
@@ -203,6 +204,15 @@ void StateManagerGL::deleteTexture(GLuint texture)
                     activeTexture(textureUnitIndex);
                     bindTexture(textureTypeIter.first, 0);
                 }
+            }
+        }
+
+        for (size_t imageUnitIndex = 0; imageUnitIndex < mImages.size(); imageUnitIndex++)
+        {
+            if (mImages[imageUnitIndex].texture == texture)
+            {
+                bindImageTexture(static_cast<GLuint>(imageUnitIndex), 0, 0, false, 0, GL_READ_ONLY,
+                                 GL_R32UI);
             }
         }
 
@@ -404,6 +414,28 @@ void StateManagerGL::bindSampler(size_t unit, GLuint sampler)
     {
         mSamplers[unit] = sampler;
         mFunctions->bindSampler(static_cast<GLuint>(unit), sampler);
+    }
+}
+
+void StateManagerGL::bindImageTexture(GLuint unit,
+                                      GLuint texture,
+                                      GLint level,
+                                      GLboolean layered,
+                                      GLint layer,
+                                      GLenum access,
+                                      GLenum format)
+{
+    auto &binding = mImages[unit];
+    if (binding.texture != texture || binding.level != level || binding.layered != layered ||
+        binding.layer != layer || binding.access != access || binding.format != format)
+    {
+        binding.texture = texture;
+        binding.level   = level;
+        binding.layered = layered;
+        binding.layer   = layer;
+        binding.access  = access;
+        binding.format  = format;
+        mFunctions->bindImageTexture(unit, texture, level, layered, layer, access, format);
     }
 }
 
@@ -842,6 +874,32 @@ void StateManagerGL::setGenericShaderState(const gl::Context *context)
             else
             {
                 bindSampler(textureUnitIndex, 0);
+            }
+        }
+    }
+
+    // TODO(xinghua.cao@intel.com): Track image units state with dirty bits to
+    // avoid update every draw call.
+    ASSERT(context->getClientVersion() >= gl::ES_3_1 || program->getImageBindings().size() == 0);
+    for (const gl::ImageBinding &imageUniform : program->getImageBindings())
+    {
+        for (size_t imageUnitIndex = 0; imageUnitIndex < imageUniform.elementCount;
+             imageUnitIndex++)
+        {
+            const gl::ImageUnit &imageUnit = glState.getImageUnit(
+                imageUniform.boundImageUnit + static_cast<GLuint>(imageUnitIndex));
+            const TextureGL *textureGL = SafeGetImplAs<TextureGL>(imageUnit.texture.get());
+            if (textureGL)
+            {
+                bindImageTexture(imageUniform.boundImageUnit + static_cast<GLuint>(imageUnitIndex),
+                                 textureGL->getTextureID(), imageUnit.level, imageUnit.layered,
+                                 imageUnit.layer, imageUnit.access, imageUnit.format);
+            }
+            else
+            {
+                bindImageTexture(imageUniform.boundImageUnit + static_cast<GLuint>(imageUnitIndex),
+                                 0, imageUnit.level, imageUnit.layered, imageUnit.layer,
+                                 imageUnit.access, imageUnit.format);
             }
         }
     }

@@ -21,6 +21,7 @@
 namespace gl
 {
 class Buffer;
+class Texture;
 
 enum PrimitiveType
 {
@@ -236,6 +237,21 @@ struct DrawElementsIndirectCommand
 };
 static_assert(sizeof(DrawElementsIndirectCommand) == 20,
               "Unexpected size of DrawElementsIndirectCommand");
+
+struct ImageUnit
+{
+    ImageUnit()
+        : texture(), level(0), layered(false), layer(0), access(GL_READ_ONLY), format(GL_R32UI)
+    {
+    }
+
+    BindingPointer<Texture> texture;
+    GLint level;
+    GLboolean layered;
+    GLint layer;
+    GLenum access;
+    GLenum format;
+};
 
 struct PixelStoreStateBase : private angle::NonCopyable
 {
