@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "676c631f_594cd16e",
+        "filename": "src/gpu_info_util/SystemInfo_internal.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-28T17:56:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bacfd96c_1def635d",
+      "range": {
+        "startLine": 30,
+        "startChar": 35,
+        "endLine": 30,
+        "endChar": 55
+      },
+      "revId": "969590ad18dca870920b25a24e4e161de278833e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a3c8c937_5a519e7f",
         "filename": "src/gpu_info_util/SystemInfo_win.cpp",
         "patchSetId": 3
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "a819a25b_e3410297",
+        "filename": "src/gpu_info_util/SystemInfo_win.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-28T17:56:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a3c8c937_5a519e7f",
+      "range": {
+        "startLine": 24,
+        "startChar": 4,
+        "endLine": 25,
+        "endChar": 36
+      },
+      "revId": "969590ad18dca870920b25a24e4e161de278833e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "90701ede_67aa1376",
         "filename": "src/gpu_info_util/SystemInfo_win.cpp",
         "patchSetId": 3
@@ -68,6 +116,30 @@
       "revId": "969590ad18dca870920b25a24e4e161de278833e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d802164b_d04dc3cd",
+        "filename": "src/gpu_info_util/SystemInfo_win.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-28T17:56:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "90701ede_67aa1376",
+      "range": {
+        "startLine": 73,
+        "startChar": 8,
+        "endLine": 73,
+        "endChar": 25
+      },
+      "revId": "969590ad18dca870920b25a24e4e161de278833e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
