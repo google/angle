@@ -282,8 +282,7 @@ const gl::Limitations &Context11::getNativeLimitations() const
 
 gl::Error Context11::dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ)
 {
-    UNIMPLEMENTED();
-    return gl::NoError();
+    return mRenderer->dispatchCompute(this, numGroupsX, numGroupsY, numGroupsZ);
 }
 
 }  // namespace rx

@@ -246,6 +246,13 @@ void StateManager11::updatePresentPath(bool presentPathFastActive,
     }
 }
 
+void StateManager11::setComputeConstants(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ)
+{
+    mComputeConstants.numWorkGroups[0] = numGroupsX;
+    mComputeConstants.numWorkGroups[1] = numGroupsY;
+    mComputeConstants.numWorkGroups[2] = numGroupsZ;
+}
+
 void StateManager11::syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits)
 {
     if (!dirtyBits.any())

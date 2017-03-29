@@ -388,6 +388,14 @@ class Renderer11 : public RendererD3D
 
     gl::Version getMaxSupportedESVersion() const override;
 
+    gl::Error dispatchCompute(Context11 *context,
+                              GLuint numGroupsX,
+                              GLuint numGroupsY,
+                              GLuint numGroupsZ);
+    gl::Error applyComputeUniforms(const ProgramD3D &programD3D,
+                                   const std::vector<D3DUniform *> &uniformArray) override;
+    gl::Error applyComputeShader(const gl::ContextState &data);
+
   protected:
     gl::Error clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd) override;
 
@@ -520,6 +528,9 @@ class Renderer11 : public RendererD3D
     std::vector<bool> mForceSetPixelSamplerStates;
     std::vector<gl::SamplerState> mCurPixelSamplerStates;
 
+    std::vector<bool> mForceSetComputeSamplerStates;
+    std::vector<gl::SamplerState> mCurComputeSamplerStates;
+
     StateManager11 mStateManager;
 
     // Currently applied primitive topology
@@ -538,6 +549,7 @@ class Renderer11 : public RendererD3D
     uintptr_t mAppliedVertexShader;
     uintptr_t mAppliedGeometryShader;
     uintptr_t mAppliedPixelShader;
+    uintptr_t mAppliedComputeShader;
 
     dx_VertexConstants11 mAppliedVertexConstants;
     ID3D11Buffer *mDriverConstantBufferVS;
@@ -554,6 +566,11 @@ class Renderer11 : public RendererD3D
     unsigned int mCurrentConstantBufferPS[gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS];
     GLintptr mCurrentConstantBufferPSOffset[gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS];
     GLsizeiptr mCurrentConstantBufferPSSize[gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS];
+
+    dx_ComputeConstants11 mAppliedComputeConstants;
+    ID3D11Buffer *mDriverConstantBufferCS;
+    SamplerMetadataD3D11 mSamplerMetadataCS;
+    ID3D11Buffer *mCurrentComputeConstantBuffer;
 
     ID3D11Buffer *mCurrentGeometryConstantBuffer;
 

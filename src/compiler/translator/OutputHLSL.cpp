@@ -639,13 +639,16 @@ void OutputHLSL::header(TInfoSinkBase &out, const BuiltInFunctionEmulator *built
     else  // Compute shader
     {
         ASSERT(mShaderType == GL_COMPUTE_SHADER);
+
+        out << "cbuffer DriverConstants : register(b1)\n"
+               "{\n";
         if (mUsesNumWorkGroups)
         {
-            out << "cbuffer DriverConstants : register(b1)\n"
-                   "{\n";
             out << "    uint3 gl_NumWorkGroups : packoffset(c0);\n";
-            out << "};\n";
         }
+        ASSERT(mOutputType == SH_HLSL_4_1_OUTPUT);
+        mUniformHLSL->samplerMetadataUniforms(out, "c1");
+        out << "};\n";
 
         // Follow built-in variables would be initialized in
         // DynamicHLSL::generateComputeShaderLinkHLSL, if they

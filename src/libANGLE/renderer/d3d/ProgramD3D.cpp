@@ -1384,6 +1384,16 @@ class ProgramD3D::GetGeometryExecutableTask : public ProgramD3D::GetExecutableTa
     const gl::ContextState &mContextState;
 };
 
+gl::Error ProgramD3D::getComputeExecutable(ShaderExecutableD3D **outExecutable)
+{
+    if (outExecutable)
+    {
+        *outExecutable = mComputeExecutable.get();
+    }
+
+    return gl::NoError();
+}
+
 LinkResult ProgramD3D::compileProgramExecutables(const gl::ContextState &contextState,
                                                  gl::InfoLog &infoLog)
 {
@@ -1686,6 +1696,19 @@ gl::Error ProgramD3D::applyUniforms(GLenum drawMode)
     ASSERT(!mDirtySamplerMapping);
 
     ANGLE_TRY(mRenderer->applyUniforms(*this, drawMode, mD3DUniforms));
+
+    for (D3DUniform *d3dUniform : mD3DUniforms)
+    {
+        d3dUniform->dirty = false;
+    }
+
+    return gl::NoError();
+}
+
+gl::Error ProgramD3D::applyComputeUniforms()
+{
+    ASSERT(!mDirtySamplerMapping);
+    ANGLE_TRY(mRenderer->applyComputeUniforms(*this, mD3DUniforms));
 
     for (D3DUniform *d3dUniform : mD3DUniforms)
     {

@@ -41,6 +41,12 @@ struct dx_PixelConstants11
     float viewScale[4];
 };
 
+struct dx_ComputeConstants11
+{
+    unsigned int numWorkGroups[3];
+    unsigned int padding;  // This just pads the struct to 16 bytes
+};
+
 class StateManager11 final : angle::NonCopyable
 {
   public:
@@ -69,6 +75,9 @@ class StateManager11 final : angle::NonCopyable
 
     const dx_VertexConstants11 &getVertexConstants() const { return mVertexConstants; }
     const dx_PixelConstants11 &getPixelConstants() const { return mPixelConstants; }
+    const dx_ComputeConstants11 &getComputeConstants() const { return mComputeConstants; }
+
+    void setComputeConstants(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ);
 
     void updateStencilSizeIfChanged(bool depthStencilInitialized, unsigned int stencilSize);
 
@@ -142,6 +151,8 @@ class StateManager11 final : angle::NonCopyable
     // Things needed in viewport state
     dx_VertexConstants11 mVertexConstants;
     dx_PixelConstants11 mPixelConstants;
+
+    dx_ComputeConstants11 mComputeConstants;
 
     // Render target variables
     gl::Extents mViewportBounds;

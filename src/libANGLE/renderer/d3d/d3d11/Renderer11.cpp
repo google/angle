@@ -427,10 +427,12 @@ Renderer11::Renderer11(egl::Display *display)
 
     mDriverConstantBufferVS = nullptr;
     mDriverConstantBufferPS = nullptr;
+    mDriverConstantBufferCS = nullptr;
 
-    mAppliedVertexShader   = NULL;
-    mAppliedGeometryShader = NULL;
-    mAppliedPixelShader    = NULL;
+    mAppliedVertexShader   = angle::DirtyPointer;
+    mAppliedGeometryShader = angle::DirtyPointer;
+    mAppliedPixelShader    = angle::DirtyPointer;
+    mAppliedComputeShader  = angle::DirtyPointer;
 
     mAppliedTFObject = angle::DirtyPointer;
 
@@ -834,6 +836,10 @@ void Renderer11::initializeDevice()
     mForceSetPixelSamplerStates.resize(rendererCaps.maxTextureImageUnits);
     mCurPixelSamplerStates.resize(rendererCaps.maxTextureImageUnits);
     mSamplerMetadataPS.initData(rendererCaps.maxTextureImageUnits);
+
+    mForceSetComputeSamplerStates.resize(rendererCaps.maxComputeTextureImageUnits);
+    mCurComputeSamplerStates.resize(rendererCaps.maxComputeTextureImageUnits);
+    mSamplerMetadataCS.initData(rendererCaps.maxComputeTextureImageUnits);
 
     mStateManager.initialize(rendererCaps);
 
@@ -1475,6 +1481,26 @@ gl::Error Renderer11::setSamplerState(gl::SamplerType type,
         mForceSetVertexSamplerStates[index] = false;
 
         metadata = &mSamplerMetadataVS;
+    }
+    else if (type == gl::SAMPLER_COMPUTE)
+    {
+        ASSERT(static_cast<unsigned int>(index) < getNativeCaps().maxComputeTextureImageUnits);
+
+        if (mForceSetComputeSamplerStates[index] ||
+            memcmp(&samplerState, &mCurComputeSamplerStates[index], sizeof(gl::SamplerState)) != 0)
+        {
+            ID3D11SamplerState *dxSamplerState = nullptr;
+            ANGLE_TRY(mStateCache.getSamplerState(samplerState, &dxSamplerState));
+
+            ASSERT(dxSamplerState != nullptr);
+            mDeviceContext->CSSetSamplers(index, 1, &dxSamplerState);
+
+            mCurComputeSamplerStates[index] = samplerState;
+        }
+
+        mForceSetComputeSamplerStates[index] = false;
+
+        metadata = &mSamplerMetadataCS;
     }
     else
         UNREACHABLE();
@@ -2782,6 +2808,12 @@ template void Renderer11::applyDriverConstantsIfNeeded<dx_PixelConstants11>(
     SamplerMetadataD3D11 *samplerMetadata,
     size_t samplerMetadataReferencedBytes,
     ID3D11Buffer *driverConstantBuffer);
+template void Renderer11::applyDriverConstantsIfNeeded<dx_ComputeConstants11>(
+    dx_ComputeConstants11 *appliedConstants,
+    const dx_ComputeConstants11 &constants,
+    SamplerMetadataD3D11 *samplerMetadata,
+    size_t samplerMetadataReferencedBytes,
+    ID3D11Buffer *driverConstantBuffer);
 
 void Renderer11::markAllStateDirty()
 {
@@ -2797,6 +2829,11 @@ void Renderer11::markAllStateDirty()
         mForceSetPixelSamplerStates[fsamplerId] = true;
     }
 
+    for (size_t csamplerId = 0; csamplerId < mForceSetComputeSamplerStates.size(); ++csamplerId)
+    {
+        mForceSetComputeSamplerStates[csamplerId] = true;
+    }
+
     mStateManager.invalidateEverything();
 
     mAppliedIB       = nullptr;
@@ -2806,6 +2843,7 @@ void Renderer11::markAllStateDirty()
     mAppliedVertexShader   = angle::DirtyPointer;
     mAppliedGeometryShader = angle::DirtyPointer;
     mAppliedPixelShader    = angle::DirtyPointer;
+    mAppliedComputeShader  = angle::DirtyPointer;
 
     mAppliedTFObject = angle::DirtyPointer;
 
@@ -2827,6 +2865,7 @@ void Renderer11::markAllStateDirty()
     mCurrentVertexConstantBuffer   = nullptr;
     mCurrentPixelConstantBuffer    = nullptr;
     mCurrentGeometryConstantBuffer = nullptr;
+    mCurrentComputeConstantBuffer  = nullptr;
 
     mCurrentPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
 }
@@ -2848,6 +2887,7 @@ void Renderer11::releaseDeviceResources()
 
     SafeRelease(mDriverConstantBufferVS);
     SafeRelease(mDriverConstantBufferPS);
+    SafeRelease(mDriverConstantBufferCS);
     SafeRelease(mSyncQuery);
 }
 
@@ -4843,6 +4883,143 @@ gl::Version Renderer11::getMaxSupportedESVersion() const
 gl::DebugAnnotator *Renderer11::getAnnotator()
 {
     return mAnnotator;
+}
+
+gl::Error Renderer11::applyComputeShader(const gl::ContextState &data)
+{
+    ANGLE_TRY(ensureHLSLCompilerInitialized());
+
+    const auto &glState    = data.getState();
+    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(glState.getProgram());
+
+    ShaderExecutableD3D *computeExe = nullptr;
+    ANGLE_TRY(programD3D->getComputeExecutable(&computeExe));
+
+    ASSERT(computeExe != nullptr);
+    ID3D11ComputeShader *computeShader = GetAs<ShaderExecutable11>(computeExe)->getComputeShader();
+
+    bool dirtyUniforms = false;
+
+    if (reinterpret_cast<uintptr_t>(computeShader) != mAppliedComputeShader)
+    {
+        mDeviceContext->CSSetShader(computeShader, nullptr, 0);
+        mAppliedComputeShader = reinterpret_cast<uintptr_t>(computeShader);
+        dirtyUniforms         = true;
+    }
+
+    if (dirtyUniforms)
+    {
+        programD3D->dirtyAllUniforms();
+    }
+
+    return programD3D->applyComputeUniforms();
+}
+
+gl::Error Renderer11::dispatchCompute(Context11 *context,
+                                      GLuint numGroupsX,
+                                      GLuint numGroupsY,
+                                      GLuint numGroupsZ)
+{
+    const auto &data     = context->getContextState();
+    gl::Program *program = data.getState().getProgram();
+    ASSERT(program != nullptr);
+    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
+
+    mStateManager.setComputeConstants(numGroupsX, numGroupsY, numGroupsZ);
+
+    programD3D->updateSamplerMapping();
+
+    ANGLE_TRY(generateSwizzles(data, gl::SAMPLER_COMPUTE));
+    ANGLE_TRY(applyTextures(context, data));
+    ANGLE_TRY(applyComputeShader(data));
+    // TODO(Xinghua): applyUniformBuffers for compute shader.
+    mDeviceContext->Dispatch(numGroupsX, numGroupsY, numGroupsZ);
+
+    return gl::NoError();
+}
+
+gl::Error Renderer11::applyComputeUniforms(const ProgramD3D &programD3D,
+                                           const std::vector<D3DUniform *> &uniformArray)
+{
+    unsigned int totalRegisterCountCS = 0;
+    bool computeUniformsDirty         = false;
+
+    for (const D3DUniform *uniform : uniformArray)
+    {
+        ASSERT(uniform->isReferencedByComputeShader());
+
+        // TODO(Xinghua): add isImage() and isAtomicCounter().
+        if (uniform->isSampler())
+        {
+            totalRegisterCountCS += uniform->registerCount;
+            computeUniformsDirty = (computeUniformsDirty || uniform->dirty);
+        }
+    }
+
+    const UniformStorage11 *computeUniformStorage =
+        GetAs<UniformStorage11>(&programD3D.getComputeUniformStorage());
+    ASSERT(computeUniformStorage);
+
+    ID3D11Buffer *computeConstantBuffer = computeUniformStorage->getConstantBuffer();
+
+    if (totalRegisterCountCS > 0 && computeUniformsDirty)
+    {
+        D3D11_MAPPED_SUBRESOURCE map = {0};
+        HRESULT result =
+            mDeviceContext->Map(computeConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+        ASSERT(SUCCEEDED(result));
+        auto *mapCS = static_cast<float(*)[4]>(map.pData);
+
+        ASSERT(mapCS);
+        for (const D3DUniform *uniform : uniformArray)
+        {
+            ASSERT(uniform->isReferencedByComputeShader());
+
+            if (uniform->isSampler())
+            {
+                continue;
+            }
+
+            unsigned int componentCount = (4 - uniform->registerCount);
+            memcpy(&mapCS[uniform->csRegisterIndex][uniform->registerElement], uniform->data,
+                   uniform->registerCount * sizeof(float) * componentCount);
+        }
+
+        mDeviceContext->Unmap(computeConstantBuffer, 0);
+    }
+
+    if (mCurrentComputeConstantBuffer != computeConstantBuffer)
+    {
+        mDeviceContext->CSSetConstantBuffers(
+            d3d11::RESERVED_CONSTANT_BUFFER_SLOT_DEFAULT_UNIFORM_BLOCK, 1, &computeConstantBuffer);
+        mCurrentComputeConstantBuffer = computeConstantBuffer;
+    }
+
+    if (!mDriverConstantBufferCS)
+    {
+        D3D11_BUFFER_DESC constantBufferDescription = {0};
+        d3d11::InitConstantBufferDesc(
+            &constantBufferDescription,
+            sizeof(dx_ComputeConstants11) + mSamplerMetadataCS.sizeBytes());
+        HRESULT result =
+            mDevice->CreateBuffer(&constantBufferDescription, nullptr, &mDriverConstantBufferCS);
+        ASSERT(SUCCEEDED(result));
+        if (FAILED(result))
+        {
+            return gl::OutOfMemory()
+                   << "Failed to create compute shader constant buffer, " << result;
+        }
+        mDeviceContext->CSSetConstantBuffers(d3d11::RESERVED_CONSTANT_BUFFER_SLOT_DRIVER, 1,
+                                             &mDriverConstantBufferCS);
+    }
+
+    const dx_ComputeConstants11 &computeConstants = mStateManager.getComputeConstants();
+    size_t samplerMetadataReferencedBytesCS = sizeof(SamplerMetadataD3D11::dx_SamplerMetadata) *
+                                              programD3D.getUsedSamplerRange(gl::SAMPLER_COMPUTE);
+    applyDriverConstantsIfNeeded(&mAppliedComputeConstants, computeConstants, &mSamplerMetadataCS,
+                                 samplerMetadataReferencedBytesCS, mDriverConstantBufferCS);
+
+    return gl::NoError();
 }
 
 }  // namespace rx
