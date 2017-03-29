@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "3817e09a_26f0ae5f",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2054,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-29T16:25:30Z",
+      "side": 1,
+      "message": "nit: can be const and no need for gl:: prefix.",
+      "range": {
+        "startLine": 2054,
+        "startChar": 4,
+        "endLine": 2054,
+        "endChar": 15
+      },
+      "revId": "c93701b97969b21c30bdb92dde8ba8c99388cbb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "855b23ec_264b7b3e",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1312,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-29T16:25:30Z",
+      "side": 1,
+      "message": "Can you split this function into separate ones? Something like:\n\n   size_t getOutputResourceCount() const;\n   ... etc ...\n\nValidateNamedProgramInterface can be updated to take an optional index to validate too.\n\nThis will probably also be useful when you add support for the GL_ACTIVE_RESOURCES query.",
+      "range": {
+        "startLine": 1289,
+        "startChar": 0,
+        "endLine": 1312,
+        "endChar": 1
+      },
+      "revId": "c93701b97969b21c30bdb92dde8ba8c99388cbb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cab38e57_a6514c0e",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1341,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-29T16:25:30Z",
+      "side": 1,
+      "message": "I don\u0027t think this is necessary because if mLinked is false then there are no output variables and validation would not allow this function to be called.",
+      "range": {
+        "startLine": 1334,
+        "startChar": 4,
+        "endLine": 1341,
+        "endChar": 5
+      },
+      "revId": "c93701b97969b21c30bdb92dde8ba8c99388cbb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1d47c7bd_454012d4",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 5
@@ -16,6 +85,47 @@
       "revId": "c93701b97969b21c30bdb92dde8ba8c99388cbb8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d62b48ab_a835a6ec",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1348,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-29T16:25:30Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "1d47c7bd_454012d4",
+      "revId": "c93701b97969b21c30bdb92dde8ba8c99388cbb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7d63f8d5_b6c7d752",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1357,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-29T16:25:30Z",
+      "side": 1,
+      "message": "Can you refactor this code into a helper function that copies a std::string into a buffer?  The code can be shared with Program::getActiveAttribute and Program::getActiveUniform.",
+      "range": {
+        "startLine": 1329,
+        "startChar": 4,
+        "endLine": 1357,
+        "endChar": 5
+      },
+      "revId": "c93701b97969b21c30bdb92dde8ba8c99388cbb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
