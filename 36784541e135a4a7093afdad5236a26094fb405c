@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "03cd4053_67cd6e59",
+        "filename": "src/libANGLE/renderer/gl/wgl/D3DTextureSurfaceWGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-29T20:43:54Z",
+      "side": 1,
+      "message": "Going to leave it that way for now.  Because the WGL backend only supports one config, it\u0027s too limiting to validate it right now.",
+      "parentUuid": "fa21e5e8_4a885506",
+      "revId": "36784541e135a4a7093afdad5236a26094fb405c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bcda4c84_563e4112",
         "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2017-03-29T17:09:25Z",
       "side": 1,
       "message": "Should this be exposed only if we have a D3D11 device?",
+      "revId": "36784541e135a4a7093afdad5236a26094fb405c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d13085e8_c353832f",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 665,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-29T20:43:54Z",
+      "side": 1,
+      "message": "Done, updated it to create the D3D11 device in more cases.",
+      "parentUuid": "bcda4c84_563e4112",
       "revId": "36784541e135a4a7093afdad5236a26094fb405c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
