@@ -92,7 +92,8 @@
 1951 D3D11 : dEQP-GLES31.functional.state_query.indexed.shader_storage_buffer_* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.internal_format.renderbuffer.* = FAIL
 1679 D3D11 : dEQP-GLES31.functional.state_query.texture_level.texture_2d_multisample.* = FAIL
-1442 D3D11 : dEQP-GLES31.functional.texture.multisample.* = FAIL
+1442 D3D11 : dEQP-GLES31.functional.texture.multisample.negative.texture* = FAIL
+1442 D3D11 : dEQP-GLES31.functional.texture.multisample.samples* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.framebuffer_default.framebuffer_default_width_get_framebuffer_parameteriv = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.framebuffer_default.framebuffer_default_height_get_framebuffer_parameteriv = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.framebuffer_default.framebuffer_default_samples_get_framebuffer_parameteriv = FAIL

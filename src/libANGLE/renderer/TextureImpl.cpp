@@ -54,4 +54,5 @@ gl::Error TextureImpl::copyCompressedTexture(const gl::Context *context, const g
     UNREACHABLE();
     return gl::InternalError() << "CHROMIUM_copy_compressed_texture exposed but not implemented.";
 }
+
 }  // namespace rx

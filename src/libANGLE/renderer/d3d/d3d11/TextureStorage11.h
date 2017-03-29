@@ -509,6 +509,56 @@ class TextureStorage11_2DArray : public TextureStorage11
     ImageMap mAssociatedImages;
 };
 
+class TextureStorage11_2DMultisample : public TextureStorage11
+{
+  public:
+    TextureStorage11_2DMultisample(Renderer11 *renderer,
+                                   GLenum internalformat,
+                                   GLsizei width,
+                                   GLsizei height,
+                                   int levels,
+                                   int samples,
+                                   GLboolean fixedSampleLocations);
+    ~TextureStorage11_2DMultisample() override;
+
+    gl::Error onDestroy(const gl::Context *context) override;
+
+    gl::Error getResource(const gl::Context *context, const TextureHelper11 **outResource) override;
+    gl::Error getRenderTarget(const gl::Context *context,
+                              const gl::ImageIndex &index,
+                              RenderTargetD3D **outRT) override;
+
+    gl::Error copyToStorage(const gl::Context *context, TextureStorage *destStorage) override;
+
+    void associateImage(Image11 *image, const gl::ImageIndex &index) override;
+    void disassociateImage(const gl::ImageIndex &index, Image11 *expectedImage) override;
+    void verifyAssociatedImageValid(const gl::ImageIndex &index, Image11 *expectedImage) override;
+    gl::Error releaseAssociatedImage(const gl::Context *context,
+                                     const gl::ImageIndex &index,
+                                     Image11 *incomingImage) override;
+
+  protected:
+    gl::Error getSwizzleTexture(const TextureHelper11 **outTexture) override;
+    gl::Error getSwizzleRenderTarget(int mipLevel, const d3d11::RenderTargetView **outRTV) override;
+
+    gl::ErrorOrResult<DropStencil> ensureDropStencilTexture(const gl::Context *context) override;
+
+    gl::Error ensureTextureExists(int mipLevels);
+
+  private:
+    gl::Error createSRV(const gl::Context *context,
+                        int baseLevel,
+                        int mipLevels,
+                        DXGI_FORMAT format,
+                        const TextureHelper11 &texture,
+                        d3d11::SharedSRV *outSRV) const override;
+
+    TextureHelper11 mTexture;
+    std::unique_ptr<RenderTarget11> mRenderTarget;
+
+    unsigned int mSamples;
+    GLboolean mFixedSampleLocations;
+};
 }
 
 #endif // LIBANGLE_RENDERER_D3D_D3D11_TEXTURESTORAGE11_H_

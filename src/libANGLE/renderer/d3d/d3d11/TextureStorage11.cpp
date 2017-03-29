@@ -2907,4 +2907,213 @@ gl::ErrorOrResult<TextureStorage11::DropStencil> TextureStorage11_2DArray::ensur
     return DropStencil::CREATED;
 }
 
+TextureStorage11_2DMultisample::TextureStorage11_2DMultisample(Renderer11 *renderer,
+                                                               GLenum internalformat,
+                                                               GLsizei width,
+                                                               GLsizei height,
+                                                               int levels,
+                                                               int samples,
+                                                               GLboolean fixedSampleLocations)
+    : TextureStorage11(
+          renderer,
+          GetTextureBindFlags(internalformat, renderer->getRenderer11DeviceCaps(), true),
+          GetTextureMiscFlags(internalformat, renderer->getRenderer11DeviceCaps(), true, levels),
+          internalformat),
+      mTexture(),
+      mRenderTarget(nullptr)
+{
+    // adjust size if needed for compressed textures
+    d3d11::MakeValidSize(false, mFormatInfo.texFormat, &width, &height, &mTopLevel);
+
+    mMipLevels            = 1;
+    mTextureWidth         = width;
+    mTextureHeight        = height;
+    mTextureDepth         = 1;
+    mSamples              = samples;
+    mFixedSampleLocations = fixedSampleLocations;
+}
+
+gl::Error TextureStorage11_2DMultisample::onDestroy(const gl::Context *context)
+{
+    mRenderTarget.reset();
+    delete this;
+
+    return gl::NoError();
+}
+
+TextureStorage11_2DMultisample::~TextureStorage11_2DMultisample()
+{
+}
+
+gl::Error TextureStorage11_2DMultisample::copyToStorage(const gl::Context *context,
+                                                        TextureStorage *destStorage)
+{
+    UNIMPLEMENTED();
+    return gl::InternalError() << "copyToStorage is unimplemented";
+}
+
+void TextureStorage11_2DMultisample::associateImage(Image11 *image, const gl::ImageIndex &index)
+{
+}
+
+void TextureStorage11_2DMultisample::verifyAssociatedImageValid(const gl::ImageIndex &index,
+                                                                Image11 *expectedImage)
+{
+}
+
+void TextureStorage11_2DMultisample::disassociateImage(const gl::ImageIndex &index,
+                                                       Image11 *expectedImage)
+{
+}
+
+gl::Error TextureStorage11_2DMultisample::releaseAssociatedImage(const gl::Context *context,
+                                                                 const gl::ImageIndex &index,
+                                                                 Image11 *incomingImage)
+{
+    return gl::NoError();
+}
+
+gl::Error TextureStorage11_2DMultisample::getResource(const gl::Context *context,
+                                                      const TextureHelper11 **outResource)
+{
+    ANGLE_TRY(ensureTextureExists(1));
+
+    *outResource = &mTexture;
+    return gl::NoError();
+}
+
+gl::Error TextureStorage11_2DMultisample::ensureTextureExists(int mipLevels)
+{
+    // For Multisampled textures, mipLevels always equals 1.
+    ASSERT(mipLevels == 1);
+
+    // if the width or height is not positive this should be treated as an incomplete texture
+    // we handle that here by skipping the d3d texture creation
+    if (!mTexture.valid() && mTextureWidth > 0 && mTextureHeight > 0)
+    {
+        D3D11_TEXTURE2D_DESC desc;
+        ZeroMemory(&desc, sizeof(desc));
+        desc.Width          = mTextureWidth;  // Compressed texture size constraints?
+        desc.Height         = mTextureHeight;
+        desc.MipLevels      = mipLevels;
+        desc.ArraySize      = 1;
+        desc.Format         = mFormatInfo.texFormat;
+        desc.Usage          = D3D11_USAGE_DEFAULT;
+        desc.BindFlags      = getBindFlags();
+        desc.CPUAccessFlags = 0;
+        desc.MiscFlags      = getMiscFlags();
+
+        const gl::TextureCaps &textureCaps =
+            mRenderer->getNativeTextureCaps().get(mFormatInfo.internalFormat);
+        GLuint supportedSamples = textureCaps.getNearestSamples(mSamples);
+        desc.SampleDesc.Count   = (supportedSamples == 0) ? 1 : supportedSamples;
+        desc.SampleDesc.Quality = 0;
+
+        ANGLE_TRY(mRenderer->allocateTexture(desc, mFormatInfo, &mTexture));
+        mTexture.setDebugName("TexStorage2DMS.Texture");
+    }
+
+    return gl::NoError();
+}
+
+gl::Error TextureStorage11_2DMultisample::getRenderTarget(const gl::Context *context,
+                                                          const gl::ImageIndex &index,
+                                                          RenderTargetD3D **outRT)
+{
+    ASSERT(!index.hasLayer());
+
+    const int level = index.mipIndex;
+    ASSERT(level == 0);
+
+    ASSERT(outRT);
+    if (mRenderTarget)
+    {
+        *outRT = mRenderTarget.get();
+        return gl::NoError();
+    }
+
+    const TextureHelper11 *texture = nullptr;
+    ANGLE_TRY(getResource(context, &texture));
+
+    const d3d11::SharedSRV *srv = nullptr;
+    ANGLE_TRY(getSRVLevel(context, level, false, &srv));
+
+    const d3d11::SharedSRV *blitSRV = nullptr;
+    ANGLE_TRY(getSRVLevel(context, level, true, &blitSRV));
+
+    if (mFormatInfo.rtvFormat != DXGI_FORMAT_UNKNOWN)
+    {
+        D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
+        rtvDesc.Format        = mFormatInfo.rtvFormat;
+        rtvDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
+
+        d3d11::RenderTargetView rtv;
+        ANGLE_TRY(mRenderer->allocateResource(rtvDesc, texture->get(), &rtv));
+
+        mRenderTarget.reset(new TextureRenderTarget11(
+            std::move(rtv), *texture, *srv, *blitSRV, mFormatInfo.internalFormat, getFormatSet(),
+            getLevelWidth(level), getLevelHeight(level), 1, mSamples));
+
+        *outRT = mRenderTarget.get();
+        return gl::NoError();
+    }
+
+    ASSERT(mFormatInfo.dsvFormat != DXGI_FORMAT_UNKNOWN);
+
+    D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+    dsvDesc.Format        = mFormatInfo.dsvFormat;
+    dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2DMS;
+    dsvDesc.Flags         = 0;
+
+    d3d11::DepthStencilView dsv;
+    ANGLE_TRY(mRenderer->allocateResource(dsvDesc, texture->get(), &dsv));
+
+    mRenderTarget.reset(new TextureRenderTarget11(
+        std::move(dsv), *texture, *srv, mFormatInfo.internalFormat, getFormatSet(),
+        getLevelWidth(level), getLevelHeight(level), 1, mSamples));
+
+    *outRT = mRenderTarget.get();
+    return gl::NoError();
+}
+
+gl::Error TextureStorage11_2DMultisample::createSRV(const gl::Context *context,
+                                                    int baseLevel,
+                                                    int mipLevels,
+                                                    DXGI_FORMAT format,
+                                                    const TextureHelper11 &texture,
+                                                    d3d11::SharedSRV *outSRV) const
+{
+    ASSERT(outSRV);
+
+    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+    srvDesc.Format        = format;
+    srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DMS;
+
+    ANGLE_TRY(mRenderer->allocateResource(srvDesc, texture.get(), outSRV));
+    outSRV->setDebugName("TexStorage2DMS.SRV");
+
+    return gl::NoError();
+}
+
+gl::Error TextureStorage11_2DMultisample::getSwizzleTexture(const TextureHelper11 **outTexture)
+{
+    UNIMPLEMENTED();
+    return gl::InternalError() << "getSwizzleTexture is unimplemented.";
+}
+
+gl::Error TextureStorage11_2DMultisample::getSwizzleRenderTarget(
+    int mipLevel,
+    const d3d11::RenderTargetView **outRTV)
+{
+    UNIMPLEMENTED();
+    return gl::InternalError() << "getSwizzleRenderTarget is unimplemented.";
+}
+
+gl::ErrorOrResult<TextureStorage11::DropStencil>
+TextureStorage11_2DMultisample::ensureDropStencilTexture(const gl::Context *context)
+{
+    UNIMPLEMENTED();
+    return gl::InternalError() << "Drop stencil texture not implemented.";
+}
+
 }  // namespace rx

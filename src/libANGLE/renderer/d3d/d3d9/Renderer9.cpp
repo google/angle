@@ -2997,6 +2997,19 @@ TextureStorage *Renderer9::createTextureStorage2DArray(GLenum internalformat,
     return nullptr;
 }
 
+TextureStorage *Renderer9::createTextureStorage2DMultisample(GLenum internalformat,
+                                                             GLsizei width,
+                                                             GLsizei height,
+                                                             int levels,
+                                                             int samples,
+                                                             GLboolean fixedSampleLocations)
+{
+    // 2D multisampled textures are not supported by the D3D9 backend.
+    UNREACHABLE();
+
+    return NULL;
+}
+
 bool Renderer9::getLUID(LUID *adapterLuid) const
 {
     adapterLuid->HighPart = 0;
@@ -3212,6 +3225,12 @@ gl::Error Renderer9::applyComputeUniforms(const ProgramD3D &programD3D,
 {
     UNIMPLEMENTED();
     return gl::InternalError() << "Compute shader is not implemented on D3D9";
+}
+
+gl::Error Renderer9::clearRenderTarget(RenderTargetD3D *renderTarget, const gl::ColorF &clearValues)
+{
+    UNIMPLEMENTED();
+    return gl::InternalError() << "clearRenderTarget is not implemented on D3D9";
 }
 
 }  // namespace rx

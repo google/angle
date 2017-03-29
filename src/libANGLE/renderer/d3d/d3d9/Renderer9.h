@@ -316,6 +316,13 @@ class Renderer9 : public RendererD3D
                                                 GLsizei depth,
                                                 int levels) override;
 
+    TextureStorage *createTextureStorage2DMultisample(GLenum internalformat,
+                                                      GLsizei width,
+                                                      GLsizei height,
+                                                      int levels,
+                                                      int samples,
+                                                      GLboolean fixedSampleLocations) override;
+
     // Buffer creation
     VertexBuffer *createVertexBuffer() override;
     IndexBuffer *createIndexBuffer() override;
@@ -387,6 +394,9 @@ class Renderer9 : public RendererD3D
 
     gl::Error applyComputeUniforms(const ProgramD3D &programD3D,
                                    const std::vector<D3DUniform *> &uniformArray) override;
+
+    gl::Error clearRenderTarget(RenderTargetD3D *renderTarget,
+                                const gl::ColorF &clearValues) override;
 
   protected:
     gl::Error clearTextures(const gl::Context *context,

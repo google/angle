@@ -231,6 +231,8 @@ int GetHLSLCoordCount(const TextureFunctionHLSL::TextureFunction &textureFunctio
         {
             case EbtSampler2D:
                 return 2;
+            case EbtSampler2DMS:
+                return 2;
             case EbtSampler3D:
                 return 3;
             case EbtSamplerCube:
@@ -241,6 +243,8 @@ int GetHLSLCoordCount(const TextureFunctionHLSL::TextureFunction &textureFunctio
                 return 2;
             case EbtISampler2D:
                 return 2;
+            case EbtISampler2DMS:
+                return 2;
             case EbtISampler3D:
                 return 3;
             case EbtISamplerCube:
@@ -248,6 +252,8 @@ int GetHLSLCoordCount(const TextureFunctionHLSL::TextureFunction &textureFunctio
             case EbtISampler2DArray:
                 return 3;
             case EbtUSampler2D:
+                return 2;
+            case EbtUSampler2DMS:
                 return 2;
             case EbtUSampler3D:
                 return 3;
@@ -1086,17 +1092,20 @@ const char *TextureFunctionHLSL::TextureFunction::getReturnType() const
         switch (sampler)
         {
             case EbtSampler2D:
+            case EbtSampler2DMS:
             case EbtSampler3D:
             case EbtSamplerCube:
             case EbtSampler2DArray:
             case EbtSamplerExternalOES:
                 return "float4";
             case EbtISampler2D:
+            case EbtISampler2DMS:
             case EbtISampler3D:
             case EbtISamplerCube:
             case EbtISampler2DArray:
                 return "int4";
             case EbtUSampler2D:
+            case EbtUSampler2DMS:
             case EbtUSampler3D:
             case EbtUSamplerCube:
             case EbtUSampler2DArray:

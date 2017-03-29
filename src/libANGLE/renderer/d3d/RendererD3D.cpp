@@ -15,6 +15,7 @@
 #include "libANGLE/Display.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
+#include "libANGLE/ImageIndex.h"
 #include "libANGLE/ResourceManager.h"
 #include "libANGLE/State.h"
 #include "libANGLE/VertexArray.h"
@@ -27,6 +28,7 @@
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
 #include "libANGLE/renderer/d3d/ProgramD3D.h"
 #include "libANGLE/renderer/d3d/SamplerD3D.h"
+#include "libANGLE/renderer/d3d/TextureD3D.h"
 
 namespace rx
 {
@@ -229,7 +231,14 @@ gl::Texture *RendererD3D::getIncompleteTexture(const gl::Context *context, GLenu
         // Skip the API layer to avoid needing to pass the Context and mess with dirty bits.
         gl::Texture *t =
             new gl::Texture(implFactory, std::numeric_limits<GLuint>::max(), createType);
-        t->setStorage(nullptr, createType, 1, GL_RGBA8, colorSize);
+        if (createType == GL_TEXTURE_2D_MULTISAMPLE)
+        {
+            t->setStorageMultisample(nullptr, createType, 1, GL_RGBA8, colorSize, true);
+        }
+        else
+        {
+            t->setStorage(nullptr, createType, 1, GL_RGBA8, colorSize);
+        }
         if (type == GL_TEXTURE_CUBE_MAP)
         {
             for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X;
@@ -238,6 +247,12 @@ gl::Texture *RendererD3D::getIncompleteTexture(const gl::Context *context, GLenu
                 t->getImplementation()->setSubImage(nullptr, face, 0, area, GL_RGBA8,
                                                     GL_UNSIGNED_BYTE, unpack, color);
             }
+        }
+        else if (type == GL_TEXTURE_2D_MULTISAMPLE)
+        {
+            gl::ColorF clearValue(0, 0, 0, 1);
+            gl::ImageIndex index = gl::ImageIndex::Make2DMultisample();
+            GetImplAs<TextureD3D>(t)->clearLevel(context, index, clearValue);
         }
         else
         {

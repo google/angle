@@ -141,9 +141,10 @@ TEST_P(TextureMultisampleTestES31, ValidateTextureStorageMultisampleParameters)
 }
 
 ANGLE_INSTANTIATE_TEST(TextureMultisampleTest,
+                       ES31_D3D11(),
                        ES3_OPENGL(),
                        ES3_OPENGLES(),
                        ES31_OPENGL(),
                        ES31_OPENGLES());
-ANGLE_INSTANTIATE_TEST(TextureMultisampleTestES31, ES31_OPENGL(), ES31_OPENGLES());
+ANGLE_INSTANTIATE_TEST(TextureMultisampleTestES31, ES31_D3D11(), ES31_OPENGL(), ES31_OPENGLES());
 }

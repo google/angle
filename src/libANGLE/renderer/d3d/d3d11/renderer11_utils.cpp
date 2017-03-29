@@ -1294,6 +1294,7 @@ void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, cons
 
     // Multisample limits
     caps->maxSamples = maxSamples;
+    caps->maxColorTextureSamples = maxSamples;
 
     // GL extension support
     extensions->setTextureExtensionSupport(*textureCapsMap);

@@ -3955,6 +3955,17 @@ TextureStorage *Renderer11::createTextureStorage2DArray(GLenum internalformat,
                                         levels);
 }
 
+TextureStorage *Renderer11::createTextureStorage2DMultisample(GLenum internalformat,
+                                                              GLsizei width,
+                                                              GLsizei height,
+                                                              int levels,
+                                                              int samples,
+                                                              GLboolean fixedSampleLocations)
+{
+    return new TextureStorage11_2DMultisample(this, internalformat, width, height, levels, samples,
+                                              fixedSampleLocations);
+}
+
 gl::Error Renderer11::readFromAttachment(const gl::Context *context,
                                          const gl::FramebufferAttachment &srcAttachment,
                                          const gl::Rectangle &sourceArea,
@@ -4952,6 +4963,17 @@ gl::Error Renderer11::getSamplerState(const gl::SamplerState &samplerState,
                                       ID3D11SamplerState **outSamplerState)
 {
     return mStateCache.getSamplerState(this, samplerState, outSamplerState);
+}
+
+gl::Error Renderer11::clearRenderTarget(RenderTargetD3D *renderTarget,
+                                        const gl::ColorF &clearValues)
+{
+    RenderTarget11 *renderTarget11     = GetAs<RenderTarget11>(renderTarget);
+    const d3d11::RenderTargetView &rtv = renderTarget11->getRenderTargetView();
+
+    mDeviceContext->ClearRenderTargetView(rtv.get(), &clearValues.red);
+
+    return gl::NoError();
 }
 
 }  // namespace rx
