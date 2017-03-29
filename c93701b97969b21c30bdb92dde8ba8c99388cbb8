@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1d47c7bd_454012d4",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1348,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-29T16:05:48Z",
+      "side": 1,
+      "message": "nit: this name \"string\" here is a bit confusing, maybe the nameWithArray.c_str() could be put in the strncpy directly?",
+      "revId": "c93701b97969b21c30bdb92dde8ba8c99388cbb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
