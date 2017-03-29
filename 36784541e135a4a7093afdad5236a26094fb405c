@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa21e5e8_4a885506",
+        "filename": "src/libANGLE/renderer/gl/wgl/D3DTextureSurfaceWGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-29T17:09:25Z",
+      "side": 1,
+      "message": "Does the SHARE_HANDLE method support any format?",
+      "revId": "36784541e135a4a7093afdad5236a26094fb405c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bcda4c84_563e4112",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 665,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-29T17:09:25Z",
+      "side": 1,
+      "message": "Should this be exposed only if we have a D3D11 device?",
+      "revId": "36784541e135a4a7093afdad5236a26094fb405c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
