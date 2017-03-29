@@ -384,4 +384,9 @@ const WorkaroundsGL &ContextGL::getWorkaroundsGL() const
     return mRenderer->getWorkarounds();
 }
 
+gl::Error ContextGL::dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ)
+{
+    return mRenderer->dispatchCompute(mState, numGroupsX, numGroupsY, numGroupsZ);
+}
+
 }  // namespace rx

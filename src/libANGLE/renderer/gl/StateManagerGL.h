@@ -153,6 +153,8 @@ class StateManagerGL final : angle::NonCopyable
                                    const GLvoid **outIndices);
     gl::Error setDrawIndirectState(const gl::ContextState &data, GLenum type);
 
+    gl::Error setDispatchComputeState(const gl::ContextState &data);
+
     void pauseTransformFeedback();
     void pauseAllQueries();
     void pauseQuery(GLenum type);
@@ -161,8 +163,6 @@ class StateManagerGL final : angle::NonCopyable
     gl::Error onMakeCurrent(const gl::ContextState &data);
 
     void syncState(const gl::ContextState &data, const gl::State::DirtyBits &glDirtyBits);
-
-    GLuint getBoundBuffer(GLenum type);
 
   private:
     // Set state that's common among draw commands and compute invocations.

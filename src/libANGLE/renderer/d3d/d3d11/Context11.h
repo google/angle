@@ -121,6 +121,8 @@ class Context11 : public ContextImpl
 
     Renderer11 *getRenderer() const { return mRenderer; }
 
+    gl::Error dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ) override;
+
   private:
     Renderer11 *mRenderer;
 };

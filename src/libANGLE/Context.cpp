@@ -4037,4 +4037,14 @@ Error Context::getScratchBuffer(size_t requestedSize, angle::MemoryBuffer **scra
     return gl::NoError();
 }
 
+void Context::dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ)
+{
+    if (numGroupsX == 0u || numGroupsY == 0u || numGroupsZ == 0u)
+    {
+        return;
+    }
+
+    mImplementation->dispatchCompute(numGroupsX, numGroupsY, numGroupsZ);
+}
+
 }  // namespace gl

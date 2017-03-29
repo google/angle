@@ -363,4 +363,9 @@ std::vector<PathImpl *> ContextNULL::createPaths(GLsizei range)
     return result;
 }
 
+gl::Error ContextNULL::dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ)
+{
+    return gl::NoError();
+}
+
 }  // namespace rx

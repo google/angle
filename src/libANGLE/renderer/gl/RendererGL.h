@@ -166,6 +166,11 @@ class RendererGL : angle::NonCopyable
     const gl::Extensions &getNativeExtensions() const;
     const gl::Limitations &getNativeLimitations() const;
 
+    gl::Error dispatchCompute(const gl::ContextState &data,
+                              GLuint numGroupsX,
+                              GLuint numGroupsY,
+                              GLuint numGroupsZ);
+
   private:
     void ensureCapsInitialized() const;
     void generateCaps(gl::Caps *outCaps,

@@ -131,6 +131,8 @@ class ContextVk : public ContextImpl, public ResourceVk
     // TODO(jmadill): Use pipeline cache.
     void invalidateCurrentPipeline();
 
+    gl::Error dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ) override;
+
   private:
     gl::Error initPipeline();
 

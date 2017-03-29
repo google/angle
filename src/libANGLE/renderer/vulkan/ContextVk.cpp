@@ -552,4 +552,10 @@ void ContextVk::invalidateCurrentPipeline()
     mRenderer->enqueueGarbageOrDeleteNow(*this, mCurrentPipeline);
 }
 
+gl::Error ContextVk::dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ)
+{
+    UNIMPLEMENTED();
+    return gl::Error(GL_INVALID_OPERATION);
+}
+
 }  // namespace rx

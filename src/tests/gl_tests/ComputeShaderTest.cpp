@@ -21,6 +21,12 @@ class ComputeShaderTest : public ANGLETest
     ComputeShaderTest() {}
 };
 
+class DispatchComputeTest : public ANGLETest
+{
+  protected:
+    DispatchComputeTest() {}
+};
+
 class ComputeShaderTestES3 : public ANGLETest
 {
   protected:
@@ -225,6 +231,25 @@ TEST_P(ComputeShaderTest, AccessPartSpecialVariables)
     ANGLE_GL_COMPUTE_PROGRAM(program, csSource);
 }
 
+// TODO(Xinghua): A temporary test for glDispatchCompute, remove and merge it
+// ComputeShaderTest after implementing this API on D3D backend.
+TEST_P(DispatchComputeTest, DispatchCompute)
+{
+    const std::string csSource =
+        "#version 310 es\n"
+        "layout(local_size_x=4, local_size_y=3, local_size_z=2) in;\n"
+        "void main()\n"
+        "{\n"
+        "    uvec3 temp1 = gl_NumWorkGroups;\n"
+        "}\n";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, csSource);
+
+    glUseProgram(program.get());
+    glDispatchCompute(8, 4, 2);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Check that it is not possible to create a compute shader when the context does not support ES
 // 3.10
 TEST_P(ComputeShaderTestES3, NotSupported)
@@ -235,6 +260,7 @@ TEST_P(ComputeShaderTestES3, NotSupported)
 }
 
 ANGLE_INSTANTIATE_TEST(ComputeShaderTest, ES31_OPENGL(), ES31_OPENGLES(), ES31_D3D11());
+ANGLE_INSTANTIATE_TEST(DispatchComputeTest, ES31_OPENGL(), ES31_OPENGLES());
 ANGLE_INSTANTIATE_TEST(ComputeShaderTestES3, ES3_OPENGL(), ES3_OPENGLES());
 
 }  // namespace

@@ -697,6 +697,8 @@ class Context final : public ValidationContext
 
     Error getScratchBuffer(size_t requestedSize, angle::MemoryBuffer **scratchBufferOut) const;
 
+    void dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ);
+
   private:
     void syncRendererState();
     void syncRendererState(const State::DirtyBits &bitMask, const State::DirtyObjects &objectMask);

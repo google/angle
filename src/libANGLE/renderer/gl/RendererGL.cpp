@@ -603,4 +603,14 @@ const gl::Limitations &RendererGL::getNativeLimitations() const
     return mNativeLimitations;
 }
 
+gl::Error RendererGL::dispatchCompute(const gl::ContextState &data,
+                                      GLuint numGroupsX,
+                                      GLuint numGroupsY,
+                                      GLuint numGroupsZ)
+{
+    ANGLE_TRY(mStateManager->setDispatchComputeState(data));
+    mFunctions->dispatchCompute(numGroupsX, numGroupsY, numGroupsZ);
+    return gl::NoError();
+}
+
 }  // namespace rx

@@ -178,6 +178,8 @@ class ContextNULL : public ContextImpl
 
     std::vector<PathImpl *> createPaths(GLsizei range) override;
 
+    gl::Error dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ) override;
+
   private:
     gl::Caps mCaps;
     gl::TextureCapsMap mTextureCaps;

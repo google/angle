@@ -683,6 +683,12 @@ gl::Error StateManagerGL::setDrawIndirectState(const gl::ContextState &data, GLe
     return setGenericDrawState(data);
 }
 
+gl::Error StateManagerGL::setDispatchComputeState(const gl::ContextState &data)
+{
+    setGenericShaderState(data);
+    return gl::NoError();
+}
+
 void StateManagerGL::pauseTransformFeedback()
 {
     if (mPrevDrawTransformFeedback != nullptr)
@@ -1805,9 +1811,4 @@ void StateManagerGL::setTextureCubemapSeamlessEnabled(bool enabled)
     }
 }
 
-GLuint StateManagerGL::getBoundBuffer(GLenum type)
-{
-    ASSERT(mBuffers.find(type) != mBuffers.end());
-    return mBuffers[type];
-}
 }

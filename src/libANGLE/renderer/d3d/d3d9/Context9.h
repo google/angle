@@ -119,6 +119,8 @@ class Context9 : public ContextImpl
     const gl::Extensions &getNativeExtensions() const override;
     const gl::Limitations &getNativeLimitations() const override;
 
+    gl::Error dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ) override;
+
   private:
     Renderer9 *mRenderer;
 };

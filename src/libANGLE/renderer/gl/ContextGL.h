@@ -176,6 +176,8 @@ class ContextGL : public ContextImpl
     StateManagerGL *getStateManager();
     const WorkaroundsGL &getWorkaroundsGL() const;
 
+    gl::Error dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ) override;
+
   private:
     RendererGL *mRenderer;
 };

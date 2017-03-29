@@ -30,11 +30,13 @@ void GL_APIENTRY DispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint nu
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation())
+        if (!context->skipValidation() &&
+            !ValidateDispatchCompute(context, numGroupsX, numGroupsY, numGroupsZ))
         {
-            context->handleError(Error(GL_INVALID_OPERATION, "Entry point not implemented"));
+            return;
         }
-        UNIMPLEMENTED();
+
+        context->dispatchCompute(numGroupsX, numGroupsY, numGroupsZ);
     }
 }
 

@@ -138,6 +138,8 @@ class ContextImpl : public GLImplFactory
     virtual const gl::Extensions &getNativeExtensions() const = 0;
     virtual const gl::Limitations &getNativeLimitations() const = 0;
 
+    virtual gl::Error dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ) = 0;
+
     const gl::ContextState &getContextState() { return mState; }
     int getClientMajorVersion() const { return mState.getClientMajorVersion(); }
     int getClientMinorVersion() const { return mState.getClientMinorVersion(); }
