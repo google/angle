@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c8e20437_20352972",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-29T17:00:14Z",
+      "side": 1,
+      "message": "nit: catchall BUG\u003d?",
+      "revId": "2dbbe62e12fb7d4237586f0bdcbd2675f862266b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88a05c2b_73908e56",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1968,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-29T17:00:14Z",
+      "side": 1,
+      "message": "Can we have a quote of the WebGL 2 spec here and in the other blocks (Section 5.10)",
+      "revId": "2dbbe62e12fb7d4237586f0bdcbd2675f862266b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "48d00988_0666459e",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1484,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-29T17:00:14Z",
+      "side": 1,
+      "message": "Could these blocks be factored somehow?",
+      "revId": "2dbbe62e12fb7d4237586f0bdcbd2675f862266b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "20a76132_bc83461e",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1515,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-29T17:00:14Z",
+      "side": 1,
+      "message": "The stencil attachment format for which this could happen is GL_DEPTH32F_STENCIL8 which has a GL_FLOAT componentType. However the clear still seems valid in that case.",
+      "revId": "2dbbe62e12fb7d4237586f0bdcbd2675f862266b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "22ec892f_c7ed56ba",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1543,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-29T17:00:14Z",
+      "side": 1,
+      "message": "nit: we should check for UNSIGNED_INT componentType here.",
+      "revId": "2dbbe62e12fb7d4237586f0bdcbd2675f862266b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
