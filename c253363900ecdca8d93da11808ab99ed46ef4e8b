@@ -34,6 +34,24 @@
       "revId": "c253363900ecdca8d93da11808ab99ed46ef4e8b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b1cc7af9_9aeec315",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-29T15:40:19Z",
+      "side": 1,
+      "message": "As long as we control precisely when TSymbolUniqueIds are created (e.g. via a static member function) then there shouldn\u0027t be id space waste. ID 0 as an invalid ID seems ok, if that\u0027s not too much refactor, otherwise feel free to ignore :)",
+      "parentUuid": "110ca9ad_c6a3f76c",
+      "revId": "c253363900ecdca8d93da11808ab99ed46ef4e8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
