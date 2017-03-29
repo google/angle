@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aeb331d9_f9ec5462",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-29T20:59:15Z",
+      "side": 1,
+      "message": "mUseDXGISwapChains || hasExtension?",
+      "revId": "0460e1f3e47e8ca92d84c921681715db1a0c176a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
