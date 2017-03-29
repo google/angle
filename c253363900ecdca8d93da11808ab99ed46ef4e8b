@@ -16,6 +16,24 @@
       "revId": "c253363900ecdca8d93da11808ab99ed46ef4e8b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "110ca9ad_c6a3f76c",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-03-29T07:13:56Z",
+      "side": 1,
+      "message": "Allocating a TSymbolUniqueId object always consumes one id number, and it\u0027s better to avoid wasting them. Maybe we could reserve some value as an invalid id though, then this might not need to be a pointer. Do you think that would be better?",
+      "parentUuid": "4c42ebac_ebacb0dc",
+      "revId": "c253363900ecdca8d93da11808ab99ed46ef4e8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
