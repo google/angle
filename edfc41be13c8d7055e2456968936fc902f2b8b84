@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8ca5afb4_92e89d0e",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 660,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-30T08:55:34Z",
+      "side": 1,
+      "message": "Error is reported in LogGLDebugMessage, which is not executed in RELEASE version, so we can only catch this failure in DEBUG version of ANGLE.\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/renderer/gl/RendererGL.cpp?l\u003d57",
+      "revId": "edfc41be13c8d7055e2456968936fc902f2b8b84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
