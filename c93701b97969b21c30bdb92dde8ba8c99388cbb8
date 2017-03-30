@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a44e08a3_3fd8c5e1",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2054,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-03-30T05:57:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3817e09a_26f0ae5f",
+      "range": {
+        "startLine": 2054,
+        "startChar": 4,
+        "endLine": 2054,
+        "endChar": 15
+      },
+      "revId": "c93701b97969b21c30bdb92dde8ba8c99388cbb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "855b23ec_264b7b3e",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 5
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "8967b975_d1eb6e1e",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1312,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-03-30T05:57:15Z",
+      "side": 1,
+      "message": "Better to split.\nBy the way, what about adding a new function ValidateProgramResourceIndex to validate index? Let ValidateNamedProgramInterface still validate interface only. It seems clear and straightforward to me.",
+      "parentUuid": "855b23ec_264b7b3e",
+      "range": {
+        "startLine": 1289,
+        "startChar": 0,
+        "endLine": 1312,
+        "endChar": 1
+      },
+      "revId": "c93701b97969b21c30bdb92dde8ba8c99388cbb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cab38e57_a6514c0e",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 5
@@ -59,6 +107,30 @@
       "writtenOn": "2017-03-29T16:25:30Z",
       "side": 1,
       "message": "I don\u0027t think this is necessary because if mLinked is false then there are no output variables and validation would not allow this function to be called.",
+      "range": {
+        "startLine": 1334,
+        "startChar": 4,
+        "endLine": 1341,
+        "endChar": 5
+      },
+      "revId": "c93701b97969b21c30bdb92dde8ba8c99388cbb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e7e56d58_c416e41f",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1341,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-03-30T05:57:15Z",
+      "side": 1,
+      "message": "Even not successfully linked, the Spec may still think these semi-finished resources valid. So validation shouldn\u0027t forbid this.\n\nSee ES 3.1 spec, Section 7.3.1, Page 75:\n\"If a program is linked successfully, the GL will generate lists of active resources based on the executable code produced by the link. If a program is linked unsuccessfully, the link may have failed for a number of reasons, including cases where the program required more resources than supported by the implementation. Implementations are permitted, but not required, to record lists of  resources that would have been considered active had the program linked successfully. If an implementation does not record information for any given interface, the corresponding list of active resources is considered empty. If a program has never been linked, all lists of active resources are considered empty.\"",
+      "parentUuid": "cab38e57_a6514c0e",
       "range": {
         "startLine": 1334,
         "startChar": 4,
@@ -106,6 +178,24 @@
     },
     {
       "key": {
+        "uuid": "4285f2db_cf660bab",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1348,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-03-30T05:57:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d62b48ab_a835a6ec",
+      "revId": "c93701b97969b21c30bdb92dde8ba8c99388cbb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7d63f8d5_b6c7d752",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 5
@@ -117,6 +207,30 @@
       "writtenOn": "2017-03-29T16:25:30Z",
       "side": 1,
       "message": "Can you refactor this code into a helper function that copies a std::string into a buffer?  The code can be shared with Program::getActiveAttribute and Program::getActiveUniform.",
+      "range": {
+        "startLine": 1329,
+        "startChar": 4,
+        "endLine": 1357,
+        "endChar": 5
+      },
+      "revId": "c93701b97969b21c30bdb92dde8ba8c99388cbb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "572f8553_e468f100",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1357,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-03-30T05:57:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7d63f8d5_b6c7d752",
       "range": {
         "startLine": 1329,
         "startChar": 4,
