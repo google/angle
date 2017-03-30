@@ -52,6 +52,24 @@
       "revId": "c253363900ecdca8d93da11808ab99ed46ef4e8b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8670ddf_a6062563",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-03-30T07:54:45Z",
+      "side": 1,
+      "message": "I think I\u0027ll leave further changes for later. This could also be fixed by splitting up the TIntermAggregate class to different classes: function calls, built-in calls and constructors. Only the function calls would get a symbol id assigned in the constructor, and others would not have a symbol id member at all. I feel like this would be a better fix, but it\u0027s a large enough change to warrant a separate patch. I\u0027d rather save efforts for doing that rather than shuffling things around more in the meantime.",
+      "parentUuid": "b1cc7af9_9aeec315",
+      "revId": "c253363900ecdca8d93da11808ab99ed46ef4e8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
