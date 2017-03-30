@@ -63,6 +63,30 @@
       "revId": "f1c22ec6be1de1de48f27ccd55c5a5b274abebad",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c5b755a1_1d433a65",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 611,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-30T08:31:55Z",
+      "side": 1,
+      "message": "setGenericShaderState will bind uniform buffer and sample except call useProgram.  These parts will be shared both by render pipeline and compute pipeline.  Besides that, in render pipeline, it also needs to bind transformfeedback, framebuffer. That part will be in setGenericDrawState.\n\nCurrently, setGenericShaderState is enough for compute pipeline. There is no additional operation special for compute.\n\n\u003eDo we need to bind atomic count buffer and/or shader storage buffer and/or any other buffers used by compute shader before dispatchCompute?\n\natomic count buffer/shader storage buffer are  not only for compute pipeline. They also can be used in vertex shader/fragment shader. So they belong to common part and should be put in setGenericShaderState. But, for this patch, I think it\u0027s ok to not include them since they haven\u0027t been implemented completely.\nPlease correct me if I am wrong. Thanks.",
+      "parentUuid": "6298b83d_e5734d89",
+      "range": {
+        "startLine": 611,
+        "startChar": 14,
+        "endLine": 611,
+        "endChar": 52
+      },
+      "revId": "f1c22ec6be1de1de48f27ccd55c5a5b274abebad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
