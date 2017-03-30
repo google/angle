@@ -39,6 +39,30 @@
       "revId": "f1c22ec6be1de1de48f27ccd55c5a5b274abebad",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6298b83d_e5734d89",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 611,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-03-30T07:39:42Z",
+      "side": 1,
+      "message": "I would like to use mStateManager::setDispatchComputeState, then put setGenericShaderState into setDispatchComputeState. but setGenericDispatchState is really unnecessary. \n\nBTW, Is setGenericShaderState really necessary? It seems that it only calls useProgram for compute shader.  Do we need to bind atomic count buffer and/or shader storage buffer and/or any other buffers used by compute shader before dispatchCompute?",
+      "parentUuid": "3bd179a3_d05a291d",
+      "range": {
+        "startLine": 611,
+        "startChar": 14,
+        "endLine": 611,
+        "endChar": 52
+      },
+      "revId": "f1c22ec6be1de1de48f27ccd55c5a5b274abebad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
