@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "892cc75d_e93dab61",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-03-30T11:14:40Z",
+      "side": 1,
+      "message": "I had modified the test case, please review this test case again. Because D3D is unimplemented, so cannot instance ES31_D3D11 case here.",
+      "revId": "15c92db07c4d9b37557368c6b2b3b402e985ea55",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
