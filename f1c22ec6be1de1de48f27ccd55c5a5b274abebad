@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9d3751b1_4b2643b1",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3962,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-30T07:04:46Z",
+      "side": 1,
+      "message": "Do you really need to sync render state?",
+      "revId": "f1c22ec6be1de1de48f27ccd55c5a5b274abebad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3bd179a3_d05a291d",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 611,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-03-30T07:04:46Z",
+      "side": 1,
+      "message": "I think you can directly call mStateManger-\u003esetGenericShaderState(data) since setDispatchComputeState\u0027s body only have setGenericShaderState(data).  In this case, you don\u0027t need to define setDispatchComputeState and setGenericDispatchState in StateManagerGL.h",
+      "range": {
+        "startLine": 611,
+        "startChar": 14,
+        "endLine": 611,
+        "endChar": 52
+      },
+      "revId": "f1c22ec6be1de1de48f27ccd55c5a5b274abebad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
