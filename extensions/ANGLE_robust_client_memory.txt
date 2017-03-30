@@ -20,7 +20,7 @@ Status
 
 Version
 
-    Version 3, October 7, 2016
+    Version 4, March 30, 2017
 
 Number
 
@@ -65,7 +65,7 @@ New Procedures and Functions
     void GetVertexAttribfvRobustANGLE(uint index, enum pname, sizei bufSize, sizei *length, float *params)
     void GetVertexAttribivRobustANGLE(uint index, enum pname, sizei bufSize, sizei *length, int *params)
     void GetVertexAttribPointervRobustANGLE(uint index, enum pname, sizei bufSize, sizei *length, void **pointer)
-    void ReadPixelsRobustANGLE(int x, int y, sizei width, sizei height, enum format, enum type, sizei bufSize, sizei *length, void *pixels)
+    void ReadPixelsRobustANGLE(int x, int y, sizei width, sizei height, enum format, enum type, sizei bufSize, sizei *length, sizei *columns, sizei *rows, void *pixels)
     void TexImage2DRobustANGLE(enum target, int level, int internalformat, sizei width, sizei height, int border, enum format, enum type, sizei bufSize, const void *pixels)
     void TexParameterfvRobustANGLE(enum target, enum pname, sizei bufSize, const GLfloat *params)
     void TexParameterivRobustANGLE(enum target, enum pname, sizei bufSize, const GLint *params)
@@ -98,7 +98,7 @@ New Procedures and Functions
     void GetTexLevelParameterfvRobustANGLE(enum target, int level, enum pname, sizei bufSize, sizei *length, float *params)
 
     void GetPointervRobustANGLERobustANGLE(enum pname, sizei bufSize, sizei *length, void **params)
-    void ReadnPixelsRobustANGLE(int x, int y, sizei width, sizei height, enum format, enum type, sizei bufSize, sizei *length, void *data)
+    void ReadnPixelsRobustANGLE(int x, int y, sizei width, sizei height, enum format, enum type, sizei bufSize, sizei *length, sizei *columns, sizei *rows, void *data)
     void GetnUniformfvRobustANGLE(uint program, int location, sizei bufSize, sizei *length, float *params)
     void GetnUniformivRobustANGLE(uint program, int location, sizei bufSize, sizei *length, int *params)
     void GetnUniformuivRobustANGLE(uint program, int location, sizei bufSize, sizei *length, uint *params)
@@ -127,6 +127,12 @@ Additions to the OpenGL ES Specification:
     large enough.  The optional <length> specifies an address of a variable to
     recieve the number of values written to the buffer.  When an error is
     generated nothing will be written to <length>.
+
+    The <columns> and <rows> parameters of ReadPixelsRobustANGLE and
+    ReadnPixelsRobustANGLE specify addresses of variables to recieve the number
+    of columns and rows of pixels written to the buffer which may be less than
+    the <width> and <height> parameters if they would have read outside of the
+    framebuffer.
 
     Calls to "xRobustANGLE" will generate errors under the same conditions as
     "x". Any instances of undefined behaviour in "x" will also be undefined in
@@ -167,3 +173,4 @@ Revision History
       2   Sept 28, 2016  geofflang  Changed name from ANGLE_robust_queries to
                                     ANGLE_robust_client_memory, added issue 3.
       3   Oct 7, 2016    geofflang  Added and resolved issue 4.
+      4   Mar 30, 2017   geofflang  Added columns and rows to ReadPixels.

@@ -2387,20 +2387,24 @@ ANGLE_EXPORT void GL_APIENTRY ReadPixelsRobustANGLE(GLint x,
                                                     GLenum type,
                                                     GLsizei bufSize,
                                                     GLsizei *length,
+                                                    GLsizei *columns,
+                                                    GLsizei *rows,
                                                     void *pixels)
 {
     EVENT(
         "(GLint x = %d, GLint y = %d, GLsizei width = %d, GLsizei height = %d, "
         "GLenum format = 0x%X, GLenum type = 0x%X, GLsizei bufsize = %d, GLsizei* length = "
-        "0x%0.8p, GLvoid* pixels = 0x%0.8p)",
-        x, y, width, height, format, type, bufSize, length, pixels);
+        "0x%0.8p, GLsizei* columns = 0x%0.8p, GLsizei* rows = 0x%0.8p, GLvoid* pixels = 0x%0.8p)",
+        x, y, width, height, format, type, bufSize, length, columns, rows, pixels);
 
     Context *context = GetValidGlobalContext();
     if (context)
     {
         GLsizei writeLength = 0;
+        GLsizei writeColumns = 0;
+        GLsizei writeRows    = 0;
         if (!ValidateReadPixelsRobustANGLE(context, x, y, width, height, format, type, bufSize,
-                                           &writeLength, pixels))
+                                           &writeLength, &writeColumns, &writeRows, pixels))
         {
             return;
         }
@@ -2408,6 +2412,8 @@ ANGLE_EXPORT void GL_APIENTRY ReadPixelsRobustANGLE(GLint x,
         context->readPixels(x, y, width, height, format, type, pixels);
 
         SetRobustLengthParam(length, writeLength);
+        SetRobustLengthParam(columns, writeColumns);
+        SetRobustLengthParam(rows, writeRows);
     }
 }
 
@@ -3108,20 +3114,24 @@ ANGLE_EXPORT void GL_APIENTRY ReadnPixelsRobustANGLE(GLint x,
                                                      GLenum type,
                                                      GLsizei bufSize,
                                                      GLsizei *length,
+                                                     GLsizei *columns,
+                                                     GLsizei *rows,
                                                      void *data)
 {
     EVENT(
         "(GLint x = %d, GLint y = %d, GLsizei width = %d, GLsizei height = %d, "
         "GLenum format = 0x%X, GLenum type = 0x%X, GLsizei bufsize = %d, GLsizei* length = "
-        "0x%0.8p, GLvoid *data = 0x%0.8p)",
-        x, y, width, height, format, type, bufSize, length, data);
+        "0x%0.8p, GLsizei* columns = 0x%0.8p, GLsizei* rows = 0x%0.8p, GLvoid *data = 0x%0.8p)",
+        x, y, width, height, format, type, bufSize, length, columns, rows, data);
 
     Context *context = GetValidGlobalContext();
     if (context)
     {
         GLsizei writeLength = 0;
+        GLsizei writeColumns = 0;
+        GLsizei writeRows    = 0;
         if (!ValidateReadnPixelsRobustANGLE(context, x, y, width, height, format, type, bufSize,
-                                            &writeLength, data))
+                                            &writeLength, &writeColumns, &writeRows, data))
         {
             return;
         }
@@ -3129,6 +3139,8 @@ ANGLE_EXPORT void GL_APIENTRY ReadnPixelsRobustANGLE(GLint x,
         context->readPixels(x, y, width, height, format, type, data);
 
         SetRobustLengthParam(length, writeLength);
+        SetRobustLengthParam(columns, writeColumns);
+        SetRobustLengthParam(rows, writeRows);
     }
 }
 

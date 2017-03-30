@@ -124,6 +124,8 @@ bool ValidateReadPixelsRobustANGLE(ValidationContext *context,
                                    GLenum type,
                                    GLsizei bufSize,
                                    GLsizei *length,
+                                   GLsizei *columns,
+                                   GLsizei *rows,
                                    GLvoid *pixels);
 bool ValidateReadnPixelsEXT(Context *context,
                             GLint x,
@@ -143,6 +145,8 @@ bool ValidateReadnPixelsRobustANGLE(ValidationContext *context,
                                     GLenum type,
                                     GLsizei bufSize,
                                     GLsizei *length,
+                                    GLsizei *columns,
+                                    GLsizei *rows,
                                     GLvoid *data);
 
 bool ValidateGenQueriesEXT(gl::Context *context, GLsizei n);

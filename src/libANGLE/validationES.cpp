@@ -233,11 +233,21 @@ bool ValidateReadPixelsBase(ValidationContext *context,
                             GLenum type,
                             GLsizei bufSize,
                             GLsizei *length,
+                            GLsizei *columns,
+                            GLsizei *rows,
                             GLvoid *pixels)
 {
     if (length != nullptr)
     {
         *length = 0;
+    }
+    if (rows != nullptr)
+    {
+        *rows = 0;
+    }
+    if (columns != nullptr)
+    {
+        *columns = 0;
     }
 
     if (width < 0 || height < 0)
@@ -320,8 +330,7 @@ bool ValidateReadPixelsBase(ValidationContext *context,
     size_t endByte = endByteOrErr.getResult();
     if (bufSize >= 0)
     {
-
-        if (static_cast<size_t>(bufSize) < endByte)
+        if (pixelPackBuffer == nullptr && static_cast<size_t>(bufSize) < endByte)
         {
             context->handleError(
                 Error(GL_INVALID_OPERATION, "bufSize must be at least %u bytes.", endByte));
@@ -344,7 +353,7 @@ bool ValidateReadPixelsBase(ValidationContext *context,
         }
     }
 
-    if (length != nullptr)
+    if (pixelPackBuffer == nullptr && length != nullptr)
     {
         if (endByte > static_cast<size_t>(std::numeric_limits<GLsizei>::max()))
         {
@@ -354,6 +363,39 @@ bool ValidateReadPixelsBase(ValidationContext *context,
         }
 
         *length = static_cast<GLsizei>(endByte);
+    }
+
+    auto getClippedExtent = [](GLint start, GLsizei length, int bufferSize) {
+        angle::CheckedNumeric<int> clippedExtent(length);
+        if (start < 0)
+        {
+            // "subtract" the area that is less than 0
+            clippedExtent += start;
+        }
+
+        const int readExtent = start + length;
+        if (readExtent > bufferSize)
+        {
+            // Subtract the region to the right of the read buffer
+            clippedExtent -= (readExtent - bufferSize);
+        }
+
+        if (!clippedExtent.IsValid())
+        {
+            return 0;
+        }
+
+        return std::max(clippedExtent.ValueOrDie(), 0);
+    };
+
+    if (columns != nullptr)
+    {
+        *columns = getClippedExtent(x, width, readBuffer->getSize().width);
+    }
+
+    if (rows != nullptr)
+    {
+        *rows = getClippedExtent(y, height, readBuffer->getSize().height);
     }
 
     return true;
@@ -2326,7 +2368,8 @@ bool ValidateReadPixels(ValidationContext *context,
                         GLenum type,
                         GLvoid *pixels)
 {
-    return ValidateReadPixelsBase(context, x, y, width, height, format, type, -1, nullptr, pixels);
+    return ValidateReadPixelsBase(context, x, y, width, height, format, type, -1, nullptr, nullptr,
+                                  nullptr, pixels);
 }
 
 bool ValidateReadPixelsRobustANGLE(ValidationContext *context,
@@ -2338,6 +2381,8 @@ bool ValidateReadPixelsRobustANGLE(ValidationContext *context,
                                    GLenum type,
                                    GLsizei bufSize,
                                    GLsizei *length,
+                                   GLsizei *columns,
+                                   GLsizei *rows,
                                    GLvoid *pixels)
 {
     if (!ValidateRobustEntryPoint(context, bufSize))
@@ -2346,7 +2391,7 @@ bool ValidateReadPixelsRobustANGLE(ValidationContext *context,
     }
 
     if (!ValidateReadPixelsBase(context, x, y, width, height, format, type, bufSize, length,
-                                pixels))
+                                columns, rows, pixels))
     {
         return false;
     }
@@ -2376,7 +2421,7 @@ bool ValidateReadnPixelsEXT(Context *context,
     }
 
     return ValidateReadPixelsBase(context, x, y, width, height, format, type, bufSize, nullptr,
-                                  pixels);
+                                  nullptr, nullptr, pixels);
 }
 
 bool ValidateReadnPixelsRobustANGLE(ValidationContext *context,
@@ -2388,6 +2433,8 @@ bool ValidateReadnPixelsRobustANGLE(ValidationContext *context,
                                     GLenum type,
                                     GLsizei bufSize,
                                     GLsizei *length,
+                                    GLsizei *columns,
+                                    GLsizei *rows,
                                     GLvoid *data)
 {
     if (!ValidateRobustEntryPoint(context, bufSize))
@@ -2395,7 +2442,8 @@ bool ValidateReadnPixelsRobustANGLE(ValidationContext *context,
         return false;
     }
 
-    if (!ValidateReadPixelsBase(context, x, y, width, height, format, type, bufSize, length, data))
+    if (!ValidateReadPixelsBase(context, x, y, width, height, format, type, bufSize, length,
+                                columns, rows, data))
     {
         return false;
     }
