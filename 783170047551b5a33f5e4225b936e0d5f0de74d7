@@ -22,6 +22,30 @@
       "revId": "783170047551b5a33f5e4225b936e0d5f0de74d7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ba24e36a_3bf2a374",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1212,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-03-30T14:47:20Z",
+      "side": 1,
+      "message": "There\u0027s actually an easier way to clean this up a bit, TFunctionSymbolInfo has a isMain() function. I could still make this code use that as a part of this patch.",
+      "parentUuid": "4619343d_ece8fb65",
+      "range": {
+        "startLine": 1212,
+        "startChar": 19,
+        "endLine": 1212,
+        "endChar": 25
+      },
+      "revId": "783170047551b5a33f5e4225b936e0d5f0de74d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
