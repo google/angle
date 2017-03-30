@@ -70,6 +70,24 @@
       "revId": "c253363900ecdca8d93da11808ab99ed46ef4e8b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "89638e70_e0b8a3d9",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-30T15:28:48Z",
+      "side": 1,
+      "message": "Sounds good, thanks for the explanation.",
+      "parentUuid": "b8670ddf_a6062563",
+      "revId": "c253363900ecdca8d93da11808ab99ed46ef4e8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
