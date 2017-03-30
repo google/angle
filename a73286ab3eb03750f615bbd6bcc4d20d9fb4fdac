@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3db6ef2f_4b0fb648",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-03-30T02:04:39Z",
+      "side": 1,
+      "message": "Refer to here:\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/renderer/gl/VertexArrayGL.cpp?l\u003d379",
+      "revId": "a73286ab3eb03750f615bbd6bcc4d20d9fb4fdac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
