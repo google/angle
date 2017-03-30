@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4619343d_ece8fb65",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1212,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-30T14:42:54Z",
+      "side": 1,
+      "message": "We should probably move this into a global variable at some point.",
+      "range": {
+        "startLine": 1212,
+        "startChar": 19,
+        "endLine": 1212,
+        "endChar": 25
+      },
+      "revId": "783170047551b5a33f5e4225b936e0d5f0de74d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
