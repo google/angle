@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d99ec7c8_4f9fc044",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-31T15:41:52Z",
+      "side": 1,
+      "message": "It still seems weird to me that the initialization of the out parameters is in a Validate function. Especially since they are stack variables that will be copied out.",
+      "revId": "7d2925437fd6aa2e8c1dbf7ee3d6c03883210529",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2eea0883_336e85b8",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-03-31T15:41:52Z",
+      "side": 1,
+      "message": "Computations in this function should checked otherwise a rogue renderer process could trigger buffer overflows.",
+      "revId": "7d2925437fd6aa2e8c1dbf7ee3d6c03883210529",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
