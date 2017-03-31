@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4f600aad_6522236b",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-31T18:11:48Z",
+      "side": 1,
+      "message": "These are copies of the out parameters (the code in the entry points copies the values back if there are no errors)",
+      "parentUuid": "d99ec7c8_4f9fc044",
+      "revId": "7d2925437fd6aa2e8c1dbf7ee3d6c03883210529",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2eea0883_336e85b8",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 2
@@ -33,6 +51,24 @@
       "revId": "7d2925437fd6aa2e8c1dbf7ee3d6c03883210529",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ba2625b_08dde05e",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 369,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-03-31T18:11:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2eea0883_336e85b8",
+      "revId": "7d2925437fd6aa2e8c1dbf7ee3d6c03883210529",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
