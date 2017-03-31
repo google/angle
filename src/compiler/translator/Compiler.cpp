@@ -17,7 +17,6 @@
 #include "compiler/translator/EmulateGLFragColorBroadcast.h"
 #include "compiler/translator/EmulatePrecision.h"
 #include "compiler/translator/Initialize.h"
-#include "compiler/translator/InitializeParseContext.h"
 #include "compiler/translator/InitializeVariables.h"
 #include "compiler/translator/ParseContext.h"
 #include "compiler/translator/PruneEmptyDeclarations.h"
@@ -293,7 +292,6 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
                                compileOptions, true, &mDiagnostics, getResources());
 
     parseContext.setFragmentPrecisionHighOnESSL1(fragmentPrecisionHigh);
-    SetGlobalParseContext(&parseContext);
 
     // We preserve symbols at the built-in level from compile-to-compile.
     // Start pushing the user-defined symbols at global level.
@@ -368,7 +366,8 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
             success = validateOutputs(root);
 
         if (success && shouldRunLoopAndIndexingValidation(compileOptions))
-            success = validateLimitations(root);
+            success =
+                ValidateLimitations(root, shaderType, symbolTable, shaderVersion, &mDiagnostics);
 
         bool multiview2 = IsExtensionEnabled(extensionBehavior, "GL_OVR_multiview2");
         if (success && compileResources.OVR_multiview && IsWebGLBasedSpec(shaderSpec) &&
@@ -477,7 +476,6 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         }
     }
 
-    SetGlobalParseContext(NULL);
     if (success)
         return root;
 
@@ -852,13 +850,6 @@ bool TCompiler::validateOutputs(TIntermNode *root)
     root->traverse(&validateOutputs);
     validateOutputs.validate(&mDiagnostics);
     return (mDiagnostics.numErrors() == 0);
-}
-
-bool TCompiler::validateLimitations(TIntermNode *root)
-{
-    ValidateLimitations validate(shaderType, &mDiagnostics);
-    root->traverse(&validate);
-    return mDiagnostics.numErrors() == 0;
 }
 
 bool TCompiler::limitExpressionComplexity(TIntermNode *root)

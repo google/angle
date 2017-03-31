@@ -6,7 +6,6 @@
 
 #include "compiler/translator/ValidateOutputs.h"
 #include "compiler/translator/InfoSink.h"
-#include "compiler/translator/InitializeParseContext.h"
 #include "compiler/translator/ParseContext.h"
 
 namespace sh

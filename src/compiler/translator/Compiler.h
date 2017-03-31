@@ -135,9 +135,6 @@ class TCompiler : public TShHandleBase
     bool checkCallDepth();
     // Returns true if a program has no conflicting or missing fragment outputs
     bool validateOutputs(TIntermNode *root);
-    // Returns true if the given shader does not exceed the minimum
-    // functionality mandated in GLSL 1.0 spec Appendix A.
-    bool validateLimitations(TIntermNode *root);
     // Add emulated functions to the built-in function emulator.
     virtual void initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu,
                                              ShCompileOptions compileOptions){};

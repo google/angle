@@ -64,8 +64,6 @@
             'compiler/translator/InitializeDll.cpp',
             'compiler/translator/InitializeDll.h',
             'compiler/translator/InitializeGlobals.h',
-            'compiler/translator/InitializeParseContext.cpp',
-            'compiler/translator/InitializeParseContext.h',
             'compiler/translator/InitializeVariables.cpp',
             'compiler/translator/InitializeVariables.h',
             'compiler/translator/IntermNode.h',
