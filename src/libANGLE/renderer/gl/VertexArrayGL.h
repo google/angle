@@ -80,6 +80,11 @@ class VertexArrayGL : public VertexArrayImpl
     void updateAttribPointer(size_t attribIndex);
     void updateAttribDivisor(size_t attribIndex);
 
+    void callVertexAttribPointer(GLuint attribIndex,
+                                 const gl::VertexAttribute &attrib,
+                                 GLsizei stride,
+                                 GLintptr offset) const;
+
     const FunctionsGL *mFunctions;
     StateManagerGL *mStateManager;
 

@@ -168,7 +168,7 @@ class VertexArray final : public LabeledObject
         DIRTY_BIT_MAX     = DIRTY_BIT_UNKNOWN,
     };
 
-    typedef angle::BitSet<DIRTY_BIT_MAX> DirtyBits;
+    using DirtyBits = angle::BitSet<DIRTY_BIT_MAX>;
 
     static size_t GetAttribIndex(size_t dirtyBit);
 

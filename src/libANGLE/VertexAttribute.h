@@ -53,11 +53,6 @@ struct VertexAttribute final : private angle::NonCopyable
     GLuint bindingIndex;
 };
 
-bool operator==(const VertexAttribute &a, const VertexAttribute &b);
-bool operator!=(const VertexAttribute &a, const VertexAttribute &b);
-bool operator==(const VertexBinding &a, const VertexBinding &b);
-bool operator!=(const VertexBinding &a, const VertexBinding &b);
-
 size_t ComputeVertexAttributeTypeSize(const VertexAttribute &attrib);
 
 // Warning: you should ensure binding really matches attrib.bindingIndex before using this function.
