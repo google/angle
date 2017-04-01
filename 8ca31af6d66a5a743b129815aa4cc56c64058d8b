@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "be8b0989_9f059342",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-01T08:43:20Z",
+      "side": 1,
+      "message": "In streamAttributes(), ANGLE only uses streaming to deal with active attributes, and a disabled attribute will not be regarded as active.\nI follow the above logic here:\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/renderer/gl/VertexArrayGL.cpp?l\u003d323.\n\nFor this attribute: (now is disabled and using a client memory pointer)\n\n1.  Still disabled and using a client memory pointer\n     Skip it again.\n\n2.  Still disabled and using a buffer object instead\n     Its dirty bit for VertexAttribPointer must be set.\n     mAppliedAttributes[attribIndex] !\u003d attrib since it is impossible that attrib.size \u003d\u003d static_cast\u003cGLuint\u003e(-1); \n     and it won\u0027t be streamed.\n\n3.  Become enabled and using a client memory pointer\n     mAttributesNeedStreaming[attribIndex] will be true after updateAttribEnabled(), so it will be streamed whether its dirty bit for attribPointer is set or not:\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/renderer/gl/VertexArrayGL.cpp?l\u003d421\n\n4. Become enabled and using a buffer object.\n    Its dirty bit for VertexAttribPointer must be set and it won\u0027t be streamed.",
+      "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
