@@ -375,7 +375,8 @@ bool ValidateMultiviewTraverser::visitAggregate(Visit visit, TIntermAggregate *n
         }
         else if (!node->isConstructor())
         {
-            TFunction *builtInFunc = mSymbolTable.findBuiltInOp(node, mShaderVersion);
+            TFunction *builtInFunc = static_cast<TFunction *>(
+                mSymbolTable.findBuiltIn(node->getSymbolTableMangledName(), mShaderVersion));
             for (size_t paramIndex = 0u; paramIndex < builtInFunc->getParamCount(); ++paramIndex)
             {
                 TQualifier qualifier = builtInFunc->getParam(paramIndex).type->getQualifier();

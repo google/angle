@@ -26,7 +26,7 @@ namespace sh
 // can be reused by multiple analyses.
 //
 // It stores a vector of function records, with one record per function.
-// Records are accessed by index but a mangled function name can be converted
+// Records are accessed by index but a function symbol id can be converted
 // to the index of the corresponding record. The records mostly contain the
 // AST node of the function and the indices of the function's callees.
 //

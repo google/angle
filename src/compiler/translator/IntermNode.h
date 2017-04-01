@@ -544,7 +544,6 @@ class TFunctionSymbolInfo
 
     void setFromFunction(const TFunction &function);
 
-    // The name stored here should always be mangled.
     void setNameObj(const TName &name) { mName = name; }
     const TName &getNameObj() const { return mName; }
 
@@ -628,6 +627,8 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
 
     TIntermSequence *getSequence() override { return &mArguments; }
     const TIntermSequence *getSequence() const override { return &mArguments; }
+
+    TString getSymbolTableMangledName() const;
 
     void setUseEmulatedFunction() { mUseEmulatedFunction = true; }
     bool getUseEmulatedFunction() { return mUseEmulatedFunction; }

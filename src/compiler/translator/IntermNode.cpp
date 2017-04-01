@@ -450,6 +450,21 @@ void TIntermAggregate::setBuiltInFunctionPrecision()
         mType.setPrecision(precision);
 }
 
+TString TIntermAggregate::getSymbolTableMangledName() const
+{
+    ASSERT(!isConstructor());
+    switch (mOp)
+    {
+        case EOpCallInternalRawFunction:
+        case EOpCallBuiltInFunction:
+        case EOpCallFunctionInAST:
+            return TFunction::GetMangledNameFromCall(mFunctionInfo.getName(), mArguments);
+        default:
+            TString opString = GetOperatorString(mOp);
+            return TFunction::GetMangledNameFromCall(opString, mArguments);
+    }
+}
+
 void TIntermBlock::appendStatement(TIntermNode *statement)
 {
     // Declaration nodes with no children can appear if all the declarators just added constants to

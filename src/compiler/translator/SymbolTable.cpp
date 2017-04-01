@@ -24,6 +24,13 @@
 namespace sh
 {
 
+namespace
+{
+
+static const char kFunctionMangledNameSeparator = '(';
+
+}  // anonymous namespace
+
 int TSymbolTable::uniqueIdCounter = 0;
 
 TSymbolUniqueId::TSymbolUniqueId() : mId(TSymbolTable::nextUniqueId())
@@ -70,20 +77,22 @@ void TFunction::swapParameters(const TFunction &parametersSource)
 
 const TString *TFunction::buildMangledName() const
 {
-    std::string newName = mangleName(getName()).c_str();
+    std::string newName = getName().c_str();
+    newName += kFunctionMangledNameSeparator;
 
     for (const auto &p : parameters)
     {
         newName += p.type->getMangledName().c_str();
     }
-
     return NewPoolTString(newName.c_str());
 }
 
-const TString &TFunction::GetMangledNameFromCall(const TString &unmangledFunctionName,
-                                                 TIntermSequence &arguments)
+const TString &TFunction::GetMangledNameFromCall(const TString &functionName,
+                                                 const TIntermSequence &arguments)
 {
-    std::string newName = mangleName(unmangledFunctionName).c_str();
+    std::string newName = functionName.c_str();
+    newName += kFunctionMangledNameSeparator;
+
     for (TIntermNode *argument : arguments)
     {
         newName += argument->getAsTyped()->getType().getMangledName().c_str();
@@ -177,20 +186,6 @@ TSymbol *TSymbolTable::findBuiltIn(const TString &name, int shaderVersion) const
     }
 
     return 0;
-}
-
-TFunction *TSymbolTable::findBuiltInOp(TIntermAggregate *callNode, int shaderVersion) const
-{
-    ASSERT(!callNode->isConstructor());
-    ASSERT(!callNode->isFunctionCall());
-    TString opString = GetOperatorString(callNode->getOp());
-    TSymbol *sym     = findBuiltIn(
-        TFunction::GetMangledNameFromCall(opString, *callNode->getSequence()), shaderVersion);
-    ASSERT(sym != nullptr && sym->isFunction());
-
-    TFunction *builtInFunc = static_cast<TFunction *>(sym);
-    ASSERT(builtInFunc->getParamCount() == callNode->getSequence()->size());
-    return builtInFunc;
 }
 
 TSymbolTable::~TSymbolTable()

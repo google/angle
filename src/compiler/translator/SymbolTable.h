@@ -174,8 +174,6 @@ class TFunction : public TSymbol
     ~TFunction() override;
     bool isFunction() const override { return true; }
 
-    static TString mangleName(const TString &name) { return name + '('; }
-
     void addParameter(const TConstParameter &p)
     {
         parameters.push_back(p);
@@ -193,8 +191,8 @@ class TFunction : public TSymbol
         return *mangledName;
     }
 
-    static const TString &GetMangledNameFromCall(const TString &unmangledFunctionName,
-                                                 TIntermSequence &arguments);
+    static const TString &GetMangledNameFromCall(const TString &functionName,
+                                                 const TIntermSequence &arguments);
 
     const TType &getReturnType() const { return *returnType; }
 
@@ -439,10 +437,6 @@ class TSymbolTable : angle::NonCopyable
     TSymbol *findGlobal(const TString &name) const;
 
     TSymbol *findBuiltIn(const TString &name, int shaderVersion) const;
-
-    // Helper front-end for regular findBuiltIn that constructs the mangled function name from
-    // callNode.
-    TFunction *findBuiltInOp(TIntermAggregate *callNode, int shaderVersion) const;
 
     TSymbolTableLevel *getOuterLevel()
     {

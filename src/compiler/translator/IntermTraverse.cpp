@@ -690,7 +690,8 @@ void TLValueTrackingTraverser::traverseAggregate(TIntermAggregate *node)
             TFunction *builtInFunc = nullptr;
             if (!node->isFunctionCall() && !node->isConstructor())
             {
-                builtInFunc = mSymbolTable.findBuiltInOp(node, mShaderVersion);
+                builtInFunc = static_cast<TFunction *>(
+                    mSymbolTable.findBuiltIn(node->getSymbolTableMangledName(), mShaderVersion));
             }
 
             size_t paramIndex = 0;

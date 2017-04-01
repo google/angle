@@ -690,9 +690,9 @@ void InsertBuiltInFunctions(sh::GLenum type,
     symbolTable.insert(COMMON_BUILTINS, depthRangeParameters);
     TVariable *depthRange = new TVariable(NewPoolTString("gl_DepthRange"), TType(depthRangeStruct));
     depthRange->setQualifier(EvqUniform);
-    // Ensure we evaluate the mangled name for depth range, so we allocate to the current scope.
-    depthRangeParameters->getType().getMangledName();
-    depthRange->getType().getMangledName();
+    // Do lazy initialization for depth range, so we allocate to the current scope.
+    depthRangeParameters->getType().realize();
+    depthRange->getType().realize();
     symbolTable.insert(COMMON_BUILTINS, depthRange);
 
     //
