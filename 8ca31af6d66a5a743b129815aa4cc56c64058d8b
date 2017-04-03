@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b5475283_d903389b",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 468,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-03T16:24:34Z",
+      "side": 1,
+      "message": "This function firstly updates if this attribute needs streaming. If it needs streaming, then the function returns. The definition of AttributeNeedsStreaming() in this file is (attrib.enabled \u0026\u0026 binding.buffer.get() \u003d\u003d nullptr), so if we can reach here the attrib must be disabled.\n\nIf an attribute has a null buffer and a client data, it will be updated in streaming. Function streamAttributes() do that. \n\nANGLE always uses a VAO and never uses the default VAO, so all data in client memory should be firstly passed into a buffer object before calling vertexAttribPointer.",
+      "parentUuid": "6189b534_08932572",
+      "range": {
+        "startLine": 468,
+        "startChar": 8,
+        "endLine": 468,
+        "endChar": 32
+      },
+      "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "be8b0989_9f059342",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 26
@@ -83,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "64cd49ca_a39f786a",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-03T16:24:34Z",
+      "side": 1,
+      "message": "Got it.\nThis change is made by git cl format. I do not intend to do that.",
+      "parentUuid": "49ca68f2_4eb082e7",
+      "range": {
+        "startLine": 208,
+        "startChar": 12,
+        "endLine": 209,
+        "endChar": 90
+      },
+      "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8518ddbb_73b4a853",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 26
@@ -94,6 +142,30 @@
       "writtenOn": "2017-04-03T15:22:37Z",
       "side": 1,
       "message": "we can make this constexpr and call it kVertexCount",
+      "range": {
+        "startLine": 260,
+        "startChar": 11,
+        "endLine": 260,
+        "endChar": 17
+      },
+      "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e3b9c32_03cd9d35",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-03T16:24:34Z",
+      "side": 1,
+      "message": "OK. I will firstly write a patch to clean up these legacy code in VertexAttributeTest.cpp.",
+      "parentUuid": "8518ddbb_73b4a853",
       "range": {
         "startLine": 260,
         "startChar": 11,
@@ -152,6 +224,30 @@
     },
     {
       "key": {
+        "uuid": "13056f1a_7db5f6b0",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-03T16:24:34Z",
+      "side": 1,
+      "message": "Got it. I will remember this.",
+      "parentUuid": "3f53aea6_fc61d500",
+      "range": {
+        "startLine": 676,
+        "startChar": 4,
+        "endLine": 676,
+        "endChar": 21
+      },
+      "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ad6a190e_57ee9483",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 26
@@ -175,6 +271,30 @@
     },
     {
       "key": {
+        "uuid": "afba2adc_f45df048",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 679,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-03T16:24:34Z",
+      "side": 1,
+      "message": "Got it. I will remember this.\nI just want to show it clearly that mProgram and mProgram2 shares 3 same attributes, and the only difference is mProgram2 has \"disabled\" but mProgram doesn\u0027t.",
+      "parentUuid": "ad6a190e_57ee9483",
+      "range": {
+        "startLine": 679,
+        "startChar": 4,
+        "endLine": 679,
+        "endChar": 10
+      },
+      "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a273bcf7_327033ba",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 26
@@ -186,6 +306,30 @@
       "writtenOn": "2017-04-03T15:22:37Z",
       "side": 1,
       "message": "same here and for every use of ASSERT in tests. Use ASSERT_NE(-1, ...)",
+      "range": {
+        "startLine": 685,
+        "startChar": 4,
+        "endLine": 685,
+        "endChar": 10
+      },
+      "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a52c5158_dcc69df6",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 685,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-03T16:24:34Z",
+      "side": 1,
+      "message": "Got it.",
+      "parentUuid": "a273bcf7_327033ba",
       "range": {
         "startLine": 685,
         "startChar": 4,
