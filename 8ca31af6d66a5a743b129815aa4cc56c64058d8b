@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "6189b534_08932572",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 468,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-03T15:22:37Z",
+      "side": 1,
+      "message": "I\u0027m not sure this makes sense - we could have a null buffer and still have client data passed in to ANGLE. Seems like this is incorrect.",
+      "range": {
+        "startLine": 468,
+        "startChar": 8,
+        "endLine": 468,
+        "endChar": 32
+      },
+      "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "be8b0989_9f059342",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 26
@@ -31,6 +54,144 @@
       "side": 1,
       "message": "Sorry I find I have misunderstood the meaning of \u0027active attribute\u0027. A disabled attribute that is using an immediate value should be active. \n\nBut it is impossible for it to use vertex arrays as it has been disabled in current draw, so I think it is still feasible to skip streaming it.",
       "parentUuid": "be8b0989_9f059342",
+      "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49ca68f2_4eb082e7",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-03T15:22:37Z",
+      "side": 1,
+      "message": "can you clean up the formatting here by replacing the use of SHADER_SOURCE with a regular constant string?",
+      "range": {
+        "startLine": 208,
+        "startChar": 12,
+        "endLine": 209,
+        "endChar": 90
+      },
+      "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8518ddbb_73b4a853",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-03T15:22:37Z",
+      "side": 1,
+      "message": "we can make this constexpr and call it kVertexCount",
+      "range": {
+        "startLine": 260,
+        "startChar": 11,
+        "endLine": 260,
+        "endChar": 17
+      },
+      "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "62879fa0_2d39fc48",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 628,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-03T15:22:37Z",
+      "side": 1,
+      "message": "use std::array\u003c\u003e",
+      "range": {
+        "startLine": 627,
+        "startChar": 4,
+        "endLine": 628,
+        "endChar": 39
+      },
+      "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f53aea6_fc61d500",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-03T15:22:37Z",
+      "side": 1,
+      "message": "use ANGLE_GL_PROGRAM. We should have discussed this with other Intel contributors or in a prior patch - use gl_raii.h types when possible.",
+      "range": {
+        "startLine": 676,
+        "startChar": 4,
+        "endLine": 676,
+        "endChar": 21
+      },
+      "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad6a190e_57ee9483",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 679,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-03T15:22:37Z",
+      "side": 1,
+      "message": "this is important : don\u0027t use ASSERT() in tests. ASSERT() is a special ANGLE macro for calling the system assert(). Use the Gtest macros: ASSERT_EQ, ASSERT_NE, ASSERT_GT, and all of the other ones, just don\u0027t use ASSERT.\n\nAlso split this into separate ASSERT statements or get rid of it if it\u0027s unnecessarily redundant.",
+      "range": {
+        "startLine": 679,
+        "startChar": 4,
+        "endLine": 679,
+        "endChar": 10
+      },
+      "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a273bcf7_327033ba",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 685,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-03T15:22:37Z",
+      "side": 1,
+      "message": "same here and for every use of ASSERT in tests. Use ASSERT_NE(-1, ...)",
+      "range": {
+        "startLine": 685,
+        "startChar": 4,
+        "endLine": 685,
+        "endChar": 10
+      },
       "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
