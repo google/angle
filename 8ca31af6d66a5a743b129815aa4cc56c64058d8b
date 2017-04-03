@@ -131,6 +131,30 @@
     },
     {
       "key": {
+        "uuid": "40feac36_e5a90882",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-03T16:55:42Z",
+      "side": 1,
+      "message": "I will do all these clean-ups in another patch in VertexAttributeTest.cpp, which I will:\n1. replacing the use of SHADER_SOURCE with a regular constant string\n2. use ANGLE_GL_PROGRAM\n3. use constexpr \n4. use std::array\u003c\u003e",
+      "parentUuid": "64cd49ca_a39f786a",
+      "range": {
+        "startLine": 208,
+        "startChar": 12,
+        "endLine": 209,
+        "endChar": 90
+      },
+      "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8518ddbb_73b4a853",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 26
@@ -201,6 +225,30 @@
     },
     {
       "key": {
+        "uuid": "617b8828_cbe945ad",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 628,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-03T16:55:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "62879fa0_2d39fc48",
+      "range": {
+        "startLine": 627,
+        "startChar": 4,
+        "endLine": 628,
+        "endChar": 39
+      },
+      "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f53aea6_fc61d500",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 26
@@ -245,6 +293,30 @@
       "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "56e50e63_d1228ee4",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-03T16:55:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "13056f1a_7db5f6b0",
+      "range": {
+        "startLine": 676,
+        "startChar": 4,
+        "endLine": 676,
+        "endChar": 21
+      },
+      "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -295,6 +367,30 @@
     },
     {
       "key": {
+        "uuid": "7537e43c_9c1fc049",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 679,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-03T16:55:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "afba2adc_f45df048",
+      "range": {
+        "startLine": 679,
+        "startChar": 4,
+        "endLine": 679,
+        "endChar": 10
+      },
+      "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a273bcf7_327033ba",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 26
@@ -339,6 +435,30 @@
       "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8e555d0_f803e2a9",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 685,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-03T16:55:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a52c5158_dcc69df6",
+      "range": {
+        "startLine": 685,
+        "startChar": 4,
+        "endLine": 685,
+        "endChar": 10
+      },
+      "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
