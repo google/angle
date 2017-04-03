@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9b75821f_33dcbe9b",
+        "filename": "src/tests/compiler_tests/AppendixALimitations_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-03T15:03:29Z",
+      "side": 1,
+      "message": "can you comment before each test as to the test\u0027s purpose?",
+      "range": {
+        "startLine": 28,
+        "startChar": 0,
+        "endLine": 28,
+        "endChar": 6
+      },
+      "revId": "0b6d17ece179dbcaedacf92af9dce56fa8c0cb5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
