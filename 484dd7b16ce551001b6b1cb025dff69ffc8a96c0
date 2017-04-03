@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "91fef537_f645973b",
+        "filename": "src/libANGLE/renderer/d3d/IndexDataManager.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-03T13:52:20Z",
+      "side": 1,
+      "message": "this can be a static non-member method.",
+      "range": {
+        "startLine": 149,
+        "startChar": 23,
+        "endLine": 149,
+        "endChar": 43
+      },
+      "revId": "484dd7b16ce551001b6b1cb025dff69ffc8a96c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d73cb73_45cefc0f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-03T13:52:20Z",
+      "side": 1,
+      "message": "can\u0027t this be a static method?",
+      "range": {
+        "startLine": 415,
+        "startChar": 9,
+        "endLine": 415,
+        "endChar": 33
+      },
+      "revId": "484dd7b16ce551001b6b1cb025dff69ffc8a96c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
