@@ -16,6 +16,24 @@
       "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3400ad8d_a08e432b",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-03T13:24:30Z",
+      "side": 1,
+      "message": "Sorry I find I have misunderstood the meaning of \u0027active attribute\u0027. A disabled attribute that is using an immediate value should be active. \n\nBut it is impossible for it to use vertex arrays as it has been disabled in current draw, so I think it is still feasible to skip streaming it.",
+      "parentUuid": "be8b0989_9f059342",
+      "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
