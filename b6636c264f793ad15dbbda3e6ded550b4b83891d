@@ -1,0 +1,107 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0dec51c7_fb9ff52f",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4027,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-04-04T14:01:47Z",
+      "side": 1,
+      "message": "Could skip the call here if numGroups in any dimension is 0.",
+      "revId": "b6636c264f793ad15dbbda3e6ded550b4b83891d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1729a24d_485a7424",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 772,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-04-04T14:01:47Z",
+      "side": 1,
+      "message": "Should be \"numGroups\". Also in the header file.",
+      "range": {
+        "startLine": 772,
+        "startChar": 54,
+        "endLine": 772,
+        "endChar": 62
+      },
+      "revId": "b6636c264f793ad15dbbda3e6ded550b4b83891d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "383b9818_43fd016f",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 777,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-04-04T14:01:47Z",
+      "side": 1,
+      "message": "Please be consistent with the error message strings. The same kind of error is generated in other places too, it would be better to use the exact same string.",
+      "revId": "b6636c264f793ad15dbbda3e6ded550b4b83891d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf2d8185_d48af9cb",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 787,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-04-04T14:01:47Z",
+      "side": 1,
+      "message": "Start error messages with an uppercase letter, unless it\u0027s referring to a variable that specifically starts with a lowercase letter (like num_groups_x).",
+      "range": {
+        "startLine": 787,
+        "startChar": 41,
+        "endLine": 787,
+        "endChar": 42
+      },
+      "revId": "b6636c264f793ad15dbbda3e6ded550b4b83891d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d951a20e_536fe40d",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 802,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-04-04T14:01:47Z",
+      "side": 1,
+      "message": "It\u0027s \"num_groups_x\" in the spec, I supposed we should follow that even though it\u0027s not the same as the general naming convention. Also applies to num_groups_y, num_groups_z.",
+      "range": {
+        "startLine": 802,
+        "startChar": 54,
+        "endLine": 802,
+        "endChar": 63
+      },
+      "revId": "b6636c264f793ad15dbbda3e6ded550b4b83891d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
