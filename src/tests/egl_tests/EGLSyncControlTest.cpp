@@ -184,7 +184,7 @@ class EGLSyncControlTest : public testing::Test
 
 // Basic test for eglGetSyncValuesCHROMIUM extension. Verifies that eglGetSyncValuesCHROMIUM
 // can be called on DX11 with direct composition and that it returns reasonable enough values.
-TEST_F(EGLSyncControlTest, SyncValuesTest)
+TEST_F(EGLSyncControlTest, DISABLED_SyncValuesTest)
 {
     static const DWORD kPollInterval    = 10;
     static const int kNumPollIterations = 100;
