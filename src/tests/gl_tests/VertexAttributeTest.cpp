@@ -102,7 +102,7 @@ class VertexAttributeTest : public ANGLETest
 
         if (test.source == Source::BUFFER)
         {
-            GLsizei dataSize = mVertexCount * TypeStride(test.type);
+            GLsizei dataSize = kVertexCount * TypeStride(test.type);
             glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
             glBufferData(GL_ARRAY_BUFFER, dataSize, test.inputData, GL_STATIC_DRAW);
             glVertexAttribPointer(mTestAttrib, typeSize, test.type, test.normalized, 0,
@@ -205,10 +205,11 @@ class VertexAttributeTest : public ANGLETest
         shaderStream << "}" << std::endl;
 
         const std::string testFragmentShaderSource =
-            SHADER_SOURCE(varying mediump float color; void main(void)
-                          {
-                              gl_FragColor = vec4(color, 0.0, 0.0, 1.0);
-                          });
+            "varying mediump float color;\n"
+            "void main(void)\n"
+            "{\n"
+            "    gl_FragColor = vec4(color, 0.0, 0.0, 1.0);\n"
+            "}\n";
 
         return CompileProgram(shaderStream.str(), testFragmentShaderSource);
     }
@@ -259,7 +260,17 @@ class VertexAttributeTest : public ANGLETest
         glUseProgram(mProgram);
     }
 
-    static const size_t mVertexCount = 24;
+    static constexpr size_t kVertexCount = 24;
+
+    static void InitTestData(std::array<GLfloat, kVertexCount> &inputData,
+                             std::array<GLfloat, kVertexCount> &expectedData)
+    {
+        for (size_t count = 0; count < kVertexCount; ++count)
+        {
+            inputData[count]    = static_cast<GLfloat>(count);
+            expectedData[count] = inputData[count];
+        }
+    }
 
     GLuint mProgram;
     GLint mTestAttrib;
@@ -270,105 +281,118 @@ class VertexAttributeTest : public ANGLETest
 
 TEST_P(VertexAttributeTest, UnsignedByteUnnormalized)
 {
-    GLubyte inputData[mVertexCount] = { 0, 1, 2, 3, 4, 5, 6, 7, 125, 126, 127, 128, 129, 250, 251, 252, 253, 254, 255 };
-    GLfloat expectedData[mVertexCount];
-    for (size_t i = 0; i < mVertexCount; i++)
+
+    std::array<GLubyte, kVertexCount> inputData = {
+        {0, 1, 2, 3, 4, 5, 6, 7, 125, 126, 127, 128, 129, 250, 251, 252, 253, 254, 255}};
+    std::array<GLfloat, kVertexCount> expectedData;
+    for (size_t i = 0; i < kVertexCount; i++)
     {
         expectedData[i] = inputData[i];
     }
 
-    TestData data(GL_UNSIGNED_BYTE, GL_FALSE, Source::IMMEDIATE, inputData, expectedData);
+    TestData data(GL_UNSIGNED_BYTE, GL_FALSE, Source::IMMEDIATE, inputData.data(),
+                  expectedData.data());
     runTest(data);
 }
 
 TEST_P(VertexAttributeTest, UnsignedByteNormalized)
 {
-    GLubyte inputData[mVertexCount] = { 0, 1, 2, 3, 4, 5, 6, 7, 125, 126, 127, 128, 129, 250, 251, 252, 253, 254, 255 };
-    GLfloat expectedData[mVertexCount];
-    for (size_t i = 0; i < mVertexCount; i++)
+    std::array<GLubyte, kVertexCount> inputData = {
+        {0, 1, 2, 3, 4, 5, 6, 7, 125, 126, 127, 128, 129, 250, 251, 252, 253, 254, 255}};
+    std::array<GLfloat, kVertexCount> expectedData;
+    for (size_t i = 0; i < kVertexCount; i++)
     {
         expectedData[i] = Normalize(inputData[i]);
     }
 
-    TestData data(GL_UNSIGNED_BYTE, GL_TRUE, Source::IMMEDIATE, inputData, expectedData);
+    TestData data(GL_UNSIGNED_BYTE, GL_TRUE, Source::IMMEDIATE, inputData.data(),
+                  expectedData.data());
     runTest(data);
 }
 
 TEST_P(VertexAttributeTest, ByteUnnormalized)
 {
-    GLbyte inputData[mVertexCount] = { 0, 1, 2, 3, 4, -1, -2, -3, -4, 125, 126, 127, -128, -127, -126 };
-    GLfloat expectedData[mVertexCount];
-    for (size_t i = 0; i < mVertexCount; i++)
+    std::array<GLbyte, kVertexCount> inputData = {
+        {0, 1, 2, 3, 4, -1, -2, -3, -4, 125, 126, 127, -128, -127, -126}};
+    std::array<GLfloat, kVertexCount> expectedData;
+    for (size_t i = 0; i < kVertexCount; i++)
     {
         expectedData[i] = inputData[i];
     }
 
-    TestData data(GL_BYTE, GL_FALSE, Source::IMMEDIATE, inputData, expectedData);
+    TestData data(GL_BYTE, GL_FALSE, Source::IMMEDIATE, inputData.data(), expectedData.data());
     runTest(data);
 }
 
 TEST_P(VertexAttributeTest, ByteNormalized)
 {
-    GLbyte inputData[mVertexCount] = { 0, 1, 2, 3, 4, -1, -2, -3, -4, 125, 126, 127, -128, -127, -126 };
-    GLfloat expectedData[mVertexCount];
-    for (size_t i = 0; i < mVertexCount; i++)
+    std::array<GLbyte, kVertexCount> inputData = {
+        {0, 1, 2, 3, 4, -1, -2, -3, -4, 125, 126, 127, -128, -127, -126}};
+    std::array<GLfloat, kVertexCount> expectedData;
+    for (size_t i = 0; i < kVertexCount; i++)
     {
         expectedData[i] = Normalize(inputData[i]);
     }
 
-    TestData data(GL_BYTE, GL_TRUE, Source::IMMEDIATE, inputData, expectedData);
+    TestData data(GL_BYTE, GL_TRUE, Source::IMMEDIATE, inputData.data(), expectedData.data());
     runTest(data);
 }
 
 TEST_P(VertexAttributeTest, UnsignedShortUnnormalized)
 {
-    GLushort inputData[mVertexCount] = { 0, 1, 2, 3, 254, 255, 256, 32766, 32767, 32768, 65533, 65534, 65535 };
-    GLfloat expectedData[mVertexCount];
-    for (size_t i = 0; i < mVertexCount; i++)
+    std::array<GLushort, kVertexCount> inputData = {
+        {0, 1, 2, 3, 254, 255, 256, 32766, 32767, 32768, 65533, 65534, 65535}};
+    std::array<GLfloat, kVertexCount> expectedData;
+    for (size_t i = 0; i < kVertexCount; i++)
     {
         expectedData[i] = inputData[i];
     }
 
-    TestData data(GL_UNSIGNED_SHORT, GL_FALSE, Source::IMMEDIATE, inputData, expectedData);
+    TestData data(GL_UNSIGNED_SHORT, GL_FALSE, Source::IMMEDIATE, inputData.data(),
+                  expectedData.data());
     runTest(data);
 }
 
 TEST_P(VertexAttributeTest, UnsignedShortNormalized)
 {
-    GLushort inputData[mVertexCount] = { 0, 1, 2, 3, 254, 255, 256, 32766, 32767, 32768, 65533, 65534, 65535 };
-    GLfloat expectedData[mVertexCount];
-    for (size_t i = 0; i < mVertexCount; i++)
+    std::array<GLushort, kVertexCount> inputData = {
+        {0, 1, 2, 3, 254, 255, 256, 32766, 32767, 32768, 65533, 65534, 65535}};
+    std::array<GLfloat, kVertexCount> expectedData;
+    for (size_t i = 0; i < kVertexCount; i++)
     {
         expectedData[i] = Normalize(inputData[i]);
     }
 
-    TestData data(GL_UNSIGNED_SHORT, GL_TRUE, Source::IMMEDIATE, inputData, expectedData);
+    TestData data(GL_UNSIGNED_SHORT, GL_TRUE, Source::IMMEDIATE, inputData.data(),
+                  expectedData.data());
     runTest(data);
 }
 
 TEST_P(VertexAttributeTest, ShortUnnormalized)
 {
-    GLshort inputData[mVertexCount] = {  0, 1, 2, 3, -1, -2, -3, -4, 32766, 32767, -32768, -32767, -32766 };
-    GLfloat expectedData[mVertexCount];
-    for (size_t i = 0; i < mVertexCount; i++)
+    std::array<GLshort, kVertexCount> inputData = {
+        {0, 1, 2, 3, -1, -2, -3, -4, 32766, 32767, -32768, -32767, -32766}};
+    std::array<GLfloat, kVertexCount> expectedData;
+    for (size_t i = 0; i < kVertexCount; i++)
     {
         expectedData[i] = inputData[i];
     }
 
-    TestData data(GL_SHORT, GL_FALSE, Source::IMMEDIATE, inputData, expectedData);
+    TestData data(GL_SHORT, GL_FALSE, Source::IMMEDIATE, inputData.data(), expectedData.data());
     runTest(data);
 }
 
 TEST_P(VertexAttributeTest, ShortNormalized)
 {
-    GLshort inputData[mVertexCount] = {  0, 1, 2, 3, -1, -2, -3, -4, 32766, 32767, -32768, -32767, -32766 };
-    GLfloat expectedData[mVertexCount];
-    for (size_t i = 0; i < mVertexCount; i++)
+    std::array<GLshort, kVertexCount> inputData = {
+        {0, 1, 2, 3, -1, -2, -3, -4, 32766, 32767, -32768, -32767, -32766}};
+    std::array<GLfloat, kVertexCount> expectedData;
+    for (size_t i = 0; i < kVertexCount; i++)
     {
         expectedData[i] = Normalize(inputData[i]);
     }
 
-    TestData data(GL_SHORT, GL_TRUE, Source::IMMEDIATE, inputData, expectedData);
+    TestData data(GL_SHORT, GL_TRUE, Source::IMMEDIATE, inputData.data(), expectedData.data());
     runTest(data);
 }
 
@@ -382,14 +406,15 @@ TEST_P(VertexAttributeTestES3, IntUnnormalized)
 {
     GLint lo                      = std::numeric_limits<GLint>::min();
     GLint hi                      = std::numeric_limits<GLint>::max();
-    GLint inputData[mVertexCount] = {0, 1, 2, 3, -1, -2, -3, -4, -1, hi, hi - 1, lo, lo + 1};
-    GLfloat expectedData[mVertexCount];
-    for (size_t i = 0; i < mVertexCount; i++)
+    std::array<GLint, kVertexCount> inputData = {
+        {0, 1, 2, 3, -1, -2, -3, -4, -1, hi, hi - 1, lo, lo + 1}};
+    std::array<GLfloat, kVertexCount> expectedData;
+    for (size_t i = 0; i < kVertexCount; i++)
     {
         expectedData[i] = static_cast<GLfloat>(inputData[i]);
     }
 
-    TestData data(GL_INT, GL_FALSE, Source::BUFFER, inputData, expectedData);
+    TestData data(GL_INT, GL_FALSE, Source::BUFFER, inputData.data(), expectedData.data());
     runTest(data);
 }
 
@@ -397,14 +422,15 @@ TEST_P(VertexAttributeTestES3, IntNormalized)
 {
     GLint lo                      = std::numeric_limits<GLint>::min();
     GLint hi                      = std::numeric_limits<GLint>::max();
-    GLint inputData[mVertexCount] = {0, 1, 2, 3, -1, -2, -3, -4, -1, hi, hi - 1, lo, lo + 1};
-    GLfloat expectedData[mVertexCount];
-    for (size_t i = 0; i < mVertexCount; i++)
+    std::array<GLint, kVertexCount> inputData = {
+        {0, 1, 2, 3, -1, -2, -3, -4, -1, hi, hi - 1, lo, lo + 1}};
+    std::array<GLfloat, kVertexCount> expectedData;
+    for (size_t i = 0; i < kVertexCount; i++)
     {
         expectedData[i] = Normalize(inputData[i]);
     }
 
-    TestData data(GL_INT, GL_TRUE, Source::BUFFER, inputData, expectedData);
+    TestData data(GL_INT, GL_TRUE, Source::BUFFER, inputData.data(), expectedData.data());
     runTest(data);
 }
 
@@ -412,15 +438,15 @@ TEST_P(VertexAttributeTestES3, UnsignedIntUnnormalized)
 {
     GLuint mid                     = std::numeric_limits<GLuint>::max() >> 1;
     GLuint hi                      = std::numeric_limits<GLuint>::max();
-    GLuint inputData[mVertexCount] = {0,       1,   2,       3,      254,    255, 256,
-                                      mid - 1, mid, mid + 1, hi - 2, hi - 1, hi};
-    GLfloat expectedData[mVertexCount];
-    for (size_t i = 0; i < mVertexCount; i++)
+    std::array<GLuint, kVertexCount> inputData = {
+        {0, 1, 2, 3, 254, 255, 256, mid - 1, mid, mid + 1, hi - 2, hi - 1, hi}};
+    std::array<GLfloat, kVertexCount> expectedData;
+    for (size_t i = 0; i < kVertexCount; i++)
     {
         expectedData[i] = static_cast<GLfloat>(inputData[i]);
     }
 
-    TestData data(GL_UNSIGNED_INT, GL_FALSE, Source::BUFFER, inputData, expectedData);
+    TestData data(GL_UNSIGNED_INT, GL_FALSE, Source::BUFFER, inputData.data(), expectedData.data());
     runTest(data);
 }
 
@@ -428,15 +454,15 @@ TEST_P(VertexAttributeTestES3, UnsignedIntNormalized)
 {
     GLuint mid                     = std::numeric_limits<GLuint>::max() >> 1;
     GLuint hi                      = std::numeric_limits<GLuint>::max();
-    GLuint inputData[mVertexCount] = {0,       1,   2,       3,      254,    255, 256,
-                                      mid - 1, mid, mid + 1, hi - 2, hi - 1, hi};
-    GLfloat expectedData[mVertexCount];
-    for (size_t i = 0; i < mVertexCount; i++)
+    std::array<GLuint, kVertexCount> inputData = {
+        {0, 1, 2, 3, 254, 255, 256, mid - 1, mid, mid + 1, hi - 2, hi - 1, hi}};
+    std::array<GLfloat, kVertexCount> expectedData;
+    for (size_t i = 0; i < kVertexCount; i++)
     {
         expectedData[i] = Normalize(inputData[i]);
     }
 
-    TestData data(GL_UNSIGNED_INT, GL_TRUE, Source::BUFFER, inputData, expectedData);
+    TestData data(GL_UNSIGNED_INT, GL_TRUE, Source::BUFFER, inputData.data(), expectedData.data());
     runTest(data);
 }
 
@@ -514,16 +540,12 @@ TEST_P(VertexAttributeTest, SimpleBindAttribLocation)
 // Verify that drawing with a large out-of-range offset generates INVALID_OPERATION.
 TEST_P(VertexAttributeTest, DrawArraysBufferTooSmall)
 {
-    GLfloat inputData[mVertexCount];
-    GLfloat expectedData[mVertexCount];
-    for (size_t count = 0; count < mVertexCount; ++count)
-    {
-        inputData[count]    = static_cast<GLfloat>(count);
-        expectedData[count] = inputData[count];
-    }
+    std::array<GLfloat, kVertexCount> inputData;
+    std::array<GLfloat, kVertexCount> expectedData;
+    InitTestData(inputData, expectedData);
 
-    TestData data(GL_FLOAT, GL_FALSE, Source::BUFFER, inputData, expectedData);
-    data.bufferOffset = mVertexCount * TypeStride(GL_FLOAT);
+    TestData data(GL_FLOAT, GL_FALSE, Source::BUFFER, inputData.data(), expectedData.data());
+    data.bufferOffset = kVertexCount * TypeStride(GL_FLOAT);
 
     setupTest(data, 1);
     drawQuad(mProgram, "position", 0.5f);
@@ -533,16 +555,12 @@ TEST_P(VertexAttributeTest, DrawArraysBufferTooSmall)
 // Verify that index draw with an out-of-range offset generates INVALID_OPERATION.
 TEST_P(VertexAttributeTest, DrawElementsBufferTooSmall)
 {
-    GLfloat inputData[mVertexCount];
-    GLfloat expectedData[mVertexCount];
-    for (size_t count = 0; count < mVertexCount; ++count)
-    {
-        inputData[count]    = static_cast<GLfloat>(count);
-        expectedData[count] = inputData[count];
-    }
+    std::array<GLfloat, kVertexCount> inputData;
+    std::array<GLfloat, kVertexCount> expectedData;
+    InitTestData(inputData, expectedData);
 
-    TestData data(GL_FLOAT, GL_FALSE, Source::BUFFER, inputData, expectedData);
-    data.bufferOffset = (mVertexCount - 3) * TypeStride(GL_FLOAT);
+    TestData data(GL_FLOAT, GL_FALSE, Source::BUFFER, inputData.data(), expectedData.data());
+    data.bufferOffset = (kVertexCount - 3) * TypeStride(GL_FLOAT);
 
     setupTest(data, 1);
     drawIndexedQuad(mProgram, "position", 0.5f);
@@ -569,13 +587,9 @@ TEST_P(VertexAttributeTest, DrawArraysWithBufferOffset)
     initBasicProgram();
     glUseProgram(mProgram);
 
-    GLfloat inputData[mVertexCount];
-    GLfloat expectedData[mVertexCount];
-    for (size_t count = 0; count < mVertexCount; ++count)
-    {
-        inputData[count]    = static_cast<GLfloat>(count);
-        expectedData[count] = inputData[count];
-    }
+    std::array<GLfloat, kVertexCount> inputData;
+    std::array<GLfloat, kVertexCount> expectedData;
+    InitTestData(inputData, expectedData);
 
     auto quadVertices        = GetQuadVertices();
     GLsizei quadVerticesSize = static_cast<GLsizei>(quadVertices.size() * sizeof(quadVertices[0]));
@@ -590,15 +604,15 @@ TEST_P(VertexAttributeTest, DrawArraysWithBufferOffset)
     glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
     glEnableVertexAttribArray(positionLocation);
 
-    GLsizei dataSize = mVertexCount * TypeStride(GL_FLOAT);
+    GLsizei dataSize = kVertexCount * TypeStride(GL_FLOAT);
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
     glBufferData(GL_ARRAY_BUFFER, dataSize + TypeStride(GL_FLOAT), nullptr, GL_STATIC_DRAW);
-    glBufferSubData(GL_ARRAY_BUFFER, 0, dataSize, inputData);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, dataSize, inputData.data());
     glVertexAttribPointer(mTestAttrib, 1, GL_FLOAT, GL_FALSE, 0, nullptr);
     glEnableVertexAttribArray(mTestAttrib);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glVertexAttribPointer(mExpectedAttrib, 1, GL_FLOAT, GL_FALSE, 0, expectedData);
+    glVertexAttribPointer(mExpectedAttrib, 1, GL_FLOAT, GL_FALSE, 0, expectedData.data());
     glEnableVertexAttribArray(mExpectedAttrib);
 
     // Vertex draw with no start vertex offset (second argument is zero).
@@ -622,16 +636,16 @@ class VertexAttributeTestES31 : public VertexAttributeTestES3
         GLint floatStride      = stride ? (stride / TypeStride(GL_FLOAT)) : 1;
         GLsizeiptr floatOffset = offset / TypeStride(GL_FLOAT);
 
-        size_t floatCount    = static_cast<size_t>(floatOffset) + mVertexCount * floatStride;
+        size_t floatCount    = static_cast<size_t>(floatOffset) + kVertexCount * floatStride;
         GLsizeiptr inputSize = static_cast<GLsizeiptr>(floatCount) * TypeStride(GL_FLOAT);
 
         initBasicProgram();
         glUseProgram(mProgram);
 
         std::vector<GLfloat> inputData(floatCount);
-        GLfloat expectedData[mVertexCount];
+        std::array<GLfloat, kVertexCount> expectedData;
 
-        for (size_t count = 0; count < mVertexCount; ++count)
+        for (size_t count = 0; count < kVertexCount; ++count)
         {
             inputData[floatOffset + count * floatStride] = static_cast<GLfloat>(count);
             expectedData[count]                          = static_cast<GLfloat>(count);
@@ -655,13 +669,13 @@ class VertexAttributeTestES31 : public VertexAttributeTestES3
         GLsizeiptr inputOffset = floatOffset * TypeStride(GL_FLOAT);
         glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
         glBufferData(GL_ARRAY_BUFFER, inputSize, nullptr, GL_STATIC_DRAW);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, inputSize, &inputData[0]);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, inputSize, inputData.data());
         glVertexAttribPointer(mTestAttrib, 1, GL_FLOAT, GL_FALSE, inputStride,
                               reinterpret_cast<const GLvoid *>(inputOffset));
         glEnableVertexAttribArray(mTestAttrib);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glVertexAttribPointer(mExpectedAttrib, 1, GL_FLOAT, GL_FALSE, 0, expectedData);
+        glVertexAttribPointer(mExpectedAttrib, 1, GL_FLOAT, GL_FALSE, 0, expectedData.data());
         glEnableVertexAttribArray(mExpectedAttrib);
 
         glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -671,7 +685,7 @@ class VertexAttributeTestES31 : public VertexAttributeTestES3
     }
 
     // Set the maximum value for stride if the stride is too large.
-    const GLint MAX_STRIDE_FOR_TEST = 4095;
+    static constexpr GLint MAX_STRIDE_FOR_TEST = 4095;
 };
 
 // Verify that MAX_VERTEX_ATTRIB_STRIDE is no less than the minimum required value (2048) in ES3.1.
@@ -840,14 +854,14 @@ void VertexAttributeCachingTest::SetUp()
         attribTypes.push_back(GL_UNSIGNED_INT);
     }
 
-    const GLint maxSize     = 4;
-    const GLsizei maxStride = 4;
+    constexpr GLint kMaxSize     = 4;
+    constexpr GLsizei kMaxStride = 4;
 
     for (GLenum attribType : attribTypes)
     {
-        for (GLint attribSize = 1; attribSize <= maxSize; ++attribSize)
+        for (GLint attribSize = 1; attribSize <= kMaxSize; ++attribSize)
         {
-            for (GLsizei stride = 1; stride <= maxStride; ++stride)
+            for (GLsizei stride = 1; stride <= kMaxStride; ++stride)
             {
                 mTestData.push_back(AttribData(attribType, attribSize, GL_FALSE, stride));
                 if (attribType != GL_FLOAT)
