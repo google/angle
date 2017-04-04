@@ -16,6 +16,24 @@
       "revId": "0460e1f3e47e8ca92d84c921681715db1a0c176a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c30ca82_a3304019",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-04T14:38:09Z",
+      "side": 1,
+      "message": "mUseDXGISwapChains isn\u0027t possible without the extension.",
+      "parentUuid": "aeb331d9_f9ec5462",
+      "revId": "0460e1f3e47e8ca92d84c921681715db1a0c176a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
