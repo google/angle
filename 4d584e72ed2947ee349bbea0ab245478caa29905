@@ -22,6 +22,30 @@
       "revId": "4d584e72ed2947ee349bbea0ab245478caa29905",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4fa70b0f_44f2c1b7",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-05T17:58:09Z",
+      "side": 1,
+      "message": "Done, created a ContextID type.",
+      "parentUuid": "d48d454a_2028debd",
+      "range": {
+        "startLine": 172,
+        "startChar": 31,
+        "endLine": 172,
+        "endChar": 40
+      },
+      "revId": "4d584e72ed2947ee349bbea0ab245478caa29905",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
