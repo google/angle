@@ -86,7 +86,8 @@ class D3DTextureSurfaceWGL : public SurfaceGL
     HANDLE mBoundObjectTextureHandle;
     HANDLE mBoundObjectRenderbufferHandle;
 
-    GLuint mRenderbufferID;
+    GLuint mColorRenderbufferID;
+    GLuint mDepthStencilRenderbufferID;
     GLuint mFramebufferID;
 };
 }  // namespace rx

@@ -27,6 +27,8 @@ class D3DTextureTest : public ANGLETest
         setConfigGreenBits(8);
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
+        setConfigDepthBits(24);
+        setConfigStencilBits(8);
     }
 
     void SetUp() override
@@ -252,6 +254,57 @@ TEST_P(D3DTextureTest, Clear)
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_EQ(static_cast<GLint>(bufferSize) / 2, static_cast<GLint>(bufferSize) / 2, 255, 0,
                     255, 255);
+
+    // Make current with null to ensure the Surface can be released immediately.
+    eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    eglDestroySurface(display, pbuffer);
+}
+
+// Test creating a pbuffer with a D3D texture and depth stencil bits in the EGL config creates keeps
+// its depth stencil buffer
+TEST_P(D3DTextureTest, DepthStencil)
+{
+    if (!valid())
+    {
+        return;
+    }
+
+    EGLWindow *window  = getEGLWindow();
+    EGLDisplay display = window->getDisplay();
+
+    const size_t bufferSize = 32;
+
+    EGLSurface pbuffer = createPBuffer(bufferSize, bufferSize, EGL_NO_TEXTURE, EGL_NO_TEXTURE);
+    ASSERT_EGL_SUCCESS();
+    ASSERT_NE(pbuffer, EGL_NO_SURFACE);
+
+    // Apply the Pbuffer and clear it to purple and verify
+    eglMakeCurrent(display, pbuffer, pbuffer, window->getContext());
+    ASSERT_EGL_SUCCESS();
+
+    glViewport(0, 0, static_cast<GLsizei>(bufferSize), static_cast<GLsizei>(bufferSize));
+    glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
+    glClearDepthf(0.5f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_FALSE);
+
+    glUseProgram(mTextureProgram);
+    glUniform1i(mTextureUniformLocation, 0);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::green);
+
+    // Draw a quad that will fail the depth test and verify that the buffer is unchanged
+    drawQuad(mTextureProgram, "position", 1.0f);
+    EXPECT_PIXEL_COLOR_EQ(static_cast<GLint>(bufferSize) / 2, static_cast<GLint>(bufferSize) / 2,
+                          GLColor::cyan);
+
+    // Draw a quad that will pass the depth test and verify that the buffer is green
+    drawQuad(mTextureProgram, "position", -1.0f);
+    EXPECT_PIXEL_COLOR_EQ(static_cast<GLint>(bufferSize) / 2, static_cast<GLint>(bufferSize) / 2,
+                          GLColor::green);
 
     // Make current with null to ensure the Surface can be released immediately.
     eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);

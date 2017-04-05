@@ -8,6 +8,7 @@
 
 #include "libANGLE/renderer/gl/wgl/D3DTextureSurfaceWGL.h"
 
+#include "libANGLE/Surface.h"
 #include "libANGLE/renderer/gl/FramebufferGL.h"
 #include "libANGLE/renderer/gl/TextureGL.h"
 #include "libANGLE/renderer/gl/RendererGL.h"
@@ -241,7 +242,8 @@ D3DTextureSurfaceWGL::D3DTextureSurfaceWGL(const egl::SurfaceState &state,
       mKeyedMutex(nullptr),
       mBoundObjectTextureHandle(nullptr),
       mBoundObjectRenderbufferHandle(nullptr),
-      mRenderbufferID(0),
+      mColorRenderbufferID(0),
+      mDepthStencilRenderbufferID(0),
       mFramebufferID(0)
 {
 }
@@ -260,7 +262,8 @@ D3DTextureSurfaceWGL::~D3DTextureSurfaceWGL()
             mFunctionsWGL->dxUnregisterObjectNV(mDeviceHandle, mBoundObjectRenderbufferHandle);
             mBoundObjectRenderbufferHandle = nullptr;
         }
-        mStateManager->deleteRenderbuffer(mRenderbufferID);
+        mStateManager->deleteRenderbuffer(mColorRenderbufferID);
+        mStateManager->deleteRenderbuffer(mDepthStencilRenderbufferID);
 
         if (mBoundObjectTextureHandle)
         {
@@ -301,20 +304,40 @@ egl::Error D3DTextureSurfaceWGL::initialize(const DisplayImpl *displayImpl)
         return error;
     }
 
-    mFunctionsGL->genRenderbuffers(1, &mRenderbufferID);
-    mStateManager->bindRenderbuffer(GL_RENDERBUFFER, mRenderbufferID);
+    mFunctionsGL->genRenderbuffers(1, &mColorRenderbufferID);
+    mStateManager->bindRenderbuffer(GL_RENDERBUFFER, mColorRenderbufferID);
     mBoundObjectRenderbufferHandle = mFunctionsWGL->dxRegisterObjectNV(
-        mDeviceHandle, mObject, mRenderbufferID, GL_RENDERBUFFER, WGL_ACCESS_READ_WRITE_NV);
+        mDeviceHandle, mObject, mColorRenderbufferID, GL_RENDERBUFFER, WGL_ACCESS_READ_WRITE_NV);
     if (mBoundObjectRenderbufferHandle == nullptr)
     {
         return egl::Error(EGL_BAD_ALLOC, "Failed to register D3D object, error: 0x%08x.",
                           HRESULT_CODE(GetLastError()));
     }
 
+    const egl::Config *config = mState.config;
+    if (config->depthStencilFormat != GL_NONE)
+    {
+        mFunctionsGL->genRenderbuffers(1, &mDepthStencilRenderbufferID);
+        mStateManager->bindRenderbuffer(GL_RENDERBUFFER, mDepthStencilRenderbufferID);
+        mFunctionsGL->renderbufferStorage(GL_RENDERBUFFER, config->depthStencilFormat,
+                                          static_cast<GLsizei>(mWidth),
+                                          static_cast<GLsizei>(mHeight));
+    }
+
     mFunctionsGL->genFramebuffers(1, &mFramebufferID);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
     mFunctionsGL->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
-                                          mRenderbufferID);
+                                          mColorRenderbufferID);
+    if (config->depthSize > 0)
+    {
+        mFunctionsGL->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
+                                              mDepthStencilRenderbufferID);
+    }
+    if (config->stencilSize > 0)
+    {
+        mFunctionsGL->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT,
+                                              GL_RENDERBUFFER, mDepthStencilRenderbufferID);
+    }
 
     return egl::Error(EGL_SUCCESS);
 }
