@@ -22,6 +22,30 @@
       "revId": "a04e8389fbf34f825aeac1c2e477d5bad4d93b2b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dece39c6_4c715a7a",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 539,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-05T06:48:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "46260da9_9ffacf24",
+      "range": {
+        "startLine": 535,
+        "startChar": 0,
+        "endLine": 539,
+        "endChar": 5
+      },
+      "revId": "a04e8389fbf34f825aeac1c2e477d5bad4d93b2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
