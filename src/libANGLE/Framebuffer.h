@@ -285,6 +285,13 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
                            GLenum binding,
                            const ImageIndex &textureIndex,
                            FramebufferAttachmentObject *resource);
+    void updateAttachment(FramebufferAttachment *attachment,
+                          size_t dirtyBit,
+                          OnAttachmentDirtyBinding *onDirtyBinding,
+                          GLenum type,
+                          GLenum binding,
+                          const ImageIndex &textureIndex,
+                          FramebufferAttachmentObject *resource);
 
     FramebufferState mState;
     rx::FramebufferImpl *mImpl;
