@@ -16,6 +16,24 @@
       "revId": "60e17eab29b66d096ef315ec59974c3aebd57ba4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa47ad80_b8011037",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1002927
+      },
+      "writtenOn": "2017-04-05T17:03:41Z",
+      "side": 1,
+      "message": "In this specific case, I think the warning is benign. It\u0027s not immediately clear what the proper fix would be.",
+      "parentUuid": "a9ab7d26_fd85f977",
+      "revId": "60e17eab29b66d096ef315ec59974c3aebd57ba4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
