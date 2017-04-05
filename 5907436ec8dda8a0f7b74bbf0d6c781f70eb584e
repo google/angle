@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ada4f54c_4f0828e9",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-05T03:16:46Z",
+      "side": 1,
+      "message": "I would  like keep the original code \u0027CompileProgram\u0027 since it will be assigned to member mProgram which is not a temporary var. I think ANGLE_GL_PROGRAM is used when program is a local variable and not be used by other test case. Other reviewers\u0027 opinion?",
+      "revId": "5907436ec8dda8a0f7b74bbf0d6c781f70eb584e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
