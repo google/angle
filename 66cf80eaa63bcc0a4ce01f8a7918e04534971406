@@ -1,0 +1,347 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8b96f409_b1b9b3c5",
+        "filename": "src/libANGLE/renderer/d3d/ImageD3D.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-05T08:13:37Z",
+      "side": 1,
+      "message": "Does it equal to the above redefine with samples \u003d1 and fixedSampleLocations \u003d true? If yes, I think there is no necessary to define a new function.  You can directly extend(reuse) the original one.",
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1350077a_06f7e713",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-05T08:13:37Z",
+      "side": 1,
+      "message": "Since this function is unreachable and you have add another class TextureD3D_2DMultisample to do it , I think you should remove the declare of it from TextureD3D. Maybe this function should not be defined in base class.",
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "520e144d_d2f11b76",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3545,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-05T08:13:37Z",
+      "side": 1,
+      "message": "image-\u003egetWidth() !\u003d  width\n\nYou have known that level\u003d0. So you can directly check whether image-\u003egetWidth equals width. Same to below.",
+      "range": {
+        "startLine": 3545,
+        "startChar": 8,
+        "endLine": 3545,
+        "endChar": 56
+      },
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "439c33cb_224efc78",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3589,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-05T08:13:37Z",
+      "side": 1,
+      "message": "why no return this-\u003esetStorageMultisample?",
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a01b7db_7f681fea",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-05T08:13:37Z",
+      "side": 1,
+      "message": "I think you can reuse above redefine with extended samples and fixedSampleLocations since their body are almost same.",
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "330de8fa_4060390a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3409,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-05T08:13:37Z",
+      "side": 1,
+      "message": "Is there limitation for index, ASSERT(index.mipIndex \u003d\u003d 0)?\n\nASSERT(mAssociatedImage \u003d\u003d expectedImage);\nmAssociatedImage \u003d nullptr;\n\nSince you have checked that mAssociatedImage equals expectedImage, the if sentence is useless.",
+      "range": {
+        "startLine": 3404,
+        "startChar": 0,
+        "endLine": 3409,
+        "endChar": 5
+      },
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0eb42a60_ed823c51",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3437,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-05T08:13:37Z",
+      "side": 1,
+      "message": "Missed mTextureDepth \u003d 1?",
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd833219_daac6fd2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3463,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-05T08:13:37Z",
+      "side": 1,
+      "message": "ensureTextureExists(1)\n\nSeems that 2DMultisample should have 1 mip level not 0 since you use the level 0 to do multisample.",
+      "range": {
+        "startLine": 3463,
+        "startChar": 14,
+        "endLine": 3463,
+        "endChar": 36
+      },
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d16a4567_3737256b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3478,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-05T08:13:37Z",
+      "side": 1,
+      "message": "Move it to the first line.",
+      "range": {
+        "startLine": 3478,
+        "startChar": 0,
+        "endLine": 3478,
+        "endChar": 31
+      },
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c373fda_3e5a261d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3486,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-05T08:13:37Z",
+      "side": 1,
+      "message": "desc.MipLevels      \u003d mipLevels;",
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "05ff22cd_129ab88d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3513,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-05T08:13:37Z",
+      "side": 1,
+      "message": "return gl::OutOfMemory() \u003c\u003c \"error message\". Same to below.",
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ff786c2_93c1030d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3549,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-05T08:13:37Z",
+      "side": 1,
+      "message": "You have used ASSERT(imageAssociationCorrect) to ensure that imageAssociationCorrect must not be nullptr. So you can directly call ANGLE_TRY(mAssociatedImage-\u003erecoverFromAssociatedStorage());.",
+      "range": {
+        "startLine": 3544,
+        "startChar": 0,
+        "endLine": 3549,
+        "endChar": 9
+      },
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc3dfd50_56c0175f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3569,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-05T08:13:37Z",
+      "side": 1,
+      "message": "One question: is index.mipIndex is always 0 for 2dMultisample. In that case, I think you can directly return true.",
+      "range": {
+        "startLine": 3558,
+        "startChar": 0,
+        "endLine": 3569,
+        "endChar": 17
+      },
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dfd048df_f4c8074c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3577,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-05T08:13:37Z",
+      "side": 1,
+      "message": "ASSERT(index.mipIndex \u003d\u003d 0);\nmAssociatedImage \u003d image;",
+      "range": {
+        "startLine": 3574,
+        "startChar": 0,
+        "endLine": 3577,
+        "endChar": 29
+      },
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d6f2397d_6cb62af5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3703,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-05T08:13:37Z",
+      "side": 1,
+      "message": "Do you really need the levelZeroWorkaround since it\u0027s for D3D11 feature level 9_3?",
+      "range": {
+        "startLine": 3703,
+        "startChar": 10,
+        "endLine": 3703,
+        "endChar": 71
+      },
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d16802f_b3e768fa",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-05T08:13:37Z",
+      "side": 1,
+      "message": "Move it to TextureStorage11_2DMultisample since it is special for multisample",
+      "range": {
+        "startLine": 123,
+        "startChar": 0,
+        "endLine": 125,
+        "endChar": 0
+      },
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e46274e0_18568c94",
+        "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-05T08:13:37Z",
+      "side": 1,
+      "message": "Remove ES2_D3D9() since it doesn\u0027t support this feature.",
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
