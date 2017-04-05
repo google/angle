@@ -54,7 +54,7 @@ gl::Error MarkAttachmentsDirty(const gl::FramebufferAttachment *attachment)
 
 void UpdateCachedRenderTarget(const gl::FramebufferAttachment *attachment,
                               RenderTarget11 *&cachedRenderTarget,
-                              ChannelBinding *channelBinding)
+                              gl::OnAttachmentDirtyBinding *channelBinding)
 {
     RenderTarget11 *newRenderTarget = nullptr;
     if (attachment)
@@ -78,10 +78,10 @@ Framebuffer11::Framebuffer11(const gl::FramebufferState &data, Renderer11 *rende
 {
     ASSERT(mRenderer != nullptr);
     mCachedColorRenderTargets.fill(nullptr);
-    for (size_t colorIndex = 0; colorIndex < data.getColorAttachments().size(); ++colorIndex)
+    for (uint32_t colorIndex = 0;
+         colorIndex < static_cast<uint32_t>(data.getColorAttachments().size()); ++colorIndex)
     {
-        mColorRenderTargetsDirty.push_back(
-            ChannelBinding(this, static_cast<SignalToken>(colorIndex)));
+        mColorRenderTargetsDirty.emplace_back(this, colorIndex);
     }
 }
 
@@ -413,9 +413,9 @@ void Framebuffer11::syncState(ContextImpl *contextImpl, const gl::Framebuffer::D
     FramebufferD3D::syncState(contextImpl, dirtyBits);
 }
 
-void Framebuffer11::signal(SignalToken token)
+void Framebuffer11::signal(uint32_t channelID)
 {
-    if (token == gl::IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS)
+    if (channelID == gl::IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS)
     {
         // Stencil is redundant in this case.
         mInternalDirtyBits.set(gl::Framebuffer::DIRTY_BIT_DEPTH_ATTACHMENT);
@@ -423,8 +423,8 @@ void Framebuffer11::signal(SignalToken token)
     }
     else
     {
-        mInternalDirtyBits.set(gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_0 + token);
-        mCachedColorRenderTargets[token] = nullptr;
+        mInternalDirtyBits.set(gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_0 + channelID);
+        mCachedColorRenderTargets[channelID] = nullptr;
     }
 }
 

@@ -143,7 +143,7 @@ class Buffer11::NativeStorage : public Buffer11::BufferStorage
   public:
     NativeStorage(Renderer11 *renderer,
                   BufferUsage usage,
-                  const angle::BroadcastChannel *onStorageChanged);
+                  const angle::BroadcastChannel<> *onStorageChanged);
     ~NativeStorage() override;
 
     bool isMappable(GLbitfield access) const override;
@@ -171,7 +171,7 @@ class Buffer11::NativeStorage : public Buffer11::BufferStorage
     void clearSRVs();
 
     ID3D11Buffer *mNativeStorage;
-    const angle::BroadcastChannel *mOnStorageChanged;
+    const angle::BroadcastChannel<> *mOnStorageChanged;
     std::map<DXGI_FORMAT, ID3D11ShaderResourceView *> mBufferResourceViews;
 };
 
@@ -902,12 +902,12 @@ void Buffer11::invalidateStaticData()
     mStaticBroadcastChannel.signal();
 }
 
-angle::BroadcastChannel *Buffer11::getStaticBroadcastChannel()
+angle::BroadcastChannel<> *Buffer11::getStaticBroadcastChannel()
 {
     return &mStaticBroadcastChannel;
 }
 
-angle::BroadcastChannel *Buffer11::getDirectBroadcastChannel()
+angle::BroadcastChannel<> *Buffer11::getDirectBroadcastChannel()
 {
     return &mDirectBroadcastChannel;
 }
@@ -941,7 +941,7 @@ gl::Error Buffer11::BufferStorage::setData(const uint8_t *data, size_t offset, s
 
 Buffer11::NativeStorage::NativeStorage(Renderer11 *renderer,
                                        BufferUsage usage,
-                                       const angle::BroadcastChannel *onStorageChanged)
+                                       const angle::BroadcastChannel<> *onStorageChanged)
     : BufferStorage(renderer, usage), mNativeStorage(nullptr), mOnStorageChanged(onStorageChanged)
 {
 }

@@ -34,7 +34,7 @@ namespace gl
 namespace
 {
 
-void BindResourceChannel(ChannelBinding *binding, FramebufferAttachmentObject *resource)
+void BindResourceChannel(OnAttachmentDirtyBinding *binding, FramebufferAttachmentObject *resource)
 {
     binding->bind(resource ? resource->getDirtyChannel() : nullptr);
 }
@@ -298,10 +298,10 @@ Framebuffer::Framebuffer(const Caps &caps, rx::GLImplFactory *factory, GLuint id
     ASSERT(mImpl != nullptr);
     ASSERT(mState.mColorAttachments.size() == static_cast<size_t>(caps.maxColorAttachments));
 
-    for (size_t colorIndex = 0; colorIndex < mState.mColorAttachments.size(); ++colorIndex)
+    for (uint32_t colorIndex = 0;
+         colorIndex < static_cast<uint32_t>(mState.mColorAttachments.size()); ++colorIndex)
     {
-        mDirtyColorAttachmentBindings.push_back(ChannelBinding(
-            this, static_cast<SignalToken>(DIRTY_BIT_COLOR_ATTACHMENT_0 + colorIndex)));
+        mDirtyColorAttachmentBindings.emplace_back(this, DIRTY_BIT_COLOR_ATTACHMENT_0 + colorIndex);
     }
 }
 
@@ -314,8 +314,7 @@ Framebuffer::Framebuffer(egl::Surface *surface)
       mDirtyStencilAttachmentBinding(this, DIRTY_BIT_STENCIL_ATTACHMENT)
 {
     ASSERT(mImpl != nullptr);
-    mDirtyColorAttachmentBindings.push_back(
-        ChannelBinding(this, static_cast<SignalToken>(DIRTY_BIT_COLOR_ATTACHMENT_0)));
+    mDirtyColorAttachmentBindings.emplace_back(this, DIRTY_BIT_COLOR_ATTACHMENT_0);
 
     setAttachmentImpl(GL_FRAMEBUFFER_DEFAULT, GL_BACK, gl::ImageIndex::MakeInvalid(), surface);
 
@@ -339,8 +338,7 @@ Framebuffer::Framebuffer(rx::GLImplFactory *factory)
       mDirtyDepthAttachmentBinding(this, DIRTY_BIT_DEPTH_ATTACHMENT),
       mDirtyStencilAttachmentBinding(this, DIRTY_BIT_STENCIL_ATTACHMENT)
 {
-    mDirtyColorAttachmentBindings.push_back(
-        ChannelBinding(this, static_cast<SignalToken>(DIRTY_BIT_COLOR_ATTACHMENT_0)));
+    mDirtyColorAttachmentBindings.emplace_back(this, DIRTY_BIT_COLOR_ATTACHMENT_0);
 }
 
 Framebuffer::~Framebuffer()
@@ -1220,7 +1218,7 @@ void Framebuffer::syncState(const Context *context)
     }
 }
 
-void Framebuffer::signal(SignalToken token)
+void Framebuffer::signal(uint32_t token)
 {
     // TOOD(jmadill): Make this only update individual attachments to do less work.
     mCachedStatus.reset();

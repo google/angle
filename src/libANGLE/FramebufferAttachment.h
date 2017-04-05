@@ -168,12 +168,12 @@ class FramebufferAttachmentObject
     Error getAttachmentRenderTarget(const FramebufferAttachment::Target &target,
                                     rx::FramebufferAttachmentRenderTarget **rtOut) const;
 
-    angle::BroadcastChannel *getDirtyChannel();
+    angle::BroadcastChannel<> *getDirtyChannel();
 
   protected:
     virtual rx::FramebufferAttachmentObjectImpl *getAttachmentImpl() const = 0;
 
-    angle::BroadcastChannel mDirtyChannel;
+    angle::BroadcastChannel<> mDirtyChannel;
 };
 
 inline Extents FramebufferAttachment::getSize() const
