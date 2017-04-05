@@ -103,6 +103,7 @@ struct TextureState final : public angle::NonCopyable
     void invalidateCompletenessCache();
 
     const ImageDesc &getImageDesc(GLenum target, size_t level) const;
+    const ImageDesc &getImageDesc(const ImageIndex &imageIndex) const;
 
     GLenum getTarget() const { return mTarget; }
     const SwizzleState &getSwizzleState() const { return mSwizzleState; }
