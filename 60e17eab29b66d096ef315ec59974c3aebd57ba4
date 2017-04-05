@@ -34,6 +34,24 @@
       "revId": "60e17eab29b66d096ef315ec59974c3aebd57ba4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b0e77691_f275deb1",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2017-04-05T17:06:52Z",
+      "side": 1,
+      "message": "Isn\u0027t the fix to remove VKAPI_PTR from PFN_PhysDevExt since it has no effect?",
+      "parentUuid": "fa47ad80_b8011037",
+      "revId": "60e17eab29b66d096ef315ec59974c3aebd57ba4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
