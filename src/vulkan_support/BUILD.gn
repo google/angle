@@ -178,7 +178,10 @@ config("vulkan_loader_config") {
 config("vulkan_loader_internal_config") {
   defines = [ "VULKAN_NON_CMAKE_BUILD" ]
   if (is_clang || !is_win) {
-    cflags = [ "-Wno-unused-function" ]
+    cflags = [
+      "-Wno-unused-function",
+      "-Wno-ignored-attributes",
+    ]
   }
 }
 
