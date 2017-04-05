@@ -150,6 +150,8 @@ class TextureManager : public TypedResourceManager<Texture, HandleAllocator, Tex
     Texture *getTexture(GLuint handle) const;
     bool isTextureGenerated(GLuint texture) const;
 
+    void invalidateTextureComplenessCache();
+
     Texture *checkTextureAllocation(rx::GLImplFactory *factory, GLuint handle, GLenum target)
     {
         return checkObjectAllocation(factory, handle, target);
@@ -237,6 +239,8 @@ class FramebufferManager
     Framebuffer *getFramebuffer(GLuint handle) const;
     void setDefaultFramebuffer(Framebuffer *framebuffer);
     bool isFramebufferGenerated(GLuint framebuffer);
+
+    void invalidateFramebufferComplenessCache();
 
     Framebuffer *checkFramebufferAllocation(rx::GLImplFactory *factory,
                                             const Caps &caps,

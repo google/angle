@@ -188,6 +188,8 @@ class Framebuffer final : public LabeledObject, public angle::SignalReceiver
     void setDefaultSamples(GLint defaultSamples);
     void setDefaultFixedSampleLocations(GLboolean defaultFixedSampleLocations);
 
+    void invalidateCompletenessCache();
+
     GLenum checkStatus(const Context *context);
 
     // TODO(jmadill): Remove this kludge.

@@ -100,6 +100,8 @@ struct TextureState final : public angle::NonCopyable
     bool isCubeComplete() const;
     bool isSamplerComplete(const SamplerState &samplerState, const ContextState &data) const;
 
+    void invalidateCompletenessCache();
+
     const ImageDesc &getImageDesc(GLenum target, size_t level) const;
 
     GLenum getTarget() const { return mTarget; }
@@ -162,14 +164,12 @@ struct TextureState final : public angle::NonCopyable
         // All values that affect sampler completeness that are not stored within
         // the texture itself
         SamplerState samplerState;
-        bool filterable;
-        GLint clientVersion;
-        bool supportsNPOT;
 
         // Result of the sampler completeness with the above parameters
         bool samplerComplete;
     };
-    mutable SamplerCompletenessCache mCompletenessCache;
+
+    mutable std::unordered_map<ContextID, SamplerCompletenessCache> mCompletenessCache;
 };
 
 bool operator==(const TextureState &a, const TextureState &b);
@@ -353,6 +353,8 @@ class Texture final : public egl::ImageSibling,
 
     egl::Surface *getBoundSurface() const;
     egl::Stream *getBoundStream() const;
+
+    void invalidateCompletenessCache();
 
     rx::TextureImpl *getImplementation() const { return mTexture; }
 

@@ -304,6 +304,17 @@ bool TextureManager::isTextureGenerated(GLuint texture) const
     return texture == 0 || mObjectMap.find(texture) != mObjectMap.end();
 }
 
+void TextureManager::invalidateTextureComplenessCache()
+{
+    for (auto &texture : mObjectMap)
+    {
+        if (texture.second)
+        {
+            texture.second->invalidateCompletenessCache();
+        }
+    }
+}
+
 // RenderbufferManager Implementation.
 
 // static
@@ -495,6 +506,17 @@ bool FramebufferManager::isFramebufferGenerated(GLuint framebuffer)
 {
     ASSERT(mObjectMap.find(0) != mObjectMap.end());
     return mObjectMap.find(framebuffer) != mObjectMap.end();
+}
+
+void FramebufferManager::invalidateFramebufferComplenessCache()
+{
+    for (auto &framebuffer : mObjectMap)
+    {
+        if (framebuffer.second)
+        {
+            framebuffer.second->invalidateCompletenessCache();
+        }
+    }
 }
 
 }  // namespace gl

@@ -734,13 +734,13 @@ gl::Error StateManagerGL::onMakeCurrent(const gl::ContextState &data)
     const gl::State &state = data.getState();
 
     // If the context has changed, pause the previous context's queries
-    if (data.getContext() != mPrevDrawContext)
+    if (data.getContextID() != mPrevDrawContext)
     {
         pauseAllQueries();
     }
     mCurrentQueries.clear();
     mPrevDrawTransformFeedback = nullptr;
-    mPrevDrawContext           = data.getContext();
+    mPrevDrawContext           = data.getContextID();
 
     // Set the current query state
     for (GLenum queryType : QueryTypes)

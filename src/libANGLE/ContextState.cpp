@@ -61,7 +61,7 @@ TextureManager *AllocateOrGetSharedTextureManager(const ContextState *shareConte
 
 }  // anonymous namespace
 
-ContextState::ContextState(uintptr_t contextIn,
+ContextState::ContextState(ContextID contextIn,
                            const ContextState *shareContextState,
                            TextureManager *shareTextures,
                            const Version &clientVersion,
@@ -117,7 +117,7 @@ ValidationContext::ValidationContext(const ValidationContext *shareContext,
                                      const Extensions &extensions,
                                      const Limitations &limitations,
                                      bool skipValidation)
-    : mState(reinterpret_cast<uintptr_t>(this),
+    : mState(reinterpret_cast<ContextID>(this),
              shareContext ? &shareContext->mState : nullptr,
              shareTextures,
              clientVersion,

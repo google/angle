@@ -2511,6 +2511,16 @@ void Context::requestExtension(const char *name)
     // Re-create the compiler with the requested extensions enabled.
     SafeDelete(mCompiler);
     mCompiler = new Compiler(mImplementation.get(), mState);
+
+    // Invalidate all cached completenesses for textures and framebuffer. Some extensions make new
+    // formats renderable or sampleable.
+    mState.mTextures->invalidateTextureComplenessCache();
+    for (auto &zeroTexture : mZeroTextures)
+    {
+        zeroTexture.second->invalidateCompletenessCache();
+    }
+
+    mState.mFramebuffers->invalidateFramebufferComplenessCache();
 }
 
 size_t Context::getRequestableExtensionStringCount() const

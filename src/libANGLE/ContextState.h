@@ -30,10 +30,12 @@ static constexpr Version ES_2_0 = Version(2, 0);
 static constexpr Version ES_3_0 = Version(3, 0);
 static constexpr Version ES_3_1 = Version(3, 1);
 
+using ContextID = uintptr_t;
+
 class ContextState final : public angle::NonCopyable
 {
   public:
-    ContextState(uintptr_t context,
+    ContextState(ContextID context,
                  const ContextState *shareContextState,
                  TextureManager *shareTextures,
                  const Version &clientVersion,
@@ -44,7 +46,7 @@ class ContextState final : public angle::NonCopyable
                  const Limitations &limitations);
     ~ContextState();
 
-    uintptr_t getContext() const { return mContext; }
+    ContextID getContextID() const { return mContext; }
     GLint getClientMajorVersion() const { return mClientVersion.major; }
     GLint getClientMinorVersion() const { return mClientVersion.minor; }
     const Version &getClientVersion() const { return mClientVersion; }
@@ -65,7 +67,7 @@ class ContextState final : public angle::NonCopyable
     friend class ValidationContext;
 
     Version mClientVersion;
-    uintptr_t mContext;
+    ContextID mContext;
     State *mState;
     const Caps &mCaps;
     const TextureCapsMap &mTextureCaps;

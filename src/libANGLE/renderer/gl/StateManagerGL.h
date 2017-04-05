@@ -202,7 +202,7 @@ class StateManagerGL final : angle::NonCopyable
 
     TransformFeedbackGL *mPrevDrawTransformFeedback;
     std::set<QueryGL *> mCurrentQueries;
-    uintptr_t mPrevDrawContext;
+    gl::ContextID mPrevDrawContext;
 
     GLint mUnpackAlignment;
     GLint mUnpackRowLength;

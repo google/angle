@@ -156,8 +156,8 @@ bool TextureState::setBaseLevel(GLuint baseLevel)
 {
     if (mBaseLevel != baseLevel)
     {
-        mBaseLevel                    = baseLevel;
-        mCompletenessCache.cacheValid = false;
+        mBaseLevel = baseLevel;
+        invalidateCompletenessCache();
         return true;
     }
     return false;
@@ -167,8 +167,8 @@ void TextureState::setMaxLevel(GLuint maxLevel)
 {
     if (mMaxLevel != maxLevel)
     {
-        mMaxLevel                     = maxLevel;
-        mCompletenessCache.cacheValid = false;
+        mMaxLevel = maxLevel;
+        invalidateCompletenessCache();
     }
 }
 
@@ -200,21 +200,28 @@ bool TextureState::isCubeComplete() const
 bool TextureState::isSamplerComplete(const SamplerState &samplerState,
                                      const ContextState &data) const
 {
-    const ImageDesc &baseImageDesc = getImageDesc(getBaseImageTarget(), getEffectiveBaseLevel());
-    const TextureCaps &textureCaps = data.getTextureCap(baseImageDesc.format.asSized());
-    if (!mCompletenessCache.cacheValid || mCompletenessCache.samplerState != samplerState ||
-        mCompletenessCache.filterable != textureCaps.filterable ||
-        mCompletenessCache.clientVersion != data.getClientMajorVersion() ||
-        mCompletenessCache.supportsNPOT != data.getExtensions().textureNPOT)
+    auto cacheIter = mCompletenessCache.find(data.getContextID());
+    if (cacheIter == mCompletenessCache.end())
     {
-        mCompletenessCache.cacheValid      = true;
-        mCompletenessCache.samplerState    = samplerState;
-        mCompletenessCache.filterable      = textureCaps.filterable;
-        mCompletenessCache.clientVersion   = data.getClientMajorVersion();
-        mCompletenessCache.supportsNPOT    = data.getExtensions().textureNPOT;
-        mCompletenessCache.samplerComplete = computeSamplerCompleteness(samplerState, data);
+        // Add a new cache entry
+        cacheIter = mCompletenessCache
+                        .insert(std::make_pair(data.getContextID(), SamplerCompletenessCache()))
+                        .first;
     }
-    return mCompletenessCache.samplerComplete;
+
+    auto cacheEntry = cacheIter->second;
+    if (!cacheEntry.cacheValid || cacheEntry.samplerState != samplerState)
+    {
+        cacheEntry.cacheValid      = true;
+        cacheEntry.samplerComplete = computeSamplerCompleteness(samplerState, data);
+    }
+
+    return cacheEntry.samplerComplete;
+}
+
+void TextureState::invalidateCompletenessCache()
+{
+    mCompletenessCache.clear();
 }
 
 bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
@@ -442,8 +449,8 @@ void TextureState::setImageDesc(GLenum target, size_t level, const ImageDesc &de
 {
     size_t descIndex = GetImageDescIndex(target, level);
     ASSERT(descIndex < mImageDescs.size());
-    mImageDescs[descIndex]        = desc;
-    mCompletenessCache.cacheValid = false;
+    mImageDescs[descIndex] = desc;
+    invalidateCompletenessCache();
 }
 
 void TextureState::setImageDescChain(GLuint baseLevel,
@@ -496,15 +503,12 @@ void TextureState::clearImageDescs()
     {
         mImageDescs[descIndex] = ImageDesc();
     }
-    mCompletenessCache.cacheValid = false;
+    invalidateCompletenessCache();
 }
 
 TextureState::SamplerCompletenessCache::SamplerCompletenessCache()
     : cacheValid(false),
       samplerState(),
-      filterable(false),
-      clientVersion(0),
-      supportsNPOT(false),
       samplerComplete(false)
 {
 }
@@ -843,6 +847,12 @@ egl::Surface *Texture::getBoundSurface() const
 egl::Stream *Texture::getBoundStream() const
 {
     return mBoundStream;
+}
+
+void Texture::invalidateCompletenessCache()
+{
+    mState.invalidateCompletenessCache();
+    mDirtyChannel.signal();
 }
 
 Error Texture::setImage(const Context *context,

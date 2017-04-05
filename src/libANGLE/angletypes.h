@@ -262,6 +262,8 @@ typedef std::bitset<IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS> UniformB
 // Client code should treat it as a std::map.
 template <class ResourceT>
 using ResourceMap = std::unordered_map<GLuint, ResourceT *>;
+
+using ContextID = uintptr_t;
 }
 
 namespace rx
