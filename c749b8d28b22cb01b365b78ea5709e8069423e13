@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5b10fe7e_9f7ccefb",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-05T08:31:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e60e3c17_90ba32a1",
+      "revId": "c749b8d28b22cb01b365b78ea5709e8069423e13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "796ac88b_760dbb64",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 6
@@ -30,6 +48,24 @@
       "writtenOn": "2017-04-05T08:12:50Z",
       "side": 1,
       "message": "Why do inputData and expectedData have different type?",
+      "revId": "c749b8d28b22cb01b365b78ea5709e8069423e13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c47e7cd_723f71b0",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 646,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-05T08:31:49Z",
+      "side": 1,
+      "message": "The size of inputData should be changed by stride and offset, so we cannot use std::array.",
+      "parentUuid": "796ac88b_760dbb64",
       "revId": "c749b8d28b22cb01b365b78ea5709e8069423e13",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
