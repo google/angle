@@ -110,6 +110,8 @@ bool GetDevicesFromRegistry(std::vector<GPUDeviceInfo> *devices)
         devices->push_back(device);
     }
 
+    SetupDiDestroyDeviceInfoList(deviceInfo);
+
     return true;
 }
 
