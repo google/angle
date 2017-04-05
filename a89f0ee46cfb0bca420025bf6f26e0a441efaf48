@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "586f30d5_6785476c",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 4032,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-04-05T15:38:22Z",
+      "side": 1,
+      "message": "This \"return\" is unnecessary.",
+      "revId": "a89f0ee46cfb0bca420025bf6f26e0a441efaf48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd3a3dd4_b0d372b6",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 781,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-04-05T15:38:22Z",
+      "side": 1,
+      "message": "The error message is still inconsistent with the others.",
+      "revId": "a89f0ee46cfb0bca420025bf6f26e0a441efaf48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
