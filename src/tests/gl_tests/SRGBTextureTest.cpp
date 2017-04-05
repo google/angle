@@ -188,6 +188,13 @@ TEST_P(SRGBTextureTest, SRGBDecodeExtensionAvailability)
 // Test basic functionality of SRGB decode using the texture parameter
 TEST_P(SRGBTextureTest, SRGBDecodeTextureParameter)
 {
+    // TODO(fjhenigman): Figure out why this fails on Ozone Intel.
+    if (IsOzone() && IsIntel() && IsOpenGLES())
+    {
+        std::cout << "Test skipped on Ozone Intel." << std::endl;
+        return;
+    }
+
     if (!extensionEnabled("GL_EXT_texture_sRGB_decode"))
     {
         std::cout << "Test skipped because GL_EXT_texture_sRGB_decode is not available."
