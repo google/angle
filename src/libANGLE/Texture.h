@@ -358,9 +358,9 @@ class Texture final : public egl::ImageSibling,
     rx::TextureImpl *getImplementation() const { return mTexture; }
 
     // FramebufferAttachmentObject implementation
-    Extents getAttachmentSize(const FramebufferAttachment::Target &target) const override;
-    const Format &getAttachmentFormat(const FramebufferAttachment::Target &target) const override;
-    GLsizei getAttachmentSamples(const FramebufferAttachment::Target &target) const override;
+    Extents getAttachmentSize(const ImageIndex &imageIndex) const override;
+    const Format &getAttachmentFormat(GLenum binding, const ImageIndex &imageIndex) const override;
+    GLsizei getAttachmentSamples(const ImageIndex &imageIndex) const override;
 
     void onAttach() override;
     void onDetach() override;

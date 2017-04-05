@@ -1239,19 +1239,19 @@ Error Texture::setEGLImageTarget(GLenum target, egl::Image *imageTarget)
     return NoError();
 }
 
-Extents Texture::getAttachmentSize(const FramebufferAttachment::Target &target) const
+Extents Texture::getAttachmentSize(const ImageIndex &imageIndex) const
 {
-    return mState.getImageDesc(target.textureIndex()).size;
+    return mState.getImageDesc(imageIndex).size;
 }
 
-const Format &Texture::getAttachmentFormat(const FramebufferAttachment::Target &target) const
+const Format &Texture::getAttachmentFormat(GLenum /*binding*/, const ImageIndex &imageIndex) const
 {
-    return mState.getImageDesc(target.textureIndex()).format;
+    return mState.getImageDesc(imageIndex).format;
 }
 
-GLsizei Texture::getAttachmentSamples(const FramebufferAttachment::Target &target) const
+GLsizei Texture::getAttachmentSamples(const ImageIndex &imageIndex) const
 {
-    return getSamples(target.textureIndex().type, 0);
+    return getSamples(imageIndex.type, 0);
 }
 
 void Texture::onAttach()

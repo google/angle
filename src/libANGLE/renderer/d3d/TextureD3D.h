@@ -71,7 +71,8 @@ class TextureD3D : public TextureImpl
     TextureStorage *getStorage();
     ImageD3D *getBaseLevelImage() const;
 
-    gl::Error getAttachmentRenderTarget(const gl::FramebufferAttachment::Target &target,
+    gl::Error getAttachmentRenderTarget(GLenum binding,
+                                        const gl::ImageIndex &imageIndex,
                                         FramebufferAttachmentRenderTarget **rtOut) override;
 
     void setBaseLevel(GLuint baseLevel) override;

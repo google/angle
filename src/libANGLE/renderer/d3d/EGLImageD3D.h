@@ -46,7 +46,7 @@ class EGLImageD3D final : public ImageImpl
 
     egl::ImageSibling *mBuffer;
 
-    gl::FramebufferAttachment::Target mAttachmentTarget;
+    gl::ImageIndex mImageIndex;
     FramebufferAttachmentObjectImpl *mAttachmentBuffer;
 
     RenderTargetD3D *mRenderTarget;

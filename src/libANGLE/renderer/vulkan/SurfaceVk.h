@@ -43,7 +43,8 @@ class OffscreenSurfaceVk : public SurfaceImpl
     EGLint isPostSubBufferSupported() const override;
     EGLint getSwapBehavior() const override;
 
-    gl::Error getAttachmentRenderTarget(const gl::FramebufferAttachment::Target &target,
+    gl::Error getAttachmentRenderTarget(GLenum binding,
+                                        const gl::ImageIndex &imageIndex,
                                         FramebufferAttachmentRenderTarget **rtOut) override;
 
   private:
@@ -79,7 +80,8 @@ class WindowSurfaceVk : public SurfaceImpl, public ResourceVk
     EGLint isPostSubBufferSupported() const override;
     EGLint getSwapBehavior() const override;
 
-    gl::Error getAttachmentRenderTarget(const gl::FramebufferAttachment::Target &target,
+    gl::Error getAttachmentRenderTarget(GLenum binding,
+                                        const gl::ImageIndex &imageIndex,
                                         FramebufferAttachmentRenderTarget **rtOut) override;
 
     gl::ErrorOrResult<vk::Framebuffer *> getCurrentFramebuffer(

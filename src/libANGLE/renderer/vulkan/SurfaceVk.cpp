@@ -137,7 +137,8 @@ EGLint OffscreenSurfaceVk::getSwapBehavior() const
 }
 
 gl::Error OffscreenSurfaceVk::getAttachmentRenderTarget(
-    const gl::FramebufferAttachment::Target & /*target*/,
+    GLenum /*binding*/,
+    const gl::ImageIndex & /*imageIndex*/,
     FramebufferAttachmentRenderTarget ** /*rtOut*/)
 {
     UNREACHABLE();
@@ -529,9 +530,9 @@ EGLint WindowSurfaceVk::getSwapBehavior() const
     return EGL_BUFFER_DESTROYED;
 }
 
-gl::Error WindowSurfaceVk::getAttachmentRenderTarget(
-    const gl::FramebufferAttachment::Target & /*target*/,
-    FramebufferAttachmentRenderTarget **rtOut)
+gl::Error WindowSurfaceVk::getAttachmentRenderTarget(GLenum /*binding*/,
+                                                     const gl::ImageIndex & /*target*/,
+                                                     FramebufferAttachmentRenderTarget **rtOut)
 {
     *rtOut = &mRenderTarget;
     return gl::NoError();

@@ -166,7 +166,7 @@ GLuint Renderbuffer::getId() const
     return id();
 }
 
-Extents Renderbuffer::getAttachmentSize(const FramebufferAttachment::Target & /*target*/) const
+Extents Renderbuffer::getAttachmentSize(const gl::ImageIndex & /*imageIndex*/) const
 {
     return Extents(mWidth, mHeight, 1);
 }

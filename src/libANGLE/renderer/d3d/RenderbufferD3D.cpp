@@ -87,7 +87,8 @@ gl::Error RenderbufferD3D::getRenderTarget(RenderTargetD3D **outRenderTarget)
     }
 }
 
-gl::Error RenderbufferD3D::getAttachmentRenderTarget(const gl::FramebufferAttachment::Target &target,
+gl::Error RenderbufferD3D::getAttachmentRenderTarget(GLenum /*binding*/,
+                                                     const gl::ImageIndex & /*imageIndex*/,
                                                      FramebufferAttachmentRenderTarget **rtOut)
 {
     return getRenderTarget(reinterpret_cast<RenderTargetD3D **>(rtOut));

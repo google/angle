@@ -88,7 +88,8 @@ class TextureVk : public TextureImpl
     void bindTexImage(egl::Surface *surface) override;
     void releaseTexImage() override;
 
-    gl::Error getAttachmentRenderTarget(const gl::FramebufferAttachment::Target &target,
+    gl::Error getAttachmentRenderTarget(GLenum binding,
+                                        const gl::ImageIndex &imageIndex,
                                         FramebufferAttachmentRenderTarget **rtOut) override;
 
     void syncState(const gl::Texture::DirtyBits &dirtyBits) override;

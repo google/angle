@@ -255,18 +255,17 @@ void Surface::releaseTexImageFromTexture()
     mTexture.set(nullptr);
 }
 
-gl::Extents Surface::getAttachmentSize(const gl::FramebufferAttachment::Target & /*target*/) const
+gl::Extents Surface::getAttachmentSize(const gl::ImageIndex & /*target*/) const
 {
     return gl::Extents(getWidth(), getHeight(), 1);
 }
 
-const gl::Format &Surface::getAttachmentFormat(
-    const gl::FramebufferAttachment::Target &target) const
+const gl::Format &Surface::getAttachmentFormat(GLenum binding, const gl::ImageIndex &target) const
 {
-    return (target.binding() == GL_BACK ? mBackFormat : mDSFormat);
+    return (binding == GL_BACK ? mBackFormat : mDSFormat);
 }
 
-GLsizei Surface::getAttachmentSamples(const gl::FramebufferAttachment::Target &target) const
+GLsizei Surface::getAttachmentSamples(const gl::ImageIndex &target) const
 {
     return getConfig()->samples;
 }

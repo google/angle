@@ -142,7 +142,8 @@ void TextureVk::releaseTexImage()
     UNIMPLEMENTED();
 }
 
-gl::Error TextureVk::getAttachmentRenderTarget(const gl::FramebufferAttachment::Target &target,
+gl::Error TextureVk::getAttachmentRenderTarget(GLenum binding,
+                                               const gl::ImageIndex &imageIndex,
                                                FramebufferAttachmentRenderTarget **rtOut)
 {
     UNIMPLEMENTED();

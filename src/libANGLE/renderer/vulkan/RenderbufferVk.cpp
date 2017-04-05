@@ -43,7 +43,8 @@ gl::Error RenderbufferVk::setStorageEGLImageTarget(egl::Image *image)
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error RenderbufferVk::getAttachmentRenderTarget(const gl::FramebufferAttachment::Target &target,
+gl::Error RenderbufferVk::getAttachmentRenderTarget(GLenum binding,
+                                                    const gl::ImageIndex &imageIndex,
                                                     FramebufferAttachmentRenderTarget **rtOut)
 {
     UNIMPLEMENTED();

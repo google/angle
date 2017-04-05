@@ -39,7 +39,11 @@ EGLImageD3D::EGLImageD3D(RendererD3D *renderer,
                          EGLenum target,
                          egl::ImageSibling *buffer,
                          const egl::AttributeMap &attribs)
-    : mRenderer(renderer), mBuffer(buffer), mAttachmentBuffer(nullptr), mRenderTarget(nullptr)
+    : mRenderer(renderer),
+      mBuffer(buffer),
+      mImageIndex(gl::ImageIndex::MakeInvalid()),
+      mAttachmentBuffer(nullptr),
+      mRenderTarget(nullptr)
 {
     ASSERT(renderer != nullptr);
     ASSERT(buffer != nullptr);
@@ -47,16 +51,13 @@ EGLImageD3D::EGLImageD3D(RendererD3D *renderer,
     if (egl::IsTextureTarget(target))
     {
         mAttachmentBuffer = GetImplAs<TextureD3D>(GetAs<gl::Texture>(buffer));
-        mAttachmentTarget = gl::FramebufferAttachment::Target(
-            GL_NONE, GetImageIndex(egl_gl::EGLImageTargetToGLTextureTarget(target),
-                                   attribs.get(EGL_GL_TEXTURE_LEVEL_KHR, 0),
-                                   attribs.get(EGL_GL_TEXTURE_ZOFFSET_KHR, 0)));
+        mImageIndex       = GetImageIndex(egl_gl::EGLImageTargetToGLTextureTarget(target),
+                                    attribs.get(EGL_GL_TEXTURE_LEVEL_KHR, 0),
+                                    attribs.get(EGL_GL_TEXTURE_ZOFFSET_KHR, 0));
     }
     else if (egl::IsRenderbufferTarget(target))
     {
         mAttachmentBuffer = GetImplAs<RenderbufferD3D>(GetAs<gl::Renderbuffer>(buffer));
-        mAttachmentTarget =
-            gl::FramebufferAttachment::Target(GL_NONE, gl::ImageIndex::MakeInvalid());
     }
     else
     {
@@ -78,11 +79,7 @@ gl::Error EGLImageD3D::orphan(egl::ImageSibling *sibling)
 {
     if (sibling == mBuffer)
     {
-        gl::Error error = copyToLocalRendertarget();
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(copyToLocalRendertarget());
     }
 
     return gl::NoError();
@@ -93,12 +90,7 @@ gl::Error EGLImageD3D::getRenderTarget(RenderTargetD3D **outRT) const
     if (mAttachmentBuffer)
     {
         FramebufferAttachmentRenderTarget *rt = nullptr;
-        gl::Error error = mAttachmentBuffer->getAttachmentRenderTarget(mAttachmentTarget, &rt);
-        if (error.isError())
-        {
-            return error;
-        }
-
+        ANGLE_TRY(mAttachmentBuffer->getAttachmentRenderTarget(GL_NONE, mImageIndex, &rt));
         *outRT = static_cast<RenderTargetD3D *>(rt);
         return gl::NoError();
     }
@@ -117,11 +109,7 @@ gl::Error EGLImageD3D::copyToLocalRendertarget()
     ASSERT(mRenderTarget == nullptr);
 
     RenderTargetD3D *curRenderTarget = nullptr;
-    gl::Error error = getRenderTarget(&curRenderTarget);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(getRenderTarget(&curRenderTarget));
 
     // This only currently applies do D3D11, where it invalidates FBOs with this Image attached.
     curRenderTarget->signalDirty();
@@ -132,4 +120,4 @@ gl::Error EGLImageD3D::copyToLocalRendertarget()
 
     return mRenderer->createRenderTargetCopy(curRenderTarget, &mRenderTarget);
 }
-}
+}  // namespace rx

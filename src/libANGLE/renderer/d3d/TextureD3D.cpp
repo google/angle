@@ -536,11 +536,12 @@ gl::Error TextureD3D::commitRegion(const gl::ImageIndex &index, const gl::Box &r
     return gl::NoError();
 }
 
-gl::Error TextureD3D::getAttachmentRenderTarget(const gl::FramebufferAttachment::Target &target,
+gl::Error TextureD3D::getAttachmentRenderTarget(GLenum /*binding*/,
+                                                const gl::ImageIndex &imageIndex,
                                                 FramebufferAttachmentRenderTarget **rtOut)
 {
     RenderTargetD3D *rtD3D = nullptr;
-    gl::Error error = getRenderTarget(target.textureIndex(), &rtD3D);
+    gl::Error error        = getRenderTarget(imageIndex, &rtD3D);
     *rtOut = static_cast<FramebufferAttachmentRenderTarget *>(rtD3D);
     return error;
 }

@@ -64,28 +64,6 @@ class FramebufferAttachment final
 
     ~FramebufferAttachment();
 
-    // A framebuffer attachment points to one of three types of resources: Renderbuffers,
-    // Textures and egl::Surface. The "Target" struct indicates which part of the
-    // object an attachment references. For the three types:
-    //   - a Renderbuffer has a unique renderable target, and needs no target index
-    //   - a Texture has targets for every image and uses an ImageIndex
-    //   - a Surface has targets for Color and Depth/Stencil, and uses the attachment binding
-    class Target
-    {
-      public:
-        Target();
-        Target(GLenum binding, const ImageIndex &imageIndex);
-        Target(const Target &other);
-        Target &operator=(const Target &other);
-
-        GLenum binding() const { return mBinding; }
-        const ImageIndex &textureIndex() const { return mTextureIndex; }
-
-      private:
-        GLenum mBinding;
-        ImageIndex mTextureIndex;
-    };
-
     void detach();
     void attach(GLenum type,
                 GLenum binding,
@@ -144,6 +122,28 @@ class FramebufferAttachment final
   private:
     gl::Error getRenderTargetImpl(rx::FramebufferAttachmentRenderTarget **rtOut) const;
 
+    // A framebuffer attachment points to one of three types of resources: Renderbuffers,
+    // Textures and egl::Surface. The "Target" struct indicates which part of the
+    // object an attachment references. For the three types:
+    //   - a Renderbuffer has a unique renderable target, and needs no target index
+    //   - a Texture has targets for every image and uses an ImageIndex
+    //   - a Surface has targets for Color and Depth/Stencil, and uses the attachment binding
+    class Target
+    {
+      public:
+        Target();
+        Target(GLenum binding, const ImageIndex &imageIndex);
+        Target(const Target &other);
+        Target &operator=(const Target &other);
+
+        GLenum binding() const { return mBinding; }
+        const ImageIndex &textureIndex() const { return mTextureIndex; }
+
+      private:
+        GLenum mBinding;
+        ImageIndex mTextureIndex;
+    };
+
     GLenum mType;
     Target mTarget;
     FramebufferAttachmentObject *mResource;
@@ -156,16 +156,17 @@ class FramebufferAttachmentObject
     FramebufferAttachmentObject() {}
     virtual ~FramebufferAttachmentObject() {}
 
-    virtual Extents getAttachmentSize(const FramebufferAttachment::Target &target) const = 0;
-    virtual const Format &getAttachmentFormat(
-        const FramebufferAttachment::Target &target) const                                  = 0;
-    virtual GLsizei getAttachmentSamples(const FramebufferAttachment::Target &target) const = 0;
+    virtual Extents getAttachmentSize(const ImageIndex &imageIndex) const = 0;
+    virtual const Format &getAttachmentFormat(GLenum binding,
+                                              const ImageIndex &imageIndex) const = 0;
+    virtual GLsizei getAttachmentSamples(const ImageIndex &imageIndex) const      = 0;
 
     virtual void onAttach() = 0;
     virtual void onDetach() = 0;
     virtual GLuint getId() const = 0;
 
-    Error getAttachmentRenderTarget(const FramebufferAttachment::Target &target,
+    Error getAttachmentRenderTarget(GLenum binding,
+                                    const ImageIndex &imageIndex,
                                     rx::FramebufferAttachmentRenderTarget **rtOut) const;
 
     angle::BroadcastChannel<> *getDirtyChannel();
@@ -179,26 +180,26 @@ class FramebufferAttachmentObject
 inline Extents FramebufferAttachment::getSize() const
 {
     ASSERT(mResource);
-    return mResource->getAttachmentSize(mTarget);
+    return mResource->getAttachmentSize(mTarget.textureIndex());
 }
 
 inline const Format &FramebufferAttachment::getFormat() const
 {
     ASSERT(mResource);
-    return mResource->getAttachmentFormat(mTarget);
+    return mResource->getAttachmentFormat(mTarget.binding(), mTarget.textureIndex());
 }
 
 inline GLsizei FramebufferAttachment::getSamples() const
 {
     ASSERT(mResource);
-    return mResource->getAttachmentSamples(mTarget);
+    return mResource->getAttachmentSamples(mTarget.textureIndex());
 }
 
 inline gl::Error FramebufferAttachment::getRenderTargetImpl(
     rx::FramebufferAttachmentRenderTarget **rtOut) const
 {
     ASSERT(mResource);
-    return mResource->getAttachmentRenderTarget(mTarget, rtOut);
+    return mResource->getAttachmentRenderTarget(mTarget.binding(), mTarget.textureIndex(), rtOut);
 }
 
 } // namespace gl

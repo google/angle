@@ -345,10 +345,11 @@ egl::Error SurfaceD3D::querySurfacePointerANGLE(EGLint attribute, void **value)
     return egl::Error(EGL_SUCCESS);
 }
 
-gl::Error SurfaceD3D::getAttachmentRenderTarget(const gl::FramebufferAttachment::Target &target,
+gl::Error SurfaceD3D::getAttachmentRenderTarget(GLenum binding,
+                                                const gl::ImageIndex &imageIndex,
                                                 FramebufferAttachmentRenderTarget **rtOut)
 {
-    if (target.binding() == GL_BACK)
+    if (binding == GL_BACK)
     {
         *rtOut = mSwapChain->getColorRenderTarget();
     }
