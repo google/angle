@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b6315a94_2f35bdad",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1361,
+      "author": {
+        "id": 1000331
+      },
+      "writtenOn": "2017-04-05T21:37:27Z",
+      "side": 1,
+      "message": "This cast is invalid when context is testing::NiceMock\u003c(anonymous namespace)::MockValidationContext\u003e. This is a reason for UBSan and CFI bots to be red, see, for example, https://build.chromium.org/p/chromium.fyi/builders/UBSanVptr%20Linux/builds/2350\n\n[ RUN      ] ValidationESTest.DrawElementsWithMaxIndexGivesError\n../../third_party/angle/src/libANGLE/Framebuffer.cpp:1361:24: runtime error: downcast of address 0x7ffd77bbefe8 which does not point to an object of type \u0027const gl::Context\u0027\n0x7ffd77bbefe8: note: object is of type \u0027testing::NiceMock\u003c(anonymous namespace)::MockValidationContext\u003e\u0027\n\nPlease, consider fixing it.",
+      "revId": "dd43e6cd1fa2b7f63a12fdaecd0391e9d7b65610",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
