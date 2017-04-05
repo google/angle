@@ -19,6 +19,29 @@
     },
     {
       "key": {
+        "uuid": "0943f57d_3040f174",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1818,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-05T17:47:05Z",
+      "side": 1,
+      "message": "nit: This should probably be higher in the file (getBoundBuffer is probably in the wrong place too)",
+      "range": {
+        "startLine": 1814,
+        "startChar": 0,
+        "endLine": 1818,
+        "endChar": 1
+      },
+      "revId": "a89f0ee46cfb0bca420025bf6f26e0a441efaf48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dd3a3dd4_b0d372b6",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 6
@@ -30,6 +53,75 @@
       "writtenOn": "2017-04-05T15:38:22Z",
       "side": 1,
       "message": "The error message is still inconsistent with the others.",
+      "revId": "a89f0ee46cfb0bca420025bf6f26e0a441efaf48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bb977c36_5f31747b",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 786,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-05T17:47:05Z",
+      "side": 1,
+      "message": "nit: gl:: prefixes aren\u0027t needed in this file.",
+      "range": {
+        "startLine": 786,
+        "startChar": 4,
+        "endLine": 786,
+        "endChar": 8
+      },
+      "revId": "a89f0ee46cfb0bca420025bf6f26e0a441efaf48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "299da268_7d43a998",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 799,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-05T17:47:05Z",
+      "side": 1,
+      "message": "nit: Capitalize",
+      "range": {
+        "startLine": 799,
+        "startChar": 13,
+        "endLine": 799,
+        "endChar": 14
+      },
+      "revId": "a89f0ee46cfb0bca420025bf6f26e0a441efaf48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "66154542_a6b9c152",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 806,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-05T17:47:05Z",
+      "side": 1,
+      "message": "I think the error message should be \"num_groups_x cannot be greater than MAX_COMPUTE_WORK_GROUP_COUNT[0] (%u).  Better to phrase it as an error.",
+      "range": {
+        "startLine": 806,
+        "startChar": 54,
+        "endLine": 806,
+        "endChar": 85
+      },
       "revId": "a89f0ee46cfb0bca420025bf6f26e0a441efaf48",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
