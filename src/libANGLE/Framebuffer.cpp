@@ -617,20 +617,19 @@ GLenum Framebuffer::checkStatusImpl(const Context *context)
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
 
-            const Format &format          = colorAttachment.getFormat();
-            const TextureCaps &formatCaps = state.getTextureCap(format.info->sizedInternalFormat);
+            const InternalFormat &format = *colorAttachment.getFormat().info;
+            if (!format.renderSupport(context->getClientVersion(), context->getExtensions()))
+            {
+                return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
+            }
+
+            if (format.depthBits > 0 || format.stencilBits > 0)
+            {
+                return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
+            }
+
             if (colorAttachment.type() == GL_TEXTURE)
             {
-                if (!formatCaps.renderable)
-                {
-                    return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
-                }
-
-                if (format.info->depthBits > 0 || format.info->stencilBits > 0)
-                {
-                    return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
-                }
-
                 if (colorAttachment.layer() >= size.depth)
                 {
                     return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
@@ -664,11 +663,6 @@ GLenum Framebuffer::checkStatusImpl(const Context *context)
             else if (colorAttachment.type() == GL_RENDERBUFFER)
             {
                 hasRenderbuffer = true;
-                if (!formatCaps.renderable || format.info->depthBits > 0 ||
-                    format.info->stencilBits > 0)
-                {
-                    return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
-                }
             }
 
             if (!missingAttachment)
@@ -684,7 +678,7 @@ GLenum Framebuffer::checkStatusImpl(const Context *context)
                 // in GLES 3.0, there is no such restriction
                 if (state.getClientMajorVersion() < 3)
                 {
-                    if (format.info->pixelBytes != colorbufferSize)
+                    if (format.pixelBytes != colorbufferSize)
                     {
                         return GL_FRAMEBUFFER_UNSUPPORTED;
                     }
@@ -693,7 +687,7 @@ GLenum Framebuffer::checkStatusImpl(const Context *context)
             else
             {
                 samples           = colorAttachment.getSamples();
-                colorbufferSize   = format.info->pixelBytes;
+                colorbufferSize   = format.pixelBytes;
                 missingAttachment = false;
             }
         }
@@ -708,26 +702,16 @@ GLenum Framebuffer::checkStatusImpl(const Context *context)
             return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
         }
 
-        const Format &format          = depthAttachment.getFormat();
-        const TextureCaps &formatCaps = state.getTextureCap(format.info->sizedInternalFormat);
-        if (depthAttachment.type() == GL_TEXTURE)
-        {
-            if (!formatCaps.renderable)
-            {
-                return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
-            }
+        const InternalFormat &format = *depthAttachment.getFormat().info;
 
-            if (format.info->depthBits == 0)
-            {
-                return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
-            }
-        }
-        else if (depthAttachment.type() == GL_RENDERBUFFER)
+        if (!format.renderSupport(context->getClientVersion(), context->getExtensions()))
         {
-            if (!formatCaps.renderable || format.info->depthBits == 0)
-            {
-                return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
-            }
+            return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
+        }
+
+        if (format.depthBits == 0)
+        {
+            return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
         }
 
         if (missingAttachment)
@@ -760,26 +744,16 @@ GLenum Framebuffer::checkStatusImpl(const Context *context)
             return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
         }
 
-        const Format &format          = stencilAttachment.getFormat();
-        const TextureCaps &formatCaps = state.getTextureCap(format.info->sizedInternalFormat);
-        if (stencilAttachment.type() == GL_TEXTURE)
-        {
-            if (!formatCaps.renderable)
-            {
-                return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
-            }
+        const InternalFormat &format = *stencilAttachment.getFormat().info;
 
-            if (format.info->stencilBits == 0)
-            {
-                return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
-            }
-        }
-        else if (stencilAttachment.type() == GL_RENDERBUFFER)
+        if (!format.renderSupport(context->getClientVersion(), context->getExtensions()))
         {
-            if (!formatCaps.renderable || format.info->stencilBits == 0)
-            {
-                return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
-            }
+            return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
+        }
+
+        if (format.stencilBits == 0)
+        {
+            return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
         }
 
         if (missingAttachment)

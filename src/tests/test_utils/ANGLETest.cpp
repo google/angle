@@ -600,7 +600,9 @@ void ANGLETest::checkD3D11SDKLayersMessages()
 
 static bool checkExtensionExists(const char *allExtensions, const std::string &extName)
 {
-    return strstr(allExtensions, extName.c_str()) != nullptr;
+    const std::string paddedExtensions = std::string(" ") + allExtensions + std::string(" ");
+    return paddedExtensions.find(std::string(" ") + extName + std::string(" ")) !=
+           std::string::npos;
 }
 
 bool ANGLETest::extensionEnabled(const std::string &extName)

@@ -1290,11 +1290,23 @@ bool ValidateES2TexStorageParameters(Context *context,
             break;
         case GL_R8_EXT:
         case GL_RG8_EXT:
+            if (!context->getExtensions().textureRG)
+            {
+                context->handleError(Error(GL_INVALID_ENUM));
+                return false;
+            }
+            break;
         case GL_R16F_EXT:
         case GL_RG16F_EXT:
+            if (!context->getExtensions().textureRG || !context->getExtensions().textureHalfFloat)
+            {
+                context->handleError(Error(GL_INVALID_ENUM));
+                return false;
+            }
+            break;
         case GL_R32F_EXT:
         case GL_RG32F_EXT:
-            if (!context->getExtensions().textureRG)
+            if (!context->getExtensions().textureRG || !context->getExtensions().textureFloat)
             {
                 context->handleError(Error(GL_INVALID_ENUM));
                 return false;

@@ -813,7 +813,8 @@ void GenerateCaps(const FunctionsGL *functions,
     extensions->drawBuffers = functions->isAtLeastGL(gl::Version(2, 0)) ||
                               functions->hasGLExtension("ARB_draw_buffers") ||
                               functions->hasGLESExtension("GL_EXT_draw_buffers");
-    extensions->textureStorage = true;
+    extensions->textureStorage = functions->standard == STANDARD_GL_DESKTOP ||
+                                 functions->hasGLESExtension("GL_EXT_texture_storage");
     extensions->textureFilterAnisotropic = functions->hasGLExtension("GL_EXT_texture_filter_anisotropic") || functions->hasGLESExtension("GL_EXT_texture_filter_anisotropic");
     extensions->occlusionQueryBoolean    = nativegl::SupportsOcclusionQueries(functions);
     extensions->maxTextureAnisotropy = extensions->textureFilterAnisotropic ? QuerySingleGLFloat(functions, GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT) : 0.0f;

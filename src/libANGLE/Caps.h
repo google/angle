@@ -330,6 +330,12 @@ struct Extensions
     // GL_EXT_sRGB_write_control
     bool sRGBWriteControl;
 
+    // GL_CHROMIUM_color_buffer_float_rgb
+    bool colorBufferFloatRGB;
+
+    // GL_CHROMIUM_color_buffer_float_rgba
+    bool colorBufferFloatRGBA;
+
     // ES3 Extension support
 
     // GL_EXT_color_buffer_float

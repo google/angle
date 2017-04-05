@@ -208,6 +208,8 @@ Extensions::Extensions()
       robustClientMemory(false),
       textureSRGBDecode(false),
       sRGBWriteControl(false),
+      colorBufferFloatRGB(false),
+      colorBufferFloatRGBA(false),
       colorBufferFloat(false),
       multisampleCompatibility(false),
       framebufferMixedSamples(false),
@@ -332,7 +334,7 @@ static bool DetermineHalfFloatTextureSupport(const TextureCapsMap &textureCaps)
         GL_RGB16F, GL_RGBA16F,
     };
 
-    return GetFormatSupport(textureCaps, requiredFormats, true, false, true);
+    return GetFormatSupport(textureCaps, requiredFormats, true, false, false);
 }
 
 // Checks for GL_OES_texture_half_float_linear support
@@ -353,7 +355,7 @@ static bool DetermineFloatTextureSupport(const TextureCapsMap &textureCaps)
         GL_RGB32F, GL_RGBA32F,
     };
 
-    return GetFormatSupport(textureCaps, requiredFormats, true, false, true);
+    return GetFormatSupport(textureCaps, requiredFormats, true, false, false);
 }
 
 // Checks for GL_OES_texture_float_linear support
@@ -511,6 +513,26 @@ static bool DetermineDepth32Support(const TextureCapsMap &textureCaps)
     return GetFormatSupport(textureCaps, requiredFormats, false, false, true);
 }
 
+// Check for GL_CHROMIUM_color_buffer_float_rgb
+static bool DetermineColorBufferFloatRGBSupport(const TextureCapsMap &textureCaps)
+{
+    constexpr GLenum requiredFormats[] = {
+        GL_RGB32F,
+    };
+
+    return GetFormatSupport(textureCaps, requiredFormats, true, false, true);
+}
+
+// Check for GL_CHROMIUM_color_buffer_float_rgba
+static bool DetermineColorBufferFloatRGBASupport(const TextureCapsMap &textureCaps)
+{
+    constexpr GLenum requiredFormats[] = {
+        GL_RGBA32F,
+    };
+
+    return GetFormatSupport(textureCaps, requiredFormats, true, false, true);
+}
+
 // Check for GL_EXT_color_buffer_float
 static bool DetermineColorBufferFloatSupport(const TextureCapsMap &textureCaps)
 {
@@ -558,6 +580,8 @@ void Extensions::setTextureExtensionSupport(const TextureCapsMap &textureCaps)
     sRGB = DetermineSRGBTextureSupport(textureCaps);
     depthTextures = DetermineDepthTextureSupport(textureCaps);
     depth32                   = DetermineDepth32Support(textureCaps);
+    colorBufferFloatRGB        = DetermineColorBufferFloatRGBSupport(textureCaps);
+    colorBufferFloatRGBA       = DetermineColorBufferFloatRGBASupport(textureCaps);
     colorBufferFloat = DetermineColorBufferFloatSupport(textureCaps);
     textureNorm16             = DetermineTextureNorm16Support(textureCaps);
 }
@@ -589,11 +613,11 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_NV_pixel_buffer_object"] = esOnlyExtension(&Extensions::pixelBufferObject);
         map["GL_OES_mapbuffer"] = esOnlyExtension(&Extensions::mapBuffer);
         map["GL_EXT_map_buffer_range"] = esOnlyExtension(&Extensions::mapBufferRange);
-        map["GL_EXT_color_buffer_half_float"] = esOnlyExtension(&Extensions::colorBufferHalfFloat);
-        map["GL_OES_texture_half_float"] = esOnlyExtension(&Extensions::textureHalfFloat);
-        map["GL_OES_texture_half_float_linear"] = esOnlyExtension(&Extensions::textureHalfFloatLinear);
-        map["GL_OES_texture_float"] = esOnlyExtension(&Extensions::textureFloat);
-        map["GL_OES_texture_float_linear"] = esOnlyExtension(&Extensions::textureFloatLinear);
+        map["GL_EXT_color_buffer_half_float"] = enableableExtension(&Extensions::colorBufferHalfFloat);
+        map["GL_OES_texture_half_float"] = enableableExtension(&Extensions::textureHalfFloat);
+        map["GL_OES_texture_half_float_linear"] = enableableExtension(&Extensions::textureHalfFloatLinear);
+        map["GL_OES_texture_float"] = enableableExtension(&Extensions::textureFloat);
+        map["GL_OES_texture_float_linear"] = enableableExtension(&Extensions::textureFloatLinear);
         map["GL_EXT_texture_rg"] = esOnlyExtension(&Extensions::textureRG);
         map["GL_EXT_texture_compression_dxt1"] = esOnlyExtension(&Extensions::textureCompressionDXT1);
         map["GL_ANGLE_texture_compression_dxt3"] = esOnlyExtension(&Extensions::textureCompressionDXT3);
@@ -636,7 +660,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_NV_EGL_stream_consumer_external"] = esOnlyExtension(&Extensions::eglStreamConsumerExternal);
         map["GL_EXT_unpack_subimage"] = esOnlyExtension(&Extensions::unpackSubimage);
         map["GL_NV_pack_subimage"] = esOnlyExtension(&Extensions::packSubimage);
-        map["GL_EXT_color_buffer_float"] = esOnlyExtension(&Extensions::colorBufferFloat);
+        map["GL_EXT_color_buffer_float"] = enableableExtension(&Extensions::colorBufferFloat);
         map["GL_OES_vertex_array_object"] = esOnlyExtension(&Extensions::vertexArrayObject);
         map["GL_KHR_debug"] = esOnlyExtension(&Extensions::debug);
         // TODO(jmadill): Enable this when complete.
@@ -652,6 +676,8 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_ANGLE_robust_client_memory"] = esOnlyExtension(&Extensions::robustClientMemory);
         map["GL_EXT_texture_sRGB_decode"] = esOnlyExtension(&Extensions::textureSRGBDecode);
         map["GL_EXT_sRGB_write_control"] = esOnlyExtension(&Extensions::sRGBWriteControl);
+        map["GL_CHROMIUM_color_buffer_float_rgb"] = enableableExtension(&Extensions::colorBufferFloatRGB);
+        map["GL_CHROMIUM_color_buffer_float_rgba"] = enableableExtension(&Extensions::colorBufferFloatRGBA);
         map["GL_EXT_multisample_compatibility"] = esOnlyExtension(&Extensions::multisampleCompatibility);
         map["GL_CHROMIUM_framebuffer_mixed_samples"] = esOnlyExtension(&Extensions::framebufferMixedSamples);
         map["GL_EXT_texture_norm16"] = esOnlyExtension(&Extensions::textureNorm16);

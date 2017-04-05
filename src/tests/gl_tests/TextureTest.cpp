@@ -208,6 +208,43 @@ class Texture2DTest : public TexCoordDrawTest
                 std::cout << "Test skipped due to missing GL_EXT_texture_rg." << std::endl;
                 return;
             }
+
+            if (destImageChannels == 3 && !extensionEnabled("GL_CHROMIUM_color_buffer_float_rgb"))
+            {
+                std::cout << "Test skipped due to missing GL_CHROMIUM_color_buffer_float_rgb."
+                          << std::endl;
+                return;
+            }
+
+            if (destImageChannels == 4 && !extensionEnabled("GL_CHROMIUM_color_buffer_float_rgba"))
+            {
+                std::cout << "Test skipped due to missing GL_CHROMIUM_color_buffer_float_rgb."
+                          << std::endl;
+                return;
+            }
+
+            if (destImageChannels <= 2)
+            {
+                std::cout << "Test skipped because no extensions grant renderability to 1 and 2 "
+                             "channel floating point textures."
+                          << std::endl;
+                return;
+            }
+        }
+        else
+        {
+            if (!extensionEnabled("GL_color_buffer_float"))
+            {
+                std::cout << "Test skipped due to missing GL_color_buffer_float." << std::endl;
+                return;
+            }
+
+            if (destImageChannels == 3 && !extensionEnabled("GL_CHROMIUM_color_buffer_float_rgb"))
+            {
+                std::cout << "Test skipped due to missing GL_CHROMIUM_color_buffer_float_rgb."
+                          << std::endl;
+                return;
+            }
         }
 
         GLfloat sourceImageData[4][16] =
