@@ -880,6 +880,15 @@ bool IsVulkan()
     return (rendererString.find("Vulkan") != std::string::npos);
 }
 
+bool IsOzone()
+{
+#if defined(ANGLE_USE_OZONE)
+    return true;
+#else
+    return false;
+#endif
+}
+
 bool IsLinux()
 {
 #if defined(ANGLE_PLATFORM_LINUX)

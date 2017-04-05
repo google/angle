@@ -311,6 +311,7 @@ bool IsD3DSM3();
 bool IsDesktopOpenGL();
 bool IsOpenGLES();
 bool IsOpenGL();
+bool IsOzone();
 bool IsNULL();
 
 // Operating systems
