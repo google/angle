@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8e4e70f3_4ae970ff",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1301,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-04-05T08:19:39Z",
+      "side": 1,
+      "message": "I think you should not add this comment here, should add some limits\u0027 variables to \"Vertex shader limits\", \"Fragment shader limits\" and \"Compute Shader limits\" .",
+      "range": {
+        "startLine": 1301,
+        "startChar": 7,
+        "endLine": 1301,
+        "endChar": 35
+      },
+      "revId": "1d317a76002d2a8ddc3b7f13d36ede883f9ad515",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c617782_e901f771",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1303,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-04-05T08:19:39Z",
+      "side": 1,
+      "message": "It is better to call function \"GetMaxComputeAtomicCounterBuffers\", although the return value is equal with maxUnorderedAccessViews.",
+      "range": {
+        "startLine": 1303,
+        "startChar": 44,
+        "endLine": 1303,
+        "endChar": 67
+      },
+      "revId": "1d317a76002d2a8ddc3b7f13d36ede883f9ad515",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bcd6ca6c_df5083b0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1308,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-04-05T08:19:39Z",
+      "side": 1,
+      "message": "Because vertex shader does not supported Unordered Access View, here cannot use UAV to implement Atomic Counter in Vertex shader. In fact, I also do not know how to implement vertex shader Atomic Counter in D3D11. We can get caps-\u003emaxVertexAtomicCounters value until we implement Atomic Counter in vertex shader.\nI think it is better to upload this patch after we implement Atomic Counter. Do you think so?",
+      "revId": "1d317a76002d2a8ddc3b7f13d36ede883f9ad515",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "44b26bad_fd368b96",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1311,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-04-05T08:19:39Z",
+      "side": 1,
+      "message": "Should it include the \"caps-\u003emaxVertexAtomicCounterBuffers\"?",
+      "range": {
+        "startLine": 1311,
+        "startChar": 4,
+        "endLine": 1311,
+        "endChar": 41
+      },
+      "revId": "1d317a76002d2a8ddc3b7f13d36ede883f9ad515",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ffdc47f_c5aef068",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1314,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-04-05T08:19:39Z",
+      "side": 1,
+      "message": "Do you mean \"maxFramentAtomicCounter\"?\nAlso need to include \"caps-\u003emaxVertexAtomicCounter\" in this equation?",
+      "range": {
+        "startLine": 1314,
+        "startChar": 47,
+        "endLine": 1314,
+        "endChar": 78
+      },
+      "revId": "1d317a76002d2a8ddc3b7f13d36ede883f9ad515",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
