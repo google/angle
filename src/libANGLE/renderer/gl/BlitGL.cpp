@@ -175,13 +175,13 @@ gl::Error BlitGL::copyImageToLUMAWorkaroundTexture(GLuint texture,
     mStateManager->bindTexture(textureType, texture);
 
     // Allocate the texture memory
-    const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat);
+    GLenum format = gl::GetUnsizedFormat(internalFormat);
 
     gl::PixelUnpackState unpack;
     mStateManager->setPixelUnpackState(unpack);
     mFunctions->texImage2D(target, static_cast<GLint>(level), internalFormat, sourceArea.width,
-                           sourceArea.height, 0, internalFormatInfo.format,
-                           source->getImplementationColorReadType(), nullptr);
+                           sourceArea.height, 0, format, source->getImplementationColorReadType(),
+                           nullptr);
 
     return copySubImageToLUMAWorkaroundTexture(texture, textureType, target, lumaFormat, level,
                                                gl::Offset(0, 0, 0), sourceArea, source);
@@ -205,8 +205,6 @@ gl::Error BlitGL::copySubImageToLUMAWorkaroundTexture(GLuint texture,
     nativegl::CopyTexImageImageFormat copyTexImageFormat = nativegl::GetCopyTexImageImageFormat(
         mFunctions, mWorkarounds, source->getImplementationColorReadFormat(),
         source->getImplementationColorReadType());
-    const gl::InternalFormat &internalFormatInfo =
-        gl::GetInternalFormatInfo(copyTexImageFormat.internalFormat);
 
     mStateManager->bindTexture(GL_TEXTURE_2D, mScratchTextures[0]);
     mFunctions->copyTexImage2D(GL_TEXTURE_2D, 0, copyTexImageFormat.internalFormat, sourceArea.x,
@@ -224,7 +222,8 @@ gl::Error BlitGL::copySubImageToLUMAWorkaroundTexture(GLuint texture,
     // to.
     mStateManager->bindTexture(GL_TEXTURE_2D, mScratchTextures[1]);
     mFunctions->texImage2D(GL_TEXTURE_2D, 0, copyTexImageFormat.internalFormat, sourceArea.width,
-                           sourceArea.height, 0, internalFormatInfo.format,
+                           sourceArea.height, 0,
+                           gl::GetUnsizedFormat(copyTexImageFormat.internalFormat),
                            source->getImplementationColorReadType(), nullptr);
 
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mScratchFBO);

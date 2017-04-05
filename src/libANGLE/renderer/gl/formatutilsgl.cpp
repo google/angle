@@ -282,33 +282,32 @@ const InternalFormat &GetInternalFormatInfo(GLenum internalFormat, StandardGL st
 
 static GLenum GetNativeInternalFormat(const FunctionsGL *functions,
                                       const WorkaroundsGL &workarounds,
-                                      GLenum internalFormat,
-                                      GLenum sizedInternalFormat)
+                                      const gl::InternalFormat &internalFormat)
 {
-    GLenum result = internalFormat;
+    GLenum result = internalFormat.internalFormat;
 
     if (functions->standard == STANDARD_GL_DESKTOP)
     {
         // Use sized internal formats whenever possible to guarantee the requested precision.
         // On Desktop GL, passing an internal format of GL_RGBA will generate a GL_RGBA8 texture
         // even if the provided type is GL_FLOAT.
-        result = sizedInternalFormat;
+        result = internalFormat.sizedInternalFormat;
 
-        const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(sizedInternalFormat);
-
-        if (workarounds.avoid1BitAlphaTextureFormats && formatInfo.alphaBits == 1)
+        if (workarounds.avoid1BitAlphaTextureFormats && internalFormat.alphaBits == 1)
         {
             // Use an 8-bit format instead
             result = GL_RGBA8;
         }
 
-        if (workarounds.rgba4IsNotSupportedForColorRendering && sizedInternalFormat == GL_RGBA4)
+        if (workarounds.rgba4IsNotSupportedForColorRendering &&
+            internalFormat.sizedInternalFormat == GL_RGBA4)
         {
             // Use an 8-bit format instead
             result = GL_RGBA8;
         }
 
-        if (sizedInternalFormat == GL_RGB565 && !functions->isAtLeastGL(gl::Version(4, 1)) &&
+        if (internalFormat.sizedInternalFormat == GL_RGB565 &&
+            !functions->isAtLeastGL(gl::Version(4, 1)) &&
             !functions->hasGLExtension("GL_ARB_ES2_compatibility"))
         {
             // GL_RGB565 is required for basic ES2 functionality but was not added to desktop GL
@@ -317,7 +316,7 @@ static GLenum GetNativeInternalFormat(const FunctionsGL *functions,
             result = GL_RGB8;
         }
 
-        if (sizedInternalFormat == GL_BGRA8_EXT)
+        if (internalFormat.sizedInternalFormat == GL_BGRA8_EXT)
         {
             // GLES accepts GL_BGRA as an internal format but desktop GL only accepts it as a type.
             // Update the internal format to GL_RGBA.
@@ -328,14 +327,14 @@ static GLenum GetNativeInternalFormat(const FunctionsGL *functions,
         {
             // Work around deprecated luminance alpha formats in the OpenGL core profile by backing
             // them with R or RG textures.
-            if (formatInfo.format == GL_LUMINANCE || formatInfo.format == GL_ALPHA)
+            if (internalFormat.format == GL_LUMINANCE || internalFormat.format == GL_ALPHA)
             {
-                result = gl::GetSizedInternalFormat(GL_RED, formatInfo.type);
+                result = gl::GetInternalFormatInfo(GL_RED, internalFormat.type).sizedInternalFormat;
             }
 
-            if (formatInfo.format == GL_LUMINANCE_ALPHA)
+            if (internalFormat.format == GL_LUMINANCE_ALPHA)
             {
-                result = gl::GetSizedInternalFormat(GL_RG, formatInfo.type);
+                result = gl::GetInternalFormatInfo(GL_RG, internalFormat.type).sizedInternalFormat;
             }
         }
     }
@@ -426,15 +425,6 @@ static GLenum GetNativeType(const FunctionsGL *functions,
         }
     }
 
-    if (functions->isAtLeastGLES(gl::Version(3, 0)))
-    {
-        if (type == GL_HALF_FLOAT_OES)
-        {
-            // The enums differ for the OES half float extensions and ES 3 spec. Update it.
-            result = GL_HALF_FLOAT;
-        }
-    }
-
     return result;
 }
 
@@ -472,7 +462,7 @@ TexImageFormat GetTexImageFormat(const FunctionsGL *functions,
 {
     TexImageFormat result;
     result.internalFormat = GetNativeInternalFormat(
-        functions, workarounds, internalFormat, gl::GetSizedInternalFormat(internalFormat, type));
+        functions, workarounds, gl::GetInternalFormatInfo(internalFormat, type));
     result.format = GetNativeFormat(functions, workarounds, format);
     result.type   = GetNativeType(functions, workarounds, type);
     return result;
@@ -513,9 +503,8 @@ CopyTexImageImageFormat GetCopyTexImageImageFormat(const FunctionsGL *functions,
                                                    GLenum framebufferType)
 {
     CopyTexImageImageFormat result;
-    result.internalFormat =
-        GetNativeInternalFormat(functions, workarounds, internalFormat,
-                                gl::GetSizedInternalFormat(internalFormat, framebufferType));
+    result.internalFormat = GetNativeInternalFormat(
+        functions, workarounds, gl::GetInternalFormatInfo(internalFormat, framebufferType));
     return result;
 }
 
@@ -524,8 +513,8 @@ TexStorageFormat GetTexStorageFormat(const FunctionsGL *functions,
                                      GLenum internalFormat)
 {
     TexStorageFormat result;
-    result.internalFormat =
-        GetNativeInternalFormat(functions, workarounds, internalFormat, internalFormat);
+    result.internalFormat = GetNativeInternalFormat(functions, workarounds,
+                                                    gl::GetSizedInternalFormatInfo(internalFormat));
     return result;
 }
 
@@ -534,8 +523,8 @@ RenderbufferFormat GetRenderbufferFormat(const FunctionsGL *functions,
                                          GLenum internalFormat)
 {
     RenderbufferFormat result;
-    result.internalFormat =
-        GetNativeInternalFormat(functions, workarounds, internalFormat, internalFormat);
+    result.internalFormat = GetNativeInternalFormat(functions, workarounds,
+                                                    gl::GetSizedInternalFormatInfo(internalFormat));
     return result;
 }
 ReadPixelsFormat GetReadPixelsFormat(const FunctionsGL *functions,

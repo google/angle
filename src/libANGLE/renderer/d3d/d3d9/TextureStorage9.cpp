@@ -43,7 +43,7 @@ DWORD TextureStorage9::GetTextureUsage(GLenum internalformat, bool renderTarget)
 {
     DWORD d3dusage = 0;
 
-    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalformat);
+    const gl::InternalFormat &formatInfo     = gl::GetSizedInternalFormatInfo(internalformat);
     const d3d9::TextureFormat &d3dFormatInfo = d3d9::GetTextureFormatInfo(internalformat);
     if (formatInfo.depthBits > 0 || formatInfo.stencilBits > 0)
     {

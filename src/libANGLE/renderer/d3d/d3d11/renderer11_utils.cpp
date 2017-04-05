@@ -83,7 +83,7 @@ gl::TextureCaps GenerateTextureFormatCaps(gl::Version maxClientVersion,
     DXGISupportHelper support(device, renderer11DeviceCaps.featureLevel);
     const d3d11::Format &formatInfo = d3d11::Format::Get(internalFormat, renderer11DeviceCaps);
 
-    const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat);
+    const gl::InternalFormat &internalFormatInfo = gl::GetSizedInternalFormatInfo(internalFormat);
 
     UINT texSupportMask = D3D11_FORMAT_SUPPORT_TEXTURE2D;
     if (internalFormatInfo.depthBits == 0 && internalFormatInfo.stencilBits == 0)
@@ -1142,17 +1142,17 @@ void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, cons
     GLuint maxSamples = 0;
     D3D_FEATURE_LEVEL featureLevel = renderer11DeviceCaps.featureLevel;
     const gl::FormatSet &allFormats = gl::GetAllSizedInternalFormats();
-    for (gl::FormatSet::const_iterator internalFormat = allFormats.begin(); internalFormat != allFormats.end(); ++internalFormat)
+    for (GLenum internalFormat : allFormats)
     {
         gl::TextureCaps textureCaps = GenerateTextureFormatCaps(
-            GetMaximumClientVersion(featureLevel), *internalFormat, device, renderer11DeviceCaps);
-        textureCapsMap->insert(*internalFormat, textureCaps);
+            GetMaximumClientVersion(featureLevel), internalFormat, device, renderer11DeviceCaps);
+        textureCapsMap->insert(internalFormat, textureCaps);
 
         maxSamples = std::max(maxSamples, textureCaps.getMaxSamples());
 
-        if (gl::GetInternalFormatInfo(*internalFormat).compressed)
+        if (gl::GetSizedInternalFormatInfo(internalFormat).compressed)
         {
-            caps->compressedTextureFormats.push_back(*internalFormat);
+            caps->compressedTextureFormats.push_back(internalFormat);
         }
     }
 

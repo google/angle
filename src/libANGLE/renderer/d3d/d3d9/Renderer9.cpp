@@ -464,8 +464,10 @@ egl::ConfigSet Renderer9::generateConfigs()
                 const gl::TextureCaps &depthStencilBufferFormatCaps = rendererTextureCaps.get(depthStencilBufferInternalFormat);
                 if (depthStencilBufferFormatCaps.renderable || depthStencilBufferInternalFormat == GL_NONE)
                 {
-                    const gl::InternalFormat &colorBufferFormatInfo = gl::GetInternalFormatInfo(colorBufferInternalFormat);
-                    const gl::InternalFormat &depthStencilBufferFormatInfo = gl::GetInternalFormatInfo(depthStencilBufferInternalFormat);
+                    const gl::InternalFormat &colorBufferFormatInfo =
+                        gl::GetSizedInternalFormatInfo(colorBufferInternalFormat);
+                    const gl::InternalFormat &depthStencilBufferFormatInfo =
+                        gl::GetSizedInternalFormatInfo(depthStencilBufferInternalFormat);
                     const d3d9::TextureFormat &d3d9ColorBufferFormatInfo = d3d9::GetTextureFormatInfo(colorBufferInternalFormat);
 
                     egl::Config config;
@@ -2505,7 +2507,7 @@ gl::Error Renderer9::createRenderTarget(int width, int height, GLenum format, GL
         bool requiresInitialization = false;
         HRESULT result = D3DERR_INVALIDCALL;
 
-        const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(format);
+        const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(format);
         if (formatInfo.depthBits > 0 || formatInfo.stencilBits > 0)
         {
             result = mDevice->CreateDepthStencilSurface(width, height, d3d9FormatInfo.renderFormat,

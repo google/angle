@@ -158,7 +158,7 @@ void PixelTransfer11::setBufferToTextureCopyParams(const gl::Box &destArea, cons
     float texelCenterX = 0.5f / static_cast<float>(destSize.width - 1);
     float texelCenterY = 0.5f / static_cast<float>(destSize.height - 1);
 
-    unsigned int bytesPerPixel = gl::GetInternalFormatInfo(internalFormat).pixelBytes;
+    unsigned int bytesPerPixel   = gl::GetSizedInternalFormatInfo(internalFormat).pixelBytes;
     unsigned int alignmentBytes = static_cast<unsigned int>(unpack.alignment);
     unsigned int alignmentPixels = (alignmentBytes <= bytesPerPixel ? 1 : alignmentBytes / bytesPerPixel);
 
@@ -193,11 +193,12 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::PixelUnpackState &unpac
 
     // The SRV must be in the proper read format, which may be different from the destination format
     // EG: for half float data, we can load full precision floats with implicit conversion
-    GLenum unsizedFormat = gl::GetInternalFormatInfo(destinationFormat).format;
-    GLenum sourceFormat = gl::GetSizedInternalFormat(unsizedFormat, sourcePixelsType);
+    GLenum unsizedFormat = gl::GetUnsizedFormat(destinationFormat);
+    const gl::InternalFormat &sourceglFormatInfo =
+        gl::GetInternalFormatInfo(unsizedFormat, sourcePixelsType);
 
-    const d3d11::Format &sourceFormatInfo =
-        d3d11::Format::Get(sourceFormat, mRenderer->getRenderer11DeviceCaps());
+    const d3d11::Format &sourceFormatInfo = d3d11::Format::Get(
+        sourceglFormatInfo.sizedInternalFormat, mRenderer->getRenderer11DeviceCaps());
     DXGI_FORMAT srvFormat = sourceFormatInfo.srvFormat;
     ASSERT(srvFormat != DXGI_FORMAT_UNKNOWN);
     Buffer11 *bufferStorage11 = GetAs<Buffer11>(sourceBuffer.getImplementation());
@@ -209,7 +210,8 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::PixelUnpackState &unpac
     ASSERT(textureRTV != nullptr);
 
     CopyShaderParams shaderParams;
-    setBufferToTextureCopyParams(destArea, destSize, sourceFormat, unpack, offset, &shaderParams);
+    setBufferToTextureCopyParams(destArea, destSize, sourceglFormatInfo.sizedInternalFormat, unpack,
+                                 offset, &shaderParams);
 
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
 
@@ -286,7 +288,7 @@ gl::Error PixelTransfer11::buildShaderMap()
 
 ID3D11PixelShader *PixelTransfer11::findBufferToTexturePS(GLenum internalFormat) const
 {
-    GLenum componentType = gl::GetInternalFormatInfo(internalFormat).componentType;
+    GLenum componentType = gl::GetSizedInternalFormatInfo(internalFormat).componentType;
     if (componentType == GL_SIGNED_NORMALIZED || componentType == GL_UNSIGNED_NORMALIZED)
     {
         componentType = GL_FLOAT;

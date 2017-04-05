@@ -540,8 +540,7 @@ gl::Error TextureStorage11::generateMipmap(const gl::ImageIndex &sourceIndex,
 
     Blit11 *blitter = mRenderer->getBlitter();
     return blitter->copyTexture(sourceSRV, sourceArea, sourceSize, destRTV, destArea, destSize,
-                                nullptr,
-                                gl::GetInternalFormatInfo(source->getInternalFormat()).format,
+                                nullptr, gl::GetUnsizedFormat(source->getInternalFormat()),
                                 GL_LINEAR, false, false, false);
 }
 
@@ -615,7 +614,7 @@ gl::Error TextureStorage11::setData(const gl::ImageIndex &index,
     UINT destSubresource = getSubresourceIndex(index);
 
     const gl::InternalFormat &internalFormatInfo =
-        gl::GetInternalFormatInfo(image->getInternalFormat());
+        gl::GetInternalFormatInfo(image->getInternalFormat(), type);
 
     gl::Box levelBox(0, 0, 0, getLevelWidth(index.mipIndex), getLevelHeight(index.mipIndex),
                      getLevelDepth(index.mipIndex));

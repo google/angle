@@ -533,7 +533,7 @@ egl::Error DXGISwapChainWindowSurfaceWGL::createSwapChain()
                                           static_cast<GLsizei>(mHeight));
 
         const gl::InternalFormat &depthStencilFormatInfo =
-            gl::GetInternalFormatInfo(mDepthBufferFormat);
+            gl::GetSizedInternalFormatInfo(mDepthBufferFormat);
         if (depthStencilFormatInfo.depthBits > 0)
         {
             mFunctionsGL->framebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,

@@ -248,8 +248,8 @@ bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
         return false;
     }
 
-    const TextureCaps &textureCaps = data.getTextureCap(baseImageDesc.format.asSized());
-    if (!textureCaps.filterable && !IsPointSampled(samplerState))
+    if (!baseImageDesc.format.info->filterSupport(data.getClientVersion(), data.getExtensions()) &&
+        !IsPointSampled(samplerState))
     {
         return false;
     }
@@ -318,7 +318,7 @@ bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
         // extension, due to some underspecification problems, we must allow linear filtering
         // for legacy compatibility with WebGL 1.
         // See http://crbug.com/649200
-        if (samplerState.compareMode == GL_NONE && baseImageDesc.format.sized)
+        if (samplerState.compareMode == GL_NONE && baseImageDesc.format.info->sized)
         {
             if ((samplerState.minFilter != GL_NEAREST &&
                  samplerState.minFilter != GL_NEAREST_MIPMAP_NEAREST) ||
@@ -880,7 +880,7 @@ Error Texture::setImage(const Context *context,
     ANGLE_TRY(mTexture->setImage(rx::SafeGetImpl(context), target, level, internalFormat, size,
                                  format, type, unpackState, pixels));
 
-    mState.setImageDesc(target, level, ImageDesc(size, Format(internalFormat, format, type)));
+    mState.setImageDesc(target, level, ImageDesc(size, Format(internalFormat, type)));
     mDirtyChannel.signal();
 
     return NoError();
@@ -959,9 +959,10 @@ Error Texture::copyImage(const Context *context,
     ANGLE_TRY(mTexture->copyImage(rx::SafeGetImpl(context), target, level, sourceArea,
                                   internalFormat, source));
 
-    const GLenum sizedFormat = GetSizedInternalFormat(internalFormat, GL_UNSIGNED_BYTE);
+    const InternalFormat &internalFormatInfo =
+        GetInternalFormatInfo(internalFormat, GL_UNSIGNED_BYTE);
     mState.setImageDesc(target, level, ImageDesc(Extents(sourceArea.width, sourceArea.height, 1),
-                                                 Format(sizedFormat)));
+                                                 Format(internalFormatInfo)));
     mDirtyChannel.signal();
 
     return NoError();
@@ -1004,8 +1005,8 @@ Error Texture::copyTexture(const Context *context,
                                     unpackUnmultiplyAlpha, source));
 
     const auto &sourceDesc   = source->mState.getImageDesc(source->getTarget(), 0);
-    const GLenum sizedFormat = GetSizedInternalFormat(internalFormat, type);
-    mState.setImageDesc(target, level, ImageDesc(sourceDesc.size, Format(sizedFormat)));
+    const InternalFormat &internalFormatInfo = GetInternalFormatInfo(internalFormat, type);
+    mState.setImageDesc(target, level, ImageDesc(sourceDesc.size, Format(internalFormatInfo)));
     mDirtyChannel.signal();
 
     return NoError();

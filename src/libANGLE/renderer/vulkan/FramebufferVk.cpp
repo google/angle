@@ -36,7 +36,7 @@ gl::ErrorOrResult<const gl::InternalFormat *> GetReadAttachmentInfo(
     ANGLE_TRY(readAttachment->getRenderTarget(&renderTarget));
 
     GLenum implFormat = renderTarget->format->format().fboImplementationInternalFormat;
-    return &gl::GetInternalFormatInfo(implFormat);
+    return &gl::GetSizedInternalFormatInfo(implFormat);
 }
 
 VkSampleCountFlagBits ConvertSamples(GLint sampleCount)
@@ -296,7 +296,7 @@ gl::Error FramebufferVk::readPixels(ContextImpl *context,
     const auto &angleFormat = renderTarget->format->format();
 
     // TODO(jmadill): Use pixel bytes from the ANGLE format directly.
-    const auto &glFormat = gl::GetInternalFormatInfo(angleFormat.glInternalFormat);
+    const auto &glFormat = gl::GetSizedInternalFormatInfo(angleFormat.glInternalFormat);
     int inputPitch       = glFormat.pixelBytes * area.width;
 
     PackPixelsParams params;

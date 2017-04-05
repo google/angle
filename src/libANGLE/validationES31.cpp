@@ -378,8 +378,8 @@ bool ValidateTexStorage2DMultiSample(Context *context,
 
     // The ES3.1 spec(section 8.8) states that an INVALID_ENUM error is generated if internalformat
     // is one of the unsized base internalformats listed in table 8.11.
-    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat);
-    if (formatInfo.pixelBytes == 0)
+    const InternalFormat &formatInfo = GetSizedInternalFormatInfo(internalFormat);
+    if (formatInfo.internalFormat == GL_NONE)
     {
         context->handleError(
             Error(GL_INVALID_ENUM,

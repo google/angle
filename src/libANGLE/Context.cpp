@@ -2637,10 +2637,10 @@ void Context::updateCaps()
 
     for (auto capsIt : mImplementation->getNativeTextureCaps())
     {
-        GLenum format          = capsIt.first;
+        GLenum sizedInternalFormat = capsIt.first;
         TextureCaps formatCaps = capsIt.second;
 
-        const InternalFormat &formatInfo = GetInternalFormatInfo(format);
+        const InternalFormat &formatInfo = GetSizedInternalFormatInfo(sizedInternalFormat);
 
         // Update the format caps based on the client version and extensions.
         // Caps are AND'd with the renderer caps because some core formats are still unsupported in
@@ -2663,10 +2663,10 @@ void Context::updateCaps()
 
         if (formatCaps.texturable && formatInfo.compressed)
         {
-            mCaps.compressedTextureFormats.push_back(format);
+            mCaps.compressedTextureFormats.push_back(sizedInternalFormat);
         }
 
-        mTextureCaps.insert(format, formatCaps);
+        mTextureCaps.insert(sizedInternalFormat, formatCaps);
     }
 }
 

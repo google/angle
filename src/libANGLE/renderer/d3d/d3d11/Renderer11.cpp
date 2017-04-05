@@ -982,9 +982,9 @@ egl::ConfigSet Renderer11::generateConfigs()
             }
 
             const gl::InternalFormat &colorBufferFormatInfo =
-                gl::GetInternalFormatInfo(colorBufferInternalFormat);
+                gl::GetSizedInternalFormatInfo(colorBufferInternalFormat);
             const gl::InternalFormat &depthStencilBufferFormatInfo =
-                gl::GetInternalFormatInfo(depthStencilBufferInternalFormat);
+                gl::GetSizedInternalFormatInfo(depthStencilBufferInternalFormat);
             const gl::Version &maxVersion = getMaxSupportedESVersion();
 
             egl::Config config;
@@ -2601,7 +2601,8 @@ void Renderer11::SamplerMetadataD3D11::initData(unsigned int samplerCount)
 void Renderer11::SamplerMetadataD3D11::update(unsigned int samplerIndex, const gl::Texture &texture)
 {
     unsigned int baseLevel = texture.getTextureState().getEffectiveBaseLevel();
-    GLenum sizedFormat     = texture.getFormat(texture.getTarget(), baseLevel).asSized();
+    GLenum sizedFormat =
+        texture.getFormat(texture.getTarget(), baseLevel).info->sizedInternalFormat;
     if (mSamplerMetadata[samplerIndex].baseLevel != static_cast<int>(baseLevel))
     {
         mSamplerMetadata[samplerIndex].baseLevel = static_cast<int>(baseLevel);
@@ -3184,9 +3185,9 @@ gl::Error Renderer11::copyImageInternal(const gl::Framebuffer *framebuffer,
 
     // Use nearest filtering because source and destination are the same size for the direct copy.
     // Convert to the unsized format before calling copyTexture.
-    const gl::InternalFormat &internalFormat = gl::GetInternalFormatInfo(destFormat);
     ANGLE_TRY(mBlit->copyTexture(source, sourceArea, sourceSize, dest, destArea, destSize, nullptr,
-                                 internalFormat.format, GL_NEAREST, false, false, false));
+                                 gl::GetUnsizedFormat(destFormat), GL_NEAREST, false, false,
+                                 false));
 
     return gl::NoError();
 }
@@ -3844,7 +3845,7 @@ bool Renderer11::supportsFastCopyBufferToTexture(GLenum internalFormat) const
 {
     ASSERT(getNativeExtensions().pixelBufferObject);
 
-    const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat);
+    const gl::InternalFormat &internalFormatInfo = gl::GetSizedInternalFormatInfo(internalFormat);
     const d3d11::Format &d3d11FormatInfo =
         d3d11::Format::Get(internalFormat, mRenderer11DeviceCaps);
 
@@ -4302,8 +4303,10 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRectIn,
 
     bool scissorNeeded = scissor && gl::ClipRectangle(drawRect, *scissor, nullptr);
 
-    const auto &destFormatInfo = gl::GetInternalFormatInfo(drawRenderTarget->getInternalFormat());
-    const auto &srcFormatInfo  = gl::GetInternalFormatInfo(readRenderTarget->getInternalFormat());
+    const auto &destFormatInfo =
+        gl::GetSizedInternalFormatInfo(drawRenderTarget->getInternalFormat());
+    const auto &srcFormatInfo =
+        gl::GetSizedInternalFormatInfo(readRenderTarget->getInternalFormat());
     const auto &formatSet      = drawRenderTarget11->getFormatSet();
     const auto &nativeFormat   = formatSet.format();
 

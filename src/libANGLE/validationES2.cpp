@@ -208,8 +208,7 @@ bool ValidateInstancedPathParameters(gl::Context *context,
 
 bool IsValidCopyTextureFormat(Context *context, GLenum internalFormat)
 {
-    const InternalFormat &internalFormatInfo = GetInternalFormatInfo(internalFormat);
-    switch (internalFormatInfo.format)
+    switch (GetUnsizedFormat(internalFormat))
     {
         case GL_ALPHA:
         case GL_LUMINANCE:
@@ -421,8 +420,8 @@ bool ValidateES2TexImageParameters(Context *context,
 
     if (isSubImage)
     {
-        GLenum textureFormat = texture->getFormat(target, level).asSized();
-        if (textureFormat == GL_NONE)
+        const InternalFormat &textureInternalFormat = *texture->getFormat(target, level).info;
+        if (textureInternalFormat.internalFormat == GL_NONE)
         {
             context->handleError(Error(GL_INVALID_OPERATION, "Texture level does not exist."));
             return false;
@@ -430,7 +429,8 @@ bool ValidateES2TexImageParameters(Context *context,
 
         if (format != GL_NONE)
         {
-            if (gl::GetSizedInternalFormat(format, type) != textureFormat)
+            if (GetInternalFormatInfo(format, type).sizedInternalFormat !=
+                textureInternalFormat.sizedInternalFormat)
             {
                 context->handleError(Error(GL_INVALID_OPERATION));
                 return false;
@@ -463,7 +463,8 @@ bool ValidateES2TexImageParameters(Context *context,
     if (isCompressed)
     {
         GLenum actualInternalFormat =
-            isSubImage ? texture->getFormat(target, level).asSized() : internalformat;
+            isSubImage ? texture->getFormat(target, level).info->sizedInternalFormat
+                       : internalformat;
         switch (actualInternalFormat)
         {
             case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
@@ -824,7 +825,7 @@ bool ValidateES2TexStorageParameters(Context *context,
         return false;
     }
 
-    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalformat);
+    const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(internalformat);
     if (formatInfo.format == GL_NONE || formatInfo.type == GL_NONE)
     {
         context->handleError(Error(GL_INVALID_ENUM));
@@ -1897,7 +1898,7 @@ bool ValidateCompressedTexImage2D(Context *context,
         }
     }
 
-    const InternalFormat &formatInfo = GetInternalFormatInfo(internalformat);
+    const InternalFormat &formatInfo = GetSizedInternalFormatInfo(internalformat);
     auto blockSizeOrErr =
         formatInfo.computeCompressedImageSize(GL_UNSIGNED_BYTE, gl::Extents(width, height, 1));
     if (blockSizeOrErr.isError())
@@ -1985,7 +1986,7 @@ bool ValidateCompressedTexSubImage2D(Context *context,
         }
     }
 
-    const InternalFormat &formatInfo = GetInternalFormatInfo(format);
+    const InternalFormat &formatInfo = GetSizedInternalFormatInfo(format);
     auto blockSizeOrErr =
         formatInfo.computeCompressedImageSize(GL_UNSIGNED_BYTE, gl::Extents(width, height, 1));
     if (blockSizeOrErr.isError())
@@ -3033,7 +3034,7 @@ bool ValidateCopyTextureCHROMIUM(Context *context,
         return false;
     }
 
-    const gl::Format &sourceFormat = source->getFormat(sourceTarget, 0);
+    const gl::InternalFormat &sourceFormat = *source->getFormat(sourceTarget, 0).info;
     if (!IsValidCopyTextureFormat(context, sourceFormat.format))
     {
         context->handleError(
@@ -3139,7 +3140,7 @@ bool ValidateCopySubTextureCHROMIUM(Context *context,
     }
 
     const gl::Format &sourceFormat = source->getFormat(sourceTarget, 0);
-    if (!IsValidCopyTextureFormat(context, sourceFormat.format))
+    if (!IsValidCopyTextureFormat(context, sourceFormat.info->internalFormat))
     {
         context->handleError(
             Error(GL_INVALID_OPERATION, "Source texture internal format is invalid."));
@@ -3168,7 +3169,7 @@ bool ValidateCopySubTextureCHROMIUM(Context *context,
         return false;
     }
 
-    const gl::Format &destFormat = dest->getFormat(destTarget, 0);
+    const gl::InternalFormat &destFormat = *dest->getFormat(destTarget, 0).info;
     if (!IsValidCopyTextureDestinationFormatType(context, destFormat.format, destFormat.type))
     {
         context->handleError(

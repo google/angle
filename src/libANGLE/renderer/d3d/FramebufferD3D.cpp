@@ -205,7 +205,8 @@ GLenum FramebufferD3D::getImplementationColorReadFormat() const
     }
 
     GLenum implementationFormat = getRenderTargetImplementationFormat(attachmentRenderTarget);
-    const gl::InternalFormat &implementationFormatInfo = gl::GetInternalFormatInfo(implementationFormat);
+    const gl::InternalFormat &implementationFormatInfo =
+        gl::GetSizedInternalFormatInfo(implementationFormat);
 
     return implementationFormatInfo.getReadPixelsFormat();
 }
@@ -227,7 +228,8 @@ GLenum FramebufferD3D::getImplementationColorReadType() const
     }
 
     GLenum implementationFormat = getRenderTargetImplementationFormat(attachmentRenderTarget);
-    const gl::InternalFormat &implementationFormatInfo = gl::GetInternalFormatInfo(implementationFormat);
+    const gl::InternalFormat &implementationFormatInfo =
+        gl::GetSizedInternalFormatInfo(implementationFormat);
 
     return implementationFormatInfo.getReadPixelsType();
 }
@@ -240,8 +242,7 @@ gl::Error FramebufferD3D::readPixels(ContextImpl *context,
 {
     const gl::PixelPackState &packState = context->getGLState().getPackState();
 
-    GLenum sizedInternalFormat = gl::GetSizedInternalFormat(format, type);
-    const gl::InternalFormat &sizedFormatInfo = gl::GetInternalFormatInfo(sizedInternalFormat);
+    const gl::InternalFormat &sizedFormatInfo = gl::GetInternalFormatInfo(format, type);
 
     GLuint outputPitch = 0;
     ANGLE_TRY_RESULT(

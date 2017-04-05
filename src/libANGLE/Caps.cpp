@@ -59,13 +59,13 @@ GLuint TextureCaps::getNearestSamples(GLuint requestedSamples) const
     return 0;
 }
 
-TextureCaps GenerateMinimumTextureCaps(GLenum internalFormat,
+TextureCaps GenerateMinimumTextureCaps(GLenum sizedInternalFormat,
                                        const Version &clientVersion,
                                        const Extensions &extensions)
 {
     TextureCaps caps;
 
-    const InternalFormat &internalFormatInfo = GetInternalFormatInfo(internalFormat);
+    const InternalFormat &internalFormatInfo = GetSizedInternalFormatInfo(sizedInternalFormat);
     caps.texturable = internalFormatInfo.textureSupport(clientVersion, extensions);
     caps.renderable = internalFormatInfo.renderSupport(clientVersion, extensions);
     caps.filterable = internalFormatInfo.filterSupport(clientVersion, extensions);

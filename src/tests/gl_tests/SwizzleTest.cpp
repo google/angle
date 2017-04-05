@@ -358,6 +358,12 @@ TEST_P(SwizzleTest, LA8_2D)
 
 TEST_P(SwizzleTest, L32F_2D)
 {
+    if (!extensionEnabled("GL_OES_texture_float"))
+    {
+        std::cout << "Test skipped due to missing GL_OES_texture_float." << std::endl;
+        return;
+    }
+
     GLfloat data[] = {0.7f};
     init2DTexture(GL_LUMINANCE, GL_LUMINANCE, GL_FLOAT, data);
     runTest2D();
@@ -365,6 +371,12 @@ TEST_P(SwizzleTest, L32F_2D)
 
 TEST_P(SwizzleTest, A32F_2D)
 {
+    if (!extensionEnabled("GL_OES_texture_float"))
+    {
+        std::cout << "Test skipped due to missing GL_OES_texture_float." << std::endl;
+        return;
+    }
+
     GLfloat data[] = {
         0.4f,
     };
@@ -374,6 +386,12 @@ TEST_P(SwizzleTest, A32F_2D)
 
 TEST_P(SwizzleTest, LA32F_2D)
 {
+    if (!extensionEnabled("GL_OES_texture_float"))
+    {
+        std::cout << "Test skipped due to missing GL_OES_texture_float." << std::endl;
+        return;
+    }
+
     GLfloat data[] = {
         0.5f, 0.6f,
     };

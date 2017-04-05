@@ -46,6 +46,8 @@ struct Type
 };
 const Type &GetTypeInfo(GLenum type);
 
+// Information about an OpenGL internal format.  Can be keyed on the internalFormat and type
+// members.
 struct InternalFormat
 {
     InternalFormat();
@@ -88,6 +90,9 @@ struct InternalFormat
 
     GLenum internalFormat;
 
+    bool sized;
+    GLenum sizedInternalFormat;
+
     GLuint redBits;
     GLuint greenBits;
     GLuint blueBits;
@@ -120,20 +125,21 @@ struct InternalFormat
     SupportCheckFunction filterSupport;
 };
 
-// A "Format" is either a sized format, or an {unsized format, type} combination.
+// A "Format" wraps an InternalFormat struct, querying it from either a sized internal format or
+// unsized internal format and type.
+// TODO(geofflang): Remove this, it doesn't add any more information than the InternalFormat object.
 struct Format
 {
     // Sized types only.
     explicit Format(GLenum internalFormat);
-    explicit Format(const InternalFormat &internalFormat);
 
     // Sized or unsized types.
-    Format(GLenum internalFormat, GLenum format, GLenum type);
+    explicit Format(const InternalFormat &internalFormat);
+    Format(GLenum internalFormat, GLenum type);
 
     Format(const Format &other);
     Format &operator=(const Format &other);
 
-    GLenum asSized() const;
     bool valid() const;
 
     static Format Invalid();
@@ -143,14 +149,14 @@ struct Format
 
     // This is the sized info.
     const InternalFormat *info;
-    GLenum format;
-    GLenum type;
-    bool sized;
 };
 
-const InternalFormat &GetInternalFormatInfo(GLenum internalFormat);
+const InternalFormat &GetSizedInternalFormatInfo(GLenum internalFormat);
+const InternalFormat &GetInternalFormatInfo(GLenum internalFormat, GLenum type);
 
-GLenum GetSizedInternalFormat(GLenum internalFormat, GLenum type);
+// Strip sizing information from an internal format.  Doesn't necessarily validate that the internal
+// format is valid.
+GLenum GetUnsizedFormat(GLenum internalFormat);
 
 typedef std::set<GLenum> FormatSet;
 const FormatSet &GetAllSizedInternalFormats();
