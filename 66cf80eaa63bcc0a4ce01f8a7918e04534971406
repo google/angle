@@ -2,6 +2,57 @@
   "comments": [
     {
       "key": {
+        "uuid": "cdf7dea4_69f0f429",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-04-05T15:50:23Z",
+      "side": 1,
+      "message": "use { } for the statement, even there is only one line code. The same for the else clause.",
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0dd2c2b5_2449e093",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-04-05T15:50:23Z",
+      "side": 1,
+      "message": "same here.",
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2a82017e_32a0d3be",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 949,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-04-05T15:50:23Z",
+      "side": 1,
+      "message": "same here. please check the other places too.",
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8b96f409_b1b9b3c5",
         "filename": "src/libANGLE/renderer/d3d/ImageD3D.h",
         "patchSetId": 11
@@ -70,6 +121,23 @@
       "writtenOn": "2017-04-05T08:13:37Z",
       "side": 1,
       "message": "why no return this-\u003esetStorageMultisample?",
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2bb89d98_7f1985aa",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-04-05T15:50:23Z",
+      "side": 1,
+      "message": "Are there mSamples and mFixedSampleLocations? Should you compare mSamples with samples?",
       "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
