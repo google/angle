@@ -65,6 +65,30 @@
     },
     {
       "key": {
+        "uuid": "1087040c_3a661718",
+        "filename": "src/tests/gl_tests/IndexedPointsTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-04-05T22:11:17Z",
+      "side": 1,
+      "message": "I don\u0027t understand.  IsOpenGLES() does not appear to be the same as GetParam() \u003d\u003d ES2_OPENGLES().\n(The former says if ANGLE is providing GLES, the latter if ANGLE is running over GLES, right?)\nI think I want the latter because that is condition in which the test is failing.",
+      "parentUuid": "1a84e6fc_ecd6ddae",
+      "range": {
+        "startLine": 300,
+        "startChar": 34,
+        "endLine": 300,
+        "endChar": 62
+      },
+      "revId": "2dcedb8278677a27e34f37c47782033740140723",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b322e80e_2f996b22",
         "filename": "src/tests/gl_tests/SRGBTextureTest.cpp",
         "patchSetId": 1
