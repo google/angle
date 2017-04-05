@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a9ab7d26_fd85f977",
+        "filename": "src/vulkan_support/BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2017-04-05T16:58:05Z",
+      "side": 1,
+      "message": "Like I said on https://chromium-review.googlesource.com/c/468375/: Isn\u0027t this warning firing a bug like 100% of the time? If so, I\u0027d suggest to angle folks that they revert their vulkan update until that\u0027s fixed (not suppressed).",
+      "revId": "60e17eab29b66d096ef315ec59974c3aebd57ba4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
