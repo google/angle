@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "809f4f87_9a8d9496",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-06T19:06:19Z",
+      "side": 1,
+      "message": "This needs a comment.",
+      "range": {
+        "startLine": 132,
+        "startChar": 4,
+        "endLine": 154,
+        "endChar": 5
+      },
+      "revId": "261e619b7359a7ace591951f28142231c4962a39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "33609775_e80fa015",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1873,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-06T19:06:19Z",
+      "side": 1,
+      "message": "The name is computed twice. Create a local std::string name.",
+      "range": {
+        "startLine": 1873,
+        "startChar": 73,
+        "endLine": 1873,
+        "endChar": 83
+      },
+      "revId": "261e619b7359a7ace591951f28142231c4962a39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f5d7548_436c54c1",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2494,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-06T19:06:19Z",
+      "side": 1,
+      "message": "I don\u0027t think this check is sufficient depending on the ordering of the varyings:\n\n  {\n     \"foo\",\n     \"foo[1]\",\n  }\n\nwill correctly validate that it is not allowed but\n\n  {\n     \"foo[1]\",\n     \"foo\",\n  }\n\nwould pass validation.  You probably need a second set of names to track the base name of TF varyings with indices.",
+      "range": {
+        "startLine": 2485,
+        "startChar": 16,
+        "endLine": 2494,
+        "endChar": 17
+      },
+      "revId": "261e619b7359a7ace591951f28142231c4962a39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c548bad9_b942e74d",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2504,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-06T19:06:19Z",
+      "side": 1,
+      "message": "nit: name it elementCount",
+      "range": {
+        "startLine": 2504,
+        "startChar": 23,
+        "endLine": 2504,
+        "endChar": 32
+      },
+      "revId": "261e619b7359a7ace591951f28142231c4962a39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "24e42a0b_3215dd08",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2643,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-06T19:06:19Z",
+      "side": 1,
+      "message": "Why is this neccessary?  Don\u0027t we validate that there is only one TF varying for each baseName?",
+      "range": {
+        "startLine": 2643,
+        "startChar": 16,
+        "endLine": 2643,
+        "endChar": 50
+      },
+      "revId": "261e619b7359a7ace591951f28142231c4962a39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "64140946_977f2703",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-06T19:06:19Z",
+      "side": 1,
+      "message": "Instead of containing the sh::Varying, let\u0027s inherit from it and add the array index member.",
+      "range": {
+        "startLine": 180,
+        "startChar": 7,
+        "endLine": 180,
+        "endChar": 31
+      },
+      "revId": "261e619b7359a7ace591951f28142231c4962a39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "56761dfc_d8320643",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-06T19:06:19Z",
+      "side": 1,
+      "message": "nit: let\u0027s change the name to mLinkedTransformFeedbackVaryings",
+      "range": {
+        "startLine": 261,
+        "startChar": 42,
+        "endLine": 261,
+        "endChar": 68
+      },
+      "revId": "261e619b7359a7ace591951f28142231c4962a39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ab43a1cb_52ce6af7",
+        "filename": "src/libANGLE/VaryingPacking.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-06T19:06:19Z",
+      "side": 1,
+      "message": "Can you update this to call PackedVarying(varyingIn, interpolationIn, \"\")",
+      "range": {
+        "startLine": 27,
+        "startChar": 10,
+        "endLine": 30,
+        "endChar": 38
+      },
+      "revId": "261e619b7359a7ace591951f28142231c4962a39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
