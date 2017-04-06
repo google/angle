@@ -89,6 +89,30 @@
     },
     {
       "key": {
+        "uuid": "51ea4af9_4b452235",
+        "filename": "src/tests/gl_tests/IndexedPointsTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-06T14:01:51Z",
+      "side": 1,
+      "message": "IsOpenGLES is the former - it tests if ANGLE is running on an OpenGL ES device. ANGLE always provides OpenGL, we don\u0027t have methods to test for front-ends since we only have the one. The mechanism of testing is a bit different from the one you have here but it will have the same effect, though it will also apply to GLES 3 and other context versions.",
+      "parentUuid": "1087040c_3a661718",
+      "range": {
+        "startLine": 300,
+        "startChar": 34,
+        "endLine": 300,
+        "endChar": 62
+      },
+      "revId": "2dcedb8278677a27e34f37c47782033740140723",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b322e80e_2f996b22",
         "filename": "src/tests/gl_tests/SRGBTextureTest.cpp",
         "patchSetId": 1
