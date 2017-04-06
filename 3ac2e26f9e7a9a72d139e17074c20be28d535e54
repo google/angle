@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "79106ea3_43e6eb48",
+        "filename": "src/tests/compiler_tests/PrunePureLiteralStatements_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-06T20:12:58Z",
+      "side": 1,
+      "message": "Forgot the comment before the tests.",
+      "revId": "3ac2e26f9e7a9a72d139e17074c20be28d535e54",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
