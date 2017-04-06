@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dcee4043_be597dfa",
+        "filename": "src/libANGLE/renderer/gl/wgl/D3DTextureSurfaceWGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-06T17:11:13Z",
+      "side": 1,
+      "message": "Is it valid to do both calls if the format is pure depth or pure stencil?",
+      "revId": "ea8a13605297214515103abc78686ec56b810ed6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
