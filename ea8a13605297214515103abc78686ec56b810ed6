@@ -16,6 +16,24 @@
       "revId": "ea8a13605297214515103abc78686ec56b810ed6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "05aa8862_dd735abd",
+        "filename": "src/libANGLE/renderer/gl/wgl/D3DTextureSurfaceWGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-06T20:46:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dcee4043_be597dfa",
+      "revId": "ea8a13605297214515103abc78686ec56b810ed6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
