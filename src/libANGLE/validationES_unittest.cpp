@@ -57,7 +57,8 @@ class MockValidationContext : public ValidationContext
 // Test that ANGLE generates an INVALID_OPERATION when validating index data that uses a value
 // larger than MAX_ELEMENT_INDEX. Not specified in the GLES 3 spec, it's undefined behaviour,
 // but we want a test to ensure we maintain this behaviour.
-TEST(ValidationESTest, DrawElementsWithMaxIndexGivesError)
+// TODO(jmadill): Re-enable when framebuffer sync state doesn't happen in validation.
+TEST(ValidationESTest, DISABLED_DrawElementsWithMaxIndexGivesError)
 {
     auto framebufferImpl = MakeFramebufferMock();
     auto programImpl     = MakeProgramMock();
