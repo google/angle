@@ -8,6 +8,7 @@
 
 #include "compiler/translator/BuiltInFunctionEmulatorGLSL.h"
 #include "compiler/translator/EmulatePrecision.h"
+#include "compiler/translator/PrunePureLiteralStatements.h"
 #include "compiler/translator/RecordConstantPrecision.h"
 #include "compiler/translator/OutputESSL.h"
 #include "angle_gl.h"
@@ -31,6 +32,10 @@ void TranslatorESSL::initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu,
 
 void TranslatorESSL::translate(TIntermNode *root, ShCompileOptions compileOptions)
 {
+    // The ESSL output doesn't define a default precision for float, so float literal statements
+    // end up with no precision which is invalid ESSL.
+    PrunePureLiteralStatements(root);
+
     TInfoSinkBase &sink = getInfoSink().obj;
 
     int shaderVer = getShaderVersion();
