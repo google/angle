@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4552178c_e65baca8",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 537,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-06T07:11:40Z",
+      "side": 1,
+      "message": "In current code, ANGLE always call updateAttribPointer whether this attribute is enabled or not. In fact, it is unnecessary to update a disabled vertex array state into driver as it isn\u0027t used in current rendering.\n\nSo for disabled attributes, shall we directly skip all their GL calls and label they are still dirty after calling syncState()? We can sync them just when they are needed by drawing.\n\nWe can use a DirtyBitSet in VertexArrayGL to implement this, just like the implementation in D3D11 part (D3D11 part uses mAttribsToUpdate to record all dirty attributes, and only active attributes in current shader program will be updated before rendering):\n\nThe pseudo-code should be something like this:\n// In syncState()\n...\nfor (unsigned long dirtyBit : angle::IterateBitSet(dirtyBits | mDirtyBitsToUpdate))\n{\n    // Update vertex attribute enabled;\n    ......\n    if (!mAppliedAtrributes[index].enabled) \n    {\n        mDirtyBitsToUpdate.set(dirtyBit);\n        continue;\n    }\n    else if (the attribute has changed from disabled to enabled)\n    {\n        mDirtyBitsToUpdate.reset(dirtyBit);\n    }\n\n    // Update AttribPointer and others\n    ......\n}\n\nOur concern is that as it is not a normal behaviour to call GL functions on a disabled vertex attribute repeatly, which is the only situation that can save unnecessary GL calls from the above code, the above code may potentially harm the performance in all other situations because of the extra bitset operations in the loop.\n\nSo could you give some advice on how to deal with this issue?",
+      "revId": "de98bea0457112be6983e9d6972c3a4ef8519dcf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
