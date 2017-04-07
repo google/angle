@@ -1,0 +1,175 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dd84312e_03c43088",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-07T08:06:48Z",
+      "side": 1,
+      "message": "EbtAtomicUint , keep align with spec.",
+      "range": {
+        "startLine": 126,
+        "startChar": 4,
+        "endLine": 126,
+        "endChar": 20
+      },
+      "revId": "19d5d3c88ab773ef4ca94fcb5346daa458b7b5af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eb475001_6e0dfb1e",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 677,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-07T08:06:48Z",
+      "side": 1,
+      "message": "Missed offset  !\u003d -1?",
+      "revId": "19d5d3c88ab773ef4ca94fcb5346daa458b7b5af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8d39e261_a8c26f98",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1342,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-07T08:06:48Z",
+      "side": 1,
+      "message": "Why you don\u0027t need arraySize here? I think you need to check (binding + 4 * arraySize) \u003c maxAtomicCounterSize",
+      "revId": "19d5d3c88ab773ef4ca94fcb5346daa458b7b5af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7148a326_3fe3cb2f",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1885,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-07T08:06:48Z",
+      "side": 1,
+      "message": "You called \u0027checkAtomicCounterBindingIsValid\u0027 in 3 different places. Are they really needed to call so many times? Does one time validation is enough?",
+      "range": {
+        "startLine": 1885,
+        "startChar": 16,
+        "endLine": 1885,
+        "endChar": 48
+      },
+      "revId": "19d5d3c88ab773ef4ca94fcb5346daa458b7b5af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de73ddcc_69e60bc6",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2024,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-07T08:06:48Z",
+      "side": 1,
+      "message": "This function is more like a setAtomicCouterBindingOffset than check.  And It maybe can merged with parseGlobalAtomicCounterBindingDefaultOffset.",
+      "revId": "19d5d3c88ab773ef4ca94fcb5346daa458b7b5af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "842ca8fc_ba8b23b7",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2441,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-07T08:06:48Z",
+      "side": 1,
+      "message": "In case \u0027layout(binding \u003d 2) uniform atomic_uint a\u0027, is layoutQualifier.offset \u003d\u003d -1? If yes, I think only binding is required. offset is optional.",
+      "revId": "19d5d3c88ab773ef4ca94fcb5346daa458b7b5af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a066ba98_be007aa2",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3595,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-07T08:06:48Z",
+      "side": 1,
+      "message": "else if (intValue  %  4  !\u003d 0)\n{\n    error(intValueLine, \"offset is not multiple of 4\", \"atomic counter offset\");\n}\nelse if (intValue  \u003e  mMaxAtomicCounterSize)\n{\n   error()\n}\n\nAnd add  the the corresponding tests in angle_end2end_tests",
+      "revId": "19d5d3c88ab773ef4ca94fcb5346daa458b7b5af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da79b172_ddb98d2e",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-07T08:06:48Z",
+      "side": 1,
+      "message": "Missed offset !\u003d other.offset ?",
+      "revId": "19d5d3c88ab773ef4ca94fcb5346daa458b7b5af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3375c52f_d3de065c",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-07T08:06:48Z",
+      "side": 1,
+      "message": "Is this part related with translating atomic counter in shader? If no, remove it in this patch.",
+      "range": {
+        "startLine": 192,
+        "startChar": 0,
+        "endLine": 194,
+        "endChar": 92
+      },
+      "revId": "19d5d3c88ab773ef4ca94fcb5346daa458b7b5af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

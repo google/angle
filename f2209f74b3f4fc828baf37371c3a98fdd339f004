@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8e8caa6c_68c7275f",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 427,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-07T08:06:48Z",
+      "side": 0,
+      "message": "Keep this line.",
+      "range": {
+        "startLine": 427,
+        "startChar": 0,
+        "endLine": 427,
+        "endChar": 93
+      },
+      "revId": "f2209f74b3f4fc828baf37371c3a98fdd339f004",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
