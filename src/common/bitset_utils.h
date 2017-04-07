@@ -3,8 +3,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// BitSetIterator:
-//   A helper class to quickly bitscan bitsets for set bits.
+// bitset_utils:
+//   Bitset-related helper classes, such as a fast iterator to scan for set bits.
 //
 
 #ifndef COMMON_BITSETITERATOR_H_
@@ -56,14 +56,12 @@ class BitSetIterator final
 };
 
 template <size_t N>
-BitSetIterator<N>::BitSetIterator(const std::bitset<N> &bitset)
-    : mBits(bitset)
+BitSetIterator<N>::BitSetIterator(const std::bitset<N> &bitset) : mBits(bitset)
 {
 }
 
 template <size_t N>
-BitSetIterator<N>::BitSetIterator(const BitSetIterator &other)
-    : mBits(other.mBits)
+BitSetIterator<N>::BitSetIterator(const BitSetIterator &other) : mBits(other.mBits)
 {
 }
 

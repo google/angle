@@ -3,13 +3,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// BitSetIteratorTest:
-//   Test the IterableBitSet class.
+// bitset_utils_unittest:
+//   Tests bitset helpers and custom classes.
 //
 
 #include <gtest/gtest.h>
 
-#include "common/BitSetIterator.h"
+#include "common/bitset_utils.h"
 
 using namespace angle;
 

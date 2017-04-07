@@ -8,7 +8,7 @@
 
 #include "libANGLE/renderer/d3d/d3d11/StateManager11.h"
 
-#include "common/BitSetIterator.h"
+#include "common/bitset_utils.h"
 #include "common/utilities.h"
 #include "libANGLE/Query.h"
 #include "libANGLE/VertexArray.h"

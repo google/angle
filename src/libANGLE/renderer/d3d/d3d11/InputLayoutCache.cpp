@@ -9,7 +9,7 @@
 
 #include "libANGLE/renderer/d3d/d3d11/InputLayoutCache.h"
 
-#include "common/BitSetIterator.h"
+#include "common/bitset_utils.h"
 #include "common/utilities.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/VertexAttribute.h"

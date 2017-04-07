@@ -7,7 +7,7 @@
 // StateManager9.cpp: Defines a class for caching D3D9 state
 #include "libANGLE/renderer/d3d/d3d9/StateManager9.h"
 
-#include "common/BitSetIterator.h"
+#include "common/bitset_utils.h"
 #include "common/utilities.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/d3d/d3d9/renderer9_utils.h"

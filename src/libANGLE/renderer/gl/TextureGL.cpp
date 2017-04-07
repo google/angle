@@ -8,7 +8,7 @@
 
 #include "libANGLE/renderer/gl/TextureGL.h"
 
-#include "common/BitSetIterator.h"
+#include "common/bitset_utils.h"
 #include "common/debug.h"
 #include "common/utilities.h"
 #include "libANGLE/State.h"

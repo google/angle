@@ -9,7 +9,7 @@
 
 #include "libANGLE/Framebuffer.h"
 
-#include "common/BitSetIterator.h"
+#include "common/bitset_utils.h"
 #include "common/Optional.h"
 #include "common/utilities.h"
 #include "libANGLE/Config.h"

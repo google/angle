@@ -8,7 +8,6 @@
         # These file lists are shared with the GN build.
         'libangle_common_sources':
         [
-            'common/BitSetIterator.h',
             'common/Color.h',
             'common/Color.inl',
             'common/Float16ToFloat32.cpp',
@@ -17,6 +16,7 @@
             'common/Optional.h',
             'common/angleutils.cpp',
             'common/angleutils.h',
+            'common/bitset_utils.h',
             'common/debug.cpp',
             'common/debug.h',
             'common/mathutil.cpp',

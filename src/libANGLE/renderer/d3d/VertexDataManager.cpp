@@ -9,7 +9,7 @@
 
 #include "libANGLE/renderer/d3d/VertexDataManager.h"
 
-#include "common/BitSetIterator.h"
+#include "common/bitset_utils.h"
 #include "libANGLE/Buffer.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/Program.h"

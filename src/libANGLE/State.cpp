@@ -11,7 +11,7 @@
 #include <limits>
 #include <string.h>
 
-#include "common/BitSetIterator.h"
+#include "common/bitset_utils.h"
 #include "common/matrix_utils.h"
 #include "common/mathutil.h"
 #include "libANGLE/Context.h"

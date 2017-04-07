@@ -9,7 +9,7 @@
 
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 
-#include "common/BitSetIterator.h"
+#include "common/bitset_utils.h"
 #include "common/debug.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/renderer/vulkan/BufferVk.h"

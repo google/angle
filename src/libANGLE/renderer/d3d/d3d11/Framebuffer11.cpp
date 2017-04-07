@@ -9,7 +9,7 @@
 #include "libANGLE/renderer/d3d/d3d11/Framebuffer11.h"
 
 #include "common/debug.h"
-#include "common/BitSetIterator.h"
+#include "common/bitset_utils.h"
 #include "libANGLE/renderer/d3d/d3d11/Buffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/Clear11.h"
 #include "libANGLE/renderer/d3d/d3d11/TextureStorage11.h"

@@ -8,7 +8,7 @@
 
 #include "libANGLE/renderer/gl/FramebufferGL.h"
 
-#include "common/BitSetIterator.h"
+#include "common/bitset_utils.h"
 #include "common/debug.h"
 #include "libANGLE/ContextState.h"
 #include "libANGLE/State.h"

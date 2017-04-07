@@ -8,7 +8,7 @@
 
 #include "libANGLE/renderer/gl/VertexArrayGL.h"
 
-#include "common/BitSetIterator.h"
+#include "common/bitset_utils.h"
 #include "common/debug.h"
 #include "common/mathutil.h"
 #include "common/utilities.h"

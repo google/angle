@@ -11,7 +11,7 @@
 
 #include <algorithm>
 
-#include "common/BitSetIterator.h"
+#include "common/bitset_utils.h"
 #include "common/debug.h"
 #include "common/platform.h"
 #include "common/utilities.h"
