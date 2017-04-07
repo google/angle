@@ -84,6 +84,30 @@
     },
     {
       "key": {
+        "uuid": "c11311ff_a7174b59",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1818,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-07T16:49:27Z",
+      "side": 1,
+      "message": "We don\u0027t have specific rules for this but try to keep the methods in the cpp file in a similar order to the header.",
+      "parentUuid": "190f2000_e1dc13c8",
+      "range": {
+        "startLine": 1814,
+        "startChar": 0,
+        "endLine": 1818,
+        "endChar": 1
+      },
+      "revId": "a89f0ee46cfb0bca420025bf6f26e0a441efaf48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dd3a3dd4_b0d372b6",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 6
