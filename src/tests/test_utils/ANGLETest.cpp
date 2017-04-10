@@ -882,7 +882,7 @@ bool IsVulkan()
 
 bool IsOzone()
 {
-#if defined(ANGLE_USE_OZONE)
+#if defined(USE_OZONE)
     return true;
 #else
     return false;
