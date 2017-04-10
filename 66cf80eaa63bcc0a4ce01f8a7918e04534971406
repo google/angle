@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5d0cef41_a66384b4",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-04-10T09:22:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cdf7dea4_69f0f429",
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0dd2c2b5_2449e093",
         "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
         "patchSetId": 11
@@ -33,6 +51,24 @@
       "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "70104ded_78f49b04",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-04-10T09:22:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0dd2c2b5_2449e093",
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "79d74aa7_4eac2cec",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 949,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-04-10T09:22:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2a82017e_32a0d3be",
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8b96f409_b1b9b3c5",
         "filename": "src/libANGLE/renderer/d3d/ImageD3D.h",
         "patchSetId": 11
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "7ecc475b_a6db278f",
+        "filename": "src/libANGLE/renderer/d3d/ImageD3D.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-04-10T09:22:54Z",
+      "side": 1,
+      "message": "I call this function in Image11.cpp to redefine texture. The samples and fixedSampleLocations might not be 1 or ture for multisampled textures.",
+      "parentUuid": "8b96f409_b1b9b3c5",
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1350077a_06f7e713",
         "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
         "patchSetId": 11
@@ -81,6 +153,24 @@
       "writtenOn": "2017-04-05T08:13:37Z",
       "side": 1,
       "message": "Since this function is unreachable and you have add another class TextureD3D_2DMultisample to do it , I think you should remove the declare of it from TextureD3D. Maybe this function should not be defined in base class.",
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ae599142_de1cfd2e",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-04-10T09:22:54Z",
+      "side": 1,
+      "message": "Return gl::noError().\nThese are virtual fucntions, so it\u0027s used to override the base function.",
+      "parentUuid": "1350077a_06f7e713",
       "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -110,6 +200,30 @@
     },
     {
       "key": {
+        "uuid": "8091486a_67f09a99",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3545,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-04-10T09:22:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "520e144d_d2f11b76",
+      "range": {
+        "startLine": 3545,
+        "startChar": 8,
+        "endLine": 3545,
+        "endChar": 56
+      },
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "439c33cb_224efc78",
         "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
         "patchSetId": 11
@@ -121,6 +235,24 @@
       "writtenOn": "2017-04-05T08:13:37Z",
       "side": 1,
       "message": "why no return this-\u003esetStorageMultisample?",
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46edec88_6935192a",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3589,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-04-10T09:22:54Z",
+      "side": 1,
+      "message": "Upper level would call this function like RendererD3D::getIncompleteTexture,  So currently I keep the function here. If it\u0027s removed, I have to add if statement upper level to identify if it\u0027s multisampled texture, call setStorageMultisample instead.",
+      "parentUuid": "439c33cb_224efc78",
       "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -141,6 +273,24 @@
       "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "03e206e2_dfdab3c0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-04-10T09:22:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2bb89d98_7f1985aa",
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -184,6 +334,30 @@
     },
     {
       "key": {
+        "uuid": "9c496500_7436a350",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3409,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-04-10T09:22:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "330de8fa_4060390a",
+      "range": {
+        "startLine": 3404,
+        "startChar": 0,
+        "endLine": 3409,
+        "endChar": 5
+      },
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0eb42a60_ed823c51",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 11
@@ -198,6 +372,24 @@
       "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "046a7565_6753d370",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3437,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-04-10T09:22:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0eb42a60_ed823c51",
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -224,6 +416,30 @@
     },
     {
       "key": {
+        "uuid": "5ee276ea_d47424f4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3463,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-04-10T09:22:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd833219_daac6fd2",
+      "range": {
+        "startLine": 3463,
+        "startChar": 14,
+        "endLine": 3463,
+        "endChar": 36
+      },
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d16a4567_3737256b",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 11
@@ -247,6 +463,30 @@
     },
     {
       "key": {
+        "uuid": "356e7504_0d93ed62",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3478,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-04-10T09:22:54Z",
+      "side": 1,
+      "message": "Mipmap levels should be 1, so I removed this line.",
+      "parentUuid": "d16a4567_3737256b",
+      "range": {
+        "startLine": 3478,
+        "startChar": 0,
+        "endLine": 3478,
+        "endChar": 31
+      },
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c373fda_3e5a261d",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 11
@@ -264,6 +504,24 @@
     },
     {
       "key": {
+        "uuid": "61e46549_30235010",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3486,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-04-10T09:22:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9c373fda_3e5a261d",
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "05ff22cd_129ab88d",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 11
@@ -278,6 +536,24 @@
       "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2dc68d06_742f9f70",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3513,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-04-10T09:22:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "05ff22cd_129ab88d",
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -304,6 +580,30 @@
     },
     {
       "key": {
+        "uuid": "d17a5a7f_9f9e6e68",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3549,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-04-10T09:22:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9ff786c2_93c1030d",
+      "range": {
+        "startLine": 3544,
+        "startChar": 0,
+        "endLine": 3549,
+        "endChar": 9
+      },
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cc3dfd50_56c0175f",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 11
@@ -324,6 +624,30 @@
       "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dcd0178b_fa473e61",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3569,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-04-10T09:22:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cc3dfd50_56c0175f",
+      "range": {
+        "startLine": 3558,
+        "startChar": 0,
+        "endLine": 3569,
+        "endChar": 17
+      },
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -350,6 +674,30 @@
     },
     {
       "key": {
+        "uuid": "8743ac02_645e3fe3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3577,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-04-10T09:22:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dfd048df_f4c8074c",
+      "range": {
+        "startLine": 3574,
+        "startChar": 0,
+        "endLine": 3577,
+        "endChar": 29
+      },
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d6f2397d_6cb62af5",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 11
@@ -370,6 +718,30 @@
       "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1633cde3_4ff7425d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 3703,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-04-10T09:22:54Z",
+      "side": 1,
+      "message": "Removed",
+      "parentUuid": "d6f2397d_6cb62af5",
+      "range": {
+        "startLine": 3703,
+        "startChar": 10,
+        "endLine": 3703,
+        "endChar": 71
+      },
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -396,6 +768,30 @@
     },
     {
       "key": {
+        "uuid": "066a1313_ae288641",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-04-10T09:22:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9d16802f_b3e768fa",
+      "range": {
+        "startLine": 123,
+        "startChar": 0,
+        "endLine": 125,
+        "endChar": 0
+      },
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e46274e0_18568c94",
         "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
         "patchSetId": 11
@@ -410,6 +806,24 @@
       "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "48ad8a01_ea690727",
+        "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-04-10T09:22:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e46274e0_18568c94",
+      "revId": "66cf80eaa63bcc0a4ce01f8a7918e04534971406",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
