@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9c580371_7c7d7a21",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 427,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-10T15:13:40Z",
+      "side": 1,
+      "message": "nit: this function isn\u0027t defined. we should remove the unused declaration.",
+      "range": {
+        "startLine": 427,
+        "startChar": 4,
+        "endLine": 427,
+        "endChar": 75
+      },
+      "revId": "fd7c3b52071222495991a47827443ab9d4db74b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
