@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "06f7af62_97f5d8c5",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 468,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-10T07:24:41Z",
+      "side": 1,
+      "message": "My response is here. Please take a look.",
+      "parentUuid": "b7d24deb_5e5f0bf0",
+      "range": {
+        "startLine": 468,
+        "startChar": 8,
+        "endLine": 468,
+        "endChar": 32
+      },
+      "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "be8b0989_9f059342",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 26
@@ -105,6 +129,24 @@
       "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d034554c_5331b06b",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-10T07:24:41Z",
+      "side": 1,
+      "message": "Please take a look.",
+      "parentUuid": "3400ad8d_a08e432b",
+      "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -227,6 +269,30 @@
     },
     {
       "key": {
+        "uuid": "54d2ef90_964bc1fe",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-10T07:24:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a73ef34f_33c7c6a0",
+      "range": {
+        "startLine": 208,
+        "startChar": 12,
+        "endLine": 209,
+        "endChar": 90
+      },
+      "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8518ddbb_73b4a853",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 26
@@ -298,6 +364,30 @@
     },
     {
       "key": {
+        "uuid": "ba2b944c_3b29d05e",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-10T07:24:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "01b69588_1b511547",
+      "range": {
+        "startLine": 260,
+        "startChar": 11,
+        "endLine": 260,
+        "endChar": 17
+      },
+      "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "62879fa0_2d39fc48",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 26
@@ -357,6 +447,30 @@
       "side": 1,
       "message": "Ack",
       "parentUuid": "617b8828_cbe945ad",
+      "range": {
+        "startLine": 627,
+        "startChar": 4,
+        "endLine": 628,
+        "endChar": 39
+      },
+      "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e75d0783_60a6baa4",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 628,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-10T07:24:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6e345c77_d817340b",
       "range": {
         "startLine": 627,
         "startChar": 4,
@@ -464,6 +578,30 @@
     },
     {
       "key": {
+        "uuid": "a2d523d4_daba7b63",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-10T07:24:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f4a9ec33_92906987",
+      "range": {
+        "startLine": 676,
+        "startChar": 4,
+        "endLine": 676,
+        "endChar": 21
+      },
+      "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ad6a190e_57ee9483",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 26
@@ -559,6 +697,30 @@
     },
     {
       "key": {
+        "uuid": "bee1d41c_74e8eaea",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 679,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-10T07:24:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f0fcbfc5_058a8bb7",
+      "range": {
+        "startLine": 679,
+        "startChar": 4,
+        "endLine": 679,
+        "endChar": 10
+      },
+      "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a273bcf7_327033ba",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 26
@@ -642,6 +804,30 @@
       "side": 1,
       "message": "Ack",
       "parentUuid": "e8e555d0_f803e2a9",
+      "range": {
+        "startLine": 685,
+        "startChar": 4,
+        "endLine": 685,
+        "endChar": 10
+      },
+      "revId": "8ca31af6d66a5a743b129815aa4cc56c64058d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "80d3c688_6b15d6bc",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 685,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-10T07:24:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c0d26668_3671eea6",
       "range": {
         "startLine": 685,
         "startChar": 4,
