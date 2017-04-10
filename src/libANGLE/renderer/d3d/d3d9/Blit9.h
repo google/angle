@@ -99,7 +99,7 @@ class Blit9 : angle::NonCopyable
                                    IDirect3DBaseTexture9 **outTexture);
     void setViewportAndShaderConstants(const RECT &sourceRect,
                                        const gl::Extents &sourceSize,
-                                       const gl::Offset &offset,
+                                       const RECT &destRect,
                                        bool flipY);
     void setCommonBlitState();
     RECT getSurfaceRect(IDirect3DSurface9 *surface) const;

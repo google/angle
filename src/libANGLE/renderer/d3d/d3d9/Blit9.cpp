@@ -220,8 +220,8 @@ gl::Error Blit9::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
     device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
     device->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
 
-    setViewportAndShaderConstants(getSurfaceRect(dest), getSurfaceSize(source), gl::Offset(0, 0, 0),
-                                  false);
+    setViewportAndShaderConstants(getSurfaceRect(source), getSurfaceSize(source),
+                                  getSurfaceRect(dest), false);
 
     render();
 
@@ -442,7 +442,13 @@ gl::Error Blit9::formatConvert(IDirect3DBaseTexture9 *source,
     device->SetTexture(0, source);
     device->SetRenderTarget(0, dest);
 
-    setViewportAndShaderConstants(sourceRect, sourceSize, destOffset, flipY);
+    RECT destRect;
+    destRect.left   = destOffset.x;
+    destRect.right  = destOffset.x + (sourceRect.right - sourceRect.left);
+    destRect.top    = destOffset.y;
+    destRect.bottom = destOffset.y + (sourceRect.bottom - sourceRect.top);
+
+    setViewportAndShaderConstants(sourceRect, sourceSize, destRect, flipY);
 
     setCommonBlitState();
 
@@ -653,16 +659,16 @@ gl::Error Blit9::copySurfaceToTexture(IDirect3DSurface9 *surface,
 
 void Blit9::setViewportAndShaderConstants(const RECT &sourceRect,
                                           const gl::Extents &sourceSize,
-                                          const gl::Offset &offset,
+                                          const RECT &destRect,
                                           bool flipY)
 {
     IDirect3DDevice9 *device = mRenderer->getDevice();
 
     D3DVIEWPORT9 vp;
-    vp.X      = offset.x;
-    vp.Y      = offset.y;
-    vp.Width  = sourceRect.right - sourceRect.left;
-    vp.Height = sourceRect.bottom - sourceRect.top;
+    vp.X      = destRect.left;
+    vp.Y      = destRect.top;
+    vp.Width  = destRect.right - destRect.left;
+    vp.Height = destRect.bottom - destRect.top;
     vp.MinZ   = 0.0f;
     vp.MaxZ   = 1.0f;
     device->SetViewport(&vp);

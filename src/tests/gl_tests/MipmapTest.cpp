@@ -6,6 +6,8 @@
 
 #include "test_utils/ANGLETest.h"
 
+#include "test_utils/gl_raii.h"
+
 using namespace angle;
 
 namespace
@@ -681,6 +683,34 @@ TEST_P(MipmapTest, RenderOntoLevelZeroAfterGenerateMipmap)
     // Render a small textured quad. This would force minification if mips were enabled, but they're not. Therefore, this should be green.
     clearAndDrawQuad(m2DProgram, getWindowWidth() / 4, getWindowHeight() / 4);
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 8, getWindowHeight() / 8, GLColor::green);
+}
+
+// Regression test for a bug that cause mipmaps to only generate using the top left corner as input.
+TEST_P(MipmapTest, MipMapGenerationD3D9Bug)
+{
+    if (!extensionEnabled("GL_EXT_texture_storage") || !extensionEnabled("GL_OES_rgb8_rgba8") ||
+        !extensionEnabled("GL_ANGLE_texture_usage"))
+    {
+        std::cout << "Test skipped due to missing extensions." << std::endl;
+        return;
+    }
+
+    const GLColor mip0Color[4] = {
+        GLColor::red, GLColor::green, GLColor::red, GLColor::green,
+    };
+    const GLColor mip1Color = GLColor(127, 127, 0, 255);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture.get());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_USAGE_ANGLE, GL_FRAMEBUFFER_ATTACHMENT_ANGLE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+    glTexStorage2DEXT(GL_TEXTURE_2D, 2, GL_RGBA8_OES, 2, 2);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 2, GL_RGBA, GL_UNSIGNED_BYTE, mip0Color);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    // Only draw to a 1 pixel viewport so the lower mip is used
+    clearAndDrawQuad(m2DProgram, 1, 1);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, mip1Color, 1.0);
 }
 
 // This test ensures that the level-zero workaround for TextureCubes (on D3D11 Feature Level 9_3)
