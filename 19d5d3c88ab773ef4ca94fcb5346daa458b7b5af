@@ -42,6 +42,24 @@
     },
     {
       "key": {
+        "uuid": "466b0f5a_62efcd1a",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 677,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-10T12:16:25Z",
+      "side": 1,
+      "message": "Good catch.",
+      "parentUuid": "eb475001_6e0dfb1e",
+      "revId": "19d5d3c88ab773ef4ca94fcb5346daa458b7b5af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8d39e261_a8c26f98",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 3
@@ -53,6 +71,24 @@
       "writtenOn": "2017-04-07T08:06:48Z",
       "side": 1,
       "message": "Why you don\u0027t need arraySize here? I think you need to check (binding + 4 * arraySize) \u003c maxAtomicCounterSize",
+      "revId": "19d5d3c88ab773ef4ca94fcb5346daa458b7b5af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9335e1d_92c6aef9",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1342,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-10T12:16:25Z",
+      "side": 1,
+      "message": "binding has nothing to do with array, whereas offset does.",
+      "parentUuid": "8d39e261_a8c26f98",
       "revId": "19d5d3c88ab773ef4ca94fcb5346daa458b7b5af",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -133,6 +169,24 @@
     },
     {
       "key": {
+        "uuid": "9a8eab8d_fba7203d",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3595,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-10T12:16:25Z",
+      "side": 1,
+      "message": "Spec doesn\u0027t demand such compile-time error checks.",
+      "parentUuid": "a066ba98_be007aa2",
+      "revId": "19d5d3c88ab773ef4ca94fcb5346daa458b7b5af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "da79b172_ddb98d2e",
         "filename": "src/compiler/translator/ShaderVars.cpp",
         "patchSetId": 3
@@ -144,6 +198,24 @@
       "writtenOn": "2017-04-07T08:06:48Z",
       "side": 1,
       "message": "Missed offset !\u003d other.offset ?",
+      "revId": "19d5d3c88ab773ef4ca94fcb5346daa458b7b5af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ba510e0d_1098880d",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-10T12:16:25Z",
+      "side": 1,
+      "message": "Good catch.",
+      "parentUuid": "da79b172_ddb98d2e",
       "revId": "19d5d3c88ab773ef4ca94fcb5346daa458b7b5af",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
