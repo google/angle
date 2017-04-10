@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "da31bc18_b449e74c",
+        "filename": "src/libANGLE/signal_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-10T14:47:49Z",
+      "side": 1,
+      "message": "An alternative to adding a variadic template argument would be to template over a single \"MessageT\" that signal takes as a const\u0026 and forwards to the SignalReceivers. This would make all templates produce the same code which would get unified by the linker.\n\nAnother comment that is linked so I\u0027ll put it here. It\u0027d be nice to have aliases for different types of channel / bindings, because ChannelBinding\u003c\u003e is less descriptive than TextureLevelDirtyBinding.",
+      "revId": "9941890c5e54bed03c3a27c352aa501169909a4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
