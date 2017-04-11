@@ -2569,6 +2569,142 @@ ANGLE_EXPORT void GL_APIENTRY TexSubImage3DRobustANGLE(GLenum target,
     }
 }
 
+void GL_APIENTRY CompressedTexImage2DRobustANGLE(GLenum target,
+                                                 GLint level,
+                                                 GLenum internalformat,
+                                                 GLsizei width,
+                                                 GLsizei height,
+                                                 GLint border,
+                                                 GLsizei imageSize,
+                                                 GLsizei dataSize,
+                                                 const GLvoid *data)
+{
+    EVENT(
+        "(GLenum target = 0x%X, GLint level = %d, GLenum internalformat = 0x%X, GLsizei width = "
+        "%d, "
+        "GLsizei height = %d, GLint border = %d, GLsizei imageSize = %d, GLsizei dataSize = %d, "
+        "const GLvoid* data = 0x%0.8p)",
+        target, level, internalformat, width, height, border, imageSize, dataSize, data);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() &&
+            !ValidateCompressedTexImage2DRobustANGLE(context, target, level, internalformat, width,
+                                                     height, border, imageSize, dataSize, data))
+        {
+            return;
+        }
+
+        context->compressedTexImage2D(target, level, internalformat, width, height, border,
+                                      imageSize, data);
+    }
+}
+
+void GL_APIENTRY CompressedTexSubImage2DRobustANGLE(GLenum target,
+                                                    GLint level,
+                                                    GLint xoffset,
+                                                    GLint yoffset,
+                                                    GLsizei width,
+                                                    GLsizei height,
+                                                    GLenum format,
+                                                    GLsizei imageSize,
+                                                    GLsizei dataSize,
+                                                    const GLvoid *data)
+{
+    EVENT(
+        "(GLenum target = 0x%X, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, "
+        "GLsizei width = %d, GLsizei height = %d, GLenum format = 0x%X, "
+        "GLsizei imageSize = %d, GLsizei dataSize = %d, const GLvoid* data = 0x%0.8p)",
+        target, level, xoffset, yoffset, width, height, format, imageSize, dataSize, data);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() &&
+            !ValidateCompressedTexSubImage2DRobustANGLE(context, target, level, xoffset, yoffset,
+                                                        width, height, format, imageSize, dataSize,
+                                                        data))
+        {
+            return;
+        }
+
+        context->compressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format,
+                                         imageSize, data);
+    }
+}
+
+void GL_APIENTRY CompressedTexImage3DRobustANGLE(GLenum target,
+                                                 GLint level,
+                                                 GLenum internalformat,
+                                                 GLsizei width,
+                                                 GLsizei height,
+                                                 GLsizei depth,
+                                                 GLint border,
+                                                 GLsizei imageSize,
+                                                 GLsizei dataSize,
+                                                 const GLvoid *data)
+{
+    EVENT(
+        "(GLenum target = 0x%X, GLint level = %d, GLenum internalformat = 0x%X, GLsizei width = "
+        "%d, "
+        "GLsizei height = %d, GLsizei depth = %d, GLint border = %d, GLsizei imageSize = %d, "
+        "GLsizei dataSize = %d, const GLvoid* data = 0x%0.8p)",
+        target, level, internalformat, width, height, depth, border, imageSize, dataSize, data);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() &&
+            !ValidateCompressedTexImage3DRobustANGLE(context, target, level, internalformat, width,
+                                                     height, depth, border, imageSize, dataSize,
+                                                     data))
+        {
+            return;
+        }
+
+        context->compressedTexImage3D(target, level, internalformat, width, height, depth, border,
+                                      imageSize, data);
+    }
+}
+
+void GL_APIENTRY CompressedTexSubImage3DRobustANGLE(GLenum target,
+                                                    GLint level,
+                                                    GLint xoffset,
+                                                    GLint yoffset,
+                                                    GLint zoffset,
+                                                    GLsizei width,
+                                                    GLsizei height,
+                                                    GLsizei depth,
+                                                    GLenum format,
+                                                    GLsizei imageSize,
+                                                    GLsizei dataSize,
+                                                    const GLvoid *data)
+{
+    EVENT(
+        "(GLenum target = 0x%X, GLint level = %d, GLint xoffset = %d, GLint yoffset = %d, "
+        "GLint zoffset = %d, GLsizei width = %d, GLsizei height = %d, GLsizei depth = %d, "
+        "GLenum format = 0x%X, GLsizei imageSize = %d, GLsizei dataSize = %d, const GLvoid* data = "
+        "0x%0.8p)",
+        target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, dataSize,
+        data);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() &&
+            !ValidateCompressedTexSubImage3DRobustANGLE(context, target, level, xoffset, yoffset,
+                                                        zoffset, width, height, depth, format,
+                                                        imageSize, dataSize, data))
+        {
+            return;
+        }
+
+        context->compressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height,
+                                         depth, format, imageSize, data);
+    }
+}
+
 ANGLE_EXPORT void GL_APIENTRY
 GetQueryivRobustANGLE(GLenum target, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *params)
 {

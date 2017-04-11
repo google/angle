@@ -6257,4 +6257,25 @@ bool ValidateWebGLFramebufferAttachmentClearType(ValidationContext *context,
     return true;
 }
 
+bool ValidateRobustCompressedTexImageBase(ValidationContext *context,
+                                          GLsizei imageSize,
+                                          GLsizei dataSize)
+{
+    if (!ValidateRobustEntryPoint(context, dataSize))
+    {
+        return false;
+    }
+
+    gl::Buffer *pixelUnpackBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER);
+    if (pixelUnpackBuffer == nullptr)
+    {
+        if (dataSize < imageSize)
+        {
+            context->handleError(
+                Error(GL_INVALID_OPERATION, "dataSize must be at least %i.", imageSize));
+        }
+    }
+    return true;
+}
+
 }  // namespace gl

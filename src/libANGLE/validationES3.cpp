@@ -1207,6 +1207,27 @@ bool ValidateCompressedTexImage3D(Context *context,
     return true;
 }
 
+bool ValidateCompressedTexImage3DRobustANGLE(Context *context,
+                                             GLenum target,
+                                             GLint level,
+                                             GLenum internalformat,
+                                             GLsizei width,
+                                             GLsizei height,
+                                             GLsizei depth,
+                                             GLint border,
+                                             GLsizei imageSize,
+                                             GLsizei dataSize,
+                                             const GLvoid *data)
+{
+    if (!ValidateRobustCompressedTexImageBase(context, imageSize, dataSize))
+    {
+        return false;
+    }
+
+    return ValidateCompressedTexImage3D(context, target, level, internalformat, width, height,
+                                        depth, border, imageSize, data);
+}
+
 bool ValidateBindVertexArray(Context *context, GLuint array)
 {
     if (context->getClientMajorVersion() < 3)
@@ -1805,6 +1826,28 @@ bool ValidateCompressedTexSubImage3D(Context *context,
 
     return ValidateES3TexImage3DParameters(context, target, level, GL_NONE, true, true, 0, 0, 0,
                                            width, height, depth, 0, GL_NONE, GL_NONE, -1, data);
+}
+bool ValidateCompressedTexSubImage3DRobustANGLE(Context *context,
+                                                GLenum target,
+                                                GLint level,
+                                                GLint xoffset,
+                                                GLint yoffset,
+                                                GLint zoffset,
+                                                GLsizei width,
+                                                GLsizei height,
+                                                GLsizei depth,
+                                                GLenum format,
+                                                GLsizei imageSize,
+                                                GLsizei dataSize,
+                                                const GLvoid *data)
+{
+    if (!ValidateRobustCompressedTexImageBase(context, imageSize, dataSize))
+    {
+        return false;
+    }
+
+    return ValidateCompressedTexSubImage3D(context, target, level, xoffset, yoffset, zoffset, width,
+                                           height, depth, format, imageSize, data);
 }
 
 bool ValidateGenQueries(Context *context, GLint n, GLuint *)

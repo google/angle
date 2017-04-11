@@ -1915,6 +1915,46 @@ bool ValidateCompressedTexImage2D(Context *context,
     return true;
 }
 
+bool ValidateCompressedTexImage2DRobustANGLE(Context *context,
+                                             GLenum target,
+                                             GLint level,
+                                             GLenum internalformat,
+                                             GLsizei width,
+                                             GLsizei height,
+                                             GLint border,
+                                             GLsizei imageSize,
+                                             GLsizei dataSize,
+                                             const GLvoid *data)
+{
+    if (!ValidateRobustCompressedTexImageBase(context, imageSize, dataSize))
+    {
+        return false;
+    }
+
+    return ValidateCompressedTexImage2D(context, target, level, internalformat, width, height,
+                                        border, imageSize, data);
+}
+bool ValidateCompressedTexSubImage2DRobustANGLE(Context *context,
+                                                GLenum target,
+                                                GLint level,
+                                                GLint xoffset,
+                                                GLint yoffset,
+                                                GLsizei width,
+                                                GLsizei height,
+                                                GLenum format,
+                                                GLsizei imageSize,
+                                                GLsizei dataSize,
+                                                const GLvoid *data)
+{
+    if (!ValidateRobustCompressedTexImageBase(context, imageSize, dataSize))
+    {
+        return false;
+    }
+
+    return ValidateCompressedTexSubImage2D(context, target, level, xoffset, yoffset, width, height,
+                                           format, imageSize, data);
+}
+
 bool ValidateCompressedTexSubImage2D(Context *context,
                                      GLenum target,
                                      GLint level,

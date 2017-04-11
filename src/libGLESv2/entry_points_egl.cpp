@@ -1458,6 +1458,10 @@ __eglMustCastToProperFunctionPointerType EGLAPIENTRY GetProcAddress(const char *
         INSERT_PROC_ADDRESS(gl, TexSubImage2DRobustANGLE);
         INSERT_PROC_ADDRESS(gl, TexImage3DRobustANGLE);
         INSERT_PROC_ADDRESS(gl, TexSubImage3DRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, CompressedTexImage2DRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, CompressedTexSubImage2DRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, CompressedTexImage3DRobustANGLE);
+        INSERT_PROC_ADDRESS(gl, CompressedTexSubImage3DRobustANGLE);
         INSERT_PROC_ADDRESS(gl, GetQueryivRobustANGLE);
         INSERT_PROC_ADDRESS(gl, GetQueryObjectuivRobustANGLE);
         INSERT_PROC_ADDRESS(gl, GetBufferPointervRobustANGLE);

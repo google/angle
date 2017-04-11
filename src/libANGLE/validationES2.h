@@ -171,6 +171,28 @@ bool ValidateCompressedTexSubImage2D(Context *context,
                                      GLenum format,
                                      GLsizei imageSize,
                                      const GLvoid *data);
+bool ValidateCompressedTexImage2DRobustANGLE(Context *context,
+                                             GLenum target,
+                                             GLint level,
+                                             GLenum internalformat,
+                                             GLsizei width,
+                                             GLsizei height,
+                                             GLint border,
+                                             GLsizei imageSize,
+                                             GLsizei dataSize,
+                                             const GLvoid *data);
+bool ValidateCompressedTexSubImage2DRobustANGLE(Context *context,
+                                                GLenum target,
+                                                GLint level,
+                                                GLint xoffset,
+                                                GLint yoffset,
+                                                GLsizei width,
+                                                GLsizei height,
+                                                GLenum format,
+                                                GLsizei imageSize,
+                                                GLsizei dataSize,
+                                                const GLvoid *data);
+
 bool ValidateBindTexture(Context *context, GLenum target, GLuint texture);
 
 bool ValidateGetBufferPointervOES(Context *context, GLenum target, GLenum pname, void **params);

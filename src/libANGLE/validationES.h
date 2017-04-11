@@ -633,6 +633,10 @@ bool ValidateWebGLFramebufferAttachmentClearType(ValidationContext *context,
                                                  const GLenum *validComponentTypes,
                                                  size_t validComponentTypeCount);
 
+bool ValidateRobustCompressedTexImageBase(ValidationContext *context,
+                                          GLsizei imageSize,
+                                          GLsizei dataSize);
+
 // Error messages shared here for use in testing.
 extern const char *g_ExceedsMaxElementErrorMessage;
 }  // namespace gl

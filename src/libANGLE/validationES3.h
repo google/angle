@@ -184,6 +184,17 @@ bool ValidateCompressedTexImage3D(Context *context,
                                   GLint border,
                                   GLsizei imageSize,
                                   const GLvoid *data);
+bool ValidateCompressedTexImage3DRobustANGLE(Context *context,
+                                             GLenum target,
+                                             GLint level,
+                                             GLenum internalformat,
+                                             GLsizei width,
+                                             GLsizei height,
+                                             GLsizei depth,
+                                             GLint border,
+                                             GLsizei imageSize,
+                                             GLsizei dataSize,
+                                             const GLvoid *data);
 
 bool ValidateBindVertexArray(Context *context, GLuint array);
 bool ValidateIsVertexArray(Context *context);
@@ -307,6 +318,19 @@ bool ValidateCompressedTexSubImage3D(Context *context,
                                      GLenum format,
                                      GLsizei imageSize,
                                      const GLvoid *data);
+bool ValidateCompressedTexSubImage3DRobustANGLE(Context *context,
+                                                GLenum target,
+                                                GLint level,
+                                                GLint xoffset,
+                                                GLint yoffset,
+                                                GLint zoffset,
+                                                GLsizei width,
+                                                GLsizei height,
+                                                GLsizei depth,
+                                                GLenum format,
+                                                GLsizei imageSize,
+                                                GLsizei dataSize,
+                                                const GLvoid *data);
 
 bool ValidateGenQueries(Context *context, GLint n, GLuint *ids);
 bool ValidateDeleteQueries(Context *context, GLint n, const GLuint *ids);
