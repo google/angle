@@ -13,6 +13,7 @@
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Config.h"
 #include "libANGLE/Context.h"
+#include "libANGLE/Fence.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/Renderbuffer.h"
@@ -885,6 +886,33 @@ void QueryFramebufferParameteriv(const Framebuffer *framebuffer, GLenum pname, G
             UNREACHABLE();
             break;
     }
+}
+
+Error QuerySynciv(const FenceSync *sync, GLenum pname, GLint *values)
+{
+    ASSERT(sync);
+
+    switch (pname)
+    {
+        case GL_OBJECT_TYPE:
+            *values = ConvertToGLint(GL_SYNC_FENCE);
+            break;
+        case GL_SYNC_CONDITION:
+            *values = ConvertToGLint(sync->getCondition());
+            break;
+        case GL_SYNC_FLAGS:
+            *values = ConvertToGLint(sync->getFlags());
+            break;
+        case GL_SYNC_STATUS:
+            ANGLE_TRY(sync->getStatus(values));
+            break;
+
+        default:
+            UNREACHABLE();
+            break;
+    }
+
+    return NoError();
 }
 
 void SetTexParameterf(Texture *texture, GLenum pname, GLfloat param)

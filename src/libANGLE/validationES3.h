@@ -384,6 +384,13 @@ bool ValidateVertexAttribIPointer(ValidationContext *context,
                                   GLsizei stride,
                                   const GLvoid *pointer);
 
+bool ValidateGetSynciv(Context *context,
+                       GLsync sync,
+                       GLenum pname,
+                       GLsizei bufSize,
+                       GLsizei *length,
+                       GLint *values);
+
 }  // namespace gl
 
 #endif // LIBANGLE_VALIDATION_ES3_H_

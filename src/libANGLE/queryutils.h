@@ -18,6 +18,8 @@ namespace gl
 {
 class Buffer;
 class Context;
+class Error;
+class FenceSync;
 class Framebuffer;
 class Program;
 class Renderbuffer;
@@ -94,6 +96,8 @@ void QueryActiveUniformBlockiv(const Program *program,
 void QueryInternalFormativ(const TextureCaps &format, GLenum pname, GLsizei bufSize, GLint *params);
 
 void QueryFramebufferParameteriv(const Framebuffer *framebuffer, GLenum pname, GLint *params);
+
+Error QuerySynciv(const FenceSync *sync, GLenum pname, GLint *values);
 
 void SetTexParameterf(Texture *texture, GLenum pname, GLfloat param);
 void SetTexParameterfv(Texture *texture, GLenum pname, const GLfloat *params);

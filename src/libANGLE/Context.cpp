@@ -4010,6 +4010,12 @@ void Context::renderbufferStorageMultisample(GLenum target,
         renderbuffer->setStorageMultisample(samples, convertedInternalFormat, width, height));
 }
 
+void Context::getSynciv(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *values)
+{
+    const FenceSync *syncObject = getFenceSync(sync);
+    handleError(QuerySynciv(syncObject, pname, values));
+}
+
 void Context::getFramebufferParameteriv(GLenum target, GLenum pname, GLint *params)
 {
     Framebuffer *framebuffer = mGLState.getTargetFramebuffer(target);

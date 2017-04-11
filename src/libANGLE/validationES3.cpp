@@ -2434,4 +2434,47 @@ bool ValidateVertexAttribIPointer(ValidationContext *context,
     return true;
 }
 
+bool ValidateGetSynciv(Context *context,
+                       GLsync sync,
+                       GLenum pname,
+                       GLsizei bufSize,
+                       GLsizei *length,
+                       GLint *values)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        context->handleError(
+            Error(GL_INVALID_OPERATION, "GetSynciv requires OpenGL ES 3.0 or higher."));
+        return false;
+    }
+
+    if (bufSize < 0)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "bufSize cannot be negative."));
+        return false;
+    }
+
+    FenceSync *fenceSync = context->getFenceSync(sync);
+    if (!fenceSync)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Invalid sync object."));
+        return false;
+    }
+
+    switch (pname)
+    {
+        case GL_OBJECT_TYPE:
+        case GL_SYNC_CONDITION:
+        case GL_SYNC_FLAGS:
+        case GL_SYNC_STATUS:
+            break;
+
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Invalid pname."));
+            return false;
+    }
+
+    return true;
+}
+
 }  // namespace gl

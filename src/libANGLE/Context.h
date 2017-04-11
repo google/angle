@@ -571,6 +571,8 @@ class Context final : public ValidationContext
                                         GLsizei width,
                                         GLsizei height);
 
+    void getSynciv(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *values);
+
     // CHROMIUM_framebuffer_mixed_samples
     void setCoverageModulation(GLenum components);
 
