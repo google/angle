@@ -134,5 +134,64 @@ TEST_P(ProgramInterfaceTestES31, GetResourceName)
     EXPECT_EQ("oColor[", std::string(name));
 }
 
+// Tests glGetProgramResourceLocation.
+TEST_P(ProgramInterfaceTestES31, GetResourceLocation)
+{
+    const std::string &vertexShaderSource =
+        "#version 310 es\n"
+        "precision highp float;\n"
+        "layout(location = 3) in highp vec4 position;\n"
+        "in highp vec4 noLocationSpecified;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = position;\n"
+        "}";
+
+    const std::string &fragmentShaderSource =
+        "#version 310 es\n"
+        "precision highp float;\n"
+        "uniform vec4 color;\n"
+        "layout(location = 2) out vec4 oColor[4];\n"
+        "void main()\n"
+        "{\n"
+        "    oColor[0] = color;\n"
+        "}";
+
+    ANGLE_GL_PROGRAM(program, vertexShaderSource, fragmentShaderSource);
+
+    std::array<GLenum, 5> invalidInterfaces = {{GL_UNIFORM_BLOCK, GL_TRANSFORM_FEEDBACK_VARYING,
+                                                GL_BUFFER_VARIABLE, GL_SHADER_STORAGE_BLOCK,
+                                                GL_ATOMIC_COUNTER_BUFFER}};
+    GLint location;
+    for (auto &invalidInterface : invalidInterfaces)
+    {
+        location = glGetProgramResourceLocation(program, invalidInterface, "any");
+        EXPECT_GL_ERROR(GL_INVALID_ENUM);
+        EXPECT_EQ(-1, location);
+    }
+
+    location = glGetProgramResourceLocation(program, GL_PROGRAM_INPUT, "position");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(3, location);
+
+    location = glGetProgramResourceLocation(program, GL_PROGRAM_INPUT, "noLocationSpecified");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(-1, location);
+
+    location = glGetProgramResourceLocation(program, GL_PROGRAM_INPUT, "missing");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(-1, location);
+
+    location = glGetProgramResourceLocation(program, GL_PROGRAM_OUTPUT, "oColor");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(2, location);
+    location = glGetProgramResourceLocation(program, GL_PROGRAM_OUTPUT, "oColor[0]");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(2, location);
+    location = glGetProgramResourceLocation(program, GL_PROGRAM_OUTPUT, "oColor[3]");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(5, location);
+}
+
 ANGLE_INSTANTIATE_TEST(ProgramInterfaceTestES31, ES31_OPENGL(), ES31_D3D11(), ES31_OPENGLES());
 }  // anonymous namespace

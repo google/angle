@@ -65,6 +65,10 @@ bool ValidateGetProgramResourceName(Context *context,
                                     GLsizei bufSize,
                                     GLsizei *length,
                                     GLchar *name);
+bool ValidateGetProgramResourceLocation(Context *context,
+                                        GLuint program,
+                                        GLenum programInterface,
+                                        const GLchar *name);
 
 bool ValidateBindVertexBuffer(ValidationContext *context,
                               GLuint bindingIndex,

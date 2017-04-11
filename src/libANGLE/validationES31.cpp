@@ -41,6 +41,19 @@ bool ValidateNamedProgramInterface(GLenum programInterface)
     }
 }
 
+bool ValidateLocationProgramInterface(GLenum programInterface)
+{
+    switch (programInterface)
+    {
+        case GL_UNIFORM:
+        case GL_PROGRAM_INPUT:
+        case GL_PROGRAM_OUTPUT:
+            return true;
+        default:
+            return false;
+    }
+}
+
 bool ValidateProgramResourceIndex(const Program *programObject,
                                   GLenum programInterface,
                                   GLuint index)
@@ -895,4 +908,36 @@ bool ValidateBindImageTexture(Context *context,
 
     return true;
 }
+
+bool ValidateGetProgramResourceLocation(Context *context,
+                                        GLuint program,
+                                        GLenum programInterface,
+                                        const GLchar *name)
+{
+    if (context->getClientVersion() < ES_3_1)
+    {
+        context->handleError(InvalidOperation() << "Context does not support GLES3.1.");
+        return false;
+    }
+
+    Program *programObject = GetValidProgram(context, program);
+    if (programObject == nullptr)
+    {
+        return false;
+    }
+
+    if (!programObject->isLinked())
+    {
+        context->handleError(InvalidOperation() << "Program is not successfully linked.");
+        return false;
+    }
+
+    if (!ValidateLocationProgramInterface(programInterface))
+    {
+        context->handleError(InvalidEnum() << "Invalid program interface.");
+        return false;
+    }
+    return true;
+}
+
 }  // namespace gl

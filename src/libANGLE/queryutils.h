@@ -128,6 +128,10 @@ void QueryProgramResourceName(const Program *program,
                               GLsizei *length,
                               GLchar *name);
 
+GLint QueryProgramResourceLocation(const Program *program,
+                                   GLenum programInterface,
+                                   const GLchar *name);
+
 }  // namespace gl
 
 namespace egl

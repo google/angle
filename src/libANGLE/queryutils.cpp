@@ -1050,7 +1050,7 @@ GLuint QueryProgramResourceIndex(const Program *program,
         case GL_PROGRAM_OUTPUT:
             return program->getOutputResourceIndex(name);
 
-        // TODO(Jie): more interfaces.
+        // TODO(jie.a.chen@intel.com): more interfaces.
         case GL_UNIFORM:
         case GL_UNIFORM_BLOCK:
         case GL_TRANSFORM_FEEDBACK_VARYING:
@@ -1082,7 +1082,7 @@ void QueryProgramResourceName(const Program *program,
             program->getOutputResourceName(index, bufSize, length, name);
             break;
 
-        // TODO(Jie): more interfaces.
+        // TODO(jie.a.chen@intel.com): more interfaces.
         case GL_UNIFORM:
         case GL_UNIFORM_BLOCK:
         case GL_TRANSFORM_FEEDBACK_VARYING:
@@ -1093,6 +1093,33 @@ void QueryProgramResourceName(const Program *program,
 
         default:
             UNREACHABLE();
+    }
+}
+
+GLint QueryProgramResourceLocation(const Program *program,
+                                   GLenum programInterface,
+                                   const GLchar *name)
+{
+    switch (programInterface)
+    {
+        case GL_PROGRAM_INPUT:
+            return program->getAttributeLocation(name);
+
+        case GL_PROGRAM_OUTPUT:
+            return program->getFragDataLocation(name);
+
+        // TODO(jie.a.chen@intel.com): more interfaces.
+        case GL_UNIFORM:
+        case GL_UNIFORM_BLOCK:
+        case GL_TRANSFORM_FEEDBACK_VARYING:
+        case GL_BUFFER_VARIABLE:
+        case GL_SHADER_STORAGE_BLOCK:
+            UNIMPLEMENTED();
+            return -1;
+
+        default:
+            UNREACHABLE();
+            return -1;
     }
 }
 
