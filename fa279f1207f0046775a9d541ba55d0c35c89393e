@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4e879254_e88f590e",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-11T19:52:44Z",
+      "side": 1,
+      "message": "We should not override a base classes\u0027 function without inheritance, it\u0027s not always clear what function will be called.  This should have a new name.",
+      "range": {
+        "startLine": 196,
+        "startChar": 12,
+        "endLine": 196,
+        "endChar": 24
+      },
+      "revId": "fa279f1207f0046775a9d541ba55d0c35c89393e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
