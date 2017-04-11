@@ -48,5 +48,17 @@ deps_os = {
   'unix': {
     'src/third_party/deqp/src':
       Var('android_git') + '/platform/external/deqp@' + Var('deqp_revision'),
-  }
+
+    'src/third_party/glslang-angle/src':
+      Var('android_git') + '/platform/external/shaderc/glslang@' + Var('glslang_revision'),
+
+    'src/third_party/spirv-headers/src':
+      Var('android_git') + '/platform/external/shaderc/spirv-headers@' + Var('spirv_headers_revision'),
+
+    'src/third_party/spirv-tools-angle/src':
+      Var('android_git') + '/platform/external/shaderc/spirv-tools@' + Var('spirv_tools_revision'),
+
+    'src/third_party/vulkan-validation-layers/src':
+      Var('android_git') + '/platform/external/vulkan-validation-layers@' + Var('vulkan_revision'),
+  },
 }
