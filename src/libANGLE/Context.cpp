@@ -4013,7 +4013,7 @@ void Context::renderbufferStorageMultisample(GLenum target,
 void Context::getSynciv(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *values)
 {
     const FenceSync *syncObject = getFenceSync(sync);
-    handleError(QuerySynciv(syncObject, pname, values));
+    handleError(QuerySynciv(syncObject, pname, bufSize, length, values));
 }
 
 void Context::getFramebufferParameteriv(GLenum target, GLenum pname, GLint *params)

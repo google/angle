@@ -888,9 +888,23 @@ void QueryFramebufferParameteriv(const Framebuffer *framebuffer, GLenum pname, G
     }
 }
 
-Error QuerySynciv(const FenceSync *sync, GLenum pname, GLint *values)
+Error QuerySynciv(const FenceSync *sync,
+                  GLenum pname,
+                  GLsizei bufSize,
+                  GLsizei *length,
+                  GLint *values)
 {
     ASSERT(sync);
+
+    // All queries return one value, exit early if the buffer can't fit anything.
+    if (bufSize < 1)
+    {
+        if (length != nullptr)
+        {
+            *length = 0;
+        }
+        return NoError();
+    }
 
     switch (pname)
     {
@@ -910,6 +924,11 @@ Error QuerySynciv(const FenceSync *sync, GLenum pname, GLint *values)
         default:
             UNREACHABLE();
             break;
+    }
+
+    if (length != nullptr)
+    {
+        *length = 1;
     }
 
     return NoError();
