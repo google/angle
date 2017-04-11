@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "82ea6e05_006307fd",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-11T07:38:51Z",
+      "side": 1,
+      "message": "Move it to private. How about rename it to \u0027setAtomicCounterBindingDefaultOffset\u0027?",
+      "range": {
+        "startLine": 236,
+        "startChar": 9,
+        "endLine": 236,
+        "endChar": 53
+      },
+      "revId": "445d0a9b73d09f9f4a49fb9fa7ef0fa34b3a30c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "190fb37f_510fdf4e",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 398,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-11T07:38:51Z",
+      "side": 1,
+      "message": "rename to defaultOffset?",
+      "range": {
+        "startLine": 398,
+        "startChar": 12,
+        "endLine": 398,
+        "endChar": 19
+      },
+      "revId": "445d0a9b73d09f9f4a49fb9fa7ef0fa34b3a30c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
