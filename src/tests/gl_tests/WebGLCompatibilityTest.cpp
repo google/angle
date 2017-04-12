@@ -215,6 +215,58 @@ TEST_P(WebGLCompatibilityTest, ExtensionCompilerSpec)
     glDeleteProgram(program);
 }
 
+// Verify that the context generates the correct error when the framebuffer attachments are
+// different sizes
+TEST_P(WebGLCompatibilityTest, FramebufferAttachmentSizeMissmatch)
+{
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    GLTexture textures[2];
+    glBindTexture(GL_TEXTURE_2D, textures[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[0], 0);
+
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    GLRenderbuffer renderbuffer;
+    glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, 3, 3);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderbuffer);
+
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS,
+                     glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    if (extensionRequestable("GL_EXT_draw_buffers"))
+    {
+        glRequestExtensionANGLE("GL_EXT_draw_buffers");
+        EXPECT_GL_NO_ERROR();
+        EXPECT_TRUE(extensionEnabled("GL_EXT_draw_buffers"));
+
+        glBindTexture(GL_TEXTURE_2D, textures[1]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, textures[1], 0);
+        ASSERT_GL_NO_ERROR();
+
+        ASSERT_GL_NO_ERROR();
+        ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS,
+                         glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, 0);
+
+        ASSERT_GL_NO_ERROR();
+        ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 3, 3, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+        ASSERT_GL_NO_ERROR();
+        ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS,
+                         glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    }
+}
+
 // Test that client-side array buffers are forbidden in WebGL mode
 TEST_P(WebGLCompatibilityTest, ForbidsClientSideArrayBuffer)
 {

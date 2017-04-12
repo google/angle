@@ -848,9 +848,10 @@ GLenum Framebuffer::checkStatusImpl(const Context *context)
         return GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT;
     }
 
-    // In ES 2.0, all color attachments must have the same width and height.
+    // In ES 2.0 and WebGL, all color attachments must have the same width and height.
     // In ES 3.0, there is no such restriction.
-    if (state.getClientMajorVersion() < 3 && !mState.attachmentsHaveSameDimensions())
+    if ((state.getClientMajorVersion() < 3 || state.getExtensions().webglCompatibility) &&
+        !mState.attachmentsHaveSameDimensions())
     {
         return GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS;
     }
