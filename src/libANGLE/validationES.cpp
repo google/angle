@@ -1820,6 +1820,74 @@ bool ValidateES2CopyTexImageParameters(ValidationContext *context,
     return (width > 0 && height > 0);
 }
 
+bool ValidateDrawElementsInstancedBase(Context *context,
+                                       GLenum mode,
+                                       GLsizei count,
+                                       GLenum type,
+                                       const GLvoid *indices,
+                                       GLsizei primcount,
+                                       IndexRange *indexRangeOut)
+{
+    if (primcount < 0)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "primcount cannot be negative."));
+        return false;
+    }
+
+    if (!ValidateDrawElements(context, mode, count, type, indices, primcount, indexRangeOut))
+    {
+        return false;
+    }
+
+    // No-op zero primitive count
+    return (primcount > 0);
+}
+
+bool ValidateDrawArraysInstancedBase(Context *context,
+                                     GLenum mode,
+                                     GLint first,
+                                     GLsizei count,
+                                     GLsizei primcount)
+{
+    if (primcount < 0)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "primcount cannot be negative."));
+        return false;
+    }
+
+    if (!ValidateDrawArraysCommon(context, mode, first, count, primcount))
+    {
+        return false;
+    }
+
+    // No-op if zero primitive count
+    return (primcount > 0);
+}
+
+bool ValidateDrawInstancedANGLEAndWebGL(Context *context)
+{
+    // Verify there is at least one active attribute with a divisor of zero
+    const State &state = context->getGLState();
+
+    Program *program = state.getProgram();
+
+    const auto &attribs  = state.getVertexArray()->getVertexAttributes();
+    const auto &bindings = state.getVertexArray()->getVertexBindings();
+    for (size_t attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
+    {
+        const VertexAttribute &attrib = attribs[attributeIndex];
+        const VertexBinding &binding  = bindings[attrib.bindingIndex];
+        if (program->isAttribLocationActive(attributeIndex) && binding.divisor == 0)
+        {
+            return true;
+        }
+    }
+
+    context->handleError(
+        Error(GL_INVALID_OPERATION, "At least one attribute must have a divisor of zero."));
+    return false;
+}
+
 }  // anonymous namespace
 
 bool ValidTextureTarget(const ValidationContext *context, GLenum target)
@@ -3768,44 +3836,12 @@ bool ValidateDrawArraysInstanced(Context *context,
                                  GLsizei count,
                                  GLsizei primcount)
 {
-    if (primcount < 0)
-    {
-        context->handleError(Error(GL_INVALID_VALUE));
-        return false;
-    }
-
-    if (!ValidateDrawArraysCommon(context, mode, first, count, primcount))
+    if (context->getExtensions().webglCompatibility && !ValidateDrawInstancedANGLEAndWebGL(context))
     {
         return false;
     }
 
-    // No-op if zero primitive count
-    return (primcount > 0);
-}
-
-static bool ValidateDrawInstancedANGLE(Context *context)
-{
-    // Verify there is at least one active attribute with a divisor of zero
-    const gl::State &state = context->getGLState();
-
-    gl::Program *program = state.getProgram();
-
-    const auto &attribs  = state.getVertexArray()->getVertexAttributes();
-    const auto &bindings = state.getVertexArray()->getVertexBindings();
-    for (size_t attributeIndex = 0; attributeIndex < MAX_VERTEX_ATTRIBS; attributeIndex++)
-    {
-        const VertexAttribute &attrib = attribs[attributeIndex];
-        const VertexBinding &binding  = bindings[attrib.bindingIndex];
-        if (program->isAttribLocationActive(attributeIndex) && binding.divisor == 0)
-        {
-            return true;
-        }
-    }
-
-    context->handleError(Error(GL_INVALID_OPERATION,
-                               "ANGLE_instanced_arrays requires that at least one active attribute"
-                               "has a divisor of zero."));
-    return false;
+    return ValidateDrawArraysInstancedBase(context, mode, first, count, primcount);
 }
 
 bool ValidateDrawArraysInstancedANGLE(Context *context,
@@ -3814,12 +3850,12 @@ bool ValidateDrawArraysInstancedANGLE(Context *context,
                                       GLsizei count,
                                       GLsizei primcount)
 {
-    if (!ValidateDrawInstancedANGLE(context))
+    if (!ValidateDrawInstancedANGLEAndWebGL(context))
     {
         return false;
     }
 
-    return ValidateDrawArraysInstanced(context, mode, first, count, primcount);
+    return ValidateDrawArraysInstancedBase(context, mode, first, count, primcount);
 }
 
 bool ValidateDrawElementsBase(ValidationContext *context, GLenum type)
@@ -4016,19 +4052,13 @@ bool ValidateDrawElementsInstanced(Context *context,
                                    GLsizei primcount,
                                    IndexRange *indexRangeOut)
 {
-    if (primcount < 0)
-    {
-        context->handleError(Error(GL_INVALID_VALUE));
-        return false;
-    }
-
-    if (!ValidateDrawElements(context, mode, count, type, indices, primcount, indexRangeOut))
+    if (context->getExtensions().webglCompatibility && !ValidateDrawInstancedANGLEAndWebGL(context))
     {
         return false;
     }
 
-    // No-op zero primitive count
-    return (primcount > 0);
+    return ValidateDrawElementsInstancedBase(context, mode, count, type, indices, primcount,
+                                             indexRangeOut);
 }
 
 bool ValidateDrawElementsInstancedANGLE(Context *context,
@@ -4039,13 +4069,13 @@ bool ValidateDrawElementsInstancedANGLE(Context *context,
                                         GLsizei primcount,
                                         IndexRange *indexRangeOut)
 {
-    if (!ValidateDrawInstancedANGLE(context))
+    if (!ValidateDrawInstancedANGLEAndWebGL(context))
     {
         return false;
     }
 
-    return ValidateDrawElementsInstanced(context, mode, count, type, indices, primcount,
-                                         indexRangeOut);
+    return ValidateDrawElementsInstancedBase(context, mode, count, type, indices, primcount,
+                                             indexRangeOut);
 }
 
 bool ValidateFramebufferTextureBase(Context *context,
