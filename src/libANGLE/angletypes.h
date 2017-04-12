@@ -9,6 +9,7 @@
 #ifndef LIBANGLE_ANGLETYPES_H_
 #define LIBANGLE_ANGLETYPES_H_
 
+#include "common/bitset_utils.h"
 #include "libANGLE/Constants.h"
 #include "libANGLE/RefCountObject.h"
 
@@ -253,10 +254,10 @@ struct PixelPackState : PixelStoreStateBase
 };
 
 // Used in Program and VertexArray.
-typedef std::bitset<MAX_VERTEX_ATTRIBS> AttributesMask;
+using AttributesMask = angle::BitSet<MAX_VERTEX_ATTRIBS>;
 
 // Use in Program
-typedef std::bitset<IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS> UniformBlockBindingMask;
+using UniformBlockBindingMask = angle::BitSet<IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS>;
 
 // A map of GL objects indexed by object ID. The specific map implementation may change.
 // Client code should treat it as a std::map.

@@ -417,7 +417,7 @@ void FramebufferGL::syncState(ContextImpl *contextImpl, const Framebuffer::Dirty
 
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
 
-    for (auto dirtyBit : angle::IterateBitSet(dirtyBits))
+    for (auto dirtyBit : dirtyBits)
     {
         switch (dirtyBit)
         {

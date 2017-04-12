@@ -241,8 +241,7 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state,
         translatedAttribs->resize(attribIndex + 1);
 
         TranslatedAttribute *translated = &(*translatedAttribs)[attribIndex];
-        auto currentValueData =
-            state.getVertexAttribCurrentValue(static_cast<unsigned int>(attribIndex));
+        auto currentValueData           = state.getVertexAttribCurrentValue(attribIndex);
 
         // Record the attribute now
         translated->active           = true;
@@ -401,14 +400,14 @@ gl::Error VertexDataManager::storeDynamicAttribs(
     StreamingBufferUnmapper localUnmapper(mStreamingBuffer);
 
     // Reserve the required space for the dynamic buffers.
-    for (auto attribIndex : IterateBitSet(dynamicAttribsMask))
+    for (auto attribIndex : dynamicAttribsMask)
     {
         const auto &dynamicAttrib = (*translatedAttribs)[attribIndex];
         ANGLE_TRY(reserveSpaceForAttrib(dynamicAttrib, count, instances));
     }
 
     // Store dynamic attributes
-    for (auto attribIndex : IterateBitSet(dynamicAttribsMask))
+    for (auto attribIndex : dynamicAttribsMask)
     {
         auto *dynamicAttrib = &(*translatedAttribs)[attribIndex];
         ANGLE_TRY(storeDynamicAttrib(dynamicAttrib, start, count, instances));
@@ -422,7 +421,7 @@ void VertexDataManager::PromoteDynamicAttribs(
     const gl::AttributesMask &dynamicAttribsMask,
     GLsizei count)
 {
-    for (auto attribIndex : IterateBitSet(dynamicAttribsMask))
+    for (auto attribIndex : dynamicAttribsMask)
     {
         const auto &dynamicAttrib = translatedAttribs[attribIndex];
         const auto &binding       = *dynamicAttrib.binding;

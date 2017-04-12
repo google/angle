@@ -59,6 +59,13 @@ config("internal_config") {
     "GL_GLEXT_PROTOTYPES",
     "EGL_EGLEXT_PROTOTYPES",
   ]
+
+  if (target_cpu == "x86") {
+    defines += [ "ANGLE_X86_CPU" ]
+  }
+  if (target_cpu == "x64") {
+    defines += [ "ANGLE_X64_CPU" ]
+  }
 }
 
 config("extra_warnings") {

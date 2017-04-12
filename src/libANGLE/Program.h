@@ -260,7 +260,7 @@ class ProgramState final : angle::NonCopyable
     UniformBlockBindingMask mActiveUniformBlockBindings;
 
     std::vector<sh::Attribute> mAttributes;
-    std::bitset<MAX_VERTEX_ATTRIBS> mActiveAttribLocationsMask;
+    angle::BitSet<MAX_VERTEX_ATTRIBS> mActiveAttribLocationsMask;
 
     // Uniforms are sorted in order:
     //  1. Non-sampler uniforms

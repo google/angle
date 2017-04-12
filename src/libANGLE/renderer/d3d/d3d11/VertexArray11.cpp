@@ -42,7 +42,7 @@ VertexArray11::~VertexArray11()
 
 void VertexArray11::syncState(ContextImpl *contextImpl, const gl::VertexArray::DirtyBits &dirtyBits)
 {
-    for (auto dirtyBit : angle::IterateBitSet(dirtyBits))
+    for (auto dirtyBit : dirtyBits)
     {
         if (dirtyBit == gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER)
             continue;
@@ -62,9 +62,9 @@ void VertexArray11::flushAttribUpdates(const gl::State &state)
     if (mAttribsToUpdate.any())
     {
         // Skip attrib locations the program doesn't use.
-        const auto &activeToUpdate = (mAttribsToUpdate & activeLocations);
+        gl::AttributesMask activeToUpdate = mAttribsToUpdate & activeLocations;
 
-        for (auto toUpdateIndex : angle::IterateBitSet(activeToUpdate))
+        for (auto toUpdateIndex : activeToUpdate)
         {
             mAttribsToUpdate.reset(toUpdateIndex);
             updateVertexAttribStorage(toUpdateIndex);
@@ -155,15 +155,14 @@ gl::Error VertexArray11::updateDirtyAndDynamicAttribs(VertexDataManager *vertexD
     if (mAttribsToTranslate.any())
     {
         // Skip attrib locations the program doesn't use, saving for the next frame.
-        const auto &dirtyActiveAttribs = (mAttribsToTranslate & activeLocations);
+        gl::AttributesMask dirtyActiveAttribs = (mAttribsToTranslate & activeLocations);
 
-        for (auto dirtyAttribIndex : angle::IterateBitSet(dirtyActiveAttribs))
+        for (auto dirtyAttribIndex : dirtyActiveAttribs)
         {
             mAttribsToTranslate.reset(dirtyAttribIndex);
 
             auto *translatedAttrib = &mTranslatedAttribs[dirtyAttribIndex];
-            const auto &currentValue =
-                state.getVertexAttribCurrentValue(static_cast<unsigned int>(dirtyAttribIndex));
+            const auto &currentValue = state.getVertexAttribCurrentValue(dirtyAttribIndex);
 
             // Record basic attrib info
             translatedAttrib->attribute = &attribs[dirtyAttribIndex];
@@ -195,11 +194,10 @@ gl::Error VertexArray11::updateDirtyAndDynamicAttribs(VertexDataManager *vertexD
     {
         auto activeDynamicAttribs = (mDynamicAttribsMask & activeLocations);
 
-        for (auto dynamicAttribIndex : angle::IterateBitSet(activeDynamicAttribs))
+        for (auto dynamicAttribIndex : activeDynamicAttribs)
         {
             auto *dynamicAttrib = &mTranslatedAttribs[dynamicAttribIndex];
-            const auto &currentValue =
-                state.getVertexAttribCurrentValue(static_cast<unsigned int>(dynamicAttribIndex));
+            const auto &currentValue = state.getVertexAttribCurrentValue(dynamicAttribIndex);
 
             // Record basic attrib info
             dynamicAttrib->attribute        = &attribs[dynamicAttribIndex];

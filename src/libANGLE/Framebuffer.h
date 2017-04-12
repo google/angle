@@ -100,7 +100,7 @@ class FramebufferState final : angle::NonCopyable
 
     std::vector<GLenum> mDrawBufferStates;
     GLenum mReadBufferState;
-    std::bitset<IMPLEMENTATION_MAX_DRAW_BUFFERS> mEnabledDrawBuffers;
+    angle::BitSet<IMPLEMENTATION_MAX_DRAW_BUFFERS> mEnabledDrawBuffers;
 
     GLint mDefaultWidth;
     GLint mDefaultHeight;
@@ -259,7 +259,7 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
         DIRTY_BIT_MAX = DIRTY_BIT_UNKNOWN
     };
 
-    typedef std::bitset<DIRTY_BIT_MAX> DirtyBits;
+    typedef angle::BitSet<DIRTY_BIT_MAX> DirtyBits;
     bool hasAnyDirtyBit() const { return mDirtyBits.any(); }
 
     void syncState(const Context *context);

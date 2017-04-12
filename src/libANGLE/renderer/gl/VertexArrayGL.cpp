@@ -257,7 +257,10 @@ void VertexArrayGL::computeStreamingAttributeSizes(const gl::AttributesMask &act
 
     const auto &attribs  = mData.getVertexAttributes();
     const auto &bindings = mData.getVertexBindings();
-    for (auto idx : angle::IterateBitSet(mAttributesNeedStreaming & activeAttributesMask))
+
+    gl::AttributesMask attribsToStream = (mAttributesNeedStreaming & activeAttributesMask);
+
+    for (auto idx : attribsToStream)
     {
         const auto &attrib  = attribs[idx];
         const auto &binding = bindings[attrib.bindingIndex];
@@ -320,7 +323,10 @@ gl::Error VertexArrayGL::streamAttributes(const gl::AttributesMask &activeAttrib
 
         const auto &attribs  = mData.getVertexAttributes();
         const auto &bindings = mData.getVertexBindings();
-        for (auto idx : angle::IterateBitSet(mAttributesNeedStreaming & activeAttributesMask))
+
+        gl::AttributesMask attribsToStream = (mAttributesNeedStreaming & activeAttributesMask);
+
+        for (auto idx : attribsToStream)
         {
             const auto &attrib  = attribs[idx];
             const auto &binding = bindings[attrib.bindingIndex];
@@ -526,7 +532,7 @@ void VertexArrayGL::updateAttribDivisor(size_t attribIndex)
 
 void VertexArrayGL::syncState(ContextImpl *contextImpl, const VertexArray::DirtyBits &dirtyBits)
 {
-    for (unsigned long dirtyBit : angle::IterateBitSet(dirtyBits))
+    for (size_t dirtyBit : dirtyBits)
     {
         if (dirtyBit == VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER)
         {

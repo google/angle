@@ -2359,7 +2359,7 @@ void ProgramD3D::updateCachedInputLayout(const gl::State &state)
     mCachedInputLayout.clear();
     const auto &vertexAttributes = state.getVertexArray()->getVertexAttributes();
 
-    for (unsigned int locationIndex : IterateBitSet(mState.getActiveAttribLocationsMask()))
+    for (size_t locationIndex : mState.getActiveAttribLocationsMask())
     {
         int d3dSemantic = mAttribLocationToD3DSemantic[locationIndex];
 

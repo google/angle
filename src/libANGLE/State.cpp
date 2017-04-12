@@ -1370,9 +1370,9 @@ void State::setVertexAttribDivisor(GLuint index, GLuint divisor)
     mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
 }
 
-const VertexAttribCurrentValueData &State::getVertexAttribCurrentValue(unsigned int attribNum) const
+const VertexAttribCurrentValueData &State::getVertexAttribCurrentValue(size_t attribNum) const
 {
-    ASSERT(static_cast<size_t>(attribNum) < mVertexAttribCurrentValues.size());
+    ASSERT(attribNum < mVertexAttribCurrentValues.size());
     return mVertexAttribCurrentValues[attribNum];
 }
 
@@ -2114,7 +2114,7 @@ void State::syncDirtyObjects(const Context *context)
 
 void State::syncDirtyObjects(const Context *context, const DirtyObjects &bitset)
 {
-    for (auto dirtyObject : angle::IterateBitSet(bitset))
+    for (auto dirtyObject : bitset)
     {
         switch (dirtyObject)
         {

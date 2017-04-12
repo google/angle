@@ -93,7 +93,7 @@ const VertexBinding &VertexArray::getVertexBinding(size_t bindingIndex) const
     return mState.mVertexBindings[bindingIndex];
 }
 
-size_t VertexArray::GetAttribIndex(unsigned long dirtyBit)
+size_t VertexArray::GetAttribIndex(size_t dirtyBit)
 {
     static_assert(gl::MAX_VERTEX_ATTRIBS == gl::MAX_VERTEX_ATTRIB_BINDINGS,
                   "The stride of vertex attributes should equal to that of vertex bindings.");

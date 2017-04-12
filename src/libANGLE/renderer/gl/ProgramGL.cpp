@@ -75,9 +75,10 @@ LinkResult ProgramGL::load(const ContextImpl *contextImpl,
     const WorkaroundsGL &workaroundsGL = GetAs<ContextGL>(contextImpl)->getWorkaroundsGL();
     if (workaroundsGL.reapplyUBOBindingsAfterLoadingBinaryProgram)
     {
-        for (GLuint bindingIndex : angle::IterateBitSet(mState.getActiveUniformBlockBindingsMask()))
+        for (size_t bindingIndex : mState.getActiveUniformBlockBindingsMask())
         {
-            setUniformBlockBinding(bindingIndex, mState.getUniformBlockBinding(bindingIndex));
+            GLuint uintIndex = static_cast<GLuint>(bindingIndex);
+            setUniformBlockBinding(uintIndex, mState.getUniformBlockBinding(uintIndex));
         }
     }
 

@@ -253,7 +253,7 @@ void StateManager11::syncState(const gl::State &state, const gl::State::DirtyBit
         return;
     }
 
-    for (auto dirtyBit : angle::IterateBitSet(dirtyBits))
+    for (auto dirtyBit : dirtyBits)
     {
         switch (dirtyBit)
         {
@@ -1103,15 +1103,14 @@ gl::Error StateManager11::updateCurrentValueAttribs(const gl::State &state,
     const auto &dirtyActiveAttribs = (activeAttribsMask & mDirtyCurrentValueAttribs);
     const auto &vertexAttributes   = state.getVertexArray()->getVertexAttributes();
 
-    for (auto attribIndex : angle::IterateBitSet(dirtyActiveAttribs))
+    for (auto attribIndex : dirtyActiveAttribs)
     {
         if (vertexAttributes[attribIndex].enabled)
             continue;
 
         mDirtyCurrentValueAttribs.reset(attribIndex);
 
-        const auto &currentValue =
-            state.getVertexAttribCurrentValue(static_cast<unsigned int>(attribIndex));
+        const auto &currentValue             = state.getVertexAttribCurrentValue(attribIndex);
         auto currentValueAttrib              = &mCurrentValueAttribs[attribIndex];
         currentValueAttrib->currentValueType = currentValue.Type;
         currentValueAttrib->attribute        = &vertexAttributes[attribIndex];

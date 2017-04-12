@@ -395,7 +395,7 @@ class Texture final : public egl::ImageSibling,
 
         DIRTY_BIT_COUNT,
     };
-    using DirtyBits = std::bitset<DIRTY_BIT_COUNT>;
+    using DirtyBits = angle::BitSet<DIRTY_BIT_COUNT>;
 
     void syncImplState();
     bool hasAnyDirtyBit() const { return mDirtyBits.any(); }

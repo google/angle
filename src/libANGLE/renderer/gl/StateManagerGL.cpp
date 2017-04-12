@@ -1394,7 +1394,7 @@ void StateManagerGL::syncState(const gl::ContextState &data,
         mLocalDirtyBits.set(gl::State::DIRTY_BIT_FRAMEBUFFER_SRGB);
     }
 
-    const auto &glAndLocalDirtyBits = (glDirtyBits | mLocalDirtyBits);
+    const gl::State::DirtyBits &glAndLocalDirtyBits = (glDirtyBits | mLocalDirtyBits);
 
     if (!glAndLocalDirtyBits.any())
     {
@@ -1402,7 +1402,7 @@ void StateManagerGL::syncState(const gl::ContextState &data,
     }
 
     // TODO(jmadill): Investigate only syncing vertex state for active attributes
-    for (auto dirtyBit : angle::IterateBitSet(glAndLocalDirtyBits))
+    for (auto dirtyBit : glAndLocalDirtyBits)
     {
         switch (dirtyBit)
         {
@@ -1648,8 +1648,8 @@ void StateManagerGL::syncState(const gl::ContextState &data,
                        dirtyBit < gl::State::DIRTY_BIT_CURRENT_VALUE_MAX);
                 size_t attribIndex =
                     static_cast<size_t>(dirtyBit) - gl::State::DIRTY_BIT_CURRENT_VALUE_0;
-                setAttributeCurrentData(attribIndex, state.getVertexAttribCurrentValue(
-                                                         static_cast<unsigned int>(attribIndex)));
+                setAttributeCurrentData(attribIndex,
+                                        state.getVertexAttribCurrentValue(attribIndex));
                 break;
             }
         }

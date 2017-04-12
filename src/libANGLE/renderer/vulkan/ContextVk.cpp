@@ -99,7 +99,7 @@ gl::Error ContextVk::initPipeline()
     std::vector<VkVertexInputBindingDescription> vertexBindings;
     std::vector<VkVertexInputAttributeDescription> vertexAttribs;
 
-    for (auto attribIndex : angle::IterateBitSet(programGL->getActiveAttribLocationsMask()))
+    for (auto attribIndex : programGL->getActiveAttribLocationsMask())
     {
         const auto &attrib = attribs[attribIndex];
         const auto &binding = bindings[attrib.bindingIndex];
@@ -293,7 +293,7 @@ gl::Error ContextVk::drawArrays(GLenum mode, GLint first, GLsizei count)
     std::vector<VkBuffer> vertexHandles;
     std::vector<VkDeviceSize> vertexOffsets;
 
-    for (auto attribIndex : angle::IterateBitSet(programGL->getActiveAttribLocationsMask()))
+    for (auto attribIndex : programGL->getActiveAttribLocationsMask())
     {
         const auto &attrib  = attribs[attribIndex];
         const auto &binding = bindings[attrib.bindingIndex];

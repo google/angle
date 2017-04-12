@@ -168,9 +168,9 @@ class VertexArray final : public LabeledObject
         DIRTY_BIT_MAX     = DIRTY_BIT_UNKNOWN,
     };
 
-    typedef std::bitset<DIRTY_BIT_MAX> DirtyBits;
+    typedef angle::BitSet<DIRTY_BIT_MAX> DirtyBits;
 
-    static size_t GetAttribIndex(unsigned long dirtyBit);
+    static size_t GetAttribIndex(size_t dirtyBit);
 
     void syncImplState(const Context *context);
     bool hasAnyDirtyBit() const { return mDirtyBits.any(); }

@@ -942,7 +942,7 @@ void TextureGL::syncState(const gl::Texture::DirtyBits &dirtyBits)
         mLocalDirtyBits |= GetLevelWorkaroundDirtyBits();
     }
 
-    for (auto dirtyBit : angle::IterateBitSet(dirtyBits | mLocalDirtyBits))
+    for (auto dirtyBit : (dirtyBits | mLocalDirtyBits))
     {
         switch (dirtyBit)
         {

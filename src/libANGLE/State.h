@@ -13,6 +13,7 @@
 #include <memory>
 
 #include "common/angleutils.h"
+#include "common/bitset_utils.h"
 #include "common/Color.h"
 #include "libANGLE/Debug.h"
 #include "libANGLE/Program.h"
@@ -266,7 +267,7 @@ class State : angle::NonCopyable
     void setVertexAttribState(unsigned int attribNum, Buffer *boundBuffer, GLint size, GLenum type,
                               bool normalized, bool pureInteger, GLsizei stride, const void *pointer);
     void setVertexAttribDivisor(GLuint index, GLuint divisor);
-    const VertexAttribCurrentValueData &getVertexAttribCurrentValue(unsigned int attribNum) const;
+    const VertexAttribCurrentValueData &getVertexAttribCurrentValue(size_t attribNum) const;
     const void *getVertexAttribPointer(unsigned int attribNum) const;
     void bindVertexBuffer(GLuint bindingIndex,
                           Buffer *boundBuffer,
@@ -425,13 +426,13 @@ class State : angle::NonCopyable
         DIRTY_OBJECT_MAX = DIRTY_OBJECT_UNKNOWN,
     };
 
-    typedef std::bitset<DIRTY_BIT_MAX> DirtyBits;
+    typedef angle::BitSet<DIRTY_BIT_MAX> DirtyBits;
     const DirtyBits &getDirtyBits() const { return mDirtyBits; }
     void clearDirtyBits() { mDirtyBits.reset(); }
     void clearDirtyBits(const DirtyBits &bitset) { mDirtyBits &= ~bitset; }
     void setAllDirtyBits() { mDirtyBits.set(); }
 
-    typedef std::bitset<DIRTY_OBJECT_MAX> DirtyObjects;
+    typedef angle::BitSet<DIRTY_OBJECT_MAX> DirtyObjects;
     void clearDirtyObjects() { mDirtyObjects.reset(); }
     void setAllDirtyObjects() { mDirtyObjects.set(); }
     void syncDirtyObjects(const Context *context);

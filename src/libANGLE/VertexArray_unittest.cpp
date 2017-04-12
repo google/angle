@@ -26,7 +26,7 @@ TEST(VertexArrayTest, VerifyGetAttribIndex)
         dirtyBits.set(bits[i]);
     }
 
-    for (unsigned long dirtyBit : angle::IterateBitSet(dirtyBits))
+    for (size_t dirtyBit : dirtyBits)
     {
         size_t index = VertexArray::GetAttribIndex(dirtyBit);
         if (dirtyBit < VertexArray::DIRTY_BIT_ATTRIB_MAX_ENABLED)

@@ -384,7 +384,7 @@ void Framebuffer11::syncState(ContextImpl *contextImpl, const gl::Framebuffer::D
     const auto &mergedDirtyBits = dirtyBits | mInternalDirtyBits;
     mInternalDirtyBits.reset();
 
-    for (auto dirtyBit : IterateBitSet(mergedDirtyBits))
+    for (auto dirtyBit : mergedDirtyBits)
     {
         switch (dirtyBit)
         {

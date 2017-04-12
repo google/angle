@@ -281,6 +281,7 @@
                         'TargetMachine': '1', # x86
                     },
                 },
+                'defines': [ 'ANGLE_X86_CPU' ],
             }, # x86_Base
 
             'x64_Base':
@@ -298,6 +299,7 @@
                         'TargetMachine': '17', # x86 - 64
                     },
                 },
+                'defines': [ 'ANGLE_X64_CPU' ],
             },    # x64_Base
 
             # Concrete configurations

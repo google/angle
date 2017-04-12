@@ -47,7 +47,7 @@ gl::InputLayout GetInputLayout(const std::vector<const TranslatedAttribute *> &t
     return inputLayout;
 }
 
-GLenum GetGLSLAttributeType(const std::vector<sh::Attribute> &shaderAttributes, int index)
+GLenum GetGLSLAttributeType(const std::vector<sh::Attribute> &shaderAttributes, size_t index)
 {
     // Count matrices differently
     for (const sh::Attribute &attrib : shaderAttributes)
@@ -59,8 +59,9 @@ GLenum GetGLSLAttributeType(const std::vector<sh::Attribute> &shaderAttributes, 
 
         GLenum transposedType = gl::TransposeMatrixType(attrib.type);
         int rows              = gl::VariableRowCount(transposedType);
+        int intIndex          = static_cast<int>(index);
 
-        if (index >= attrib.location && index < attrib.location + rows)
+        if (intIndex >= attrib.location && intIndex < attrib.location + rows)
         {
             return transposedType;
         }
@@ -105,7 +106,7 @@ void SortAttributesByLayout(const gl::Program *program,
     const auto &locationToSemantic =
         GetImplAs<ProgramD3D>(program)->getAttribLocationToD3DSemantics();
 
-    for (auto locationIndex : angle::IterateBitSet(program->getActiveAttribLocationsMask()))
+    for (auto locationIndex : program->getActiveAttribLocationsMask())
     {
         int d3dSemantic = locationToSemantic[locationIndex];
         if (sortedAttributesOut->size() <= static_cast<size_t>(d3dSemantic))
@@ -485,7 +486,7 @@ gl::Error InputLayoutCache::updateInputLayout(const gl::State &state,
     const auto &bindings           = state.getVertexArray()->getVertexBindings();
     const auto &locationToSemantic = programD3D->getAttribLocationToD3DSemantics();
 
-    for (unsigned long attribIndex : angle::IterateBitSet(program->getActiveAttribLocationsMask()))
+    for (size_t attribIndex : program->getActiveAttribLocationsMask())
     {
         // Record the type of the associated vertex shader vector in our key
         // This will prevent mismatched vertex shaders from using the same input layout
@@ -495,7 +496,8 @@ gl::Error InputLayoutCache::updateInputLayout(const gl::State &state,
         const auto &binding = bindings[attrib.bindingIndex];
         int d3dSemantic    = locationToSemantic[attribIndex];
 
-        const auto &currentValue              = state.getVertexAttribCurrentValue(attribIndex);
+        const auto &currentValue =
+            state.getVertexAttribCurrentValue(static_cast<unsigned int>(attribIndex));
         gl::VertexFormatType vertexFormatType = gl::GetVertexFormatType(attrib, currentValue.Type);
 
         layout.addAttributeData(glslElementType, d3dSemantic, vertexFormatType, binding.divisor);
