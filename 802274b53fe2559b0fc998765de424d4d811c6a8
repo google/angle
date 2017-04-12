@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d81c632_648948dd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/Passthrough2D11.hlsl",
+        "patchSetId": 12
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-04-12T19:58:34Z",
+      "side": 1,
+      "message": "To keep consistent with how the other Tex2D items are named, should this be TextureF_MS or something similar? TextureM by itself gives no indication as to the texture component type (UINT, INT or FLOAT)",
+      "revId": "802274b53fe2559b0fc998765de424d4d811c6a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
