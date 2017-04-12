@@ -1151,6 +1151,18 @@ void Program::getOutputResourceName(GLuint index,
     }
 }
 
+const sh::Attribute &Program::getInputResource(GLuint index) const
+{
+    ASSERT(index < mState.mAttributes.size());
+    return mState.mAttributes[index];
+}
+
+const sh::OutputVariable &Program::getOutputResource(GLuint index) const
+{
+    ASSERT(index < mState.mOutputVariables.size());
+    return mState.mOutputVariables[index];
+}
+
 GLint Program::getFragDataLocation(const std::string &name) const
 {
     std::string baseName(name);

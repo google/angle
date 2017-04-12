@@ -2180,6 +2180,20 @@ GLint Context::getProgramResourceLocation(GLuint program,
     return QueryProgramResourceLocation(programObject, programInterface, name);
 }
 
+void Context::getProgramResourceiv(GLuint program,
+                                   GLenum programInterface,
+                                   GLuint index,
+                                   GLsizei propCount,
+                                   const GLenum *props,
+                                   GLsizei bufSize,
+                                   GLsizei *length,
+                                   GLint *params)
+{
+    const auto *programObject = getProgram(program);
+    QueryProgramResourceiv(programObject, programInterface, index, propCount, props, bufSize,
+                           length, params);
+}
+
 Error Context::handleError(const Error &error)
 {
     if (error.isError())

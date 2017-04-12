@@ -440,6 +440,93 @@ void QueryBufferParameterBase(const Buffer *buffer, GLenum pname, ParamType *par
     }
 }
 
+GLint GetLocationVariableProperty(const sh::VariableWithLocation &var, GLenum prop)
+{
+    switch (prop)
+    {
+        case GL_TYPE:
+            return var.type;
+
+        case GL_ARRAY_SIZE:
+            // TODO(jie.a.chen@intel.com): check array of array.
+            if (var.isArray() && !var.isStruct())
+            {
+                return static_cast<GLint>(var.elementCount());
+            }
+            return 1;
+
+        case GL_NAME_LENGTH:
+        {
+            GLint length = static_cast<GLint>(var.name.size());
+            if (var.isArray())
+            {
+                // Counts "[0]".
+                length += 3;
+            }
+            // ES31 spec p84: This counts the terminating null char.
+            ++length;
+            return length;
+        }
+
+        case GL_LOCATION:
+            return var.location;
+
+        default:
+            UNREACHABLE();
+            return GL_INVALID_VALUE;
+    }
+}
+
+GLint GetInputResourceProperty(const Program *program, GLuint index, GLenum prop)
+{
+    const auto &attribute = program->getInputResource(index);
+    switch (prop)
+    {
+        case GL_TYPE:
+        case GL_ARRAY_SIZE:
+        case GL_LOCATION:
+        case GL_NAME_LENGTH:
+            return GetLocationVariableProperty(attribute, prop);
+
+        case GL_REFERENCED_BY_VERTEX_SHADER:
+            return 1;
+
+        case GL_REFERENCED_BY_FRAGMENT_SHADER:
+        case GL_REFERENCED_BY_COMPUTE_SHADER:
+            return 0;
+
+        default:
+            UNREACHABLE();
+            return GL_INVALID_VALUE;
+    }
+}
+
+GLint GetOutputResourceProperty(const Program *program, GLuint index, const GLenum prop)
+{
+    const auto &outputVariable = program->getOutputResource(index);
+    switch (prop)
+    {
+        case GL_TYPE:
+        case GL_ARRAY_SIZE:
+        case GL_LOCATION:
+        case GL_NAME_LENGTH:
+            return GetLocationVariableProperty(outputVariable, prop);
+
+        case GL_REFERENCED_BY_VERTEX_SHADER:
+            return 0;
+
+        case GL_REFERENCED_BY_FRAGMENT_SHADER:
+            return 1;
+
+        case GL_REFERENCED_BY_COMPUTE_SHADER:
+            return 0;
+
+        default:
+            UNREACHABLE();
+            return GL_INVALID_VALUE;
+    }
+}
+
 }  // anonymous namespace
 
 void QueryFramebufferAttachmentParameteriv(const Framebuffer *framebuffer,
@@ -1121,6 +1208,60 @@ GLint QueryProgramResourceLocation(const Program *program,
         default:
             UNREACHABLE();
             return -1;
+    }
+}
+
+void QueryProgramResourceiv(const Program *program,
+                            GLenum programInterface,
+                            GLuint index,
+                            GLsizei propCount,
+                            const GLenum *props,
+                            GLsizei bufSize,
+                            GLsizei *length,
+                            GLint *params)
+{
+    if (!program->isLinked())
+    {
+        if (length != nullptr)
+        {
+            *length = 0;
+        }
+        return;
+    }
+
+    GLsizei count = std::min(propCount, bufSize);
+    if (length != nullptr)
+    {
+        *length = count;
+    }
+
+    for (GLsizei i = 0; i < count; i++)
+    {
+        switch (programInterface)
+        {
+            case GL_PROGRAM_INPUT:
+                params[i] = GetInputResourceProperty(program, index, props[i]);
+                break;
+
+            case GL_PROGRAM_OUTPUT:
+                params[i] = GetOutputResourceProperty(program, index, props[i]);
+                break;
+
+            // TODO(jie.a.chen@intel.com): more interfaces.
+            case GL_UNIFORM:
+            case GL_UNIFORM_BLOCK:
+            case GL_TRANSFORM_FEEDBACK_VARYING:
+            case GL_BUFFER_VARIABLE:
+            case GL_SHADER_STORAGE_BLOCK:
+            case GL_ATOMIC_COUNTER_BUFFER:
+                UNIMPLEMENTED();
+                params[i] = GL_INVALID_VALUE;
+                break;
+
+            default:
+                UNREACHABLE();
+                params[i] = GL_INVALID_VALUE;
+        }
     }
 }
 

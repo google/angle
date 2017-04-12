@@ -131,6 +131,14 @@ void QueryProgramResourceName(const Program *program,
 GLint QueryProgramResourceLocation(const Program *program,
                                    GLenum programInterface,
                                    const GLchar *name);
+void QueryProgramResourceiv(const Program *program,
+                            GLenum programInterface,
+                            GLuint index,
+                            GLsizei propCount,
+                            const GLenum *props,
+                            GLsizei bufSize,
+                            GLsizei *length,
+                            GLint *params);
 
 }  // namespace gl
 

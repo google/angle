@@ -193,5 +193,71 @@ TEST_P(ProgramInterfaceTestES31, GetResourceLocation)
     EXPECT_EQ(5, location);
 }
 
+// Tests glGetProgramResource.
+TEST_P(ProgramInterfaceTestES31, GetResource)
+{
+    const std::string &vertexShaderSource =
+        "#version 310 es\n"
+        "precision highp float;\n"
+        "layout(location = 3) in highp vec4 position;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = position;\n"
+        "}";
+
+    const std::string &fragmentShaderSource =
+        "#version 310 es\n"
+        "precision highp float;\n"
+        "uniform vec4 color;\n"
+        "layout(location = 2) out vec4 oColor[4];\n"
+        "void main()\n"
+        "{\n"
+        "    oColor[0] = color;\n"
+        "}";
+
+    ANGLE_GL_PROGRAM(program, vertexShaderSource, fragmentShaderSource);
+
+    GLuint index = glGetProgramResourceIndex(program, GL_PROGRAM_INPUT, "position");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_NE(GL_INVALID_INDEX, index);
+
+    constexpr int kPropCount = 7;
+    std::array<GLint, kPropCount> params;
+    GLsizei length;
+    std::array<GLenum, kPropCount> props = {
+        {GL_TYPE, GL_ARRAY_SIZE, GL_LOCATION, GL_NAME_LENGTH, GL_REFERENCED_BY_VERTEX_SHADER,
+         GL_REFERENCED_BY_FRAGMENT_SHADER, GL_REFERENCED_BY_COMPUTE_SHADER}};
+    glGetProgramResourceiv(program, GL_PROGRAM_INPUT, index, kPropCount, props.data(), kPropCount,
+                           &length, params.data());
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(kPropCount, length);
+    EXPECT_EQ(GL_FLOAT_VEC4, params[0]);
+    EXPECT_EQ(1, params[1]);
+    EXPECT_EQ(3, params[2]);
+    EXPECT_EQ(9, params[3]);
+    EXPECT_EQ(1, params[4]);
+    EXPECT_EQ(0, params[5]);
+    EXPECT_EQ(0, params[6]);
+
+    index = glGetProgramResourceIndex(program, GL_PROGRAM_OUTPUT, "oColor[0]");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_NE(index, GL_INVALID_INDEX);
+    glGetProgramResourceiv(program, GL_PROGRAM_OUTPUT, index, kPropCount, props.data(),
+                           kPropCount - 1, &length, params.data());
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(kPropCount - 1, length);
+    EXPECT_EQ(GL_FLOAT_VEC4, params[0]);
+    EXPECT_EQ(4, params[1]);
+    EXPECT_EQ(2, params[2]);
+    EXPECT_EQ(10, params[3]);
+    EXPECT_EQ(0, params[4]);
+    EXPECT_EQ(1, params[5]);
+
+    GLenum invalidOutputProp = GL_OFFSET;
+    glGetProgramResourceiv(program, GL_PROGRAM_OUTPUT, index, 1, &invalidOutputProp, 1, &length,
+                           params.data());
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
 ANGLE_INSTANTIATE_TEST(ProgramInterfaceTestES31, ES31_OPENGL(), ES31_D3D11(), ES31_OPENGLES());
 }  // anonymous namespace

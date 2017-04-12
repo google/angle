@@ -218,6 +218,14 @@ class Context final : public ValidationContext
                                 GLsizei *length,
                                 GLchar *name);
     GLint getProgramResourceLocation(GLuint program, GLenum programInterface, const GLchar *name);
+    void getProgramResourceiv(GLuint program,
+                              GLenum programInterface,
+                              GLuint index,
+                              GLsizei propCount,
+                              const GLenum *props,
+                              GLsizei bufSize,
+                              GLsizei *length,
+                              GLint *params);
 
     Buffer *getBuffer(GLuint handle) const;
     FenceNV *getFenceNV(GLuint handle);
