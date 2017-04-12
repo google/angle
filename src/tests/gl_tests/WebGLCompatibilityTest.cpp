@@ -1550,6 +1550,73 @@ TEST_P(WebGL2CompatibilityTest, ClearBufferTypeCompatibity)
     EXPECT_GL_NO_ERROR();
 }
 
+// Verify that errors are generate when trying to blit from an image to itself
+TEST_P(WebGL2CompatibilityTest, BlitFramebufferSameImage)
+{
+    GLTexture textures[2];
+    glBindTexture(GL_TEXTURE_2D, textures[0]);
+    glTexStorage2D(GL_TEXTURE_2D, 3, GL_RGBA8, 4, 4);
+    glBindTexture(GL_TEXTURE_2D, textures[1]);
+    glTexStorage2D(GL_TEXTURE_2D, 3, GL_RGBA8, 4, 4);
+
+    GLRenderbuffer renderbuffers[2];
+    glBindRenderbuffer(GL_RENDERBUFFER, renderbuffers[0]);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 4, 4);
+    glBindRenderbuffer(GL_RENDERBUFFER, renderbuffers[1]);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, 4, 4);
+
+    GLFramebuffer framebuffers[2];
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffers[0]);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuffers[1]);
+
+    ASSERT_GL_NO_ERROR();
+
+    // Same texture
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[0],
+                           0);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[0],
+                           0);
+    ASSERT_GL_NO_ERROR();
+    glBlitFramebuffer(0, 0, 4, 4, 0, 0, 4, 4, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    ASSERT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Same textures but different renderbuffers
+    glFramebufferRenderbuffer(GL_READ_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              renderbuffers[0]);
+    glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              renderbuffers[1]);
+    ASSERT_GL_NO_ERROR();
+    glBlitFramebuffer(0, 0, 4, 4, 0, 0, 4, 4, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+    glBlitFramebuffer(0, 0, 4, 4, 0, 0, 4, 4, GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT,
+                      GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+    glBlitFramebuffer(0, 0, 4, 4, 0, 0, 4, 4,
+                      GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT,
+                      GL_NEAREST);
+    ASSERT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Same renderbuffers but different textures
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[0],
+                           0);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[1],
+                           0);
+    glFramebufferRenderbuffer(GL_READ_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              renderbuffers[0]);
+    glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                              renderbuffers[0]);
+    ASSERT_GL_NO_ERROR();
+    glBlitFramebuffer(0, 0, 4, 4, 0, 0, 4, 4, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+    glBlitFramebuffer(0, 0, 4, 4, 0, 0, 4, 4, GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT,
+                      GL_NEAREST);
+    ASSERT_GL_ERROR(GL_INVALID_OPERATION);
+    glBlitFramebuffer(0, 0, 4, 4, 0, 0, 4, 4,
+                      GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT,
+                      GL_NEAREST);
+    ASSERT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(WebGLCompatibilityTest,
