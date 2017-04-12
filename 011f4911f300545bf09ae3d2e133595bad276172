@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5fb35cf4_df03f164",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-12T15:21:28Z",
+      "side": 1,
+      "message": "You can replace this with \"return true\" which helps get rid of the \"found\" variable.",
+      "revId": "011f4911f300545bf09ae3d2e133595bad276172",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "24e2b855_9f4e7484",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2542,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-12T15:21:28Z",
+      "side": 1,
+      "message": "nit: this is unnecessary",
+      "range": {
+        "startLine": 2542,
+        "startChar": 0,
+        "endLine": 2542,
+        "endChar": 22
+      },
+      "revId": "011f4911f300545bf09ae3d2e133595bad276172",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b28383dd_0048bab4",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2434,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-12T15:21:28Z",
+      "side": 1,
+      "message": "Can this be put outside of the for (registerInfo: varyingPacking.getRegisterList()) loop?",
+      "range": {
+        "startLine": 2433,
+        "startChar": 0,
+        "endLine": 2434,
+        "endChar": 88
+      },
+      "revId": "011f4911f300545bf09ae3d2e133595bad276172",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d5ab45e7_b6ec7856",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2435,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-12T15:21:28Z",
+      "side": 1,
+      "message": "nit: you can combine the two ifs with a \u0026\u0026",
+      "revId": "011f4911f300545bf09ae3d2e133595bad276172",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

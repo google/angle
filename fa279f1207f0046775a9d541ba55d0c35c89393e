@@ -46,6 +46,23 @@
       "revId": "fa279f1207f0046775a9d541ba55d0c35c89393e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "490afc71_eef89db2",
+        "filename": "src/libANGLE/VaryingPacking.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-12T15:21:28Z",
+      "side": 1,
+      "message": "For other reviewers: I checked that C++11 delegated constructors are allowed.",
+      "revId": "fa279f1207f0046775a9d541ba55d0c35c89393e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
