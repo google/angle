@@ -96,7 +96,8 @@ class WindowSurfaceVk : public SurfaceImpl, public ResourceVk
     VkSwapchainKHR mSwapchain;
 
     RenderTargetVk mRenderTarget;
-    vk::Semaphore mPresentCompleteSemaphore;
+    vk::Semaphore mImageAvailableSemaphore;
+    vk::Semaphore mRenderingCompleteSemaphore;
 
     uint32_t mCurrentSwapchainImageIndex;
     std::vector<vk::Image> mSwapchainImages;

@@ -174,7 +174,10 @@ void WindowSurfaceVk::destroy(const DisplayImpl *displayImpl)
     VkDevice device            = rendererVk->getDevice();
     VkInstance instance        = rendererVk->getInstance();
 
-    mPresentCompleteSemaphore.destroy(device);
+    rendererVk->finish();
+
+    mImageAvailableSemaphore.destroy(device);
+    mRenderingCompleteSemaphore.destroy(device);
 
     for (auto &imageView : mSwapchainImageViews)
     {
@@ -404,7 +407,10 @@ vk::Error WindowSurfaceVk::initializeImpl(RendererVk *renderer)
     ANGLE_TRY(commandBuffer->end());
     ANGLE_TRY(renderer->submitAndFinishCommandBuffer(*commandBuffer));
 
-    // Start by getting the next available swapchain image.
+    ANGLE_TRY(mImageAvailableSemaphore.init(device));
+    ANGLE_TRY(mRenderingCompleteSemaphore.init(device));
+
+    // Get the first available swapchain iamge.
     ANGLE_TRY(nextSwapchainImage(renderer));
 
     return vk::NoError();
@@ -433,13 +439,14 @@ vk::Error WindowSurfaceVk::swapImpl(RendererVk *renderer)
                                   VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, currentCB);
     currentCB->end();
 
-    ANGLE_TRY(renderer->waitThenFinishCommandBuffer(*currentCB, mPresentCompleteSemaphore));
+    ANGLE_TRY(renderer->submitCommandsWithSync(*currentCB, mImageAvailableSemaphore,
+                                               mRenderingCompleteSemaphore));
 
     VkPresentInfoKHR presentInfo;
     presentInfo.sType              = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
     presentInfo.pNext              = nullptr;
-    presentInfo.waitSemaphoreCount = 0;
-    presentInfo.pWaitSemaphores    = nullptr;
+    presentInfo.waitSemaphoreCount = 1;
+    presentInfo.pWaitSemaphores    = mRenderingCompleteSemaphore.ptr();
     presentInfo.swapchainCount     = 1;
     presentInfo.pSwapchains        = &mSwapchain;
     presentInfo.pImageIndices      = &mCurrentSwapchainImageIndex;
@@ -457,14 +464,9 @@ vk::Error WindowSurfaceVk::nextSwapchainImage(RendererVk *renderer)
 {
     VkDevice device = renderer->getDevice();
 
-    vk::Semaphore presentComplete;
-    ANGLE_TRY(presentComplete.init(device));
-
     ANGLE_VK_TRY(vkAcquireNextImageKHR(device, mSwapchain, std::numeric_limits<uint64_t>::max(),
-                                       presentComplete.getHandle(), VK_NULL_HANDLE,
+                                       mImageAvailableSemaphore.getHandle(), VK_NULL_HANDLE,
                                        &mCurrentSwapchainImageIndex));
-
-    mPresentCompleteSemaphore.retain(device, std::move(presentComplete));
 
     // Update RenderTarget pointers.
     mRenderTarget.image     = &mSwapchainImages[mCurrentSwapchainImageIndex];

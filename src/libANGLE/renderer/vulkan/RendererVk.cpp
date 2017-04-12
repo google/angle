@@ -610,29 +610,25 @@ vk::Error RendererVk::submitAndFinishCommandBuffer(const vk::CommandBuffer &comm
     return vk::NoError();
 }
 
-vk::Error RendererVk::waitThenFinishCommandBuffer(const vk::CommandBuffer &commandBuffer,
-                                                  const vk::Semaphore &waitSemaphore)
+vk::Error RendererVk::submitCommandsWithSync(const vk::CommandBuffer &commandBuffer,
+                                             const vk::Semaphore &waitSemaphore,
+                                             const vk::Semaphore &signalSemaphore)
 {
-    VkCommandBuffer commandBufferHandle = commandBuffer.getHandle();
-    VkSemaphore waitHandle              = waitSemaphore.getHandle();
     VkPipelineStageFlags waitStageMask  = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
 
     VkSubmitInfo submitInfo;
     submitInfo.sType                = VK_STRUCTURE_TYPE_SUBMIT_INFO;
     submitInfo.pNext                = nullptr;
     submitInfo.waitSemaphoreCount   = 1;
-    submitInfo.pWaitSemaphores      = &waitHandle;
+    submitInfo.pWaitSemaphores      = waitSemaphore.ptr();
     submitInfo.pWaitDstStageMask    = &waitStageMask;
     submitInfo.commandBufferCount   = 1;
-    submitInfo.pCommandBuffers      = &commandBufferHandle;
-    submitInfo.signalSemaphoreCount = 0;
-    submitInfo.pSignalSemaphores    = nullptr;
+    submitInfo.pCommandBuffers      = commandBuffer.ptr();
+    submitInfo.signalSemaphoreCount = 1;
+    submitInfo.pSignalSemaphores    = signalSemaphore.ptr();
 
     // TODO(jmadill): Investigate how to properly queue command buffer work.
     ANGLE_TRY(submit(submitInfo));
-
-    // Wait indefinitely for the queue to finish.
-    ANGLE_TRY(finish());
 
     return vk::NoError();
 }

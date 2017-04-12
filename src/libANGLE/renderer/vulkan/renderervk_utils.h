@@ -161,6 +161,8 @@ class WrappedObject : angle::NonCopyable
     HandleT getHandle() const { return mHandle; }
     bool valid() const { return (mHandle != VK_NULL_HANDLE); }
 
+    const HandleT *ptr() const { return &mHandle; }
+
   protected:
     WrappedObject() : mHandle(VK_NULL_HANDLE) {}
     WrappedObject(HandleT handle) : mHandle(handle) {}

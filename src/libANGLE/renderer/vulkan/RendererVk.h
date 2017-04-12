@@ -53,8 +53,9 @@ class RendererVk : angle::NonCopyable
     vk::CommandBuffer *getCommandBuffer();
     vk::Error submitCommandBuffer(const vk::CommandBuffer &commandBuffer);
     vk::Error submitAndFinishCommandBuffer(const vk::CommandBuffer &commandBuffer);
-    vk::Error waitThenFinishCommandBuffer(const vk::CommandBuffer &commandBuffer,
-                                          const vk::Semaphore &waitSemaphore);
+    vk::Error submitCommandsWithSync(const vk::CommandBuffer &commandBuffer,
+                                     const vk::Semaphore &waitSemaphore,
+                                     const vk::Semaphore &signalSemaphore);
     vk::Error finish();
 
     const gl::Caps &getNativeCaps() const;
