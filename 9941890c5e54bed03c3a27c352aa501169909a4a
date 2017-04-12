@@ -16,6 +16,24 @@
       "revId": "9941890c5e54bed03c3a27c352aa501169909a4a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ab233be6_14ea9fe6",
+        "filename": "src/libANGLE/signal_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-12T14:39:56Z",
+      "side": 1,
+      "message": "Done on the second, I had done this in a subsequent patch but moved it up to this CL. For the first, it\u0027s something to consider, but didn\u0027t feel like reworking it, and didn\u0027t like having to make custom structs for multiple params.",
+      "parentUuid": "da31bc18_b449e74c",
+      "revId": "9941890c5e54bed03c3a27c352aa501169909a4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
