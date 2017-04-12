@@ -159,8 +159,6 @@ struct TextureState final : public angle::NonCopyable
     {
         SamplerCompletenessCache();
 
-        bool cacheValid;
-
         // All values that affect sampler completeness that are not stored within
         // the texture itself
         SamplerState samplerState;

@@ -200,6 +200,7 @@ bool TextureState::isCubeComplete() const
 bool TextureState::isSamplerComplete(const SamplerState &samplerState,
                                      const ContextState &data) const
 {
+    bool newEntry  = false;
     auto cacheIter = mCompletenessCache.find(data.getContextID());
     if (cacheIter == mCompletenessCache.end())
     {
@@ -207,16 +208,17 @@ bool TextureState::isSamplerComplete(const SamplerState &samplerState,
         cacheIter = mCompletenessCache
                         .insert(std::make_pair(data.getContextID(), SamplerCompletenessCache()))
                         .first;
+        newEntry = true;
     }
 
-    auto cacheEntry = cacheIter->second;
-    if (!cacheEntry.cacheValid || cacheEntry.samplerState != samplerState)
+    SamplerCompletenessCache *cacheEntry = &cacheIter->second;
+    if (newEntry || cacheEntry->samplerState != samplerState)
     {
-        cacheEntry.cacheValid      = true;
-        cacheEntry.samplerComplete = computeSamplerCompleteness(samplerState, data);
+        cacheEntry->samplerState    = samplerState;
+        cacheEntry->samplerComplete = computeSamplerCompleteness(samplerState, data);
     }
 
-    return cacheEntry.samplerComplete;
+    return cacheEntry->samplerComplete;
 }
 
 void TextureState::invalidateCompletenessCache()
@@ -507,9 +509,7 @@ void TextureState::clearImageDescs()
 }
 
 TextureState::SamplerCompletenessCache::SamplerCompletenessCache()
-    : cacheValid(false),
-      samplerState(),
-      samplerComplete(false)
+    : samplerState(), samplerComplete(false)
 {
 }
 
