@@ -610,12 +610,12 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_ANGLE_framebuffer_multisample"] = esOnlyExtension(&Extensions::framebufferMultisample);
         map["GL_ANGLE_instanced_arrays"] = esOnlyExtension(&Extensions::instancedArrays);
         map["GL_ANGLE_pack_reverse_row_order"] = esOnlyExtension(&Extensions::packReverseRowOrder);
-        map["GL_OES_standard_derivatives"] = esOnlyExtension(&Extensions::standardDerivatives);
-        map["GL_EXT_shader_texture_lod"] = esOnlyExtension(&Extensions::shaderTextureLOD);
+        map["GL_OES_standard_derivatives"] = enableableExtension(&Extensions::standardDerivatives);
+        map["GL_EXT_shader_texture_lod"] = enableableExtension(&Extensions::shaderTextureLOD);
         map["GL_NV_shader_framebuffer_fetch"] = esOnlyExtension(&Extensions::NVshaderFramebufferFetch);
         map["GL_ARM_shader_framebuffer_fetch"] = esOnlyExtension(&Extensions::ARMshaderFramebufferFetch);
         map["GL_EXT_shader_framebuffer_fetch"] = esOnlyExtension(&Extensions::shaderFramebufferFetch);
-        map["GL_EXT_frag_depth"] = esOnlyExtension(&Extensions::fragDepth);
+        map["GL_EXT_frag_depth"] = enableableExtension(&Extensions::fragDepth);
         map["GL_ANGLE_texture_usage"] = esOnlyExtension(&Extensions::textureUsage);
         map["GL_ANGLE_translated_shader_source"] = esOnlyExtension(&Extensions::translatedShaderSource);
         map["GL_OES_fbo_render_mipmap"] = esOnlyExtension(&Extensions::fboRenderMipmap);

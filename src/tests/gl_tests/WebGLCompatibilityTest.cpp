@@ -149,6 +149,79 @@ TEST_P(WebGLCompatibilityTest, EnableExtensionUintIndices)
     }
 }
 
+// Test enabling the GL_OES_standard_derivatives extension
+TEST_P(WebGLCompatibilityTest, EnableExtensionStandardDerivitives)
+{
+    EXPECT_FALSE(extensionEnabled("GL_OES_standard_derivatives"));
+
+    const std::string source =
+        "#extension GL_OES_standard_derivatives : require\n"
+        "void main() { gl_FragColor = vec4(dFdx(vec2(1.0, 1.0)).x, 1, 0, 1); }\n";
+    ASSERT_EQ(0u, CompileShader(GL_FRAGMENT_SHADER, source));
+
+    if (extensionRequestable("GL_OES_standard_derivatives"))
+    {
+        glRequestExtensionANGLE("GL_OES_standard_derivatives");
+        EXPECT_GL_NO_ERROR();
+        EXPECT_TRUE(extensionEnabled("GL_OES_standard_derivatives"));
+
+        GLuint shader = CompileShader(GL_FRAGMENT_SHADER, source);
+        ASSERT_NE(0u, shader);
+        glDeleteShader(shader);
+    }
+}
+
+// Test enabling the GL_EXT_shader_texture_lod extension
+TEST_P(WebGLCompatibilityTest, EnableExtensionTextureLOD)
+{
+    EXPECT_FALSE(extensionEnabled("GL_EXT_shader_texture_lod"));
+
+    const std::string source =
+        "#extension GL_EXT_shader_texture_lod : require\n"
+        "uniform sampler2D u_texture;\n"
+        "void main() {\n"
+        "    gl_FragColor = texture2DGradEXT(u_texture, vec2(0.0, 0.0), vec2(0.0, 0.0), vec2(0.0, "
+        "0.0));\n"
+        "}\n";
+    ASSERT_EQ(0u, CompileShader(GL_FRAGMENT_SHADER, source));
+
+    if (extensionRequestable("GL_EXT_shader_texture_lod"))
+    {
+        glRequestExtensionANGLE("GL_EXT_shader_texture_lod");
+        EXPECT_GL_NO_ERROR();
+        EXPECT_TRUE(extensionEnabled("GL_EXT_shader_texture_lod"));
+
+        GLuint shader = CompileShader(GL_FRAGMENT_SHADER, source);
+        ASSERT_NE(0u, shader);
+        glDeleteShader(shader);
+    }
+}
+
+// Test enabling the GL_EXT_frag_depth extension
+TEST_P(WebGLCompatibilityTest, EnableExtensionFragDepth)
+{
+    EXPECT_FALSE(extensionEnabled("GL_EXT_frag_depth"));
+
+    const std::string source =
+        "#extension GL_EXT_frag_depth : require\n"
+        "void main() {\n"
+        "    gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);\n"
+        "    gl_FragDepthEXT = 1.0;\n"
+        "}\n";
+    ASSERT_EQ(0u, CompileShader(GL_FRAGMENT_SHADER, source));
+
+    if (extensionRequestable("GL_EXT_frag_depth"))
+    {
+        glRequestExtensionANGLE("GL_EXT_frag_depth");
+        EXPECT_GL_NO_ERROR();
+        EXPECT_TRUE(extensionEnabled("GL_EXT_frag_depth"));
+
+        GLuint shader = CompileShader(GL_FRAGMENT_SHADER, source);
+        ASSERT_NE(0u, shader);
+        glDeleteShader(shader);
+    }
+}
+
 // Test enabling the GL_EXT_texture_filter_anisotropic extension
 TEST_P(WebGLCompatibilityTest, EnableExtensionTextureFilterAnisotropic)
 {
