@@ -813,6 +813,11 @@ void Context::deleteSampler(GLuint sampler)
 
 void Context::deleteTransformFeedback(GLuint transformFeedback)
 {
+    if (transformFeedback == 0)
+    {
+        return;
+    }
+
     auto iter = mTransformFeedbackMap.find(transformFeedback);
     if (iter != mTransformFeedbackMap.end())
     {
