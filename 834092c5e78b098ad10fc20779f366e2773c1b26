@@ -22,6 +22,30 @@
       "revId": "834092c5e78b098ad10fc20779f366e2773c1b26",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1c877703_3c0c95ec",
+        "filename": "src/compiler/translator/PrunePureLiteralStatements.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-12T17:34:19Z",
+      "side": 1,
+      "message": "The current code handles that correctly thanks to the \"continue\". Added a tests.",
+      "parentUuid": "37e43b3e_5f3ada80",
+      "range": {
+        "startLine": 52,
+        "startChar": 12,
+        "endLine": 52,
+        "endChar": 14
+      },
+      "revId": "834092c5e78b098ad10fc20779f366e2773c1b26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
