@@ -78,6 +78,11 @@ ShaderD3D::~ShaderD3D()
 
 std::string ShaderD3D::getDebugInfo() const
 {
+    if (mDebugInfo.empty())
+    {
+        return "";
+    }
+
     return mDebugInfo + std::string("\n// ") + GetShaderTypeString(mData.getShaderType()) +
            " SHADER END\n";
 }
