@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "369aeebf_d6d5c310",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-13T13:46:09Z",
+      "side": 1,
+      "message": "Can you make a small comment on why this keeps initialization in the right order with line 94?",
+      "revId": "c33f57ef4da199e3e67a045a575b4ea1ee3dbe4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
