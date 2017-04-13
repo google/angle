@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8ac10281_262fe1f9",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-13T15:45:00Z",
+      "side": 1,
+      "message": "I thought this would only require having multiple version of the BitSetIterator::Iterator to optimize for small sizes, and not having to reimplement our own small std::bitset. What we really want is for BitSetIterator\u003cN\u003e::Iterator::getNextBit() to be a call to builtin_clz when N is small.\n\nBy only adding specializations of the BitSetIterator::Iterator, most of the other changes in this patch would not be required.\n\nAm I missing something?",
+      "revId": "2414c086799f9b7321fdd3661c96b07952021ce5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ba1dfa1_4a8775f6",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-13T15:45:00Z",
+      "side": 1,
+      "message": "I don\u0027t think the iterator needs to keep mCurrentBit, and it should be free to recompute it everytime as it is just one assembly instruction to do __builtin_clz or ScanForward. Also it would remove the need to branch on mBitsCopy.none()\n\nSee [1], [2] and [3]",
+      "revId": "2414c086799f9b7321fdd3661c96b07952021ce5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ae2c9d24_b74946d7",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-13T15:45:00Z",
+      "side": 1,
+      "message": "[1] This would become empty.",
+      "revId": "2414c086799f9b7321fdd3661c96b07952021ce5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2f11b0c7_c96e3abe",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 395,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-13T15:45:00Z",
+      "side": 1,
+      "message": "[2] It is invalid to call operator++ on the end() so it is valid to call ScanForward.",
+      "revId": "2414c086799f9b7321fdd3661c96b07952021ce5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0e758a57_c5f8445e",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 416,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-13T15:45:00Z",
+      "side": 1,
+      "message": "[3] It is invalid to call operator* on end() so it is valid to call ScanForward.",
+      "revId": "2414c086799f9b7321fdd3661c96b07952021ce5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "606dff24_db9d4b91",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-13T15:45:00Z",
+      "side": 1,
+      "message": "You can keep these inside the namespace, even the priv one.",
+      "revId": "2414c086799f9b7321fdd3661c96b07952021ce5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
