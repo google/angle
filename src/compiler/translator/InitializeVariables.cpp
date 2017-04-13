@@ -82,11 +82,17 @@ void VariableInitializer::insertInitCode(TIntermSequence *sequence)
             TType arrayType   = elementType;
             arrayType.setArraySize(var.elementCount());
 
-            for (unsigned int i = 0; i < var.arraySize; ++i)
+            // Workaround for http://crbug.com/709317
+            //   This loop is reversed to initialize elements in increasing
+            // order [0 1 2 ...]. Otherwise, they're initialized in
+            // decreasing order [... 2 1 0], due to
+            // `sequence->insert(sequence->begin(), ...)` below.
+            for (unsigned int i = var.arraySize; i > 0; --i)
             {
+                unsigned int index = i - 1;
                 TIntermSymbol *arraySymbol = new TIntermSymbol(0, name, arrayType);
                 TIntermBinary *element     = new TIntermBinary(EOpIndexDirect, arraySymbol,
-                                                           TIntermTyped::CreateIndexNode(i));
+                                                           TIntermTyped::CreateIndexNode(index));
 
                 TIntermTyped *zero        = TIntermTyped::CreateZero(elementType);
                 TIntermBinary *assignment = new TIntermBinary(EOpAssign, element, zero);
