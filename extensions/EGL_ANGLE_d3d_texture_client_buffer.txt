@@ -101,6 +101,11 @@ Additions to Chapter 3 of the EGL 1.4 Specification (EGL Functions and Errors)
 
 Issues
 
+    1. What renderers allow the use of a multi-sampled texture?
+
+    PROPOSED: Mutli-sampled texture support is currently limited to D3D11. Additionally,
+    the client is responsible for resolving the texture.
+
 Revision History
 
     Version 1, 2016/10/05 - first draft.

@@ -91,8 +91,10 @@ class Renderer9 : public RendererD3D
                                   IUnknown *d3dTexture,
                                   GLenum backBufferFormat,
                                   GLenum depthBufferFormat,
-                                  EGLint orientation) override;
-    egl::Error getD3DTextureInfo(IUnknown *d3dTexture,
+                                  EGLint orientation,
+                                  EGLint samples) override;
+    egl::Error getD3DTextureInfo(const egl::Config *configuration,
+                                 IUnknown *d3dTexture,
                                  EGLint *width,
                                  EGLint *height,
                                  GLenum *fboFormat) const override;

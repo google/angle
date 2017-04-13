@@ -72,6 +72,14 @@ class EGLContextCompatibilityTest : public ANGLETest
     };
 
   protected:
+    // Queries EGL config to determine if multisampled or not
+    bool isMultisampledConfig(EGLConfig config)
+    {
+        EGLint samples = 0;
+        eglGetConfigAttrib(mDisplay, config, EGL_SAMPLES, &samples);
+        return (samples > 1);
+    }
+
     bool areConfigsCompatible(EGLConfig c1, EGLConfig c2, EGLint surfaceBit)
     {
         EGLint colorBufferType1, colorBufferType2;
@@ -235,6 +243,12 @@ TEST_P(EGLContextCompatibilityTest, WindowSameConfig)
 
         if ((surfaceType & EGL_WINDOW_BIT) != 0)
         {
+            // Disabling multisampled configurations due to test instability with various graphics
+            // cards
+            if (isMultisampledConfig(config))
+            {
+                continue;
+            }
             testWindowCompatibility(config, config, true);
         }
     }
@@ -254,6 +268,12 @@ TEST_P(EGLContextCompatibilityTest, PbufferSameConfig)
 
         if ((surfaceType & EGL_PBUFFER_BIT) != 0)
         {
+            // Disabling multisampled configurations due to test instability with various graphics
+            // cards
+            if (isMultisampledConfig(config))
+            {
+                continue;
+            }
             testPbufferCompatibility(config, config, true);
         }
     }
@@ -266,6 +286,12 @@ TEST_P(EGLContextCompatibilityTest, WindowDifferentConfig)
     for (size_t i = 0; i < mConfigs.size(); i++)
     {
         EGLConfig config1 = mConfigs[i];
+        // Disabling multisampled configurations due to test instability with various graphics cards
+        if (isMultisampledConfig(config1))
+        {
+            continue;
+        }
+
         EGLint surfaceType;
         eglGetConfigAttrib(mDisplay, config1, EGL_SURFACE_TYPE, &surfaceType);
         ASSERT_EGL_SUCCESS();
@@ -278,6 +304,12 @@ TEST_P(EGLContextCompatibilityTest, WindowDifferentConfig)
         for (size_t j = 0; j < mConfigs.size(); j++)
         {
             EGLConfig config2 = mConfigs[j];
+            // Disabling multisampled configurations due to test instability with various graphics
+            // cards
+            if (isMultisampledConfig(config2))
+            {
+                continue;
+            }
             testWindowCompatibility(config1, config2,
                                     areConfigsCompatible(config1, config2, EGL_WINDOW_BIT));
         }
@@ -291,6 +323,12 @@ TEST_P(EGLContextCompatibilityTest, PbufferDifferentConfig)
     for (size_t i = 0; i < mConfigs.size(); i++)
     {
         EGLConfig config1 = mConfigs[i];
+        // Disabling multisampled configurations due to test instability with various graphics cards
+        if (isMultisampledConfig(config1))
+        {
+            continue;
+        }
+
         EGLint surfaceType;
         eglGetConfigAttrib(mDisplay, config1, EGL_SURFACE_TYPE, &surfaceType);
         ASSERT_EGL_SUCCESS();
@@ -303,6 +341,12 @@ TEST_P(EGLContextCompatibilityTest, PbufferDifferentConfig)
         for (size_t j = 0; j < mConfigs.size(); j++)
         {
             EGLConfig config2 = mConfigs[j];
+            // Disabling multisampled configurations due to test instability with various graphics
+            // cards
+            if (isMultisampledConfig(config2))
+            {
+                continue;
+            }
             testPbufferCompatibility(config1, config2, areConfigsCompatible(config1, config2, EGL_PBUFFER_BIT));
         }
     }

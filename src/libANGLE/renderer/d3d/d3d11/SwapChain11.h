@@ -27,7 +27,8 @@ class SwapChain11 final : public SwapChainD3D
                 IUnknown *d3dTexture,
                 GLenum backBufferFormat,
                 GLenum depthBufferFormat,
-                EGLint orientation);
+                EGLint orientation,
+                EGLint samples);
     virtual ~SwapChain11();
 
     EGLint resize(EGLint backbufferWidth, EGLint backbufferHeight);
@@ -49,6 +50,7 @@ class SwapChain11 final : public SwapChainD3D
     EGLint getWidth() const { return mWidth; }
     EGLint getHeight() const { return mHeight; }
     void *getKeyedMutex() override { return mKeyedMutex; }
+    EGLint getSamples() const { return mEGLSamples; }
 
     egl::Error getSyncValues(EGLuint64KHR *ust, EGLuint64KHR *msc, EGLuint64KHR *sbc) override;
 
@@ -66,6 +68,7 @@ class SwapChain11 final : public SwapChainD3D
 
     EGLint copyOffscreenToBackbuffer(EGLint x, EGLint y, EGLint width, EGLint height);
     EGLint present(EGLint x, EGLint y, EGLint width, EGLint height);
+    UINT getD3DSamples() const;
 
     Renderer11 *mRenderer;
     EGLint mWidth;
@@ -105,6 +108,7 @@ class SwapChain11 final : public SwapChainD3D
     SurfaceRenderTarget11 mColorRenderTarget;
     SurfaceRenderTarget11 mDepthStencilRenderTarget;
 
+    EGLint mEGLSamples;
     LONGLONG mQPCFrequency;
 };
 

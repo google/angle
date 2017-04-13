@@ -405,8 +405,7 @@ GLenum SurfaceRenderTarget11::getInternalFormat() const
 
 GLsizei SurfaceRenderTarget11::getSamples() const
 {
-    // Our EGL surfaces do not support multisampling.
-    return 0;
+    return mSwapChain->getSamples();
 }
 
 ID3D11Resource *SurfaceRenderTarget11::getTexture() const

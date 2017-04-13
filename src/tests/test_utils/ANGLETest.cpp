@@ -29,6 +29,7 @@ const GLColor GLColor::red              = GLColor(255u, 0u, 0u, 255u);
 const GLColor GLColor::transparentBlack = GLColor(0u, 0u, 0u, 0u);
 const GLColor GLColor::white            = GLColor(255u, 255u, 255u, 255u);
 const GLColor GLColor::yellow           = GLColor(255u, 255u, 0, 255u);
+const GLColor GLColor::magenta          = GLColor(255u, 0u, 255u, 255u);
 
 namespace
 {
@@ -680,6 +681,11 @@ void ANGLETest::setConfigComponentType(EGLenum componentType)
 void ANGLETest::setMultisampleEnabled(bool enabled)
 {
     mEGLWindow->setMultisample(enabled);
+}
+
+void ANGLETest::setSamples(EGLint samples)
+{
+    mEGLWindow->setSamples(samples);
 }
 
 void ANGLETest::setDebugEnabled(bool enabled)

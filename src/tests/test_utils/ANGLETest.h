@@ -87,6 +87,7 @@ struct GLColor
     static const GLColor transparentBlack;
     static const GLColor white;
     static const GLColor yellow;
+    static const GLColor magenta;
 };
 
 struct GLColor32F
@@ -235,6 +236,7 @@ class ANGLETest : public ::testing::TestWithParam<angle::PlatformParameters>
     void setConfigStencilBits(int bits);
     void setConfigComponentType(EGLenum componentType);
     void setMultisampleEnabled(bool enabled);
+    void setSamples(EGLint samples);
     void setDebugEnabled(bool enabled);
     void setNoErrorEnabled(bool enabled);
     void setWebGLCompatibilityEnabled(bool webglCompatibility);

@@ -126,8 +126,10 @@ class Renderer11 : public RendererD3D
                                   IUnknown *d3dTexture,
                                   GLenum backBufferFormat,
                                   GLenum depthBufferFormat,
-                                  EGLint orientation) override;
-    egl::Error getD3DTextureInfo(IUnknown *d3dTexture,
+                                  EGLint orientation,
+                                  EGLint samples) override;
+    egl::Error getD3DTextureInfo(const egl::Config *configuration,
+                                 IUnknown *d3dTexture,
                                  EGLint *width,
                                  EGLint *height,
                                  GLenum *fboFormat) const override;
@@ -487,6 +489,10 @@ class Renderer11 : public RendererD3D
                                 GLenum destFormat,
                                 const gl::Offset &destOffset,
                                 RenderTargetD3D *destRenderTarget);
+
+    gl::SupportedSampleSet generateSampleSetFromCaps(
+        const gl::TextureCaps &colorBufferFormatCaps,
+        const gl::TextureCaps &depthStencilBufferFormatCaps) const;
 
     HMODULE mD3d11Module;
     HMODULE mDxgiModule;

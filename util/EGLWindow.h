@@ -68,6 +68,7 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     void setConfigStencilBits(int bits) { mStencilBits = bits; }
     void setConfigComponentType(EGLenum componentType) { mComponentType = componentType; }
     void setMultisample(bool multisample) { mMultisample = multisample; }
+    void setSamples(EGLint samples) { mSamples = samples; }
     void setDebugEnabled(bool debug) { mDebug = debug; }
     void setNoErrorEnabled(bool noError) { mNoError = noError; }
     void setWebGLCompatibilityEnabled(bool webglCompatibility)
@@ -142,6 +143,7 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     bool mClientArraysEnabled;
     bool mRobustResourceInit;
     EGLint mSwapInterval;
+    EGLint mSamples;
     Optional<bool> mVulkanLayersEnabled;
 };
 

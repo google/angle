@@ -60,7 +60,8 @@ SurfaceD3D::SurfaceD3D(const egl::SurfaceState &state,
             mD3DTexture = static_cast<IUnknown *>(clientBuffer);
             ASSERT(mD3DTexture != nullptr);
             mD3DTexture->AddRef();
-            mRenderer->getD3DTextureInfo(mD3DTexture, &mWidth, &mHeight, &mRenderTargetFormat);
+            mRenderer->getD3DTextureInfo(state.config, mD3DTexture, &mWidth, &mHeight,
+                                         &mRenderTargetFormat);
             break;
 
         default:
@@ -146,8 +147,9 @@ egl::Error SurfaceD3D::resetSwapChain()
         height = mHeight;
     }
 
-    mSwapChain = mRenderer->createSwapChain(mNativeWindow, mShareHandle, mD3DTexture,
-                                            mRenderTargetFormat, mDepthStencilFormat, mOrientation);
+    mSwapChain =
+        mRenderer->createSwapChain(mNativeWindow, mShareHandle, mD3DTexture, mRenderTargetFormat,
+                                   mDepthStencilFormat, mOrientation, mState.config->samples);
     if (!mSwapChain)
     {
         return egl::Error(EGL_BAD_ALLOC);

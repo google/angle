@@ -117,7 +117,8 @@ EGLWindow::EGLWindow(EGLint glesMajorVersion,
       mBindGeneratesResource(true),
       mClientArraysEnabled(true),
       mRobustResourceInit(false),
-      mSwapInterval(-1)
+      mSwapInterval(-1),
+      mSamples(-1)
 {
 }
 
@@ -228,6 +229,7 @@ bool EGLWindow::initializeDisplayAndSurface(OSWindow *osWindow)
         EGL_DEPTH_SIZE,     (mDepthBits >= 0) ? mDepthBits : EGL_DONT_CARE,
         EGL_STENCIL_SIZE,   (mStencilBits >= 0) ? mStencilBits : EGL_DONT_CARE,
         EGL_SAMPLE_BUFFERS, mMultisample ? 1 : 0,
+        EGL_SAMPLES,        (mSamples >= 0) ? mSamples : EGL_DONT_CARE,
     };
 
     // Add dynamic attributes
@@ -258,6 +260,7 @@ bool EGLWindow::initializeDisplayAndSurface(OSWindow *osWindow)
     eglGetConfigAttrib(mDisplay, mConfig, EGL_ALPHA_SIZE, &mAlphaBits);
     eglGetConfigAttrib(mDisplay, mConfig, EGL_DEPTH_SIZE, &mDepthBits);
     eglGetConfigAttrib(mDisplay, mConfig, EGL_STENCIL_SIZE, &mStencilBits);
+    eglGetConfigAttrib(mDisplay, mConfig, EGL_SAMPLES, &mSamples);
 
     std::vector<EGLint> surfaceAttributes;
     if (strstr(displayExtensions, "EGL_NV_post_sub_buffer") != nullptr)
