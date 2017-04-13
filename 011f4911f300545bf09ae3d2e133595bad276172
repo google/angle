@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "2a1e458b_5ce7b53d",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-13T14:20:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5fb35cf4_df03f164",
+      "revId": "011f4911f300545bf09ae3d2e133595bad276172",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "24e2b855_9f4e7484",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 10
@@ -30,6 +48,30 @@
       "writtenOn": "2017-04-12T15:21:28Z",
       "side": 1,
       "message": "nit: this is unnecessary",
+      "range": {
+        "startLine": 2542,
+        "startChar": 0,
+        "endLine": 2542,
+        "endChar": 22
+      },
+      "revId": "011f4911f300545bf09ae3d2e133595bad276172",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa4aad18_1b30ca4f",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2542,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-13T14:20:24Z",
+      "side": 1,
+      "message": "Seemingly Yes. Probably It \u0027s still a bit useful as it can avoid unnecessarily walking through the loop for remaining \u0027varyings\u0027.",
+      "parentUuid": "24e2b855_9f4e7484",
       "range": {
         "startLine": 2542,
         "startChar": 0,
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "b844b853_4ddd05ce",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2434,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-13T14:20:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b28383dd_0048bab4",
+      "range": {
+        "startLine": 2433,
+        "startChar": 0,
+        "endLine": 2434,
+        "endChar": 88
+      },
+      "revId": "011f4911f300545bf09ae3d2e133595bad276172",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d5ab45e7_b6ec7856",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 10
@@ -79,6 +145,24 @@
       "revId": "011f4911f300545bf09ae3d2e133595bad276172",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f1db6c69_d0c5d594",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2435,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-13T14:20:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d5ab45e7_b6ec7856",
+      "revId": "011f4911f300545bf09ae3d2e133595bad276172",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
