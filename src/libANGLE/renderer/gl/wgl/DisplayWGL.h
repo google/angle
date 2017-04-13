@@ -86,6 +86,7 @@ class DisplayWGL : public DisplayGL
     HGLRC mWGLContext;
 
     bool mUseDXGISwapChains;
+    bool mHasDXInterop;
     HMODULE mDxgiModule;
     HMODULE mD3d11Module;
     HANDLE mD3D11DeviceHandle;

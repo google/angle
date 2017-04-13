@@ -70,6 +70,7 @@ DisplayWGL::DisplayWGL(const egl::DisplayState &state)
       mPixelFormat(0),
       mWGLContext(nullptr),
       mUseDXGISwapChains(false),
+      mHasDXInterop(false),
       mDxgiModule(nullptr),
       mD3d11Module(nullptr),
       mD3D11DeviceHandle(nullptr),
@@ -375,18 +376,19 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
         mUseDXGISwapChains = false;
     }
 
-    if (mFunctionsWGL->hasExtension("WGL_NV_DX_interop2"))
+    mHasDXInterop = mFunctionsWGL->hasExtension("WGL_NV_DX_interop2");
+
+    if (mUseDXGISwapChains)
     {
-        egl::Error error = initializeD3DDevice();
-        if (error.isError())
+        if (mHasDXInterop)
         {
-            return error;
+            ANGLE_TRY(initializeD3DDevice());
         }
-    }
-    else if (mUseDXGISwapChains)
-    {
-        // Want to use DXGI swap chains but WGL_NV_DX_interop2 is not present, fail initialization
-        return egl::Error(EGL_NOT_INITIALIZED, "WGL_NV_DX_interop2 is required but not present.");
+        else
+        {
+            // Want to use DXGI swap chains but WGL_NV_DX_interop2 is not present, fail initialization
+            return egl::Error(EGL_NOT_INITIALIZED, "WGL_NV_DX_interop2 is required but not present.");
+        }
     }
 
     return DisplayGL::initialize(display);
@@ -441,6 +443,12 @@ SurfaceImpl *DisplayWGL::createWindowSurface(const egl::SurfaceState &state,
     EGLint orientation = static_cast<EGLint>(attribs.get(EGL_SURFACE_ORIENTATION_ANGLE, 0));
     if (mUseDXGISwapChains)
     {
+        egl::Error error = initializeD3DDevice();
+        if (error.isError())
+        {
+            return nullptr;
+        }
+
         return new DXGISwapChainWindowSurfaceWGL(state, getRenderer(), window, mD3D11Device,
                                                  mD3D11DeviceHandle, mWGLContext, mDeviceContext,
                                                  mFunctionsGL, mFunctionsWGL, orientation);
@@ -470,6 +478,12 @@ SurfaceImpl *DisplayWGL::createPbufferFromClientBuffer(const egl::SurfaceState &
                                                        EGLClientBuffer clientBuffer,
                                                        const egl::AttributeMap &attribs)
 {
+    egl::Error error = initializeD3DDevice();
+    if (error.isError())
+    {
+        return nullptr;
+    }
+
     return new D3DTextureSurfaceWGL(state, getRenderer(), buftype, clientBuffer, this, mWGLContext,
                                     mDeviceContext, mD3D11Device, mFunctionsGL, mFunctionsWGL);
 }
@@ -593,6 +607,7 @@ egl::Error DisplayWGL::validateClientBuffer(const egl::Config *configuration,
     {
         case EGL_D3D_TEXTURE_ANGLE:
         case EGL_D3D_TEXTURE_2D_SHARE_HANDLE_ANGLE:
+            ANGLE_TRY(const_cast<DisplayWGL*>(this)->initializeD3DDevice());
             return D3DTextureSurfaceWGL::ValidateD3DTextureClientBuffer(buftype, clientBuffer,
                                                                         mD3D11Device);
 
@@ -665,8 +680,8 @@ void DisplayWGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
 
     outExtensions->createContextRobustness = mHasRobustness;
 
-    outExtensions->d3dTextureClientBuffer         = mD3D11Device != nullptr;
-    outExtensions->d3dShareHandleClientBuffer     = mD3D11Device != nullptr;
+    outExtensions->d3dTextureClientBuffer         = mHasDXInterop;
+    outExtensions->d3dShareHandleClientBuffer     = mHasDXInterop;
     outExtensions->surfaceD3DTexture2DShareHandle = true;
     outExtensions->querySurfacePointer            = true;
     outExtensions->keyedMutex                     = true;
