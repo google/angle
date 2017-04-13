@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c8378dd7_348f22b2",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1992,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-13T15:04:40Z",
+      "side": 1,
+      "message": "I think these can just call context-\u003egetBooleanv",
+      "range": {
+        "startLine": 1985,
+        "startChar": 8,
+        "endLine": 1992,
+        "endChar": 9
+      },
+      "revId": "85fc7e214a1d4339d5334b39c5025046f2b77c9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
