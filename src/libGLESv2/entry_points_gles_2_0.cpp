@@ -1091,10 +1091,9 @@ void GL_APIENTRY GetFramebufferAttachmentParameteriv(GLenum target, GLenum attac
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        GLsizei numParams = 0;
         if (!context->skipValidation() &&
             !ValidateGetFramebufferAttachmentParameteriv(context, target, attachment, pname,
-                                                         &numParams))
+                                                         nullptr))
         {
             return;
         }
@@ -1126,9 +1125,8 @@ void GL_APIENTRY GetProgramiv(GLuint program, GLenum pname, GLint* params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        GLsizei numParams = 0;
         if (!context->skipValidation() &&
-            !ValidateGetProgramiv(context, program, pname, &numParams))
+            !ValidateGetProgramiv(context, program, pname, nullptr))
         {
             return;
         }
