@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3265745e_cb6058fd",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-13T15:11:28Z",
+      "side": 1,
+      "message": "Only one of these casts should be needed.",
+      "range": {
+        "startLine": 487,
+        "startChar": 8,
+        "endLine": 487,
+        "endChar": 42
+      },
+      "revId": "ba3d48ce5010f65ad1865de7c110ae1b3c0d1b2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
