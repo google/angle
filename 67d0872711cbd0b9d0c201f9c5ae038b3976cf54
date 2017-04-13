@@ -84,6 +84,24 @@
     },
     {
       "key": {
+        "uuid": "e1f39e11_0a8f4c83",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 803,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-13T16:47:31Z",
+      "side": 1,
+      "message": "I\u0027m worried that this might hide bugs, would it make sense to have a GetSizedInternalFormatOrNone function? It could be in another patch as it would be functional change.",
+      "parentUuid": "51c20c59_7ae4ba35",
+      "revId": "67d0872711cbd0b9d0c201f9c5ae038b3976cf54",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "668b68ef_14423e09",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
         "patchSetId": 15
