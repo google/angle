@@ -1307,7 +1307,7 @@ Compiler *Context::getCompiler() const
     return mCompiler;
 }
 
-void Context::getBooleanv(GLenum pname, GLboolean *params)
+void Context::getBooleanvImpl(GLenum pname, GLboolean *params)
 {
     switch (pname)
     {
@@ -1319,7 +1319,7 @@ void Context::getBooleanv(GLenum pname, GLboolean *params)
     }
 }
 
-void Context::getFloatv(GLenum pname, GLfloat *params)
+void Context::getFloatvImpl(GLenum pname, GLfloat *params)
 {
     // Queries about context capabilities and maximums are answered by Context.
     // Queries about current GL state values are answered by State.
@@ -1356,7 +1356,7 @@ void Context::getFloatv(GLenum pname, GLfloat *params)
     }
 }
 
-void Context::getIntegerv(GLenum pname, GLint *params)
+void Context::getIntegervImpl(GLenum pname, GLint *params)
 {
     // Queries about context capabilities and maximums are answered by Context.
     // Queries about current GL state values are answered by State.
@@ -4050,6 +4050,570 @@ void Context::dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGr
     }
 
     mImplementation->dispatchCompute(numGroupsX, numGroupsY, numGroupsZ);
+}
+
+GLenum Context::checkFramebufferStatus(GLenum target)
+{
+    Framebuffer *framebuffer = mGLState.getTargetFramebuffer(target);
+    ASSERT(framebuffer);
+
+    return framebuffer->checkStatus(this);
+}
+
+void Context::compileShader(GLuint shader)
+{
+    Shader *shaderObject = GetValidShader(this, shader);
+    if (!shaderObject)
+    {
+        return;
+    }
+    shaderObject->compile(this);
+}
+
+void Context::deleteBuffers(GLsizei n, const GLuint *buffers)
+{
+    for (int i = 0; i < n; i++)
+    {
+        deleteBuffer(buffers[i]);
+    }
+}
+
+void Context::deleteFramebuffers(GLsizei n, const GLuint *framebuffers)
+{
+    for (int i = 0; i < n; i++)
+    {
+        if (framebuffers[i] != 0)
+        {
+            deleteFramebuffer(framebuffers[i]);
+        }
+    }
+}
+
+void Context::deleteRenderbuffers(GLsizei n, const GLuint *renderbuffers)
+{
+    for (int i = 0; i < n; i++)
+    {
+        deleteRenderbuffer(renderbuffers[i]);
+    }
+}
+
+void Context::deleteTextures(GLsizei n, const GLuint *textures)
+{
+    for (int i = 0; i < n; i++)
+    {
+        if (textures[i] != 0)
+        {
+            deleteTexture(textures[i]);
+        }
+    }
+}
+
+void Context::detachShader(GLuint program, GLuint shader)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+
+    Shader *shaderObject = getShader(shader);
+    ASSERT(shaderObject);
+
+    programObject->detachShader(this, shaderObject);
+}
+
+void Context::genBuffers(GLsizei n, GLuint *buffers)
+{
+    for (int i = 0; i < n; i++)
+    {
+        buffers[i] = createBuffer();
+    }
+}
+
+void Context::genFramebuffers(GLsizei n, GLuint *framebuffers)
+{
+    for (int i = 0; i < n; i++)
+    {
+        framebuffers[i] = createFramebuffer();
+    }
+}
+
+void Context::genRenderbuffers(GLsizei n, GLuint *renderbuffers)
+{
+    for (int i = 0; i < n; i++)
+    {
+        renderbuffers[i] = createRenderbuffer();
+    }
+}
+
+void Context::genTextures(GLsizei n, GLuint *textures)
+{
+    for (int i = 0; i < n; i++)
+    {
+        textures[i] = createTexture();
+    }
+}
+
+void Context::getActiveAttrib(GLuint program,
+                              GLuint index,
+                              GLsizei bufsize,
+                              GLsizei *length,
+                              GLint *size,
+                              GLenum *type,
+                              GLchar *name)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->getActiveAttribute(index, bufsize, length, size, type, name);
+}
+
+void Context::getActiveUniform(GLuint program,
+                               GLuint index,
+                               GLsizei bufsize,
+                               GLsizei *length,
+                               GLint *size,
+                               GLenum *type,
+                               GLchar *name)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->getActiveUniform(index, bufsize, length, size, type, name);
+}
+
+void Context::getAttachedShaders(GLuint program, GLsizei maxcount, GLsizei *count, GLuint *shaders)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->getAttachedShaders(maxcount, count, shaders);
+}
+
+GLint Context::getAttribLocation(GLuint program, const GLchar *name)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    return programObject->getAttributeLocation(name);
+}
+
+void Context::getBooleanv(GLenum pname, GLboolean *params)
+{
+    GLenum nativeType;
+    unsigned int numParams = 0;
+    getQueryParameterInfo(pname, &nativeType, &numParams);
+
+    if (nativeType == GL_BOOL)
+    {
+        getBooleanvImpl(pname, params);
+    }
+    else
+    {
+        CastStateValues(this, nativeType, pname, numParams, params);
+    }
+}
+
+void Context::getFloatv(GLenum pname, GLfloat *params)
+{
+    GLenum nativeType;
+    unsigned int numParams = 0;
+    getQueryParameterInfo(pname, &nativeType, &numParams);
+
+    if (nativeType == GL_FLOAT)
+    {
+        getFloatvImpl(pname, params);
+    }
+    else
+    {
+        CastStateValues(this, nativeType, pname, numParams, params);
+    }
+}
+
+void Context::getIntegerv(GLenum pname, GLint *params)
+{
+    GLenum nativeType;
+    unsigned int numParams = 0;
+    getQueryParameterInfo(pname, &nativeType, &numParams);
+
+    if (nativeType == GL_INT)
+    {
+        getIntegervImpl(pname, params);
+    }
+    else
+    {
+        CastStateValues(this, nativeType, pname, numParams, params);
+    }
+}
+
+void Context::getProgramiv(GLuint program, GLenum pname, GLint *params)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    QueryProgramiv(programObject, pname, params);
+}
+
+void Context::getInfoLog(GLuint program, GLsizei bufsize, GLsizei *length, GLchar *infolog)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->getInfoLog(bufsize, length, infolog);
+}
+
+void Context::getShaderiv(GLuint shader, GLenum pname, GLint *params)
+{
+    Shader *shaderObject = getShader(shader);
+    ASSERT(shaderObject);
+    QueryShaderiv(shaderObject, pname, params);
+}
+
+void Context::getShaderInfoLog(GLuint shader, GLsizei bufsize, GLsizei *length, GLchar *infolog)
+{
+    Shader *shaderObject = getShader(shader);
+    ASSERT(shaderObject);
+    shaderObject->getInfoLog(bufsize, length, infolog);
+}
+
+void Context::getShaderPrecisionFormat(GLenum shadertype,
+                                       GLenum precisiontype,
+                                       GLint *range,
+                                       GLint *precision)
+{
+    // TODO(jmadill): Compute shaders.
+
+    switch (shadertype)
+    {
+        case GL_VERTEX_SHADER:
+            switch (precisiontype)
+            {
+                case GL_LOW_FLOAT:
+                    mCaps.vertexLowpFloat.get(range, precision);
+                    break;
+                case GL_MEDIUM_FLOAT:
+                    mCaps.vertexMediumpFloat.get(range, precision);
+                    break;
+                case GL_HIGH_FLOAT:
+                    mCaps.vertexHighpFloat.get(range, precision);
+                    break;
+
+                case GL_LOW_INT:
+                    mCaps.vertexLowpInt.get(range, precision);
+                    break;
+                case GL_MEDIUM_INT:
+                    mCaps.vertexMediumpInt.get(range, precision);
+                    break;
+                case GL_HIGH_INT:
+                    mCaps.vertexHighpInt.get(range, precision);
+                    break;
+
+                default:
+                    UNREACHABLE();
+                    return;
+            }
+            break;
+
+        case GL_FRAGMENT_SHADER:
+            switch (precisiontype)
+            {
+                case GL_LOW_FLOAT:
+                    mCaps.fragmentLowpFloat.get(range, precision);
+                    break;
+                case GL_MEDIUM_FLOAT:
+                    mCaps.fragmentMediumpFloat.get(range, precision);
+                    break;
+                case GL_HIGH_FLOAT:
+                    mCaps.fragmentHighpFloat.get(range, precision);
+                    break;
+
+                case GL_LOW_INT:
+                    mCaps.fragmentLowpInt.get(range, precision);
+                    break;
+                case GL_MEDIUM_INT:
+                    mCaps.fragmentMediumpInt.get(range, precision);
+                    break;
+                case GL_HIGH_INT:
+                    mCaps.fragmentHighpInt.get(range, precision);
+                    break;
+
+                default:
+                    UNREACHABLE();
+                    return;
+            }
+            break;
+
+        default:
+            UNREACHABLE();
+            return;
+    }
+}
+
+void Context::getShaderSource(GLuint shader, GLsizei bufsize, GLsizei *length, GLchar *source)
+{
+    Shader *shaderObject = getShader(shader);
+    ASSERT(shaderObject);
+    shaderObject->getSource(bufsize, length, source);
+}
+
+void Context::getUniformfv(GLuint program, GLint location, GLfloat *params)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->getUniformfv(location, params);
+}
+
+void Context::getUniformiv(GLuint program, GLint location, GLint *params)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->getUniformiv(location, params);
+}
+
+GLint Context::getUniformLocation(GLuint program, const GLchar *name)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    return programObject->getUniformLocation(name);
+}
+
+GLboolean Context::isBuffer(GLuint buffer)
+{
+    if (buffer == 0)
+    {
+        return GL_FALSE;
+    }
+
+    return (getBuffer(buffer) ? GL_TRUE : GL_FALSE);
+}
+
+GLboolean Context::isEnabled(GLenum cap)
+{
+    return mGLState.getEnableFeature(cap);
+}
+
+GLboolean Context::isFramebuffer(GLuint framebuffer)
+{
+    if (framebuffer == 0)
+    {
+        return GL_FALSE;
+    }
+
+    return (getFramebuffer(framebuffer) ? GL_TRUE : GL_FALSE);
+}
+
+GLboolean Context::isProgram(GLuint program)
+{
+    if (program == 0)
+    {
+        return GL_FALSE;
+    }
+
+    return (getProgram(program) ? GL_TRUE : GL_FALSE);
+}
+
+GLboolean Context::isRenderbuffer(GLuint renderbuffer)
+{
+    if (renderbuffer == 0)
+    {
+        return GL_FALSE;
+    }
+
+    return (getRenderbuffer(renderbuffer) ? GL_TRUE : GL_FALSE);
+}
+
+GLboolean Context::isShader(GLuint shader)
+{
+    if (shader == 0)
+    {
+        return GL_FALSE;
+    }
+
+    return (getShader(shader) ? GL_TRUE : GL_FALSE);
+}
+
+GLboolean Context::isTexture(GLuint texture)
+{
+    if (texture == 0)
+    {
+        return GL_FALSE;
+    }
+
+    return (getTexture(texture) ? GL_TRUE : GL_FALSE);
+}
+
+void Context::linkProgram(GLuint program)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    handleError(programObject->link(this));
+}
+
+void Context::releaseShaderCompiler()
+{
+    handleError(mCompiler->release());
+}
+
+void Context::shaderBinary(GLsizei n,
+                           const GLuint *shaders,
+                           GLenum binaryformat,
+                           const GLvoid *binary,
+                           GLsizei length)
+{
+    // No binary shader formats are supported.
+    UNIMPLEMENTED();
+}
+
+void Context::shaderSource(GLuint shader,
+                           GLsizei count,
+                           const GLchar *const *string,
+                           const GLint *length)
+{
+    Shader *shaderObject = getShader(shader);
+    ASSERT(shaderObject);
+    shaderObject->setSource(count, string, length);
+}
+
+void Context::stencilFunc(GLenum func, GLint ref, GLuint mask)
+{
+    stencilFuncSeparate(GL_FRONT_AND_BACK, func, ref, mask);
+}
+
+void Context::stencilMask(GLuint mask)
+{
+    stencilMaskSeparate(GL_FRONT_AND_BACK, mask);
+}
+
+void Context::stencilOp(GLenum fail, GLenum zfail, GLenum zpass)
+{
+    stencilOpSeparate(GL_FRONT_AND_BACK, fail, zfail, zpass);
+}
+
+void Context::uniform1f(GLint location, GLfloat x)
+{
+    Program *program = mGLState.getProgram();
+    program->setUniform1fv(location, 1, &x);
+}
+
+void Context::uniform1fv(GLint location, GLsizei count, const GLfloat *v)
+{
+    Program *program = mGLState.getProgram();
+    program->setUniform1fv(location, count, v);
+}
+
+void Context::uniform1i(GLint location, GLint x)
+{
+    Program *program = mGLState.getProgram();
+    program->setUniform1iv(location, 1, &x);
+}
+
+void Context::uniform1iv(GLint location, GLsizei count, const GLint *v)
+{
+    Program *program = mGLState.getProgram();
+    program->setUniform1iv(location, count, v);
+}
+
+void Context::uniform2f(GLint location, GLfloat x, GLfloat y)
+{
+    GLfloat xy[2]    = {x, y};
+    Program *program = mGLState.getProgram();
+    program->setUniform2fv(location, 1, xy);
+}
+
+void Context::uniform2fv(GLint location, GLsizei count, const GLfloat *v)
+{
+    Program *program = mGLState.getProgram();
+    program->setUniform2fv(location, count, v);
+}
+
+void Context::uniform2i(GLint location, GLint x, GLint y)
+{
+    GLint xy[2]      = {x, y};
+    Program *program = mGLState.getProgram();
+    program->setUniform2iv(location, 1, xy);
+}
+
+void Context::uniform2iv(GLint location, GLsizei count, const GLint *v)
+{
+    Program *program = mGLState.getProgram();
+    program->setUniform2iv(location, count, v);
+}
+
+void Context::uniform3f(GLint location, GLfloat x, GLfloat y, GLfloat z)
+{
+    GLfloat xyz[3]   = {x, y, z};
+    Program *program = mGLState.getProgram();
+    program->setUniform3fv(location, 1, xyz);
+}
+
+void Context::uniform3fv(GLint location, GLsizei count, const GLfloat *v)
+{
+    Program *program = mGLState.getProgram();
+    program->setUniform3fv(location, count, v);
+}
+
+void Context::uniform3i(GLint location, GLint x, GLint y, GLint z)
+{
+    GLint xyz[3]     = {x, y, z};
+    Program *program = mGLState.getProgram();
+    program->setUniform3iv(location, 1, xyz);
+}
+
+void Context::uniform3iv(GLint location, GLsizei count, const GLint *v)
+{
+    Program *program = mGLState.getProgram();
+    program->setUniform3iv(location, count, v);
+}
+
+void Context::uniform4f(GLint location, GLfloat x, GLfloat y, GLfloat z, GLfloat w)
+{
+    GLfloat xyzw[4]  = {x, y, z, w};
+    Program *program = mGLState.getProgram();
+    program->setUniform4fv(location, 1, xyzw);
+}
+
+void Context::uniform4fv(GLint location, GLsizei count, const GLfloat *v)
+{
+    Program *program = mGLState.getProgram();
+    program->setUniform4fv(location, count, v);
+}
+
+void Context::uniform4i(GLint location, GLint x, GLint y, GLint z, GLint w)
+{
+    GLint xyzw[4]    = {x, y, z, w};
+    Program *program = mGLState.getProgram();
+    program->setUniform4iv(location, 1, xyzw);
+}
+
+void Context::uniform4iv(GLint location, GLsizei count, const GLint *v)
+{
+    Program *program = mGLState.getProgram();
+    program->setUniform4iv(location, count, v);
+}
+
+void Context::uniformMatrix2fv(GLint location,
+                               GLsizei count,
+                               GLboolean transpose,
+                               const GLfloat *value)
+{
+    Program *program = mGLState.getProgram();
+    program->setUniformMatrix2fv(location, count, transpose, value);
+}
+
+void Context::uniformMatrix3fv(GLint location,
+                               GLsizei count,
+                               GLboolean transpose,
+                               const GLfloat *value)
+{
+    Program *program = mGLState.getProgram();
+    program->setUniformMatrix3fv(location, count, transpose, value);
+}
+
+void Context::uniformMatrix4fv(GLint location,
+                               GLsizei count,
+                               GLboolean transpose,
+                               const GLfloat *value)
+{
+    Program *program = mGLState.getProgram();
+    program->setUniformMatrix4fv(location, count, transpose, value);
+}
+
+void Context::validateProgram(GLuint program)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->validate(mCaps);
 }
 
 }  // namespace gl

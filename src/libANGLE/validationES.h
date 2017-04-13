@@ -214,9 +214,9 @@ bool ValidateProgramUniformMatrix(Context *context,
                                   GLsizei count,
                                   GLboolean transpose);
 
-bool ValidateUniform(Context *context, GLenum uniformType, GLint location, GLsizei count);
+bool ValidateUniform(ValidationContext *context, GLenum uniformType, GLint location, GLsizei count);
 bool ValidateUniform1iv(Context *context, GLint location, GLsizei count, const GLint *value);
-bool ValidateUniformMatrix(Context *context,
+bool ValidateUniformMatrix(ValidationContext *context,
                            GLenum matrixType,
                            GLint location,
                            GLsizei count,
@@ -249,11 +249,11 @@ bool ValidateCopyTexImageParametersBase(ValidationContext *context,
                                         Format *textureFormatOut);
 
 bool ValidateDrawBase(ValidationContext *context, GLenum mode, GLsizei count);
-bool ValidateDrawArrays(ValidationContext *context,
-                        GLenum mode,
-                        GLint first,
-                        GLsizei count,
-                        GLsizei primcount);
+bool ValidateDrawArraysCommon(ValidationContext *context,
+                              GLenum mode,
+                              GLint first,
+                              GLsizei count,
+                              GLsizei primcount);
 bool ValidateDrawArraysInstanced(Context *context,
                                  GLenum mode,
                                  GLint first,

@@ -284,6 +284,58 @@ bool IsValidCopyTextureSourceTarget(Context *context, GLenum target)
     return false;
 }
 
+bool IsValidStencilFunc(GLenum func)
+{
+    switch (func)
+    {
+        case GL_NEVER:
+        case GL_ALWAYS:
+        case GL_LESS:
+        case GL_LEQUAL:
+        case GL_EQUAL:
+        case GL_GEQUAL:
+        case GL_GREATER:
+        case GL_NOTEQUAL:
+            return true;
+
+        default:
+            return false;
+    }
+}
+
+bool IsValidStencilFace(GLenum face)
+{
+    switch (face)
+    {
+        case GL_FRONT:
+        case GL_BACK:
+        case GL_FRONT_AND_BACK:
+            return true;
+
+        default:
+            return false;
+    }
+}
+
+bool IsValidStencilOp(GLenum op)
+{
+    switch (op)
+    {
+        case GL_ZERO:
+        case GL_KEEP:
+        case GL_REPLACE:
+        case GL_INCR:
+        case GL_DECR:
+        case GL_INVERT:
+        case GL_INCR_WRAP:
+        case GL_DECR_WRAP:
+            return true;
+
+        default:
+            return false;
+    }
+}
+
 }  // anonymous namespace
 
 bool ValidateES2TexImageParameters(Context *context,
@@ -739,292 +791,6 @@ bool ValidateES2TexImageParameters(Context *context,
     }
 
     return true;
-}
-
-bool ValidateES2CopyTexImageParameters(ValidationContext *context,
-                                       GLenum target,
-                                       GLint level,
-                                       GLenum internalformat,
-                                       bool isSubImage,
-                                       GLint xoffset,
-                                       GLint yoffset,
-                                       GLint x,
-                                       GLint y,
-                                       GLsizei width,
-                                       GLsizei height,
-                                       GLint border)
-{
-    if (!ValidTexture2DDestinationTarget(context, target))
-    {
-        context->handleError(Error(GL_INVALID_ENUM, "Invalid texture target"));
-        return false;
-    }
-
-    if (!ValidImageSizeParameters(context, target, level, width, height, 1, isSubImage))
-    {
-        context->handleError(Error(GL_INVALID_VALUE, "Invalid texture dimensions."));
-        return false;
-    }
-
-    Format textureFormat = Format::Invalid();
-    if (!ValidateCopyTexImageParametersBase(context, target, level, internalformat, isSubImage,
-                                            xoffset, yoffset, 0, x, y, width, height, border,
-                                            &textureFormat))
-    {
-        return false;
-    }
-
-    const gl::Framebuffer *framebuffer = context->getGLState().getReadFramebuffer();
-    GLenum colorbufferFormat           = framebuffer->getReadColorbuffer()->getFormat().asSized();
-    const auto &formatInfo             = *textureFormat.info;
-
-    // [OpenGL ES 2.0.24] table 3.9
-    if (isSubImage)
-    {
-        switch (formatInfo.format)
-        {
-            case GL_ALPHA:
-                if (colorbufferFormat != GL_ALPHA8_EXT && colorbufferFormat != GL_RGBA4 &&
-                    colorbufferFormat != GL_RGB5_A1 && colorbufferFormat != GL_RGBA8_OES)
-                {
-                    context->handleError(Error(GL_INVALID_OPERATION));
-                    return false;
-                }
-                break;
-            case GL_LUMINANCE:
-                if (colorbufferFormat != GL_R8_EXT && colorbufferFormat != GL_RG8_EXT &&
-                    colorbufferFormat != GL_RGB565 && colorbufferFormat != GL_RGB8_OES &&
-                    colorbufferFormat != GL_RGBA4 && colorbufferFormat != GL_RGB5_A1 &&
-                    colorbufferFormat != GL_RGBA8_OES)
-                {
-                    context->handleError(Error(GL_INVALID_OPERATION));
-                    return false;
-                }
-                break;
-            case GL_RED_EXT:
-                if (colorbufferFormat != GL_R8_EXT && colorbufferFormat != GL_RG8_EXT &&
-                    colorbufferFormat != GL_RGB565 && colorbufferFormat != GL_RGB8_OES &&
-                    colorbufferFormat != GL_RGBA4 && colorbufferFormat != GL_RGB5_A1 &&
-                    colorbufferFormat != GL_RGBA8_OES && colorbufferFormat != GL_R32F &&
-                    colorbufferFormat != GL_RG32F && colorbufferFormat != GL_RGB32F &&
-                    colorbufferFormat != GL_RGBA32F)
-                {
-                    context->handleError(Error(GL_INVALID_OPERATION));
-                    return false;
-                }
-                break;
-            case GL_RG_EXT:
-                if (colorbufferFormat != GL_RG8_EXT && colorbufferFormat != GL_RGB565 &&
-                    colorbufferFormat != GL_RGB8_OES && colorbufferFormat != GL_RGBA4 &&
-                    colorbufferFormat != GL_RGB5_A1 && colorbufferFormat != GL_RGBA8_OES &&
-                    colorbufferFormat != GL_RG32F && colorbufferFormat != GL_RGB32F &&
-                    colorbufferFormat != GL_RGBA32F)
-                {
-                    context->handleError(Error(GL_INVALID_OPERATION));
-                    return false;
-                }
-                break;
-            case GL_RGB:
-                if (colorbufferFormat != GL_RGB565 && colorbufferFormat != GL_RGB8_OES &&
-                    colorbufferFormat != GL_RGBA4 && colorbufferFormat != GL_RGB5_A1 &&
-                    colorbufferFormat != GL_RGBA8_OES && colorbufferFormat != GL_RGB32F &&
-                    colorbufferFormat != GL_RGBA32F)
-                {
-                    context->handleError(Error(GL_INVALID_OPERATION));
-                    return false;
-                }
-                break;
-            case GL_LUMINANCE_ALPHA:
-            case GL_RGBA:
-                if (colorbufferFormat != GL_RGBA4 && colorbufferFormat != GL_RGB5_A1 &&
-                    colorbufferFormat != GL_RGBA8_OES && colorbufferFormat != GL_RGBA32F)
-                {
-                    context->handleError(Error(GL_INVALID_OPERATION));
-                    return false;
-                }
-                break;
-            case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
-            case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
-            case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:
-            case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
-            case GL_ETC1_RGB8_OES:
-            case GL_ETC1_RGB8_LOSSY_DECODE_ANGLE:
-            case GL_COMPRESSED_RGB8_LOSSY_DECODE_ETC2_ANGLE:
-            case GL_COMPRESSED_SRGB8_LOSSY_DECODE_ETC2_ANGLE:
-            case GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_LOSSY_DECODE_ETC2_ANGLE:
-            case GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_LOSSY_DECODE_ETC2_ANGLE:
-                context->handleError(Error(GL_INVALID_OPERATION));
-                return false;
-            case GL_DEPTH_COMPONENT:
-            case GL_DEPTH_STENCIL_OES:
-                context->handleError(Error(GL_INVALID_OPERATION));
-                return false;
-            default:
-                context->handleError(Error(GL_INVALID_OPERATION));
-                return false;
-        }
-
-        if (formatInfo.type == GL_FLOAT && !context->getExtensions().textureFloat)
-        {
-            context->handleError(Error(GL_INVALID_OPERATION));
-            return false;
-        }
-    }
-    else
-    {
-        switch (internalformat)
-        {
-            case GL_ALPHA:
-                if (colorbufferFormat != GL_ALPHA8_EXT && colorbufferFormat != GL_RGBA4 &&
-                    colorbufferFormat != GL_RGB5_A1 && colorbufferFormat != GL_BGRA8_EXT &&
-                    colorbufferFormat != GL_RGBA8_OES && colorbufferFormat != GL_BGR5_A1_ANGLEX)
-                {
-                    context->handleError(Error(GL_INVALID_OPERATION));
-                    return false;
-                }
-                break;
-            case GL_LUMINANCE:
-                if (colorbufferFormat != GL_R8_EXT && colorbufferFormat != GL_RG8_EXT &&
-                    colorbufferFormat != GL_RGB565 && colorbufferFormat != GL_RGB8_OES &&
-                    colorbufferFormat != GL_RGBA4 && colorbufferFormat != GL_RGB5_A1 &&
-                    colorbufferFormat != GL_BGRA8_EXT && colorbufferFormat != GL_RGBA8_OES &&
-                    colorbufferFormat != GL_BGR5_A1_ANGLEX)
-                {
-                    context->handleError(Error(GL_INVALID_OPERATION));
-                    return false;
-                }
-                break;
-            case GL_RED_EXT:
-                if (colorbufferFormat != GL_R8_EXT && colorbufferFormat != GL_RG8_EXT &&
-                    colorbufferFormat != GL_RGB565 && colorbufferFormat != GL_RGB8_OES &&
-                    colorbufferFormat != GL_RGBA4 && colorbufferFormat != GL_RGB5_A1 &&
-                    colorbufferFormat != GL_BGRA8_EXT && colorbufferFormat != GL_RGBA8_OES &&
-                    colorbufferFormat != GL_BGR5_A1_ANGLEX)
-                {
-                    context->handleError(Error(GL_INVALID_OPERATION));
-                    return false;
-                }
-                break;
-            case GL_RG_EXT:
-                if (colorbufferFormat != GL_RG8_EXT && colorbufferFormat != GL_RGB565 &&
-                    colorbufferFormat != GL_RGB8_OES && colorbufferFormat != GL_RGBA4 &&
-                    colorbufferFormat != GL_RGB5_A1 && colorbufferFormat != GL_BGRA8_EXT &&
-                    colorbufferFormat != GL_RGBA8_OES && colorbufferFormat != GL_BGR5_A1_ANGLEX)
-                {
-                    context->handleError(Error(GL_INVALID_OPERATION));
-                    return false;
-                }
-                break;
-            case GL_RGB:
-                if (colorbufferFormat != GL_RGB565 && colorbufferFormat != GL_RGB8_OES &&
-                    colorbufferFormat != GL_RGBA4 && colorbufferFormat != GL_RGB5_A1 &&
-                    colorbufferFormat != GL_BGRA8_EXT && colorbufferFormat != GL_RGBA8_OES &&
-                    colorbufferFormat != GL_BGR5_A1_ANGLEX)
-                {
-                    context->handleError(Error(GL_INVALID_OPERATION));
-                    return false;
-                }
-                break;
-            case GL_LUMINANCE_ALPHA:
-            case GL_RGBA:
-                if (colorbufferFormat != GL_RGBA4 && colorbufferFormat != GL_RGB5_A1 &&
-                    colorbufferFormat != GL_BGRA8_EXT && colorbufferFormat != GL_RGBA8_OES &&
-                    colorbufferFormat != GL_BGR5_A1_ANGLEX)
-                {
-                    context->handleError(Error(GL_INVALID_OPERATION));
-                    return false;
-                }
-                break;
-            case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
-            case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
-                if (context->getExtensions().textureCompressionDXT1)
-                {
-                    context->handleError(Error(GL_INVALID_OPERATION));
-                    return false;
-                }
-                else
-                {
-                    context->handleError(Error(GL_INVALID_ENUM));
-                    return false;
-                }
-                break;
-            case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:
-                if (context->getExtensions().textureCompressionDXT3)
-                {
-                    context->handleError(Error(GL_INVALID_OPERATION));
-                    return false;
-                }
-                else
-                {
-                    context->handleError(Error(GL_INVALID_ENUM));
-                    return false;
-                }
-                break;
-            case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
-                if (context->getExtensions().textureCompressionDXT5)
-                {
-                    context->handleError(Error(GL_INVALID_OPERATION));
-                    return false;
-                }
-                else
-                {
-                    context->handleError(Error(GL_INVALID_ENUM));
-                    return false;
-                }
-                break;
-            case GL_ETC1_RGB8_OES:
-                if (context->getExtensions().compressedETC1RGB8Texture)
-                {
-                    context->handleError(Error(GL_INVALID_OPERATION));
-                    return false;
-                }
-                else
-                {
-                    context->handleError(Error(GL_INVALID_ENUM));
-                    return false;
-                }
-                break;
-            case GL_ETC1_RGB8_LOSSY_DECODE_ANGLE:
-            case GL_COMPRESSED_RGB8_LOSSY_DECODE_ETC2_ANGLE:
-            case GL_COMPRESSED_SRGB8_LOSSY_DECODE_ETC2_ANGLE:
-            case GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_LOSSY_DECODE_ETC2_ANGLE:
-            case GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_LOSSY_DECODE_ETC2_ANGLE:
-                if (context->getExtensions().lossyETCDecode)
-                {
-                    context->handleError(Error(GL_INVALID_OPERATION,
-                                               "ETC lossy decode formats can't be copied to."));
-                    return false;
-                }
-                else
-                {
-                    context->handleError(Error(
-                        GL_INVALID_ENUM, "ANGLE_lossy_etc_decode extension is not supported."));
-                    return false;
-                }
-                break;
-            case GL_DEPTH_COMPONENT:
-            case GL_DEPTH_COMPONENT16:
-            case GL_DEPTH_COMPONENT32_OES:
-            case GL_DEPTH_STENCIL_OES:
-            case GL_DEPTH24_STENCIL8_OES:
-                if (context->getExtensions().depthTextures)
-                {
-                    context->handleError(Error(GL_INVALID_OPERATION));
-                    return false;
-                }
-                else
-                {
-                    context->handleError(Error(GL_INVALID_ENUM));
-                    return false;
-                }
-            default:
-                context->handleError(Error(GL_INVALID_ENUM));
-                return false;
-        }
-    }
-
-    // If width or height is zero, it is a no-op.  Return false without setting an error.
-    return (width > 0 && height > 0);
 }
 
 bool ValidateES2TexStorageParameters(Context *context,
@@ -3752,6 +3518,15 @@ static bool ValidBlendEquationMode(GLenum mode)
     }
 }
 
+bool ValidateBlendColor(ValidationContext *context,
+                        GLclampf red,
+                        GLclampf green,
+                        GLclampf blue,
+                        GLclampf alpha)
+{
+    return true;
+}
+
 bool ValidateBlendEquation(ValidationContext *context, GLenum mode)
 {
     if (!ValidBlendEquationMode(mode))
@@ -4073,6 +3848,987 @@ bool ValidateRenderbufferStorageMultisampleANGLE(ValidationContext *context,
 
     return ValidateRenderbufferStorageParametersBase(context, target, samples, internalformat,
                                                      width, height);
+}
+
+bool ValidateCheckFramebufferStatus(ValidationContext *context, GLenum target)
+{
+    if (!ValidFramebufferTarget(target))
+    {
+        context->handleError(Error(GL_INVALID_ENUM, "Invalid Framebuffer target"));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateClearColor(ValidationContext *context,
+                        GLclampf red,
+                        GLclampf green,
+                        GLclampf blue,
+                        GLclampf alpha)
+{
+    return true;
+}
+
+bool ValidateClearDepthf(ValidationContext *context, GLclampf depth)
+{
+    return true;
+}
+
+bool ValidateClearStencil(ValidationContext *context, GLint s)
+{
+    return true;
+}
+
+bool ValidateColorMask(ValidationContext *context,
+                       GLboolean red,
+                       GLboolean green,
+                       GLboolean blue,
+                       GLboolean alpha)
+{
+    return true;
+}
+
+bool ValidateCompileShader(ValidationContext *context, GLuint shader)
+{
+    return true;
+}
+
+bool ValidateCreateProgram(ValidationContext *context)
+{
+    return true;
+}
+
+bool ValidateCullFace(ValidationContext *context, GLenum mode)
+{
+    switch (mode)
+    {
+        case GL_FRONT:
+        case GL_BACK:
+        case GL_FRONT_AND_BACK:
+            break;
+
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Invalid cull face parameter"));
+            return false;
+    }
+
+    return true;
+}
+
+bool ValidateDeleteProgram(ValidationContext *context, GLuint program)
+{
+    if (program == 0)
+    {
+        return false;
+    }
+
+    if (!context->getProgram(program))
+    {
+        if (context->getShader(program))
+        {
+            context->handleError(
+                Error(GL_INVALID_OPERATION, "Shader handle passed to DeleteProgram"));
+            return false;
+        }
+        else
+        {
+            context->handleError(Error(GL_INVALID_VALUE, "Invalid program handle"));
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool ValidateDeleteShader(ValidationContext *context, GLuint shader)
+{
+    if (shader == 0)
+    {
+        return false;
+    }
+
+    if (!context->getShader(shader))
+    {
+        if (context->getProgram(shader))
+        {
+            context->handleError(
+                Error(GL_INVALID_OPERATION, "Program handle passed to DeleteShader"));
+            return false;
+        }
+        else
+        {
+            context->handleError(Error(GL_INVALID_VALUE, "Invalid shader handle"));
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool ValidateDepthFunc(ValidationContext *context, GLenum func)
+{
+    switch (func)
+    {
+        case GL_NEVER:
+        case GL_ALWAYS:
+        case GL_LESS:
+        case GL_LEQUAL:
+        case GL_EQUAL:
+        case GL_GREATER:
+        case GL_GEQUAL:
+        case GL_NOTEQUAL:
+            break;
+
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Invalid depth function"));
+            return false;
+    }
+
+    return true;
+}
+
+bool ValidateDepthMask(ValidationContext *context, GLboolean flag)
+{
+    return true;
+}
+
+bool ValidateDetachShader(ValidationContext *context, GLuint program, GLuint shader)
+{
+    Program *programObject = GetValidProgram(context, program);
+    if (!programObject)
+    {
+        return false;
+    }
+
+    Shader *shaderObject = GetValidShader(context, shader);
+    if (!shaderObject)
+    {
+        return false;
+    }
+
+    const Shader *attachedShader = nullptr;
+
+    switch (shaderObject->getType())
+    {
+        case GL_VERTEX_SHADER:
+        {
+            attachedShader = programObject->getAttachedVertexShader();
+            break;
+        }
+        case GL_FRAGMENT_SHADER:
+        {
+            attachedShader = programObject->getAttachedFragmentShader();
+            break;
+        }
+        case GL_COMPUTE_SHADER:
+        {
+            attachedShader = programObject->getAttachedComputeShader();
+            break;
+        }
+        default:
+            UNREACHABLE();
+            return false;
+    }
+
+    if (attachedShader != shaderObject)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Cannot detach non-attached shader."));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateDisableVertexAttribArray(ValidationContext *context, GLuint index)
+{
+    if (index >= MAX_VERTEX_ATTRIBS)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Attrib array index out of range"));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateEnableVertexAttribArray(ValidationContext *context, GLuint index)
+{
+    if (index >= MAX_VERTEX_ATTRIBS)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Attrib array index out of range"));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateFinish(ValidationContext *context)
+{
+    return true;
+}
+
+bool ValidateFlush(ValidationContext *context)
+{
+    return true;
+}
+
+bool ValidateFrontFace(ValidationContext *context, GLenum mode)
+{
+    switch (mode)
+    {
+        case GL_CW:
+        case GL_CCW:
+            break;
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "Invalid mode for FrontFace"));
+            return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetActiveAttrib(ValidationContext *context,
+                             GLuint program,
+                             GLuint index,
+                             GLsizei bufsize,
+                             GLsizei *length,
+                             GLint *size,
+                             GLenum *type,
+                             GLchar *name)
+{
+    if (bufsize < 0)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "bufsize must be non-negative."));
+        return false;
+    }
+
+    Program *programObject = GetValidProgram(context, program);
+
+    if (!programObject)
+    {
+        return false;
+    }
+
+    if (index >= static_cast<GLuint>(programObject->getActiveAttributeCount()))
+    {
+        context->handleError(
+            Error(GL_INVALID_VALUE, "index exeeds program active attribute count."));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetActiveUniform(ValidationContext *context,
+                              GLuint program,
+                              GLuint index,
+                              GLsizei bufsize,
+                              GLsizei *length,
+                              GLint *size,
+                              GLenum *type,
+                              GLchar *name)
+{
+    if (bufsize < 0)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "bufsize must be non-negative."));
+        return false;
+    }
+
+    Program *programObject = GetValidProgram(context, program);
+
+    if (!programObject)
+    {
+        return false;
+    }
+
+    if (index >= static_cast<GLuint>(programObject->getActiveUniformCount()))
+    {
+        context->handleError(
+            Error(GL_INVALID_VALUE, "index exceeds program active uniform count."));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetAttachedShaders(ValidationContext *context,
+                                GLuint program,
+                                GLsizei maxcount,
+                                GLsizei *count,
+                                GLuint *shaders)
+{
+    if (maxcount < 0)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "max count must be non-negative."));
+        return false;
+    }
+
+    Program *programObject = GetValidProgram(context, program);
+
+    if (!programObject)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetAttribLocation(ValidationContext *context, GLuint program, const GLchar *name)
+{
+    Program *programObject = GetValidProgram(context, program);
+
+    if (!programObject)
+    {
+        return false;
+    }
+
+    if (!programObject->isLinked())
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "program not linked."));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetBooleanv(ValidationContext *context, GLenum pname, GLboolean *params)
+{
+    GLenum nativeType;
+    unsigned int numParams = 0;
+    return ValidateStateQuery(context, pname, &nativeType, &numParams);
+}
+
+bool ValidateGetError(ValidationContext *context)
+{
+    return true;
+}
+
+bool ValidateGetFloatv(ValidationContext *context, GLenum pname, GLfloat *params)
+{
+    GLenum nativeType;
+    unsigned int numParams = 0;
+    return ValidateStateQuery(context, pname, &nativeType, &numParams);
+}
+
+bool ValidateGetIntegerv(ValidationContext *context, GLenum pname, GLint *params)
+{
+    GLenum nativeType;
+    unsigned int numParams = 0;
+    return ValidateStateQuery(context, pname, &nativeType, &numParams);
+}
+
+bool ValidateGetProgramInfoLog(ValidationContext *context,
+                               GLuint program,
+                               GLsizei bufsize,
+                               GLsizei *length,
+                               GLchar *infolog)
+{
+    if (bufsize < 0)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "bufsize must be non-negative."));
+        return false;
+    }
+
+    Program *programObject = GetValidProgram(context, program);
+    if (!programObject)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetShaderInfoLog(ValidationContext *context,
+                              GLuint shader,
+                              GLsizei bufsize,
+                              GLsizei *length,
+                              GLchar *infolog)
+{
+    if (bufsize < 0)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "bufsize must be non-negative."));
+        return false;
+    }
+
+    Shader *shaderObject = GetValidShader(context, shader);
+    if (!shaderObject)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetShaderPrecisionFormat(ValidationContext *context,
+                                      GLenum shadertype,
+                                      GLenum precisiontype,
+                                      GLint *range,
+                                      GLint *precision)
+{
+    switch (shadertype)
+    {
+        case GL_VERTEX_SHADER:
+        case GL_FRAGMENT_SHADER:
+            break;
+        case GL_COMPUTE_SHADER:
+            context->handleError(
+                Error(GL_INVALID_OPERATION, "compute shader precision not yet implemented."));
+            return false;
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "invalid shader type."));
+            return false;
+    }
+
+    switch (precisiontype)
+    {
+        case GL_LOW_FLOAT:
+        case GL_MEDIUM_FLOAT:
+        case GL_HIGH_FLOAT:
+        case GL_LOW_INT:
+        case GL_MEDIUM_INT:
+        case GL_HIGH_INT:
+            break;
+
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "invalid precision type."));
+            return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetShaderSource(ValidationContext *context,
+                             GLuint shader,
+                             GLsizei bufsize,
+                             GLsizei *length,
+                             GLchar *source)
+{
+    if (bufsize < 0)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "bufsize must be non-negative."));
+        return false;
+    }
+
+    Shader *shaderObject = GetValidShader(context, shader);
+    if (!shaderObject)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetUniformLocation(ValidationContext *context, GLuint program, const GLchar *name)
+{
+    if (strstr(name, "gl_") == name)
+    {
+        return false;
+    }
+
+    Program *programObject = GetValidProgram(context, program);
+
+    if (!programObject)
+    {
+        return false;
+    }
+
+    if (!programObject->isLinked())
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "program is not linked."));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateHint(ValidationContext *context, GLenum target, GLenum mode)
+{
+    switch (mode)
+    {
+        case GL_FASTEST:
+        case GL_NICEST:
+        case GL_DONT_CARE:
+            break;
+
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "invalid hint mode."));
+            return false;
+    }
+
+    switch (target)
+    {
+        case GL_GENERATE_MIPMAP_HINT:
+            break;
+
+        case GL_FRAGMENT_SHADER_DERIVATIVE_HINT_OES:
+            if (!context->getExtensions().standardDerivatives)
+            {
+                context->handleError(
+                    Error(GL_INVALID_OPERATION, "hint requires OES_standard_derivatives."));
+                return false;
+            }
+            break;
+
+        default:
+            context->handleError(Error(GL_INVALID_ENUM, "invalid hint target."));
+            return false;
+    }
+
+    return true;
+}
+
+bool ValidateIsBuffer(ValidationContext *context, GLuint buffer)
+{
+    return true;
+}
+
+bool ValidateIsFramebuffer(ValidationContext *context, GLuint framebuffer)
+{
+    return true;
+}
+
+bool ValidateIsProgram(ValidationContext *context, GLuint program)
+{
+    return true;
+}
+
+bool ValidateIsRenderbuffer(ValidationContext *context, GLuint renderbuffer)
+{
+    return true;
+}
+
+bool ValidateIsShader(ValidationContext *context, GLuint shader)
+{
+    return true;
+}
+
+bool ValidateIsTexture(ValidationContext *context, GLuint texture)
+{
+    return true;
+}
+
+bool ValidatePixelStorei(ValidationContext *context, GLenum pname, GLint param)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        switch (pname)
+        {
+            case GL_UNPACK_IMAGE_HEIGHT:
+            case GL_UNPACK_SKIP_IMAGES:
+                context->handleError(Error(GL_INVALID_ENUM));
+                return false;
+
+            case GL_UNPACK_ROW_LENGTH:
+            case GL_UNPACK_SKIP_ROWS:
+            case GL_UNPACK_SKIP_PIXELS:
+                if (!context->getExtensions().unpackSubimage)
+                {
+                    context->handleError(Error(GL_INVALID_ENUM));
+                    return false;
+                }
+                break;
+
+            case GL_PACK_ROW_LENGTH:
+            case GL_PACK_SKIP_ROWS:
+            case GL_PACK_SKIP_PIXELS:
+                if (!context->getExtensions().packSubimage)
+                {
+                    context->handleError(Error(GL_INVALID_ENUM));
+                    return false;
+                }
+                break;
+        }
+    }
+
+    if (param < 0)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Cannot use negative values in PixelStorei"));
+        return false;
+    }
+
+    switch (pname)
+    {
+        case GL_UNPACK_ALIGNMENT:
+            if (param != 1 && param != 2 && param != 4 && param != 8)
+            {
+                context->handleError(Error(GL_INVALID_VALUE));
+                return false;
+            }
+            break;
+
+        case GL_PACK_ALIGNMENT:
+            if (param != 1 && param != 2 && param != 4 && param != 8)
+            {
+                context->handleError(Error(GL_INVALID_VALUE));
+                return false;
+            }
+            break;
+
+        case GL_PACK_REVERSE_ROW_ORDER_ANGLE:
+        case GL_UNPACK_ROW_LENGTH:
+        case GL_UNPACK_IMAGE_HEIGHT:
+        case GL_UNPACK_SKIP_IMAGES:
+        case GL_UNPACK_SKIP_ROWS:
+        case GL_UNPACK_SKIP_PIXELS:
+        case GL_PACK_ROW_LENGTH:
+        case GL_PACK_SKIP_ROWS:
+        case GL_PACK_SKIP_PIXELS:
+            break;
+
+        default:
+            context->handleError(Error(GL_INVALID_ENUM));
+            return false;
+    }
+
+    return true;
+}
+
+bool ValidatePolygonOffset(ValidationContext *context, GLfloat factor, GLfloat units)
+{
+    return true;
+}
+
+bool ValidateReleaseShaderCompiler(ValidationContext *context)
+{
+    return true;
+}
+
+bool ValidateSampleCoverage(ValidationContext *context, GLclampf value, GLboolean invert)
+{
+    return true;
+}
+
+bool ValidateScissor(ValidationContext *context, GLint x, GLint y, GLsizei width, GLsizei height)
+{
+    if (width < 0 || height < 0)
+    {
+        context->handleError(
+            Error(GL_INVALID_VALUE, "Scissor width and height must be non-negative."));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateShaderBinary(ValidationContext *context,
+                          GLsizei n,
+                          const GLuint *shaders,
+                          GLenum binaryformat,
+                          const GLvoid *binary,
+                          GLsizei length)
+{
+    const std::vector<GLenum> &shaderBinaryFormats = context->getCaps().shaderBinaryFormats;
+    if (std::find(shaderBinaryFormats.begin(), shaderBinaryFormats.end(), binaryformat) ==
+        shaderBinaryFormats.end())
+    {
+        context->handleError(Error(GL_INVALID_ENUM, "Invalid shader binary format."));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateShaderSource(ValidationContext *context,
+                          GLuint shader,
+                          GLsizei count,
+                          const GLchar *const *string,
+                          const GLint *length)
+{
+    if (count < 0)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Count must be non-negative."));
+        return false;
+    }
+
+    Shader *shaderObject = GetValidShader(context, shader);
+    if (!shaderObject)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateStencilFunc(ValidationContext *context, GLenum func, GLint ref, GLuint mask)
+{
+    if (!IsValidStencilFunc(func))
+    {
+        context->handleError(Error(GL_INVALID_ENUM, "Invalid stencil function."));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateStencilFuncSeparate(ValidationContext *context,
+                                 GLenum face,
+                                 GLenum func,
+                                 GLint ref,
+                                 GLuint mask)
+{
+    if (!IsValidStencilFace(face))
+    {
+        context->handleError(Error(GL_INVALID_ENUM, "Invalid stencil face."));
+        return false;
+    }
+
+    if (!IsValidStencilFunc(func))
+    {
+        context->handleError(Error(GL_INVALID_ENUM, "Invalid stencil function."));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateStencilMask(ValidationContext *context, GLuint mask)
+{
+    return true;
+}
+
+bool ValidateStencilMaskSeparate(ValidationContext *context, GLenum face, GLuint mask)
+{
+    if (!IsValidStencilFace(face))
+    {
+        context->handleError(Error(GL_INVALID_ENUM, "Invalid stencil face."));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateStencilOp(ValidationContext *context, GLenum fail, GLenum zfail, GLenum zpass)
+{
+    if (!IsValidStencilOp(fail))
+    {
+        context->handleError(Error(GL_INVALID_ENUM, "Invalid stencil fail op."));
+        return false;
+    }
+
+    if (!IsValidStencilOp(zfail))
+    {
+        context->handleError(Error(GL_INVALID_ENUM, "Invalid stencil z fail op."));
+        return false;
+    }
+
+    if (!IsValidStencilOp(zpass))
+    {
+        context->handleError(Error(GL_INVALID_ENUM, "Invalid stencil z pass op."));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateStencilOpSeparate(ValidationContext *context,
+                               GLenum face,
+                               GLenum fail,
+                               GLenum zfail,
+                               GLenum zpass)
+{
+    if (!IsValidStencilFace(face))
+    {
+        context->handleError(Error(GL_INVALID_ENUM, "Invalid stencil face."));
+        return false;
+    }
+
+    return ValidateStencilOp(context, fail, zfail, zpass);
+}
+
+bool ValidateUniform1f(ValidationContext *context, GLint location, GLfloat x)
+{
+    return ValidateUniform(context, GL_FLOAT, location, 1);
+}
+
+bool ValidateUniform1fv(ValidationContext *context, GLint location, GLsizei count, const GLfloat *v)
+{
+    return ValidateUniform(context, GL_FLOAT, location, count);
+}
+
+bool ValidateUniform2f(ValidationContext *context, GLint location, GLfloat x, GLfloat y)
+{
+    return ValidateUniform(context, GL_FLOAT_VEC2, location, 1);
+}
+
+bool ValidateUniform2fv(ValidationContext *context, GLint location, GLsizei count, const GLfloat *v)
+{
+    return ValidateUniform(context, GL_FLOAT_VEC2, location, count);
+}
+
+bool ValidateUniform2i(ValidationContext *context, GLint location, GLint x, GLint y)
+{
+    return ValidateUniform(context, GL_INT_VEC2, location, 1);
+}
+
+bool ValidateUniform2iv(ValidationContext *context, GLint location, GLsizei count, const GLint *v)
+{
+    return ValidateUniform(context, GL_INT_VEC2, location, count);
+}
+
+bool ValidateUniform3f(ValidationContext *context, GLint location, GLfloat x, GLfloat y, GLfloat z)
+{
+    return ValidateUniform(context, GL_FLOAT_VEC3, location, 1);
+}
+
+bool ValidateUniform3fv(ValidationContext *context, GLint location, GLsizei count, const GLfloat *v)
+{
+    return ValidateUniform(context, GL_FLOAT_VEC3, location, count);
+}
+
+bool ValidateUniform3i(ValidationContext *context, GLint location, GLint x, GLint y, GLint z)
+{
+    return ValidateUniform(context, GL_INT_VEC3, location, 1);
+}
+
+bool ValidateUniform3iv(ValidationContext *context, GLint location, GLsizei count, const GLint *v)
+{
+    return ValidateUniform(context, GL_INT_VEC3, location, count);
+}
+
+bool ValidateUniform4f(ValidationContext *context,
+                       GLint location,
+                       GLfloat x,
+                       GLfloat y,
+                       GLfloat z,
+                       GLfloat w)
+{
+    return ValidateUniform(context, GL_FLOAT_VEC4, location, 1);
+}
+
+bool ValidateUniform4fv(ValidationContext *context, GLint location, GLsizei count, const GLfloat *v)
+{
+    return ValidateUniform(context, GL_FLOAT_VEC4, location, count);
+}
+
+bool ValidateUniform4i(ValidationContext *context,
+                       GLint location,
+                       GLint x,
+                       GLint y,
+                       GLint z,
+                       GLint w)
+{
+    return ValidateUniform(context, GL_INT_VEC4, location, 1);
+}
+
+bool ValidateUniform4iv(ValidationContext *context, GLint location, GLsizei count, const GLint *v)
+{
+    return ValidateUniform(context, GL_INT_VEC4, location, count);
+}
+
+bool ValidateUniformMatrix2fv(ValidationContext *context,
+                              GLint location,
+                              GLsizei count,
+                              GLboolean transpose,
+                              const GLfloat *value)
+{
+    return ValidateUniformMatrix(context, GL_FLOAT_MAT2, location, count, transpose);
+}
+
+bool ValidateUniformMatrix3fv(ValidationContext *context,
+                              GLint location,
+                              GLsizei count,
+                              GLboolean transpose,
+                              const GLfloat *value)
+{
+    return ValidateUniformMatrix(context, GL_FLOAT_MAT3, location, count, transpose);
+}
+
+bool ValidateUniformMatrix4fv(ValidationContext *context,
+                              GLint location,
+                              GLsizei count,
+                              GLboolean transpose,
+                              const GLfloat *value)
+{
+    return ValidateUniformMatrix(context, GL_FLOAT_MAT4, location, count, transpose);
+}
+
+bool ValidateValidateProgram(ValidationContext *context, GLuint program)
+{
+    Program *programObject = GetValidProgram(context, program);
+
+    if (!programObject)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateVertexAttribIndex(ValidationContext *context, GLuint index)
+{
+    if (index >= MAX_VERTEX_ATTRIBS)
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Vertex attrib index out of range."));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateVertexAttrib1f(ValidationContext *context, GLuint index, GLfloat x)
+{
+    return ValidateVertexAttribIndex(context, index);
+}
+
+bool ValidateVertexAttrib1fv(ValidationContext *context, GLuint index, const GLfloat *values)
+{
+    return ValidateVertexAttribIndex(context, index);
+}
+
+bool ValidateVertexAttrib2f(ValidationContext *context, GLuint index, GLfloat x, GLfloat y)
+{
+    return ValidateVertexAttribIndex(context, index);
+}
+
+bool ValidateVertexAttrib2fv(ValidationContext *context, GLuint index, const GLfloat *values)
+{
+    return ValidateVertexAttribIndex(context, index);
+}
+
+bool ValidateVertexAttrib3f(ValidationContext *context,
+                            GLuint index,
+                            GLfloat x,
+                            GLfloat y,
+                            GLfloat z)
+{
+    return ValidateVertexAttribIndex(context, index);
+}
+
+bool ValidateVertexAttrib3fv(ValidationContext *context, GLuint index, const GLfloat *values)
+{
+    return ValidateVertexAttribIndex(context, index);
+}
+
+bool ValidateVertexAttrib4f(ValidationContext *context,
+                            GLuint index,
+                            GLfloat x,
+                            GLfloat y,
+                            GLfloat z,
+                            GLfloat w)
+{
+    return ValidateVertexAttribIndex(context, index);
+}
+
+bool ValidateVertexAttrib4fv(ValidationContext *context, GLuint index, const GLfloat *values)
+{
+    return ValidateVertexAttribIndex(context, index);
+}
+
+bool ValidateViewport(ValidationContext *context, GLint x, GLint y, GLsizei width, GLsizei height)
+{
+    if (width < 0 || height < 0)
+    {
+        context->handleError(
+            Error(GL_INVALID_VALUE, "Viewport width and height must be non-negative."));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateDrawArrays(ValidationContext *context, GLenum mode, GLint first, GLsizei count)
+{
+    return ValidateDrawArraysCommon(context, mode, first, count, 1);
 }
 
 }  // namespace gl

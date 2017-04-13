@@ -298,7 +298,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     rx::ProgramImpl *getImplementation() const { return mProgram; }
 
     void attachShader(Shader *shader);
-    bool detachShader(const Context *context, Shader *shader);
+    void detachShader(const Context *context, Shader *shader);
     int getAttachedShadersCount() const;
 
     const Shader *getAttachedVertexShader() const { return mState.mAttachedVertexShader; }

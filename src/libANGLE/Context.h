@@ -237,8 +237,11 @@ class Context final : public ValidationContext
     bool isTransformFeedbackGenerated(GLuint vertexArray);
 
     void getBooleanv(GLenum pname, GLboolean *params);
+    void getBooleanvImpl(GLenum pname, GLboolean *params);
     void getFloatv(GLenum pname, GLfloat *params);
+    void getFloatvImpl(GLenum pname, GLfloat *params);
     void getIntegerv(GLenum pname, GLint *params);
+    void getIntegervImpl(GLenum pname, GLint *params);
     void getInteger64v(GLenum pname, GLint64 *params);
     void getPointerv(GLenum pname, void **params) const;
     void getBooleani_v(GLenum target, GLuint index, GLboolean *data);
@@ -668,6 +671,87 @@ class Context final : public ValidationContext
                            GLintptr readOffset,
                            GLintptr writeOffset,
                            GLsizeiptr size);
+
+    GLenum checkFramebufferStatus(GLenum target);
+    void compileShader(GLuint shader);
+    void deleteBuffers(GLsizei n, const GLuint *buffers);
+    void deleteFramebuffers(GLsizei n, const GLuint *framebuffers);
+    void deleteRenderbuffers(GLsizei n, const GLuint *renderbuffers);
+    void deleteTextures(GLsizei n, const GLuint *textures);
+    void detachShader(GLuint program, GLuint shader);
+    void genBuffers(GLsizei n, GLuint *buffers);
+    void genFramebuffers(GLsizei n, GLuint *framebuffers);
+    void genRenderbuffers(GLsizei n, GLuint *renderbuffers);
+    void genTextures(GLsizei n, GLuint *textures);
+    void getActiveAttrib(GLuint program,
+                         GLuint index,
+                         GLsizei bufsize,
+                         GLsizei *length,
+                         GLint *size,
+                         GLenum *type,
+                         GLchar *name);
+    void getActiveUniform(GLuint program,
+                          GLuint index,
+                          GLsizei bufsize,
+                          GLsizei *length,
+                          GLint *size,
+                          GLenum *type,
+                          GLchar *name);
+    void getAttachedShaders(GLuint program, GLsizei maxcount, GLsizei *count, GLuint *shaders);
+    GLint getAttribLocation(GLuint program, const GLchar *name);
+    void getProgramiv(GLuint program, GLenum pname, GLint *params);
+    void getInfoLog(GLuint program, GLsizei bufsize, GLsizei *length, GLchar *infolog);
+    void getShaderiv(GLuint shader, GLenum pname, GLint *params);
+    void getShaderInfoLog(GLuint shader, GLsizei bufsize, GLsizei *length, GLchar *infolog);
+    void getShaderPrecisionFormat(GLenum shadertype,
+                                  GLenum precisiontype,
+                                  GLint *range,
+                                  GLint *precision);
+    void getShaderSource(GLuint shader, GLsizei bufsize, GLsizei *length, GLchar *source);
+    void getUniformfv(GLuint program, GLint location, GLfloat *params);
+    void getUniformiv(GLuint program, GLint location, GLint *params);
+    GLint getUniformLocation(GLuint program, const GLchar *name);
+    GLboolean isBuffer(GLuint buffer);
+    GLboolean isEnabled(GLenum cap);
+    GLboolean isFramebuffer(GLuint framebuffer);
+    GLboolean isProgram(GLuint program);
+    GLboolean isRenderbuffer(GLuint renderbuffer);
+    GLboolean isShader(GLuint shader);
+    GLboolean isTexture(GLuint texture);
+    void linkProgram(GLuint program);
+    void releaseShaderCompiler();
+    void shaderBinary(GLsizei n,
+                      const GLuint *shaders,
+                      GLenum binaryformat,
+                      const GLvoid *binary,
+                      GLsizei length);
+    void shaderSource(GLuint shader,
+                      GLsizei count,
+                      const GLchar *const *string,
+                      const GLint *length);
+    void stencilFunc(GLenum func, GLint ref, GLuint mask);
+    void stencilMask(GLuint mask);
+    void stencilOp(GLenum fail, GLenum zfail, GLenum zpass);
+    void uniform1f(GLint location, GLfloat x);
+    void uniform1fv(GLint location, GLsizei count, const GLfloat *v);
+    void uniform1i(GLint location, GLint x);
+    void uniform1iv(GLint location, GLsizei count, const GLint *v);
+    void uniform2f(GLint location, GLfloat x, GLfloat y);
+    void uniform2fv(GLint location, GLsizei count, const GLfloat *v);
+    void uniform2i(GLint location, GLint x, GLint y);
+    void uniform2iv(GLint location, GLsizei count, const GLint *v);
+    void uniform3f(GLint location, GLfloat x, GLfloat y, GLfloat z);
+    void uniform3fv(GLint location, GLsizei count, const GLfloat *v);
+    void uniform3i(GLint location, GLint x, GLint y, GLint z);
+    void uniform3iv(GLint location, GLsizei count, const GLint *v);
+    void uniform4f(GLint location, GLfloat x, GLfloat y, GLfloat z, GLfloat w);
+    void uniform4fv(GLint location, GLsizei count, const GLfloat *v);
+    void uniform4i(GLint location, GLint x, GLint y, GLint z, GLint w);
+    void uniform4iv(GLint location, GLsizei count, const GLint *v);
+    void uniformMatrix2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
+    void uniformMatrix3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
+    void uniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
+    void validateProgram(GLuint program);
 
     void handleError(const Error &error) override;
 

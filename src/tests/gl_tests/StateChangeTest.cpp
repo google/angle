@@ -500,6 +500,9 @@ TEST_P(StateChangeRenderTest, RecreateTexture)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[0], 0);
 
+    // Explictly check FBO status sync in some versions of ANGLE no_error skips FBO checks.
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
     // Draw with red to the FBO.
     GLColor red(255, 0, 0, 255);
     setUniformColor(red);
@@ -512,6 +515,9 @@ TEST_P(StateChangeRenderTest, RecreateTexture)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 32, 32, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                  greenPixels.data());
     EXPECT_PIXEL_COLOR_EQ(0, 0, green);
+
+    // Explictly check FBO status sync in some versions of ANGLE no_error skips FBO checks.
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
 
     // Verify drawing blue gives blue. This covers the FBO sync with D3D dirty bits.
     GLColor blue(0, 0, 255, 255);
@@ -531,6 +537,9 @@ TEST_P(StateChangeRenderTest, RecreateRenderbuffer)
     glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 16, 16);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, mRenderbuffer);
 
+    // Explictly check FBO status sync in some versions of ANGLE no_error skips FBO checks.
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
     // Draw with red to the FBO.
     GLColor red(255, 0, 0, 255);
     setUniformColor(red);
@@ -543,6 +552,9 @@ TEST_P(StateChangeRenderTest, RecreateRenderbuffer)
     glClear(GL_COLOR_BUFFER_BIT);
     GLColor green(0, 255, 0, 255);
     EXPECT_PIXEL_COLOR_EQ(0, 0, green);
+
+    // Explictly check FBO status sync in some versions of ANGLE no_error skips FBO checks.
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
 
     // Verify drawing blue gives blue. This covers the FBO sync with D3D dirty bits.
     GLColor blue(0, 0, 255, 255);
@@ -564,6 +576,9 @@ TEST_P(StateChangeRenderTest, GenerateMipmap)
     glTexImage2D(GL_TEXTURE_2D, 2, GL_RGBA, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[0], 0);
 
+    // Explictly check FBO status sync in some versions of ANGLE no_error skips FBO checks.
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
     // Draw once to set the RenderTarget in D3D11
     GLColor red(255, 0, 0, 255);
     setUniformColor(red);
@@ -572,6 +587,9 @@ TEST_P(StateChangeRenderTest, GenerateMipmap)
 
     // This will trigger the texture to be re-created on FL9_3.
     glGenerateMipmap(GL_TEXTURE_2D);
+
+    // Explictly check FBO status sync in some versions of ANGLE no_error skips FBO checks.
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
 
     // Now ensure we don't have a stale render target.
     GLColor blue(0, 0, 255, 255);

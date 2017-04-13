@@ -490,39 +490,27 @@ void Program::attachShader(Shader *shader)
     }
 }
 
-bool Program::detachShader(const Context *context, Shader *shader)
+void Program::detachShader(const Context *context, Shader *shader)
 {
     switch (shader->getType())
     {
         case GL_VERTEX_SHADER:
         {
-            if (mState.mAttachedVertexShader != shader)
-            {
-                return false;
-            }
-
+            ASSERT(mState.mAttachedVertexShader == shader);
             shader->release(context);
             mState.mAttachedVertexShader = nullptr;
             break;
         }
         case GL_FRAGMENT_SHADER:
         {
-            if (mState.mAttachedFragmentShader != shader)
-            {
-                return false;
-            }
-
+            ASSERT(mState.mAttachedFragmentShader == shader);
             shader->release(context);
             mState.mAttachedFragmentShader = nullptr;
             break;
         }
         case GL_COMPUTE_SHADER:
         {
-            if (mState.mAttachedComputeShader != shader)
-            {
-                return false;
-            }
-
+            ASSERT(mState.mAttachedComputeShader == shader);
             shader->release(context);
             mState.mAttachedComputeShader = nullptr;
             break;
@@ -530,8 +518,6 @@ bool Program::detachShader(const Context *context, Shader *shader)
         default:
             UNREACHABLE();
     }
-
-    return true;
 }
 
 int Program::getAttachedShadersCount() const
