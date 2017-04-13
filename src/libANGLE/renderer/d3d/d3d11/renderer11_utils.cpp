@@ -2005,8 +2005,12 @@ angle::WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps
                 d3d11_gl::GetIntelDriverVersion(deviceCaps.driverVersion) <
                 IntelDriverVersion(4542);
         }
-        workarounds.rewriteUnaryMinusOperator =
-            IsBroadwell(adapterDesc.DeviceId) || IsHaswell(adapterDesc.DeviceId);
+        else if (IsBroadwell(adapterDesc.DeviceId) || IsHaswell(adapterDesc.DeviceId))
+        {
+            workarounds.rewriteUnaryMinusOperator =
+                d3d11_gl::GetIntelDriverVersion(deviceCaps.driverVersion) <
+                IntelDriverVersion(4624);
+        }
     }
 
     // TODO(jmadill): Disable when we have a fixed driver version.
