@@ -22,6 +22,30 @@
       "revId": "d4f2ad3b9d876c308312bf2c2572d5fee554362f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3b03e81a_16906581",
+        "filename": "include/platform/WorkaroundsD3D.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-14T01:02:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "adde9cad_dad59de9",
+      "range": {
+        "startLine": 91,
+        "startChar": 12,
+        "endLine": 91,
+        "endChar": 18
+      },
+      "revId": "d4f2ad3b9d876c308312bf2c2572d5fee554362f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
