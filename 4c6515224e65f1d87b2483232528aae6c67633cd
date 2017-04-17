@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "95e6e226_b2b5f9b0",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2105,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-17T07:44:21Z",
+      "side": 1,
+      "message": "I just thought this fragment of code is a little ugly. \nIn my thought: std::Map\u003cint binding, std::vector\u003cBufferBacked\u003e bufferBackend\u003e atomicCounterBuffers\n\nint atomicCounterIndex\u003d 0;\nfor (unsigned int index \u003d 0; index \u003c mState.mUniforms.size(); index++)\n    {\n        auto \u0026uniform \u003d mState.mUniforms[index];\n        if (uniform.isAtomicCounter())\n        {\n            auto\u0026 buffer \u003d atomicCounterBuffers.find(uniform.binding);\n            if (buffer!\u003d atomicCounterBuffers.end() )\n            {\n                    buffer.memberIndexes.push_back(index);\n                    uniform.blockIndex \u003d buffer.resourceIndex;\n             }\n             else\n             {\n                    BufferBacked atomicCounterBuffer;\n                    atomicCounterBuffer.memberIndexes.push_back(index);\n                    atomicCounterBuffer.resourceIndx \u003d atomicCounterIndex;\n                    mState.mAtomicCounterBuffers[uniform.binding] \u003d atomicCounterBuffer;\n                    uniform.blockIndex \u003d atomicCounterIndex;\n                    atomicCounterIndex++;\n             }\n      ... ...\n\nMaybe there are better ways to do it.\n\nWe can keep it as an open here. Other reviews\u0027 opinion?",
+      "parentUuid": "8bc12cf7_463137a7",
+      "range": {
+        "startLine": 2105,
+        "startChar": 30,
+        "endLine": 2105,
+        "endChar": 40
+      },
+      "revId": "4c6515224e65f1d87b2483232528aae6c67633cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e842f6f3_18f721f5",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 9
@@ -78,6 +102,24 @@
       "side": 1,
       "message": "Why not to just re-use it?",
       "parentUuid": "e842f6f3_18f721f5",
+      "revId": "4c6515224e65f1d87b2483232528aae6c67633cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7bc36531_e74ddfb8",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2112,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-17T07:44:21Z",
+      "side": 1,
+      "message": "This naming can keep consistent with spec. Of course, we can reuse it.  But I think we need to rename it to \u0027resourceIndex\u0027 or  something similar in that case. blockIndex is only for Interface Block from name.",
+      "parentUuid": "3d050b9c_8e4a6f6d",
       "revId": "4c6515224e65f1d87b2483232528aae6c67633cd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
