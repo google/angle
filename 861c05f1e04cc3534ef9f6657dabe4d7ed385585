@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bf5ed72f_c0c6b1ed",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-04-17T02:20:35Z",
+      "side": 1,
+      "message": "Specify D3D here: \"for Intel D3D drivers\"",
+      "revId": "861c05f1e04cc3534ef9f6657dabe4d7ed385585",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
