@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8bc12cf7_463137a7",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2105,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-17T06:39:57Z",
+      "side": 1,
+      "message": "Using vector here, we will have a nature \u0027resource index\u0027 for later use.",
+      "parentUuid": "8b6c67e5_1a6cb753",
+      "range": {
+        "startLine": 2105,
+        "startChar": 30,
+        "endLine": 2105,
+        "endChar": 40
+      },
+      "revId": "4c6515224e65f1d87b2483232528aae6c67633cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e842f6f3_18f721f5",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 9
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "3d050b9c_8e4a6f6d",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2112,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-17T06:39:57Z",
+      "side": 1,
+      "message": "Why not to just re-use it?",
+      "parentUuid": "e842f6f3_18f721f5",
+      "revId": "4c6515224e65f1d87b2483232528aae6c67633cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "52a5a826_b6672aeb",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 9
@@ -53,6 +95,24 @@
       "writtenOn": "2017-04-17T06:27:28Z",
       "side": 1,
       "message": "Same here. In fact, I don\u0027t know why you set \u0027uniform.blockIndex \u003d static_cast\u003cint\u003e(mState.mAtomicCounterBuffers.size() - 1);\u0027",
+      "revId": "4c6515224e65f1d87b2483232528aae6c67633cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7fc20b10_4876311d",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2123,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-17T06:39:57Z",
+      "side": 1,
+      "message": "Same \u0027resource index\u0027 consideration",
+      "parentUuid": "52a5a826_b6672aeb",
       "revId": "4c6515224e65f1d87b2483232528aae6c67633cd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
