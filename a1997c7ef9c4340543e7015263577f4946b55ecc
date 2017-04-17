@@ -1,0 +1,307 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "96058882_a3de88a3",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-17T09:08:52Z",
+      "side": 1,
+      "message": "Why not process EbtISampler2DMS and EbtUSampler2DMS?",
+      "revId": "a1997c7ef9c4340543e7015263577f4946b55ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b3f178a_c3411ce0",
+        "filename": "src/compiler/translator/TextureFunctionHLSL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 403,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-17T09:08:52Z",
+      "side": 1,
+      "message": "Same question with above.",
+      "revId": "a1997c7ef9c4340543e7015263577f4946b55ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "270d5e7a_76a824f9",
+        "filename": "src/libANGLE/renderer/d3d/ImageD3D.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-17T09:08:52Z",
+      "side": 1,
+      "message": "I refer you reuse above function redefine with extended parameter list like this function\u0027s but not create a new function.",
+      "revId": "a1997c7ef9c4340543e7015263577f4946b55ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "59a49d4e_990c01d1",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-17T09:08:52Z",
+      "side": 1,
+      "message": "the default fixed sample location is false?  I saw you set samples to 1 and fixedSampleLocation to true in ImageD3D.cpp",
+      "revId": "a1997c7ef9c4340543e7015263577f4946b55ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "041bd6d8_5449affa",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3470,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-17T09:08:52Z",
+      "side": 1,
+      "message": "Can\u0027t levels always equal 1 for multi sample?",
+      "revId": "a1997c7ef9c4340543e7015263577f4946b55ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8410322_153349be",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3581,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-17T09:08:52Z",
+      "side": 1,
+      "message": "Remove it since you don\u0027t need it.  Set an empty function in TextureD3D::setStorage()",
+      "range": {
+        "startLine": 3581,
+        "startChar": 10,
+        "endLine": 3581,
+        "endChar": 46
+      },
+      "revId": "a1997c7ef9c4340543e7015263577f4946b55ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7d69861e_b820ae77",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3403,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-17T09:08:52Z",
+      "side": 1,
+      "message": "ASSERT(index.mipIndex\u003d\u003d 0);\n\nAnd move this function next to associateImage()",
+      "revId": "a1997c7ef9c4340543e7015263577f4946b55ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e1540712_89dcc11e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3430,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-17T09:08:52Z",
+      "side": 1,
+      "message": "ASSERT(levels \u003d\u003d 1); ?",
+      "revId": "a1997c7ef9c4340543e7015263577f4946b55ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf260a2a_46a433bf",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3451,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-17T09:08:52Z",
+      "side": 1,
+      "message": "ASSERT(mAssociatedImage-\u003eisAssociatedStorageValid(this));\nmAssociatedImage-\u003erecoverFromAssociatedStorage();",
+      "range": {
+        "startLine": 3443,
+        "startChar": 0,
+        "endLine": 3451,
+        "endChar": 9
+      },
+      "revId": "a1997c7ef9c4340543e7015263577f4946b55ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e83c7dae_86f73853",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3517,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-17T09:08:52Z",
+      "side": 1,
+      "message": "TexStorage2DMS",
+      "range": {
+        "startLine": 3517,
+        "startChar": 45,
+        "endLine": 3517,
+        "endChar": 57
+      },
+      "revId": "a1997c7ef9c4340543e7015263577f4946b55ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b2da681_32b929c6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3528,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-17T09:08:52Z",
+      "side": 1,
+      "message": "ASSERT(index.mipIndex \u003d\u003d 0);",
+      "range": {
+        "startLine": 3526,
+        "startChar": 0,
+        "endLine": 3528,
+        "endChar": 23
+      },
+      "revId": "a1997c7ef9c4340543e7015263577f4946b55ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ab070dd6_d32da251",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3629,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-17T09:08:52Z",
+      "side": 1,
+      "message": "I think we can remove this line",
+      "range": {
+        "startLine": 3629,
+        "startChar": 8,
+        "endLine": 3629,
+        "endChar": 61
+      },
+      "revId": "a1997c7ef9c4340543e7015263577f4946b55ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b4da7cf2_3a436a8f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3662,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-17T09:08:52Z",
+      "side": 1,
+      "message": "Will it have error if we remove these two line?",
+      "range": {
+        "startLine": 3661,
+        "startChar": 0,
+        "endLine": 3662,
+        "endChar": 42
+      },
+      "revId": "a1997c7ef9c4340543e7015263577f4946b55ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ceee23a9_f6a8d9f6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3669,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-17T09:08:52Z",
+      "side": 1,
+      "message": "This line is not needed.",
+      "range": {
+        "startLine": 3669,
+        "startChar": 1,
+        "endLine": 3669,
+        "endChar": 57
+      },
+      "revId": "a1997c7ef9c4340543e7015263577f4946b55ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "139b161c_5b5b7750",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3676,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-17T09:08:52Z",
+      "side": 1,
+      "message": "TexStorage2DMS",
+      "range": {
+        "startLine": 3676,
+        "startChar": 34,
+        "endLine": 3676,
+        "endChar": 46
+      },
+      "revId": "a1997c7ef9c4340543e7015263577f4946b55ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
