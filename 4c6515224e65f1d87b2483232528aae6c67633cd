@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "f0eca6cf_1dfe7189",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2105,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-17T08:04:37Z",
+      "side": 1,
+      "message": "Offline talked with Jie. Jie said that if we use a vector, we can quickly get the resource by index. But for map, we need to iterate the map buffers. This is the key point why he chose a vector not a map.",
+      "parentUuid": "95e6e226_b2b5f9b0",
+      "range": {
+        "startLine": 2105,
+        "startChar": 30,
+        "endLine": 2105,
+        "endChar": 40
+      },
+      "revId": "4c6515224e65f1d87b2483232528aae6c67633cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e842f6f3_18f721f5",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 9
