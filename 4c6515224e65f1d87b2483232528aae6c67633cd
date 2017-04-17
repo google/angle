@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "98905aaf_1fcd3cef",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 9
+      },
+      "lineNbr": 978,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-04-17T08:14:02Z",
+      "side": 1,
+      "message": "“atomic_unit can be only used...”",
+      "revId": "4c6515224e65f1d87b2483232528aae6c67633cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8b6c67e5_1a6cb753",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 9
@@ -179,6 +196,23 @@
       "side": 1,
       "message": "Same \u0027resource index\u0027 consideration",
       "parentUuid": "52a5a826_b6672aeb",
+      "revId": "4c6515224e65f1d87b2483232528aae6c67633cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f541d379_59955631",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-04-17T08:14:02Z",
+      "side": 1,
+      "message": "BufferBacked is not a good name, what about BackedBufferInfo?",
       "revId": "4c6515224e65f1d87b2483232528aae6c67633cd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
