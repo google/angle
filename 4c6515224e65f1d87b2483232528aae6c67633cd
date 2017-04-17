@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8b6c67e5_1a6cb753",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2105,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-17T06:27:28Z",
+      "side": 1,
+      "message": "change blockIndex to atomicCounterBufferIndex. And here, can you use a more efficient data structure, like Map instead of a for loop since atomic counter buffer index and binding are both unique?",
+      "range": {
+        "startLine": 2105,
+        "startChar": 30,
+        "endLine": 2105,
+        "endChar": 40
+      },
+      "revId": "4c6515224e65f1d87b2483232528aae6c67633cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e842f6f3_18f721f5",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2112,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-17T06:27:28Z",
+      "side": 1,
+      "message": "I think you need to add another member atomicCounterBufferIndex in uniform. Here you should set uniform.atomicCounterBufferIndex \u003d atomicCounterBufferIndex, uniform.blockIndex \u003d -1;\n\nSee spec 7.3 PROGRAM OBJECTS P83 For the property ATOMIC_COUNTER_BUFFER_INDEX and For the property BLOCK_INDEX",
+      "revId": "4c6515224e65f1d87b2483232528aae6c67633cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "52a5a826_b6672aeb",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2123,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-17T06:27:28Z",
+      "side": 1,
+      "message": "Same here. In fact, I don\u0027t know why you set \u0027uniform.blockIndex \u003d static_cast\u003cint\u003e(mState.mAtomicCounterBuffers.size() - 1);\u0027",
+      "revId": "4c6515224e65f1d87b2483232528aae6c67633cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
