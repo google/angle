@@ -108,6 +108,24 @@
     },
     {
       "key": {
+        "uuid": "ecf1b234_cb2be170",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-18T19:48:11Z",
+      "side": 1,
+      "message": "I still think this would be worthwhile to investigate, it would be easy thanks to BitSetIteratorPerf.",
+      "parentUuid": "3bc06f13_3d10203a",
+      "revId": "2414c086799f9b7321fdd3661c96b07952021ce5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ae2c9d24_b74946d7",
         "filename": "src/common/bitset_utils.h",
         "patchSetId": 12
