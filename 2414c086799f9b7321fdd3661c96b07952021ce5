@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "f8b50202_7bcd38b5",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-18T17:55:34Z",
+      "side": 1,
+      "message": "I took a look at the implementation of bitsets, they are almost as good as BitSetT except:\n - MSVC\u0027s implementation of bitset::all isn\u0027t very good and I\u0027m not sure if the compiler is able to optimize it [4]. We don\u0027t seem to use all() very much though.\n - libc++\u0027s implementation does some additional masking when not 64 and 32 bit [5]\n\nGoing one way or the other LGTM.\n\n[4]\tbool all() const _NOEXCEPT\n\t\t{\t// test if all bits set\n\t\treturn (count() \u003d\u003d size());\n\t\t}\n\n\tsize_t count() const _NOEXCEPT\n\t\t{\t// count number of set bits\n\t\tconst char *const _Bitsperbyte \u003d\n\t\t\t\"\\0\\1\\1\\2\\1\\2\\2\\3\\1\\2\\2\\3\\2\\3\\3\\4\"\n\t\t\t\"\\1\\2\\2\\3\\2\\3\\3\\4\\2\\3\\3\\4\\3\\4\\4\\5\"\n\t\t\t\"\\1\\2\\2\\3\\2\\3\\3\\4\\2\\3\\3\\4\\3\\4\\4\\5\"\n\t\t\t\"\\2\\3\\3\\4\\3\\4\\4\\5\\3\\4\\4\\5\\4\\5\\5\\6\"\n\t\t\t\"\\1\\2\\2\\3\\2\\3\\3\\4\\2\\3\\3\\4\\3\\4\\4\\5\"\n\t\t\t\"\\2\\3\\3\\4\\3\\4\\4\\5\\3\\4\\4\\5\\4\\5\\5\\6\"\n\t\t\t\"\\2\\3\\3\\4\\3\\4\\4\\5\\3\\4\\4\\5\\4\\5\\5\\6\"\n\t\t\t\"\\3\\4\\4\\5\\4\\5\\5\\6\\4\\5\\5\\6\\5\\6\\6\\7\"\n\t\t\t\"\\1\\2\\2\\3\\2\\3\\3\\4\\2\\3\\3\\4\\3\\4\\4\\5\"\n\t\t\t\"\\2\\3\\3\\4\\3\\4\\4\\5\\3\\4\\4\\5\\4\\5\\5\\6\"\n\t\t\t\"\\2\\3\\3\\4\\3\\4\\4\\5\\3\\4\\4\\5\\4\\5\\5\\6\"\n\t\t\t\"\\3\\4\\4\\5\\4\\5\\5\\6\\4\\5\\5\\6\\5\\6\\6\\7\"\n\t\t\t\"\\2\\3\\3\\4\\3\\4\\4\\5\\3\\4\\4\\5\\4\\5\\5\\6\"\n\t\t\t\"\\3\\4\\4\\5\\4\\5\\5\\6\\4\\5\\5\\6\\5\\6\\6\\7\"\n\t\t\t\"\\3\\4\\4\\5\\4\\5\\5\\6\\4\\5\\5\\6\\5\\6\\6\\7\"\n\t\t\t\"\\4\\5\\5\\6\\5\\6\\6\\7\\5\\6\\6\\7\\6\\7\\7\\x8\";\n\t\tconst unsigned char *_Ptr \u003d\n\t\t\t(const unsigned char *)(const void *)_Array;\n\t\tconst unsigned char *const _End \u003d _Ptr + sizeof (_Array);\n\t\tsize_t _Val \u003d 0;\n\t\tfor ( ; _Ptr !\u003d _End; ++_Ptr)\n\t\t\t_Val +\u003d _Bitsperbyte[*_Ptr];\n\t\treturn (_Val);\n\t\t}\n\n[5] https://github.com/llvm-mirror/libcxx/blob/master/include/bitset#L390",
+      "parentUuid": "57c03878_e1bef735",
+      "revId": "2414c086799f9b7321fdd3661c96b07952021ce5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3ba1dfa1_4a8775f6",
         "filename": "src/common/bitset_utils.h",
         "patchSetId": 12
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "Hm, I\u0027m not sure it would be much faster. What do you think?\n\nI think we still need the none() check in all cases, see the docs for __builtin_clz:\n\nhttps://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html\n\nBuilt-in Function: int __builtin_clz (unsigned int x)\nReturns the number of leading 0-bits in x, starting at the most significant bit position. If x is 0, the result is undefined.",
       "parentUuid": "3ba1dfa1_4a8775f6",
+      "revId": "2414c086799f9b7321fdd3661c96b07952021ce5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3bc06f13_3d10203a",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-18T17:55:34Z",
+      "side": 1,
+      "message": "The goal of this CL is to optimize bitsets, and this should be at least as fast while being simpler :)\n\noperator++ wouldn\u0027t need to check for none() as currently done in its call to getNextBit() because operator++ should not be called if *this \u003d\u003d end() (which is 0) though we should probably have an assert.",
+      "parentUuid": "fc7fb2d6_dcb66326",
       "revId": "2414c086799f9b7321fdd3661c96b07952021ce5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
