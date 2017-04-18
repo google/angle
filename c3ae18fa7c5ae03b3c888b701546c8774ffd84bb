@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3d578f35_bf2d89aa",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1042,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-18T14:47:08Z",
+      "side": 1,
+      "message": "I think we will want to disable binding to texture for multisampled configs.  The EGL spec doesn\u0027t cover this but it will almost certainly cause problems if we try to sample from one of these surfaces, the generated hlsl will not know it\u0027s multisampled and GL_TEXTURE_2D objects are not supposed to be multisampled to begin with.  If the user will still be able to render to the surfaces by simply calling eglMakeCurrent.\n\nThis will probably break one of the tests you wrote about binding the surfaces to textures but that would be intentional.",
+      "range": {
+        "startLine": 1040,
+        "startChar": 16,
+        "endLine": 1042,
+        "endChar": 89
+      },
+      "revId": "c3ae18fa7c5ae03b3c888b701546c8774ffd84bb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
