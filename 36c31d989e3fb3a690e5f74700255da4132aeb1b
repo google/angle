@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bb27a46f_2dfd5f41",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2025,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-18T17:18:43Z",
+      "side": 1,
+      "message": "These lines can be removed, the operator[] for maps will create a new element on the next line if one does not exist.",
+      "range": {
+        "startLine": 2021,
+        "startChar": 4,
+        "endLine": 2025,
+        "endChar": 5
+      },
+      "revId": "36c31d989e3fb3a690e5f74700255da4132aeb1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9cfb243_9504da81",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-18T17:18:43Z",
+      "side": 1,
+      "message": "You can just declare \"struct BindingOffset\" here and then define the entire class in the cpp file.  OffsetSpan can go entirely in the cpp file.",
+      "range": {
+        "startLine": 366,
+        "startChar": 4,
+        "endLine": 366,
+        "endChar": 24
+      },
+      "revId": "36c31d989e3fb3a690e5f74700255da4132aeb1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "921bbe58_5ea0adbb",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-18T17:18:43Z",
+      "side": 1,
+      "message": "nit: just return false here and remove the isOverlapped bool.",
+      "range": {
+        "startLine": 380,
+        "startChar": 20,
+        "endLine": 381,
+        "endChar": 26
+      },
+      "revId": "36c31d989e3fb3a690e5f74700255da4132aeb1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
