@@ -63,6 +63,7 @@ DisplayWGL::DisplayWGL(const egl::DisplayState &state)
       mOpenGLModule(nullptr),
       mFunctionsWGL(nullptr),
       mFunctionsGL(nullptr),
+      mHasWGLCreateContextRobustness(false),
       mHasRobustness(false),
       mWindowClass(0),
       mWindow(nullptr),
@@ -168,18 +169,10 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
         return egl::Error(EGL_NOT_INITIALIZED, "Failed to make the dummy WGL context current.");
     }
 
-    // Grab the GL version from this context and use it as the maximum version available.
-    typedef const GLubyte* (GL_APIENTRYP PFNGLGETSTRINGPROC) (GLenum name);
-    PFNGLGETSTRINGPROC getString = reinterpret_cast<PFNGLGETSTRINGPROC>(GetProcAddress(mOpenGLModule, "glGetString"));
-    if (!getString)
-    {
-        return egl::Error(EGL_NOT_INITIALIZED, "Failed to get glGetString pointer.");
-    }
-
     // Reinitialize the wgl functions to grab the extensions
     mFunctionsWGL->initialize(mOpenGLModule, dummyDeviceContext);
 
-    bool hasWGLCreateContextRobustness =
+    mHasWGLCreateContextRobustness =
         mFunctionsWGL->hasExtension("WGL_ARB_create_context_robustness");
 
     // Destroy the dummy window and context
@@ -250,79 +243,8 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
 
     if (mFunctionsWGL->createContextAttribsARB)
     {
-        int flags = 0;
-        // TODO: allow debug contexts
-        // TODO: handle robustness
 
-        int mask = 0;
-
-        if (requestedDisplayType == EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE)
-        {
-            mask |= WGL_CONTEXT_ES_PROFILE_BIT_EXT;
-        }
-        else
-        {
-            // Request core profile
-            mask |= WGL_CONTEXT_CORE_PROFILE_BIT_ARB;
-        }
-
-        std::vector<int> contextCreationAttributes;
-
-        if (hasWGLCreateContextRobustness)
-        {
-            contextCreationAttributes.push_back(WGL_CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB);
-            contextCreationAttributes.push_back(WGL_LOSE_CONTEXT_ON_RESET_ARB);
-        }
-
-        // Don't request a specific version unless the user wants one.  WGL will return the highest version
-        // that the driver supports if no version is requested.
-        EGLint requestedMajorVersion = static_cast<EGLint>(
-            displayAttributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE, EGL_DONT_CARE));
-        EGLint requestedMinorVersion = static_cast<EGLint>(
-            displayAttributes.get(EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE, EGL_DONT_CARE));
-        if (requestedMajorVersion != EGL_DONT_CARE && requestedMinorVersion != EGL_DONT_CARE)
-        {
-            contextCreationAttributes.push_back(WGL_CONTEXT_MAJOR_VERSION_ARB);
-            contextCreationAttributes.push_back(requestedMajorVersion);
-
-            contextCreationAttributes.push_back(WGL_CONTEXT_MINOR_VERSION_ARB);
-            contextCreationAttributes.push_back(requestedMinorVersion);
-        }
-        else
-        {
-            // the ES profile will give us ES version 1.1 unless a higher version is requested.
-            // Requesting version 2.0 will give us the highest compatible version available (2.0,
-            // 3.0, 3.1, etc).
-            if (requestedDisplayType == EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE)
-            {
-                contextCreationAttributes.push_back(WGL_CONTEXT_MAJOR_VERSION_ARB);
-                contextCreationAttributes.push_back(2);
-
-                contextCreationAttributes.push_back(WGL_CONTEXT_MINOR_VERSION_ARB);
-                contextCreationAttributes.push_back(0);
-            }
-        }
-
-        // Set the flag attributes
-        if (flags != 0)
-        {
-            contextCreationAttributes.push_back(WGL_CONTEXT_FLAGS_ARB);
-            contextCreationAttributes.push_back(flags);
-        }
-
-        // Set the mask attribute
-        if (mask != 0)
-        {
-            contextCreationAttributes.push_back(WGL_CONTEXT_PROFILE_MASK_ARB);
-            contextCreationAttributes.push_back(mask);
-        }
-
-        // Signal the end of the attributes
-        contextCreationAttributes.push_back(0);
-        contextCreationAttributes.push_back(0);
-
-        mWGLContext = mFunctionsWGL->createContextAttribsARB(mDeviceContext, nullptr,
-                                                             &contextCreationAttributes[0]);
+        mWGLContext = initializeContextAttribs(displayAttributes);
     }
 
     // If wglCreateContextAttribsARB is unavailable or failed, try the standard wglCreateContext
@@ -346,7 +268,7 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
     mFunctionsGL->initialize();
 
     mHasRobustness = mFunctionsGL->getGraphicsResetStatus != nullptr;
-    if (hasWGLCreateContextRobustness != mHasRobustness)
+    if (mHasWGLCreateContextRobustness != mHasRobustness)
     {
         WARN() << "WGL_ARB_create_context_robustness exists but unable to OpenGL context with "
                   "robustness.";
@@ -756,5 +678,79 @@ void DisplayWGL::releaseD3DDevice(HANDLE deviceHandle)
             }
         }
     }
+}
+
+HGLRC DisplayWGL::initializeContextAttribs(const egl::AttributeMap &eglAttributes) const
+{
+    EGLint requestedDisplayType = static_cast<EGLint>(
+        eglAttributes.get(EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE));
+
+    // Create a context of the requested version, if any.
+    gl::Version requestedVersion(static_cast<EGLint>(eglAttributes.get(
+                                     EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE, EGL_DONT_CARE)),
+                                 static_cast<EGLint>(eglAttributes.get(
+                                     EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE, EGL_DONT_CARE)));
+    if (static_cast<EGLint>(requestedVersion.major) != EGL_DONT_CARE &&
+        static_cast<EGLint>(requestedVersion.minor) != EGL_DONT_CARE)
+    {
+        int profileMask = 0;
+        if (requestedDisplayType != EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE &&
+            requestedVersion >= gl::Version(3, 2))
+        {
+            profileMask |= WGL_CONTEXT_CORE_PROFILE_BIT_ARB;
+        }
+        return createContextAttribs(requestedVersion, profileMask);
+    }
+
+    // Try all the GL version in order as a workaround for Mesa context creation where the driver
+    // doesn't automatically return the highest version available.
+    for (const auto &info : GenerateContextCreationToTry(requestedDisplayType, false))
+    {
+        int profileFlag = 0;
+        if (info.type == ContextCreationTry::Type::DESKTOP_CORE)
+        {
+            profileFlag |= WGL_CONTEXT_CORE_PROFILE_BIT_ARB;
+        }
+        else if (info.type == ContextCreationTry::Type::ES)
+        {
+            profileFlag |= WGL_CONTEXT_ES_PROFILE_BIT_EXT;
+        }
+
+        HGLRC context = createContextAttribs(info.version, profileFlag);
+        if (context != nullptr)
+        {
+            return context;
+        }
+    }
+
+    return nullptr;
+}
+
+HGLRC DisplayWGL::createContextAttribs(const gl::Version &version, int profileMask) const
+{
+    std::vector<int> attribs;
+
+    if (mHasWGLCreateContextRobustness)
+    {
+        attribs.push_back(WGL_CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB);
+        attribs.push_back(WGL_LOSE_CONTEXT_ON_RESET_ARB);
+    }
+
+    attribs.push_back(WGL_CONTEXT_MAJOR_VERSION_ARB);
+    attribs.push_back(version.major);
+
+    attribs.push_back(WGL_CONTEXT_MINOR_VERSION_ARB);
+    attribs.push_back(version.minor);
+
+    if (profileMask != 0)
+    {
+        attribs.push_back(WGL_CONTEXT_PROFILE_MASK_ARB);
+        attribs.push_back(profileMask);
+    }
+
+    attribs.push_back(0);
+    attribs.push_back(0);
+
+    return mFunctionsWGL->createContextAttribsARB(mDeviceContext, nullptr, &attribs[0]);
 }
 }

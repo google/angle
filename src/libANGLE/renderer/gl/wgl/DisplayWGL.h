@@ -72,11 +72,15 @@ class DisplayWGL : public DisplayGL
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;
 
+    HGLRC initializeContextAttribs(const egl::AttributeMap &eglAttributes) const;
+    HGLRC createContextAttribs(const gl::Version &version, int profileMask) const;
+
     HMODULE mOpenGLModule;
 
     FunctionsWGL *mFunctionsWGL;
     FunctionsGL *mFunctionsGL;
 
+    bool mHasWGLCreateContextRobustness;
     bool mHasRobustness;
 
     ATOM mWindowClass;
