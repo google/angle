@@ -2136,12 +2136,56 @@ bool CompressedTextureFormatRequiresExactSize(GLenum internalFormat)
     }
 }
 
+bool ValidCompressedDimension(GLsizei size, GLuint blockSize, bool smallerThanBlockSizeAllowed)
+{
+    return (smallerThanBlockSizeAllowed && (size > 0) && (blockSize % size == 0)) ||
+           (size % blockSize == 0);
+}
+
 bool ValidCompressedImageSize(const ValidationContext *context,
                               GLenum internalFormat,
-                              GLint xoffset,
-                              GLint yoffset,
+                              GLint level,
                               GLsizei width,
                               GLsizei height)
+{
+    const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(internalFormat);
+    if (!formatInfo.compressed)
+    {
+        return false;
+    }
+
+    if (width < 0 || height < 0)
+    {
+        return false;
+    }
+
+    if (CompressedTextureFormatRequiresExactSize(internalFormat))
+    {
+        // The ANGLE extensions allow specifying compressed textures with sizes smaller than the
+        // block size for level 0 but WebGL disallows this.
+        bool smallerThanBlockSizeAllowed =
+            level > 0 || !context->getExtensions().webglCompatibility;
+
+        if (!ValidCompressedDimension(width, formatInfo.compressedBlockWidth,
+                                      smallerThanBlockSizeAllowed) ||
+            !ValidCompressedDimension(height, formatInfo.compressedBlockHeight,
+                                      smallerThanBlockSizeAllowed))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool ValidCompressedSubImageSize(const ValidationContext *context,
+                                 GLenum internalFormat,
+                                 GLint xoffset,
+                                 GLint yoffset,
+                                 GLsizei width,
+                                 GLsizei height,
+                                 size_t textureWidth,
+                                 size_t textureHeight)
 {
     const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(internalFormat);
     if (!formatInfo.compressed)
@@ -2157,11 +2201,19 @@ bool ValidCompressedImageSize(const ValidationContext *context,
     if (CompressedTextureFormatRequiresExactSize(internalFormat))
     {
         if (xoffset % formatInfo.compressedBlockWidth != 0 ||
-            yoffset % formatInfo.compressedBlockHeight != 0 ||
-            (static_cast<GLuint>(width) > formatInfo.compressedBlockWidth &&
-             width % formatInfo.compressedBlockWidth != 0) ||
-            (static_cast<GLuint>(height) > formatInfo.compressedBlockHeight &&
-             height % formatInfo.compressedBlockHeight != 0))
+            yoffset % formatInfo.compressedBlockHeight != 0)
+        {
+            return false;
+        }
+
+        // Allowed to either have data that is a multiple of block size or is smaller than the block
+        // size but fills the entire mip
+        bool fillsEntireMip = xoffset == 0 && yoffset == 0 &&
+                              static_cast<size_t>(width) == textureWidth &&
+                              static_cast<size_t>(height) == textureHeight;
+        bool sizeMultipleOfBlockSize = (width % formatInfo.compressedBlockWidth) == 0 &&
+                                       (height % formatInfo.compressedBlockHeight) == 0;
+        if (!sizeMultipleOfBlockSize && !fillsEntireMip)
         {
             return false;
         }
@@ -3598,14 +3650,7 @@ bool ValidateCopyTexImageParametersBase(ValidationContext *context,
     const gl::InternalFormat &formatInfo =
         gl::GetInternalFormatInfo(internalformat, GL_UNSIGNED_BYTE);
 
-    if (formatInfo.depthBits > 0)
-    {
-        context->handleError(Error(GL_INVALID_OPERATION));
-        return false;
-    }
-
-    if (formatInfo.compressed &&
-        !ValidCompressedImageSize(context, internalformat, xoffset, yoffset, width, height))
+    if (formatInfo.depthBits > 0 || formatInfo.compressed)
     {
         context->handleError(Error(GL_INVALID_OPERATION));
         return false;

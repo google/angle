@@ -524,11 +524,33 @@ bool ValidateES2TexImageParameters(Context *context,
                           "internalformat is not a supported compressed internal format"));
                 return false;
         }
-        if (!ValidCompressedImageSize(context, actualInternalFormat, xoffset, yoffset, width,
-                                      height))
+
+        if (isSubImage)
         {
-            context->handleError(Error(GL_INVALID_OPERATION));
-            return false;
+            if (!ValidCompressedSubImageSize(context, actualInternalFormat, xoffset, yoffset, width,
+                                             height, texture->getWidth(target, level),
+                                             texture->getHeight(target, level)))
+            {
+                context->handleError(
+                    Error(GL_INVALID_OPERATION, "Invalid compressed format dimension."));
+                return false;
+            }
+
+            if (format != actualInternalFormat)
+            {
+                context->handleError(Error(
+                    GL_INVALID_OPERATION, "Format must match the internal format of the texture."));
+                return false;
+            }
+        }
+        else
+        {
+            if (!ValidCompressedImageSize(context, actualInternalFormat, level, width, height))
+            {
+                context->handleError(
+                    Error(GL_INVALID_OPERATION, "Invalid compressed format dimension."));
+                return false;
+            }
         }
     }
     else
@@ -1970,7 +1992,7 @@ bool ValidateCompressedTexSubImage2D(Context *context,
     if (context->getClientMajorVersion() < 3)
     {
         if (!ValidateES2TexImageParameters(context, target, level, GL_NONE, true, true, xoffset,
-                                           yoffset, width, height, 0, GL_NONE, GL_NONE, -1, data))
+                                           yoffset, width, height, 0, format, GL_NONE, -1, data))
         {
             return false;
         }
@@ -1979,7 +2001,7 @@ bool ValidateCompressedTexSubImage2D(Context *context,
     {
         ASSERT(context->getClientMajorVersion() >= 3);
         if (!ValidateES3TexImage2DParameters(context, target, level, GL_NONE, true, true, xoffset,
-                                             yoffset, 0, width, height, 1, 0, GL_NONE, GL_NONE, -1,
+                                             yoffset, 0, width, height, 1, 0, format, GL_NONE, -1,
                                              data))
         {
             return false;

@@ -1251,6 +1251,96 @@ TEST_P(WebGLCompatibilityTest, BuiltInInvariant)
     EXPECT_EQ(0u, program);
 }
 
+// Test dimension and image size validation of compressed textures
+TEST_P(WebGLCompatibilityTest, CompressedTextureS3TC)
+{
+    if (extensionRequestable("GL_EXT_texture_compression_dxt1"))
+    {
+        glRequestExtensionANGLE("GL_EXT_texture_compression_dxt1");
+    }
+
+    if (!extensionEnabled("GL_EXT_texture_compression_dxt1"))
+    {
+        std::cout << "Test skipped because GL_EXT_texture_compression_dxt1 is not available."
+                  << std::endl;
+        return;
+    }
+
+    constexpr uint8_t CompressedImageDXT1[] = {0x00, 0xf8, 0x00, 0xf8, 0xaa, 0xaa, 0xaa, 0xaa};
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    // Regular case, verify that it works
+    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGB_S3TC_DXT1_EXT, 4, 4, 0,
+                           sizeof(CompressedImageDXT1), CompressedImageDXT1);
+    ASSERT_GL_NO_ERROR();
+
+    // Test various dimensions that are not valid
+    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGB_S3TC_DXT1_EXT, 3, 4, 0,
+                           sizeof(CompressedImageDXT1), CompressedImageDXT1);
+    ASSERT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGB_S3TC_DXT1_EXT, 4, 3, 0,
+                           sizeof(CompressedImageDXT1), CompressedImageDXT1);
+    ASSERT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGB_S3TC_DXT1_EXT, 2, 2, 0,
+                           sizeof(CompressedImageDXT1), CompressedImageDXT1);
+    ASSERT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGB_S3TC_DXT1_EXT, 1, 1, 0,
+                           sizeof(CompressedImageDXT1), CompressedImageDXT1);
+    ASSERT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Test various image sizes that are not valid
+    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGB_S3TC_DXT1_EXT, 4, 4, 0,
+                           sizeof(CompressedImageDXT1) - 1, CompressedImageDXT1);
+    ASSERT_GL_ERROR(GL_INVALID_VALUE);
+
+    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGB_S3TC_DXT1_EXT, 4, 4, 0,
+                           sizeof(CompressedImageDXT1) + 1, CompressedImageDXT1);
+    ASSERT_GL_ERROR(GL_INVALID_VALUE);
+
+    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGB_S3TC_DXT1_EXT, 4, 4, 0, 0,
+                           CompressedImageDXT1);
+    ASSERT_GL_ERROR(GL_INVALID_VALUE);
+
+    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGB_S3TC_DXT1_EXT, 0, 0, 0,
+                           sizeof(CompressedImageDXT1), CompressedImageDXT1);
+    ASSERT_GL_ERROR(GL_INVALID_VALUE);
+
+    // Fill a full mip chain and verify that it works
+    glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGB_S3TC_DXT1_EXT, 4, 4, 0,
+                           sizeof(CompressedImageDXT1), CompressedImageDXT1);
+    glCompressedTexImage2D(GL_TEXTURE_2D, 1, GL_COMPRESSED_RGB_S3TC_DXT1_EXT, 2, 2, 0,
+                           sizeof(CompressedImageDXT1), CompressedImageDXT1);
+    glCompressedTexImage2D(GL_TEXTURE_2D, 2, GL_COMPRESSED_RGB_S3TC_DXT1_EXT, 1, 1, 0,
+                           sizeof(CompressedImageDXT1), CompressedImageDXT1);
+    ASSERT_GL_NO_ERROR();
+
+    glCompressedTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 4, 4, GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
+                              sizeof(CompressedImageDXT1), CompressedImageDXT1);
+    ASSERT_GL_NO_ERROR();
+
+    // Test that non-block size sub-uploads are not valid for the 0 mip
+    glCompressedTexSubImage2D(GL_TEXTURE_2D, 0, 2, 2, 2, 2, GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
+                              sizeof(CompressedImageDXT1), CompressedImageDXT1);
+    ASSERT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Test that non-block size sub-uploads are valid for if they fill the whole mip
+    glCompressedTexSubImage2D(GL_TEXTURE_2D, 1, 0, 0, 2, 2, GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
+                              sizeof(CompressedImageDXT1), CompressedImageDXT1);
+    glCompressedTexSubImage2D(GL_TEXTURE_2D, 2, 0, 0, 1, 1, GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
+                              sizeof(CompressedImageDXT1), CompressedImageDXT1);
+    ASSERT_GL_NO_ERROR();
+
+    // Test that if the format miss-matches the texture, an error is generated
+    glCompressedTexSubImage2D(GL_TEXTURE_2D, 0, 2, 2, 2, 2, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,
+                              sizeof(CompressedImageDXT1), CompressedImageDXT1);
+    ASSERT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
 // This tests that rendering feedback loops works as expected with WebGL 2.
 // Based on WebGL test conformance2/rendering/rendering-sampling-feedback-loop.html
 TEST_P(WebGL2CompatibilityTest, RenderingFeedbackLoopWithDrawBuffers)
