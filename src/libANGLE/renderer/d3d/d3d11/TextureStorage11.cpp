@@ -778,19 +778,15 @@ TextureStorage11_2D::~TextureStorage11_2D()
     {
         if (mAssociatedImages[i] != nullptr)
         {
-            bool imageAssociationCorrect = mAssociatedImages[i]->isAssociatedStorageValid(this);
-            ASSERT(imageAssociationCorrect);
+            mAssociatedImages[i]->verifyAssociatedStorageValid(this);
 
-            if (imageAssociationCorrect)
+            // We must let the Images recover their data before we delete it from the
+            // TextureStorage.
+            gl::Error error = mAssociatedImages[i]->recoverFromAssociatedStorage();
+            if (error.isError())
             {
-                // We must let the Images recover their data before we delete it from the
-                // TextureStorage.
-                gl::Error error = mAssociatedImages[i]->recoverFromAssociatedStorage();
-                if (error.isError())
-                {
-                    // TODO: Find a way to report this back to the context
-                    ERR() << "Error initialization texture storage: " << error;
-                }
+                // TODO: Find a way to report this back to the context
+                ERR() << "Error initialization texture storage: " << error;
             }
         }
     }
@@ -925,21 +921,15 @@ void TextureStorage11_2D::associateImage(Image11 *image, const gl::ImageIndex &i
     }
 }
 
-bool TextureStorage11_2D::isAssociatedImageValid(const gl::ImageIndex &index,
-                                                 Image11 *expectedImage)
+void TextureStorage11_2D::verifyAssociatedImageValid(const gl::ImageIndex &index,
+                                                     Image11 *expectedImage)
 {
     const GLint level = index.mipIndex;
 
-    if (0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS)
-    {
-        // This validation check should never return false. It means the Image/TextureStorage
-        // association is broken.
-        bool retValue = (mAssociatedImages[level] == expectedImage);
-        ASSERT(retValue);
-        return retValue;
-    }
-
-    return false;
+    ASSERT(0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
+    // This validation check should never return false. It means the Image/TextureStorage
+    // association is broken.
+    ASSERT(mAssociatedImages[level] == expectedImage);
 }
 
 // disassociateImage allows an Image to end its association with a Storage.
@@ -948,16 +938,8 @@ void TextureStorage11_2D::disassociateImage(const gl::ImageIndex &index, Image11
     const GLint level = index.mipIndex;
 
     ASSERT(0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
-
-    if (0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS)
-    {
-        ASSERT(mAssociatedImages[level] == expectedImage);
-
-        if (mAssociatedImages[level] == expectedImage)
-        {
-            mAssociatedImages[level] = nullptr;
-        }
-    }
+    ASSERT(mAssociatedImages[level] == expectedImage);
+    mAssociatedImages[level] = nullptr;
 }
 
 // releaseAssociatedImage prepares the Storage for a new Image association. It lets the old Image
@@ -974,17 +956,12 @@ gl::Error TextureStorage11_2D::releaseAssociatedImage(const gl::ImageIndex &inde
         // No need to let the old Image recover its data, if it is also the incoming Image.
         if (mAssociatedImages[level] != nullptr && mAssociatedImages[level] != incomingImage)
         {
-            // Ensure that the Image is still associated with this TextureStorage. This should be
-            // true.
-            bool imageAssociationCorrect = mAssociatedImages[level]->isAssociatedStorageValid(this);
-            ASSERT(imageAssociationCorrect);
+            // Ensure that the Image is still associated with this TextureStorage.
+            mAssociatedImages[level]->verifyAssociatedStorageValid(this);
 
-            if (imageAssociationCorrect)
-            {
-                // Force the image to recover from storage before its data is overwritten.
-                // This will reset mAssociatedImages[level] to nullptr too.
-                ANGLE_TRY(mAssociatedImages[level]->recoverFromAssociatedStorage());
-            }
+            // Force the image to recover from storage before its data is overwritten.
+            // This will reset mAssociatedImages[level] to nullptr too.
+            ANGLE_TRY(mAssociatedImages[level]->recoverFromAssociatedStorage());
         }
     }
 
@@ -1398,10 +1375,10 @@ void TextureStorage11_External::associateImage(Image11 *image, const gl::ImageIn
     mAssociatedImage = image;
 }
 
-bool TextureStorage11_External::isAssociatedImageValid(const gl::ImageIndex &index,
-                                                       Image11 *expectedImage)
+void TextureStorage11_External::verifyAssociatedImageValid(const gl::ImageIndex &index,
+                                                           Image11 *expectedImage)
 {
-    return (index.mipIndex == 0 && mAssociatedImage == expectedImage);
+    ASSERT(index.mipIndex == 0 && mAssociatedImage == expectedImage);
 }
 
 void TextureStorage11_External::disassociateImage(const gl::ImageIndex &index,
@@ -1419,13 +1396,9 @@ gl::Error TextureStorage11_External::releaseAssociatedImage(const gl::ImageIndex
 
     if (mAssociatedImage != nullptr && mAssociatedImage != incomingImage)
     {
-        bool imageAssociationCorrect = mAssociatedImage->isAssociatedStorageValid(this);
-        ASSERT(imageAssociationCorrect);
+        mAssociatedImage->verifyAssociatedStorageValid(this);
 
-        if (imageAssociationCorrect)
-        {
-            ANGLE_TRY(mAssociatedImage->recoverFromAssociatedStorage());
-        }
+        ANGLE_TRY(mAssociatedImage->recoverFromAssociatedStorage());
     }
 
     return gl::NoError();
@@ -1592,9 +1565,8 @@ void TextureStorage11_EGLImage::disassociateImage(const gl::ImageIndex &, Image1
 {
 }
 
-bool TextureStorage11_EGLImage::isAssociatedImageValid(const gl::ImageIndex &, Image11 *)
+void TextureStorage11_EGLImage::verifyAssociatedImageValid(const gl::ImageIndex &, Image11 *)
 {
-    return false;
 }
 
 gl::Error TextureStorage11_EGLImage::releaseAssociatedImage(const gl::ImageIndex &, Image11 *)
@@ -1804,16 +1776,11 @@ TextureStorage11_Cube::~TextureStorage11_Cube()
         {
             if (mAssociatedImages[face][level] != nullptr)
             {
-                bool imageAssociationCorrect =
-                    mAssociatedImages[face][level]->isAssociatedStorageValid(this);
-                ASSERT(imageAssociationCorrect);
+                mAssociatedImages[face][level]->verifyAssociatedStorageValid(this);
 
-                if (imageAssociationCorrect)
-                {
-                    // We must let the Images recover their data before we delete it from the
-                    // TextureStorage.
-                    mAssociatedImages[face][level]->recoverFromAssociatedStorage();
-                }
+                // We must let the Images recover their data before we delete it from the
+                // TextureStorage.
+                mAssociatedImages[face][level]->recoverFromAssociatedStorage();
             }
         }
     }
@@ -1967,25 +1934,17 @@ void TextureStorage11_Cube::associateImage(Image11 *image, const gl::ImageIndex 
     }
 }
 
-bool TextureStorage11_Cube::isAssociatedImageValid(const gl::ImageIndex &index,
-                                                   Image11 *expectedImage)
+void TextureStorage11_Cube::verifyAssociatedImageValid(const gl::ImageIndex &index,
+                                                       Image11 *expectedImage)
 {
     const GLint level       = index.mipIndex;
     const GLint layerTarget = index.layerIndex;
 
-    if (0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS)
-    {
-        if (0 <= layerTarget && layerTarget < static_cast<GLint>(CUBE_FACE_COUNT))
-        {
-            // This validation check should never return false. It means the Image/TextureStorage
-            // association is broken.
-            bool retValue = (mAssociatedImages[layerTarget][level] == expectedImage);
-            ASSERT(retValue);
-            return retValue;
-        }
-    }
-
-    return false;
+    ASSERT(0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
+    ASSERT(0 <= layerTarget && layerTarget < static_cast<GLint>(CUBE_FACE_COUNT));
+    // This validation check should never return false. It means the Image/TextureStorage
+    // association is broken.
+    ASSERT(mAssociatedImages[layerTarget][level] == expectedImage);
 }
 
 // disassociateImage allows an Image to end its association with a Storage.
@@ -1996,19 +1955,8 @@ void TextureStorage11_Cube::disassociateImage(const gl::ImageIndex &index, Image
 
     ASSERT(0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
     ASSERT(0 <= layerTarget && layerTarget < static_cast<GLint>(CUBE_FACE_COUNT));
-
-    if (0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS)
-    {
-        if (0 <= layerTarget && layerTarget < static_cast<GLint>(CUBE_FACE_COUNT))
-        {
-            ASSERT(mAssociatedImages[layerTarget][level] == expectedImage);
-
-            if (mAssociatedImages[layerTarget][level] == expectedImage)
-            {
-                mAssociatedImages[layerTarget][level] = nullptr;
-            }
-        }
-    }
+    ASSERT(mAssociatedImages[layerTarget][level] == expectedImage);
+    mAssociatedImages[layerTarget][level] = nullptr;
 }
 
 // releaseAssociatedImage prepares the Storage for a new Image association. It lets the old Image
@@ -2030,19 +1978,12 @@ gl::Error TextureStorage11_Cube::releaseAssociatedImage(const gl::ImageIndex &in
             if (mAssociatedImages[layerTarget][level] != nullptr &&
                 mAssociatedImages[layerTarget][level] != incomingImage)
             {
-                // Ensure that the Image is still associated with this TextureStorage. This should
-                // be true.
-                bool imageAssociationCorrect =
-                    mAssociatedImages[layerTarget][level]->isAssociatedStorageValid(this);
-                ASSERT(imageAssociationCorrect);
+                // Ensure that the Image is still associated with this TextureStorage.
+                mAssociatedImages[layerTarget][level]->verifyAssociatedStorageValid(this);
 
-                if (imageAssociationCorrect)
-                {
-                    // Force the image to recover from storage before its data is overwritten.
-                    // This will reset mAssociatedImages[level] to nullptr too.
-                    ANGLE_TRY(
-                        mAssociatedImages[layerTarget][level]->recoverFromAssociatedStorage());
-                }
+                // Force the image to recover from storage before its data is overwritten.
+                // This will reset mAssociatedImages[level] to nullptr too.
+                ANGLE_TRY(mAssociatedImages[layerTarget][level]->recoverFromAssociatedStorage());
             }
         }
     }
@@ -2559,15 +2500,11 @@ TextureStorage11_3D::~TextureStorage11_3D()
     {
         if (mAssociatedImages[i] != nullptr)
         {
-            bool imageAssociationCorrect = mAssociatedImages[i]->isAssociatedStorageValid(this);
-            ASSERT(imageAssociationCorrect);
+            mAssociatedImages[i]->verifyAssociatedStorageValid(this);
 
-            if (imageAssociationCorrect)
-            {
-                // We must let the Images recover their data before we delete it from the
-                // TextureStorage.
-                mAssociatedImages[i]->recoverFromAssociatedStorage();
-            }
+            // We must let the Images recover their data before we delete it from the
+            // TextureStorage.
+            mAssociatedImages[i]->recoverFromAssociatedStorage();
         }
     }
 
@@ -2600,21 +2537,15 @@ void TextureStorage11_3D::associateImage(Image11 *image, const gl::ImageIndex &i
     }
 }
 
-bool TextureStorage11_3D::isAssociatedImageValid(const gl::ImageIndex &index,
-                                                 Image11 *expectedImage)
+void TextureStorage11_3D::verifyAssociatedImageValid(const gl::ImageIndex &index,
+                                                     Image11 *expectedImage)
 {
     const GLint level = index.mipIndex;
 
-    if (0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS)
-    {
-        // This validation check should never return false. It means the Image/TextureStorage
-        // association is broken.
-        bool retValue = (mAssociatedImages[level] == expectedImage);
-        ASSERT(retValue);
-        return retValue;
-    }
-
-    return false;
+    ASSERT(0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
+    // This validation check should never return false. It means the Image/TextureStorage
+    // association is broken.
+    ASSERT(mAssociatedImages[level] == expectedImage);
 }
 
 // disassociateImage allows an Image to end its association with a Storage.
@@ -2623,16 +2554,8 @@ void TextureStorage11_3D::disassociateImage(const gl::ImageIndex &index, Image11
     const GLint level = index.mipIndex;
 
     ASSERT(0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
-
-    if (0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS)
-    {
-        ASSERT(mAssociatedImages[level] == expectedImage);
-
-        if (mAssociatedImages[level] == expectedImage)
-        {
-            mAssociatedImages[level] = nullptr;
-        }
-    }
+    ASSERT(mAssociatedImages[level] == expectedImage);
+    mAssociatedImages[level] = nullptr;
 }
 
 // releaseAssociatedImage prepares the Storage for a new Image association. It lets the old Image
@@ -2649,17 +2572,12 @@ gl::Error TextureStorage11_3D::releaseAssociatedImage(const gl::ImageIndex &inde
         // No need to let the old Image recover its data, if it is also the incoming Image.
         if (mAssociatedImages[level] != nullptr && mAssociatedImages[level] != incomingImage)
         {
-            // Ensure that the Image is still associated with this TextureStorage. This should be
-            // true.
-            bool imageAssociationCorrect = mAssociatedImages[level]->isAssociatedStorageValid(this);
-            ASSERT(imageAssociationCorrect);
+            // Ensure that the Image is still associated with this TextureStorage.
+            mAssociatedImages[level]->verifyAssociatedStorageValid(this);
 
-            if (imageAssociationCorrect)
-            {
-                // Force the image to recover from storage before its data is overwritten.
-                // This will reset mAssociatedImages[level] to nullptr too.
-                ANGLE_TRY(mAssociatedImages[level]->recoverFromAssociatedStorage());
-            }
+            // Force the image to recover from storage before its data is overwritten.
+            // This will reset mAssociatedImages[level] to nullptr too.
+            ANGLE_TRY(mAssociatedImages[level]->recoverFromAssociatedStorage());
         }
     }
 
@@ -2961,15 +2879,11 @@ TextureStorage11_2DArray::~TextureStorage11_2DArray()
     {
         if (i->second)
         {
-            bool imageAssociationCorrect = i->second->isAssociatedStorageValid(this);
-            ASSERT(imageAssociationCorrect);
+            i->second->verifyAssociatedStorageValid(this);
 
-            if (imageAssociationCorrect)
-            {
-                // We must let the Images recover their data before we delete it from the
-                // TextureStorage.
-                i->second->recoverFromAssociatedStorage();
-            }
+            // We must let the Images recover their data before we delete it from the
+            // TextureStorage.
+            i->second->recoverFromAssociatedStorage();
         }
     }
     mAssociatedImages.clear();
@@ -3003,8 +2917,8 @@ void TextureStorage11_2DArray::associateImage(Image11 *image, const gl::ImageInd
     }
 }
 
-bool TextureStorage11_2DArray::isAssociatedImageValid(const gl::ImageIndex &index,
-                                                      Image11 *expectedImage)
+void TextureStorage11_2DArray::verifyAssociatedImageValid(const gl::ImageIndex &index,
+                                                          Image11 *expectedImage)
 {
     const GLint level       = index.mipIndex;
     const GLint layerTarget = index.layerIndex;
@@ -3016,7 +2930,6 @@ bool TextureStorage11_2DArray::isAssociatedImageValid(const gl::ImageIndex &inde
     bool retValue = (mAssociatedImages.find(key) != mAssociatedImages.end() &&
                      (mAssociatedImages[key] == expectedImage));
     ASSERT(retValue);
-    return retValue;
 }
 
 // disassociateImage allows an Image to end its association with a Storage.
@@ -3031,11 +2944,7 @@ void TextureStorage11_2DArray::disassociateImage(const gl::ImageIndex &index,
     bool imageAssociationCorrect = (mAssociatedImages.find(key) != mAssociatedImages.end() &&
                                     (mAssociatedImages[key] == expectedImage));
     ASSERT(imageAssociationCorrect);
-
-    if (imageAssociationCorrect)
-    {
-        mAssociatedImages[key] = nullptr;
-    }
+    mAssociatedImages[key] = nullptr;
 }
 
 // releaseAssociatedImage prepares the Storage for a new Image association. It lets the old Image
@@ -3052,17 +2961,12 @@ gl::Error TextureStorage11_2DArray::releaseAssociatedImage(const gl::ImageIndex 
     {
         if (mAssociatedImages[key] != nullptr && mAssociatedImages[key] != incomingImage)
         {
-            // Ensure that the Image is still associated with this TextureStorage. This should be
-            // true.
-            bool imageAssociationCorrect = mAssociatedImages[key]->isAssociatedStorageValid(this);
-            ASSERT(imageAssociationCorrect);
+            // Ensure that the Image is still associated with this TextureStorage.
+            mAssociatedImages[key]->verifyAssociatedStorageValid(this);
 
-            if (imageAssociationCorrect)
-            {
-                // Force the image to recover from storage before its data is overwritten.
-                // This will reset mAssociatedImages[level] to nullptr too.
-                ANGLE_TRY(mAssociatedImages[key]->recoverFromAssociatedStorage());
-            }
+            // Force the image to recover from storage before its data is overwritten.
+            // This will reset mAssociatedImages[level] to nullptr too.
+            ANGLE_TRY(mAssociatedImages[key]->recoverFromAssociatedStorage());
         }
     }
 

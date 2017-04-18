@@ -133,9 +133,9 @@ gl::Error Image11::copyToStorage(TextureStorage *storage,
     return gl::NoError();
 }
 
-bool Image11::isAssociatedStorageValid(TextureStorage11 *textureStorage) const
+void Image11::verifyAssociatedStorageValid(TextureStorage11 *textureStorage) const
 {
-    return (mAssociatedStorage == textureStorage);
+    ASSERT(mAssociatedStorage == textureStorage);
 }
 
 gl::Error Image11::recoverFromAssociatedStorage()
@@ -144,22 +144,13 @@ gl::Error Image11::recoverFromAssociatedStorage()
     {
         ANGLE_TRY(createStagingTexture());
 
-        bool textureStorageCorrect =
-            mAssociatedStorage->isAssociatedImageValid(mAssociatedImageIndex, this);
+        mAssociatedStorage->verifyAssociatedImageValid(mAssociatedImageIndex, this);
 
-        // This means that the cached TextureStorage has been modified after this Image11 released
-        // its copy of its data. This should not have happened. The TextureStorage should have told
-        // this Image11 to recover its data before it was overwritten.
-        ASSERT(textureStorageCorrect);
-
-        if (textureStorageCorrect)
-        {
-            // CopySubResource from the Storage to the Staging texture
-            gl::Box region(0, 0, 0, mWidth, mHeight, mDepth);
-            ANGLE_TRY(mAssociatedStorage->copySubresourceLevel(mStagingTexture, mStagingSubresource,
-                                                               mAssociatedImageIndex, region));
-            mRecoveredFromStorageCount += 1;
-        }
+        // CopySubResource from the Storage to the Staging texture
+        gl::Box region(0, 0, 0, mWidth, mHeight, mDepth);
+        ANGLE_TRY(mAssociatedStorage->copySubresourceLevel(mStagingTexture, mStagingSubresource,
+                                                           mAssociatedImageIndex, region));
+        mRecoveredFromStorageCount += 1;
 
         // Reset all the recovery parameters, even if the texture storage association is broken.
         disassociateStorage();

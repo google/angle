@@ -58,7 +58,7 @@ class Image11 : public ImageD3D
                                   const gl::Framebuffer *source) override;
 
     gl::Error recoverFromAssociatedStorage();
-    bool isAssociatedStorageValid(TextureStorage11* textureStorage) const;
+    void verifyAssociatedStorageValid(TextureStorage11 *textureStorage) const;
     void disassociateStorage();
 
   protected:

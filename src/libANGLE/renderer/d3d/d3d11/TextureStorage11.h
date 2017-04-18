@@ -36,28 +36,15 @@ struct Renderer11DeviceCaps;
 class TextureStorage11 : public TextureStorage
 {
   public:
-    virtual ~TextureStorage11();
+    ~TextureStorage11() override;
 
     static DWORD GetTextureBindFlags(GLenum internalFormat, const Renderer11DeviceCaps &renderer11DeviceCaps, bool renderTarget);
     static DWORD GetTextureMiscFlags(GLenum internalFormat, const Renderer11DeviceCaps &renderer11DeviceCaps, bool renderTarget, int levels);
 
     UINT getBindFlags() const;
     UINT getMiscFlags() const;
-
-    virtual gl::Error getResource(ID3D11Resource **outResource) = 0;
-    virtual gl::Error getSRV(const gl::TextureState &textureState,
-                             ID3D11ShaderResourceView **outSRV);
-    virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT) = 0;
-
-    virtual gl::Error generateMipmap(const gl::ImageIndex &sourceIndex, const gl::ImageIndex &destIndex);
-
-    virtual int getTopLevel() const;
-    virtual bool isRenderTarget() const;
-    virtual bool isManaged() const;
-    bool supportsNativeMipmapFunction() const override;
-    virtual int getLevelCount() const;
-    virtual UINT getSubresourceIndex(const gl::ImageIndex &index) const;
-
+    const d3d11::Format &getFormatSet() const;
+    gl::Error getSRVLevels(GLint baseLevel, GLint maxLevel, ID3D11ShaderResourceView **outSRV);
     gl::Error generateSwizzles(const gl::SwizzleState &swizzleTarget);
     void markLevelDirty(int mipLevel);
     void markDirty();
@@ -68,18 +55,31 @@ class TextureStorage11 : public TextureStorage
     gl::Error copySubresourceLevel(ID3D11Resource* dstTexture, unsigned int dstSubresource,
                                    const gl::ImageIndex &index, const gl::Box &region);
 
+    // TextureStorage virtual functions
+    int getTopLevel() const override;
+    bool isRenderTarget() const override;
+    bool isManaged() const override;
+    bool supportsNativeMipmapFunction() const override;
+    int getLevelCount() const override;
+    gl::Error generateMipmap(const gl::ImageIndex &sourceIndex,
+                             const gl::ImageIndex &destIndex) override;
+    gl::Error copyToStorage(TextureStorage *destStorage) override;
+    gl::Error setData(const gl::ImageIndex &index,
+                      ImageD3D *image,
+                      const gl::Box *destBox,
+                      GLenum type,
+                      const gl::PixelUnpackState &unpack,
+                      const uint8_t *pixelData) override;
+
+    virtual gl::Error getSRV(const gl::TextureState &textureState,
+                             ID3D11ShaderResourceView **outSRV);
+    virtual UINT getSubresourceIndex(const gl::ImageIndex &index) const;
+    virtual gl::Error getResource(ID3D11Resource **outResource) = 0;
     virtual void associateImage(Image11* image, const gl::ImageIndex &index) = 0;
     virtual void disassociateImage(const gl::ImageIndex &index, Image11* expectedImage) = 0;
-    virtual bool isAssociatedImageValid(const gl::ImageIndex &index, Image11* expectedImage) = 0;
+    virtual void verifyAssociatedImageValid(const gl::ImageIndex &index,
+                                            Image11 *expectedImage) = 0;
     virtual gl::Error releaseAssociatedImage(const gl::ImageIndex &index, Image11* incomingImage) = 0;
-
-    virtual gl::Error copyToStorage(TextureStorage *destStorage);
-    virtual gl::Error setData(const gl::ImageIndex &index, ImageD3D *image, const gl::Box *destBox, GLenum type,
-                              const gl::PixelUnpackState &unpack, const uint8_t *pixelData);
-
-    gl::Error getSRVLevels(GLint baseLevel, GLint maxLevel, ID3D11ShaderResourceView **outSRV);
-
-    const d3d11::Format &getFormatSet() const;
 
   protected:
     TextureStorage11(Renderer11 *renderer, UINT bindFlags, UINT miscFlags, GLenum internalFormat);
@@ -163,7 +163,7 @@ class TextureStorage11_2D : public TextureStorage11
 
     void associateImage(Image11 *image, const gl::ImageIndex &index) override;
     void disassociateImage(const gl::ImageIndex &index, Image11 *expectedImage) override;
-    bool isAssociatedImageValid(const gl::ImageIndex &index, Image11 *expectedImage) override;
+    void verifyAssociatedImageValid(const gl::ImageIndex &index, Image11 *expectedImage) override;
     gl::Error releaseAssociatedImage(const gl::ImageIndex &index, Image11 *incomingImage) override;
 
     gl::Error useLevelZeroWorkaroundTexture(bool useLevelZeroTexture) override;
@@ -223,7 +223,7 @@ class TextureStorage11_External : public TextureStorage11
 
     void associateImage(Image11 *image, const gl::ImageIndex &index) override;
     void disassociateImage(const gl::ImageIndex &index, Image11 *expectedImage) override;
-    bool isAssociatedImageValid(const gl::ImageIndex &index, Image11 *expectedImage) override;
+    void verifyAssociatedImageValid(const gl::ImageIndex &index, Image11 *expectedImage) override;
     gl::Error releaseAssociatedImage(const gl::ImageIndex &index, Image11 *incomingImage) override;
 
   protected:
@@ -262,7 +262,7 @@ class TextureStorage11_EGLImage final : public TextureStorage11
 
     void associateImage(Image11 *image, const gl::ImageIndex &index) override;
     void disassociateImage(const gl::ImageIndex &index, Image11 *expectedImage) override;
-    bool isAssociatedImageValid(const gl::ImageIndex &index, Image11 *expectedImage) override;
+    void verifyAssociatedImageValid(const gl::ImageIndex &index, Image11 *expectedImage) override;
     gl::Error releaseAssociatedImage(const gl::ImageIndex &index, Image11 *incomingImage) override;
 
     gl::Error useLevelZeroWorkaroundTexture(bool useLevelZeroTexture) override;
@@ -296,34 +296,37 @@ class TextureStorage11_Cube : public TextureStorage11
 {
   public:
     TextureStorage11_Cube(Renderer11 *renderer, GLenum internalformat, bool renderTarget, int size, int levels, bool hintLevelZeroOnly);
-    virtual ~TextureStorage11_Cube();
+    ~TextureStorage11_Cube() override;
 
-    virtual UINT getSubresourceIndex(const gl::ImageIndex &index) const;
+    UINT getSubresourceIndex(const gl::ImageIndex &index) const override;
 
-    virtual gl::Error getResource(ID3D11Resource **outResource);
-    virtual gl::Error getMippedResource(ID3D11Resource **outResource);
-    virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT);
+    gl::Error getResource(ID3D11Resource **outResource) override;
+    gl::Error getMippedResource(ID3D11Resource **outResource) override;
+    gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT) override;
 
-    virtual gl::Error copyToStorage(TextureStorage *destStorage);
+    gl::Error copyToStorage(TextureStorage *destStorage) override;
 
-    virtual void associateImage(Image11* image, const gl::ImageIndex &index);
-    virtual void disassociateImage(const gl::ImageIndex &index, Image11* expectedImage);
-    virtual bool isAssociatedImageValid(const gl::ImageIndex &index, Image11* expectedImage);
-    virtual gl::Error releaseAssociatedImage(const gl::ImageIndex &index, Image11* incomingImage);
+    void associateImage(Image11 *image, const gl::ImageIndex &index) override;
+    void disassociateImage(const gl::ImageIndex &index, Image11 *expectedImage) override;
+    void verifyAssociatedImageValid(const gl::ImageIndex &index, Image11 *expectedImage) override;
+    gl::Error releaseAssociatedImage(const gl::ImageIndex &index, Image11 *incomingImage) override;
 
-    virtual gl::Error useLevelZeroWorkaroundTexture(bool useLevelZeroTexture);
+    gl::Error useLevelZeroWorkaroundTexture(bool useLevelZeroTexture) override;
 
   protected:
-    virtual gl::Error getSwizzleTexture(ID3D11Resource **outTexture);
-    virtual gl::Error getSwizzleRenderTarget(int mipLevel, ID3D11RenderTargetView **outRTV);
+    gl::Error getSwizzleTexture(ID3D11Resource **outTexture) override;
+    gl::Error getSwizzleRenderTarget(int mipLevel, ID3D11RenderTargetView **outRTV) override;
 
     gl::ErrorOrResult<DropStencil> ensureDropStencilTexture() override;
 
     gl::Error ensureTextureExists(int mipLevels);
 
   private:
-    virtual gl::Error createSRV(int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture,
-                                ID3D11ShaderResourceView **outSRV) const;
+    gl::Error createSRV(int baseLevel,
+                        int mipLevels,
+                        DXGI_FORMAT format,
+                        ID3D11Resource *texture,
+                        ID3D11ShaderResourceView **outSRV) const override;
     gl::Error createRenderTargetSRV(ID3D11Resource *texture,
                                     const gl::ImageIndex &index,
                                     DXGI_FORMAT resourceFormat,
@@ -350,25 +353,28 @@ class TextureStorage11_3D : public TextureStorage11
   public:
     TextureStorage11_3D(Renderer11 *renderer, GLenum internalformat, bool renderTarget,
                         GLsizei width, GLsizei height, GLsizei depth, int levels);
-    virtual ~TextureStorage11_3D();
+    ~TextureStorage11_3D() override;
 
-    virtual gl::Error getResource(ID3D11Resource **outResource);
+    gl::Error getResource(ID3D11Resource **outResource) override;
 
     // Handles both layer and non-layer RTs
-    virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT);
+    gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT) override;
 
-    virtual void associateImage(Image11* image, const gl::ImageIndex &index);
-    virtual void disassociateImage(const gl::ImageIndex &index, Image11* expectedImage);
-    virtual bool isAssociatedImageValid(const gl::ImageIndex &index, Image11* expectedImage);
-    virtual gl::Error releaseAssociatedImage(const gl::ImageIndex &index, Image11* incomingImage);
+    void associateImage(Image11 *image, const gl::ImageIndex &index) override;
+    void disassociateImage(const gl::ImageIndex &index, Image11 *expectedImage) override;
+    void verifyAssociatedImageValid(const gl::ImageIndex &index, Image11 *expectedImage) override;
+    gl::Error releaseAssociatedImage(const gl::ImageIndex &index, Image11 *incomingImage) override;
 
   protected:
-    virtual gl::Error getSwizzleTexture(ID3D11Resource **outTexture);
-    virtual gl::Error getSwizzleRenderTarget(int mipLevel, ID3D11RenderTargetView **outRTV);
+    gl::Error getSwizzleTexture(ID3D11Resource **outTexture) override;
+    gl::Error getSwizzleRenderTarget(int mipLevel, ID3D11RenderTargetView **outRTV) override;
 
   private:
-    virtual gl::Error createSRV(int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture,
-                                ID3D11ShaderResourceView **outSRV) const;
+    gl::Error createSRV(int baseLevel,
+                        int mipLevels,
+                        DXGI_FORMAT format,
+                        ID3D11Resource *texture,
+                        ID3D11ShaderResourceView **outSRV) const override;
 
     typedef std::pair<int, int> LevelLayerKey;
     typedef std::map<LevelLayerKey, RenderTarget11*> RenderTargetMap;
@@ -388,25 +394,28 @@ class TextureStorage11_2DArray : public TextureStorage11
   public:
     TextureStorage11_2DArray(Renderer11 *renderer, GLenum internalformat, bool renderTarget,
                              GLsizei width, GLsizei height, GLsizei depth, int levels);
-    virtual ~TextureStorage11_2DArray();
+    ~TextureStorage11_2DArray() override;
 
-    virtual gl::Error getResource(ID3D11Resource **outResource);
-    virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT);
+    gl::Error getResource(ID3D11Resource **outResource) override;
+    gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT) override;
 
-    virtual void associateImage(Image11* image, const gl::ImageIndex &index);
-    virtual void disassociateImage(const gl::ImageIndex &index, Image11* expectedImage);
-    virtual bool isAssociatedImageValid(const gl::ImageIndex &index, Image11* expectedImage);
-    virtual gl::Error releaseAssociatedImage(const gl::ImageIndex &index, Image11* incomingImage);
+    void associateImage(Image11 *image, const gl::ImageIndex &index) override;
+    void disassociateImage(const gl::ImageIndex &index, Image11 *expectedImage) override;
+    void verifyAssociatedImageValid(const gl::ImageIndex &index, Image11 *expectedImage) override;
+    gl::Error releaseAssociatedImage(const gl::ImageIndex &index, Image11 *incomingImage) override;
 
   protected:
-    virtual gl::Error getSwizzleTexture(ID3D11Resource **outTexture);
-    virtual gl::Error getSwizzleRenderTarget(int mipLevel, ID3D11RenderTargetView **outRTV);
+    gl::Error getSwizzleTexture(ID3D11Resource **outTexture) override;
+    gl::Error getSwizzleRenderTarget(int mipLevel, ID3D11RenderTargetView **outRTV) override;
 
     gl::ErrorOrResult<DropStencil> ensureDropStencilTexture() override;
 
   private:
-    virtual gl::Error createSRV(int baseLevel, int mipLevels, DXGI_FORMAT format, ID3D11Resource *texture,
-                                ID3D11ShaderResourceView **outSRV) const;
+    gl::Error createSRV(int baseLevel,
+                        int mipLevels,
+                        DXGI_FORMAT format,
+                        ID3D11Resource *texture,
+                        ID3D11ShaderResourceView **outSRV) const override;
     gl::Error createRenderTargetSRV(ID3D11Resource *texture,
                                     const gl::ImageIndex &index,
                                     DXGI_FORMAT resourceFormat,
