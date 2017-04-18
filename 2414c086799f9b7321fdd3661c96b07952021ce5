@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "57c03878_e1bef735",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-18T17:05:08Z",
+      "side": 1,
+      "message": "It\u0027s possible we could get most of the benefit from iteration as you suggest, but I think for small operations like copies, any(), none(), etc, all of which we do internally in many places, this will be the faster implementation. Take a look throughout the code and you\u0027ll see what I mean.",
+      "parentUuid": "8ac10281_262fe1f9",
+      "revId": "2414c086799f9b7321fdd3661c96b07952021ce5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3ba1dfa1_4a8775f6",
         "filename": "src/common/bitset_utils.h",
         "patchSetId": 12
@@ -30,6 +48,24 @@
       "writtenOn": "2017-04-13T15:45:00Z",
       "side": 1,
       "message": "I don\u0027t think the iterator needs to keep mCurrentBit, and it should be free to recompute it everytime as it is just one assembly instruction to do __builtin_clz or ScanForward. Also it would remove the need to branch on mBitsCopy.none()\n\nSee [1], [2] and [3]",
+      "revId": "2414c086799f9b7321fdd3661c96b07952021ce5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc7fb2d6_dcb66326",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-18T17:05:08Z",
+      "side": 1,
+      "message": "Hm, I\u0027m not sure it would be much faster. What do you think?\n\nI think we still need the none() check in all cases, see the docs for __builtin_clz:\n\nhttps://gcc.gnu.org/onlinedocs/gcc/Other-Builtins.html\n\nBuilt-in Function: int __builtin_clz (unsigned int x)\nReturns the number of leading 0-bits in x, starting at the most significant bit position. If x is 0, the result is undefined.",
+      "parentUuid": "3ba1dfa1_4a8775f6",
       "revId": "2414c086799f9b7321fdd3661c96b07952021ce5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
