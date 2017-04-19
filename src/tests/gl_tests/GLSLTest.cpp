@@ -2770,6 +2770,37 @@ TEST_P(GLSLTest_ES3, NestedSamplingOperation)
     EXPECT_PIXEL_COLOR_EQ_VEC2(lr, simpleColors[3]);
 }
 
+// Tests that using a constant declaration as the only statement in a for loop without curly braces
+// doesn't crash.
+TEST_P(GLSLTest, ConstantStatementInForLoop)
+{
+    const std::string &vertexShader =
+        "void main()\n"
+        "{\n"
+        "    for (int i = 0; i < 10; ++i)\n"
+        "        const int b = 0;\n"
+        "}\n";
+
+    GLuint shader = CompileShader(GL_VERTEX_SHADER, vertexShader);
+    EXPECT_NE(0u, shader);
+    glDeleteShader(shader);
+}
+
+// Tests that using a constant declaration as a loop init expression doesn't crash. Note that this
+// test doesn't work on D3D9 due to looping limitations, so it is only run on ES3.
+TEST_P(GLSLTest_ES3, ConstantStatementAsLoopInit)
+{
+    const std::string &vertexShader =
+        "void main()\n"
+        "{\n"
+        "    for (const int i = 0; i < 0;) {}\n"
+        "}\n";
+
+    GLuint shader = CompileShader(GL_VERTEX_SHADER, vertexShader);
+    EXPECT_NE(0u, shader);
+    glDeleteShader(shader);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest,
                        ES2_D3D9(),

@@ -1028,6 +1028,22 @@ TIntermTernary::TIntermTernary(TIntermTyped *cond,
         TIntermTernary::DetermineQualifier(cond, trueExpression, falseExpression));
 }
 
+TIntermLoop::TIntermLoop(TLoopType type,
+                         TIntermNode *init,
+                         TIntermTyped *cond,
+                         TIntermTyped *expr,
+                         TIntermBlock *body)
+    : mType(type), mInit(init), mCond(cond), mExpr(expr), mBody(body)
+{
+    // Declaration nodes with no children can appear if all the declarators just added constants to
+    // the symbol table instead of generating code. They're no-ops so don't add them to the tree.
+    if (mInit && mInit->getAsDeclarationNode() &&
+        mInit->getAsDeclarationNode()->getSequence()->empty())
+    {
+        mInit = nullptr;
+    }
+}
+
 // static
 TQualifier TIntermTernary::DetermineQualifier(TIntermTyped *cond,
                                               TIntermTyped *trueExpression,

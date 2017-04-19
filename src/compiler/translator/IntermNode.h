@@ -204,10 +204,7 @@ class TIntermLoop : public TIntermNode
                 TIntermNode *init,
                 TIntermTyped *cond,
                 TIntermTyped *expr,
-                TIntermBlock *body)
-        : mType(type), mInit(init), mCond(cond), mExpr(expr), mBody(body)
-    {
-    }
+                TIntermBlock *body);
 
     TIntermLoop *getAsLoopNode() override { return this; }
     void traverse(TIntermTraverser *it) override;

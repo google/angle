@@ -80,7 +80,7 @@ TIntermBlock *TIntermediate::EnsureBlock(TIntermNode *node)
 
     blockNode = new TIntermBlock();
     blockNode->setLine(node->getLine());
-    blockNode->getSequence()->push_back(node);
+    blockNode->appendStatement(node);
     return blockNode;
 }
 
