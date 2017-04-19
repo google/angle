@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ecaacd30_dce2c521",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2025,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-19T11:40:40Z",
+      "side": 1,
+      "message": "Nice to know this. Thanks much!",
+      "parentUuid": "bb27a46f_2dfd5f41",
+      "range": {
+        "startLine": 2021,
+        "startChar": 4,
+        "endLine": 2025,
+        "endChar": 5
+      },
+      "revId": "36c31d989e3fb3a690e5f74700255da4132aeb1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f9cfb243_9504da81",
         "filename": "src/compiler/translator/ParseContext.h",
         "patchSetId": 10
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "de87ce68_528393ec",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-19T11:40:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f9cfb243_9504da81",
+      "range": {
+        "startLine": 366,
+        "startChar": 4,
+        "endLine": 366,
+        "endChar": 24
+      },
+      "revId": "36c31d989e3fb3a690e5f74700255da4132aeb1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "921bbe58_5ea0adbb",
         "filename": "src/compiler/translator/ParseContext.h",
         "patchSetId": 10
@@ -68,6 +116,30 @@
       "revId": "36c31d989e3fb3a690e5f74700255da4132aeb1b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f42666b_0737a8ea",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-19T11:40:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "921bbe58_5ea0adbb",
+      "range": {
+        "startLine": 380,
+        "startChar": 20,
+        "endLine": 381,
+        "endChar": 26
+      },
+      "revId": "36c31d989e3fb3a690e5f74700255da4132aeb1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
