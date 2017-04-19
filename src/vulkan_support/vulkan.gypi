@@ -9,6 +9,7 @@
         'spirv_headers_path': '../../third_party/spirv-headers/src',
         'spirv_tools_path': '../../third_party/spirv-tools-angle/src',
         'vulkan_layers_path': '../../third_party/vulkan-validation-layers/src',
+        'vulkan_json': 'angledata',
         'vulkan_loader_sources':
         [
             '<(vulkan_layers_path)/loader/cJSON.c',
@@ -296,12 +297,12 @@
         ],
         'vulkan_gen_json_files_outputs':
         [
-            '<(angle_gen_path)/vulkan/json/VkLayer_core_validation.json',
-            '<(angle_gen_path)/vulkan/json/VkLayer_object_tracker.json',
-            '<(angle_gen_path)/vulkan/json/VkLayer_parameter_validation.json',
-            '<(angle_gen_path)/vulkan/json/VkLayer_swapchain.json',
-            '<(angle_gen_path)/vulkan/json/VkLayer_threading.json',
-            '<(angle_gen_path)/vulkan/json/VkLayer_unique_objects.json',
+            '<(PRODUCT_DIR)/<(vulkan_json)/VkLayer_core_validation.json',
+            '<(PRODUCT_DIR)/<(vulkan_json)/VkLayer_object_tracker.json',
+            '<(PRODUCT_DIR)/<(vulkan_json)/VkLayer_parameter_validation.json',
+            '<(PRODUCT_DIR)/<(vulkan_json)/VkLayer_swapchain.json',
+            '<(PRODUCT_DIR)/<(vulkan_json)/VkLayer_threading.json',
+            '<(PRODUCT_DIR)/<(vulkan_json)/VkLayer_unique_objects.json',
         ],
     },
     'conditions':
@@ -817,7 +818,7 @@
                                     'action':
                                     [
                                         'python', '<(angle_path)/scripts/generate_vulkan_layers_json.py',
-                                        '<(vulkan_layers_path)/layers/windows', '<(angle_gen_path)/vulkan/json',
+                                        '<(vulkan_layers_path)/layers/windows', '<(PRODUCT_DIR)/<(vulkan_json)',
                                     ],
                                 }],
                             ],
@@ -926,7 +927,7 @@
                             'action':
                             [
                                 # TODO(jmadill): Use correct platform path
-                                'python', '<(angle_path)/scripts/generate_vulkan_header.py', '<(angle_gen_path)/vulkan/json',
+                                'python', '<(angle_path)/scripts/generate_vulkan_header.py', '<(PRODUCT_DIR)/<(vulkan_json)',
                                 '<(angle_gen_path)/vulkan/angle_loader.h', '<(PRODUCT_DIR)',
                             ],
                         },
