@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "118bd0e0_40a7e9b9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4891,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-19T03:07:46Z",
+      "side": 1,
+      "message": "Yes, it\u0027s not a real name and it\u0027s just a wrapper. I prefer you add a method isOpaque() in uniform like below rather than a long conditions checking:  You can find a similar declaration IsOpaqueType in utilities.cpp\nbool isOpaque() \n{\n   // TODO: add atomic counter in this\n    isSampler() || isImage();\n }\n\nOr you can leave it unchanged and add a \u0027TODO\u0027 comment is good in case you miss it in future.",
+      "parentUuid": "3ef336fc_a5d8c9c5",
+      "range": {
+        "startLine": 4891,
+        "startChar": 55,
+        "endLine": 4891,
+        "endChar": 75
+      },
+      "revId": "c2c9004dfbccf497c33d406604c8b9b128d526c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d74431f2_4e4d8969",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 4
