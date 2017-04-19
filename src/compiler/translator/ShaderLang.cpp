@@ -222,6 +222,8 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     resources->MaxFragmentAtomicCounterBuffers = 0;
     resources->MaxCombinedAtomicCounterBuffers = 1;
     resources->MaxAtomicCounterBufferSize      = 32;
+
+    resources->MaxUniformBufferBindings = 32;
 }
 
 //

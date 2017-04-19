@@ -59,7 +59,10 @@ struct LinkedUniform : public sh::Uniform
 struct UniformBlock
 {
     UniformBlock();
-    UniformBlock(const std::string &nameIn, bool isArrayIn, unsigned int arrayElementIn);
+    UniformBlock(const std::string &nameIn,
+                 bool isArrayIn,
+                 unsigned int arrayElementIn,
+                 int bindingIn);
     UniformBlock(const UniformBlock &other) = default;
     UniformBlock &operator=(const UniformBlock &other) = default;
 
@@ -68,6 +71,7 @@ struct UniformBlock
     std::string name;
     bool isArray;
     unsigned int arrayElement;
+    int binding;
     unsigned int dataSize;
 
     bool vertexStaticUse;

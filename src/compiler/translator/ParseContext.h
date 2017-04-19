@@ -397,6 +397,7 @@ class TParseContext : angle::NonCopyable
     void checkBindingIsNotSpecified(const TSourceLoc &location, int binding);
     void checkImageBindingIsValid(const TSourceLoc &location, int binding, int arraySize);
     void checkSamplerBindingIsValid(const TSourceLoc &location, int binding, int arraySize);
+    void checkBlockBindingIsValid(const TSourceLoc &location, int binding, int arraySize);
 
     void checkUniformLocationInRange(const TSourceLoc &location,
                                      int objectLocationCount,
@@ -480,6 +481,7 @@ class TParseContext : angle::NonCopyable
     int mMaxImageUnits;
     int mMaxCombinedTextureImageUnits;
     int mMaxUniformLocations;
+    int mMaxUniformBufferBindings;
     // keeps track whether we are declaring / defining a function
     bool mDeclaringFunction;
 };

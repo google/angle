@@ -549,6 +549,7 @@ InterfaceBlock CollectVariables::recordInterfaceBlock(const TIntermSymbol &varia
         (blockType->hasInstanceName() ? blockType->instanceName().c_str() : "");
     interfaceBlock.arraySize        = variable.getArraySize();
     interfaceBlock.isRowMajorLayout = (blockType->matrixPacking() == EmpRowMajor);
+    interfaceBlock.binding          = blockType->blockBinding();
     interfaceBlock.layout           = GetBlockLayoutType(blockType->blockStorage());
 
     // Gather field information

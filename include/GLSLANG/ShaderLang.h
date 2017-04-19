@@ -380,6 +380,9 @@ struct ShBuiltInResources
 
     // maximum number of buffer object storage in machine units
     int MaxAtomicCounterBufferSize;
+
+    // maximum number of uniform block bindings
+    int MaxUniformBufferBindings;
 };
 
 //

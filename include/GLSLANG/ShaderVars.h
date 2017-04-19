@@ -216,6 +216,7 @@ struct InterfaceBlock
     unsigned int arraySize;
     BlockLayoutType layout;
     bool isRowMajorLayout;
+    int binding;
     bool staticUse;
     std::vector<InterfaceBlockField> fields;
 };
