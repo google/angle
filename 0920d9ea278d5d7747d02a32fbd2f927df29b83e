@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "82aff347_b0f64272",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-19T14:28:07Z",
+      "side": 1,
+      "message": "Maybe call it isMesaGLX?",
+      "range": {
+        "startLine": 83,
+        "startChar": 66,
+        "endLine": 83,
+        "endChar": 72
+      },
+      "revId": "0920d9ea278d5d7747d02a32fbd2f927df29b83e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "657ad718_fa89c10d",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-19T14:28:07Z",
+      "side": 1,
+      "message": "nit: requestedDisplayType !\u003d EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE ?",
+      "range": {
+        "startLine": 681,
+        "startChar": 12,
+        "endLine": 681,
+        "endChar": 77
+      },
+      "revId": "0920d9ea278d5d7747d02a32fbd2f927df29b83e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "18b28562_565e1ee8",
+        "filename": "src/libANGLE/renderer/gl/wgl/DisplayWGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 697,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-19T14:28:07Z",
+      "side": 1,
+      "message": "Instead of this, pass the requested display type to GenerateContextCreationToTry.",
+      "range": {
+        "startLine": 693,
+        "startChar": 8,
+        "endLine": 697,
+        "endChar": 9
+      },
+      "revId": "0920d9ea278d5d7747d02a32fbd2f927df29b83e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
