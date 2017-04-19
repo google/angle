@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dc4f0ed5_85602af7",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1164,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-04-19T20:21:55Z",
+      "side": 0,
+      "message": "Note it was \"resource\" here, but now is \"attachmentObj\".",
+      "range": {
+        "startLine": 1164,
+        "startChar": 59,
+        "endLine": 1164,
+        "endChar": 67
+      },
+      "revId": "b29316019b27fa87acd796572c12bca53aeffbff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7668d0cf_1bdb7147",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1165,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-04-19T20:21:55Z",
+      "side": 0,
+      "message": "Here, too.",
+      "range": {
+        "startLine": 1165,
+        "startChar": 61,
+        "endLine": 1165,
+        "endChar": 69
+      },
+      "revId": "b29316019b27fa87acd796572c12bca53aeffbff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
