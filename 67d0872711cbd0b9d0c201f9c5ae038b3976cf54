@@ -102,6 +102,29 @@
     },
     {
       "key": {
+        "uuid": "f2ef154e_d8e8afe4",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-19T16:31:26Z",
+      "side": 1,
+      "message": "this comment probably more accurately describes InternalFormat now.",
+      "range": {
+        "startLine": 126,
+        "startChar": 0,
+        "endLine": 126,
+        "endChar": 81
+      },
+      "revId": "67d0872711cbd0b9d0c201f9c5ae038b3976cf54",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "668b68ef_14423e09",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
         "patchSetId": 15

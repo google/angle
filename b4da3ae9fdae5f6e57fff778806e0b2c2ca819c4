@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c3e7a80d_1cae5cb3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 16
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-19T16:31:26Z",
+      "side": 1,
+      "message": "can you work anglebug/1228 into here as well? I think this CL directly addresses that bug.",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 21
+      },
+      "revId": "b4da3ae9fdae5f6e57fff778806e0b2c2ca819c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d949eecb_a25933bd",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-19T16:31:26Z",
+      "side": 1,
+      "message": "a little bit concerned about performance of the double indirection. hopefully we can clear this up the future with the globals refactor.",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 0
+      },
+      "revId": "b4da3ae9fdae5f6e57fff778806e0b2c2ca819c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c45da7c5_be7b9909",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-19T16:31:26Z",
+      "side": 1,
+      "message": "can you leave a TODO here to remove this in a follow-up at some point?",
+      "range": {
+        "startLine": 127,
+        "startChar": 7,
+        "endLine": 127,
+        "endChar": 13
+      },
+      "revId": "b4da3ae9fdae5f6e57fff778806e0b2c2ca819c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
