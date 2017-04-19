@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c2787d6a_52751f8b",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 649,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-19T16:35:34Z",
+      "side": 1,
+      "message": "I don\u0027t think this can happen because compute shaders were introduced with shader model 5, see https://msdn.microsoft.com/en-us/library/windows/desktop/ff471356(v\u003dvs.85).aspx",
+      "revId": "5bebf3fbf171e5b7ef42a22ab28cb4d7d415effd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "76921217_3e273830",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1391,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-19T16:35:34Z",
+      "side": 1,
+      "message": "nit: this line is redundant.",
+      "revId": "5bebf3fbf171e5b7ef42a22ab28cb4d7d415effd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5352ff2d_dbdb73f2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-19T16:35:34Z",
+      "side": 1,
+      "message": "nit: nullptr here too.",
+      "revId": "5bebf3fbf171e5b7ef42a22ab28cb4d7d415effd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "661c1bc1_d82d576e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-19T16:35:34Z",
+      "side": 1,
+      "message": "nit: Can you add a static for this invariant?",
+      "revId": "5bebf3fbf171e5b7ef42a22ab28cb4d7d415effd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
