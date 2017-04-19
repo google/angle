@@ -1823,6 +1823,28 @@ TEST_P(GLSLTest, VerifyMaxFragmentUniformVectorsExceeded)
     CompileGLSLWithUniformsAndSamplers(0, maxUniforms + 1, 0, 0, false);
 }
 
+// Test compiling shaders using the GL_EXT_shader_texture_lod extension
+TEST_P(GLSLTest, TextureLOD)
+{
+    if (!extensionEnabled("GL_EXT_shader_texture_lod"))
+    {
+        std::cout << "Test skipped due to missing GL_EXT_shader_texture_lod." << std::endl;
+        return;
+    }
+
+    const std::string source =
+        "#extension GL_EXT_shader_texture_lod : require\n"
+        "uniform sampler2D u_texture;\n"
+        "void main() {\n"
+        "    gl_FragColor = texture2DGradEXT(u_texture, vec2(0.0, 0.0), vec2(0.0, 0.0), vec2(0.0, "
+        "0.0));\n"
+        "}\n";
+
+    GLuint shader = CompileShader(GL_FRAGMENT_SHADER, source);
+    ASSERT_NE(0u, shader);
+    glDeleteShader(shader);
+}
+
 // Test that two constructors which have vec4 and mat2 parameters get disambiguated (issue in
 // HLSL).
 TEST_P(GLSLTest_ES3, AmbiguousConstructorCall2x2)

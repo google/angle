@@ -822,12 +822,14 @@ void GenerateCaps(const FunctionsGL *functions,
                               functions->isAtLeastGLES(gl::Version(3, 0)) || functions->hasGLESExtension("GL_EXT_blend_minmax");
     extensions->framebufferBlit = (functions->blitFramebuffer != nullptr);
     extensions->framebufferMultisample = caps->maxSamples > 0;
-    extensions->standardDerivatives = functions->isAtLeastGL(gl::Version(2, 0)) || functions->hasGLExtension("GL_ARB_fragment_shader") ||
-                                      functions->isAtLeastGLES(gl::Version(3, 0)) || functions->hasGLESExtension("GL_OES_standard_derivatives");
-    extensions->shaderTextureLOD = functions->isAtLeastGL(gl::Version(3, 0)) || functions->hasGLExtension("GL_ARB_shader_texture_lod") ||
-                                   functions->isAtLeastGLES(gl::Version(3, 0)) || functions->hasGLESExtension("GL_EXT_shader_texture_lod");
+    extensions->standardDerivatives    = functions->isAtLeastGL(gl::Version(2, 0)) ||
+                                      functions->hasGLExtension("GL_ARB_fragment_shader") ||
+                                      functions->hasGLESExtension("GL_OES_standard_derivatives");
+    extensions->shaderTextureLOD = functions->isAtLeastGL(gl::Version(3, 0)) ||
+                                   functions->hasGLExtension("GL_ARB_shader_texture_lod") ||
+                                   functions->hasGLESExtension("GL_EXT_shader_texture_lod");
     extensions->fragDepth = functions->standard == STANDARD_GL_DESKTOP ||
-                            functions->isAtLeastGLES(gl::Version(3, 0)) || functions->hasGLESExtension("GL_EXT_frag_depth");
+                            functions->hasGLESExtension("GL_EXT_frag_depth");
     extensions->fboRenderMipmap = functions->isAtLeastGL(gl::Version(3, 0)) || functions->hasGLExtension("GL_EXT_framebuffer_object") ||
                                   functions->isAtLeastGLES(gl::Version(3, 0)) || functions->hasGLESExtension("GL_OES_fbo_render_mipmap");
     extensions->instancedArrays = functions->isAtLeastGL(gl::Version(3, 1)) ||

@@ -214,6 +214,7 @@ int GetHLSLCoordCount(const TextureFunctionHLSL::TextureFunction &textureFunctio
         switch (textureFunction.method)
         {
             case TextureFunctionHLSL::TextureFunction::IMPLICIT:
+            case TextureFunctionHLSL::TextureFunction::GRAD:
                 return hlslCoords;
             case TextureFunctionHLSL::TextureFunction::BIAS:
             case TextureFunctionHLSL::TextureFunction::LOD:
@@ -830,6 +831,9 @@ void OutputTextureSampleFunctionReturnStatement(
                 break;
             case TextureFunctionHLSL::TextureFunction::LOD0BIAS:
                 out << "lod(" << samplerReference << ", ";
+                break;
+            case TextureFunctionHLSL::TextureFunction::GRAD:
+                out << "grad(" << samplerReference << ", ";
                 break;
             default:
                 UNREACHABLE();
