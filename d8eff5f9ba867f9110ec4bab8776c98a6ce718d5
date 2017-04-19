@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "36e9e269_52f21886",
+        "filename": "src/compiler/preprocessor/64bit-tokenizer-safety.patch",
+        "patchSetId": 3
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-19T16:24:17Z",
+      "side": 1,
+      "message": "you can leave the changes out of the .patch .l .y and generated files.",
+      "range": {
+        "startLine": 70,
+        "startChar": 21,
+        "endLine": 70,
+        "endChar": 28
+      },
+      "revId": "d8eff5f9ba867f9110ec4bab8776c98a6ce718d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1d17cd04_9fa776cf",
+        "filename": "src/tests/third_party/rapidjson/include/rapidjson/document.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 1570,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-19T16:24:17Z",
+      "side": 1,
+      "message": "you can also omit the changes from third party code.",
+      "range": {
+        "startLine": 1570,
+        "startChar": 18,
+        "endLine": 1570,
+        "endChar": 25
+      },
+      "revId": "d8eff5f9ba867f9110ec4bab8776c98a6ce718d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
