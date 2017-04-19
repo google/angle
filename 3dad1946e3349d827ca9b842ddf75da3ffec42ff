@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7a73785a_99c04276",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-19T15:01:05Z",
+      "side": 1,
+      "message": "Seemed reasonable, done.",
+      "parentUuid": "5b31a78b_2eda9c73",
+      "revId": "3dad1946e3349d827ca9b842ddf75da3ffec42ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "95f4a2a2_5021d028",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2017-02-27T13:12:15Z",
       "side": 1,
       "message": "Why are there two granularities? On the CPU side we can only do things at queue submit granularity so it seems it would be more efficient to have a std::vector\u003cInFlightQueueSubmit\u003e with In FlightQueueSubmit having a serial, a fence and a vector of command buffers.",
+      "revId": "3dad1946e3349d827ca9b842ddf75da3ffec42ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cfc1056e_8b64a4f2",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-19T15:01:05Z",
+      "side": 1,
+      "message": "You might be right about it being simpler to have one granularity, but the reason I don\u0027t like it right now is because it would involve creating and freeing a lot of std::vectors, which would trigger allocation. Maybe if we get our own block allocator in the future we can do this more efficiently, but I didn\u0027t want to code it for this CL.",
+      "parentUuid": "95f4a2a2_5021d028",
       "revId": "3dad1946e3349d827ca9b842ddf75da3ffec42ff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
