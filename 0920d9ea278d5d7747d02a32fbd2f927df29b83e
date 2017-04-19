@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "1e941b2f_1a1ddefe",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-19T14:46:10Z",
+      "side": 1,
+      "message": "maybe make a small enum CORE/COMPAT or something?",
+      "range": {
+        "startLine": 79,
+        "startChar": 4,
+        "endLine": 79,
+        "endChar": 14
+      },
+      "revId": "0920d9ea278d5d7747d02a32fbd2f927df29b83e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "82aff347_b0f64272",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.h",
         "patchSetId": 3
