@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fcf37fd3_b9049c96",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-04-19T01:26:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8fd4da05_19cc2aae",
+      "range": {
+        "startLine": 274,
+        "startChar": 0,
+        "endLine": 275,
+        "endChar": 37
+      },
+      "revId": "c2c9004dfbccf497c33d406604c8b9b128d526c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "91fe85df_edbd77ea",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 4
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "3bef7856_6ac5cb18",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4866,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-04-19T01:26:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "91fe85df_edbd77ea",
+      "range": {
+        "startLine": 4865,
+        "startChar": 0,
+        "endLine": 4866,
+        "endChar": 48
+      },
+      "revId": "c2c9004dfbccf497c33d406604c8b9b128d526c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0684f0d2_c23c4823",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 4
@@ -59,6 +107,30 @@
       "writtenOn": "2017-04-17T02:34:57Z",
       "side": 1,
       "message": "should be \u0027uniform-\u003eisOpaque()\u0027?",
+      "range": {
+        "startLine": 4891,
+        "startChar": 55,
+        "endLine": 4891,
+        "endChar": 75
+      },
+      "revId": "c2c9004dfbccf497c33d406604c8b9b128d526c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ef336fc_a5d8c9c5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4891,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-04-19T01:26:20Z",
+      "side": 1,
+      "message": "I think Opaque is not a \u0027real\u0027 type, it includes image type, sampler type, atomic type, so \"isOpaque\" is not reasonable, here will use \"!uniform-\u003eisSampler \u0026\u0026 !uniform-\u003eisImage \u0026\u0026 !uniform-\u003eisAtomicCounter\". Do you think so?\nI will correct this code until image and atomic_counter are implemented.",
+      "parentUuid": "0684f0d2_c23c4823",
       "range": {
         "startLine": 4891,
         "startChar": 55,
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "fd038198_0bdb2ff4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4917,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-04-19T01:26:20Z",
+      "side": 1,
+      "message": "same as above.",
+      "parentUuid": "d74431f2_4e4d8969",
+      "range": {
+        "startLine": 4917,
+        "startChar": 12,
+        "endLine": 4917,
+        "endChar": 32
+      },
+      "revId": "c2c9004dfbccf497c33d406604c8b9b128d526c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "383fc448_f2db81fa",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 4
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "87d86a61_2289f6e0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4953,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-04-19T01:26:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "383fc448_f2db81fa",
+      "range": {
+        "startLine": 4953,
+        "startChar": 19,
+        "endLine": 4953,
+        "endChar": 45
+      },
+      "revId": "c2c9004dfbccf497c33d406604c8b9b128d526c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9145dd4d_491ba48b",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 4
@@ -131,6 +251,24 @@
       "revId": "c2c9004dfbccf497c33d406604c8b9b128d526c7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dabc8a53_7e796b6d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1131,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-04-19T01:26:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9145dd4d_491ba48b",
+      "revId": "c2c9004dfbccf497c33d406604c8b9b128d526c7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
