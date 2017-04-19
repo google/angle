@@ -390,21 +390,21 @@ Renderer11::Renderer11(egl::Display *display)
       mScratchMemoryBuffer(ScratchMemoryBufferLifetime),
       mAnnotator(nullptr)
 {
-    mVertexDataManager = NULL;
-    mIndexDataManager  = NULL;
+    mVertexDataManager = nullptr;
+    mIndexDataManager  = nullptr;
 
-    mLineLoopIB       = NULL;
-    mTriangleFanIB    = NULL;
+    mLineLoopIB       = nullptr;
+    mTriangleFanIB    = nullptr;
     mAppliedIBChanged = false;
 
-    mBlit          = NULL;
-    mPixelTransfer = NULL;
+    mBlit          = nullptr;
+    mPixelTransfer = nullptr;
 
-    mClear = NULL;
+    mClear = nullptr;
 
-    mTrim = NULL;
+    mTrim = nullptr;
 
-    mSyncQuery = NULL;
+    mSyncQuery = nullptr;
 
     mRenderer11DeviceCaps.supportsClearView             = false;
     mRenderer11DeviceCaps.supportsConstantBufferOffsets = false;
@@ -413,20 +413,20 @@ Renderer11::Renderer11(egl::Display *display)
     mRenderer11DeviceCaps.B4G4R4A4support               = 0;
     mRenderer11DeviceCaps.B5G5R5A1support               = 0;
 
-    mD3d11Module          = NULL;
-    mDxgiModule           = NULL;
-    mDCompModule          = NULL;
+    mD3d11Module          = nullptr;
+    mDxgiModule           = nullptr;
+    mDCompModule          = nullptr;
     mCreatedWithDeviceEXT = false;
     mEGLDevice            = nullptr;
 
-    mDevice         = NULL;
-    mDeviceContext  = NULL;
-    mDeviceContext1 = NULL;
-    mDxgiAdapter    = NULL;
-    mDxgiFactory    = NULL;
+    mDevice         = nullptr;
+    mDeviceContext  = nullptr;
+    mDeviceContext1 = nullptr;
+    mDxgiAdapter    = nullptr;
+    mDxgiFactory    = nullptr;
 
-    mDriverConstantBufferVS = NULL;
-    mDriverConstantBufferPS = NULL;
+    mDriverConstantBufferVS = nullptr;
+    mDriverConstantBufferPS = nullptr;
 
     mAppliedVertexShader   = NULL;
     mAppliedGeometryShader = NULL;
@@ -562,7 +562,7 @@ egl::Error Renderer11::initialize()
 
         if (requireDXGI1_2)
         {
-            IDXGIDevice2 *dxgiDevice2 = NULL;
+            IDXGIDevice2 *dxgiDevice2 = nullptr;
             result = mDevice->QueryInterface(__uuidof(IDXGIDevice2), (void **)&dxgiDevice2);
             if (FAILED(result))
             {
@@ -583,7 +583,7 @@ egl::Error Renderer11::initialize()
         // Don't error in this case- just don't use mDeviceContext1.
         mDeviceContext1 = d3d11::DynamicCastComObject<ID3D11DeviceContext1>(mDeviceContext);
 
-        IDXGIDevice *dxgiDevice = NULL;
+        IDXGIDevice *dxgiDevice = nullptr;
         result = mDevice->QueryInterface(__uuidof(IDXGIDevice), (void **)&dxgiDevice);
 
         if (FAILED(result))
@@ -1389,7 +1389,7 @@ gl::Error Renderer11::setSamplerState(gl::SamplerType type,
         if (mForceSetPixelSamplerStates[index] ||
             memcmp(&samplerState, &mCurPixelSamplerStates[index], sizeof(gl::SamplerState)) != 0)
         {
-            ID3D11SamplerState *dxSamplerState = NULL;
+            ID3D11SamplerState *dxSamplerState = nullptr;
             ANGLE_TRY(mStateCache.getSamplerState(samplerState, &dxSamplerState));
 
             ASSERT(dxSamplerState != NULL);
@@ -1409,7 +1409,7 @@ gl::Error Renderer11::setSamplerState(gl::SamplerType type,
         if (mForceSetVertexSamplerStates[index] ||
             memcmp(&samplerState, &mCurVertexSamplerStates[index], sizeof(gl::SamplerState)) != 0)
         {
-            ID3D11SamplerState *dxSamplerState = NULL;
+            ID3D11SamplerState *dxSamplerState = nullptr;
             ANGLE_TRY(mStateCache.getSamplerState(samplerState, &dxSamplerState));
 
             ASSERT(dxSamplerState != NULL);
@@ -1433,7 +1433,7 @@ gl::Error Renderer11::setSamplerState(gl::SamplerType type,
 
 gl::Error Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *texture)
 {
-    ID3D11ShaderResourceView *textureSRV = NULL;
+    ID3D11ShaderResourceView *textureSRV = nullptr;
 
     if (texture)
     {
@@ -2175,7 +2175,7 @@ gl::Error Renderer11::drawLineLoop(const gl::ContextState &data,
         BufferD3D *storage = GetImplAs<BufferD3D>(elementArrayBuffer);
         intptr_t offset    = reinterpret_cast<intptr_t>(indices);
 
-        const uint8_t *bufferData = NULL;
+        const uint8_t *bufferData = nullptr;
         ANGLE_TRY(storage->getData(&bufferData));
 
         indices = bufferData + offset;
@@ -2211,7 +2211,7 @@ gl::Error Renderer11::drawLineLoop(const gl::ContextState &data,
         static_cast<unsigned int>(sizeof(GLuint) * mScratchIndexDataBuffer.size());
     ANGLE_TRY(mLineLoopIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_INT));
 
-    void *mappedMemory = NULL;
+    void *mappedMemory = nullptr;
     unsigned int offset;
     ANGLE_TRY(mLineLoopIB->mapBuffer(spaceNeeded, &mappedMemory, &offset));
 
@@ -2266,7 +2266,7 @@ gl::Error Renderer11::drawTriangleFan(const gl::ContextState &data,
         BufferD3D *storage = GetImplAs<BufferD3D>(elementArrayBuffer);
         intptr_t offset    = reinterpret_cast<intptr_t>(indices);
 
-        const uint8_t *bufferData = NULL;
+        const uint8_t *bufferData = nullptr;
         ANGLE_TRY(storage->getData(&bufferData));
 
         indexPointer = bufferData + offset;
@@ -2450,8 +2450,8 @@ gl::Error Renderer11::applyUniforms(const ProgramD3D &programD3D,
     ID3D11Buffer *vertexConstantBuffer = vertexUniformStorage->getConstantBuffer();
     ID3D11Buffer *pixelConstantBuffer  = fragmentUniformStorage->getConstantBuffer();
 
-    float(*mapVS)[4] = NULL;
-    float(*mapPS)[4] = NULL;
+    float(*mapVS)[4] = nullptr;
+    float(*mapPS)[4] = nullptr;
 
     if (totalRegisterCountVS > 0 && vertexUniformsDirty)
     {
@@ -2745,7 +2745,7 @@ void Renderer11::markAllStateDirty()
 
     mStateManager.invalidateEverything();
 
-    mAppliedIB       = NULL;
+    mAppliedIB       = nullptr;
     mAppliedIBFormat = DXGI_FORMAT_UNKNOWN;
     mAppliedIBOffset = 0;
 
@@ -2770,9 +2770,9 @@ void Renderer11::markAllStateDirty()
         mCurrentConstantBufferPSSize[i]   = 0;
     }
 
-    mCurrentVertexConstantBuffer   = NULL;
-    mCurrentPixelConstantBuffer    = NULL;
-    mCurrentGeometryConstantBuffer = NULL;
+    mCurrentVertexConstantBuffer   = nullptr;
+    mCurrentPixelConstantBuffer    = nullptr;
+    mCurrentGeometryConstantBuffer = nullptr;
 
     mCurrentPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
 }
@@ -2895,19 +2895,19 @@ void Renderer11::release()
     if (mD3d11Module)
     {
         FreeLibrary(mD3d11Module);
-        mD3d11Module = NULL;
+        mD3d11Module = nullptr;
     }
 
     if (mDxgiModule)
     {
         FreeLibrary(mDxgiModule);
-        mDxgiModule = NULL;
+        mDxgiModule = nullptr;
     }
 
     if (mDCompModule)
     {
         FreeLibrary(mDCompModule);
-        mDCompModule = NULL;
+        mDCompModule = nullptr;
     }
 
     mCompiler.release();
@@ -3458,7 +3458,7 @@ gl::Error Renderer11::createRenderTarget(int width,
         // The format must be either an RTV or a DSV
         ASSERT(bindRTV != bindDSV);
 
-        ID3D11Texture2D *texture = NULL;
+        ID3D11Texture2D *texture = nullptr;
         HRESULT result           = mDevice->CreateTexture2D(&desc, NULL, &texture);
         if (FAILED(result))
         {
@@ -3526,7 +3526,7 @@ gl::Error Renderer11::createRenderTarget(int width,
             dsvDesc.Texture2D.MipSlice = 0;
             dsvDesc.Flags              = 0;
 
-            ID3D11DepthStencilView *dsv = NULL;
+            ID3D11DepthStencilView *dsv = nullptr;
             result                      = mDevice->CreateDepthStencilView(texture, &dsvDesc, &dsv);
             if (FAILED(result))
             {
@@ -3552,7 +3552,7 @@ gl::Error Renderer11::createRenderTarget(int width,
                                                             : D3D11_RTV_DIMENSION_TEXTURE2DMS;
             rtvDesc.Texture2D.MipSlice = 0;
 
-            ID3D11RenderTargetView *rtv = NULL;
+            ID3D11RenderTargetView *rtv = nullptr;
             result                      = mDevice->CreateRenderTargetView(texture, &rtvDesc, &rtv);
             if (FAILED(result))
             {
@@ -3783,7 +3783,7 @@ gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog,
 
     D3D_SHADER_MACRO loopMacros[] = {{"ANGLE_ENABLE_LOOP_FLATTEN", "1"}, {0, 0}};
 
-    ID3DBlob *binary = NULL;
+    ID3DBlob *binary = nullptr;
     std::string debugInfo;
     ANGLE_TRY(mCompiler.compileToBinary(infoLog, shaderHLSL, profile, configs, loopMacros, &binary,
                                         &debugInfo));
@@ -3793,7 +3793,7 @@ gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog,
     // internal state is still OK.
     if (!binary)
     {
-        *outExectuable = NULL;
+        *outExectuable = nullptr;
         return gl::NoError();
     }
 

@@ -197,7 +197,7 @@ GLenum FramebufferD3D::getImplementationColorReadFormat() const
         return GL_NONE;
     }
 
-    RenderTargetD3D *attachmentRenderTarget = NULL;
+    RenderTargetD3D *attachmentRenderTarget = nullptr;
     gl::Error error = readAttachment->getRenderTarget(&attachmentRenderTarget);
     if (error.isError())
     {
@@ -220,7 +220,7 @@ GLenum FramebufferD3D::getImplementationColorReadType() const
         return GL_NONE;
     }
 
-    RenderTargetD3D *attachmentRenderTarget = NULL;
+    RenderTargetD3D *attachmentRenderTarget = nullptr;
     gl::Error error = readAttachment->getRenderTarget(&attachmentRenderTarget);
     if (error.isError())
     {

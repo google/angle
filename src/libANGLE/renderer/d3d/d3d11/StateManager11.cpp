@@ -89,7 +89,7 @@ bool ImageIndexConflictsWithSRV(const gl::ImageIndex &index, D3D11_SHADER_RESOUR
 // Does *not* increment the resource ref count!!
 ID3D11Resource *GetViewResource(ID3D11View *view)
 {
-    ID3D11Resource *resource = NULL;
+    ID3D11Resource *resource = nullptr;
     ASSERT(view);
     view->GetResource(&resource);
     resource->Release();
@@ -570,7 +570,7 @@ gl::Error StateManager11::setDepthStencilState(const gl::State &glState)
     ASSERT((mCurDepthStencilState.stencilMask & maxStencil) ==
            (mCurDepthStencilState.stencilBackMask & maxStencil));
 
-    ID3D11DepthStencilState *dxDepthStencilState = NULL;
+    ID3D11DepthStencilState *dxDepthStencilState = nullptr;
     gl::DepthStencilState dsStateKey             = glState.getDepthStencilState();
 
     if (disableDepth)

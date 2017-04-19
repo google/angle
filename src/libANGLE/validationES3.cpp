@@ -529,7 +529,7 @@ static bool IsValidES3CopyTexImageCombination(const InternalFormat &textureForma
     //      sizes] are consistent with the values of the source buffer's [channel sizes]. Table 3.17
     //      is used if the FRAMEBUFFER_ATTACHMENT_ENCODING is LINEAR and table 3.18 is used if the
     //      FRAMEBUFFER_ATTACHMENT_ENCODING is SRGB.
-    const InternalFormat *sourceEffectiveFormat = NULL;
+    const InternalFormat *sourceEffectiveFormat = nullptr;
     if (readBufferHandle != 0)
     {
         // Not the default framebuffer, therefore the read buffer must be a user-created texture or

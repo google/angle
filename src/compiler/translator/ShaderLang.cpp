@@ -182,7 +182,7 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     resources->MaxViewsOVR = 2;
 
     // Disable name hashing by default.
-    resources->HashFunction = NULL;
+    resources->HashFunction = nullptr;
 
     resources->ArrayIndexClampingStrategy = SH_CLAMP_WITH_CLAMP_INTRINSIC;
 

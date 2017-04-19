@@ -1176,7 +1176,7 @@ gl::Error ProgramD3D::getPixelExecutableForOutputLayout(const std::vector<GLenum
         mPixelHLSL, mPixelShaderKey, mUsesFragDepth, outputSignature);
 
     // Generate new pixel executable
-    ShaderExecutableD3D *pixelExecutable = NULL;
+    ShaderExecutableD3D *pixelExecutable = nullptr;
 
     gl::InfoLog tempInfoLog;
     gl::InfoLog *currentInfoLog = infoLog ? infoLog : &tempInfoLog;
@@ -1221,7 +1221,7 @@ gl::Error ProgramD3D::getVertexExecutableForInputLayout(const gl::InputLayout &i
         mVertexHLSL, inputLayout, mState.getAttributes());
 
     // Generate new vertex executable
-    ShaderExecutableD3D *vertexExecutable = NULL;
+    ShaderExecutableD3D *vertexExecutable = nullptr;
 
     gl::InfoLog tempInfoLog;
     gl::InfoLog *currentInfoLog = infoLog ? infoLog : &tempInfoLog;

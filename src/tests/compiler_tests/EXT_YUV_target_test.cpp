@@ -202,7 +202,7 @@ class EXTYUVTargetTest : public testing::TestWithParam<testing::tuple<const char
         sh::InitBuiltInResources(&mResources);
         mResources.EXT_YUV_target = 1;
 
-        mCompiler = NULL;
+        mCompiler = nullptr;
     }
 
     virtual void TearDown() { DestroyCompiler(); }
@@ -211,7 +211,7 @@ class EXTYUVTargetTest : public testing::TestWithParam<testing::tuple<const char
         if (mCompiler)
         {
             sh::Destruct(mCompiler);
-            mCompiler = NULL;
+            mCompiler = nullptr;
         }
     }
 

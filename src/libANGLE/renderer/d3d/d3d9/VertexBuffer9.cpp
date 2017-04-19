@@ -19,7 +19,7 @@ namespace rx
 
 VertexBuffer9::VertexBuffer9(Renderer9 *renderer) : mRenderer(renderer)
 {
-    mVertexBuffer = NULL;
+    mVertexBuffer = nullptr;
     mBufferSize = 0;
     mDynamicUsage = false;
 }

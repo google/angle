@@ -677,7 +677,7 @@ void TCompiler::clearResults()
 
     nameMap.clear();
 
-    mSourcePath     = NULL;
+    mSourcePath     = nullptr;
     mTemporaryIndex = 0;
 }
 

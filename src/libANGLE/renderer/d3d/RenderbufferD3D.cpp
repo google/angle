@@ -55,7 +55,7 @@ gl::Error RenderbufferD3D::setStorageMultisample(size_t samples, GLenum internal
                          samples, formatCaps.getMaxSamples());
     }
 
-    RenderTargetD3D *newRT = NULL;
+    RenderTargetD3D *newRT = nullptr;
     ANGLE_TRY(mRenderer->createRenderTarget(static_cast<int>(width), static_cast<int>(height),
                                             creationFormat, static_cast<GLsizei>(samples), &newRT));
 

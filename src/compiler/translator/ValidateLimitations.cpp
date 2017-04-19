@@ -338,7 +338,7 @@ bool ValidateLimitationsTraverser::validateForLoopExpr(TIntermLoop *node, int in
     TIntermBinary *binOp = unOp ? NULL : expr->getAsBinaryNode();
 
     TOperator op          = EOpNull;
-    TIntermSymbol *symbol = NULL;
+    TIntermSymbol *symbol = nullptr;
     if (unOp != NULL)
     {
         op     = unOp->getOp();

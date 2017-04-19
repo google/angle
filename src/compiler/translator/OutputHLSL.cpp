@@ -131,7 +131,7 @@ OutputHLSL::OutputHLSL(sh::GLenum shaderType,
     mInsideDiscontinuousLoop = false;
     mNestedLoopDepth         = 0;
 
-    mExcessiveLoopIndex = NULL;
+    mExcessiveLoopIndex = nullptr;
 
     mStructureHLSL       = new StructureHLSL;
     mUniformHLSL         = new UniformHLSL(mStructureHLSL, outputType, uniforms);
@@ -2317,7 +2317,7 @@ bool OutputHLSL::handleExcessiveLoop(TInfoSinkBase &out, TIntermLoop *node)
 
     // Parse loops of the form:
     // for(int index = initial; index [comparator] limit; index += increment)
-    TIntermSymbol *index = NULL;
+    TIntermSymbol *index = nullptr;
     TOperator comparator = EOpNull;
     int initial          = 0;
     int limit            = 0;
@@ -2472,7 +2472,7 @@ bool OutputHLSL::handleExcessiveLoop(TInfoSinkBase &out, TIntermLoop *node)
 
                 if (iterations <= MAX_LOOP_ITERATIONS)  // Last loop fragment
                 {
-                    mExcessiveLoopIndex = NULL;  // Stops setting the Break flag
+                    mExcessiveLoopIndex = nullptr;  // Stops setting the Break flag
                 }
 
                 // for(int index = initial; index < clampedLimit; index += increment)

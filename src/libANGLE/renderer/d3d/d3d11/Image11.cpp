@@ -114,7 +114,7 @@ gl::Error Image11::copyToStorage(TextureStorage *storage,
         ANGLE_TRY(storage11->releaseAssociatedImage(index, this));
     }
 
-    ID3D11Resource *stagingTexture       = NULL;
+    ID3D11Resource *stagingTexture       = nullptr;
     unsigned int stagingSubresourceIndex = 0;
     ANGLE_TRY(getStagingTexture(&stagingTexture, &stagingSubresourceIndex));
     ANGLE_TRY(
@@ -176,7 +176,7 @@ void Image11::disassociateStorage()
         mAssociatedStorage->disassociateImage(mAssociatedImageIndex, this);
 
         mRecoverFromStorage   = false;
-        mAssociatedStorage    = NULL;
+        mAssociatedStorage    = nullptr;
         mAssociatedImageIndex = gl::ImageIndex::MakeInvalid();
     }
 }
@@ -431,7 +431,7 @@ gl::Error Image11::copyWithoutConversion(const gl::Offset &destOffset,
         resolveDesc.CPUAccessFlags     = 0;
         resolveDesc.MiscFlags          = 0;
 
-        ID3D11Texture2D *srcTex2D = NULL;
+        ID3D11Texture2D *srcTex2D = nullptr;
         HRESULT result            = device->CreateTexture2D(&resolveDesc, NULL, &srcTex2D);
         if (FAILED(result))
         {
@@ -509,7 +509,7 @@ gl::Error Image11::createStagingTexture()
 
     if (mTarget == GL_TEXTURE_3D)
     {
-        ID3D11Texture3D *newTexture = NULL;
+        ID3D11Texture3D *newTexture = nullptr;
 
         D3D11_TEXTURE3D_DESC desc;
         desc.Width          = width;
@@ -551,7 +551,7 @@ gl::Error Image11::createStagingTexture()
     else if (mTarget == GL_TEXTURE_2D || mTarget == GL_TEXTURE_2D_ARRAY ||
              mTarget == GL_TEXTURE_CUBE_MAP)
     {
-        ID3D11Texture2D *newTexture = NULL;
+        ID3D11Texture2D *newTexture = nullptr;
 
         D3D11_TEXTURE2D_DESC desc;
         desc.Width              = width;
@@ -606,7 +606,7 @@ gl::Error Image11::map(D3D11_MAP mapType, D3D11_MAPPED_SUBRESOURCE *map)
     // We must recover from the TextureStorage if necessary, even for D3D11_MAP_WRITE.
     ANGLE_TRY(recoverFromAssociatedStorage());
 
-    ID3D11Resource *stagingTexture = NULL;
+    ID3D11Resource *stagingTexture = nullptr;
     unsigned int subresourceIndex  = 0;
     ANGLE_TRY(getStagingTexture(&stagingTexture, &subresourceIndex));
 

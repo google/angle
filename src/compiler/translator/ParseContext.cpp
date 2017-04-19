@@ -1536,7 +1536,7 @@ const TVariable *TParseContext::getNamedVariable(const TSourceLoc &location,
                                                  const TString *name,
                                                  const TSymbol *symbol)
 {
-    const TVariable *variable = NULL;
+    const TVariable *variable = nullptr;
 
     if (!symbol)
     {

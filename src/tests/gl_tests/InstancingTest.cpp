@@ -31,9 +31,9 @@ class InstancingTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        mVertexAttribDivisorANGLE = NULL;
-        mDrawArraysInstancedANGLE = NULL;
-        mDrawElementsInstancedANGLE = NULL;
+        mVertexAttribDivisorANGLE   = nullptr;
+        mDrawArraysInstancedANGLE   = nullptr;
+        mDrawElementsInstancedANGLE = nullptr;
 
         char *extensionString = (char*)glGetString(GL_EXTENSIONS);
         if (strstr(extensionString, "GL_ANGLE_instanced_arrays"))

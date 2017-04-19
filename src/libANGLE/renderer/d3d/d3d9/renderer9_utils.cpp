@@ -566,12 +566,12 @@ void GenerateCaps(IDirect3D9 *d3d9,
     extensions->maxTextureAnisotropy = static_cast<GLfloat>(deviceCaps.MaxAnisotropy);
 
     // Check occlusion query support by trying to create one
-    IDirect3DQuery9 *occlusionQuery = NULL;
+    IDirect3DQuery9 *occlusionQuery = nullptr;
     extensions->occlusionQueryBoolean = SUCCEEDED(device->CreateQuery(D3DQUERYTYPE_OCCLUSION, &occlusionQuery)) && occlusionQuery;
     SafeRelease(occlusionQuery);
 
     // Check event query support by trying to create one
-    IDirect3DQuery9 *eventQuery = NULL;
+    IDirect3DQuery9 *eventQuery = nullptr;
     extensions->fence = SUCCEEDED(device->CreateQuery(D3DQUERYTYPE_EVENT, &eventQuery)) && eventQuery;
     SafeRelease(eventQuery);
 

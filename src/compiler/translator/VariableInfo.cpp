@@ -107,7 +107,7 @@ CollectVariables::CollectVariables(std::vector<sh::Attribute> *attribs,
 void CollectVariables::visitSymbol(TIntermSymbol *symbol)
 {
     ASSERT(symbol != NULL);
-    ShaderVariable *var       = NULL;
+    ShaderVariable *var       = nullptr;
     const TString &symbolName = symbol->getSymbol();
 
     if (IsVarying(symbol->getQualifier()))

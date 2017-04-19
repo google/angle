@@ -141,7 +141,7 @@ bool ShaderVariable::findInfoByMappedName(const std::string &mappedFullName,
         }
         for (size_t ii = 0; ii < this->fields.size(); ++ii)
         {
-            const ShaderVariable *fieldVar = NULL;
+            const ShaderVariable *fieldVar = nullptr;
             std::string originalFieldName;
             bool found = fields[ii].findInfoByMappedName(remaining, &fieldVar, &originalFieldName);
             if (found)

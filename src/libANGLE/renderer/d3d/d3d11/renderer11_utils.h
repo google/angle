@@ -152,7 +152,7 @@ HRESULT SetDebugName(angle::ComPtr<T> &resource, const char *name)
 template <typename outType>
 outType* DynamicCastComObject(IUnknown* object)
 {
-    outType *outObject = NULL;
+    outType *outObject = nullptr;
     HRESULT result = object->QueryInterface(__uuidof(outType), reinterpret_cast<void**>(&outObject));
     if (SUCCEEDED(result))
     {

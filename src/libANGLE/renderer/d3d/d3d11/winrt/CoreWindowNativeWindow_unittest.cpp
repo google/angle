@@ -59,7 +59,7 @@ class MockCoreWindow : public ABI::Windows::UI::Core::ICoreWindow
     // IUnknown
     STDMETHOD(QueryInterface)(REFIID riid, void** ppvObject)
     {
-        *ppvObject = NULL;
+        *ppvObject = nullptr;
 
         if (IsEqualIID(IID_IUnknown, riid))
         {

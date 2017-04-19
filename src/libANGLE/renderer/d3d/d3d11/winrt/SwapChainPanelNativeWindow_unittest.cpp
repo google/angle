@@ -45,7 +45,7 @@ class MockSwapChainPanel : public ISwapChainPanel,
     // IUnknown
     STDMETHOD(QueryInterface)(REFIID riid, void** ppvObject)
     {
-        *ppvObject = NULL;
+        *ppvObject = nullptr;
 
         if (IsEqualIID(IID_IUnknown, riid))
         {

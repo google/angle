@@ -402,13 +402,13 @@ void DisplayWGL::terminate()
 
     mFunctionsWGL->makeCurrent(mDeviceContext, NULL);
     mFunctionsWGL->deleteContext(mWGLContext);
-    mWGLContext = NULL;
+    mWGLContext = nullptr;
 
     ReleaseDC(mWindow, mDeviceContext);
-    mDeviceContext = NULL;
+    mDeviceContext = nullptr;
 
     DestroyWindow(mWindow);
-    mWindow = NULL;
+    mWindow = nullptr;
 
     UnregisterClassA(reinterpret_cast<const char*>(mWindowClass), NULL);
     mWindowClass = NULL;

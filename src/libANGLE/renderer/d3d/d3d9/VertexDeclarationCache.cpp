@@ -21,7 +21,7 @@ VertexDeclarationCache::VertexDeclarationCache() : mMaxLru(0)
 {
     for (int i = 0; i < NUM_VERTEX_DECL_CACHE_ENTRIES; i++)
     {
-        mVertexDeclCache[i].vertexDeclaration = NULL;
+        mVertexDeclCache[i].vertexDeclaration = nullptr;
         mVertexDeclCache[i].lruCount = 0;
     }
 
@@ -30,7 +30,7 @@ VertexDeclarationCache::VertexDeclarationCache() : mMaxLru(0)
         mAppliedVBs[i].serial = 0;
     }
 
-    mLastSetVDecl = NULL;
+    mLastSetVDecl      = nullptr;
     mInstancingEnabled = true;
 }
 
@@ -249,7 +249,7 @@ void VertexDeclarationCache::markStateDirty()
         mAppliedVBs[i].serial = 0;
     }
 
-    mLastSetVDecl = NULL;
+    mLastSetVDecl      = nullptr;
     mInstancingEnabled = true;   // Forces it to be disabled when not used
 }
 

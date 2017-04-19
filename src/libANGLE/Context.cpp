@@ -639,7 +639,7 @@ GLuint Context::createQuery()
 {
     GLuint handle = mQueryHandleAllocator.allocate();
 
-    mQueryMap[handle] = NULL;
+    mQueryMap[handle] = nullptr;
 
     return handle;
 }

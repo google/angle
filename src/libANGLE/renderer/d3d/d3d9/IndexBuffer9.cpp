@@ -14,7 +14,7 @@ namespace rx
 
 IndexBuffer9::IndexBuffer9(Renderer9 *const renderer) : mRenderer(renderer)
 {
-    mIndexBuffer = NULL;
+    mIndexBuffer = nullptr;
     mBufferSize = 0;
     mIndexType = 0;
     mDynamic = false;
@@ -74,7 +74,7 @@ gl::Error IndexBuffer9::mapBuffer(unsigned int offset, unsigned int size, void**
 
     DWORD lockFlags = mDynamic ? D3DLOCK_NOOVERWRITE : 0;
 
-    void *mapPtr = NULL;
+    void *mapPtr   = nullptr;
     HRESULT result = mIndexBuffer->Lock(offset, size, &mapPtr, lockFlags);
     if (FAILED(result))
     {

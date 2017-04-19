@@ -56,7 +56,7 @@ void SwapChain9::release()
 
     if (mNativeWindow->getNativeWindow())
     {
-        mShareHandle = NULL;
+        mShareHandle = nullptr;
     }
 }
 
@@ -116,7 +116,7 @@ EGLint SwapChain9::reset(int backbufferWidth, int backbufferHeight, EGLint swapI
     }
     else
     {
-        HANDLE *pShareHandle = NULL;
+        HANDLE *pShareHandle = nullptr;
         if (!mNativeWindow->getNativeWindow() && mRenderer->getShareHandleSupport())
         {
             pShareHandle = &mShareHandle;
@@ -433,7 +433,7 @@ void SwapChain9::recreate()
     HRESULT result = mSwapChain->GetPresentParameters(&presentParameters);
     ASSERT(SUCCEEDED(result));
 
-    IDirect3DSwapChain9* newSwapChain = NULL;
+    IDirect3DSwapChain9 *newSwapChain = nullptr;
     result = device->CreateAdditionalSwapChain(&presentParameters, &newSwapChain);
     if (FAILED(result))
     {

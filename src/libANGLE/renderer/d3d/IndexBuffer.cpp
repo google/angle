@@ -79,7 +79,7 @@ gl::Error IndexBufferInterface::mapBuffer(unsigned int size, void **outMappedMem
     {
         if (outMappedMemory)
         {
-            *outMappedMemory = NULL;
+            *outMappedMemory = nullptr;
         }
         return error;
     }

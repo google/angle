@@ -45,7 +45,7 @@ gl::Error GetUnpackPointer(const gl::PixelUnpackState &unpack, const uint8_t *pi
         // This functionality should be moved into renderer and the getData method of BufferImpl removed.
         BufferD3D *bufferD3D = GetImplAs<BufferD3D>(pixelBuffer);
         ASSERT(bufferD3D);
-        const uint8_t *bufferData = NULL;
+        const uint8_t *bufferData = nullptr;
         ANGLE_TRY(bufferD3D->getData(&bufferData));
         *pointerOut = bufferData + offset;
     }
@@ -192,7 +192,7 @@ gl::Error TextureD3D::setImageImpl(const gl::ImageIndex &index,
 
     // We no longer need the "GLenum format" parameter to TexImage to determine what data format "pixels" contains.
     // From our image internal format we know how many channels to expect, and "type" gives the format of pixel's components.
-    const uint8_t *pixelData = NULL;
+    const uint8_t *pixelData = nullptr;
     ANGLE_TRY(GetUnpackPointer(unpack, pixels, layerOffset, &pixelData));
 
     if (pixelData != nullptr)
@@ -217,7 +217,7 @@ gl::Error TextureD3D::subImage(const gl::ImageIndex &index, const gl::Box &area,
                                const gl::PixelUnpackState &unpack, const uint8_t *pixels, ptrdiff_t layerOffset)
 {
     // CPU readback & copy where direct GPU copy is not supported
-    const uint8_t *pixelData = NULL;
+    const uint8_t *pixelData = nullptr;
     ANGLE_TRY(GetUnpackPointer(unpack, pixels, layerOffset, &pixelData));
 
     if (pixelData != NULL)
@@ -253,7 +253,7 @@ gl::Error TextureD3D::setCompressedImageImpl(const gl::ImageIndex &index,
 
     // We no longer need the "GLenum format" parameter to TexImage to determine what data format "pixels" contains.
     // From our image internal format we know how many channels to expect, and "type" gives the format of pixel's components.
-    const uint8_t *pixelData = NULL;
+    const uint8_t *pixelData = nullptr;
     ANGLE_TRY(GetUnpackPointer(unpack, pixels, layerOffset, &pixelData));
 
     if (pixelData != NULL)
@@ -271,7 +271,7 @@ gl::Error TextureD3D::subImageCompressed(const gl::ImageIndex &index, const gl::
                                          const gl::PixelUnpackState &unpack, const uint8_t *pixels,
                                          ptrdiff_t layerOffset)
 {
-    const uint8_t *pixelData = NULL;
+    const uint8_t *pixelData = nullptr;
     ANGLE_TRY(GetUnpackPointer(unpack, pixels, layerOffset, &pixelData));
 
     if (pixelData != NULL)
@@ -371,7 +371,7 @@ gl::Error TextureD3D::generateMipmap(ContextImpl *contextImpl)
     if (mTexStorage && mRenderer->getWorkarounds().zeroMaxLodWorkaround)
     {
         // Switch to using the mipmapped texture.
-        TextureStorage *textureStorage = NULL;
+        TextureStorage *textureStorage = nullptr;
         ANGLE_TRY(getNativeTexture(&textureStorage));
         ANGLE_TRY(textureStorage->useLevelZeroWorkaroundTexture(false));
     }
@@ -868,7 +868,7 @@ gl::Error TextureD3D_2D::setImage(ContextImpl *contextImpl,
     if (isFastUnpackable(unpack, internalFormatInfo.sizedInternalFormat) && isLevelComplete(level))
     {
         // Will try to create RT storage if it does not exist
-        RenderTargetD3D *destRenderTarget = NULL;
+        RenderTargetD3D *destRenderTarget = nullptr;
         ANGLE_TRY(getRenderTarget(index, &destRenderTarget));
 
         gl::Box destArea(0, 0, 0, getWidth(level), getHeight(level), 1);
@@ -905,7 +905,7 @@ gl::Error TextureD3D_2D::setSubImage(ContextImpl *contextImpl,
     gl::ImageIndex index = gl::ImageIndex::Make2D(level);
     if (isFastUnpackable(unpack, getInternalFormat(level)) && isLevelComplete(level))
     {
-        RenderTargetD3D *renderTarget = NULL;
+        RenderTargetD3D *renderTarget = nullptr;
         ANGLE_TRY(getRenderTarget(index, &renderTarget));
         ASSERT(!mImageArray[level]->isDirty());
 
@@ -1315,7 +1315,7 @@ gl::Error TextureD3D_2D::initializeStorage(bool renderTarget)
 
     bool createRenderTarget = (renderTarget || IsRenderTargetUsage(mState.getUsage()));
 
-    TextureStorage *storage = NULL;
+    TextureStorage *storage = nullptr;
     ANGLE_TRY(createCompleteStorage(createRenderTarget, &storage));
 
     gl::Error error = setCompleteTexStorage(storage);
@@ -1839,7 +1839,7 @@ gl::Error TextureD3D_Cube::initializeStorage(bool renderTarget)
 
     bool createRenderTarget = (renderTarget || IsRenderTargetUsage(mState.getUsage()));
 
-    TextureStorage *storage = NULL;
+    TextureStorage *storage = nullptr;
     ANGLE_TRY(createCompleteStorage(createRenderTarget, &storage));
 
     gl::Error error = setCompleteTexStorage(storage);
@@ -2161,7 +2161,7 @@ gl::Error TextureD3D_3D::setImage(ContextImpl *contextImpl,
         isLevelComplete(level))
     {
         // Will try to create RT storage if it does not exist
-        RenderTargetD3D *destRenderTarget = NULL;
+        RenderTargetD3D *destRenderTarget = nullptr;
         ANGLE_TRY(getRenderTarget(index, &destRenderTarget));
 
         gl::Box destArea(0, 0, 0, getWidth(level), getHeight(level), getDepth(level));
@@ -2200,7 +2200,7 @@ gl::Error TextureD3D_3D::setSubImage(ContextImpl *contextImpl,
     // Attempt a fast gpu copy of the pixel data to the surface if the app bound an unpack buffer
     if (isFastUnpackable(unpack, getInternalFormat(level)) && isLevelComplete(level))
     {
-        RenderTargetD3D *destRenderTarget = NULL;
+        RenderTargetD3D *destRenderTarget = nullptr;
         ANGLE_TRY(getRenderTarget(index, &destRenderTarget));
         ASSERT(!mImageArray[level]->isDirty());
 
@@ -2394,7 +2394,7 @@ gl::Error TextureD3D_3D::initializeStorage(bool renderTarget)
 
     bool createRenderTarget = (renderTarget || IsRenderTargetUsage(mState.getUsage()));
 
-    TextureStorage *storage = NULL;
+    TextureStorage *storage = nullptr;
     ANGLE_TRY(createCompleteStorage(createRenderTarget, &storage));
 
     gl::Error error = setCompleteTexStorage(storage);
@@ -2595,7 +2595,7 @@ TextureD3D_2DArray::TextureD3D_2DArray(const gl::TextureState &state, RendererD3
     for (int level = 0; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++level)
     {
         mLayerCounts[level] = 0;
-        mImageArray[level] = NULL;
+        mImageArray[level]  = nullptr;
     }
 }
 
@@ -3093,7 +3093,7 @@ void TextureD3D_2DArray::deleteImages()
             delete mImageArray[level][layer];
         }
         delete[] mImageArray[level];
-        mImageArray[level] = NULL;
+        mImageArray[level]  = nullptr;
         mLayerCounts[level] = 0;
     }
 }

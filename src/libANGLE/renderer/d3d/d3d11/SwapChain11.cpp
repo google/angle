@@ -126,7 +126,7 @@ void SwapChain11::release()
 
     if (!mAppCreatedShareHandle)
     {
-        mShareHandle = NULL;
+        mShareHandle = nullptr;
     }
 }
 
@@ -259,7 +259,7 @@ EGLint SwapChain11::resetOffscreenColorBuffer(int backbufferWidth, int backbuffe
         // EGL_ANGLE_surface_d3d_texture_2d_share_handle requires that we store a share handle for the client
         if (useSharedResource)
         {
-            IDXGIResource *offscreenTextureResource = NULL;
+            IDXGIResource *offscreenTextureResource = nullptr;
             result = mOffscreenTexture->QueryInterface(__uuidof(IDXGIResource), (void**)&offscreenTextureResource);
 
             // Fall back to no share handle on failure
@@ -274,7 +274,7 @@ EGLint SwapChain11::resetOffscreenColorBuffer(int backbufferWidth, int backbuffe
 
                 if (FAILED(result))
                 {
-                    mShareHandle = NULL;
+                    mShareHandle = nullptr;
                     ERR() << "Could not get offscreen texture shared handle, " << gl::FmtHR(result);
                 }
             }

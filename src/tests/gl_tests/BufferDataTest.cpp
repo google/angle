@@ -148,7 +148,7 @@ TEST_P(BufferDataTest, DISABLED_HugeSetDataShouldNotCrash)
 
     GLsizei allocSize = std::numeric_limits<GLsizei>::max() >> 2;
 
-    uint8_t *data = NULL;
+    uint8_t *data = nullptr;
     while (data == NULL && allocSize >= 4)
     {
         data = new (std::nothrow) uint8_t[allocSize];

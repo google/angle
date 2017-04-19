@@ -129,7 +129,7 @@ class EXTBlendFuncExtendedTest
         mResources.EXT_draw_buffers = 1;
         mResources.NV_draw_buffers  = 2;
 
-        mCompiler = NULL;
+        mCompiler = nullptr;
     }
 
     virtual void TearDown() { DestroyCompiler(); }
@@ -138,7 +138,7 @@ class EXTBlendFuncExtendedTest
         if (mCompiler)
         {
             sh::Destruct(mCompiler);
-            mCompiler = NULL;
+            mCompiler = nullptr;
         }
     }
 

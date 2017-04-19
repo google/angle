@@ -21,10 +21,10 @@ namespace rx
 
 VertexBuffer11::VertexBuffer11(Renderer11 *const renderer) : mRenderer(renderer)
 {
-    mBuffer             = NULL;
+    mBuffer             = nullptr;
     mBufferSize         = 0;
     mDynamicUsage       = false;
-    mMappedResourceData = NULL;
+    mMappedResourceData = nullptr;
 }
 
 VertexBuffer11::~VertexBuffer11()
@@ -103,7 +103,7 @@ void VertexBuffer11::hintUnmapResource()
         ID3D11DeviceContext *dxContext = mRenderer->getDeviceContext();
         dxContext->Unmap(mBuffer, 0);
 
-        mMappedResourceData = NULL;
+        mMappedResourceData = nullptr;
     }
 }
 

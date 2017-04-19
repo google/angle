@@ -292,7 +292,7 @@ gl::Error RenderStateCache::getRasterizerState(const gl::RasterizerState &raster
             rasterDesc.DepthBias = 0;
         }
 
-        ID3D11RasterizerState *dx11RasterizerState = NULL;
+        ID3D11RasterizerState *dx11RasterizerState = nullptr;
         HRESULT result = mDevice->CreateRasterizerState(&rasterDesc, &dx11RasterizerState);
         if (FAILED(result) || !dx11RasterizerState)
         {
@@ -372,7 +372,7 @@ gl::Error RenderStateCache::getDepthStencilState(const gl::DepthStencilState &gl
     dsDesc.BackFace.StencilPassOp       = ConvertStencilOp(glState.stencilBackPassDepthPass);
     dsDesc.BackFace.StencilFunc         = ConvertComparison(glState.stencilBackFunc);
 
-    ID3D11DepthStencilState *dx11DepthStencilState = NULL;
+    ID3D11DepthStencilState *dx11DepthStencilState = nullptr;
     HRESULT result = mDevice->CreateDepthStencilState(&dsDesc, &dx11DepthStencilState);
     if (FAILED(result) || !dx11DepthStencilState)
     {
@@ -464,7 +464,7 @@ gl::Error RenderStateCache::getSamplerState(const gl::SamplerState &samplerState
             samplerDesc.MaxLOD = FLT_MAX;
         }
 
-        ID3D11SamplerState *dx11SamplerState = NULL;
+        ID3D11SamplerState *dx11SamplerState = nullptr;
         HRESULT result = mDevice->CreateSamplerState(&samplerDesc, &dx11SamplerState);
         if (FAILED(result) || !dx11SamplerState)
         {

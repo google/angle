@@ -105,7 +105,7 @@ gl::Error Blit9::initialize()
         return gl::Error(GL_OUT_OF_MEMORY, "Failed to create internal blit vertex shader, result: 0x%X.", result);
     }
 
-    void *lockPtr = NULL;
+    void *lockPtr = nullptr;
     result = mQuadVertexBuffer->Lock(0, 0, &lockPtr, 0);
 
     if (FAILED(result) || lockPtr == NULL)
@@ -203,7 +203,7 @@ gl::Error Blit9::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
 {
     ANGLE_TRY(initialize());
 
-    IDirect3DBaseTexture9 *texture = NULL;
+    IDirect3DBaseTexture9 *texture = nullptr;
     ANGLE_TRY(copySurfaceToTexture(source, getSurfaceRect(source), &texture));
 
     IDirect3DDevice9 *device = mRenderer->getDevice();
@@ -246,7 +246,7 @@ gl::Error Blit9::copy2D(const gl::Framebuffer *framebuffer, const RECT &sourceRe
     IDirect3DSurface9 *source = renderTarget9->getSurface();
     ASSERT(source);
 
-    IDirect3DSurface9 *destSurface = NULL;
+    IDirect3DSurface9 *destSurface = nullptr;
     TextureStorage9 *storage9      = GetAs<TextureStorage9>(storage);
     gl::Error error = storage9->getSurfaceLevel(GL_TEXTURE_2D, level, true, &destSurface);
     if (error.isError())
@@ -287,7 +287,7 @@ gl::Error Blit9::copyCube(const gl::Framebuffer *framebuffer, const RECT &source
     IDirect3DSurface9 *source = renderTarget9->getSurface();
     ASSERT(source);
 
-    IDirect3DSurface9 *destSurface = NULL;
+    IDirect3DSurface9 *destSurface = nullptr;
     TextureStorage9 *storage9      = GetAs<TextureStorage9>(storage);
     error = storage9->getSurfaceLevel(target, level, true, &destSurface);
     if (error.isError())

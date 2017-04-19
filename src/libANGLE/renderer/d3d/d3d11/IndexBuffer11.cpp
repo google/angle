@@ -16,7 +16,7 @@ namespace rx
 
 IndexBuffer11::IndexBuffer11(Renderer11 *const renderer) : mRenderer(renderer)
 {
-    mBuffer = NULL;
+    mBuffer       = nullptr;
     mBufferSize = 0;
     mDynamicUsage = false;
 }

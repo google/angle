@@ -781,7 +781,7 @@ bool ANGLETest::DestroyTestWindow()
     {
         mOSWindow->destroy();
         delete mOSWindow;
-        mOSWindow = NULL;
+        mOSWindow = nullptr;
     }
 
     mGLESLibrary.reset(nullptr);

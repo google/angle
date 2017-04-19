@@ -24,8 +24,8 @@ namespace rx
 
 Image9::Image9(Renderer9 *renderer)
 {
-    mSurface = NULL;
-    mRenderer = NULL;
+    mSurface  = nullptr;
+    mRenderer = nullptr;
 
     mD3DPool = D3DPOOL_SYSTEMMEM;
     mD3DFormat = D3DFMT_UNKNOWN;
@@ -97,14 +97,14 @@ gl::Error Image9::generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 
 
 gl::Error Image9::generateMipmap(Image9 *dest, Image9 *source)
 {
-    IDirect3DSurface9 *sourceSurface = NULL;
+    IDirect3DSurface9 *sourceSurface = nullptr;
     gl::Error error = source->getSurface(&sourceSurface);
     if (error.isError())
     {
         return error;
     }
 
-    IDirect3DSurface9 *destSurface = NULL;
+    IDirect3DSurface9 *destSurface = nullptr;
     error = dest->getSurface(&destSurface);
     if (error.isError())
     {
@@ -205,8 +205,8 @@ gl::Error Image9::createSurface()
         return gl::NoError();
     }
 
-    IDirect3DTexture9 *newTexture = NULL;
-    IDirect3DSurface9 *newSurface = NULL;
+    IDirect3DTexture9 *newTexture = nullptr;
+    IDirect3DSurface9 *newSurface = nullptr;
     const D3DPOOL poolToUse = D3DPOOL_SYSTEMMEM;
     const D3DFORMAT d3dFormat = getD3DFormat();
 
@@ -329,7 +329,7 @@ gl::Error Image9::getSurface(IDirect3DSurface9 **outSurface)
 
 gl::Error Image9::setManagedSurface2D(TextureStorage *storage, int level)
 {
-    IDirect3DSurface9 *surface = NULL;
+    IDirect3DSurface9 *surface = nullptr;
     TextureStorage9 *storage9  = GetAs<TextureStorage9>(storage);
     gl::Error error = storage9->getSurfaceLevel(GL_TEXTURE_2D, level, false, &surface);
     if (error.isError())
@@ -341,7 +341,7 @@ gl::Error Image9::setManagedSurface2D(TextureStorage *storage, int level)
 
 gl::Error Image9::setManagedSurfaceCube(TextureStorage *storage, int face, int level)
 {
-    IDirect3DSurface9 *surface = NULL;
+    IDirect3DSurface9 *surface = nullptr;
     TextureStorage9 *storage9 = GetAs<TextureStorage9>(storage);
     gl::Error error =
         storage9->getSurfaceLevel(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level, false, &surface);
@@ -387,7 +387,7 @@ gl::Error Image9::copyToStorage(TextureStorage *storage, const gl::ImageIndex &i
 
     TextureStorage9 *storage9 = GetAs<TextureStorage9>(storage);
 
-    IDirect3DSurface9 *destSurface = NULL;
+    IDirect3DSurface9 *destSurface = nullptr;
 
     if (index.type == GL_TEXTURE_2D)
     {
@@ -417,7 +417,7 @@ gl::Error Image9::copyToSurface(IDirect3DSurface9 *destSurface, const gl::Box &a
     ASSERT(area.width > 0 && area.height > 0 && area.depth == 1);
     ASSERT(destSurface);
 
-    IDirect3DSurface9 *sourceSurface = NULL;
+    IDirect3DSurface9 *sourceSurface = nullptr;
     gl::Error error = getSurface(&sourceSurface);
     if (error.isError())
     {
@@ -574,7 +574,7 @@ gl::Error Image9::copyFromRTInternal(const gl::Offset &destOffset,
 
     IDirect3DDevice9 *device = mRenderer->getDevice();
 
-    IDirect3DSurface9 *renderTargetData = NULL;
+    IDirect3DSurface9 *renderTargetData = nullptr;
     D3DSURFACE_DESC description;
     surface->GetDesc(&description);
 
@@ -808,7 +808,7 @@ gl::Error Image9::copyFromFramebuffer(const gl::Offset &destOffset,
     const gl::FramebufferAttachment *srcAttachment = source->getReadColorbuffer();
     ASSERT(srcAttachment);
 
-    RenderTargetD3D *renderTarget = NULL;
+    RenderTargetD3D *renderTarget = nullptr;
     gl::Error error = srcAttachment->getRenderTarget(&renderTarget);
     if (error.isError())
     {

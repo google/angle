@@ -244,7 +244,7 @@ void State::reset(const Context *context)
     {
         mProgram->release(context);
     }
-    mProgram = NULL;
+    mProgram = nullptr;
 
     mTransformFeedback.set(NULL);
 
@@ -277,7 +277,7 @@ void State::reset(const Context *context)
         buf.set(nullptr);
     }
 
-    mProgram = NULL;
+    mProgram = nullptr;
 
     angle::Matrix<GLfloat>::setToIdentity(mPathMatrixProj);
     angle::Matrix<GLfloat>::setToIdentity(mPathMatrixMV);
@@ -1039,7 +1039,7 @@ bool State::removeVertexArrayBinding(GLuint vertexArray)
 {
     if (mVertexArray->id() == vertexArray)
     {
-        mVertexArray = NULL;
+        mVertexArray = nullptr;
         mDirtyBits.set(DIRTY_BIT_VERTEX_ARRAY_BINDING);
         mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
         return true;

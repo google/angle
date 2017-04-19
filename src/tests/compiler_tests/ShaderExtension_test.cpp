@@ -53,7 +53,7 @@ class ShaderExtensionTest : public testing::Test
     virtual void SetUp()
     {
         sh::InitBuiltInResources(&mResources);
-        mCompiler = NULL;
+        mCompiler = nullptr;
     }
 
     virtual void TearDown()
@@ -66,7 +66,7 @@ class ShaderExtensionTest : public testing::Test
         if (mCompiler)
         {
             sh::Destruct(mCompiler);
-            mCompiler = NULL;
+            mCompiler = nullptr;
         }
     }
 
