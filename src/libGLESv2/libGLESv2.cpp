@@ -6,7 +6,7 @@
 
 // libGLESv2.cpp: Implements the exported OpenGL ES 2.0 functions.
 
-#include "libGLESv2/entry_points_gles_2_0.h"
+#include "libGLESv2/entry_points_gles_2_0_autogen.h"
 #include "libGLESv2/entry_points_gles_2_0_ext.h"
 #include "libGLESv2/entry_points_gles_3_0.h"
 #include "libGLESv2/entry_points_gles_3_1.h"

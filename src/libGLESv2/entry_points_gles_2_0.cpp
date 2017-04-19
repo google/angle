@@ -6,7 +6,7 @@
 
 // entry_points_gles_2_0.cpp : Implements the GLES 2.0 entry points.
 
-#include "libGLESv2/entry_points_gles_2_0.h"
+#include "libGLESv2/entry_points_gles_2_0_autogen.h"
 
 #include "libGLESv2/global_state.h"
 
