@@ -102,6 +102,24 @@
     },
     {
       "key": {
+        "uuid": "038c9471_765a7850",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 803,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-19T19:53:58Z",
+      "side": 1,
+      "message": "I was worried about that too but I think it should be another patch (when I remove the Format struct, probably)",
+      "parentUuid": "e1f39e11_0a8f4c83",
+      "revId": "67d0872711cbd0b9d0c201f9c5ae038b3976cf54",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f2ef154e_d8e8afe4",
         "filename": "src/libANGLE/formatutils.h",
         "patchSetId": 15
@@ -122,6 +140,30 @@
       "revId": "67d0872711cbd0b9d0c201f9c5ae038b3976cf54",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a155faaa_0f08e286",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-19T19:53:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f2ef154e_d8e8afe4",
+      "range": {
+        "startLine": 126,
+        "startChar": 0,
+        "endLine": 126,
+        "endChar": 81
+      },
+      "revId": "67d0872711cbd0b9d0c201f9c5ae038b3976cf54",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
