@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "31be3420_7ca06c47",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2073,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-20T20:27:43Z",
+      "side": 1,
+      "message": "do you have a reference for why this is blickSize % size \u003d\u003d 0 instead of blockSize \u003c size ?",
+      "range": {
+        "startLine": 2073,
+        "startChar": 57,
+        "endLine": 2073,
+        "endChar": 80
+      },
+      "revId": "12495318ce26dd33b984e731057ecfd5aba4b452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3aa4c20b_60ba33e4",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-20T20:27:43Z",
+      "side": 1,
+      "message": "nit: need an error message here and line 549",
+      "revId": "12495318ce26dd33b984e731057ecfd5aba4b452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c26f80a4_c7f06ea0",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-20T20:27:43Z",
+      "side": 1,
+      "message": "ditto for error message.",
+      "revId": "12495318ce26dd33b984e731057ecfd5aba4b452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8cba89ab_614f71be",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1151,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-20T20:27:43Z",
+      "side": 1,
+      "message": "nit: can we have a small explanation of these tests?",
+      "revId": "12495318ce26dd33b984e731057ecfd5aba4b452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
