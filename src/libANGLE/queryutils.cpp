@@ -764,12 +764,12 @@ void QueryVertexAttribiv(const VertexAttribute &attrib,
     QueryVertexAttribBase(attrib, binding, currentValueData.FloatValues, pname, params);
 }
 
-void QueryVertexAttribPointerv(const VertexAttribute &attrib, GLenum pname, GLvoid **pointer)
+void QueryVertexAttribPointerv(const VertexAttribute &attrib, GLenum pname, void **pointer)
 {
     switch (pname)
     {
         case GL_VERTEX_ATTRIB_ARRAY_POINTER:
-            *pointer = const_cast<GLvoid *>(attrib.pointer);
+            *pointer = const_cast<void *>(attrib.pointer);
             break;
 
         default:

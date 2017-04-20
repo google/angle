@@ -39,7 +39,7 @@ class RendererD3D;
 struct SourceIndexData
 {
     BufferD3D *srcBuffer;
-    const GLvoid *srcIndices;
+    const void *srcIndices;
     unsigned int srcCount;
     GLenum srcIndexType;
     bool srcIndicesChanged;
@@ -72,12 +72,12 @@ class IndexDataManager : angle::NonCopyable
     gl::Error prepareIndexData(GLenum srcType,
                                GLsizei count,
                                gl::Buffer *glBuffer,
-                               const GLvoid *indices,
+                               const void *indices,
                                TranslatedIndexData *translated,
                                bool primitiveRestartFixedIndexEnabled);
 
   private:
-    gl::Error streamIndexData(const GLvoid *data,
+    gl::Error streamIndexData(const void *data,
                               unsigned int count,
                               GLenum srcType,
                               GLenum dstType,

@@ -638,9 +638,9 @@ gl::Error StateManagerGL::setDrawArraysState(const gl::ContextState &data,
 gl::Error StateManagerGL::setDrawElementsState(const gl::ContextState &data,
                                                GLsizei count,
                                                GLenum type,
-                                               const GLvoid *indices,
+                                               const void *indices,
                                                GLsizei instanceCount,
-                                               const GLvoid **outIndices)
+                                               const void **outIndices)
 {
     const gl::State &state = data.getState();
 

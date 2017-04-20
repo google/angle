@@ -70,13 +70,20 @@ ANGLE_EXPORT void GL_APIENTRY DrawElementsInstancedANGLE(GLenum mode, GLsizei co
 ANGLE_EXPORT void GL_APIENTRY VertexAttribDivisorANGLE(GLuint index, GLuint divisor);
 
 // GL_OES_get_program_binary
-ANGLE_EXPORT void GL_APIENTRY GetProgramBinaryOES(GLuint program, GLsizei bufSize, GLsizei *length, GLenum *binaryFormat, GLvoid *binary);
-ANGLE_EXPORT void GL_APIENTRY ProgramBinaryOES(GLuint program, GLenum binaryFormat, const GLvoid *binary, GLint length);
+ANGLE_EXPORT void GL_APIENTRY GetProgramBinaryOES(GLuint program,
+                                                  GLsizei bufSize,
+                                                  GLsizei *length,
+                                                  GLenum *binaryFormat,
+                                                  void *binary);
+ANGLE_EXPORT void GL_APIENTRY ProgramBinaryOES(GLuint program,
+                                               GLenum binaryFormat,
+                                               const void *binary,
+                                               GLint length);
 
 // GL_OES_mapbuffer
 ANGLE_EXPORT void *GL_APIENTRY MapBufferOES(GLenum target, GLenum access);
 ANGLE_EXPORT GLboolean GL_APIENTRY UnmapBufferOES(GLenum target);
-ANGLE_EXPORT void GL_APIENTRY GetBufferPointervOES(GLenum target, GLenum pname, GLvoid **params);
+ANGLE_EXPORT void GL_APIENTRY GetBufferPointervOES(GLenum target, GLenum pname, void **params);
 
 // GL_EXT_map_buffer_range
 ANGLE_EXPORT void *GL_APIENTRY MapBufferRangeEXT(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access);

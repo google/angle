@@ -107,7 +107,7 @@ class VertexAttributeTest : public ANGLETest
             glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
             glBufferData(GL_ARRAY_BUFFER, dataSize, test.inputData, GL_STATIC_DRAW);
             glVertexAttribPointer(mTestAttrib, typeSize, test.type, test.normalized, 0,
-                                  reinterpret_cast<GLvoid *>(test.bufferOffset));
+                                  reinterpret_cast<void *>(test.bufferOffset));
             glBindBuffer(GL_ARRAY_BUFFER, 0);
         }
         else
@@ -749,7 +749,7 @@ class VertexAttributeTestES31 : public VertexAttributeTestES3
         glBufferData(GL_ARRAY_BUFFER, inputSize, nullptr, GL_STATIC_DRAW);
         glBufferSubData(GL_ARRAY_BUFFER, 0, inputSize, inputData.data());
         glVertexAttribPointer(mTestAttrib, 1, GL_FLOAT, GL_FALSE, inputStride,
-                              reinterpret_cast<const GLvoid *>(inputOffset));
+                              reinterpret_cast<const void *>(inputOffset));
         glEnableVertexAttribArray(mTestAttrib);
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);

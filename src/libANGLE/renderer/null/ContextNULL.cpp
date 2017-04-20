@@ -108,7 +108,7 @@ gl::Error ContextNULL::drawArraysInstanced(GLenum mode,
 gl::Error ContextNULL::drawElements(GLenum mode,
                                     GLsizei count,
                                     GLenum type,
-                                    const GLvoid *indices,
+                                    const void *indices,
                                     const gl::IndexRange &indexRange)
 {
     return gl::NoError();
@@ -117,7 +117,7 @@ gl::Error ContextNULL::drawElements(GLenum mode,
 gl::Error ContextNULL::drawElementsInstanced(GLenum mode,
                                              GLsizei count,
                                              GLenum type,
-                                             const GLvoid *indices,
+                                             const void *indices,
                                              GLsizei instances,
                                              const gl::IndexRange &indexRange)
 {
@@ -129,18 +129,18 @@ gl::Error ContextNULL::drawRangeElements(GLenum mode,
                                          GLuint end,
                                          GLsizei count,
                                          GLenum type,
-                                         const GLvoid *indices,
+                                         const void *indices,
                                          const gl::IndexRange &indexRange)
 {
     return gl::NoError();
 }
 
-gl::Error ContextNULL::drawArraysIndirect(GLenum mode, const GLvoid *indirect)
+gl::Error ContextNULL::drawArraysIndirect(GLenum mode, const void *indirect)
 {
     return gl::NoError();
 }
 
-gl::Error ContextNULL::drawElementsIndirect(GLenum mode, GLenum type, const GLvoid *indirect)
+gl::Error ContextNULL::drawElementsIndirect(GLenum mode, GLenum type, const void *indirect)
 {
     return gl::NoError();
 }

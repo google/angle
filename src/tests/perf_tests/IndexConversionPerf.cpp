@@ -158,10 +158,8 @@ void IndexConversionPerfTest::drawConversion()
 
     for (unsigned int it = 0; it < params.iterations; it++)
     {
-        glDrawElements(GL_TRIANGLES,
-                       static_cast<GLsizei>(params.numIndexTris * 3 - 1),
-                       GL_UNSIGNED_SHORT,
-                       reinterpret_cast<GLvoid*>(0));
+        glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(params.numIndexTris * 3 - 1),
+                       GL_UNSIGNED_SHORT, reinterpret_cast<void *>(0));
     }
 
     ASSERT_GL_NO_ERROR();
@@ -182,7 +180,7 @@ void IndexConversionPerfTest::drawIndexRange()
     for (unsigned int it = 0; it < params.iterations; it++)
     {
         glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(indexCount), GL_UNSIGNED_SHORT,
-                       reinterpret_cast<GLvoid *>(offset));
+                       reinterpret_cast<void *>(offset));
     }
 
     ASSERT_GL_NO_ERROR();

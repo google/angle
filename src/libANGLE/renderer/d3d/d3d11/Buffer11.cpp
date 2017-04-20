@@ -452,7 +452,7 @@ gl::Error Buffer11::copySubData(ContextImpl *context,
     return gl::NoError();
 }
 
-gl::Error Buffer11::map(ContextImpl *context, GLenum access, GLvoid **mapPtr)
+gl::Error Buffer11::map(ContextImpl *context, GLenum access, void **mapPtr)
 {
     // GL_OES_mapbuffer uses an enum instead of a bitfield for it's access, convert to a bitfield
     // and call mapRange.
@@ -464,7 +464,7 @@ gl::Error Buffer11::mapRange(ContextImpl *context,
                              size_t offset,
                              size_t length,
                              GLbitfield access,
-                             GLvoid **mapPtr)
+                             void **mapPtr)
 {
     ASSERT(!mMappedStorage);
 
@@ -500,7 +500,7 @@ gl::Error Buffer11::mapRange(ContextImpl *context,
     ANGLE_TRY(mMappedStorage->map(offset, length, access, &mappedBuffer));
     ASSERT(mappedBuffer);
 
-    *mapPtr = static_cast<GLvoid *>(mappedBuffer);
+    *mapPtr = static_cast<void *>(mappedBuffer);
     return gl::NoError();
 }
 

@@ -95,7 +95,7 @@ TEST_P(PBOExtensionTest, PBOWithOtherTarget)
         glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
         glBindBuffer(GL_ARRAY_BUFFER, mPBO);
 
-        GLvoid *mappedPtr = glMapBufferRangeEXT(GL_ARRAY_BUFFER, 0, 32, GL_MAP_READ_BIT);
+        void *mappedPtr        = glMapBufferRangeEXT(GL_ARRAY_BUFFER, 0, 32, GL_MAP_READ_BIT);
         unsigned char *dataPtr = static_cast<unsigned char *>(mappedPtr);
         EXPECT_GL_NO_ERROR();
 
@@ -128,8 +128,8 @@ TEST_P(PBOExtensionTest, PBOWithExistingData)
         EXPECT_GL_NO_ERROR();
 
         // Read 16x16 region from green backbuffer to PBO at offset 16
-        glReadPixels(0, 0, 16, 16, GL_RGBA, GL_UNSIGNED_BYTE, reinterpret_cast<GLvoid*>(16));
-        GLvoid * mappedPtr = glMapBufferRangeEXT(GL_PIXEL_PACK_BUFFER, 0, 32, GL_MAP_READ_BIT);
+        glReadPixels(0, 0, 16, 16, GL_RGBA, GL_UNSIGNED_BYTE, reinterpret_cast<void *>(16));
+        void *mappedPtr        = glMapBufferRangeEXT(GL_PIXEL_PACK_BUFFER, 0, 32, GL_MAP_READ_BIT);
         unsigned char *dataPtr = static_cast<unsigned char *>(mappedPtr);
         EXPECT_GL_NO_ERROR();
 

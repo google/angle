@@ -249,7 +249,7 @@ gl::Error FramebufferVk::readPixels(ContextImpl *context,
                                     const gl::Rectangle &area,
                                     GLenum format,
                                     GLenum type,
-                                    GLvoid *pixels) const
+                                    void *pixels) const
 {
     const auto &glState         = context->getGLState();
     const auto *readFramebuffer = glState.getReadFramebuffer();

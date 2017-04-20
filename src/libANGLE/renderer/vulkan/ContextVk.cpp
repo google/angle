@@ -338,7 +338,7 @@ gl::Error ContextVk::drawArraysInstanced(GLenum mode,
 gl::Error ContextVk::drawElements(GLenum mode,
                                   GLsizei count,
                                   GLenum type,
-                                  const GLvoid *indices,
+                                  const void *indices,
                                   const gl::IndexRange &indexRange)
 {
     UNIMPLEMENTED();
@@ -348,7 +348,7 @@ gl::Error ContextVk::drawElements(GLenum mode,
 gl::Error ContextVk::drawElementsInstanced(GLenum mode,
                                            GLsizei count,
                                            GLenum type,
-                                           const GLvoid *indices,
+                                           const void *indices,
                                            GLsizei instances,
                                            const gl::IndexRange &indexRange)
 {
@@ -361,7 +361,7 @@ gl::Error ContextVk::drawRangeElements(GLenum mode,
                                        GLuint end,
                                        GLsizei count,
                                        GLenum type,
-                                       const GLvoid *indices,
+                                       const void *indices,
                                        const gl::IndexRange &indexRange)
 {
     return gl::NoError();
@@ -384,13 +384,13 @@ vk::Error ContextVk::submitCommands(vk::CommandBuffer *commandBuffer)
     return vk::NoError();
 }
 
-gl::Error ContextVk::drawArraysIndirect(GLenum mode, const GLvoid *indirect)
+gl::Error ContextVk::drawArraysIndirect(GLenum mode, const void *indirect)
 {
     UNIMPLEMENTED();
     return gl::InternalError() << "DrawArraysIndirect hasn't been implemented for vulkan backend.";
 }
 
-gl::Error ContextVk::drawElementsIndirect(GLenum mode, GLenum type, const GLvoid *indirect)
+gl::Error ContextVk::drawElementsIndirect(GLenum mode, GLenum type, const void *indirect)
 {
     UNIMPLEMENTED();
     return gl::InternalError()

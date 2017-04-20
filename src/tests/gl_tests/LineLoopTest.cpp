@@ -67,7 +67,7 @@ class LineLoopTest : public ANGLETest
         ANGLETest::TearDown();
     }
 
-    void runTest(GLenum indexType, GLuint indexBuffer, const GLvoid *indexPtr)
+    void runTest(GLenum indexType, GLuint indexBuffer, const void *indexPtr)
     {
         glClear(GL_COLOR_BUFFER_BIT);
 

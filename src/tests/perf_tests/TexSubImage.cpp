@@ -236,7 +236,8 @@ void TexSubImageBenchmark::drawBenchmark()
     // Load the vertex position
     glVertexAttribPointer(mPositionLoc, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), 0);
     // Load the texture coordinate
-    glVertexAttribPointer(mTexCoordLoc, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+    glVertexAttribPointer(mTexCoordLoc, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat),
+                          reinterpret_cast<void *>(3 * sizeof(GLfloat)));
 
     glEnableVertexAttribArray(mPositionLoc);
     glEnableVertexAttribArray(mTexCoordLoc);

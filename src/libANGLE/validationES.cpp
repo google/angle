@@ -235,7 +235,7 @@ bool ValidateReadPixelsBase(ValidationContext *context,
                             GLsizei *length,
                             GLsizei *columns,
                             GLsizei *rows,
-                            GLvoid *pixels)
+                            void *pixels)
 {
     if (length != nullptr)
     {
@@ -2228,7 +2228,7 @@ bool ValidImageDataSize(ValidationContext *context,
                         GLsizei depth,
                         GLenum internalFormat,
                         GLenum type,
-                        const GLvoid *pixels,
+                        const void *pixels,
                         GLsizei imageSize)
 {
     gl::Buffer *pixelUnpackBuffer = context->getGLState().getTargetBuffer(GL_PIXEL_UNPACK_BUFFER);
@@ -2316,7 +2316,7 @@ bool ValidateWebGLVertexAttribPointer(ValidationContext *context,
                                       GLenum type,
                                       GLboolean normalized,
                                       GLsizei stride,
-                                      const GLvoid *ptr,
+                                      const void *ptr,
                                       bool pureInteger)
 {
     ASSERT(context->getExtensions().webglCompatibility);
@@ -2786,7 +2786,7 @@ bool ValidateReadPixels(ValidationContext *context,
                         GLsizei height,
                         GLenum format,
                         GLenum type,
-                        GLvoid *pixels)
+                        void *pixels)
 {
     return ValidateReadPixelsBase(context, x, y, width, height, format, type, -1, nullptr, nullptr,
                                   nullptr, pixels);
@@ -2803,7 +2803,7 @@ bool ValidateReadPixelsRobustANGLE(ValidationContext *context,
                                    GLsizei *length,
                                    GLsizei *columns,
                                    GLsizei *rows,
-                                   GLvoid *pixels)
+                                   void *pixels)
 {
     if (!ValidateRobustEntryPoint(context, bufSize))
     {
@@ -2832,7 +2832,7 @@ bool ValidateReadnPixelsEXT(Context *context,
                             GLenum format,
                             GLenum type,
                             GLsizei bufSize,
-                            GLvoid *pixels)
+                            void *pixels)
 {
     if (bufSize < 0)
     {
@@ -2855,7 +2855,7 @@ bool ValidateReadnPixelsRobustANGLE(ValidationContext *context,
                                     GLsizei *length,
                                     GLsizei *columns,
                                     GLsizei *rows,
-                                    GLvoid *data)
+                                    void *data)
 {
     if (!ValidateRobustEntryPoint(context, bufSize))
     {
@@ -3958,7 +3958,7 @@ bool ValidateDrawElementsCommon(ValidationContext *context,
                                 GLenum mode,
                                 GLsizei count,
                                 GLenum type,
-                                const GLvoid *indices,
+                                const void *indices,
                                 GLsizei primcount)
 {
     if (!ValidateDrawElementsBase(context, type))
@@ -4099,7 +4099,7 @@ bool ValidateDrawElementsInstancedCommon(ValidationContext *context,
                                          GLenum mode,
                                          GLsizei count,
                                          GLenum type,
-                                         const GLvoid *indices,
+                                         const void *indices,
                                          GLsizei primcount)
 {
     if (context->getExtensions().webglCompatibility && !ValidateDrawInstancedANGLEAndWebGL(context))
@@ -4114,7 +4114,7 @@ bool ValidateDrawElementsInstancedANGLE(Context *context,
                                         GLenum mode,
                                         GLsizei count,
                                         GLenum type,
-                                        const GLvoid *indices,
+                                        const void *indices,
                                         GLsizei primcount)
 {
     if (!ValidateDrawInstancedANGLEAndWebGL(context))

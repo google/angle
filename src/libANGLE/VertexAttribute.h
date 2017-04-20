@@ -46,7 +46,7 @@ struct VertexAttribute final : angle::NonCopyable
     bool normalized;
     bool pureInteger;
 
-    const GLvoid *pointer;
+    const void *pointer;
     GLintptr relativeOffset;
 
     GLuint vertexAttribArrayStride;  // ONLY for queries of VERTEX_ATTRIB_ARRAY_STRIDE

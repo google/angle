@@ -60,7 +60,7 @@ unsigned int RendererD3D::GetBlendSampleMask(const gl::ContextState &data, int s
     unsigned int mask = 0;
     if (glState.isSampleCoverageEnabled())
     {
-        GLclampf coverageValue = glState.getSampleCoverageValue();
+        GLfloat coverageValue = glState.getSampleCoverageValue();
         if (coverageValue != 0)
         {
             float threshold = 0.5f;

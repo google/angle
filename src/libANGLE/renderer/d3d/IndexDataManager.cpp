@@ -80,7 +80,7 @@ void ConvertIndices(GLenum sourceType,
 }
 
 gl::Error StreamInIndexBuffer(IndexBufferInterface *buffer,
-                              const GLvoid *data,
+                              const void *data,
                               unsigned int count,
                               GLenum srcType,
                               GLenum dstType,
@@ -194,7 +194,7 @@ bool IndexDataManager::isStreamingIndexData(bool primitiveRestartWorkaround,
 gl::Error IndexDataManager::prepareIndexData(GLenum srcType,
                                              GLsizei count,
                                              gl::Buffer *glBuffer,
-                                             const GLvoid *indices,
+                                             const void *indices,
                                              TranslatedIndexData *translated,
                                              bool primitiveRestartFixedIndexEnabled)
 {
@@ -325,7 +325,7 @@ gl::Error IndexDataManager::prepareIndexData(GLenum srcType,
     return gl::NoError();
 }
 
-gl::Error IndexDataManager::streamIndexData(const GLvoid *data,
+gl::Error IndexDataManager::streamIndexData(const void *data,
                                             unsigned int count,
                                             GLenum srcType,
                                             GLenum dstType,

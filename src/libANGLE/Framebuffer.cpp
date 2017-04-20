@@ -965,7 +965,7 @@ Error Framebuffer::readPixels(rx::ContextImpl *context,
                               const Rectangle &area,
                               GLenum format,
                               GLenum type,
-                              GLvoid *pixels) const
+                              void *pixels) const
 {
     ANGLE_TRY(mImpl->readPixels(context, area, format, type, pixels));
 

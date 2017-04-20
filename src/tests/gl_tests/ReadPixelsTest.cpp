@@ -121,7 +121,7 @@ TEST_P(ReadPixelsPBOTest, Basic)
     glBindBuffer(GL_PIXEL_PACK_BUFFER, mPBO);
     glReadPixels(0, 0, 16, 16, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 
-    GLvoid *mappedPtr  = glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, 32, GL_MAP_READ_BIT);
+    void *mappedPtr    = glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, 32, GL_MAP_READ_BIT);
     GLColor *dataColor = static_cast<GLColor *>(mappedPtr);
     EXPECT_GL_NO_ERROR();
 
@@ -173,7 +173,7 @@ TEST_P(ReadPixelsPBOTest, ArrayBufferTarget)
     glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
     glBindBuffer(GL_ARRAY_BUFFER, mPBO);
 
-    GLvoid *mappedPtr = glMapBufferRange(GL_ARRAY_BUFFER, 0, 32, GL_MAP_READ_BIT);
+    void *mappedPtr    = glMapBufferRange(GL_ARRAY_BUFFER, 0, 32, GL_MAP_READ_BIT);
     GLColor *dataColor = static_cast<GLColor *>(mappedPtr);
     EXPECT_GL_NO_ERROR();
 
@@ -208,8 +208,8 @@ TEST_P(ReadPixelsPBOTest, ExistingDataPreserved)
     EXPECT_GL_NO_ERROR();
 
     // Read 16x16 region from green backbuffer to PBO at offset 16
-    glReadPixels(0, 0, 16, 16, GL_RGBA, GL_UNSIGNED_BYTE, reinterpret_cast<GLvoid*>(16));
-    GLvoid *mappedPtr  = glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, 32, GL_MAP_READ_BIT);
+    glReadPixels(0, 0, 16, 16, GL_RGBA, GL_UNSIGNED_BYTE, reinterpret_cast<void *>(16));
+    void *mappedPtr    = glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, 32, GL_MAP_READ_BIT);
     GLColor *dataColor = static_cast<GLColor *>(mappedPtr);
     EXPECT_GL_NO_ERROR();
 
@@ -239,7 +239,7 @@ TEST_P(ReadPixelsPBOTest, SubDataPreservesContents)
     glBindBuffer(GL_ARRAY_BUFFER, mPBO);
     glBufferSubData(GL_ARRAY_BUFFER, 0, 4, data);
 
-    GLvoid *mappedPtr  = glMapBufferRange(GL_ARRAY_BUFFER, 0, 32, GL_MAP_READ_BIT);
+    void *mappedPtr    = glMapBufferRange(GL_ARRAY_BUFFER, 0, 32, GL_MAP_READ_BIT);
     GLColor *dataColor = static_cast<GLColor *>(mappedPtr);
     EXPECT_GL_NO_ERROR();
 
@@ -272,7 +272,7 @@ TEST_P(ReadPixelsPBOTest, SubDataOffsetPreservesContents)
     glBindBuffer(GL_ARRAY_BUFFER, mPBO);
     glBufferSubData(GL_ARRAY_BUFFER, 16, 4, data);
 
-    GLvoid *mappedPtr  = glMapBufferRange(GL_ARRAY_BUFFER, 0, 32, GL_MAP_READ_BIT);
+    void *mappedPtr    = glMapBufferRange(GL_ARRAY_BUFFER, 0, 32, GL_MAP_READ_BIT);
     GLColor *dataColor = static_cast<GLColor *>(mappedPtr);
     EXPECT_GL_NO_ERROR();
 

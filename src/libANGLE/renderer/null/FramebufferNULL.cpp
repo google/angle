@@ -109,7 +109,7 @@ gl::Error FramebufferNULL::readPixels(ContextImpl *context,
                                       const gl::Rectangle &area,
                                       GLenum format,
                                       GLenum type,
-                                      GLvoid *pixels) const
+                                      void *pixels) const
 {
     return gl::NoError();
 }

@@ -16,12 +16,54 @@ namespace gl
 {
 
 ANGLE_EXPORT void GL_APIENTRY ReadBuffer(GLenum mode);
-ANGLE_EXPORT void GL_APIENTRY DrawRangeElements(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, const GLvoid* indices);
-ANGLE_EXPORT void GL_APIENTRY TexImage3D(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type, const GLvoid* pixels);
-ANGLE_EXPORT void GL_APIENTRY TexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const GLvoid* pixels);
+ANGLE_EXPORT void GL_APIENTRY DrawRangeElements(GLenum mode,
+                                                GLuint start,
+                                                GLuint end,
+                                                GLsizei count,
+                                                GLenum type,
+                                                const void *indices);
+ANGLE_EXPORT void GL_APIENTRY TexImage3D(GLenum target,
+                                         GLint level,
+                                         GLint internalformat,
+                                         GLsizei width,
+                                         GLsizei height,
+                                         GLsizei depth,
+                                         GLint border,
+                                         GLenum format,
+                                         GLenum type,
+                                         const void *pixels);
+ANGLE_EXPORT void GL_APIENTRY TexSubImage3D(GLenum target,
+                                            GLint level,
+                                            GLint xoffset,
+                                            GLint yoffset,
+                                            GLint zoffset,
+                                            GLsizei width,
+                                            GLsizei height,
+                                            GLsizei depth,
+                                            GLenum format,
+                                            GLenum type,
+                                            const void *pixels);
 ANGLE_EXPORT void GL_APIENTRY CopyTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height);
-ANGLE_EXPORT void GL_APIENTRY CompressedTexImage3D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLsizei imageSize, const GLvoid* data);
-ANGLE_EXPORT void GL_APIENTRY CompressedTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const GLvoid* data);
+ANGLE_EXPORT void GL_APIENTRY CompressedTexImage3D(GLenum target,
+                                                   GLint level,
+                                                   GLenum internalformat,
+                                                   GLsizei width,
+                                                   GLsizei height,
+                                                   GLsizei depth,
+                                                   GLint border,
+                                                   GLsizei imageSize,
+                                                   const void *data);
+ANGLE_EXPORT void GL_APIENTRY CompressedTexSubImage3D(GLenum target,
+                                                      GLint level,
+                                                      GLint xoffset,
+                                                      GLint yoffset,
+                                                      GLint zoffset,
+                                                      GLsizei width,
+                                                      GLsizei height,
+                                                      GLsizei depth,
+                                                      GLenum format,
+                                                      GLsizei imageSize,
+                                                      const void *data);
 ANGLE_EXPORT void GL_APIENTRY GenQueries(GLsizei n, GLuint* ids);
 ANGLE_EXPORT void GL_APIENTRY DeleteQueries(GLsizei n, const GLuint* ids);
 ANGLE_EXPORT GLboolean GL_APIENTRY IsQuery(GLuint id);
@@ -30,7 +72,7 @@ ANGLE_EXPORT void GL_APIENTRY EndQuery(GLenum target);
 ANGLE_EXPORT void GL_APIENTRY GetQueryiv(GLenum target, GLenum pname, GLint* params);
 ANGLE_EXPORT void GL_APIENTRY GetQueryObjectuiv(GLuint id, GLenum pname, GLuint* params);
 ANGLE_EXPORT GLboolean GL_APIENTRY UnmapBuffer(GLenum target);
-ANGLE_EXPORT void GL_APIENTRY GetBufferPointerv(GLenum target, GLenum pname, GLvoid** params);
+ANGLE_EXPORT void GL_APIENTRY GetBufferPointerv(GLenum target, GLenum pname, void **params);
 ANGLE_EXPORT void GL_APIENTRY DrawBuffers(GLsizei n, const GLenum* bufs);
 ANGLE_EXPORT void GL_APIENTRY UniformMatrix2x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value);
 ANGLE_EXPORT void GL_APIENTRY UniformMatrix3x2fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat* value);
@@ -41,7 +83,10 @@ ANGLE_EXPORT void GL_APIENTRY UniformMatrix4x3fv(GLint location, GLsizei count, 
 ANGLE_EXPORT void GL_APIENTRY BlitFramebuffer(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter);
 ANGLE_EXPORT void GL_APIENTRY RenderbufferStorageMultisample(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height);
 ANGLE_EXPORT void GL_APIENTRY FramebufferTextureLayer(GLenum target, GLenum attachment, GLuint texture, GLint level, GLint layer);
-ANGLE_EXPORT GLvoid* GL_APIENTRY MapBufferRange(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access);
+ANGLE_EXPORT void *GL_APIENTRY MapBufferRange(GLenum target,
+                                              GLintptr offset,
+                                              GLsizeiptr length,
+                                              GLbitfield access);
 ANGLE_EXPORT void GL_APIENTRY FlushMappedBufferRange(GLenum target, GLintptr offset, GLsizeiptr length);
 ANGLE_EXPORT void GL_APIENTRY BindVertexArray(GLuint array);
 ANGLE_EXPORT void GL_APIENTRY DeleteVertexArrays(GLsizei n, const GLuint* arrays);
@@ -54,7 +99,8 @@ ANGLE_EXPORT void GL_APIENTRY BindBufferRange(GLenum target, GLuint index, GLuin
 ANGLE_EXPORT void GL_APIENTRY BindBufferBase(GLenum target, GLuint index, GLuint buffer);
 ANGLE_EXPORT void GL_APIENTRY TransformFeedbackVaryings(GLuint program, GLsizei count, const GLchar* const* varyings, GLenum bufferMode);
 ANGLE_EXPORT void GL_APIENTRY GetTransformFeedbackVarying(GLuint program, GLuint index, GLsizei bufSize, GLsizei* length, GLsizei* size, GLenum* type, GLchar* name);
-ANGLE_EXPORT void GL_APIENTRY VertexAttribIPointer(GLuint index, GLint size, GLenum type, GLsizei stride, const GLvoid* pointer);
+ANGLE_EXPORT void GL_APIENTRY
+VertexAttribIPointer(GLuint index, GLint size, GLenum type, GLsizei stride, const void *pointer);
 ANGLE_EXPORT void GL_APIENTRY GetVertexAttribIiv(GLuint index, GLenum pname, GLint* params);
 ANGLE_EXPORT void GL_APIENTRY GetVertexAttribIuiv(GLuint index, GLenum pname, GLuint* params);
 ANGLE_EXPORT void GL_APIENTRY VertexAttribI4i(GLuint index, GLint x, GLint y, GLint z, GLint w);
@@ -84,7 +130,11 @@ ANGLE_EXPORT void GL_APIENTRY GetActiveUniformBlockiv(GLuint program, GLuint uni
 ANGLE_EXPORT void GL_APIENTRY GetActiveUniformBlockName(GLuint program, GLuint uniformBlockIndex, GLsizei bufSize, GLsizei* length, GLchar* uniformBlockName);
 ANGLE_EXPORT void GL_APIENTRY UniformBlockBinding(GLuint program, GLuint uniformBlockIndex, GLuint uniformBlockBinding);
 ANGLE_EXPORT void GL_APIENTRY DrawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei instanceCount);
-ANGLE_EXPORT void GL_APIENTRY DrawElementsInstanced(GLenum mode, GLsizei count, GLenum type, const GLvoid* indices, GLsizei instanceCount);
+ANGLE_EXPORT void GL_APIENTRY DrawElementsInstanced(GLenum mode,
+                                                    GLsizei count,
+                                                    GLenum type,
+                                                    const void *indices,
+                                                    GLsizei instanceCount);
 ANGLE_EXPORT GLsync GL_APIENTRY FenceSync_(GLenum condition, GLbitfield flags);
 ANGLE_EXPORT GLboolean GL_APIENTRY IsSync(GLsync sync);
 ANGLE_EXPORT void GL_APIENTRY DeleteSync(GLsync sync);
@@ -111,8 +161,15 @@ ANGLE_EXPORT void GL_APIENTRY GenTransformFeedbacks(GLsizei n, GLuint* ids);
 ANGLE_EXPORT GLboolean GL_APIENTRY IsTransformFeedback(GLuint id);
 ANGLE_EXPORT void GL_APIENTRY PauseTransformFeedback(void);
 ANGLE_EXPORT void GL_APIENTRY ResumeTransformFeedback(void);
-ANGLE_EXPORT void GL_APIENTRY GetProgramBinary(GLuint program, GLsizei bufSize, GLsizei* length, GLenum* binaryFormat, GLvoid* binary);
-ANGLE_EXPORT void GL_APIENTRY ProgramBinary(GLuint program, GLenum binaryFormat, const GLvoid* binary, GLsizei length);
+ANGLE_EXPORT void GL_APIENTRY GetProgramBinary(GLuint program,
+                                               GLsizei bufSize,
+                                               GLsizei *length,
+                                               GLenum *binaryFormat,
+                                               void *binary);
+ANGLE_EXPORT void GL_APIENTRY ProgramBinary(GLuint program,
+                                            GLenum binaryFormat,
+                                            const void *binary,
+                                            GLsizei length);
 ANGLE_EXPORT void GL_APIENTRY ProgramParameteri(GLuint program, GLenum pname, GLint value);
 ANGLE_EXPORT void GL_APIENTRY InvalidateFramebuffer(GLenum target, GLsizei numAttachments, const GLenum* attachments);
 ANGLE_EXPORT void GL_APIENTRY InvalidateSubFramebuffer(GLenum target, GLsizei numAttachments, const GLenum* attachments, GLint x, GLint y, GLsizei width, GLsizei height);

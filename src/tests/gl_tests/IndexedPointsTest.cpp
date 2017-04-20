@@ -156,7 +156,7 @@ class IndexedPointsTest : public ANGLETest
             GLint vertexColorLocation = glGetAttribLocation(program, "color");
             glVertexAttribPointer(vertexColorLocation, 3, GL_FLOAT, GL_FALSE,
                                   static_cast<const GLsizei>(VertexWithColorSize),
-                                  (GLvoid *)((sizeof(float) * 2)));
+                                  (void *)((sizeof(float) * 2)));
             glEnableVertexAttribArray(vertexColorLocation);
         }
         else

@@ -97,9 +97,9 @@ class MockBufferD3D : public rx::BufferD3D
     MOCK_METHOD5(setSubData, gl::Error(rx::ContextImpl *, GLenum, const void *, size_t, size_t));
     MOCK_METHOD5(copySubData,
                  gl::Error(rx::ContextImpl *context, BufferImpl *, GLintptr, GLintptr, GLsizeiptr));
-    MOCK_METHOD3(map, gl::Error(rx::ContextImpl *context, GLenum, GLvoid **));
+    MOCK_METHOD3(map, gl::Error(rx::ContextImpl *context, GLenum, void **));
     MOCK_METHOD5(mapRange,
-                 gl::Error(rx::ContextImpl *context, size_t, size_t, GLbitfield, GLvoid **));
+                 gl::Error(rx::ContextImpl *context, size_t, size_t, GLbitfield, void **));
     MOCK_METHOD2(unmap, gl::Error(rx::ContextImpl *context, GLboolean *));
 
     // BufferD3D

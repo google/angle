@@ -119,7 +119,7 @@ gl::Error BufferVk::copySubData(ContextImpl *context,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error BufferVk::map(ContextImpl *context, GLenum access, GLvoid **mapPtr)
+gl::Error BufferVk::map(ContextImpl *context, GLenum access, void **mapPtr)
 {
     ASSERT(mBuffer.getHandle() != VK_NULL_HANDLE);
     ASSERT(mBuffer.getMemory().getHandle() != VK_NULL_HANDLE);
@@ -136,7 +136,7 @@ gl::Error BufferVk::mapRange(ContextImpl *context,
                              size_t offset,
                              size_t length,
                              GLbitfield access,
-                             GLvoid **mapPtr)
+                             void **mapPtr)
 {
     ASSERT(mBuffer.getHandle() != VK_NULL_HANDLE);
     ASSERT(mBuffer.getMemory().getHandle() != VK_NULL_HANDLE);

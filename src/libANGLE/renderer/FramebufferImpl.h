@@ -63,7 +63,7 @@ class FramebufferImpl : angle::NonCopyable
                                  const gl::Rectangle &area,
                                  GLenum format,
                                  GLenum type,
-                                 GLvoid *pixels) const = 0;
+                                 void *pixels) const = 0;
 
     virtual gl::Error blit(ContextImpl *context,
                            const gl::Rectangle &sourceArea,

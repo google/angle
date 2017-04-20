@@ -41,12 +41,12 @@ class ContextVk : public ContextImpl, public ResourceVk
     gl::Error drawElements(GLenum mode,
                            GLsizei count,
                            GLenum type,
-                           const GLvoid *indices,
+                           const void *indices,
                            const gl::IndexRange &indexRange) override;
     gl::Error drawElementsInstanced(GLenum mode,
                                     GLsizei count,
                                     GLenum type,
-                                    const GLvoid *indices,
+                                    const void *indices,
                                     GLsizei instances,
                                     const gl::IndexRange &indexRange) override;
     gl::Error drawRangeElements(GLenum mode,
@@ -54,10 +54,10 @@ class ContextVk : public ContextImpl, public ResourceVk
                                 GLuint end,
                                 GLsizei count,
                                 GLenum type,
-                                const GLvoid *indices,
+                                const void *indices,
                                 const gl::IndexRange &indexRange) override;
-    gl::Error drawArraysIndirect(GLenum mode, const GLvoid *indirect) override;
-    gl::Error drawElementsIndirect(GLenum mode, GLenum type, const GLvoid *indirect) override;
+    gl::Error drawArraysIndirect(GLenum mode, const void *indirect) override;
+    gl::Error drawElementsIndirect(GLenum mode, GLenum type, const void *indirect) override;
 
     // Device loss
     GLenum getResetStatus() override;

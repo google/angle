@@ -68,7 +68,7 @@ class FramebufferGL : public FramebufferImpl
                          const gl::Rectangle &area,
                          GLenum format,
                          GLenum type,
-                         GLvoid *pixels) const override;
+                         void *pixels) const override;
 
     gl::Error blit(ContextImpl *context,
                    const gl::Rectangle &sourceArea,
@@ -98,13 +98,13 @@ class FramebufferGL : public FramebufferImpl
                                            GLenum format,
                                            GLenum type,
                                            const gl::PixelPackState &pack,
-                                           GLvoid *pixels) const;
+                                           void *pixels) const;
 
     gl::Error readPixelsPaddingWorkaround(const gl::Rectangle &area,
                                           GLenum format,
                                           GLenum type,
                                           const gl::PixelPackState &pack,
-                                          GLvoid *pixels) const;
+                                          void *pixels) const;
 
     const FunctionsGL *mFunctions;
     StateManagerGL *mStateManager;

@@ -91,10 +91,10 @@ gl::Error VertexArrayGL::syncDrawArraysState(const gl::AttributesMask &activeAtt
 gl::Error VertexArrayGL::syncDrawElementsState(const gl::AttributesMask &activeAttributesMask,
                                                GLsizei count,
                                                GLenum type,
-                                               const GLvoid *indices,
+                                               const void *indices,
                                                GLsizei instanceCount,
                                                bool primitiveRestartEnabled,
-                                               const GLvoid **outIndices) const
+                                               const void **outIndices) const
 {
     return syncDrawState(activeAttributesMask, 0, count, type, indices, instanceCount,
                          primitiveRestartEnabled, outIndices);
@@ -118,10 +118,10 @@ gl::Error VertexArrayGL::syncDrawState(const gl::AttributesMask &activeAttribute
                                        GLint first,
                                        GLsizei count,
                                        GLenum type,
-                                       const GLvoid *indices,
+                                       const void *indices,
                                        GLsizei instanceCount,
                                        bool primitiveRestartEnabled,
-                                       const GLvoid **outIndices) const
+                                       const void **outIndices) const
 {
     mStateManager->bindVertexArray(mVertexArrayID, getAppliedElementArrayBufferID());
 
@@ -162,11 +162,11 @@ gl::Error VertexArrayGL::syncDrawState(const gl::AttributesMask &activeAttribute
 
 gl::Error VertexArrayGL::syncIndexData(GLsizei count,
                                        GLenum type,
-                                       const GLvoid *indices,
+                                       const void *indices,
                                        bool primitiveRestartEnabled,
                                        bool attributesNeedStreaming,
                                        IndexRange *outIndexRange,
-                                       const GLvoid **outIndices) const
+                                       const void **outIndices) const
 {
     ASSERT(outIndices);
 
@@ -371,17 +371,15 @@ gl::Error VertexArrayGL::streamAttributes(const gl::AttributesMask &activeAttrib
             if (attrib.pureInteger)
             {
                 ASSERT(!attrib.normalized);
-                mFunctions->vertexAttribIPointer(
-                    static_cast<GLuint>(idx), attrib.size, attrib.type,
-                    static_cast<GLsizei>(destStride),
-                    reinterpret_cast<const GLvoid *>(vertexStartOffset));
+                mFunctions->vertexAttribIPointer(static_cast<GLuint>(idx), attrib.size, attrib.type,
+                                                 static_cast<GLsizei>(destStride),
+                                                 reinterpret_cast<const void *>(vertexStartOffset));
             }
             else
             {
-                mFunctions->vertexAttribPointer(
-                    static_cast<GLuint>(idx), attrib.size, attrib.type, attrib.normalized,
-                    static_cast<GLsizei>(destStride),
-                    reinterpret_cast<const GLvoid *>(vertexStartOffset));
+                mFunctions->vertexAttribPointer(static_cast<GLuint>(idx), attrib.size, attrib.type,
+                                                attrib.normalized, static_cast<GLsizei>(destStride),
+                                                reinterpret_cast<const void *>(vertexStartOffset));
             }
 
             curBufferOffset += destStride * streamedVertexCount;
@@ -489,7 +487,7 @@ void VertexArrayGL::updateAttribPointer(size_t attribIndex)
     ASSERT(arrayBuffer != nullptr);
     const BufferGL *arrayBufferGL = GetImplAs<BufferGL>(arrayBuffer);
     mStateManager->bindBuffer(GL_ARRAY_BUFFER, arrayBufferGL->getBufferID());
-    const GLvoid *inputPointer =
+    const void *inputPointer =
         reinterpret_cast<const uint8_t *>(binding.offset + attrib.relativeOffset);
 
     if (attrib.pureInteger)

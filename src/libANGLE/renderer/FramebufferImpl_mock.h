@@ -36,7 +36,7 @@ class MockFramebufferImpl : public rx::FramebufferImpl
     MOCK_CONST_METHOD0(getImplementationColorReadFormat, GLenum());
     MOCK_CONST_METHOD0(getImplementationColorReadType, GLenum());
     MOCK_CONST_METHOD5(readPixels,
-                       gl::Error(ContextImpl *, const gl::Rectangle &, GLenum, GLenum, GLvoid *));
+                       gl::Error(ContextImpl *, const gl::Rectangle &, GLenum, GLenum, void *));
 
     MOCK_CONST_METHOD2(getSamplePosition, gl::Error(size_t, GLfloat *));
 

@@ -406,7 +406,7 @@ TEST_P(TransformFeedbackTest, VertexOnly)
 
     glUseProgram(0);
 
-    GLvoid *mappedBuffer =
+    void *mappedBuffer =
         glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, sizeof(float) * 6, GL_MAP_READ_BIT);
     ASSERT_NE(nullptr, mappedBuffer);
 
@@ -765,7 +765,7 @@ TEST_P(TransformFeedbackTest, PackingBug)
     glUseProgram(0);
     ASSERT_GL_NO_ERROR();
 
-    const GLvoid *mapPointer =
+    const void *mapPointer =
         glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, sizeof(Vector2) * 2 * 6, GL_MAP_READ_BIT);
     ASSERT_NE(nullptr, mapPointer);
 
@@ -877,7 +877,7 @@ TEST_P(TransformFeedbackTest, TwoUnreferencedInFragShader)
     glUseProgram(0);
     ASSERT_GL_NO_ERROR();
 
-    const GLvoid *mapPointer =
+    const void *mapPointer =
         glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, sizeof(Vector3) * 2 * 6, GL_MAP_READ_BIT);
     ASSERT_NE(nullptr, mapPointer);
 

@@ -44,12 +44,9 @@ bool ValidateTexStorage2DMultiSample(Context *context,
                                      GLboolean fixedSampleLocations);
 bool ValidateGetMultisamplefv(Context *context, GLenum pname, GLuint index, GLfloat *val);
 
-bool ValidateDrawIndirectBase(Context *context, GLenum mode, const GLvoid *indirect);
-bool ValidateDrawArraysIndirect(Context *context, GLenum mode, const GLvoid *indirect);
-bool ValidateDrawElementsIndirect(Context *context,
-                                  GLenum mode,
-                                  GLenum type,
-                                  const GLvoid *indirect);
+bool ValidateDrawIndirectBase(Context *context, GLenum mode, const void *indirect);
+bool ValidateDrawArraysIndirect(Context *context, GLenum mode, const void *indirect);
+bool ValidateDrawElementsIndirect(Context *context, GLenum mode, GLenum type, const void *indirect);
 
 bool ValidationFramebufferParameteri(Context *context, GLenum target, GLenum pname, GLint param);
 bool ValidationGetFramebufferParameteri(Context *context,

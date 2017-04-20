@@ -235,7 +235,7 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
                      const gl::Rectangle &area,
                      GLenum format,
                      GLenum type,
-                     GLvoid *pixels) const;
+                     void *pixels) const;
 
     Error blit(rx::ContextImpl *context,
                const Rectangle &sourceArea,

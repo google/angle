@@ -65,7 +65,7 @@ class FramebufferVk : public FramebufferImpl, public ResourceVk
                          const gl::Rectangle &area,
                          GLenum format,
                          GLenum type,
-                         GLvoid *pixels) const override;
+                         void *pixels) const override;
 
     gl::Error blit(ContextImpl *context,
                    const gl::Rectangle &sourceArea,

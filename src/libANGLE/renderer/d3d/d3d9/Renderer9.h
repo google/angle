@@ -147,7 +147,7 @@ class Renderer9 : public RendererD3D
                                 GLsizei instances,
                                 TranslatedIndexData *indexInfo);
     gl::Error applyIndexBuffer(const gl::ContextState &data,
-                               const GLvoid *indices,
+                               const void *indices,
                                GLsizei count,
                                GLenum mode,
                                GLenum type,
@@ -343,7 +343,7 @@ class Renderer9 : public RendererD3D
                                   GLenum mode,
                                   GLsizei count,
                                   GLenum type,
-                                  const GLvoid *indices,
+                                  const void *indices,
                                   GLsizei instances,
                                   const gl::IndexRange &indexRange);
 
@@ -368,7 +368,7 @@ class Renderer9 : public RendererD3D
                                GLenum mode,
                                GLsizei count,
                                GLenum type,
-                               const GLvoid *indices,
+                               const void *indices,
                                GLsizei instances);
 
     gl::Error applyShaders(const gl::ContextState &data, GLenum drawMode);
@@ -387,8 +387,16 @@ class Renderer9 : public RendererD3D
     void applyUniformniv(const D3DUniform *targetUniform, const GLint *v);
     void applyUniformnbv(const D3DUniform *targetUniform, const GLint *v);
 
-    gl::Error drawLineLoop(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
-    gl::Error drawIndexedPoints(GLsizei count, GLenum type, const GLvoid *indices, int minIndex, gl::Buffer *elementArrayBuffer);
+    gl::Error drawLineLoop(GLsizei count,
+                           GLenum type,
+                           const void *indices,
+                           int minIndex,
+                           gl::Buffer *elementArrayBuffer);
+    gl::Error drawIndexedPoints(GLsizei count,
+                                GLenum type,
+                                const void *indices,
+                                int minIndex,
+                                gl::Buffer *elementArrayBuffer);
 
     gl::Error getCountingIB(size_t count, StaticIndexBufferInterface **outIB);
 

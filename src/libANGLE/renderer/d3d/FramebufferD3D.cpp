@@ -239,7 +239,7 @@ gl::Error FramebufferD3D::readPixels(ContextImpl *context,
                                      const gl::Rectangle &area,
                                      GLenum format,
                                      GLenum type,
-                                     GLvoid *pixels) const
+                                     void *pixels) const
 {
     const gl::PixelPackState &packState = context->getGLState().getPackState();
 

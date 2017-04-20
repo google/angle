@@ -85,7 +85,7 @@ class FramebufferD3D : public FramebufferImpl
                          const gl::Rectangle &area,
                          GLenum format,
                          GLenum type,
-                         GLvoid *pixels) const override;
+                         void *pixels) const override;
 
     gl::Error blit(ContextImpl *impl,
                    const gl::Rectangle &sourceArea,

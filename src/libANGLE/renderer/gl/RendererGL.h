@@ -60,13 +60,13 @@ class RendererGL : angle::NonCopyable
                            GLenum mode,
                            GLsizei count,
                            GLenum type,
-                           const GLvoid *indices,
+                           const void *indices,
                            const gl::IndexRange &indexRange);
     gl::Error drawElementsInstanced(const gl::ContextState &data,
                                     GLenum mode,
                                     GLsizei count,
                                     GLenum type,
-                                    const GLvoid *indices,
+                                    const void *indices,
                                     GLsizei instances,
                                     const gl::IndexRange &indexRange);
     gl::Error drawRangeElements(const gl::ContextState &data,
@@ -75,13 +75,13 @@ class RendererGL : angle::NonCopyable
                                 GLuint end,
                                 GLsizei count,
                                 GLenum type,
-                                const GLvoid *indices,
+                                const void *indices,
                                 const gl::IndexRange &indexRange);
-    gl::Error drawArraysIndirect(const gl::ContextState &data, GLenum mode, const GLvoid *indirect);
+    gl::Error drawArraysIndirect(const gl::ContextState &data, GLenum mode, const void *indirect);
     gl::Error drawElementsIndirect(const gl::ContextState &data,
                                    GLenum mode,
                                    GLenum type,
-                                   const GLvoid *indirect);
+                                   const void *indirect);
 
     // CHROMIUM_path_rendering implementation
     void stencilFillPath(const gl::ContextState &state,

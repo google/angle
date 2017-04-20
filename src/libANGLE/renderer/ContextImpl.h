@@ -45,12 +45,12 @@ class ContextImpl : public GLImplFactory
     virtual gl::Error drawElements(GLenum mode,
                                    GLsizei count,
                                    GLenum type,
-                                   const GLvoid *indices,
+                                   const void *indices,
                                    const gl::IndexRange &indexRange) = 0;
     virtual gl::Error drawElementsInstanced(GLenum mode,
                                             GLsizei count,
                                             GLenum type,
-                                            const GLvoid *indices,
+                                            const void *indices,
                                             GLsizei instances,
                                             const gl::IndexRange &indexRange) = 0;
     virtual gl::Error drawRangeElements(GLenum mode,
@@ -58,11 +58,11 @@ class ContextImpl : public GLImplFactory
                                         GLuint end,
                                         GLsizei count,
                                         GLenum type,
-                                        const GLvoid *indices,
+                                        const void *indices,
                                         const gl::IndexRange &indexRange) = 0;
 
-    virtual gl::Error drawArraysIndirect(GLenum mode, const GLvoid *indirect) = 0;
-    virtual gl::Error drawElementsIndirect(GLenum mode, GLenum type, const GLvoid *indirect) = 0;
+    virtual gl::Error drawArraysIndirect(GLenum mode, const void *indirect) = 0;
+    virtual gl::Error drawElementsIndirect(GLenum mode, GLenum type, const void *indirect) = 0;
 
     // CHROMIUM_path_rendering path drawing methods.
     virtual void stencilFillPath(const gl::Path *path, GLenum fillMode, GLuint mask);

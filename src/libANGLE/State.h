@@ -120,8 +120,8 @@ class State : angle::NonCopyable
     void setSampleAlphaToCoverage(bool enabled);
     bool isSampleCoverageEnabled() const;
     void setSampleCoverage(bool enabled);
-    void setSampleCoverageParams(GLclampf value, bool invert);
-    GLclampf getSampleCoverageValue() const;
+    void setSampleCoverageParams(GLfloat value, bool invert);
+    GLfloat getSampleCoverageValue() const;
     bool getSampleCoverageInvert() const;
 
     // Multisampling/alpha to one manipulation.
@@ -446,7 +446,7 @@ class State : angle::NonCopyable
     GLuint mMaxCombinedTextureImageUnits;
 
     ColorF mColorClearValue;
-    GLclampf mDepthClearValue;
+    GLfloat mDepthClearValue;
     int mStencilClearValue;
 
     RasterizerState mRasterizer;
@@ -456,7 +456,7 @@ class State : angle::NonCopyable
     BlendState mBlend;
     ColorF mBlendColor;
     bool mSampleCoverage;
-    GLclampf mSampleCoverageValue;
+    GLfloat mSampleCoverageValue;
     bool mSampleCoverageInvert;
 
     DepthStencilState mDepthStencil;

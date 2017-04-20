@@ -173,7 +173,7 @@ TEST_P(ProvokingVertexTest, FlatTriWithTransformFeedback)
     ASSERT_GL_NO_ERROR();
     EXPECT_EQ(vertexData[2], pixelValue);
 
-    GLvoid *mapPointer =
+    void *mapPointer =
         glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, sizeof(int) * 6, GL_MAP_READ_BIT);
     ASSERT_NE(nullptr, mapPointer);
 

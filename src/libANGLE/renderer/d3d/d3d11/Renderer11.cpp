@@ -139,7 +139,7 @@ void SetLineLoopIndices(GLuint *dest, size_t count)
 }
 
 template <typename T>
-void CopyLineLoopIndices(const GLvoid *indices, GLuint *dest, size_t count)
+void CopyLineLoopIndices(const void *indices, GLuint *dest, size_t count)
 {
     const T *srcPtr = static_cast<const T *>(indices);
     for (size_t i = 0; i < count; ++i)
@@ -160,7 +160,7 @@ void SetTriangleFanIndices(GLuint *destPtr, size_t numTris)
 }
 
 template <typename T>
-void CopyLineLoopIndicesWithRestart(const GLvoid *indices,
+void CopyLineLoopIndicesWithRestart(const void *indices,
                                     size_t count,
                                     GLenum indexType,
                                     std::vector<GLuint> *bufferOut)
@@ -201,7 +201,7 @@ void CopyLineLoopIndicesWithRestart(const GLvoid *indices,
     }
 }
 
-void GetLineLoopIndices(const GLvoid *indices,
+void GetLineLoopIndices(const void *indices,
                         GLenum indexType,
                         GLuint count,
                         bool usePrimitiveRestartFixedIndex,
@@ -252,7 +252,7 @@ void GetLineLoopIndices(const GLvoid *indices,
 }
 
 template <typename T>
-void CopyTriangleFanIndices(const GLvoid *indices, GLuint *destPtr, size_t numTris)
+void CopyTriangleFanIndices(const void *indices, GLuint *destPtr, size_t numTris)
 {
     const T *srcPtr = static_cast<const T *>(indices);
 
@@ -265,7 +265,7 @@ void CopyTriangleFanIndices(const GLvoid *indices, GLuint *destPtr, size_t numTr
 }
 
 template <typename T>
-void CopyTriangleFanIndicesWithRestart(const GLvoid *indices,
+void CopyTriangleFanIndicesWithRestart(const void *indices,
                                        GLuint indexCount,
                                        GLenum indexType,
                                        std::vector<GLuint> *bufferOut)
@@ -309,7 +309,7 @@ void CopyTriangleFanIndicesWithRestart(const GLvoid *indices,
     }
 }
 
-void GetTriFanIndices(const GLvoid *indices,
+void GetTriFanIndices(const void *indices,
                       GLenum indexType,
                       GLuint count,
                       bool usePrimitiveRestartFixedIndex,
@@ -1805,7 +1805,7 @@ gl::Error Renderer11::applyVertexBuffer(const gl::State &state,
 }
 
 gl::Error Renderer11::applyIndexBuffer(const gl::ContextState &data,
-                                       const GLvoid *indices,
+                                       const void *indices,
                                        GLsizei count,
                                        GLenum mode,
                                        GLenum type,
@@ -2003,7 +2003,7 @@ gl::Error Renderer11::drawElementsImpl(const gl::ContextState &data,
                                        GLenum mode,
                                        GLsizei count,
                                        GLenum type,
-                                       const GLvoid *indices,
+                                       const void *indices,
                                        GLsizei instances)
 {
     int startVertex = static_cast<int>(indexInfo.indexRange.start);
@@ -2099,7 +2099,7 @@ bool Renderer11::supportsFastIndirectDraw(const gl::State &state, GLenum mode, G
 
 gl::Error Renderer11::drawArraysIndirectImpl(const gl::ContextState &data,
                                              GLenum mode,
-                                             const GLvoid *indirect)
+                                             const void *indirect)
 {
     if (skipDraw(data, mode))
     {
@@ -2148,7 +2148,7 @@ gl::Error Renderer11::drawArraysIndirectImpl(const gl::ContextState &data,
 gl::Error Renderer11::drawElementsIndirectImpl(const gl::ContextState &data,
                                                GLenum mode,
                                                GLenum type,
-                                               const GLvoid *indirect)
+                                               const void *indirect)
 {
     if (skipDraw(data, mode))
     {
@@ -2216,7 +2216,7 @@ gl::Error Renderer11::drawElementsIndirectImpl(const gl::ContextState &data,
 gl::Error Renderer11::drawLineLoop(const gl::ContextState &data,
                                    GLsizei count,
                                    GLenum type,
-                                   const GLvoid *indexPointer,
+                                   const void *indexPointer,
                                    int baseVertex,
                                    int instances)
 {
@@ -2224,7 +2224,7 @@ gl::Error Renderer11::drawLineLoop(const gl::ContextState &data,
     gl::VertexArray *vao           = glState.getVertexArray();
     gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
 
-    const GLvoid *indices = indexPointer;
+    const void *indices = indexPointer;
 
     // Get the raw indices for an indexed draw
     if (type != GL_NONE && elementArrayBuffer)
@@ -2308,14 +2308,14 @@ gl::Error Renderer11::drawLineLoop(const gl::ContextState &data,
 gl::Error Renderer11::drawTriangleFan(const gl::ContextState &data,
                                       GLsizei count,
                                       GLenum type,
-                                      const GLvoid *indices,
+                                      const void *indices,
                                       int baseVertex,
                                       int instances)
 {
     gl::VertexArray *vao           = data.getState().getVertexArray();
     gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
 
-    const GLvoid *indexPointer = indices;
+    const void *indexPointer = indices;
 
     // Get the raw indices for an indexed draw
     if (type != GL_NONE && elementArrayBuffer)
@@ -4702,7 +4702,7 @@ gl::Error Renderer11::genericDrawElements(Context11 *context,
                                           GLenum mode,
                                           GLsizei count,
                                           GLenum type,
-                                          const GLvoid *indices,
+                                          const void *indices,
                                           GLsizei instances,
                                           const gl::IndexRange &indexRange)
 {
@@ -4793,7 +4793,7 @@ gl::Error Renderer11::genericDrawArrays(Context11 *context,
 gl::Error Renderer11::genericDrawIndirect(Context11 *context,
                                           GLenum mode,
                                           GLenum type,
-                                          const GLvoid *indirect)
+                                          const void *indirect)
 {
     const auto &data     = context->getContextState();
     const auto &glState  = data.getState();

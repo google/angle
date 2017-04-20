@@ -97,7 +97,7 @@ class IndexBufferOffsetTest : public ANGLETest
 
         for (int i = 0; i < 16; i++)
         {
-            glDrawElements(GL_TRIANGLES, 6, type, reinterpret_cast<GLvoid *>(indexDataWidth));
+            glDrawElements(GL_TRIANGLES, 6, type, reinterpret_cast<void *>(indexDataWidth));
             EXPECT_PIXEL_EQ(64, 64, 255, 0, 0, 255);
         }
 
@@ -105,7 +105,7 @@ class IndexBufferOffsetTest : public ANGLETest
         glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 2 * indexDataWidth, indexDataWidth, indexData);
 
         glUniform4f(mColorUniformLocation, 0.0f, 1.0f, 0.0f, 1.0f);
-        glDrawElements(GL_TRIANGLES, 6, type, reinterpret_cast<GLvoid *>(indexDataWidth * 2));
+        glDrawElements(GL_TRIANGLES, 6, type, reinterpret_cast<void *>(indexDataWidth * 2));
         EXPECT_PIXEL_EQ(64, 64, 0, 255, 0, 255);
 
         EXPECT_GL_NO_ERROR();

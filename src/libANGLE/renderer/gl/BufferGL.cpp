@@ -121,7 +121,7 @@ gl::Error BufferGL::copySubData(ContextImpl *context,
     return gl::NoError();
 }
 
-gl::Error BufferGL::map(ContextImpl *context, GLenum access, GLvoid **mapPtr)
+gl::Error BufferGL::map(ContextImpl *context, GLenum access, void **mapPtr)
 {
     if (mShadowBufferData)
     {
@@ -151,7 +151,7 @@ gl::Error BufferGL::mapRange(ContextImpl *context,
                              size_t offset,
                              size_t length,
                              GLbitfield access,
-                             GLvoid **mapPtr)
+                             void **mapPtr)
 {
     if (mShadowBufferData)
     {

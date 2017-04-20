@@ -119,7 +119,7 @@ bool ValidateTexImage2D(Context *context,
                         GLint border,
                         GLenum format,
                         GLenum type,
-                        const GLvoid *pixels);
+                        const void *pixels);
 bool ValidateTexImage2DRobust(Context *context,
                               GLenum target,
                               GLint level,
@@ -130,7 +130,7 @@ bool ValidateTexImage2DRobust(Context *context,
                               GLenum format,
                               GLenum type,
                               GLsizei bufSize,
-                              const GLvoid *pixels);
+                              const void *pixels);
 bool ValidateTexSubImage2D(Context *context,
                            GLenum target,
                            GLint level,
@@ -140,7 +140,7 @@ bool ValidateTexSubImage2D(Context *context,
                            GLsizei height,
                            GLenum format,
                            GLenum type,
-                           const GLvoid *pixels);
+                           const void *pixels);
 bool ValidateTexSubImage2DRobustANGLE(Context *context,
                                       GLenum target,
                                       GLint level,
@@ -151,7 +151,7 @@ bool ValidateTexSubImage2DRobustANGLE(Context *context,
                                       GLenum format,
                                       GLenum type,
                                       GLsizei bufSize,
-                                      const GLvoid *pixels);
+                                      const void *pixels);
 bool ValidateCompressedTexImage2D(Context *context,
                                   GLenum target,
                                   GLint level,
@@ -160,7 +160,7 @@ bool ValidateCompressedTexImage2D(Context *context,
                                   GLsizei height,
                                   GLint border,
                                   GLsizei imageSize,
-                                  const GLvoid *data);
+                                  const void *data);
 bool ValidateCompressedTexSubImage2D(Context *context,
                                      GLenum target,
                                      GLint level,
@@ -170,7 +170,7 @@ bool ValidateCompressedTexSubImage2D(Context *context,
                                      GLsizei height,
                                      GLenum format,
                                      GLsizei imageSize,
-                                     const GLvoid *data);
+                                     const void *data);
 bool ValidateCompressedTexImage2DRobustANGLE(Context *context,
                                              GLenum target,
                                              GLint level,
@@ -180,7 +180,7 @@ bool ValidateCompressedTexImage2DRobustANGLE(Context *context,
                                              GLint border,
                                              GLsizei imageSize,
                                              GLsizei dataSize,
-                                             const GLvoid *data);
+                                             const void *data);
 bool ValidateCompressedTexSubImage2DRobustANGLE(Context *context,
                                                 GLenum target,
                                                 GLint level,
@@ -191,7 +191,7 @@ bool ValidateCompressedTexSubImage2DRobustANGLE(Context *context,
                                                 GLenum format,
                                                 GLsizei imageSize,
                                                 GLsizei dataSize,
-                                                const GLvoid *data);
+                                                const void *data);
 
 bool ValidateBindTexture(Context *context, GLenum target, GLuint texture);
 
@@ -341,13 +341,13 @@ bool ValidateCreateShader(Context *context, GLenum type);
 bool ValidateBufferData(ValidationContext *context,
                         GLenum target,
                         GLsizeiptr size,
-                        const GLvoid *data,
+                        const void *data,
                         GLenum usage);
 bool ValidateBufferSubData(ValidationContext *context,
                            GLenum target,
                            GLintptr offset,
                            GLsizeiptr size,
-                           const GLvoid *data);
+                           const void *data);
 
 bool ValidateRequestExtensionANGLE(ValidationContext *context, const GLchar *name);
 
@@ -382,7 +382,7 @@ bool ValidateVertexAttribPointer(ValidationContext *context,
                                  GLenum type,
                                  GLboolean normalized,
                                  GLsizei stride,
-                                 const GLvoid *ptr);
+                                 const void *ptr);
 
 bool ValidateDepthRangef(ValidationContext *context, GLclampf zNear, GLclampf zFar);
 bool ValidateRenderbufferStorage(ValidationContext *context,
@@ -486,7 +486,7 @@ bool ValidateShaderBinary(ValidationContext *context,
                           GLsizei n,
                           const GLuint *shaders,
                           GLenum binaryformat,
-                          const GLvoid *binary,
+                          const void *binary,
                           GLsizei length);
 bool ValidateShaderSource(ValidationContext *context,
                           GLuint shader,
@@ -581,7 +581,7 @@ bool ValidateDrawElements(ValidationContext *context,
                           GLenum mode,
                           GLsizei count,
                           GLenum type,
-                          const GLvoid *indices);
+                          const void *indices);
 
 bool ValidateDrawArrays(ValidationContext *context, GLenum mode, GLint first, GLsizei count);
 

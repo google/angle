@@ -75,7 +75,7 @@ gl::Error BufferNULL::copySubData(ContextImpl *context,
     return gl::NoError();
 }
 
-gl::Error BufferNULL::map(ContextImpl *context, GLenum access, GLvoid **mapPtr)
+gl::Error BufferNULL::map(ContextImpl *context, GLenum access, void **mapPtr)
 {
     *mapPtr = mData.data();
     return gl::NoError();
@@ -85,7 +85,7 @@ gl::Error BufferNULL::mapRange(ContextImpl *context,
                                size_t offset,
                                size_t length,
                                GLbitfield access,
-                               GLvoid **mapPtr)
+                               void **mapPtr)
 {
     *mapPtr = mData.data() + offset;
     return gl::NoError();
