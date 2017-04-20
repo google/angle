@@ -1087,7 +1087,8 @@
             '<(deqp_path)/framework/qphelper/qpCrashHandler.c',
             '<(deqp_path)/framework/qphelper/qpDebugOut.c',
             '<(deqp_path)/framework/qphelper/qpInfo.c',
-            '<(deqp_path)/framework/qphelper/qpTestLog.c',
+            # TODO(jmadill): Restore this when we upstream the change.
+            #'<(deqp_path)/framework/qphelper/qpTestLog.c',
             '<(deqp_path)/framework/qphelper/qpWatchDog.c',
             '<(deqp_path)/framework/qphelper/qpXmlWriter.c',
             '<(deqp_path)/framework/randomshaders/rsgBinaryOps.cpp',
@@ -1156,6 +1157,8 @@
             '<(deqp_path)/modules/glshared/glsTextureTestUtil.cpp',
             '<(deqp_path)/modules/glshared/glsUniformBlockCase.cpp',
             '<(deqp_path)/modules/glshared/glsVertexArrayTests.cpp',
+            # TODO(jmadill): Remove this when we upstream the change.
+            '<(angle_path)/src/tests/deqp_support/qpTestLog.c',
             '<(angle_path)/src/tests/deqp_support/tcuANGLENativeDisplayFactory.cpp',
             '<(angle_path)/src/tests/deqp_support/tcuANGLENativeDisplayFactory.h',
             # TODO(jmadill): integrate with dEQP
