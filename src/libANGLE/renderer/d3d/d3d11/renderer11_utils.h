@@ -428,6 +428,16 @@ gl::ErrorOrResult<TextureHelper11> CreateStagingTexture(GLenum textureType,
 
 bool UsePresentPathFast(const Renderer11 *renderer, const gl::FramebufferAttachment *colorbuffer);
 
+// Used for state change notifications between buffers and vertex arrays.
+using OnBufferDataDirtyBinding  = angle::ChannelBinding<size_t>;
+using OnBufferDataDirtyChannel  = angle::BroadcastChannel<size_t>;
+using OnBufferDataDirtyReceiver = angle::SignalReceiver<size_t>;
+
+// Used for state change notifications between RenderTarget11 and Framebuffer11.
+using OnRenderTargetDirtyBinding  = angle::ChannelBinding<size_t>;
+using OnRenderTargetDirtyChannel  = angle::BroadcastChannel<size_t>;
+using OnRenderTargetDirtyReceiver = angle::SignalReceiver<size_t>;
+
 }  // namespace rx
 
 #endif // LIBANGLE_RENDERER_D3D_D3D11_RENDERER11_UTILS_H_

@@ -14,7 +14,7 @@
 
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/d3d/BufferD3D.h"
-#include "libANGLE/signal_utils.h"
+#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 
 namespace gl
 {
@@ -103,8 +103,8 @@ class Buffer11 : public BufferD3D
     // We use two set of dirty events. Static buffers are marked dirty whenever
     // data changes, because they must be re-translated. Direct buffers only need to be
     // updated when the underlying ID3D11Buffer pointer changes - hopefully far less often.
-    angle::BroadcastChannel<> *getStaticBroadcastChannel();
-    angle::BroadcastChannel<> *getDirectBroadcastChannel();
+    OnBufferDataDirtyChannel *getStaticBroadcastChannel();
+    OnBufferDataDirtyChannel *getDirectBroadcastChannel();
 
   private:
     class BufferStorage;
@@ -162,8 +162,8 @@ class Buffer11 : public BufferD3D
     size_t mConstantBufferStorageAdditionalSize;
     unsigned int mMaxConstantBufferLruCount;
 
-    angle::BroadcastChannel<> mStaticBroadcastChannel;
-    angle::BroadcastChannel<> mDirectBroadcastChannel;
+    OnBufferDataDirtyChannel mStaticBroadcastChannel;
+    OnBufferDataDirtyChannel mDirectBroadcastChannel;
 };
 
 }  // namespace rx

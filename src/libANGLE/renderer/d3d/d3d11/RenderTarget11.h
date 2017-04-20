@@ -12,8 +12,8 @@
 
 #include "libANGLE/renderer/d3d/RenderTargetD3D.h"
 
+#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 #include "libANGLE/renderer/d3d/d3d11/texture_format_table.h"
-#include "libANGLE/signal_utils.h"
 
 namespace rx
 {
@@ -35,12 +35,12 @@ class RenderTarget11 : public RenderTargetD3D
     virtual unsigned int getSubresourceIndex() const = 0;
 
     void signalDirty() override;
-    angle::BroadcastChannel<> *getBroadcastChannel() { return &mBroadcastChannel; }
+    OnRenderTargetDirtyChannel *getBroadcastChannel() { return &mBroadcastChannel; }
 
     const d3d11::Format &getFormatSet() const { return mFormatSet; }
 
   protected:
-    angle::BroadcastChannel<> mBroadcastChannel;
+    OnRenderTargetDirtyChannel mBroadcastChannel;
     const d3d11::Format &mFormatSet;
 };
 

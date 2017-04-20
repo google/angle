@@ -25,7 +25,7 @@ VertexArray11::VertexArray11(const gl::VertexArrayState &data)
 {
     for (size_t attribIndex = 0; attribIndex < mCurrentBuffers.size(); ++attribIndex)
     {
-        mOnBufferDataDirty.emplace_back(this, static_cast<uint32_t>(attribIndex));
+        mOnBufferDataDirty.emplace_back(this, attribIndex);
     }
 }
 
@@ -112,7 +112,7 @@ void VertexArray11::updateVertexAttribStorage(size_t attribIndex)
     {
         // Note that for static callbacks, promotion to a static buffer from a dynamic buffer means
         // we need to tag dynamic buffers with static callbacks.
-        BroadcastChannel<> *newChannel = nullptr;
+        OnBufferDataDirtyChannel *newChannel = nullptr;
         if (newBuffer11 != nullptr)
         {
             switch (newStorageType)
@@ -218,7 +218,7 @@ const std::vector<TranslatedAttribute> &VertexArray11::getTranslatedAttribs() co
     return mTranslatedAttribs;
 }
 
-void VertexArray11::signal(uint32_t channelID)
+void VertexArray11::signal(size_t channelID)
 {
     ASSERT(mAttributeStorageTypes[channelID] != VertexStorageType::CURRENT_VALUE);
 
