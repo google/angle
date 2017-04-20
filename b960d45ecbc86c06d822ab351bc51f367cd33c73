@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "34ac7db9_84f9fe22",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-20T06:23:37Z",
+      "side": 1,
+      "message": "Bad small. This will introduce a lot of \u0027if-else\u0027 in your code.",
+      "range": {
+        "startLine": 220,
+        "startChar": 1,
+        "endLine": 221,
+        "endChar": 30
+      },
+      "revId": "b960d45ecbc86c06d822ab351bc51f367cd33c73",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "efceca6f_8337e95d",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 1
+      },
+      "lineNbr": 955,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-20T06:23:37Z",
+      "side": 1,
+      "message": "check 3.1 only.",
+      "revId": "b960d45ecbc86c06d822ab351bc51f367cd33c73",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "acaaf901_73304811",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-20T06:23:37Z",
+      "side": 1,
+      "message": "Most fields are same with LinkedUniform\u0027s. Can you do some abstraction to inherit from some common struct?",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 0
+      },
+      "revId": "b960d45ecbc86c06d822ab351bc51f367cd33c73",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
