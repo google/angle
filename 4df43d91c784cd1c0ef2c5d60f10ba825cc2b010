@@ -1,0 +1,176 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9738a50b_7bf9f1ee",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 781,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-20T20:51:00Z",
+      "side": 1,
+      "message": "nit: initParams?",
+      "range": {
+        "startLine": 781,
+        "startChar": 9,
+        "endLine": 781,
+        "endChar": 19
+      },
+      "revId": "4df43d91c784cd1c0ef2c5d60f10ba825cc2b010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa1f10bf_bc2c0462",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 881,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-20T20:51:00Z",
+      "side": 1,
+      "message": "Instead of using the enum, why can\u0027t we use the class types directly?",
+      "range": {
+        "startLine": 880,
+        "startChar": 0,
+        "endLine": 881,
+        "endChar": 41
+      },
+      "revId": "4df43d91c784cd1c0ef2c5d60f10ba825cc2b010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f27c808_3401597f",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 884,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-20T20:51:00Z",
+      "side": 1,
+      "message": "MemoryBuffer::resize will resize the buffer if the new size is samller than the old one.  Maybe we should wrap this in a \"if (sizeof(new type) \u003c mParamsBuffer.size())\"",
+      "range": {
+        "startLine": 884,
+        "startChar": 4,
+        "endLine": 884,
+        "endChar": 24
+      },
+      "revId": "4df43d91c784cd1c0ef2c5d60f10ba825cc2b010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "55907f79_656fab0d",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 885,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-20T20:51:00Z",
+      "side": 1,
+      "message": "I think this can be skipped, allocating an object into the memory should initialize it as long as the class members are initialized.",
+      "range": {
+        "startLine": 885,
+        "startChar": 4,
+        "endLine": 885,
+        "endChar": 26
+      },
+      "revId": "4df43d91c784cd1c0ef2c5d60f10ba825cc2b010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19ace5af_37e0b55f",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 886,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-20T20:51:00Z",
+      "side": 1,
+      "message": "nit: std::forward(args)...",
+      "range": {
+        "startLine": 886,
+        "startChar": 61,
+        "endLine": 886,
+        "endChar": 65
+      },
+      "revId": "4df43d91c784cd1c0ef2c5d60f10ba825cc2b010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46db2730_a1d865e8",
+        "filename": "src/libANGLE/ContextState.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-20T20:51:00Z",
+      "side": 1,
+      "message": "nit: assert that buffer is large enough for the type.",
+      "revId": "4df43d91c784cd1c0ef2c5d60f10ba825cc2b010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c37e04fe_ebe2f9ed",
+        "filename": "src/libANGLE/ContextState.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-20T20:51:00Z",
+      "side": 1,
+      "message": "Instead, this could be something like:\n\n      const ParamsBase *params \u003d reinterpret_cast\u003cParamsBase *\u003e(mParamsBuffer.data())\n      return GetAs\u003cEP\u003e(params);\n\nWhich would do the assertion and remove the need for an enum to represent each class type.",
+      "range": {
+        "startLine": 151,
+        "startChar": 4,
+        "endLine": 153,
+        "endChar": 39
+      },
+      "revId": "4df43d91c784cd1c0ef2c5d60f10ba825cc2b010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8beead5b_a6356106",
+        "filename": "src/libANGLE/params.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-20T20:51:00Z",
+      "side": 1,
+      "message": "Why does this need to be variadic?",
+      "revId": "4df43d91c784cd1c0ef2c5d60f10ba825cc2b010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
