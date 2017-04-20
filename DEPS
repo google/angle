@@ -40,7 +40,7 @@ deps = {
     Var('android_git') + '/platform/external/vulkan-validation-layers' + '@' + 'f47c534fee2f26f6b783209d56e0ade48e30eb8d',
 
   'third_party/zlib':
-    Var('chromium_git') + '/chromium/src/third_party/zlib' + '@' + 'afd8c4593c010c045902f6c0501718f1823064a3',
+    Var('chromium_git') + '/chromium/src/third_party/zlib' + '@' + '24ab14872e8e068ba08cc31cc3d43bcc6d5cb832',
 }
 
 hooks = [
