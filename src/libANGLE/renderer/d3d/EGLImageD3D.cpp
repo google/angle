@@ -27,23 +27,9 @@ EGLImageD3D::EGLImageD3D(const egl::ImageState &state,
                          EGLenum target,
                          const egl::AttributeMap &attribs,
                          RendererD3D *renderer)
-    : ImageImpl(state), mRenderer(renderer), mAttachmentBuffer(nullptr), mRenderTarget(nullptr)
+    : ImageImpl(state), mRenderer(renderer), mRenderTarget(nullptr)
 {
     ASSERT(renderer != nullptr);
-
-    if (egl::IsTextureTarget(target))
-    {
-        mAttachmentBuffer = GetImplAs<TextureD3D>(GetAs<gl::Texture>(mState.source.get()));
-    }
-    else if (egl::IsRenderbufferTarget(target))
-    {
-        mAttachmentBuffer =
-            GetImplAs<RenderbufferD3D>(GetAs<gl::Renderbuffer>(mState.source.get()));
-    }
-    else
-    {
-        UNREACHABLE();
-    }
 }
 
 EGLImageD3D::~EGLImageD3D()
@@ -68,10 +54,11 @@ gl::Error EGLImageD3D::orphan(egl::ImageSibling *sibling)
 
 gl::Error EGLImageD3D::getRenderTarget(RenderTargetD3D **outRT) const
 {
-    if (mAttachmentBuffer)
+    if (mState.source.get())
     {
+        ASSERT(!mRenderTarget);
         FramebufferAttachmentRenderTarget *rt = nullptr;
-        ANGLE_TRY(mAttachmentBuffer->getAttachmentRenderTarget(GL_NONE, mState.imageIndex, &rt));
+        ANGLE_TRY(mState.source->getAttachmentRenderTarget(GL_NONE, mState.imageIndex, &rt));
         *outRT = static_cast<RenderTargetD3D *>(rt);
         return gl::NoError();
     }
@@ -86,7 +73,6 @@ gl::Error EGLImageD3D::getRenderTarget(RenderTargetD3D **outRT) const
 gl::Error EGLImageD3D::copyToLocalRendertarget()
 {
     ASSERT(mState.source.get() != nullptr);
-    ASSERT(mAttachmentBuffer != nullptr);
     ASSERT(mRenderTarget == nullptr);
 
     RenderTargetD3D *curRenderTarget = nullptr;
@@ -94,9 +80,6 @@ gl::Error EGLImageD3D::copyToLocalRendertarget()
 
     // This only currently applies do D3D11, where it invalidates FBOs with this Image attached.
     curRenderTarget->signalDirty();
-
-    // Clear the source image buffers
-    mAttachmentBuffer = nullptr;
 
     return mRenderer->createRenderTargetCopy(curRenderTarget, &mRenderTarget);
 }

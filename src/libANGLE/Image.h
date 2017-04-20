@@ -12,7 +12,7 @@
 #include "common/angleutils.h"
 #include "libANGLE/AttributeMap.h"
 #include "libANGLE/Error.h"
-#include "libANGLE/ImageIndex.h"
+#include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/RefCountObject.h"
 #include "libANGLE/formatutils.h"
 
@@ -28,7 +28,10 @@ namespace egl
 {
 class Image;
 
-class ImageSibling : public RefCountObject
+// Only currently Renderbuffers and Textures can be bound with images. This makes the relationship
+// explicit, and also ensures that an image sibling can determine if it's been initialized or not,
+// which is important for the robust resource init extension with Textures and EGLImages.
+class ImageSibling : public RefCountObject, public gl::FramebufferAttachmentObject
 {
   public:
     ImageSibling(GLuint id);
@@ -93,13 +96,7 @@ class Image final : public RefCountObject
     gl::Error orphanSibling(ImageSibling *sibling);
 
     ImageState mState;
-
     rx::ImageImpl *mImplementation;
-
-    gl::Format mFormat;
-    size_t mWidth;
-    size_t mHeight;
-    size_t mSamples;
 };
 }  // namespace egl
 

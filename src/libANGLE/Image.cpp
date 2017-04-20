@@ -110,39 +110,12 @@ Image::Image(rx::EGLImplFactory *factory,
              const AttributeMap &attribs)
     : RefCountObject(0),
       mState(target, buffer, attribs),
-      mImplementation(factory->createImage(mState, target, attribs)),
-      mFormat(gl::Format::Invalid()),
-      mWidth(0),
-      mHeight(0),
-      mSamples(0)
+      mImplementation(factory->createImage(mState, target, attribs))
 {
     ASSERT(mImplementation != nullptr);
     ASSERT(buffer != nullptr);
 
     mState.source->addImageSource(this);
-
-    if (IsTextureTarget(target))
-    {
-        gl::Texture *texture = rx::GetAs<gl::Texture>(mState.source.get());
-        GLenum textureTarget = egl_gl::EGLImageTargetToGLTextureTarget(target);
-        size_t level         = attribs.get(EGL_GL_TEXTURE_LEVEL_KHR, 0);
-        mFormat              = texture->getFormat(textureTarget, level);
-        mWidth               = texture->getWidth(textureTarget, level);
-        mHeight              = texture->getHeight(textureTarget, level);
-        mSamples             = 0;
-    }
-    else if (IsRenderbufferTarget(target))
-    {
-        gl::Renderbuffer *renderbuffer = rx::GetAs<gl::Renderbuffer>(mState.source.get());
-        mFormat                        = renderbuffer->getFormat();
-        mWidth                         = renderbuffer->getWidth();
-        mHeight                        = renderbuffer->getHeight();
-        mSamples                       = renderbuffer->getSamples();
-    }
-    else
-    {
-        UNREACHABLE();
-    }
 }
 
 Image::~Image()
@@ -187,22 +160,22 @@ gl::Error Image::orphanSibling(ImageSibling *sibling)
 
 const gl::Format &Image::getFormat() const
 {
-    return mFormat;
+    return mState.source->getAttachmentFormat(GL_NONE, mState.imageIndex);
 }
 
 size_t Image::getWidth() const
 {
-    return mWidth;
+    return mState.source->getAttachmentSize(mState.imageIndex).width;
 }
 
 size_t Image::getHeight() const
 {
-    return mHeight;
+    return mState.source->getAttachmentSize(mState.imageIndex).height;
 }
 
 size_t Image::getSamples() const
 {
-    return mSamples;
+    return mState.source->getAttachmentSamples(mState.imageIndex);
 }
 
 rx::ImageImpl *Image::getImplementation() const

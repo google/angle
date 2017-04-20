@@ -28,7 +28,6 @@ namespace gl
 // attachment point.
 
 class Renderbuffer final : public egl::ImageSibling,
-                           public gl::FramebufferAttachmentObject,
                            public LabeledObject
 {
   public:

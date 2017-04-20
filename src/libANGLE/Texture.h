@@ -175,7 +175,6 @@ bool operator==(const TextureState &a, const TextureState &b);
 bool operator!=(const TextureState &a, const TextureState &b);
 
 class Texture final : public egl::ImageSibling,
-                      public FramebufferAttachmentObject,
                       public LabeledObject
 {
   public:

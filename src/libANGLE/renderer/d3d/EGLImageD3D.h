@@ -43,9 +43,6 @@ class EGLImageD3D final : public ImageImpl
     gl::Error copyToLocalRendertarget();
 
     RendererD3D *mRenderer;
-
-    FramebufferAttachmentObjectImpl *mAttachmentBuffer;
-
     RenderTargetD3D *mRenderTarget;
 };
 }  // namespace rx
