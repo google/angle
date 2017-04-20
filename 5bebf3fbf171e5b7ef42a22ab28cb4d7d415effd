@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f01983c0_3646cdee",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 649,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-04-20T10:13:43Z",
+      "side": 1,
+      "message": "I think that SH_HLSL_4_1_OUTPUT does not mean shader model is 4.1. Refer to Context11::createCompiler(), it means that ID3D11Device\u0027s feature level is greater than D3D_FEATURE_LEVEL_9_3.\nIn D3D, calling D3DCompile function will specify Compiler Targets, the shader model  can be 2, 3, 4 or 5. According to Renderer11::getMajorShaderModel() and Renderer11::getMinorShaderModel(), when device\u0027s feature level is D3D_FEATURE_LEVEL_11_0, its shader model is 5.0\nDo I understand correctly?",
+      "parentUuid": "c2787d6a_52751f8b",
+      "revId": "5bebf3fbf171e5b7ef42a22ab28cb4d7d415effd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "76921217_3e273830",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 6
@@ -33,6 +51,24 @@
       "revId": "5bebf3fbf171e5b7ef42a22ab28cb4d7d415effd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b40f40d3_6041975b",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1391,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-04-20T10:13:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "76921217_3e273830",
+      "revId": "5bebf3fbf171e5b7ef42a22ab28cb4d7d415effd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "793d3a98_9b951204",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-04-20T10:13:43Z",
+      "side": 1,
+      "message": "It is uintptr_t type, cannot cast nullptr to uintptr_t, error happens when compiling.",
+      "parentUuid": "5352ff2d_dbdb73f2",
+      "revId": "5bebf3fbf171e5b7ef42a22ab28cb4d7d415effd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "661c1bc1_d82d576e",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
         "patchSetId": 6
@@ -67,6 +121,24 @@
       "revId": "5bebf3fbf171e5b7ef42a22ab28cb4d7d415effd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d004621e_25c55c10",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-04-20T10:13:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "661c1bc1_d82d576e",
+      "revId": "5bebf3fbf171e5b7ef42a22ab28cb4d7d415effd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
