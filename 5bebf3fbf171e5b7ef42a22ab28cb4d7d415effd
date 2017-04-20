@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "ebebbe5e_81f93bc4",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 649,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-20T14:34:37Z",
+      "side": 1,
+      "message": "That makes sense I don\u0027t know these D3d things too much :)\nI\u0027ll let Geoff and Jamie comment on this, thanks for the explanation!",
+      "parentUuid": "f01983c0_3646cdee",
+      "revId": "5bebf3fbf171e5b7ef42a22ab28cb4d7d415effd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "76921217_3e273830",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 6
@@ -101,6 +119,24 @@
       "side": 1,
       "message": "It is uintptr_t type, cannot cast nullptr to uintptr_t, error happens when compiling.",
       "parentUuid": "5352ff2d_dbdb73f2",
+      "revId": "5bebf3fbf171e5b7ef42a22ab28cb4d7d415effd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da59622a_b8c51269",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-20T14:34:37Z",
+      "side": 1,
+      "message": "For uintptr_t we should use 0 (which NULL is a define for AFAIK)",
+      "parentUuid": "793d3a98_9b951204",
       "revId": "5bebf3fbf171e5b7ef42a22ab28cb4d7d415effd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
