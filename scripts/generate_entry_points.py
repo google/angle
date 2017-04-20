@@ -100,12 +100,10 @@ template_entry_point_def = """{return_type}GL_APIENTRY {name}({params})
     {{
         context->gatherParams<EntryPoint::{name}>({pass_params});
 
-        if (!context->skipValidation() && !Validate{name}({validate_params}))
+        if (context->skipValidation() || Validate{name}({validate_params}))
         {{
-            return{default_return};
+            {return_if_needed}context->{name_lower}({pass_params});
         }}
-
-        {return_if_needed}context->{name_lower}({pass_params});
     }}
 {default_return_if_needed}}}
 """
@@ -176,9 +174,8 @@ def format_entry_point_def(cmd_name, proto, params):
         comma_if_needed = ", " if len(params) > 0 else "",
         validate_params = ", ".join(["context"] + pass_params),
         format_params = ", ".join(format_params),
-        default_return = "" if default_return == "" else " " + default_return,
         return_if_needed = "" if default_return == "" else "return ",
-        default_return_if_needed = "" if default_return == "" else "    return " + default_return + ";\n")
+        default_return_if_needed = "" if default_return == "" else "\n    return " + default_return + ";\n")
 
 for cmd_name in gles2_commands:
     command_xpath = "command/proto[name='" + cmd_name + "']/.."
