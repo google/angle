@@ -14,7 +14,7 @@
 namespace rx
 {
 
-ImageNULL::ImageNULL() : ImageImpl()
+ImageNULL::ImageNULL(const egl::ImageState &state) : ImageImpl(state)
 {
 }
 

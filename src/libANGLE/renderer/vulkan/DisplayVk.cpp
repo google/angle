@@ -177,8 +177,8 @@ SurfaceImpl *DisplayVk::createPixmapSurface(const egl::SurfaceState &state,
     return static_cast<SurfaceImpl *>(0);
 }
 
-ImageImpl *DisplayVk::createImage(EGLenum target,
-                                  egl::ImageSibling *buffer,
+ImageImpl *DisplayVk::createImage(const egl::ImageState &state,
+                                  EGLenum target,
                                   const egl::AttributeMap &attribs)
 {
     UNIMPLEMENTED();

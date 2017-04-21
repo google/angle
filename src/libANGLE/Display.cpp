@@ -635,12 +635,10 @@ Error Display::createImage(gl::Context *context,
     }
     ASSERT(sibling != nullptr);
 
-    rx::ImageImpl *imageImpl = mImplementation->createImage(target, sibling, attribs);
-    ASSERT(imageImpl != nullptr);
+    std::unique_ptr<Image> imagePtr(new Image(mImplementation, target, sibling, attribs));
+    ANGLE_TRY(imagePtr->initialize());
 
-    ANGLE_TRY(imageImpl->initialize());
-
-    Image *image = new Image(imageImpl, target, sibling, attribs);
+    Image *image = imagePtr.release();
 
     ASSERT(outImage != nullptr);
     *outImage = image;
@@ -649,7 +647,7 @@ Error Display::createImage(gl::Context *context,
     image->addRef();
     mImageSet.insert(image);
 
-    return egl::Error(EGL_SUCCESS);
+    return egl::NoError();
 }
 
 Error Display::createStream(const AttributeMap &attribs, Stream **outStream)

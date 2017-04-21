@@ -14,7 +14,7 @@
 namespace rx
 {
 
-ImageVk::ImageVk() : ImageImpl()
+ImageVk::ImageVk(const egl::ImageState &state) : ImageImpl(state)
 {
 }
 

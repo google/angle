@@ -49,8 +49,8 @@ void DisplayGL::terminate()
     SafeDelete(mRenderer);
 }
 
-ImageImpl *DisplayGL::createImage(EGLenum target,
-                                  egl::ImageSibling *buffer,
+ImageImpl *DisplayGL::createImage(const egl::ImageState &state,
+                                  EGLenum target,
                                   const egl::AttributeMap &attribs)
 {
     UNIMPLEMENTED();

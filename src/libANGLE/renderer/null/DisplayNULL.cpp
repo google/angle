@@ -164,11 +164,11 @@ SurfaceImpl *DisplayNULL::createPixmapSurface(const egl::SurfaceState &state,
     return new SurfaceNULL(state);
 }
 
-ImageImpl *DisplayNULL::createImage(EGLenum target,
-                                    egl::ImageSibling *buffer,
+ImageImpl *DisplayNULL::createImage(const egl::ImageState &state,
+                                    EGLenum target,
                                     const egl::AttributeMap &attribs)
 {
-    return new ImageNULL();
+    return new ImageNULL(state);
 }
 
 ContextImpl *DisplayNULL::createContext(const gl::ContextState &state)

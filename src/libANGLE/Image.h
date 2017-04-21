@@ -12,6 +12,7 @@
 #include "common/angleutils.h"
 #include "libANGLE/AttributeMap.h"
 #include "libANGLE/Error.h"
+#include "libANGLE/ImageIndex.h"
 #include "libANGLE/RefCountObject.h"
 #include "libANGLE/formatutils.h"
 
@@ -19,6 +20,7 @@
 
 namespace rx
 {
+class EGLImplFactory;
 class ImageImpl;
 }
 
@@ -52,10 +54,22 @@ class ImageSibling : public RefCountObject
     BindingPointer<Image> mTargetOf;
 };
 
+struct ImageState : angle::NonCopyable
+{
+    ImageState(EGLenum target, ImageSibling *buffer, const AttributeMap &attribs);
+
+    gl::ImageIndex imageIndex;
+    BindingPointer<ImageSibling> source;
+    std::set<ImageSibling *> targets;
+};
+
 class Image final : public RefCountObject
 {
   public:
-    Image(rx::ImageImpl *impl, EGLenum target, ImageSibling *buffer, const AttributeMap &attribs);
+    Image(rx::EGLImplFactory *factory,
+          EGLenum target,
+          ImageSibling *buffer,
+          const AttributeMap &attribs);
     ~Image();
 
     const gl::Format &getFormat() const;
@@ -63,8 +77,9 @@ class Image final : public RefCountObject
     size_t getHeight() const;
     size_t getSamples() const;
 
-    rx::ImageImpl *getImplementation();
-    const rx::ImageImpl *getImplementation() const;
+    Error initialize();
+
+    rx::ImageImpl *getImplementation() const;
 
   private:
     friend class ImageSibling;
@@ -77,16 +92,15 @@ class Image final : public RefCountObject
     // been respecified and state tracking should be updated.
     gl::Error orphanSibling(ImageSibling *sibling);
 
+    ImageState mState;
+
     rx::ImageImpl *mImplementation;
 
     gl::Format mFormat;
     size_t mWidth;
     size_t mHeight;
     size_t mSamples;
-
-    BindingPointer<ImageSibling> mSource;
-    std::set<ImageSibling *> mTargets;
 };
-}
+}  // namespace egl
 
 #endif  // LIBANGLE_IMAGE_H_

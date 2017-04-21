@@ -15,6 +15,7 @@
 namespace egl
 {
 class ImageSibling;
+struct ImageState;
 }
 
 namespace rx
@@ -22,11 +23,15 @@ namespace rx
 class ImageImpl : angle::NonCopyable
 {
   public:
+    ImageImpl(const egl::ImageState &state) : mState(state) {}
     virtual ~ImageImpl() {}
     virtual egl::Error initialize() = 0;
 
     virtual gl::Error orphan(egl::ImageSibling *sibling) = 0;
+
+  protected:
+    const egl::ImageState &mState;
 };
-}
+}  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_IMAGEIMPL_H_

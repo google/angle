@@ -206,12 +206,12 @@ SurfaceImpl *DisplayAndroid::createPixmapSurface(const egl::SurfaceState &state,
     return nullptr;
 }
 
-ImageImpl *DisplayAndroid::createImage(EGLenum target,
-                                       egl::ImageSibling *buffer,
+ImageImpl *DisplayAndroid::createImage(const egl::ImageState &state,
+                                       EGLenum target,
                                        const egl::AttributeMap &attribs)
 {
     UNIMPLEMENTED();
-    return DisplayGL::createImage(target, buffer, attribs);
+    return DisplayGL::createImage(state, target, attribs);
 }
 
 template <typename T>

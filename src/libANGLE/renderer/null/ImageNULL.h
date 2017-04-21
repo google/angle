@@ -18,7 +18,7 @@ namespace rx
 class ImageNULL : public ImageImpl
 {
   public:
-    ImageNULL();
+    ImageNULL(const egl::ImageState &state);
     ~ImageNULL() override;
     egl::Error initialize() override;
 

@@ -9,7 +9,6 @@
 #ifndef LIBANGLE_RENDERER_D3D_EGLIMAGED3D_H_
 #define LIBANGLE_RENDERER_D3D_EGLIMAGED3D_H_
 
-#include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/renderer/ImageImpl.h"
 
 namespace egl
@@ -19,6 +18,7 @@ class AttributeMap;
 
 namespace rx
 {
+class FramebufferAttachmentObjectImpl;
 class TextureD3D;
 class RenderbufferD3D;
 class RendererD3D;
@@ -27,10 +27,10 @@ class RenderTargetD3D;
 class EGLImageD3D final : public ImageImpl
 {
   public:
-    EGLImageD3D(RendererD3D *renderer,
+    EGLImageD3D(const egl::ImageState &state,
                 EGLenum target,
-                egl::ImageSibling *buffer,
-                const egl::AttributeMap &attribs);
+                const egl::AttributeMap &attribs,
+                RendererD3D *renderer);
     ~EGLImageD3D() override;
 
     egl::Error initialize() override;
@@ -44,13 +44,10 @@ class EGLImageD3D final : public ImageImpl
 
     RendererD3D *mRenderer;
 
-    egl::ImageSibling *mBuffer;
-
-    gl::ImageIndex mImageIndex;
     FramebufferAttachmentObjectImpl *mAttachmentBuffer;
 
     RenderTargetD3D *mRenderTarget;
 };
-}
+}  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_D3D_EGLIMAGED3D_H_

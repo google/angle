@@ -31,8 +31,8 @@ class DisplayGL : public DisplayImpl
     egl::Error initialize(egl::Display *display) override;
     void terminate() override;
 
-    ImageImpl *createImage(EGLenum target,
-                           egl::ImageSibling *buffer,
+    ImageImpl *createImage(const egl::ImageState &state,
+                           EGLenum target,
                            const egl::AttributeMap &attribs) override;
 
     ContextImpl *createContext(const gl::ContextState &state) override;

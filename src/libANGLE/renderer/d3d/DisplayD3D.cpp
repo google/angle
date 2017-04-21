@@ -187,11 +187,11 @@ SurfaceImpl *DisplayD3D::createPixmapSurface(const egl::SurfaceState &state,
     return nullptr;
 }
 
-ImageImpl *DisplayD3D::createImage(EGLenum target,
-                                   egl::ImageSibling *buffer,
+ImageImpl *DisplayD3D::createImage(const egl::ImageState &state,
+                                   EGLenum target,
                                    const egl::AttributeMap &attribs)
 {
-    return new EGLImageD3D(mRenderer, target, buffer, attribs);
+    return new EGLImageD3D(state, target, attribs, mRenderer);
 }
 
 egl::Error DisplayD3D::getDevice(DeviceImpl **device)

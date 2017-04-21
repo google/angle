@@ -18,7 +18,7 @@ namespace rx
 class ImageVk : public ImageImpl
 {
   public:
-    ImageVk();
+    ImageVk(const egl::ImageState &state);
     ~ImageVk() override;
     egl::Error initialize() override;
 
