@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1d919aaa_23b73478",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4933,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-21T15:10:44Z",
+      "side": 1,
+      "message": "This can all be merged into the above if-statement. (the mapCS variable too)",
+      "range": {
+        "startLine": 4915,
+        "startChar": 4,
+        "endLine": 4933,
+        "endChar": 5
+      },
+      "revId": "e314d9a951ca6efa490ed88b7d4b0bf69af11a00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1fbbf72a_437582be",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-21T15:10:44Z",
+      "side": 1,
+      "message": "static variables probably wont pad the struct.  Also add a static_assert(sizeof(dx_ComputeConstants11) \u003d\u003d 16, \"Unexpected structure size of dx_ComputeConstants11.\") after the struct declaration.",
+      "range": {
+        "startLine": 47,
+        "startChar": 4,
+        "endLine": 47,
+        "endChar": 10
+      },
+      "revId": "e314d9a951ca6efa490ed88b7d4b0bf69af11a00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
