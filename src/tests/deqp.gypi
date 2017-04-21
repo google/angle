@@ -1288,6 +1288,7 @@
                                 '/wd4131', # old-style declarator
                                 '/wd4244', # Conversion from 'type1' to 'type2', possible loss of data
                                 '/wd4245', # argument signed/unsigned mismatch
+                                '/wd4267', # size_t to 'type', possible loss of data
                                 '/wd4324', # structure was padded
                                 '/wd4701', # potentially uninit used
                                 '/wd4996', # deprecated
@@ -1328,7 +1329,6 @@
                         '<(zlib_path)/inflate.h',
                         '<(zlib_path)/inftrees.c',
                         '<(zlib_path)/inftrees.h',
-                        '<(zlib_path)/mozzconf.h',
                         '<(zlib_path)/trees.c',
                         '<(zlib_path)/trees.h',
                         '<(zlib_path)/uncompr.c',
