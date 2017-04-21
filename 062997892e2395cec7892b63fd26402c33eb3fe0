@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "341475e6_65b0c5d5",
+        "filename": "src/vulkan_support/vulkan.gypi",
+        "patchSetId": 3
+      },
+      "lineNbr": 916,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-21T14:39:01Z",
+      "side": 1,
+      "message": "use space indent, not tabs. actually, i think you should just move this section to your linux patch, since it specifically deals with Linux. Also, you can disable the loader header action on Linux by moving it into the OS\u003d\u003d\u0027win\u0027 conditions block. Again you can merge this into your Linux patch.",
+      "range": {
+        "startLine": 909,
+        "startChar": 0,
+        "endLine": 916,
+        "endChar": 3
+      },
+      "revId": "062997892e2395cec7892b63fd26402c33eb3fe0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
