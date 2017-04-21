@@ -16,6 +16,24 @@
       "revId": "2a76c0cdc25dd4be65e90c0cce4d7918d65ce13b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "30d0bee6_c3116b64",
+        "filename": "src/image_util/generatemip.inl",
+        "patchSetId": 3
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-21T14:18:22Z",
+      "side": 1,
+      "message": "They are implementation details of templates that we moved to a different file to avoid cluttering the headers.",
+      "parentUuid": "4c2511df_63f8069c",
+      "revId": "2a76c0cdc25dd4be65e90c0cce4d7918d65ce13b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
