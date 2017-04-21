@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "dd41eb9e_ffa0aa35",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 881,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-21T14:54:12Z",
+      "side": 1,
+      "message": "Also this could be ParamsT\u0026\u0026 instead to do perfect forwarding with std::forward.",
+      "parentUuid": "fa1f10bf_bc2c0462",
+      "range": {
+        "startLine": 880,
+        "startChar": 0,
+        "endLine": 881,
+        "endChar": 41
+      },
+      "revId": "4df43d91c784cd1c0ef2c5d60f10ba825cc2b010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7f27c808_3401597f",
         "filename": "src/libANGLE/Context.h",
         "patchSetId": 8
@@ -157,6 +181,23 @@
     },
     {
       "key": {
+        "uuid": "fc16370a_e3d28bee",
+        "filename": "src/libANGLE/params.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-21T14:54:12Z",
+      "side": 1,
+      "message": "Why do we need this inheritance scheme when the extra arguments in the Range / Instanced / InstancedANGLE versions aren\u0027t used? All we really need is DrawElementsParam.\nIn general I think there are going to be few use cases for the inheritance in GL and that they could be replaced by having a struct that holds a superset of all the arguments.",
+      "revId": "4df43d91c784cd1c0ef2c5d60f10ba825cc2b010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8beead5b_a6356106",
         "filename": "src/libANGLE/params.h",
         "patchSetId": 8
@@ -168,6 +209,23 @@
       "writtenOn": "2017-04-20T20:51:00Z",
       "side": 1,
       "message": "Why does this need to be variadic?",
+      "revId": "4df43d91c784cd1c0ef2c5d60f10ba825cc2b010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "29c0e1d0_6f8f5c1d",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 4035,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-21T14:54:12Z",
+      "side": 1,
+      "message": "nit: indexRange isn\u0027t used.",
       "revId": "4df43d91c784cd1c0ef2c5d60f10ba825cc2b010",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
