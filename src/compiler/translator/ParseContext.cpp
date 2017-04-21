@@ -4631,7 +4631,7 @@ int PaParseStrings(size_t count,
                    const int length[],
                    TParseContext *context)
 {
-    if ((count == 0) || (string == NULL))
+    if ((count == 0) || (string == nullptr))
         return 1;
 
     if (glslang_initialize(context))

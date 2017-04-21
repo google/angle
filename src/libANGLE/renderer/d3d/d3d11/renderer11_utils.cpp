@@ -1822,7 +1822,7 @@ void GenerateInitialTextureData(GLint internalFormat,
                                 std::vector<std::vector<BYTE>> *outData)
 {
     const d3d11::Format &d3dFormatInfo = d3d11::Format::Get(internalFormat, renderer11DeviceCaps);
-    ASSERT(d3dFormatInfo.dataInitializerFunction != NULL);
+    ASSERT(d3dFormatInfo.dataInitializerFunction != nullptr);
 
     const d3d11::DXGIFormatSize &dxgiFormatInfo =
         d3d11::GetDXGIFormatSizeInfo(d3dFormatInfo.texFormat);

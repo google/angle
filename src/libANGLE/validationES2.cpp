@@ -757,7 +757,7 @@ bool ValidateES2TexImageParameters(Context *context,
                 }
                 // OES_depth_texture supports loading depth data and multiple levels,
                 // but ANGLE_depth_texture does not
-                if (pixels != NULL || level != 0)
+                if (pixels != nullptr || level != 0)
                 {
                     context->handleError(Error(GL_INVALID_OPERATION));
                     return false;

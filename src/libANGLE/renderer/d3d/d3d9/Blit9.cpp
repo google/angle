@@ -108,7 +108,7 @@ gl::Error Blit9::initialize()
     void *lockPtr = nullptr;
     result = mQuadVertexBuffer->Lock(0, 0, &lockPtr, 0);
 
-    if (FAILED(result) || lockPtr == NULL)
+    if (FAILED(result) || lockPtr == nullptr)
     {
         ASSERT(result == D3DERR_OUTOFVIDEOMEMORY || result == E_OUTOFMEMORY);
         SafeRelease(mQuadVertexBuffer);
@@ -146,7 +146,7 @@ gl::Error Blit9::setShader(ShaderId source, const char *profile,
 
     D3DShaderType *shader = nullptr;
 
-    if (mCompiledShaders[source] != NULL)
+    if (mCompiledShaders[source] != nullptr)
     {
         shader = static_cast<D3DShaderType*>(mCompiledShaders[source]);
     }
@@ -364,7 +364,7 @@ gl::Error Blit9::copy(IDirect3DSurface9 *source,
                       bool premultiplyAlpha,
                       bool unmultiplyAlpha)
 {
-    ASSERT(source != NULL && dest != NULL);
+    ASSERT(source != nullptr && dest != nullptr);
 
     IDirect3DDevice9 *device = mRenderer->getDevice();
 
@@ -738,7 +738,7 @@ void Blit9::saveState()
     device->GetDepthStencilSurface(&mSavedDepthStencil);
     device->GetRenderTarget(0, &mSavedRenderTarget);
 
-    if (mSavedStateBlock == NULL)
+    if (mSavedStateBlock == nullptr)
     {
         hr = device->BeginStateBlock();
         ASSERT(SUCCEEDED(hr) || hr == D3DERR_OUTOFVIDEOMEMORY || hr == E_OUTOFMEMORY);
@@ -772,9 +772,9 @@ void Blit9::saveState()
         ASSERT(SUCCEEDED(hr) || hr == D3DERR_OUTOFVIDEOMEMORY || hr == E_OUTOFMEMORY);
     }
 
-    ASSERT(mSavedStateBlock != NULL);
+    ASSERT(mSavedStateBlock != nullptr);
 
-    if (mSavedStateBlock != NULL)
+    if (mSavedStateBlock != nullptr)
     {
         hr = mSavedStateBlock->Capture();
         ASSERT(SUCCEEDED(hr));
@@ -791,9 +791,9 @@ void Blit9::restoreState()
     device->SetRenderTarget(0, mSavedRenderTarget);
     SafeRelease(mSavedRenderTarget);
 
-    ASSERT(mSavedStateBlock != NULL);
+    ASSERT(mSavedStateBlock != nullptr);
 
-    if (mSavedStateBlock != NULL)
+    if (mSavedStateBlock != nullptr)
     {
         mSavedStateBlock->Apply();
     }

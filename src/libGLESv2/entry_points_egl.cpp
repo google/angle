@@ -817,7 +817,7 @@ EGLBoolean EGLAPIENTRY BindTexImage(EGLDisplay dpy, EGLSurface surface, EGLint b
     if (context)
     {
         gl::Texture *textureObject = context->getTargetTexture(GL_TEXTURE_2D);
-        ASSERT(textureObject != NULL);
+        ASSERT(textureObject != nullptr);
 
         if (textureObject->getImmutableFormat())
         {
@@ -924,7 +924,7 @@ EGLBoolean EGLAPIENTRY SwapInterval(EGLDisplay dpy, EGLint interval)
 
     Surface *draw_surface = static_cast<Surface *>(thread->getDrawSurface());
 
-    if (draw_surface == NULL)
+    if (draw_surface == nullptr)
     {
         thread->setError(Error(EGL_BAD_SURFACE));
         return EGL_FALSE;

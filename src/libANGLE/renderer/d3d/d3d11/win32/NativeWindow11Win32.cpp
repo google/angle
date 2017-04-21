@@ -58,7 +58,8 @@ HRESULT NativeWindow11Win32::createSwapChain(ID3D11Device *device,
                                              UINT height,
                                              IDXGISwapChain **swapChain)
 {
-    if (device == NULL || factory == NULL || swapChain == NULL || width == 0 || height == 0)
+    if (device == nullptr || factory == nullptr || swapChain == nullptr || width == 0 ||
+        height == 0)
     {
         return E_INVALIDARG;
     }

@@ -1025,13 +1025,13 @@ void State::setVertexArrayBinding(VertexArray *vertexArray)
 
 GLuint State::getVertexArrayId() const
 {
-    ASSERT(mVertexArray != NULL);
+    ASSERT(mVertexArray != nullptr);
     return mVertexArray->id();
 }
 
 VertexArray *State::getVertexArray() const
 {
-    ASSERT(mVertexArray != NULL);
+    ASSERT(mVertexArray != nullptr);
     return mVertexArray;
 }
 

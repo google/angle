@@ -3322,7 +3322,7 @@ TConstantUnion *TIntermConstantUnion::FoldAggregateBuiltIn(TIntermAggregate *agg
 // static
 TString TIntermTraverser::hash(const TString &name, ShHashFunction64 hashFunction)
 {
-    if (hashFunction == NULL || name.empty())
+    if (hashFunction == nullptr || name.empty())
         return name;
     khronos_uint64_t number = (*hashFunction)(name.c_str(), name.length());
     TStringStream stream;

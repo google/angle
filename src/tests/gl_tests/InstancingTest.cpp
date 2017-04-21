@@ -43,9 +43,9 @@ class InstancingTest : public ANGLETest
             mDrawElementsInstancedANGLE = (PFNGLDRAWELEMENTSINSTANCEDANGLEPROC)eglGetProcAddress("glDrawElementsInstancedANGLE");
         }
 
-        ASSERT_TRUE(mVertexAttribDivisorANGLE != NULL);
-        ASSERT_TRUE(mDrawArraysInstancedANGLE != NULL);
-        ASSERT_TRUE(mDrawElementsInstancedANGLE != NULL);
+        ASSERT_TRUE(mVertexAttribDivisorANGLE != nullptr);
+        ASSERT_TRUE(mDrawArraysInstancedANGLE != nullptr);
+        ASSERT_TRUE(mDrawElementsInstancedANGLE != nullptr);
 
         // Initialize the vertex and index vectors
         GLfloat qvertex1[3] = {-quadRadius,  quadRadius, 0.0f};

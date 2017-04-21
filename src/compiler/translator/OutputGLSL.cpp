@@ -93,7 +93,7 @@ TString TOutputGLSL::translateTextureFunction(const TString &name)
     const char **mapping =
         (sh::IsGLSL130OrNewer(getShaderOutput())) ? legacyToCoreRename : simpleRename;
 
-    for (int i = 0; mapping[i] != NULL; i += 2)
+    for (int i = 0; mapping[i] != nullptr; i += 2)
     {
         if (name == mapping[i])
         {

@@ -90,7 +90,7 @@ GLboolean GL_APIENTRY IsQueryEXT(GLuint id)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        return (context->getQuery(id, false, GL_NONE) != NULL) ? GL_TRUE : GL_FALSE;
+        return (context->getQuery(id, false, GL_NONE) != nullptr) ? GL_TRUE : GL_FALSE;
     }
 
     return GL_FALSE;
@@ -314,7 +314,7 @@ void GL_APIENTRY FinishFenceNV(GLuint fence)
     {
         FenceNV *fenceObject = context->getFenceNV(fence);
 
-        if (fenceObject == NULL)
+        if (fenceObject == nullptr)
         {
             context->handleError(Error(GL_INVALID_OPERATION));
             return;
@@ -359,7 +359,7 @@ void GL_APIENTRY GetFenceivNV(GLuint fence, GLenum pname, GLint *params)
     {
         FenceNV *fenceObject = context->getFenceNV(fence);
 
-        if (fenceObject == NULL)
+        if (fenceObject == nullptr)
         {
             context->handleError(Error(GL_INVALID_OPERATION));
             return;
@@ -496,7 +496,7 @@ GLboolean GL_APIENTRY IsFenceNV(GLuint fence)
     {
         FenceNV *fenceObject = context->getFenceNV(fence);
 
-        if (fenceObject == NULL)
+        if (fenceObject == nullptr)
         {
             return GL_FALSE;
         }
@@ -564,7 +564,7 @@ void GL_APIENTRY SetFenceNV(GLuint fence, GLenum condition)
 
         FenceNV *fenceObject = context->getFenceNV(fence);
 
-        if (fenceObject == NULL)
+        if (fenceObject == nullptr)
         {
             context->handleError(Error(GL_INVALID_OPERATION));
             return;
@@ -588,7 +588,7 @@ GLboolean GL_APIENTRY TestFenceNV(GLuint fence)
     {
         FenceNV *fenceObject = context->getFenceNV(fence);
 
-        if (fenceObject == NULL)
+        if (fenceObject == nullptr)
         {
             context->handleError(Error(GL_INVALID_OPERATION));
             return GL_TRUE;

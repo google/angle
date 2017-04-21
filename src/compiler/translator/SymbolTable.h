@@ -431,8 +431,8 @@ class TSymbolTable : angle::NonCopyable
 
     TSymbol *find(const TString &name,
                   int shaderVersion,
-                  bool *builtIn   = NULL,
-                  bool *sameScope = NULL) const;
+                  bool *builtIn   = nullptr,
+                  bool *sameScope = nullptr) const;
 
     TSymbol *findGlobal(const TString &name) const;
 

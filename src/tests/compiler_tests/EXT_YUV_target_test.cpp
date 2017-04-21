@@ -220,7 +220,7 @@ class EXTYUVTargetTest : public testing::TestWithParam<testing::tuple<const char
         DestroyCompiler();
         mCompiler =
             sh::ConstructCompiler(GL_FRAGMENT_SHADER, SH_GLES3_SPEC, SH_ESSL_OUTPUT, &mResources);
-        ASSERT_TRUE(mCompiler != NULL) << "Compiler could not be constructed.";
+        ASSERT_TRUE(mCompiler != nullptr) << "Compiler could not be constructed.";
     }
 
     testing::AssertionResult TestShaderCompile(const char *pragma)

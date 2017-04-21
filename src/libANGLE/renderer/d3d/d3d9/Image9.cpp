@@ -61,7 +61,7 @@ gl::Error Image9::generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 
     ASSERT(sourceDesc.Height == 1 || sourceDesc.Height / 2 == destDesc.Height);
 
     const d3d9::D3DFormat &d3dFormatInfo = d3d9::GetD3DFormatInfo(sourceDesc.Format);
-    ASSERT(d3dFormatInfo.info().mipGenerationFunction != NULL);
+    ASSERT(d3dFormatInfo.info().mipGenerationFunction != nullptr);
 
     D3DLOCKED_RECT sourceLocked = {0};
     result = sourceSurface->LockRect(&sourceLocked, NULL, D3DLOCK_READONLY);
@@ -190,7 +190,7 @@ bool Image9::redefine(GLenum target, GLenum internalformat, const gl::Extents &s
         mRenderable = (d3d9FormatInfo.renderFormat != D3DFMT_UNKNOWN);
 
         SafeRelease(mSurface);
-        mDirty = (d3d9FormatInfo.dataInitializerFunction != NULL);
+        mDirty = (d3d9FormatInfo.dataInitializerFunction != nullptr);
 
         return true;
     }
@@ -232,7 +232,7 @@ gl::Error Image9::createSurface()
         SafeRelease(newTexture);
 
         const d3d9::TextureFormat &d3dFormatInfo = d3d9::GetTextureFormatInfo(mInternalFormat);
-        if (d3dFormatInfo.dataInitializerFunction != NULL)
+        if (d3dFormatInfo.dataInitializerFunction != nullptr)
         {
             RECT entireRect;
             entireRect.left = 0;
@@ -312,7 +312,9 @@ bool Image9::isDirty() const
 {
     // Make sure to that this image is marked as dirty even if the staging texture hasn't been created yet
     // if initialization is required before use.
-    return (mSurface || d3d9::GetTextureFormatInfo(mInternalFormat).dataInitializerFunction != NULL) && mDirty;
+    return (mSurface ||
+            d3d9::GetTextureFormatInfo(mInternalFormat).dataInitializerFunction != nullptr) &&
+           mDirty;
 }
 
 gl::Error Image9::getSurface(IDirect3DSurface9 **outSurface)
@@ -492,7 +494,7 @@ gl::Error Image9::loadData(const gl::Box &area,
     ASSERT(unpack.skipRows == 0);
 
     const d3d9::TextureFormat &d3dFormatInfo = d3d9::GetTextureFormatInfo(mInternalFormat);
-    ASSERT(d3dFormatInfo.loadFunction != NULL);
+    ASSERT(d3dFormatInfo.loadFunction != nullptr);
 
     RECT lockRect =
     {
@@ -533,7 +535,7 @@ gl::Error Image9::loadCompressedData(const gl::Box &area, const void *input)
     ASSERT(area.x % d3d9::GetD3DFormatInfo(d3d9FormatInfo.texFormat).blockWidth == 0);
     ASSERT(area.y % d3d9::GetD3DFormatInfo(d3d9FormatInfo.texFormat).blockHeight == 0);
 
-    ASSERT(d3d9FormatInfo.loadFunction != NULL);
+    ASSERT(d3d9FormatInfo.loadFunction != nullptr);
 
     RECT lockRect =
     {

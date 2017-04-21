@@ -220,7 +220,7 @@ gl::Error TextureD3D::subImage(const gl::ImageIndex &index, const gl::Box &area,
     const uint8_t *pixelData = nullptr;
     ANGLE_TRY(GetUnpackPointer(unpack, pixels, layerOffset, &pixelData));
 
-    if (pixelData != NULL)
+    if (pixelData != nullptr)
     {
         ImageD3D *image = getImage(index);
         ASSERT(image);
@@ -256,7 +256,7 @@ gl::Error TextureD3D::setCompressedImageImpl(const gl::ImageIndex &index,
     const uint8_t *pixelData = nullptr;
     ANGLE_TRY(GetUnpackPointer(unpack, pixels, layerOffset, &pixelData));
 
-    if (pixelData != NULL)
+    if (pixelData != nullptr)
     {
         gl::Box fullImageArea(0, 0, 0, image->getWidth(), image->getHeight(), image->getDepth());
         ANGLE_TRY(image->loadCompressedData(fullImageArea, pixelData));
@@ -274,7 +274,7 @@ gl::Error TextureD3D::subImageCompressed(const gl::ImageIndex &index, const gl::
     const uint8_t *pixelData = nullptr;
     ANGLE_TRY(GetUnpackPointer(unpack, pixels, layerOffset, &pixelData));
 
-    if (pixelData != NULL)
+    if (pixelData != nullptr)
     {
         ImageD3D *image = getImage(index);
         ASSERT(image);
@@ -1383,7 +1383,7 @@ gl::Error TextureD3D_2D::setCompleteTexStorage(TextureStorage *newCompleteTexSto
 
 gl::Error TextureD3D_2D::updateStorage()
 {
-    ASSERT(mTexStorage != NULL);
+    ASSERT(mTexStorage != nullptr);
     GLint storageLevels = mTexStorage->getLevelCount();
     for (int level = 0; level < storageLevels; level++)
     {
@@ -1398,7 +1398,7 @@ gl::Error TextureD3D_2D::updateStorage()
 
 gl::Error TextureD3D_2D::updateStorageLevel(int level)
 {
-    ASSERT(level <= (int)ArraySize(mImageArray) && mImageArray[level] != NULL);
+    ASSERT(level <= (int)ArraySize(mImageArray) && mImageArray[level] != nullptr);
     ASSERT(isLevelComplete(level));
 
     if (mImageArray[level]->isDirty())
@@ -1911,7 +1911,7 @@ gl::Error TextureD3D_Cube::setCompleteTexStorage(TextureStorage *newCompleteTexS
 
 gl::Error TextureD3D_Cube::updateStorage()
 {
-    ASSERT(mTexStorage != NULL);
+    ASSERT(mTexStorage != nullptr);
     GLint storageLevels = mTexStorage->getLevelCount();
     for (int face = 0; face < 6; face++)
     {
@@ -1984,7 +1984,8 @@ bool TextureD3D_Cube::isImageComplete(const gl::ImageIndex &index) const
 
 gl::Error TextureD3D_Cube::updateStorageFaceLevel(int faceIndex, int level)
 {
-    ASSERT(level >= 0 && faceIndex < 6 && level < (int)ArraySize(mImageArray[faceIndex]) && mImageArray[faceIndex][level] != NULL);
+    ASSERT(level >= 0 && faceIndex < 6 && level < (int)ArraySize(mImageArray[faceIndex]) &&
+           mImageArray[faceIndex][level] != nullptr);
     ImageD3D *image = mImageArray[faceIndex][level];
 
     if (image->isDirty())
@@ -2445,7 +2446,7 @@ gl::Error TextureD3D_3D::setCompleteTexStorage(TextureStorage *newCompleteTexSto
 
 gl::Error TextureD3D_3D::updateStorage()
 {
-    ASSERT(mTexStorage != NULL);
+    ASSERT(mTexStorage != nullptr);
     GLint storageLevels = mTexStorage->getLevelCount();
     for (int level = 0; level < storageLevels; level++)
     {
@@ -2465,7 +2466,7 @@ bool TextureD3D_3D::isValidLevel(int level) const
 
 bool TextureD3D_3D::isLevelComplete(int level) const
 {
-    ASSERT(level >= 0 && level < (int)ArraySize(mImageArray) && mImageArray[level] != NULL);
+    ASSERT(level >= 0 && level < (int)ArraySize(mImageArray) && mImageArray[level] != nullptr);
 
     if (isImmutable())
     {
@@ -2518,7 +2519,7 @@ bool TextureD3D_3D::isImageComplete(const gl::ImageIndex &index) const
 
 gl::Error TextureD3D_3D::updateStorageLevel(int level)
 {
-    ASSERT(level >= 0 && level < (int)ArraySize(mImageArray) && mImageArray[level] != NULL);
+    ASSERT(level >= 0 && level < (int)ArraySize(mImageArray) && mImageArray[level] != nullptr);
     ASSERT(isLevelComplete(level));
 
     if (mImageArray[level]->isDirty())
@@ -2989,7 +2990,7 @@ gl::Error TextureD3D_2DArray::setCompleteTexStorage(TextureStorage *newCompleteT
 
 gl::Error TextureD3D_2DArray::updateStorage()
 {
-    ASSERT(mTexStorage != NULL);
+    ASSERT(mTexStorage != nullptr);
     GLint storageLevels = mTexStorage->getLevelCount();
     for (int level = 0; level < storageLevels; level++)
     {
@@ -3073,7 +3074,7 @@ gl::Error TextureD3D_2DArray::updateStorageLevel(int level)
 
     for (int layer = 0; layer < mLayerCounts[level]; layer++)
     {
-        ASSERT(mImageArray[level] != NULL && mImageArray[level][layer] != NULL);
+        ASSERT(mImageArray[level] != nullptr && mImageArray[level][layer] != nullptr);
         if (mImageArray[level][layer]->isDirty())
         {
             gl::ImageIndex index = gl::ImageIndex::Make2DArray(level, layer);

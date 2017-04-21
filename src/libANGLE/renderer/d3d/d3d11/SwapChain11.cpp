@@ -174,7 +174,7 @@ EGLint SwapChain11::resetOffscreenColorBuffer(int backbufferWidth, int backbuffe
     TRACE_EVENT0("gpu.angle", "SwapChain11::resetOffscreenTexture");
     ID3D11Device *device = mRenderer->getDevice();
 
-    ASSERT(device != NULL);
+    ASSERT(device != nullptr);
 
     // D3D11 does not allow zero size textures
     ASSERT(backbufferWidth >= 1);
@@ -413,7 +413,7 @@ EGLint SwapChain11::resize(EGLint backbufferWidth, EGLint backbufferHeight)
     TRACE_EVENT0("gpu.angle", "SwapChain11::resize");
     ID3D11Device *device = mRenderer->getDevice();
 
-    if (device == NULL)
+    if (device == nullptr)
     {
         return EGL_BAD_ACCESS;
     }
@@ -536,7 +536,7 @@ EGLint SwapChain11::reset(EGLint backbufferWidth, EGLint backbufferHeight, EGLin
     TRACE_EVENT0("gpu.angle", "SwapChain11::reset");
     ID3D11Device *device = mRenderer->getDevice();
 
-    if (device == NULL)
+    if (device == nullptr)
     {
         return EGL_BAD_ACCESS;
     }
@@ -610,11 +610,11 @@ void SwapChain11::initPassThroughResources()
     TRACE_EVENT0("gpu.angle", "SwapChain11::initPassThroughResources");
     ID3D11Device *device = mRenderer->getDevice();
 
-    ASSERT(device != NULL);
+    ASSERT(device != nullptr);
 
     // Make sure our resources are all not allocated, when we create
-    ASSERT(mQuadVB == NULL && mPassThroughSampler == NULL);
-    ASSERT(mPassThroughIL == NULL && mPassThroughVS == NULL && mPassThroughPS == NULL);
+    ASSERT(mQuadVB == nullptr && mPassThroughSampler == nullptr);
+    ASSERT(mPassThroughIL == nullptr && mPassThroughVS == nullptr && mPassThroughPS == nullptr);
 
     D3D11_BUFFER_DESC vbDesc;
     vbDesc.ByteWidth = sizeof(d3d11::PositionTexCoordVertex) * 4;

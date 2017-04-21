@@ -608,7 +608,7 @@ egl::Error Renderer11::initialize()
         // description string.
         // If DXGI1.2 is available then IDXGIAdapter2::GetDesc2 can be used to get the actual
         // hardware values.
-        if (mRenderer11DeviceCaps.featureLevel <= D3D_FEATURE_LEVEL_9_3 && dxgiAdapter2 != NULL)
+        if (mRenderer11DeviceCaps.featureLevel <= D3D_FEATURE_LEVEL_9_3 && dxgiAdapter2 != nullptr)
         {
             DXGI_ADAPTER_DESC2 adapterDesc2 = {};
             result                          = dxgiAdapter2->GetDesc2(&adapterDesc2);
@@ -1392,7 +1392,7 @@ gl::Error Renderer11::setSamplerState(gl::SamplerType type,
             ID3D11SamplerState *dxSamplerState = nullptr;
             ANGLE_TRY(mStateCache.getSamplerState(samplerState, &dxSamplerState));
 
-            ASSERT(dxSamplerState != NULL);
+            ASSERT(dxSamplerState != nullptr);
             mDeviceContext->PSSetSamplers(index, 1, &dxSamplerState);
 
             mCurPixelSamplerStates[index] = samplerState;
@@ -1412,7 +1412,7 @@ gl::Error Renderer11::setSamplerState(gl::SamplerType type,
             ID3D11SamplerState *dxSamplerState = nullptr;
             ANGLE_TRY(mStateCache.getSamplerState(samplerState, &dxSamplerState));
 
-            ASSERT(dxSamplerState != NULL);
+            ASSERT(dxSamplerState != nullptr);
             mDeviceContext->VSSetSamplers(index, 1, &dxSamplerState);
 
             mCurVertexSamplerStates[index] = samplerState;
@@ -1451,7 +1451,7 @@ gl::Error Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *t
 
         // If we get NULL back from getSRV here, something went wrong in the texture class and we're
         // unexpectedly missing the shader resource view
-        ASSERT(textureSRV != NULL);
+        ASSERT(textureSRV != nullptr);
 
         textureImpl->resetDirty();
     }
@@ -2825,7 +2825,7 @@ bool Renderer11::testDeviceResettable()
     PFN_D3D11_CREATE_DEVICE D3D11CreateDevice =
         (PFN_D3D11_CREATE_DEVICE)GetProcAddress(mD3d11Module, "D3D11CreateDevice");
 
-    if (D3D11CreateDevice == NULL)
+    if (D3D11CreateDevice == nullptr)
     {
         return false;
     }
@@ -3565,7 +3565,7 @@ gl::Error Renderer11::createRenderTarget(int width,
                                  result);
             }
 
-            if (formatInfo.dataInitializerFunction != NULL)
+            if (formatInfo.dataInitializerFunction != nullptr)
             {
                 const float clearValues[4] = {0.0f, 0.0f, 0.0f, 1.0f};
                 mDeviceContext->ClearRenderTargetView(rtv, clearValues);

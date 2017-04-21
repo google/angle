@@ -277,7 +277,7 @@ gl::Error PixelTransfer11::buildShaderMap()
     // Check that all the shaders were created successfully
     for (auto shaderMapIt = mBufferToTexturePSMap.begin(); shaderMapIt != mBufferToTexturePSMap.end(); shaderMapIt++)
     {
-        if (shaderMapIt->second == NULL)
+        if (shaderMapIt->second == nullptr)
         {
             return gl::Error(GL_OUT_OF_MEMORY, "Failed to create internal buffer to texture pixel shader.");
         }

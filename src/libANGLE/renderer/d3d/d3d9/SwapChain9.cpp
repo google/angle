@@ -89,7 +89,7 @@ EGLint SwapChain9::reset(int backbufferWidth, int backbufferHeight, EGLint swapI
 {
     IDirect3DDevice9 *device = mRenderer->getDevice();
 
-    if (device == NULL)
+    if (device == nullptr)
     {
         return EGL_BAD_ACCESS;
     }
@@ -424,7 +424,7 @@ void SwapChain9::recreate()
     }
 
     IDirect3DDevice9 *device = mRenderer->getDevice();
-    if (device == NULL)
+    if (device == nullptr)
     {
         return;
     }

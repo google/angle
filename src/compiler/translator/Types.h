@@ -163,7 +163,7 @@ class TInterfaceBlock : public TFieldListCollection
     }
 
     const TString &instanceName() const { return *mInstanceName; }
-    bool hasInstanceName() const { return mInstanceName != NULL; }
+    bool hasInstanceName() const { return mInstanceName != nullptr; }
     bool isArray() const { return mArraySize > 0; }
     int arraySize() const { return mArraySize; }
     TLayoutBlockStorage blockStorage() const { return mBlockStorage; }

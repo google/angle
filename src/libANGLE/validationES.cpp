@@ -4099,7 +4099,7 @@ bool ValidateFramebufferTextureBase(Context *context,
     {
         gl::Texture *tex = context->getTexture(texture);
 
-        if (tex == NULL)
+        if (tex == nullptr)
         {
             context->handleError(Error(GL_INVALID_OPERATION));
             return false;

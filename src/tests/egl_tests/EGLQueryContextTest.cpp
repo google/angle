@@ -21,7 +21,7 @@ class EGLQueryContextTest : public testing::TestWithParam<PlatformParameters>
         int clientVersion = GetParam().majorVersion;
 
         PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT = reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(eglGetProcAddress("eglGetPlatformDisplayEXT"));
-        EXPECT_TRUE(eglGetPlatformDisplayEXT != NULL);
+        EXPECT_TRUE(eglGetPlatformDisplayEXT != nullptr);
 
         EGLint dispattrs[] =
         {

@@ -245,7 +245,7 @@ gl::Error TextureStorage9_2D::getBaseTexture(IDirect3DBaseTexture9 **outTexture)
 {
     // if the width or height is not positive this should be treated as an incomplete texture
     // we handle that here by skipping the d3d texture creation
-    if (mTexture == NULL && mTextureWidth > 0 && mTextureHeight > 0)
+    if (mTexture == nullptr && mTextureWidth > 0 && mTextureHeight > 0)
     {
         ASSERT(mMipLevels > 0);
 
@@ -494,7 +494,7 @@ gl::Error TextureStorage9_Cube::getRenderTarget(const gl::ImageIndex &index, Ren
     ASSERT(index.mipIndex == 0);
     ASSERT(index.layerIndex >= 0 && static_cast<size_t>(index.layerIndex) < CUBE_FACE_COUNT);
 
-    if (mRenderTarget[index.layerIndex] == NULL && isRenderTarget())
+    if (mRenderTarget[index.layerIndex] == nullptr && isRenderTarget())
     {
         IDirect3DBaseTexture9 *baseTexture = nullptr;
         gl::Error error = getBaseTexture(&baseTexture);
@@ -551,7 +551,7 @@ gl::Error TextureStorage9_Cube::getBaseTexture(IDirect3DBaseTexture9 **outTextur
 {
     // if the size is not positive this should be treated as an incomplete texture
     // we handle that here by skipping the d3d texture creation
-    if (mTexture == NULL && mTextureWidth > 0 && mTextureHeight > 0)
+    if (mTexture == nullptr && mTextureWidth > 0 && mTextureHeight > 0)
     {
         ASSERT(mMipLevels > 0);
         ASSERT(mTextureWidth == mTextureHeight);

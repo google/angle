@@ -224,7 +224,7 @@ GLboolean GL_APIENTRY IsQuery(GLuint id)
             return GL_FALSE;
         }
 
-        return (context->getQuery(id, false, GL_NONE) != NULL) ? GL_TRUE : GL_FALSE;
+        return (context->getQuery(id, false, GL_NONE) != nullptr) ? GL_TRUE : GL_FALSE;
     }
 
     return GL_FALSE;
@@ -632,7 +632,7 @@ GLboolean GL_APIENTRY IsVertexArray(GLuint array)
 
         VertexArray *vao = context->getVertexArray(array);
 
-        return (vao != NULL ? GL_TRUE : GL_FALSE);
+        return (vao != nullptr ? GL_TRUE : GL_FALSE);
     }
 
     return GL_FALSE;
@@ -684,7 +684,7 @@ void GL_APIENTRY EndTransformFeedback(void)
         }
 
         TransformFeedback *transformFeedback = context->getGLState().getCurrentTransformFeedback();
-        ASSERT(transformFeedback != NULL);
+        ASSERT(transformFeedback != nullptr);
 
         if (!transformFeedback->isActive())
         {
@@ -1547,7 +1547,7 @@ GLboolean GL_APIENTRY IsSync(GLsync sync)
             return GL_FALSE;
         }
 
-        return (context->getFenceSync(sync) != NULL);
+        return (context->getFenceSync(sync) != nullptr);
     }
 
     return GL_FALSE;
@@ -2084,7 +2084,7 @@ void GL_APIENTRY PauseTransformFeedback(void)
         }
 
         TransformFeedback *transformFeedback = context->getGLState().getCurrentTransformFeedback();
-        ASSERT(transformFeedback != NULL);
+        ASSERT(transformFeedback != nullptr);
 
         // Current transform feedback must be active and not paused in order to pause (3.0.2 pg 86)
         if (!transformFeedback->isActive() || transformFeedback->isPaused())
@@ -2111,7 +2111,7 @@ void GL_APIENTRY ResumeTransformFeedback(void)
         }
 
         TransformFeedback *transformFeedback = context->getGLState().getCurrentTransformFeedback();
-        ASSERT(transformFeedback != NULL);
+        ASSERT(transformFeedback != nullptr);
 
         // Current transform feedback must be active and paused in order to resume (3.0.2 pg 86)
         if (!transformFeedback->isActive() || !transformFeedback->isPaused())

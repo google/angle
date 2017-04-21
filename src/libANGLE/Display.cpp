@@ -1008,7 +1008,7 @@ bool Display::isValidNativeDisplay(EGLNativeDisplayType display)
     {
         return true;
     }
-    return (WindowFromDC(display) != NULL);
+    return (WindowFromDC(display) != nullptr);
 #else
     return true;
 #endif

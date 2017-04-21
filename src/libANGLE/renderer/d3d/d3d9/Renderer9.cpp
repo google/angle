@@ -183,7 +183,7 @@ egl::Error Renderer9::initialize()
     TRACE_EVENT0("gpu.angle", "GetModuleHandle_d3d9");
     mD3d9Module = GetModuleHandle(TEXT("d3d9.dll"));
 
-    if (mD3d9Module == NULL)
+    if (mD3d9Module == nullptr)
     {
         return egl::Error(EGL_NOT_INITIALIZED, D3D9_INIT_MISSING_DEP, "No D3D9 module found.");
     }
@@ -970,7 +970,7 @@ gl::Error Renderer9::setTexture(gl::SamplerType type, int index, gl::Texture *te
 
         // If we get NULL back from getBaseTexture here, something went wrong
         // in the texture class and we're unexpectedly missing the d3d texture
-        ASSERT(d3dTexture != NULL);
+        ASSERT(d3dTexture != nullptr);
 
         forceSetTexture = textureImpl->hasDirtyImages();
         textureImpl->resetDirty();
@@ -1129,7 +1129,7 @@ gl::Error Renderer9::getNullColorbuffer(GLImplFactory *implFactory,
     // search cached nullcolorbuffers
     for (int i = 0; i < NUM_NULL_COLORBUFFER_CACHE_ENTRIES; i++)
     {
-        if (mNullColorbufferCache[i].buffer != NULL &&
+        if (mNullColorbufferCache[i].buffer != nullptr &&
             mNullColorbufferCache[i].width == size.width &&
             mNullColorbufferCache[i].height == size.height)
         {
@@ -1316,7 +1316,7 @@ gl::Error Renderer9::applyIndexBuffer(const gl::ContextState &data,
     }
 
     // Directly binding the storage buffer is not supported for d3d9
-    ASSERT(indexInfo->storage == NULL);
+    ASSERT(indexInfo->storage == nullptr);
 
     if (indexInfo->serial != mAppliedIBSerial)
     {
@@ -1955,7 +1955,7 @@ gl::Error Renderer9::clear(const ClearParameters &clearParams,
         // State which is altered in only some paths will be flagged dirty in the case that
         //  that path is taken.
         HRESULT hr;
-        if (mMaskedClearSavedState == NULL)
+        if (mMaskedClearSavedState == nullptr)
         {
             hr = mDevice->BeginStateBlock();
             ASSERT(SUCCEEDED(hr) || hr == D3DERR_OUTOFVIDEOMEMORY || hr == E_OUTOFMEMORY);
@@ -1991,9 +1991,9 @@ gl::Error Renderer9::clear(const ClearParameters &clearParams,
             ASSERT(SUCCEEDED(hr) || hr == D3DERR_OUTOFVIDEOMEMORY || hr == E_OUTOFMEMORY);
         }
 
-        ASSERT(mMaskedClearSavedState != NULL);
+        ASSERT(mMaskedClearSavedState != nullptr);
 
-        if (mMaskedClearSavedState != NULL)
+        if (mMaskedClearSavedState != nullptr)
         {
             hr = mMaskedClearSavedState->Capture();
             ASSERT(SUCCEEDED(hr));
@@ -2087,7 +2087,7 @@ gl::Error Renderer9::clear(const ClearParameters &clearParams,
             mDevice->Clear(0, NULL, D3DCLEAR_ZBUFFER, color, depth, stencil);
         }
 
-        if (mMaskedClearSavedState != NULL)
+        if (mMaskedClearSavedState != nullptr)
         {
             mMaskedClearSavedState->Apply();
         }
@@ -2208,10 +2208,10 @@ bool Renderer9::testDeviceResettable()
       case D3DERR_DEVICEHUNG:
         return true;
       case D3DERR_DEVICELOST:
-        return (mDeviceEx != NULL);
+          return (mDeviceEx != nullptr);
       case D3DERR_DEVICEREMOVED:
-        ASSERT(mDeviceEx != NULL);
-        return isRemovedDeviceResettable();
+          ASSERT(mDeviceEx != nullptr);
+          return isRemovedDeviceResettable();
       default:
         return false;
     }
@@ -2228,7 +2228,7 @@ bool Renderer9::resetDevice()
     bool removedDevice = (getDeviceStatusCode() == D3DERR_DEVICEREMOVED);
 
     // Device Removed is a feature which is only present with D3D9Ex
-    ASSERT(mDeviceEx != NULL || !removedDevice);
+    ASSERT(mDeviceEx != nullptr || !removedDevice);
 
     for (int attempts = 3; lost && attempts > 0; attempts--)
     {
@@ -2379,7 +2379,7 @@ unsigned int Renderer9::getReservedFragmentUniformBuffers() const
 bool Renderer9::getShareHandleSupport() const
 {
     // PIX doesn't seem to support using share handles, so disable them.
-    return (mD3d9Ex != NULL) && !gl::DebugAnnotationsActive();
+    return (mD3d9Ex != nullptr) && !gl::DebugAnnotationsActive();
 }
 
 int Renderer9::getMajorShaderModel() const
@@ -2404,7 +2404,7 @@ DWORD Renderer9::getCapsDeclTypes() const
 
 D3DPOOL Renderer9::getBufferPool(DWORD usage) const
 {
-    if (mD3d9Ex != NULL)
+    if (mD3d9Ex != nullptr)
     {
         return D3DPOOL_DEFAULT;
     }
@@ -2737,7 +2737,7 @@ gl::Error Renderer9::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *des
 
 D3DPOOL Renderer9::getTexturePool(DWORD usage) const
 {
-    if (mD3d9Ex != NULL)
+    if (mD3d9Ex != nullptr)
     {
         return D3DPOOL_DEFAULT;
     }

@@ -111,7 +111,7 @@ gl::Error VertexDeclarationCache::applyDeclaration(
         if (attributes[i].active)
         {
             // Directly binding the storage buffer is not supported for d3d9
-            ASSERT(attributes[i].storage == NULL);
+            ASSERT(attributes[i].storage == nullptr);
 
             int stream = static_cast<int>(i);
 
@@ -221,7 +221,7 @@ gl::Error VertexDeclarationCache::applyDeclaration(
         }
     }
 
-    if (lastCache->vertexDeclaration != NULL)
+    if (lastCache->vertexDeclaration != nullptr)
     {
         SafeRelease(lastCache->vertexDeclaration);
         // mLastSetVDecl is set to the replacement, so we don't have to worry

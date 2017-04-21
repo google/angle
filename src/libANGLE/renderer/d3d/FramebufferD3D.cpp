@@ -66,7 +66,8 @@ ClearParameters GetClearParameters(const gl::State &state, GLbitfield mask)
 
     if (mask & GL_DEPTH_BUFFER_BIT)
     {
-        if (state.getDepthStencilState().depthMask && framebufferObject->getDepthbuffer() != NULL)
+        if (state.getDepthStencilState().depthMask &&
+            framebufferObject->getDepthbuffer() != nullptr)
         {
             clearParams.clearDepth = true;
         }
@@ -74,7 +75,7 @@ ClearParameters GetClearParameters(const gl::State &state, GLbitfield mask)
 
     if (mask & GL_STENCIL_BUFFER_BIT)
     {
-        if (framebufferObject->getStencilbuffer() != NULL &&
+        if (framebufferObject->getStencilbuffer() != nullptr &&
             framebufferObject->getStencilbuffer()->getStencilSize() > 0)
         {
             clearParams.clearStencil = true;

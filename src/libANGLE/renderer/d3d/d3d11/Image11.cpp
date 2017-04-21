@@ -207,7 +207,7 @@ bool Image11::redefine(GLenum target,
         mRenderable = (formatInfo.rtvFormat != DXGI_FORMAT_UNKNOWN);
 
         releaseStagingTexture();
-        mDirty = (formatInfo.dataInitializerFunction != NULL);
+        mDirty = (formatInfo.dataInitializerFunction != nullptr);
 
         return true;
     }
@@ -523,7 +523,7 @@ gl::Error Image11::createStagingTexture()
         desc.MiscFlags      = 0;
 
         if (d3d11::Format::Get(mInternalFormat, mRenderer->getRenderer11DeviceCaps())
-                .dataInitializerFunction != NULL)
+                .dataInitializerFunction != nullptr)
         {
             std::vector<D3D11_SUBRESOURCE_DATA> initialData;
             std::vector<std::vector<BYTE>> textureData;
@@ -567,7 +567,7 @@ gl::Error Image11::createStagingTexture()
         desc.MiscFlags          = 0;
 
         if (d3d11::Format::Get(mInternalFormat, mRenderer->getRenderer11DeviceCaps())
-                .dataInitializerFunction != NULL)
+                .dataInitializerFunction != nullptr)
         {
             std::vector<D3D11_SUBRESOURCE_DATA> initialData;
             std::vector<std::vector<BYTE>> textureData;
