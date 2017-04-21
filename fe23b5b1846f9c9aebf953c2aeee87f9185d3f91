@@ -1,0 +1,135 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "24e78a43_aae65ded",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-21T15:16:18Z",
+      "side": 1,
+      "message": "variables",
+      "range": {
+        "startLine": 96,
+        "startChar": 3,
+        "endLine": 96,
+        "endChar": 11
+      },
+      "revId": "fe23b5b1846f9c9aebf953c2aeee87f9185d3f91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32556f08_bd083231",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1915,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-21T15:16:18Z",
+      "side": 1,
+      "message": "this is not dEQP specific, but in the GLSLES 310 spec section 4.4.6",
+      "revId": "fe23b5b1846f9c9aebf953c2aeee87f9185d3f91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "307c50a0_7eb4cb8c",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-21T15:16:18Z",
+      "side": 1,
+      "message": "This destructor isn\u0027t needed.",
+      "revId": "fe23b5b1846f9c9aebf953c2aeee87f9185d3f91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7486249c_a83e9158",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 11
+      },
+      "lineNbr": 977,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-21T15:16:18Z",
+      "side": 1,
+      "message": "We try to not have validation in glslang.y but in ParseContext instead.",
+      "revId": "fe23b5b1846f9c9aebf953c2aeee87f9185d3f91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa5a4d0b_28005aa4",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2128,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-21T15:16:18Z",
+      "side": 1,
+      "message": "in TODOs we try to put full email addresses",
+      "revId": "fe23b5b1846f9c9aebf953c2aeee87f9185d3f91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d319d46_293fb617",
+        "filename": "src/tests/gl_tests/AtomicCounterBufferTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-21T15:16:18Z",
+      "side": 1,
+      "message": "If these tests were instantiated only on ES 3.1  there wouldn\u0027t be a need for this check here and in other tests.",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 5
+      },
+      "revId": "fe23b5b1846f9c9aebf953c2aeee87f9185d3f91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "246719cc_430439dc",
+        "filename": "src/tests/gl_tests/AtomicCounterBufferTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-21T15:16:18Z",
+      "side": 1,
+      "message": "It would be good to have a test to check that the auto-increment of offset is working correctly, if the queries are already available.",
+      "revId": "fe23b5b1846f9c9aebf953c2aeee87f9185d3f91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
