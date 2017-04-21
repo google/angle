@@ -1287,6 +1287,7 @@
                             [
                                 '/wd4131', # old-style declarator
                                 '/wd4244', # Conversion from 'type1' to 'type2', possible loss of data
+                                '/wd4245', # argument signed/unsigned mismatch
                                 '/wd4324', # structure was padded
                                 '/wd4701', # potentially uninit used
                                 '/wd4996', # deprecated
