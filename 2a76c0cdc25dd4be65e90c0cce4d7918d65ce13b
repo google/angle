@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4c2511df_63f8069c",
+        "filename": "src/image_util/generatemip.inl",
+        "patchSetId": 3
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-04-21T09:50:48Z",
+      "side": 1,
+      "message": "I am not familiar with the .inl files. They are c++ style code, so I think it is OK to replace NULL by nullptr for pointers in these files.",
+      "revId": "2a76c0cdc25dd4be65e90c0cce4d7918d65ce13b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
