@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "66be1da8_4c55a5ff",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-22T12:22:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "24e78a43_aae65ded",
+      "range": {
+        "startLine": 96,
+        "startChar": 3,
+        "endLine": 96,
+        "endChar": 11
+      },
+      "revId": "fe23b5b1846f9c9aebf953c2aeee87f9185d3f91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "32556f08_bd083231",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 11
@@ -36,6 +60,24 @@
       "writtenOn": "2017-04-21T15:16:18Z",
       "side": 1,
       "message": "this is not dEQP specific, but in the GLSLES 310 spec section 4.4.6",
+      "revId": "fe23b5b1846f9c9aebf953c2aeee87f9185d3f91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef3338e2_05d47d32",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1915,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-22T12:22:48Z",
+      "side": 1,
+      "message": "Could you please point me the specific text? I just can\u0027t find such explicit statement. The spec says only \"binding\" and \"offset\" can be used. It seems unclear what kinds of error should be generated for other qualifiers.",
+      "parentUuid": "32556f08_bd083231",
       "revId": "fe23b5b1846f9c9aebf953c2aeee87f9185d3f91",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "58bb3ca3_3aeeeeb8",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-22T12:22:48Z",
+      "side": 1,
+      "message": "The forward declaration \"struct BindingOffset;\" will cause incomplete type compile error without this.",
+      "parentUuid": "307c50a0_7eb4cb8c",
+      "revId": "fe23b5b1846f9c9aebf953c2aeee87f9185d3f91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7486249c_a83e9158",
         "filename": "src/compiler/translator/glslang.y",
         "patchSetId": 11
@@ -76,6 +136,24 @@
     },
     {
       "key": {
+        "uuid": "587b0fa7_038f74e8",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 11
+      },
+      "lineNbr": 977,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-22T12:22:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7486249c_a83e9158",
+      "revId": "fe23b5b1846f9c9aebf953c2aeee87f9185d3f91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aa5a4d0b_28005aa4",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 11
@@ -90,6 +168,24 @@
       "revId": "fe23b5b1846f9c9aebf953c2aeee87f9185d3f91",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e6e638fd_90af18e8",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2128,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-22T12:22:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa5a4d0b_28005aa4",
+      "revId": "fe23b5b1846f9c9aebf953c2aeee87f9185d3f91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -116,6 +212,30 @@
     },
     {
       "key": {
+        "uuid": "4d0cab5b_60918f42",
+        "filename": "src/tests/gl_tests/AtomicCounterBufferTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-22T12:22:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0d319d46_293fb617",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 53,
+        "endChar": 5
+      },
+      "revId": "fe23b5b1846f9c9aebf953c2aeee87f9185d3f91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "246719cc_430439dc",
         "filename": "src/tests/gl_tests/AtomicCounterBufferTest.cpp",
         "patchSetId": 11
@@ -127,6 +247,24 @@
       "writtenOn": "2017-04-21T15:16:18Z",
       "side": 1,
       "message": "It would be good to have a test to check that the auto-increment of offset is working correctly, if the queries are already available.",
+      "revId": "fe23b5b1846f9c9aebf953c2aeee87f9185d3f91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ecd9666_af27dc87",
+        "filename": "src/tests/gl_tests/AtomicCounterBufferTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-22T12:22:48Z",
+      "side": 1,
+      "message": "I will do this later. Add TODO here for now.",
+      "parentUuid": "246719cc_430439dc",
       "revId": "fe23b5b1846f9c9aebf953c2aeee87f9185d3f91",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
