@@ -305,6 +305,10 @@ VertexFormatType GetVertexFormatType(const VertexAttribute &attrib, GLenum curre
 const VertexFormat &GetVertexFormatFromType(VertexFormatType vertexFormatType);
 size_t GetVertexFormatTypeSize(VertexFormatType vertexFormatType);
 
+// Check if an internal format is ever valid in ES3.  Makes no checks about support for a specific
+// context.
+bool ValidES3InternalFormat(GLenum internalFormat);
+
 // Implemented in format_map_autogen.cpp
 bool ValidES3Format(GLenum format);
 bool ValidES3Type(GLenum type);

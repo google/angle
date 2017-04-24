@@ -1892,6 +1892,12 @@ size_t GetVertexFormatTypeSize(VertexFormatType vertexFormatType)
     }
 }
 
+bool ValidES3InternalFormat(GLenum internalFormat)
+{
+    const InternalFormatInfoMap &formatMap = GetInternalFormatMap();
+    return internalFormat != GL_NONE && formatMap.find(internalFormat) != formatMap.end();
+}
+
 VertexFormat::VertexFormat(GLenum typeIn, GLboolean normalizedIn, GLuint componentsIn, bool pureIntegerIn)
     : type(typeIn),
       normalized(normalizedIn),

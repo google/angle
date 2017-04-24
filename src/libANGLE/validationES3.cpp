@@ -32,9 +32,25 @@ static bool ValidateTexImageFormatCombination(gl::Context *context,
 {
 
     // The type and format are valid if any supported internal format has that type and format
-    if (!ValidES3Format(format) || !ValidES3Type(type))
+    if (!ValidES3Format(format))
     {
-        context->handleError(Error(GL_INVALID_ENUM));
+        context->handleError(Error(GL_INVALID_ENUM, "Invalid format."));
+        return false;
+    }
+
+    if (!ValidES3Type(type))
+    {
+        context->handleError(Error(GL_INVALID_ENUM, "Invalid type."));
+        return false;
+    }
+
+    // For historical reasons, glTexImage2D and glTexImage3D pass in their internal format as a
+    // GLint instead of a GLenum. Therefor an invalid internal format gives a GL_INVALID_VALUE
+    // error instead of a GL_INVALID_ENUM error. As this validation function is only called in
+    // the validation codepaths for glTexImage2D/3D, we record a GL_INVALID_VALUE error.
+    if (!ValidES3InternalFormat(internalFormat))
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Invalid internalFormat."));
         return false;
     }
 
@@ -51,21 +67,18 @@ static bool ValidateTexImageFormatCombination(gl::Context *context,
         return false;
     }
 
-    // For historical reasons, glTexImage2D and glTexImage3D pass in their internal format as a
-    // GLint instead of a GLenum. Therefor an invalid internal format gives a GL_INVALID_VALUE
-    // error instead of a GL_INVALID_ENUM error. As this validation function is only called in
-    // the validation codepaths for glTexImage2D/3D, we record a GL_INVALID_VALUE error.
-    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat, type);
-    if (!formatInfo.textureSupport(context->getClientVersion(), context->getExtensions()))
-    {
-        context->handleError(Error(GL_INVALID_VALUE));
-        return false;
-    }
-
     // Check if this is a valid format combination to load texture data
     if (!ValidES3FormatCombination(format, type, internalFormat))
     {
-        context->handleError(Error(GL_INVALID_OPERATION));
+        context->handleError(
+            Error(GL_INVALID_OPERATION, "Invalid combination of format, type and internalFormat."));
+        return false;
+    }
+
+    const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat, type);
+    if (!formatInfo.textureSupport(context->getClientVersion(), context->getExtensions()))
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Unsupported internal format."));
         return false;
     }
 
