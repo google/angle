@@ -2345,6 +2345,22 @@ TEST_F(FragmentShaderValidationTest, InvariantNonOuput)
     }
 }
 
+// Invariant cannot be used with a non-output variable in ESSL3.
+// ESSL 3.00.6 section 4.8: This applies even if the declaration is empty.
+TEST_F(FragmentShaderValidationTest, InvariantNonOuputEmptyDeclaration)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "invariant in float;\n"
+        "void main() {}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
 // Invariant declaration should follow the following format "invariant <out variable name>".
 // Test having an incorrect qualifier in the invariant declaration.
 TEST_F(FragmentShaderValidationTest, InvariantDeclarationWithStorageQualifier)
@@ -3727,5 +3743,22 @@ TEST_F(FragmentShaderValidationTest, ConstructStructContainingVoidArray)
     if (compile(shaderString))
     {
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
+
+// Uniforms can't have location in ESSL 3.00.
+// Test this with an empty declaration (ESSL 3.00.6 section 4.8: The combinations of qualifiers that
+// cause compile-time or link-time errors are the same whether or not the declaration is empty).
+TEST_F(FragmentShaderValidationTest, UniformLocationEmptyDeclaration)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "layout(location=0) uniform float;\n"
+        "void main() {}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }

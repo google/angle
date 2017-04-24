@@ -136,9 +136,17 @@ class TParseContext : angle::NonCopyable
                                         const TTypeQualifierBuilder &typeQualifierBuilder,
                                         TType *type);
     bool checkCanUseExtension(const TSourceLoc &line, const TString &extension);
-    void singleDeclarationErrorCheck(const TPublicType &publicType,
-                                     const TSourceLoc &identifierLocation);
+
+    // Done for all declarations, whether empty or not.
+    void declarationQualifierErrorCheck(const sh::TQualifier qualifier,
+                                        const sh::TLayoutQualifier &layoutQualifier,
+                                        const TSourceLoc &location);
+    // Done for the first non-empty declarator in a declaration.
+    void nonEmptyDeclarationErrorCheck(const TPublicType &publicType,
+                                       const TSourceLoc &identifierLocation);
+    // Done only for empty declarations.
     void emptyDeclarationErrorCheck(const TPublicType &publicType, const TSourceLoc &location);
+
     void checkLayoutQualifierSupported(const TSourceLoc &location,
                                        const TString &layoutQualifierName,
                                        int versionRequired);
@@ -433,8 +441,10 @@ class TParseContext : angle::NonCopyable
                                                               const TSourceLoc &location,
                                                               bool insertParametersToSymbolTable);
 
-    // Set to true when the last/current declarator list was started with an empty declaration.
-    bool mDeferredSingleDeclarationErrorCheck;
+    // Set to true when the last/current declarator list was started with an empty declaration. The
+    // non-empty declaration error check will need to be performed if the empty declaration is
+    // followed by a declarator.
+    bool mDeferredNonEmptyDeclarationErrorCheck;
 
     sh::GLenum mShaderType;    // vertex or fragment language (future: pack or unpack)
     ShShaderSpec mShaderSpec;  // The language specification compiler conforms to - GLES2 or WebGL.

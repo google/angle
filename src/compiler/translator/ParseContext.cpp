@@ -96,7 +96,7 @@ TParseContext::TParseContext(TSymbolTable &symt,
                              const ShBuiltInResources &resources)
     : intermediate(),
       symbolTable(symt),
-      mDeferredSingleDeclarationErrorCheck(false),
+      mDeferredNonEmptyDeclarationErrorCheck(false),
       mShaderType(type),
       mShaderSpec(spec),
       mCompileOptions(options),
@@ -1136,6 +1136,60 @@ bool TParseContext::checkCanUseExtension(const TSourceLoc &line, const TString &
     return true;
 }
 
+// ESSL 3.00.6 section 4.8 Empty Declarations: "The combinations of qualifiers that cause
+// compile-time or link-time errors are the same whether or not the declaration is empty".
+// This function implements all the checks that are done on qualifiers regardless of if the
+// declaration is empty.
+void TParseContext::declarationQualifierErrorCheck(const sh::TQualifier qualifier,
+                                                   const sh::TLayoutQualifier &layoutQualifier,
+                                                   const TSourceLoc &location)
+{
+    if (qualifier == EvqShared && !layoutQualifier.isEmpty())
+    {
+        error(location, "Shared memory declarations cannot have layout specified", "layout");
+    }
+
+    if (layoutQualifier.matrixPacking != EmpUnspecified)
+    {
+        error(location, "layout qualifier only valid for interface blocks",
+              getMatrixPackingString(layoutQualifier.matrixPacking));
+        return;
+    }
+
+    if (layoutQualifier.blockStorage != EbsUnspecified)
+    {
+        error(location, "layout qualifier only valid for interface blocks",
+              getBlockStorageString(layoutQualifier.blockStorage));
+        return;
+    }
+
+    if (qualifier == EvqFragmentOut)
+    {
+        if (layoutQualifier.location != -1 && layoutQualifier.yuv == true)
+        {
+            error(location, "invalid layout qualifier combination", "yuv");
+            return;
+        }
+    }
+    else
+    {
+        checkYuvIsNotSpecified(location, layoutQualifier.yuv);
+    }
+
+    bool canHaveLocation = qualifier == EvqVertexIn || qualifier == EvqFragmentOut;
+    if (mShaderVersion >= 310 && qualifier == EvqUniform)
+    {
+        canHaveLocation = true;
+        // We're not checking whether the uniform location is in range here since that depends on
+        // the type of the variable.
+        // The type can only be fully determined for non-empty declarations.
+    }
+    if (!canHaveLocation)
+    {
+        checkLocationIsNotSpecified(location, layoutQualifier);
+    }
+}
+
 void TParseContext::emptyDeclarationErrorCheck(const TPublicType &publicType,
                                                const TSourceLoc &location)
 {
@@ -1145,16 +1199,12 @@ void TParseContext::emptyDeclarationErrorCheck(const TPublicType &publicType,
         // error. It is assumed that this applies to empty declarations as well.
         error(location, "empty array declaration needs to specify a size", "");
     }
-    if (publicType.qualifier == EvqShared && !publicType.layoutQualifier.isEmpty())
-    {
-        error(location, "Shared memory declarations cannot have layout specified", "layout");
-    }
 }
 
-// These checks are common for all declarations starting a declarator list, and declarators that
-// follow an empty declaration.
-void TParseContext::singleDeclarationErrorCheck(const TPublicType &publicType,
-                                                const TSourceLoc &identifierLocation)
+// These checks are done for all declarations that are non-empty. They're done for non-empty
+// declarations starting a declarator list, and declarators that follow an empty declaration.
+void TParseContext::nonEmptyDeclarationErrorCheck(const TPublicType &publicType,
+                                                  const TSourceLoc &identifierLocation)
 {
     switch (publicType.qualifier)
     {
@@ -1197,30 +1247,8 @@ void TParseContext::singleDeclarationErrorCheck(const TPublicType &publicType,
         return;
     }
 
-    // check for layout qualifier issues
-    const TLayoutQualifier layoutQualifier = publicType.layoutQualifier;
-
-    if (layoutQualifier.matrixPacking != EmpUnspecified)
-    {
-        error(identifierLocation, "layout qualifier only valid for interface blocks",
-              getMatrixPackingString(layoutQualifier.matrixPacking));
-        return;
-    }
-
-    if (layoutQualifier.blockStorage != EbsUnspecified)
-    {
-        error(identifierLocation, "layout qualifier only valid for interface blocks",
-              getBlockStorageString(layoutQualifier.blockStorage));
-        return;
-    }
-
-    bool canHaveLocation =
-        publicType.qualifier == EvqVertexIn || publicType.qualifier == EvqFragmentOut;
-
     if (mShaderVersion >= 310 && publicType.qualifier == EvqUniform)
     {
-        canHaveLocation = true;
-
         // Valid uniform declarations can't be unsized arrays since uniforms can't be initialized.
         // But invalid shaders may still reach here with an unsized array declaration.
         if (!publicType.isUnsizedArray())
@@ -1230,23 +1258,9 @@ void TParseContext::singleDeclarationErrorCheck(const TPublicType &publicType,
                                         publicType.layoutQualifier);
         }
     }
-    if (!canHaveLocation)
-    {
-        checkLocationIsNotSpecified(identifierLocation, publicType.layoutQualifier);
-    }
 
-    if (publicType.qualifier == EvqFragmentOut)
-    {
-        if (layoutQualifier.location != -1 && layoutQualifier.yuv == true)
-        {
-            error(identifierLocation, "invalid layout qualifier combination", "yuv");
-            return;
-        }
-    }
-    else
-    {
-        checkYuvIsNotSpecified(identifierLocation, layoutQualifier.yuv);
-    }
+    // check for layout qualifier issues
+    const TLayoutQualifier layoutQualifier = publicType.layoutQualifier;
 
     if (IsImage(publicType.getBasicType()))
     {
@@ -1880,7 +1894,7 @@ void TParseContext::checkInputOutputTypeIsValidES3(const TQualifier qualifier,
             {
                 error(qualifierLocation, "cannot be array", getQualifierString(qualifier));
             }
-            // Vertex inputs with a struct type are disallowed in singleDeclarationErrorCheck
+            // Vertex inputs with a struct type are disallowed in nonEmptyDeclarationErrorCheck
             return;
         case EvqFragmentOut:
             // ESSL 3.00 section 4.3.6
@@ -1888,7 +1902,7 @@ void TParseContext::checkInputOutputTypeIsValidES3(const TQualifier qualifier,
             {
                 error(qualifierLocation, "cannot be matrix", getQualifierString(qualifier));
             }
-            // Fragment outputs with a struct type are disallowed in singleDeclarationErrorCheck
+            // Fragment outputs with a struct type are disallowed in nonEmptyDeclarationErrorCheck
             return;
         default:
             break;
@@ -2007,38 +2021,45 @@ TIntermDeclaration *TParseContext::parseSingleDeclaration(
         }
     }
 
-    TIntermSymbol *symbol = intermediate.addSymbol(0, identifier, type, identifierOrTypeLocation);
+    declarationQualifierErrorCheck(publicType.qualifier, publicType.layoutQualifier,
+                                   identifierOrTypeLocation);
 
     bool emptyDeclaration = (identifier == "");
+    mDeferredNonEmptyDeclarationErrorCheck = emptyDeclaration;
 
-    mDeferredSingleDeclarationErrorCheck = emptyDeclaration;
-
-    TIntermDeclaration *declaration = new TIntermDeclaration();
-    declaration->setLine(identifierOrTypeLocation);
-
+    TIntermSymbol *symbol = nullptr;
     if (emptyDeclaration)
     {
         emptyDeclarationErrorCheck(publicType, identifierOrTypeLocation);
+        // In most cases we don't need to create a symbol node for an empty declaration.
+        // But if the empty declaration is declaring a struct type, the symbol node will store that.
+        if (type.getBasicType() == EbtStruct)
+        {
+            symbol = intermediate.addSymbol(0, "", type, identifierOrTypeLocation);
+        }
     }
     else
     {
-        singleDeclarationErrorCheck(publicType, identifierOrTypeLocation);
+        nonEmptyDeclarationErrorCheck(publicType, identifierOrTypeLocation);
 
         checkCanBeDeclaredWithoutInitializer(identifierOrTypeLocation, identifier, &publicType);
 
         TVariable *variable = nullptr;
         declareVariable(identifierOrTypeLocation, identifier, type, &variable);
 
-        if (variable && symbol)
+        if (variable)
         {
-            symbol->setId(variable->getUniqueId());
+            symbol = intermediate.addSymbol(variable->getUniqueId(), identifier, type,
+                                            identifierOrTypeLocation);
         }
     }
 
-    // We append the symbol even if the declaration is empty, mainly because of struct declarations
-    // that may just declare a type.
-    declaration->appendDeclarator(symbol);
-
+    TIntermDeclaration *declaration = new TIntermDeclaration();
+    declaration->setLine(identifierOrTypeLocation);
+    if (symbol)
+    {
+        declaration->appendDeclarator(symbol);
+    }
     return declaration;
 }
 
@@ -2048,9 +2069,12 @@ TIntermDeclaration *TParseContext::parseSingleArrayDeclaration(TPublicType &publ
                                                                const TSourceLoc &indexLocation,
                                                                TIntermTyped *indexExpression)
 {
-    mDeferredSingleDeclarationErrorCheck = false;
+    mDeferredNonEmptyDeclarationErrorCheck = false;
 
-    singleDeclarationErrorCheck(publicType, identifierLocation);
+    declarationQualifierErrorCheck(publicType.qualifier, publicType.layoutQualifier,
+                                   identifierLocation);
+
+    nonEmptyDeclarationErrorCheck(publicType, identifierLocation);
 
     checkCanBeDeclaredWithoutInitializer(identifierLocation, identifier, &publicType);
 
@@ -2085,9 +2109,12 @@ TIntermDeclaration *TParseContext::parseSingleInitDeclaration(const TPublicType 
                                                               const TSourceLoc &initLocation,
                                                               TIntermTyped *initializer)
 {
-    mDeferredSingleDeclarationErrorCheck = false;
+    mDeferredNonEmptyDeclarationErrorCheck = false;
 
-    singleDeclarationErrorCheck(publicType, identifierLocation);
+    declarationQualifierErrorCheck(publicType.qualifier, publicType.layoutQualifier,
+                                   identifierLocation);
+
+    nonEmptyDeclarationErrorCheck(publicType, identifierLocation);
 
     TIntermDeclaration *declaration = new TIntermDeclaration();
     declaration->setLine(identifierLocation);
@@ -2112,9 +2139,12 @@ TIntermDeclaration *TParseContext::parseSingleArrayInitDeclaration(
     const TSourceLoc &initLocation,
     TIntermTyped *initializer)
 {
-    mDeferredSingleDeclarationErrorCheck = false;
+    mDeferredNonEmptyDeclarationErrorCheck = false;
 
-    singleDeclarationErrorCheck(publicType, identifierLocation);
+    declarationQualifierErrorCheck(publicType.qualifier, publicType.layoutQualifier,
+                                   identifierLocation);
+
+    nonEmptyDeclarationErrorCheck(publicType, identifierLocation);
 
     checkIsValidTypeAndQualifierForArray(indexLocation, publicType);
 
@@ -2207,10 +2237,10 @@ void TParseContext::parseDeclarator(TPublicType &publicType,
 {
     // If the declaration starting this declarator list was empty (example: int,), some checks were
     // not performed.
-    if (mDeferredSingleDeclarationErrorCheck)
+    if (mDeferredNonEmptyDeclarationErrorCheck)
     {
-        singleDeclarationErrorCheck(publicType, identifierLocation);
-        mDeferredSingleDeclarationErrorCheck = false;
+        nonEmptyDeclarationErrorCheck(publicType, identifierLocation);
+        mDeferredNonEmptyDeclarationErrorCheck = false;
     }
 
     checkDeclaratorLocationIsNotSpecified(identifierLocation, publicType);
@@ -2238,10 +2268,10 @@ void TParseContext::parseArrayDeclarator(TPublicType &publicType,
 {
     // If the declaration starting this declarator list was empty (example: int,), some checks were
     // not performed.
-    if (mDeferredSingleDeclarationErrorCheck)
+    if (mDeferredNonEmptyDeclarationErrorCheck)
     {
-        singleDeclarationErrorCheck(publicType, identifierLocation);
-        mDeferredSingleDeclarationErrorCheck = false;
+        nonEmptyDeclarationErrorCheck(publicType, identifierLocation);
+        mDeferredNonEmptyDeclarationErrorCheck = false;
     }
 
     checkDeclaratorLocationIsNotSpecified(identifierLocation, publicType);
@@ -2275,10 +2305,10 @@ void TParseContext::parseInitDeclarator(const TPublicType &publicType,
 {
     // If the declaration starting this declarator list was empty (example: int,), some checks were
     // not performed.
-    if (mDeferredSingleDeclarationErrorCheck)
+    if (mDeferredNonEmptyDeclarationErrorCheck)
     {
-        singleDeclarationErrorCheck(publicType, identifierLocation);
-        mDeferredSingleDeclarationErrorCheck = false;
+        nonEmptyDeclarationErrorCheck(publicType, identifierLocation);
+        mDeferredNonEmptyDeclarationErrorCheck = false;
     }
 
     checkDeclaratorLocationIsNotSpecified(identifierLocation, publicType);
@@ -2307,10 +2337,10 @@ void TParseContext::parseArrayInitDeclarator(const TPublicType &publicType,
 {
     // If the declaration starting this declarator list was empty (example: int,), some checks were
     // not performed.
-    if (mDeferredSingleDeclarationErrorCheck)
+    if (mDeferredNonEmptyDeclarationErrorCheck)
     {
-        singleDeclarationErrorCheck(publicType, identifierLocation);
-        mDeferredSingleDeclarationErrorCheck = false;
+        nonEmptyDeclarationErrorCheck(publicType, identifierLocation);
+        mDeferredNonEmptyDeclarationErrorCheck = false;
     }
 
     checkDeclaratorLocationIsNotSpecified(identifierLocation, publicType);
