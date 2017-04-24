@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "12dc0a3e_c23de0df",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 417,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-24T03:26:36Z",
+      "side": 1,
+      "message": "According to ES3.1 SPEC, the definition of VertexAttribPointer is as follows (Chapter 10.3.1 Page. 245):\nif (the default vertex array object is bound and no buffer is bound to ARRAY_BUFFER)\n{\n    vertex_buffer \u003d temporary buffer\n    offset \u003d 0;\n}\nelse\n{\n    vertex_buffer \u003d \u003cbuffer bound to ARRAY_BUFFER\u003e\n    offset \u003d (char *)pointer - (char *)NULL;\n}\nVertexAttrib*Format(index, size, type, [normalized, ], 0);\nVertexAttribBinding(index, index);\nif (stride !\u003d 0)\n{\n    effectiveStride \u003d stride;\n}\nelse\n{\n    compute effectiveStride based on size and type;\n}\nVERTEX_ATTRIB_ARRAY_STRIDE[index] \u003d stride;\nVERTEX_ATTRIB_ARRAY_POINTER[index] \u003d pointer;\n// This sets VERTEX_BINDING_STRIDE to effectiveStride\nBindVertexBuffer(index, vertex_buffer, offset, effectiveStride);\n\nSo we must ensure attribIndex \u003d\u003d attrib.bindingIndex \u0026\u0026 attrib.relativeOffset \u003d\u003d 0 when we want to use VertexAttribPointer to sync status.",
+      "revId": "feecdc6b36d1e44cfe412282ccfde3ec3213d08b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
