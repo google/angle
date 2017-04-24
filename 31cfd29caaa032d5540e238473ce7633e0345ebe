@@ -164,6 +164,30 @@
     },
     {
       "key": {
+        "uuid": "68e0d73f_89291ad4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-24T19:24:06Z",
+      "side": 1,
+      "message": "I meant you can store the ClearShader class itself by-value. But if you want to just get rid of the class and store the LazyShaders and ComPtr in Clear11 that seems good too.",
+      "parentUuid": "21a8d7ed_1dc76018",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 6
+      },
+      "revId": "31cfd29caaa032d5540e238473ce7633e0345ebe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1cb5a254_4999dab5",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
         "patchSetId": 11
