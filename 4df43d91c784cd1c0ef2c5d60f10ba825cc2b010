@@ -343,6 +343,30 @@
     },
     {
       "key": {
+        "uuid": "86ad34c8_16152139",
+        "filename": "src/libANGLE/ContextState.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-24T19:56:44Z",
+      "side": 1,
+      "message": "Independent of the other discussions, we should probably make define ANGLE_HAS_DYNAMIC_CAST on all configurations that have assertions enabled.",
+      "parentUuid": "d708aec7_37811f73",
+      "range": {
+        "startLine": 151,
+        "startChar": 4,
+        "endLine": 153,
+        "endChar": 39
+      },
+      "revId": "4df43d91c784cd1c0ef2c5d60f10ba825cc2b010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fc16370a_e3d28bee",
         "filename": "src/libANGLE/params.h",
         "patchSetId": 8

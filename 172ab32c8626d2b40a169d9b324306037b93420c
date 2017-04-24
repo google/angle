@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7515c359_e21ef906",
+        "filename": "src/libANGLE/params.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-24T19:56:44Z",
+      "side": 1,
+      "message": "I\u0027m still not entirely sure the type info is needed here when we often make unsafe casts with assertions (even though they may be disabled in chrome builds).",
+      "range": {
+        "startLine": 38,
+        "startChar": 6,
+        "endLine": 38,
+        "endChar": 19
+      },
+      "revId": "172ab32c8626d2b40a169d9b324306037b93420c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b2120ea4_887560e4",
+        "filename": "src/libANGLE/params.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-24T19:56:44Z",
+      "side": 1,
+      "message": "This could probably be a macro too, something like:\n\n   DEFINE_PARAMS_TYPE_INFO(HasIndexRange, ParamsBase);",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 40
+      },
+      "revId": "172ab32c8626d2b40a169d9b324306037b93420c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
