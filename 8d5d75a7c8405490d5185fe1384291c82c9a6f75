@@ -1,0 +1,174 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0955ece3_00d4aaaa",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-24T05:50:16Z",
+      "side": 1,
+      "message": "Oh I should remove the prefix \u0027gl\u0027......",
+      "revId": "8d5d75a7c8405490d5185fe1384291c82c9a6f75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4b99f3f4_1b894da0",
+        "filename": "src/libANGLE/VertexAttribute.inl",
+        "patchSetId": 12
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-24T05:50:16Z",
+      "side": 1,
+      "message": "This function can be reused both in VertexAttribFormat and VertexAttribPointer.\n(just add a.relativeOffset \u003d\u003d b.relativeOffset when dealing with VertexAttribFormat)",
+      "revId": "8d5d75a7c8405490d5185fe1384291c82c9a6f75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f91b2a9c_5aa30c8e",
+        "filename": "src/libANGLE/VertexAttribute.inl",
+        "patchSetId": 12
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-24T05:50:16Z",
+      "side": 1,
+      "message": "This function can be reused both in BindVertexBuffer and VertexAttribPointer.",
+      "revId": "8d5d75a7c8405490d5185fe1384291c82c9a6f75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d96e5cf2_39f394a9",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-24T05:50:16Z",
+      "side": 1,
+      "message": "I prefer making this function a member of VertexArrayGL.\nIt\u0027s also OK to me to keep the origin style.",
+      "revId": "8d5d75a7c8405490d5185fe1384291c82c9a6f75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6961f07e_0277b362",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 413,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-24T05:50:16Z",
+      "side": 1,
+      "message": "According to ES3.1 SPEC, the definition of VertexAttribPointer is as follows (Chapter 10.3.1 Page. 245):\nif (the default vertex array object is bound and no buffer is bound to ARRAY_BUFFER)\n{\n    vertex_buffer \u003d temporary buffer\n    offset \u003d 0;\n}\nelse\n{\n    vertex_buffer \u003d \u003cbuffer bound to ARRAY_BUFFER\u003e\n    offset \u003d (char *)pointer - (char *)NULL;\n}\nVertexAttrib*Format(index, size, type, [normalized, ], 0);\nVertexAttribBinding(index, index);\nif (stride !\u003d 0)\n{\n    effectiveStride \u003d stride;\n}\nelse\n{\n    compute effectiveStride based on size and type;\n}\nVERTEX_ATTRIB_ARRAY_STRIDE[index] \u003d stride;\nVERTEX_ATTRIB_ARRAY_POINTER[index] \u003d pointer;\n// This sets VERTEX_BINDING_STRIDE to effectiveStride\nBindVertexBuffer(index, vertex_buffer, offset, effectiveStride);\n\nSo we must ensure attribIndex \u003d\u003d attrib.bindingIndex \u0026\u0026 attrib.relativeOffset \u003d\u003d 0 when we want to use VertexAttribPointer to sync status.",
+      "revId": "8d5d75a7c8405490d5185fe1384291c82c9a6f75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dc40cd50_e1c7c279",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-24T05:50:16Z",
+      "side": 1,
+      "message": "I feel it very strange to use a \u0027-1\u0027 as the flag using client memory pointer.\n\nI decide to set the buffer nullptr to label this.",
+      "revId": "8d5d75a7c8405490d5185fe1384291c82c9a6f75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7c5ed70_70a4029f",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 540,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-24T05:50:16Z",
+      "side": 1,
+      "message": "bindVertexArray was called in updateAttribEnabled, updateAttribPointer and updateAttribDivisor, which I think is unnecessary to call it so many times.\n\nI just call it once before the iteration starts.",
+      "revId": "8d5d75a7c8405490d5185fe1384291c82c9a6f75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf20f16a_84d5ed7c",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 556,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-24T05:50:16Z",
+      "side": 1,
+      "message": "There are only two situations that mAttributesNeedStreaming[index] should be changed.\n1.  attribute enabling is dirty (from enabled to disabled and vice versa)\n2.  array buffer usage has been changed (from using client memory pointer to buffer and vice versa)\n\nSince one change is enough, it is unnecessary to call updateNeedsStreaming both in updateAttribEnabled and updateAttribPointer even if both attribEnabled and attribPointer are dirty.",
+      "revId": "8d5d75a7c8405490d5185fe1384291c82c9a6f75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d6e4bcd4_2e164476",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 579,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-24T05:50:16Z",
+      "side": 1,
+      "message": "I split the code for client memory pointer from the origin updateAttribPointer to make the structure more clearly.\n\nNow the logic of updating vertex attrib pointer should be:\n1. Both the current and the cache are using client memory pointer\n    Update needsStreaming if attrib enabled is changed;\n    Set binding buffer to nullptr as a flag for using a client memory pointer;\n    The client memory pointer should be handled in streamAttributes if it is enabled; or just ignore it.\n\n2.  The current uses client memory pointer and the cache uses buffer\n     Update needsStreaming because dirtyArrayBufferUsage is true;\n     Set binding buffer to nullptr as a flag for using a client memory pointer;\n     The client memory pointer should be handled in streamAttributes if it is enabled; or just ignore it.    \n\n3. The current uses buffer and the cache uses client memory pointer\n     Update needsStreaming because dirtyArrayBufferUsage is true;\n     Call updateAttribPointerWithArrayBuffer without comparing to cached values because dirtyArrayBufferUsage is true\n\n4.  Both the current and the cache are using buffer\n     Call updateAttribPointerWithArrayBuffer if necessary after comparing the current to cached values.",
+      "revId": "8d5d75a7c8405490d5185fe1384291c82c9a6f75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2a7868c3_4d152002",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 581,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-24T05:50:16Z",
+      "side": 1,
+      "message": "We can decide to call updateAttribPointer immediately if we start to use a buffer instead of  using a client memory pointer.",
+      "revId": "8d5d75a7c8405490d5185fe1384291c82c9a6f75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

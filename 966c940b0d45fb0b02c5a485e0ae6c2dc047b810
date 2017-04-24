@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d05ca412_8b77b316",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-24T05:50:16Z",
+      "side": 0,
+      "message": "This piece of code appears twice: here and in updateAttribPointer.\nI move this into a function callVertexAttribPointer.",
+      "revId": "966c940b0d45fb0b02c5a485e0ae6c2dc047b810",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5750d7be_c58ef71e",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-24T05:50:16Z",
+      "side": 0,
+      "message": "In origin code,  updateNeedsStreaming is called after the comparison of cached values. To ensure we can reach this code we have  to set size -1 to make the comparison to cached values fail.\n\nNow we split the code for client memory pointers as a special case from updateAttribPointer, so we do not need this strange flag.",
+      "revId": "966c940b0d45fb0b02c5a485e0ae6c2dc047b810",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ce331781_93b76385",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-24T05:50:16Z",
+      "side": 0,
+      "message": "It is enough just to compare the binding buffer and six parameters which should be used in VertexAttribPointer, not all members in VertexAttribute and VertexBinding.",
+      "revId": "966c940b0d45fb0b02c5a485e0ae6c2dc047b810",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "db17c5c0_3ea23a51",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 544,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-24T05:50:16Z",
+      "side": 0,
+      "message": "These bits are unnecessary when the driver does not support Vertex Attrib Binding.\n\nIn my next patch I will implement Vertex Attrib Binding with these bits on drivers supporting this feature.",
+      "revId": "966c940b0d45fb0b02c5a485e0ae6c2dc047b810",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
