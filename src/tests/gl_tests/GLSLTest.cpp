@@ -1699,7 +1699,7 @@ TEST_P(GLSLTest, LoopIndexingValidation)
 
             std::string infoLog;
             infoLog.resize(infoLogLength);
-            glGetShaderInfoLog(shader, static_cast<GLsizei>(infoLog.size()), NULL, &infoLog[0]);
+            glGetShaderInfoLog(shader, static_cast<GLsizei>(infoLog.size()), nullptr, &infoLog[0]);
 
             if (infoLog.find("Loop index cannot be compared with non-constant expression") ==
                 std::string::npos)

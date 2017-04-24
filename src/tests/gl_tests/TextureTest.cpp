@@ -121,7 +121,7 @@ class TexCoordDrawTest : public ANGLETest
         GLuint texture2D;
         glGenTextures(1, &texture2D);
         glBindTexture(GL_TEXTURE_2D, texture2D);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
         EXPECT_GL_NO_ERROR();
         return texture2D;
     }
@@ -1473,7 +1473,7 @@ TEST_P(Texture2DTest, TexStorageWithPBO)
 
         // Initializes the color of the upper-left 8x8 pixels, leaves the other pixels untouched.
         // glTexSubImage2D should take into account that the image is dirty.
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 8, 8, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 8, 8, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 

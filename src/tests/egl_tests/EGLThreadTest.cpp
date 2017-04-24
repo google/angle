@@ -60,14 +60,15 @@ void EGLThreadTest::ThreadingTest()
 
     EXPECT_TRUE(mDisplay!= EGL_NO_DISPLAY);
 
-    mInitialize(mDisplay, NULL, NULL);
+    mInitialize(mDisplay, nullptr, nullptr);
     mGetCurrentContext();
 }
 
 TEST_F(EGLThreadTest, thread_init_crash)
 {
     DWORD threadId;
-    HANDLE threadHandle = CreateThread(NULL, 0, EGLThreadTest::ThreadingTestEntryPoint, this, 0, &threadId);
+    HANDLE threadHandle =
+        CreateThread(nullptr, 0, EGLThreadTest::ThreadingTestEntryPoint, this, 0, &threadId);
     EXPECT_TRUE(threadHandle != nullptr);
 
     // wait for signal from thread

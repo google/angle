@@ -215,7 +215,7 @@ class BinaryOutputStream : angle::NonCopyable
 
     const void* data() const
     {
-        return mData.size() ? &mData[0] : NULL;
+        return mData.size() ? &mData[0] : nullptr;
     }
 
   private:

@@ -32,7 +32,7 @@ class DepthStencilFormatsTestBase : public ANGLETest
         GLuint tex = 0;
         glGenTextures(1, &tex);
         glBindTexture(GL_TEXTURE_2D, tex);
-        glTexImage2D(GL_TEXTURE_2D, 0, format, 1, 1, 0, format, type, NULL);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, 1, 1, 0, format, type, nullptr);
         glDeleteTextures(1, &tex);
 
         return (glGetError() == GL_NO_ERROR);

@@ -943,7 +943,7 @@ void StateManager11::unsetConflictingSRVs(gl::SamplerType samplerType,
         if (record.srv && record.resource == resource &&
             ImageIndexConflictsWithSRV(index, record.desc))
         {
-            setShaderResource(samplerType, static_cast<UINT>(resourceIndex), NULL);
+            setShaderResource(samplerType, static_cast<UINT>(resourceIndex), nullptr);
         }
     }
 }

@@ -546,7 +546,7 @@ bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary *node)
             break;
 
         case EOpIndexDirect:
-            writeTriplet(visit, NULL, "[", "]");
+            writeTriplet(visit, nullptr, "[", "]");
             break;
         case EOpIndexIndirect:
             if (node->getAddIndexClamp())
@@ -582,7 +582,7 @@ bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary *node)
             }
             else
             {
-                writeTriplet(visit, NULL, "[", "]");
+                writeTriplet(visit, nullptr, "[", "]");
             }
             break;
         case EOpIndexDirectStruct:
@@ -799,7 +799,7 @@ bool TOutputGLSLBase::visitUnary(Visit visit, TIntermUnary *node)
             UNREACHABLE();
     }
 
-    writeTriplet(visit, preString.c_str(), NULL, postString.c_str());
+    writeTriplet(visit, preString.c_str(), nullptr, postString.c_str());
 
     return true;
 }
@@ -1119,16 +1119,16 @@ bool TOutputGLSLBase::visitBranch(Visit visit, TIntermBranch *node)
     switch (node->getFlowOp())
     {
         case EOpKill:
-            writeTriplet(visit, "discard", NULL, NULL);
+            writeTriplet(visit, "discard", nullptr, nullptr);
             break;
         case EOpBreak:
-            writeTriplet(visit, "break", NULL, NULL);
+            writeTriplet(visit, "break", nullptr, nullptr);
             break;
         case EOpContinue:
-            writeTriplet(visit, "continue", NULL, NULL);
+            writeTriplet(visit, "continue", nullptr, nullptr);
             break;
         case EOpReturn:
-            writeTriplet(visit, "return ", NULL, NULL);
+            writeTriplet(visit, "return ", nullptr, nullptr);
             break;
         default:
             UNREACHABLE();

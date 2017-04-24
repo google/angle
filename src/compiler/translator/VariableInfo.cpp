@@ -60,7 +60,7 @@ VarT *FindVariable(const TString &name, std::vector<VarT> *infoList)
             return &((*infoList)[ii]);
     }
 
-    return NULL;
+    return nullptr;
 }
 }
 

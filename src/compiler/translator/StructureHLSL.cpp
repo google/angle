@@ -163,13 +163,13 @@ TString StructureHLSL::defineQualified(const TStructure &structure,
     }
     else
     {
-        return define(structure, useHLSLRowMajorPacking, useStd140Packing, NULL);
+        return define(structure, useHLSLRowMajorPacking, useStd140Packing, nullptr);
     }
 }
 
 TString StructureHLSL::defineNameless(const TStructure &structure)
 {
-    return define(structure, false, false, NULL);
+    return define(structure, false, false, nullptr);
 }
 
 TString StructureHLSL::define(const TStructure &structure,

@@ -367,7 +367,7 @@ TEST_P(PointSpritesTest, PointSizeEnabledCompliance)
     glBindBuffer(GL_ARRAY_BUFFER, vertexObject);
     ASSERT_GL_NO_ERROR();
 
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices) + sizeof(colors), NULL, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices) + sizeof(colors), nullptr, GL_STATIC_DRAW);
     ASSERT_GL_NO_ERROR();
 
     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);

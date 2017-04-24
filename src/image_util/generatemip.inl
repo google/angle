@@ -233,7 +233,7 @@ static MipGenerationFunction GetMipGenerationFunction(size_t sourceWidth, size_t
 
     switch (index)
     {
-      case 0: return NULL;
+      case 0: return nullptr;
       case 1: return GenerateMip_X<T>;   // W x 1 x 1
       case 2: return GenerateMip_Y<T>;   // 1 x H x 1
       case 3: return GenerateMip_XY<T>;  // W x H x 1
@@ -244,7 +244,7 @@ static MipGenerationFunction GetMipGenerationFunction(size_t sourceWidth, size_t
     }
 
     UNREACHABLE();
-    return NULL;
+    return nullptr;
 }
 
 }  // namespace priv

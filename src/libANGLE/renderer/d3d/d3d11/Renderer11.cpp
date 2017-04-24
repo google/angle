@@ -1189,7 +1189,7 @@ gl::Error Renderer11::finish()
         UINT flags = (attempt % flushFrequency == 0) ? 0 : D3D11_ASYNC_GETDATA_DONOTFLUSH;
         attempt++;
 
-        result = mDeviceContext->GetData(mSyncQuery, NULL, 0, flags);
+        result = mDeviceContext->GetData(mSyncQuery, nullptr, 0, flags);
         if (FAILED(result))
         {
             return gl::Error(GL_OUT_OF_MEMORY, "Failed to get event query data, result: 0x%X.",
@@ -1921,7 +1921,7 @@ gl::Error Renderer11::drawArraysImpl(const gl::ContextState &data,
 
         ID3D11PixelShader *pixelShader = GetAs<ShaderExecutable11>(pixelExe)->getPixelShader();
         ASSERT(reinterpret_cast<uintptr_t>(pixelShader) == mAppliedPixelShader);
-        mDeviceContext->PSSetShader(pixelShader, NULL, 0);
+        mDeviceContext->PSSetShader(pixelShader, nullptr, 0);
 
         // Retrieve the geometry shader.
         rx::ShaderExecutableD3D *geometryExe = nullptr;
@@ -1929,10 +1929,10 @@ gl::Error Renderer11::drawArraysImpl(const gl::ContextState &data,
             programD3D->getGeometryExecutableForPrimitiveType(data, mode, &geometryExe, nullptr));
 
         ID3D11GeometryShader *geometryShader =
-            (geometryExe ? GetAs<ShaderExecutable11>(geometryExe)->getGeometryShader() : NULL);
+            (geometryExe ? GetAs<ShaderExecutable11>(geometryExe)->getGeometryShader() : nullptr);
         mAppliedGeometryShader = reinterpret_cast<uintptr_t>(geometryShader);
         ASSERT(geometryShader);
-        mDeviceContext->GSSetShader(geometryShader, NULL, 0);
+        mDeviceContext->GSSetShader(geometryShader, nullptr, 0);
 
         if (instances > 0)
         {
@@ -2893,7 +2893,7 @@ bool Renderer11::testDeviceResettable()
 
     ASSERT(mRequestedDriverType != D3D_DRIVER_TYPE_UNKNOWN);
     HRESULT result = D3D11CreateDevice(
-        NULL, mRequestedDriverType, NULL,
+        nullptr, mRequestedDriverType, nullptr,
 #if defined(_DEBUG)
         D3D11_CREATE_DEVICE_DEBUG,
 #else
@@ -3516,7 +3516,7 @@ gl::Error Renderer11::createRenderTarget(int width,
         ASSERT(bindRTV != bindDSV);
 
         ID3D11Texture2D *texture = nullptr;
-        HRESULT result           = mDevice->CreateTexture2D(&desc, NULL, &texture);
+        HRESULT result           = mDevice->CreateTexture2D(&desc, nullptr, &texture);
         if (FAILED(result))
         {
             ASSERT(result == E_OUTOFMEMORY);
@@ -3684,7 +3684,7 @@ gl::Error Renderer11::loadExecutable(const void *function,
             ID3D11VertexShader *vertexShader      = nullptr;
             ID3D11GeometryShader *streamOutShader = nullptr;
 
-            HRESULT result = mDevice->CreateVertexShader(function, length, NULL, &vertexShader);
+            HRESULT result = mDevice->CreateVertexShader(function, length, nullptr, &vertexShader);
             ASSERT(SUCCEEDED(result));
             if (FAILED(result))
             {
@@ -3711,7 +3711,7 @@ gl::Error Renderer11::loadExecutable(const void *function,
 
                 result = mDevice->CreateGeometryShaderWithStreamOutput(
                     function, static_cast<unsigned int>(length), soDeclaration.data(),
-                    static_cast<unsigned int>(soDeclaration.size()), NULL, 0, 0, NULL,
+                    static_cast<unsigned int>(soDeclaration.size()), nullptr, 0, 0, nullptr,
                     &streamOutShader);
                 ASSERT(SUCCEEDED(result));
                 if (FAILED(result))
@@ -3728,7 +3728,7 @@ gl::Error Renderer11::loadExecutable(const void *function,
         {
             ID3D11PixelShader *pixelShader = nullptr;
 
-            HRESULT result = mDevice->CreatePixelShader(function, length, NULL, &pixelShader);
+            HRESULT result = mDevice->CreatePixelShader(function, length, nullptr, &pixelShader);
             ASSERT(SUCCEEDED(result));
             if (FAILED(result))
             {
@@ -3742,7 +3742,8 @@ gl::Error Renderer11::loadExecutable(const void *function,
         {
             ID3D11GeometryShader *geometryShader = nullptr;
 
-            HRESULT result = mDevice->CreateGeometryShader(function, length, NULL, &geometryShader);
+            HRESULT result =
+                mDevice->CreateGeometryShader(function, length, nullptr, &geometryShader);
             ASSERT(SUCCEEDED(result));
             if (FAILED(result))
             {
@@ -3756,7 +3757,8 @@ gl::Error Renderer11::loadExecutable(const void *function,
         {
             ID3D11ComputeShader *computeShader = nullptr;
 
-            HRESULT result = mDevice->CreateComputeShader(function, length, NULL, &computeShader);
+            HRESULT result =
+                mDevice->CreateComputeShader(function, length, nullptr, &computeShader);
             ASSERT(SUCCEEDED(result));
             if (FAILED(result))
             {

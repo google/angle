@@ -19,7 +19,7 @@ Query9::Query9(Renderer9 *renderer, GLenum type)
       mResult(GL_FALSE),
       mQueryFinished(false),
       mRenderer(renderer),
-      mQuery(NULL)
+      mQuery(nullptr)
 {
 }
 

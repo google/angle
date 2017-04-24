@@ -196,7 +196,7 @@ class TriangleFanBenchSample : public SampleApplication
         for (unsigned i = 0; i < mNumSquares; ++i)
         {
             glBindBuffer(GL_ARRAY_BUFFER, mFanBufId[i]);
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
             glDrawArrays(GL_TRIANGLE_FAN, 0, mNumFanVerts);
         }
         mFanTimer->stop();
@@ -211,7 +211,7 @@ class TriangleFanBenchSample : public SampleApplication
         for (unsigned i = 1; i < mNumSquares; ++i)
         {
             glBindBuffer(GL_ARRAY_BUFFER, mTriBufId[i]);
-            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
             glDrawArrays(GL_TRIANGLES, 0, mNumTriVerts);
         }
         mTriTimer->stop();

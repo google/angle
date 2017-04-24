@@ -58,7 +58,7 @@ class ProgramBinaryTest : public ANGLETest
 
         glGenBuffers(1, &mBuffer);
         glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
-        glBufferData(GL_ARRAY_BUFFER, 128, NULL, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, 128, nullptr, GL_STATIC_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         ASSERT_GL_NO_ERROR();
@@ -103,7 +103,7 @@ TEST_P(ProgramBinaryTest, FloatDynamicShaderSize)
     glUseProgram(mProgram);
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
 
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 8, NULL);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 8, nullptr);
     glEnableVertexAttribArray(0);
     glDrawArrays(GL_POINTS, 0, 1);
 
@@ -114,7 +114,7 @@ TEST_P(ProgramBinaryTest, FloatDynamicShaderSize)
 
     for (GLsizei size = 1; size <= 3; size++)
     {
-        glVertexAttribPointer(0, size, GL_FLOAT, GL_FALSE, 8, NULL);
+        glVertexAttribPointer(0, size, GL_FLOAT, GL_FALSE, 8, nullptr);
         glEnableVertexAttribArray(0);
         glDrawArrays(GL_POINTS, 0, 1);
 
@@ -190,7 +190,7 @@ TEST_P(ProgramBinaryTest, SaveAndLoadBinary)
             if (infoLogLength > 0)
             {
                 std::vector<GLchar> infoLog(infoLogLength);
-                glGetProgramInfoLog(program2, static_cast<GLsizei>(infoLog.size()), NULL,
+                glGetProgramInfoLog(program2, static_cast<GLsizei>(infoLog.size()), nullptr,
                                     &infoLog[0]);
                 FAIL() << "program link failed: " << &infoLog[0];
             }
@@ -204,7 +204,7 @@ TEST_P(ProgramBinaryTest, SaveAndLoadBinary)
             glUseProgram(program2);
             glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
 
-            glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 8, NULL);
+            glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 8, nullptr);
             glEnableVertexAttribArray(0);
             glDrawArrays(GL_POINTS, 0, 1);
 
@@ -670,7 +670,7 @@ class ProgramBinariesAcrossPlatforms : public testing::TestWithParam<PlatformsWi
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         glDisableVertexAttribArray(positionLocation);
-        glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, NULL);
+        glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
 
         EXPECT_PIXEL_EQ(mOSWindow->getWidth() / 2, mOSWindow->getHeight() / 2, 255, 0, 0, 255);
     }

@@ -95,7 +95,7 @@ egl::Error DisplayGLX::initialize(egl::Display *display)
     if (mXDisplay == EGL_DEFAULT_DISPLAY)
     {
         mUsesNewXDisplay = true;
-        mXDisplay = XOpenDisplay(NULL);
+        mXDisplay        = XOpenDisplay(nullptr);
         if (!mXDisplay)
         {
             return egl::Error(EGL_NOT_INITIALIZED, "Could not open the default X display.");

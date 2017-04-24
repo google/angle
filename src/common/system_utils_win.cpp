@@ -22,7 +22,7 @@ namespace
 std::string GetExecutablePathImpl()
 {
     std::array<char, MAX_PATH> executableFileBuf;
-    DWORD executablePathLen = GetModuleFileNameA(NULL, executableFileBuf.data(),
+    DWORD executablePathLen = GetModuleFileNameA(nullptr, executableFileBuf.data(),
                                                  static_cast<DWORD>(executableFileBuf.size()));
     return (executablePathLen > 0 ? std::string(executableFileBuf.data()) : "");
 }

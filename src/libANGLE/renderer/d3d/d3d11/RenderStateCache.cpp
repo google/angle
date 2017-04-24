@@ -48,9 +48,11 @@ RenderStateCache::RenderStateCache(Renderer11 *renderer)
       mCounter(0),
       mBlendStateCache(kMaxBlendStates, HashBlendState, CompareBlendStates),
       mRasterizerStateCache(kMaxRasterizerStates, HashRasterizerState, CompareRasterizerStates),
-      mDepthStencilStateCache(kMaxDepthStencilStates, HashDepthStencilState, CompareDepthStencilStates),
+      mDepthStencilStateCache(kMaxDepthStencilStates,
+                              HashDepthStencilState,
+                              CompareDepthStencilStates),
       mSamplerStateCache(kMaxSamplerStates, HashSamplerState, CompareSamplerStates),
-      mDevice(NULL)
+      mDevice(nullptr)
 {
 }
 

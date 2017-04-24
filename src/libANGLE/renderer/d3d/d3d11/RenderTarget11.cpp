@@ -230,7 +230,7 @@ TextureRenderTarget11::TextureRenderTarget11(ID3D11RenderTargetView *rtv,
       mSubresourceIndex(0),
       mTexture(resource),
       mRenderTarget(rtv),
-      mDepthStencil(NULL),
+      mDepthStencil(nullptr),
       mShaderResource(srv),
       mBlitShaderResource(blitSRV)
 {
@@ -278,7 +278,7 @@ TextureRenderTarget11::TextureRenderTarget11(ID3D11DepthStencilView *dsv,
       mSamples(samples),
       mSubresourceIndex(0),
       mTexture(resource),
-      mRenderTarget(NULL),
+      mRenderTarget(nullptr),
       mDepthStencil(dsv),
       mShaderResource(srv),
       mBlitShaderResource(nullptr)
@@ -415,12 +415,12 @@ ID3D11Resource *SurfaceRenderTarget11::getTexture() const
 
 ID3D11RenderTargetView *SurfaceRenderTarget11::getRenderTargetView() const
 {
-    return (mDepth ? NULL : mSwapChain->getRenderTarget());
+    return (mDepth ? nullptr : mSwapChain->getRenderTarget());
 }
 
 ID3D11DepthStencilView *SurfaceRenderTarget11::getDepthStencilView() const
 {
-    return (mDepth ? mSwapChain->getDepthStencil() : NULL);
+    return (mDepth ? mSwapChain->getDepthStencil() : nullptr);
 }
 
 ID3D11ShaderResourceView *SurfaceRenderTarget11::getShaderResourceView() const

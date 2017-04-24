@@ -48,7 +48,10 @@ class TexRedefBenchSample : public SampleApplication
   public:
     TexRedefBenchSample()
         : SampleApplication("Microbench", 1280, 1280),
-          mPixelsResize(NULL), mPixelsNewTex(NULL), mTimeFrame(false), mFrameCount(0)
+          mPixelsResize(nullptr),
+          mPixelsNewTex(nullptr),
+          mTimeFrame(false),
+          mFrameCount(0)
     {
     }
 

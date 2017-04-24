@@ -182,7 +182,7 @@ bool X11Window::initialize(const std::string &name, size_t width, size_t height)
 {
     destroy();
 
-    mDisplay = XOpenDisplay(NULL);
+    mDisplay = XOpenDisplay(nullptr);
     if (!mDisplay)
     {
         return false;

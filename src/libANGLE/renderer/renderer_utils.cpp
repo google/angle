@@ -130,19 +130,19 @@ static FormatWriteFunctionMap BuildFormatWriteFunctionMap()
     InsertFormatWriteFunctionMapping(&map, GL_SRGB_EXT,           GL_UNSIGNED_BYTE,                  WriteColor<R8G8B8, GLfloat>       );
     InsertFormatWriteFunctionMapping(&map, GL_SRGB_ALPHA_EXT,     GL_UNSIGNED_BYTE,                  WriteColor<R8G8B8A8, GLfloat>     );
 
-    InsertFormatWriteFunctionMapping(&map, GL_COMPRESSED_RGB_S3TC_DXT1_EXT,    GL_UNSIGNED_BYTE,     NULL                              );
-    InsertFormatWriteFunctionMapping(&map, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,   GL_UNSIGNED_BYTE,     NULL                              );
-    InsertFormatWriteFunctionMapping(&map, GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE, GL_UNSIGNED_BYTE,     NULL                              );
-    InsertFormatWriteFunctionMapping(&map, GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE, GL_UNSIGNED_BYTE,     NULL                              );
+    InsertFormatWriteFunctionMapping(&map, GL_COMPRESSED_RGB_S3TC_DXT1_EXT,    GL_UNSIGNED_BYTE,     nullptr                              );
+    InsertFormatWriteFunctionMapping(&map, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,   GL_UNSIGNED_BYTE,     nullptr                              );
+    InsertFormatWriteFunctionMapping(&map, GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE, GL_UNSIGNED_BYTE,     nullptr                              );
+    InsertFormatWriteFunctionMapping(&map, GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE, GL_UNSIGNED_BYTE,     nullptr                              );
 
-    InsertFormatWriteFunctionMapping(&map, GL_DEPTH_COMPONENT,    GL_UNSIGNED_SHORT,                 NULL                              );
-    InsertFormatWriteFunctionMapping(&map, GL_DEPTH_COMPONENT,    GL_UNSIGNED_INT,                   NULL                              );
-    InsertFormatWriteFunctionMapping(&map, GL_DEPTH_COMPONENT,    GL_FLOAT,                          NULL                              );
+    InsertFormatWriteFunctionMapping(&map, GL_DEPTH_COMPONENT,    GL_UNSIGNED_SHORT,                 nullptr                              );
+    InsertFormatWriteFunctionMapping(&map, GL_DEPTH_COMPONENT,    GL_UNSIGNED_INT,                   nullptr                              );
+    InsertFormatWriteFunctionMapping(&map, GL_DEPTH_COMPONENT,    GL_FLOAT,                          nullptr                              );
 
-    InsertFormatWriteFunctionMapping(&map, GL_STENCIL,            GL_UNSIGNED_BYTE,                  NULL                              );
+    InsertFormatWriteFunctionMapping(&map, GL_STENCIL,            GL_UNSIGNED_BYTE,                  nullptr                              );
 
-    InsertFormatWriteFunctionMapping(&map, GL_DEPTH_STENCIL,      GL_UNSIGNED_INT_24_8,              NULL                              );
-    InsertFormatWriteFunctionMapping(&map, GL_DEPTH_STENCIL,      GL_FLOAT_32_UNSIGNED_INT_24_8_REV, NULL                              );
+    InsertFormatWriteFunctionMapping(&map, GL_DEPTH_STENCIL,      GL_UNSIGNED_INT_24_8,              nullptr                              );
+    InsertFormatWriteFunctionMapping(&map, GL_DEPTH_STENCIL,      GL_FLOAT_32_UNSIGNED_INT_24_8_REV, nullptr                              );
     // clang-format on
 
     return map;

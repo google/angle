@@ -32,7 +32,7 @@ class EGLX11VisualHintTest : public ::testing::TestWithParam<angle::PlatformPara
         mEglGetPlatformDisplayEXT = reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(
             eglGetProcAddress("eglGetPlatformDisplayEXT"));
 
-        mDisplay = XOpenDisplay(NULL);
+        mDisplay = XOpenDisplay(nullptr);
     }
 
     std::vector<EGLint> getDisplayAttributes(int visualId) const

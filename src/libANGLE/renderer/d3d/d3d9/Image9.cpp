@@ -64,7 +64,7 @@ gl::Error Image9::generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 
     ASSERT(d3dFormatInfo.info().mipGenerationFunction != nullptr);
 
     D3DLOCKED_RECT sourceLocked = {0};
-    result = sourceSurface->LockRect(&sourceLocked, NULL, D3DLOCK_READONLY);
+    result                      = sourceSurface->LockRect(&sourceLocked, nullptr, D3DLOCK_READONLY);
     ASSERT(SUCCEEDED(result));
     if (FAILED(result))
     {
@@ -72,7 +72,7 @@ gl::Error Image9::generateMip(IDirect3DSurface9 *destSurface, IDirect3DSurface9 
     }
 
     D3DLOCKED_RECT destLocked = {0};
-    result = destSurface->LockRect(&destLocked, NULL, 0);
+    result                    = destSurface->LockRect(&destLocked, nullptr, 0);
     ASSERT(SUCCEEDED(result));
     if (FAILED(result))
     {
@@ -129,13 +129,13 @@ gl::Error Image9::copyLockableSurfaces(IDirect3DSurface9 *dest, IDirect3DSurface
 
     HRESULT result;
 
-    result = source->LockRect(&sourceLock, NULL, 0);
+    result = source->LockRect(&sourceLock, nullptr, 0);
     if (FAILED(result))
     {
         return gl::Error(GL_OUT_OF_MEMORY, "Failed to lock source surface for copy, result: 0x%X.", result);
     }
 
-    result = dest->LockRect(&destLock, NULL, 0);
+    result = dest->LockRect(&destLock, nullptr, 0);
     if (FAILED(result))
     {
         source->UnlockRect();
@@ -219,8 +219,8 @@ gl::Error Image9::createSurface()
 
         IDirect3DDevice9 *device = mRenderer->getDevice();
 
-        HRESULT result = device->CreateTexture(requestWidth, requestHeight, levelToFetch + 1, 0, d3dFormat,
-                                                    poolToUse, &newTexture, NULL);
+        HRESULT result = device->CreateTexture(requestWidth, requestHeight, levelToFetch + 1, 0,
+                                               d3dFormat, poolToUse, &newTexture, nullptr);
 
         if (FAILED(result))
         {
@@ -444,7 +444,8 @@ gl::Error Image9::copyToSurface(IDirect3DSurface9 *destSurface, const gl::Box &a
         sourceSurface->GetDesc(&desc);
 
         IDirect3DSurface9 *surf = 0;
-        HRESULT result = device->CreateOffscreenPlainSurface(desc.Width, desc.Height, desc.Format, D3DPOOL_SYSTEMMEM, &surf, NULL);
+        HRESULT result = device->CreateOffscreenPlainSurface(desc.Width, desc.Height, desc.Format,
+                                                             D3DPOOL_SYSTEMMEM, &surf, nullptr);
         if (FAILED(result))
         {
             return gl::Error(GL_OUT_OF_MEMORY, "Internal CreateOffscreenPlainSurface call failed, result: 0x%X.", result);
@@ -580,7 +581,9 @@ gl::Error Image9::copyFromRTInternal(const gl::Offset &destOffset,
     D3DSURFACE_DESC description;
     surface->GetDesc(&description);
 
-    HRESULT result = device->CreateOffscreenPlainSurface(description.Width, description.Height, description.Format, D3DPOOL_SYSTEMMEM, &renderTargetData, NULL);
+    HRESULT result = device->CreateOffscreenPlainSurface(description.Width, description.Height,
+                                                         description.Format, D3DPOOL_SYSTEMMEM,
+                                                         &renderTargetData, nullptr);
 
     if (FAILED(result))
     {

@@ -1525,13 +1525,13 @@ GLsync GL_APIENTRY FenceSync_(GLenum condition, GLbitfield flags)
         {
             context->deleteFenceSync(fenceSync);
             context->handleError(error);
-            return NULL;
+            return nullptr;
         }
 
         return fenceSync;
     }
 
-    return NULL;
+    return nullptr;
 }
 
 GLboolean GL_APIENTRY IsSync(GLsync sync)

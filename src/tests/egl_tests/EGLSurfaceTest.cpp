@@ -214,7 +214,7 @@ class EGLSurfaceTest : public testing::Test
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
         glDisableVertexAttribArray(positionLocation);
-        glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, NULL);
+        glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
 
         EXPECT_PIXEL_EQ(mOSWindow->getWidth() / 2, mOSWindow->getHeight() / 2, 255, 0, 0, 255);
     }

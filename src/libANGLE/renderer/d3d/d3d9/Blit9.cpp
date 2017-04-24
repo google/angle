@@ -59,11 +59,11 @@ namespace rx
 Blit9::Blit9(Renderer9 *renderer)
     : mRenderer(renderer),
       mGeometryLoaded(false),
-      mQuadVertexBuffer(NULL),
-      mQuadVertexDeclaration(NULL),
-      mSavedStateBlock(NULL),
-      mSavedRenderTarget(NULL),
-      mSavedDepthStencil(NULL)
+      mQuadVertexBuffer(nullptr),
+      mQuadVertexDeclaration(nullptr),
+      mSavedStateBlock(nullptr),
+      mSavedRenderTarget(nullptr),
+      mSavedDepthStencil(nullptr)
 {
     memset(mCompiledShaders, 0, sizeof(mCompiledShaders));
 }
@@ -97,7 +97,8 @@ gl::Error Blit9::initialize()
 
     IDirect3DDevice9 *device = mRenderer->getDevice();
 
-    HRESULT result = device->CreateVertexBuffer(sizeof(quad), D3DUSAGE_WRITEONLY, 0, D3DPOOL_DEFAULT, &mQuadVertexBuffer, NULL);
+    HRESULT result = device->CreateVertexBuffer(sizeof(quad), D3DUSAGE_WRITEONLY, 0,
+                                                D3DPOOL_DEFAULT, &mQuadVertexBuffer, nullptr);
 
     if (FAILED(result))
     {
@@ -623,7 +624,9 @@ gl::Error Blit9::copySurfaceToTexture(IDirect3DSurface9 *surface,
 
     // Copy the render target into a texture
     IDirect3DTexture9 *texture;
-    HRESULT result = device->CreateTexture(sourceRect.right - sourceRect.left, sourceRect.bottom - sourceRect.top, 1, D3DUSAGE_RENDERTARGET, sourceDesc.Format, D3DPOOL_DEFAULT, &texture, NULL);
+    HRESULT result = device->CreateTexture(
+        sourceRect.right - sourceRect.left, sourceRect.bottom - sourceRect.top, 1,
+        D3DUSAGE_RENDERTARGET, sourceDesc.Format, D3DPOOL_DEFAULT, &texture, nullptr);
 
     if (FAILED(result))
     {
@@ -642,7 +645,7 @@ gl::Error Blit9::copySurfaceToTexture(IDirect3DSurface9 *surface,
     }
 
     mRenderer->endScene();
-    result = device->StretchRect(surface, &sourceRect, textureSurface, NULL, D3DTEXF_NONE);
+    result = device->StretchRect(surface, &sourceRect, textureSurface, nullptr, D3DTEXF_NONE);
 
     SafeRelease(textureSurface);
 
@@ -692,7 +695,7 @@ void Blit9::setCommonBlitState()
 {
     IDirect3DDevice9 *device = mRenderer->getDevice();
 
-    device->SetDepthStencilSurface(NULL);
+    device->SetDepthStencilSurface(nullptr);
 
     device->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
     device->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
@@ -747,9 +750,9 @@ void Blit9::saveState()
 
         static const float dummyConst[8] = { 0 };
 
-        device->SetVertexShader(NULL);
+        device->SetVertexShader(nullptr);
         device->SetVertexShaderConstantF(0, dummyConst, 2);
-        device->SetPixelShader(NULL);
+        device->SetPixelShader(nullptr);
         device->SetPixelShaderConstantF(0, dummyConst, 2);
 
         D3DVIEWPORT9 dummyVp;
@@ -762,7 +765,7 @@ void Blit9::saveState()
 
         device->SetViewport(&dummyVp);
 
-        device->SetTexture(0, NULL);
+        device->SetTexture(0, nullptr);
 
         device->SetStreamSource(0, mQuadVertexBuffer, 0, 0);
 

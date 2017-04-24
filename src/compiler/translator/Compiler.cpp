@@ -144,7 +144,7 @@ class TScopedPoolAllocator
     }
     ~TScopedPoolAllocator()
     {
-        SetGlobalPoolAllocator(NULL);
+        SetGlobalPoolAllocator(nullptr);
         mAllocator->pop();
     }
 
@@ -199,7 +199,7 @@ TShHandleBase::TShHandleBase()
 
 TShHandleBase::~TShHandleBase()
 {
-    SetGlobalPoolAllocator(NULL);
+    SetGlobalPoolAllocator(nullptr);
     allocator.popAll();
 }
 
@@ -216,7 +216,7 @@ TCompiler::TCompiler(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
       clampingStrategy(SH_CLAMP_WITH_CLAMP_INTRINSIC),
       builtInFunctionEmulator(),
       mDiagnostics(infoSink.info),
-      mSourcePath(NULL),
+      mSourcePath(nullptr),
       mComputeShaderLocalSizeDeclared(false),
       mTemporaryIndex(0)
 {
@@ -479,7 +479,7 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
     if (success)
         return root;
 
-    return NULL;
+    return nullptr;
 }
 
 bool TCompiler::compile(const char *const shaderStrings[],

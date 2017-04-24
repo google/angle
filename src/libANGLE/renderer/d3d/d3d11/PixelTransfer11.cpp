@@ -36,11 +36,11 @@ namespace rx
 PixelTransfer11::PixelTransfer11(Renderer11 *renderer)
     : mRenderer(renderer),
       mResourcesLoaded(false),
-      mBufferToTextureVS(NULL),
-      mBufferToTextureGS(NULL),
-      mParamsConstantBuffer(NULL),
-      mCopyRasterizerState(NULL),
-      mCopyDepthStencilState(NULL)
+      mBufferToTextureVS(nullptr),
+      mBufferToTextureGS(nullptr),
+      mParamsConstantBuffer(nullptr),
+      mCopyRasterizerState(nullptr),
+      mCopyDepthStencilState(nullptr)
 {
 }
 
@@ -120,7 +120,7 @@ gl::Error PixelTransfer11::loadResources()
     constantBufferDesc.MiscFlags = 0;
     constantBufferDesc.StructureByteStride = 0;
 
-    result = device->CreateBuffer(&constantBufferDesc, NULL, &mParamsConstantBuffer);
+    result = device->CreateBuffer(&constantBufferDesc, nullptr, &mParamsConstantBuffer);
     ASSERT(SUCCEEDED(result));
     if (FAILED(result))
     {
@@ -219,18 +219,18 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::PixelUnpackState &unpac
     UINT zero = 0;
 
     // Are we doing a 2D or 3D copy?
-    ID3D11GeometryShader *geometryShader = ((destSize.depth > 1) ? mBufferToTextureGS : NULL);
+    ID3D11GeometryShader *geometryShader = ((destSize.depth > 1) ? mBufferToTextureGS : nullptr);
     auto stateManager                    = mRenderer->getStateManager();
 
-    deviceContext->VSSetShader(mBufferToTextureVS, NULL, 0);
-    deviceContext->GSSetShader(geometryShader, NULL, 0);
-    deviceContext->PSSetShader(pixelShader, NULL, 0);
+    deviceContext->VSSetShader(mBufferToTextureVS, nullptr, 0);
+    deviceContext->GSSetShader(geometryShader, nullptr, 0);
+    deviceContext->PSSetShader(pixelShader, nullptr, 0);
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, bufferSRV);
-    deviceContext->IASetInputLayout(NULL);
+    deviceContext->IASetInputLayout(nullptr);
     deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 
     deviceContext->IASetVertexBuffers(0, 1, &nullBuffer, &zero, &zero);
-    deviceContext->OMSetBlendState(NULL, NULL, 0xFFFFFFF);
+    deviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);
     deviceContext->OMSetDepthStencilState(mCopyDepthStencilState, 0xFFFFFFFF);
     deviceContext->RSSetState(mCopyRasterizerState);
 
@@ -258,7 +258,7 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::PixelUnpackState &unpac
     deviceContext->Draw(numPixels, 0);
 
     // Unbind textures and render targets and vertex buffer
-    stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, NULL);
+    stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
     deviceContext->VSSetConstantBuffers(0, 1, &nullBuffer);
 
     mRenderer->markAllStateDirty();
@@ -295,7 +295,7 @@ ID3D11PixelShader *PixelTransfer11::findBufferToTexturePS(GLenum internalFormat)
     }
 
     auto shaderMapIt = mBufferToTexturePSMap.find(componentType);
-    return (shaderMapIt == mBufferToTexturePSMap.end() ? NULL : shaderMapIt->second);
+    return (shaderMapIt == mBufferToTexturePSMap.end() ? nullptr : shaderMapIt->second);
 }
 
 }  // namespace rx

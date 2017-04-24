@@ -199,7 +199,7 @@ gl::Error TextureD3D::setImageImpl(const gl::ImageIndex &index,
     {
         if (shouldUseSetData(image))
         {
-            ANGLE_TRY(mTexStorage->setData(index, image, NULL, type, unpack, pixelData));
+            ANGLE_TRY(mTexStorage->setData(index, image, nullptr, type, unpack, pixelData));
         }
         else
         {
@@ -2615,7 +2615,7 @@ ImageD3D *TextureD3D_2DArray::getImage(int level, int layer) const
     ASSERT(level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
     ASSERT((layer == 0 && mLayerCounts[level] == 0) ||
            layer < mLayerCounts[level]);
-    return (mImageArray[level] ? mImageArray[level][layer] : NULL);
+    return (mImageArray[level] ? mImageArray[level][layer] : nullptr);
 }
 
 ImageD3D *TextureD3D_2DArray::getImage(const gl::ImageIndex &index) const
@@ -2624,7 +2624,7 @@ ImageD3D *TextureD3D_2DArray::getImage(const gl::ImageIndex &index) const
     ASSERT((index.layerIndex == 0 && mLayerCounts[index.mipIndex] == 0) ||
            index.layerIndex < mLayerCounts[index.mipIndex]);
     ASSERT(index.type == GL_TEXTURE_2D_ARRAY);
-    return (mImageArray[index.mipIndex] ? mImageArray[index.mipIndex][index.layerIndex] : NULL);
+    return (mImageArray[index.mipIndex] ? mImageArray[index.mipIndex][index.layerIndex] : nullptr);
 }
 
 GLsizei TextureD3D_2DArray::getLayerCount(int level) const

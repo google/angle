@@ -431,7 +431,7 @@ void ANGLETest::drawQuad(GLuint program,
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
     glDisableVertexAttribArray(positionLocation);
-    glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, NULL);
+    glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
 
     if (previousProgram != static_cast<GLint>(program))
     {
@@ -476,7 +476,7 @@ void ANGLETest::drawIndexedQuad(GLuint program,
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
 
     glDisableVertexAttribArray(positionLocation);
-    glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, NULL);
+    glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
 
     if (static_cast<GLuint>(activeProgram) != program)
     {
@@ -489,7 +489,7 @@ GLuint ANGLETest::compileShader(GLenum type, const std::string &source)
     GLuint shader = glCreateShader(type);
 
     const char *sourceArray[1] = { source.c_str() };
-    glShaderSource(shader, 1, sourceArray, NULL);
+    glShaderSource(shader, 1, sourceArray, nullptr);
     glCompileShader(shader);
 
     GLint compileResult;
@@ -507,7 +507,7 @@ GLuint ANGLETest::compileShader(GLenum type, const std::string &source)
         else
         {
             std::vector<GLchar> infoLog(infoLogLength);
-            glGetShaderInfoLog(shader, static_cast<GLsizei>(infoLog.size()), NULL, &infoLog[0]);
+            glGetShaderInfoLog(shader, static_cast<GLsizei>(infoLog.size()), nullptr, &infoLog[0]);
 
             std::cerr << "shader compilation failed: " << &infoLog[0];
         }

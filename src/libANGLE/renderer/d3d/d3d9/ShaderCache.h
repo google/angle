@@ -24,9 +24,7 @@ template <typename ShaderObject>
 class ShaderCache : angle::NonCopyable
 {
   public:
-    ShaderCache() : mDevice(NULL)
-    {
-    }
+    ShaderCache() : mDevice(nullptr) {}
 
     ~ShaderCache()
     {

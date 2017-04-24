@@ -274,7 +274,9 @@ egl::Error Renderer9::initialize()
 
     {
         TRACE_EVENT0("gpu.angle", "CreateWindowEx");
-        mDeviceWindow = CreateWindowEx(WS_EX_NOACTIVATE, className, windowName, WS_DISABLED | WS_POPUP, 0, 0, 1, 1, HWND_MESSAGE, NULL, GetModuleHandle(NULL), NULL);
+        mDeviceWindow =
+            CreateWindowEx(WS_EX_NOACTIVATE, className, windowName, WS_DISABLED | WS_POPUP, 0, 0, 1,
+                           1, HWND_MESSAGE, nullptr, GetModuleHandle(nullptr), nullptr);
     }
 
     D3DPRESENT_PARAMETERS presentParameters = getDefaultPresentParameters();
@@ -588,7 +590,7 @@ gl::Error Renderer9::flush()
     }
 
     // Grab the query data once
-    result = query->GetData(NULL, 0, D3DGETDATA_FLUSH);
+    result = query->GetData(nullptr, 0, D3DGETDATA_FLUSH);
     freeEventQuery(query);
     if (FAILED(result))
     {
@@ -620,7 +622,7 @@ gl::Error Renderer9::finish()
     }
 
     // Grab the query data once
-    result = query->GetData(NULL, 0, D3DGETDATA_FLUSH);
+    result = query->GetData(nullptr, 0, D3DGETDATA_FLUSH);
     if (FAILED(result))
     {
         if (d3d9::isDeviceLostError(result))
@@ -638,7 +640,7 @@ gl::Error Renderer9::finish()
         // Keep polling, but allow other threads to do something useful first
         ScheduleYield();
 
-        result = query->GetData(NULL, 0, D3DGETDATA_FLUSH);
+        result = query->GetData(nullptr, 0, D3DGETDATA_FLUSH);
 
         // explicitly check for device loss
         // some drivers seem to return S_FALSE even if the device is lost
@@ -844,7 +846,7 @@ gl::Error Renderer9::createPixelShader(const DWORD *function, size_t length, IDi
 HRESULT Renderer9::createVertexBuffer(UINT Length, DWORD Usage, IDirect3DVertexBuffer9 **ppVertexBuffer)
 {
     D3DPOOL Pool = getBufferPool(Usage);
-    return mDevice->CreateVertexBuffer(Length, Usage, 0, Pool, ppVertexBuffer, NULL);
+    return mDevice->CreateVertexBuffer(Length, Usage, 0, Pool, ppVertexBuffer, nullptr);
 }
 
 VertexBuffer *Renderer9::createVertexBuffer()
@@ -855,7 +857,7 @@ VertexBuffer *Renderer9::createVertexBuffer()
 HRESULT Renderer9::createIndexBuffer(UINT Length, DWORD Usage, D3DFORMAT Format, IDirect3DIndexBuffer9 **ppIndexBuffer)
 {
     D3DPOOL Pool = getBufferPool(Usage);
-    return mDevice->CreateIndexBuffer(Length, Usage, Format, Pool, ppIndexBuffer, NULL);
+    return mDevice->CreateIndexBuffer(Length, Usage, Format, Pool, ppIndexBuffer, nullptr);
 }
 
 IndexBuffer *Renderer9::createIndexBuffer()
@@ -1255,7 +1257,7 @@ gl::Error Renderer9::applyRenderTarget(GLImplFactory *implFactory,
         }
         else
         {
-            mDevice->SetDepthStencilSurface(NULL);
+            mDevice->SetDepthStencilSurface(nullptr);
         }
 
         mStateManager.updateDepthSizeIfChanged(mDepthStencilInitialized, depthSize);
@@ -1349,7 +1351,7 @@ gl::Error Renderer9::drawArraysImpl(const gl::ContextState &data,
 
     if (mode == GL_LINE_LOOP)
     {
-        return drawLineLoop(count, GL_NONE, NULL, 0, NULL);
+        return drawLineLoop(count, GL_NONE, nullptr, 0, nullptr);
     }
     else if (instances > 0)
     {
@@ -1661,7 +1663,7 @@ gl::Error Renderer9::getCountingIB(size_t count, StaticIndexBufferInterface **ou
             mCountingIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_SHORT);
 
             void *mappedMemory = nullptr;
-            gl::Error error = mCountingIB->mapBuffer(spaceNeeded, &mappedMemory, NULL);
+            gl::Error error    = mCountingIB->mapBuffer(spaceNeeded, &mappedMemory, nullptr);
             if (error.isError())
             {
                 return error;
@@ -1691,7 +1693,7 @@ gl::Error Renderer9::getCountingIB(size_t count, StaticIndexBufferInterface **ou
             mCountingIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_INT);
 
             void *mappedMemory = nullptr;
-            gl::Error error = mCountingIB->mapBuffer(spaceNeeded, &mappedMemory, NULL);
+            gl::Error error    = mCountingIB->mapBuffer(spaceNeeded, &mappedMemory, nullptr);
             if (error.isError())
             {
                 return error;
@@ -1972,10 +1974,10 @@ gl::Error Renderer9::clear(const ClearParameters &clearParams,
             mDevice->SetRenderState(D3DRS_CLIPPLANEENABLE, 0);
             mDevice->SetRenderState(D3DRS_COLORWRITEENABLE, 0);
             mDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
-            mDevice->SetPixelShader(NULL);
-            mDevice->SetVertexShader(NULL);
+            mDevice->SetPixelShader(nullptr);
+            mDevice->SetVertexShader(nullptr);
             mDevice->SetFVF(D3DFVF_XYZRHW | D3DFVF_DIFFUSE);
-            mDevice->SetStreamSource(0, NULL, 0, 0);
+            mDevice->SetStreamSource(0, nullptr, 0, 0);
             mDevice->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, TRUE);
             mDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
             mDevice->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TFACTOR);
@@ -2039,8 +2041,8 @@ gl::Error Renderer9::clear(const ClearParameters &clearParams,
             mDevice->SetRenderState(D3DRS_STENCILENABLE, FALSE);
         }
 
-        mDevice->SetPixelShader(NULL);
-        mDevice->SetVertexShader(NULL);
+        mDevice->SetPixelShader(nullptr);
+        mDevice->SetVertexShader(nullptr);
         mDevice->SetFVF(D3DFVF_XYZRHW);
         mDevice->SetRenderState(D3DRS_SEPARATEALPHABLENDENABLE, TRUE);
         mDevice->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
@@ -2086,7 +2088,7 @@ gl::Error Renderer9::clear(const ClearParameters &clearParams,
         {
             mDevice->SetRenderState(D3DRS_ZENABLE, TRUE);
             mDevice->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-            mDevice->Clear(0, NULL, D3DCLEAR_ZBUFFER, color, depth, stencil);
+            mDevice->Clear(0, nullptr, D3DCLEAR_ZBUFFER, color, depth, stencil);
         }
 
         if (mMaskedClearSavedState != nullptr)
@@ -2110,7 +2112,7 @@ gl::Error Renderer9::clear(const ClearParameters &clearParams,
             dxClearFlags |= D3DCLEAR_STENCIL;
         }
 
-        mDevice->Clear(0, NULL, dxClearFlags, color, depth, stencil);
+        mDevice->Clear(0, nullptr, dxClearFlags, color, depth, stencil);
     }
 
     return gl::NoError();
@@ -2190,7 +2192,7 @@ HRESULT Renderer9::getDeviceStatusCode()
 
     if (mDeviceEx)
     {
-        status = mDeviceEx->CheckDeviceState(NULL);
+        status = mDeviceEx->CheckDeviceState(nullptr);
     }
     else if (mDevice)
     {
@@ -2245,7 +2247,7 @@ bool Renderer9::resetDevice()
         else if (mDeviceEx)
         {
             Sleep(500);   // Give the graphics driver some CPU time
-            result = mDeviceEx->ResetEx(&presentParameters, NULL);
+            result = mDeviceEx->ResetEx(&presentParameters, nullptr);
             lost = testDeviceLost();
         }
         else
@@ -2512,9 +2514,9 @@ gl::Error Renderer9::createRenderTarget(int width, int height, GLenum format, GL
         const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(format);
         if (formatInfo.depthBits > 0 || formatInfo.stencilBits > 0)
         {
-            result = mDevice->CreateDepthStencilSurface(width, height, d3d9FormatInfo.renderFormat,
-                                                        gl_d3d9::GetMultisampleType(supportedSamples),
-                                                        0, FALSE, &renderTarget, NULL);
+            result = mDevice->CreateDepthStencilSurface(
+                width, height, d3d9FormatInfo.renderFormat,
+                gl_d3d9::GetMultisampleType(supportedSamples), 0, FALSE, &renderTarget, nullptr);
         }
         else
         {
@@ -2551,7 +2553,7 @@ gl::Error Renderer9::createRenderTarget(int width, int height, GLenum format, GL
             IDirect3DSurface9 *prevRenderTarget = nullptr;
             mDevice->GetRenderTarget(0, &prevRenderTarget);
             mDevice->SetRenderTarget(0, renderTarget);
-            mDevice->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_RGBA(0, 0, 0, 255), 0.0f, 0);
+            mDevice->Clear(0, nullptr, D3DCLEAR_TARGET, D3DCOLOR_RGBA(0, 0, 0, 255), 0.0f, 0);
             mDevice->SetRenderTarget(0, prevRenderTarget);
         }
     }
@@ -2691,7 +2693,8 @@ gl::Error Renderer9::compileToExecutable(gl::InfoLog &infoLog,
 
     ID3DBlob *binary = nullptr;
     std::string debugInfo;
-    gl::Error error = mCompiler.compileToBinary(infoLog, shaderHLSL, profile, configs, NULL, &binary, &debugInfo);
+    gl::Error error = mCompiler.compileToBinary(infoLog, shaderHLSL, profile, configs, nullptr,
+                                                &binary, &debugInfo);
     if (error.isError())
     {
         return error;
@@ -2766,19 +2769,20 @@ gl::Error Renderer9::copyToRenderTarget(IDirect3DSurface9 *dest, IDirect3DSurfac
         source->GetDesc(&desc);
 
         IDirect3DSurface9 *surf = 0;
-        result = mDevice->CreateOffscreenPlainSurface(desc.Width, desc.Height, desc.Format, D3DPOOL_SYSTEMMEM, &surf, NULL);
+        result = mDevice->CreateOffscreenPlainSurface(desc.Width, desc.Height, desc.Format,
+                                                      D3DPOOL_SYSTEMMEM, &surf, nullptr);
 
         if (SUCCEEDED(result))
         {
             Image9::copyLockableSurfaces(surf, source);
-            result = mDevice->UpdateSurface(surf, NULL, dest, NULL);
+            result = mDevice->UpdateSurface(surf, nullptr, dest, nullptr);
             SafeRelease(surf);
         }
     }
     else
     {
         endScene();
-        result = mDevice->StretchRect(source, NULL, dest, NULL, D3DTEXF_NONE);
+        result = mDevice->StretchRect(source, nullptr, dest, nullptr, D3DTEXF_NONE);
     }
 
     if (FAILED(result))
@@ -2844,7 +2848,7 @@ TextureStorage *Renderer9::createTextureStorage3D(GLenum internalformat, bool re
     // 3D textures are not supported by the D3D9 backend.
     UNREACHABLE();
 
-    return NULL;
+    return nullptr;
 }
 
 TextureStorage *Renderer9::createTextureStorage2DArray(GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, GLsizei depth, int levels)
@@ -2852,7 +2856,7 @@ TextureStorage *Renderer9::createTextureStorage2DArray(GLenum internalformat, bo
     // 2D array textures are not supported by the D3D9 backend.
     UNREACHABLE();
 
-    return NULL;
+    return nullptr;
 }
 
 bool Renderer9::getLUID(LUID *adapterLuid) const

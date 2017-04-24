@@ -90,8 +90,7 @@ ID3D11ComputeShader *ShaderExecutable11::getComputeShader() const
 }
 
 UniformStorage11::UniformStorage11(Renderer11 *renderer, size_t initialSize)
-    : UniformStorageD3D(initialSize),
-      mConstantBuffer(NULL)
+    : UniformStorageD3D(initialSize), mConstantBuffer(nullptr)
 {
     ID3D11Device *d3d11Device = renderer->getDevice();
 
@@ -105,7 +104,8 @@ UniformStorage11::UniformStorage11(Renderer11 *renderer, size_t initialSize)
         constantBufferDescription.MiscFlags = 0;
         constantBufferDescription.StructureByteStride = 0;
 
-        HRESULT result = d3d11Device->CreateBuffer(&constantBufferDescription, NULL, &mConstantBuffer);
+        HRESULT result =
+            d3d11Device->CreateBuffer(&constantBufferDescription, nullptr, &mConstantBuffer);
         ASSERT(SUCCEEDED(result));
     }
 }

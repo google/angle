@@ -229,14 +229,14 @@ EGLint SwapChain9::reset(int backbufferWidth, int backbufferHeight, EGLint swapI
 
         result = mSwapChain->GetBackBuffer(0, D3DBACKBUFFER_TYPE_MONO, &mBackBuffer);
         ASSERT(SUCCEEDED(result));
-        InvalidateRect(window, NULL, FALSE);
+        InvalidateRect(window, nullptr, FALSE);
     }
 
     if (mDepthBufferFormat != GL_NONE)
     {
-        result = device->CreateDepthStencilSurface(backbufferWidth, backbufferHeight,
-                                                   depthBufferd3dFormatInfo.renderFormat,
-                                                   D3DMULTISAMPLE_NONE, 0, FALSE, &mDepthStencil, NULL);
+        result = device->CreateDepthStencilSurface(
+            backbufferWidth, backbufferHeight, depthBufferd3dFormatInfo.renderFormat,
+            D3DMULTISAMPLE_NONE, 0, FALSE, &mDepthStencil, nullptr);
 
         if (FAILED(result))
         {
@@ -285,11 +285,11 @@ EGLint SwapChain9::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
     device->SetRenderState(D3DRS_COLORWRITEENABLE, D3DCOLORWRITEENABLE_ALPHA | D3DCOLORWRITEENABLE_BLUE | D3DCOLORWRITEENABLE_GREEN | D3DCOLORWRITEENABLE_RED);
     device->SetRenderState(D3DRS_SRGBWRITEENABLE, FALSE);
     device->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
-    device->SetPixelShader(NULL);
-    device->SetVertexShader(NULL);
+    device->SetPixelShader(nullptr);
+    device->SetVertexShader(nullptr);
 
     device->SetRenderTarget(0, mBackBuffer);
-    device->SetDepthStencilSurface(NULL);
+    device->SetDepthStencilSurface(nullptr);
 
     device->SetTexture(0, mOffscreenTexture);
     device->SetTextureStageState(0, D3DTSS_COLOROP, D3DTOP_SELECTARG1);
@@ -328,7 +328,7 @@ EGLint SwapChain9::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
     device->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, quad, 6 * sizeof(float));
     mRenderer->endScene();
 
-    device->SetTexture(0, NULL);
+    device->SetTexture(0, nullptr);
 
     RECT rect =
     {
@@ -336,7 +336,7 @@ EGLint SwapChain9::swapRect(EGLint x, EGLint y, EGLint width, EGLint height)
         static_cast<LONG>(x + width), static_cast<LONG>(mHeight - y)
     };
 
-    HRESULT result = mSwapChain->Present(&rect, &rect, NULL, NULL, 0);
+    HRESULT result = mSwapChain->Present(&rect, &rect, nullptr, nullptr, 0);
 
     mRenderer->markAllStateDirty();
 

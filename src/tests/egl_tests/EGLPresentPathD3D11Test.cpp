@@ -59,7 +59,7 @@ class EGLPresentPathD3D11 : public testing::TestWithParam<PlatformParameters>
         mDisplay =
             eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE, EGL_DEFAULT_DISPLAY, displayAttribs);
         ASSERT_TRUE(EGL_NO_DISPLAY != mDisplay);
-        ASSERT_EGL_TRUE(eglInitialize(mDisplay, NULL, NULL));
+        ASSERT_EGL_TRUE(eglInitialize(mDisplay, nullptr, nullptr));
 
         // Choose the EGL config
         EGLint numConfigs;
@@ -81,7 +81,7 @@ class EGLPresentPathD3D11 : public testing::TestWithParam<PlatformParameters>
 
         // Set up the EGL context
         EGLint contextAttribs[] = {EGL_CONTEXT_CLIENT_VERSION, clientVersion, EGL_NONE};
-        mContext = eglCreateContext(mDisplay, mConfig, NULL, contextAttribs);
+        mContext                = eglCreateContext(mDisplay, mConfig, nullptr, contextAttribs);
         ASSERT_TRUE(EGL_NO_CONTEXT != mContext);
     }
 

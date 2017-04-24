@@ -273,7 +273,7 @@ Display *Display::GetDisplayFromNativeDisplay(EGLNativeDisplayType nativeDisplay
         // Validate the native display
         if (!Display::isValidNativeDisplay(nativeDisplay))
         {
-            return NULL;
+            return nullptr;
         }
 
         display = new Display(EGL_PLATFORM_ANGLE_ANGLE, nativeDisplay, nullptr);

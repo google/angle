@@ -26,10 +26,10 @@ namespace rx
 Image11::Image11(Renderer11 *renderer)
     : mRenderer(renderer),
       mDXGIFormat(DXGI_FORMAT_UNKNOWN),
-      mStagingTexture(NULL),
+      mStagingTexture(nullptr),
       mStagingSubresource(0),
       mRecoverFromStorage(false),
-      mAssociatedStorage(NULL),
+      mAssociatedStorage(nullptr),
       mAssociatedImageIndex(gl::ImageIndex::MakeInvalid()),
       mRecoveredFromStorageCount(0)
 {
@@ -423,7 +423,7 @@ gl::Error Image11::copyWithoutConversion(const gl::Offset &destOffset,
         resolveDesc.MiscFlags          = 0;
 
         ID3D11Texture2D *srcTex2D = nullptr;
-        HRESULT result            = device->CreateTexture2D(&resolveDesc, NULL, &srcTex2D);
+        HRESULT result            = device->CreateTexture2D(&resolveDesc, nullptr, &srcTex2D);
         if (FAILED(result))
         {
             return gl::Error(GL_OUT_OF_MEMORY,
@@ -526,7 +526,7 @@ gl::Error Image11::createStagingTexture()
         }
         else
         {
-            result = device->CreateTexture3D(&desc, NULL, &newTexture);
+            result = device->CreateTexture3D(&desc, nullptr, &newTexture);
         }
 
         if (FAILED(result))
@@ -570,7 +570,7 @@ gl::Error Image11::createStagingTexture()
         }
         else
         {
-            result = device->CreateTexture2D(&desc, NULL, &newTexture);
+            result = device->CreateTexture2D(&desc, nullptr, &newTexture);
         }
 
         if (FAILED(result))

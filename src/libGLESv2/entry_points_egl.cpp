@@ -134,7 +134,7 @@ const char *EGLAPIENTRY QueryString(EGLDisplay dpy, EGLint name)
         if (error.isError())
         {
             thread->setError(error);
-            return NULL;
+            return nullptr;
         }
     }
 
@@ -162,7 +162,7 @@ const char *EGLAPIENTRY QueryString(EGLDisplay dpy, EGLint name)
         break;
       default:
           thread->setError(Error(EGL_BAD_PARAMETER));
-          return NULL;
+          return nullptr;
     }
 
     thread->setError(Error(EGL_SUCCESS));

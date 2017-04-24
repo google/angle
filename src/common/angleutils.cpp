@@ -31,7 +31,7 @@ size_t FormatStringIntoVector(const char *fmt, va_list vararg, std::vector<char>
     if (len < 0 || static_cast<size_t>(len) >= outBuffer.size())
     {
         // Buffer was not large enough, calculate the required size and resize the buffer
-        len = vsnprintf(NULL, 0, fmt, vararg);
+        len = vsnprintf(nullptr, 0, fmt, vararg);
         outBuffer.resize(len + 1);
 
         // Print again

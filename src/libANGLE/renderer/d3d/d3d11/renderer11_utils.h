@@ -161,7 +161,7 @@ outType* DynamicCastComObject(IUnknown* object)
     else
     {
         SafeRelease(outObject);
-        return NULL;
+        return nullptr;
     }
 }
 

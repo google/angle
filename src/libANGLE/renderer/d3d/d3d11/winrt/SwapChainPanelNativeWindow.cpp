@@ -49,7 +49,8 @@ HRESULT RunOnUIThread(CODE &&code, const ComPtr<ICoreDispatcher> &dispatcher)
     }
     else
     {
-        Event waitEvent(CreateEventEx(NULL, NULL, CREATE_EVENT_MANUAL_RESET, EVENT_ALL_ACCESS));
+        Event waitEvent(
+            CreateEventEx(nullptr, nullptr, CREATE_EVENT_MANUAL_RESET, EVENT_ALL_ACCESS));
         if (!waitEvent.IsValid())
         {
             return E_FAIL;

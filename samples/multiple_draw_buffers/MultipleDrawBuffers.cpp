@@ -33,7 +33,7 @@ class MultipleDrawBuffersSample : public SampleApplication
     {
         // Check EXT_draw_buffers is supported
         char *extensionString = (char*)glGetString(GL_EXTENSIONS);
-        if (strstr(extensionString, "GL_EXT_draw_buffers") != NULL)
+        if (strstr(extensionString, "GL_EXT_draw_buffers") != nullptr)
         {
             // Retrieve the address of glDrawBuffersEXT from EGL
             mDrawBuffers = (PFNGLDRAWBUFFERSEXTPROC)eglGetProcAddress("glDrawBuffersEXT");
@@ -89,7 +89,8 @@ class MultipleDrawBuffersSample : public SampleApplication
         {
             // Create textures for the four color attachments
             glBindTexture(GL_TEXTURE_2D, mFramebufferTextures[i]);
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, getWindow()->getWidth(), getWindow()->getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, getWindow()->getWidth(),
+                         getWindow()->getHeight(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);

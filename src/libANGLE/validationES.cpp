@@ -3785,7 +3785,7 @@ bool ValidateDrawBase(ValidationContext *context, GLenum mode, GLsizei count)
         return false;
     }
 
-    if (!program->validateSamplers(NULL, context->getCaps()))
+    if (!program->validateSamplers(nullptr, context->getCaps()))
     {
         context->handleError(Error(GL_INVALID_OPERATION));
         return false;

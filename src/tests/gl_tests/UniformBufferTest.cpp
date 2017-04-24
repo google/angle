@@ -240,7 +240,7 @@ TEST_P(UniformBufferTest, UniformBufferManyUpdates)
     float data[4];
 
     glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
-    glBufferData(GL_UNIFORM_BUFFER, sizeof(data), NULL, GL_DYNAMIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(data), nullptr, GL_DYNAMIC_DRAW);
     glUniformBlockBinding(mProgram, mUniformBufferIndex, 0);
     glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
 

@@ -13,10 +13,7 @@
 namespace rx
 {
 
-FenceNV9::FenceNV9(Renderer9 *renderer)
-    : FenceNVImpl(),
-      mRenderer(renderer),
-      mQuery(NULL)
+FenceNV9::FenceNV9(Renderer9 *renderer) : FenceNVImpl(), mRenderer(renderer), mQuery(nullptr)
 {
 }
 
@@ -74,7 +71,7 @@ gl::Error FenceNV9::testHelper(bool flushCommandBuffer, GLboolean *outFinished)
     ASSERT(mQuery);
 
     DWORD getDataFlags = (flushCommandBuffer ? D3DGETDATA_FLUSH : 0);
-    HRESULT result = mQuery->GetData(NULL, 0, getDataFlags);
+    HRESULT result     = mQuery->GetData(nullptr, 0, getDataFlags);
 
     if (d3d9::isDeviceLostError(result))
     {

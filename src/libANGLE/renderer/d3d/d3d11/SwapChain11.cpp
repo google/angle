@@ -240,7 +240,8 @@ EGLint SwapChain11::resetOffscreenColorBuffer(int backbufferWidth, int backbuffe
         offscreenTextureDesc.CPUAccessFlags = 0;
         offscreenTextureDesc.MiscFlags = useSharedResource ? ANGLE_RESOURCE_SHARE_TYPE : 0;
 
-        HRESULT result = device->CreateTexture2D(&offscreenTextureDesc, NULL, &mOffscreenTexture);
+        HRESULT result =
+            device->CreateTexture2D(&offscreenTextureDesc, nullptr, &mOffscreenTexture);
 
         if (FAILED(result))
         {
@@ -368,7 +369,7 @@ EGLint SwapChain11::resetOffscreenDepthBuffer(int backbufferWidth, int backbuffe
 
         ID3D11Device *device = mRenderer->getDevice();
         HRESULT result =
-            device->CreateTexture2D(&depthStencilTextureDesc, NULL, &mDepthStencilTexture);
+            device->CreateTexture2D(&depthStencilTextureDesc, nullptr, &mDepthStencilTexture);
         if (FAILED(result))
         {
             ERR() << "Could not create depthstencil surface for new swap chain, "
@@ -477,7 +478,7 @@ EGLint SwapChain11::resize(EGLint backbufferWidth, EGLint backbufferHeight)
     if (SUCCEEDED(result))
     {
         d3d11::SetDebugName(mBackBufferTexture, "Back buffer texture");
-        result = device->CreateRenderTargetView(mBackBufferTexture, NULL, &mBackBufferRTView);
+        result = device->CreateRenderTargetView(mBackBufferTexture, nullptr, &mBackBufferRTView);
         ASSERT(SUCCEEDED(result));
         if (SUCCEEDED(result))
         {
@@ -594,7 +595,7 @@ EGLint SwapChain11::reset(EGLint backbufferWidth, EGLint backbufferHeight, EGLin
         ASSERT(SUCCEEDED(result));
         d3d11::SetDebugName(mBackBufferTexture, "Back buffer texture");
 
-        result = device->CreateRenderTargetView(mBackBufferTexture, NULL, &mBackBufferRTView);
+        result = device->CreateRenderTargetView(mBackBufferTexture, nullptr, &mBackBufferRTView);
         ASSERT(SUCCEEDED(result));
         d3d11::SetDebugName(mBackBufferRTView, "Back buffer render target");
 
@@ -632,7 +633,7 @@ void SwapChain11::initPassThroughResources()
     vbDesc.MiscFlags = 0;
     vbDesc.StructureByteStride = 0;
 
-    HRESULT result = device->CreateBuffer(&vbDesc, NULL, &mQuadVB);
+    HRESULT result = device->CreateBuffer(&vbDesc, nullptr, &mQuadVB);
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mQuadVB, "Swap chain quad vertex buffer");
 
@@ -665,7 +666,8 @@ void SwapChain11::initPassThroughResources()
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mPassThroughIL, "Swap chain pass through layout");
 
-    result = device->CreateVertexShader(g_VS_Passthrough2D, sizeof(g_VS_Passthrough2D), NULL, &mPassThroughVS);
+    result = device->CreateVertexShader(g_VS_Passthrough2D, sizeof(g_VS_Passthrough2D), nullptr,
+                                        &mPassThroughVS);
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mPassThroughVS, "Swap chain pass through vertex shader");
 
@@ -779,19 +781,19 @@ EGLint SwapChain11::copyOffscreenToBackbuffer(EGLint x, EGLint y, EGLint width, 
     deviceContext->IASetVertexBuffers(0, 1, &mQuadVB, &stride, &startIdx);
 
     // Apply state
-    deviceContext->OMSetDepthStencilState(NULL, 0xFFFFFFFF);
+    deviceContext->OMSetDepthStencilState(nullptr, 0xFFFFFFFF);
 
     static const float blendFactor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-    deviceContext->OMSetBlendState(NULL, blendFactor, 0xFFFFFFF);
+    deviceContext->OMSetBlendState(nullptr, blendFactor, 0xFFFFFFF);
 
     deviceContext->RSSetState(mPassThroughRS);
 
     // Apply shaders
     deviceContext->IASetInputLayout(mPassThroughIL);
     deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-    deviceContext->VSSetShader(mPassThroughVS, NULL, 0);
-    deviceContext->PSSetShader(mPassThroughPS, NULL, 0);
-    deviceContext->GSSetShader(NULL, NULL, 0);
+    deviceContext->VSSetShader(mPassThroughVS, nullptr, 0);
+    deviceContext->PSSetShader(mPassThroughPS, nullptr, 0);
+    deviceContext->GSSetShader(nullptr, nullptr, 0);
 
     auto stateManager = mRenderer->getStateManager();
 
@@ -818,7 +820,7 @@ EGLint SwapChain11::copyOffscreenToBackbuffer(EGLint x, EGLint y, EGLint width, 
     // Rendering to the swapchain is now complete. Now we can call Present().
     // Before that, we perform any cleanup on the D3D device. We do this before Present() to make sure the
     // cleanup is caught under the current eglSwapBuffers() PIX/Graphics Diagnostics call rather than the next one.
-    stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, NULL);
+    stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
 
     mRenderer->markAllStateDirty();
 

@@ -25,7 +25,7 @@ inline const char *getBehaviorString(TBehavior b)
         case EBhDisable:
             return "disable";
         default:
-            return NULL;
+            return nullptr;
     }
 }
 

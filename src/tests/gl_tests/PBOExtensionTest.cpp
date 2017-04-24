@@ -29,7 +29,8 @@ class PBOExtensionTest : public ANGLETest
         {
             glGenBuffers(1, &mPBO);
             glBindBuffer(GL_PIXEL_PACK_BUFFER, mPBO);
-            glBufferData(GL_PIXEL_PACK_BUFFER, 4 * getWindowWidth() * getWindowHeight(), NULL, GL_STATIC_DRAW);
+            glBufferData(GL_PIXEL_PACK_BUFFER, 4 * getWindowWidth() * getWindowHeight(), nullptr,
+                         GL_STATIC_DRAW);
             glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
 
             const char *vertexShaderSrc = SHADER_SOURCE
@@ -61,7 +62,7 @@ class PBOExtensionTest : public ANGLETest
 
             glGenBuffers(1, &mPositionVBO);
             glBindBuffer(GL_ARRAY_BUFFER, mPositionVBO);
-            glBufferData(GL_ARRAY_BUFFER, 128, NULL, GL_DYNAMIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, 128, nullptr, GL_DYNAMIC_DRAW);
             glBindBuffer(GL_ARRAY_BUFFER, 0);
         }
         ASSERT_GL_NO_ERROR();

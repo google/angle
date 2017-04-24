@@ -145,7 +145,7 @@ class DrawBuffersTest : public ANGLETest
         GLint location = glGetAttribLocation(*programOut, "position");
         ASSERT_NE(location, -1);
         glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
-        glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, 8, NULL);
+        glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, 8, nullptr);
         glEnableVertexAttribArray(location);
     }
 
@@ -191,7 +191,7 @@ class DrawBuffersTest : public ANGLETest
         GLint location = glGetAttribLocation(*programOut, "position");
         ASSERT_NE(location, -1);
         glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
-        glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, 8, NULL);
+        glVertexAttribPointer(location, 2, GL_FLOAT, GL_FALSE, 8, nullptr);
         glEnableVertexAttribArray(location);
     }
 

@@ -313,7 +313,7 @@ class ReadPixelsPBODrawTest : public ReadPixelsPBOTest
 
         glGenBuffers(1, &mPositionVBO);
         glBindBuffer(GL_ARRAY_BUFFER, mPositionVBO);
-        glBufferData(GL_ARRAY_BUFFER, 128, NULL, GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, 128, nullptr, GL_DYNAMIC_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
@@ -442,7 +442,7 @@ TEST_P(ReadPixelsMultisampleTest, BasicClear)
     glBindBuffer(GL_PIXEL_PACK_BUFFER, mPBO);
     EXPECT_GL_NO_ERROR();
 
-    glReadPixels(0, 0, 1, 1, GL_RGBA8, GL_UNSIGNED_BYTE, NULL);
+    glReadPixels(0, 0, 1, 1, GL_RGBA8, GL_UNSIGNED_BYTE, nullptr);
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 

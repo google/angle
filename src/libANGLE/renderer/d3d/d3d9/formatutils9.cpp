@@ -252,7 +252,7 @@ typedef std::map<GLenum, TextureFormat> D3D9FormatMap;
 TextureFormat::TextureFormat()
     : texFormat(D3DFMT_UNKNOWN),
       renderFormat(D3DFMT_UNKNOWN),
-      dataInitializerFunction(NULL),
+      dataInitializerFunction(nullptr),
       loadFunction(UnreachableLoad)
 {
 }
@@ -266,7 +266,8 @@ static inline void InsertD3D9FormatInfo(D3D9FormatMap *map, GLenum internalForma
 
     static const InternalFormatInitialzerMap dataInitializationMap = BuildInternalFormatInitialzerMap();
     InternalFormatInitialzerMap::const_iterator dataInitIter = dataInitializationMap.find(internalFormat);
-    info.dataInitializerFunction = (dataInitIter != dataInitializationMap.end()) ? dataInitIter->second : NULL;
+    info.dataInitializerFunction =
+        (dataInitIter != dataInitializationMap.end()) ? dataInitIter->second : nullptr;
 
     info.loadFunction = loadFunction;
 
@@ -549,7 +550,7 @@ public:
 VertexFormat::VertexFormat()
     : conversionType(VERTEX_CONVERT_NONE),
       outputElementSize(0),
-      copyFunction(NULL),
+      copyFunction(nullptr),
       nativeFormat(D3DDECLTYPE_UNUSED),
       componentType(GL_NONE)
 {

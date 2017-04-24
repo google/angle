@@ -34,7 +34,7 @@ class ElseBlockRewriter : public TIntermTraverser
     TIntermNode *rewriteIfElse(TIntermIfElse *ifElse);
 };
 
-ElseBlockRewriter::ElseBlockRewriter() : TIntermTraverser(true, false, true), mFunctionType(NULL)
+ElseBlockRewriter::ElseBlockRewriter() : TIntermTraverser(true, false, true), mFunctionType(nullptr)
 {
 }
 

@@ -49,7 +49,7 @@ gl::Error FenceTestHelper(FenceClass *fence, bool flushCommandBuffer, GLboolean 
 
     UINT getDataFlags = (flushCommandBuffer ? 0 : D3D11_ASYNC_GETDATA_DONOTFLUSH);
     HRESULT result =
-        fence->mRenderer->getDeviceContext()->GetData(fence->mQuery, NULL, 0, getDataFlags);
+        fence->mRenderer->getDeviceContext()->GetData(fence->mQuery, nullptr, 0, getDataFlags);
 
     if (FAILED(result))
     {
@@ -65,7 +65,7 @@ gl::Error FenceTestHelper(FenceClass *fence, bool flushCommandBuffer, GLboolean 
 // FenceNV11
 //
 
-FenceNV11::FenceNV11(Renderer11 *renderer) : FenceNVImpl(), mRenderer(renderer), mQuery(NULL)
+FenceNV11::FenceNV11(Renderer11 *renderer) : FenceNVImpl(), mRenderer(renderer), mQuery(nullptr)
 {
 }
 
@@ -121,7 +121,8 @@ gl::Error FenceNV11::finish()
 // We still opt to use QPC. In the present and moving forward, most newer systems will not suffer
 // from buggy implementations.
 
-FenceSync11::FenceSync11(Renderer11 *renderer) : FenceSyncImpl(), mRenderer(renderer), mQuery(NULL)
+FenceSync11::FenceSync11(Renderer11 *renderer)
+    : FenceSyncImpl(), mRenderer(renderer), mQuery(nullptr)
 {
     LARGE_INTEGER counterFreqency = {};
     BOOL success                  = QueryPerformanceFrequency(&counterFreqency);

@@ -31,7 +31,7 @@ class TransformFeedbackTestBase : public ANGLETest
 
         glGenBuffers(1, &mTransformFeedbackBuffer);
         glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, mTransformFeedbackBuffer);
-        glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, mTransformFeedbackBufferSize, NULL,
+        glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, mTransformFeedbackBufferSize, nullptr,
                      GL_STATIC_DRAW);
 
         glGenTransformFeedbacks(1, &mTransformFeedback);
@@ -269,7 +269,7 @@ TEST_P(TransformFeedbackTest, RecordAndDraw)
     glDrawArrays(GL_POINTS, 0, 6);
 
     glDisableVertexAttribArray(positionLocation);
-    glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, NULL);
+    glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
     // End the query and transform feedkback
     glEndQuery(GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN);
     glEndTransformFeedback();
@@ -914,7 +914,7 @@ class TransformFeedbackLifetimeTest : public TransformFeedbackTest
 
         glGenBuffers(1, &mTransformFeedbackBuffer);
         glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, mTransformFeedbackBuffer);
-        glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, mTransformFeedbackBufferSize, NULL,
+        glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, mTransformFeedbackBufferSize, nullptr,
                      GL_DYNAMIC_DRAW);
         glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, 0);
 

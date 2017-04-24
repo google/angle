@@ -174,7 +174,7 @@ gl::Error TextureStorage9_2D::getSurfaceLevel(GLenum target,
     // With managed textures the driver needs to be informed of updates to the lower mipmap levels
     if (level + mTopLevel != 0 && isManaged() && dirty)
     {
-        texture->AddDirtyRect(NULL);
+        texture->AddDirtyRect(nullptr);
     }
 
     return gl::NoError();
@@ -250,10 +250,10 @@ gl::Error TextureStorage9_2D::getBaseTexture(IDirect3DBaseTexture9 **outTexture)
         ASSERT(mMipLevels > 0);
 
         IDirect3DDevice9 *device = mRenderer->getDevice();
-        HRESULT result = device->CreateTexture(static_cast<unsigned int>(mTextureWidth),
+        HRESULT result           = device->CreateTexture(static_cast<unsigned int>(mTextureWidth),
                                                static_cast<unsigned int>(mTextureHeight),
                                                static_cast<unsigned int>(mMipLevels), getUsage(),
-                                               mTextureFormat, getPool(), &mTexture, NULL);
+                                               mTextureFormat, getPool(), &mTexture, nullptr);
 
         if (FAILED(result))
         {
@@ -482,7 +482,7 @@ gl::Error TextureStorage9_Cube::getSurfaceLevel(GLenum target,
     // With managed textures the driver needs to be informed of updates to the lower mipmap levels
     if (level != 0 && isManaged() && dirty)
     {
-        texture->AddDirtyRect(face, NULL);
+        texture->AddDirtyRect(face, nullptr);
     }
 
     return gl::NoError();
@@ -557,9 +557,9 @@ gl::Error TextureStorage9_Cube::getBaseTexture(IDirect3DBaseTexture9 **outTextur
         ASSERT(mTextureWidth == mTextureHeight);
 
         IDirect3DDevice9 *device = mRenderer->getDevice();
-        HRESULT result = device->CreateCubeTexture(
+        HRESULT result           = device->CreateCubeTexture(
             static_cast<unsigned int>(mTextureWidth), static_cast<unsigned int>(mMipLevels),
-            getUsage(), mTextureFormat, getPool(), &mTexture, NULL);
+            getUsage(), mTextureFormat, getPool(), &mTexture, nullptr);
 
         if (FAILED(result))
         {

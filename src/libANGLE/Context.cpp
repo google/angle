@@ -441,7 +441,7 @@ void Context::destroy(egl::Display *display)
 
     for (auto &zeroTexture : mZeroTextures)
     {
-        zeroTexture.second.set(NULL);
+        zeroTexture.second.set(nullptr);
     }
     mZeroTextures.clear();
 
@@ -1184,7 +1184,7 @@ Error Context::endQuery(GLenum target)
     gl::Error error = queryObject->end();
 
     // Always unbind the query, even if there was an error. This may delete the query object.
-    mGLState.setActiveQuery(target, NULL);
+    mGLState.setActiveQuery(target, nullptr);
 
     return error;
 }
@@ -1258,7 +1258,7 @@ FenceNV *Context::getFenceNV(unsigned int handle)
 
     if (fence == mFenceNVMap.end())
     {
-        return NULL;
+        return nullptr;
     }
     else
     {
@@ -1272,7 +1272,7 @@ Query *Context::getQuery(unsigned int handle, bool create, GLenum type)
 
     if (query == mQueryMap.end())
     {
-        return NULL;
+        return nullptr;
     }
     else
     {

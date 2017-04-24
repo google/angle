@@ -35,7 +35,7 @@ GLuint CompileShader(GLenum type, const std::string &source)
     GLuint shader = glCreateShader(type);
 
     const char *sourceArray[1] = { source.c_str() };
-    glShaderSource(shader, 1, sourceArray, NULL);
+    glShaderSource(shader, 1, sourceArray, nullptr);
     glCompileShader(shader);
 
     GLint compileResult;
@@ -51,7 +51,7 @@ GLuint CompileShader(GLenum type, const std::string &source)
         if (infoLogLength > 1)
         {
             std::vector<GLchar> infoLog(infoLogLength);
-            glGetShaderInfoLog(shader, static_cast<GLsizei>(infoLog.size()), NULL, &infoLog[0]);
+            glGetShaderInfoLog(shader, static_cast<GLsizei>(infoLog.size()), nullptr, &infoLog[0]);
             std::cerr << "shader compilation failed: " << &infoLog[0];
         }
         else

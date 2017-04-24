@@ -321,7 +321,8 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
         contextCreationAttributes.push_back(0);
         contextCreationAttributes.push_back(0);
 
-        mWGLContext = mFunctionsWGL->createContextAttribsARB(mDeviceContext, NULL, &contextCreationAttributes[0]);
+        mWGLContext = mFunctionsWGL->createContextAttribsARB(mDeviceContext, nullptr,
+                                                             &contextCreationAttributes[0]);
     }
 
     // If wglCreateContextAttribsARB is unavailable or failed, try the standard wglCreateContext
@@ -400,7 +401,7 @@ void DisplayWGL::terminate()
 
     releaseD3DDevice(mD3D11DeviceHandle);
 
-    mFunctionsWGL->makeCurrent(mDeviceContext, NULL);
+    mFunctionsWGL->makeCurrent(mDeviceContext, nullptr);
     mFunctionsWGL->deleteContext(mWGLContext);
     mWGLContext = nullptr;
 
@@ -410,7 +411,7 @@ void DisplayWGL::terminate()
     DestroyWindow(mWindow);
     mWindow = nullptr;
 
-    UnregisterClassA(reinterpret_cast<const char*>(mWindowClass), NULL);
+    UnregisterClassA(reinterpret_cast<const char *>(mWindowClass), nullptr);
     mWindowClass = NULL;
 
     SafeDelete(mFunctionsWGL);

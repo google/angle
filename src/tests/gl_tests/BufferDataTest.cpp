@@ -97,14 +97,14 @@ TEST_P(BufferDataTest, NULLData)
     for (int i = 0; i < numIterations; ++i)
     {
         GLsizei bufferSize = sizeof(GLfloat) * (i + 1);
-        glBufferData(GL_ARRAY_BUFFER, bufferSize, NULL, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, bufferSize, nullptr, GL_STATIC_DRAW);
         EXPECT_GL_NO_ERROR();
 
         for (int j = 0; j < bufferSize; j++)
         {
             for (int k = 0; k < bufferSize - j; k++)
             {
-                glBufferSubData(GL_ARRAY_BUFFER, k, j, NULL);
+                glBufferSubData(GL_ARRAY_BUFFER, k, j, nullptr);
                 ASSERT_GL_NO_ERROR();
             }
         }
@@ -129,10 +129,10 @@ TEST_P(BufferDataTest, ZeroNonNULLData)
 TEST_P(BufferDataTest, NULLResolvedData)
 {
     glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
-    glBufferData(GL_ARRAY_BUFFER, 128, NULL, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 128, nullptr, GL_DYNAMIC_DRAW);
 
     glUseProgram(mProgram);
-    glVertexAttribPointer(mAttribLocation, 1, GL_FLOAT, GL_FALSE, 4, NULL);
+    glVertexAttribPointer(mAttribLocation, 1, GL_FLOAT, GL_FALSE, 4, nullptr);
     glEnableVertexAttribArray(mAttribLocation);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -159,7 +159,7 @@ TEST_P(BufferDataTest, DISABLED_HugeSetDataShouldNotCrash)
         }
     }
 
-    ASSERT_NE(static_cast<uint8_t*>(NULL), data);
+    ASSERT_NE(static_cast<uint8_t *>(nullptr), data);
     memset(data, 0, allocSize);
 
     float * fValue = reinterpret_cast<float*>(data);
@@ -179,11 +179,11 @@ TEST_P(BufferDataTest, DISABLED_HugeSetDataShouldNotCrash)
         // DISABLED because it takes a long time, but left for posterity
 
         //glUseProgram(mProgram);
-        //glVertexAttribPointer(mAttribLocation, 1, GL_FLOAT, GL_FALSE, 4, NULL);
-        //glEnableVertexAttribArray(mAttribLocation);
-        //glBindBuffer(GL_ARRAY_BUFFER, 0);
-        //drawQuad(mProgram, "position", 0.5f);
-        //swapBuffers();
+        // glVertexAttribPointer(mAttribLocation, 1, GL_FLOAT, GL_FALSE, 4, nullptr);
+        // glEnableVertexAttribArray(mAttribLocation);
+        // glBindBuffer(GL_ARRAY_BUFFER, 0);
+        // drawQuad(mProgram, "position", 0.5f);
+        // swapBuffers();
 
         //// Draw operations can also generate out-of-memory, which is in-spec
         //error = glGetError();
@@ -329,7 +329,7 @@ TEST_P(IndexedBufferCopyTest, IndexRangeBug)
     glBufferData(GL_ARRAY_BUFFER, sizeof(char) * 6, vertexData, GL_STATIC_DRAW);
 
     glUseProgram(mProgram);
-    glVertexAttribPointer(mAttribLocation, 3, GL_UNSIGNED_BYTE, GL_TRUE, 3, NULL);
+    glVertexAttribPointer(mAttribLocation, 3, GL_UNSIGNED_BYTE, GL_TRUE, 3, nullptr);
     glEnableVertexAttribArray(mAttribLocation);
 
     ASSERT_GL_NO_ERROR();
@@ -341,7 +341,7 @@ TEST_P(IndexedBufferCopyTest, IndexRangeBug)
 
     ASSERT_GL_NO_ERROR();
 
-    glDrawElements(GL_POINTS, 1, GL_UNSIGNED_INT, NULL);
+    glDrawElements(GL_POINTS, 1, GL_UNSIGNED_INT, nullptr);
 
     EXPECT_GL_NO_ERROR();
     EXPECT_PIXEL_EQ(0, 0, 255, 0, 0, 255);
@@ -361,7 +361,7 @@ TEST_P(IndexedBufferCopyTest, IndexRangeBug)
     unsigned char newData[] = { 0, 255, 0 };
     glBufferSubData(GL_ARRAY_BUFFER, 3, 3, newData);
 
-    glDrawElements(GL_POINTS, 1, GL_UNSIGNED_INT, NULL);
+    glDrawElements(GL_POINTS, 1, GL_UNSIGNED_INT, nullptr);
 
     EXPECT_GL_NO_ERROR();
     EXPECT_PIXEL_EQ(0, 0, 0, 255, 0, 255);
@@ -387,7 +387,7 @@ TEST_P(BufferDataTestES3, BufferResizing)
     // To trigger the bug, the buffer need to be big enough because some hardware copy buffers
     // by chunks of pages instead of the minimum number of bytes neeeded.
     const size_t numBytes = 4096*4;
-    glBufferData(GL_ARRAY_BUFFER, numBytes, NULL, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, numBytes, nullptr, GL_STATIC_DRAW);
 
     // Copy the original data to the buffer
     uint8_t srcBytes[numBytes];

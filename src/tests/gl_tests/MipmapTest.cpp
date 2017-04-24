@@ -158,7 +158,8 @@ class MipmapTest : public BaseMipmapTest
 
         // Initialize the texture2D to be empty, and don't use mips.
         glBindTexture(GL_TEXTURE_2D, mTexture2D);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, getWindowWidth(), getWindowHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, getWindowWidth(), getWindowHeight(), 0, GL_RGB,
+                     GL_UNSIGNED_BYTE, nullptr);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
@@ -459,7 +460,8 @@ TEST_P(MipmapTest, DISABLED_ThreeLevelsInitData)
     int n = 1;
     while (getWindowWidth() / (1U << n) >= 1)
     {
-        glTexImage2D(GL_TEXTURE_2D, n, GL_RGB, getWindowWidth() / (1U << n), getWindowWidth() / (1U << n), 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+        glTexImage2D(GL_TEXTURE_2D, n, GL_RGB, getWindowWidth() / (1U << n),
+                     getWindowWidth() / (1U << n), 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
         ASSERT_GL_NO_ERROR();
         n+=1;
     }

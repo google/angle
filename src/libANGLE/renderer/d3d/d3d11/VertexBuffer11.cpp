@@ -51,7 +51,7 @@ gl::Error VertexBuffer11::initialize(unsigned int size, bool dynamicUsage)
         bufferDesc.MiscFlags           = 0;
         bufferDesc.StructureByteStride = 0;
 
-        HRESULT result = dxDevice->CreateBuffer(&bufferDesc, NULL, &mBuffer);
+        HRESULT result = dxDevice->CreateBuffer(&bufferDesc, nullptr, &mBuffer);
         if (FAILED(result))
         {
             return gl::Error(GL_OUT_OF_MEMORY,
