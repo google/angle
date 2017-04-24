@@ -1,0 +1,182 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f82d8944_ccabe782",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-24T02:12:44Z",
+      "side": 1,
+      "message": "Move it next to arraySize since they are both int.",
+      "range": {
+        "startLine": 219,
+        "startChar": 4,
+        "endLine": 219,
+        "endChar": 16
+      },
+      "revId": "4d62deafda866d9f79be01a7128927bd85a09a61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "150f6cd7_3e3f823e",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-24T02:12:44Z",
+      "side": 1,
+      "message": "How about moving mBinding next to mArraySize since they both are \u0027int\u0027 type.",
+      "range": {
+        "startLine": 185,
+        "startChar": 4,
+        "endLine": 185,
+        "endChar": 17
+      },
+      "revId": "4d62deafda866d9f79be01a7128927bd85a09a61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9721bfa_ab0eb41a",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-24T02:12:44Z",
+      "side": 1,
+      "message": "Why not just keep it -1 if  there is not binding in layout.",
+      "revId": "4d62deafda866d9f79be01a7128927bd85a09a61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f15f2833_8b9da993",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-24T02:12:44Z",
+      "side": 1,
+      "message": "int binding;\nunsigned int arrayElement;\nunsigned int dataSize;",
+      "range": {
+        "startLine": 73,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 26
+      },
+      "revId": "4d62deafda866d9f79be01a7128927bd85a09a61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "494b7a24_4150227f",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 377,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-24T02:12:44Z",
+      "side": 1,
+      "message": "It\u0027s better to add a comment here to explain why you do this change. Or split this to another patch so it can be merged quickly.",
+      "range": {
+        "startLine": 376,
+        "startChar": 0,
+        "endLine": 377,
+        "endChar": 39
+      },
+      "revId": "4d62deafda866d9f79be01a7128927bd85a09a61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e9cb2494_1957a704",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 702,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-24T02:12:44Z",
+      "side": 1,
+      "message": "Maybe you can use GLBuffer uniformBuffer. GLBuffer is defined in gl_raii.h",
+      "range": {
+        "startLine": 701,
+        "startChar": 0,
+        "endLine": 702,
+        "endChar": 36
+      },
+      "revId": "4d62deafda866d9f79be01a7128927bd85a09a61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de6e7c60_8171907a",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 768,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-24T02:12:44Z",
+      "side": 1,
+      "message": "It seems that uniformBufferIndex is never used.",
+      "range": {
+        "startLine": 767,
+        "startChar": 0,
+        "endLine": 768,
+        "endChar": 38
+      },
+      "revId": "4d62deafda866d9f79be01a7128927bd85a09a61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f1c9f4ff_52d1e8f5",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 794,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-24T02:12:44Z",
+      "side": 1,
+      "message": "Same here.",
+      "range": {
+        "startLine": 792,
+        "startChar": 0,
+        "endLine": 794,
+        "endChar": 38
+      },
+      "revId": "4d62deafda866d9f79be01a7128927bd85a09a61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
