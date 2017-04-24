@@ -188,6 +188,30 @@
     },
     {
       "key": {
+        "uuid": "593c523e_1452370b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-04-24T19:42:06Z",
+      "side": 1,
+      "message": "I can define the class by value. As far as passing in the feature level and renderer instead of storing it, that is problematic because they are both needed in the constructor. Since they are already passed in there, it made sense to store it as well.",
+      "parentUuid": "68e0d73f_89291ad4",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 6
+      },
+      "revId": "31cfd29caaa032d5540e238473ce7633e0345ebe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1cb5a254_4999dab5",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
         "patchSetId": 11
