@@ -212,6 +212,30 @@
     },
     {
       "key": {
+        "uuid": "8d52734a_18a8479e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-24T19:47:05Z",
+      "side": 1,
+      "message": "I\u0027d like to stop all storing of Renderer pointers in our classes at this point. So can you find a solution that doesn\u0027t do that?",
+      "parentUuid": "593c523e_1452370b",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 6
+      },
+      "revId": "31cfd29caaa032d5540e238473ce7633e0345ebe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1cb5a254_4999dab5",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
         "patchSetId": 11
