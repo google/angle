@@ -65,6 +65,24 @@
     },
     {
       "key": {
+        "uuid": "7bdf1f5f_d418c7a6",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-24T10:32:14Z",
+      "side": 1,
+      "message": "ESSL 3.10 P58\n\"Any uniform or shader storage block declared without a binding qualifier is initially assigned to block binding point zero\".",
+      "parentUuid": "f9721bfa_ab0eb41a",
+      "revId": "4d62deafda866d9f79be01a7128927bd85a09a61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f15f2833_8b9da993",
         "filename": "src/libANGLE/Uniform.h",
         "patchSetId": 2

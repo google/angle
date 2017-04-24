@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8a70373d_87f48f31",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1802,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-24T10:32:14Z",
+      "side": 0,
+      "message": "GLES 3.0 spec, Page 49:\nFor an active interface block declared as an array of instances, separate entries will be generated for each active instance. The name of the instance is formed by concatenating the block name, the \"[\" character, an integer identifying the instance number, and the \"]\" character.\n\nSo this seems only correct regarding the instances from 0 to 9 which only take 1 character.",
+      "range": {
+        "startLine": 1797,
+        "startChar": 0,
+        "endLine": 1802,
+        "endChar": 70
+      },
+      "revId": "966c940b0d45fb0b02c5a485e0ae6c2dc047b810",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cda7c072_77b27426",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2844,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-24T10:32:14Z",
+      "side": 0,
+      "message": "It\u0027s not safe to assume all blocks of an array have same block size. I can\u0027t find such saying in GLES/ESSL spec. It should be implementation dependent.",
+      "range": {
+        "startLine": 2834,
+        "startChar": 0,
+        "endLine": 2844,
+        "endChar": 5
+      },
+      "revId": "966c940b0d45fb0b02c5a485e0ae6c2dc047b810",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "34cf19d9_6cfbe21f",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-24T10:32:14Z",
+      "side": 0,
+      "message": "To get the actual index value of a resource, the Spec only tells us to get it by its name or enumerating.  It\u0027s error-prone to guess it by hacking.",
+      "range": {
+        "startLine": 376,
+        "startChar": 0,
+        "endLine": 386,
+        "endChar": 68
+      },
+      "revId": "966c940b0d45fb0b02c5a485e0ae6c2dc047b810",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
