@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fbe9c141_2f4162eb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-24T19:08:10Z",
+      "side": 1,
+      "message": "nit: these should be sorted alphabetically, not semantically. so this line would go back where it was.",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 72
+      },
+      "revId": "31cfd29caaa032d5540e238473ce7633e0345ebe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "694d264c_e4c2707a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-24T19:08:10Z",
+      "side": 1,
+      "message": "nit: we use uint8_t * generally for these kinds of typeless memory buffer.",
+      "range": {
+        "startLine": 43,
+        "startChar": 19,
+        "endLine": 43,
+        "endChar": 24
+      },
+      "revId": "31cfd29caaa032d5540e238473ce7633e0345ebe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "37eaab6f_4f9258c1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-24T19:08:10Z",
+      "side": 1,
+      "message": "always use ASSERT, don\u0027t use assert",
+      "range": {
+        "startLine": 129,
+        "startChar": 8,
+        "endLine": 129,
+        "endChar": 14
+      },
+      "revId": "31cfd29caaa032d5540e238473ce7633e0345ebe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7ecfdf11_d42f5eb1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 610,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-24T19:08:10Z",
+      "side": 1,
+      "message": "nit: \u0027Cb\u0027 seems a bit overly terse, maybe UpdateClearData",
+      "range": {
+        "startLine": 610,
+        "startChar": 22,
+        "endLine": 610,
+        "endChar": 35
+      },
+      "revId": "31cfd29caaa032d5540e238473ce7633e0345ebe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b458687f_e9729c0e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 697,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-24T19:08:10Z",
+      "side": 1,
+      "message": "I\u0027m not a fan of fullscreen triangle, can we keep this as fullscreen quad? I recall another developer reporting negative results for performance with fullscreen tri on some platforms.",
+      "range": {
+        "startLine": 697,
+        "startChar": 16,
+        "endLine": 697,
+        "endChar": 35
+      },
+      "revId": "31cfd29caaa032d5540e238473ce7633e0345ebe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e190583a_d8973517",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-24T19:08:10Z",
+      "side": 1,
+      "message": "I would rather you just store this by value, if you\u0027re going to define it in the header anyway. Also you can pass the renderer and FL to getIlVsPs instead of storing it. Also you should probably call this something more descriptive, at least \u0027ClearShaders\u0027 plural. And can you call getIlVsPs \u0027getShadersAndLayout\u0027?",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 6
+      },
+      "revId": "31cfd29caaa032d5540e238473ce7633e0345ebe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1cb5a254_4999dab5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-24T19:08:10Z",
+      "side": 1,
+      "message": "nit: mConstantBufferClearData I think is a bit more readable",
+      "range": {
+        "startLine": 80,
+        "startChar": 27,
+        "endLine": 80,
+        "endChar": 35
+      },
+      "revId": "31cfd29caaa032d5540e238473ce7633e0345ebe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe092ffb_46f6aa25",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 11
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-24T19:08:10Z",
+      "side": 1,
+      "message": "re-sort these as well.",
+      "range": {
+        "startLine": 422,
+        "startChar": 12,
+        "endLine": 425,
+        "endChar": 76
+      },
+      "revId": "31cfd29caaa032d5540e238473ce7633e0345ebe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
