@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9999d1c5_eaec575d",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1895,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-25T15:46:50Z",
+      "side": 1,
+      "message": "nit: This function doesn\u0027t seem to be ES3 specific.",
+      "revId": "23c5c748e2f93c5c7e981ca6ee9d0ee30b63e3eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3f1c63c_29aa9846",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-25T15:46:50Z",
+      "side": 1,
+      "message": "nit: that\u0027s a new check, should it be in a different CL?",
+      "revId": "23c5c748e2f93c5c7e981ca6ee9d0ee30b63e3eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
