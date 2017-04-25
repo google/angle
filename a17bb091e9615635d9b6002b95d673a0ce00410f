@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5672e7b3_8601171b",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-25T06:16:43Z",
+      "side": 1,
+      "message": "It\u0027s just my own preference. I think the old version cannot check if the attrib and the binding really matches.\n\nIt\u0027s also OK for me not to do this change.",
+      "parentUuid": "230728bd_835da2eb",
+      "revId": "a17bb091e9615635d9b6002b95d673a0ce00410f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "67d4d5ce_8156a674",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 13
@@ -30,6 +48,24 @@
       "writtenOn": "2017-04-25T06:04:36Z",
       "side": 1,
       "message": "Is this really necessary?",
+      "revId": "a17bb091e9615635d9b6002b95d673a0ce00410f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "740b98fb_69c6acbc",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 445,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-25T06:16:43Z",
+      "side": 1,
+      "message": "This piece of code appears twice in VertexArrayGL.cpp:\n1. streamAttributes()  (Line.371 - Line. 385)\n2. updateAttribPointer() -  (line. 495 - Line. 504)\n\nI put the duplicated code here.",
+      "parentUuid": "67d4d5ce_8156a674",
       "revId": "a17bb091e9615635d9b6002b95d673a0ce00410f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
