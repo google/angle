@@ -1,0 +1,95 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "095e3d82_caebb2dc",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-04-25T14:11:58Z",
+      "side": 1,
+      "message": "I think naming this \"AtomicCounterBindingState\" would be clearer. Offsets only exist for atomic counters, and to me BindingOffset sounds like as if it was only storing the default offset.",
+      "range": {
+        "startLine": 98,
+        "startChar": 22,
+        "endLine": 98,
+        "endChar": 35
+      },
+      "revId": "975e01df48291179b633b9df7d7bef8d9fee17ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f2eb5e4_8d85d082",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3715,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-04-25T14:11:58Z",
+      "side": 1,
+      "message": "Could add a comment mentioning that this is based on section 4.1.8 of the spec.",
+      "revId": "975e01df48291179b633b9df7d7bef8d9fee17ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c8063b8f_f2798c58",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-04-25T14:11:58Z",
+      "side": 1,
+      "message": "Nit: Clean up extra whitespace changes.",
+      "revId": "975e01df48291179b633b9df7d7bef8d9fee17ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "68dfa35d_e737a30c",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 13
+      },
+      "lineNbr": 977,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-04-25T14:11:58Z",
+      "side": 1,
+      "message": "I don\u0027t think that this check should be necessary. Isn\u0027t the code already checking elsewhere that atomic counters are uniforms, and that uniforms must be at global scope?",
+      "revId": "975e01df48291179b633b9df7d7bef8d9fee17ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eac8bfa9_5f4c3a9b",
+        "filename": "src/tests/gl_tests/AtomicCounterBufferTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-04-25T14:11:58Z",
+      "side": 1,
+      "message": "All of the tests that are just meant to check for validating shader source correctly should be in unit tests. This way the tests are more targeted and have less overhead. This applies to most of these tests. Only the linking tests should be kept here.",
+      "revId": "975e01df48291179b633b9df7d7bef8d9fee17ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
