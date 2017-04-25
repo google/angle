@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ee798362_cbf74c13",
+        "filename": "src/libGLESv2.gypi",
+        "patchSetId": 28
+      },
+      "lineNbr": 699,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-25T17:29:08Z",
+      "side": 1,
+      "message": "I\u0027d prefer splitting these files into separate folders \"libANGLE/renderer/vulkan/win32\" and \"libANGLE/renderer/vulkan/xcb\"",
+      "range": {
+        "startLine": 686,
+        "startChar": 8,
+        "endLine": 699,
+        "endChar": 10
+      },
+      "revId": "0768a09302642909373e6de2f99c807b4ef534ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
