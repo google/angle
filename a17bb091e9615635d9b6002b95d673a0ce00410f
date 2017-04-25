@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "230728bd_835da2eb",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-04-25T06:04:36Z",
+      "side": 1,
+      "message": "Why you change the function\u0027s parameters, and get \u0027attrib\u0027 and \u0027binding\u0027 again?",
+      "revId": "a17bb091e9615635d9b6002b95d673a0ce00410f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67d4d5ce_8156a674",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 445,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-04-25T06:04:36Z",
+      "side": 1,
+      "message": "Is this really necessary?",
+      "revId": "a17bb091e9615635d9b6002b95d673a0ce00410f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
