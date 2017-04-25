@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b810e0b6_4cdf3214",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-25T07:04:17Z",
+      "side": 0,
+      "message": "Ack",
+      "parentUuid": "d05ca412_8b77b316",
+      "revId": "966c940b0d45fb0b02c5a485e0ae6c2dc047b810",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5750d7be_c58ef71e",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 12
@@ -33,6 +51,24 @@
       "revId": "966c940b0d45fb0b02c5a485e0ae6c2dc047b810",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dc48386d_5474b5d6",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-25T07:04:17Z",
+      "side": 0,
+      "message": "Ack",
+      "parentUuid": "5750d7be_c58ef71e",
+      "revId": "966c940b0d45fb0b02c5a485e0ae6c2dc047b810",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "2e080024_69545c72",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-25T07:04:17Z",
+      "side": 0,
+      "message": "Ack",
+      "parentUuid": "ce331781_93b76385",
+      "revId": "966c940b0d45fb0b02c5a485e0ae6c2dc047b810",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "db17c5c0_3ea23a51",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 12
@@ -67,6 +121,24 @@
       "revId": "966c940b0d45fb0b02c5a485e0ae6c2dc047b810",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "703c9d06_6783e620",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 544,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-25T07:04:17Z",
+      "side": 0,
+      "message": "Ack",
+      "parentUuid": "db17c5c0_3ea23a51",
+      "revId": "966c940b0d45fb0b02c5a485e0ae6c2dc047b810",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
