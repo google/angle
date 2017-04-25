@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9726fdd2_57b57384",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-25T17:18:54Z",
+      "side": 0,
+      "message": "[1]",
+      "revId": "d75dd26c5ce9a4b9438c861b45cc638f50a8bd4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
