@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "397bee4e_9dc36639",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1895,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-25T16:57:25Z",
+      "side": 1,
+      "message": "Right, could use some clarification here.",
+      "parentUuid": "9999d1c5_eaec575d",
+      "revId": "23c5c748e2f93c5c7e981ca6ee9d0ee30b63e3eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b3f1c63c_29aa9846",
         "filename": "src/libANGLE/validationES3.cpp",
         "patchSetId": 4
