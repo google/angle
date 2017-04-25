@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a8f796c1_04ef6998",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-04-25T22:25:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fbe9c141_2f4162eb",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 72
+      },
+      "revId": "31cfd29caaa032d5540e238473ce7633e0345ebe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "694d264c_e4c2707a",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 11
@@ -36,6 +60,30 @@
       "writtenOn": "2017-04-24T19:08:10Z",
       "side": 1,
       "message": "nit: we use uint8_t * generally for these kinds of typeless memory buffer.",
+      "range": {
+        "startLine": 43,
+        "startChar": 19,
+        "endLine": 43,
+        "endChar": 24
+      },
+      "revId": "31cfd29caaa032d5540e238473ce7633e0345ebe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ce3f262e_33f38d5b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-04-25T22:25:48Z",
+      "side": 1,
+      "message": "The problem with using uint8_t * here is that the input would need to have a reinterpret_cast when it is being passed in and the output would have to have a reinterpret_cast again when it is finally used and this makes the code much more difficult to follow.",
+      "parentUuid": "694d264c_e4c2707a",
       "range": {
         "startLine": 43,
         "startChar": 19,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "84f2d9da_3ad08f54",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-04-25T22:25:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37eaab6f_4f9258c1",
+      "range": {
+        "startLine": 129,
+        "startChar": 8,
+        "endLine": 129,
+        "endChar": 14
+      },
+      "revId": "31cfd29caaa032d5540e238473ce7633e0345ebe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7ecfdf11_d42f5eb1",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 11
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "e150fdc6_e63f468b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 610,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-04-25T22:25:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ecfdf11_d42f5eb1",
+      "range": {
+        "startLine": 610,
+        "startChar": 22,
+        "endLine": 610,
+        "endChar": 35
+      },
+      "revId": "31cfd29caaa032d5540e238473ce7633e0345ebe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b458687f_e9729c0e",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 11
@@ -105,6 +201,30 @@
       "writtenOn": "2017-04-24T19:08:10Z",
       "side": 1,
       "message": "I\u0027m not a fan of fullscreen triangle, can we keep this as fullscreen quad? I recall another developer reporting negative results for performance with fullscreen tri on some platforms.",
+      "range": {
+        "startLine": 697,
+        "startChar": 16,
+        "endLine": 697,
+        "endChar": 35
+      },
+      "revId": "31cfd29caaa032d5540e238473ce7633e0345ebe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "adce4890_25c67833",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 697,
+      "author": {
+        "id": 1175269
+      },
+      "writtenOn": "2017-04-25T22:25:48Z",
+      "side": 1,
+      "message": "The nice thing about using a triangle is that the number of vertices and the topology is the same for both FL9 and FL10+ rendering modes. Changing it to use a quad, would add extra complexity for setting up the context (which you previously stated you\u0027d like to avoid) and require changes to the FL10+ shader. If that is something you can live with, I am happy to make the change.\n\nAlso, I am curious as to why performance issues are being seen and in what scenarios. Do you have any specific data on this? Perhaps the additional clipping this requires is expensive on some hardware or scissoring isn\u0027t being implicitly applied over the surface area. As an alternative to modifying the code to draw a quad, I can enable scissoring for all draw based clears and simply adjust the rects based on whether or not scissoring is enabled to avoid the previously described scenario from potentially occurring.",
+      "parentUuid": "b458687f_e9729c0e",
       "range": {
         "startLine": 697,
         "startChar": 16,
