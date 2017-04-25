@@ -1442,8 +1442,8 @@ void TextureD3D_2D::redefineImage(size_t level,
             size.height != storageHeight ||
             internalformat != storageFormat)   // Discard mismatched storage
         {
-            markAllImagesDirty();
             SafeDelete(mTexStorage);
+            markAllImagesDirty();
         }
     }
 
