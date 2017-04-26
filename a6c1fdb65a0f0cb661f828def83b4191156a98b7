@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8ae6aa9a_880dc9e8",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-26T05:31:20Z",
+      "side": 1,
+      "message": "The alias declaration has been changed into C++11 style.",
+      "revId": "a6c1fdb65a0f0cb661f828def83b4191156a98b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01ba7966_a814ad85",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-26T05:31:20Z",
+      "side": 1,
+      "message": "I use buffer.get() \u003d\u003d nullptr as the flag to indicate the current attribute is using a client memory pointer instead of  \u0027-1\u0027 in updateClientMemoryPointer().\n\nThe main purpose to use \u0027-1\u0027 is to let the comparison to cached VertexAttributes must be unequal whatever the new attribute is.\nWith this patch, if an attribute doesn\u0027t need to streamed later:\n1. It is disabled.\n    It is irrelevant to VertexAttribPointer.\n2. It uses a buffer object instead of a client memory pointer.\n    The comparison between new VertexBinding.buffer.get() (not nullptr) and cached buffer (nullptr) must return unequal, thus we won\u0027t skip this change.\n\nI think it also makes the code easier to understand.",
+      "revId": "a6c1fdb65a0f0cb661f828def83b4191156a98b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f58acc73_1d687fff",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-26T05:31:20Z",
+      "side": 1,
+      "message": "updateAttribEnabled returns true if the attribute enabling really changes in this function.\nIt is a flag that updateNeedsStreaming has been called in this function, thus we do not need to call it again in updateAttribPointer.",
+      "revId": "a6c1fdb65a0f0cb661f828def83b4191156a98b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0e6b6dae_0a15cc9e",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-26T05:31:20Z",
+      "side": 1,
+      "message": "It is unnecessary to compare every member of VertexAttribute and VertexBinding when deciding if we should use VertexAttribPointer.\ne.g.\nattrib.enabled, binding.divisor,  attrib.bindingIndex (it should always equal to attribIndex as the ASSERT goes), etc.",
+      "revId": "a6c1fdb65a0f0cb661f828def83b4191156a98b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2a8430e4_bbe3a104",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-26T05:31:20Z",
+      "side": 1,
+      "message": "I split all the code related to client memory pointers into updateClientMemoryPointer().\nI think the structure is clearer than before.",
+      "revId": "a6c1fdb65a0f0cb661f828def83b4191156a98b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "126b65bb_8cddf7fa",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 555,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-26T05:31:20Z",
+      "side": 1,
+      "message": "I think it is unnecessary to make this GL call in every update* function., so I put it here and remove other redundant ones.",
+      "revId": "a6c1fdb65a0f0cb661f828def83b4191156a98b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3b02c6aa_46223851",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 557,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-26T05:31:20Z",
+      "side": 1,
+      "message": "The return value of updateAttribEnabled is stored here and will be used by updateAttribPointer.",
+      "revId": "a6c1fdb65a0f0cb661f828def83b4191156a98b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
