@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "817f30b4_cab33ed6",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3955,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-26T15:49:27Z",
+      "side": 0,
+      "message": "This is not needed as images are not allowed to be structure member.",
+      "range": {
+        "startLine": 3949,
+        "startChar": 0,
+        "endLine": 3955,
+        "endChar": 13
+      },
+      "revId": "6d1ccf0158318af2d8282661963ac31cd923cd77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

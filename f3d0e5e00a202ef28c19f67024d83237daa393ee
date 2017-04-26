@@ -16,6 +16,24 @@
       "revId": "f3d0e5e00a202ef28c19f67024d83237daa393ee",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2feb7cdd_0180f368",
+        "filename": "src/tests/compiler_tests/AtomicCounter_test.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-26T15:49:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "45e2e8f0_a93d0028",
+      "revId": "f3d0e5e00a202ef28c19f67024d83237daa393ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
