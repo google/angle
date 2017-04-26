@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "09c5c9b2_597012a8",
+        "filename": "include/GLES2/gl2.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-26T18:45:53Z",
+      "side": 1,
+      "message": "Where is the change to GLvoid and GLclampf?",
+      "revId": "1c3c144c985b46c9b81d33f0ea10f37ee987bc58",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "963d9f63_ee09d1d7",
+        "filename": "src/tests/gl_tests/PointSpritesTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 384,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-26T18:45:53Z",
+      "side": 1,
+      "message": "nit: reinterpret_cast",
+      "revId": "1c3c144c985b46c9b81d33f0ea10f37ee987bc58",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c260a89c_0c07f230",
+        "filename": "src/tests/perf_tests/TexSubImage.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-26T18:45:53Z",
+      "side": 1,
+      "message": "nit: reinterpret_cast",
+      "revId": "1c3c144c985b46c9b81d33f0ea10f37ee987bc58",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
