@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "491b55cc_316d41a6",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-26T05:43:07Z",
+      "side": 1,
+      "message": "Very comfortable naming. Thanks!",
+      "parentUuid": "095e3d82_caebb2dc",
+      "range": {
+        "startLine": 98,
+        "startChar": 22,
+        "endLine": 98,
+        "endChar": 35
+      },
+      "revId": "975e01df48291179b633b9df7d7bef8d9fee17ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0f2eb5e4_8d85d082",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 13
@@ -39,6 +63,24 @@
       "revId": "975e01df48291179b633b9df7d7bef8d9fee17ad",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b2bdc894_6ced48b7",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3715,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-26T05:43:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0f2eb5e4_8d85d082",
+      "revId": "975e01df48291179b633b9df7d7bef8d9fee17ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "c8fdae8e_b390af40",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-26T05:43:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c8063b8f_f2798c58",
+      "revId": "975e01df48291179b633b9df7d7bef8d9fee17ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "68dfa35d_e737a30c",
         "filename": "src/compiler/translator/glslang.y",
         "patchSetId": 13
@@ -70,6 +130,24 @@
       "writtenOn": "2017-04-25T14:11:58Z",
       "side": 1,
       "message": "I don\u0027t think that this check should be necessary. Isn\u0027t the code already checking elsewhere that atomic counters are uniforms, and that uniforms must be at global scope?",
+      "revId": "975e01df48291179b633b9df7d7bef8d9fee17ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98943837_905be444",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 13
+      },
+      "lineNbr": 977,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-26T05:43:07Z",
+      "side": 1,
+      "message": "There is  a BODY_DECLARE negative test case in \"deqp/src/modules/gles31/functional/es31fNegativeAtomicCounterTests.cpp\". This case failed my previous patchset, so I added this check here.  The case is as such:\nvoid main (void)\n{\n    atomic_uint counter;\n}\nThe declaration line is not a fully specified type, so it can escape from the existing check on uniform.",
+      "parentUuid": "68dfa35d_e737a30c",
       "revId": "975e01df48291179b633b9df7d7bef8d9fee17ad",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -90,6 +168,24 @@
       "revId": "975e01df48291179b633b9df7d7bef8d9fee17ad",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "30abff80_6d2e0e87",
+        "filename": "src/tests/gl_tests/AtomicCounterBufferTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-26T05:43:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eac8bfa9_5f4c3a9b",
+      "revId": "975e01df48291179b633b9df7d7bef8d9fee17ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
