@@ -4,8 +4,8 @@
 // found in the LICENSE file.
 //
 
-#include "test_utils/ANGLETest.h"
 #include "random_utils.h"
+#include "test_utils/ANGLETest.h"
 
 using namespace angle;
 
@@ -76,26 +76,15 @@ class TransformFeedbackTest : public TransformFeedbackTestBase
     {
         ASSERT_EQ(0u, mProgram);
 
-        const std::string vertexShaderSource = SHADER_SOURCE
-        (
-            precision highp float;
-            attribute vec4 position;
+        const std::string vertexShaderSource =
+            SHADER_SOURCE(precision highp float; attribute vec4 position;
 
-            void main()
-            {
-                gl_Position = position;
-            }
-        );
+                          void main() { gl_Position = position; });
 
-        const std::string fragmentShaderSource = SHADER_SOURCE
-        (
-            precision highp float;
+        const std::string fragmentShaderSource =
+            SHADER_SOURCE(precision highp float;
 
-            void main()
-            {
-                gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-            }
-        );
+                          void main() { gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); });
 
         mProgram = CompileProgramWithTransformFeedback(vertexShaderSource, fragmentShaderSource,
                                                        tfVaryings, bufferMode);
@@ -161,7 +150,6 @@ TEST_P(TransformFeedbackTest, BufferRebinding)
     glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, mTransformFeedbackBufferSize, data.data(),
                  GL_STATIC_DRAW);
 
-
     // Create a query to check how many primitives were written
     GLuint primitivesWrittenQuery = 0;
     glGenQueries(1, &primitivesWrittenQuery);
@@ -218,7 +206,8 @@ TEST_P(TransformFeedbackTest, BufferRebinding)
     EXPECT_GL_NO_ERROR();
 }
 
-// Test that XFB can write back vertices to a buffer and that we can draw from this buffer afterward.
+// Test that XFB can write back vertices to a buffer and that we can draw from this buffer
+// afterward.
 TEST_P(TransformFeedbackTest, RecordAndDraw)
 {
     // TODO(jmadill): Figure out why this fails on Intel.
@@ -243,15 +232,10 @@ TEST_P(TransformFeedbackTest, RecordAndDraw)
     // First pass: draw 6 points to the XFB buffer
     glEnable(GL_RASTERIZER_DISCARD);
 
-    const GLfloat vertices[] =
-    {
-        -1.0f,  1.0f, 0.5f,
-        -1.0f, -1.0f, 0.5f,
-         1.0f, -1.0f, 0.5f,
+    const GLfloat vertices[] = {
+        -1.0f, 1.0f, 0.5f, -1.0f, -1.0f, 0.5f, 1.0f, -1.0f, 0.5f,
 
-        -1.0f,  1.0f, 0.5f,
-         1.0f, -1.0f, 0.5f,
-         1.0f,  1.0f, 0.5f,
+        -1.0f, 1.0f, 0.5f, 1.0f,  -1.0f, 0.5f, 1.0f, 1.0f,  0.5f,
     };
 
     glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, vertices);
@@ -297,7 +281,7 @@ TEST_P(TransformFeedbackTest, RecordAndDraw)
 
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
-    EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 255,   0,   0, 255);
+    EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 255, 0, 0, 255);
     EXPECT_GL_NO_ERROR();
 }
 
@@ -746,7 +730,8 @@ TEST_P(TransformFeedbackTest, PackingBug)
     std::vector<Vector2> attrib1Data;
     std::vector<Vector2> attrib2Data;
     int counter = 0;
-    for (size_t i = 0; i < 6; i++) {
+    for (size_t i = 0; i < 6; i++)
+    {
         attrib1Data.push_back(Vector2(counter + 0.0f, counter + 1.0f));
         attrib2Data.push_back(Vector2(counter + 2.0f, counter + 3.0f));
         counter += 4;
@@ -1083,7 +1068,8 @@ TEST_P(TransformFeedbackTestES31, DifferentArrayElementVaryings)
     ASSERT_GL_NO_ERROR();
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these
+// tests should be run against.
 ANGLE_INSTANTIATE_TEST(TransformFeedbackTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(TransformFeedbackLifetimeTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 ANGLE_INSTANTIATE_TEST(TransformFeedbackTestES31, ES31_D3D11(), ES31_OPENGL(), ES31_OPENGLES());

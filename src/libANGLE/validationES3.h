@@ -153,10 +153,16 @@ bool ValidateGetQueryiv(Context *context, GLenum target, GLenum pname, GLint *pa
 
 bool ValidateGetQueryObjectuiv(Context *context, GLuint id, GLenum pname, GLuint *params);
 
-bool ValidateFramebufferTextureLayer(Context *context, GLenum target, GLenum attachment,
-                                     GLuint texture, GLint level, GLint layer);
+bool ValidateFramebufferTextureLayer(Context *context,
+                                     GLenum target,
+                                     GLenum attachment,
+                                     GLuint texture,
+                                     GLint level,
+                                     GLint layer);
 
-bool ValidateInvalidateFramebuffer(Context *context, GLenum target, GLsizei numAttachments,
+bool ValidateInvalidateFramebuffer(Context *context,
+                                   GLenum target,
+                                   GLsizei numAttachments,
                                    const GLenum *attachments);
 
 bool ValidateClearBuffer(ValidationContext *context);
@@ -169,7 +175,7 @@ bool ValidateDrawRangeElements(Context *context,
                                GLenum type,
                                const void *indices);
 
-bool ValidateGetUniformuiv(Context *context, GLuint program, GLint location, GLuint* params);
+bool ValidateGetUniformuiv(Context *context, GLuint program, GLint location, GLuint *params);
 
 bool ValidateReadBuffer(Context *context, GLenum mode);
 
@@ -423,4 +429,4 @@ bool ValidateDrawElementsInstanced(ValidationContext *context,
 
 }  // namespace gl
 
-#endif // LIBANGLE_VALIDATION_ES3_H_
+#endif  // LIBANGLE_VALIDATION_ES3_H_

@@ -9,8 +9,8 @@
 
 #include "libANGLE/Framebuffer.h"
 
-#include "common/bitset_utils.h"
 #include "common/Optional.h"
+#include "common/bitset_utils.h"
 #include "common/utilities.h"
 #include "libANGLE/Config.h"
 #include "libANGLE/Context.h"
@@ -115,8 +115,11 @@ const FramebufferAttachment *FramebufferState::getReadAttachment() const
     {
         return nullptr;
     }
-    ASSERT(mReadBufferState == GL_BACK || (mReadBufferState >= GL_COLOR_ATTACHMENT0 && mReadBufferState <= GL_COLOR_ATTACHMENT15));
-    size_t readIndex = (mReadBufferState == GL_BACK ? 0 : static_cast<size_t>(mReadBufferState - GL_COLOR_ATTACHMENT0));
+    ASSERT(mReadBufferState == GL_BACK ||
+           (mReadBufferState >= GL_COLOR_ATTACHMENT0 && mReadBufferState <= GL_COLOR_ATTACHMENT15));
+    size_t readIndex = (mReadBufferState == GL_BACK
+                            ? 0
+                            : static_cast<size_t>(mReadBufferState - GL_COLOR_ATTACHMENT0));
     ASSERT(readIndex < mColorAttachments.size());
     return mColorAttachments[readIndex].isAttached() ? &mColorAttachments[readIndex] : nullptr;
 }
@@ -169,9 +172,8 @@ const FramebufferAttachment *FramebufferState::getStencilOrDepthStencilAttachmen
 const FramebufferAttachment *FramebufferState::getColorAttachment(size_t colorAttachment) const
 {
     ASSERT(colorAttachment < mColorAttachments.size());
-    return mColorAttachments[colorAttachment].isAttached() ?
-           &mColorAttachments[colorAttachment] :
-           nullptr;
+    return mColorAttachments[colorAttachment].isAttached() ? &mColorAttachments[colorAttachment]
+                                                           : nullptr;
 }
 
 const FramebufferAttachment *FramebufferState::getDepthAttachment() const
@@ -201,8 +203,7 @@ bool FramebufferState::attachmentsHaveSameDimensions() const
 {
     Optional<Extents> attachmentSize;
 
-    auto hasMismatchedSize = [&attachmentSize](const FramebufferAttachment &attachment)
-    {
+    auto hasMismatchedSize = [&attachmentSize](const FramebufferAttachment &attachment) {
         if (!attachment.isAttached())
         {
             return false;
@@ -602,8 +603,8 @@ GLenum Framebuffer::checkStatusImpl(const Context *context)
     ASSERT(mId != 0);
 
     unsigned int colorbufferSize = 0;
-    int samples = -1;
-    bool missingAttachment = true;
+    int samples                  = -1;
+    bool missingAttachment       = true;
     Optional<GLboolean> fixedSampleLocations;
     bool hasRenderbuffer = false;
 
@@ -674,8 +675,8 @@ GLenum Framebuffer::checkStatusImpl(const Context *context)
                     return GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_EXT;
                 }
 
-                // in GLES 2.0, all color attachments attachments must have the same number of bitplanes
-                // in GLES 3.0, there is no such restriction
+                // in GLES 2.0, all color attachments attachments must have the same number of
+                // bitplanes in GLES 3.0, there is no such restriction
                 if (state.getClientMajorVersion() < 3)
                 {
                     if (format.pixelBytes != colorbufferSize)
@@ -716,7 +717,7 @@ GLenum Framebuffer::checkStatusImpl(const Context *context)
 
         if (missingAttachment)
         {
-            samples = depthAttachment.getSamples();
+            samples           = depthAttachment.getSamples();
             missingAttachment = false;
         }
         else if (samples != depthAttachment.getSamples())
@@ -758,7 +759,7 @@ GLenum Framebuffer::checkStatusImpl(const Context *context)
 
         if (missingAttachment)
         {
-            samples = stencilAttachment.getSamples();
+            samples           = stencilAttachment.getSamples();
             missingAttachment = false;
         }
         else if (samples != stencilAttachment.getSamples())

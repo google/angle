@@ -11,13 +11,13 @@
 #include <memory>
 
 #include "common/MemoryBuffer.h"
-#include "libANGLE/renderer/renderer_utils.h"
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
 #include "libANGLE/renderer/d3d/VertexDataManager.h"
-#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
-#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
+#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
+#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
+#include "libANGLE/renderer/renderer_utils.h"
 
 namespace rx
 {
@@ -123,7 +123,7 @@ class Buffer11::BufferStorage : angle::NonCopyable
                           size_t length,
                           GLbitfield access,
                           uint8_t **mapPointerOut) = 0;
-    virtual void unmap() = 0;
+    virtual void unmap()                           = 0;
 
     gl::Error setData(const uint8_t *data, size_t offset, size_t size);
 
@@ -204,8 +204,8 @@ class Buffer11::EmulatedIndexedStorage : public Buffer11::BufferStorage
     void unmap() override;
 
   private:
-    ID3D11Buffer *mNativeStorage;       // contains expanded data for use by D3D
-    angle::MemoryBuffer mMemoryBuffer;  // original data (not expanded)
+    ID3D11Buffer *mNativeStorage;              // contains expanded data for use by D3D
+    angle::MemoryBuffer mMemoryBuffer;         // original data (not expanded)
     angle::MemoryBuffer mIndicesMemoryBuffer;  // indices data
 };
 
@@ -770,8 +770,7 @@ gl::ErrorOrResult<Buffer11::BufferStorage *> Buffer11::getConstantBufferRangeSto
             auto iter = std::min_element(std::begin(mConstantBufferRangeStoragesCache),
                                          std::end(mConstantBufferRangeStoragesCache),
                                          [](const ConstantBufferCache::value_type &a,
-                                            const ConstantBufferCache::value_type &b)
-                                         {
+                                            const ConstantBufferCache::value_type &b) {
                                              return a.second.lruCount < b.second.lruCount;
                                          });
 
@@ -846,7 +845,7 @@ gl::ErrorOrResult<Buffer11::BufferStorage *> Buffer11::getLatestBufferStorage() 
     // Even though we iterate over all the direct buffers, it is expected that only
     // 1 or 2 will be present.
     BufferStorage *latestStorage = nullptr;
-    DataRevision latestRevision = 0;
+    DataRevision latestRevision  = 0;
     for (auto &storage : mBufferStorages)
     {
         if (storage && (!latestStorage || storage->getDataRevision() > latestRevision))
@@ -1154,7 +1153,7 @@ gl::Error Buffer11::NativeStorage::map(size_t offset,
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     ID3D11DeviceContext *context = mRenderer->getDeviceContext();
     D3D11_MAP d3dMapType         = gl_d3d11::GetD3DMapTypeFromBits(mUsage, access);
-    UINT d3dMapFlag              = ((access & GL_MAP_UNSYNCHRONIZED_BIT) != 0 ? D3D11_MAP_FLAG_DO_NOT_WAIT : 0);
+    UINT d3dMapFlag = ((access & GL_MAP_UNSYNCHRONIZED_BIT) != 0 ? D3D11_MAP_FLAG_DO_NOT_WAIT : 0);
 
     HRESULT result = context->Map(mNativeStorage, 0, d3dMapType, d3dMapFlag, &mappedResource);
     ASSERT(SUCCEEDED(result));

@@ -33,30 +33,19 @@ class PBOExtensionTest : public ANGLETest
                          GL_STATIC_DRAW);
             glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
 
-            const char *vertexShaderSrc = SHADER_SOURCE
-            (
-                attribute vec4 aTest;
-                attribute vec2 aPosition;
-                varying vec4 vTest;
+            const char *vertexShaderSrc =
+                SHADER_SOURCE(attribute vec4 aTest; attribute vec2 aPosition; varying vec4 vTest;
 
-                void main()
-                {
-                    vTest = aTest;
-                    gl_Position = vec4(aPosition, 0.0, 1.0);
-                    gl_PointSize = 1.0;
-                }
-            );
+                              void main() {
+                                  vTest        = aTest;
+                                  gl_Position  = vec4(aPosition, 0.0, 1.0);
+                                  gl_PointSize = 1.0;
+                              });
 
-            const char *fragmentShaderSrc = SHADER_SOURCE
-            (
-                precision mediump float;
-                varying vec4 vTest;
+            const char *fragmentShaderSrc =
+                SHADER_SOURCE(precision mediump float; varying vec4 vTest;
 
-                void main()
-                {
-                    gl_FragColor = vTest;
-                }
-            );
+                              void main() { gl_FragColor = vTest; });
 
             mProgram = CompileProgram(vertexShaderSrc, fragmentShaderSrc);
 
@@ -100,8 +89,8 @@ TEST_P(PBOExtensionTest, PBOWithOtherTarget)
         EXPECT_GL_NO_ERROR();
 
         EXPECT_EQ(255, dataPtr[0]);
-        EXPECT_EQ(0,   dataPtr[1]);
-        EXPECT_EQ(0,   dataPtr[2]);
+        EXPECT_EQ(0, dataPtr[1]);
+        EXPECT_EQ(0, dataPtr[2]);
         EXPECT_EQ(255, dataPtr[3]);
 
         glUnmapBufferOES(GL_ARRAY_BUFFER);
@@ -150,5 +139,6 @@ TEST_P(PBOExtensionTest, PBOWithExistingData)
     EXPECT_GL_NO_ERROR();
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
+// Use this to select which configurations (e.g. which renderer, which GLES major version) these
+// tests should be run against.
 ANGLE_INSTANTIATE_TEST(PBOExtensionTest, ES2_D3D11(), ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());

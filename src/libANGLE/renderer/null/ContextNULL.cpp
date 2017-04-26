@@ -64,9 +64,9 @@ ContextNULL::ContextNULL(const gl::ContextState &state, AllocationTrackerNULL *a
     ASSERT(mAllocationTracker != nullptr);
 
     const gl::Version maxClientVersion(3, 1);
-    mCaps        = GenerateMinimumCaps(maxClientVersion);
+    mCaps = GenerateMinimumCaps(maxClientVersion);
 
-    mExtensions  = gl::Extensions();
+    mExtensions                       = gl::Extensions();
     mExtensions.copyTexture           = true;
     mExtensions.copyCompressedTexture = true;
 

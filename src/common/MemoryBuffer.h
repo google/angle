@@ -9,8 +9,8 @@
 
 #include "common/angleutils.h"
 
-#include <cstddef>
 #include <stdint.h>
+#include <cstddef>
 
 namespace angle
 {
@@ -60,4 +60,4 @@ class ScratchBuffer final : NonCopyable
 
 }  // namespace angle
 
-#endif // COMMON_MEMORYBUFFER_H_
+#endif  // COMMON_MEMORYBUFFER_H_

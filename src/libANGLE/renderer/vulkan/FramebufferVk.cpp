@@ -9,8 +9,8 @@
 
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
 
-#include <array>
 #include <vulkan/vulkan.h>
+#include <array>
 
 #include "common/debug.h"
 #include "image_util/imageformats.h"

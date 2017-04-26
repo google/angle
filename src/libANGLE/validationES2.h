@@ -17,10 +17,16 @@ namespace gl
 class Context;
 class ValidationContext;
 
-bool ValidateES2TexStorageParameters(Context *context, GLenum target, GLsizei levels, GLenum internalformat,
-                                                   GLsizei width, GLsizei height);
+bool ValidateES2TexStorageParameters(Context *context,
+                                     GLenum target,
+                                     GLsizei levels,
+                                     GLenum internalformat,
+                                     GLsizei width,
+                                     GLsizei height);
 
-bool ValidateDiscardFramebufferEXT(Context *context, GLenum target, GLsizei numAttachments,
+bool ValidateDiscardFramebufferEXT(Context *context,
+                                   GLenum target,
+                                   GLsizei numAttachments,
                                    const GLenum *attachments);
 
 bool ValidateDrawBuffersEXT(ValidationContext *context, GLsizei n, const GLenum *bufs);
@@ -672,4 +678,4 @@ bool ValidateUseProgram(Context *context, GLuint program);
 
 }  // namespace gl
 
-#endif // LIBANGLE_VALIDATION_ES2_H_
+#endif  // LIBANGLE_VALIDATION_ES2_H_

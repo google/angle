@@ -118,4 +118,4 @@ class Buffer final : public RefCountObject, public LabeledObject
 
 }  // namespace gl
 
-#endif   // LIBANGLE_BUFFER_H_
+#endif  // LIBANGLE_BUFFER_H_

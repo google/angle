@@ -9,9 +9,9 @@
 
 #include "libANGLE/Context.h"
 
+#include <string.h>
 #include <iterator>
 #include <sstream>
-#include <string.h>
 #include <vector>
 
 #include "common/matrix_utils.h"
@@ -26,7 +26,6 @@
 #include "libANGLE/Path.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/Query.h"
-#include "libANGLE/queryutils.h"
 #include "libANGLE/Renderbuffer.h"
 #include "libANGLE/ResourceManager.h"
 #include "libANGLE/Sampler.h"
@@ -34,13 +33,13 @@
 #include "libANGLE/Texture.h"
 #include "libANGLE/TransformFeedback.h"
 #include "libANGLE/VertexArray.h"
-#include "libANGLE/formatutils.h"
-#include "libANGLE/validationES.h"
 #include "libANGLE/Workarounds.h"
-#include "libANGLE/renderer/ContextImpl.h"
-#include "libANGLE/renderer/EGLImplFactory.h"
+#include "libANGLE/formatutils.h"
 #include "libANGLE/queryconversions.h"
 #include "libANGLE/queryutils.h"
+#include "libANGLE/renderer/ContextImpl.h"
+#include "libANGLE/renderer/EGLImplFactory.h"
+#include "libANGLE/validationES.h"
 
 namespace
 {
@@ -1311,11 +1310,15 @@ void Context::getBooleanvImpl(GLenum pname, GLboolean *params)
 {
     switch (pname)
     {
-      case GL_SHADER_COMPILER:           *params = GL_TRUE;                             break;
-      case GL_CONTEXT_ROBUST_ACCESS_EXT: *params = mRobustAccess ? GL_TRUE : GL_FALSE;  break;
-      default:
-          mGLState.getBooleanv(pname, params);
-          break;
+        case GL_SHADER_COMPILER:
+            *params = GL_TRUE;
+            break;
+        case GL_CONTEXT_ROBUST_ACCESS_EXT:
+            *params = mRobustAccess ? GL_TRUE : GL_FALSE;
+            break;
+        default:
+            mGLState.getBooleanv(pname, params);
+            break;
     }
 }
 
@@ -1325,34 +1328,34 @@ void Context::getFloatvImpl(GLenum pname, GLfloat *params)
     // Queries about current GL state values are answered by State.
     switch (pname)
     {
-      case GL_ALIASED_LINE_WIDTH_RANGE:
-        params[0] = mCaps.minAliasedLineWidth;
-        params[1] = mCaps.maxAliasedLineWidth;
-        break;
-      case GL_ALIASED_POINT_SIZE_RANGE:
-        params[0] = mCaps.minAliasedPointSize;
-        params[1] = mCaps.maxAliasedPointSize;
-        break;
-      case GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT:
-        ASSERT(mExtensions.textureFilterAnisotropic);
-        *params = mExtensions.maxTextureAnisotropy;
-        break;
-      case GL_MAX_TEXTURE_LOD_BIAS:
-        *params = mCaps.maxLODBias;
+        case GL_ALIASED_LINE_WIDTH_RANGE:
+            params[0] = mCaps.minAliasedLineWidth;
+            params[1] = mCaps.maxAliasedLineWidth;
+            break;
+        case GL_ALIASED_POINT_SIZE_RANGE:
+            params[0] = mCaps.minAliasedPointSize;
+            params[1] = mCaps.maxAliasedPointSize;
+            break;
+        case GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT:
+            ASSERT(mExtensions.textureFilterAnisotropic);
+            *params = mExtensions.maxTextureAnisotropy;
+            break;
+        case GL_MAX_TEXTURE_LOD_BIAS:
+            *params = mCaps.maxLODBias;
+            break;
+
+        case GL_PATH_MODELVIEW_MATRIX_CHROMIUM:
+        case GL_PATH_PROJECTION_MATRIX_CHROMIUM:
+        {
+            ASSERT(mExtensions.pathRendering);
+            const GLfloat *m = mGLState.getPathRenderingMatrix(pname);
+            memcpy(params, m, 16 * sizeof(GLfloat));
+        }
         break;
 
-      case GL_PATH_MODELVIEW_MATRIX_CHROMIUM:
-      case GL_PATH_PROJECTION_MATRIX_CHROMIUM:
-      {
-          ASSERT(mExtensions.pathRendering);
-          const GLfloat *m = mGLState.getPathRenderingMatrix(pname);
-          memcpy(params, m, 16 * sizeof(GLfloat));
-      }
-      break;
-
-      default:
-          mGLState.getFloatv(pname, params);
-          break;
+        default:
+            mGLState.getFloatv(pname, params);
+            break;
     }
 }
 
@@ -1363,221 +1366,289 @@ void Context::getIntegervImpl(GLenum pname, GLint *params)
 
     switch (pname)
     {
-      case GL_MAX_VERTEX_ATTRIBS:                       *params = mCaps.maxVertexAttributes;                            break;
-      case GL_MAX_VERTEX_UNIFORM_VECTORS:               *params = mCaps.maxVertexUniformVectors;                        break;
-      case GL_MAX_VERTEX_UNIFORM_COMPONENTS:            *params = mCaps.maxVertexUniformComponents;                     break;
-      case GL_MAX_VARYING_VECTORS:                      *params = mCaps.maxVaryingVectors;                              break;
-      case GL_MAX_VARYING_COMPONENTS:                   *params = mCaps.maxVertexOutputComponents;                      break;
-      case GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS:         *params = mCaps.maxCombinedTextureImageUnits;                   break;
-      case GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS:           *params = mCaps.maxVertexTextureImageUnits;                     break;
-      case GL_MAX_TEXTURE_IMAGE_UNITS:                  *params = mCaps.maxTextureImageUnits;                           break;
-      case GL_MAX_FRAGMENT_UNIFORM_VECTORS:             *params = mCaps.maxFragmentUniformVectors;                      break;
-      case GL_MAX_FRAGMENT_UNIFORM_COMPONENTS:          *params = mCaps.maxFragmentUniformComponents;                   break;
-      case GL_MAX_RENDERBUFFER_SIZE:                    *params = mCaps.maxRenderbufferSize;                            break;
-      case GL_MAX_COLOR_ATTACHMENTS_EXT:                *params = mCaps.maxColorAttachments;                            break;
-      case GL_MAX_DRAW_BUFFERS_EXT:                     *params = mCaps.maxDrawBuffers;                                 break;
-      //case GL_FRAMEBUFFER_BINDING:                    // now equivalent to GL_DRAW_FRAMEBUFFER_BINDING_ANGLE
-      case GL_SUBPIXEL_BITS:                            *params = 4;                                                    break;
-      case GL_MAX_TEXTURE_SIZE:                         *params = mCaps.max2DTextureSize;                               break;
-      case GL_MAX_CUBE_MAP_TEXTURE_SIZE:                *params = mCaps.maxCubeMapTextureSize;                          break;
-      case GL_MAX_3D_TEXTURE_SIZE:                      *params = mCaps.max3DTextureSize;                               break;
-      case GL_MAX_ARRAY_TEXTURE_LAYERS:                 *params = mCaps.maxArrayTextureLayers;                          break;
-      case GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT:          *params = mCaps.uniformBufferOffsetAlignment;                   break;
-      case GL_MAX_UNIFORM_BUFFER_BINDINGS:              *params = mCaps.maxUniformBufferBindings;                       break;
-      case GL_MAX_VERTEX_UNIFORM_BLOCKS:                *params = mCaps.maxVertexUniformBlocks;                         break;
-      case GL_MAX_FRAGMENT_UNIFORM_BLOCKS:              *params = mCaps.maxFragmentUniformBlocks;                       break;
-      case GL_MAX_COMBINED_UNIFORM_BLOCKS:              *params = mCaps.maxCombinedTextureImageUnits;                   break;
-      case GL_MAX_VERTEX_OUTPUT_COMPONENTS:             *params = mCaps.maxVertexOutputComponents;                      break;
-      case GL_MAX_FRAGMENT_INPUT_COMPONENTS:            *params = mCaps.maxFragmentInputComponents;                     break;
-      case GL_MIN_PROGRAM_TEXEL_OFFSET:                 *params = mCaps.minProgramTexelOffset;                          break;
-      case GL_MAX_PROGRAM_TEXEL_OFFSET:                 *params = mCaps.maxProgramTexelOffset;                          break;
-      case GL_MAJOR_VERSION:
-          *params = getClientVersion().major;
-          break;
-      case GL_MINOR_VERSION:
-          *params = getClientVersion().minor;
-          break;
-      case GL_MAX_ELEMENTS_INDICES:                     *params = mCaps.maxElementsIndices;                             break;
-      case GL_MAX_ELEMENTS_VERTICES:                    *params = mCaps.maxElementsVertices;                            break;
-      case GL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS: *params = mCaps.maxTransformFeedbackInterleavedComponents; break;
-      case GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS:       *params = mCaps.maxTransformFeedbackSeparateAttributes;    break;
-      case GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS:    *params = mCaps.maxTransformFeedbackSeparateComponents;    break;
-      case GL_NUM_COMPRESSED_TEXTURE_FORMATS:
-          *params = static_cast<GLint>(mCaps.compressedTextureFormats.size());
-          break;
-      case GL_MAX_SAMPLES_ANGLE:                        *params = mCaps.maxSamples;                                     break;
-      case GL_MAX_VIEWPORT_DIMS:
+        case GL_MAX_VERTEX_ATTRIBS:
+            *params = mCaps.maxVertexAttributes;
+            break;
+        case GL_MAX_VERTEX_UNIFORM_VECTORS:
+            *params = mCaps.maxVertexUniformVectors;
+            break;
+        case GL_MAX_VERTEX_UNIFORM_COMPONENTS:
+            *params = mCaps.maxVertexUniformComponents;
+            break;
+        case GL_MAX_VARYING_VECTORS:
+            *params = mCaps.maxVaryingVectors;
+            break;
+        case GL_MAX_VARYING_COMPONENTS:
+            *params = mCaps.maxVertexOutputComponents;
+            break;
+        case GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS:
+            *params = mCaps.maxCombinedTextureImageUnits;
+            break;
+        case GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS:
+            *params = mCaps.maxVertexTextureImageUnits;
+            break;
+        case GL_MAX_TEXTURE_IMAGE_UNITS:
+            *params = mCaps.maxTextureImageUnits;
+            break;
+        case GL_MAX_FRAGMENT_UNIFORM_VECTORS:
+            *params = mCaps.maxFragmentUniformVectors;
+            break;
+        case GL_MAX_FRAGMENT_UNIFORM_COMPONENTS:
+            *params = mCaps.maxFragmentUniformComponents;
+            break;
+        case GL_MAX_RENDERBUFFER_SIZE:
+            *params = mCaps.maxRenderbufferSize;
+            break;
+        case GL_MAX_COLOR_ATTACHMENTS_EXT:
+            *params = mCaps.maxColorAttachments;
+            break;
+        case GL_MAX_DRAW_BUFFERS_EXT:
+            *params = mCaps.maxDrawBuffers;
+            break;
+        // case GL_FRAMEBUFFER_BINDING:                    // now equivalent to
+        // GL_DRAW_FRAMEBUFFER_BINDING_ANGLE
+        case GL_SUBPIXEL_BITS:
+            *params = 4;
+            break;
+        case GL_MAX_TEXTURE_SIZE:
+            *params = mCaps.max2DTextureSize;
+            break;
+        case GL_MAX_CUBE_MAP_TEXTURE_SIZE:
+            *params = mCaps.maxCubeMapTextureSize;
+            break;
+        case GL_MAX_3D_TEXTURE_SIZE:
+            *params = mCaps.max3DTextureSize;
+            break;
+        case GL_MAX_ARRAY_TEXTURE_LAYERS:
+            *params = mCaps.maxArrayTextureLayers;
+            break;
+        case GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT:
+            *params = mCaps.uniformBufferOffsetAlignment;
+            break;
+        case GL_MAX_UNIFORM_BUFFER_BINDINGS:
+            *params = mCaps.maxUniformBufferBindings;
+            break;
+        case GL_MAX_VERTEX_UNIFORM_BLOCKS:
+            *params = mCaps.maxVertexUniformBlocks;
+            break;
+        case GL_MAX_FRAGMENT_UNIFORM_BLOCKS:
+            *params = mCaps.maxFragmentUniformBlocks;
+            break;
+        case GL_MAX_COMBINED_UNIFORM_BLOCKS:
+            *params = mCaps.maxCombinedTextureImageUnits;
+            break;
+        case GL_MAX_VERTEX_OUTPUT_COMPONENTS:
+            *params = mCaps.maxVertexOutputComponents;
+            break;
+        case GL_MAX_FRAGMENT_INPUT_COMPONENTS:
+            *params = mCaps.maxFragmentInputComponents;
+            break;
+        case GL_MIN_PROGRAM_TEXEL_OFFSET:
+            *params = mCaps.minProgramTexelOffset;
+            break;
+        case GL_MAX_PROGRAM_TEXEL_OFFSET:
+            *params = mCaps.maxProgramTexelOffset;
+            break;
+        case GL_MAJOR_VERSION:
+            *params = getClientVersion().major;
+            break;
+        case GL_MINOR_VERSION:
+            *params = getClientVersion().minor;
+            break;
+        case GL_MAX_ELEMENTS_INDICES:
+            *params = mCaps.maxElementsIndices;
+            break;
+        case GL_MAX_ELEMENTS_VERTICES:
+            *params = mCaps.maxElementsVertices;
+            break;
+        case GL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS:
+            *params = mCaps.maxTransformFeedbackInterleavedComponents;
+            break;
+        case GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS:
+            *params = mCaps.maxTransformFeedbackSeparateAttributes;
+            break;
+        case GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS:
+            *params = mCaps.maxTransformFeedbackSeparateComponents;
+            break;
+        case GL_NUM_COMPRESSED_TEXTURE_FORMATS:
+            *params = static_cast<GLint>(mCaps.compressedTextureFormats.size());
+            break;
+        case GL_MAX_SAMPLES_ANGLE:
+            *params = mCaps.maxSamples;
+            break;
+        case GL_MAX_VIEWPORT_DIMS:
         {
             params[0] = mCaps.maxViewportWidth;
             params[1] = mCaps.maxViewportHeight;
         }
         break;
-      case GL_COMPRESSED_TEXTURE_FORMATS:
-        std::copy(mCaps.compressedTextureFormats.begin(), mCaps.compressedTextureFormats.end(), params);
-        break;
-      case GL_RESET_NOTIFICATION_STRATEGY_EXT:
-        *params = mResetStrategy;
-        break;
-      case GL_NUM_SHADER_BINARY_FORMATS:
-          *params = static_cast<GLint>(mCaps.shaderBinaryFormats.size());
-        break;
-      case GL_SHADER_BINARY_FORMATS:
-        std::copy(mCaps.shaderBinaryFormats.begin(), mCaps.shaderBinaryFormats.end(), params);
-        break;
-      case GL_NUM_PROGRAM_BINARY_FORMATS:
-          *params = static_cast<GLint>(mCaps.programBinaryFormats.size());
-        break;
-      case GL_PROGRAM_BINARY_FORMATS:
-        std::copy(mCaps.programBinaryFormats.begin(), mCaps.programBinaryFormats.end(), params);
-        break;
-      case GL_NUM_EXTENSIONS:
-        *params = static_cast<GLint>(mExtensionStrings.size());
-        break;
+        case GL_COMPRESSED_TEXTURE_FORMATS:
+            std::copy(mCaps.compressedTextureFormats.begin(), mCaps.compressedTextureFormats.end(),
+                      params);
+            break;
+        case GL_RESET_NOTIFICATION_STRATEGY_EXT:
+            *params = mResetStrategy;
+            break;
+        case GL_NUM_SHADER_BINARY_FORMATS:
+            *params = static_cast<GLint>(mCaps.shaderBinaryFormats.size());
+            break;
+        case GL_SHADER_BINARY_FORMATS:
+            std::copy(mCaps.shaderBinaryFormats.begin(), mCaps.shaderBinaryFormats.end(), params);
+            break;
+        case GL_NUM_PROGRAM_BINARY_FORMATS:
+            *params = static_cast<GLint>(mCaps.programBinaryFormats.size());
+            break;
+        case GL_PROGRAM_BINARY_FORMATS:
+            std::copy(mCaps.programBinaryFormats.begin(), mCaps.programBinaryFormats.end(), params);
+            break;
+        case GL_NUM_EXTENSIONS:
+            *params = static_cast<GLint>(mExtensionStrings.size());
+            break;
 
-      // GL_KHR_debug
-      case GL_MAX_DEBUG_MESSAGE_LENGTH:
-          *params = mExtensions.maxDebugMessageLength;
-          break;
-      case GL_MAX_DEBUG_LOGGED_MESSAGES:
-          *params = mExtensions.maxDebugLoggedMessages;
-          break;
-      case GL_MAX_DEBUG_GROUP_STACK_DEPTH:
-          *params = mExtensions.maxDebugGroupStackDepth;
-          break;
-      case GL_MAX_LABEL_LENGTH:
-          *params = mExtensions.maxLabelLength;
-          break;
+        // GL_KHR_debug
+        case GL_MAX_DEBUG_MESSAGE_LENGTH:
+            *params = mExtensions.maxDebugMessageLength;
+            break;
+        case GL_MAX_DEBUG_LOGGED_MESSAGES:
+            *params = mExtensions.maxDebugLoggedMessages;
+            break;
+        case GL_MAX_DEBUG_GROUP_STACK_DEPTH:
+            *params = mExtensions.maxDebugGroupStackDepth;
+            break;
+        case GL_MAX_LABEL_LENGTH:
+            *params = mExtensions.maxLabelLength;
+            break;
 
-      // GL_EXT_disjoint_timer_query
-      case GL_GPU_DISJOINT_EXT:
-          *params = mImplementation->getGPUDisjoint();
-          break;
-      case GL_MAX_FRAMEBUFFER_WIDTH:
-          *params = mCaps.maxFramebufferWidth;
-          break;
-      case GL_MAX_FRAMEBUFFER_HEIGHT:
-          *params = mCaps.maxFramebufferHeight;
-          break;
-      case GL_MAX_FRAMEBUFFER_SAMPLES:
-          *params = mCaps.maxFramebufferSamples;
-          break;
-      case GL_MAX_SAMPLE_MASK_WORDS:
-          *params = mCaps.maxSampleMaskWords;
-          break;
-      case GL_MAX_COLOR_TEXTURE_SAMPLES:
-          *params = mCaps.maxColorTextureSamples;
-          break;
-      case GL_MAX_DEPTH_TEXTURE_SAMPLES:
-          *params = mCaps.maxDepthTextureSamples;
-          break;
-      case GL_MAX_INTEGER_SAMPLES:
-          *params = mCaps.maxIntegerSamples;
-          break;
-      case GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET:
-          *params = mCaps.maxVertexAttribRelativeOffset;
-          break;
-      case GL_MAX_VERTEX_ATTRIB_BINDINGS:
-          *params = mCaps.maxVertexAttribBindings;
-          break;
-      case GL_MAX_VERTEX_ATTRIB_STRIDE:
-          *params = mCaps.maxVertexAttribStride;
-          break;
-      case GL_MAX_VERTEX_ATOMIC_COUNTER_BUFFERS:
-          *params = mCaps.maxVertexAtomicCounterBuffers;
-          break;
-      case GL_MAX_VERTEX_ATOMIC_COUNTERS:
-          *params = mCaps.maxVertexAtomicCounters;
-          break;
-      case GL_MAX_VERTEX_IMAGE_UNIFORMS:
-          *params = mCaps.maxVertexImageUniforms;
-          break;
-      case GL_MAX_VERTEX_SHADER_STORAGE_BLOCKS:
-          *params = mCaps.maxVertexShaderStorageBlocks;
-          break;
-      case GL_MAX_FRAGMENT_ATOMIC_COUNTER_BUFFERS:
-          *params = mCaps.maxFragmentAtomicCounterBuffers;
-          break;
-      case GL_MAX_FRAGMENT_ATOMIC_COUNTERS:
-          *params = mCaps.maxFragmentAtomicCounters;
-          break;
-      case GL_MAX_FRAGMENT_IMAGE_UNIFORMS:
-          *params = mCaps.maxFragmentImageUniforms;
-          break;
-      case GL_MAX_FRAGMENT_SHADER_STORAGE_BLOCKS:
-          *params = mCaps.maxFragmentShaderStorageBlocks;
-          break;
-      case GL_MIN_PROGRAM_TEXTURE_GATHER_OFFSET:
-          *params = mCaps.minProgramTextureGatherOffset;
-          break;
-      case GL_MAX_PROGRAM_TEXTURE_GATHER_OFFSET:
-          *params = mCaps.maxProgramTextureGatherOffset;
-          break;
-      case GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS:
-          *params = mCaps.maxComputeWorkGroupInvocations;
-          break;
-      case GL_MAX_COMPUTE_UNIFORM_BLOCKS:
-          *params = mCaps.maxComputeUniformBlocks;
-          break;
-      case GL_MAX_COMPUTE_TEXTURE_IMAGE_UNITS:
-          *params = mCaps.maxComputeTextureImageUnits;
-          break;
-      case GL_MAX_COMPUTE_SHARED_MEMORY_SIZE:
-          *params = mCaps.maxComputeSharedMemorySize;
-          break;
-      case GL_MAX_COMPUTE_UNIFORM_COMPONENTS:
-          *params = mCaps.maxComputeUniformComponents;
-          break;
-      case GL_MAX_COMPUTE_ATOMIC_COUNTER_BUFFERS:
-          *params = mCaps.maxComputeAtomicCounterBuffers;
-          break;
-      case GL_MAX_COMPUTE_ATOMIC_COUNTERS:
-          *params = mCaps.maxComputeAtomicCounters;
-          break;
-      case GL_MAX_COMPUTE_IMAGE_UNIFORMS:
-          *params = mCaps.maxComputeImageUniforms;
-          break;
-      case GL_MAX_COMBINED_COMPUTE_UNIFORM_COMPONENTS:
-          *params = mCaps.maxCombinedComputeUniformComponents;
-          break;
-      case GL_MAX_COMPUTE_SHADER_STORAGE_BLOCKS:
-          *params = mCaps.maxComputeShaderStorageBlocks;
-          break;
-      case GL_MAX_COMBINED_SHADER_OUTPUT_RESOURCES:
-          *params = mCaps.maxCombinedShaderOutputResources;
-          break;
-      case GL_MAX_UNIFORM_LOCATIONS:
-          *params = mCaps.maxUniformLocations;
-          break;
-      case GL_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS:
-          *params = mCaps.maxAtomicCounterBufferBindings;
-          break;
-      case GL_MAX_ATOMIC_COUNTER_BUFFER_SIZE:
-          *params = mCaps.maxAtomicCounterBufferSize;
-          break;
-      case GL_MAX_COMBINED_ATOMIC_COUNTER_BUFFERS:
-          *params = mCaps.maxCombinedAtomicCounterBuffers;
-          break;
-      case GL_MAX_COMBINED_ATOMIC_COUNTERS:
-          *params = mCaps.maxCombinedAtomicCounters;
-          break;
-      case GL_MAX_IMAGE_UNITS:
-          *params = mCaps.maxImageUnits;
-          break;
-      case GL_MAX_COMBINED_IMAGE_UNIFORMS:
-          *params = mCaps.maxCombinedImageUniforms;
-          break;
-      case GL_MAX_SHADER_STORAGE_BUFFER_BINDINGS:
-          *params = mCaps.maxShaderStorageBufferBindings;
-          break;
-      case GL_MAX_COMBINED_SHADER_STORAGE_BLOCKS:
-          *params = mCaps.maxCombinedShaderStorageBlocks;
-          break;
-      case GL_SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT:
-          *params = mCaps.shaderStorageBufferOffsetAlignment;
-          break;
-      default:
-          mGLState.getIntegerv(this, pname, params);
-          break;
+        // GL_EXT_disjoint_timer_query
+        case GL_GPU_DISJOINT_EXT:
+            *params = mImplementation->getGPUDisjoint();
+            break;
+        case GL_MAX_FRAMEBUFFER_WIDTH:
+            *params = mCaps.maxFramebufferWidth;
+            break;
+        case GL_MAX_FRAMEBUFFER_HEIGHT:
+            *params = mCaps.maxFramebufferHeight;
+            break;
+        case GL_MAX_FRAMEBUFFER_SAMPLES:
+            *params = mCaps.maxFramebufferSamples;
+            break;
+        case GL_MAX_SAMPLE_MASK_WORDS:
+            *params = mCaps.maxSampleMaskWords;
+            break;
+        case GL_MAX_COLOR_TEXTURE_SAMPLES:
+            *params = mCaps.maxColorTextureSamples;
+            break;
+        case GL_MAX_DEPTH_TEXTURE_SAMPLES:
+            *params = mCaps.maxDepthTextureSamples;
+            break;
+        case GL_MAX_INTEGER_SAMPLES:
+            *params = mCaps.maxIntegerSamples;
+            break;
+        case GL_MAX_VERTEX_ATTRIB_RELATIVE_OFFSET:
+            *params = mCaps.maxVertexAttribRelativeOffset;
+            break;
+        case GL_MAX_VERTEX_ATTRIB_BINDINGS:
+            *params = mCaps.maxVertexAttribBindings;
+            break;
+        case GL_MAX_VERTEX_ATTRIB_STRIDE:
+            *params = mCaps.maxVertexAttribStride;
+            break;
+        case GL_MAX_VERTEX_ATOMIC_COUNTER_BUFFERS:
+            *params = mCaps.maxVertexAtomicCounterBuffers;
+            break;
+        case GL_MAX_VERTEX_ATOMIC_COUNTERS:
+            *params = mCaps.maxVertexAtomicCounters;
+            break;
+        case GL_MAX_VERTEX_IMAGE_UNIFORMS:
+            *params = mCaps.maxVertexImageUniforms;
+            break;
+        case GL_MAX_VERTEX_SHADER_STORAGE_BLOCKS:
+            *params = mCaps.maxVertexShaderStorageBlocks;
+            break;
+        case GL_MAX_FRAGMENT_ATOMIC_COUNTER_BUFFERS:
+            *params = mCaps.maxFragmentAtomicCounterBuffers;
+            break;
+        case GL_MAX_FRAGMENT_ATOMIC_COUNTERS:
+            *params = mCaps.maxFragmentAtomicCounters;
+            break;
+        case GL_MAX_FRAGMENT_IMAGE_UNIFORMS:
+            *params = mCaps.maxFragmentImageUniforms;
+            break;
+        case GL_MAX_FRAGMENT_SHADER_STORAGE_BLOCKS:
+            *params = mCaps.maxFragmentShaderStorageBlocks;
+            break;
+        case GL_MIN_PROGRAM_TEXTURE_GATHER_OFFSET:
+            *params = mCaps.minProgramTextureGatherOffset;
+            break;
+        case GL_MAX_PROGRAM_TEXTURE_GATHER_OFFSET:
+            *params = mCaps.maxProgramTextureGatherOffset;
+            break;
+        case GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS:
+            *params = mCaps.maxComputeWorkGroupInvocations;
+            break;
+        case GL_MAX_COMPUTE_UNIFORM_BLOCKS:
+            *params = mCaps.maxComputeUniformBlocks;
+            break;
+        case GL_MAX_COMPUTE_TEXTURE_IMAGE_UNITS:
+            *params = mCaps.maxComputeTextureImageUnits;
+            break;
+        case GL_MAX_COMPUTE_SHARED_MEMORY_SIZE:
+            *params = mCaps.maxComputeSharedMemorySize;
+            break;
+        case GL_MAX_COMPUTE_UNIFORM_COMPONENTS:
+            *params = mCaps.maxComputeUniformComponents;
+            break;
+        case GL_MAX_COMPUTE_ATOMIC_COUNTER_BUFFERS:
+            *params = mCaps.maxComputeAtomicCounterBuffers;
+            break;
+        case GL_MAX_COMPUTE_ATOMIC_COUNTERS:
+            *params = mCaps.maxComputeAtomicCounters;
+            break;
+        case GL_MAX_COMPUTE_IMAGE_UNIFORMS:
+            *params = mCaps.maxComputeImageUniforms;
+            break;
+        case GL_MAX_COMBINED_COMPUTE_UNIFORM_COMPONENTS:
+            *params = mCaps.maxCombinedComputeUniformComponents;
+            break;
+        case GL_MAX_COMPUTE_SHADER_STORAGE_BLOCKS:
+            *params = mCaps.maxComputeShaderStorageBlocks;
+            break;
+        case GL_MAX_COMBINED_SHADER_OUTPUT_RESOURCES:
+            *params = mCaps.maxCombinedShaderOutputResources;
+            break;
+        case GL_MAX_UNIFORM_LOCATIONS:
+            *params = mCaps.maxUniformLocations;
+            break;
+        case GL_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS:
+            *params = mCaps.maxAtomicCounterBufferBindings;
+            break;
+        case GL_MAX_ATOMIC_COUNTER_BUFFER_SIZE:
+            *params = mCaps.maxAtomicCounterBufferSize;
+            break;
+        case GL_MAX_COMBINED_ATOMIC_COUNTER_BUFFERS:
+            *params = mCaps.maxCombinedAtomicCounterBuffers;
+            break;
+        case GL_MAX_COMBINED_ATOMIC_COUNTERS:
+            *params = mCaps.maxCombinedAtomicCounters;
+            break;
+        case GL_MAX_IMAGE_UNITS:
+            *params = mCaps.maxImageUnits;
+            break;
+        case GL_MAX_COMBINED_IMAGE_UNIFORMS:
+            *params = mCaps.maxCombinedImageUniforms;
+            break;
+        case GL_MAX_SHADER_STORAGE_BUFFER_BINDINGS:
+            *params = mCaps.maxShaderStorageBufferBindings;
+            break;
+        case GL_MAX_COMBINED_SHADER_STORAGE_BLOCKS:
+            *params = mCaps.maxCombinedShaderStorageBlocks;
+            break;
+        case GL_SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT:
+            *params = mCaps.shaderStorageBufferOffsetAlignment;
+            break;
+        default:
+            mGLState.getIntegerv(this, pname, params);
+            break;
     }
 }
 
@@ -1587,33 +1658,33 @@ void Context::getInteger64v(GLenum pname, GLint64 *params)
     // Queries about current GL state values are answered by State.
     switch (pname)
     {
-      case GL_MAX_ELEMENT_INDEX:
-        *params = mCaps.maxElementIndex;
-        break;
-      case GL_MAX_UNIFORM_BLOCK_SIZE:
-        *params = mCaps.maxUniformBlockSize;
-        break;
-      case GL_MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS:
-        *params = mCaps.maxCombinedVertexUniformComponents;
-        break;
-      case GL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS:
-        *params = mCaps.maxCombinedFragmentUniformComponents;
-        break;
-      case GL_MAX_SERVER_WAIT_TIMEOUT:
-        *params = mCaps.maxServerWaitTimeout;
-        break;
+        case GL_MAX_ELEMENT_INDEX:
+            *params = mCaps.maxElementIndex;
+            break;
+        case GL_MAX_UNIFORM_BLOCK_SIZE:
+            *params = mCaps.maxUniformBlockSize;
+            break;
+        case GL_MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS:
+            *params = mCaps.maxCombinedVertexUniformComponents;
+            break;
+        case GL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS:
+            *params = mCaps.maxCombinedFragmentUniformComponents;
+            break;
+        case GL_MAX_SERVER_WAIT_TIMEOUT:
+            *params = mCaps.maxServerWaitTimeout;
+            break;
 
-      // GL_EXT_disjoint_timer_query
-      case GL_TIMESTAMP_EXT:
-          *params = mImplementation->getTimestamp();
-          break;
+        // GL_EXT_disjoint_timer_query
+        case GL_TIMESTAMP_EXT:
+            *params = mImplementation->getTimestamp();
+            break;
 
-      case GL_MAX_SHADER_STORAGE_BLOCK_SIZE:
-          *params = mCaps.maxShaderStorageBlockSize;
-          break;
-      default:
-        UNREACHABLE();
-        break;
+        case GL_MAX_SHADER_STORAGE_BLOCK_SIZE:
+            *params = mCaps.maxShaderStorageBlockSize;
+            break;
+        default:
+            UNREACHABLE();
+            break;
     }
 }
 
@@ -2128,10 +2199,10 @@ void Context::markContextLost()
 {
     if (mResetStrategy == GL_LOSE_CONTEXT_ON_RESET_EXT)
     {
-        mResetStatus = GL_UNKNOWN_CONTEXT_RESET_EXT;
+        mResetStatus       = GL_UNKNOWN_CONTEXT_RESET_EXT;
         mContextLostForced = true;
     }
-    mContextLost     = true;
+    mContextLost = true;
 }
 
 bool Context::isContextLost()
@@ -2279,8 +2350,9 @@ void Context::detachFramebuffer(GLuint framebuffer)
     // to State at binding time.
 
     // [OpenGL ES 2.0.24] section 4.4 page 107:
-    // If a framebuffer that is currently bound to the target FRAMEBUFFER is deleted, it is as though
-    // BindFramebuffer had been executed with the target of FRAMEBUFFER and framebuffer of zero.
+    // If a framebuffer that is currently bound to the target FRAMEBUFFER is deleted, it is as
+    // though BindFramebuffer had been executed with the target of FRAMEBUFFER and framebuffer of
+    // zero.
 
     if (mGLState.removeReadFramebufferBinding(framebuffer) && framebuffer != 0)
     {
@@ -2562,7 +2634,7 @@ void Context::initCaps(const egl::DisplayExtensions &displayExtensions)
     if (getClientVersion() < Version(3, 0))
     {
         // Disable ES3+ extensions
-        mExtensions.colorBufferFloat = false;
+        mExtensions.colorBufferFloat      = false;
         mExtensions.eglImageExternalEssl3 = false;
         mExtensions.textureNorm16         = false;
     }
@@ -2570,12 +2642,12 @@ void Context::initCaps(const egl::DisplayExtensions &displayExtensions)
     if (getClientVersion() > Version(2, 0))
     {
         // FIXME(geofflang): Don't support EXT_sRGB in non-ES2 contexts
-        //mExtensions.sRGB = false;
+        // mExtensions.sRGB = false;
     }
 
     // Some extensions are always available because they are implemented in the GL layer.
-    mExtensions.bindUniformLocation = true;
-    mExtensions.vertexArrayObject   = true;
+    mExtensions.bindUniformLocation   = true;
+    mExtensions.vertexArrayObject     = true;
     mExtensions.bindGeneratesResource = true;
     mExtensions.clientArrays          = true;
     mExtensions.requestExtension      = true;
@@ -2607,10 +2679,13 @@ void Context::initCaps(const egl::DisplayExtensions &displayExtensions)
             ? mCaps.maxVertexAttributes
             : std::min<GLuint>(mCaps.maxVertexAttribBindings, MAX_VERTEX_ATTRIB_BINDINGS);
 
-    mCaps.maxVertexUniformBlocks = std::min<GLuint>(mCaps.maxVertexUniformBlocks, IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS);
-    mCaps.maxVertexOutputComponents = std::min<GLuint>(mCaps.maxVertexOutputComponents, IMPLEMENTATION_MAX_VARYING_VECTORS * 4);
+    mCaps.maxVertexUniformBlocks = std::min<GLuint>(
+        mCaps.maxVertexUniformBlocks, IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS);
+    mCaps.maxVertexOutputComponents =
+        std::min<GLuint>(mCaps.maxVertexOutputComponents, IMPLEMENTATION_MAX_VARYING_VECTORS * 4);
 
-    mCaps.maxFragmentInputComponents = std::min<GLuint>(mCaps.maxFragmentInputComponents, IMPLEMENTATION_MAX_VARYING_VECTORS * 4);
+    mCaps.maxFragmentInputComponents =
+        std::min<GLuint>(mCaps.maxFragmentInputComponents, IMPLEMENTATION_MAX_VARYING_VECTORS * 4);
 
     // WebGL compatibility
     mExtensions.webglCompatibility = mWebGLContext;
@@ -2635,7 +2710,7 @@ void Context::updateCaps()
     for (auto capsIt : mImplementation->getNativeTextureCaps())
     {
         GLenum sizedInternalFormat = capsIt.first;
-        TextureCaps formatCaps = capsIt.second;
+        TextureCaps formatCaps     = capsIt.second;
 
         const InternalFormat &formatInfo = GetSizedInternalFormatInfo(sizedInternalFormat);
 

@@ -115,7 +115,7 @@ class Buffer11 : public BufferD3D
 
     struct ConstantBufferCacheEntry
     {
-        ConstantBufferCacheEntry() : storage(nullptr), lruCount(0) { }
+        ConstantBufferCacheEntry() : storage(nullptr), lruCount(0) {}
 
         BufferStorage *storage;
         unsigned int lruCount;
@@ -168,4 +168,4 @@ class Buffer11 : public BufferD3D
 
 }  // namespace rx
 
-#endif // LIBANGLE_RENDERER_D3D_D3D11_BUFFER11_H_
+#endif  // LIBANGLE_RENDERER_D3D_D3D11_BUFFER11_H_

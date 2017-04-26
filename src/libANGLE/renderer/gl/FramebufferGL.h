@@ -41,7 +41,9 @@ class FramebufferGL : public FramebufferImpl
 
     gl::Error discard(size_t count, const GLenum *attachments) override;
     gl::Error invalidate(size_t count, const GLenum *attachments) override;
-    gl::Error invalidateSub(size_t count, const GLenum *attachments, const gl::Rectangle &area) override;
+    gl::Error invalidateSub(size_t count,
+                            const GLenum *attachments,
+                            const gl::Rectangle &area) override;
 
     gl::Error clear(ContextImpl *context, GLbitfield mask) override;
     gl::Error clearBufferfv(ContextImpl *context,
@@ -114,7 +116,6 @@ class FramebufferGL : public FramebufferImpl
     GLuint mFramebufferID;
     bool mIsDefault;
 };
-
 }
 
-#endif // LIBANGLE_RENDERER_GL_FRAMEBUFFERGL_H_
+#endif  // LIBANGLE_RENDERER_GL_FRAMEBUFFERGL_H_

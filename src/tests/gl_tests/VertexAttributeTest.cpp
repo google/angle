@@ -404,8 +404,8 @@ class VertexAttributeTestES3 : public VertexAttributeTest
 
 TEST_P(VertexAttributeTestES3, IntUnnormalized)
 {
-    GLint lo                      = std::numeric_limits<GLint>::min();
-    GLint hi                      = std::numeric_limits<GLint>::max();
+    GLint lo = std::numeric_limits<GLint>::min();
+    GLint hi = std::numeric_limits<GLint>::max();
     std::array<GLint, kVertexCount> inputData = {
         {0, 1, 2, 3, -1, -2, -3, -4, -1, hi, hi - 1, lo, lo + 1}};
     std::array<GLfloat, kVertexCount> expectedData;
@@ -420,8 +420,8 @@ TEST_P(VertexAttributeTestES3, IntUnnormalized)
 
 TEST_P(VertexAttributeTestES3, IntNormalized)
 {
-    GLint lo                      = std::numeric_limits<GLint>::min();
-    GLint hi                      = std::numeric_limits<GLint>::max();
+    GLint lo = std::numeric_limits<GLint>::min();
+    GLint hi = std::numeric_limits<GLint>::max();
     std::array<GLint, kVertexCount> inputData = {
         {0, 1, 2, 3, -1, -2, -3, -4, -1, hi, hi - 1, lo, lo + 1}};
     std::array<GLfloat, kVertexCount> expectedData;
@@ -436,8 +436,8 @@ TEST_P(VertexAttributeTestES3, IntNormalized)
 
 TEST_P(VertexAttributeTestES3, UnsignedIntUnnormalized)
 {
-    GLuint mid                     = std::numeric_limits<GLuint>::max() >> 1;
-    GLuint hi                      = std::numeric_limits<GLuint>::max();
+    GLuint mid = std::numeric_limits<GLuint>::max() >> 1;
+    GLuint hi  = std::numeric_limits<GLuint>::max();
     std::array<GLuint, kVertexCount> inputData = {
         {0, 1, 2, 3, 254, 255, 256, mid - 1, mid, mid + 1, hi - 2, hi - 1, hi}};
     std::array<GLfloat, kVertexCount> expectedData;
@@ -452,8 +452,8 @@ TEST_P(VertexAttributeTestES3, UnsignedIntUnnormalized)
 
 TEST_P(VertexAttributeTestES3, UnsignedIntNormalized)
 {
-    GLuint mid                     = std::numeric_limits<GLuint>::max() >> 1;
-    GLuint hi                      = std::numeric_limits<GLuint>::max();
+    GLuint mid = std::numeric_limits<GLuint>::max() >> 1;
+    GLuint hi  = std::numeric_limits<GLuint>::max();
     std::array<GLuint, kVertexCount> inputData = {
         {0, 1, 2, 3, 254, 255, 256, mid - 1, mid, mid + 1, hi - 2, hi - 1, hi}};
     std::array<GLfloat, kVertexCount> expectedData;

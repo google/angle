@@ -16,11 +16,11 @@
 
 #include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
+#include "libANGLE/Surface.h"
 #include "libANGLE/Texture.h"
 #include "libANGLE/Thread.h"
-#include "libANGLE/Surface.h"
-#include "libANGLE/validationEGL.h"
 #include "libANGLE/queryutils.h"
+#include "libANGLE/validationEGL.h"
 
 #include "common/debug.h"
 #include "common/version.h"
@@ -92,8 +92,10 @@ EGLBoolean EGLAPIENTRY Initialize(EGLDisplay dpy, EGLint *major, EGLint *minor)
         return EGL_FALSE;
     }
 
-    if (major) *major = 1;
-    if (minor) *minor = 4;
+    if (major)
+        *major = 1;
+    if (minor)
+        *minor = 4;
 
     thread->setError(Error(EGL_SUCCESS));
     return EGL_TRUE;
@@ -127,7 +129,7 @@ const char *EGLAPIENTRY QueryString(EGLDisplay dpy, EGLint name)
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLint name = %d)", dpy, name);
     Thread *thread = GetCurrentThread();
 
-    Display *display = static_cast<Display*>(dpy);
+    Display *display = static_cast<Display *>(dpy);
     if (!(display == EGL_NO_DISPLAY && name == EGL_EXTENSIONS))
     {
         Error error = ValidateDisplay(display);
@@ -141,35 +143,38 @@ const char *EGLAPIENTRY QueryString(EGLDisplay dpy, EGLint name)
     const char *result;
     switch (name)
     {
-      case EGL_CLIENT_APIS:
-        result = "OpenGL_ES";
-        break;
-      case EGL_EXTENSIONS:
-        if (display == EGL_NO_DISPLAY)
-        {
-            result = Display::getClientExtensionString().c_str();
-        }
-        else
-        {
-            result = display->getExtensionString().c_str();
-        }
-        break;
-      case EGL_VENDOR:
-        result = display->getVendorString().c_str();
-        break;
-      case EGL_VERSION:
-        result = "1.4 (ANGLE " ANGLE_VERSION_STRING ")";
-        break;
-      default:
-          thread->setError(Error(EGL_BAD_PARAMETER));
-          return nullptr;
+        case EGL_CLIENT_APIS:
+            result = "OpenGL_ES";
+            break;
+        case EGL_EXTENSIONS:
+            if (display == EGL_NO_DISPLAY)
+            {
+                result = Display::getClientExtensionString().c_str();
+            }
+            else
+            {
+                result = display->getExtensionString().c_str();
+            }
+            break;
+        case EGL_VENDOR:
+            result = display->getVendorString().c_str();
+            break;
+        case EGL_VERSION:
+            result = "1.4 (ANGLE " ANGLE_VERSION_STRING ")";
+            break;
+        default:
+            thread->setError(Error(EGL_BAD_PARAMETER));
+            return nullptr;
     }
 
     thread->setError(Error(EGL_SUCCESS));
     return result;
 }
 
-EGLBoolean EGLAPIENTRY GetConfigs(EGLDisplay dpy, EGLConfig *configs, EGLint config_size, EGLint *num_config)
+EGLBoolean EGLAPIENTRY GetConfigs(EGLDisplay dpy,
+                                  EGLConfig *configs,
+                                  EGLint config_size,
+                                  EGLint *num_config)
 {
     EVENT(
         "(EGLDisplay dpy = 0x%0.8p, EGLConfig *configs = 0x%0.8p, "
@@ -177,7 +182,7 @@ EGLBoolean EGLAPIENTRY GetConfigs(EGLDisplay dpy, EGLConfig *configs, EGLint con
         dpy, configs, config_size, num_config);
     Thread *thread = GetCurrentThread();
 
-    Display *display = static_cast<Display*>(dpy);
+    Display *display = static_cast<Display *>(dpy);
 
     Error error = ValidateGetConfigs(display, config_size, num_config);
     if (error.isError())
@@ -192,7 +197,11 @@ EGLBoolean EGLAPIENTRY GetConfigs(EGLDisplay dpy, EGLConfig *configs, EGLint con
     return EGL_TRUE;
 }
 
-EGLBoolean EGLAPIENTRY ChooseConfig(EGLDisplay dpy, const EGLint *attrib_list, EGLConfig *configs, EGLint config_size, EGLint *num_config)
+EGLBoolean EGLAPIENTRY ChooseConfig(EGLDisplay dpy,
+                                    const EGLint *attrib_list,
+                                    EGLConfig *configs,
+                                    EGLint config_size,
+                                    EGLint *num_config)
 {
     EVENT(
         "(EGLDisplay dpy = 0x%0.8p, const EGLint *attrib_list = 0x%0.8p, "
@@ -200,7 +209,7 @@ EGLBoolean EGLAPIENTRY ChooseConfig(EGLDisplay dpy, const EGLint *attrib_list, E
         dpy, attrib_list, configs, config_size, num_config);
     Thread *thread = GetCurrentThread();
 
-    Display *display = static_cast<Display*>(dpy);
+    Display *display       = static_cast<Display *>(dpy);
     AttributeMap attribMap = AttributeMap::CreateFromIntArray(attrib_list);
 
     Error error = ValidateChooseConfig(display, attribMap, config_size, num_config);
@@ -216,7 +225,10 @@ EGLBoolean EGLAPIENTRY ChooseConfig(EGLDisplay dpy, const EGLint *attrib_list, E
     return EGL_TRUE;
 }
 
-EGLBoolean EGLAPIENTRY GetConfigAttrib(EGLDisplay dpy, EGLConfig config, EGLint attribute, EGLint *value)
+EGLBoolean EGLAPIENTRY GetConfigAttrib(EGLDisplay dpy,
+                                       EGLConfig config,
+                                       EGLint attribute,
+                                       EGLint *value)
 {
     EVENT(
         "(EGLDisplay dpy = 0x%0.8p, EGLConfig config = 0x%0.8p, EGLint attribute = %d, EGLint "
@@ -224,8 +236,8 @@ EGLBoolean EGLAPIENTRY GetConfigAttrib(EGLDisplay dpy, EGLConfig config, EGLint 
         dpy, config, attribute, value);
     Thread *thread = GetCurrentThread();
 
-    Display *display = static_cast<Display*>(dpy);
-    Config *configuration = static_cast<Config*>(config);
+    Display *display      = static_cast<Display *>(dpy);
+    Config *configuration = static_cast<Config *>(config);
 
     Error error = ValidateGetConfigAttrib(display, configuration, attribute);
     if (error.isError())
@@ -240,7 +252,10 @@ EGLBoolean EGLAPIENTRY GetConfigAttrib(EGLDisplay dpy, EGLConfig config, EGLint 
     return EGL_TRUE;
 }
 
-EGLSurface EGLAPIENTRY CreateWindowSurface(EGLDisplay dpy, EGLConfig config, EGLNativeWindowType win, const EGLint *attrib_list)
+EGLSurface EGLAPIENTRY CreateWindowSurface(EGLDisplay dpy,
+                                           EGLConfig config,
+                                           EGLNativeWindowType win,
+                                           const EGLint *attrib_list)
 {
     EVENT(
         "(EGLDisplay dpy = 0x%0.8p, EGLConfig config = 0x%0.8p, EGLNativeWindowType win = 0x%0.8p, "
@@ -248,8 +263,8 @@ EGLSurface EGLAPIENTRY CreateWindowSurface(EGLDisplay dpy, EGLConfig config, EGL
         dpy, config, win, attrib_list);
     Thread *thread = GetCurrentThread();
 
-    Display *display = static_cast<Display*>(dpy);
-    Config *configuration = static_cast<Config*>(config);
+    Display *display        = static_cast<Display *>(dpy);
+    Config *configuration   = static_cast<Config *>(config);
     AttributeMap attributes = AttributeMap::CreateFromIntArray(attrib_list);
 
     Error error = ValidateCreateWindowSurface(display, configuration, win, attributes);
@@ -260,7 +275,7 @@ EGLSurface EGLAPIENTRY CreateWindowSurface(EGLDisplay dpy, EGLConfig config, EGL
     }
 
     egl::Surface *surface = nullptr;
-    error = display->createWindowSurface(configuration, win, attributes, &surface);
+    error                 = display->createWindowSurface(configuration, win, attributes, &surface);
     if (error.isError())
     {
         thread->setError(error);
@@ -270,7 +285,9 @@ EGLSurface EGLAPIENTRY CreateWindowSurface(EGLDisplay dpy, EGLConfig config, EGL
     return static_cast<EGLSurface>(surface);
 }
 
-EGLSurface EGLAPIENTRY CreatePbufferSurface(EGLDisplay dpy, EGLConfig config, const EGLint *attrib_list)
+EGLSurface EGLAPIENTRY CreatePbufferSurface(EGLDisplay dpy,
+                                            EGLConfig config,
+                                            const EGLint *attrib_list)
 {
     EVENT(
         "(EGLDisplay dpy = 0x%0.8p, EGLConfig config = 0x%0.8p, const EGLint *attrib_list = "
@@ -278,8 +295,8 @@ EGLSurface EGLAPIENTRY CreatePbufferSurface(EGLDisplay dpy, EGLConfig config, co
         dpy, config, attrib_list);
     Thread *thread = GetCurrentThread();
 
-    Display *display = static_cast<Display*>(dpy);
-    Config *configuration = static_cast<Config*>(config);
+    Display *display        = static_cast<Display *>(dpy);
+    Config *configuration   = static_cast<Config *>(config);
     AttributeMap attributes = AttributeMap::CreateFromIntArray(attrib_list);
 
     Error error = ValidateCreatePbufferSurface(display, configuration, attributes);
@@ -290,7 +307,7 @@ EGLSurface EGLAPIENTRY CreatePbufferSurface(EGLDisplay dpy, EGLConfig config, co
     }
 
     egl::Surface *surface = nullptr;
-    error = display->createPbufferSurface(configuration, attributes, &surface);
+    error                 = display->createPbufferSurface(configuration, attributes, &surface);
     if (error.isError())
     {
         thread->setError(error);
@@ -300,14 +317,20 @@ EGLSurface EGLAPIENTRY CreatePbufferSurface(EGLDisplay dpy, EGLConfig config, co
     return static_cast<EGLSurface>(surface);
 }
 
-EGLSurface EGLAPIENTRY CreatePixmapSurface(EGLDisplay dpy, EGLConfig config, EGLNativePixmapType pixmap, const EGLint *attrib_list)
+EGLSurface EGLAPIENTRY CreatePixmapSurface(EGLDisplay dpy,
+                                           EGLConfig config,
+                                           EGLNativePixmapType pixmap,
+                                           const EGLint *attrib_list)
 {
-    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLConfig config = 0x%0.8p, EGLNativePixmapType pixmap = 0x%0.8p, "
-          "const EGLint *attrib_list = 0x%0.8p)", dpy, config, pixmap, attrib_list);
+    EVENT(
+        "(EGLDisplay dpy = 0x%0.8p, EGLConfig config = 0x%0.8p, EGLNativePixmapType pixmap = "
+        "0x%0.8p, "
+        "const EGLint *attrib_list = 0x%0.8p)",
+        dpy, config, pixmap, attrib_list);
     Thread *thread = GetCurrentThread();
 
-    Display *display = static_cast<Display*>(dpy);
-    Config *configuration = static_cast<Config*>(config);
+    Display *display      = static_cast<Display *>(dpy);
+    Config *configuration = static_cast<Config *>(config);
 
     Error error = ValidateConfig(display, configuration);
     if (error.isError())
@@ -316,7 +339,7 @@ EGLSurface EGLAPIENTRY CreatePixmapSurface(EGLDisplay dpy, EGLConfig config, EGL
         return EGL_NO_SURFACE;
     }
 
-    UNIMPLEMENTED();   // FIXME
+    UNIMPLEMENTED();  // FIXME
 
     thread->setError(Error(EGL_SUCCESS));
     return EGL_NO_SURFACE;
@@ -327,8 +350,8 @@ EGLBoolean EGLAPIENTRY DestroySurface(EGLDisplay dpy, EGLSurface surface)
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLSurface surface = 0x%0.8p)", dpy, surface);
     Thread *thread = GetCurrentThread();
 
-    Display *display = static_cast<Display*>(dpy);
-    Surface *eglSurface = static_cast<Surface*>(surface);
+    Display *display    = static_cast<Display *>(dpy);
+    Surface *eglSurface = static_cast<Surface *>(surface);
 
     Error error = ValidateSurface(display, eglSurface);
     if (error.isError())
@@ -343,20 +366,25 @@ EGLBoolean EGLAPIENTRY DestroySurface(EGLDisplay dpy, EGLSurface surface)
         return EGL_FALSE;
     }
 
-    display->destroySurface((Surface*)surface);
+    display->destroySurface((Surface *)surface);
 
     thread->setError(Error(EGL_SUCCESS));
     return EGL_TRUE;
 }
 
-EGLBoolean EGLAPIENTRY QuerySurface(EGLDisplay dpy, EGLSurface surface, EGLint attribute, EGLint *value)
+EGLBoolean EGLAPIENTRY QuerySurface(EGLDisplay dpy,
+                                    EGLSurface surface,
+                                    EGLint attribute,
+                                    EGLint *value)
 {
-    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLSurface surface = 0x%0.8p, EGLint attribute = %d, EGLint *value = 0x%0.8p)",
-          dpy, surface, attribute, value);
+    EVENT(
+        "(EGLDisplay dpy = 0x%0.8p, EGLSurface surface = 0x%0.8p, EGLint attribute = %d, EGLint "
+        "*value = 0x%0.8p)",
+        dpy, surface, attribute, value);
     Thread *thread = GetCurrentThread();
 
-    Display *display = static_cast<Display*>(dpy);
-    Surface *eglSurface = (Surface*)surface;
+    Display *display    = static_cast<Display *>(dpy);
+    Surface *eglSurface = (Surface *)surface;
 
     Error error = ValidateSurface(display, eglSurface);
     if (error.isError())
@@ -373,119 +401,125 @@ EGLBoolean EGLAPIENTRY QuerySurface(EGLDisplay dpy, EGLSurface surface, EGLint a
 
     switch (attribute)
     {
-      case EGL_VG_ALPHA_FORMAT:
-        UNIMPLEMENTED();   // FIXME
-        break;
-      case EGL_VG_COLORSPACE:
-        UNIMPLEMENTED();   // FIXME
-        break;
-      case EGL_CONFIG_ID:
-        *value = eglSurface->getConfig()->configID;
-        break;
-      case EGL_HEIGHT:
-        *value = eglSurface->getHeight();
-        break;
-      case EGL_HORIZONTAL_RESOLUTION:
-        UNIMPLEMENTED();   // FIXME
-        break;
-      case EGL_LARGEST_PBUFFER:
-        UNIMPLEMENTED();   // FIXME
-        break;
-      case EGL_MIPMAP_TEXTURE:
-        UNIMPLEMENTED();   // FIXME
-        break;
-      case EGL_MIPMAP_LEVEL:
-        UNIMPLEMENTED();   // FIXME
-        break;
-      case EGL_MULTISAMPLE_RESOLVE:
-        UNIMPLEMENTED();   // FIXME
-        break;
-      case EGL_PIXEL_ASPECT_RATIO:
-        *value = eglSurface->getPixelAspectRatio();
-        break;
-      case EGL_RENDER_BUFFER:
-        *value = eglSurface->getRenderBuffer();
-        break;
-      case EGL_SWAP_BEHAVIOR:
-        *value = eglSurface->getSwapBehavior();
-        break;
-      case EGL_TEXTURE_FORMAT:
-        *value = eglSurface->getTextureFormat();
-        break;
-      case EGL_TEXTURE_TARGET:
-        *value = eglSurface->getTextureTarget();
-        break;
-      case EGL_VERTICAL_RESOLUTION:
-        UNIMPLEMENTED();   // FIXME
-        break;
-      case EGL_WIDTH:
-        *value = eglSurface->getWidth();
-        break;
-      case EGL_POST_SUB_BUFFER_SUPPORTED_NV:
-        if (!display->getExtensions().postSubBuffer)
-        {
+        case EGL_VG_ALPHA_FORMAT:
+            UNIMPLEMENTED();  // FIXME
+            break;
+        case EGL_VG_COLORSPACE:
+            UNIMPLEMENTED();  // FIXME
+            break;
+        case EGL_CONFIG_ID:
+            *value = eglSurface->getConfig()->configID;
+            break;
+        case EGL_HEIGHT:
+            *value = eglSurface->getHeight();
+            break;
+        case EGL_HORIZONTAL_RESOLUTION:
+            UNIMPLEMENTED();  // FIXME
+            break;
+        case EGL_LARGEST_PBUFFER:
+            UNIMPLEMENTED();  // FIXME
+            break;
+        case EGL_MIPMAP_TEXTURE:
+            UNIMPLEMENTED();  // FIXME
+            break;
+        case EGL_MIPMAP_LEVEL:
+            UNIMPLEMENTED();  // FIXME
+            break;
+        case EGL_MULTISAMPLE_RESOLVE:
+            UNIMPLEMENTED();  // FIXME
+            break;
+        case EGL_PIXEL_ASPECT_RATIO:
+            *value = eglSurface->getPixelAspectRatio();
+            break;
+        case EGL_RENDER_BUFFER:
+            *value = eglSurface->getRenderBuffer();
+            break;
+        case EGL_SWAP_BEHAVIOR:
+            *value = eglSurface->getSwapBehavior();
+            break;
+        case EGL_TEXTURE_FORMAT:
+            *value = eglSurface->getTextureFormat();
+            break;
+        case EGL_TEXTURE_TARGET:
+            *value = eglSurface->getTextureTarget();
+            break;
+        case EGL_VERTICAL_RESOLUTION:
+            UNIMPLEMENTED();  // FIXME
+            break;
+        case EGL_WIDTH:
+            *value = eglSurface->getWidth();
+            break;
+        case EGL_POST_SUB_BUFFER_SUPPORTED_NV:
+            if (!display->getExtensions().postSubBuffer)
+            {
+                thread->setError(Error(EGL_BAD_ATTRIBUTE));
+                return EGL_FALSE;
+            }
+            *value = eglSurface->isPostSubBufferSupported();
+            break;
+        case EGL_FIXED_SIZE_ANGLE:
+            if (!display->getExtensions().windowFixedSize)
+            {
+                thread->setError(Error(EGL_BAD_ATTRIBUTE));
+                return EGL_FALSE;
+            }
+            *value = eglSurface->isFixedSize();
+            break;
+        case EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE:
+            if (!display->getExtensions().flexibleSurfaceCompatibility)
+            {
+                thread->setError(Error(
+                    EGL_BAD_ATTRIBUTE,
+                    "EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE cannot be used without "
+                    "EGL_ANGLE_flexible_surface_compatibility support."));
+                return EGL_FALSE;
+            }
+            *value = eglSurface->flexibleSurfaceCompatibilityRequested();
+            break;
+        case EGL_SURFACE_ORIENTATION_ANGLE:
+            if (!display->getExtensions().surfaceOrientation)
+            {
+                thread->setError(Error(EGL_BAD_ATTRIBUTE,
+                                       "EGL_SURFACE_ORIENTATION_ANGLE cannot be queried without "
+                                       "EGL_ANGLE_surface_orientation support."));
+                return EGL_FALSE;
+            }
+            *value = eglSurface->getOrientation();
+            break;
+        case EGL_DIRECT_COMPOSITION_ANGLE:
+            if (!display->getExtensions().directComposition)
+            {
+                thread->setError(Error(EGL_BAD_ATTRIBUTE,
+                                       "EGL_DIRECT_COMPOSITION_ANGLE cannot be used without "
+                                       "EGL_ANGLE_direct_composition support."));
+                return EGL_FALSE;
+            }
+            *value = eglSurface->directComposition();
+            break;
+        default:
             thread->setError(Error(EGL_BAD_ATTRIBUTE));
             return EGL_FALSE;
-        }
-        *value = eglSurface->isPostSubBufferSupported();
-        break;
-      case EGL_FIXED_SIZE_ANGLE:
-        if (!display->getExtensions().windowFixedSize)
-        {
-            thread->setError(Error(EGL_BAD_ATTRIBUTE));
-            return EGL_FALSE;
-        }
-        *value = eglSurface->isFixedSize();
-        break;
-      case EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE:
-          if (!display->getExtensions().flexibleSurfaceCompatibility)
-          {
-              thread->setError(
-                  Error(EGL_BAD_ATTRIBUTE,
-                        "EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE cannot be used without "
-                        "EGL_ANGLE_flexible_surface_compatibility support."));
-              return EGL_FALSE;
-          }
-          *value = eglSurface->flexibleSurfaceCompatibilityRequested();
-          break;
-      case EGL_SURFACE_ORIENTATION_ANGLE:
-          if (!display->getExtensions().surfaceOrientation)
-          {
-              thread->setError(Error(EGL_BAD_ATTRIBUTE,
-                                     "EGL_SURFACE_ORIENTATION_ANGLE cannot be queried without "
-                                     "EGL_ANGLE_surface_orientation support."));
-              return EGL_FALSE;
-          }
-          *value = eglSurface->getOrientation();
-          break;
-      case EGL_DIRECT_COMPOSITION_ANGLE:
-          if (!display->getExtensions().directComposition)
-          {
-              thread->setError(Error(EGL_BAD_ATTRIBUTE,
-                                     "EGL_DIRECT_COMPOSITION_ANGLE cannot be used without "
-                                     "EGL_ANGLE_direct_composition support."));
-              return EGL_FALSE;
-          }
-          *value = eglSurface->directComposition();
-          break;
-      default:
-          thread->setError(Error(EGL_BAD_ATTRIBUTE));
-          return EGL_FALSE;
     }
 
     thread->setError(Error(EGL_SUCCESS));
     return EGL_TRUE;
 }
 
-EGLContext EGLAPIENTRY CreateContext(EGLDisplay dpy, EGLConfig config, EGLContext share_context, const EGLint *attrib_list)
+EGLContext EGLAPIENTRY CreateContext(EGLDisplay dpy,
+                                     EGLConfig config,
+                                     EGLContext share_context,
+                                     const EGLint *attrib_list)
 {
-    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLConfig config = 0x%0.8p, EGLContext share_context = 0x%0.8p, "
-          "const EGLint *attrib_list = 0x%0.8p)", dpy, config, share_context, attrib_list);
+    EVENT(
+        "(EGLDisplay dpy = 0x%0.8p, EGLConfig config = 0x%0.8p, EGLContext share_context = "
+        "0x%0.8p, "
+        "const EGLint *attrib_list = 0x%0.8p)",
+        dpy, config, share_context, attrib_list);
     Thread *thread = GetCurrentThread();
 
-    Display *display = static_cast<Display*>(dpy);
-    Config *configuration = static_cast<Config*>(config);
-    gl::Context* sharedGLContext = static_cast<gl::Context*>(share_context);
+    Display *display             = static_cast<Display *>(dpy);
+    Config *configuration        = static_cast<Config *>(config);
+    gl::Context *sharedGLContext = static_cast<gl::Context *>(share_context);
     AttributeMap attributes      = AttributeMap::CreateFromIntArray(attrib_list);
 
     Error error = ValidateCreateContext(display, configuration, sharedGLContext, attributes);
@@ -512,8 +546,8 @@ EGLBoolean EGLAPIENTRY DestroyContext(EGLDisplay dpy, EGLContext ctx)
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLContext ctx = 0x%0.8p)", dpy, ctx);
     Thread *thread = GetCurrentThread();
 
-    Display *display = static_cast<Display*>(dpy);
-    gl::Context *context = static_cast<gl::Context*>(ctx);
+    Display *display     = static_cast<Display *>(dpy);
+    gl::Context *context = static_cast<gl::Context *>(ctx);
 
     Error error = ValidateContext(display, context);
     if (error.isError())
@@ -541,12 +575,14 @@ EGLBoolean EGLAPIENTRY DestroyContext(EGLDisplay dpy, EGLContext ctx)
 
 EGLBoolean EGLAPIENTRY MakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface read, EGLContext ctx)
 {
-    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLSurface draw = 0x%0.8p, EGLSurface read = 0x%0.8p, EGLContext ctx = 0x%0.8p)",
-          dpy, draw, read, ctx);
+    EVENT(
+        "(EGLDisplay dpy = 0x%0.8p, EGLSurface draw = 0x%0.8p, EGLSurface read = 0x%0.8p, "
+        "EGLContext ctx = 0x%0.8p)",
+        dpy, draw, read, ctx);
     Thread *thread = GetCurrentThread();
 
-    Display *display = static_cast<Display*>(dpy);
-    gl::Context *context = static_cast<gl::Context*>(ctx);
+    Display *display     = static_cast<Display *>(dpy);
+    gl::Context *context = static_cast<gl::Context *>(ctx);
 
     Error error = ValidateMakeCurrent(display, draw, read, context);
     if (error.isError())
@@ -555,7 +591,7 @@ EGLBoolean EGLAPIENTRY MakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface r
         return EGL_FALSE;
     }
 
-    Surface *readSurface = static_cast<Surface*>(read);
+    Surface *readSurface   = static_cast<Surface *>(read);
     Surface *drawSurface   = static_cast<Surface *>(draw);
     Error makeCurrentError = display->makeCurrent(drawSurface, readSurface, context);
     if (makeCurrentError.isError())
@@ -613,12 +649,14 @@ EGLDisplay EGLAPIENTRY GetCurrentDisplay(void)
 
 EGLBoolean EGLAPIENTRY QueryContext(EGLDisplay dpy, EGLContext ctx, EGLint attribute, EGLint *value)
 {
-    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLContext ctx = 0x%0.8p, EGLint attribute = %d, EGLint *value = 0x%0.8p)",
-          dpy, ctx, attribute, value);
+    EVENT(
+        "(EGLDisplay dpy = 0x%0.8p, EGLContext ctx = 0x%0.8p, EGLint attribute = %d, EGLint *value "
+        "= 0x%0.8p)",
+        dpy, ctx, attribute, value);
     Thread *thread = GetCurrentThread();
 
-    Display *display = static_cast<Display*>(dpy);
-    gl::Context *context = static_cast<gl::Context*>(ctx);
+    Display *display     = static_cast<Display *>(dpy);
+    gl::Context *context = static_cast<gl::Context *>(ctx);
 
     Error error = ValidateContext(display, context);
     if (error.isError())
@@ -629,21 +667,21 @@ EGLBoolean EGLAPIENTRY QueryContext(EGLDisplay dpy, EGLContext ctx, EGLint attri
 
     switch (attribute)
     {
-      case EGL_CONFIG_ID:
-        *value = context->getConfig()->configID;
-        break;
-      case EGL_CONTEXT_CLIENT_TYPE:
-        *value = context->getClientType();
-        break;
-      case EGL_CONTEXT_CLIENT_VERSION:
-          *value = context->getClientMajorVersion();
-          break;
-      case EGL_RENDER_BUFFER:
-        *value = context->getRenderBuffer();
-        break;
-      default:
-          thread->setError(Error(EGL_BAD_ATTRIBUTE));
-          return EGL_FALSE;
+        case EGL_CONFIG_ID:
+            *value = context->getConfig()->configID;
+            break;
+        case EGL_CONTEXT_CLIENT_TYPE:
+            *value = context->getClientType();
+            break;
+        case EGL_CONTEXT_CLIENT_VERSION:
+            *value = context->getClientMajorVersion();
+            break;
+        case EGL_RENDER_BUFFER:
+            *value = context->getRenderBuffer();
+            break;
+        default:
+            thread->setError(Error(EGL_BAD_ATTRIBUTE));
+            return EGL_FALSE;
     }
 
     thread->setError(Error(EGL_SUCCESS));
@@ -713,8 +751,8 @@ EGLBoolean EGLAPIENTRY SwapBuffers(EGLDisplay dpy, EGLSurface surface)
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLSurface surface = 0x%0.8p)", dpy, surface);
     Thread *thread = GetCurrentThread();
 
-    Display *display = static_cast<Display*>(dpy);
-    Surface *eglSurface = (Surface*)surface;
+    Display *display    = static_cast<Display *>(dpy);
+    Surface *eglSurface = (Surface *)surface;
 
     Error error = ValidateSurface(display, eglSurface);
     if (error.isError())
@@ -748,11 +786,14 @@ EGLBoolean EGLAPIENTRY SwapBuffers(EGLDisplay dpy, EGLSurface surface)
 
 EGLBoolean EGLAPIENTRY CopyBuffers(EGLDisplay dpy, EGLSurface surface, EGLNativePixmapType target)
 {
-    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLSurface surface = 0x%0.8p, EGLNativePixmapType target = 0x%0.8p)", dpy, surface, target);
+    EVENT(
+        "(EGLDisplay dpy = 0x%0.8p, EGLSurface surface = 0x%0.8p, EGLNativePixmapType target = "
+        "0x%0.8p)",
+        dpy, surface, target);
     Thread *thread = GetCurrentThread();
 
-    Display *display = static_cast<Display*>(dpy);
-    Surface *eglSurface = static_cast<Surface*>(surface);
+    Display *display    = static_cast<Display *>(dpy);
+    Surface *eglSurface = static_cast<Surface *>(surface);
 
     Error error = ValidateSurface(display, eglSurface);
     if (error.isError())
@@ -767,7 +808,7 @@ EGLBoolean EGLAPIENTRY CopyBuffers(EGLDisplay dpy, EGLSurface surface, EGLNative
         return EGL_FALSE;
     }
 
-    UNIMPLEMENTED();   // FIXME
+    UNIMPLEMENTED();  // FIXME
 
     thread->setError(Error(EGL_SUCCESS));
     return 0;
@@ -776,11 +817,12 @@ EGLBoolean EGLAPIENTRY CopyBuffers(EGLDisplay dpy, EGLSurface surface, EGLNative
 // EGL 1.1
 EGLBoolean EGLAPIENTRY BindTexImage(EGLDisplay dpy, EGLSurface surface, EGLint buffer)
 {
-    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLSurface surface = 0x%0.8p, EGLint buffer = %d)", dpy, surface, buffer);
+    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLSurface surface = 0x%0.8p, EGLint buffer = %d)", dpy,
+          surface, buffer);
     Thread *thread = GetCurrentThread();
 
-    Display *display = static_cast<Display*>(dpy);
-    Surface *eglSurface = static_cast<Surface*>(surface);
+    Display *display    = static_cast<Display *>(dpy);
+    Surface *eglSurface = static_cast<Surface *>(surface);
 
     Error error = ValidateSurface(display, eglSurface);
     if (error.isError())
@@ -837,14 +879,19 @@ EGLBoolean EGLAPIENTRY BindTexImage(EGLDisplay dpy, EGLSurface surface, EGLint b
     return EGL_TRUE;
 }
 
-EGLBoolean EGLAPIENTRY SurfaceAttrib(EGLDisplay dpy, EGLSurface surface, EGLint attribute, EGLint value)
+EGLBoolean EGLAPIENTRY SurfaceAttrib(EGLDisplay dpy,
+                                     EGLSurface surface,
+                                     EGLint attribute,
+                                     EGLint value)
 {
-    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLSurface surface = 0x%0.8p, EGLint attribute = %d, EGLint value = %d)",
+    EVENT(
+        "(EGLDisplay dpy = 0x%0.8p, EGLSurface surface = 0x%0.8p, EGLint attribute = %d, EGLint "
+        "value = %d)",
         dpy, surface, attribute, value);
     Thread *thread = GetCurrentThread();
 
-    Display *display = static_cast<Display*>(dpy);
-    Surface *eglSurface = static_cast<Surface*>(surface);
+    Display *display    = static_cast<Display *>(dpy);
+    Surface *eglSurface = static_cast<Surface *>(surface);
 
     Error error = ValidateSurface(display, eglSurface);
     if (error.isError())
@@ -853,7 +900,7 @@ EGLBoolean EGLAPIENTRY SurfaceAttrib(EGLDisplay dpy, EGLSurface surface, EGLint 
         return EGL_FALSE;
     }
 
-    UNIMPLEMENTED();   // FIXME
+    UNIMPLEMENTED();  // FIXME
 
     thread->setError(Error(EGL_SUCCESS));
     return EGL_TRUE;
@@ -861,11 +908,12 @@ EGLBoolean EGLAPIENTRY SurfaceAttrib(EGLDisplay dpy, EGLSurface surface, EGLint 
 
 EGLBoolean EGLAPIENTRY ReleaseTexImage(EGLDisplay dpy, EGLSurface surface, EGLint buffer)
 {
-    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLSurface surface = 0x%0.8p, EGLint buffer = %d)", dpy, surface, buffer);
+    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLSurface surface = 0x%0.8p, EGLint buffer = %d)", dpy,
+          surface, buffer);
     Thread *thread = GetCurrentThread();
 
-    Display *display = static_cast<Display*>(dpy);
-    Surface *eglSurface = static_cast<Surface*>(surface);
+    Display *display    = static_cast<Display *>(dpy);
+    Surface *eglSurface = static_cast<Surface *>(surface);
 
     Error error = ValidateSurface(display, eglSurface);
     if (error.isError())
@@ -913,7 +961,7 @@ EGLBoolean EGLAPIENTRY SwapInterval(EGLDisplay dpy, EGLint interval)
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLint interval = %d)", dpy, interval);
     Thread *thread = GetCurrentThread();
 
-    Display *display = static_cast<Display*>(dpy);
+    Display *display = static_cast<Display *>(dpy);
 
     Error error = ValidateDisplay(display);
     if (error.isError())
@@ -931,14 +979,14 @@ EGLBoolean EGLAPIENTRY SwapInterval(EGLDisplay dpy, EGLint interval)
     }
 
     const egl::Config *surfaceConfig = draw_surface->getConfig();
-    EGLint clampedInterval = std::min(std::max(interval, surfaceConfig->minSwapInterval), surfaceConfig->maxSwapInterval);
+    EGLint clampedInterval           = std::min(std::max(interval, surfaceConfig->minSwapInterval),
+                                      surfaceConfig->maxSwapInterval);
 
     draw_surface->setSwapInterval(clampedInterval);
 
     thread->setError(Error(EGL_SUCCESS));
     return EGL_TRUE;
 }
-
 
 // EGL 1.2
 EGLBoolean EGLAPIENTRY BindAPI(EGLenum api)
@@ -948,15 +996,15 @@ EGLBoolean EGLAPIENTRY BindAPI(EGLenum api)
 
     switch (api)
     {
-      case EGL_OPENGL_API:
-      case EGL_OPENVG_API:
-          thread->setError(Error(EGL_BAD_PARAMETER));
-          return EGL_FALSE;  // Not supported by this implementation
-      case EGL_OPENGL_ES_API:
-        break;
-      default:
-          thread->setError(Error(EGL_BAD_PARAMETER));
-          return EGL_FALSE;
+        case EGL_OPENGL_API:
+        case EGL_OPENVG_API:
+            thread->setError(Error(EGL_BAD_PARAMETER));
+            return EGL_FALSE;  // Not supported by this implementation
+        case EGL_OPENGL_ES_API:
+            break;
+        default:
+            thread->setError(Error(EGL_BAD_PARAMETER));
+            return EGL_FALSE;
     }
 
     thread->setAPI(api);
@@ -976,18 +1024,24 @@ EGLenum EGLAPIENTRY QueryAPI(void)
     return API;
 }
 
-EGLSurface EGLAPIENTRY CreatePbufferFromClientBuffer(EGLDisplay dpy, EGLenum buftype, EGLClientBuffer buffer, EGLConfig config, const EGLint *attrib_list)
+EGLSurface EGLAPIENTRY CreatePbufferFromClientBuffer(EGLDisplay dpy,
+                                                     EGLenum buftype,
+                                                     EGLClientBuffer buffer,
+                                                     EGLConfig config,
+                                                     const EGLint *attrib_list)
 {
-    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLenum buftype = 0x%X, EGLClientBuffer buffer = 0x%0.8p, "
-          "EGLConfig config = 0x%0.8p, const EGLint *attrib_list = 0x%0.8p)",
-          dpy, buftype, buffer, config, attrib_list);
+    EVENT(
+        "(EGLDisplay dpy = 0x%0.8p, EGLenum buftype = 0x%X, EGLClientBuffer buffer = 0x%0.8p, "
+        "EGLConfig config = 0x%0.8p, const EGLint *attrib_list = 0x%0.8p)",
+        dpy, buftype, buffer, config, attrib_list);
     Thread *thread = GetCurrentThread();
 
-    Display *display = static_cast<Display*>(dpy);
-    Config *configuration = static_cast<Config*>(config);
+    Display *display        = static_cast<Display *>(dpy);
+    Config *configuration   = static_cast<Config *>(config);
     AttributeMap attributes = AttributeMap::CreateFromIntArray(attrib_list);
 
-    Error error = ValidateCreatePbufferFromClientBuffer(display, buftype, buffer, configuration, attributes);
+    Error error =
+        ValidateCreatePbufferFromClientBuffer(display, buftype, buffer, configuration, attributes);
     if (error.isError())
     {
         thread->setError(error);
@@ -1057,7 +1111,8 @@ EGLContext EGLAPIENTRY GetCurrentContext(void)
 // EGL 1.5
 EGLSync EGLAPIENTRY CreateSync(EGLDisplay dpy, EGLenum type, const EGLAttrib *attrib_list)
 {
-    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLenum type = 0x%X, const EGLint* attrib_list = 0x%0.8p)", dpy, type, attrib_list);
+    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLenum type = 0x%X, const EGLint* attrib_list = 0x%0.8p)",
+          dpy, type, attrib_list);
     Thread *thread = GetCurrentThread();
 
     UNIMPLEMENTED();
@@ -1077,7 +1132,10 @@ EGLBoolean EGLAPIENTRY DestroySync(EGLDisplay dpy, EGLSync sync)
 
 EGLint EGLAPIENTRY ClientWaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags, EGLTime timeout)
 {
-    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLSync sync = 0x%0.8p, EGLint flags = 0x%X, EGLTime timeout = %d)", dpy, sync, flags, timeout);
+    EVENT(
+        "(EGLDisplay dpy = 0x%0.8p, EGLSync sync = 0x%0.8p, EGLint flags = 0x%X, EGLTime timeout = "
+        "%d)",
+        dpy, sync, flags, timeout);
     Thread *thread = GetCurrentThread();
 
     UNIMPLEMENTED();
@@ -1085,9 +1143,15 @@ EGLint EGLAPIENTRY ClientWaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags, EG
     return 0;
 }
 
-EGLBoolean EGLAPIENTRY GetSyncAttrib(EGLDisplay dpy, EGLSync sync, EGLint attribute, EGLAttrib *value)
+EGLBoolean EGLAPIENTRY GetSyncAttrib(EGLDisplay dpy,
+                                     EGLSync sync,
+                                     EGLint attribute,
+                                     EGLAttrib *value)
 {
-    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLSync sync = 0x%0.8p, EGLint attribute = 0x%X, EGLAttrib *value = 0x%0.8p)", dpy, sync, attribute, value);
+    EVENT(
+        "(EGLDisplay dpy = 0x%0.8p, EGLSync sync = 0x%0.8p, EGLint attribute = 0x%X, EGLAttrib "
+        "*value = 0x%0.8p)",
+        dpy, sync, attribute, value);
     Thread *thread = GetCurrentThread();
 
     UNIMPLEMENTED();
@@ -1095,11 +1159,16 @@ EGLBoolean EGLAPIENTRY GetSyncAttrib(EGLDisplay dpy, EGLSync sync, EGLint attrib
     return EGL_FALSE;
 }
 
-EGLImage EGLAPIENTRY CreateImage(EGLDisplay dpy, EGLContext ctx, EGLenum target, EGLClientBuffer buffer, const EGLAttrib *attrib_list)
+EGLImage EGLAPIENTRY CreateImage(EGLDisplay dpy,
+                                 EGLContext ctx,
+                                 EGLenum target,
+                                 EGLClientBuffer buffer,
+                                 const EGLAttrib *attrib_list)
 {
-    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLContext ctx = 0x%0.8p, EGLenum target = 0x%X, "
-          "EGLClientBuffer buffer = 0x%0.8p, const EGLAttrib *attrib_list = 0x%0.8p)",
-          dpy, ctx, target, buffer, attrib_list);
+    EVENT(
+        "(EGLDisplay dpy = 0x%0.8p, EGLContext ctx = 0x%0.8p, EGLenum target = 0x%X, "
+        "EGLClientBuffer buffer = 0x%0.8p, const EGLAttrib *attrib_list = 0x%0.8p)",
+        dpy, ctx, target, buffer, attrib_list);
     Thread *thread = GetCurrentThread();
 
     UNIMPLEMENTED();
@@ -1117,10 +1186,14 @@ EGLBoolean EGLAPIENTRY DestroyImage(EGLDisplay dpy, EGLImage image)
     return EGL_FALSE;
 }
 
-EGLDisplay EGLAPIENTRY GetPlatformDisplay(EGLenum platform, void *native_display, const EGLAttrib *attrib_list)
+EGLDisplay EGLAPIENTRY GetPlatformDisplay(EGLenum platform,
+                                          void *native_display,
+                                          const EGLAttrib *attrib_list)
 {
-    EVENT("(EGLenum platform = %d, void* native_display = 0x%0.8p, const EGLint* attrib_list = 0x%0.8p)",
-          platform, native_display, attrib_list);
+    EVENT(
+        "(EGLenum platform = %d, void* native_display = 0x%0.8p, const EGLint* attrib_list = "
+        "0x%0.8p)",
+        platform, native_display, attrib_list);
     Thread *thread = GetCurrentThread();
 
     UNIMPLEMENTED();
@@ -1128,10 +1201,15 @@ EGLDisplay EGLAPIENTRY GetPlatformDisplay(EGLenum platform, void *native_display
     return EGL_NO_DISPLAY;
 }
 
-EGLSurface EGLAPIENTRY CreatePlatformWindowSurface(EGLDisplay dpy, EGLConfig config, void *native_window, const EGLAttrib *attrib_list)
+EGLSurface EGLAPIENTRY CreatePlatformWindowSurface(EGLDisplay dpy,
+                                                   EGLConfig config,
+                                                   void *native_window,
+                                                   const EGLAttrib *attrib_list)
 {
-    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLConfig config = 0x%0.8p, void* native_window = 0x%0.8p, const EGLint* attrib_list = 0x%0.8p)",
-          dpy, config, native_window, attrib_list);
+    EVENT(
+        "(EGLDisplay dpy = 0x%0.8p, EGLConfig config = 0x%0.8p, void* native_window = 0x%0.8p, "
+        "const EGLint* attrib_list = 0x%0.8p)",
+        dpy, config, native_window, attrib_list);
     Thread *thread = GetCurrentThread();
 
     UNIMPLEMENTED();
@@ -1139,10 +1217,15 @@ EGLSurface EGLAPIENTRY CreatePlatformWindowSurface(EGLDisplay dpy, EGLConfig con
     return EGL_NO_SURFACE;
 }
 
-EGLSurface EGLAPIENTRY CreatePlatformPixmapSurface(EGLDisplay dpy, EGLConfig config, void *native_pixmap, const EGLAttrib *attrib_list)
+EGLSurface EGLAPIENTRY CreatePlatformPixmapSurface(EGLDisplay dpy,
+                                                   EGLConfig config,
+                                                   void *native_pixmap,
+                                                   const EGLAttrib *attrib_list)
 {
-    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLConfig config = 0x%0.8p, void* native_pixmap = 0x%0.8p, const EGLint* attrib_list = 0x%0.8p)",
-          dpy, config, native_pixmap, attrib_list);
+    EVENT(
+        "(EGLDisplay dpy = 0x%0.8p, EGLConfig config = 0x%0.8p, void* native_pixmap = 0x%0.8p, "
+        "const EGLint* attrib_list = 0x%0.8p)",
+        dpy, config, native_pixmap, attrib_list);
     Thread *thread = GetCurrentThread();
 
     UNIMPLEMENTED();
@@ -1152,7 +1235,8 @@ EGLSurface EGLAPIENTRY CreatePlatformPixmapSurface(EGLDisplay dpy, EGLConfig con
 
 EGLBoolean EGLAPIENTRY WaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags)
 {
-    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLSync sync = 0x%0.8p, EGLint flags = 0x%X)", dpy, sync, flags);
+    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLSync sync = 0x%0.8p, EGLint flags = 0x%X)", dpy, sync,
+          flags);
     Thread *thread = GetCurrentThread();
 
     UNIMPLEMENTED();
@@ -1166,8 +1250,7 @@ __eglMustCastToProperFunctionPointerType EGLAPIENTRY GetProcAddress(const char *
     Thread *thread = GetCurrentThread();
 
     typedef std::map<std::string, __eglMustCastToProperFunctionPointerType> ProcAddressMap;
-    auto generateProcAddressMap = []()
-    {
+    auto generateProcAddressMap = []() {
         ProcAddressMap map;
 #define INSERT_PROC_ADDRESS(ns, proc) \
     map[#ns #proc] = reinterpret_cast<__eglMustCastToProperFunctionPointerType>(ns::proc)
@@ -1795,5 +1878,4 @@ __eglMustCastToProperFunctionPointerType EGLAPIENTRY GetProcAddress(const char *
     auto iter = procAddressMap.find(procname);
     return iter != procAddressMap.end() ? iter->second : nullptr;
 }
-
 }

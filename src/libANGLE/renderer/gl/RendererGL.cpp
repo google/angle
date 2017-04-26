@@ -55,42 +55,87 @@ std::vector<GLuint> GatherPaths(const std::vector<gl::Path *> &paths)
 }  // namespace
 
 #ifndef NDEBUG
-static void INTERNAL_GL_APIENTRY LogGLDebugMessage(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
-                                                   const GLchar *message, const void *userParam)
+static void INTERNAL_GL_APIENTRY LogGLDebugMessage(GLenum source,
+                                                   GLenum type,
+                                                   GLuint id,
+                                                   GLenum severity,
+                                                   GLsizei length,
+                                                   const GLchar *message,
+                                                   const void *userParam)
 {
     std::string sourceText;
     switch (source)
     {
-      case GL_DEBUG_SOURCE_API:             sourceText = "OpenGL";          break;
-      case GL_DEBUG_SOURCE_WINDOW_SYSTEM:   sourceText = "Windows";         break;
-      case GL_DEBUG_SOURCE_SHADER_COMPILER: sourceText = "Shader Compiler"; break;
-      case GL_DEBUG_SOURCE_THIRD_PARTY:     sourceText = "Third Party";     break;
-      case GL_DEBUG_SOURCE_APPLICATION:     sourceText = "Application";     break;
-      case GL_DEBUG_SOURCE_OTHER:           sourceText = "Other";           break;
-      default:                              sourceText = "UNKNOWN";         break;
+        case GL_DEBUG_SOURCE_API:
+            sourceText = "OpenGL";
+            break;
+        case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
+            sourceText = "Windows";
+            break;
+        case GL_DEBUG_SOURCE_SHADER_COMPILER:
+            sourceText = "Shader Compiler";
+            break;
+        case GL_DEBUG_SOURCE_THIRD_PARTY:
+            sourceText = "Third Party";
+            break;
+        case GL_DEBUG_SOURCE_APPLICATION:
+            sourceText = "Application";
+            break;
+        case GL_DEBUG_SOURCE_OTHER:
+            sourceText = "Other";
+            break;
+        default:
+            sourceText = "UNKNOWN";
+            break;
     }
 
     std::string typeText;
     switch (type)
     {
-      case GL_DEBUG_TYPE_ERROR:               typeText = "Error";               break;
-      case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: typeText = "Deprecated behavior"; break;
-      case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:  typeText = "Undefined behavior";  break;
-      case GL_DEBUG_TYPE_PORTABILITY:         typeText = "Portability";         break;
-      case GL_DEBUG_TYPE_PERFORMANCE:         typeText = "Performance";         break;
-      case GL_DEBUG_TYPE_OTHER:               typeText = "Other";               break;
-      case GL_DEBUG_TYPE_MARKER:              typeText = "Marker";              break;
-      default:                                typeText = "UNKNOWN";             break;
+        case GL_DEBUG_TYPE_ERROR:
+            typeText = "Error";
+            break;
+        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+            typeText = "Deprecated behavior";
+            break;
+        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+            typeText = "Undefined behavior";
+            break;
+        case GL_DEBUG_TYPE_PORTABILITY:
+            typeText = "Portability";
+            break;
+        case GL_DEBUG_TYPE_PERFORMANCE:
+            typeText = "Performance";
+            break;
+        case GL_DEBUG_TYPE_OTHER:
+            typeText = "Other";
+            break;
+        case GL_DEBUG_TYPE_MARKER:
+            typeText = "Marker";
+            break;
+        default:
+            typeText = "UNKNOWN";
+            break;
     }
 
     std::string severityText;
     switch (severity)
     {
-      case GL_DEBUG_SEVERITY_HIGH:         severityText = "High";         break;
-      case GL_DEBUG_SEVERITY_MEDIUM:       severityText = "Medium";       break;
-      case GL_DEBUG_SEVERITY_LOW:          severityText = "Low";          break;
-      case GL_DEBUG_SEVERITY_NOTIFICATION: severityText = "Notification"; break;
-      default:                             severityText = "UNKNOWN";      break;
+        case GL_DEBUG_SEVERITY_HIGH:
+            severityText = "High";
+            break;
+        case GL_DEBUG_SEVERITY_MEDIUM:
+            severityText = "Medium";
+            break;
+        case GL_DEBUG_SEVERITY_LOW:
+            severityText = "Low";
+            break;
+        case GL_DEBUG_SEVERITY_NOTIFICATION:
+            severityText = "Notification";
+            break;
+        default:
+            severityText = "UNKNOWN";
+            break;
     }
 
     if (type == GL_DEBUG_TYPE_ERROR)
@@ -130,7 +175,7 @@ RendererGL::RendererGL(const FunctionsGL *functions, const egl::AttributeMap &at
     ASSERT(mFunctions);
     nativegl_gl::GenerateWorkarounds(mFunctions, &mWorkarounds);
     mStateManager = new StateManagerGL(mFunctions, getNativeCaps());
-    mBlitter = new BlitGL(functions, mWorkarounds, mStateManager);
+    mBlitter      = new BlitGL(functions, mWorkarounds, mStateManager);
 
     mHasDebugOutput = mFunctions->isAtLeastGL(gl::Version(4, 3)) ||
                       mFunctions->hasGLExtension("GL_KHR_debug") ||
@@ -141,10 +186,14 @@ RendererGL::RendererGL(const FunctionsGL *functions, const egl::AttributeMap &at
     {
         mFunctions->enable(GL_DEBUG_OUTPUT);
         mFunctions->enable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-        mFunctions->debugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_HIGH, 0, nullptr, GL_TRUE);
-        mFunctions->debugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_MEDIUM, 0, nullptr, GL_TRUE);
-        mFunctions->debugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_LOW, 0, nullptr, GL_FALSE);
-        mFunctions->debugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE);
+        mFunctions->debugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_HIGH, 0,
+                                        nullptr, GL_TRUE);
+        mFunctions->debugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_MEDIUM, 0,
+                                        nullptr, GL_TRUE);
+        mFunctions->debugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_LOW, 0,
+                                        nullptr, GL_FALSE);
+        mFunctions->debugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION,
+                                        0, nullptr, GL_FALSE);
         mFunctions->debugMessageCallback(&LogGLDebugMessage, nullptr);
     }
 #endif
@@ -509,13 +558,15 @@ void RendererGL::popGroupMarker()
 
 std::string RendererGL::getVendorString() const
 {
-    return std::string(reinterpret_cast<const char*>(mFunctions->getString(GL_VENDOR)));
+    return std::string(reinterpret_cast<const char *>(mFunctions->getString(GL_VENDOR)));
 }
 
 std::string RendererGL::getRendererDescription() const
 {
-    std::string nativeVendorString(reinterpret_cast<const char*>(mFunctions->getString(GL_VENDOR)));
-    std::string nativeRendererString(reinterpret_cast<const char*>(mFunctions->getString(GL_RENDERER)));
+    std::string nativeVendorString(
+        reinterpret_cast<const char *>(mFunctions->getString(GL_VENDOR)));
+    std::string nativeRendererString(
+        reinterpret_cast<const char *>(mFunctions->getString(GL_RENDERER)));
 
     std::ostringstream rendererString;
     rendererString << nativeVendorString << " " << nativeRendererString << " OpenGL";
@@ -549,7 +600,8 @@ const gl::Version &RendererGL::getMaxSupportedESVersion() const
     return mMaxSupportedESVersion;
 }
 
-void RendererGL::generateCaps(gl::Caps *outCaps, gl::TextureCapsMap* outTextureCaps,
+void RendererGL::generateCaps(gl::Caps *outCaps,
+                              gl::TextureCapsMap *outTextureCaps,
                               gl::Extensions *outExtensions,
                               gl::Limitations * /* outLimitations */) const
 {

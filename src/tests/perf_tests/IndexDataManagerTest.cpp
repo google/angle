@@ -25,13 +25,12 @@ class MockIndexBuffer : public rx::IndexBuffer
 {
   public:
     MockIndexBuffer(unsigned int bufferSize, GLenum indexType)
-        : mBufferSize(bufferSize),
-          mIndexType(indexType)
+        : mBufferSize(bufferSize), mIndexType(indexType)
     {
     }
 
     MOCK_METHOD3(initialize, gl::Error(unsigned int, GLenum, bool));
-    MOCK_METHOD3(mapBuffer, gl::Error(unsigned int, unsigned int, void**));
+    MOCK_METHOD3(mapBuffer, gl::Error(unsigned int, unsigned int, void **));
     MOCK_METHOD0(unmapBuffer, gl::Error());
     MOCK_METHOD0(discard, gl::Error());
     MOCK_METHOD2(setSize, gl::Error(unsigned int, GLenum));
@@ -49,12 +48,11 @@ class MockBufferFactoryD3D : public rx::BufferFactoryD3D
 {
   public:
     MockBufferFactoryD3D(unsigned int bufferSize, GLenum indexType)
-        : mBufferSize(bufferSize),
-          mIndexType(indexType)
+        : mBufferSize(bufferSize), mIndexType(indexType)
     {
     }
 
-    MOCK_METHOD0(createVertexBuffer, rx::VertexBuffer*());
+    MOCK_METHOD0(createVertexBuffer, rx::VertexBuffer *());
     MOCK_CONST_METHOD1(getVertexConversionType, rx::VertexConversionType(gl::VertexFormatType));
     MOCK_CONST_METHOD1(getVertexComponentType, GLenum(gl::VertexFormatType));
     MOCK_CONST_METHOD4(getVertexSpaceRequired,
@@ -64,7 +62,7 @@ class MockBufferFactoryD3D : public rx::BufferFactoryD3D
                                                        GLsizei));
 
     // Dependency injection
-    rx::IndexBuffer* createIndexBuffer() override
+    rx::IndexBuffer *createIndexBuffer() override
     {
         return new MockIndexBuffer(mBufferSize, mIndexType);
     }

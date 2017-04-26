@@ -75,4 +75,4 @@ class BufferGL : public BufferImpl
 
 }  // namespace rx
 
-#endif // LIBANGLE_RENDERER_GL_BUFFERGL_H_
+#endif  // LIBANGLE_RENDERER_GL_BUFFERGL_H_

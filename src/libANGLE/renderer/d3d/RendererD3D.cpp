@@ -8,13 +8,16 @@
 
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 
-#include "common/debug.h"
 #include "common/MemoryBuffer.h"
+#include "common/debug.h"
 #include "common/utilities.h"
 #include "libANGLE/Display.h"
-#include "libANGLE/formatutils.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
+#include "libANGLE/ResourceManager.h"
+#include "libANGLE/State.h"
+#include "libANGLE/VertexArray.h"
+#include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/TextureImpl.h"
 #include "libANGLE/renderer/d3d/BufferD3D.h"
 #include "libANGLE/renderer/d3d/DeviceD3D.h"
@@ -22,9 +25,6 @@
 #include "libANGLE/renderer/d3d/IndexDataManager.h"
 #include "libANGLE/renderer/d3d/ProgramD3D.h"
 #include "libANGLE/renderer/d3d/SamplerD3D.h"
-#include "libANGLE/ResourceManager.h"
-#include "libANGLE/State.h"
-#include "libANGLE/VertexArray.h"
 
 namespace rx
 {
@@ -57,7 +57,7 @@ void RendererD3D::cleanup()
 unsigned int RendererD3D::GetBlendSampleMask(const gl::ContextState &data, int samples)
 {
     const auto &glState = data.getState();
-    unsigned int mask = 0;
+    unsigned int mask   = 0;
     if (glState.isSampleCoverageEnabled())
     {
         GLfloat coverageValue = glState.getSampleCoverageValue();
@@ -134,7 +134,8 @@ gl::Error RendererD3D::applyTextures(GLImplFactory *implFactory,
             }
             else
             {
-                // Texture is not sampler complete or it is in use by the framebuffer.  Bind the incomplete texture.
+                // Texture is not sampler complete or it is in use by the framebuffer.  Bind the
+                // incomplete texture.
                 gl::Texture *incompleteTexture = getIncompleteTexture(implFactory, textureType);
 
                 ANGLE_TRY(setSamplerState(shaderType, samplerIndex, incompleteTexture,
@@ -144,7 +145,8 @@ gl::Error RendererD3D::applyTextures(GLImplFactory *implFactory,
         }
         else
         {
-            // No texture bound to this slot even though it is used by the shader, bind a NULL texture
+            // No texture bound to this slot even though it is used by the shader, bind a NULL
+            // texture
             ANGLE_TRY(setTexture(shaderType, samplerIndex, nullptr));
         }
     }
@@ -230,7 +232,8 @@ size_t RendererD3D::getBoundFramebufferTextures(const gl::ContextState &data,
         }
     }
 
-    const gl::FramebufferAttachment *depthStencilAttachment = drawFramebuffer->getDepthOrStencilbuffer();
+    const gl::FramebufferAttachment *depthStencilAttachment =
+        drawFramebuffer->getDepthOrStencilbuffer();
     if (depthStencilAttachment && depthStencilAttachment->type() == GL_TEXTURE)
     {
         (*outTextureArray)[textureCount++] = depthStencilAttachment->getTexture();
@@ -245,7 +248,7 @@ gl::Texture *RendererD3D::getIncompleteTexture(GLImplFactory *implFactory, GLenu
 {
     if (mIncompleteTextures.find(type) == mIncompleteTextures.end())
     {
-        const GLubyte color[] = { 0, 0, 0, 255 };
+        const GLubyte color[] = {0, 0, 0, 255};
         const gl::Extents colorSize(1, 1, 1);
         const gl::PixelUnpackState unpack(1, 0);
         const gl::Box area(0, 0, 0, 1, 1, 1);
@@ -259,7 +262,8 @@ gl::Texture *RendererD3D::getIncompleteTexture(GLImplFactory *implFactory, GLenu
         t->setStorage(nullptr, createType, 1, GL_RGBA8, colorSize);
         if (type == GL_TEXTURE_CUBE_MAP)
         {
-            for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X; face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z; face++)
+            for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X;
+                 face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z; face++)
             {
                 t->getImplementation()->setSubImage(nullptr, face, 0, area, GL_RGBA8,
                                                     GL_UNSIGNED_BYTE, unpack, color);
@@ -304,12 +308,13 @@ void RendererD3D::notifyDeviceLost()
 
 std::string RendererD3D::getVendorString() const
 {
-    LUID adapterLuid = { 0 };
+    LUID adapterLuid = {0};
 
     if (getLUID(&adapterLuid))
     {
         char adapterLuidString[64];
-        sprintf_s(adapterLuidString, sizeof(adapterLuidString), "(adapter LUID: %08x%08x)", adapterLuid.HighPart, adapterLuid.LowPart);
+        sprintf_s(adapterLuidString, sizeof(adapterLuidString), "(adapter LUID: %08x%08x)",
+                  adapterLuid.HighPart, adapterLuid.LowPart);
         return std::string(adapterLuidString);
     }
 

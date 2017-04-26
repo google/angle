@@ -72,8 +72,7 @@ size_t ComputeVertexBindingElementCount(const VertexBinding &binding,
 
 struct VertexAttribCurrentValueData
 {
-    union
-    {
+    union {
         GLfloat FloatValues[4];
         GLint IntValues[4];
         GLuint UnsignedIntValues[4];
@@ -94,4 +93,4 @@ bool operator!=(const VertexAttribCurrentValueData &a, const VertexAttribCurrent
 
 #include "VertexAttribute.inl"
 
-#endif // LIBANGLE_VERTEXATTRIBUTE_H_
+#endif  // LIBANGLE_VERTEXATTRIBUTE_H_

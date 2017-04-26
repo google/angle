@@ -60,4 +60,4 @@ class Buffer9 : public BufferD3D
 
 }  // namespace rx
 
-#endif // LIBANGLE_RENDERER_D3D_D3D9_BUFFER9_H_
+#endif  // LIBANGLE_RENDERER_D3D_D3D9_BUFFER9_H_

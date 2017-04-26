@@ -295,7 +295,6 @@ class StateManagerGL final : angle::NonCopyable
 
     gl::State::DirtyBits mLocalDirtyBits;
 };
-
 }
 
-#endif // LIBANGLE_RENDERER_GL_STATEMANAGERGL_H_
+#endif  // LIBANGLE_RENDERER_GL_STATEMANAGERGL_H_

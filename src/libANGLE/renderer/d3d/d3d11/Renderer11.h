@@ -15,13 +15,13 @@
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/d3d/HLSLCompiler.h"
 #include "libANGLE/renderer/d3d/ProgramD3D.h"
-#include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/RenderTargetD3D.h"
+#include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h"
 #include "libANGLE/renderer/d3d/d3d11/InputLayoutCache.h"
-#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 #include "libANGLE/renderer/d3d/d3d11/RenderStateCache.h"
 #include "libANGLE/renderer/d3d/d3d11/StateManager11.h"
+#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 
 namespace gl
 {
@@ -46,18 +46,18 @@ class VertexDataManager;
 struct Renderer11DeviceCaps
 {
     D3D_FEATURE_LEVEL featureLevel;
-    bool supportsDXGI1_2;               // Support for DXGI 1.2
-    bool supportsClearView;             // Support for ID3D11DeviceContext1::ClearView
-    bool supportsConstantBufferOffsets; // Support for Constant buffer offset
-    UINT B5G6R5support;                 // Bitfield of D3D11_FORMAT_SUPPORT values for DXGI_FORMAT_B5G6R5_UNORM
-    UINT B4G4R4A4support;               // Bitfield of D3D11_FORMAT_SUPPORT values for DXGI_FORMAT_B4G4R4A4_UNORM
-    UINT B5G5R5A1support;               // Bitfield of D3D11_FORMAT_SUPPORT values for DXGI_FORMAT_B5G5R5A1_UNORM
+    bool supportsDXGI1_2;                // Support for DXGI 1.2
+    bool supportsClearView;              // Support for ID3D11DeviceContext1::ClearView
+    bool supportsConstantBufferOffsets;  // Support for Constant buffer offset
+    UINT B5G6R5support;    // Bitfield of D3D11_FORMAT_SUPPORT values for DXGI_FORMAT_B5G6R5_UNORM
+    UINT B4G4R4A4support;  // Bitfield of D3D11_FORMAT_SUPPORT values for DXGI_FORMAT_B4G4R4A4_UNORM
+    UINT B5G5R5A1support;  // Bitfield of D3D11_FORMAT_SUPPORT values for DXGI_FORMAT_B5G5R5A1_UNORM
     Optional<LARGE_INTEGER> driverVersion;  // Four-part driver version number.
 };
 
 enum
 {
-    MAX_VERTEX_UNIFORM_VECTORS_D3D11 = 1024,
+    MAX_VERTEX_UNIFORM_VECTORS_D3D11   = 1024,
     MAX_FRAGMENT_UNIFORM_VECTORS_D3D11 = 1024
 };
 
@@ -327,7 +327,8 @@ class Renderer11 : public RendererD3D
                          uint8_t *pixelsOut);
 
     bool getLUID(LUID *adapterLuid) const override;
-    VertexConversionType getVertexConversionType(gl::VertexFormatType vertexFormatType) const override;
+    VertexConversionType getVertexConversionType(
+        gl::VertexFormatType vertexFormatType) const override;
     GLenum getVertexComponentType(gl::VertexFormatType vertexFormatType) const override;
 
     // Warning: you should ensure binding really matches attrib.bindingIndex before using this
@@ -345,9 +346,15 @@ class Renderer11 : public RendererD3D
                                  const gl::PixelPackState &pack,
                                  uint8_t *pixels);
 
-    gl::Error blitRenderbufferRect(const gl::Rectangle &readRect, const gl::Rectangle &drawRect, RenderTargetD3D *readRenderTarget,
-                                   RenderTargetD3D *drawRenderTarget, GLenum filter, const gl::Rectangle *scissor,
-                                   bool colorBlit, bool depthBlit, bool stencilBlit);
+    gl::Error blitRenderbufferRect(const gl::Rectangle &readRect,
+                                   const gl::Rectangle &drawRect,
+                                   RenderTargetD3D *readRenderTarget,
+                                   RenderTargetD3D *drawRenderTarget,
+                                   GLenum filter,
+                                   const gl::Rectangle *scissor,
+                                   bool colorBlit,
+                                   bool depthBlit,
+                                   bool stencilBlit);
 
     bool isES3Capable() const;
     const Renderer11DeviceCaps &getRenderer11DeviceCaps() const { return mRenderer11DeviceCaps; };
@@ -397,7 +404,9 @@ class Renderer11 : public RendererD3D
     gl::Error applyComputeShader(const gl::ContextState &data);
 
   protected:
-    gl::Error clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd) override;
+    gl::Error clearTextures(gl::SamplerType samplerType,
+                            size_t rangeStart,
+                            size_t rangeEnd) override;
 
   private:
     gl::Error drawArraysImpl(const gl::ContextState &data,
@@ -596,7 +605,7 @@ class Renderer11 : public RendererD3D
     ID3D11Query *mSyncQuery;
 
     // Created objects state tracking
-    std::set<const Buffer11*> mAliveBuffers;
+    std::set<const Buffer11 *> mAliveBuffers;
 
     double mLastHistogramUpdateTime;
 
@@ -620,4 +629,4 @@ class Renderer11 : public RendererD3D
 };
 
 }  // namespace rx
-#endif // LIBANGLE_RENDERER_D3D_D3D11_RENDERER11_H_
+#endif  // LIBANGLE_RENDERER_D3D_D3D11_RENDERER11_H_

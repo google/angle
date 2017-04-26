@@ -98,7 +98,6 @@ class VertexArrayGL : public VertexArrayImpl
 
     gl::AttributesMask mAttributesNeedStreaming;
 };
-
 }
 
-#endif // LIBANGLE_RENDERER_GL_VERTEXARRAYGL_H_
+#endif  // LIBANGLE_RENDERER_GL_VERTEXARRAYGL_H_

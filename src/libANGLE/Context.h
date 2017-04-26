@@ -898,4 +898,4 @@ void Context::gatherParams(ArgsT &&... args)
 
 }  // namespace gl
 
-#endif   // LIBANGLE_CONTEXT_H_
+#endif  // LIBANGLE_CONTEXT_H_

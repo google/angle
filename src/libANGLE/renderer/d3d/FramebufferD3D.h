@@ -9,8 +9,8 @@
 #ifndef LIBANGLE_RENDERER_D3D_FRAMBUFFERD3D_H_
 #define LIBANGLE_RENDERER_D3D_FRAMBUFFERD3D_H_
 
-#include <vector>
 #include <cstdint>
+#include <vector>
 
 #include "common/Color.h"
 #include "common/Optional.h"
@@ -23,7 +23,6 @@ class FramebufferAttachment;
 struct PixelPackState;
 
 typedef std::vector<const FramebufferAttachment *> AttachmentList;
-
 }
 
 namespace rx
@@ -125,7 +124,6 @@ class FramebufferD3D : public FramebufferImpl
     RendererD3D *mRenderer;
     Optional<gl::AttachmentList> mColorAttachmentsForRender;
 };
-
 }
 
-#endif // LIBANGLE_RENDERER_D3D_FRAMBUFFERD3D_H_
+#endif  // LIBANGLE_RENDERER_D3D_FRAMBUFFERD3D_H_

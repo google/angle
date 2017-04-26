@@ -201,4 +201,4 @@ class RendererGL : angle::NonCopyable
 
 }  // namespace rx
 
-#endif // LIBANGLE_RENDERER_GL_RENDERERGL_H_
+#endif  // LIBANGLE_RENDERER_GL_RENDERERGL_H_

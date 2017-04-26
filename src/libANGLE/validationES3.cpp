@@ -11,13 +11,13 @@
 #include "base/numerics/safe_conversions.h"
 #include "common/mathutil.h"
 #include "common/utilities.h"
-#include "libANGLE/validationES.h"
 #include "libANGLE/Context.h"
-#include "libANGLE/Texture.h"
 #include "libANGLE/Framebuffer.h"
-#include "libANGLE/Renderbuffer.h"
-#include "libANGLE/formatutils.h"
 #include "libANGLE/FramebufferAttachment.h"
+#include "libANGLE/Renderbuffer.h"
+#include "libANGLE/Texture.h"
+#include "libANGLE/formatutils.h"
+#include "libANGLE/validationES.h"
 
 using namespace angle;
 

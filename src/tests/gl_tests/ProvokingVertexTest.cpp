@@ -140,7 +140,7 @@ TEST_P(ProvokingVertexTest, FlatTriangle)
 // Ensure that any provoking vertex shenanigans still gives correct vertex streams.
 TEST_P(ProvokingVertexTest, FlatTriWithTransformFeedback)
 {
-    // TODO(cwallez) figure out why it is broken on AMD on Mac
+// TODO(cwallez) figure out why it is broken on AMD on Mac
 #if defined(ANGLE_PLATFORM_APPLE)
     if (IsAMD())
     {

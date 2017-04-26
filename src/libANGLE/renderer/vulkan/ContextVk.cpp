@@ -101,7 +101,7 @@ gl::Error ContextVk::initPipeline()
 
     for (auto attribIndex : programGL->getActiveAttribLocationsMask())
     {
-        const auto &attrib = attribs[attribIndex];
+        const auto &attrib  = attribs[attribIndex];
         const auto &binding = bindings[attrib.bindingIndex];
         if (attrib.enabled)
         {

@@ -8,20 +8,20 @@
 
 #include "libANGLE/validationES.h"
 
-#include "libANGLE/validationES2.h"
-#include "libANGLE/validationES3.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
-#include "libANGLE/Texture.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
-#include "libANGLE/formatutils.h"
 #include "libANGLE/Image.h"
-#include "libANGLE/Query.h"
 #include "libANGLE/Program.h"
-#include "libANGLE/Uniform.h"
+#include "libANGLE/Query.h"
+#include "libANGLE/Texture.h"
 #include "libANGLE/TransformFeedback.h"
+#include "libANGLE/Uniform.h"
 #include "libANGLE/VertexArray.h"
+#include "libANGLE/formatutils.h"
+#include "libANGLE/validationES2.h"
+#include "libANGLE/validationES3.h"
 
 #include "common/mathutil.h"
 #include "common/utilities.h"
@@ -44,10 +44,10 @@ bool ValidateDrawAttribs(ValidationContext *context,
 
     bool webglCompatibility = context->getExtensions().webglCompatibility;
 
-    const VertexArray *vao    = state.getVertexArray();
-    const auto &vertexAttribs = vao->getVertexAttributes();
+    const VertexArray *vao     = state.getVertexArray();
+    const auto &vertexAttribs  = vao->getVertexAttributes();
     const auto &vertexBindings = vao->getVertexBindings();
-    size_t maxEnabledAttrib   = vao->getMaxEnabledAttribute();
+    size_t maxEnabledAttrib    = vao->getMaxEnabledAttribute();
     for (size_t attributeIndex = 0; attributeIndex < maxEnabledAttrib; ++attributeIndex)
     {
         const VertexAttribute &attrib = vertexAttribs[attributeIndex];
@@ -57,7 +57,8 @@ bool ValidateDrawAttribs(ValidationContext *context,
         }
 
         const VertexBinding &binding = vertexBindings[attrib.bindingIndex];
-        // If we have no buffer, then we either get an error, or there are no more checks to be done.
+        // If we have no buffer, then we either get an error, or there are no more checks to be
+        // done.
         gl::Buffer *buffer = binding.buffer.get();
         if (!buffer)
         {
@@ -76,9 +77,8 @@ bool ValidateDrawAttribs(ValidationContext *context,
             {
                 // This is an application error that would normally result in a crash,
                 // but we catch it and return an error
-                context->handleError(
-                    Error(GL_INVALID_OPERATION,
-                          "An enabled vertex array has no buffer and no pointer."));
+                context->handleError(Error(
+                    GL_INVALID_OPERATION, "An enabled vertex array has no buffer and no pointer."));
                 return false;
             }
             continue;
@@ -135,8 +135,8 @@ bool ValidateDrawAttribs(ValidationContext *context,
         // enough backing data.
         if (attribDataSizeWithOffset > static_cast<uint64_t>(buffer->getSize()))
         {
-            context->handleError(Error(GL_INVALID_OPERATION,
-                                       "Vertex buffer is not big enough for the draw call"));
+            context->handleError(
+                Error(GL_INVALID_OPERATION, "Vertex buffer is not big enough for the draw call"));
             return false;
         }
     }

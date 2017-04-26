@@ -19,7 +19,10 @@
 
 namespace
 {
-    enum { INITIAL_INDEX_BUFFER_SIZE = 4096 * sizeof(GLuint) };
+enum
+{
+    INITIAL_INDEX_BUFFER_SIZE = 4096 * sizeof(GLuint)
+};
 }
 
 namespace gl
@@ -49,7 +52,7 @@ struct TranslatedIndexData
 {
     gl::IndexRange indexRange;
     unsigned int startIndex;
-    unsigned int startOffset;   // In bytes
+    unsigned int startOffset;  // In bytes
 
     IndexBuffer *indexBuffer;
     BufferD3D *storage;
@@ -91,7 +94,6 @@ class IndexDataManager : angle::NonCopyable
     StreamingIndexBufferInterface *mStreamingBufferShort;
     StreamingIndexBufferInterface *mStreamingBufferInt;
 };
-
 }
 
-#endif   // LIBANGLE_INDEXDATAMANAGER_H_
+#endif  // LIBANGLE_INDEXDATAMANAGER_H_

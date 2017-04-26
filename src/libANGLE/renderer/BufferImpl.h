@@ -28,7 +28,7 @@ class BufferImpl : angle::NonCopyable
 {
   public:
     BufferImpl(const gl::BufferState &state) : mState(state) {}
-    virtual ~BufferImpl() { }
+    virtual ~BufferImpl() {}
     virtual void destroy(ContextImpl *contextImpl) {}
 
     virtual gl::Error setData(ContextImpl *context,
@@ -63,7 +63,6 @@ class BufferImpl : angle::NonCopyable
   protected:
     const gl::BufferState &mState;
 };
-
 }
 
-#endif // LIBANGLE_RENDERER_BUFFERIMPL_H_
+#endif  // LIBANGLE_RENDERER_BUFFERIMPL_H_

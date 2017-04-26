@@ -9,14 +9,14 @@
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
 
 #include "common/bitset_utils.h"
-#include "libANGLE/formatutils.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Surface.h"
+#include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/ContextImpl.h"
-#include "libANGLE/renderer/d3d/RendererD3D.h"
-#include "libANGLE/renderer/d3d/RenderbufferD3D.h"
 #include "libANGLE/renderer/d3d/RenderTargetD3D.h"
+#include "libANGLE/renderer/d3d/RenderbufferD3D.h"
+#include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/SurfaceD3D.h"
 #include "libANGLE/renderer/d3d/SwapChainD3D.h"
 #include "libANGLE/renderer/d3d/TextureD3D.h"
@@ -84,7 +84,6 @@ ClearParameters GetClearParameters(const gl::State &state, GLbitfield mask)
 
     return clearParams;
 }
-
 }
 
 FramebufferD3D::FramebufferD3D(const gl::FramebufferState &data, RendererD3D *renderer)
@@ -332,12 +331,13 @@ void FramebufferD3D::syncState(ContextImpl *contextImpl,
 
     for (size_t attachmentIndex = 0; attachmentIndex < colorAttachments.size(); ++attachmentIndex)
     {
-        GLenum drawBufferState = drawBufferStates[attachmentIndex];
+        GLenum drawBufferState                           = drawBufferStates[attachmentIndex];
         const gl::FramebufferAttachment &colorAttachment = colorAttachments[attachmentIndex];
 
         if (colorAttachment.isAttached() && drawBufferState != GL_NONE)
         {
-            ASSERT(drawBufferState == GL_BACK || drawBufferState == (GL_COLOR_ATTACHMENT0_EXT + attachmentIndex));
+            ASSERT(drawBufferState == GL_BACK ||
+                   drawBufferState == (GL_COLOR_ATTACHMENT0_EXT + attachmentIndex));
             colorAttachmentsForRender.push_back(&colorAttachment);
         }
         else if (!workarounds.mrtPerfWorkaround)

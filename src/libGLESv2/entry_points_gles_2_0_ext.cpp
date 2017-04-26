@@ -14,12 +14,12 @@
 #include "libANGLE/Error.h"
 #include "libANGLE/Fence.h"
 #include "libANGLE/Framebuffer.h"
-#include "libANGLE/Shader.h"
 #include "libANGLE/Query.h"
-#include "libANGLE/queryconversions.h"
-#include "libANGLE/queryutils.h"
+#include "libANGLE/Shader.h"
 #include "libANGLE/Thread.h"
 #include "libANGLE/VertexArray.h"
+#include "libANGLE/queryconversions.h"
+#include "libANGLE/queryutils.h"
 
 #include "libANGLE/validationES.h"
 #include "libANGLE/validationES2.h"
@@ -354,7 +354,8 @@ void GL_APIENTRY GenFencesNV(GLsizei n, GLuint *fences)
 
 void GL_APIENTRY GetFenceivNV(GLuint fence, GLenum pname, GLint *params)
 {
-    EVENT("(GLuint fence = %d, GLenum pname = 0x%X, GLint *params = 0x%0.8p)", fence, pname, params);
+    EVENT("(GLuint fence = %d, GLenum pname = 0x%X, GLint *params = 0x%0.8p)", fence, pname,
+          params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -375,11 +376,12 @@ void GL_APIENTRY GetFenceivNV(GLuint fence, GLenum pname, GLint *params)
 
         switch (pname)
         {
-          case GL_FENCE_STATUS_NV:
+            case GL_FENCE_STATUS_NV:
             {
                 // GL_NV_fence spec:
-                // Once the status of a fence has been finished (via FinishFenceNV) or tested and the returned status is TRUE (via either TestFenceNV
-                // or GetFenceivNV querying the FENCE_STATUS_NV), the status remains TRUE until the next SetFenceNV of the fence.
+                // Once the status of a fence has been finished (via FinishFenceNV) or tested and
+                // the returned status is TRUE (via either TestFenceNV or GetFenceivNV querying the
+                // FENCE_STATUS_NV), the status remains TRUE until the next SetFenceNV of the fence.
                 GLboolean status = GL_TRUE;
                 if (fenceObject->getStatus() != GL_TRUE)
                 {
@@ -394,13 +396,13 @@ void GL_APIENTRY GetFenceivNV(GLuint fence, GLenum pname, GLint *params)
                 break;
             }
 
-          case GL_FENCE_CONDITION_NV:
+            case GL_FENCE_CONDITION_NV:
             {
                 *params = static_cast<GLint>(fenceObject->getCondition());
                 break;
             }
 
-          default:
+            default:
             {
                 context->handleError(Error(GL_INVALID_ENUM));
                 return;
@@ -423,10 +425,15 @@ GLenum GL_APIENTRY GetGraphicsResetStatusEXT(void)
     return GL_NO_ERROR;
 }
 
-void GL_APIENTRY GetTranslatedShaderSourceANGLE(GLuint shader, GLsizei bufsize, GLsizei* length, GLchar* source)
+void GL_APIENTRY GetTranslatedShaderSourceANGLE(GLuint shader,
+                                                GLsizei bufsize,
+                                                GLsizei *length,
+                                                GLchar *source)
 {
-    EVENT("(GLuint shader = %d, GLsizei bufsize = %d, GLsizei* length = 0x%0.8p, GLchar* source = 0x%0.8p)",
-          shader, bufsize, length, source);
+    EVENT(
+        "(GLuint shader = %d, GLsizei bufsize = %d, GLsizei* length = 0x%0.8p, GLchar* source = "
+        "0x%0.8p)",
+        shader, bufsize, length, source);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -449,10 +456,12 @@ void GL_APIENTRY GetTranslatedShaderSourceANGLE(GLuint shader, GLsizei bufsize, 
     }
 }
 
-void GL_APIENTRY GetnUniformfvEXT(GLuint program, GLint location, GLsizei bufSize, GLfloat* params)
+void GL_APIENTRY GetnUniformfvEXT(GLuint program, GLint location, GLsizei bufSize, GLfloat *params)
 {
-    EVENT("(GLuint program = %d, GLint location = %d, GLsizei bufSize = %d, GLfloat* params = 0x%0.8p)",
-          program, location, bufSize, params);
+    EVENT(
+        "(GLuint program = %d, GLint location = %d, GLsizei bufSize = %d, GLfloat* params = "
+        "0x%0.8p)",
+        program, location, bufSize, params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -469,10 +478,11 @@ void GL_APIENTRY GetnUniformfvEXT(GLuint program, GLint location, GLsizei bufSiz
     }
 }
 
-void GL_APIENTRY GetnUniformivEXT(GLuint program, GLint location, GLsizei bufSize, GLint* params)
+void GL_APIENTRY GetnUniformivEXT(GLuint program, GLint location, GLsizei bufSize, GLint *params)
 {
-    EVENT("(GLuint program = %d, GLint location = %d, GLsizei bufSize = %d, GLint* params = 0x%0.8p)",
-          program, location, bufSize, params);
+    EVENT(
+        "(GLuint program = %d, GLint location = %d, GLsizei bufSize = %d, GLint* params = 0x%0.8p)",
+        program, location, bufSize, params);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -504,7 +514,8 @@ GLboolean GL_APIENTRY IsFenceNV(GLuint fence)
         }
 
         // GL_NV_fence spec:
-        // A name returned by GenFencesNV, but not yet set via SetFenceNV, is not the name of an existing fence.
+        // A name returned by GenFencesNV, but not yet set via SetFenceNV, is not the name of an
+        // existing fence.
         return fenceObject->isSet();
     }
 
@@ -538,9 +549,15 @@ void GL_APIENTRY ReadnPixelsEXT(GLint x,
     }
 }
 
-void GL_APIENTRY RenderbufferStorageMultisampleANGLE(GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height)
+void GL_APIENTRY RenderbufferStorageMultisampleANGLE(GLenum target,
+                                                     GLsizei samples,
+                                                     GLenum internalformat,
+                                                     GLsizei width,
+                                                     GLsizei height)
 {
-    EVENT("(GLenum target = 0x%X, GLsizei samples = %d, GLenum internalformat = 0x%X, GLsizei width = %d, GLsizei height = %d)",
+    EVENT(
+        "(GLenum target = 0x%X, GLsizei samples = %d, GLenum internalformat = 0x%X, GLsizei width "
+        "= %d, GLsizei height = %d)",
         target, samples, internalformat, width, height);
 
     Context *context = GetValidGlobalContext();
@@ -622,10 +639,13 @@ GLboolean GL_APIENTRY TestFenceNV(GLuint fence)
     return GL_TRUE;
 }
 
-void GL_APIENTRY TexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height)
+void GL_APIENTRY
+TexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height)
 {
-    EVENT("(GLenum target = 0x%X, GLsizei levels = %d, GLenum internalformat = 0x%X, GLsizei width = %d, GLsizei height = %d)",
-           target, levels, internalformat, width, height);
+    EVENT(
+        "(GLenum target = 0x%X, GLsizei levels = %d, GLenum internalformat = 0x%X, GLsizei width = "
+        "%d, GLsizei height = %d)",
+        target, levels, internalformat, width, height);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -678,11 +698,15 @@ void GL_APIENTRY VertexAttribDivisorANGLE(GLuint index, GLuint divisor)
         {
             if (index == 0 && divisor != 0)
             {
-                const char *errorMessage = "The current context doesn't support setting a non-zero divisor on the attribute with index zero. "
-                                           "Please reorder the attributes in your vertex shader so that attribute zero can have a zero divisor.";
+                const char *errorMessage =
+                    "The current context doesn't support setting a non-zero divisor on the "
+                    "attribute with index zero. "
+                    "Please reorder the attributes in your vertex shader so that attribute zero "
+                    "can have a zero divisor.";
                 context->handleError(Error(GL_INVALID_OPERATION, errorMessage));
 
-                // We also output an error message to the debugger window if tracing is active, so that developers can see the error message.
+                // We also output an error message to the debugger window if tracing is active, so
+                // that developers can see the error message.
                 ERR() << errorMessage;
 
                 return;
@@ -693,13 +717,22 @@ void GL_APIENTRY VertexAttribDivisorANGLE(GLuint index, GLuint divisor)
     }
 }
 
-void GL_APIENTRY BlitFramebufferANGLE(GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1,
-                          GLbitfield mask, GLenum filter)
+void GL_APIENTRY BlitFramebufferANGLE(GLint srcX0,
+                                      GLint srcY0,
+                                      GLint srcX1,
+                                      GLint srcY1,
+                                      GLint dstX0,
+                                      GLint dstY0,
+                                      GLint dstX1,
+                                      GLint dstY1,
+                                      GLbitfield mask,
+                                      GLenum filter)
 {
-    EVENT("(GLint srcX0 = %d, GLint srcY0 = %d, GLint srcX1 = %d, GLint srcY1 = %d, "
-          "GLint dstX0 = %d, GLint dstY0 = %d, GLint dstX1 = %d, GLint dstY1 = %d, "
-          "GLbitfield mask = 0x%X, GLenum filter = 0x%X)",
-          srcX0, srcY0, srcX1, srcX1, dstX0, dstY0, dstX1, dstY1, mask, filter);
+    EVENT(
+        "(GLint srcX0 = %d, GLint srcY0 = %d, GLint srcX1 = %d, GLint srcY1 = %d, "
+        "GLint dstX0 = %d, GLint dstY0 = %d, GLint dstX1 = %d, GLint dstY1 = %d, "
+        "GLbitfield mask = 0x%X, GLenum filter = 0x%X)",
+        srcX0, srcY0, srcX1, srcX1, dstX0, dstY0, dstX1, dstY1, mask, filter);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -716,9 +749,12 @@ void GL_APIENTRY BlitFramebufferANGLE(GLint srcX0, GLint srcY0, GLint srcX1, GLi
     }
 }
 
-void GL_APIENTRY DiscardFramebufferEXT(GLenum target, GLsizei numAttachments, const GLenum *attachments)
+void GL_APIENTRY DiscardFramebufferEXT(GLenum target,
+                                       GLsizei numAttachments,
+                                       const GLenum *attachments)
 {
-    EVENT("(GLenum target = 0x%X, GLsizei numAttachments = %d, attachments = 0x%0.8p)", target, numAttachments, attachments);
+    EVENT("(GLenum target = 0x%X, GLsizei numAttachments = %d, attachments = 0x%0.8p)", target,
+          numAttachments, attachments);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -750,13 +786,19 @@ void GL_APIENTRY TexImage3DOES(GLenum target,
         "GLenum format = 0x%X, GLenum type = 0x%x, const void* pixels = 0x%0.8p)",
         target, level, internalformat, width, height, depth, border, format, type, pixels);
 
-    UNIMPLEMENTED();   // FIXME
+    UNIMPLEMENTED();  // FIXME
 }
 
-void GL_APIENTRY GetProgramBinaryOES(GLuint program, GLsizei bufSize, GLsizei *length, GLenum *binaryFormat, void *binary)
+void GL_APIENTRY GetProgramBinaryOES(GLuint program,
+                                     GLsizei bufSize,
+                                     GLsizei *length,
+                                     GLenum *binaryFormat,
+                                     void *binary)
 {
-    EVENT("(GLenum program = 0x%X, bufSize = %d, length = 0x%0.8p, binaryFormat = 0x%0.8p, binary = 0x%0.8p)",
-          program, bufSize, length, binaryFormat, binary);
+    EVENT(
+        "(GLenum program = 0x%X, bufSize = %d, length = 0x%0.8p, binaryFormat = 0x%0.8p, binary = "
+        "0x%0.8p)",
+        program, bufSize, length, binaryFormat, binary);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -778,10 +820,13 @@ void GL_APIENTRY GetProgramBinaryOES(GLuint program, GLsizei bufSize, GLsizei *l
     }
 }
 
-void GL_APIENTRY ProgramBinaryOES(GLuint program, GLenum binaryFormat, const void *binary, GLint length)
+void GL_APIENTRY ProgramBinaryOES(GLuint program,
+                                  GLenum binaryFormat,
+                                  const void *binary,
+                                  GLint length)
 {
-    EVENT("(GLenum program = 0x%X, binaryFormat = 0x%x, binary = 0x%0.8p, length = %d)",
-          program, binaryFormat, binary, length);
+    EVENT("(GLenum program = 0x%X, binaryFormat = 0x%x, binary = 0x%0.8p, length = %d)", program,
+          binaryFormat, binary, length);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -819,7 +864,7 @@ void GL_APIENTRY DrawBuffersEXT(GLsizei n, const GLenum *bufs)
     }
 }
 
-void GL_APIENTRY GetBufferPointervOES(GLenum target, GLenum pname, void** params)
+void GL_APIENTRY GetBufferPointervOES(GLenum target, GLenum pname, void **params)
 {
     EVENT("(GLenum target = 0x%X, GLenum pname = 0x%X, void** params = 0x%0.8p)", target, pname,
           params);
@@ -873,10 +918,15 @@ GLboolean GL_APIENTRY UnmapBufferOES(GLenum target)
     return GL_FALSE;
 }
 
-void *GL_APIENTRY MapBufferRangeEXT(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access)
+void *GL_APIENTRY MapBufferRangeEXT(GLenum target,
+                                    GLintptr offset,
+                                    GLsizeiptr length,
+                                    GLbitfield access)
 {
-    EVENT("(GLenum target = 0x%X, GLintptr offset = %d, GLsizeiptr length = %d, GLbitfield access = 0x%X)",
-          target, offset, length, access);
+    EVENT(
+        "(GLenum target = 0x%X, GLintptr offset = %d, GLsizeiptr length = %d, GLbitfield access = "
+        "0x%X)",
+        target, offset, length, access);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -895,7 +945,8 @@ void *GL_APIENTRY MapBufferRangeEXT(GLenum target, GLintptr offset, GLsizeiptr l
 
 void GL_APIENTRY FlushMappedBufferRangeEXT(GLenum target, GLintptr offset, GLsizeiptr length)
 {
-    EVENT("(GLenum target = 0x%X, GLintptr offset = %d, GLsizeiptr length = %d)", target, offset, length);
+    EVENT("(GLenum target = 0x%X, GLintptr offset = %d, GLsizeiptr length = %d)", target, offset,
+          length);
 
     Context *context = GetValidGlobalContext();
     if (context)
@@ -1005,7 +1056,7 @@ ANGLE_EXPORT void GL_APIENTRY EGLImageTargetTexture2DOES(GLenum target, GLeglIma
         }
 
         Texture *texture = context->getTargetTexture(target);
-        Error error = texture->setEGLImageTarget(target, imageObject);
+        Error error      = texture->setEGLImageTarget(target, imageObject);
         if (error.isError())
         {
             context->handleError(error);
@@ -1031,7 +1082,7 @@ ANGLE_EXPORT void GL_APIENTRY EGLImageTargetRenderbufferStorageOES(GLenum target
         }
 
         Renderbuffer *renderbuffer = context->getGLState().getCurrentRenderbuffer();
-        Error error = renderbuffer->setStorageEGLImageTarget(imageObject);
+        Error error                = renderbuffer->setStorageEGLImageTarget(imageObject);
         if (error.isError())
         {
             context->handleError(error);
@@ -2395,7 +2446,7 @@ ANGLE_EXPORT void GL_APIENTRY ReadPixelsRobustANGLE(GLint x,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        GLsizei writeLength = 0;
+        GLsizei writeLength  = 0;
         GLsizei writeColumns = 0;
         GLsizei writeRows    = 0;
         if (!ValidateReadPixelsRobustANGLE(context, x, y, width, height, format, type, bufSize,
@@ -2639,10 +2690,9 @@ void GL_APIENTRY CompressedTexSubImage2DRobustANGLE(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateCompressedTexSubImage2DRobustANGLE(context, target, level, xoffset, yoffset,
-                                                        width, height, format, imageSize, dataSize,
-                                                        data))
+        if (!context->skipValidation() && !ValidateCompressedTexSubImage2DRobustANGLE(
+                                              context, target, level, xoffset, yoffset, width,
+                                              height, format, imageSize, dataSize, data))
         {
             return;
         }
@@ -2673,10 +2723,9 @@ void GL_APIENTRY CompressedTexImage3DRobustANGLE(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() &&
-            !ValidateCompressedTexImage3DRobustANGLE(context, target, level, internalformat, width,
-                                                     height, depth, border, imageSize, dataSize,
-                                                     data))
+        if (!context->skipValidation() && !ValidateCompressedTexImage3DRobustANGLE(
+                                              context, target, level, internalformat, width, height,
+                                              depth, border, imageSize, dataSize, data))
         {
             return;
         }
@@ -3258,7 +3307,7 @@ ANGLE_EXPORT void GL_APIENTRY ReadnPixelsRobustANGLE(GLint x,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        GLsizei writeLength = 0;
+        GLsizei writeLength  = 0;
         GLsizei writeColumns = 0;
         GLsizei writeRows    = 0;
         if (!ValidateReadnPixelsRobustANGLE(context, x, y, width, height, format, type, bufSize,

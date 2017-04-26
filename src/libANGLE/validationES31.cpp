@@ -10,9 +10,9 @@
 
 #include "libANGLE/Context.h"
 #include "libANGLE/Framebuffer.h"
+#include "libANGLE/VertexArray.h"
 #include "libANGLE/validationES.h"
 #include "libANGLE/validationES3.h"
-#include "libANGLE/VertexArray.h"
 
 #include "common/utilities.h"
 
