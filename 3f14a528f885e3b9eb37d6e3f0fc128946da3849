@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3076007a_e1f28ce8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-04-26T02:59:41Z",
+      "side": 1,
+      "message": "Refact -\u003e Refactor",
+      "revId": "3f14a528f885e3b9eb37d6e3f0fc128946da3849",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45802cf2_905b59f3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-04-26T02:59:41Z",
+      "side": 1,
+      "message": "Suggest to be revised to: setStorageMultisample and setImageDescChainMultisample looks redundant. They can be merged into setStorage and setImageDescChain respectively, with two more parameters \u0027sample\u0027 and \u0027fixedSampleLocation\u0027 .",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 55
+      },
+      "revId": "3f14a528f885e3b9eb37d6e3f0fc128946da3849",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a2ca8686_45e8196f",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 678,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-04-26T02:59:41Z",
+      "side": 1,
+      "message": "Can we combine the TextureD3D_2DMultisample with TextureD3D_2D? These two classes seem to be redundant too, just like setStorage and setStorageMultisample. And the other variant like TextureD3D_Cube / TextureD3D_3D have no similar classes (TextureD3D_CubeMultisample or TextureD3D_3DMultisample). \n\nYes, we have only one new multisampled texture format: TEXTURE_2D_MULTISAMPLE. There is no TEXTURE_3D_MULTISAMPLE and TEXTURE_CUBEMAP_MULTISAMPLE in ES31, so the current design may be reasonable, but you can take a look and think about it deeper.",
+      "range": {
+        "startLine": 667,
+        "startChar": 0,
+        "endLine": 678,
+        "endChar": 0
+      },
+      "revId": "3f14a528f885e3b9eb37d6e3f0fc128946da3849",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96ee2e51_50beef53",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 850,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-04-26T02:59:41Z",
+      "side": 1,
+      "message": "Not a fault of your patch, just think the else clause is a little strange. We can use an ASSERT before line 717 if necessary.",
+      "range": {
+        "startLine": 847,
+        "startChar": 4,
+        "endLine": 850,
+        "endChar": 5
+      },
+      "revId": "3f14a528f885e3b9eb37d6e3f0fc128946da3849",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
