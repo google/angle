@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1c5609e9_c7adb5d4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-04-26T08:04:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3076007a_e1f28ce8",
+      "revId": "3f14a528f885e3b9eb37d6e3f0fc128946da3849",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45802cf2_905b59f3",
         "filename": "/COMMIT_MSG",
         "patchSetId": 3
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "b2a300d0_d8854f6a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-04-26T08:04:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "45802cf2_905b59f3",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 55
+      },
+      "revId": "3f14a528f885e3b9eb37d6e3f0fc128946da3849",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a2ca8686_45e8196f",
         "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
         "patchSetId": 3
@@ -53,6 +95,30 @@
       "writtenOn": "2017-04-26T02:59:41Z",
       "side": 1,
       "message": "Can we combine the TextureD3D_2DMultisample with TextureD3D_2D? These two classes seem to be redundant too, just like setStorage and setStorageMultisample. And the other variant like TextureD3D_Cube / TextureD3D_3D have no similar classes (TextureD3D_CubeMultisample or TextureD3D_3DMultisample). \n\nYes, we have only one new multisampled texture format: TEXTURE_2D_MULTISAMPLE. There is no TEXTURE_3D_MULTISAMPLE and TEXTURE_CUBEMAP_MULTISAMPLE in ES31, so the current design may be reasonable, but you can take a look and think about it deeper.",
+      "range": {
+        "startLine": 667,
+        "startChar": 0,
+        "endLine": 678,
+        "endChar": 0
+      },
+      "revId": "3f14a528f885e3b9eb37d6e3f0fc128946da3849",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ab88c07f_6b4718f0",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 678,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-04-26T08:04:17Z",
+      "side": 1,
+      "message": "The level count of TEXTURE_2D_MULTISAMPLE is always one, and it  couldn\u0027t  generateMipmap. If we combine them, we have to judge if the target is TEXTURE_2D or TEXTURE_2D_MULTISAMPLE in the functions of TextureD3D_2D.",
+      "parentUuid": "a2ca8686_45e8196f",
       "range": {
         "startLine": 667,
         "startChar": 0,
@@ -88,6 +154,30 @@
     },
     {
       "key": {
+        "uuid": "9b68668a_4215dae6",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 850,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-04-26T08:04:17Z",
+      "side": 1,
+      "message": "If I use ASSERT in line 717, the variable seems too long, but I saw some code else where, ASSERT in the lase else if so that UNREACHABLE() can be removed.",
+      "parentUuid": "96ee2e51_50beef53",
+      "range": {
+        "startLine": 847,
+        "startChar": 4,
+        "endLine": 850,
+        "endChar": 5
+      },
+      "revId": "3f14a528f885e3b9eb37d6e3f0fc128946da3849",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d908b12b_c6be4b40",
         "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
         "patchSetId": 3
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "ff645e58_df4a8777",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 652,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-04-26T08:04:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d908b12b_c6be4b40",
+      "range": {
+        "startLine": 645,
+        "startChar": 0,
+        "endLine": 652,
+        "endChar": 9
+      },
+      "revId": "3f14a528f885e3b9eb37d6e3f0fc128946da3849",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a5d5b45_8f47b5bc",
         "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
         "patchSetId": 3
@@ -131,6 +245,30 @@
       "revId": "3f14a528f885e3b9eb37d6e3f0fc128946da3849",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b809f9ee_8194f3cf",
+        "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2259,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-04-26T08:04:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a5d5b45_8f47b5bc",
+      "range": {
+        "startLine": 2252,
+        "startChar": 0,
+        "endLine": 2259,
+        "endChar": 9
+      },
+      "revId": "3f14a528f885e3b9eb37d6e3f0fc128946da3849",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
