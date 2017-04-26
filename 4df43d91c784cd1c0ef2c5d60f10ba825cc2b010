@@ -391,6 +391,30 @@
     },
     {
       "key": {
+        "uuid": "ffa60a9b_5796559d",
+        "filename": "src/libANGLE/ContextState.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-04-26T17:14:53Z",
+      "side": 1,
+      "message": "Yea, that\u0027s fine.  We just update our HAS_DYNAMIC_CAST macro to be used when assertions are enabled and RTTI is enabled (currently it\u0027s !NDEBUG and RTTI)",
+      "parentUuid": "cc547b3a_7d3586c1",
+      "range": {
+        "startLine": 151,
+        "startChar": 4,
+        "endLine": 153,
+        "endChar": 39
+      },
+      "revId": "4df43d91c784cd1c0ef2c5d60f10ba825cc2b010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fc16370a_e3d28bee",
         "filename": "src/libANGLE/params.h",
         "patchSetId": 8
