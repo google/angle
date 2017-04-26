@@ -25,6 +25,40 @@
     },
     {
       "key": {
+        "uuid": "bdecb86c_24cde8d2",
+        "filename": "src/libANGLE/params.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-26T13:54:35Z",
+      "side": 1,
+      "message": "The semantics of what operator bool() mean here isn\u0027t clear. It could be isValid() instead. Also I\u0027m not sure this is needed at all if we generate gathers only for  entry-point that need a gather().",
+      "revId": "172ab32c8626d2b40a169d9b324306037b93420c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3efddfbb_a489c5a9",
+        "filename": "src/libANGLE/params.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-26T13:54:35Z",
+      "side": 1,
+      "message": "This code could be moved to gatherParams, or is there a case where a custom factory is needed? The code in the ANGLE_ENTRY_POINT_FUNC could go in the constructor instead.",
+      "revId": "172ab32c8626d2b40a169d9b324306037b93420c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b2120ea4_887560e4",
         "filename": "src/libANGLE/params.h",
         "patchSetId": 13
@@ -36,6 +70,30 @@
       "writtenOn": "2017-04-24T19:56:44Z",
       "side": 1,
       "message": "This could probably be a macro too, something like:\n\n   DEFINE_PARAMS_TYPE_INFO(HasIndexRange, ParamsBase);",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 40
+      },
+      "revId": "172ab32c8626d2b40a169d9b324306037b93420c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3b211a65_0f7d3f9c",
+        "filename": "src/libANGLE/params.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-26T13:54:35Z",
+      "side": 1,
+      "message": "Do we expect cases of non-noop inheritance (like is the case for IndexRange / DrawElemens*)?",
+      "parentUuid": "b2120ea4_887560e4",
       "range": {
         "startLine": 89,
         "startChar": 0,
