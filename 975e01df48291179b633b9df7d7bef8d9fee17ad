@@ -154,6 +154,24 @@
     },
     {
       "key": {
+        "uuid": "f398238c_504f13cd",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 13
+      },
+      "lineNbr": 977,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-04-26T08:50:37Z",
+      "side": 1,
+      "message": "Ah, but now the code has the problem that this code compiles, where the atomic_uint variable is not a uniform:\n\n#version 310 es\natomic_uint counter;\nvoid main (void)\n{   \n}\n\nPlease add a check to make sure that this code doesn\u0027t compile. I believe it should be in ParseContext::singleDeclarationErrorCheck, same place where it is checking that images can only be uniforms. Also add a unit test verifying it. After that this check will not be necessary anymore.",
+      "parentUuid": "98943837_905be444",
+      "revId": "975e01df48291179b633b9df7d7bef8d9fee17ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "eac8bfa9_5f4c3a9b",
         "filename": "src/tests/gl_tests/AtomicCounterBufferTest.cpp",
         "patchSetId": 13
