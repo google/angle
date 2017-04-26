@@ -6,7 +6,7 @@ vars = {
 deps = {
 
   'buildtools':
-    Var('chromium_git') + '/chromium/buildtools.git' + '@' + '39b1db2ab4aa4b2ccaa263c29bdf63e7c1ee28aa',
+    Var('chromium_git') + '/chromium/buildtools.git' + '@' + '98f00fa10dbad2cdbb2e297a66c3d6d5bc3994f3',
 
   'testing/gmock':
     Var('chromium_git') + '/external/googlemock.git' + '@' + '0421b6f358139f02e102c9c332ce19a33faf75be', # from svn revision 566

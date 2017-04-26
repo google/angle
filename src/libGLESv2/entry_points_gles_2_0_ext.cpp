@@ -294,14 +294,16 @@ void GL_APIENTRY DrawElementsInstancedANGLE(GLenum mode,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        IndexRange indexRange;
-        if (!ValidateDrawElementsInstancedANGLE(context, mode, count, type, indices, primcount,
-                                                &indexRange))
+        context->gatherParams<EntryPoint::DrawElementsInstancedANGLE>(mode, count, type, indices,
+                                                                      primcount);
+
+        if (!context->skipValidation() &&
+            !ValidateDrawElementsInstancedANGLE(context, mode, count, type, indices, primcount))
         {
             return;
         }
 
-        context->drawElementsInstanced(mode, count, type, indices, primcount, indexRange);
+        context->drawElementsInstanced(mode, count, type, indices, primcount);
     }
 }
 

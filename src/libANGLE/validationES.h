@@ -273,28 +273,25 @@ bool ValidateDrawArraysInstancedANGLE(Context *context,
                                       GLsizei primcount);
 
 bool ValidateDrawElementsBase(ValidationContext *context, GLenum type);
-bool ValidateDrawElements(ValidationContext *context,
-                          GLenum mode,
-                          GLsizei count,
-                          GLenum type,
-                          const GLvoid *indices,
-                          GLsizei primcount,
-                          IndexRange *indexRangeOut);
+bool ValidateDrawElementsCommon(ValidationContext *context,
+                                GLenum mode,
+                                GLsizei count,
+                                GLenum type,
+                                const GLvoid *indices,
+                                GLsizei primcount);
 
-bool ValidateDrawElementsInstanced(Context *context,
-                                   GLenum mode,
-                                   GLsizei count,
-                                   GLenum type,
-                                   const GLvoid *indices,
-                                   GLsizei primcount,
-                                   IndexRange *indexRangeOut);
+bool ValidateDrawElementsInstancedCommon(ValidationContext *context,
+                                         GLenum mode,
+                                         GLsizei count,
+                                         GLenum type,
+                                         const GLvoid *indices,
+                                         GLsizei primcount);
 bool ValidateDrawElementsInstancedANGLE(Context *context,
                                         GLenum mode,
                                         GLsizei count,
                                         GLenum type,
                                         const GLvoid *indices,
-                                        GLsizei primcount,
-                                        IndexRange *indexRangeOut);
+                                        GLsizei primcount);
 
 bool ValidateFramebufferTextureBase(Context *context,
                                     GLenum target,

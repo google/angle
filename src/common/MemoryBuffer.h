@@ -28,6 +28,8 @@ class MemoryBuffer final : NonCopyable
     const uint8_t *data() const;
     uint8_t *data();
 
+    void fill(uint8_t datum);
+
   private:
     size_t mSize;
     uint8_t *mData;

@@ -4894,4 +4894,13 @@ bool ValidateDrawArrays(ValidationContext *context, GLenum mode, GLint first, GL
     return ValidateDrawArraysCommon(context, mode, first, count, 1);
 }
 
+bool ValidateDrawElements(ValidationContext *context,
+                          GLenum mode,
+                          GLsizei count,
+                          GLenum type,
+                          const GLvoid *indices)
+{
+    return ValidateDrawElementsCommon(context, mode, count, type, indices, 1);
+}
+
 }  // namespace gl

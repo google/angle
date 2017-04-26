@@ -1080,8 +1080,7 @@ bool ValidateDrawRangeElements(Context *context,
                                GLuint end,
                                GLsizei count,
                                GLenum type,
-                               const GLvoid *indices,
-                               IndexRange *indexRange)
+                               const GLvoid *indices)
 {
     if (context->getClientMajorVersion() < 3)
     {
@@ -1095,12 +1094,21 @@ bool ValidateDrawRangeElements(Context *context,
         return false;
     }
 
-    if (!ValidateDrawElements(context, mode, count, type, indices, 0, indexRange))
+    if (!ValidateDrawElementsCommon(context, mode, count, type, indices, 0))
     {
         return false;
     }
 
-    if (indexRange->end > end || indexRange->start < start)
+    // Use the parameter buffer to retrieve and cache the index range.
+    const auto &params        = context->getParams<HasIndexRange>();
+    const auto &indexRangeOpt = params.getIndexRange();
+    if (!indexRangeOpt.valid())
+    {
+        // Unexpected error.
+        return false;
+    }
+
+    if (indexRangeOpt.value().end > end || indexRangeOpt.value().start < start)
     {
         // GL spec says that behavior in this case is undefined - generating an error is fine.
         context->handleError(
@@ -2553,6 +2561,22 @@ bool ValidateGetSynciv(Context *context,
     }
 
     return true;
+}
+
+bool ValidateDrawElementsInstanced(ValidationContext *context,
+                                   GLenum mode,
+                                   GLsizei count,
+                                   GLenum type,
+                                   const GLvoid *indices,
+                                   GLsizei instanceCount)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION, "Requires a GLES 3.0 or higher context."));
+        return false;
+    }
+
+    return ValidateDrawElementsInstancedCommon(context, mode, count, type, indices, instanceCount);
 }
 
 }  // namespace gl

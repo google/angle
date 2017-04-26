@@ -347,24 +347,18 @@ class Context final : public ValidationContext
     void drawArrays(GLenum mode, GLint first, GLsizei count);
     void drawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei instanceCount);
 
-    void drawElements(GLenum mode,
-                      GLsizei count,
-                      GLenum type,
-                      const GLvoid *indices,
-                      const IndexRange &indexRange);
+    void drawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices);
     void drawElementsInstanced(GLenum mode,
                                GLsizei count,
                                GLenum type,
                                const GLvoid *indices,
-                               GLsizei instances,
-                               const IndexRange &indexRange);
+                               GLsizei instances);
     void drawRangeElements(GLenum mode,
                            GLuint start,
                            GLuint end,
                            GLsizei count,
                            GLenum type,
-                           const GLvoid *indices,
-                           const IndexRange &indexRange);
+                           const GLvoid *indices);
     void drawArraysIndirect(GLenum mode, const GLvoid *indirect);
     void drawElementsIndirect(GLenum mode, GLenum type, const GLvoid *indirect);
 
@@ -783,6 +777,9 @@ class Context final : public ValidationContext
 
     void dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ);
 
+    template <EntryPoint EP, typename... ParamsT>
+    void gatherParams(ParamsT &&... params);
+
   private:
     void syncRendererState();
     void syncRendererState(const State::DirtyBits &bitMask, const State::DirtyObjects &objectMask);
@@ -879,6 +876,25 @@ class Context final : public ValidationContext
     // Not really a property of context state. The size and contexts change per-api-call.
     mutable angle::ScratchBuffer mScratchBuffer;
 };
+
+template <EntryPoint EP, typename... ArgsT>
+void Context::gatherParams(ArgsT &&... args)
+{
+    static_assert(sizeof(EntryPointParamType<EP>) <= kParamsBufferSize,
+                  "Params struct too large, please increase kParamsBufferSize.");
+
+    mSavedArgsType = &EntryPointParamType<EP>::TypeInfo;
+
+    // Skip doing any work for ParamsBase/Invalid type.
+    if (!EntryPointParamType<EP>::TypeInfo.isValid())
+    {
+        return;
+    }
+
+    EntryPointParamType<EP> *objBuffer =
+        reinterpret_cast<EntryPointParamType<EP> *>(mParamsBuffer.data());
+    EntryPointParamType<EP>::template Factory<EP>(objBuffer, this, std::forward<ArgsT>(args)...);
+}
 
 }  // namespace gl
 

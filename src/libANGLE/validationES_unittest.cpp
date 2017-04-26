@@ -111,11 +111,10 @@ TEST(ValidationESTest, DISABLED_DrawElementsWithMaxIndexGivesError)
     // Call once with maximum index, and once with an excessive index.
     GLuint indexData[] = {0, 1, static_cast<GLuint>(caps.maxElementIndex - 1),
                           3, 4, static_cast<GLuint>(caps.maxElementIndex)};
-    IndexRange indexRange;
-    EXPECT_TRUE(ValidateDrawElements(&testContext, GL_TRIANGLES, 3, GL_UNSIGNED_INT, indexData, 1,
-                                     &indexRange));
-    EXPECT_FALSE(ValidateDrawElements(&testContext, GL_TRIANGLES, 6, GL_UNSIGNED_INT, indexData, 2,
-                                      &indexRange));
+    EXPECT_TRUE(
+        ValidateDrawElementsCommon(&testContext, GL_TRIANGLES, 3, GL_UNSIGNED_INT, indexData, 1));
+    EXPECT_FALSE(
+        ValidateDrawElementsCommon(&testContext, GL_TRIANGLES, 6, GL_UNSIGNED_INT, indexData, 2));
 
     texture->release();
 

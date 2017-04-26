@@ -76,6 +76,14 @@ uint8_t *MemoryBuffer::data()
     return mData;
 }
 
+void MemoryBuffer::fill(uint8_t datum)
+{
+    if (!empty())
+    {
+        std::fill(mData, mData + mSize, datum);
+    }
+}
+
 // ScratchBuffer implementation.
 
 ScratchBuffer::ScratchBuffer(uint32_t lifetime) : mLifetime(lifetime), mResetCounter(lifetime)

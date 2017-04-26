@@ -167,8 +167,7 @@ bool ValidateDrawRangeElements(Context *context,
                                GLuint end,
                                GLsizei count,
                                GLenum type,
-                               const GLvoid *indices,
-                               IndexRange *indexRange);
+                               const GLvoid *indices);
 
 bool ValidateGetUniformuiv(Context *context, GLuint program, GLint location, GLuint* params);
 
@@ -414,6 +413,13 @@ bool ValidateGetSynciv(Context *context,
                        GLsizei bufSize,
                        GLsizei *length,
                        GLint *values);
+
+bool ValidateDrawElementsInstanced(ValidationContext *context,
+                                   GLenum mode,
+                                   GLsizei count,
+                                   GLenum type,
+                                   const GLvoid *indices,
+                                   GLsizei instanceCount);
 
 }  // namespace gl
 

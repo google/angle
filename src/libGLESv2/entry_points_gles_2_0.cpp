@@ -716,6 +716,8 @@ void GL_APIENTRY DrawArrays(GLenum mode, GLint first, GLsizei count)
     Context *context = GetValidGlobalContext();
     if (context)
     {
+        context->gatherParams<EntryPoint::DrawArrays>(mode, first, count);
+
         if (!context->skipValidation() && !ValidateDrawArrays(context, mode, first, count))
         {
             return;
@@ -733,14 +735,15 @@ void GL_APIENTRY DrawElements(GLenum mode, GLsizei count, GLenum type, const GLv
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        // TODO(jmadill): Cache index range in the context.
-        IndexRange indexRange;
-        if (!ValidateDrawElements(context, mode, count, type, indices, 1, &indexRange))
+        context->gatherParams<EntryPoint::DrawElements>(mode, count, type, indices);
+
+        if (!context->skipValidation() &&
+            !ValidateDrawElements(context, mode, count, type, indices))
         {
             return;
         }
 
-        context->drawElements(mode, count, type, indices, indexRange);
+        context->drawElements(mode, count, type, indices);
     }
 }
 
