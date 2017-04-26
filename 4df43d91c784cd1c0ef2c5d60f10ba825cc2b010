@@ -367,6 +367,30 @@
     },
     {
       "key": {
+        "uuid": "cc547b3a_7d3586c1",
+        "filename": "src/libANGLE/ContextState.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-26T17:10:09Z",
+      "side": 1,
+      "message": "Sorry, I remember agreeing with this but forget the details - maybe you can refresh my memory? Happy to do this in a follow-up.",
+      "parentUuid": "86ad34c8_16152139",
+      "range": {
+        "startLine": 151,
+        "startChar": 4,
+        "endLine": 153,
+        "endChar": 39
+      },
+      "revId": "4df43d91c784cd1c0ef2c5d60f10ba825cc2b010",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fc16370a_e3d28bee",
         "filename": "src/libANGLE/params.h",
         "patchSetId": 8
