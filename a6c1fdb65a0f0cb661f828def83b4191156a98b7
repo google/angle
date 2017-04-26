@@ -118,6 +118,24 @@
       "revId": "a6c1fdb65a0f0cb661f828def83b4191156a98b7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dfa4c542_5d4676d0",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 557,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-26T06:15:12Z",
+      "side": 1,
+      "message": "Sorry I give up this because I find it doesn\u0027t give us much improvement. It just saves a dirty bit setting (updateNeedsStreaming ) but adds another dirty bit setting (needStreamingUpdated).",
+      "parentUuid": "3b02c6aa_46223851",
+      "revId": "a6c1fdb65a0f0cb661f828def83b4191156a98b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
