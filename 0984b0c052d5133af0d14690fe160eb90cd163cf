@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3eb0e9f9_c0906584",
+        "filename": "src/libANGLE/Constants.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1144534
+      },
+      "writtenOn": "2017-04-26T10:25:54Z",
+      "side": 1,
+      "message": "This is used for defining DIRTY_BIT_SAMPLE_MASK_WORD_0 and DIRTY_BIT_SAMPLE_MASK_WORD_MAX \u003d DIRTY_BIT_SAMPLE_MASK_WORD_0 + MAX_SAMPLE_MASK_WORDS in src/libANGLE/State.h. We need a constant for max sample mask words at compile time. \n\nWhen querying GL_MAX_SAMPLE_MASK_WORDS, we return the minimum value of MAX_SAMPLE_MASK_WORDS defined here and the value returned by driver.",
+      "revId": "0984b0c052d5133af0d14690fe160eb90cd163cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
