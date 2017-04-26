@@ -119,6 +119,24 @@
     },
     {
       "key": {
+        "uuid": "8c12d69b_eba28f67",
+        "filename": "src/libANGLE/params.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-26T17:32:41Z",
+      "side": 1,
+      "message": "After offline discussion this doesn\u0027t work because HasIndexRange is used as is for all the DrawElements* entrypoints, and there would be a risk of having overloaded constructors that can\u0027t be disambiguated.",
+      "parentUuid": "650df558_fc92a4eb",
+      "revId": "172ab32c8626d2b40a169d9b324306037b93420c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b2120ea4_887560e4",
         "filename": "src/libANGLE/params.h",
         "patchSetId": 13
@@ -178,6 +196,30 @@
       "side": 1,
       "message": "Corentin, I don\u0027t totally understand your question, but I do anticipate using inheritance to solve the layering issue with Framebuffer::checkStatus. I think I\u0027ll make a HasDrawFramebuffer / etc class and make HasIndexRange inherit from that, since if we\u0027re rendering with indices we\u0027re always rendering to a Framebuffer.\n\nGeoff: Done.",
       "parentUuid": "3b211a65_0f7d3f9c",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 40
+      },
+      "revId": "172ab32c8626d2b40a169d9b324306037b93420c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82a386ba_e41b7265",
+        "filename": "src/libANGLE/params.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-26T17:32:41Z",
+      "side": 1,
+      "message": "Thanks for the explanation, I was worried the inheritance mechanism was adding complexity without being useful but it turns out it is :)",
+      "parentUuid": "887e0eda_29e879f0",
       "range": {
         "startLine": 89,
         "startChar": 0,
