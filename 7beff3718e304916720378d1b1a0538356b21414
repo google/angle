@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "82be831a_28beb560",
+        "filename": "src/common/bitset_utils_unittest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-04-26T13:38:52Z",
+      "side": 1,
+      "message": "nit: To test the code returns the correct value for operator\u003d you could do something like\n\n   (mStateBits[value] \u003d false) \u003d true;",
+      "revId": "7beff3718e304916720378d1b1a0538356b21414",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
