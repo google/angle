@@ -85,6 +85,52 @@
       "revId": "3f14a528f885e3b9eb37d6e3f0fc128946da3849",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d908b12b_c6be4b40",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 652,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-26T03:28:14Z",
+      "side": 1,
+      "message": "I prefer you put these to context.cpp and define a new function texStorage2D. We should ensure that all entry points will go though context.",
+      "range": {
+        "startLine": 645,
+        "startChar": 0,
+        "endLine": 652,
+        "endChar": 9
+      },
+      "revId": "3f14a528f885e3b9eb37d6e3f0fc128946da3849",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a5d5b45_8f47b5bc",
+        "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2259,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-04-26T03:28:14Z",
+      "side": 1,
+      "message": "Same here.",
+      "range": {
+        "startLine": 2252,
+        "startChar": 0,
+        "endLine": 2259,
+        "endChar": 9
+      },
+      "revId": "3f14a528f885e3b9eb37d6e3f0fc128946da3849",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
