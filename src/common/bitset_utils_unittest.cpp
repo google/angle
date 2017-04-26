@@ -89,4 +89,24 @@ TEST_F(BitSetIteratorTest, NonLValueBitset)
     EXPECT_EQ((mStateBits & otherBits).count(), seenBits.size());
 }
 
+// Test bit assignments.
+TEST_F(BitSetIteratorTest, BitAssignment)
+{
+    std::set<size_t> originalValues;
+    originalValues.insert(2);
+    originalValues.insert(6);
+    originalValues.insert(8);
+    originalValues.insert(35);
+
+    for (size_t value : originalValues)
+    {
+        (mStateBits[value] = false) = true;
+    }
+
+    for (size_t value : originalValues)
+    {
+        EXPECT_TRUE(mStateBits.test(value));
+    }
+}
+
 }  // anonymous namespace

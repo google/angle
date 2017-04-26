@@ -30,7 +30,11 @@ class BitSetT final
     {
       public:
         ~Reference() {}
-        Reference &operator=(bool x) { mParent->set(mBit, x); }
+        Reference &operator=(bool x)
+        {
+            mParent->set(mBit, x);
+            return *this;
+        }
         operator bool() const { return mParent->test(mBit); }
 
       private:
