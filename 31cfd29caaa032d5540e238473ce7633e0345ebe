@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "f161de3f_77d6a924",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-27T20:49:26Z",
+      "side": 1,
+      "message": "In that case, just pass in the type of the cache and do a single reinterpret_cast instead of an implicit cast to void *, and then the reinterpret cast.",
+      "parentUuid": "ce3f262e_33f38d5b",
+      "range": {
+        "startLine": 43,
+        "startChar": 19,
+        "endLine": 43,
+        "endChar": 24
+      },
+      "revId": "31cfd29caaa032d5540e238473ce7633e0345ebe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "37eaab6f_4f9258c1",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 11
@@ -225,6 +249,30 @@
       "side": 1,
       "message": "The nice thing about using a triangle is that the number of vertices and the topology is the same for both FL9 and FL10+ rendering modes. Changing it to use a quad, would add extra complexity for setting up the context (which you previously stated you\u0027d like to avoid) and require changes to the FL10+ shader. If that is something you can live with, I am happy to make the change.\n\nAlso, I am curious as to why performance issues are being seen and in what scenarios. Do you have any specific data on this? Perhaps the additional clipping this requires is expensive on some hardware or scissoring isn\u0027t being implicitly applied over the surface area. As an alternative to modifying the code to draw a quad, I can enable scissoring for all draw based clears and simply adjust the rects based on whether or not scissoring is enabled to avoid the previously described scenario from potentially occurring.",
       "parentUuid": "b458687f_e9729c0e",
+      "range": {
+        "startLine": 697,
+        "startChar": 16,
+        "endLine": 697,
+        "endChar": 35
+      },
+      "revId": "31cfd29caaa032d5540e238473ce7633e0345ebe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f5024e7_422b517e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 697,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-04-27T20:49:26Z",
+      "side": 1,
+      "message": "I\u0027ll try to find where I was seeing the discussion about full-screen tri vs quad. It was something to do with clipping, it was different on different vendors, and it might have been on OpenGL, but as long as the changes aren\u0027t too complex I\u0027d be happy if you put them back to the FL10+ shader. Thanks.",
+      "parentUuid": "adce4890_25c67833",
       "range": {
         "startLine": 697,
         "startChar": 16,
