@@ -1156,7 +1156,7 @@ TEST_P(MipmapTestES3, GenerateMipmapBaseLevelOutOfRangeImmutableTexture)
 // A native version of the WebGL2 test tex-base-level-bug.html
 TEST_P(MipmapTestES3, BaseLevelTextureBug)
 {
-    if (IsOpenGL() && IsWindows() && IsAMD())
+    if (IsOpenGL() && IsAMD())
     {
         std::cout << "Test skipped on Windows AMD OpenGL." << std::endl;
         return;
