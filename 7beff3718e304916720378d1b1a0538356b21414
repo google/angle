@@ -34,6 +34,24 @@
       "revId": "7beff3718e304916720378d1b1a0538356b21414",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df33841f_d11e9f04",
+        "filename": "src/common/bitset_utils_unittest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-27T02:10:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e0f89cf4_4f208cf6",
+      "revId": "7beff3718e304916720378d1b1a0538356b21414",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
