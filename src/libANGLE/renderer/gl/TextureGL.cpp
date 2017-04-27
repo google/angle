@@ -736,21 +736,29 @@ gl::Error TextureGL::setStorage(ContextImpl *contextImpl,
                 {
                     if (internalFormatInfo.compressed)
                     {
+                        nativegl::CompressedTexSubImageFormat compressedTexImageFormat =
+                            nativegl::GetCompressedSubTexImageFormat(mFunctions, mWorkarounds,
+                                                                     internalFormat);
+
                         GLuint dataSize = 0;
                         ANGLE_TRY_RESULT(internalFormatInfo.computeCompressedImageSize(
                                              GL_UNSIGNED_BYTE, levelSize),
                                          dataSize);
                         mFunctions->compressedTexImage2D(target, static_cast<GLint>(level),
-                                                         texStorageFormat.internalFormat,
+                                                         compressedTexImageFormat.format,
                                                          levelSize.width, levelSize.height, 0,
                                                          static_cast<GLsizei>(dataSize), nullptr);
                     }
                     else
                     {
+                        nativegl::TexImageFormat texImageFormat = nativegl::GetTexImageFormat(
+                            mFunctions, mWorkarounds, internalFormat, internalFormatInfo.format,
+                            internalFormatInfo.type);
+
                         mFunctions->texImage2D(target, static_cast<GLint>(level),
-                                               texStorageFormat.internalFormat, levelSize.width,
-                                               levelSize.height, 0, internalFormatInfo.format,
-                                               internalFormatInfo.type, nullptr);
+                                               texImageFormat.internalFormat, levelSize.width,
+                                               levelSize.height, 0, texImageFormat.format,
+                                               texImageFormat.type, nullptr);
                     }
                 }
                 else if (getTarget() == GL_TEXTURE_CUBE_MAP)
@@ -759,21 +767,29 @@ gl::Error TextureGL::setStorage(ContextImpl *contextImpl,
                     {
                         if (internalFormatInfo.compressed)
                         {
+                            nativegl::CompressedTexSubImageFormat compressedTexImageFormat =
+                                nativegl::GetCompressedSubTexImageFormat(mFunctions, mWorkarounds,
+                                                                         internalFormat);
+
                             GLuint dataSize = 0;
                             ANGLE_TRY_RESULT(internalFormatInfo.computeCompressedImageSize(
                                                  GL_UNSIGNED_BYTE, levelSize),
                                              dataSize);
                             mFunctions->compressedTexImage2D(
-                                face, static_cast<GLint>(level), texStorageFormat.internalFormat,
+                                face, static_cast<GLint>(level), compressedTexImageFormat.format,
                                 levelSize.width, levelSize.height, 0,
                                 static_cast<GLsizei>(dataSize), nullptr);
                         }
                         else
                         {
+                            nativegl::TexImageFormat texImageFormat = nativegl::GetTexImageFormat(
+                                mFunctions, mWorkarounds, internalFormat, internalFormatInfo.format,
+                                internalFormatInfo.type);
+
                             mFunctions->texImage2D(face, static_cast<GLint>(level),
-                                                   texStorageFormat.internalFormat, levelSize.width,
-                                                   levelSize.height, 0, internalFormatInfo.format,
-                                                   internalFormatInfo.type, nullptr);
+                                                   texImageFormat.internalFormat, levelSize.width,
+                                                   levelSize.height, 0, texImageFormat.format,
+                                                   texImageFormat.type, nullptr);
                         }
                     }
                 }
@@ -811,21 +827,28 @@ gl::Error TextureGL::setStorage(ContextImpl *contextImpl,
 
                 if (internalFormatInfo.compressed)
                 {
+                    nativegl::CompressedTexSubImageFormat compressedTexImageFormat =
+                        nativegl::GetCompressedSubTexImageFormat(mFunctions, mWorkarounds,
+                                                                 internalFormat);
+
                     GLuint dataSize = 0;
                     ANGLE_TRY_RESULT(
                         internalFormatInfo.computeCompressedImageSize(GL_UNSIGNED_BYTE, levelSize),
                         dataSize);
-                    mFunctions->compressedTexImage3D(target, i, texStorageFormat.internalFormat,
+                    mFunctions->compressedTexImage3D(target, i, compressedTexImageFormat.format,
                                                      levelSize.width, levelSize.height,
                                                      levelSize.depth, 0,
                                                      static_cast<GLsizei>(dataSize), nullptr);
                 }
                 else
                 {
-                    mFunctions->texImage3D(target, i, texStorageFormat.internalFormat,
+                    nativegl::TexImageFormat texImageFormat = nativegl::GetTexImageFormat(
+                        mFunctions, mWorkarounds, internalFormat, internalFormatInfo.format,
+                        internalFormatInfo.type);
+
+                    mFunctions->texImage3D(target, i, texImageFormat.internalFormat,
                                            levelSize.width, levelSize.height, levelSize.depth, 0,
-                                           internalFormatInfo.format, internalFormatInfo.type,
-                                           nullptr);
+                                           texImageFormat.format, texImageFormat.type, nullptr);
                 }
             }
         }
