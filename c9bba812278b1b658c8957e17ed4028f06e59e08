@@ -1,0 +1,118 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fe52cc2f_7e1b3d0a",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-04-27T14:39:58Z",
+      "side": 1,
+      "message": "I think in this case we\u0027d want to keep the distinction between the different opaque types. If you think about the user of the compiler, they might want to fix this error by adding a default precision statement. For this it\u0027s helpful if the compiler clearly tells them what type of default precision statement is needed.\n\nIn general I like the unification of the opaque type errors, though, good work.",
+      "revId": "c9bba812278b1b658c8957e17ed4028f06e59e08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f521bd92_73f24b4f",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 1815,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-04-27T14:39:58Z",
+      "side": 1,
+      "message": "I think these checks might fit better to singleDeclarationErrorCheck as well. Atomic uints can\u0027t be function return values, so the checks are not needed here.",
+      "revId": "c9bba812278b1b658c8957e17ed4028f06e59e08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "686d76b5_49b55ec5",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 3690,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-04-27T14:39:58Z",
+      "side": 1,
+      "message": "Nit: Version should be 3.10",
+      "range": {
+        "startLine": 3690,
+        "startChar": 16,
+        "endLine": 3690,
+        "endChar": 19
+      },
+      "revId": "c9bba812278b1b658c8957e17ed4028f06e59e08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a7d804c9_3746553e",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 3990,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-04-27T14:39:58Z",
+      "side": 1,
+      "message": "What about the EOpAssign and EOpInitialize checks that used to be here? Maybe you intended to change the check above to cover all opaque types? The condition also looks a bit odd - I suppose the intent was to do this check only on ESSL 3.10. ESSL 3.00 doesn\u0027t seem to have the same rule in section 5.9 (though that might be a spec bug).",
+      "revId": "c9bba812278b1b658c8957e17ed4028f06e59e08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "acb0e065_e019c4e4",
+        "filename": "src/tests/compiler_tests/AtomicCounter_test.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-04-27T14:39:58Z",
+      "side": 1,
+      "message": "Nit: typo. Should be \"comparison\"",
+      "range": {
+        "startLine": 131,
+        "startChar": 41,
+        "endLine": 131,
+        "endChar": 52
+      },
+      "revId": "c9bba812278b1b658c8957e17ed4028f06e59e08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e83f1a4_924886c9",
+        "filename": "src/tests/compiler_tests/AtomicCounter_test.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-04-27T14:39:58Z",
+      "side": 1,
+      "message": "Still need the test for non-uniform atomic uint declared in global scope.",
+      "revId": "c9bba812278b1b658c8957e17ed4028f06e59e08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
