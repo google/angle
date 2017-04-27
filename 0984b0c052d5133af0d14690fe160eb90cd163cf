@@ -16,6 +16,75 @@
       "revId": "0984b0c052d5133af0d14690fe160eb90cd163cf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c725e15b_c644acc4",
+        "filename": "src/libANGLE/Constants.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-27T01:41:50Z",
+      "side": 1,
+      "message": "I see SPEC says the minimum MAX SAMPLE MASK WORDS is 1, I just wonder if \u00278\u0027 is the best value in this case.",
+      "parentUuid": "3eb0e9f9_c0906584",
+      "revId": "0984b0c052d5133af0d14690fe160eb90cd163cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7abdb084_0cef02ed",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 697,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-27T01:41:50Z",
+      "side": 1,
+      "message": "Shall we follow the style above?",
+      "revId": "0984b0c052d5133af0d14690fe160eb90cd163cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "406f0b2e_9b7e6eae",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 729,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-27T01:41:50Z",
+      "side": 1,
+      "message": "Same here",
+      "revId": "0984b0c052d5133af0d14690fe160eb90cd163cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90ab400e_791a650f",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1662,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-04-27T01:41:50Z",
+      "side": 1,
+      "message": "Same here",
+      "revId": "0984b0c052d5133af0d14690fe160eb90cd163cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
