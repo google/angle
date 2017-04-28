@@ -53,8 +53,8 @@
 1662 WIN : dEQP-EGL.functional.query_surface.simple.pbuffer.other = FAIL
 1662 WIN : dEQP-EGL.functional.query_surface.set_attribute.window.other = FAIL
 1662 WIN : dEQP-EGL.functional.query_surface.set_attribute.pbuffer.other = FAIL
-1662 WIN : dEQP-EGL.functional.native_color_mapping.native_window.other_clear = FAIL
-1662 WIN : dEQP-EGL.functional.native_color_mapping.native_window.other_render = FAIL
+1662 WIN : dEQP-EGL.functional.native_color_mapping.native_window.other_clear = SKIP
+1662 WIN : dEQP-EGL.functional.native_color_mapping.native_window.other_render = SKIP
 
 ////////////////////////////////////////////////////////////////////////////////
 //

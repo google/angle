@@ -970,10 +970,7 @@ egl::ConfigSet Renderer11::generateConfigs()
         // Additional high bit depth formats added in D3D 10.0
         // https://msdn.microsoft.com/en-us/library/windows/desktop/bb173064.aspx
         colorBufferFormats.push_back(GL_RGBA16F);
-
-        // TODO(geofflang): Re-enable once client code has been updated to filter configs better and
-        // not use RGB10A2 accidentally when requesting RGBA8
-        // colorBufferFormats.push_back(GL_RGB10_A2);
+        colorBufferFormats.push_back(GL_RGB10_A2);
     }
 
     if (!mPresentPathFastEnabled)
