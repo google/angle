@@ -3659,6 +3659,49 @@ TEST_P(Texture3DTestES3, FormatRedefinitionBug)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test basic pixel unpack buffer OOB checks when uploading to a 2D or 3D texture
+TEST_P(Texture3DTestES3, BasicUnpackBufferOOB)
+{
+    // 2D tests
+    {
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_2D, tex.get());
+
+        GLBuffer pbo;
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo.get());
+
+        // Test OOB
+        glBufferData(GL_PIXEL_UNPACK_BUFFER, sizeof(GLColor) * 2 * 2 - 1, nullptr, GL_STATIC_DRAW);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        ASSERT_GL_ERROR(GL_INVALID_OPERATION);
+
+        // Test OOB
+        glBufferData(GL_PIXEL_UNPACK_BUFFER, sizeof(GLColor) * 2 * 2, nullptr, GL_STATIC_DRAW);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        ASSERT_GL_NO_ERROR();
+    }
+
+    // 3D tests
+    {
+        GLTexture tex;
+        glBindTexture(GL_TEXTURE_3D, tex.get());
+
+        GLBuffer pbo;
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pbo.get());
+
+        // Test OOB
+        glBufferData(GL_PIXEL_UNPACK_BUFFER, sizeof(GLColor) * 2 * 2 * 2 - 1, nullptr,
+                     GL_STATIC_DRAW);
+        glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 2, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        ASSERT_GL_ERROR(GL_INVALID_OPERATION);
+
+        // Test OOB
+        glBufferData(GL_PIXEL_UNPACK_BUFFER, sizeof(GLColor) * 2 * 2 * 2, nullptr, GL_STATIC_DRAW);
+        glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 2, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+        ASSERT_GL_NO_ERROR();
+    }
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 // TODO(oetuaho): Enable all below tests on OpenGL. Requires a fix for ANGLE bug 1278.
 ANGLE_INSTANTIATE_TEST(Texture2DTest,

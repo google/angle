@@ -297,8 +297,8 @@ bool ValidateES3TexImageParametersBase(Context *context,
         }
     }
 
-    if (!ValidImageDataSize(context, target, width, height, 1, actualInternalFormat, type, pixels,
-                            imageSize))
+    if (!ValidImageDataSize(context, target, width, height, depth, actualInternalFormat, type,
+                            pixels, imageSize))
     {
         return false;
     }
