@@ -1162,6 +1162,17 @@ TEST_P(MipmapTestES3, BaseLevelTextureBug)
         return;
     }
 
+#if defined(ANGLE_PLATFORM_APPLE)
+    // Regression in 10.12.4 needing workaround -- crbug.com/705865.
+    // Seems to be passing on AMD GPUs. Definitely not NVIDIA.
+    // Probably not Intel.
+    if (IsNVIDIA() || IsIntel())
+    {
+        std::cout << "Test skipped on macOS with NVIDIA and Intel GPUs." << std::endl;
+        return;
+    }
+#endif
+
     glBindTexture(GL_TEXTURE_2D, mTexture);
     glTexImage2D(GL_TEXTURE_2D, 2, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::red);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 2);
