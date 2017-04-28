@@ -56,12 +56,8 @@ class ParamTypeInfo
     const ParamTypeInfo *mParentTypeInfo;
 };
 
-#if defined(ANGLE_ENABLE_ASSERTS)
 #define ANGLE_PARAM_TYPE_INFO(NAME, BASENAME) \
     static constexpr ParamTypeInfo TypeInfo = {#NAME, &BASENAME::TypeInfo}
-#else
-#define ANGLE_PARAM_TYPE_INFO(NAME, BASENAME)
-#endif  // defined(ANGLE_ENABLE_ASSERTS)
 
 class ParamsBase : angle::NonCopyable
 {
