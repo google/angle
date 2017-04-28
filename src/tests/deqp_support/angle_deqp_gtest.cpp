@@ -61,6 +61,11 @@ const char *g_angleEGLString = "--use-angle=";
 
 const APIInfo *g_initAPI = nullptr;
 
+constexpr const char *g_deqpEGLConfigNameString = "--deqp-gl-config-name=";
+
+// Default the config to RGBA8
+const char *g_eglConfigName = "rgba8888";
+
 // Returns the default API for a platform.
 const char *GetDefaultAPIName()
 {
@@ -332,6 +337,11 @@ void dEQPTest<TestModuleIndex>::SetUpTestCase()
     std::string apiArgString = std::string(g_deqpEGLString) + targetApi;
     argv.push_back(apiArgString.c_str());
 
+    // Add config name
+    const char *targetConfigName = g_eglConfigName;
+    std::string configArgString  = std::string(g_deqpEGLConfigNameString) + targetConfigName;
+    argv.push_back(configArgString.c_str());
+
     // Init the platform.
     if (!deqp_libtester_init_platform(static_cast<int>(argv.size()), argv.data()))
     {
@@ -416,6 +426,11 @@ void HandleDisplayType(const char *displayTypeString)
     }
 }
 
+void HandleEGLConfigName(const char *configNameString)
+{
+    g_eglConfigName = configNameString;
+}
+
 void DeleteArg(int *argc, int argIndex, char **argv)
 {
     (*argc)--;
@@ -443,6 +458,12 @@ void InitTestHarness(int *argc, char **argv)
         else if (strncmp(argv[argIndex], g_angleEGLString, strlen(g_angleEGLString)) == 0)
         {
             HandleDisplayType(argv[argIndex] + strlen(g_angleEGLString));
+            DeleteArg(argc, argIndex, argv);
+        }
+        else if (strncmp(argv[argIndex], g_deqpEGLConfigNameString,
+                         strlen(g_deqpEGLConfigNameString)) == 0)
+        {
+            HandleEGLConfigName(argv[argIndex] + strlen(g_deqpEGLConfigNameString));
             DeleteArg(argc, argIndex, argv);
         }
         else

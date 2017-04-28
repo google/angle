@@ -83,6 +83,11 @@
 2222 D3D11 NVIDIA : dEQP-GLES2.functional.shaders.functions.control_flow.return_in_nested_loop_fragment = FAIL
 2222 D3D11 NVIDIA : dEQP-GLES2.functional.shaders.functions.control_flow.return_in_nested_loop_vertex = FAIL
 
+// AMD GPU vertex shader texture sampling is not precise enough when rendering to 32-bit backbuffers
+2337 D3D11 AMD : dEQP-GLES2.functional.texture.vertex.2d.wrap.* = FAIL
+2337 D3D11 AMD : dEQP-GLES2.functional.texture.vertex.2d.filtering.linear_mipmap_linear_* = FAIL
+2337 D3D11 AMD : dEQP-GLES2.functional.texture.vertex.2d.filtering.nearest_mipmap_linear_* = FAIL
+
 // Failures on the D3D11 bots that do not reproduce locally
 // TODO(jmadill): Figure out why these fail on the bots, but not locally.
 1108 D3D11 : dEQP-GLES2.functional.shaders.struct.local.dynamic_loop_struct_array_fragment = FAIL

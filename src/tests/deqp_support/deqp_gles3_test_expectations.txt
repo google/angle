@@ -86,18 +86,15 @@
 2222 D3D11 NVIDIA : dEQP-GLES3.functional.texture.mipmap.2d.min_lod.nearest_nearest = FAIL
 2222 D3D11 NVIDIA : dEQP-GLES3.functional.texture.mipmap.3d.min_lod.linear_nearest = FAIL
 2222 D3D11 NVIDIA : dEQP-GLES3.functional.texture.mipmap.3d.min_lod.nearest_nearest = FAIL
+2222 D3D11 NVIDIA : dEQP-GLES3.functional.texture.mipmap.cube.min_lod.linear_nearest = FAIL
+2222 D3D11 NVIDIA : dEQP-GLES3.functional.texture.mipmap.cube.min_lod.nearest_nearest = FAIL
 2222 LINUX NVIDIA : dEQP-GLES3.functional.fbo.completeness.samples.rbo2_rbo2_rbo0 = FAIL
 
 // Failing everywhere
 2322 DEBUG RELEASE : dEQP-GLES3.functional.shaders.metamorphic.* = FAIL
 
 // Windows and Linux failures
-1095 WIN LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_nearest_clamp = FAIL
-1095 WIN LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_nearest_repeat = FAIL
-1095 WIN LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.nearest_nearest_mirror = FAIL
-1095 WIN LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.linear_nearest_clamp = FAIL
-1095 WIN LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.linear_nearest_repeat = FAIL
-1095 WIN LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.linear_nearest_mirror = FAIL
+1095 WIN LINUX : dEQP-GLES3.functional.texture.mipmap.2d.projected.* = FAIL
 
 // Windows only failure
 1092 WIN : dEQP-GLES3.functional.shaders.texture_functions.textureoffset.sampler3d_fixed_fragment = FAIL
