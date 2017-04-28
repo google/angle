@@ -16,11 +16,9 @@
 namespace gl
 {
 
-#if defined(ANGLE_ENABLE_ASSERTS)
 // static
 constexpr ParamTypeInfo ParamsBase::TypeInfo;
 constexpr ParamTypeInfo HasIndexRange::TypeInfo;
-#endif  // defined(ANGLE_ENABLE_ASSERTS)
 
 ParamsBase::ParamsBase(Context *context, ...)
 {

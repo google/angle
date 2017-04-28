@@ -67,9 +67,7 @@ class ParamsBase : angle::NonCopyable
     template <EntryPoint EP, typename... ArgsT>
     static void Factory(EntryPointParamType<EP> *objBuffer, ArgsT... args);
 
-#if defined(ANGLE_ENABLE_ASSERTS)
     static constexpr ParamTypeInfo TypeInfo = {nullptr, nullptr};
-#endif  // defined(ANGLE_ENABLE_ASSERTS)
 };
 
 // static
