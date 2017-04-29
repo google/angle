@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7d89f676_7b73b76b",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-04-29T06:03:43Z",
+      "side": 0,
+      "message": "Opaque type can\u0027t be member of interface block. Spec 3.10 Section 4.3.9 P48.\nImage and atomic counter can\u0027t be member of structure. Spec 3.10 Section 4.1.8 P32.\n\nRemove the unnecessary  and misleading code.",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 67,
+        "endChar": 1
+      },
+      "revId": "e8b3551272a3a9748b5b3768cf1c4cbbc9a468ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
