@@ -167,6 +167,7 @@ TEST_P(StateChangeTest, FramebufferIncompleteWithTexStorage)
     if (!extensionEnabled("GL_EXT_texture_storage"))
     {
         std::cout << "Test skipped because TexStorage2DEXT not available." << std::endl;
+        return;
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);

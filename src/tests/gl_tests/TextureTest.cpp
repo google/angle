@@ -191,6 +191,12 @@ class Texture2DTest : public TexCoordDrawTest
 
         if (getClientMajorVersion() < 3)
         {
+            if (!extensionEnabled("GL_EXT_texture_storage"))
+            {
+                std::cout << "Test skipped due to missing GL_EXT_texture_storage." << std::endl;
+                return;
+            }
+
             if (!extensionEnabled("GL_OES_texture_float"))
             {
                 std::cout << "Test skipped due to missing GL_OES_texture_float." << std::endl;
@@ -258,7 +264,14 @@ class Texture2DTest : public TexCoordDrawTest
         GLenum destImageFormat = imageFormats[destImageChannels - 1];
 
         glBindTexture(GL_TEXTURE_2D, textures[0]);
-        glTexStorage2DEXT(GL_TEXTURE_2D, 1, sourceImageFormat, 2, 2);
+        if (getClientMajorVersion() >= 3)
+        {
+            glTexStorage2D(GL_TEXTURE_2D, 1, sourceImageFormat, 2, 2);
+        }
+        else
+        {
+            glTexStorage2DEXT(GL_TEXTURE_2D, 1, sourceImageFormat, 2, 2);
+        }
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 2, sourceUnsizedFormat, GL_FLOAT, imageData);
@@ -279,7 +292,14 @@ class Texture2DTest : public TexCoordDrawTest
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[0], 0);
 
         glBindTexture(GL_TEXTURE_2D, textures[1]);
-        glTexStorage2DEXT(GL_TEXTURE_2D, 1, destImageFormat, 2, 2);
+        if (getClientMajorVersion() >= 3)
+        {
+            glTexStorage2D(GL_TEXTURE_2D, 1, destImageFormat, 2, 2);
+        }
+        else
+        {
+            glTexStorage2DEXT(GL_TEXTURE_2D, 1, destImageFormat, 2, 2);
+        }
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
@@ -544,7 +564,11 @@ class TextureCubeTest : public TexCoordDrawTest
 
         glGenTextures(1, &mTextureCube);
         glBindTexture(GL_TEXTURE_CUBE_MAP, mTextureCube);
-        glTexStorage2DEXT(GL_TEXTURE_CUBE_MAP, 1, GL_RGBA8, 1, 1);
+        for (GLenum face = 0; face < 6; face++)
+        {
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, 0, GL_RGBA, 1, 1, 0, GL_RGBA,
+                         GL_UNSIGNED_BYTE, nullptr);
+        }
         EXPECT_GL_NO_ERROR();
 
         mTexture2D = create2DTexture();
@@ -1395,6 +1419,13 @@ TEST_P(TextureCubeTest, CubeMapFBO)
 // Test that glTexSubImage2D works properly when glTexStorage2DEXT has initialized the image with a default color.
 TEST_P(Texture2DTest, TexStorage)
 {
+    if (getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_texture_storage"))
+    {
+        std::cout << "Test skipped because ES3 or GL_EXT_texture_storage not available."
+                  << std::endl;
+        return;
+    }
+
     int width = getWindowWidth();
     int height = getWindowHeight();
 
@@ -1415,7 +1446,14 @@ TEST_P(Texture2DTest, TexStorage)
     // ANGLE internally uses RGBA as the DirectX format for RGB images
     // therefore glTexStorage2DEXT initializes the image to a default color to get a consistent alpha color.
     // The data is kept in a CPU-side image and the image is marked as dirty.
-    glTexStorage2DEXT(GL_TEXTURE_2D, 1, GL_RGB8, 16, 16);
+    if (getClientMajorVersion() >= 3)
+    {
+        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGB8, 16, 16);
+    }
+    else
+    {
+        glTexStorage2DEXT(GL_TEXTURE_2D, 1, GL_RGB8, 16, 16);
+    }
 
     // Initializes the color of the upper-left 8x8 pixels, leaves the other pixels untouched.
     // glTexSubImage2D should take into account that the image is dirty.

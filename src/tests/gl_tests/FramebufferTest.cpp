@@ -66,7 +66,15 @@ class FramebufferFormatsTest : public ANGLETest
     {
         glGenTextures(1, &mTexture);
         glBindTexture(GL_TEXTURE_2D, mTexture);
-        glTexStorage2DEXT(GL_TEXTURE_2D, 1, internalFormat, 1, 1);
+
+        if (getClientMajorVersion() >= 3)
+        {
+            glTexStorage2D(GL_TEXTURE_2D, 1, internalFormat, 1, 1);
+        }
+        else
+        {
+            glTexStorage2DEXT(GL_TEXTURE_2D, 1, internalFormat, 1, 1);
+        }
 
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTexture, 0);
 
@@ -180,19 +188,34 @@ class FramebufferFormatsTest : public ANGLETest
 
 TEST_P(FramebufferFormatsTest, RGBA4)
 {
+    if (getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_texture_storage"))
+    {
+        std::cout << "Test skipped due to missing ES3 or GL_EXT_texture_storage." << std::endl;
+        return;
+    }
+
     testTextureFormat(GL_RGBA4, 4, 4, 4, 4);
 }
 
 TEST_P(FramebufferFormatsTest, RGB565)
 {
+    if (getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_texture_storage"))
+    {
+        std::cout << "Test skipped due to missing ES3 or GL_EXT_texture_storage." << std::endl;
+        return;
+    }
+
     testTextureFormat(GL_RGB565, 5, 6, 5, 0);
 }
 
 TEST_P(FramebufferFormatsTest, RGB8)
 {
-    if (getClientMajorVersion() < 3 && !extensionEnabled("GL_OES_rgb8_rgba8"))
+    if (getClientMajorVersion() < 3 &&
+        (!extensionEnabled("GL_OES_rgb8_rgba8") || !extensionEnabled("GL_EXT_texture_storage")))
     {
-        std::cout << "Test skipped due to missing ES3 or GL_OES_rgb8_rgba8." << std::endl;
+        std::cout
+            << "Test skipped due to missing ES3 or GL_OES_rgb8_rgba8 and GL_EXT_texture_storage."
+            << std::endl;
         return;
     }
 
@@ -201,9 +224,12 @@ TEST_P(FramebufferFormatsTest, RGB8)
 
 TEST_P(FramebufferFormatsTest, BGRA8)
 {
-    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888"))
+    if (!extensionEnabled("GL_EXT_texture_format_BGRA8888") ||
+        (getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_texture_storage")))
     {
-        std::cout << "Test skipped due to missing GL_EXT_texture_format_BGRA8888." << std::endl;
+        std::cout << "Test skipped due to missing GL_EXT_texture_format_BGRA8888 or "
+                     "GL_EXT_texture_storage."
+                  << std::endl;
         return;
     }
 
@@ -212,9 +238,12 @@ TEST_P(FramebufferFormatsTest, BGRA8)
 
 TEST_P(FramebufferFormatsTest, RGBA8)
 {
-    if (getClientMajorVersion() < 3 && !extensionEnabled("GL_OES_rgb8_rgba8"))
+    if (getClientMajorVersion() < 3 &&
+        (!extensionEnabled("GL_OES_rgb8_rgba8") || !extensionEnabled("GL_EXT_texture_storage")))
     {
-        std::cout << "Test skipped due to missing ES3 or GL_OES_rgb8_rgba8." << std::endl;
+        std::cout
+            << "Test skipped due to missing ES3 or GL_OES_rgb8_rgba8 and GL_EXT_texture_storage."
+            << std::endl;
         return;
     }
 

@@ -119,15 +119,16 @@ class BlitFramebufferANGLETest : public ANGLETest
             mOriginalFBO = (GLuint)originalFBO;
         }
 
-        GLenum format = GL_BGRA8_EXT;
-        
+        GLenum format = GL_BGRA_EXT;
+
         glGenFramebuffers(1, &mUserFBO);
         glBindFramebuffer(GL_FRAMEBUFFER, mUserFBO);
         glGenTextures(1, &mUserColorBuffer);
         glGenRenderbuffers(1, &mUserDepthStencilBuffer);
         glBindTexture(GL_TEXTURE_2D, mUserColorBuffer);
-        glTexStorage2DEXT(GL_TEXTURE_2D, 1, format, getWindowWidth(), getWindowHeight());
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mUserColorBuffer, 0);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, getWindowWidth(), getWindowHeight(), 0, format,
+                     GL_UNSIGNED_BYTE, nullptr);
         glBindRenderbuffer(GL_RENDERBUFFER, mUserDepthStencilBuffer);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8_OES, getWindowWidth(), getWindowHeight());
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, mUserDepthStencilBuffer);
@@ -141,7 +142,8 @@ class BlitFramebufferANGLETest : public ANGLETest
         glGenTextures(1, &mSmallColorBuffer);
         glGenRenderbuffers(1, &mSmallDepthStencilBuffer);
         glBindTexture(GL_TEXTURE_2D, mSmallColorBuffer);
-        glTexStorage2DEXT(GL_TEXTURE_2D, 1, format, getWindowWidth() / 2, getWindowHeight() / 2);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, getWindowWidth() / 2, getWindowHeight() / 2, 0,
+                     format, GL_UNSIGNED_BYTE, nullptr);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mSmallColorBuffer, 0);
         glBindRenderbuffer(GL_RENDERBUFFER, mSmallDepthStencilBuffer);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8_OES, getWindowWidth() / 2, getWindowHeight() / 2);
@@ -155,7 +157,8 @@ class BlitFramebufferANGLETest : public ANGLETest
         glBindFramebuffer(GL_FRAMEBUFFER, mColorOnlyFBO);
         glGenTextures(1, &mColorOnlyColorBuffer);
         glBindTexture(GL_TEXTURE_2D, mColorOnlyColorBuffer);
-        glTexStorage2DEXT(GL_TEXTURE_2D, 1, format, getWindowWidth(), getWindowHeight());
+        glTexImage2D(GL_TEXTURE_2D, 0, format, getWindowWidth(), getWindowHeight(), 0, format,
+                     GL_UNSIGNED_BYTE, nullptr);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mColorOnlyColorBuffer, 0);
 
         ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
@@ -165,7 +168,8 @@ class BlitFramebufferANGLETest : public ANGLETest
         glBindFramebuffer(GL_FRAMEBUFFER, mDiffFormatFBO);
         glGenTextures(1, &mDiffFormatColorBuffer);
         glBindTexture(GL_TEXTURE_2D, mDiffFormatColorBuffer);
-        glTexStorage2DEXT(GL_TEXTURE_2D, 1, GL_RGB565, getWindowWidth(), getWindowHeight());
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, getWindowWidth(), getWindowHeight(), 0, GL_RGB,
+                     GL_UNSIGNED_SHORT_5_6_5, nullptr);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mDiffFormatColorBuffer, 0);
 
         ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
@@ -175,7 +179,8 @@ class BlitFramebufferANGLETest : public ANGLETest
         glBindFramebuffer(GL_FRAMEBUFFER, mDiffSizeFBO);
         glGenTextures(1, &mDiffSizeColorBuffer);
         glBindTexture(GL_TEXTURE_2D, mDiffSizeColorBuffer);
-        glTexStorage2DEXT(GL_TEXTURE_2D, 1, format, getWindowWidth()*2, getWindowHeight()*2);
+        glTexImage2D(GL_TEXTURE_2D, 0, format, getWindowWidth() * 2, getWindowHeight() * 2, 0,
+                     format, GL_UNSIGNED_BYTE, nullptr);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mDiffSizeColorBuffer, 0);
 
         ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
@@ -188,10 +193,12 @@ class BlitFramebufferANGLETest : public ANGLETest
             glGenTextures(1, &mMRTColorBuffer0);
             glGenTextures(1, &mMRTColorBuffer1);
             glBindTexture(GL_TEXTURE_2D, mMRTColorBuffer0);
-            glTexStorage2DEXT(GL_TEXTURE_2D, 1, format, getWindowWidth(), getWindowHeight());
+            glTexImage2D(GL_TEXTURE_2D, 0, format, getWindowWidth(), getWindowHeight(), 0, format,
+                         GL_UNSIGNED_BYTE, nullptr);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, mMRTColorBuffer0, 0);
             glBindTexture(GL_TEXTURE_2D, mMRTColorBuffer1);
-            glTexStorage2DEXT(GL_TEXTURE_2D, 1, format, getWindowWidth(), getWindowHeight());
+            glTexImage2D(GL_TEXTURE_2D, 0, format, getWindowWidth(), getWindowHeight(), 0, format,
+                         GL_UNSIGNED_BYTE, nullptr);
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1_EXT, GL_TEXTURE_2D, mMRTColorBuffer1, 0);
 
             ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
@@ -203,7 +210,8 @@ class BlitFramebufferANGLETest : public ANGLETest
             // Test blit between RGBA and multisampled BGRA
             glGenTextures(1, &mRGBAColorbuffer);
             glBindTexture(GL_TEXTURE_2D, mRGBAColorbuffer);
-            glTexStorage2DEXT(GL_TEXTURE_2D, 1, GL_RGBA8_OES, getWindowWidth(), getWindowHeight());
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, getWindowWidth(), getWindowHeight(), 0, GL_RGBA,
+                         GL_UNSIGNED_BYTE, nullptr);
 
             glGenFramebuffers(1, &mRGBAFBO);
             glBindFramebuffer(GL_FRAMEBUFFER, mRGBAFBO);
