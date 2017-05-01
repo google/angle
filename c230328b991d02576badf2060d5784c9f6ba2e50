@@ -22,6 +22,30 @@
       "revId": "c230328b991d02576badf2060d5784c9f6ba2e50",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6211a9bf_8b4d7f41",
+        "filename": "src/tests/gl_tests/MipmapTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1167,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2017-05-01T17:24:27Z",
+      "side": 1,
+      "message": "Thanks, fair point. I thought that suppression maybe only applied to Windows. No output seen in e.g. https://luci-logdog.appspot.com/v/?s\u003dchromium%2Fbb%2Fchromium.gpu.fyi%2FMac_Experimental_Retina_Release__AMD_%2F692%2F%2B%2Frecipes%2Fsteps%2Fangle_end2end_tests%2F0%2Fstdout , but maybe passing tests\u0027 output is being suppressed.",
+      "parentUuid": "f075537b_8bdac4a7",
+      "range": {
+        "startLine": 1167,
+        "startChar": 7,
+        "endLine": 1167,
+        "endChar": 39
+      },
+      "revId": "c230328b991d02576badf2060d5784c9f6ba2e50",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
