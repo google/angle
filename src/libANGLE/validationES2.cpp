@@ -5554,10 +5554,13 @@ bool ValidateGenerateMipmap(Context *context, GLenum target)
         return false;
     }
 
-    // GL_EXT_sRGB does not support mipmap generation on sRGB textures
-    if (context->getClientMajorVersion() == 2 && format.info->colorEncoding == GL_SRGB)
+    // ES3 and WebGL grant mipmap generation for sRGB textures but GL_EXT_sRGB does not.
+    bool supportsSRGBMipmapGeneration =
+        context->getClientVersion() >= ES_3_0 || context->getExtensions().webglCompatibility;
+    if (!supportsSRGBMipmapGeneration && format.info->colorEncoding == GL_SRGB)
     {
-        context->handleError(Error(GL_INVALID_OPERATION));
+        context->handleError(
+            Error(GL_INVALID_OPERATION, "Mipmap generation of sRGB textures is not allowed."));
         return false;
     }
 
