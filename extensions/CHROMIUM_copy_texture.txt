@@ -183,7 +183,7 @@ Additions to the OpenGL ES 2.0 Specification
         RGB8
         RGBA8
         BGRA_EXT
-        BGRA8_EXT,
+        BGRA8_EXT
         SRGB_EXT
         SRGB_ALPHA_EXT
         R8
@@ -195,7 +195,6 @@ Additions to the OpenGL ES 2.0 Specification
         RGB8UI
         SRGB8_ALPHA8
         RGB5_A1
-        RGBA4
         RGBA4
         RGBA8UI
         RGB9_E5
@@ -225,7 +224,7 @@ Additions to the OpenGL ES 2.0 Specification
         BGRA_EXT
         BGRA8_EXT
         RGB_YCBCR_420V_CHROMIUM
-        RGB_YCBCR_422_CHROMIUM.
+        RGB_YCBCR_422_CHROMIUM
 
 Dependencies on ARB_texture_rg
 

@@ -617,6 +617,21 @@ bool IsTriangleMode(GLenum drawMode)
     return false;
 }
 
+bool IsIntegerFormat(GLenum unsizedFormat)
+{
+    switch (unsizedFormat)
+    {
+        case GL_RGBA_INTEGER:
+        case GL_RGB_INTEGER:
+        case GL_RG_INTEGER:
+        case GL_RED_INTEGER:
+            return true;
+
+        default:
+            return false;
+    }
+}
+
 // [OpenGL ES SL 3.00.4] Section 11 p. 120
 // Vertex Outs/Fragment Ins packing priorities
 int VariableSortOrder(GLenum type)

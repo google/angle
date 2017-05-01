@@ -75,7 +75,10 @@ class BlitGL : angle::NonCopyable
                              bool unpackUnmultiplyAlpha);
 
     gl::Error copyTexSubImage(TextureGL *source,
+                              size_t sourceLevel,
                               TextureGL *dest,
+                              GLenum destTarget,
+                              size_t destLevel,
                               const gl::Rectangle &sourceArea,
                               const gl::Offset &destOffset);
 

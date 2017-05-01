@@ -3280,9 +3280,10 @@ gl::Error Renderer11::copyImageInternal(const gl::Framebuffer *framebuffer,
 
     // Use nearest filtering because source and destination are the same size for the direct copy.
     // Convert to the unsized format before calling copyTexture.
-    ANGLE_TRY(mBlit->copyTexture(source, sourceArea, sourceSize, dest, destArea, destSize, nullptr,
-                                 gl::GetUnsizedFormat(destFormat), GL_NEAREST, false, false,
-                                 false));
+    GLenum sourceFormat = colorAttachment->getFormat().info->format;
+    ANGLE_TRY(mBlit->copyTexture(source, sourceArea, sourceSize, sourceFormat, dest, destArea,
+                                 destSize, nullptr, gl::GetUnsizedFormat(destFormat), GL_NEAREST,
+                                 false, false, false));
 
     return gl::NoError();
 }
@@ -3392,15 +3393,15 @@ gl::Error Renderer11::copyTexture(const gl::Texture *source,
     TextureStorage *sourceStorage = nullptr;
     ANGLE_TRY(const_cast<TextureD3D *>(sourceD3D)->getNativeTexture(&sourceStorage));
 
-    ASSERT(destTarget == GL_TEXTURE_2D);
     TextureStorage11_2D *sourceStorage11 = GetAs<TextureStorage11_2D>(sourceStorage);
     ASSERT(sourceStorage11);
 
-    TextureStorage11_2D *destStorage11 = GetAs<TextureStorage11_2D>(storage);
+    TextureStorage11 *destStorage11 = GetAs<TextureStorage11>(storage);
     ASSERT(destStorage11);
 
     // Check for fast path where a CopySubresourceRegion can be used.
     if (unpackPremultiplyAlpha == unpackUnmultiplyAlpha && !unpackFlipY &&
+        source->getFormat(GL_TEXTURE_2D, sourceLevel).info->format == destFormat &&
         sourceStorage11->getFormatSet().texFormat == destStorage11->getFormatSet().texFormat)
     {
         ID3D11Resource *sourceResource = nullptr;
@@ -3412,7 +3413,7 @@ gl::Error Renderer11::copyTexture(const gl::Texture *source,
         ID3D11Resource *destResource = nullptr;
         ANGLE_TRY(destStorage11->getResource(&destResource));
 
-        gl::ImageIndex destIndex = gl::ImageIndex::Make2D(destLevel);
+        gl::ImageIndex destIndex = gl::ImageIndex::MakeGeneric(destTarget, destLevel);
         UINT destSubresource     = destStorage11->getSubresourceIndex(destIndex);
 
         D3D11_BOX sourceBox{
@@ -3433,7 +3434,7 @@ gl::Error Renderer11::copyTexture(const gl::Texture *source,
         d3d11::SharedSRV sourceSRV;
         ANGLE_TRY(sourceStorage11->getSRVLevels(sourceLevel, sourceLevel, &sourceSRV));
 
-        gl::ImageIndex destIndex             = gl::ImageIndex::Make2D(destLevel);
+        gl::ImageIndex destIndex             = gl::ImageIndex::MakeGeneric(destTarget, destLevel);
         RenderTargetD3D *destRenderTargetD3D = nullptr;
         ANGLE_TRY(destStorage11->getRenderTarget(destIndex, &destRenderTargetD3D));
 
@@ -3448,7 +3449,7 @@ gl::Error Renderer11::copyTexture(const gl::Texture *source,
             static_cast<int>(source->getHeight(source->getTarget(), sourceLevel)), 1);
         if (unpackFlipY)
         {
-            sourceArea.y      = sourceSize.height - sourceRect.y;
+            sourceArea.y += sourceArea.height;
             sourceArea.height = -sourceArea.height;
         }
 
@@ -3457,9 +3458,10 @@ gl::Error Renderer11::copyTexture(const gl::Texture *source,
 
         // Use nearest filtering because source and destination are the same size for the direct
         // copy
-        ANGLE_TRY(mBlit->copyTexture(sourceSRV, sourceArea, sourceSize, destRTV, destArea, destSize,
-                                     nullptr, destFormat, GL_NEAREST, false, unpackPremultiplyAlpha,
-                                     unpackUnmultiplyAlpha));
+        GLenum sourceFormat = source->getFormat(GL_TEXTURE_2D, sourceLevel).info->format;
+        ANGLE_TRY(mBlit->copyTexture(sourceSRV, sourceArea, sourceSize, sourceFormat, destRTV,
+                                     destArea, destSize, nullptr, destFormat, GL_NEAREST, false,
+                                     unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
     }
 
     destStorage11->markLevelDirty(destLevel);
@@ -4489,9 +4491,9 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRectIn,
             // We don't currently support masking off any other channel than alpha
             bool maskOffAlpha = colorMaskingNeeded && colorMask.alpha;
             ASSERT(readSRV.valid());
-            ANGLE_TRY(mBlit->copyTexture(readSRV, readArea, readSize, drawRTV, drawArea, drawSize,
-                                         scissor, destFormatInfo.format, filter, maskOffAlpha,
-                                         false, false));
+            ANGLE_TRY(mBlit->copyTexture(readSRV, readArea, readSize, srcFormatInfo.format, drawRTV,
+                                         drawArea, drawSize, scissor, destFormatInfo.format, filter,
+                                         maskOffAlpha, false, false));
         }
     }
 

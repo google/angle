@@ -2579,17 +2579,15 @@ gl::Error Renderer9::copyTexture(const gl::Texture *source,
                                  bool unpackPremultiplyAlpha,
                                  bool unpackUnmultiplyAlpha)
 {
-    ASSERT(destTarget == GL_TEXTURE_2D);
-
     RECT rect;
     rect.left   = sourceRect.x;
     rect.top    = sourceRect.y;
     rect.right  = sourceRect.x + sourceRect.width;
     rect.bottom = sourceRect.y + sourceRect.height;
 
-    return mBlit->copyTexture2D(source, sourceLevel, rect, destFormat, destOffset, storage,
-                                destLevel, unpackFlipY, unpackPremultiplyAlpha,
-                                unpackUnmultiplyAlpha);
+    return mBlit->copyTexture(source, sourceLevel, rect, destFormat, destOffset, storage,
+                              destTarget, destLevel, unpackFlipY, unpackPremultiplyAlpha,
+                              unpackUnmultiplyAlpha);
 }
 
 gl::Error Renderer9::copyCompressedTexture(const gl::Texture *source,

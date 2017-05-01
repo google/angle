@@ -45,16 +45,17 @@ class Blit9 : angle::NonCopyable
                        TextureStorage *storage,
                        GLenum target,
                        GLint level);
-    gl::Error copyTexture2D(const gl::Texture *source,
-                            GLint sourceLevel,
-                            const RECT &sourceRect,
-                            GLenum destFormat,
-                            const gl::Offset &destOffset,
-                            TextureStorage *storage,
-                            GLint destLevel,
-                            bool flipY,
-                            bool premultiplyAlpha,
-                            bool unmultiplyAlpha);
+    gl::Error copyTexture(const gl::Texture *source,
+                          GLint sourceLevel,
+                          const RECT &sourceRect,
+                          GLenum destFormat,
+                          const gl::Offset &destOffset,
+                          TextureStorage *storage,
+                          GLenum destTarget,
+                          GLint destLevel,
+                          bool flipY,
+                          bool premultiplyAlpha,
+                          bool unmultiplyAlpha);
 
     // 2x2 box filter sample from source to dest.
     // Requires that source is RGB(A) and dest has the same format as source.

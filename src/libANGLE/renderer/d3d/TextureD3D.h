@@ -337,6 +337,27 @@ class TextureD3D_Cube : public TextureD3D
                            const gl::Rectangle &sourceArea,
                            const gl::Framebuffer *source) override;
 
+    gl::Error copyTexture(ContextImpl *contextImpl,
+                          GLenum target,
+                          size_t level,
+                          GLenum internalFormat,
+                          GLenum type,
+                          size_t sourceLevel,
+                          bool unpackFlipY,
+                          bool unpackPremultiplyAlpha,
+                          bool unpackUnmultiplyAlpha,
+                          const gl::Texture *source) override;
+    gl::Error copySubTexture(ContextImpl *contextImpl,
+                             GLenum target,
+                             size_t level,
+                             const gl::Offset &destOffset,
+                             size_t sourceLevel,
+                             const gl::Rectangle &sourceArea,
+                             bool unpackFlipY,
+                             bool unpackPremultiplyAlpha,
+                             bool unpackUnmultiplyAlpha,
+                             const gl::Texture *source) override;
+
     gl::Error setStorage(ContextImpl *contextImpl,
                          GLenum target,
                          size_t levels,

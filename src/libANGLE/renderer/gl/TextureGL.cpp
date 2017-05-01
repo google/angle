@@ -638,7 +638,7 @@ gl::Error TextureGL::copyTexture(ContextImpl *contextImpl,
 
     const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat, type);
     reserveTexImageToBeFilled(getTarget(), 0, internalFormatInfo.sizedInternalFormat,
-                              sourceImageDesc.size, internalFormat, type);
+                              sourceImageDesc.size, internalFormatInfo.format, type);
 
     return copySubTextureHelper(target, level, gl::Offset(0, 0, 0), sourceLevel, sourceArea,
                                 internalFormat, unpackFlipY, unpackPremultiplyAlpha,
@@ -683,11 +683,12 @@ gl::Error TextureGL::copySubTextureHelper(GLenum target,
         (sourceFormat == destFormat && sourceFormat != GL_BGRA_EXT) ||
         (sourceFormat == GL_RGBA && destFormat == GL_RGB);
 
-    if (source->getTarget() == GL_TEXTURE_2D && getTarget() == GL_TEXTURE_2D && !unpackFlipY &&
+    if (source->getTarget() == GL_TEXTURE_2D && !unpackFlipY &&
         unpackPremultiplyAlpha == unpackUnmultiplyAlpha && !needsLumaWorkaround &&
         sourceFormatContainSupersetOfDestFormat)
     {
-        return mBlitter->copyTexSubImage(sourceGL, this, sourceArea, destOffset);
+        return mBlitter->copyTexSubImage(sourceGL, sourceLevel, this, target, level, sourceArea,
+                                         destOffset);
     }
 
     // We can't use copyTexSubImage, do a manual copy

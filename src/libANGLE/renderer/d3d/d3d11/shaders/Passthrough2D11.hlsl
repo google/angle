@@ -27,23 +27,6 @@ float4 PS_PassthroughRGBA2DMS(in float4 inPosition : SV_POSITION, in float2 inTe
     return TextureF_MS.sample[inSampleIndex][inTexCoord].rgba;
 }
 
-float4 PS_PassthroughRGBAPremultiply2D(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
-{
-    float4 color = TextureF.Sample(Sampler, inTexCoord).rgba;
-    color.rgb *= color.a;
-    return color;
-}
-
-float4 PS_PassthroughRGBAUnmultiply2D(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
-{
-    float4 color = TextureF.Sample(Sampler, inTexCoord).rgba;
-    if (color.a > 0.0f)
-    {
-        color.rgb /= color.a;
-    }
-    return color;
-}
-
 uint4 PS_PassthroughRGBA2DUI(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
 {
     uint2 size;
@@ -63,23 +46,6 @@ int4 PS_PassthroughRGBA2DI(in float4 inPosition : SV_POSITION, in float2 inTexCo
 float4 PS_PassthroughRGB2D(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
 {
     return float4(TextureF.Sample(Sampler, inTexCoord).rgb, 1.0f);
-}
-
-float4 PS_PassthroughRGBPremultiply2D(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
-{
-    float4 color = TextureF.Sample(Sampler, inTexCoord).rgba;
-    color.rgb *= color.a;
-    return color;
-}
-
-float4 PS_PassthroughRGBUnmultiply2D(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
-{
-    float4 color = TextureF.Sample(Sampler, inTexCoord).rgba;
-    if (color.a > 0.0f)
-    {
-        color.rgb /= color.a;
-    }
-    return color;
 }
 
 uint4 PS_PassthroughRGB2DUI(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0

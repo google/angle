@@ -64,6 +64,7 @@ IndexRange ComputeIndexRange(GLenum indexType,
 GLuint GetPrimitiveRestartIndex(GLenum indexType);
 
 bool IsTriangleMode(GLenum drawMode);
+bool IsIntegerFormat(GLenum unsizedFormat);
 
 // [OpenGL ES 3.0.2] Section 2.3.1 page 14
 // Data Conversion For State-Setting Commands

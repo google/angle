@@ -206,22 +206,73 @@ bool ValidateInstancedPathParameters(gl::Context *context,
     return true;
 }
 
-bool IsValidCopyTextureFormat(Context *context, GLenum internalFormat)
+bool IsValidCopyTextureSourceInternalFormatEnum(GLenum internalFormat)
 {
+    // Table 1.1 from the CHROMIUM_copy_texture spec
     switch (GetUnsizedFormat(internalFormat))
     {
+        case GL_RED:
         case GL_ALPHA:
         case GL_LUMINANCE:
         case GL_LUMINANCE_ALPHA:
         case GL_RGB:
         case GL_RGBA:
+        case GL_RGB8:
+        case GL_RGBA8:
+        case GL_BGRA_EXT:
+        case GL_BGRA8_EXT:
             return true;
 
-        case GL_RED:
-            return context->getClientMajorVersion() >= 3 || context->getExtensions().textureRG;
+        default:
+            return false;
+    }
+}
 
+bool IsValidCopySubTextureSourceInternalFormat(GLenum internalFormat)
+{
+    return IsValidCopyTextureSourceInternalFormatEnum(internalFormat);
+}
+
+bool IsValidCopySubTextureDestionationInternalFormat(GLenum internalFormat)
+{
+    return IsValidCopyTextureSourceInternalFormatEnum(internalFormat);
+}
+
+bool IsValidCopyTextureDestinationInternalFormatEnum(GLint internalFormat)
+{
+    // Table 1.0 from the CHROMIUM_copy_texture spec
+    switch (internalFormat)
+    {
+        case GL_RGB:
+        case GL_RGBA:
+        case GL_RGB8:
+        case GL_RGBA8:
         case GL_BGRA_EXT:
-            return context->getExtensions().textureFormatBGRA8888;
+        case GL_BGRA8_EXT:
+        case GL_SRGB_EXT:
+        case GL_SRGB_ALPHA_EXT:
+        case GL_R8:
+        case GL_R8UI:
+        case GL_RG8:
+        case GL_RG8UI:
+        case GL_SRGB8:
+        case GL_RGB565:
+        case GL_RGB8UI:
+        case GL_SRGB8_ALPHA8:
+        case GL_RGB5_A1:
+        case GL_RGBA4:
+        case GL_RGBA8UI:
+        case GL_RGB9_E5:
+        case GL_R16F:
+        case GL_R32F:
+        case GL_RG16F:
+        case GL_RG32F:
+        case GL_RGB16F:
+        case GL_RGB32F:
+        case GL_RGBA16F:
+        case GL_RGBA32F:
+        case GL_R11F_G11F_B10F:
+            return true;
 
         default:
             return false;
@@ -230,37 +281,34 @@ bool IsValidCopyTextureFormat(Context *context, GLenum internalFormat)
 
 bool IsValidCopyTextureDestinationFormatType(Context *context, GLint internalFormat, GLenum type)
 {
-    switch (internalFormat)
+    if (!IsValidCopyTextureDestinationInternalFormatEnum(internalFormat))
     {
-        case GL_RGB:
-        case GL_RGBA:
-            break;
-
-        case GL_BGRA_EXT:
-            return context->getExtensions().textureFormatBGRA8888;
-
-        default:
-            return false;
+        return false;
     }
 
-    switch (type)
+    const InternalFormat &internalFormatInfo = GetInternalFormatInfo(internalFormat, type);
+    if (!internalFormatInfo.textureSupport(context->getClientVersion(), context->getExtensions()))
     {
-        case GL_UNSIGNED_BYTE:
-            break;
-
-        default:
-            return false;
+        return false;
     }
 
     return true;
 }
 
-bool IsValidCopyTextureDestinationTarget(Context *context, GLenum target)
+bool IsValidCopyTextureDestinationTarget(Context *context, GLenum textureType, GLenum target)
 {
     switch (target)
     {
         case GL_TEXTURE_2D:
-            return true;
+            return textureType == GL_TEXTURE_2D;
+
+        case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
+        case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
+        case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
+        case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
+        case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
+        case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
+            return textureType == GL_TEXTURE_CUBE_MAP;
 
         // TODO(geofflang): accept GL_TEXTURE_RECTANGLE_ARB if the texture_rectangle extension is
         // supported
@@ -272,15 +320,72 @@ bool IsValidCopyTextureDestinationTarget(Context *context, GLenum target)
 
 bool IsValidCopyTextureSourceTarget(Context *context, GLenum target)
 {
-    if (IsValidCopyTextureDestinationTarget(context, target))
+    switch (target)
     {
-        return true;
+        case GL_TEXTURE_2D:
+            return true;
+
+        // TODO(geofflang): accept GL_TEXTURE_RECTANGLE_ARB if the texture_rectangle extension is
+        // supported
+
+        // TODO(geofflang): accept GL_TEXTURE_EXTERNAL_OES if the texture_external extension is
+        // supported
+
+        default:
+            return false;
+    }
+}
+
+bool IsValidCopyTextureSourceLevel(Context *context, GLenum target, GLint level)
+{
+    if (level < 0)
+    {
+        return false;
     }
 
-    // TODO(geofflang): accept GL_TEXTURE_EXTERNAL_OES if the texture_external extension is
-    // supported
+    if (level > 0 && context->getClientVersion() < ES_3_0)
+    {
+        return false;
+    }
 
-    return false;
+    return true;
+}
+
+bool IsValidCopyTextureDestinationLevel(Context *context,
+                                        GLenum target,
+                                        GLint level,
+                                        GLsizei width,
+                                        GLsizei height)
+{
+    if (level < 0)
+    {
+        return false;
+    }
+
+    if (level > 0 && context->getClientVersion() < ES_3_0)
+    {
+        return false;
+    }
+
+    const Caps &caps = context->getCaps();
+    if (target == GL_TEXTURE_2D)
+    {
+        if (static_cast<GLuint>(width) > (caps.max2DTextureSize >> level) ||
+            static_cast<GLuint>(height) > (caps.max2DTextureSize >> level))
+        {
+            return false;
+        }
+    }
+    else if (IsCubeMapTextureTarget(target))
+    {
+        if (static_cast<GLuint>(width) > (caps.maxCubeMapTextureSize >> level) ||
+            static_cast<GLuint>(height) > (caps.maxCubeMapTextureSize >> level))
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 bool IsValidStencilFunc(GLenum func)
@@ -3386,7 +3491,7 @@ bool ValidateCopyTextureCHROMIUM(Context *context,
         return false;
     }
 
-    const gl::Texture *source = context->getTexture(sourceId);
+    const Texture *source = context->getTexture(sourceId);
     if (source == nullptr)
     {
         context->handleError(
@@ -3402,22 +3507,31 @@ bool ValidateCopyTextureCHROMIUM(Context *context,
 
     GLenum sourceTarget = source->getTarget();
     ASSERT(sourceTarget != GL_TEXTURE_CUBE_MAP);
-    if (source->getWidth(sourceTarget, 0) == 0 || source->getHeight(sourceTarget, 0) == 0)
+
+    if (!IsValidCopyTextureSourceLevel(context, source->getTarget(), sourceLevel))
     {
-        context->handleError(
-            Error(GL_INVALID_VALUE, "Level 0 of the source texture must be defined."));
+        context->handleError(Error(GL_INVALID_VALUE, "Source texture level is not valid."));
         return false;
     }
 
-    const gl::InternalFormat &sourceFormat = *source->getFormat(sourceTarget, 0).info;
-    if (!IsValidCopyTextureFormat(context, sourceFormat.format))
+    GLsizei sourceWidth  = static_cast<GLsizei>(source->getWidth(sourceTarget, sourceLevel));
+    GLsizei sourceHeight = static_cast<GLsizei>(source->getHeight(sourceTarget, sourceLevel));
+    if (sourceWidth == 0 || sourceHeight == 0)
+    {
+        context->handleError(
+            Error(GL_INVALID_VALUE, "The source level of the source texture must be defined."));
+        return false;
+    }
+
+    const InternalFormat &sourceFormat = *source->getFormat(sourceTarget, sourceLevel).info;
+    if (!IsValidCopyTextureSourceInternalFormatEnum(sourceFormat.internalFormat))
     {
         context->handleError(
             Error(GL_INVALID_OPERATION, "Source texture internal format is invalid."));
         return false;
     }
 
-    const gl::Texture *dest = context->getTexture(destId);
+    const Texture *dest = context->getTexture(destId);
     if (dest == nullptr)
     {
         context->handleError(
@@ -3425,9 +3539,16 @@ bool ValidateCopyTextureCHROMIUM(Context *context,
         return false;
     }
 
-    if (!IsValidCopyTextureDestinationTarget(context, dest->getTarget()))
+    if (!IsValidCopyTextureDestinationTarget(context, dest->getTarget(), destTarget))
     {
         context->handleError(Error(GL_INVALID_VALUE, "Destination texture a valid texture type."));
+        return false;
+    }
+
+    if (!IsValidCopyTextureDestinationLevel(context, destTarget, destLevel, sourceWidth,
+                                            sourceHeight))
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Destination texture level is not valid."));
         return false;
     }
 
@@ -3436,6 +3557,13 @@ bool ValidateCopyTextureCHROMIUM(Context *context,
         context->handleError(
             Error(GL_INVALID_OPERATION,
                   "Destination internal format and type combination is not valid."));
+        return false;
+    }
+
+    if (IsCubeMapTextureTarget(destTarget) && sourceWidth != sourceHeight)
+    {
+        context->handleError(Error(
+            GL_INVALID_VALUE, "Destination width and height must be equal for cube map textures."));
         return false;
     }
 
@@ -3471,7 +3599,7 @@ bool ValidateCopySubTextureCHROMIUM(Context *context,
         return false;
     }
 
-    const gl::Texture *source = context->getTexture(sourceId);
+    const Texture *source = context->getTexture(sourceId);
     if (source == nullptr)
     {
         context->handleError(
@@ -3487,10 +3615,18 @@ bool ValidateCopySubTextureCHROMIUM(Context *context,
 
     GLenum sourceTarget = source->getTarget();
     ASSERT(sourceTarget != GL_TEXTURE_CUBE_MAP);
-    if (source->getWidth(sourceTarget, 0) == 0 || source->getHeight(sourceTarget, 0) == 0)
+
+    if (!IsValidCopyTextureSourceLevel(context, source->getTarget(), sourceLevel))
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Source texture level is not valid."));
+        return false;
+    }
+
+    if (source->getWidth(sourceTarget, sourceLevel) == 0 ||
+        source->getHeight(sourceTarget, sourceLevel) == 0)
     {
         context->handleError(
-            Error(GL_INVALID_VALUE, "Level 0 of the source texture must be defined."));
+            Error(GL_INVALID_VALUE, "The source level of the source texture must be defined."));
         return false;
     }
 
@@ -3506,23 +3642,23 @@ bool ValidateCopySubTextureCHROMIUM(Context *context,
         return false;
     }
 
-    if (static_cast<size_t>(x + width) > source->getWidth(sourceTarget, 0) ||
-        static_cast<size_t>(y + height) > source->getHeight(sourceTarget, 0))
+    if (static_cast<size_t>(x + width) > source->getWidth(sourceTarget, sourceLevel) ||
+        static_cast<size_t>(y + height) > source->getHeight(sourceTarget, sourceLevel))
     {
         context->handleError(
             Error(GL_INVALID_VALUE, "Source texture not large enough to copy from."));
         return false;
     }
 
-    const gl::Format &sourceFormat = source->getFormat(sourceTarget, 0);
-    if (!IsValidCopyTextureFormat(context, sourceFormat.info->internalFormat))
+    const Format &sourceFormat = source->getFormat(sourceTarget, sourceLevel);
+    if (!IsValidCopySubTextureSourceInternalFormat(sourceFormat.info->internalFormat))
     {
         context->handleError(
             Error(GL_INVALID_OPERATION, "Source texture internal format is invalid."));
         return false;
     }
 
-    const gl::Texture *dest = context->getTexture(destId);
+    const Texture *dest = context->getTexture(destId);
     if (dest == nullptr)
     {
         context->handleError(
@@ -3530,22 +3666,27 @@ bool ValidateCopySubTextureCHROMIUM(Context *context,
         return false;
     }
 
-    if (!IsValidCopyTextureDestinationTarget(context, dest->getTarget()))
+    if (!IsValidCopyTextureDestinationTarget(context, dest->getTarget(), destTarget))
     {
         context->handleError(Error(GL_INVALID_VALUE, "Destination texture a valid texture type."));
         return false;
     }
 
-    ASSERT(destTarget != GL_TEXTURE_CUBE_MAP);
-    if (dest->getWidth(sourceTarget, 0) == 0 || dest->getHeight(sourceTarget, 0) == 0)
+    if (!IsValidCopyTextureDestinationLevel(context, destTarget, destLevel, width, height))
     {
-        context->handleError(
-            Error(GL_INVALID_VALUE, "Level 0 of the destination texture must be defined."));
+        context->handleError(Error(GL_INVALID_VALUE, "Destination texture level is not valid."));
         return false;
     }
 
-    const gl::InternalFormat &destFormat = *dest->getFormat(destTarget, 0).info;
-    if (!IsValidCopyTextureDestinationFormatType(context, destFormat.format, destFormat.type))
+    if (dest->getWidth(destTarget, destLevel) == 0 || dest->getHeight(destTarget, destLevel) == 0)
+    {
+        context->handleError(Error(
+            GL_INVALID_VALUE, "The destination level of the destination texture must be defined."));
+        return false;
+    }
+
+    const InternalFormat &destFormat = *dest->getFormat(destTarget, destLevel).info;
+    if (!IsValidCopySubTextureDestionationInternalFormat(destFormat.internalFormat))
     {
         context->handleError(
             Error(GL_INVALID_OPERATION,
@@ -3559,8 +3700,8 @@ bool ValidateCopySubTextureCHROMIUM(Context *context,
         return false;
     }
 
-    if (static_cast<size_t>(xoffset + width) > dest->getWidth(destTarget, 0) ||
-        static_cast<size_t>(yoffset + height) > dest->getHeight(destTarget, 0))
+    if (static_cast<size_t>(xoffset + width) > dest->getWidth(destTarget, destLevel) ||
+        static_cast<size_t>(yoffset + height) > dest->getHeight(destTarget, destLevel))
     {
         context->handleError(
             Error(GL_INVALID_VALUE, "Destination texture not large enough to copy to."));

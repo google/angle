@@ -30,10 +30,16 @@ call:BuildShader Passthrough2D11.hlsl PS_PassthroughR2D        ps_4_0_level_9_3 
 call:BuildShader Passthrough2D11.hlsl PS_PassthroughLum2D      ps_4_0_level_9_3  compiled\passthroughlum2d11ps.h      %debug%
 call:BuildShader Passthrough2D11.hlsl PS_PassthroughLumAlpha2D ps_4_0_level_9_3  compiled\passthroughlumalpha2d11ps.h %debug%
 
-call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGBAPremultiply2D ps_4_0_level_9_3 compiled\passthroughrgbapremultiply2d11ps.h %debug%
-call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGBAUnmultiply2D  ps_4_0_level_9_3 compiled\passthroughrgbaunmultiply2d11ps.h  %debug%
-call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGBPremultiply2D  ps_4_0_level_9_3 compiled\passthroughrgbpremultiply2d11ps.h  %debug%
-call:BuildShader Passthrough2D11.hlsl PS_PassthroughRGBUnmultiply2D   ps_4_0_level_9_3 compiled\passthroughrgbunmultiply2d11ps.h   %debug%
+call:BuildShader MultiplyAlpha.hlsl PS_FtoF_PM_RGBA ps_4_0 compiled\multiplyalpha_ftof_pm_rgba_ps.h %debug%
+call:BuildShader MultiplyAlpha.hlsl PS_FtoF_UM_RGBA ps_4_0 compiled\multiplyalpha_ftof_um_rgba_ps.h %debug%
+call:BuildShader MultiplyAlpha.hlsl PS_FtoF_PM_RGB  ps_4_0 compiled\multiplyalpha_ftof_pm_rgb_ps.h  %debug%
+call:BuildShader MultiplyAlpha.hlsl PS_FtoF_UM_RGB  ps_4_0 compiled\multiplyalpha_ftof_um_rgb_ps.h  %debug%
+call:BuildShader MultiplyAlpha.hlsl PS_FtoU_PT_RGBA ps_4_0 compiled\multiplyalpha_ftou_pt_rgba_ps.h %debug%
+call:BuildShader MultiplyAlpha.hlsl PS_FtoU_PM_RGBA ps_4_0 compiled\multiplyalpha_ftou_pm_rgba_ps.h %debug%
+call:BuildShader MultiplyAlpha.hlsl PS_FtoU_UM_RGBA ps_4_0 compiled\multiplyalpha_ftou_um_rgba_ps.h %debug%
+call:BuildShader MultiplyAlpha.hlsl PS_FtoU_PT_RGB  ps_4_0 compiled\multiplyalpha_ftou_pt_rgb_ps.h  %debug%
+call:BuildShader MultiplyAlpha.hlsl PS_FtoU_PM_RGB  ps_4_0 compiled\multiplyalpha_ftou_pm_rgb_ps.h  %debug%
+call:BuildShader MultiplyAlpha.hlsl PS_FtoU_UM_RGB  ps_4_0 compiled\multiplyalpha_ftou_um_rgb_ps.h  %debug%
 
 call:BuildShader Clear11.hlsl           VS_Clear_FL9             vs_4_0_level_9_3  compiled\clear11_fl9vs.h             %debug%
 call:BuildShader Clear11.hlsl           PS_ClearFloat_FL9        ps_4_0_level_9_3  compiled\clearfloat11_fl9ps.h        %debug%

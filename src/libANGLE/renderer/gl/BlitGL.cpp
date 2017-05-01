@@ -513,7 +513,10 @@ gl::Error BlitGL::copySubTexture(TextureGL *source,
 }
 
 gl::Error BlitGL::copyTexSubImage(TextureGL *source,
+                                  size_t sourceLevel,
                                   TextureGL *dest,
+                                  GLenum destTarget,
+                                  size_t destLevel,
                                   const gl::Rectangle &sourceArea,
                                   const gl::Offset &destOffset)
 {
@@ -521,12 +524,13 @@ gl::Error BlitGL::copyTexSubImage(TextureGL *source,
 
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mScratchFBO);
     mFunctions->framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-                                     source->getTextureID(), 0);
+                                     source->getTextureID(), static_cast<GLint>(sourceLevel));
 
     mStateManager->bindTexture(dest->getTarget(), dest->getTextureID());
 
-    mFunctions->copyTexSubImage2D(dest->getTarget(), 0, destOffset.x, destOffset.y, sourceArea.x,
-                                  sourceArea.y, sourceArea.width, sourceArea.height);
+    mFunctions->copyTexSubImage2D(destTarget, static_cast<GLint>(destLevel), destOffset.x,
+                                  destOffset.y, sourceArea.x, sourceArea.y, sourceArea.width,
+                                  sourceArea.height);
 
     return gl::NoError();
 }

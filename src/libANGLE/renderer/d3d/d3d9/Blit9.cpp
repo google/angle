@@ -307,16 +307,17 @@ gl::Error Blit9::copyCube(const gl::Framebuffer *framebuffer, const RECT &source
     return result;
 }
 
-gl::Error Blit9::copyTexture2D(const gl::Texture *source,
-                               GLint sourceLevel,
-                               const RECT &sourceRect,
-                               GLenum destFormat,
-                               const gl::Offset &destOffset,
-                               TextureStorage *storage,
-                               GLint destLevel,
-                               bool flipY,
-                               bool premultiplyAlpha,
-                               bool unmultiplyAlpha)
+gl::Error Blit9::copyTexture(const gl::Texture *source,
+                             GLint sourceLevel,
+                             const RECT &sourceRect,
+                             GLenum destFormat,
+                             const gl::Offset &destOffset,
+                             TextureStorage *storage,
+                             GLenum destTarget,
+                             GLint destLevel,
+                             bool flipY,
+                             bool premultiplyAlpha,
+                             bool unmultiplyAlpha)
 {
     ANGLE_TRY(initialize());
 
@@ -328,7 +329,7 @@ gl::Error Blit9::copyTexture2D(const gl::Texture *source,
     TextureStorage9_2D *sourceStorage9 = GetAs<TextureStorage9_2D>(sourceStorage);
     ASSERT(sourceStorage9);
 
-    TextureStorage9_2D *destStorage9 = GetAs<TextureStorage9_2D>(storage);
+    TextureStorage9 *destStorage9 = GetAs<TextureStorage9>(storage);
     ASSERT(destStorage9);
 
     ASSERT(sourceLevel == 0);
@@ -339,7 +340,7 @@ gl::Error Blit9::copyTexture2D(const gl::Texture *source,
     ANGLE_TRY(sourceStorage9->getSurfaceLevel(GL_TEXTURE_2D, sourceLevel, true, &sourceSurface));
 
     IDirect3DSurface9 *destSurface = nullptr;
-    gl::Error error = destStorage9->getSurfaceLevel(GL_TEXTURE_2D, destLevel, true, &destSurface);
+    gl::Error error = destStorage9->getSurfaceLevel(destTarget, destLevel, true, &destSurface);
     if (error.isError())
     {
         SafeRelease(sourceSurface);
