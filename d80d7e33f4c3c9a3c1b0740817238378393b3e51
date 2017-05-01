@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "24d78e4f_0fd9da39",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-01T20:23:09Z",
+      "side": 1,
+      "message": "nit: here and below the skip message isn\u0027t correct, the check for texture_storage could be put in a new condition.",
+      "revId": "d80d7e33f4c3c9a3c1b0740817238378393b3e51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
