@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f075537b_8bdac4a7",
+        "filename": "src/tests/gl_tests/MipmapTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1167,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-01T14:17:36Z",
+      "side": 1,
+      "message": "Unless you tested locally, the above suppression is disabling this test on AMD",
+      "range": {
+        "startLine": 1167,
+        "startChar": 7,
+        "endLine": 1167,
+        "endChar": 39
+      },
+      "revId": "c230328b991d02576badf2060d5784c9f6ba2e50",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
