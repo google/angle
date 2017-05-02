@@ -963,6 +963,7 @@
                             'defines':
                             [
                                 'DEFAULT_VK_LAYERS_PATH="."',
+                                'HAVE_SECURE_GETENV',
                                 'LAYERS_SOURCE_PATH="<(vulkan_json)"',
                                 'VK_USE_PLATFORM_XCB_KHR',
                                 'VK_USE_PLATFORM_XCB_KHX',

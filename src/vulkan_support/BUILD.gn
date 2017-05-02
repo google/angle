@@ -203,6 +203,10 @@ config("vulkan_loader_config") {
   if (is_win) {
     cflags = [ "/wd4201" ]
   }
+  if (is_linux) {
+    # assume secure_getenv() is available
+    defines += [ "HAVE_SECURE_GETENV" ]
+  }
 }
 
 static_library("vulkan_loader") {
