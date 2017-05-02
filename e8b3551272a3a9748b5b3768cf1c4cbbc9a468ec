@@ -22,6 +22,30 @@
       "revId": "e8b3551272a3a9748b5b3768cf1c4cbbc9a468ec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "295deb73_7e870b1b",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-02T08:15:56Z",
+      "side": 0,
+      "message": "I think this would be another part that should be split off and maybe put together with the refactoring of opaque type related checks. All in all, what I\u0027d like to see is a patch chain like:\n\n1. Refactor the checks for opaque types (including removing this code).\n2. Parsing of atomic counters in the compiler together with the compiler unit tests. This would be dependent on the above.\n3. The libANGLE changes related to atomic counters, tested with dEQP and the end2end tests. This would be dependent on the above.",
+      "parentUuid": "7d89f676_7b73b76b",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 67,
+        "endChar": 1
+      },
+      "revId": "e8b3551272a3a9748b5b3768cf1c4cbbc9a468ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
