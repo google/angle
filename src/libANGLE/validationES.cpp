@@ -2785,12 +2785,13 @@ bool ValidateDrawArraysInstanced(Context *context,
                                  GLsizei count,
                                  GLsizei primcount)
 {
-    if (context->getExtensions().webglCompatibility && !ValidateDrawInstancedANGLEAndWebGL(context))
+    if (!ValidateDrawArraysInstancedBase(context, mode, first, count, primcount))
     {
         return false;
     }
 
-    return ValidateDrawArraysInstancedBase(context, mode, first, count, primcount);
+    return !context->getExtensions().webglCompatibility ||
+           ValidateDrawInstancedANGLEAndWebGL(context);
 }
 
 bool ValidateDrawArraysInstancedANGLE(Context *context,
@@ -2799,12 +2800,12 @@ bool ValidateDrawArraysInstancedANGLE(Context *context,
                                       GLsizei count,
                                       GLsizei primcount)
 {
-    if (!ValidateDrawInstancedANGLEAndWebGL(context))
+    if (!ValidateDrawArraysInstancedBase(context, mode, first, count, primcount))
     {
         return false;
     }
 
-    return ValidateDrawArraysInstancedBase(context, mode, first, count, primcount);
+    return ValidateDrawInstancedANGLEAndWebGL(context);
 }
 
 bool ValidateDrawElementsBase(ValidationContext *context, GLenum type)
@@ -2853,6 +2854,11 @@ bool ValidateDrawElementsCommon(ValidationContext *context,
         return false;
 
     const State &state = context->getGLState();
+
+    if (!ValidateDrawBase(context, mode, count))
+    {
+        return false;
+    }
 
     // Check for mapped buffers
     if (state.hasMappedBuffer(GL_ELEMENT_ARRAY_BUFFER))
@@ -2948,11 +2954,6 @@ bool ValidateDrawElementsCommon(ValidationContext *context,
         }
     }
 
-    if (!ValidateDrawBase(context, mode, count))
-    {
-        return false;
-    }
-
     // Use the parameter buffer to retrieve and cache the index range.
     // TODO: offer fast path, with disabled index validation.
     // TODO: also disable index checking on back-ends that are robust to out-of-range accesses.
@@ -2990,12 +2991,13 @@ bool ValidateDrawElementsInstancedCommon(ValidationContext *context,
                                          const void *indices,
                                          GLsizei primcount)
 {
-    if (context->getExtensions().webglCompatibility && !ValidateDrawInstancedANGLEAndWebGL(context))
+    if (!ValidateDrawElementsInstancedBase(context, mode, count, type, indices, primcount))
     {
         return false;
     }
 
-    return ValidateDrawElementsInstancedBase(context, mode, count, type, indices, primcount);
+    return !context->getExtensions().webglCompatibility ||
+           ValidateDrawInstancedANGLEAndWebGL(context);
 }
 
 bool ValidateDrawElementsInstancedANGLE(Context *context,
@@ -3005,12 +3007,12 @@ bool ValidateDrawElementsInstancedANGLE(Context *context,
                                         const void *indices,
                                         GLsizei primcount)
 {
-    if (!ValidateDrawInstancedANGLEAndWebGL(context))
+    if (!ValidateDrawElementsInstancedBase(context, mode, count, type, indices, primcount))
     {
         return false;
     }
 
-    return ValidateDrawElementsInstancedBase(context, mode, count, type, indices, primcount);
+    return ValidateDrawInstancedANGLEAndWebGL(context);
 }
 
 bool ValidateFramebufferTextureBase(Context *context,
