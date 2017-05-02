@@ -564,8 +564,6 @@ TIntermTyped *TIntermTyped::CreateZero(const TType &type)
 
     if (!type.isArray() && type.getBasicType() != EbtStruct)
     {
-        ASSERT(type.isScalar() || type.isVector() || type.isMatrix());
-
         size_t size       = constType.getObjectSize();
         TConstantUnion *u = new TConstantUnion[size];
         for (size_t i = 0; i < size; ++i)
@@ -597,6 +595,15 @@ TIntermTyped *TIntermTyped::CreateZero(const TType &type)
 
         TIntermConstantUnion *node = new TIntermConstantUnion(u, constType);
         return node;
+    }
+
+    if (type.getBasicType() == EbtVoid)
+    {
+        // Void array. This happens only on error condition, similarly to the case above. We don't
+        // have a constructor operator for void, so this needs special handling. We'll end up with a
+        // value without the array type, but that should not be a problem.
+        constType.clearArrayness();
+        return CreateZero(constType);
     }
 
     TIntermSequence *arguments = new TIntermSequence();

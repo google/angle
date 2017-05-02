@@ -3707,3 +3707,25 @@ TEST_F(FragmentShaderValidationTest, SamplerUniformBindingESSL300)
         FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
     }
 }
+
+// Attempting to construct a struct containing a void array should fail without asserting.
+TEST_F(FragmentShaderValidationTest, ConstructStructContainingVoidArray)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 outFrag;\n"
+        "struct S\n"
+        "{\n"
+        "    void A[1];\n"
+        "} s = S();\n"
+        "void main()\n"
+        "{\n"
+        "    outFrag = vec4(0.0);\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure " << mInfoLog;
+    }
+}
