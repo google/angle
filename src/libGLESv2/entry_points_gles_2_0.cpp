@@ -8,29 +8,10 @@
 
 #include "libGLESv2/entry_points_gles_2_0_autogen.h"
 
-#include "libGLESv2/global_state.h"
-
-#include "libANGLE/Buffer.h"
-#include "libANGLE/Compiler.h"
-#include "libANGLE/Context.h"
-#include "libANGLE/Error.h"
-#include "libANGLE/Framebuffer.h"
-#include "libANGLE/FramebufferAttachment.h"
-#include "libANGLE/Program.h"
-#include "libANGLE/Renderbuffer.h"
-#include "libANGLE/Shader.h"
-#include "libANGLE/Texture.h"
-#include "libANGLE/VertexArray.h"
-#include "libANGLE/formatutils.h"
-
-#include "libANGLE/queryconversions.h"
-#include "libANGLE/queryutils.h"
-#include "libANGLE/validationES.h"
-#include "libANGLE/validationES2.h"
-#include "libANGLE/validationES3.h"
-
 #include "common/debug.h"
-#include "common/utilities.h"
+#include "libANGLE/Context.h"
+#include "libANGLE/validationES2.h"
+#include "libGLESv2/global_state.h"
 
 namespace gl
 {
@@ -1174,7 +1155,7 @@ void GL_APIENTRY GetFramebufferAttachmentParameteriv(GLenum target,
     if (context)
     {
         if (!context->skipValidation() && !ValidateGetFramebufferAttachmentParameteriv(
-                                              context, target, attachment, pname, nullptr))
+                                              context, target, attachment, pname, params))
         {
             return;
         }
@@ -1207,7 +1188,7 @@ void GL_APIENTRY GetProgramiv(GLuint program, GLenum pname, GLint *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateGetProgramiv(context, program, pname, nullptr))
+        if (!context->skipValidation() && !ValidateGetProgramiv(context, program, pname, params))
         {
             return;
         }
@@ -1235,7 +1216,7 @@ void GL_APIENTRY GetProgramInfoLog(GLuint program,
             return;
         }
 
-        context->getInfoLog(program, bufsize, length, infolog);
+        context->getProgramInfoLog(program, bufsize, length, infolog);
     }
 }
 
@@ -2118,7 +2099,7 @@ void GL_APIENTRY Uniform1i(GLint location, GLint x)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateUniform1iv(context, location, 1, &x))
+        if (!context->skipValidation() && !ValidateUniform1i(context, location, x))
         {
             return;
         }

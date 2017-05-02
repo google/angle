@@ -335,6 +335,341 @@ bool IsValidStencilOp(GLenum op)
     }
 }
 
+bool ValidateES2CopyTexImageParameters(ValidationContext *context,
+                                       GLenum target,
+                                       GLint level,
+                                       GLenum internalformat,
+                                       bool isSubImage,
+                                       GLint xoffset,
+                                       GLint yoffset,
+                                       GLint x,
+                                       GLint y,
+                                       GLsizei width,
+                                       GLsizei height,
+                                       GLint border)
+{
+    if (!ValidTexture2DDestinationTarget(context, target))
+    {
+        context->handleError(Error(GL_INVALID_ENUM, "Invalid texture target"));
+        return false;
+    }
+
+    if (!ValidImageSizeParameters(context, target, level, width, height, 1, isSubImage))
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Invalid texture dimensions."));
+        return false;
+    }
+
+    Format textureFormat = Format::Invalid();
+    if (!ValidateCopyTexImageParametersBase(context, target, level, internalformat, isSubImage,
+                                            xoffset, yoffset, 0, x, y, width, height, border,
+                                            &textureFormat))
+    {
+        return false;
+    }
+
+    const gl::Framebuffer *framebuffer = context->getGLState().getReadFramebuffer();
+    GLenum colorbufferFormat =
+        framebuffer->getReadColorbuffer()->getFormat().info->sizedInternalFormat;
+    const auto &formatInfo = *textureFormat.info;
+
+    // [OpenGL ES 2.0.24] table 3.9
+    if (isSubImage)
+    {
+        switch (formatInfo.format)
+        {
+            case GL_ALPHA:
+                if (colorbufferFormat != GL_ALPHA8_EXT && colorbufferFormat != GL_RGBA4 &&
+                    colorbufferFormat != GL_RGB5_A1 && colorbufferFormat != GL_RGBA8_OES)
+                {
+                    context->handleError(Error(GL_INVALID_OPERATION));
+                    return false;
+                }
+                break;
+            case GL_LUMINANCE:
+                if (colorbufferFormat != GL_R8_EXT && colorbufferFormat != GL_RG8_EXT &&
+                    colorbufferFormat != GL_RGB565 && colorbufferFormat != GL_RGB8_OES &&
+                    colorbufferFormat != GL_RGBA4 && colorbufferFormat != GL_RGB5_A1 &&
+                    colorbufferFormat != GL_RGBA8_OES)
+                {
+                    context->handleError(Error(GL_INVALID_OPERATION));
+                    return false;
+                }
+                break;
+            case GL_RED_EXT:
+                if (colorbufferFormat != GL_R8_EXT && colorbufferFormat != GL_RG8_EXT &&
+                    colorbufferFormat != GL_RGB565 && colorbufferFormat != GL_RGB8_OES &&
+                    colorbufferFormat != GL_RGBA4 && colorbufferFormat != GL_RGB5_A1 &&
+                    colorbufferFormat != GL_RGBA8_OES && colorbufferFormat != GL_R32F &&
+                    colorbufferFormat != GL_RG32F && colorbufferFormat != GL_RGB32F &&
+                    colorbufferFormat != GL_RGBA32F)
+                {
+                    context->handleError(Error(GL_INVALID_OPERATION));
+                    return false;
+                }
+                break;
+            case GL_RG_EXT:
+                if (colorbufferFormat != GL_RG8_EXT && colorbufferFormat != GL_RGB565 &&
+                    colorbufferFormat != GL_RGB8_OES && colorbufferFormat != GL_RGBA4 &&
+                    colorbufferFormat != GL_RGB5_A1 && colorbufferFormat != GL_RGBA8_OES &&
+                    colorbufferFormat != GL_RG32F && colorbufferFormat != GL_RGB32F &&
+                    colorbufferFormat != GL_RGBA32F)
+                {
+                    context->handleError(Error(GL_INVALID_OPERATION));
+                    return false;
+                }
+                break;
+            case GL_RGB:
+                if (colorbufferFormat != GL_RGB565 && colorbufferFormat != GL_RGB8_OES &&
+                    colorbufferFormat != GL_RGBA4 && colorbufferFormat != GL_RGB5_A1 &&
+                    colorbufferFormat != GL_RGBA8_OES && colorbufferFormat != GL_RGB32F &&
+                    colorbufferFormat != GL_RGBA32F)
+                {
+                    context->handleError(Error(GL_INVALID_OPERATION));
+                    return false;
+                }
+                break;
+            case GL_LUMINANCE_ALPHA:
+            case GL_RGBA:
+                if (colorbufferFormat != GL_RGBA4 && colorbufferFormat != GL_RGB5_A1 &&
+                    colorbufferFormat != GL_RGBA8_OES && colorbufferFormat != GL_RGBA32F)
+                {
+                    context->handleError(Error(GL_INVALID_OPERATION));
+                    return false;
+                }
+                break;
+            case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
+            case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
+            case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:
+            case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
+            case GL_ETC1_RGB8_OES:
+            case GL_ETC1_RGB8_LOSSY_DECODE_ANGLE:
+            case GL_COMPRESSED_RGB8_LOSSY_DECODE_ETC2_ANGLE:
+            case GL_COMPRESSED_SRGB8_LOSSY_DECODE_ETC2_ANGLE:
+            case GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_LOSSY_DECODE_ETC2_ANGLE:
+            case GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_LOSSY_DECODE_ETC2_ANGLE:
+                context->handleError(Error(GL_INVALID_OPERATION));
+                return false;
+            case GL_DEPTH_COMPONENT:
+            case GL_DEPTH_STENCIL_OES:
+                context->handleError(Error(GL_INVALID_OPERATION));
+                return false;
+            default:
+                context->handleError(Error(GL_INVALID_OPERATION));
+                return false;
+        }
+
+        if (formatInfo.type == GL_FLOAT && !context->getExtensions().textureFloat)
+        {
+            context->handleError(Error(GL_INVALID_OPERATION));
+            return false;
+        }
+    }
+    else
+    {
+        switch (internalformat)
+        {
+            case GL_ALPHA:
+                if (colorbufferFormat != GL_ALPHA8_EXT && colorbufferFormat != GL_RGBA4 &&
+                    colorbufferFormat != GL_RGB5_A1 && colorbufferFormat != GL_BGRA8_EXT &&
+                    colorbufferFormat != GL_RGBA8_OES && colorbufferFormat != GL_BGR5_A1_ANGLEX)
+                {
+                    context->handleError(Error(GL_INVALID_OPERATION));
+                    return false;
+                }
+                break;
+            case GL_LUMINANCE:
+                if (colorbufferFormat != GL_R8_EXT && colorbufferFormat != GL_RG8_EXT &&
+                    colorbufferFormat != GL_RGB565 && colorbufferFormat != GL_RGB8_OES &&
+                    colorbufferFormat != GL_RGBA4 && colorbufferFormat != GL_RGB5_A1 &&
+                    colorbufferFormat != GL_BGRA8_EXT && colorbufferFormat != GL_RGBA8_OES &&
+                    colorbufferFormat != GL_BGR5_A1_ANGLEX)
+                {
+                    context->handleError(Error(GL_INVALID_OPERATION));
+                    return false;
+                }
+                break;
+            case GL_RED_EXT:
+                if (colorbufferFormat != GL_R8_EXT && colorbufferFormat != GL_RG8_EXT &&
+                    colorbufferFormat != GL_RGB565 && colorbufferFormat != GL_RGB8_OES &&
+                    colorbufferFormat != GL_RGBA4 && colorbufferFormat != GL_RGB5_A1 &&
+                    colorbufferFormat != GL_BGRA8_EXT && colorbufferFormat != GL_RGBA8_OES &&
+                    colorbufferFormat != GL_BGR5_A1_ANGLEX)
+                {
+                    context->handleError(Error(GL_INVALID_OPERATION));
+                    return false;
+                }
+                break;
+            case GL_RG_EXT:
+                if (colorbufferFormat != GL_RG8_EXT && colorbufferFormat != GL_RGB565 &&
+                    colorbufferFormat != GL_RGB8_OES && colorbufferFormat != GL_RGBA4 &&
+                    colorbufferFormat != GL_RGB5_A1 && colorbufferFormat != GL_BGRA8_EXT &&
+                    colorbufferFormat != GL_RGBA8_OES && colorbufferFormat != GL_BGR5_A1_ANGLEX)
+                {
+                    context->handleError(Error(GL_INVALID_OPERATION));
+                    return false;
+                }
+                break;
+            case GL_RGB:
+                if (colorbufferFormat != GL_RGB565 && colorbufferFormat != GL_RGB8_OES &&
+                    colorbufferFormat != GL_RGBA4 && colorbufferFormat != GL_RGB5_A1 &&
+                    colorbufferFormat != GL_BGRA8_EXT && colorbufferFormat != GL_RGBA8_OES &&
+                    colorbufferFormat != GL_BGR5_A1_ANGLEX)
+                {
+                    context->handleError(Error(GL_INVALID_OPERATION));
+                    return false;
+                }
+                break;
+            case GL_LUMINANCE_ALPHA:
+            case GL_RGBA:
+                if (colorbufferFormat != GL_RGBA4 && colorbufferFormat != GL_RGB5_A1 &&
+                    colorbufferFormat != GL_BGRA8_EXT && colorbufferFormat != GL_RGBA8_OES &&
+                    colorbufferFormat != GL_BGR5_A1_ANGLEX)
+                {
+                    context->handleError(Error(GL_INVALID_OPERATION));
+                    return false;
+                }
+                break;
+            case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
+            case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
+                if (context->getExtensions().textureCompressionDXT1)
+                {
+                    context->handleError(Error(GL_INVALID_OPERATION));
+                    return false;
+                }
+                else
+                {
+                    context->handleError(Error(GL_INVALID_ENUM));
+                    return false;
+                }
+                break;
+            case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:
+                if (context->getExtensions().textureCompressionDXT3)
+                {
+                    context->handleError(Error(GL_INVALID_OPERATION));
+                    return false;
+                }
+                else
+                {
+                    context->handleError(Error(GL_INVALID_ENUM));
+                    return false;
+                }
+                break;
+            case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
+                if (context->getExtensions().textureCompressionDXT5)
+                {
+                    context->handleError(Error(GL_INVALID_OPERATION));
+                    return false;
+                }
+                else
+                {
+                    context->handleError(Error(GL_INVALID_ENUM));
+                    return false;
+                }
+                break;
+            case GL_ETC1_RGB8_OES:
+                if (context->getExtensions().compressedETC1RGB8Texture)
+                {
+                    context->handleError(Error(GL_INVALID_OPERATION));
+                    return false;
+                }
+                else
+                {
+                    context->handleError(Error(GL_INVALID_ENUM));
+                    return false;
+                }
+                break;
+            case GL_ETC1_RGB8_LOSSY_DECODE_ANGLE:
+            case GL_COMPRESSED_RGB8_LOSSY_DECODE_ETC2_ANGLE:
+            case GL_COMPRESSED_SRGB8_LOSSY_DECODE_ETC2_ANGLE:
+            case GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_LOSSY_DECODE_ETC2_ANGLE:
+            case GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_LOSSY_DECODE_ETC2_ANGLE:
+                if (context->getExtensions().lossyETCDecode)
+                {
+                    context->handleError(Error(GL_INVALID_OPERATION,
+                                               "ETC lossy decode formats can't be copied to."));
+                    return false;
+                }
+                else
+                {
+                    context->handleError(Error(
+                        GL_INVALID_ENUM, "ANGLE_lossy_etc_decode extension is not supported."));
+                    return false;
+                }
+                break;
+            case GL_DEPTH_COMPONENT:
+            case GL_DEPTH_COMPONENT16:
+            case GL_DEPTH_COMPONENT32_OES:
+            case GL_DEPTH_STENCIL_OES:
+            case GL_DEPTH24_STENCIL8_OES:
+                if (context->getExtensions().depthTextures)
+                {
+                    context->handleError(Error(GL_INVALID_OPERATION));
+                    return false;
+                }
+                else
+                {
+                    context->handleError(Error(GL_INVALID_ENUM));
+                    return false;
+                }
+            default:
+                context->handleError(Error(GL_INVALID_ENUM));
+                return false;
+        }
+    }
+
+    // If width or height is zero, it is a no-op.  Return false without setting an error.
+    return (width > 0 && height > 0);
+}
+
+bool ValidCap(const Context *context, GLenum cap, bool queryOnly)
+{
+    switch (cap)
+    {
+        // EXT_multisample_compatibility
+        case GL_MULTISAMPLE_EXT:
+        case GL_SAMPLE_ALPHA_TO_ONE_EXT:
+            return context->getExtensions().multisampleCompatibility;
+
+        case GL_CULL_FACE:
+        case GL_POLYGON_OFFSET_FILL:
+        case GL_SAMPLE_ALPHA_TO_COVERAGE:
+        case GL_SAMPLE_COVERAGE:
+        case GL_SCISSOR_TEST:
+        case GL_STENCIL_TEST:
+        case GL_DEPTH_TEST:
+        case GL_BLEND:
+        case GL_DITHER:
+            return true;
+
+        case GL_PRIMITIVE_RESTART_FIXED_INDEX:
+        case GL_RASTERIZER_DISCARD:
+            return (context->getClientMajorVersion() >= 3);
+
+        case GL_DEBUG_OUTPUT_SYNCHRONOUS:
+        case GL_DEBUG_OUTPUT:
+            return context->getExtensions().debug;
+
+        case GL_BIND_GENERATES_RESOURCE_CHROMIUM:
+            return queryOnly && context->getExtensions().bindGeneratesResource;
+
+        case GL_CLIENT_ARRAYS_ANGLE:
+            return queryOnly && context->getExtensions().clientArrays;
+
+        case GL_FRAMEBUFFER_SRGB_EXT:
+            return context->getExtensions().sRGBWriteControl;
+
+        case GL_SAMPLE_MASK:
+            return context->getClientVersion() >= Version(3, 1);
+
+        case GL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
+            return queryOnly && context->getExtensions().robustResourceInitialization;
+
+        default:
+            return false;
+    }
+}
+
 }  // anonymous namespace
 
 bool ValidateES2TexImageParameters(Context *context,
@@ -4708,6 +5043,11 @@ bool ValidateUniform1fv(ValidationContext *context, GLint location, GLsizei coun
     return ValidateUniform(context, GL_FLOAT, location, count);
 }
 
+bool ValidateUniform1i(ValidationContext *context, GLint location, GLint x)
+{
+    return ValidateUniform1iv(context, location, 1, &x);
+}
+
 bool ValidateUniform2f(ValidationContext *context, GLint location, GLfloat x, GLfloat y)
 {
     return ValidateUniform(context, GL_FLOAT_VEC2, location, 1);
@@ -4901,6 +5241,491 @@ bool ValidateDrawElements(ValidationContext *context,
                           const void *indices)
 {
     return ValidateDrawElementsCommon(context, mode, count, type, indices, 1);
+}
+
+bool ValidateGetFramebufferAttachmentParameteriv(ValidationContext *context,
+                                                 GLenum target,
+                                                 GLenum attachment,
+                                                 GLenum pname,
+                                                 GLint *params)
+{
+    return ValidateGetFramebufferAttachmentParameterivBase(context, target, attachment, pname,
+                                                           nullptr);
+}
+
+bool ValidateGetProgramiv(ValidationContext *context, GLuint program, GLenum pname, GLint *params)
+{
+    return ValidateGetProgramivBase(context, program, pname, nullptr);
+}
+
+bool ValidateCopyTexImage2D(ValidationContext *context,
+                            GLenum target,
+                            GLint level,
+                            GLenum internalformat,
+                            GLint x,
+                            GLint y,
+                            GLsizei width,
+                            GLsizei height,
+                            GLint border)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        return ValidateES2CopyTexImageParameters(context, target, level, internalformat, false, 0,
+                                                 0, x, y, width, height, border);
+    }
+
+    ASSERT(context->getClientMajorVersion() == 3);
+    return ValidateES3CopyTexImage2DParameters(context, target, level, internalformat, false, 0, 0,
+                                               0, x, y, width, height, border);
+}
+
+bool ValidateCopyTexSubImage2D(Context *context,
+                               GLenum target,
+                               GLint level,
+                               GLint xoffset,
+                               GLint yoffset,
+                               GLint x,
+                               GLint y,
+                               GLsizei width,
+                               GLsizei height)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        return ValidateES2CopyTexImageParameters(context, target, level, GL_NONE, true, xoffset,
+                                                 yoffset, x, y, width, height, 0);
+    }
+
+    return ValidateES3CopyTexImage2DParameters(context, target, level, GL_NONE, true, xoffset,
+                                               yoffset, 0, x, y, width, height, 0);
+}
+
+bool ValidateDeleteBuffers(Context *context, GLint n, const GLuint *)
+{
+    return ValidateGenOrDelete(context, n);
+}
+
+bool ValidateDeleteFramebuffers(Context *context, GLint n, const GLuint *)
+{
+    return ValidateGenOrDelete(context, n);
+}
+
+bool ValidateDeleteRenderbuffers(Context *context, GLint n, const GLuint *)
+{
+    return ValidateGenOrDelete(context, n);
+}
+
+bool ValidateDeleteTextures(Context *context, GLint n, const GLuint *)
+{
+    return ValidateGenOrDelete(context, n);
+}
+
+bool ValidateDisable(Context *context, GLenum cap)
+{
+    if (!ValidCap(context, cap, false))
+    {
+        context->handleError(Error(GL_INVALID_ENUM, "Invalid cap."));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateEnable(Context *context, GLenum cap)
+{
+    if (!ValidCap(context, cap, false))
+    {
+        context->handleError(Error(GL_INVALID_ENUM, "Invalid cap."));
+        return false;
+    }
+
+    if (context->getLimitations().noSampleAlphaToCoverageSupport &&
+        cap == GL_SAMPLE_ALPHA_TO_COVERAGE)
+    {
+        const char *errorMessage = "Current renderer doesn't support alpha-to-coverage";
+        context->handleError(Error(GL_INVALID_OPERATION, errorMessage));
+
+        // We also output an error message to the debugger window if tracing is active, so that
+        // developers can see the error message.
+        ERR() << errorMessage;
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateFramebufferRenderbuffer(Context *context,
+                                     GLenum target,
+                                     GLenum attachment,
+                                     GLenum renderbuffertarget,
+                                     GLuint renderbuffer)
+{
+    if (!ValidFramebufferTarget(target) ||
+        (renderbuffertarget != GL_RENDERBUFFER && renderbuffer != 0))
+    {
+        context->handleError(Error(GL_INVALID_ENUM));
+        return false;
+    }
+
+    return ValidateFramebufferRenderbufferParameters(context, target, attachment,
+                                                     renderbuffertarget, renderbuffer);
+}
+
+bool ValidateFramebufferTexture2D(Context *context,
+                                  GLenum target,
+                                  GLenum attachment,
+                                  GLenum textarget,
+                                  GLuint texture,
+                                  GLint level)
+{
+    // Attachments are required to be bound to level 0 without ES3 or the GL_OES_fbo_render_mipmap
+    // extension
+    if (context->getClientMajorVersion() < 3 && !context->getExtensions().fboRenderMipmap &&
+        level != 0)
+    {
+        context->handleError(Error(GL_INVALID_VALUE));
+        return false;
+    }
+
+    if (!ValidateFramebufferTextureBase(context, target, attachment, texture, level))
+    {
+        return false;
+    }
+
+    if (texture != 0)
+    {
+        gl::Texture *tex = context->getTexture(texture);
+        ASSERT(tex);
+
+        const gl::Caps &caps = context->getCaps();
+
+        switch (textarget)
+        {
+            case GL_TEXTURE_2D:
+            {
+                if (level > gl::log2(caps.max2DTextureSize))
+                {
+                    context->handleError(Error(GL_INVALID_VALUE));
+                    return false;
+                }
+                if (tex->getTarget() != GL_TEXTURE_2D)
+                {
+                    context->handleError(Error(GL_INVALID_OPERATION,
+                                               "Textarget must match the texture target type."));
+                    return false;
+                }
+            }
+            break;
+
+            case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
+            case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
+            case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
+            case GL_TEXTURE_CUBE_MAP_NEGATIVE_Y:
+            case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
+            case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
+            {
+                if (level > gl::log2(caps.maxCubeMapTextureSize))
+                {
+                    context->handleError(Error(GL_INVALID_VALUE));
+                    return false;
+                }
+                if (tex->getTarget() != GL_TEXTURE_CUBE_MAP)
+                {
+                    context->handleError(Error(GL_INVALID_OPERATION,
+                                               "Textarget must match the texture target type."));
+                    return false;
+                }
+            }
+            break;
+
+            case GL_TEXTURE_2D_MULTISAMPLE:
+            {
+                if (context->getClientVersion() < ES_3_1)
+                {
+                    context->handleError(Error(GL_INVALID_OPERATION,
+                                               "Texture target requires at least OpenGL ES 3.1."));
+                    return false;
+                }
+
+                if (level != 0)
+                {
+                    context->handleError(
+                        Error(GL_INVALID_VALUE, "Level must be 0 for TEXTURE_2D_MULTISAMPLE."));
+                    return false;
+                }
+                if (tex->getTarget() != GL_TEXTURE_2D_MULTISAMPLE)
+                {
+                    context->handleError(Error(GL_INVALID_OPERATION,
+                                               "Textarget must match the texture target type."));
+                    return false;
+                }
+            }
+            break;
+
+            default:
+                context->handleError(Error(GL_INVALID_ENUM));
+                return false;
+        }
+
+        const Format &format = tex->getFormat(textarget, level);
+        if (format.info->compressed)
+        {
+            context->handleError(Error(GL_INVALID_OPERATION));
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool ValidateGenBuffers(Context *context, GLint n, GLuint *)
+{
+    return ValidateGenOrDelete(context, n);
+}
+
+bool ValidateGenFramebuffers(Context *context, GLint n, GLuint *)
+{
+    return ValidateGenOrDelete(context, n);
+}
+
+bool ValidateGenRenderbuffers(Context *context, GLint n, GLuint *)
+{
+    return ValidateGenOrDelete(context, n);
+}
+
+bool ValidateGenTextures(Context *context, GLint n, GLuint *)
+{
+    return ValidateGenOrDelete(context, n);
+}
+
+bool ValidateGenerateMipmap(Context *context, GLenum target)
+{
+    if (!ValidTextureTarget(context, target))
+    {
+        context->handleError(Error(GL_INVALID_ENUM));
+        return false;
+    }
+
+    Texture *texture = context->getTargetTexture(target);
+
+    if (texture == nullptr)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION));
+        return false;
+    }
+
+    const GLuint effectiveBaseLevel = texture->getTextureState().getEffectiveBaseLevel();
+
+    // This error isn't spelled out in the spec in a very explicit way, but we interpret the spec so
+    // that out-of-range base level has a non-color-renderable / non-texture-filterable format.
+    if (effectiveBaseLevel >= gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION));
+        return false;
+    }
+
+    GLenum baseTarget  = (target == GL_TEXTURE_CUBE_MAP) ? GL_TEXTURE_CUBE_MAP_POSITIVE_X : target;
+    const auto &format = texture->getFormat(baseTarget, effectiveBaseLevel);
+    const TextureCaps &formatCaps = context->getTextureCaps().get(format.info->sizedInternalFormat);
+
+    // GenerateMipmap should not generate an INVALID_OPERATION for textures created with
+    // unsized formats or that are color renderable and filterable.  Since we do not track if
+    // the texture was created with sized or unsized format (only sized formats are stored),
+    // it is not possible to make sure the the LUMA formats can generate mipmaps (they should
+    // be able to) because they aren't color renderable.  Simply do a special case for LUMA
+    // textures since they're the only texture format that can be created with unsized formats
+    // that is not color renderable.  New unsized formats are unlikely to be added, since ES2
+    // was the last version to use add them.
+    if (format.info->depthBits > 0 || format.info->stencilBits > 0 || !formatCaps.filterable ||
+        (!formatCaps.renderable && !format.info->isLUMA()) || format.info->compressed)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION));
+        return false;
+    }
+
+    // GL_EXT_sRGB does not support mipmap generation on sRGB textures
+    if (context->getClientMajorVersion() == 2 && format.info->colorEncoding == GL_SRGB)
+    {
+        context->handleError(Error(GL_INVALID_OPERATION));
+        return false;
+    }
+
+    // Non-power of 2 ES2 check
+    if (context->getClientVersion() < Version(3, 0) && !context->getExtensions().textureNPOT &&
+        (!isPow2(static_cast<int>(texture->getWidth(baseTarget, 0))) ||
+         !isPow2(static_cast<int>(texture->getHeight(baseTarget, 0)))))
+    {
+        ASSERT(target == GL_TEXTURE_2D || target == GL_TEXTURE_CUBE_MAP);
+        context->handleError(Error(GL_INVALID_OPERATION));
+        return false;
+    }
+
+    // Cube completeness check
+    if (target == GL_TEXTURE_CUBE_MAP && !texture->getTextureState().isCubeComplete())
+    {
+        context->handleError(Error(GL_INVALID_OPERATION));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetBufferParameteriv(ValidationContext *context,
+                                  GLenum target,
+                                  GLenum pname,
+                                  GLint *params)
+{
+    return ValidateGetBufferParameterBase(context, target, pname, false, nullptr);
+}
+
+bool ValidateGetRenderbufferParameteriv(Context *context,
+                                        GLenum target,
+                                        GLenum pname,
+                                        GLint *params)
+{
+    return ValidateGetRenderbufferParameterivBase(context, target, pname, nullptr);
+}
+
+bool ValidateGetShaderiv(Context *context, GLuint shader, GLenum pname, GLint *params)
+{
+    return ValidateGetShaderivBase(context, shader, pname, nullptr);
+}
+
+bool ValidateGetTexParameterfv(Context *context, GLenum target, GLenum pname, GLfloat *params)
+{
+    return ValidateGetTexParameterBase(context, target, pname, nullptr);
+}
+
+bool ValidateGetTexParameteriv(Context *context, GLenum target, GLenum pname, GLint *params)
+{
+    return ValidateGetTexParameterBase(context, target, pname, nullptr);
+}
+
+bool ValidateGetUniformfv(Context *context, GLuint program, GLint location, GLfloat *params)
+{
+    return ValidateGetUniformBase(context, program, location);
+}
+
+bool ValidateGetUniformiv(Context *context, GLuint program, GLint location, GLint *params)
+{
+    return ValidateGetUniformBase(context, program, location);
+}
+
+bool ValidateGetVertexAttribfv(Context *context, GLuint index, GLenum pname, GLfloat *params)
+{
+    return ValidateGetVertexAttribBase(context, index, pname, nullptr, false, false);
+}
+
+bool ValidateGetVertexAttribiv(Context *context, GLuint index, GLenum pname, GLint *params)
+{
+    return ValidateGetVertexAttribBase(context, index, pname, nullptr, false, false);
+}
+
+bool ValidateGetVertexAttribPointerv(Context *context, GLuint index, GLenum pname, void **pointer)
+{
+    return ValidateGetVertexAttribBase(context, index, pname, nullptr, true, false);
+}
+
+bool ValidateIsEnabled(Context *context, GLenum cap)
+{
+    if (!ValidCap(context, cap, true))
+    {
+        context->handleError(Error(GL_INVALID_ENUM, "Invalid cap."));
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateLinkProgram(Context *context, GLuint program)
+{
+    if (context->hasActiveTransformFeedback(program))
+    {
+        // ES 3.0.4 section 2.15 page 91
+        context->handleError(Error(GL_INVALID_OPERATION,
+                                   "Cannot link program while program is associated with an active "
+                                   "transform feedback object."));
+        return false;
+    }
+
+    Program *programObject = GetValidProgram(context, program);
+    if (!programObject)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateReadPixels(ValidationContext *context,
+                        GLint x,
+                        GLint y,
+                        GLsizei width,
+                        GLsizei height,
+                        GLenum format,
+                        GLenum type,
+                        void *pixels)
+{
+    return ValidateReadPixelsBase(context, x, y, width, height, format, type, -1, nullptr, nullptr,
+                                  nullptr, pixels);
+}
+
+bool ValidateTexParameterf(Context *context, GLenum target, GLenum pname, GLfloat param)
+{
+    return ValidateTexParameterBase(context, target, pname, -1, &param);
+}
+
+bool ValidateTexParameterfv(Context *context, GLenum target, GLenum pname, const GLfloat *params)
+{
+    return ValidateTexParameterBase(context, target, pname, -1, params);
+}
+
+bool ValidateTexParameteri(Context *context, GLenum target, GLenum pname, GLint param)
+{
+    return ValidateTexParameterBase(context, target, pname, -1, &param);
+}
+
+bool ValidateTexParameteriv(Context *context, GLenum target, GLenum pname, const GLint *params)
+{
+    return ValidateTexParameterBase(context, target, pname, -1, params);
+}
+
+bool ValidateUseProgram(Context *context, GLuint program)
+{
+    if (program != 0)
+    {
+        Program *programObject = context->getProgram(program);
+        if (!programObject)
+        {
+            // ES 3.1.0 section 7.3 page 72
+            if (context->getShader(program))
+            {
+                context->handleError(
+                    Error(GL_INVALID_OPERATION,
+                          "Attempted to use a single shader instead of a shader program."));
+                return false;
+            }
+            else
+            {
+                context->handleError(Error(GL_INVALID_VALUE, "Program invalid."));
+                return false;
+            }
+        }
+        if (!programObject->isLinked())
+        {
+            context->handleError(Error(GL_INVALID_OPERATION, "Program not linked."));
+            return false;
+        }
+    }
+    if (context->getGLState().isTransformFeedbackActiveUnpaused())
+    {
+        // ES 3.0.4 section 2.15 page 91
+        context->handleError(
+            Error(GL_INVALID_OPERATION,
+                  "Cannot change active program while transform feedback is unpaused."));
+        return false;
+    }
+
+    return true;
 }
 
 }  // namespace gl

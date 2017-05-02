@@ -4240,7 +4240,7 @@ void Context::getProgramiv(GLuint program, GLenum pname, GLint *params)
     QueryProgramiv(programObject, pname, params);
 }
 
-void Context::getInfoLog(GLuint program, GLsizei bufsize, GLsizei *length, GLchar *infolog)
+void Context::getProgramInfoLog(GLuint program, GLsizei bufsize, GLsizei *length, GLchar *infolog)
 {
     Program *programObject = getProgram(program);
     ASSERT(programObject);

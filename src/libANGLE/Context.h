@@ -694,7 +694,7 @@ class Context final : public ValidationContext
     void getAttachedShaders(GLuint program, GLsizei maxcount, GLsizei *count, GLuint *shaders);
     GLint getAttribLocation(GLuint program, const GLchar *name);
     void getProgramiv(GLuint program, GLenum pname, GLint *params);
-    void getInfoLog(GLuint program, GLsizei bufsize, GLsizei *length, GLchar *infolog);
+    void getProgramInfoLog(GLuint program, GLsizei bufsize, GLsizei *length, GLchar *infolog);
     void getShaderiv(GLuint shader, GLenum pname, GLint *params);
     void getShaderInfoLog(GLuint shader, GLsizei bufsize, GLsizei *length, GLchar *infolog);
     void getShaderPrecisionFormat(GLenum shadertype,
