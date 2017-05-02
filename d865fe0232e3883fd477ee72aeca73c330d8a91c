@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ac0ca0ec_a8b60607",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-05-02T21:30:34Z",
+      "side": 1,
+      "message": "I think it\u0027s bad to make this virtual when the base destructor in NonCopyable is not virtual.\nI have a CL that makes ~NonCopyable virtual:\nhttps://chromium-review.googlesource.com/494206",
+      "range": {
+        "startLine": 473,
+        "startChar": 32,
+        "endLine": 473,
+        "endChar": 0
+      },
+      "revId": "d865fe0232e3883fd477ee72aeca73c330d8a91c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
