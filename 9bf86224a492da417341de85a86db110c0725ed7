@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ebd35d70_1153bef5",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 11
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-02T14:14:35Z",
+      "side": 1,
+      "message": "Maybe we should point this at the khronos site instead of a local file?",
+      "range": {
+        "startLine": 67,
+        "startChar": 23,
+        "endLine": 67,
+        "endChar": 31
+      },
+      "revId": "9bf86224a492da417341de85a86db110c0725ed7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
