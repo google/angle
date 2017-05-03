@@ -16,6 +16,24 @@
       "revId": "c5e2bb096c76db7d4f8ae274c049b7f134ef59b4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "13e4f098_cb2386c5",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-03T20:37:09Z",
+      "side": 1,
+      "message": "I agree with this, we can just make it on IGarbageObject.",
+      "parentUuid": "11497346_94b60b05",
+      "revId": "c5e2bb096c76db7d4f8ae274c049b7f134ef59b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
