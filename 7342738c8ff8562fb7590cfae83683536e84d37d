@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c7fb20d9_2ee83815",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-03T17:32:29Z",
+      "side": 1,
+      "message": "nitL assert the extension is present to avoid test bugs.",
+      "revId": "7342738c8ff8562fb7590cfae83683536e84d37d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "41f3fc7c_e2ce4c63",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-03T17:32:29Z",
+      "side": 1,
+      "message": "Shouldn\u0027t only the last error be kept in GL, so that the second glGetError isn\u0027t needed?",
+      "revId": "7342738c8ff8562fb7590cfae83683536e84d37d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e9e7f859_db8b1c81",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 1528,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-03T17:32:29Z",
+      "side": 1,
+      "message": "Why does this require texture storage? Is it because GLES 3 doesn\u0027t add float LA formats to TexStorage?",
+      "revId": "7342738c8ff8562fb7590cfae83683536e84d37d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
