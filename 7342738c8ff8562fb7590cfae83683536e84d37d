@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "11181383_18b677ec",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-03T17:57:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c7fb20d9_2ee83815",
+      "revId": "7342738c8ff8562fb7590cfae83683536e84d37d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "41f3fc7c_e2ce4c63",
         "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
         "patchSetId": 22
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "b5e3c9bb_60c07c95",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-03T17:57:25Z",
+      "side": 1,
+      "message": "It keeps the last error of each type, sometimes different errors are generated and it needs to be cleared twice.",
+      "parentUuid": "41f3fc7c_e2ce4c63",
+      "revId": "7342738c8ff8562fb7590cfae83683536e84d37d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e9e7f859_db8b1c81",
         "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
         "patchSetId": 22
@@ -47,6 +83,24 @@
       "writtenOn": "2017-05-03T17:32:29Z",
       "side": 1,
       "message": "Why does this require texture storage? Is it because GLES 3 doesn\u0027t add float LA formats to TexStorage?",
+      "revId": "7342738c8ff8562fb7590cfae83683536e84d37d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81894e5e_bfe475e3",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 1528,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-03T17:57:25Z",
+      "side": 1,
+      "message": "Correct, ES3 tried to do away with LUMA formats now that RG and swizzle were available.",
+      "parentUuid": "e9e7f859_db8b1c81",
       "revId": "7342738c8ff8562fb7590cfae83683536e84d37d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
