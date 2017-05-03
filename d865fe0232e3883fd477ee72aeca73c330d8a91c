@@ -22,6 +22,30 @@
       "revId": "d865fe0232e3883fd477ee72aeca73c330d8a91c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f90934e0_3310c4e5",
+        "filename": "src/libANGLE/renderer/vulkan/renderervk_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-03T20:36:25Z",
+      "side": 1,
+      "message": "I think we should probably just make IGarbageObject virtual. If someone wants to keep a pointer to something as a NonCopyable, they deserve to suffer the consequences.",
+      "parentUuid": "ac0ca0ec_a8b60607",
+      "range": {
+        "startLine": 473,
+        "startChar": 32,
+        "endLine": 473,
+        "endChar": 0
+      },
+      "revId": "d865fe0232e3883fd477ee72aeca73c330d8a91c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
