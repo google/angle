@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e86d818d_728297f0",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-05-03T09:11:44Z",
+      "side": 1,
+      "message": "The code snippet is called at different places. So it is OK to wrap it into a standalone function. But the name \u0027callVertexAttribPointer\u0027 is not very good. Any idea for the function name, Jamie/Geoff/Corentin?",
+      "range": {
+        "startLine": 371,
+        "startChar": 2,
+        "endLine": 371,
+        "endChar": 85
+      },
+      "revId": "d0011e35fbe7787c7e8df5ea2d7a9799d20e58a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
