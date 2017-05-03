@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a28ac173_ffe10ee0",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-05-03T08:34:29Z",
+      "side": 0,
+      "message": "Opaque type can\u0027t be member of interface block. Spec 3.10 Section 4.3.9 P48.\nImage and atomic counter can\u0027t be member of structure. Spec 3.10 Section 4.1.8 P32.\nRemove the unnecessary  and misleading code.",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 67,
+        "endChar": 1
+      },
+      "revId": "be849e4f7126777bc3b80f545ea9f7a4690bca11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c79ebf8_7cf49513",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 461,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-05-03T08:34:29Z",
+      "side": 0,
+      "message": "These checks are unreachable as superseded by the above \"case EvqUniform:\".",
+      "range": {
+        "startLine": 454,
+        "startChar": 0,
+        "endLine": 461,
+        "endChar": 13
+      },
+      "revId": "be849e4f7126777bc3b80f545ea9f7a4690bca11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e09fe797_4f944193",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3825,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-05-03T08:34:29Z",
+      "side": 0,
+      "message": "ES 3.10, 4.1.7\n\"Except for array indexing, structure member selection, and parentheses,\nopaque variables are not allowed to be operands in expressions; such use results in a compile-time error.\"\n\"Opaque variables cannot be treated as l-values;\"\n\"They cannot be declared with an initializer.\"\n\nES 3.00 4.1.7 has similar statement for samplers. \n\nThe rules seem not fully respected here. Probably more checks as below are required.\n\nswitch (op)\n{\n            case EOpIndexDirect:\n            case EOpIndexDirectStruct:\n            case EOpIndexDirectInterfaceBlock:\n                break;\n            default:\n                if (IsOpaqueType(left-\u003egetBasicType()) || IsOpaqueType(right-\u003egetBasicType())\n                    error(loc, \"Invalid opaque operand(s)\", GetOperatorString(op));\n}\n\nIf so, should I do this change in another patch, and write some compile unit tests to cover it?",
+      "revId": "be849e4f7126777bc3b80f545ea9f7a4690bca11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc82ab05_fb32bc3f",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4603,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-05-03T08:34:29Z",
+      "side": 0,
+      "message": "No need to do same check on the falseExpression?",
+      "range": {
+        "startLine": 4594,
+        "startChar": 0,
+        "endLine": 4603,
+        "endChar": 5
+      },
+      "revId": "be849e4f7126777bc3b80f545ea9f7a4690bca11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
