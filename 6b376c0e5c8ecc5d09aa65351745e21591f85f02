@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ee28a976_84406843",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 696,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-03T20:43:08Z",
+      "side": 1,
+      "message": "I like this cleanup a lot. There\u0027s almost no difference between the depth and stencil methods - can you make a helper function to semi-merge them as a follow-up?",
+      "range": {
+        "startLine": 696,
+        "startChar": 5,
+        "endLine": 696,
+        "endChar": 70
+      },
+      "revId": "6b376c0e5c8ecc5d09aa65351745e21591f85f02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "244199fa_e3195100",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 605,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-03T20:43:08Z",
+      "side": 1,
+      "message": "funny. could also do the splitstringsalongwhitespice thing.",
+      "range": {
+        "startLine": 603,
+        "startChar": 0,
+        "endLine": 605,
+        "endChar": 28
+      },
+      "revId": "6b376c0e5c8ecc5d09aa65351745e21591f85f02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
