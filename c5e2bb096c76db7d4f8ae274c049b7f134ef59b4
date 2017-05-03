@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "11497346_94b60b05",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-03T14:52:51Z",
+      "side": 1,
+      "message": "I disagree with adding a vtable to NonCopyable. It will add a vtable pointer to a lot of types that don\u0027t need it.",
+      "revId": "c5e2bb096c76db7d4f8ae274c049b7f134ef59b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
