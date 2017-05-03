@@ -123,12 +123,9 @@ class TParseContext : angle::NonCopyable
     bool checkIsNonVoid(const TSourceLoc &line, const TString &identifier, const TBasicType &type);
     void checkIsScalarBool(const TSourceLoc &line, const TIntermTyped *type);
     void checkIsScalarBool(const TSourceLoc &line, const TPublicType &pType);
-    bool checkIsNotSampler(const TSourceLoc &line,
-                           const TTypeSpecifierNonArray &pType,
-                           const char *reason);
-    bool checkIsNotImage(const TSourceLoc &line,
-                         const TTypeSpecifierNonArray &pType,
-                         const char *reason);
+    bool checkIsNotOpaqueType(const TSourceLoc &line,
+                              const TTypeSpecifierNonArray &pType,
+                              const char *reason);
     void checkDeclaratorLocationIsNotSpecified(const TSourceLoc &line, const TPublicType &pType);
     void checkLocationIsNotSpecified(const TSourceLoc &location,
                                      const TLayoutQualifier &layoutQualifier);
@@ -384,15 +381,9 @@ class TParseContext : angle::NonCopyable
     // Assumes that multiplication op has already been set based on the types.
     bool isMultiplicationTypeCombinationValid(TOperator op, const TType &left, const TType &right);
 
-    void checkOutParameterIsNotImage(const TSourceLoc &line,
-                                     TQualifier qualifier,
-                                     const TType &type);
     void checkOutParameterIsNotOpaqueType(const TSourceLoc &line,
                                           TQualifier qualifier,
                                           const TType &type);
-    void checkOutParameterIsNotSampler(const TSourceLoc &line,
-                                       TQualifier qualifier,
-                                       const TType &type);
 
     void checkInternalFormatIsNotSpecified(const TSourceLoc &location,
                                            TLayoutImageInternalFormat internalFormat);

@@ -98,7 +98,6 @@ class TStructure : public TFieldListCollection
     bool containsArrays() const;
     bool containsType(TBasicType t) const;
     bool containsSamplers() const;
-    bool containsImages() const;
 
     void createSamplerSymbols(const TString &structName,
                               const TString &structAPIName,
@@ -466,11 +465,6 @@ class TType
     bool isStructureContainingSamplers() const
     {
         return structure ? structure->containsSamplers() : false;
-    }
-
-    bool isStructureContainingImages() const
-    {
-        return structure ? structure->containsImages() : false;
     }
 
     void createSamplerSymbols(const TString &structName,

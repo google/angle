@@ -3762,3 +3762,20 @@ TEST_F(FragmentShaderValidationTest, UniformLocationEmptyDeclaration)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test function parameters of opaque type can't be l-value too.
+TEST_F(FragmentShaderValidationTest, OpaqueParameterCanNotBeLValue)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "uniform sampler2D s;\n"
+        "void foo(sampler2D as) {\n"
+        "    as = s;\n"
+        "}\n"
+        "void main() {}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}

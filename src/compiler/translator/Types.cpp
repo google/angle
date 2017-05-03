@@ -526,17 +526,6 @@ bool TStructure::containsSamplers() const
     return false;
 }
 
-bool TStructure::containsImages() const
-{
-    for (size_t i = 0; i < mFields->size(); ++i)
-    {
-        const TType *fieldType = (*mFields)[i]->type();
-        if (IsImage(fieldType->getBasicType()) || fieldType->isStructureContainingImages())
-            return true;
-    }
-    return false;
-}
-
 void TStructure::createSamplerSymbols(const TString &structName,
                                       const TString &structAPIName,
                                       const unsigned int arrayOfStructsSize,
