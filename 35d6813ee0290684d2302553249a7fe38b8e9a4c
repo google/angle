@@ -22,6 +22,30 @@
       "revId": "35d6813ee0290684d2302553249a7fe38b8e9a4c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b2ff29de_d8fad58e",
+        "filename": "src/tests/gl_tests/CopyTexImageTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-05-04T21:06:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "35bc4439_054b9bc4",
+      "range": {
+        "startLine": 304,
+        "startChar": 4,
+        "endLine": 304,
+        "endChar": 15
+      },
+      "revId": "35d6813ee0290684d2302553249a7fe38b8e9a4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
