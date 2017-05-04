@@ -42,7 +42,7 @@ class Clear11 : angle::NonCopyable
                                const gl::FramebufferState &fboData);
 
   private:
-    class ShaderManager final : public angle::NonCopyable
+    class ShaderManager final : angle::NonCopyable
     {
       public:
         ShaderManager();

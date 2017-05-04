@@ -289,7 +289,7 @@ enum VertexFormatType
 
 typedef std::vector<VertexFormatType> InputLayout;
 
-struct VertexFormat : angle::NonCopyable
+struct VertexFormat : private angle::NonCopyable
 {
     VertexFormat(GLenum typeIn, GLboolean normalizedIn, GLuint componentsIn, bool pureIntegerIn);
 

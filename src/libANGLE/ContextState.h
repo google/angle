@@ -34,7 +34,7 @@ static constexpr Version ES_3_1 = Version(3, 1);
 
 using ContextID = uintptr_t;
 
-class ContextState final : public angle::NonCopyable
+class ContextState final : angle::NonCopyable
 {
   public:
     ContextState(ContextID context,

@@ -57,7 +57,7 @@ class ImageSibling : public RefCountObject, public gl::FramebufferAttachmentObje
     BindingPointer<Image> mTargetOf;
 };
 
-struct ImageState : angle::NonCopyable
+struct ImageState : private angle::NonCopyable
 {
     ImageState(EGLenum target, ImageSibling *buffer, const AttributeMap &attribs);
 

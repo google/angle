@@ -55,7 +55,7 @@ struct PixelShaderOutputVariable
     size_t outputIndex = 0;
 };
 
-struct BuiltinVarying final : angle::NonCopyable
+struct BuiltinVarying final : private angle::NonCopyable
 {
     BuiltinVarying();
 

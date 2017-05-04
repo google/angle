@@ -187,7 +187,7 @@ class EGLWindow;
 class OSWindow;
 class ANGLETest;
 
-struct TestPlatformContext final : angle::NonCopyable
+struct TestPlatformContext final : private angle::NonCopyable
 {
     bool ignoreMessages    = false;
     ANGLETest *currentTest = nullptr;

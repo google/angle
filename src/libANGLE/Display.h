@@ -41,7 +41,7 @@ class Stream;
 
 using SurfaceSet = std::set<Surface *>;
 
-struct DisplayState final : angle::NonCopyable
+struct DisplayState final : private angle::NonCopyable
 {
     SurfaceSet surfaceSet;
 };

@@ -18,7 +18,7 @@ using namespace testing;
 namespace
 {
 // Only applies to D3D11
-struct Captures final : angle::NonCopyable
+struct Captures final : private angle::NonCopyable
 {
     Timer *timer           = CreateTimer();
     size_t loadDLLsMS      = 0;

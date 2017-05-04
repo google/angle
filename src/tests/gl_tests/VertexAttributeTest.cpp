@@ -69,7 +69,7 @@ class VertexAttributeTest : public ANGLETest
         IMMEDIATE,
     };
 
-    struct TestData final : angle::NonCopyable
+    struct TestData final : private angle::NonCopyable
     {
         TestData(GLenum typeIn,
                  GLboolean normalizedIn,

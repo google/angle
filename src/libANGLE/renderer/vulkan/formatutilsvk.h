@@ -20,7 +20,7 @@ namespace rx
 namespace vk
 {
 
-struct Format final : angle::NonCopyable
+struct Format final : private angle::NonCopyable
 {
     constexpr Format(GLenum internalFormat,
                      angle::Format::ID formatID,

@@ -18,7 +18,7 @@ class VertexArray;
 //
 // Implementation of Generic Vertex Attribute Bindings for ES3.1
 //
-struct VertexBinding final : angle::NonCopyable
+struct VertexBinding final : private angle::NonCopyable
 {
     VertexBinding();
     explicit VertexBinding(VertexBinding &&binding);
@@ -34,7 +34,7 @@ struct VertexBinding final : angle::NonCopyable
 //
 // Implementation of Generic Vertex Attributes for ES3.1
 //
-struct VertexAttribute final : angle::NonCopyable
+struct VertexAttribute final : private angle::NonCopyable
 {
     explicit VertexAttribute(GLuint bindingIndex);
     explicit VertexAttribute(VertexAttribute &&attrib);

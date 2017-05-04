@@ -18,7 +18,7 @@
 namespace angle
 {
 
-struct Format final : angle::NonCopyable
+struct Format final : private angle::NonCopyable
 {
     enum class ID;
 

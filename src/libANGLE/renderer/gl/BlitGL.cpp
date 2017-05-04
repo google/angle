@@ -53,7 +53,7 @@ gl::Error CheckLinkStatus(const rx::FunctionsGL *functions, GLuint program)
     return gl::NoError();
 }
 
-class ScopedGLState : public angle::NonCopyable
+class ScopedGLState : angle::NonCopyable
 {
   public:
     enum

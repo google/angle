@@ -28,7 +28,7 @@ class StateManagerGL;
 class TextureGL;
 struct WorkaroundsGL;
 
-class BlitGL : public angle::NonCopyable
+class BlitGL : angle::NonCopyable
 {
   public:
     BlitGL(const FunctionsGL *functions,

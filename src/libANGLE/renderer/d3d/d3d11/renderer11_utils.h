@@ -223,7 +223,7 @@ ID3D11PixelShader *CompilePS(ID3D11Device *device, const BYTE (&byteCode)[N], co
 }
 
 template <typename ResourceType>
-class LazyResource : public angle::NonCopyable
+class LazyResource : angle::NonCopyable
 {
   public:
     LazyResource() : mResource(nullptr), mAssociatedDevice(nullptr) {}

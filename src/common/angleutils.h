@@ -29,10 +29,11 @@ using Microsoft::WRL::ComPtr;
 
 class NonCopyable
 {
-  public:
+  protected:
     NonCopyable() = default;
     ~NonCopyable() = default;
-  protected:
+
+  private:
     NonCopyable(const NonCopyable&) = delete;
     void operator=(const NonCopyable&) = delete;
 };

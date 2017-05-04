@@ -37,7 +37,7 @@ class AttributeMap;
 class Display;
 struct Config;
 
-struct SurfaceState final : angle::NonCopyable
+struct SurfaceState final : private angle::NonCopyable
 {
     SurfaceState(const egl::Config *configIn);
 

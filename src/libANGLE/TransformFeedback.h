@@ -27,7 +27,7 @@ struct Caps;
 class Context;
 class Program;
 
-class TransformFeedbackState final : public angle::NonCopyable
+class TransformFeedbackState final : angle::NonCopyable
 {
   public:
     TransformFeedbackState(size_t maxIndexedBuffers);

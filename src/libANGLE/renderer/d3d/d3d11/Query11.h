@@ -36,7 +36,7 @@ class Query11 : public QueryImpl
     gl::Error resume();
 
   private:
-    struct QueryState final : public angle::NonCopyable
+    struct QueryState final : private angle::NonCopyable
     {
         QueryState();
         ~QueryState();

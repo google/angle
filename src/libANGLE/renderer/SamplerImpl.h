@@ -14,7 +14,7 @@
 namespace rx
 {
 
-class SamplerImpl : public angle::NonCopyable
+class SamplerImpl : angle::NonCopyable
 {
   public:
     SamplerImpl() {}

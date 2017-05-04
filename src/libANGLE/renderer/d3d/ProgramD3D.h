@@ -32,7 +32,7 @@ class ShaderExecutableD3D;
 #endif
 
 // Helper struct representing a single shader uniform
-struct D3DUniform : angle::NonCopyable
+struct D3DUniform : private angle::NonCopyable
 {
     D3DUniform(GLenum typeIn,
                const std::string &nameIn,

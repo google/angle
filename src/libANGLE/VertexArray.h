@@ -31,7 +31,7 @@ namespace gl
 {
 class Buffer;
 
-class VertexArrayState final : public angle::NonCopyable
+class VertexArrayState final : angle::NonCopyable
 {
   public:
     VertexArrayState(size_t maxAttribs, size_t maxBindings);
