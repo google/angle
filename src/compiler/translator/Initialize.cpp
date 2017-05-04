@@ -791,9 +791,15 @@ void IdentifyBuiltIns(sh::GLenum type,
 
     if (resources.OVR_multiview && type != GL_COMPUTE_SHADER)
     {
-        symbolTable.insert(COMMON_BUILTINS, "GL_OVR_multiview",
+        symbolTable.insert(ESSL3_BUILTINS, "GL_OVR_multiview",
                            new TVariable(NewPoolTString("gl_ViewID_OVR"),
                                          TType(EbtUInt, EbpHigh, EvqViewIDOVR, 1)));
+
+        // ESSL 1.00 doesn't have unsigned integers, so gl_ViewID_OVR is a signed integer in ESSL
+        // 1.00. This is specified in the WEBGL_multiview spec.
+        symbolTable.insert(ESSL1_BUILTINS, "GL_OVR_multiview",
+                           new TVariable(NewPoolTString("gl_ViewID_OVR"),
+                                         TType(EbtInt, EbpHigh, EvqViewIDOVR, 1)));
     }
 
     switch (type)

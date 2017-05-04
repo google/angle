@@ -157,6 +157,12 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, void *scanner, cons
     }  \
 }
 
+#define ES3_OR_NEWER_OR_MULTIVIEW(TOKEN, LINE, REASON) {  \
+    if (context->getShaderVersion() < 300 && !context->isMultiviewExtensionEnabled()) {  \
+        context->error(LINE, REASON " supported in GLSL ES 3.00 and above only ", TOKEN);  \
+    }  \
+}
+
 #define ES3_1_ONLY(TOKEN, LINE, REASON) {  \
     if (context->getShaderVersion() != 310) {  \
         context->error(LINE, REASON " supported in GLSL ES 3.10 only ", TOKEN);  \
@@ -907,7 +913,7 @@ storage_qualifier
         }
         else if (context->getShaderType() == GL_VERTEX_SHADER)
         {
-            ES3_OR_NEWER("in", @1, "storage qualifier");
+            ES3_OR_NEWER_OR_MULTIVIEW("in", @1, "storage qualifier");
             $$ = new TStorageQualifierWrapper(EvqVertexIn, @1);
         }
         else
@@ -992,7 +998,7 @@ precision_qualifier
 
 layout_qualifier
     : LAYOUT LEFT_PAREN layout_qualifier_id_list RIGHT_PAREN {
-        ES3_OR_NEWER("layout", @1, "qualifier");
+        ES3_OR_NEWER_OR_MULTIVIEW("layout", @1, "qualifier");
         $$ = $3;
     }
     ;
