@@ -14,20 +14,11 @@
 #include "common/Optional.h"
 #include "common/angleutils.h"
 #include "common/mathutil.h"
+#include "libANGLE/entry_points_enum_autogen.h"
 
 namespace gl
 {
 class Context;
-
-enum class EntryPoint
-{
-    Invalid,
-    DrawArrays,
-    DrawElements,
-    DrawElementsInstanced,
-    DrawElementsInstancedANGLE,
-    DrawRangeElements,
-};
 
 template <EntryPoint EP>
 struct EntryPointParam;
