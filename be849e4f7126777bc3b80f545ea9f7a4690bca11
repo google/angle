@@ -65,6 +65,24 @@
     },
     {
       "key": {
+        "uuid": "c1b56685_b458d9cd",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3825,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-05-04T01:40:46Z",
+      "side": 0,
+      "message": "I think you can do this change in another patch and write some unit tests to cover it. Let\u0027s keep this patch simple and small. So the reviewer can quickly merge it.",
+      "parentUuid": "e09fe797_4f944193",
+      "revId": "be849e4f7126777bc3b80f545ea9f7a4690bca11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cc82ab05_fb32bc3f",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 1
@@ -76,6 +94,30 @@
       "writtenOn": "2017-05-03T08:34:29Z",
       "side": 0,
       "message": "No need to do same check on the falseExpression?",
+      "range": {
+        "startLine": 4594,
+        "startChar": 0,
+        "endLine": 4603,
+        "endChar": 5
+      },
+      "revId": "be849e4f7126777bc3b80f545ea9f7a4690bca11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a931857_8b15971f",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4603,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-05-04T01:40:46Z",
+      "side": 0,
+      "message": "Agreee. I think the falseExpression needs to do the same checking.  Do you check why other if sentences only do  trueExpression?  It seems that other if sentences also need to check the falseExpression.  Please add tests to verify it.\n\nYou can put this part and above part together in another patch.",
+      "parentUuid": "cc82ab05_fb32bc3f",
       "range": {
         "startLine": 4594,
         "startChar": 0,
