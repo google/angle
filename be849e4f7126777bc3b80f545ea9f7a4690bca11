@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "dfc62791_37b1d50f",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-04T09:44:15Z",
+      "side": 0,
+      "message": "Always nice to see code being removed!",
+      "parentUuid": "a28ac173_ffe10ee0",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 67,
+        "endChar": 1
+      },
+      "revId": "be849e4f7126777bc3b80f545ea9f7a4690bca11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0c79ebf8_7cf49513",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2017-05-03T08:34:29Z",
       "side": 0,
       "message": "These checks are unreachable as superseded by the above \"case EvqUniform:\".",
+      "range": {
+        "startLine": 454,
+        "startChar": 0,
+        "endLine": 461,
+        "endChar": 13
+      },
+      "revId": "be849e4f7126777bc3b80f545ea9f7a4690bca11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ddab142_ac49ba19",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 461,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-04T09:44:15Z",
+      "side": 0,
+      "message": "I don\u0027t think that these can be removed. A sampler or image can be a function parameter as well, in that case the reference doesn\u0027t have the uniform qualifier.\n\nSeems like this isn\u0027t being tested, you could add a test like this to cover this:\n\nuniform sampler2D s;\nvoid foo(sampler2D as) {\n    as \u003d s;\n}\nvoid main() {\n}\n\nI think the test can be in this same patch.",
+      "parentUuid": "0c79ebf8_7cf49513",
       "range": {
         "startLine": 454,
         "startChar": 0,
@@ -83,6 +131,24 @@
     },
     {
       "key": {
+        "uuid": "1353fa44_772a4758",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3825,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-04T09:44:15Z",
+      "side": 0,
+      "message": "True, these checks are missing. For example this code passes compilation, when it should result in an error:\n\nuniform sampler2D s;\nuniform sampler2D s2;\nvoid main() {\n    s + s2;\n}\n\nI also think that this should be fixed in another patch. Would be good to put the same tests into WebGL conformance tests as well.",
+      "parentUuid": "c1b56685_b458d9cd",
+      "revId": "be849e4f7126777bc3b80f545ea9f7a4690bca11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cc82ab05_fb32bc3f",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 1
@@ -118,6 +184,30 @@
       "side": 0,
       "message": "Agreee. I think the falseExpression needs to do the same checking.  Do you check why other if sentences only do  trueExpression?  It seems that other if sentences also need to check the falseExpression.  Please add tests to verify it.\n\nYou can put this part and above part together in another patch.",
       "parentUuid": "cc82ab05_fb32bc3f",
+      "range": {
+        "startLine": 4594,
+        "startChar": 0,
+        "endLine": 4603,
+        "endChar": 5
+      },
+      "revId": "be849e4f7126777bc3b80f545ea9f7a4690bca11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7989a23_12a054d6",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4603,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-04T09:44:15Z",
+      "side": 0,
+      "message": "It is already being checked above that the type of trueExpression and falseExpression match, so only one of them needs to be checked from here on.",
+      "parentUuid": "4a931857_8b15971f",
       "range": {
         "startLine": 4594,
         "startChar": 0,

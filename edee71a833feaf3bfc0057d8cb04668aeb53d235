@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "893202f7_e7d011fe",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-04T09:44:15Z",
+      "side": 1,
+      "message": "Commit message header should describe what is changed. Make it something like \"Unify opaque type validation in GLSL parsing\".",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 47
+      },
+      "revId": "edee71a833feaf3bfc0057d8cb04668aeb53d235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "173ccaac_797db40b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-04T09:44:15Z",
+      "side": 1,
+      "message": "I don\u0027t think bug 1920 is related enough. I\u0027d remove it from the commit message.",
+      "revId": "edee71a833feaf3bfc0057d8cb04668aeb53d235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b225587_54a3ee4e",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 760,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-04T09:44:15Z",
+      "side": 1,
+      "message": "Add a comment that only samplers need to be checked from structs, since other opaque types can\u0027t be struct members.",
+      "revId": "edee71a833feaf3bfc0057d8cb04668aeb53d235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "774a604a_8e64d348",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1075,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-04T09:44:15Z",
+      "side": 1,
+      "message": "These patches will need rebasing once https://chromium-review.googlesource.com/c/493227/ lands.\n\nMost of the checks that were in singleDeclarationErrorCheck will be in nonEmptyDeclarationErrorCheck after that patch.\n\nThe checks that are done only on qualifiers and don\u0027t care about the type of the declaration need to be in declarationQualifierErrorCheck.",
+      "revId": "edee71a833feaf3bfc0057d8cb04668aeb53d235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
