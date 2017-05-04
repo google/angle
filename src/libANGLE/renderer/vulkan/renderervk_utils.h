@@ -470,6 +470,7 @@ using FenceAndSerial         = ObjectAndSerial<Fence>;
 class IGarbageObject : angle::NonCopyable
 {
   public:
+    virtual ~IGarbageObject() {}
     virtual bool destroyIfComplete(VkDevice device, Serial completedSerial) = 0;
     virtual void destroy(VkDevice device) = 0;
 };
