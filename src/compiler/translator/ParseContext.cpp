@@ -440,6 +440,9 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
         case EvqLocalInvocationIndex:
             message = "can't modify gl_LocalInvocationIndex";
             break;
+        case EvqViewIDOVR:
+            message = "can't modify gl_ViewID_OVR";
+            break;
         case EvqComputeIn:
             message = "can't modify work group size variable";
             break;

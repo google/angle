@@ -397,3 +397,24 @@ TEST_F(WEBGLMultiviewVertexShaderTest, AssignmentWithViewIDInsideAssignment)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test that gl_ViewID_OVR can't be used as an l-value.
+TEST_F(WEBGLMultiviewVertexShaderTest, ViewIdAsLValue)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview2 : require\n"
+        "void foo(out uint u)\n"
+        "{\n"
+        "    u = 3u;\n"
+        "}\n"
+        "void main()\n"
+        "{\n"
+        "    foo(gl_ViewID_OVR);\n"
+        "    gl_Position = vec4(0.0, 0.0, 0.0, 1.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
