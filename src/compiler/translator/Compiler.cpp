@@ -362,7 +362,7 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         if (success)
             PruneEmptyDeclarations(root);
 
-        if (success && shaderVersion == 300 && shaderType == GL_FRAGMENT_SHADER)
+        if (success && shaderVersion >= 300 && shaderType == GL_FRAGMENT_SHADER)
             success = validateOutputs(root);
 
         if (success && shouldRunLoopAndIndexingValidation(compileOptions))
