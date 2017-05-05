@@ -169,6 +169,24 @@
       "revId": "edee71a833feaf3bfc0057d8cb04668aeb53d235",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed20d00f_85c597f8",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1075,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-05-05T12:10:50Z",
+      "side": 1,
+      "message": "Understood!",
+      "parentUuid": "45b984e5_21e2531a",
+      "revId": "edee71a833feaf3bfc0057d8cb04668aeb53d235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
