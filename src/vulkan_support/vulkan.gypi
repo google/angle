@@ -636,6 +636,7 @@
                         {
                             'action_name': 'vulkan_run_vk_xml_generate_vk_enum_string_helper_h',
                             'message': 'generating vk_enum_string_helper.h',
+                            'msvs_cygwin_shell': 0,
                             'inputs':
                             [
                                 '<(vulkan_layers_path)/scripts/generator.py',
@@ -660,6 +661,7 @@
                         {
                             'action_name': 'vulkan_run_vk_xml_generate_vk_struct_size_helper_h',
                             'message': 'generating vk_struct_size_helper.h',
+                            'msvs_cygwin_shell': 0,
                             'inputs':
                             [
                                 '<(vulkan_layers_path)/scripts/generator.py',
@@ -684,6 +686,7 @@
                         {
                             'action_name': 'vulkan_run_vk_xml_generate_vk_struct_size_helper_c',
                             'message': 'generating vk_struct_size_helper.c',
+                            'msvs_cygwin_shell': 0,
                             'inputs':
                             [
                                 '<(vulkan_layers_path)/scripts/generator.py',
@@ -708,6 +711,7 @@
                         {
                             'action_name': 'vulkan_run_vk_xml_generate_vk_safe_struct_h',
                             'message': 'generating vk_safe_struct.h',
+                            'msvs_cygwin_shell': 0,
                             'inputs':
                             [
                                 '<(vulkan_layers_path)/scripts/generator.py',
@@ -732,6 +736,7 @@
                         {
                             'action_name': 'vulkan_run_vk_xml_generate_vk_safe_struct_cpp',
                             'message': 'generating vk_safe_struct.cpp',
+                            'msvs_cygwin_shell': 0,
                             'inputs':
                             [
                                 '<(vulkan_layers_path)/scripts/generator.py',
@@ -756,6 +761,7 @@
                         {
                             'action_name': 'vulkan_run_vk_xml_generate_vk_layer_dispatch_table_h',
                             'message': 'generating vk_layer_dispatch_table.h',
+                            'msvs_cygwin_shell': 0,
                             'inputs':
                             [
                                 '<(vulkan_layers_path)/scripts/loader_extension_generator.py',
@@ -778,6 +784,7 @@
                         {
                             'action_name': 'vulkan_run_vk_xml_generate_vk_dispatch_table_helper_h',
                             'message': 'generating vk_dispatch_table_helper.h',
+                            'msvs_cygwin_shell': 0,
                             'inputs':
                             [
                                 '<(vulkan_layers_path)/scripts/dispatch_table_helper_generator.py',
@@ -800,6 +807,7 @@
                         {
                             'action_name': 'vulkan_run_vk_xml_generate_vk_loader_extensions_h',
                             'message': 'generating vk_loader_extensions.h',
+                            'msvs_cygwin_shell': 0,
                             'inputs':
                             [
                                 '<(vulkan_layers_path)/scripts/loader_extension_generator.py',
@@ -822,6 +830,7 @@
                         {
                             'action_name': 'vulkan_run_vk_xml_generate_vk_loader_extensions_c',
                             'message': 'generating vk_loader_extensions.c',
+                            'msvs_cygwin_shell': 0,
                             'inputs':
                             [
                                 '<(vulkan_layers_path)/scripts/loader_extension_generator.py',
@@ -1009,6 +1018,7 @@
                         {
                             'action_name': 'vulkan_loader_order_deps',
                             'message': 'stamping for vulkan_loader_order_deps',
+                            'msvs_cygwin_shell': 0,
                             'inputs': [ '<@(vulkan_layer_generated_files)' ],
                             'outputs': [ '<(angle_gen_path)/vulkan/vulkan_loader_order_deps.stamp' ],
                             'action':
@@ -1037,6 +1047,7 @@
                         {
                             'action_name': 'layer_core_validation_order_deps',
                             'message': 'stamping for layer_core_validation_order_deps',
+                            'msvs_cygwin_shell': 0,
                             'inputs': [ '<@(vulkan_layer_generated_files)' ],
                             'outputs': [ '<(angle_gen_path)/vulkan/layer_core_validation_order_deps.stamp' ],
                             'action':
@@ -1074,6 +1085,7 @@
                         {
                             'action_name': 'layer_swapchain_order_deps',
                             'message': 'stamping for layer_swapchain_order_deps',
+                            'msvs_cygwin_shell': 0,
                             'inputs': [ '<@(vulkan_layer_generated_files)' ],
                             'outputs': [ '<(angle_gen_path)/vulkan/layer_swapchain_order_deps.stamp' ],
                             'action':
@@ -1111,6 +1123,7 @@
                         {
                             'action_name': 'layer_object_tracker_order_deps',
                             'message': 'stamping for layer_object_tracker_order_deps',
+                            'msvs_cygwin_shell': 0,
                             'inputs': [ '<@(vulkan_layer_generated_files)' ],
                             'outputs': [ '<(angle_gen_path)/vulkan/layer_object_tracker_order_deps.stamp' ],
                             'action':
@@ -1158,6 +1171,7 @@
                         {
                             'action_name': 'layer_unique_objects_order_deps',
                             'message': 'stamping for layer_unique_objects_order_deps',
+                            'msvs_cygwin_shell': 0,
                             'inputs': [ '<@(vulkan_layer_generated_files)' ],
                             'outputs': [ '<(angle_gen_path)/vulkan/layer_unique_objects_order_deps.stamp' ],
                             'action':
@@ -1169,6 +1183,7 @@
                         {
                             'action_name': 'vulkan_layer_unique_objects_generate',
                             'message': 'generating Vulkan unique_objects helpers',
+                            'msvs_cygwin_shell': 0,
                             'inputs':
                             [
                                 '<(vulkan_layers_path)/scripts/generator.py',
@@ -1216,6 +1231,7 @@
                         {
                             'action_name': 'layer_threading_order_deps',
                             'message': 'stamping for layer_threading_order_deps',
+                            'msvs_cygwin_shell': 0,
                             'inputs': [ '<@(vulkan_layer_generated_files)' ],
                             'outputs': [ '<(angle_gen_path)/vulkan/layer_threading_order_deps.stamp' ],
                             'action':
@@ -1227,6 +1243,7 @@
                         {
                             'action_name': 'vulkan_layer_threading_generate',
                             'message': 'generating Vulkan threading header',
+                            'msvs_cygwin_shell': 0,
                             'inputs':
                             [
                                 '<(vulkan_layers_path)/scripts/generator.py',
@@ -1274,6 +1291,7 @@
                         {
                             'action_name': 'layer_parameter_validation_order_deps',
                             'message': 'stamping for layer_parameter_validation_order_deps',
+                            'msvs_cygwin_shell': 0,
                             'inputs': [ '<@(vulkan_layer_generated_files)' ],
                             'outputs': [ '<(angle_gen_path)/vulkan/layer_parameter_validation_order_deps.stamp' ],
                             'action':
@@ -1285,6 +1303,7 @@
                         {
                             'action_name': 'vulkan_layer_parameter_validation_generate',
                             'message': 'generating Vulkan parameter_validation header',
+                            'msvs_cygwin_shell': 0,
                             'inputs':
                             [
                                 '<(vulkan_layers_path)/scripts/generator.py',
