@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "904011a5_77e47ece",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 30
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-05T15:20:34Z",
+      "side": 1,
+      "message": "I just want to change it into C++11 style.",
+      "revId": "f477aa9914d6bdaec85cbe358f6eea1589664491",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "93c9e429_d9a936b2",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-05T15:20:34Z",
+      "side": 1,
+      "message": "This function is for implementing Vertex Attrib Binding.\nif IsVertexAttribPointerValid is false, then we should not call VertexAttribPointer because there exists some states that VertexAttribPointer cannot handle.\ne.g. We can only use VertexAttribFormat to set attrib.relativeOffset if it is not 0.",
+      "revId": "f477aa9914d6bdaec85cbe358f6eea1589664491",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b5bf4285_fb5f39d1",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-05T15:20:34Z",
+      "side": 1,
+      "message": "I think it is a better way to represent the attribute is using a client memory pointer than the original one (assign a \u0027-1\u0027 to size)",
+      "revId": "f477aa9914d6bdaec85cbe358f6eea1589664491",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

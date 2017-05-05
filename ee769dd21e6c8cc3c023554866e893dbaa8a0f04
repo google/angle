@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bcec5faa_6e44f60c",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 383,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-05T15:20:34Z",
+      "side": 0,
+      "message": "This piece of code appears twice: once here and another in updateAttribPointer(Line. 493).\nI put this in one function callVertexAttribPointer.",
+      "revId": "ee769dd21e6c8cc3c023554866e893dbaa8a0f04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6fb53d1c_287cf291",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-05T15:20:34Z",
+      "side": 0,
+      "message": "This function appears in every updateAttrib* functions, which I think is redundant.\nI remove all bindVertexArray and just call it once in syncState().",
+      "revId": "ee769dd21e6c8cc3c023554866e893dbaa8a0f04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "80f4fd44_4301f245",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 455,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-05T15:20:34Z",
+      "side": 0,
+      "message": "We do not need to check the members that are not relevant to VertexAttribPointer in both VertexAttribute and VertexBindings here:\n1. attrib.enabled (it should be checked in updateAttribEnabled())\n2. attrib.pointer (if it represents a client memory pointer, it should be updated in streamAttribute() not here)\n3. attrib.vertexAttribArrayStride (it is only for query VERTEX_ATTRIB_STRIDE, we should use binding.stride as stride here)\n4. binding.divisor (it should be checked in updateAttribDivisor())",
+      "revId": "ee769dd21e6c8cc3c023554866e893dbaa8a0f04",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
