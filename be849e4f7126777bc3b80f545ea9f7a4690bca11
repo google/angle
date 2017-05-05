@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "ee23a98b_7e777d05",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 461,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-05-05T02:20:42Z",
+      "side": 0,
+      "message": "Ah, that\u0027s it. Kind of interesting.\nNew test case added.",
+      "parentUuid": "4ddab142_ac49ba19",
+      "range": {
+        "startLine": 454,
+        "startChar": 0,
+        "endLine": 461,
+        "endChar": 13
+      },
+      "revId": "be849e4f7126777bc3b80f545ea9f7a4690bca11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e09fe797_4f944193",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 1
@@ -143,6 +167,24 @@
       "side": 0,
       "message": "True, these checks are missing. For example this code passes compilation, when it should result in an error:\n\nuniform sampler2D s;\nuniform sampler2D s2;\nvoid main() {\n    s + s2;\n}\n\nI also think that this should be fixed in another patch. Would be good to put the same tests into WebGL conformance tests as well.",
       "parentUuid": "c1b56685_b458d9cd",
+      "revId": "be849e4f7126777bc3b80f545ea9f7a4690bca11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f6cd9405_9427bcdf",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3825,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-05-05T02:20:42Z",
+      "side": 0,
+      "message": "Okay, will do that in another patch.",
+      "parentUuid": "1353fa44_772a4758",
       "revId": "be849e4f7126777bc3b80f545ea9f7a4690bca11",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -208,6 +250,30 @@
       "side": 0,
       "message": "It is already being checked above that the type of trueExpression and falseExpression match, so only one of them needs to be checked from here on.",
       "parentUuid": "4a931857_8b15971f",
+      "range": {
+        "startLine": 4594,
+        "startChar": 0,
+        "endLine": 4603,
+        "endChar": 5
+      },
+      "revId": "be849e4f7126777bc3b80f545ea9f7a4690bca11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f4551233_c49a9a9a",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4603,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-05-05T02:20:42Z",
+      "side": 0,
+      "message": "Got it, thanks for the clarification!",
+      "parentUuid": "d7989a23_12a054d6",
       "range": {
         "startLine": 4594,
         "startChar": 0,

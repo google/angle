@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7ea8dc17_09ac8465",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-05-05T02:20:42Z",
+      "side": 1,
+      "message": "Nice, good practice indeed!",
+      "parentUuid": "893202f7_e7d011fe",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 47
+      },
+      "revId": "edee71a833feaf3bfc0057d8cb04668aeb53d235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "173ccaac_797db40b",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -39,6 +63,24 @@
       "revId": "edee71a833feaf3bfc0057d8cb04668aeb53d235",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d6a4170e_29f4aa62",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-05-05T02:20:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "173ccaac_797db40b",
+      "revId": "edee71a833feaf3bfc0057d8cb04668aeb53d235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "5b5d5de1_7045775b",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 760,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-05-05T02:20:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6b225587_54a3ee4e",
+      "revId": "edee71a833feaf3bfc0057d8cb04668aeb53d235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "774a604a_8e64d348",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 1
@@ -73,6 +133,24 @@
       "revId": "edee71a833feaf3bfc0057d8cb04668aeb53d235",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "518712fc_0ef2bfbb",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1075,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-05-05T02:20:42Z",
+      "side": 1,
+      "message": "Rebased.\n\nThat CL makes things much clearer, and is easy to read, except for the naming of declarationQualifierErrorCheck. My personal understanding is that check process should be something like commonDeclarationErrorCheck first, and then empty or non-empty check later. So the declarationQualifierErrorCheck naming would better carry this kind of information. Beside It\u0027s a bit misleading in sense that all qualifier error checks should be put into it, but actually nonEmptyDeclarationErrorCheck does a lot of qualifier checkes as well. Just my personal feeling. Please ignore if a noise.",
+      "parentUuid": "774a604a_8e64d348",
+      "revId": "edee71a833feaf3bfc0057d8cb04668aeb53d235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
