@@ -3779,3 +3779,21 @@ TEST_F(FragmentShaderValidationTest, OpaqueParameterCanNotBeLValue)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test samplers must not be operands in expressions, except for array indexing, structure field
+// selection and parentheses(ESSL 3.00 Secion 4.1.7).
+TEST_F(FragmentShaderValidationTest, InvalidExpressionForSamplerOperands)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "uniform sampler2D s;\n"
+        "uniform sampler2D s2;\n"
+        "void main() {\n"
+        "    s + s2;\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}

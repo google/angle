@@ -3769,8 +3769,24 @@ bool TParseContext::binaryOpCommonCheck(TOperator op,
                                         TIntermTyped *right,
                                         const TSourceLoc &loc)
 {
-    // TODO(jie.a.chen@intel.com): Validate opaque type variables can only be operands in array
-    // indexing, structure member selection, and parentheses expressions.
+    // Check opaque types are not allowed to be operands in expressions other than array indexing
+    // and structure member selection.
+    if (IsOpaqueType(left->getBasicType()) || IsOpaqueType(right->getBasicType()))
+    {
+        switch (op)
+        {
+            case EOpIndexDirect:
+            case EOpIndexIndirect:
+                break;
+            case EOpIndexDirectStruct:
+                UNREACHABLE();
+
+            default:
+                error(loc, "Invalid operation for variables with an opaque type",
+                      GetOperatorString(op));
+                return false;
+        }
+    }
 
     if (left->getType().getStruct() || right->getType().getStruct())
     {
