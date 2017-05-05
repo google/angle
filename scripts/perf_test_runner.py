@@ -28,8 +28,9 @@ perftests_paths = [
 ]
 metric = 'score'
 
-# TODO(jmadill): Linux binaries
-binary_name = 'angle_perftests.exe'
+binary_name = 'angle_perftests'
+if sys.platform == 'win32':
+    binary_name += '.exe'
 
 scores = []
 
@@ -83,10 +84,13 @@ for path in perftests_paths:
 perftests_path = newest_binary
 
 if perftests_path == None or not os.path.exists(perftests_path):
-    print("Cannot find Release angle_perftests.exe!")
+    print('Cannot find Release %s!' % binary_name)
     sys.exit(1)
 
-test_name = "DrawCallPerfBenchmark.Run/d3d11_null"
+if sys.platform == 'win32':
+    test_name = 'DrawCallPerfBenchmark.Run/d3d11_null'
+else:
+    test_name = 'DrawCallPerfBenchmark.Run/gl'
 
 if len(sys.argv) >= 2:
     test_name = sys.argv[1]
