@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2963a691_47cbf678",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-05T10:46:28Z",
+      "side": 1,
+      "message": "Nit: Maybe \"can\u0027t modify a variable with type\" would be better - I find the \"a(an)\" a bit distracting.",
+      "revId": "d32b9510def71afb73fce3e7a56201d83ed2b946",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "65da02ff_581928c3",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 662,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-05T10:46:28Z",
+      "side": 1,
+      "message": "Nit: Same here - \"cannot convert a variable with type \"",
+      "revId": "d32b9510def71afb73fce3e7a56201d83ed2b946",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

@@ -151,6 +151,24 @@
       "revId": "edee71a833feaf3bfc0057d8cb04668aeb53d235",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "45b984e5_21e2531a",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1075,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-05T10:46:28Z",
+      "side": 1,
+      "message": "It\u0027s really hard to pick good names for these functions, and something like commonDeclarationErrorCheck might indeed be a good alternative. I picked declarationQualifierErrorCheck because it does checks on the combination of qualifiers as opposed to doing checks related to the type of the declaration. nonEmptyDeclarationErrorCheck looks at qualifiers as well, but those checks always depend also on the type of the declaration.",
+      "parentUuid": "518712fc_0ef2bfbb",
+      "revId": "edee71a833feaf3bfc0057d8cb04668aeb53d235",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
