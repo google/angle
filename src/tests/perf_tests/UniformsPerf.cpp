@@ -181,6 +181,10 @@ void UniformsBenchmark::initializeBenchmark()
         }
     }
 
+    GLint attribLocation = glGetAttribLocation(mProgram, "pos");
+    ASSERT_NE(-1, attribLocation);
+    glVertexAttrib4f(attribLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+
     ASSERT_GL_NO_ERROR();
 }
 
@@ -201,6 +205,8 @@ void UniformsBenchmark::initShaders()
     std::string typeString  = isMatrix ? "mat4" : "vec4";
     std::string constVector = "const vec4 one = vec4(1, 1, 1, 1);\n";
 
+    vstrstr << "attribute vec4 pos;\n";
+
     if (isMatrix)
     {
         vstrstr << constVector;
@@ -213,7 +219,7 @@ void UniformsBenchmark::initShaders()
 
     vstrstr << "void main()\n"
                "{\n"
-               "    gl_Position = vec4(0, 0, 0, 0);\n";
+               "    gl_Position = pos;\n";
     for (size_t i = 0; i < params.numVertexUniforms; i++)
     {
         vstrstr << "    gl_Position += " << GetUniformLocationName(i, true);
