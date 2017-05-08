@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "707a35a9_81d2978f",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3856,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-08T08:37:39Z",
+      "side": 1,
+      "message": "Nit: typo",
+      "range": {
+        "startLine": 3856,
+        "startChar": 13,
+        "endLine": 3856,
+        "endChar": 19
+      },
+      "revId": "e8a3eec62cfadf4b7c7dfee803a87517c73473f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "29465330_235b52f8",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3861,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-08T08:37:39Z",
+      "side": 1,
+      "message": "I don\u0027t think that the EOpIndexDirectStruct case is ever possible, actually. EOpIndexDirectStruct nodes are only created when the left operand is the struct and the right operand is a field id. Neither of them can have an opaque type. You could add UNREACHABLE() under EOpIndexDirectStruct after moving the if statement to surround the switch statement (see comment below).\n\nEOpIndexIndirect should be allowed, though. That\u0027s necessary for at least ESSL 1.00 support, which allows indexing sampler arrays with loop indices. We may have a bug where dynamic indexing of sampler arrays is allowed unintentionally in ESSL 3.00, but that should be looked into separately, there may have been some complexity related to that with ESSL 3.00.",
+      "revId": "e8a3eec62cfadf4b7c7dfee803a87517c73473f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9a03cba4_b2b3abf0",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3865,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-08T08:37:39Z",
+      "side": 1,
+      "message": "Move this if statement outside the switch statement, that\u0027s more consistent with how the checks are done with other types such as structs etc.",
+      "range": {
+        "startLine": 3865,
+        "startChar": 12,
+        "endLine": 3865,
+        "endChar": 90
+      },
+      "revId": "e8a3eec62cfadf4b7c7dfee803a87517c73473f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0031365d_33c045c7",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3866,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-08T08:37:39Z",
+      "side": 1,
+      "message": "I would make this \"Invalid operation for variables with an opaque type\" to be more consistent with the other error messages.\n\nAlso add \"return false;\" here.",
+      "range": {
+        "startLine": 3866,
+        "startChar": 28,
+        "endLine": 3866,
+        "endChar": 53
+      },
+      "revId": "e8a3eec62cfadf4b7c7dfee803a87517c73473f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
