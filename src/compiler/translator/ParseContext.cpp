@@ -4523,32 +4523,35 @@ TIntermTyped *TParseContext::addTernarySelection(TIntermTyped *cond,
 
     if (trueExpression->getType() != falseExpression->getType())
     {
-        binaryOpError(loc, ":", trueExpression->getCompleteString(),
+        binaryOpError(loc, "?:", trueExpression->getCompleteString(),
                       falseExpression->getCompleteString());
         return falseExpression;
     }
     if (IsOpaqueType(trueExpression->getBasicType()))
     {
         // ESSL 1.00 section 4.1.7
-        // ESSL 3.00 section 4.1.7
+        // ESSL 3.00.6 section 4.1.7
         // Opaque/sampler types are not allowed in most types of expressions, including ternary.
         // Note that structs containing opaque types don't need to be checked as structs are
         // forbidden below.
-        error(loc, "ternary operator is not allowed for opaque types", ":");
+        error(loc, "ternary operator is not allowed for opaque types", "?:");
         return falseExpression;
     }
 
-    // ESSL1 sections 5.2 and 5.7:
-    // ESSL3 section 5.7:
+    // ESSL 1.00.17 sections 5.2 and 5.7:
     // Ternary operator is not among the operators allowed for structures/arrays.
+    // ESSL 3.00.6 section 5.7:
+    // Ternary operator support is optional for arrays. No certainty that it works across all
+    // devices with struct either, so we err on the side of caution here. TODO (oetuaho@nvidia.com):
+    // Would be nice to make the spec and implementation agree completely here.
     if (trueExpression->isArray() || trueExpression->getBasicType() == EbtStruct)
     {
-        error(loc, "ternary operator is not allowed for structures or arrays", ":");
+        error(loc, "ternary operator is not allowed for structures or arrays", "?:");
         return falseExpression;
     }
     if (trueExpression->getBasicType() == EbtInterfaceBlock)
     {
-        error(loc, "ternary operator is not allowed for interface blocks", ":");
+        error(loc, "ternary operator is not allowed for interface blocks", "?:");
         return falseExpression;
     }
 
@@ -4556,7 +4559,7 @@ TIntermTyped *TParseContext::addTernarySelection(TIntermTyped *cond,
     // "Ternary operator applied to void, arrays, or structs containing arrays"
     if (mShaderSpec == SH_WEBGL2_SPEC && trueExpression->getBasicType() == EbtVoid)
     {
-        error(loc, "ternary operator is not allowed for void", ":");
+        error(loc, "ternary operator is not allowed for void", "?:");
         return falseExpression;
     }
 
