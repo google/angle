@@ -89,6 +89,8 @@ std::array<angle::Vector3, 4> GetIndexedQuadVertices()
     return vertices;
 }
 
+static constexpr GLushort IndexedQuadIndices[6] = {0, 1, 2, 0, 2, 3};
+
 }  // anonymous namespace
 
 GLColorRGB::GLColorRGB() : R(0), G(0), B(0)
@@ -204,6 +206,7 @@ ANGLETest::ANGLETest()
       mHeight(16),
       mIgnoreD3D11SDKLayersWarnings(false),
       mQuadVertexBuffer(0),
+      mQuadIndexBuffer(0),
       mDeferContextInit(false)
 {
     mEGLWindow =
@@ -237,6 +240,10 @@ ANGLETest::~ANGLETest()
     if (mQuadVertexBuffer)
     {
         glDeleteBuffers(1, &mQuadVertexBuffer);
+    }
+    if (mQuadIndexBuffer)
+    {
+        glDeleteBuffers(1, &mQuadIndexBuffer);
     }
     SafeDelete(mEGLWindow);
 }
@@ -373,6 +380,18 @@ void ANGLETest::setupIndexedQuadVertexBuffer(GLfloat positionAttribZ, GLfloat po
     glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * 4, quadVertices.data(), GL_STATIC_DRAW);
 }
 
+void ANGLETest::setupIndexedQuadIndexBuffer()
+{
+    if (mQuadIndexBuffer == 0)
+    {
+        glGenBuffers(1, &mQuadIndexBuffer);
+    }
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mQuadIndexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(angle::IndexedQuadIndices),
+                 angle::IndexedQuadIndices, GL_STATIC_DRAW);
+}
+
 // static
 void ANGLETest::drawQuad(GLuint program,
                          const std::string &positionAttribName,
@@ -448,6 +467,15 @@ void ANGLETest::drawIndexedQuad(GLuint program,
                                 GLfloat positionAttribZ,
                                 GLfloat positionAttribXYScale)
 {
+    drawIndexedQuad(program, positionAttribName, positionAttribZ, positionAttribXYScale, false);
+}
+
+void ANGLETest::drawIndexedQuad(GLuint program,
+                                const std::string &positionAttribName,
+                                GLfloat positionAttribZ,
+                                GLfloat positionAttribXYScale,
+                                bool useIndexBuffer)
+{
     GLint positionLocation = glGetAttribLocation(program, positionAttribName.c_str());
 
     GLint activeProgram = 0;
@@ -457,20 +485,36 @@ void ANGLETest::drawIndexedQuad(GLuint program,
         glUseProgram(program);
     }
 
-    GLuint prevBinding = 0;
-    glGetIntegerv(GL_ARRAY_BUFFER_BINDING, reinterpret_cast<GLint *>(&prevBinding));
+    GLuint prevCoordBinding = 0;
+    glGetIntegerv(GL_ARRAY_BUFFER_BINDING, reinterpret_cast<GLint *>(&prevCoordBinding));
 
     setupIndexedQuadVertexBuffer(positionAttribZ, positionAttribXYScale);
 
     glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
     glEnableVertexAttribArray(positionLocation);
-    glBindBuffer(GL_ARRAY_BUFFER, prevBinding);
+    glBindBuffer(GL_ARRAY_BUFFER, prevCoordBinding);
 
-    const GLushort indices[] = {
-        0, 1, 2, 0, 2, 3,
-    };
+    GLuint prevIndexBinding = 0;
+    const GLvoid *indices;
+    if (useIndexBuffer)
+    {
+        glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING,
+                      reinterpret_cast<GLint *>(&prevIndexBinding));
+
+        setupIndexedQuadIndexBuffer();
+        indices = 0;
+    }
+    else
+    {
+        indices = angle::IndexedQuadIndices;
+    }
 
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
+
+    if (useIndexBuffer)
+    {
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, prevIndexBinding);
+    }
 
     glDisableVertexAttribArray(positionLocation);
     glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, nullptr);

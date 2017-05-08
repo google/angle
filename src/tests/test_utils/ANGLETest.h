@@ -231,6 +231,7 @@ class ANGLETest : public ::testing::TestWithParam<angle::PlatformParameters>
 
     void setupQuadVertexBuffer(GLfloat positionAttribZ, GLfloat positionAttribXYScale);
     void setupIndexedQuadVertexBuffer(GLfloat positionAttribZ, GLfloat positionAttribXYScale);
+    void setupIndexedQuadIndexBuffer();
 
     void drawQuad(GLuint program, const std::string &positionAttribName, GLfloat positionAttribZ);
     void drawQuad(GLuint program,
@@ -250,6 +251,11 @@ class ANGLETest : public ::testing::TestWithParam<angle::PlatformParameters>
                          const std::string &positionAttribName,
                          GLfloat positionAttribZ,
                          GLfloat positionAttribXYScale);
+    void drawIndexedQuad(GLuint program,
+                         const std::string &positionAttribName,
+                         GLfloat positionAttribZ,
+                         GLfloat positionAttribXYScale,
+                         bool useBufferObject);
 
     static GLuint compileShader(GLenum type, const std::string &source);
     static bool extensionEnabled(const std::string &extName);
@@ -306,6 +312,7 @@ class ANGLETest : public ::testing::TestWithParam<angle::PlatformParameters>
 
     // Used for indexed quad rendering
     GLuint mQuadVertexBuffer;
+    GLuint mQuadIndexBuffer;
 
     angle::PlatformMethods mPlatformMethods;
     TestPlatformContext mPlatformContext;

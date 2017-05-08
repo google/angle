@@ -358,9 +358,9 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
 
     gl::Extents framebufferSize;
 
-    if (depthStencilRenderTarget != nullptr)
+    if (depthStencilAttachment != nullptr)
     {
-        framebufferSize = depthStencilRenderTarget->getExtents();
+        framebufferSize = depthStencilAttachment->getSize();
     }
     else
     {
