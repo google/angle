@@ -1678,6 +1678,12 @@ TEST_P(WebGLCompatibilityTest, RG32FTextures)
 
 TEST_P(WebGLCompatibilityTest, RGB32FTextures)
 {
+    if (IsLinux() && IsIntel())
+    {
+        std::cout << "Test skipped on Linux Intel." << std::endl;
+        return;
+    }
+
     constexpr float data[] = {1000.0f, -500.0f, 10.0f, 1.0f};
 
     for (auto extension : FloatingPointTextureExtensions)
@@ -1847,6 +1853,12 @@ TEST_P(WebGLCompatibilityTest, RG16FTextures)
 
 TEST_P(WebGLCompatibilityTest, RGB16FTextures)
 {
+    if (IsOzone() && IsIntel())
+    {
+        std::cout << "Test skipped on Intel Ozone." << std::endl;
+        return;
+    }
+
     constexpr float readPixelsData[] = {7000.0f, 100.0f, 33.0f, 1.0f};
     const GLushort textureData[]     = {
         gl::float32ToFloat16(readPixelsData[0]), gl::float32ToFloat16(readPixelsData[1]),
@@ -1894,6 +1906,12 @@ TEST_P(WebGLCompatibilityTest, RGB16FTextures)
 
 TEST_P(WebGLCompatibilityTest, RGBA16FTextures)
 {
+    if (IsOzone() && IsIntel())
+    {
+        std::cout << "Test skipped on Intel Ozone." << std::endl;
+        return;
+    }
+
     constexpr float readPixelsData[] = {7000.0f, 100.0f, 33.0f, -1.0f};
     const GLushort textureData[]     = {
         gl::float32ToFloat16(readPixelsData[0]), gl::float32ToFloat16(readPixelsData[1]),
