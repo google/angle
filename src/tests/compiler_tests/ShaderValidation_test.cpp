@@ -3797,3 +3797,64 @@ TEST_F(FragmentShaderValidationTest, InvalidExpressionForSamplerOperands)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test interface blocks as invalid operands to a binary expression.
+TEST_F(FragmentShaderValidationTest, InvalidInterfaceBlockBinaryExpression)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "uniform U\n"
+        "{\n"
+        "    int foo; \n"
+        "} u;\n"
+        "void main()\n"
+        "{\n"
+        "    u + u;\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test interface block as an invalid operand to an unary expression.
+TEST_F(FragmentShaderValidationTest, InvalidInterfaceBlockUnaryExpression)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "uniform U\n"
+        "{\n"
+        "    int foo; \n"
+        "} u;\n"
+        "void main()\n"
+        "{\n"
+        "    +u;\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test interface block as an invalid operand to a ternary expression.
+// Note that the spec is not very explicit on this, but it makes sense to forbid this.
+TEST_F(FragmentShaderValidationTest, InvalidInterfaceBlockTernaryExpression)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "uniform U\n"
+        "{\n"
+        "    int foo; \n"
+        "} u;\n"
+        "void main()\n"
+        "{\n"
+        "    true ? u : u;\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}

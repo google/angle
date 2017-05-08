@@ -3688,8 +3688,9 @@ TIntermTyped *TParseContext::createUnaryMath(TOperator op,
         case EOpPreDecrement:
         case EOpNegative:
         case EOpPositive:
-            if (child->getBasicType() == EbtStruct || child->getBasicType() == EbtBool ||
-                child->isArray() || IsOpaqueType(child->getBasicType()))
+            if (child->getBasicType() == EbtStruct || child->isInterfaceBlock() ||
+                child->getBasicType() == EbtBool || child->isArray() ||
+                IsOpaqueType(child->getBasicType()))
             {
                 unaryOpError(loc, GetOperatorString(op), child->getCompleteString());
                 return nullptr;
@@ -3769,6 +3770,19 @@ bool TParseContext::binaryOpCommonCheck(TOperator op,
                 break;
             default:
                 error(loc, "Invalid operation for structs", GetOperatorString(op));
+                return false;
+        }
+    }
+
+    if (left->isInterfaceBlock() || right->isInterfaceBlock())
+    {
+        switch (op)
+        {
+            case EOpIndexDirectInterfaceBlock:
+                ASSERT(left->getType().getInterfaceBlock());
+                break;
+            default:
+                error(loc, "Invalid operation for interface blocks", GetOperatorString(op));
                 return false;
         }
     }
@@ -4532,6 +4546,12 @@ TIntermTyped *TParseContext::addTernarySelection(TIntermTyped *cond,
         error(loc, "ternary operator is not allowed for structures or arrays", ":");
         return falseExpression;
     }
+    if (trueExpression->getBasicType() == EbtInterfaceBlock)
+    {
+        error(loc, "ternary operator is not allowed for interface blocks", ":");
+        return falseExpression;
+    }
+
     // WebGL2 section 5.26, the following results in an error:
     // "Ternary operator applied to void, arrays, or structs containing arrays"
     if (mShaderSpec == SH_WEBGL2_SPEC && trueExpression->getBasicType() == EbtVoid)
