@@ -157,12 +157,12 @@ TEST_F(TypeTrackingTest, BuiltInMatFunctionResultTypeAndPrecision)
         "}\n";
     compile(shaderString);
     ASSERT_FALSE(foundErrorInIntermediateTree());
-    ASSERT_TRUE(foundInIntermediateTree("Construct mat2x3 (mediump 2X3 matrix of float)"));
-    ASSERT_TRUE(foundInIntermediateTree("Construct mat3x2 (mediump 3X2 matrix of float)"));
-    ASSERT_TRUE(foundInIntermediateTree("Construct mat2x4 (mediump 2X4 matrix of float)"));
-    ASSERT_TRUE(foundInIntermediateTree("Construct mat4x2 (mediump 4X2 matrix of float)"));
-    ASSERT_TRUE(foundInIntermediateTree("Construct mat3x4 (mediump 3X4 matrix of float)"));
-    ASSERT_TRUE(foundInIntermediateTree("Construct mat4x3 (mediump 4X3 matrix of float)"));
+    ASSERT_TRUE(foundInIntermediateTree("Construct (mediump 2X3 matrix of float)"));
+    ASSERT_TRUE(foundInIntermediateTree("Construct (mediump 3X2 matrix of float)"));
+    ASSERT_TRUE(foundInIntermediateTree("Construct (mediump 2X4 matrix of float)"));
+    ASSERT_TRUE(foundInIntermediateTree("Construct (mediump 4X2 matrix of float)"));
+    ASSERT_TRUE(foundInIntermediateTree("Construct (mediump 3X4 matrix of float)"));
+    ASSERT_TRUE(foundInIntermediateTree("Construct (mediump 4X3 matrix of float)"));
 }
 
 TEST_F(TypeTrackingTest, BuiltInFunctionChoosesHigherPrecision)
@@ -288,7 +288,7 @@ TEST_F(TypeTrackingTest, BuiltInConstructorResultTypeAndPrecision)
         "}\n";
     compile(shaderString);
     ASSERT_FALSE(foundErrorInIntermediateTree());
-    ASSERT_TRUE(foundInIntermediateTree("Construct vec4 (mediump 4-component vector of float)"));
+    ASSERT_TRUE(foundInIntermediateTree("Construct (mediump 4-component vector of float)"));
 }
 
 TEST_F(TypeTrackingTest, StructConstructorResultNoPrecision)
@@ -304,7 +304,7 @@ TEST_F(TypeTrackingTest, StructConstructorResultNoPrecision)
         "}\n";
     compile(shaderString);
     ASSERT_FALSE(foundErrorInIntermediateTree());
-    ASSERT_TRUE(foundInIntermediateTree("Construct structure (structure)"));
+    ASSERT_TRUE(foundInIntermediateTree("Construct (structure)"));
 }
 
 TEST_F(TypeTrackingTest, PackResultTypeAndPrecision)

@@ -1846,92 +1846,47 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
 
             return false;
         }
-        case EOpConstructFloat:
-            outputConstructor(out, visit, node->getType(), "vec1", node->getSequence());
-            break;
-        case EOpConstructVec2:
-            outputConstructor(out, visit, node->getType(), "vec2", node->getSequence());
-            break;
-        case EOpConstructVec3:
-            outputConstructor(out, visit, node->getType(), "vec3", node->getSequence());
-            break;
-        case EOpConstructVec4:
-            outputConstructor(out, visit, node->getType(), "vec4", node->getSequence());
-            break;
-        case EOpConstructBool:
-            outputConstructor(out, visit, node->getType(), "bvec1", node->getSequence());
-            break;
-        case EOpConstructBVec2:
-            outputConstructor(out, visit, node->getType(), "bvec2", node->getSequence());
-            break;
-        case EOpConstructBVec3:
-            outputConstructor(out, visit, node->getType(), "bvec3", node->getSequence());
-            break;
-        case EOpConstructBVec4:
-            outputConstructor(out, visit, node->getType(), "bvec4", node->getSequence());
-            break;
-        case EOpConstructInt:
-            outputConstructor(out, visit, node->getType(), "ivec1", node->getSequence());
-            break;
-        case EOpConstructIVec2:
-            outputConstructor(out, visit, node->getType(), "ivec2", node->getSequence());
-            break;
-        case EOpConstructIVec3:
-            outputConstructor(out, visit, node->getType(), "ivec3", node->getSequence());
-            break;
-        case EOpConstructIVec4:
-            outputConstructor(out, visit, node->getType(), "ivec4", node->getSequence());
-            break;
-        case EOpConstructUInt:
-            outputConstructor(out, visit, node->getType(), "uvec1", node->getSequence());
-            break;
-        case EOpConstructUVec2:
-            outputConstructor(out, visit, node->getType(), "uvec2", node->getSequence());
-            break;
-        case EOpConstructUVec3:
-            outputConstructor(out, visit, node->getType(), "uvec3", node->getSequence());
-            break;
-        case EOpConstructUVec4:
-            outputConstructor(out, visit, node->getType(), "uvec4", node->getSequence());
-            break;
-        case EOpConstructMat2:
-            outputConstructor(out, visit, node->getType(), "mat2", node->getSequence());
-            break;
-        case EOpConstructMat2x3:
-            outputConstructor(out, visit, node->getType(), "mat2x3", node->getSequence());
-            break;
-        case EOpConstructMat2x4:
-            outputConstructor(out, visit, node->getType(), "mat2x4", node->getSequence());
-            break;
-        case EOpConstructMat3x2:
-            outputConstructor(out, visit, node->getType(), "mat3x2", node->getSequence());
-            break;
-        case EOpConstructMat3:
-            outputConstructor(out, visit, node->getType(), "mat3", node->getSequence());
-            break;
-        case EOpConstructMat3x4:
-            outputConstructor(out, visit, node->getType(), "mat3x4", node->getSequence());
-            break;
-        case EOpConstructMat4x2:
-            outputConstructor(out, visit, node->getType(), "mat4x2", node->getSequence());
-            break;
-        case EOpConstructMat4x3:
-            outputConstructor(out, visit, node->getType(), "mat4x3", node->getSequence());
-            break;
-        case EOpConstructMat4:
-            outputConstructor(out, visit, node->getType(), "mat4", node->getSequence());
-            break;
-        case EOpConstructStruct:
-        {
-            if (node->getType().isArray())
+        case EOpConstruct:
+            if (node->getBasicType() == EbtStruct)
             {
-                UNIMPLEMENTED();
+                if (node->getType().isArray())
+                {
+                    UNIMPLEMENTED();
+                }
+                const TString &structName = StructNameString(*node->getType().getStruct());
+                mStructureHLSL->addConstructor(node->getType(), structName, node->getSequence());
+                outputTriplet(out, visit, (structName + "_ctor(").c_str(), ", ", ")");
             }
-            const TString &structName = StructNameString(*node->getType().getStruct());
-            mStructureHLSL->addConstructor(node->getType(), structName, node->getSequence());
-            outputTriplet(out, visit, (structName + "_ctor(").c_str(), ", ", ")");
-        }
-        break;
+            else
+            {
+                const char *name = "";
+                if (node->getType().getNominalSize() == 1)
+                {
+                    switch (node->getBasicType())
+                    {
+                        case EbtFloat:
+                            name = "vec1";
+                            break;
+                        case EbtInt:
+                            name = "ivec1";
+                            break;
+                        case EbtUInt:
+                            name = "uvec1";
+                            break;
+                        case EbtBool:
+                            name = "bvec1";
+                            break;
+                        default:
+                            UNREACHABLE();
+                    }
+                }
+                else
+                {
+                    name = node->getType().getBuiltInTypeNameString();
+                }
+                outputConstructor(out, visit, node->getType(), name, node->getSequence());
+            }
+            break;
         case EOpEqualComponentWise:
             outputTriplet(out, visit, "(", " == ", ")");
             break;

@@ -386,67 +386,58 @@ bool TOutputTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
         return true;
     }
 
-    if (node->isConstructor())
+    // Give verbose names for some built-in functions that are easy to confuse with others, but
+    // mostly use GLSL names for functions.
+    switch (node->getOp())
     {
-        if (node->getOp() == EOpConstructStruct)
-        {
-            out << "Construct structure";
-        }
-        else
-        {
-            out << "Construct " << GetOperatorString(node->getOp());
-        }
-    }
-    else
-    {
-        // Give verbose names for some built-in functions that are easy to confuse with others, but
-        // mostly use GLSL names for functions.
-        switch (node->getOp())
-        {
-            case EOpCallFunctionInAST:
-                OutputFunction(out, "Call an user-defined function", node->getFunctionSymbolInfo());
-                break;
-            case EOpCallInternalRawFunction:
-                OutputFunction(out, "Call an internal function with raw implementation",
-                               node->getFunctionSymbolInfo());
-                break;
-            case EOpCallBuiltInFunction:
-                OutputFunction(out, "Call a built-in function", node->getFunctionSymbolInfo());
-                break;
+        case EOpCallFunctionInAST:
+            OutputFunction(out, "Call an user-defined function", node->getFunctionSymbolInfo());
+            break;
+        case EOpCallInternalRawFunction:
+            OutputFunction(out, "Call an internal function with raw implementation",
+                           node->getFunctionSymbolInfo());
+            break;
+        case EOpCallBuiltInFunction:
+            OutputFunction(out, "Call a built-in function", node->getFunctionSymbolInfo());
+            break;
 
-            case EOpEqualComponentWise:
-                out << "component-wise equal";
-                break;
-            case EOpNotEqualComponentWise:
-                out << "component-wise not equal";
-                break;
-            case EOpLessThanComponentWise:
-                out << "component-wise less than";
-                break;
-            case EOpGreaterThanComponentWise:
-                out << "component-wise greater than";
-                break;
-            case EOpLessThanEqualComponentWise:
-                out << "component-wise less than or equal";
-                break;
-            case EOpGreaterThanEqualComponentWise:
-                out << "component-wise greater than or equal";
-                break;
+        case EOpConstruct:
+            // The type of the constructor will be printed below.
+            out << "Construct";
+            break;
 
-            case EOpDot:
-                out << "dot product";
-                break;
-            case EOpCross:
-                out << "cross product";
-                break;
-            case EOpMulMatrixComponentWise:
-                out << "component-wise multiply";
-                break;
+        case EOpEqualComponentWise:
+            out << "component-wise equal";
+            break;
+        case EOpNotEqualComponentWise:
+            out << "component-wise not equal";
+            break;
+        case EOpLessThanComponentWise:
+            out << "component-wise less than";
+            break;
+        case EOpGreaterThanComponentWise:
+            out << "component-wise greater than";
+            break;
+        case EOpLessThanEqualComponentWise:
+            out << "component-wise less than or equal";
+            break;
+        case EOpGreaterThanEqualComponentWise:
+            out << "component-wise greater than or equal";
+            break;
 
-            default:
-                out << GetOperatorString(node->getOp());
-                break;
-        }
+        case EOpDot:
+            out << "dot product";
+            break;
+        case EOpCross:
+            out << "cross product";
+            break;
+        case EOpMulMatrixComponentWise:
+            out << "component-wise multiply";
+            break;
+
+        default:
+            out << GetOperatorString(node->getOp());
+            break;
     }
 
     out << " (" << node->getCompleteString() << ")";

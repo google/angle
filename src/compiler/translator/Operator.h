@@ -202,39 +202,10 @@ enum TOperator
     EOpContinue,
 
     //
-    // Constructors
+    // Constructor
     //
 
-    // Used by ParseContext to denote any constructor.
     EOpConstruct,
-
-    // In the AST, constructors are stored using the below more specific op codes.
-    EOpConstructInt,
-    EOpConstructUInt,
-    EOpConstructBool,
-    EOpConstructFloat,
-    EOpConstructVec2,
-    EOpConstructVec3,
-    EOpConstructVec4,
-    EOpConstructBVec2,
-    EOpConstructBVec3,
-    EOpConstructBVec4,
-    EOpConstructIVec2,
-    EOpConstructIVec3,
-    EOpConstructIVec4,
-    EOpConstructUVec2,
-    EOpConstructUVec3,
-    EOpConstructUVec4,
-    EOpConstructMat2,
-    EOpConstructMat2x3,
-    EOpConstructMat2x4,
-    EOpConstructMat3x2,
-    EOpConstructMat3,
-    EOpConstructMat3x4,
-    EOpConstructMat4x2,
-    EOpConstructMat4x3,
-    EOpConstructMat4,
-    EOpConstructStruct,
 
     //
     // moves

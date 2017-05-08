@@ -640,12 +640,16 @@ bool EmulatePrecision::visitAggregate(Visit visit, TIntermAggregate *node)
     bool visitChildren = true;
     switch (node->getOp())
     {
-        case EOpConstructStruct:
         case EOpCallInternalRawFunction:
         case EOpCallFunctionInAST:
             // User-defined function return values are not rounded. The calculations that produced
             // the value inside the function definition should have been rounded.
             break;
+        case EOpConstruct:
+            if (node->getBasicType() == EbtStruct)
+            {
+                break;
+            }
         default:
             TIntermNode *parent = getParentNode();
             if (canRoundFloat(node->getType()) && visit == PreVisit &&

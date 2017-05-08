@@ -306,10 +306,7 @@ TIntermAggregate *TIntermAggregate::CreateBuiltInFunctionCall(const TFunction &f
 TIntermAggregate *TIntermAggregate::CreateConstructor(const TType &type,
                                                       TIntermSequence *arguments)
 {
-    TIntermAggregate *constructorNode =
-        new TIntermAggregate(type, sh::TypeToConstructorOperator(type), arguments);
-    ASSERT(constructorNode->isConstructor());
-    return constructorNode;
+    return new TIntermAggregate(type, EOpConstruct, arguments);
 }
 
 TIntermAggregate *TIntermAggregate::Create(const TType &type,
@@ -343,7 +340,7 @@ void TIntermAggregate::setTypePrecisionAndQualifier(const TType &type)
         {
             // Structs should not be precision qualified, the individual members may be.
             // Built-in types on the other hand should be precision qualified.
-            if (mOp != EOpConstructStruct)
+            if (getBasicType() != EbtStruct)
             {
                 setPrecisionFromChildren();
             }
@@ -776,43 +773,9 @@ bool TIntermOperator::isMultiplication() const
     }
 }
 
-// Returns true if the operator is for one of the constructors.
 bool TIntermOperator::isConstructor() const
 {
-    switch (mOp)
-    {
-        case EOpConstructVec2:
-        case EOpConstructVec3:
-        case EOpConstructVec4:
-        case EOpConstructMat2:
-        case EOpConstructMat2x3:
-        case EOpConstructMat2x4:
-        case EOpConstructMat3x2:
-        case EOpConstructMat3:
-        case EOpConstructMat3x4:
-        case EOpConstructMat4x2:
-        case EOpConstructMat4x3:
-        case EOpConstructMat4:
-        case EOpConstructFloat:
-        case EOpConstructIVec2:
-        case EOpConstructIVec3:
-        case EOpConstructIVec4:
-        case EOpConstructInt:
-        case EOpConstructUVec2:
-        case EOpConstructUVec3:
-        case EOpConstructUVec4:
-        case EOpConstructUInt:
-        case EOpConstructBVec2:
-        case EOpConstructBVec3:
-        case EOpConstructBVec4:
-        case EOpConstructBool:
-        case EOpConstructStruct:
-            return true;
-        default:
-            // EOpConstruct is not supposed to be used in the AST.
-            ASSERT(mOp != EOpConstruct);
-            return false;
-    }
+    return (mOp == EOpConstruct);
 }
 
 bool TIntermOperator::isFunctionCall() const

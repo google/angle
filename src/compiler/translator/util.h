@@ -43,8 +43,6 @@ TString ArrayString(const TType &type);
 
 TType GetShaderVariableBasicType(const sh::ShaderVariable &var);
 
-TOperator TypeToConstructorOperator(const TType &type);
-
 bool IsBuiltinOutputVariable(TQualifier qualifier);
 bool IsBuiltinFragmentInputVariable(TQualifier qualifier);
 bool CanBeInvariantESSL1(TQualifier qualifier);
