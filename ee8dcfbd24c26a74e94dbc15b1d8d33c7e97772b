@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ccfa92c5_53db7ea3",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3862,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-08T10:39:05Z",
+      "side": 1,
+      "message": "Still missing EOpIndexIndirect.",
+      "revId": "ee8dcfbd24c26a74e94dbc15b1d8d33c7e97772b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
