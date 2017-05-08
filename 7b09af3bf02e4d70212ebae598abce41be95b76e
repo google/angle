@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cc7f81dc_316f8159",
+        "filename": "scripts/perf_test_runner.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1171626
+      },
+      "writtenOn": "2017-05-08T06:31:12Z",
+      "side": 1,
+      "message": "I\u0027d prefer to have a centralized place to set test_name. In this way, you need to judge the system multiple times, and you may cache the result of platform.system() if you like.",
+      "revId": "7b09af3bf02e4d70212ebae598abce41be95b76e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
