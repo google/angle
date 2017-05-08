@@ -110,7 +110,7 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
         TIntermTyped *zeroNode = TIntermTyped::CreateZero(TType(EbtInt));
         constructOffsetIvecArguments->push_back(zeroNode);
 
-        offsetNode = TIntermAggregate::CreateConstructor(texCoordNode->getType(), EOpConstructIVec3,
+        offsetNode = TIntermAggregate::CreateConstructor(texCoordNode->getType(),
                                                          constructOffsetIvecArguments);
         offsetNode->setLine(texCoordNode->getLine());
     }

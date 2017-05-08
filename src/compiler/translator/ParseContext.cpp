@@ -546,121 +546,22 @@ bool TParseContext::checkIsNotReserved(const TSourceLoc &line, const TString &id
     return true;
 }
 
-// Make sure there is enough data provided to the constructor to build
-// something of the type of the constructor.  Also returns the type of
-// the constructor.
+// Make sure the argument types are correct for constructing a specific type.
 bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
                                               const TIntermSequence *arguments,
-                                              TOperator op,
                                               const TType &type)
 {
-    bool constructingMatrix = false;
-    switch (op)
-    {
-        case EOpConstructMat2:
-        case EOpConstructMat2x3:
-        case EOpConstructMat2x4:
-        case EOpConstructMat3x2:
-        case EOpConstructMat3:
-        case EOpConstructMat3x4:
-        case EOpConstructMat4x2:
-        case EOpConstructMat4x3:
-        case EOpConstructMat4:
-            constructingMatrix = true;
-            break;
-        default:
-            break;
-    }
-
-    //
-    // Note: It's okay to have too many components available, but not okay to have unused
-    // arguments.  'full' will go to true when enough args have been seen.  If we loop
-    // again, there is an extra argument, so 'overfull' will become true.
-    //
-
-    size_t size         = 0;
-    bool full           = false;
-    bool overFull       = false;
-    bool matrixInMatrix = false;
-    bool arrayArg       = false;
-    for (TIntermNode *arg : *arguments)
-    {
-        const TIntermTyped *argTyped = arg->getAsTyped();
-        size += argTyped->getType().getObjectSize();
-
-        if (constructingMatrix && argTyped->getType().isMatrix())
-            matrixInMatrix = true;
-        if (full)
-            overFull = true;
-        if (op != EOpConstructStruct && !type.isArray() && size >= type.getObjectSize())
-            full = true;
-        if (argTyped->getType().isArray())
-            arrayArg = true;
-    }
-
-    if (type.isArray())
-    {
-        // The size of an unsized constructor should already have been determined.
-        ASSERT(!type.isUnsizedArray());
-        if (static_cast<size_t>(type.getArraySize()) != arguments->size())
-        {
-            error(line, "array constructor needs one argument per array element", "constructor");
-            return false;
-        }
-    }
-
-    if (arrayArg && op != EOpConstructStruct)
-    {
-        error(line, "constructing from a non-dereferenced array", "constructor");
-        return false;
-    }
-
-    if (matrixInMatrix && !type.isArray())
-    {
-        if (arguments->size() != 1)
-        {
-            error(line, "constructing matrix from matrix can only take one argument",
-                  "constructor");
-            return false;
-        }
-    }
-
-    if (overFull)
-    {
-        error(line, "too many arguments", "constructor");
-        return false;
-    }
-
-    if (op == EOpConstructStruct && !type.isArray() &&
-        type.getStruct()->fields().size() != arguments->size())
-    {
-        error(line,
-              "Number of constructor parameters does not match the number of structure fields",
-              "constructor");
-        return false;
-    }
-
-    if (!type.isMatrix() || !matrixInMatrix)
-    {
-        if ((op != EOpConstructStruct && size != 1 && size < type.getObjectSize()) ||
-            (op == EOpConstructStruct && size < type.getObjectSize()))
-        {
-            error(line, "not enough data provided for construction", "constructor");
-            return false;
-        }
-    }
-
     if (arguments->empty())
     {
         error(line, "constructor does not have any arguments", "constructor");
         return false;
     }
 
-    for (TIntermNode *const &argNode : *arguments)
+    for (TIntermNode *arg : *arguments)
     {
-        TIntermTyped *argTyped = argNode->getAsTyped();
+        const TIntermTyped *argTyped = arg->getAsTyped();
         ASSERT(argTyped != nullptr);
-        if (op != EOpConstructStruct && IsOpaqueType(argTyped->getBasicType()))
+        if (type.getBasicType() != EbtStruct && IsOpaqueType(argTyped->getBasicType()))
         {
             std::string reason("cannot convert a variable with type ");
             reason += getBasicString(argTyped->getBasicType());
@@ -676,15 +577,21 @@ bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
 
     if (type.isArray())
     {
+        // The size of an unsized constructor should already have been determined.
+        ASSERT(!type.isUnsizedArray());
+        if (static_cast<size_t>(type.getArraySize()) != arguments->size())
+        {
+            error(line, "array constructor needs one argument per array element", "constructor");
+            return false;
+        }
         // GLSL ES 3.00 section 5.4.4: Each argument must be the same type as the element type of
         // the array.
         for (TIntermNode *const &argNode : *arguments)
         {
             const TType &argType = argNode->getAsTyped()->getType();
-            // It has already been checked that the argument is not an array, but we can arrive
-            // here due to prior error conditions.
             if (argType.isArray())
             {
+                error(line, "constructing from a non-dereferenced array", "constructor");
                 return false;
             }
             if (!argType.sameElementType(type))
@@ -694,9 +601,16 @@ bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
             }
         }
     }
-    else if (op == EOpConstructStruct)
+    else if (type.getBasicType() == EbtStruct)
     {
         const TFieldList &fields = type.getStruct()->fields();
+        if (fields.size() != arguments->size())
+        {
+            error(line,
+                  "Number of constructor parameters does not match the number of structure fields",
+                  "constructor");
+            return false;
+        }
 
         for (size_t i = 0; i < fields.size(); i++)
         {
@@ -705,6 +619,67 @@ bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
             {
                 error(line, "Structure constructor arguments do not match structure fields",
                       "constructor");
+                return false;
+            }
+        }
+    }
+    else
+    {
+        // We're constructing a scalar, vector, or matrix.
+
+        // Note: It's okay to have too many components available, but not okay to have unused
+        // arguments. 'full' will go to true when enough args have been seen. If we loop again,
+        // there is an extra argument, so 'overFull' will become true.
+
+        size_t size    = 0;
+        bool full      = false;
+        bool overFull  = false;
+        bool matrixArg = false;
+        for (TIntermNode *arg : *arguments)
+        {
+            const TIntermTyped *argTyped = arg->getAsTyped();
+            ASSERT(argTyped != nullptr);
+
+            if (argTyped->getType().isArray())
+            {
+                error(line, "constructing from a non-dereferenced array", "constructor");
+                return false;
+            }
+            if (argTyped->getType().isMatrix())
+            {
+                matrixArg = true;
+            }
+
+            size += argTyped->getType().getObjectSize();
+            if (full)
+            {
+                overFull = true;
+            }
+            if (type.getBasicType() != EbtStruct && !type.isArray() && size >= type.getObjectSize())
+            {
+                full = true;
+            }
+        }
+
+        if (type.isMatrix() && matrixArg)
+        {
+            if (arguments->size() != 1)
+            {
+                error(line, "constructing matrix from matrix can only take one argument",
+                      "constructor");
+                return false;
+            }
+        }
+        else
+        {
+            if (size != 1 && size < type.getObjectSize())
+            {
+                error(line, "not enough data provided for construction", "constructor");
+                return false;
+            }
+            if (overFull)
+            {
+                error(line, "too many arguments", "constructor");
                 return false;
             }
         }
@@ -2698,34 +2673,23 @@ TFunction *TParseContext::parseFunctionHeader(const TPublicType &type,
     return new TFunction(name, new TType(type));
 }
 
-TFunction *TParseContext::addConstructorFunc(const TPublicType &publicTypeIn)
+TFunction *TParseContext::addConstructorFunc(const TPublicType &publicType)
 {
-    TPublicType publicType = publicTypeIn;
     if (publicType.isStructSpecifier())
     {
         error(publicType.getLine(), "constructor can't be a structure definition",
               getBasicString(publicType.getBasicType()));
     }
 
-    TOperator op = EOpNull;
-    if (publicType.getUserDef())
+    TType *type = new TType(publicType);
+    if (!type->canBeConstructed())
     {
-        op = EOpConstructStruct;
-    }
-    else
-    {
-        op = sh::TypeToConstructorOperator(TType(publicType));
-        if (op == EOpNull)
-        {
-            error(publicType.getLine(), "cannot construct this type",
-                  getBasicString(publicType.getBasicType()));
-            publicType.setBasicType(EbtFloat);
-            op = EOpConstructFloat;
-        }
+        error(publicType.getLine(), "cannot construct this type",
+              getBasicString(publicType.getBasicType()));
+        type->setBasicType(EbtFloat);
     }
 
-    const TType *type = new TType(publicType);
-    return new TFunction(nullptr, type, op);
+    return new TFunction(nullptr, type, EOpConstruct);
 }
 
 // This function is used to test for the correctness of the parameters passed to various constructor
@@ -2734,7 +2698,6 @@ TFunction *TParseContext::addConstructorFunc(const TPublicType &publicTypeIn)
 // Returns a node to add to the tree regardless of if an error was generated or not.
 //
 TIntermTyped *TParseContext::addConstructor(TIntermSequence *arguments,
-                                            TOperator op,
                                             TType type,
                                             const TSourceLoc &line)
 {
@@ -2749,12 +2712,12 @@ TIntermTyped *TParseContext::addConstructor(TIntermSequence *arguments,
         type.setArraySize(static_cast<unsigned int>(arguments->size()));
     }
 
-    if (!checkConstructorArguments(line, arguments, op, type))
+    if (!checkConstructorArguments(line, arguments, type))
     {
         return TIntermTyped::CreateZero(type);
     }
 
-    TIntermAggregate *constructorNode = TIntermAggregate::CreateConstructor(type, op, arguments);
+    TIntermAggregate *constructorNode = TIntermAggregate::CreateConstructor(type, arguments);
     constructorNode->setLine(line);
 
     TIntermTyped *constConstructor =
@@ -4383,12 +4346,13 @@ TIntermTyped *TParseContext::addFunctionCallOrMethod(TFunction *fnCall,
     }
 
     TOperator op = fnCall->getBuiltInOp();
-    if (op != EOpNull)
+    if (op == EOpConstruct)
     {
-        return addConstructor(arguments, op, fnCall->getReturnType(), loc);
+        return addConstructor(arguments, fnCall->getReturnType(), loc);
     }
     else
     {
+        ASSERT(op == EOpNull);
         return addNonConstructorFunctionCall(fnCall, arguments, loc);
     }
 }

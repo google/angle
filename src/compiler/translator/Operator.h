@@ -205,6 +205,10 @@ enum TOperator
     // Constructors
     //
 
+    // Used by ParseContext to denote any constructor.
+    EOpConstruct,
+
+    // In the AST, constructors are stored using the below more specific op codes.
     EOpConstructInt,
     EOpConstructUInt,
     EOpConstructBool,

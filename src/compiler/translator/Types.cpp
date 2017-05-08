@@ -125,6 +125,8 @@ TType::TType(const TPublicType &p)
       interfaceBlock(0),
       structure(0)
 {
+    ASSERT(primarySize <= 4);
+    ASSERT(secondarySize <= 4);
     if (p.getUserDef())
         structure = p.getUserDef()->getStruct();
 }
@@ -132,6 +134,21 @@ TType::TType(const TPublicType &p)
 bool TStructure::equals(const TStructure &other) const
 {
     return (uniqueId() == other.uniqueId());
+}
+
+bool TType::canBeConstructed() const
+{
+    switch (type)
+    {
+        case EbtFloat:
+        case EbtInt:
+        case EbtUInt:
+        case EbtBool:
+        case EbtStruct:
+            return true;
+        default:
+            return false;
+    }
 }
 
 const char *TType::getBuiltInTypeNameString() const

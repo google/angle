@@ -110,7 +110,7 @@ TIntermTyped *EnsureSignedInt(TIntermTyped *node)
 
     TIntermSequence *arguments = new TIntermSequence();
     arguments->push_back(node);
-    return TIntermAggregate::CreateConstructor(TType(EbtInt), EOpConstructInt, arguments);
+    return TIntermAggregate::CreateConstructor(TType(EbtInt), arguments);
 }
 
 TType GetFieldType(const TType &indexedType)

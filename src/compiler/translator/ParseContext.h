@@ -113,7 +113,6 @@ class TParseContext : angle::NonCopyable
     bool checkIsAtGlobalLevel(const TSourceLoc &line, const char *token);
     bool checkConstructorArguments(const TSourceLoc &line,
                                    const TIntermSequence *arguments,
-                                   TOperator op,
                                    const TType &type);
 
     // Returns a sanitized array size to use (the size is at least 1).
@@ -415,7 +414,6 @@ class TParseContext : angle::NonCopyable
                             TIntermNode *thisNode,
                             const TSourceLoc &loc);
     TIntermTyped *addConstructor(TIntermSequence *arguments,
-                                 TOperator op,
                                  TType type,
                                  const TSourceLoc &line);
     TIntermTyped *addNonConstructorFunctionCall(TFunction *fnCall,

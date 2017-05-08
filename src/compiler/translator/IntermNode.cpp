@@ -304,10 +304,10 @@ TIntermAggregate *TIntermAggregate::CreateBuiltInFunctionCall(const TFunction &f
 }
 
 TIntermAggregate *TIntermAggregate::CreateConstructor(const TType &type,
-                                                      TOperator op,
                                                       TIntermSequence *arguments)
 {
-    TIntermAggregate *constructorNode = new TIntermAggregate(type, op, arguments);
+    TIntermAggregate *constructorNode =
+        new TIntermAggregate(type, sh::TypeToConstructorOperator(type), arguments);
     ASSERT(constructorNode->isConstructor());
     return constructorNode;
 }
@@ -630,8 +630,7 @@ TIntermTyped *TIntermTyped::CreateZero(const TType &type)
         }
     }
 
-    return TIntermAggregate::CreateConstructor(constType, sh::TypeToConstructorOperator(type),
-                                               arguments);
+    return TIntermAggregate::CreateConstructor(constType, arguments);
 }
 
 // static
@@ -777,9 +776,7 @@ bool TIntermOperator::isMultiplication() const
     }
 }
 
-//
-// returns true if the operator is for one of the constructors
-//
+// Returns true if the operator is for one of the constructors.
 bool TIntermOperator::isConstructor() const
 {
     switch (mOp)
@@ -812,6 +809,8 @@ bool TIntermOperator::isConstructor() const
         case EOpConstructStruct:
             return true;
         default:
+            // EOpConstruct is not supposed to be used in the AST.
+            ASSERT(mOp != EOpConstruct);
             return false;
     }
 }

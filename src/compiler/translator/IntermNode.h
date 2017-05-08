@@ -604,7 +604,6 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
     static TIntermAggregate *CreateBuiltInFunctionCall(const TFunction &func,
                                                        TIntermSequence *arguments);
     static TIntermAggregate *CreateConstructor(const TType &type,
-                                               TOperator op,
                                                TIntermSequence *arguments);
     static TIntermAggregate *Create(const TType &type, TOperator op, TIntermSequence *arguments);
     ~TIntermAggregate() {}

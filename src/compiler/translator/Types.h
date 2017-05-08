@@ -318,6 +318,7 @@ class TType
     {
         if (primarySize != ps)
         {
+            ASSERT(ps <= 4);
             primarySize = ps;
             invalidateMangledName();
         }
@@ -326,6 +327,7 @@ class TType
     {
         if (secondarySize != ss)
         {
+            ASSERT(ss <= 4);
             secondarySize = ss;
             invalidateMangledName();
         }
@@ -376,6 +378,8 @@ class TType
     bool isScalar() const { return primarySize == 1 && secondarySize == 1 && !structure; }
     bool isScalarFloat() const { return isScalar() && type == EbtFloat; }
     bool isScalarInt() const { return isScalar() && (type == EbtInt || type == EbtUInt); }
+
+    bool canBeConstructed() const;
 
     TStructure *getStruct() const { return structure; }
     void setStruct(TStructure *s)
