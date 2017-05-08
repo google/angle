@@ -373,17 +373,13 @@ TEST_P(UniformBufferTest, ActiveUniformNames)
     glGetProgramiv(program, GL_ACTIVE_UNIFORM_BLOCKS, &activeUniformBlocks);
     ASSERT_EQ(2, activeUniformBlocks);
 
-    GLint maxLength;
-    GLsizei length;
-    glGetProgramiv(program, GL_ACTIVE_UNIFORM_BLOCK_MAX_NAME_LENGTH, &maxLength);
-    std::vector<GLchar> strBlockNameBuffer(maxLength + 1, 0);
-    glGetActiveUniformBlockName(program, 0, maxLength, &length, &strBlockNameBuffer[0]);
+    GLuint index = glGetUniformBlockIndex(program, "blockName1");
+    EXPECT_NE(GL_INVALID_INDEX, index);
     ASSERT_GL_NO_ERROR();
-    EXPECT_EQ("blockName1", std::string(&strBlockNameBuffer[0]));
 
-    glGetActiveUniformBlockName(program, 1, maxLength, &length, &strBlockNameBuffer[0]);
+    index = glGetUniformBlockIndex(program, "blockName2[0]");
+    EXPECT_NE(GL_INVALID_INDEX, index);
     ASSERT_GL_NO_ERROR();
-    EXPECT_EQ("blockName2[0]", std::string(&strBlockNameBuffer[0]));
 
     GLint activeUniforms;
     glGetProgramiv(program, GL_ACTIVE_UNIFORMS, &activeUniforms);
@@ -392,18 +388,26 @@ TEST_P(UniformBufferTest, ActiveUniformNames)
 
     GLint size;
     GLenum type;
+    GLint maxLength;
+    GLsizei length;
+
     glGetProgramiv(program, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxLength);
     std::vector<GLchar> strUniformNameBuffer(maxLength + 1, 0);
-    glGetActiveUniform(program, 0, maxLength, &length, &size, &type, &strUniformNameBuffer[0]);
-
+    const GLchar *uniformNames[1];
+    uniformNames[0] = "blockName1.f1";
+    glGetUniformIndices(program, 1, uniformNames, &index);
+    EXPECT_NE(GL_INVALID_INDEX, index);
     ASSERT_GL_NO_ERROR();
+    glGetActiveUniform(program, index, maxLength, &length, &size, &type, &strUniformNameBuffer[0]);
     EXPECT_EQ(1, size);
     EXPECT_GLENUM_EQ(GL_FLOAT, type);
     EXPECT_EQ("blockName1.f1", std::string(&strUniformNameBuffer[0]));
 
-    glGetActiveUniform(program, 1, maxLength, &length, &size, &type, &strUniformNameBuffer[0]);
-
+    uniformNames[0] = "blockName2.f2";
+    glGetUniformIndices(program, 1, uniformNames, &index);
+    EXPECT_NE(GL_INVALID_INDEX, index);
     ASSERT_GL_NO_ERROR();
+    glGetActiveUniform(program, index, maxLength, &length, &size, &type, &strUniformNameBuffer[0]);
     EXPECT_EQ(1, size);
     EXPECT_GLENUM_EQ(GL_FLOAT, type);
     EXPECT_EQ("blockName2.f2", std::string(&strUniformNameBuffer[0]));
@@ -412,23 +416,6 @@ TEST_P(UniformBufferTest, ActiveUniformNames)
 // Tests active uniforms and blocks when the layout is std140, shared and packed.
 TEST_P(UniformBufferTest, ActiveUniformNumberAndName)
 {
-    // TODO(Jiajia): Figure out why this fails on Intel on Mac.
-    // This case can pass on Intel Mac-10.11/10.12. But it fails on Intel Mac-10.10.
-    if (IsIntel() && IsOSX())
-    {
-        std::cout << "Test skipped on Intel on Mac." << std::endl;
-        return;
-    }
-
-    // This case fails on all AMD platforms (Mac, Linux, Win).
-    // TODO(zmo): This actually passes on certain AMD cards, but we don't have
-    // a way to do device specific handling yet.
-    if (IsAMD())
-    {
-        std::cout << "Test skipped on AMD." << std::endl;
-        return;
-    }
-
     const std::string &vertexShaderSource =
         "#version 300 es\n"
         "in vec2 position;\n"
@@ -481,60 +468,105 @@ TEST_P(UniformBufferTest, ActiveUniformNumberAndName)
     GLint maxLength, size;
     GLenum type;
     GLsizei length;
+    GLuint index;
+    const GLchar *uniformNames[1];
     glGetProgramiv(program.get(), GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxLength);
     std::vector<GLchar> strBuffer(maxLength + 1, 0);
 
-    glGetActiveUniform(program.get(), 0, maxLength, &length, &size, &type, &strBuffer[0]);
+    uniformNames[0] = "s0.a";
+    glGetUniformIndices(program, 1, uniformNames, &index);
+    EXPECT_NE(GL_INVALID_INDEX, index);
     ASSERT_GL_NO_ERROR();
+    glGetActiveUniform(program.get(), index, maxLength, &length, &size, &type, &strBuffer[0]);
     EXPECT_EQ(1, size);
     EXPECT_EQ("s0.a", std::string(&strBuffer[0]));
 
-    glGetActiveUniform(program.get(), 1, maxLength, &length, &size, &type, &strBuffer[0]);
+    uniformNames[0] = "s0.b[0]";
+    glGetUniformIndices(program, 1, uniformNames, &index);
+    EXPECT_NE(GL_INVALID_INDEX, index);
+    ASSERT_GL_NO_ERROR();
+    glGetActiveUniform(program.get(), index, maxLength, &length, &size, &type, &strBuffer[0]);
     ASSERT_GL_NO_ERROR();
     EXPECT_EQ(4, size);
     EXPECT_EQ("s0.b[0]", std::string(&strBuffer[0]));
 
-    glGetActiveUniform(program.get(), 2, maxLength, &length, &size, &type, &strBuffer[0]);
+    uniformNames[0] = "v0";
+    glGetUniformIndices(program, 1, uniformNames, &index);
+    EXPECT_NE(GL_INVALID_INDEX, index);
+    ASSERT_GL_NO_ERROR();
+    glGetActiveUniform(program.get(), index, maxLength, &length, &size, &type, &strBuffer[0]);
     ASSERT_GL_NO_ERROR();
     EXPECT_EQ(1, size);
     EXPECT_EQ("v0", std::string(&strBuffer[0]));
 
-    glGetActiveUniform(program.get(), 3, maxLength, &length, &size, &type, &strBuffer[0]);
+    uniformNames[0] = "s1[0].a";
+    glGetUniformIndices(program, 1, uniformNames, &index);
+    EXPECT_NE(GL_INVALID_INDEX, index);
+    ASSERT_GL_NO_ERROR();
+    glGetActiveUniform(program.get(), index, maxLength, &length, &size, &type, &strBuffer[0]);
     ASSERT_GL_NO_ERROR();
     EXPECT_EQ(1, size);
     EXPECT_EQ("s1[0].a", std::string(&strBuffer[0]));
 
-    glGetActiveUniform(program.get(), 4, maxLength, &length, &size, &type, &strBuffer[0]);
+    uniformNames[0] = "s1[0].b[0]";
+    glGetUniformIndices(program, 1, uniformNames, &index);
+    EXPECT_NE(GL_INVALID_INDEX, index);
+    ASSERT_GL_NO_ERROR();
+    glGetActiveUniform(program.get(), index, maxLength, &length, &size, &type, &strBuffer[0]);
     ASSERT_GL_NO_ERROR();
     EXPECT_EQ(4, size);
     EXPECT_EQ("s1[0].b[0]", std::string(&strBuffer[0]));
 
-    glGetActiveUniform(program.get(), 5, maxLength, &length, &size, &type, &strBuffer[0]);
+    uniformNames[0] = "s1[1].a";
+    glGetUniformIndices(program, 1, uniformNames, &index);
+    EXPECT_NE(GL_INVALID_INDEX, index);
+    ASSERT_GL_NO_ERROR();
+    glGetActiveUniform(program.get(), index, maxLength, &length, &size, &type, &strBuffer[0]);
     ASSERT_GL_NO_ERROR();
     EXPECT_EQ(1, size);
     EXPECT_EQ("s1[1].a", std::string(&strBuffer[0]));
 
-    glGetActiveUniform(program.get(), 6, maxLength, &length, &size, &type, &strBuffer[0]);
+    uniformNames[0] = "s1[1].b[0]";
+    glGetUniformIndices(program, 1, uniformNames, &index);
+    EXPECT_NE(GL_INVALID_INDEX, index);
+    ASSERT_GL_NO_ERROR();
+    glGetActiveUniform(program.get(), index, maxLength, &length, &size, &type, &strBuffer[0]);
     ASSERT_GL_NO_ERROR();
     EXPECT_EQ(4, size);
     EXPECT_EQ("s1[1].b[0]", std::string(&strBuffer[0]));
 
-    glGetActiveUniform(program.get(), 7, maxLength, &length, &size, &type, &strBuffer[0]);
+    uniformNames[0] = "u0";
+    glGetUniformIndices(program, 1, uniformNames, &index);
+    EXPECT_NE(GL_INVALID_INDEX, index);
+    ASSERT_GL_NO_ERROR();
+    glGetActiveUniform(program.get(), index, maxLength, &length, &size, &type, &strBuffer[0]);
     ASSERT_GL_NO_ERROR();
     EXPECT_EQ(1, size);
     EXPECT_EQ("u0", std::string(&strBuffer[0]));
 
-    glGetActiveUniform(program.get(), 8, maxLength, &length, &size, &type, &strBuffer[0]);
+    uniformNames[0] = "blockName1.f1";
+    glGetUniformIndices(program, 1, uniformNames, &index);
+    EXPECT_NE(GL_INVALID_INDEX, index);
+    ASSERT_GL_NO_ERROR();
+    glGetActiveUniform(program.get(), index, maxLength, &length, &size, &type, &strBuffer[0]);
     ASSERT_GL_NO_ERROR();
     EXPECT_EQ(1, size);
     EXPECT_EQ("blockName1.f1", std::string(&strBuffer[0]));
 
-    glGetActiveUniform(program.get(), 9, maxLength, &length, &size, &type, &strBuffer[0]);
+    uniformNames[0] = "blockName1.b1";
+    glGetUniformIndices(program, 1, uniformNames, &index);
+    EXPECT_NE(GL_INVALID_INDEX, index);
+    ASSERT_GL_NO_ERROR();
+    glGetActiveUniform(program.get(), index, maxLength, &length, &size, &type, &strBuffer[0]);
     ASSERT_GL_NO_ERROR();
     EXPECT_EQ(1, size);
     EXPECT_EQ("blockName1.b1", std::string(&strBuffer[0]));
 
-    glGetActiveUniform(program.get(), 10, maxLength, &length, &size, &type, &strBuffer[0]);
+    uniformNames[0] = "f2";
+    glGetUniformIndices(program, 1, uniformNames, &index);
+    EXPECT_NE(GL_INVALID_INDEX, index);
+    ASSERT_GL_NO_ERROR();
+    glGetActiveUniform(program.get(), index, maxLength, &length, &size, &type, &strBuffer[0]);
     ASSERT_GL_NO_ERROR();
     EXPECT_EQ(1, size);
     EXPECT_EQ("f2", std::string(&strBuffer[0]));
