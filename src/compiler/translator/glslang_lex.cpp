@@ -588,7 +588,7 @@ static const flex_int16_t yy_accept[886] =
       183,  183,  183,  183,    8,  183,  183,    9,  183,  183,
       183,  183,  183,  183,   20,  102,   11,  156,  116,   89,
        96,  183,  183,  183,  183,  183,  183,  183,  183,  183,
-      183,  183,  183,  183,  152,  183,  183,  183,  100,  105,
+      183,  183,  183,  183,  152,  183,  183,  183,  100,  106,
       103,  183,  183,  183,  183,  183,  183,  183,  148,  117,
 
        90,   95,  183,  183,  163,  183,  104,  183,  183,  183,
@@ -600,7 +600,7 @@ static const flex_int16_t yy_accept[886] =
       183,  183,  183,  130,   68,   69,  183,  183,  183,  183,
       183,  183,  183,  183,  183,  183,  183,  183,  183,  183,
       110,  183,  183,  183,   98,  132,   73,   74,  183,  183,
-      183,  183,  106,  183,  183,  183,  183,  183,  183,  183,
+      183,  183,  105,  183,  183,  183,  183,  183,  183,  183,
 
       125,  183,  183,  183,  183,  183,  183,  183,  183,  183,
       183,  183,   67,  183,  183,  183,  183,   61,  183,  183,
@@ -2107,8 +2107,11 @@ case 104:
 YY_RULE_SETUP
 { return ES2_and_ES3_reserved_ES3_1_keyword(context, VOLATILE); }
 	YY_BREAK
-/* Reserved keywords for GLSL ES 3.00 that are not reserved for GLSL ES 1.00 */
 case 105:
+YY_RULE_SETUP
+{ return ES2_ident_ES3_reserved_ES3_1_keyword(context, ATOMICUINT); }
+	YY_BREAK
+/* Reserved keywords for GLSL ES 3.00 that are not reserved for GLSL ES 1.00 */
 case 106:
 case 107:
 case 108:

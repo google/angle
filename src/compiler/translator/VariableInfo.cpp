@@ -572,6 +572,7 @@ Uniform CollectVariables::recordUniform(const TIntermSymbol &variable) const
     setCommonVariableProperties(variable.getType(), variable.getSymbol(), &uniform);
     uniform.binding = variable.getType().getLayoutQualifier().binding;
     uniform.location = variable.getType().getLayoutQualifier().location;
+    uniform.offset   = variable.getType().getLayoutQualifier().offset;
     return uniform;
 }
 

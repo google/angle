@@ -392,6 +392,8 @@ GLenum GLVariableType(const TType &type)
             return GL_INT_IMAGE_CUBE;
         case EbtUImageCube:
             return GL_UNSIGNED_INT_IMAGE_CUBE;
+        case EbtAtomicCounter:
+            return GL_UNSIGNED_INT_ATOMIC_COUNTER;
         default:
             UNREACHABLE();
     }

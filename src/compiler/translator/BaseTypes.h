@@ -123,6 +123,8 @@ enum TBasicType
     EbtInterfaceBlock,
     EbtAddress,  // should be deprecated??
 
+    EbtAtomicCounter,
+
     // end of list
     EbtLast
 };
@@ -198,10 +200,14 @@ inline bool IsGImage(TBasicType type)
     return type > EbtGuardGImageBegin && type < EbtGuardGImageEnd;
 }
 
+inline bool IsAtomicCounter(TBasicType type)
+{
+    return type == EbtAtomicCounter;
+}
+
 inline bool IsOpaqueType(TBasicType type)
 {
-    // TODO (mradev): add atomic types as opaque.
-    return IsSampler(type) || IsImage(type);
+    return IsSampler(type) || IsImage(type) || IsAtomicCounter(type);
 }
 
 inline bool IsIntegerSampler(TBasicType type)
@@ -626,6 +632,7 @@ struct TLayoutQualifier
     sh::WorkGroupSize localSize;
 
     int binding;
+    int offset;
 
     // Image format layout qualifier
     TLayoutImageInternalFormat imageInternalFormat;
@@ -647,6 +654,7 @@ struct TLayoutQualifier
 
         layoutQualifier.localSize.fill(-1);
         layoutQualifier.binding  = -1;
+        layoutQualifier.offset   = -1;
         layoutQualifier.numViews = -1;
         layoutQualifier.yuv      = false;
 
@@ -656,7 +664,7 @@ struct TLayoutQualifier
 
     bool isEmpty() const
     {
-        return location == -1 && binding == -1 && numViews == -1 && yuv == false &&
+        return location == -1 && binding == -1 && offset == -1 && numViews == -1 && yuv == false &&
                matrixPacking == EmpUnspecified && blockStorage == EbsUnspecified &&
                !localSize.isAnyValueSet() && imageInternalFormat == EiifUnspecified;
     }

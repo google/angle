@@ -329,6 +329,8 @@ TString TypeString(const TType &type)
                 return "samplerCUBE";
             case EbtSamplerExternalOES:
                 return "sampler2D";
+            case EbtAtomicCounter:
+                return "atomic_uint";
             default:
                 break;
         }

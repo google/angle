@@ -105,6 +105,8 @@ const char *getBasicString(TBasicType t)
             return "iimageCube";
         case EbtUImageCube:
             return "uimageCube";
+        case EbtAtomicCounter:
+            return "atomic_uint";
         default:
             UNREACHABLE();
             return "unknown type";

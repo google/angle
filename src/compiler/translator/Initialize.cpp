@@ -630,6 +630,11 @@ void InsertBuiltInFunctions(sh::GLenum type,
     symbolTable.insertBuiltIn(ESSL3_BUILTINS, float1, "textureProjGradOffset", sampler2DShadow,
                               float4, float2, float2, int2);
 
+    const TType *atomicCounter = TCache::getType(EbtAtomicCounter);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, uint1, "atomicCounter", atomicCounter);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, uint1, "atomicCounterIncrement", atomicCounter);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, uint1, "atomicCounterDecrement", atomicCounter);
+
     const TType *gimage2D      = TCache::getType(EbtGImage2D);
     const TType *gimage3D      = TCache::getType(EbtGImage3D);
     const TType *gimage2DArray = TCache::getType(EbtGImage2DArray);

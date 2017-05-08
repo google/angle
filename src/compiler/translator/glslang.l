@@ -225,10 +225,10 @@ O           [0-7]
 "coherent" { return ES2_ident_ES3_reserved_ES3_1_keyword(context, COHERENT); }
 "restrict" { return ES2_ident_ES3_reserved_ES3_1_keyword(context, RESTRICT); }
 "volatile" { return ES2_and_ES3_reserved_ES3_1_keyword(context, VOLATILE); }
+"atomic_uint" { return ES2_ident_ES3_reserved_ES3_1_keyword(context, ATOMICUINT); }
 
     /* Reserved keywords for GLSL ES 3.00 that are not reserved for GLSL ES 1.00 */
 "resource"          |
-"atomic_uint"       |
 "noperspective"     |
 "patch"             |
 "sample"            |

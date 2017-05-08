@@ -600,6 +600,10 @@ bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources &resources)
     // It isn't specified whether Sampler2DRect has default precision.
     initSamplerDefaultPrecision(EbtSampler2DRect);
 
+    TPublicType atomicCounter;
+    atomicCounter.initializeBasicType(EbtAtomicCounter);
+    symbolTable.setDefaultPrecision(atomicCounter, EbpHigh);
+
     InsertBuiltInFunctions(shaderType, shaderSpec, resources, symbolTable);
 
     IdentifyBuiltIns(shaderType, shaderSpec, resources, symbolTable);
