@@ -467,7 +467,7 @@ TIntermAggregate *createCompoundAssignmentFunctionCallNode(TIntermTyped *left,
     return createInternalFunctionCallNode(TType(EbtVoid), functionName, arguments);
 }
 
-bool parentUsesResult(TIntermNode *parent, TIntermNode *node)
+bool ParentUsesResult(TIntermNode *parent, TIntermTyped *node)
 {
     if (!parent)
     {
@@ -490,6 +490,24 @@ bool parentUsesResult(TIntermNode *parent, TIntermNode *node)
     return true;
 }
 
+bool ParentConstructorTakesCareOfRounding(TIntermNode *parent, TIntermTyped *node)
+{
+    if (!parent)
+    {
+        return false;
+    }
+    TIntermAggregate *parentConstructor = parent->getAsAggregate();
+    if (!parentConstructor || parentConstructor->getOp() != EOpConstruct)
+    {
+        return false;
+    }
+    if (parentConstructor->getPrecision() != node->getPrecision())
+    {
+        return false;
+    }
+    return canRoundFloat(parentConstructor->getType());
+}
+
 }  // namespace anonymous
 
 EmulatePrecision::EmulatePrecision(const TSymbolTable &symbolTable, int shaderVersion)
@@ -500,7 +518,10 @@ EmulatePrecision::EmulatePrecision(const TSymbolTable &symbolTable, int shaderVe
 
 void EmulatePrecision::visitSymbol(TIntermSymbol *node)
 {
-    if (canRoundFloat(node->getType()) && !mDeclaringVariables && !isLValueRequiredHere())
+    TIntermNode *parent = getParentNode();
+    if (canRoundFloat(node->getType()) && ParentUsesResult(parent, node) &&
+        !ParentConstructorTakesCareOfRounding(parent, node) && !mDeclaringVariables &&
+        !isLValueRequiredHere())
     {
         TIntermNode *replacement = createRoundingFunctionCallNode(node);
         queueReplacement(node, replacement, OriginalNode::BECOMES_CHILD);
@@ -545,7 +566,8 @@ bool EmulatePrecision::visitBinary(Visit visit, TIntermBinary *node)
             case EOpMatrixTimesMatrix:
             {
                 TIntermNode *parent = getParentNode();
-                if (!parentUsesResult(parent, node))
+                if (!ParentUsesResult(parent, node) ||
+                    ParentConstructorTakesCareOfRounding(parent, node))
                 {
                     break;
                 }
@@ -637,7 +659,8 @@ bool EmulatePrecision::visitFunctionPrototype(Visit visit, TIntermFunctionProtot
 
 bool EmulatePrecision::visitAggregate(Visit visit, TIntermAggregate *node)
 {
-    bool visitChildren = true;
+    if (visit != PreVisit)
+        return true;
     switch (node->getOp())
     {
         case EOpCallInternalRawFunction:
@@ -652,15 +675,15 @@ bool EmulatePrecision::visitAggregate(Visit visit, TIntermAggregate *node)
             }
         default:
             TIntermNode *parent = getParentNode();
-            if (canRoundFloat(node->getType()) && visit == PreVisit &&
-                parentUsesResult(parent, node))
+            if (canRoundFloat(node->getType()) && ParentUsesResult(parent, node) &&
+                !ParentConstructorTakesCareOfRounding(parent, node))
             {
                 TIntermNode *replacement = createRoundingFunctionCallNode(node);
                 queueReplacement(node, replacement, OriginalNode::BECOMES_CHILD);
             }
             break;
     }
-    return visitChildren;
+    return true;
 }
 
 bool EmulatePrecision::visitUnary(Visit visit, TIntermUnary *node)

@@ -798,7 +798,7 @@ TEST_F(DebugShaderPrecisionTest, ConstructorRounding)
         "precision mediump int;\n"
         "uniform float u1;\n"
         "uniform float u2;\n"
-        "uniform float u3;\n"
+        "uniform lowp float u3;\n"
         "uniform float u4;\n"
         "uniform ivec4 uiv;\n"
         "void main() {\n"
@@ -807,13 +807,10 @@ TEST_F(DebugShaderPrecisionTest, ConstructorRounding)
         "   gl_FragColor = v1 + v2;\n"
         "}\n";
     compile(shaderString);
-    // Note: this is suboptimal for the case taking four floats, but optimizing would be tricky.
-    ASSERT_TRUE(foundInAllGLSLCode(
-        "v1 = angle_frm(vec4(angle_frm(u1), angle_frm(u2), angle_frm(u3), angle_frm(u4)))"));
+    ASSERT_TRUE(foundInAllGLSLCode("v1 = angle_frm(vec4(u1, u2, angle_frl(u3), u4))"));
     ASSERT_TRUE(foundInAllGLSLCode("v2 = angle_frm(vec4(uiv))"));
 
-    ASSERT_TRUE(foundInHLSLCode(
-        "v1 = angle_frm(vec4(angle_frm(_u1), angle_frm(_u2), angle_frm(_u3), angle_frm(_u4)))"));
+    ASSERT_TRUE(foundInHLSLCode("v1 = angle_frm(vec4(_u1, _u2, angle_frl(_u3), _u4))"));
     ASSERT_TRUE(foundInHLSLCode("v2 = angle_frm(vec4(_uiv))"));
 }
 
