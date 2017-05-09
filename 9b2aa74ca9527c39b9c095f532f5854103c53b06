@@ -22,6 +22,30 @@
       "revId": "9b2aa74ca9527c39b9c095f532f5854103c53b06",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b4ed614_b65369b2",
+        "filename": "scripts/perf_test_runner.py",
+        "patchSetId": 9
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-09T14:28:11Z",
+      "side": 1,
+      "message": "sorry, sys.platform, not os.platform.",
+      "parentUuid": "28502622_9f45fc5f",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 15
+      },
+      "revId": "9b2aa74ca9527c39b9c095f532f5854103c53b06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
