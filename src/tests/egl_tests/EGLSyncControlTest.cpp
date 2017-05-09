@@ -260,6 +260,6 @@ TEST_F(EGLSyncControlTest, DISABLED_SyncValuesTest)
 
     // sbc2 should be 2. msc2 and ust2 should be greater than previous msc and ust values.
     ASSERT_EQ(2ull, sbc2);
-    ASSERT_GT((ust2 - ust), 0ull);
-    ASSERT_GT((msc2 - msc), 0ull);
+    ASSERT_GT(ust2, ust);
+    ASSERT_GT(msc2, msc);
 }
