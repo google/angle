@@ -16,6 +16,24 @@
       "revId": "30db188ad48d7c6bd5b6cc51a0601eaadaee7394",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f757df9_60eedf21",
+        "filename": "src/compiler/translator/EmulatePrecision.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 640,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-09T12:19:01Z",
+      "side": 1,
+      "message": "Ah I see you did it in a follow-up patch.",
+      "parentUuid": "208e9707_146e5959",
+      "revId": "30db188ad48d7c6bd5b6cc51a0601eaadaee7394",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
