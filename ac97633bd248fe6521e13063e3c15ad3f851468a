@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "79d95f39_7321b5d7",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 630,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-09T09:44:01Z",
+      "side": 1,
+      "message": "Yes, that\u0027s it.",
+      "parentUuid": "c4711e44_ce0de75a",
+      "revId": "ac97633bd248fe6521e13063e3c15ad3f851468a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d57e2dc8_bb160d42",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2017-05-09T09:01:55Z",
       "side": 1,
       "message": "nit: this reads a bit weird, it isn\u0027t the basic type that can be constructed, but the aggregate type. Maybe the .getBasicType() could be done in sh::CanBeConstructed? Also we already are in the sh namespace.",
+      "revId": "ac97633bd248fe6521e13063e3c15ad3f851468a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ac0944f_6dc18c51",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2687,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-09T09:44:01Z",
+      "side": 1,
+      "message": "Made it a member function of TType now.",
+      "parentUuid": "d57e2dc8_bb160d42",
       "revId": "ac97633bd248fe6521e13063e3c15ad3f851468a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
