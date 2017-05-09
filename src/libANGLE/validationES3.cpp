@@ -78,7 +78,7 @@ static bool ValidateTexImageFormatCombination(gl::Context *context,
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat, type);
     if (!formatInfo.textureSupport(context->getClientVersion(), context->getExtensions()))
     {
-        context->handleError(Error(GL_INVALID_VALUE, "Unsupported internal format."));
+        context->handleError(Error(GL_INVALID_OPERATION, "Unsupported internal format."));
         return false;
     }
 
