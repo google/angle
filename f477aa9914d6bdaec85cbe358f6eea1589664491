@@ -191,6 +191,30 @@
       "revId": "f477aa9914d6bdaec85cbe358f6eea1589664491",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dc4e6dc8_9d7b2f2e",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-09T15:21:44Z",
+      "side": 1,
+      "message": "Thanks for pointing out the spec section.  This makes sense given that updating the bindings aren\u0027t supported yet and mAppliedAttributes[attribIndex].bindingIndex \u003d\u003d attribIndex is always true but when we start supporting re-binding then it doesn\u0027t make sense to update the bindings based on attribIndex.",
+      "parentUuid": "ebf7e1c1_212259ac",
+      "range": {
+        "startLine": 491,
+        "startChar": 21,
+        "endLine": 491,
+        "endChar": 32
+      },
+      "revId": "f477aa9914d6bdaec85cbe358f6eea1589664491",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
