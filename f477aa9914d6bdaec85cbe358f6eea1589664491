@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "241e6f15_0af58d34",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 30
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-09T05:29:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37a84234_b18ec67f",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 58,
+        "endChar": 58
+      },
+      "revId": "f477aa9914d6bdaec85cbe358f6eea1589664491",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "49b31a65_e4689b0a",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 30
@@ -53,6 +77,30 @@
       "writtenOn": "2017-05-08T20:55:05Z",
       "side": 1,
       "message": "nit: use \"Supported\"",
+      "range": {
+        "startLine": 35,
+        "startChar": 26,
+        "endLine": 35,
+        "endChar": 31
+      },
+      "revId": "f477aa9914d6bdaec85cbe358f6eea1589664491",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e28f683a_1aa5c525",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-09T05:29:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "49b31a65_e4689b0a",
       "range": {
         "startLine": 35,
         "startChar": 26,
@@ -110,6 +158,30 @@
       "writtenOn": "2017-05-08T20:55:05Z",
       "side": 1,
       "message": "Why update these?",
+      "range": {
+        "startLine": 491,
+        "startChar": 21,
+        "endLine": 491,
+        "endChar": 32
+      },
+      "revId": "f477aa9914d6bdaec85cbe358f6eea1589664491",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ebf7e1c1_212259ac",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-09T05:29:49Z",
+      "side": 1,
+      "message": "According to ES3.1 SPEC, the definition of VertexAttribPointer is as follows (Chapter 10.3.1 Page. 245):\n\nif (the default vertex array object is bound and no buffer is bound to ARRAY_BUFFER)\n{\n    vertex_buffer \u003d temporary buffer\n    offset \u003d 0;\n}\nelse\n{\n    vertex_buffer \u003d \u003cbuffer bound to ARRAY_BUFFER\u003e\n    offset \u003d (char *)pointer - (char *)NULL;\n}\nVertexAttrib*Format(index, size, type, [normalized, ], 0);\nVertexAttribBinding(index, index);\nif (stride !\u003d 0)\n{\n    effectiveStride \u003d stride;\n}\nelse\n{\n    compute effectiveStride based on size and type;\n}\nVERTEX_ATTRIB_ARRAY_STRIDE[index] \u003d stride;\nVERTEX_ATTRIB_ARRAY_POINTER[index] \u003d pointer;\n// This sets VERTEX_BINDING_STRIDE to effectiveStride\nBindVertexBuffer(index, vertex_buffer, offset, effectiveStride);\n\nWe can see that VertexAttribPointer is equivalent to call VertexAttribFormat, VertexAttribBinding and BindVertexBuffer, so we should update all cached values related to these GL calls:\n- All params related to VertexAttribFormat and attrib.bindingIndex should be stored in mAppliedAttributes[index];\n- All params related to BindVertexBuffer should be stored into mAppliedBindings[index]\n\nWe can use these cached values to define if we actually need to call GL commands. ( We actually don\u0027t need to do anything if the new states are equal to the cached ones).",
+      "parentUuid": "8dbdb460_d012925d",
       "range": {
         "startLine": 491,
         "startChar": 21,
