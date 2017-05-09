@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "208e9707_146e5959",
+        "filename": "src/compiler/translator/EmulatePrecision.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 640,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-09T12:17:34Z",
+      "side": 1,
+      "message": "nit: visitChildren is never written to.",
+      "revId": "30db188ad48d7c6bd5b6cc51a0601eaadaee7394",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
