@@ -265,9 +265,7 @@ bool TOutputTraverser::visitBinary(Visit visit, TIntermBinary *node)
     // here where we have that contextual knowledge.
     if (node->getOp() == EOpIndexDirectStruct || node->getOp() == EOpIndexDirectInterfaceBlock)
     {
-        mDepth++;
         node->getLeft()->traverse(this);
-        mDepth--;
 
         TIntermConstantUnion *intermConstantUnion = node->getRight()->getAsConstantUnion();
         ASSERT(intermConstantUnion);
@@ -285,6 +283,8 @@ bool TOutputTraverser::visitBinary(Visit visit, TIntermBinary *node)
         const TField *field = fields[constantUnion->getIConst()];
 
         out << constantUnion->getIConst() << " (field '" << field->name() << "')";
+
+        out << "\n";
 
         return false;
     }
