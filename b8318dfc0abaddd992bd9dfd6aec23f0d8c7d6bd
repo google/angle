@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "04ad5ae9_cd90828f",
+        "filename": "src/tests/compiler_tests/AtomicCounter_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-05-09T13:43:48Z",
+      "side": 1,
+      "message": "I am not quite sure of my understanding on this. I think in common sense this line should be logically identical with below 2 lines:\n    layout(binding \u003d 2, offset \u003d 4) uniform atomic_uint a;\n    layout(binding \u003d 2) uniform atomic_uint b;\n\nBut the spec says \"When multiple variables are listed in a layout declaration, the effect will be the same as if they were declared one at a time, in order from left to right.\". if we rigidly follow this rule, then the interpretation should be:\n    layout(binding \u003d 2, offset \u003d 4) uniform atomic_uint a;\n    layout(binding \u003d 2, offset \u003d 4) uniform atomic_uint b;\nObviously we will get an offsets conflict error which  seems not as desired. But this rule still makes sense regarding this case:\n    layout(binding \u003d 2, offset \u003d 4) uniform atomic_uint a;\n    layout(binding \u003d 2) uniform atomic_uint b, c;\nSo I am a bit struggling with the current decision.",
+      "range": {
+        "startLine": 117,
+        "startChar": 8,
+        "endLine": 117,
+        "endChar": 69
+      },
+      "revId": "b8318dfc0abaddd992bd9dfd6aec23f0d8c7d6bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
