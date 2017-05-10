@@ -215,6 +215,30 @@
       "revId": "f477aa9914d6bdaec85cbe358f6eea1589664491",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4c018fc2_c56f7fa3",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-10T07:47:04Z",
+      "side": 1,
+      "message": "Yes this is actually what I want to do in the next patch.\nI agree with you that it is better only to use bindingIndex to access a binding, which will make the logic much clearer.\nDone",
+      "parentUuid": "dc4e6dc8_9d7b2f2e",
+      "range": {
+        "startLine": 491,
+        "startChar": 21,
+        "endLine": 491,
+        "endChar": 32
+      },
+      "revId": "f477aa9914d6bdaec85cbe358f6eea1589664491",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }

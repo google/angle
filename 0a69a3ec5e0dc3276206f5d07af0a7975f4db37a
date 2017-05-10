@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6e014da6_7241598f",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 429,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-10T07:47:04Z",
+      "side": 1,
+      "message": "In this function, only attrib.enabled is used.\nI want to replace all attrib.enabled with its reference enabled.",
+      "revId": "0a69a3ec5e0dc3276206f5d07af0a7975f4db37a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1274156d_18fb4115",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 531,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-10T07:47:04Z",
+      "side": 1,
+      "message": "According to ES3.1 SPEC, the definition of VertexAttribDivisor is as follows (Chapter 10.3.1 Page. 247):\n\nVertexAttribBinding(index, index);\nVertexBindingDivisor(index, divisor);\n\nSo VertexAttribDivisor can actually change both attrib.bindingIndex and binding.divisor.\n\nIn this function, only attrib.bindingIndex and binding.divisor are used.\nI want to replace all attrib.bindingIndex with its reference bindingIndex and binding.divisor with its reference divisor.",
+      "revId": "0a69a3ec5e0dc3276206f5d07af0a7975f4db37a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
