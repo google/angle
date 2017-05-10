@@ -903,7 +903,7 @@ bool TCompiler::enforcePackingRestrictions()
     return packer.CheckVariablesWithinPackingLimits(maxUniformVectors, expandedUniforms);
 }
 
-void TCompiler::initializeGLPosition(TIntermNode *root)
+void TCompiler::initializeGLPosition(TIntermBlock *root)
 {
     InitVariableList list;
     sh::ShaderVariable var(GL_FLOAT_VEC4, 0);
@@ -912,7 +912,7 @@ void TCompiler::initializeGLPosition(TIntermNode *root)
     InitializeVariables(root, list, symbolTable);
 }
 
-void TCompiler::useAllMembersInUnusedStandardAndSharedBlocks(TIntermNode *root)
+void TCompiler::useAllMembersInUnusedStandardAndSharedBlocks(TIntermBlock *root)
 {
     sh::InterfaceBlockList list;
 
@@ -928,7 +928,7 @@ void TCompiler::useAllMembersInUnusedStandardAndSharedBlocks(TIntermNode *root)
     sh::UseInterfaceBlockFields(root, list, symbolTable);
 }
 
-void TCompiler::initializeOutputVariables(TIntermNode *root)
+void TCompiler::initializeOutputVariables(TIntermBlock *root)
 {
     InitVariableList list;
     if (shaderType == GL_VERTEX_SHADER)

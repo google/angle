@@ -52,6 +52,8 @@
             'compiler/translator/ExpandIntegerPowExpressions.cpp',
             'compiler/translator/ExpandIntegerPowExpressions.h',
             'compiler/translator/ExtensionBehavior.h',
+            'compiler/translator/FindMain.cpp',
+            'compiler/translator/FindMain.h',
             'compiler/translator/FindSymbolNode.cpp',
             'compiler/translator/FindSymbolNode.h',
             'compiler/translator/FlagStd140Structs.cpp',

@@ -11,7 +11,7 @@
 
 namespace sh
 {
-class TIntermNode;
+class TIntermBlock;
 class TSymbolTable;
 
 typedef std::vector<sh::ShaderVariable> InitVariableList;
@@ -23,7 +23,7 @@ typedef std::vector<sh::ShaderVariable> InitVariableList;
 //   2. initializing ESSL 3.00 shaders' output variables (which might be structs).
 // Specifically, it's not feasible to make it work for local variables because if their
 // types are structs, we can't look into TSymbolTable to find the TType data.
-void InitializeVariables(TIntermNode *root,
+void InitializeVariables(TIntermBlock *root,
                          const InitVariableList &vars,
                          const TSymbolTable &symbolTable);
 }  // namespace sh

@@ -12,6 +12,7 @@
 
 #include "compiler/translator/DeferGlobalInitializers.h"
 
+#include "compiler/translator/FindMain.h"
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/SymbolTable.h"
 
@@ -116,19 +117,14 @@ void DeferGlobalInitializersTraverser::insertInitFunction(TIntermBlock *root)
     root->getSequence()->push_back(functionDefinition);
 
     // Insert call into main function
-    for (TIntermNode *node : *root->getSequence())
-    {
-        TIntermFunctionDefinition *nodeFunction = node->getAsFunctionDefinition();
-        if (nodeFunction != nullptr && nodeFunction->getFunctionSymbolInfo()->isMain())
-        {
-            TIntermAggregate *functionCallNode = CreateInternalFunctionCallNode(
-                TType(EbtVoid), functionName, initFunctionId, nullptr);
+    TIntermFunctionDefinition *main = FindMain(root);
+    ASSERT(main != nullptr);
+    TIntermAggregate *functionCallNode =
+        CreateInternalFunctionCallNode(TType(EbtVoid), functionName, initFunctionId, nullptr);
 
-            TIntermBlock *mainBody = nodeFunction->getBody();
-            ASSERT(mainBody != nullptr);
-            mainBody->getSequence()->insert(mainBody->getSequence()->begin(), functionCallNode);
-        }
-    }
+    TIntermBlock *mainBody = main->getBody();
+    ASSERT(mainBody != nullptr);
+    mainBody->getSequence()->insert(mainBody->getSequence()->begin(), functionCallNode);
 }
 
 }  // namespace
