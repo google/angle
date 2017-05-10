@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "ab3987fe_e37303bd",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-10T21:07:21Z",
+      "side": 1,
+      "message": "call this SameVertexBindings",
+      "range": {
+        "startLine": 41,
+        "startChar": 5,
+        "endLine": 41,
+        "endChar": 25
+      },
+      "revId": "0a69a3ec5e0dc3276206f5d07af0a7975f4db37a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6e014da6_7241598f",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 34
@@ -19,6 +42,70 @@
     },
     {
       "key": {
+        "uuid": "93021f96_c95f15ac",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 429,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-10T21:07:21Z",
+      "side": 1,
+      "message": "sorry, I don\u0027t understand your comment - I think you should just make this const bool, not const bool\u0026. storing a reference to a bool seems unnecessary, since it is so small. or does this value change inside updateNeedsStreaming? if so, it seems hard to understand.",
+      "parentUuid": "6e014da6_7241598f",
+      "revId": "0a69a3ec5e0dc3276206f5d07af0a7975f4db37a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b06b2ed3_35a9762c",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-10T21:07:21Z",
+      "side": 1,
+      "message": "We will defer calling attribPointer until the draw call.",
+      "range": {
+        "startLine": 472,
+        "startChar": 20,
+        "endLine": 472,
+        "endChar": 51
+      },
+      "revId": "0a69a3ec5e0dc3276206f5d07af0a7975f4db37a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d647d40_bf03ad35",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-10T21:07:21Z",
+      "side": 1,
+      "message": "this is very confusing to read. I\u0027m not sure what you\u0027re doing here, but maybe just remove this comment.",
+      "range": {
+        "startLine": 479,
+        "startChar": 0,
+        "endLine": 482,
+        "endChar": 50
+      },
+      "revId": "0a69a3ec5e0dc3276206f5d07af0a7975f4db37a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1274156d_18fb4115",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 34
@@ -30,6 +117,24 @@
       "writtenOn": "2017-05-10T07:47:04Z",
       "side": 1,
       "message": "According to ES3.1 SPEC, the definition of VertexAttribDivisor is as follows (Chapter 10.3.1 Page. 247):\n\nVertexAttribBinding(index, index);\nVertexBindingDivisor(index, divisor);\n\nSo VertexAttribDivisor can actually change both attrib.bindingIndex and binding.divisor.\n\nIn this function, only attrib.bindingIndex and binding.divisor are used.\nI want to replace all attrib.bindingIndex with its reference bindingIndex and binding.divisor with its reference divisor.",
+      "revId": "0a69a3ec5e0dc3276206f5d07af0a7975f4db37a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46fe0bf4_26838f53",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 531,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-10T21:07:21Z",
+      "side": 1,
+      "message": "I still don\u0027t like using references to plain old data (int, bool, etc).",
+      "parentUuid": "1274156d_18fb4115",
       "revId": "0a69a3ec5e0dc3276206f5d07af0a7975f4db37a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true

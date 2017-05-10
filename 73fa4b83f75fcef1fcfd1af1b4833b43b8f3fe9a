@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5a271c93_a0beb387",
+        "filename": "src/libANGLE/VertexAttribute.inl",
+        "patchSetId": 34
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-10T21:07:21Z",
+      "side": 0,
+      "message": "I like removing these methods! Good work.",
+      "range": {
+        "startLine": 12,
+        "startChar": 12,
+        "endLine": 12,
+        "endChar": 20
+      },
+      "revId": "73fa4b83f75fcef1fcfd1af1b4833b43b8f3fe9a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
