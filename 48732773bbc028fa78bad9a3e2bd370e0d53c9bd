@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e38e7223_ac107e74",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1195,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-05-10T11:58:17Z",
+      "side": 1,
+      "message": "checkNonEmptyDeclarationErrorCheck has such check already -- covered by opaque. So only emptyDeclarationErrorCheck needs this.",
+      "parentUuid": "8d7dbf23_6186a9b2",
+      "range": {
+        "startLine": 1192,
+        "startChar": 0,
+        "endLine": 1195,
+        "endChar": 9
+      },
+      "revId": "48732773bbc028fa78bad9a3e2bd370e0d53c9bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c0b28f8b_30d500df",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 4
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "f09f0599_74bf88e5",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2439,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-05-10T11:58:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c0b28f8b_30d500df",
+      "range": {
+        "startLine": 2436,
+        "startChar": 0,
+        "endLine": 2439,
+        "endChar": 5
+      },
+      "revId": "48732773bbc028fa78bad9a3e2bd370e0d53c9bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1ac0fac8_d8cbe82b",
         "filename": "src/tests/compiler_tests/AtomicCounter_test.cpp",
         "patchSetId": 4
@@ -59,6 +107,24 @@
       "writtenOn": "2017-05-10T09:35:38Z",
       "side": 1,
       "message": "The comment is a little controversial.  So only multiple variables won\u0027t lead to compile-time error like below:\n    const std::string \u0026source \u003d\n        \"#version 310 es\\n\"\n        \"layout(binding \u003d 2, offset \u003d 4) uniform atomic_uint a, b;\\n\"\n        \"void main()\\n\"\n        \"{\\n\"\n        \"}\\n\";\n\nThe compile error is because the offset of c should be 12?",
+      "revId": "48732773bbc028fa78bad9a3e2bd370e0d53c9bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b7fd37e9_07bf1ca1",
+        "filename": "src/tests/compiler_tests/AtomicCounter_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-05-10T11:58:17Z",
+      "side": 1,
+      "message": "Right!\nThe comment is misleading.",
+      "parentUuid": "1ac0fac8_d8cbe82b",
       "revId": "48732773bbc028fa78bad9a3e2bd370e0d53c9bd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
