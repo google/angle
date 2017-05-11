@@ -84,6 +84,30 @@
     },
     {
       "key": {
+        "uuid": "fd590d84_5fefcfcc",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1795,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-11T15:53:42Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "063d0374_3b963925",
+      "range": {
+        "startLine": 1795,
+        "startChar": 41,
+        "endLine": 1795,
+        "endChar": 90
+      },
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "837f5322_9911fbf9",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 12
@@ -116,6 +140,24 @@
       "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7ee98f01_d842806f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 3363,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-11T15:53:42Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "711ee2be_5eb2770f",
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -186,6 +228,24 @@
       "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1db9211f_f8672428",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-11T15:53:42Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "a8e9b761_931aabcd",
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -444,6 +504,24 @@
       "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e0937b6b_5ab88f6a",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 786,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-11T15:53:42Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "3069c3e4_8d21e909",
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
