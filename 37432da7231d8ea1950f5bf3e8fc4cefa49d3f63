@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "199322d5_feb25f5f",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1100,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-11T15:50:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "555fc67c_3a941e1a",
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "54cc04fc_43c0e7f5",
         "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
         "patchSetId": 12
@@ -30,6 +48,30 @@
       "writtenOn": "2017-05-11T10:47:33Z",
       "side": 1,
       "message": "It seems that apart from this, copyTexture could just define the level then call copySubTexture. But why is this getting the format of the base level, instead of the format for the destination level?",
+      "range": {
+        "startLine": 1795,
+        "startChar": 41,
+        "endLine": 1795,
+        "endChar": 90
+      },
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "063d0374_3b963925",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1795,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-11T15:50:52Z",
+      "side": 1,
+      "message": "Fixed by getting the internal format of the correct level.  I didn\u0027t refactor it yet though, there are some extra parameters that don\u0027t allow one function to be a subset of the other.",
+      "parentUuid": "54cc04fc_43c0e7f5",
       "range": {
         "startLine": 1795,
         "startChar": 41,
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "711ee2be_5eb2770f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 3363,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-11T15:50:52Z",
+      "side": 1,
+      "message": "The source is still always a texture 2D.",
+      "parentUuid": "837f5322_9911fbf9",
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fb787c70_89e092ee",
         "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/MultiplyAlpha.hlsl",
         "patchSetId": 12
@@ -73,6 +133,24 @@
       "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "702cceea_fdf70368",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/MultiplyAlpha.hlsl",
+        "patchSetId": 12
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-11T15:50:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fb787c70_89e092ee",
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -93,6 +171,24 @@
     },
     {
       "key": {
+        "uuid": "a8e9b761_931aabcd",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-11T15:50:52Z",
+      "side": 1,
+      "message": "My guess is that they won\u0027t grow but I felt that keeping them separate makes the validation code below more readable.",
+      "parentUuid": "bbff6a98_f50ded05",
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5db1660f_2f5da244",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 12
@@ -107,6 +203,24 @@
       "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "44caa2a2_99d299a6",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-11T15:50:52Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "5db1660f_2f5da244",
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -133,6 +247,30 @@
     },
     {
       "key": {
+        "uuid": "2a192236_0bdc032c",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 3516,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-11T15:50:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4cd158ef_bb6b34f9",
+      "range": {
+        "startLine": 3516,
+        "startChar": 37,
+        "endLine": 3516,
+        "endChar": 44
+      },
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48b6a993_ba45d03e",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 12
@@ -153,6 +291,30 @@
       "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d074aa7d_19ac3b0d",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 3623,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-11T15:50:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48b6a993_ba45d03e",
+      "range": {
+        "startLine": 3623,
+        "startChar": 37,
+        "endLine": 3623,
+        "endChar": 44
+      },
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -179,6 +341,30 @@
     },
     {
       "key": {
+        "uuid": "17d5ce29_a978975b",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 3678,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-11T15:50:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "95936708_ef33ab4d",
+      "range": {
+        "startLine": 3678,
+        "startChar": 37,
+        "endLine": 3678,
+        "endChar": 44
+      },
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eb6c3cbe_c6f83ada",
         "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
         "patchSetId": 12
@@ -202,6 +388,30 @@
     },
     {
       "key": {
+        "uuid": "59c472f1_dae8ffc4",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 755,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-11T15:50:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eb6c3cbe_c6f83ada",
+      "range": {
+        "startLine": 755,
+        "startChar": 84,
+        "endLine": 755,
+        "endChar": 94
+      },
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10733bef_16ee6624",
         "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
         "patchSetId": 12
@@ -213,6 +423,24 @@
       "writtenOn": "2017-05-11T10:47:33Z",
       "side": 1,
       "message": "was GL_ALPHA already supported?",
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3069c3e4_8d21e909",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 786,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-11T15:50:52Z",
+      "side": 1,
+      "message": "Just added tests for it.",
+      "parentUuid": "10733bef_16ee6624",
       "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -236,6 +464,24 @@
     },
     {
       "key": {
+        "uuid": "36337959_4d7efdf6",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 884,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-11T15:50:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ce183282_91fb5804",
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4632e6e6_65fbb0c8",
         "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
         "patchSetId": 12
@@ -256,6 +502,30 @@
       "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d3fb7fd3_c4799201",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1036,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-11T15:50:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4632e6e6_65fbb0c8",
+      "range": {
+        "startLine": 1036,
+        "startChar": 68,
+        "endLine": 1036,
+        "endChar": 71
+      },
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
