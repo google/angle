@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a46a33e7_502751de",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-11T06:55:22Z",
+      "side": 1,
+      "message": "I suggest we call this SameVertexBuffer because in this function we don\u0027t need to compare binding.divisor, and it isn\u0027t suitable to claim two bindings are \u0027same\u0027 without comparing their divisors.",
+      "parentUuid": "ab3987fe_e37303bd",
+      "range": {
+        "startLine": 41,
+        "startChar": 5,
+        "endLine": 41,
+        "endChar": 25
+      },
+      "revId": "0a69a3ec5e0dc3276206f5d07af0a7975f4db37a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6e014da6_7241598f",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 34
@@ -60,6 +84,24 @@
     },
     {
       "key": {
+        "uuid": "23dfbe5f_09f97ec8",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 429,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-11T06:55:22Z",
+      "side": 1,
+      "message": "I just want to say that I want to use \u0027enabled\u0027 instead of \u0027attrib.enabled\u0027 since only attrib.enabled is used. I have updated it now.\nDone",
+      "parentUuid": "93021f96_c95f15ac",
+      "revId": "0a69a3ec5e0dc3276206f5d07af0a7975f4db37a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b06b2ed3_35a9762c",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 34
@@ -83,6 +125,30 @@
     },
     {
       "key": {
+        "uuid": "acf83cb7_fc7e0969",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-11T06:55:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b06b2ed3_35a9762c",
+      "range": {
+        "startLine": 472,
+        "startChar": 20,
+        "endLine": 472,
+        "endChar": 51
+      },
+      "revId": "0a69a3ec5e0dc3276206f5d07af0a7975f4db37a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9d647d40_bf03ad35",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 34
@@ -94,6 +160,30 @@
       "writtenOn": "2017-05-10T21:07:21Z",
       "side": 1,
       "message": "this is very confusing to read. I\u0027m not sure what you\u0027re doing here, but maybe just remove this comment.",
+      "range": {
+        "startLine": 479,
+        "startChar": 0,
+        "endLine": 482,
+        "endChar": 50
+      },
+      "revId": "0a69a3ec5e0dc3276206f5d07af0a7975f4db37a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bdb59a6d_754c7b24",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-11T06:55:22Z",
+      "side": 1,
+      "message": "Sorry for my poor English. \n\nWhat I want to say is that:\n- If attrib is using an client memory pointer, current implementation sets attrib.size \u003d -1 as the flag, which I think is a bit hard to understand. (https://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/renderer/gl/VertexArrayGL.cpp?l\u003d389)\n- We can just set mAppliedBindings[bindingIndex].buffer to nullptr as the flag that can show the current attribute is using a client memory pointer in a better way.\n- For the concern in the comments of the current code: if we start to use a buffer object later, the comparison of binding.buffer.get() (not nullptr) and mAppliedBindings[bindingIndex].buffer.get() (nullptr) must be inequal, thus we won\u0027t skip updating it.\n- We don\u0027t need to care if the attribute will use another binding - Actually it is impossible, because only default VAO allows using client memory pointer, and we cannot use VertexAttribBinding to change the binding on the default VAO according to ES3.1 SPEC.",
+      "parentUuid": "9d647d40_bf03ad35",
       "range": {
         "startLine": 479,
         "startChar": 0,
@@ -135,6 +225,24 @@
       "side": 1,
       "message": "I still don\u0027t like using references to plain old data (int, bool, etc).",
       "parentUuid": "1274156d_18fb4115",
+      "revId": "0a69a3ec5e0dc3276206f5d07af0a7975f4db37a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4b921b45_f1081b05",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 531,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-11T06:55:22Z",
+      "side": 1,
+      "message": "Got it.\nDone",
+      "parentUuid": "46fe0bf4_26838f53",
       "revId": "0a69a3ec5e0dc3276206f5d07af0a7975f4db37a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
