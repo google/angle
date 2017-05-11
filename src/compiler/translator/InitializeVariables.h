@@ -9,23 +9,31 @@
 
 #include <GLSLANG/ShaderLang.h>
 
+#include "compiler/translator/IntermNode.h"
+
 namespace sh
 {
-class TIntermBlock;
 class TSymbolTable;
 
 typedef std::vector<sh::ShaderVariable> InitVariableList;
 
-// Currently this function is only capable of initializing variables of basic types,
-// array of basic types, or struct of basic types.
+// Return a sequence of assignment operations to initialize "initializedSymbol". initializedSymbol
+// may be an array, struct or any combination of these, as long as it contains only basic types.
+TIntermSequence *CreateInitCode(const TIntermSymbol *initializedSymbol);
+
+// Initialize all uninitialized local variables, so that undefined behavior is avoided.
+void InitializeUninitializedLocals(TIntermBlock *root, int shaderVersion);
+
+// This function can initialize all the types that CreateInitCode is able to initialize. For struct
+// typed variables it requires that the struct is found from the symbolTable, which is usually not
+// the case for locally defined struct types.
 // For now it is used for the following two scenarios:
 //   1. initializing gl_Position;
-//   2. initializing ESSL 3.00 shaders' output variables (which might be structs).
-// Specifically, it's not feasible to make it work for local variables because if their
-// types are structs, we can't look into TSymbolTable to find the TType data.
+//   2. initializing ESSL 3.00 shaders' output variables.
 void InitializeVariables(TIntermBlock *root,
                          const InitVariableList &vars,
                          const TSymbolTable &symbolTable);
+
 }  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_INITIALIZEVARIABLES_H_

@@ -2823,6 +2823,142 @@ TEST_P(GLSLTest_ES3, ConstantStatementAsLoopInit)
     glDeleteShader(shader);
 }
 
+// Test that uninitialized local variables are initialized to 0.
+TEST_P(GLSLTest_ES3, InitUninitializedLocals)
+{
+    if (IsAndroid() && IsOpenGLES())
+    {
+        // http://anglebug.com/2046
+        std::cout
+            << "Test skipped on Android GLES because local variable initialization is disabled."
+            << std::endl;
+        return;
+    }
+
+    if (IsOSX() && IsOpenGL())
+    {
+        // http://anglebug.com/2041
+        std::cout << "Test skipped on Mac OpenGL because local variable initialization is disabled."
+                  << std::endl;
+        return;
+    }
+
+    const std::string &fragmentShader =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "int result = 0;\n"
+        "void main()\n"
+        "{\n"
+        "    int u;\n"
+        "    result += u;\n"
+        "    int k = 0;\n"
+        "    for (int i[2], j = i[0] + 1; k < 2; ++k)\n"
+        "    {\n"
+        "        result += j;\n"
+        "    }\n"
+        "    if (result == 2)\n"
+        "    {\n"
+        "        my_FragColor = vec4(0, 1, 0, 1);\n"
+        "    }\n"
+        "    else\n"
+        "    {\n"
+        "        my_FragColor = vec4(1, 0, 0, 1);\n"
+        "    }\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test that uninitialized structs containing arrays of structs are initialized to 0. This
+// specifically tests with two different struct variables declared in the same block.
+TEST_P(GLSLTest, InitUninitializedStructContainingArrays)
+{
+    if (IsAndroid() && IsOpenGLES())
+    {
+        // http://anglebug.com/2046
+        std::cout
+            << "Test skipped on Android GLES because local variable initialization is disabled."
+            << std::endl;
+        return;
+    }
+
+    if (IsOSX() && IsOpenGL())
+    {
+        // http://anglebug.com/2041
+        std::cout << "Test skipped on Mac OpenGL because local variable initialization is disabled."
+                  << std::endl;
+        return;
+    }
+
+    const std::string &fragmentShader =
+        "precision mediump float;\n"
+        "struct T\n"
+        "{\n"
+        "    int a[2];\n"
+        "};\n"
+        "struct S\n"
+        "{\n"
+        "    T t[2];\n"
+        "};\n"
+        "void main()\n"
+        "{\n"
+        "    S s;\n"
+        "    S s2;\n"
+        "    if (s.t[1].a[1] == 0 && s2.t[1].a[1] == 0)\n"
+        "    {\n"
+        "        gl_FragColor = vec4(0, 1, 0, 1);\n"
+        "    }\n"
+        "    else\n"
+        "    {\n"
+        "        gl_FragColor = vec4(1, 0, 0, 1);\n"
+        "    }\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test that an uninitialized nameless struct inside a for loop init statement works.
+TEST_P(GLSLTest_ES3, UninitializedNamelessStructInForInitStatement)
+{
+    if (IsAndroid() && IsOpenGLES())
+    {
+        // http://anglebug.com/2046
+        std::cout
+            << "Test skipped on Android GLES because local variable initialization is disabled."
+            << std::endl;
+        return;
+    }
+
+    if (IsOSX() && IsOpenGL())
+    {
+        // http://anglebug.com/2041
+        std::cout << "Test skipped on Mac OpenGL because local variable initialization is disabled."
+                  << std::endl;
+        return;
+    }
+
+    const std::string &fragmentShader =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    my_FragColor = vec4(1, 0, 0, 1);\n"
+        "    for (struct { float q; } b; b.q < 2.0; b.q++) {\n"
+        "        my_FragColor = vec4(0, 1, 0, 1);\n"
+        "    }\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest,
                        ES2_D3D9(),

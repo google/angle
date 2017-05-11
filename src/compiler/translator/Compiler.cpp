@@ -18,6 +18,7 @@
 #include "compiler/translator/EmulatePrecision.h"
 #include "compiler/translator/Initialize.h"
 #include "compiler/translator/InitializeVariables.h"
+#include "compiler/translator/IntermNodePatternMatcher.h"
 #include "compiler/translator/ParseContext.h"
 #include "compiler/translator/PruneEmptyDeclarations.h"
 #include "compiler/translator/RegenerateStructNames.h"
@@ -25,6 +26,8 @@
 #include "compiler/translator/RemovePow.h"
 #include "compiler/translator/RewriteDoWhile.h"
 #include "compiler/translator/ScalarizeVecAndMatConstructorArgs.h"
+#include "compiler/translator/SeparateDeclarations.h"
+#include "compiler/translator/SimplifyLoopConditions.h"
 #include "compiler/translator/UnfoldShortCircuitAST.h"
 #include "compiler/translator/UseInterfaceBlockFields.h"
 #include "compiler/translator/ValidateLimitations.h"
@@ -473,6 +476,29 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         if (success)
         {
             DeferGlobalInitializers(root);
+        }
+
+        if (success && (compileOptions & SH_INITIALIZE_UNINITIALIZED_LOCALS) && getOutputType())
+        {
+            // Initialize uninitialized local variables.
+            // In some cases initializing can generate extra statements in the parent block, such as
+            // when initializing nameless structs or initializing arrays in ESSL 1.00. In that case
+            // we need to first simplify loop conditions and separate declarations. If we don't
+            // follow the Appendix A limitations, loop init statements can declare arrays or
+            // nameless structs and have multiple declarations.
+
+            if (!shouldRunLoopAndIndexingValidation(compileOptions))
+            {
+                SimplifyLoopConditions(root,
+                                       IntermNodePatternMatcher::kMultiDeclaration |
+                                           IntermNodePatternMatcher::kArrayDeclaration |
+                                           IntermNodePatternMatcher::kNamelessStructDeclaration,
+                                       getTemporaryIndex(), getSymbolTable(), getShaderVersion());
+            }
+            // We only really need to separate array declarations and nameless struct declarations,
+            // but it's simpler to just use the regular SeparateDeclarations.
+            SeparateDeclarations(root);
+            InitializeUninitializedLocals(root, getShaderVersion());
         }
     }
 

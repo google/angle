@@ -25,7 +25,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 174
+#define ANGLE_SH_VERSION 175
 
 enum ShShaderSpec
 {
@@ -217,6 +217,10 @@ const ShCompileOptions SH_EMULATE_ATAN2_FLOAT_FUNCTION = UINT64_C(1) << 30;
 // Set to 1 to translate gl_ViewID_OVR to an uniform so that the extension can be emulated.
 // "uniform highp uint webgl_angle_ViewID_OVR".
 const ShCompileOptions SH_TRANSLATE_VIEWID_OVR_TO_UNIFORM = UINT64_C(1) << 31;
+
+// Set to initialize uninitialized local variables. Should only be used with GLSL output. In HLSL
+// output variables are initialized regardless of if this flag is set.
+const ShCompileOptions SH_INITIALIZE_UNINITIALIZED_LOCALS = UINT64_C(1) << 32;
 
 // Defines alternate strategies for implementing array index clamping.
 enum ShArrayIndexClampingStrategy

@@ -144,24 +144,29 @@ int main(int argc, char *argv[])
                 {
                     switch (argv[0][3])
                     {
-                      case 'e': output = SH_ESSL_OUTPUT; break;
-                      case 'g':
-                          if (!ParseGLSLOutputVersion(&argv[0][sizeof("-b=g") - 1], &output))
-                          {
-                              failCode = EFailUsage;
-                          }
-                          break;
-                      case 'h':
-                        if (argv[0][4] == '1' && argv[0][5] == '1')
-                        {
-                            output = SH_HLSL_4_1_OUTPUT;
-                        }
-                        else
-                        {
-                            output = SH_HLSL_3_0_OUTPUT;
-                        }
-                        break;
-                      default: failCode = EFailUsage;
+                        case 'e':
+                            output = SH_ESSL_OUTPUT;
+                            compileOptions |= SH_INITIALIZE_UNINITIALIZED_LOCALS;
+                            break;
+                        case 'g':
+                            if (!ParseGLSLOutputVersion(&argv[0][sizeof("-b=g") - 1], &output))
+                            {
+                                failCode = EFailUsage;
+                            }
+                            compileOptions |= SH_INITIALIZE_UNINITIALIZED_LOCALS;
+                            break;
+                        case 'h':
+                            if (argv[0][4] == '1' && argv[0][5] == '1')
+                            {
+                                output = SH_HLSL_4_1_OUTPUT;
+                            }
+                            else
+                            {
+                                output = SH_HLSL_3_0_OUTPUT;
+                            }
+                            break;
+                        default:
+                            failCode = EFailUsage;
                     }
                 }
                 else

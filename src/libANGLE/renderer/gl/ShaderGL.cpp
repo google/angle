@@ -95,6 +95,11 @@ ShCompileOptions ShaderGL::prepareSourceAndReturnOptions(std::stringstream *sour
         options |= SH_REWRITE_FLOAT_UNARY_MINUS_OPERATOR;
     }
 
+    if (!mWorkarounds.dontInitializeUninitializedLocals)
+    {
+        options |= SH_INITIALIZE_UNINITIALIZED_LOCALS;
+    }
+
     return options;
 }
 

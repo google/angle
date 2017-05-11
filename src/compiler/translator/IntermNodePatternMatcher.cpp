@@ -109,7 +109,35 @@ bool IntermNodePatternMatcher::match(TIntermDeclaration *node)
 {
     if ((mMask & kMultiDeclaration) != 0)
     {
-        return node->getSequence()->size() > 1;
+        if (node->getSequence()->size() > 1)
+        {
+            return true;
+        }
+    }
+    if ((mMask & kArrayDeclaration) != 0)
+    {
+        if (node->getSequence()->front()->getAsTyped()->getType().isStructureContainingArrays())
+        {
+            return true;
+        }
+        // Need to check from all declarators whether they are arrays since that may vary between
+        // declarators.
+        for (TIntermNode *declarator : *node->getSequence())
+        {
+            if (declarator->getAsTyped()->isArray())
+            {
+                return true;
+            }
+        }
+    }
+    if ((mMask & kNamelessStructDeclaration) != 0)
+    {
+        TIntermTyped *declarator = node->getSequence()->front()->getAsTyped();
+        if (declarator->getBasicType() == EbtStruct &&
+            declarator->getType().getStruct()->name() == "")
+        {
+            return true;
+        }
     }
     return false;
 }

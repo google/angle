@@ -125,6 +125,10 @@ struct WorkaroundsGL
     // This only seems to affect AMD OpenGL drivers.
     // Tracking bug: http://anglebug.com/1936
     bool emulateMaxVertexAttribStride = false;
+
+    // Initializing uninitialized locals caused odd behavior on Mac in a few WebGL 2 tests.
+    // Tracking bug: http://anglebug/2041
+    bool dontInitializeUninitializedLocals = false;
 };
 }  // namespace rx
 
