@@ -1,0 +1,261 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "555fc67c_3a941e1a",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1100,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-11T10:47:33Z",
+      "side": 1,
+      "message": "Same comment as below in TextureD3D_Cube::copySubTexture.",
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "54cc04fc_43c0e7f5",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1795,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-11T10:47:33Z",
+      "side": 1,
+      "message": "It seems that apart from this, copyTexture could just define the level then call copySubTexture. But why is this getting the format of the base level, instead of the format for the destination level?",
+      "range": {
+        "startLine": 1795,
+        "startChar": 41,
+        "endLine": 1795,
+        "endChar": 90
+      },
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "837f5322_9911fbf9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 3363,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-11T10:47:33Z",
+      "side": 1,
+      "message": "We use MakeGeneric below, but won\u0027t this condition make it so only 2D textures can take the fast path?",
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fb787c70_89e092ee",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/MultiplyAlpha.hlsl",
+        "patchSetId": 12
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-11T10:47:33Z",
+      "side": 1,
+      "message": "nit: PT: passthrough",
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bbff6a98_f50ded05",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-11T10:47:33Z",
+      "side": 1,
+      "message": "nit: do we expect these to grow? If not it could make sense to directly call IsValidCopyTextureSourceInternalFormatEnum",
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5db1660f_2f5da244",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 238,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-11T10:47:33Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4cd158ef_bb6b34f9",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 3516,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-11T10:47:33Z",
+      "side": 1,
+      "message": "nit: It now supports level !\u003d 0",
+      "range": {
+        "startLine": 3516,
+        "startChar": 37,
+        "endLine": 3516,
+        "endChar": 44
+      },
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "48b6a993_ba45d03e",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 3623,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-11T10:47:33Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 3623,
+        "startChar": 37,
+        "endLine": 3623,
+        "endChar": 44
+      },
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95936708_ef33ab4d",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 3678,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-11T10:47:33Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 3678,
+        "startChar": 37,
+        "endLine": 3678,
+        "endChar": 44
+      },
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eb6c3cbe_c6f83ada",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 755,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-11T10:47:33Z",
+      "side": 1,
+      "message": "nit: this isn\u0027t used",
+      "range": {
+        "startLine": 755,
+        "startChar": 84,
+        "endLine": 755,
+        "endChar": 94
+      },
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "10733bef_16ee6624",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 786,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-11T10:47:33Z",
+      "side": 1,
+      "message": "was GL_ALPHA already supported?",
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ce183282_91fb5804",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 884,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-11T10:47:33Z",
+      "side": 1,
+      "message": "nit: this test is a duplicate, did you mean to try unmultiply?",
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4632e6e6_65fbb0c8",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1036,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-11T10:47:33Z",
+      "side": 1,
+      "message": "why 120 instead of 128?",
+      "range": {
+        "startLine": 1036,
+        "startChar": 68,
+        "endLine": 1036,
+        "endChar": 71
+      },
+      "revId": "37432da7231d8ea1950f5bf3e8fc4cefa49d3f63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
