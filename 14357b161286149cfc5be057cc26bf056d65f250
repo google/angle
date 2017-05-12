@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ce0a26e5_3ae63634",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 649,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-05-12T03:39:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c0fc3b3e_c6ce21ac",
+      "range": {
+        "startLine": 649,
+        "startChar": 8,
+        "endLine": 649,
+        "endChar": 46
+      },
+      "revId": "14357b161286149cfc5be057cc26bf056d65f250",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "44129e5b_3a9fc11a",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
         "patchSetId": 11
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "7bdeb512_d46052c1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-05-12T03:39:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "44129e5b_3a9fc11a",
+      "range": {
+        "startLine": 285,
+        "startChar": 22,
+        "endLine": 285,
+        "endChar": 44
+      },
+      "revId": "14357b161286149cfc5be057cc26bf056d65f250",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a419aa5_eef2eeb4",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 11
@@ -59,6 +107,30 @@
       "writtenOn": "2017-05-10T21:27:49Z",
       "side": 1,
       "message": "i think we should be using nullptr for these, right?",
+      "range": {
+        "startLine": 435,
+        "startChar": 29,
+        "endLine": 435,
+        "endChar": 33
+      },
+      "revId": "14357b161286149cfc5be057cc26bf056d65f250",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d96c7e5_9769158a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-05-12T03:39:06Z",
+      "side": 1,
+      "message": "LHS type is uintptr_t type, cannot be assigned with a value of type nullptr_t, compiling error.\nIn fact, Corentin had given me comment, I am sorry that forgot to correct it.\nRefer Renderer11::markAllStateDirty function, I think it is better to use \"angle::DirtyPointer\" to assign it. Is that right?",
+      "parentUuid": "9a419aa5_eef2eeb4",
       "range": {
         "startLine": 435,
         "startChar": 29,
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "b4b8d54f_bf2321a1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1495,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-05-12T03:39:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "992dd367_2325ceab",
+      "range": {
+        "startLine": 1495,
+        "startChar": 49,
+        "endLine": 1495,
+        "endChar": 53
+      },
+      "revId": "14357b161286149cfc5be057cc26bf056d65f250",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f5f9118_b3e0c89e",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 11
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "0db2692a_2e56cf30",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 4902,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-05-12T03:39:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f5f9118_b3e0c89e",
+      "range": {
+        "startLine": 4902,
+        "startChar": 9,
+        "endLine": 4902,
+        "endChar": 19
+      },
+      "revId": "14357b161286149cfc5be057cc26bf056d65f250",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59c54068_0fe8e6da",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 11
@@ -137,6 +257,30 @@
       "revId": "14357b161286149cfc5be057cc26bf056d65f250",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b847e384_5ee44d7a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 4974,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-05-12T03:39:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59c54068_0fe8e6da",
+      "range": {
+        "startLine": 4974,
+        "startChar": 27,
+        "endLine": 4974,
+        "endChar": 40
+      },
+      "revId": "14357b161286149cfc5be057cc26bf056d65f250",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
