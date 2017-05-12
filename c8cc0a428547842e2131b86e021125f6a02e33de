@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "60b34260_c8db9721",
+        "filename": "src/compiler/translator/intermOut.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-12T09:16:34Z",
+      "side": 1,
+      "message": "Can you fix the indentation in this same patch as well, and change the patch title to \"Fix formatting of struct indexing in intermediate output\"? Basically, the mDepth++ and mDepth-- lines need to be removed (the right indentation is already done in traverse()).",
+      "revId": "c8cc0a428547842e2131b86e021125f6a02e33de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
