@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a602bb29_fe99441b",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1166,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-05-12T03:42:22Z",
+      "side": 1,
+      "message": "Why not directly use if (publicType.precision !\u003d EbpHighp)",
+      "revId": "e33411bf1be6f56dcc5dbb7442fb46c1f101b6fb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
