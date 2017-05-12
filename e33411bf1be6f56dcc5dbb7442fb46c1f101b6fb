@@ -34,6 +34,24 @@
       "revId": "e33411bf1be6f56dcc5dbb7442fb46c1f101b6fb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8369fed0_6b057676",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1166,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-05-12T05:05:35Z",
+      "side": 1,
+      "message": "I notice that you add the following code in Compiler.cpp:\n    TPublicType atomicCounter;\n    atomicCounter.initializeBasicType(EbtAtomicCounter);\n    symbolTable.setDefaultPrecision(atomicCounter, EbpHigh);\n\nWon\u0027t it ensure that publicType.precision can never be undefined?",
+      "parentUuid": "66e812fa_923dbb32",
+      "revId": "e33411bf1be6f56dcc5dbb7442fb46c1f101b6fb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
