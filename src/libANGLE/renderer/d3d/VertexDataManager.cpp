@@ -293,6 +293,7 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state,
 // static
 void VertexDataManager::StoreDirectAttrib(TranslatedAttribute *directAttrib)
 {
+    ASSERT(directAttrib->attribute && directAttrib->binding);
     const auto &attrib  = *directAttrib->attribute;
     const auto &binding = *directAttrib->binding;
 
@@ -314,6 +315,7 @@ void VertexDataManager::StoreDirectAttrib(TranslatedAttribute *directAttrib)
 // static
 gl::Error VertexDataManager::StoreStaticAttrib(TranslatedAttribute *translated)
 {
+    ASSERT(translated->attribute && translated->binding);
     const auto &attrib  = *translated->attribute;
     const auto &binding = *translated->binding;
 
@@ -424,7 +426,9 @@ void VertexDataManager::PromoteDynamicAttribs(
     for (auto attribIndex : dynamicAttribsMask)
     {
         const auto &dynamicAttrib = translatedAttribs[attribIndex];
+        ASSERT(dynamicAttrib.attribute && dynamicAttrib.binding);
         const auto &binding       = *dynamicAttrib.binding;
+
         gl::Buffer *buffer        = binding.buffer.get();
         if (buffer)
         {
@@ -439,8 +443,10 @@ gl::Error VertexDataManager::reserveSpaceForAttrib(const TranslatedAttribute &tr
                                                    GLsizei count,
                                                    GLsizei instances) const
 {
+    ASSERT(translatedAttrib.attribute && translatedAttrib.binding);
     const auto &attrib  = *translatedAttrib.attribute;
     const auto &binding = *translatedAttrib.binding;
+
     ASSERT(!DirectStoragePossible(attrib, binding));
 
     gl::Buffer *buffer   = binding.buffer.get();
@@ -461,6 +467,7 @@ gl::Error VertexDataManager::storeDynamicAttrib(TranslatedAttribute *translated,
                                                 GLsizei count,
                                                 GLsizei instances)
 {
+    ASSERT(translated->attribute && translated->binding);
     const auto &attrib  = *translated->attribute;
     const auto &binding = *translated->binding;
 
@@ -523,6 +530,7 @@ gl::Error VertexDataManager::storeCurrentValue(const gl::VertexAttribCurrentValu
 
     if (cachedState->data != currentValue)
     {
+        ASSERT(translated->attribute && translated->binding);
         const auto &attrib  = *translated->attribute;
         const auto &binding = *translated->binding;
 
