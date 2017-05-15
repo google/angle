@@ -95,6 +95,7 @@ struct WorkaroundsGL
     // On Mac with OpenGL version 4.1, unused std140 or shared uniform blocks will be
     // treated as inactive which is not consistent with WebGL2.0 spec. Reference all members in a
     // unused std140 or shared uniform block at the beginning of main to work around it.
+    // Also used on Linux AMD.
     bool useUnusedBlocksWithStandardOrSharedLayout = false;
 
     // This flag will keep invariant declaration for input in fragment shader for GLSL >=4.20

@@ -955,6 +955,7 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
 #if defined(ANGLE_PLATFORM_LINUX)
     workarounds->emulateMaxVertexAttribStride =
         functions->standard == STANDARD_GL_DESKTOP && IsAMD(vendor);
+    workarounds->useUnusedBlocksWithStandardOrSharedLayout = IsAMD(vendor);
 #endif
 
 #if defined(ANGLE_PLATFORM_APPLE)
