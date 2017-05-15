@@ -184,7 +184,7 @@ egl::Error FunctionsEGL::initialize(EGLNativeDisplayType nativeDisplay)
 
 egl::Error FunctionsEGL::terminate()
 {
-    if (mFnPtrs->terminatePtr(mEGLDisplay) == EGL_TRUE)
+    if (mFnPtrs->terminatePtr == nullptr || mFnPtrs->terminatePtr(mEGLDisplay) == EGL_TRUE)
     {
         mEGLDisplay = nullptr;
         return egl::Error(EGL_SUCCESS);
