@@ -133,7 +133,7 @@ constexpr Format g_formatInfoTable[] = {
     { Format::ID::R8G8B8A8_SNORM, GL_RGBA8_SNORM, GL_RGBA8_SNORM, GenerateMip<R8G8B8A8S>, NoCopyFunctions, ReadColor<R8G8B8A8S, GLfloat>, GL_SIGNED_NORMALIZED, 8, 8, 8, 8, 0, 0 },
     { Format::ID::R8G8B8A8_UINT, GL_RGBA8UI, GL_RGBA8UI, GenerateMip<R8G8B8A8>, NoCopyFunctions, ReadColor<R8G8B8A8, GLuint>, GL_UNSIGNED_INT, 8, 8, 8, 8, 0, 0 },
     { Format::ID::R8G8B8A8_UNORM, GL_RGBA8, GL_RGBA8, GenerateMip<R8G8B8A8>, NoCopyFunctions, ReadColor<R8G8B8A8, GLfloat>, GL_UNSIGNED_NORMALIZED, 8, 8, 8, 8, 0, 0 },
-    { Format::ID::R8G8B8A8_UNORM_SRGB, GL_SRGB8_ALPHA8, GL_SRGB8_ALPHA8, GenerateMip<R8G8B8A8>, NoCopyFunctions, ReadColor<R8G8B8A8, GLfloat>, GL_UNSIGNED_NORMALIZED, 8, 8, 8, 8, 0, 0 },
+    { Format::ID::R8G8B8A8_UNORM_SRGB, GL_SRGB8_ALPHA8, GL_SRGB8_ALPHA8, GenerateMip<R8G8B8A8SRGB>, NoCopyFunctions, ReadColor<R8G8B8A8SRGB, GLfloat>, GL_UNSIGNED_NORMALIZED, 8, 8, 8, 8, 0, 0 },
     { Format::ID::R8G8B8_SINT, GL_RGB8I, GL_RGB8I, GenerateMip<R8G8B8S>, NoCopyFunctions, ReadColor<R8G8B8S, GLint>, GL_INT, 8, 8, 8, 0, 0, 0 },
     { Format::ID::R8G8B8_SNORM, GL_RGB8_SNORM, GL_RGB8_SNORM, GenerateMip<R8G8B8S>, NoCopyFunctions, ReadColor<R8G8B8S, GLfloat>, GL_SIGNED_NORMALIZED, 8, 8, 8, 0, 0, 0 },
     { Format::ID::R8G8B8_UINT, GL_RGB8UI, GL_RGB8UI, GenerateMip<R8G8B8>, NoCopyFunctions, ReadColor<R8G8B8, GLuint>, GL_UNSIGNED_INT, 8, 8, 8, 0, 0, 0 },
