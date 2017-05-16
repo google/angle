@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "75733672_2657c628",
+        "filename": "src/libANGLE/Stream.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-05-16T22:29:09Z",
+      "side": 1,
+      "message": "I guess my reasoning for gl::NoError doesn\u0027t apply to egl::, since I already have Egl in the names (had to add it because of conflict with X11 defines). There is a minor issue (from my perspective) that in some places there will be egl::EglSuccess and in others just EglSuccess. I don\u0027t feel strongly about it. Do you want me to remove \"egl::\" where not needed, or maybe we can keep it as is?",
+      "parentUuid": "5cc1d81d_b8aa891a",
+      "range": {
+        "startLine": 160,
+        "startChar": 11,
+        "endLine": 160,
+        "endChar": 16
+      },
+      "revId": "742b7ea8a1eb1b1d8176218197f8228d6a2c0d0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "28880ae1_74367be0",
         "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
         "patchSetId": 2
