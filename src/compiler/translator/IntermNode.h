@@ -1087,9 +1087,7 @@ class TIntermTraverser : angle::NonCopyable
     // traversed.
     // The statements will be inserted before the node being traversed once updateTree is called.
     // Should only be called during PreVisit or PostVisit from sequence nodes.
-    // Note that inserting more than one set of nodes to the same parent node on a single updateTree
-    // call is not
-    // supported.
+    // Note that two insertions to the same position in the same block are not supported.
     void insertStatementsInParentBlock(const TIntermSequence &insertions);
 
     // Same as above, but supports simultaneous insertion of statements before and after the node
@@ -1148,6 +1146,9 @@ class TIntermTraverser : angle::NonCopyable
 
   private:
     static TName GetInternalFunctionName(const char *name);
+
+    static bool CompareInsertion(const NodeInsertMultipleEntry &a,
+                                 const NodeInsertMultipleEntry &b);
 
     // To replace a single node with another on the parent node
     struct NodeUpdateEntry

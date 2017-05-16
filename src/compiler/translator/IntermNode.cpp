@@ -3300,10 +3300,27 @@ TString TIntermTraverser::hash(const TString &name, ShHashFunction64 hashFunctio
     return hashedName;
 }
 
+bool TIntermTraverser::CompareInsertion(const NodeInsertMultipleEntry &a,
+                                        const NodeInsertMultipleEntry &b)
+{
+    if (a.parent != b.parent)
+    {
+        return a.parent > b.parent;
+    }
+    return a.position > b.position;
+}
+
 void TIntermTraverser::updateTree()
 {
+    // Sort the insertions so that insertion position is decreasing. This way multiple insertions to
+    // the same parent node are handled correctly.
+    std::sort(mInsertions.begin(), mInsertions.end(), CompareInsertion);
     for (size_t ii = 0; ii < mInsertions.size(); ++ii)
     {
+        // We can't know here what the intended ordering of two insertions to the same position is,
+        // so it is not supported.
+        ASSERT(ii == 0 || mInsertions[ii].position != mInsertions[ii - 1].position ||
+               mInsertions[ii].parent != mInsertions[ii - 1].parent);
         const NodeInsertMultipleEntry &insertion = mInsertions[ii];
         ASSERT(insertion.parent);
         if (!insertion.insertionsAfter.empty())
