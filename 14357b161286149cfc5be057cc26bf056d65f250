@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "f960066e_36080790",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-16T15:23:05Z",
+      "side": 1,
+      "message": "right, that\u0027s correct. thanks.",
+      "parentUuid": "3d96c7e5_9769158a",
+      "range": {
+        "startLine": 435,
+        "startChar": 29,
+        "endLine": 435,
+        "endChar": 33
+      },
+      "revId": "14357b161286149cfc5be057cc26bf056d65f250",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "992dd367_2325ceab",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 11
