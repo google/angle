@@ -839,6 +839,11 @@ GLboolean Texture::getFixedSampleLocations(GLenum target, size_t level) const
     return mState.getImageDesc(target, level).fixedSampleLocations;
 }
 
+GLuint Texture::getMipmapMaxLevel() const
+{
+    return mState.getMipmapMaxLevel();
+}
+
 bool Texture::isMipmapComplete() const
 {
     return mState.computeMipmapCompleteness();

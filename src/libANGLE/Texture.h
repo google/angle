@@ -260,6 +260,9 @@ class Texture final : public egl::ImageSibling,
     GLboolean getFixedSampleLocations(GLenum target, size_t level) const;
     const Format &getFormat(GLenum target, size_t level) const;
 
+    // Returns the value called "q" in the GLES 3.0.4 spec section 3.8.10.
+    GLuint getMipmapMaxLevel() const;
+
     bool isMipmapComplete() const;
 
     Error setImage(const Context *context,

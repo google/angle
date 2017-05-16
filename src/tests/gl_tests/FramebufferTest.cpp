@@ -12,6 +12,17 @@
 
 using namespace angle;
 
+namespace
+{
+
+void ExpectFramebufferCompleteOrUnsupported(GLenum binding)
+{
+    GLenum status = glCheckFramebufferStatus(binding);
+    EXPECT_TRUE(status == GL_FRAMEBUFFER_COMPLETE || status == GL_FRAMEBUFFER_UNSUPPORTED);
+}
+
+}  // anonymous namespace
+
 class FramebufferFormatsTest : public ANGLETest
 {
   protected:
@@ -368,34 +379,17 @@ ANGLE_INSTANTIATE_TEST(FramebufferFormatsTest,
 
 class FramebufferTest_ES3 : public ANGLETest
 {
-  protected:
-    FramebufferTest_ES3() : mFramebuffer(0), mRenderbuffer(0) {}
-
-    void SetUp() override
-    {
-        ANGLETest::SetUp();
-
-        glGenFramebuffers(1, &mFramebuffer);
-        glGenRenderbuffers(1, &mRenderbuffer);
-    }
-
-    void TearDown() override
-    {
-        glDeleteFramebuffers(1, &mFramebuffer);
-        glDeleteRenderbuffers(1, &mRenderbuffer);
-        ANGLETest::TearDown();
-    }
-
-    GLuint mFramebuffer;
-    GLuint mRenderbuffer;
 };
 
 // Covers invalidating an incomplete framebuffer. This should be a no-op, but should not error.
 TEST_P(FramebufferTest_ES3, InvalidateIncomplete)
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
-    glBindRenderbuffer(GL_RENDERBUFFER, mRenderbuffer);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, mRenderbuffer);
+    GLFramebuffer framebuffer;
+    GLRenderbuffer renderbuffer;
+
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, renderbuffer);
     EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT,
                      glCheckFramebufferStatus(GL_FRAMEBUFFER));
 
@@ -410,13 +404,78 @@ TEST_P(FramebufferTest_ES3, InvalidateIncomplete)
 // as a depth-stencil attachment. It is equivalent to detaching the depth-stencil attachment.
 TEST_P(FramebufferTest_ES3, DepthOnlyAsDepthStencil)
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
-    glBindRenderbuffer(GL_RENDERBUFFER, mRenderbuffer);
+    GLFramebuffer framebuffer;
+    GLRenderbuffer renderbuffer;
+
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, 4, 4);
 
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
-                              mRenderbuffer);
+                              renderbuffer);
     EXPECT_GLENUM_NE(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+}
+
+// Test that the framebuffer correctly returns that it is not complete if invalid texture mip levels
+// are bound
+TEST_P(FramebufferTest_ES3, TextureAttachmentMipLevels)
+{
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    // Create a complete mip chain in mips 1 to 3
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 2, GL_RGBA8, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 3, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    // Create another complete mip chain in mips 4 to 5
+    glTexImage2D(GL_TEXTURE_2D, 4, GL_RGBA8, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 5, GL_RGBA8, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    // Create a non-complete mip chain in mip 6
+    glTexImage2D(GL_TEXTURE_2D, 6, GL_RGBA8, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    // Incomplete, mipLevel != baseLevel and texture is not mip complete
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 1);
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT,
+                     glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    // Complete, mipLevel == baseLevel
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    ExpectFramebufferCompleteOrUnsupported(GL_FRAMEBUFFER);
+
+    // Complete, mipLevel != baseLevel but texture is now mip complete
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 2);
+    ExpectFramebufferCompleteOrUnsupported(GL_FRAMEBUFFER);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 3);
+    ExpectFramebufferCompleteOrUnsupported(GL_FRAMEBUFFER);
+
+    // Incomplete, attached level below the base level
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 2);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 1);
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT,
+                     glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    // Incomplete, attached level is beyond effective max level
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 4);
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT,
+                     glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    // Complete, mipLevel == baseLevel
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 4);
+    ExpectFramebufferCompleteOrUnsupported(GL_FRAMEBUFFER);
+
+    // Complete, mipLevel != baseLevel but texture is now mip complete
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 5);
+    ExpectFramebufferCompleteOrUnsupported(GL_FRAMEBUFFER);
+
+    // Complete, mipLevel == baseLevel
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 6);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 6);
+    ExpectFramebufferCompleteOrUnsupported(GL_FRAMEBUFFER);
 }
 
 ANGLE_INSTANTIATE_TEST(FramebufferTest_ES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());

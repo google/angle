@@ -73,6 +73,35 @@ bool CheckAttachmentCompleteness(const Context *context, const FramebufferAttach
         {
             return false;
         }
+
+        if (!texture->getImmutableFormat())
+        {
+            GLuint attachmentMipLevel = static_cast<GLuint>(attachment.mipLevel());
+
+            // From the ES 3.0 spec, pg 213:
+            // If the value of FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE is TEXTURE and the value of
+            // FRAMEBUFFER_ATTACHMENT_OBJECT_NAME does not name an immutable-format texture,
+            // then the value of FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL must be in the
+            // range[levelbase, q], where levelbase is the value of TEXTURE_BASE_LEVEL and q is
+            // the effective maximum texture level defined in the Mipmapping discussion of
+            // section 3.8.10.4.
+            if (attachmentMipLevel < texture->getBaseLevel() ||
+                attachmentMipLevel > texture->getMipmapMaxLevel())
+            {
+                return false;
+            }
+
+            // Form the ES 3.0 spec, pg 213/214:
+            // If the value of FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE is TEXTURE and the value of
+            // FRAMEBUFFER_ATTACHMENT_OBJECT_NAME does not name an immutable-format texture and
+            // the value of FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL is not levelbase, then the
+            // texture must be mipmap complete, and if FRAMEBUFFER_ATTACHMENT_OBJECT_NAME names
+            // a cubemap texture, the texture must also be cube complete.
+            if (attachmentMipLevel != texture->getBaseLevel() && !texture->isMipmapComplete())
+            {
+                return false;
+            }
+        }
     }
 
     return true;
