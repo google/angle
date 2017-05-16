@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8164ffed_4857a353",
+        "filename": "src/libANGLE/Fence.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-05-16T22:00:20Z",
+      "side": 1,
+      "message": "The reason I\u0027ve decided to add it is:\n1) Some files had it and some didn\u0027t, and I wanted a consistent style\n2) It is similar to GL_NO_ERROR, like gl::InvalidOperation is similar to GL_INVALID_OPERATION, thus it is easy to remember which name to use\n3) When the namespace is there, you can easily distinguish between gl::NoError and vk::NoError in search results. I.e., you can easily find all the references to gl::NoError if you want to refactor it to something else.",
+      "parentUuid": "b8323d44_5583a3d7",
+      "range": {
+        "startLine": 46,
+        "startChar": 11,
+        "endLine": 46,
+        "endChar": 15
+      },
+      "revId": "742b7ea8a1eb1b1d8176218197f8228d6a2c0d0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5cc1d81d_b8aa891a",
         "filename": "src/libANGLE/Stream.cpp",
         "patchSetId": 2
