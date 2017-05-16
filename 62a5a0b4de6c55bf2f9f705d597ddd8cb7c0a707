@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d9af5b6b_013d4c3b",
+        "filename": "src/image_util/imageformats.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-16T15:18:23Z",
+      "side": 1,
+      "message": "This code is used for readpixels in some cases so we don\u0027t want to do the conversion I think.",
+      "parentUuid": "dcf02307_2030065a",
+      "revId": "62a5a0b4de6c55bf2f9f705d597ddd8cb7c0a707",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "79199558_f6a49cae",
         "filename": "src/image_util/imageformats.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2017-05-16T14:25:40Z",
       "side": 1,
       "message": "(255 \u003e\u003e 1) + (255 \u003e\u003e 1) is 127 + 127 \u003d 254, the following would fix this:\n(static_cast\u003cuint32_t\u003e(src1-\u003eA) + static_cast\u003cuint32_t\u003e(src2-\u003eA)) \u003e\u003e 1",
+      "revId": "62a5a0b4de6c55bf2f9f705d597ddd8cb7c0a707",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7a105b8c_bf1068b1",
+        "filename": "src/image_util/imageformats.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 374,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-16T15:18:23Z",
+      "side": 1,
+      "message": "Nice, fixed.",
+      "parentUuid": "79199558_f6a49cae",
       "revId": "62a5a0b4de6c55bf2f9f705d597ddd8cb7c0a707",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
