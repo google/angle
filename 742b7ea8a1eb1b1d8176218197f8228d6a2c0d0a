@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "0f72fade_1949da84",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-17T09:12:14Z",
+      "side": 1,
+      "message": "I didn\u0027t go through the whole stack, but I didn\u0027t see this constructor used. If it isn\u0027t, then we could get rid of mId too.",
+      "revId": "742b7ea8a1eb1b1d8176218197f8228d6a2c0d0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b8323d44_5583a3d7",
         "filename": "src/libANGLE/Fence.cpp",
         "patchSetId": 2
