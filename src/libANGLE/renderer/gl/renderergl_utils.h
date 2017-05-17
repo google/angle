@@ -32,6 +32,11 @@ namespace rx
 {
 class FunctionsGL;
 struct WorkaroundsGL;
+enum class MultiviewImplementationTypeGL
+{
+    NV_VIEWPORT_ARRAY2,
+    UNSPECIFIED
+};
 
 VendorID GetVendorID(const FunctionsGL *functions);
 std::string GetDriverVersion(const FunctionsGL *functions);
@@ -44,7 +49,8 @@ void GenerateCaps(const FunctionsGL *functions,
                   gl::Caps *caps,
                   gl::TextureCapsMap *textureCapsMap,
                   gl::Extensions *extensions,
-                  gl::Version *maxSupportedESVersion);
+                  gl::Version *maxSupportedESVersion,
+                  MultiviewImplementationTypeGL *multiviewImplementationType);
 
 void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workarounds);
 void ApplyWorkarounds(const FunctionsGL *functions, gl::Workarounds *workarounds);

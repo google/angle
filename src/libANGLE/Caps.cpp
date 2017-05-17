@@ -188,6 +188,8 @@ Extensions::Extensions()
       ARMshaderFramebufferFetch(false),
       NVshaderFramebufferFetch(false),
       fragDepth(false),
+      multiview(false),
+      maxViews(1u),
       textureUsage(false),
       translatedShaderSource(false),
       fboRenderMipmap(false),
@@ -659,6 +661,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_ARM_shader_framebuffer_fetch"] = esOnlyExtension(&Extensions::ARMshaderFramebufferFetch);
         map["GL_EXT_shader_framebuffer_fetch"] = esOnlyExtension(&Extensions::shaderFramebufferFetch);
         map["GL_EXT_frag_depth"] = enableableExtension(&Extensions::fragDepth);
+        map["GL_ANGLE_multiview"] = enableableExtension(&Extensions::multiview);
         map["GL_ANGLE_texture_usage"] = esOnlyExtension(&Extensions::textureUsage);
         map["GL_ANGLE_translated_shader_source"] = esOnlyExtension(&Extensions::translatedShaderSource);
         map["GL_OES_fbo_render_mipmap"] = esOnlyExtension(&Extensions::fboRenderMipmap);

@@ -22,12 +22,14 @@ namespace rx
 ShaderGL::ShaderGL(const gl::ShaderState &data,
                    const FunctionsGL *functions,
                    const WorkaroundsGL &workarounds,
-                   bool isWebGL)
+                   bool isWebGL,
+                   MultiviewImplementationTypeGL multiviewImplementationType)
     : ShaderImpl(data),
       mFunctions(functions),
       mWorkarounds(workarounds),
       mShaderID(0),
-      mIsWebGL(isWebGL)
+      mIsWebGL(isWebGL),
+      mMultiviewImplementationType(multiviewImplementationType)
 {
     ASSERT(mFunctions);
 }
@@ -108,6 +110,12 @@ ShCompileOptions ShaderGL::prepareSourceAndReturnOptions(std::stringstream *sour
     if (!mWorkarounds.dontInitializeUninitializedLocals)
     {
         options |= SH_INITIALIZE_UNINITIALIZED_LOCALS;
+    }
+
+    if (mMultiviewImplementationType == MultiviewImplementationTypeGL::NV_VIEWPORT_ARRAY2)
+    {
+        options |= SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW;
+        options |= SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER;
     }
 
     return options;

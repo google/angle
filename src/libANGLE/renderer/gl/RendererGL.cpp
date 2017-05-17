@@ -170,7 +170,8 @@ RendererGL::RendererGL(const FunctionsGL *functions, const egl::AttributeMap &at
       mBlitter(nullptr),
       mHasDebugOutput(false),
       mSkipDrawCalls(false),
-      mCapsInitialized(false)
+      mCapsInitialized(false),
+      mMultiviewImplementationType(MultiviewImplementationTypeGL::UNSPECIFIED)
 {
     ASSERT(mFunctions);
     nativegl_gl::GenerateWorkarounds(mFunctions, &mWorkarounds);
@@ -606,7 +607,7 @@ void RendererGL::generateCaps(gl::Caps *outCaps,
                               gl::Limitations * /* outLimitations */) const
 {
     nativegl_gl::GenerateCaps(mFunctions, mWorkarounds, outCaps, outTextureCaps, outExtensions,
-                              &mMaxSupportedESVersion);
+                              &mMaxSupportedESVersion, &mMultiviewImplementationType);
 }
 
 GLint RendererGL::getGPUDisjoint()
@@ -653,6 +654,12 @@ const gl::Limitations &RendererGL::getNativeLimitations() const
 {
     ensureCapsInitialized();
     return mNativeLimitations;
+}
+
+MultiviewImplementationTypeGL RendererGL::getMultiviewImplementationType() const
+{
+    ensureCapsInitialized();
+    return mMultiviewImplementationType;
 }
 
 void RendererGL::applyNativeWorkarounds(gl::Workarounds *workarounds) const

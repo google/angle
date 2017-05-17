@@ -685,12 +685,14 @@ void TCompiler::setResourceString()
         << ":EXT_shader_framebuffer_fetch:" << compileResources.EXT_shader_framebuffer_fetch
         << ":NV_shader_framebuffer_fetch:" << compileResources.NV_shader_framebuffer_fetch
         << ":ARM_shader_framebuffer_fetch:" << compileResources.ARM_shader_framebuffer_fetch
+        << ":OVR_multiview:" << compileResources.OVR_multiview
         << ":EXT_YUV_target:" << compileResources.EXT_YUV_target
         << ":MaxVertexOutputVectors:" << compileResources.MaxVertexOutputVectors
         << ":MaxFragmentInputVectors:" << compileResources.MaxFragmentInputVectors
         << ":MinProgramTexelOffset:" << compileResources.MinProgramTexelOffset
         << ":MaxProgramTexelOffset:" << compileResources.MaxProgramTexelOffset
         << ":MaxDualSourceDrawBuffers:" << compileResources.MaxDualSourceDrawBuffers
+        << ":MaxViewsOVR:" << compileResources.MaxViewsOVR
         << ":NV_draw_buffers:" << compileResources.NV_draw_buffers
         << ":WEBGL_debug_shader_precision:" << compileResources.WEBGL_debug_shader_precision
         << ":MaxImageUnits:" << compileResources.MaxImageUnits

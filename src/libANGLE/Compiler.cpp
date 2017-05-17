@@ -76,6 +76,10 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const ContextState &state)
     mResources.FragmentPrecisionHigh = 1;
     mResources.EXT_frag_depth        = extensions.fragDepth;
 
+    // OVR_multiview state
+    mResources.OVR_multiview = extensions.multiview;
+    mResources.MaxViewsOVR   = extensions.maxViews;
+
     // GLSL ES 3.0 constants
     mResources.MaxVertexOutputVectors  = caps.maxVertexOutputComponents / 4;
     mResources.MaxFragmentInputVectors = caps.maxFragmentInputComponents / 4;

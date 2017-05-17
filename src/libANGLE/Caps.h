@@ -251,6 +251,10 @@ struct Extensions
     // GL_EXT_frag_depth
     bool fragDepth;
 
+    // ANGLE_multiview
+    bool multiview;
+    GLuint maxViews;
+
     // GL_ANGLE_texture_usage
     bool textureUsage;
 
