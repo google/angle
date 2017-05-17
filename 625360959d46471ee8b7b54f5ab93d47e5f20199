@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "618a1c6c_92083ebb",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1331,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-05-17T09:00:08Z",
+      "side": 1,
+      "message": "Oh, my misunderstanding, it will miss \u0027binding \u003d mMaxUniformBufferBindings, arraySize \u003d 0\u0027 case. Please ignore above comment.",
+      "parentUuid": "96ddd1c8_a6f9b28d",
+      "range": {
+        "startLine": 1330,
+        "startChar": 4,
+        "endLine": 1331,
+        "endChar": 56
+      },
+      "revId": "625360959d46471ee8b7b54f5ab93d47e5f20199",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "abba8433_1a854589",
         "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
         "patchSetId": 7
