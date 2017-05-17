@@ -246,6 +246,26 @@
 
 // Linux only failures
 
+// A Clang roll causes a crash in the dEQP rsgExpression file on Linux NVIDIA. Bug ID is a Chromium bug ID.
+722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.trigonometric.fragment.77 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.texture.vertex.44 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.conditionals.vertex.2 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.conditionals.vertex.33 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.conditionals.fragment.32 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.comparison.ops.fragment.11 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.basic.expression.vertex.98 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.scalar.conversion.fragment.11 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.conditionals.vertex.94 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.scalar.conversion.combined.79 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.swizzle.vertex.38 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.conditionals.combined.7 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.scalar.conversion.combined.48 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.texture.vertex.3 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.scalar.conversion.combined.11 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.conditionals.combined.32 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.all.features.fragment.29 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.basic.expression.vertex.78 = FAIL
+
 // UBO tests trigger crashes when getting the program info log, skip them until this is fixed.
 1323 LINUX : dEQP-GLES3.functional.ubo.* = SKIP
 

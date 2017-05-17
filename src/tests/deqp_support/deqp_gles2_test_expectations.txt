@@ -70,6 +70,25 @@
 //
 ////////////////////////////////////////////////////////////////////////////////
 
+// A Clang roll causes a crash in the dEQP rsgExpression file on Linux NVIDIA. Bug ID is a Chromium bug ID.
+722345 LINUX NVIDIA : dEQP-GLES2.functional.shaders.random.conditionals.combined.7 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES2.functional.shaders.random.conditionals.vertex.94 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES2.functional.shaders.random.basic.expression.vertex.78 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES2.functional.shaders.random.conditionals.vertex.2 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES2.functional.shaders.random.conditionals.vertex.33 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES2.functional.shaders.random.comparison.ops.fragment.11 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES2.functional.shaders.random.scalar.conversion.fragment.11 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES2.functional.shaders.random.scalar.conversion.combined.11 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES2.functional.shaders.random.basic.expression.vertex.98 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES2.functional.shaders.random.scalar.conversion.combined.48 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES2.functional.shaders.random.swizzle.vertex.38 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES2.functional.shaders.random.scalar.conversion.combined.79 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES2.functional.shaders.random.conditionals.fragment.32 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES2.functional.shaders.random.conditionals.combined.32 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES2.functional.shaders.random.all.features.fragment.29 = FAIL
+722345 LINUX NVIDIA : dEQP-GLES2.functional.shaders.random.trigonometric.fragment.77 = FAIL
+
+
 // Only fails in D3D11 32-bit.
 1418 D3D11 : dEQP-GLES2.functional.clipping.triangle_vertex.clip_three.clip_pos_x_pos_y_pos_z_and_neg_x_pos_y_pos_z_and_neg_x_neg_y_neg_z = FAIL
 
