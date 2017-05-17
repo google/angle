@@ -1238,6 +1238,64 @@ TEST_P(TransformFeedbackTest, NonExistentTransformFeedbackVarying)
     ASSERT_EQ(0u, mProgram);
 }
 
+// Test transform feedback names can be reserved names in GLSL, as long as they're not reserved in
+// GLSL ES.
+TEST_P(TransformFeedbackTest, VaryingReservedOpenGLName)
+{
+    const std::string &vertexShaderSource =
+        "#version 300 es\n"
+        "in vec3 position;\n"
+        "out vec3 buffer;\n"
+        "void main() {\n"
+        "  buffer = position;\n"
+        "  gl_Position = vec4(position, 1);\n"
+        "}";
+
+    const std::string &fragmentShaderSource =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "out vec4 color;\n"
+        "in vec3 buffer;\n"
+        "void main() {\n"
+        "  color = vec4(0);\n"
+        "}";
+
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back("buffer");
+
+    mProgram = CompileProgramWithTransformFeedback(vertexShaderSource, fragmentShaderSource,
+                                                   tfVaryings, GL_INTERLEAVED_ATTRIBS);
+    ASSERT_NE(0u, mProgram);
+
+    glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, mTransformFeedbackBuffer);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, sizeof(Vector3) * 6, nullptr, GL_STREAM_DRAW);
+
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, mTransformFeedback);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
+
+    glUseProgram(mProgram);
+    glBeginTransformFeedback(GL_TRIANGLES);
+    drawQuad(mProgram, "position", 0.5f);
+    glEndTransformFeedback();
+    glUseProgram(0);
+    ASSERT_GL_NO_ERROR();
+
+    const GLvoid *mapPointer =
+        glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, sizeof(Vector3) * 6, GL_MAP_READ_BIT);
+    ASSERT_NE(nullptr, mapPointer);
+
+    const auto &quadVertices = GetQuadVertices();
+
+    const Vector3 *vecPointer = static_cast<const Vector3 *>(mapPointer);
+    for (unsigned int vectorIndex = 0; vectorIndex < 3; ++vectorIndex)
+    {
+        EXPECT_EQ(quadVertices[vectorIndex], vecPointer[vectorIndex]);
+    }
+    glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
+
+    ASSERT_GL_NO_ERROR();
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(TransformFeedbackTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());

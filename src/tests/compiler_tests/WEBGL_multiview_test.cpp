@@ -752,8 +752,8 @@ TEST_F(WEBGLMultiviewVertexShaderOutputCodeTest, ViewIDAndInstanceIDHaveCorrectV
     requestHLSLOutput();
     compile(shaderString, SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW);
 
-    EXPECT_TRUE(foundInAllGLSLCode("webgl_angle_ViewID_OVR = (uint(gl_InstanceID) % 3u)"));
-    EXPECT_TRUE(foundInAllGLSLCode("webgl_angle_InstanceID = (gl_InstanceID / 3)"));
+    EXPECT_TRUE(foundInAllGLSLCode("ViewID_OVR = (uint(gl_InstanceID) % 3u)"));
+    EXPECT_TRUE(foundInAllGLSLCode("InstanceID = (gl_InstanceID / 3)"));
 
     EXPECT_TRUE(foundInHLSLCode("ViewID_OVR = (uvec1(gl_InstanceID) % 3)"));
     EXPECT_TRUE(foundInHLSLCode("InstanceID = (gl_InstanceID / 3)"));
@@ -914,13 +914,13 @@ TEST_F(WEBGLMultiviewVertexShaderOutputCodeTest, GlViewportIndexIsSet)
         "}\n";
     compile(shaderString, SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW |
                               SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER);
-    const char glViewportIndexAssignment[] = "gl_ViewportIndex = int(webgl_angle_ViewID_OVR)";
+    const char glViewportIndexAssignment[] = "gl_ViewportIndex = int(ViewID_OVR)";
 
     // Check that the viewport index is selected.
     EXPECT_TRUE(foundInAllGLSLCode(glViewportIndexAssignment));
 
     // Setting gl_ViewportIndex must happen after ViewID_OVR's initialization.
-    const char viewIDOVRAssignment[] = "webgl_angle_ViewID_OVR = (uint(gl_InstanceID) % 3u)";
+    const char viewIDOVRAssignment[] = "ViewID_OVR = (uint(gl_InstanceID) % 3u)";
     size_t viewIDOVRAssignmentLoc = findInCode(SH_GLSL_COMPATIBILITY_OUTPUT, viewIDOVRAssignment);
     size_t glViewportIndexAssignmentLoc =
         findInCode(SH_GLSL_COMPATIBILITY_OUTPUT, glViewportIndexAssignment);
@@ -944,14 +944,13 @@ TEST_F(WEBGLMultiviewVertexShaderOutputCodeTest, GlLayerIsSet)
         "}\n";
     compile(shaderString, SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW |
                               SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER);
-    const char glLayerAssignment[] =
-        "gl_Layer = (int(webgl_angle_ViewID_OVR) + webgl_angle_multiviewBaseViewLayerIndex)";
+    const char glLayerAssignment[] = "gl_Layer = (int(ViewID_OVR) + multiviewBaseViewLayerIndex)";
 
     // Check that the layer is selected.
     EXPECT_TRUE(foundInAllGLSLCode(glLayerAssignment));
 
     // Setting gl_Layer must happen after ViewID_OVR's initialization.
-    const char viewIDOVRAssignment[] = "webgl_angle_ViewID_OVR = (uint(gl_InstanceID) % 3u)";
+    const char viewIDOVRAssignment[] = "ViewID_OVR = (uint(gl_InstanceID) % 3u)";
     size_t viewIDOVRAssignmentLoc = findInCode(SH_GLSL_COMPATIBILITY_OUTPUT, viewIDOVRAssignment);
     size_t glLayerAssignmentLoc   = findInCode(SH_GLSL_COMPATIBILITY_OUTPUT, glLayerAssignment);
     EXPECT_LT(viewIDOVRAssignmentLoc, glLayerAssignmentLoc);

@@ -158,6 +158,12 @@ class Shader final : angle::NonCopyable, public LabeledObject
     const std::vector<sh::Attribute> &getActiveAttributes(const Context *context);
     const std::vector<sh::OutputVariable> &getActiveOutputVariables(const Context *context);
 
+    // Returns mapped name of a transform feedback varying. The original name may contain array
+    // brackets with an index inside, which will get copied to the mapped name. The varying must be
+    // known to be declared in the shader.
+    std::string getTransformFeedbackVaryingMappedName(const std::string &tfVaryingName,
+                                                      const Context *context);
+
     const sh::WorkGroupSize &getWorkGroupSize(const Context *context);
 
     int getNumViews(const Context *context);

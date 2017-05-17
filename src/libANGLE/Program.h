@@ -610,6 +610,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     template <typename VarT>
     void defineUniformBlockMembers(const std::vector<VarT> &fields,
                                    const std::string &prefix,
+                                   const std::string &mappedPrefix,
                                    int blockIndex);
 
     void defineUniformBlock(const sh::InterfaceBlock &interfaceBlock, GLenum shaderType);

@@ -147,10 +147,11 @@ UniformBlock::UniformBlock() : isArray(false), arrayElement(0)
 }
 
 UniformBlock::UniformBlock(const std::string &nameIn,
+                           const std::string &mappedNameIn,
                            bool isArrayIn,
                            unsigned int arrayElementIn,
                            int bindingIn)
-    : name(nameIn), isArray(isArrayIn), arrayElement(arrayElementIn)
+    : name(nameIn), mappedName(mappedNameIn), isArray(isArrayIn), arrayElement(arrayElementIn)
 {
     binding = bindingIn;
 }
@@ -159,6 +160,18 @@ std::string UniformBlock::nameWithArrayIndex() const
 {
     std::stringstream fullNameStr;
     fullNameStr << name;
+    if (isArray)
+    {
+        fullNameStr << "[" << arrayElement << "]";
+    }
+
+    return fullNameStr.str();
+}
+
+std::string UniformBlock::mappedNameWithArrayIndex() const
+{
+    std::stringstream fullNameStr;
+    fullNameStr << mappedName;
     if (isArray)
     {
         fullNameStr << "[" << arrayElement << "]";

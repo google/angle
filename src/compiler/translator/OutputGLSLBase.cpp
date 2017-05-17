@@ -1142,35 +1142,13 @@ TString TOutputGLSLBase::getTypeName(const TType &type)
 
 TString TOutputGLSLBase::hashName(const TName &name)
 {
-    if (name.getString().empty())
-    {
-        ASSERT(!name.isInternal());
-        return name.getString();
-    }
-    if (name.isInternal())
-    {
-        // TODO(oetuaho): Would be nicer to prefix non-internal names with "_" instead, like is
-        // done in the HLSL output, but that requires fairly complex changes elsewhere in the code
-        // as well.
-        // We need to use a prefix that is reserved in WebGL in order to guarantee that the internal
-        // names don't conflict with user-defined names from WebGL.
-        return "webgl_angle_" + name.getString();
-    }
-    if (mHashFunction == nullptr)
-    {
-        return name.getString();
-    }
-    NameMap::const_iterator it = mNameMap.find(name.getString().c_str());
-    if (it != mNameMap.end())
-        return it->second.c_str();
-    TString hashedName                 = HashName(name.getString(), mHashFunction);
-    mNameMap[name.getString().c_str()] = hashedName.c_str();
-    return hashedName;
+    return HashName(name, mHashFunction, &mNameMap);
 }
 
 TString TOutputGLSLBase::hashVariableName(const TName &name)
 {
-    if (mSymbolTable->findBuiltIn(name.getString(), mShaderVersion) != nullptr)
+    if (mSymbolTable->findBuiltIn(name.getString(), mShaderVersion) != nullptr ||
+        name.getString().substr(0, 3) == "gl_")
     {
         if (mCompileOptions & SH_TRANSLATE_VIEWID_OVR_TO_UNIFORM &&
             name.getString() == "gl_ViewID_OVR")
@@ -1186,10 +1164,8 @@ TString TOutputGLSLBase::hashVariableName(const TName &name)
 
 TString TOutputGLSLBase::hashFunctionNameIfNeeded(const TFunctionSymbolInfo &info)
 {
-    if (info.isMain() || info.getNameObj().isInternal())
+    if (info.isMain())
     {
-        // Internal function names are outputted as-is - they may refer to functions manually added
-        // to the output shader source that are not included in the AST at all.
         return info.getName();
     }
     else

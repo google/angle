@@ -2525,7 +2525,9 @@ D3DUniform *ProgramD3D::getD3DUniformFromLocation(GLint location)
     return mD3DUniforms[mState.getUniformLocations()[location].index];
 }
 
-bool ProgramD3D::getUniformBlockSize(const std::string &blockName, size_t *sizeOut) const
+bool ProgramD3D::getUniformBlockSize(const std::string &blockName,
+                                     const std::string & /* blockMappedName */,
+                                     size_t *sizeOut) const
 {
     std::string baseName = blockName;
     gl::ParseAndStripArrayIndex(&baseName);
@@ -2542,6 +2544,7 @@ bool ProgramD3D::getUniformBlockSize(const std::string &blockName, size_t *sizeO
 }
 
 bool ProgramD3D::getUniformBlockMemberInfo(const std::string &memberUniformName,
+                                           const std::string & /* memberUniformMappedName */,
                                            sh::BlockMemberInfo *memberInfoOut) const
 {
     auto infoIter = mBlockInfo.find(memberUniformName);

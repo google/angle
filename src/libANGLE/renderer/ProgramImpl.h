@@ -86,11 +86,14 @@ class ProgramImpl : angle::NonCopyable
 
     // May only be called after a successful link operation.
     // Return false for inactive blocks.
-    virtual bool getUniformBlockSize(const std::string &blockName, size_t *sizeOut) const = 0;
+    virtual bool getUniformBlockSize(const std::string &blockName,
+                                     const std::string &blockMappedName,
+                                     size_t *sizeOut) const = 0;
 
     // May only be called after a successful link operation.
     // Returns false for inactive members.
     virtual bool getUniformBlockMemberInfo(const std::string &memberUniformName,
+                                           const std::string &memberUniformMappedName,
                                            sh::BlockMemberInfo *memberInfoOut) const = 0;
     // CHROMIUM_path_rendering
     // Set parameters to control fragment shader input variable interpolation

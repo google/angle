@@ -184,8 +184,11 @@ class ProgramD3D : public ProgramImpl
                         gl::InfoLog &infoLog) override;
     GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;
 
-    bool getUniformBlockSize(const std::string &blockName, size_t *sizeOut) const override;
+    bool getUniformBlockSize(const std::string &blockName,
+                             const std::string &blockMappedName,
+                             size_t *sizeOut) const override;
     bool getUniformBlockMemberInfo(const std::string &memberUniformName,
+                                   const std::string &memberUniformMappedName,
                                    sh::BlockMemberInfo *memberInfoOut) const override;
     void setPathFragmentInputGen(const std::string &inputName,
                                  GLenum genMode,

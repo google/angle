@@ -963,6 +963,72 @@ TEST_P(UniformBufferTest, GetUniformBlockIndexDefaultReturn)
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 }
 
+// Block names can be reserved names in GLSL, as long as they're not reserved in GLSL ES.
+TEST_P(UniformBufferTest, UniformBlockReservedOpenGLName)
+{
+    const std::string &fragmentShader =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "out vec4 my_FragColor;\n"
+        "layout(std140) uniform buffer { vec4 color; };\n"
+        "void main()\n"
+        "{\n"
+        "    my_FragColor = color;\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, mVertexShaderSource, fragmentShader);
+    GLint uniformBufferIndex = glGetUniformBlockIndex(program, "buffer");
+
+    glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
+    const GLsizei kElementsPerVector = 4;
+    const GLsizei kBytesPerElement   = 4;
+    const GLsizei kDataSize          = kElementsPerVector * kBytesPerElement;
+    std::vector<GLubyte> v(kDataSize, 0);
+    float *vAsFloat = reinterpret_cast<float *>(v.data());
+
+    vAsFloat[1] = 1.0f;
+    vAsFloat[3] = 1.0f;
+
+    glBufferData(GL_UNIFORM_BUFFER, kDataSize, v.data(), GL_STATIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
+    glUniformBlockBinding(program, uniformBufferIndex, 0);
+    drawQuad(program.get(), "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Block instance names can be reserved names in GLSL, as long as they're not reserved in GLSL ES.
+TEST_P(UniformBufferTest, UniformBlockInstanceReservedOpenGLName)
+{
+    const std::string &fragmentShader =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "out vec4 my_FragColor;\n"
+        "layout(std140) uniform dmat2 { vec4 color; } buffer;\n"
+        "void main()\n"
+        "{\n"
+        "    my_FragColor = buffer.color;\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, mVertexShaderSource, fragmentShader);
+    GLint uniformBufferIndex = glGetUniformBlockIndex(program, "dmat2");
+
+    glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
+    const GLsizei kElementsPerVector = 4;
+    const GLsizei kBytesPerElement   = 4;
+    const GLsizei kDataSize          = kElementsPerVector * kBytesPerElement;
+    std::vector<GLubyte> v(kDataSize, 0);
+    float *vAsFloat = reinterpret_cast<float *>(v.data());
+
+    vAsFloat[1] = 1.0f;
+    vAsFloat[3] = 1.0f;
+
+    glBufferData(GL_UNIFORM_BUFFER, kDataSize, v.data(), GL_STATIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
+    glUniformBlockBinding(program, uniformBufferIndex, 0);
+    drawQuad(program.get(), "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(UniformBufferTest,
                        ES3_D3D11(),

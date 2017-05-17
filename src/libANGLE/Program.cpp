@@ -2799,11 +2799,15 @@ void Program::gatherInterfaceBlockInfo(const Context *context)
 template <typename VarT>
 void Program::defineUniformBlockMembers(const std::vector<VarT> &fields,
                                         const std::string &prefix,
+                                        const std::string &mappedPrefix,
                                         int blockIndex)
 {
     for (const VarT &field : fields)
     {
         const std::string &fullName = (prefix.empty() ? field.name : prefix + "." + field.name);
+
+        const std::string &fullMappedName =
+            (mappedPrefix.empty() ? field.mappedName : mappedPrefix + "." + field.mappedName);
 
         if (field.isStruct())
         {
@@ -2811,20 +2815,24 @@ void Program::defineUniformBlockMembers(const std::vector<VarT> &fields,
             {
                 const std::string uniformElementName =
                     fullName + (field.isArray() ? ArrayString(arrayElement) : "");
-                defineUniformBlockMembers(field.fields, uniformElementName, blockIndex);
+                const std::string uniformElementMappedName =
+                    fullMappedName + (field.isArray() ? ArrayString(arrayElement) : "");
+                defineUniformBlockMembers(field.fields, uniformElementName,
+                                          uniformElementMappedName, blockIndex);
             }
         }
         else
         {
             // If getBlockMemberInfo returns false, the uniform is optimized out.
             sh::BlockMemberInfo memberInfo;
-            if (!mProgram->getUniformBlockMemberInfo(fullName, &memberInfo))
+            if (!mProgram->getUniformBlockMemberInfo(fullName, fullMappedName, &memberInfo))
             {
                 continue;
             }
 
             LinkedUniform newUniform(field.type, field.precision, fullName, field.arraySize, -1, -1,
                                      -1, blockIndex, memberInfo);
+            newUniform.mappedName = fullMappedName;
 
             // Since block uniforms have no location, we don't need to store them in the uniform
             // locations list.
@@ -2841,7 +2849,8 @@ void Program::defineUniformBlock(const sh::InterfaceBlock &interfaceBlock, GLenu
     // Track the first and last uniform index to determine the range of active uniforms in the
     // block.
     size_t firstBlockUniformIndex = mState.mUniforms.size();
-    defineUniformBlockMembers(interfaceBlock.fields, interfaceBlock.fieldPrefix(), blockIndex);
+    defineUniformBlockMembers(interfaceBlock.fields, interfaceBlock.fieldPrefix(),
+                              interfaceBlock.fieldMappedPrefix(), blockIndex);
     size_t lastBlockUniformIndex = mState.mUniforms.size();
 
     std::vector<unsigned int> blockUniformIndexes;
@@ -2859,12 +2868,13 @@ void Program::defineUniformBlock(const sh::InterfaceBlock &interfaceBlock, GLenu
         for (unsigned int arrayElement = 0; arrayElement < interfaceBlock.arraySize; ++arrayElement)
         {
             // Don't define this block at all if it's not active in the implementation.
-            if (!mProgram->getUniformBlockSize(interfaceBlock.name + ArrayString(arrayElement),
-                                               &blockSize))
+            if (!mProgram->getUniformBlockSize(
+                    interfaceBlock.name + ArrayString(arrayElement),
+                    interfaceBlock.mappedName + ArrayString(arrayElement), &blockSize))
             {
                 continue;
             }
-            UniformBlock block(interfaceBlock.name, true, arrayElement,
+            UniformBlock block(interfaceBlock.name, interfaceBlock.mappedName, true, arrayElement,
                                blockBinding + arrayElement);
             block.memberIndexes = blockUniformIndexes;
 
@@ -2898,11 +2908,12 @@ void Program::defineUniformBlock(const sh::InterfaceBlock &interfaceBlock, GLenu
     }
     else
     {
-        if (!mProgram->getUniformBlockSize(interfaceBlock.name, &blockSize))
+        if (!mProgram->getUniformBlockSize(interfaceBlock.name, interfaceBlock.mappedName,
+                                           &blockSize))
         {
             return;
         }
-        UniformBlock block(interfaceBlock.name, false, 0, blockBinding);
+        UniformBlock block(interfaceBlock.name, interfaceBlock.mappedName, false, 0, blockBinding);
         block.memberIndexes = blockUniformIndexes;
 
         switch (shaderType)

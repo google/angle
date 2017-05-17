@@ -259,13 +259,16 @@ void ProgramVk::setUniformBlockBinding(GLuint uniformBlockIndex, GLuint uniformB
     UNIMPLEMENTED();
 }
 
-bool ProgramVk::getUniformBlockSize(const std::string &blockName, size_t *sizeOut) const
+bool ProgramVk::getUniformBlockSize(const std::string &blockName,
+                                    const std::string &blockMappedName,
+                                    size_t *sizeOut) const
 {
     UNIMPLEMENTED();
     return bool();
 }
 
 bool ProgramVk::getUniformBlockMemberInfo(const std::string &memberUniformName,
+                                          const std::string &memberUniformMappedName,
                                           sh::BlockMemberInfo *memberInfoOut) const
 {
     UNIMPLEMENTED();

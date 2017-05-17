@@ -946,6 +946,37 @@ TEST_P(UniformTestES3, StructWithNonSquareMatrixAndBool)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
 }
 
+// Test that uniforms with reserved OpenGL names that aren't reserved in GL ES 2 work correctly.
+TEST_P(UniformTest, UniformWithReservedOpenGLName)
+{
+    const char *vertexShader =
+        "attribute highp vec4 a_position;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = a_position;\n"
+        "}\n";
+    const char *fragShader =
+        "precision mediump float;\n"
+        "uniform float buffer;"
+        "void main() {\n"
+        "    gl_FragColor = vec4(buffer);\n"
+        "}";
+
+    mProgram = CompileProgram(vertexShader, fragShader);
+    ASSERT_NE(mProgram, 0u);
+
+    GLint location = glGetUniformLocation(mProgram, "buffer");
+    ASSERT_NE(-1, location);
+
+    glUseProgram(mProgram);
+    glUniform1f(location, 1.0f);
+
+    drawQuad(mProgram, "a_position", 0.0f);
+
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::white);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(UniformTest,
                        ES2_D3D9(),

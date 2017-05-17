@@ -417,6 +417,11 @@ std::string InterfaceBlock::fieldPrefix() const
     return instanceName.empty() ? "" : name;
 }
 
+std::string InterfaceBlock::fieldMappedPrefix() const
+{
+    return instanceName.empty() ? "" : mappedName;
+}
+
 bool InterfaceBlock::isSameInterfaceBlockAtLinkTime(const InterfaceBlock &other) const
 {
     if (name != other.name || mappedName != other.mappedName || arraySize != other.arraySize ||

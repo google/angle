@@ -477,6 +477,38 @@ const std::vector<sh::OutputVariable> &Shader::getActiveOutputVariables(const Co
     return mState.getActiveOutputVariables();
 }
 
+std::string Shader::getTransformFeedbackVaryingMappedName(const std::string &tfVaryingName,
+                                                          const Context *context)
+{
+    const auto &varyings = getVaryings(context);
+    auto bracketPos      = tfVaryingName.find("[");
+    if (bracketPos != std::string::npos)
+    {
+        auto tfVaryingBaseName = tfVaryingName.substr(0, bracketPos);
+        for (const auto &varying : varyings)
+        {
+            if (varying.name == tfVaryingBaseName)
+            {
+                std::string mappedNameWithArrayIndex =
+                    varying.mappedName + tfVaryingName.substr(bracketPos);
+                return mappedNameWithArrayIndex;
+            }
+        }
+    }
+    else
+    {
+        for (const auto &varying : varyings)
+        {
+            if (varying.name == tfVaryingName)
+            {
+                return varying.mappedName;
+            }
+        }
+    }
+    UNREACHABLE();
+    return std::string();
+}
+
 const sh::WorkGroupSize &Shader::getWorkGroupSize(const Context *context)
 {
     resolveCompile(context);
