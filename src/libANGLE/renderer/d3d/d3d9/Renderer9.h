@@ -266,6 +266,13 @@ class Renderer9 : public RendererD3D
     gl::Error generateMipmap(ImageD3D *dest, ImageD3D *source) override;
     gl::Error generateMipmapUsingD3D(TextureStorage *storage,
                                      const gl::TextureState &textureState) override;
+    gl::Error copyImage(ImageD3D *dest,
+                        ImageD3D *source,
+                        const gl::Rectangle &sourceRect,
+                        const gl::Offset &destOffset,
+                        bool unpackFlipY,
+                        bool unpackPremultiplyAlpha,
+                        bool unpackUnmultiplyAlpha) override;
     TextureStorage *createTextureStorage2D(SwapChainD3D *swapChain) override;
     TextureStorage *createTextureStorageEGLImage(EGLImageD3D *eglImage,
                                                  RenderTargetD3D *renderTargetD3D) override;

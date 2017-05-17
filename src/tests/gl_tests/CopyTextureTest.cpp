@@ -927,7 +927,7 @@ TEST_P(CopyTextureTestES3, ES3FloatFormats)
                         GL_R11F_G11F_B10F, GL_FLOAT, false, false, true,
                         GLColor32F(1.0f, 0.5f, 0.25f, 1.0f));
 
-    if (IsD3D11() || IsOpenGL() || IsOpenGLES())
+    if (IsOpenGL() || IsOpenGLES())
     {
         std::cout << "Skipping GL_RGB9_E5 because it is not implemented yet." << std::endl;
     }

@@ -41,6 +41,8 @@ class TextureD3D : public TextureImpl
     virtual ImageD3D *getImage(const gl::ImageIndex &index) const = 0;
     virtual GLsizei getLayerCount(int level) const = 0;
 
+    gl::Error getImageAndSyncFromStorage(const gl::ImageIndex &index, ImageD3D **outImage) const;
+
     GLint getBaseLevelWidth() const;
     GLint getBaseLevelHeight() const;
     GLenum getBaseLevelInternalFormat() const;

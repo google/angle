@@ -3966,6 +3966,20 @@ gl::Error Renderer11::generateMipmapUsingD3D(TextureStorage *storage,
     return gl::NoError();
 }
 
+gl::Error Renderer11::copyImage(ImageD3D *dest,
+                                ImageD3D *source,
+                                const gl::Rectangle &sourceRect,
+                                const gl::Offset &destOffset,
+                                bool unpackFlipY,
+                                bool unpackPremultiplyAlpha,
+                                bool unpackUnmultiplyAlpha)
+{
+    Image11 *dest11 = GetAs<Image11>(dest);
+    Image11 *src11  = GetAs<Image11>(source);
+    return Image11::copyImage(dest11, src11, sourceRect, destOffset, unpackFlipY,
+                              unpackPremultiplyAlpha, unpackUnmultiplyAlpha, mRenderer11DeviceCaps);
+}
+
 TextureStorage *Renderer11::createTextureStorage2D(SwapChainD3D *swapChain)
 {
     SwapChain11 *swapChain11 = GetAs<SwapChain11>(swapChain);

@@ -23,6 +23,50 @@
 namespace rx
 {
 
+namespace
+{
+void CopyColor(gl::ColorF *color)
+{
+    // No-op
+}
+
+void PremultiplyAlpha(gl::ColorF *color)
+{
+    color->red *= color->alpha;
+    color->green *= color->alpha;
+    color->blue *= color->alpha;
+}
+
+void UnmultiplyAlpha(gl::ColorF *color)
+{
+    if (color->alpha != 0.0f)
+    {
+        float invAlpha = 1.0f / color->alpha;
+        color->red *= invAlpha;
+        color->green *= invAlpha;
+        color->blue *= invAlpha;
+    }
+}
+
+void WriteUintColor(const gl::ColorF &color,
+                    ColorWriteFunction colorWriteFunction,
+                    uint8_t *destPixelData)
+{
+    gl::ColorUI destColor(
+        static_cast<unsigned int>(color.red * 255), static_cast<unsigned int>(color.green * 255),
+        static_cast<unsigned int>(color.red * 255), static_cast<unsigned int>(color.alpha * 255));
+    colorWriteFunction(reinterpret_cast<const uint8_t *>(&destColor), destPixelData);
+}
+
+void WriteFloatColor(const gl::ColorF &color,
+                     ColorWriteFunction colorWriteFunction,
+                     uint8_t *destPixelData)
+{
+    colorWriteFunction(reinterpret_cast<const uint8_t *>(&color), destPixelData);
+}
+
+}  // anonymous namespace
+
 Image11::Image11(Renderer11 *renderer)
     : mRenderer(renderer),
       mDXGIFormat(DXGI_FORMAT_UNKNOWN),
@@ -71,6 +115,97 @@ gl::Error Image11::generateMipmap(Image11 *dest,
 
     dest->unmap();
     src->unmap();
+
+    dest->markDirty();
+
+    return gl::NoError();
+}
+
+gl::Error Image11::copyImage(Image11 *dest,
+                             Image11 *source,
+                             const gl::Rectangle &sourceRect,
+                             const gl::Offset &destOffset,
+                             bool unpackFlipY,
+                             bool unpackPremultiplyAlpha,
+                             bool unpackUnmultiplyAlpha,
+                             const Renderer11DeviceCaps &rendererCaps)
+{
+    D3D11_MAPPED_SUBRESOURCE destMapped;
+    ANGLE_TRY(dest->map(D3D11_MAP_WRITE, &destMapped));
+
+    D3D11_MAPPED_SUBRESOURCE srcMapped;
+    gl::Error error = source->map(D3D11_MAP_READ, &srcMapped);
+    if (error.isError())
+    {
+        dest->unmap();
+        return error;
+    }
+
+    const auto &sourceFormat =
+        d3d11::Format::Get(source->getInternalFormat(), rendererCaps).format();
+    GLuint sourcePixelBytes =
+        gl::GetSizedInternalFormatInfo(sourceFormat.fboImplementationInternalFormat).pixelBytes;
+
+    const auto &destFormat = d3d11::Format::Get(dest->getInternalFormat(), rendererCaps).format();
+    const auto &destFormatInfo =
+        gl::GetSizedInternalFormatInfo(destFormat.fboImplementationInternalFormat);
+    GLuint destPixelBytes = destFormatInfo.pixelBytes;
+
+    const uint8_t *sourceData = reinterpret_cast<const uint8_t *>(srcMapped.pData);
+    uint8_t *destData         = reinterpret_cast<uint8_t *>(destMapped.pData);
+
+    using ConversionFunction              = void (*)(gl::ColorF *);
+    ConversionFunction conversionFunction = CopyColor;
+    if (unpackPremultiplyAlpha != unpackUnmultiplyAlpha)
+    {
+        if (unpackPremultiplyAlpha)
+        {
+            conversionFunction = PremultiplyAlpha;
+        }
+        else
+        {
+            conversionFunction = UnmultiplyAlpha;
+        }
+    }
+
+    auto writeFunction =
+        (destFormatInfo.componentType == GL_UNSIGNED_INT) ? WriteUintColor : WriteFloatColor;
+
+    for (int y = 0; y < sourceRect.height; y++)
+    {
+        for (int x = 0; x < sourceRect.width; x++)
+        {
+            int sourceX = sourceRect.x + x;
+            int sourceY = sourceRect.y + y;
+            const uint8_t *sourcePixelData =
+                sourceData + sourceY * srcMapped.RowPitch + sourceX * sourcePixelBytes;
+
+            gl::ColorF sourceColor;
+            sourceFormat.colorReadFunction(sourcePixelData,
+                                           reinterpret_cast<uint8_t *>(&sourceColor));
+
+            conversionFunction(&sourceColor);
+
+            int destX = destOffset.x + x;
+            int destY = destOffset.y;
+            if (unpackFlipY)
+            {
+                destY += (sourceRect.height - 1);
+                destY -= y;
+            }
+            else
+            {
+                destY += y;
+            }
+
+            uint8_t *destPixelData =
+                destData + destY * destMapped.RowPitch + destX * destPixelBytes;
+            writeFunction(sourceColor, destFormat.colorWriteFunction, destPixelData);
+        }
+    }
+
+    dest->unmap();
+    source->unmap();
 
     dest->markDirty();
 

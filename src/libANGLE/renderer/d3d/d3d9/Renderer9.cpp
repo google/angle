@@ -2925,6 +2925,18 @@ gl::Error Renderer9::generateMipmapUsingD3D(TextureStorage *storage,
     return gl::NoError();
 }
 
+gl::Error Renderer9::copyImage(ImageD3D *dest,
+                               ImageD3D *source,
+                               const gl::Rectangle &sourceRect,
+                               const gl::Offset &destOffset,
+                               bool unpackFlipY,
+                               bool unpackPremultiplyAlpha,
+                               bool unpackUnmultiplyAlpha)
+{
+    UNREACHABLE();
+    return gl::NoError();
+}
+
 TextureStorage *Renderer9::createTextureStorage2D(SwapChainD3D *swapChain)
 {
     SwapChain9 *swapChain9 = GetAs<SwapChain9>(swapChain);

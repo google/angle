@@ -366,6 +366,14 @@ void R8G8B8A8SRGB::readColor(gl::ColorF *dst, const R8G8B8A8SRGB *src)
     dst->alpha = gl::normalizedToFloat(src->A);
 }
 
+void R8G8B8A8SRGB::writeColor(R8G8B8A8SRGB *dst, const gl::ColorF *src)
+{
+    dst->R = gl::floatToNormalized<uint8_t>(src->red);
+    dst->G = gl::floatToNormalized<uint8_t>(src->green);
+    dst->B = gl::floatToNormalized<uint8_t>(src->blue);
+    dst->A = gl::floatToNormalized<uint8_t>(src->alpha);
+}
+
 void R8G8B8A8SRGB::average(R8G8B8A8SRGB *dst, const R8G8B8A8SRGB *src1, const R8G8B8A8SRGB *src2)
 {
     dst->R =

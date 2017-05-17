@@ -36,6 +36,14 @@ class Image11 : public ImageD3D
     static gl::Error generateMipmap(Image11 *dest,
                                     Image11 *src,
                                     const Renderer11DeviceCaps &rendererCaps);
+    static gl::Error copyImage(Image11 *dest,
+                               Image11 *source,
+                               const gl::Rectangle &sourceRect,
+                               const gl::Offset &destOffset,
+                               bool unpackFlipY,
+                               bool unpackPremultiplyAlpha,
+                               bool unpackUnmultiplyAlpha,
+                               const Renderer11DeviceCaps &rendererCaps);
 
     virtual bool isDirty() const;
 
