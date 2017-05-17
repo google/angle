@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "73023366_4843bbcb",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 481,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-17T15:20:33Z",
+      "side": 1,
+      "message": "move this above the \"Since ANGLE always...\" comment.",
+      "range": {
+        "startLine": 477,
+        "startChar": 3,
+        "endLine": 481,
+        "endChar": 5
+      },
+      "revId": "475c269e69d5516f71701c175b520bdd0073bcc7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c26bd52d_426423a8",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 483,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-17T15:20:33Z",
+      "side": 1,
+      "message": "move this above the \"if\" and use this value to check, as the previous code did.",
+      "range": {
+        "startLine": 483,
+        "startChar": 4,
+        "endLine": 483,
+        "endChar": 53
+      },
+      "revId": "475c269e69d5516f71701c175b520bdd0073bcc7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

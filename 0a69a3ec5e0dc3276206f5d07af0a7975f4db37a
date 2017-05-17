@@ -196,6 +196,30 @@
     },
     {
       "key": {
+        "uuid": "a98f7aa1_10674523",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-17T15:20:33Z",
+      "side": 1,
+      "message": "Aha, thank you for clarifying.",
+      "parentUuid": "bdb59a6d_754c7b24",
+      "range": {
+        "startLine": 479,
+        "startChar": 0,
+        "endLine": 482,
+        "endChar": 50
+      },
+      "revId": "0a69a3ec5e0dc3276206f5d07af0a7975f4db37a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1274156d_18fb4115",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 34

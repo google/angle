@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d1b384a3_73e8240c",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 468,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-17T15:20:33Z",
+      "side": 0,
+      "message": "keep this comment.",
+      "range": {
+        "startLine": 468,
+        "startChar": 3,
+        "endLine": 468,
+        "endChar": 76
+      },
+      "revId": "995c2ed27861d2873e260058b0b74cc138aa754b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b5cd6a39_c91af39b",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 36
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-17T15:20:33Z",
+      "side": 0,
+      "message": "you should keep this comment. it makes the next comment make sense.",
+      "range": {
+        "startLine": 482,
+        "startChar": 4,
+        "endLine": 482,
+        "endChar": 91
+      },
+      "revId": "995c2ed27861d2873e260058b0b74cc138aa754b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
