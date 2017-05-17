@@ -22,6 +22,29 @@
       "revId": "0812b9d0ade524b63e19bc5d46eff344fbdd37b2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bafe5e7d_439a4b05",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 642,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-17T16:12:39Z",
+      "side": 1,
+      "message": "Since only one of these checks is done per call to this function, I think they could be kept at the callsite.",
+      "range": {
+        "startLine": 627,
+        "startChar": 0,
+        "endLine": 642,
+        "endChar": 9
+      },
+      "revId": "0812b9d0ade524b63e19bc5d46eff344fbdd37b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
