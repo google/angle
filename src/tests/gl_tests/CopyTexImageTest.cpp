@@ -302,13 +302,9 @@ TEST_P(CopyTexImageTest, SubImageRGBToL)
 // Read default framebuffer with glCopyTexImage2D().
 TEST_P(CopyTexImageTest, DefaultFramebuffer)
 {
-    // TODO(fjhenigman): Test fails on Linnux Intel with the following in GL Debug Output:
-    //   GL_INVALID_OPERATION in glCopyTexImage2D(missing readbuffer)
-    if (IsLinux() && IsIntel())
-    {
-        std::cout << "Test skipped on Linux Intel." << std::endl;
-        return;
-    }
+    // Seems to be a bug in Mesa with the GLX back end: cannot read framebuffer until we draw to it.
+    // glCopyTexImage2D() below will fail without this clear.
+    glClear(GL_COLOR_BUFFER_BIT);
 
     const GLint w = getWindowWidth(), h = getWindowHeight();
     GLTexture tex;
@@ -321,13 +317,9 @@ TEST_P(CopyTexImageTest, DefaultFramebuffer)
 // Read default framebuffer with glCopyTexSubImage2D().
 TEST_P(CopyTexImageTest, SubDefaultFramebuffer)
 {
-    // TODO(fjhenigman): Test fails on Linnux Intel with the following in GL Debug Output:
-    //   GL_INVALID_OPERATION in glCopyTexImage2D(missing readbuffer)
-    if (IsLinux() && IsIntel())
-    {
-        std::cout << "Test skipped on Linux Intel." << std::endl;
-        return;
-    }
+    // Seems to be a bug in Mesa with the GLX back end: cannot read framebuffer until we draw to it.
+    // glCopyTexSubImage2D() below will fail without this clear.
+    glClear(GL_COLOR_BUFFER_BIT);
 
     const GLint w = getWindowWidth(), h = getWindowHeight();
     GLTexture tex;
