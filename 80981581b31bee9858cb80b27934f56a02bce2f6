@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1ffd587a_76e9b871",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1331,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-18T11:54:10Z",
+      "side": 1,
+      "message": "Would be simpler to just use: \"binding + size \u003e\", similarly to other checks above.",
+      "range": {
+        "startLine": 1331,
+        "startChar": 8,
+        "endLine": 1331,
+        "endChar": 29
+      },
+      "revId": "80981581b31bee9858cb80b27934f56a02bce2f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "71e900c8_57f2ffa2",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-18T11:54:10Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 653,
+        "startChar": 81,
+        "endLine": 653,
+        "endChar": 87
+      },
+      "revId": "80981581b31bee9858cb80b27934f56a02bce2f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
