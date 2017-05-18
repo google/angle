@@ -44,7 +44,7 @@ class SwapChain11 final : public SwapChainD3D
     ID3D11ShaderResourceView *getRenderTargetShaderResource();
 
     ID3D11Texture2D *getDepthStencilTexture();
-    ID3D11DepthStencilView *getDepthStencil();
+    const d3d11::DepthStencilView &getDepthStencil();
     ID3D11ShaderResourceView *getDepthStencilShaderResource();
 
     EGLint getWidth() const { return mWidth; }
@@ -95,7 +95,7 @@ class SwapChain11 final : public SwapChainD3D
     ID3D11ShaderResourceView *mOffscreenSRView;
 
     ID3D11Texture2D *mDepthStencilTexture;
-    ID3D11DepthStencilView *mDepthStencilDSView;
+    d3d11::DepthStencilView mDepthStencilDSView;
     ID3D11ShaderResourceView *mDepthStencilSRView;
 
     ID3D11Buffer *mQuadVB;

@@ -496,7 +496,7 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
 
     if (depthStencilRenderTarget)
     {
-        dsv = depthStencilRenderTarget->getDepthStencilView();
+        dsv = depthStencilRenderTarget->getDepthStencilView().get();
 
         if (!dsv)
         {

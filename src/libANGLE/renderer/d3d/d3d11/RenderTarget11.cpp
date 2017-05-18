@@ -230,7 +230,7 @@ TextureRenderTarget11::TextureRenderTarget11(d3d11::RenderTargetView &&rtv,
       mSubresourceIndex(0),
       mTexture(resource),
       mRenderTarget(std::move(rtv)),
-      mDepthStencil(nullptr),
+      mDepthStencil(),
       mShaderResource(srv),
       mBlitShaderResource(blitSRV)
 {
@@ -256,7 +256,7 @@ TextureRenderTarget11::TextureRenderTarget11(d3d11::RenderTargetView &&rtv,
     ASSERT(mFormatSet.formatID != angle::Format::ID::NONE || mWidth == 0 || mHeight == 0);
 }
 
-TextureRenderTarget11::TextureRenderTarget11(ID3D11DepthStencilView *dsv,
+TextureRenderTarget11::TextureRenderTarget11(d3d11::DepthStencilView &&dsv,
                                              ID3D11Resource *resource,
                                              ID3D11ShaderResourceView *srv,
                                              GLenum internalFormat,
@@ -274,7 +274,7 @@ TextureRenderTarget11::TextureRenderTarget11(ID3D11DepthStencilView *dsv,
       mSubresourceIndex(0),
       mTexture(resource),
       mRenderTarget(),
-      mDepthStencil(dsv),
+      mDepthStencil(std::move(dsv)),
       mShaderResource(srv),
       mBlitShaderResource(nullptr)
 {
@@ -283,19 +283,14 @@ TextureRenderTarget11::TextureRenderTarget11(ID3D11DepthStencilView *dsv,
         mTexture->AddRef();
     }
 
-    if (mDepthStencil)
-    {
-        mDepthStencil->AddRef();
-    }
-
     if (mShaderResource)
     {
         mShaderResource->AddRef();
     }
 
-    if (mDepthStencil && mTexture)
+    if (mDepthStencil.valid() && mTexture)
     {
-        mSubresourceIndex = GetDSVSubresourceIndex(mTexture, mDepthStencil);
+        mSubresourceIndex = GetDSVSubresourceIndex(mTexture, mDepthStencil.get());
     }
     ASSERT(mFormatSet.formatID != angle::Format::ID::NONE || mWidth == 0 || mHeight == 0);
 }
@@ -303,7 +298,6 @@ TextureRenderTarget11::TextureRenderTarget11(ID3D11DepthStencilView *dsv,
 TextureRenderTarget11::~TextureRenderTarget11()
 {
     SafeRelease(mTexture);
-    SafeRelease(mDepthStencil);
     SafeRelease(mShaderResource);
     SafeRelease(mBlitShaderResource);
 }
@@ -318,7 +312,7 @@ const d3d11::RenderTargetView &TextureRenderTarget11::getRenderTargetView() cons
     return mRenderTarget;
 }
 
-ID3D11DepthStencilView *TextureRenderTarget11::getDepthStencilView() const
+const d3d11::DepthStencilView &TextureRenderTarget11::getDepthStencilView() const
 {
     return mDepthStencil;
 }
@@ -413,9 +407,10 @@ const d3d11::RenderTargetView &SurfaceRenderTarget11::getRenderTargetView() cons
     return mSwapChain->getRenderTarget();
 }
 
-ID3D11DepthStencilView *SurfaceRenderTarget11::getDepthStencilView() const
+const d3d11::DepthStencilView &SurfaceRenderTarget11::getDepthStencilView() const
 {
-    return (mDepth ? mSwapChain->getDepthStencil() : nullptr);
+    ASSERT(mDepth);
+    return mSwapChain->getDepthStencil();
 }
 
 ID3D11ShaderResourceView *SurfaceRenderTarget11::getShaderResourceView() const

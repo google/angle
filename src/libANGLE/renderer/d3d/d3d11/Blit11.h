@@ -58,7 +58,7 @@ class Blit11 : angle::NonCopyable
     gl::Error copyDepth(ID3D11ShaderResourceView *source,
                         const gl::Box &sourceArea,
                         const gl::Extents &sourceSize,
-                        ID3D11DepthStencilView *dest,
+                        const d3d11::DepthStencilView &dest,
                         const gl::Box &destArea,
                         const gl::Extents &destSize,
                         const gl::Rectangle *scissor);
@@ -290,7 +290,7 @@ class Blit11 : angle::NonCopyable
     TextureHelper11 mResolvedDepthStencil;
     d3d11::RenderTargetView mResolvedDepthStencilRTView;
     TextureHelper11 mResolvedDepth;
-    angle::ComPtr<ID3D11DepthStencilView> mResolvedDepthDSView;
+    d3d11::DepthStencilView mResolvedDepthDSView;
 };
 
 }  // namespace rx

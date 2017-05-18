@@ -24,6 +24,14 @@ size_t ComputeMemoryUsage(const T *desc)
 }
 
 HRESULT CreateResource(ID3D11Device *device,
+                       const D3D11_DEPTH_STENCIL_VIEW_DESC *desc,
+                       ID3D11Resource *resource,
+                       ID3D11DepthStencilView **depthStencilView)
+{
+    return device->CreateDepthStencilView(resource, desc, depthStencilView);
+}
+
+HRESULT CreateResource(ID3D11Device *device,
                        const D3D11_RENDER_TARGET_VIEW_DESC *desc,
                        ID3D11Resource *resource,
                        ID3D11RenderTargetView **renderTargetView)

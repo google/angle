@@ -1296,7 +1296,7 @@ gl::Error Blit11::copyStencil(const TextureHelper11 &source,
 gl::Error Blit11::copyDepth(ID3D11ShaderResourceView *source,
                             const gl::Box &sourceArea,
                             const gl::Extents &sourceSize,
-                            ID3D11DepthStencilView *dest,
+                            const d3d11::DepthStencilView &dest,
                             const gl::Box &destArea,
                             const gl::Extents &destSize,
                             const gl::Rectangle *scissor)
@@ -1369,7 +1369,7 @@ gl::Error Blit11::copyDepth(ID3D11ShaderResourceView *source,
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
 
     // Apply render target
-    stateManager->setOneTimeRenderTarget(nullptr, dest);
+    stateManager->setOneTimeRenderTarget(nullptr, dest.get());
 
     // Set the viewport
     D3D11_VIEWPORT viewport;
@@ -1987,7 +1987,7 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveDepth(RenderTarget11 *depth)
     context->GSSetShader(nullptr, nullptr, 0);
     context->RSSetState(nullptr);
     context->OMSetDepthStencilState(mDepthStencilState.Get(), 0xFFFFFFFF);
-    context->OMSetRenderTargets(0, nullptr, mResolvedDepthDSView.Get());
+    context->OMSetRenderTargets(0, nullptr, mResolvedDepthDSView.get());
     context->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);
 
     // Set the viewport
@@ -2052,18 +2052,14 @@ gl::Error Blit11::initResolveDepthOnly(const d3d11::Format &format, const gl::Ex
     dsvDesc.Texture2D.MipSlice = 0;
     dsvDesc.ViewDimension      = D3D11_DSV_DIMENSION_TEXTURE2D;
 
-    hr = device->CreateDepthStencilView(mResolvedDepth.getResource(), &dsvDesc,
-                                        mResolvedDepthDSView.ReleaseAndGetAddressOf());
-    if (FAILED(hr))
-    {
-        return gl::OutOfMemory() << "Failed to allocate Blit11::mResolvedDepthDSView, " << hr;
-    }
-    d3d11::SetDebugName(mResolvedDepthDSView, "Blit11::mResolvedDepthDSView");
+    ANGLE_TRY(
+        mRenderer->allocateResource(dsvDesc, mResolvedDepth.getResource(), &mResolvedDepthDSView));
+    mResolvedDepthDSView.setDebugName("Blit11::mResolvedDepthDSView");
 
     // Possibly D3D11 bug or undefined behaviour: Clear the DSV so that our first render
     // works as expected. Otherwise the results of the first use seem to be incorrect.
     auto context = mRenderer->getDeviceContext();
-    context->ClearDepthStencilView(mResolvedDepthDSView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+    context->ClearDepthStencilView(mResolvedDepthDSView.get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
     return gl::NoError();
 }

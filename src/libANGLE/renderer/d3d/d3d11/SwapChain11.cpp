@@ -78,7 +78,7 @@ SwapChain11::SwapChain11(Renderer11 *renderer,
       mOffscreenRTView(),
       mOffscreenSRView(nullptr),
       mDepthStencilTexture(nullptr),
-      mDepthStencilDSView(nullptr),
+      mDepthStencilDSView(),
       mDepthStencilSRView(nullptr),
       mQuadVB(nullptr),
       mPassThroughSampler(nullptr),
@@ -118,7 +118,7 @@ void SwapChain11::release()
     mOffscreenRTView.reset();
     SafeRelease(mOffscreenSRView);
     SafeRelease(mDepthStencilTexture);
-    SafeRelease(mDepthStencilDSView);
+    mDepthStencilDSView.reset();
     SafeRelease(mDepthStencilSRView);
     SafeRelease(mQuadVB);
     SafeRelease(mPassThroughSampler);
@@ -143,7 +143,7 @@ void SwapChain11::releaseOffscreenColorBuffer()
 void SwapChain11::releaseOffscreenDepthBuffer()
 {
     SafeRelease(mDepthStencilTexture);
-    SafeRelease(mDepthStencilDSView);
+    mDepthStencilDSView.reset();
     SafeRelease(mDepthStencilSRView);
 }
 
@@ -395,9 +395,10 @@ EGLint SwapChain11::resetOffscreenDepthBuffer(int backbufferWidth, int backbuffe
         depthStencilDesc.Flags = 0;
         depthStencilDesc.Texture2D.MipSlice = 0;
 
-        result = device->CreateDepthStencilView(mDepthStencilTexture, &depthStencilDesc, &mDepthStencilDSView);
-        ASSERT(SUCCEEDED(result));
-        d3d11::SetDebugName(mDepthStencilDSView, "Offscreen depth stencil view");
+        gl::Error err = mRenderer->allocateResource(depthStencilDesc, mDepthStencilTexture,
+                                                    &mDepthStencilDSView);
+        ASSERT(!err.isError());
+        mDepthStencilDSView.setDebugName("Offscreen depth stencil view");
 
         if (depthBufferFormatInfo.srvFormat != DXGI_FORMAT_UNKNOWN)
         {
@@ -905,7 +906,7 @@ ID3D11ShaderResourceView *SwapChain11::getRenderTargetShaderResource()
     return mNeedsOffscreenTexture ? mOffscreenSRView : mBackBufferSRView;
 }
 
-ID3D11DepthStencilView *SwapChain11::getDepthStencil()
+const d3d11::DepthStencilView &SwapChain11::getDepthStencil()
 {
     return mDepthStencilDSView;
 }

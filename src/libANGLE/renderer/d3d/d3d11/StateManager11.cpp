@@ -1071,7 +1071,7 @@ gl::Error StateManager11::syncFramebuffer(ContextImpl *contextImpl, gl::Framebuf
     const auto *depthStencilRenderTarget = framebuffer11->getCachedDepthStencilRenderTarget();
     if (depthStencilRenderTarget)
     {
-        framebufferDSV = depthStencilRenderTarget->getDepthStencilView();
+        framebufferDSV = depthStencilRenderTarget->getDepthStencilView().get();
         ASSERT(framebufferDSV);
 
         // If there is no render buffer, the width, height and format values come from

@@ -1075,8 +1075,6 @@ gl::Error TextureStorage11_2D::getRenderTarget(const gl::ImageIndex &index, Rend
     ID3D11ShaderResourceView *blitSRV = nullptr;
     ANGLE_TRY(getSRVLevel(level, true, &blitSRV));
 
-    ID3D11Device *device = mRenderer->getDevice();
-
     if (mUseLevelZeroTexture)
     {
         if (!mLevelZeroRenderTarget)
@@ -1124,24 +1122,12 @@ gl::Error TextureStorage11_2D::getRenderTarget(const gl::ImageIndex &index, Rend
     dsvDesc.Texture2D.MipSlice = mTopLevel + level;
     dsvDesc.Flags              = 0;
 
-    ID3D11DepthStencilView *dsv;
-    HRESULT result = device->CreateDepthStencilView(texture, &dsvDesc, &dsv);
+    d3d11::DepthStencilView dsv;
+    ANGLE_TRY(mRenderer->allocateResource(dsvDesc, texture, &dsv));
 
-    ASSERT(result == E_OUTOFMEMORY || SUCCEEDED(result));
-    if (FAILED(result))
-    {
-        return gl::Error(
-            GL_OUT_OF_MEMORY,
-            "Failed to create internal depth stencil view for texture storage, result: 0x%X.",
-            result);
-    }
-
-    mRenderTarget[level] =
-        new TextureRenderTarget11(dsv, texture, srv, mFormatInfo.internalFormat, getFormatSet(),
-                                  getLevelWidth(level), getLevelHeight(level), 1, 0);
-
-    // RenderTarget will take ownership of these resources
-    SafeRelease(dsv);
+    mRenderTarget[level] = new TextureRenderTarget11(
+        std::move(dsv), texture, srv, mFormatInfo.internalFormat, getFormatSet(),
+        getLevelWidth(level), getLevelHeight(level), 1, 0);
 
     *outRT = mRenderTarget[level];
     return gl::NoError();
@@ -2063,9 +2049,6 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::ImageIndex &index,
 
     if (!mRenderTarget[faceIndex][level])
     {
-        ID3D11Device *device = mRenderer->getDevice();
-        HRESULT result;
-
         ID3D11Resource *texture = nullptr;
         ANGLE_TRY(getResource(&texture));
 
@@ -2152,28 +2135,21 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::ImageIndex &index,
             dsvDesc.Texture2DArray.FirstArraySlice = faceIndex;
             dsvDesc.Texture2DArray.ArraySize       = 1;
 
-            ID3D11DepthStencilView *dsv;
-            result = device->CreateDepthStencilView(texture, &dsvDesc, &dsv);
-
-            ASSERT(result == E_OUTOFMEMORY || SUCCEEDED(result));
-            if (FAILED(result))
+            d3d11::DepthStencilView dsv;
+            gl::Error err = mRenderer->allocateResource(dsvDesc, texture, &dsv);
+            if (err.isError())
             {
                 SafeRelease(srv);
                 SafeRelease(blitSRV);
-                return gl::Error(GL_OUT_OF_MEMORY,
-                                 "Failed to create internal depth stencil view for texture "
-                                 "storage, result: 0x%X.",
-                                 result);
+                return err;
             }
-
-            d3d11::SetDebugName(dsv, "TexStorageCube.RenderTargetDSV");
+            dsv.setDebugName("TexStorageCube.RenderTargetDSV");
 
             mRenderTarget[faceIndex][level] = new TextureRenderTarget11(
-                dsv, texture, srv, mFormatInfo.internalFormat, getFormatSet(), getLevelWidth(level),
-                getLevelHeight(level), 1, 0);
+                std::move(dsv), texture, srv, mFormatInfo.internalFormat, getFormatSet(),
+                getLevelWidth(level), getLevelHeight(level), 1, 0);
 
             // RenderTarget will take ownership of these resources
-            SafeRelease(dsv);
             SafeRelease(srv);
             SafeRelease(blitSRV);
         }
@@ -2965,9 +2941,6 @@ gl::Error TextureStorage11_2DArray::getRenderTarget(const gl::ImageIndex &index,
     LevelLayerKey key(mipLevel, layer);
     if (mRenderTargets.find(key) == mRenderTargets.end())
     {
-        ID3D11Device *device = mRenderer->getDevice();
-        HRESULT result;
-
         ID3D11Resource *texture = nullptr;
         ANGLE_TRY(getResource(&texture));
         ID3D11ShaderResourceView *srv;
@@ -3031,26 +3004,22 @@ gl::Error TextureStorage11_2DArray::getRenderTarget(const gl::ImageIndex &index,
             dsvDesc.Texture2DArray.ArraySize       = 1;
             dsvDesc.Flags                          = 0;
 
-            ID3D11DepthStencilView *dsv;
-            result = device->CreateDepthStencilView(texture, &dsvDesc, &dsv);
-
-            ASSERT(result == E_OUTOFMEMORY || SUCCEEDED(result));
-            if (FAILED(result))
+            d3d11::DepthStencilView dsv;
+            gl::Error err = mRenderer->allocateResource(dsvDesc, texture, &dsv);
+            if (err.isError())
             {
                 SafeRelease(srv);
                 SafeRelease(blitSRV);
-                return gl::Error(GL_OUT_OF_MEMORY,
-                                 "Failed to create TexStorage2DArray DSV. Result: 0x%X.", result);
+                return err;
             }
 
-            d3d11::SetDebugName(dsv, "TexStorage2DArray.RenderTargetDSV");
+            dsv.setDebugName("TexStorage2DArray.RenderTargetDSV");
 
             mRenderTargets[key] = new TextureRenderTarget11(
-                dsv, texture, srv, mFormatInfo.internalFormat, getFormatSet(),
+                std::move(dsv), texture, srv, mFormatInfo.internalFormat, getFormatSet(),
                 getLevelWidth(mipLevel), getLevelHeight(mipLevel), 1, 0);
 
             // RenderTarget will take ownership of these resources
-            SafeRelease(dsv);
             SafeRelease(srv);
             SafeRelease(blitSRV);
         }
