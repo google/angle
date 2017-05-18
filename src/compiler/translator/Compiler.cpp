@@ -852,7 +852,7 @@ bool TCompiler::validateOutputs(TIntermNode *root)
     return (mDiagnostics.numErrors() == 0);
 }
 
-bool TCompiler::limitExpressionComplexity(TIntermNode *root)
+bool TCompiler::limitExpressionComplexity(TIntermBlock *root)
 {
     TMaxDepthTraverser traverser(maxExpressionComplexity + 1);
     root->traverse(&traverser);
@@ -863,7 +863,7 @@ bool TCompiler::limitExpressionComplexity(TIntermNode *root)
         return false;
     }
 
-    if (!ValidateMaxParameters::validate(root, maxFunctionParameters))
+    if (!ValidateMaxParameters(root, maxFunctionParameters))
     {
         mDiagnostics.globalError("Function has too many parameters.");
         return false;

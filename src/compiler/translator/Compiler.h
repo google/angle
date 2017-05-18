@@ -156,7 +156,7 @@ class TCompiler : public TShHandleBase
     // This function should only be applied to vertex shaders.
     void initializeGLPosition(TIntermBlock *root);
     // Return true if the maximum expression complexity is below the limit.
-    bool limitExpressionComplexity(TIntermNode *root);
+    bool limitExpressionComplexity(TIntermBlock *root);
     // Get built-in extensions with default behavior.
     const TExtensionBehavior &getExtensionBehavior() const;
     const char *getSourcePath() const;
