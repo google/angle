@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5e2ea07a_c361c0a7",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-18T14:51:49Z",
+      "side": 1,
+      "message": "I believe this should be checked for all attachment types because binding textures as depth stencil is possible.  I couldn\u0027t find anywhere in the spec that these checks should be for color attachments only.",
+      "parentUuid": "7cae30c0_b248e325",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 76,
+        "endChar": 5
+      },
+      "revId": "fd6bb77f38a6990e071ca214933e76b3f254c0ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "63022372_33835d45",
         "filename": "src/libANGLE/Framebuffer.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2017-05-18T14:48:07Z",
       "side": 1,
       "message": "I wonder if this could be made into a second helper function - it looks basically the same between the revisions.",
+      "range": {
+        "startLine": 727,
+        "startChar": 0,
+        "endLine": 745,
+        "endChar": 9
+      },
+      "revId": "fd6bb77f38a6990e071ca214933e76b3f254c0ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eb388d1a_ca971a6d",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 745,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-18T14:51:49Z",
+      "side": 1,
+      "message": "Will make a follow-up for this.",
+      "parentUuid": "63022372_33835d45",
       "range": {
         "startLine": 727,
         "startChar": 0,
