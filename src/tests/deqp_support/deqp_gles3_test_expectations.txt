@@ -253,19 +253,19 @@
 722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.conditionals.vertex.2 = SKIP
 722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.conditionals.vertex.33 = SKIP
 722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.conditionals.fragment.32 = SKIP
-722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.comparison.ops.fragment.11 = SKIP
-722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.basic.expression.vertex.98 = SKIP
-722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.scalar.conversion.fragment.11 = SKIP
+722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.comparison_ops.fragment.11 = SKIP
+722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.basic_expression.vertex.98 = SKIP
+722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.scalar_conversion.fragment.11 = SKIP
 722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.conditionals.vertex.94 = SKIP
-722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.scalar.conversion.combined.79 = SKIP
+722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.scalar_conversion.combined.79 = SKIP
 722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.swizzle.vertex.38 = SKIP
 722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.conditionals.combined.7 = SKIP
-722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.scalar.conversion.combined.48 = SKIP
+722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.scalar_conversion.combined.48 = SKIP
 722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.texture.vertex.3 = SKIP
-722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.scalar.conversion.combined.11 = SKIP
+722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.scalar_conversion.combined.11 = SKIP
 722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.conditionals.combined.32 = SKIP
-722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.all.features.fragment.29 = SKIP
-722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.basic.expression.vertex.78 = SKIP
+722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.all_features.fragment.29 = SKIP
+722345 LINUX NVIDIA : dEQP-GLES3.functional.shaders.random.basic_expression.vertex.78 = SKIP
 
 // UBO tests trigger crashes when getting the program info log, skip them until this is fixed.
 1323 LINUX : dEQP-GLES3.functional.ubo.* = SKIP
