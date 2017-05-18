@@ -583,7 +583,7 @@ Blit11::Blit11(Renderer11 *renderer)
                         ArraySize(g_PS_ResolveStencil),
                         "Blit11::mResolveStencilPS"),
       mStencilSRV(nullptr),
-      mResolvedDepthStencilRTView(nullptr)
+      mResolvedDepthStencilRTView()
 {
 }
 
@@ -982,7 +982,7 @@ Blit11::ShaderSupport Blit11::getShaderSupport(const Shader &shader)
 }
 
 gl::Error Blit11::swizzleTexture(ID3D11ShaderResourceView *source,
-                                 ID3D11RenderTargetView *dest,
+                                 const d3d11::RenderTargetView &dest,
                                  const gl::Extents &size,
                                  const gl::SwizzleState &swizzleTarget)
 {
@@ -1096,7 +1096,7 @@ gl::Error Blit11::swizzleTexture(ID3D11ShaderResourceView *source,
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
 
     // Apply render target
-    stateManager->setOneTimeRenderTarget(dest, nullptr);
+    stateManager->setOneTimeRenderTarget(dest.get(), nullptr);
 
     // Set the viewport
     D3D11_VIEWPORT viewport;
@@ -1132,7 +1132,7 @@ gl::Error Blit11::swizzleTexture(ID3D11ShaderResourceView *source,
 gl::Error Blit11::copyTexture(ID3D11ShaderResourceView *source,
                               const gl::Box &sourceArea,
                               const gl::Extents &sourceSize,
-                              ID3D11RenderTargetView *dest,
+                              const d3d11::RenderTargetView &dest,
                               const gl::Box &destArea,
                               const gl::Extents &destSize,
                               const gl::Rectangle *scissor,
@@ -1232,7 +1232,7 @@ gl::Error Blit11::copyTexture(ID3D11ShaderResourceView *source,
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
 
     // Apply render target
-    stateManager->setOneTimeRenderTarget(dest, nullptr);
+    stateManager->setOneTimeRenderTarget(dest.get(), nullptr);
 
     // Set the viewport
     D3D11_VIEWPORT viewport;
@@ -2107,15 +2107,9 @@ gl::Error Blit11::initResolveDepthStencil(const gl::Extents &extents)
     }
     d3d11::SetDebugName(resolvedDepthStencil, "Blit11::mResolvedDepthStencil");
 
-    ASSERT(mResolvedDepthStencilRTView == nullptr);
-    hr = device->CreateRenderTargetView(resolvedDepthStencil, nullptr,
-                                        mResolvedDepthStencilRTView.GetAddressOf());
-    if (FAILED(hr))
-    {
-        return gl::OutOfMemory() << "Failed to allocate Blit11::mResolvedDepthStencilRTView, "
-                                 << hr;
-    }
-    d3d11::SetDebugName(mResolvedDepthStencilRTView, "Blit11::mResolvedDepthStencilRTView");
+    ANGLE_TRY(
+        mRenderer->allocateResourceNoDesc(resolvedDepthStencil, &mResolvedDepthStencilRTView));
+    mResolvedDepthStencilRTView.setDebugName("Blit11::mResolvedDepthStencilRTView");
 
     mResolvedDepthStencil = TextureHelper11::MakeAndPossess2D(resolvedDepthStencil, formatSet);
 
@@ -2169,6 +2163,8 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(RenderTarget11 *depthS
     // Notify the Renderer that all state should be invalidated.
     mRenderer->markAllStateDirty();
 
+    ID3D11RenderTargetView *rtvs[] = {mResolvedDepthStencilRTView.get()};
+
     // Apply the necessary state changes to the D3D11 immediate device context.
     context->IASetInputLayout(nullptr);
     context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -2176,7 +2172,7 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(RenderTarget11 *depthS
     context->GSSetShader(nullptr, nullptr, 0);
     context->RSSetState(nullptr);
     context->OMSetDepthStencilState(nullptr, 0xFFFFFFFF);
-    context->OMSetRenderTargets(1, mResolvedDepthStencilRTView.GetAddressOf(), nullptr);
+    context->OMSetRenderTargets(1, rtvs, nullptr);
     context->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);
 
     // Set the viewport
@@ -2231,7 +2227,7 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(RenderTarget11 *depthS
 void Blit11::releaseResolveDepthStencilResources()
 {
     mStencilSRV.Reset();
-    mResolvedDepthStencilRTView.Reset();
+    mResolvedDepthStencilRTView.reset();
 }
 
 }  // namespace rx

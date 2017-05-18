@@ -408,6 +408,8 @@
             'libANGLE/renderer/d3d/d3d11/Query11.h',
             'libANGLE/renderer/d3d/d3d11/Renderer11.cpp',
             'libANGLE/renderer/d3d/d3d11/Renderer11.h',
+            'libANGLE/renderer/d3d/d3d11/ResourceManager11.cpp',
+            'libANGLE/renderer/d3d/d3d11/ResourceManager11.h',
             'libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp',
             'libANGLE/renderer/d3d/d3d11/renderer11_utils.h',
             'libANGLE/renderer/d3d/d3d11/RenderStateCache.cpp',

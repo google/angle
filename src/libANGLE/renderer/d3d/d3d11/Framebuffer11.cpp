@@ -241,11 +241,11 @@ gl::Error Framebuffer11::invalidateAttachment(const gl::FramebufferAttachment *a
 
     RenderTarget11 *renderTarget = nullptr;
     ANGLE_TRY(attachment->getRenderTarget(&renderTarget));
-    ID3D11View *view = renderTarget->getRenderTargetView();
+    const auto &rtv = renderTarget->getRenderTargetView();
 
-    if (view != nullptr)
+    if (rtv.valid())
     {
-        deviceContext1->DiscardView(view);
+        deviceContext1->DiscardView(rtv.get());
     }
 
     return gl::NoError();

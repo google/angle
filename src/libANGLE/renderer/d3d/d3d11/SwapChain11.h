@@ -40,7 +40,7 @@ class SwapChain11 final : public SwapChainD3D
     RenderTargetD3D *getDepthStencilRenderTarget() override { return &mDepthStencilRenderTarget; }
 
     ID3D11Texture2D *getOffscreenTexture();
-    ID3D11RenderTargetView *getRenderTarget();
+    const d3d11::RenderTargetView &getRenderTarget();
     ID3D11ShaderResourceView *getRenderTargetShaderResource();
 
     ID3D11Texture2D *getDepthStencilTexture();
@@ -86,12 +86,12 @@ class SwapChain11 final : public SwapChainD3D
     IDXGIKeyedMutex *mKeyedMutex;
 
     ID3D11Texture2D *mBackBufferTexture;
-    ID3D11RenderTargetView *mBackBufferRTView;
+    d3d11::RenderTargetView mBackBufferRTView;
     ID3D11ShaderResourceView *mBackBufferSRView;
 
     const bool mNeedsOffscreenTexture;
     ID3D11Texture2D *mOffscreenTexture;
-    ID3D11RenderTargetView *mOffscreenRTView;
+    d3d11::RenderTargetView mOffscreenRTView;
     ID3D11ShaderResourceView *mOffscreenSRView;
 
     ID3D11Texture2D *mDepthStencilTexture;

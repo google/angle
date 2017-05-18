@@ -206,8 +206,9 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::PixelUnpackState &unpac
     ANGLE_TRY_RESULT(bufferStorage11->getSRV(srvFormat), bufferSRV);
     ASSERT(bufferSRV != nullptr);
 
-    ID3D11RenderTargetView *textureRTV = GetAs<RenderTarget11>(destRenderTarget)->getRenderTargetView();
-    ASSERT(textureRTV != nullptr);
+    const d3d11::RenderTargetView &textureRTV =
+        GetAs<RenderTarget11>(destRenderTarget)->getRenderTargetView();
+    ASSERT(textureRTV.valid());
 
     CopyShaderParams shaderParams;
     setBufferToTextureCopyParams(destArea, destSize, sourceglFormatInfo.sizedInternalFormat, unpack,
@@ -234,7 +235,7 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::PixelUnpackState &unpac
     deviceContext->OMSetDepthStencilState(mCopyDepthStencilState, 0xFFFFFFFF);
     deviceContext->RSSetState(mCopyRasterizerState);
 
-    stateManager->setOneTimeRenderTarget(textureRTV, nullptr);
+    stateManager->setOneTimeRenderTarget(textureRTV.get(), nullptr);
 
     if (!StructEquals(mParamsData, shaderParams))
     {

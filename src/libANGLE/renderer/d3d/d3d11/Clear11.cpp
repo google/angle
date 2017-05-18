@@ -409,8 +409,8 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
                 continue;
             }
 
-            ID3D11RenderTargetView *framebufferRTV = renderTarget->getRenderTargetView();
-            if (!framebufferRTV)
+            const d3d11::RenderTargetView &framebufferRTV = renderTarget->getRenderTargetView();
+            if (!framebufferRTV.valid())
             {
                 return gl::OutOfMemory()
                        << "Clear11: Render target view pointer unexpectedly null.";
@@ -423,7 +423,7 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
                 (formatInfo.blueBits > 0 && !clearParams.colorMaskBlue) ||
                 (formatInfo.alphaBits > 0 && !clearParams.colorMaskAlpha))
             {
-                rtvs[numRtvs]     = framebufferRTV;
+                rtvs[numRtvs]     = framebufferRTV.get();
                 rtvMasks[numRtvs] = gl_d3d11::GetColorMask(&formatInfo) & colorMask;
                 numRtvs++;
             }
@@ -470,23 +470,23 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
                     rect.top    = clearParams.scissor.y;
                     rect.bottom = clearParams.scissor.y + clearParams.scissor.height;
 
-                    deviceContext1->ClearView(framebufferRTV, clearValues, &rect, 1);
+                    deviceContext1->ClearView(framebufferRTV.get(), clearValues, &rect, 1);
                     if (mRenderer->getWorkarounds().callClearTwiceOnSmallTarget)
                     {
                         if (clearParams.scissor.width <= 16 || clearParams.scissor.height <= 16)
                         {
-                            deviceContext1->ClearView(framebufferRTV, clearValues, &rect, 1);
+                            deviceContext1->ClearView(framebufferRTV.get(), clearValues, &rect, 1);
                         }
                     }
                 }
                 else
                 {
-                    deviceContext->ClearRenderTargetView(framebufferRTV, clearValues);
+                    deviceContext->ClearRenderTargetView(framebufferRTV.get(), clearValues);
                     if (mRenderer->getWorkarounds().callClearTwiceOnSmallTarget)
                     {
                         if (framebufferSize.width <= 16 || framebufferSize.height <= 16)
                         {
-                            deviceContext->ClearRenderTargetView(framebufferRTV, clearValues);
+                            deviceContext->ClearRenderTargetView(framebufferRTV.get(), clearValues);
                         }
                     }
                 }

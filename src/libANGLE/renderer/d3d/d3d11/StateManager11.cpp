@@ -1046,7 +1046,7 @@ gl::Error StateManager11::syncFramebuffer(ContextImpl *contextImpl, gl::Framebuf
 
         if (renderTarget)
         {
-            framebufferRTVs[appliedRTIndex] = renderTarget->getRenderTargetView();
+            framebufferRTVs[appliedRTIndex] = renderTarget->getRenderTargetView().get();
             ASSERT(framebufferRTVs[appliedRTIndex]);
             maxExistingRT = static_cast<UINT>(appliedRTIndex) + 1;
 

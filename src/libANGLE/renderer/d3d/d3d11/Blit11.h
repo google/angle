@@ -10,8 +10,9 @@
 #define LIBANGLE_RENDERER_D3D_D3D11_BLIT11_H_
 
 #include "common/angleutils.h"
-#include "libANGLE/angletypes.h"
 #include "libANGLE/Error.h"
+#include "libANGLE/angletypes.h"
+#include "libANGLE/renderer/d3d/d3d11/ResourceManager11.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 
 #include <map>
@@ -27,14 +28,14 @@ class Blit11 : angle::NonCopyable
     ~Blit11();
 
     gl::Error swizzleTexture(ID3D11ShaderResourceView *source,
-                             ID3D11RenderTargetView *dest,
+                             const d3d11::RenderTargetView &dest,
                              const gl::Extents &size,
                              const gl::SwizzleState &swizzleTarget);
 
     gl::Error copyTexture(ID3D11ShaderResourceView *source,
                           const gl::Box &sourceArea,
                           const gl::Extents &sourceSize,
-                          ID3D11RenderTargetView *dest,
+                          const d3d11::RenderTargetView &dest,
                           const gl::Box &destArea,
                           const gl::Extents &destSize,
                           const gl::Rectangle *scissor,
@@ -287,7 +288,7 @@ class Blit11 : angle::NonCopyable
     d3d11::LazyShader<ID3D11PixelShader> mResolveStencilPS;
     angle::ComPtr<ID3D11ShaderResourceView> mStencilSRV;
     TextureHelper11 mResolvedDepthStencil;
-    angle::ComPtr<ID3D11RenderTargetView> mResolvedDepthStencilRTView;
+    d3d11::RenderTargetView mResolvedDepthStencilRTView;
     TextureHelper11 mResolvedDepth;
     angle::ComPtr<ID3D11DepthStencilView> mResolvedDepthDSView;
 };
