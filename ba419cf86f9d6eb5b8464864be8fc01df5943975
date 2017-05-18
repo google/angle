@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3821bc85_7f6995e9",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1766,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-18T19:45:51Z",
+      "side": 1,
+      "message": "is this reachable? ie, something you\u0027re planning to implement? if so, maybe mention this in the commit message.",
+      "range": {
+        "startLine": 1766,
+        "startChar": 8,
+        "endLine": 1766,
+        "endChar": 21
+      },
+      "revId": "ba419cf86f9d6eb5b8464864be8fc01df5943975",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "29faa876_62025671",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 862,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-18T19:45:51Z",
+      "side": 1,
+      "message": "can we make this a static function or place it in the gles utils file? I don\u0027t see the need for this to be a lamdba function.",
+      "range": {
+        "startLine": 850,
+        "startChar": 8,
+        "endLine": 862,
+        "endChar": 10
+      },
+      "revId": "ba419cf86f9d6eb5b8464864be8fc01df5943975",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "64366548_9989cb1e",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1017,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-18T19:45:51Z",
+      "side": 1,
+      "message": "these lambdas don\u0027t really seem necessary. maybe in the future you can try to avoid using this kind of coding style?",
+      "range": {
+        "startLine": 1017,
+        "startChar": 3,
+        "endLine": 1017,
+        "endChar": 49
+      },
+      "revId": "ba419cf86f9d6eb5b8464864be8fc01df5943975",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
