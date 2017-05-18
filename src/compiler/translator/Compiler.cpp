@@ -13,6 +13,7 @@
 #include "compiler/translator/AddAndTrueToLoopCondition.h"
 #include "compiler/translator/Cache.h"
 #include "compiler/translator/CallDAG.h"
+#include "compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.h"
 #include "compiler/translator/DeferGlobalInitializers.h"
 #include "compiler/translator/EmulateGLFragColorBroadcast.h"
 #include "compiler/translator/EmulatePrecision.h"
@@ -405,6 +406,12 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         // Clamping uniform array bounds needs to happen after validateLimitations pass.
         if (success && (compileOptions & SH_CLAMP_INDIRECT_ARRAY_BOUNDS))
             arrayBoundsClamper.MarkIndirectArrayBoundsForClamping(root);
+
+        if (success && (compileOptions & SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW) &&
+            parseContext.isMultiviewExtensionEnabled() && getShaderType() == GL_VERTEX_SHADER)
+        {
+            DeclareAndInitBuiltinsForInstancedMultiview(root, getNumViews());
+        }
 
         // gl_Position is always written in compatibility output mode
         if (success && shaderType == GL_VERTEX_SHADER &&

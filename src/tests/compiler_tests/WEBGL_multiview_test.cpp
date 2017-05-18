@@ -7,12 +7,64 @@
 //   Test that shaders with gl_ViewID_OVR are validated correctly.
 //
 
-#include "angle_gl.h"
-#include "gtest/gtest.h"
 #include "GLSLANG/ShaderLang.h"
+#include "compiler/translator/IntermNode.h"
 #include "tests/test_utils/ShaderCompileTreeTest.h"
+#include "tests/test_utils/compiler_test.h"
 
 using namespace sh;
+
+class SymbolOccurrenceCounter : public TIntermTraverser
+{
+  public:
+    SymbolOccurrenceCounter() : TIntermTraverser(true, false, false), mNumberOfOccurrences(0u) {}
+
+    void visitSymbol(TIntermSymbol *node) override
+    {
+        if (shouldCountSymbol(node))
+        {
+            ++mNumberOfOccurrences;
+        }
+    }
+
+    virtual bool shouldCountSymbol(const TIntermSymbol *node) const = 0;
+
+    unsigned getNumberOfOccurrences() const { return mNumberOfOccurrences; }
+
+  private:
+    unsigned mNumberOfOccurrences;
+};
+
+class SymbolOccurrenceCounterByQualifier : public SymbolOccurrenceCounter
+{
+  public:
+    SymbolOccurrenceCounterByQualifier(TQualifier symbolQualifier)
+        : mSymbolQualifier(symbolQualifier)
+    {
+    }
+
+    bool shouldCountSymbol(const TIntermSymbol *node) const override
+    {
+        return node->getQualifier() == mSymbolQualifier;
+    }
+
+  private:
+    TQualifier mSymbolQualifier;
+};
+
+class SymbolOccurrenceCounterByName : public SymbolOccurrenceCounter
+{
+  public:
+    SymbolOccurrenceCounterByName(const TString &symbolName) : mSymbolName(symbolName) {}
+
+    bool shouldCountSymbol(const TIntermSymbol *node) const override
+    {
+        return node->getName().getString() == mSymbolName;
+    }
+
+  private:
+    TString mSymbolName;
+};
 
 class WEBGLMultiviewVertexShaderTest : public ShaderCompileTreeTest
 {
@@ -39,6 +91,34 @@ class WEBGLMultiviewFragmentShaderTest : public ShaderCompileTreeTest
     {
         resources->OVR_multiview = 1;
         resources->MaxViewsOVR   = 4;
+    }
+};
+
+class WEBGLMultiviewVertexShaderOutputCodeTest : public MatchOutputCodeTest
+{
+  public:
+    WEBGLMultiviewVertexShaderOutputCodeTest()
+        : MatchOutputCodeTest(GL_VERTEX_SHADER, 0, SH_ESSL_OUTPUT)
+    {
+        addOutputType(SH_GLSL_COMPATIBILITY_OUTPUT);
+#if defined(ANGLE_ENABLE_HLSL)
+        addOutputType(SH_HLSL_4_1_OUTPUT);
+#endif
+        getResources()->OVR_multiview = 1;
+        getResources()->MaxViewsOVR   = 4;
+    }
+    bool foundInAllGLSLCode(const char *str)
+    {
+        return foundInCode(SH_GLSL_COMPATIBILITY_OUTPUT, str) && foundInCode(SH_ESSL_OUTPUT, str);
+    }
+
+    bool foundInHLSLCode(const char *stringToFind) const
+    {
+#if defined(ANGLE_ENABLE_HLSL)
+        return foundInCode(SH_HLSL_4_1_OUTPUT, stringToFind);
+#else
+        return true;
+#endif
     }
 };
 
@@ -517,4 +597,97 @@ TEST_F(WEBGLMultiviewFragmentShaderTest, ESSL1ShaderUnsupportedInStorageQualifie
     {
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
+}
+
+// Test that gl_InstanceID gets correctly replaced by InstanceID. gl_InstanceID should only be used
+// twice: once to initialize ViewID_OVR and once for InstanceID. The number of occurrences of
+// InstanceID in the AST should be the sum of two and the number of occurrences of gl_InstanceID
+// before any renaming.
+TEST_F(WEBGLMultiviewVertexShaderTest, GLInstanceIDIsRenamed)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview : require\n"
+        "layout(num_views = 2) in;\n"
+        "flat out int myInstance;\n"
+        "out float myInstanceF;\n"
+        "out float myInstanceF2;\n"
+        "void main()\n"
+        "{\n"
+        "   gl_Position.x = gl_ViewID_OVR == 0u ? 0. : 1.;\n"
+        "   gl_Position.yzw = vec3(0., 0., 1.);\n"
+        "   myInstance = gl_InstanceID;\n"
+        "   myInstanceF = float(gl_InstanceID) + .5;\n"
+        "   myInstanceF2 = float(gl_InstanceID) + .1;\n"
+        "}\n";
+    mExtraCompileOptions |= SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW;
+    compileAssumeSuccess(shaderString);
+
+    SymbolOccurrenceCounterByName glInstanceIDByName("gl_InstanceID");
+    mASTRoot->traverse(&glInstanceIDByName);
+    EXPECT_EQ(2u, glInstanceIDByName.getNumberOfOccurrences());
+
+    SymbolOccurrenceCounterByQualifier glInstanceIDByQualifier(EvqInstanceID);
+    mASTRoot->traverse(&glInstanceIDByQualifier);
+    EXPECT_EQ(2u, glInstanceIDByQualifier.getNumberOfOccurrences());
+
+    SymbolOccurrenceCounterByName instanceIDByName("InstanceID");
+    mASTRoot->traverse(&instanceIDByName);
+    EXPECT_EQ(5u, instanceIDByName.getNumberOfOccurrences());
+}
+
+// Test that gl_ViewID_OVR gets correctly replaced by ViewID_OVR. gl_ViewID_OVR should not be found
+// by either name or qualifier. The number of occurrences of ViewID_OVR in the AST should be the sum
+// of two and the number of occurrences of gl_ViewID_OVR before any renaming.
+TEST_F(WEBGLMultiviewVertexShaderTest, GLViewIDIsRenamed)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview2 : require\n"
+        "layout(num_views = 2) in;\n"
+        "flat out uint a;\n"
+        "void main()\n"
+        "{\n"
+        "   gl_Position.x = gl_ViewID_OVR == 0u ? 0. : 1.;\n"
+        "   gl_Position.yzw = vec3(0., 0., 1.);\n"
+        "   a = gl_ViewID_OVR == 0u ? (gl_ViewID_OVR+2u) : gl_ViewID_OVR;\n"
+        "}\n";
+    mExtraCompileOptions |= SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW;
+    compileAssumeSuccess(shaderString);
+
+    SymbolOccurrenceCounterByName glViewIDOVRByName("gl_ViewID_OVR");
+    mASTRoot->traverse(&glViewIDOVRByName);
+    EXPECT_EQ(0u, glViewIDOVRByName.getNumberOfOccurrences());
+
+    SymbolOccurrenceCounterByQualifier glViewIDOVRByQualifier(EvqViewIDOVR);
+    mASTRoot->traverse(&glViewIDOVRByQualifier);
+    EXPECT_EQ(0u, glViewIDOVRByQualifier.getNumberOfOccurrences());
+
+    SymbolOccurrenceCounterByName viewIDByName("ViewID_OVR");
+    mASTRoot->traverse(&viewIDByName);
+    EXPECT_EQ(6u, viewIDByName.getNumberOfOccurrences());
+}
+
+// The test checks that ViewID_OVR and InstanceID have the correct initializers based on the
+// number of views.
+TEST_F(WEBGLMultiviewVertexShaderOutputCodeTest, ViewIDAndInstanceIDHaveCorrectValues)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview : require\n"
+        "layout(num_views = 3) in;\n"
+        "flat out int myInstance;\n"
+        "void main()\n"
+        "{\n"
+        "   gl_Position.x = gl_ViewID_OVR == 0u ? 0. : 1.;\n"
+        "   gl_Position.yzw = vec3(0., 0., 1.);\n"
+        "   myInstance = gl_InstanceID;\n"
+        "}\n";
+    compile(shaderString, SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW);
+
+    EXPECT_TRUE(foundInAllGLSLCode("webgl_angle_ViewID_OVR = (uint(gl_InstanceID) % 3u)"));
+    EXPECT_TRUE(foundInAllGLSLCode("webgl_angle_InstanceID = (gl_InstanceID / 3)"));
+
+    EXPECT_TRUE(foundInHLSLCode("ViewID_OVR = (uvec1(gl_InstanceID) % 3)"));
+    EXPECT_TRUE(foundInHLSLCode("InstanceID = (gl_InstanceID / 3)"));
 }

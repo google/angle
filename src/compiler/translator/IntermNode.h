@@ -272,6 +272,7 @@ class TIntermSymbol : public TIntermTyped
     int getId() const { return mId; }
     const TString &getSymbol() const { return mSymbol.getString(); }
     const TName &getName() const { return mSymbol; }
+    TName &getName() { return mSymbol; }
 
     void setId(int newId) { mId = newId; }
 

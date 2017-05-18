@@ -217,7 +217,7 @@ int main(int argc, char *argv[])
                       case 'a': resources.ARM_shader_framebuffer_fetch = 1; break;
                       case 'm':
                           resources.OVR_multiview = 1;
-                          compileOptions |= SH_TRANSLATE_VIEWID_OVR_TO_UNIFORM;
+                          compileOptions |= SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW;
                           break;
                       case 'y': resources.EXT_YUV_target = 1; break;
                       default: failCode = EFailUsage;
