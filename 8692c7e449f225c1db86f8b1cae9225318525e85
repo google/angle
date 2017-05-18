@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa330bac_3b1aeeda",
+        "filename": "src/tests/gl_tests/CopyTexImageTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-18T07:42:55Z",
+      "side": 1,
+      "message": "Maybe this should be put in DisplayGLX when mIsMesa is true so that it isn\u0027t fixed just for this test.",
+      "revId": "8692c7e449f225c1db86f8b1cae9225318525e85",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
