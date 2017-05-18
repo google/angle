@@ -18,59 +18,41 @@ namespace sh
 namespace
 {
 
-class AddDefaultReturnStatementsTraverser : private TIntermTraverser
+bool NeedsReturnStatement(TIntermFunctionDefinition *node, TType *returnType)
 {
-  public:
-    static void Apply(TIntermNode *root)
+    *returnType = node->getFunctionPrototype()->getType();
+    if (returnType->getBasicType() == EbtVoid)
     {
-        AddDefaultReturnStatementsTraverser separateInit;
-        root->traverse(&separateInit);
-        separateInit.updateTree();
+        return false;
     }
 
-  private:
-    AddDefaultReturnStatementsTraverser() : TIntermTraverser(true, false, false) {}
-
-    static bool IsFunctionWithoutReturnStatement(TIntermFunctionDefinition *node, TType *returnType)
+    TIntermBlock *bodyNode    = node->getBody();
+    TIntermBranch *returnNode = bodyNode->getSequence()->back()->getAsBranchNode();
+    if (returnNode != nullptr && returnNode->getFlowOp() == EOpReturn)
     {
-        *returnType = node->getFunctionPrototype()->getType();
-        if (returnType->getBasicType() == EbtVoid)
-        {
-            return false;
-        }
-
-        TIntermBlock *bodyNode    = node->getBody();
-        TIntermBranch *returnNode = bodyNode->getSequence()->back()->getAsBranchNode();
-        if (returnNode != nullptr && returnNode->getFlowOp() == EOpReturn)
-        {
-            return false;
-        }
-
-        return true;
+        return false;
     }
 
-    bool visitFunctionDefinition(Visit, TIntermFunctionDefinition *node) override
+    return true;
+}
+
+}  // anonymous namespace
+
+void AddDefaultReturnStatements(TIntermBlock *root)
+{
+    TType returnType;
+    for (TIntermNode *node : *root->getSequence())
     {
-        TType returnType;
-        if (IsFunctionWithoutReturnStatement(node, &returnType))
+        TIntermFunctionDefinition *definition = node->getAsFunctionDefinition();
+        if (definition != nullptr && NeedsReturnStatement(definition, &returnType))
         {
             TIntermBranch *branch =
                 new TIntermBranch(EOpReturn, TIntermTyped::CreateZero(returnType));
 
-            TIntermBlock *bodyNode = node->getBody();
+            TIntermBlock *bodyNode = definition->getBody();
             bodyNode->getSequence()->push_back(branch);
-
-            return false;
         }
-
-        return true;
     }
-};
-}  // anonymous namespace
-
-void AddDefaultReturnStatements(TIntermNode *node)
-{
-    AddDefaultReturnStatementsTraverser::Apply(node);
 }
 
 }  // namespace sh

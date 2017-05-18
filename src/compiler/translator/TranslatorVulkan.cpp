@@ -22,7 +22,7 @@ TranslatorVulkan::TranslatorVulkan(sh::GLenum type, ShShaderSpec spec)
 {
 }
 
-void TranslatorVulkan::translate(TIntermNode *root, ShCompileOptions compileOptions)
+void TranslatorVulkan::translate(TIntermBlock *root, ShCompileOptions compileOptions)
 {
     TInfoSinkBase &sink = getInfoSink().obj;
 

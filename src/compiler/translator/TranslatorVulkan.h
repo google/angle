@@ -23,7 +23,7 @@ class TranslatorVulkan : public TCompiler
     TranslatorVulkan(sh::GLenum type, ShShaderSpec spec);
 
   protected:
-    void translate(TIntermNode *root, ShCompileOptions compileOptions) override;
+    void translate(TIntermBlock *root, ShCompileOptions compileOptions) override;
     bool shouldFlattenPragmaStdglInvariantAll() override;
 };
 

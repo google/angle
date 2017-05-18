@@ -139,7 +139,7 @@ class TCompiler : public TShHandleBase
     virtual void initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu,
                                              ShCompileOptions compileOptions){};
     // Translate to object code.
-    virtual void translate(TIntermNode *root, ShCompileOptions compileOptions) = 0;
+    virtual void translate(TIntermBlock *root, ShCompileOptions compileOptions) = 0;
     // Returns true if, after applying the packing rules in the GLSL 1.017 spec
     // Appendix A, section 7, the shader does not use too many uniforms.
     bool enforcePackingRestrictions();

@@ -32,7 +32,7 @@ TranslatorHLSL::TranslatorHLSL(sh::GLenum type, ShShaderSpec spec, ShShaderOutpu
 {
 }
 
-void TranslatorHLSL::translate(TIntermNode *root, ShCompileOptions compileOptions)
+void TranslatorHLSL::translate(TIntermBlock *root, ShCompileOptions compileOptions)
 {
     const ShBuiltInResources &resources = getResources();
     int numRenderTargets                = resources.EXT_draw_buffers ? resources.MaxDrawBuffers : 1;
