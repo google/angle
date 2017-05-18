@@ -16,6 +16,24 @@
       "revId": "8692c7e449f225c1db86f8b1cae9225318525e85",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "265443b0_5d89a15f",
+        "filename": "src/tests/gl_tests/CopyTexImageTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 305,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-18T13:39:23Z",
+      "side": 1,
+      "message": "This may actually be covered by Jamie\u0027s work on robust initialization.  We should still have a workaround that does the initialization on mesa even when the extension is not enabled.",
+      "parentUuid": "fa330bac_3b1aeeda",
+      "revId": "8692c7e449f225c1db86f8b1cae9225318525e85",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
