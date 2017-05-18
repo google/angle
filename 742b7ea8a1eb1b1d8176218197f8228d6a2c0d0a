@@ -37,6 +37,93 @@
     },
     {
       "key": {
+        "uuid": "f46dafc2_455c2c32",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-18T14:55:00Z",
+      "side": 1,
+      "message": "I think it is useful, since I don\u0027t know if we have a way to pipe error IDs otherwise and I think we will need them. Could also make some kind of weird helper struct that you could pipe to the ErrorStream",
+      "parentUuid": "2e06f362_233d4d15",
+      "revId": "742b7ea8a1eb1b1d8176218197f8228d6a2c0d0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fbc2c461_78fe1522",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-18T14:55:00Z",
+      "side": 1,
+      "message": "make this a shared template like with ErrorOrResult.",
+      "range": {
+        "startLine": 170,
+        "startChar": 0,
+        "endLine": 193,
+        "endChar": 2
+      },
+      "revId": "742b7ea8a1eb1b1d8176218197f8228d6a2c0d0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b0650e5_0d2015aa",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-18T14:55:00Z",
+      "side": 1,
+      "message": "de-prefix all these.. just BadDevice, BadState, etc.",
+      "range": {
+        "startLine": 204,
+        "startChar": 0,
+        "endLine": 220,
+        "endChar": 67
+      },
+      "revId": "742b7ea8a1eb1b1d8176218197f8228d6a2c0d0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6a044d48_298c83a6",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-18T14:55:00Z",
+      "side": 1,
+      "message": "call this NoError for consistency.",
+      "range": {
+        "startLine": 222,
+        "startChar": 13,
+        "endLine": 222,
+        "endChar": 23
+      },
+      "revId": "742b7ea8a1eb1b1d8176218197f8228d6a2c0d0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b8323d44_5583a3d7",
         "filename": "src/libANGLE/Fence.cpp",
         "patchSetId": 2
