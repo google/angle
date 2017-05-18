@@ -45,7 +45,7 @@ class BuiltInFunctionEmulator::BuiltInFunctionEmulationMarker : public TIntermTr
             }
             const TIntermSequence &sequence = *(node->getSequence());
             bool needToEmulate              = false;
-            // Right now we only handle built-in functions with two or three parameters.
+            // Right now we only handle built-in functions with two to four parameters.
             if (sequence.size() == 2)
             {
                 TIntermTyped *param1 = sequence[0]->getAsTyped();
@@ -281,7 +281,7 @@ void BuiltInFunctionEmulator::addFunctionMap(BuiltinQueryFunc queryFunc)
 void BuiltInFunctionEmulator::WriteEmulatedFunctionName(TInfoSinkBase &out, const char *name)
 {
     ASSERT(name[strlen(name) - 1] != '(');
-    out << "webgl_" << name << "_emu";
+    out << name << "_emu";
 }
 
 FunctionId::FunctionId()

@@ -720,7 +720,7 @@ TEST_F(DebugShaderPrecisionTest, BuiltInMathFunctionRounding)
     ASSERT_TRUE(foundInHLSLCode("v6 = angle_frm(asin(angle_frm(_u1)))"));
     ASSERT_TRUE(foundInHLSLCode("v7 = angle_frm(acos(angle_frm(_u1)))"));
     ASSERT_TRUE(foundInHLSLCode("v8 = angle_frm(atan(angle_frm(_u1)))"));
-    ASSERT_TRUE(foundInHLSLCode("v9 = angle_frm(webgl_atan_emu(angle_frm(_u1), angle_frm(_u2)))"));
+    ASSERT_TRUE(foundInHLSLCode("v9 = angle_frm(atan_emu(angle_frm(_u1), angle_frm(_u2)))"));
     ASSERT_TRUE(foundInHLSLCode("v10 = angle_frm(pow(angle_frm(_u1), angle_frm(_u2)))"));
     ASSERT_TRUE(foundInHLSLCode("v11 = angle_frm(exp(angle_frm(_u1)))"));
     ASSERT_TRUE(foundInHLSLCode("v12 = angle_frm(log(angle_frm(_u1)))"));
@@ -733,8 +733,8 @@ TEST_F(DebugShaderPrecisionTest, BuiltInMathFunctionRounding)
     ASSERT_TRUE(foundInHLSLCode("v19 = angle_frm(floor(angle_frm(_u1)))"));
     ASSERT_TRUE(foundInHLSLCode("v20 = angle_frm(ceil(angle_frm(_u1)))"));
     ASSERT_TRUE(foundInHLSLCode("v21 = angle_frm(frac(angle_frm(_u1)))"));
-    ASSERT_TRUE(foundInHLSLCode("v22 = angle_frm(webgl_mod_emu(angle_frm(_u1), angle_frm(_uf)))"));
-    ASSERT_TRUE(foundInHLSLCode("v23 = angle_frm(webgl_mod_emu(angle_frm(_u1), angle_frm(_u2)))"));
+    ASSERT_TRUE(foundInHLSLCode("v22 = angle_frm(mod_emu(angle_frm(_u1), angle_frm(_uf)))"));
+    ASSERT_TRUE(foundInHLSLCode("v23 = angle_frm(mod_emu(angle_frm(_u1), angle_frm(_u2)))"));
     ASSERT_TRUE(foundInHLSLCode("v24 = angle_frm(min(angle_frm(_u1), angle_frm(_uf)))"));
     ASSERT_TRUE(foundInHLSLCode("v25 = angle_frm(min(angle_frm(_u1), angle_frm(_u2)))"));
     ASSERT_TRUE(foundInHLSLCode("v26 = angle_frm(max(angle_frm(_u1), angle_frm(_uf)))"));
@@ -755,7 +755,7 @@ TEST_F(DebugShaderPrecisionTest, BuiltInMathFunctionRounding)
         "v35 = angle_frm(smoothstep(angle_frm(_uf), angle_frm(_uf2), angle_frm(_u1)))"));
     ASSERT_TRUE(foundInHLSLCode("v36 = angle_frm(normalize(angle_frm(_u1)))"));
     ASSERT_TRUE(foundInHLSLCode(
-        "v37 = angle_frm(webgl_faceforward_emu(angle_frm(_u1), angle_frm(_u2), angle_frm(_u3)))"));
+        "v37 = angle_frm(faceforward_emu(angle_frm(_u1), angle_frm(_u2), angle_frm(_u3)))"));
     ASSERT_TRUE(foundInHLSLCode("v38 = angle_frm(reflect(angle_frm(_u1), angle_frm(_u2)))"));
     ASSERT_TRUE(foundInHLSLCode(
         "v39 = angle_frm(refract(angle_frm(_u1), angle_frm(_u2), angle_frm(_uf)))"));

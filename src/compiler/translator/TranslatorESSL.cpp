@@ -71,14 +71,14 @@ void TranslatorESSL::translate(TIntermBlock *root, ShCompileOptions compileOptio
         if (getShaderType() == GL_FRAGMENT_SHADER)
         {
             sink << "#if defined(GL_FRAGMENT_PRECISION_HIGH)\n"
-                 << "#define webgl_emu_precision highp\n"
+                 << "#define emu_precision highp\n"
                  << "#else\n"
-                 << "#define webgl_emu_precision mediump\n"
+                 << "#define emu_precision mediump\n"
                  << "#endif\n\n";
         }
         else
         {
-            sink << "#define webgl_emu_precision highp\n";
+            sink << "#define emu_precision highp\n";
         }
 
         getBuiltInFunctionEmulator().outputEmulatedFunctions(sink);

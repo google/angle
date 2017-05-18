@@ -29,42 +29,42 @@ struct FunctionPair
 
 constexpr FunctionPair g_hlslFunctions[] = {
     {{EOpMod, ParamType::Float1, ParamType::Float1},
-     "float webgl_mod_emu(float x, float y)\n"
+     "float mod_emu(float x, float y)\n"
      "{\n"
      "    return x - y * floor(x / y);\n"
      "}\n"},
     {{EOpMod, ParamType::Float2, ParamType::Float2},
-     "float2 webgl_mod_emu(float2 x, float2 y)\n"
+     "float2 mod_emu(float2 x, float2 y)\n"
      "{\n"
      "    return x - y * floor(x / y);\n"
      "}\n"},
     {{EOpMod, ParamType::Float2, ParamType::Float1},
-     "float2 webgl_mod_emu(float2 x, float y)\n"
+     "float2 mod_emu(float2 x, float y)\n"
      "{\n"
      "    return x - y * floor(x / y);\n"
      "}\n"},
     {{EOpMod, ParamType::Float3, ParamType::Float3},
-     "float3 webgl_mod_emu(float3 x, float3 y)\n"
+     "float3 mod_emu(float3 x, float3 y)\n"
      "{\n"
      "    return x - y * floor(x / y);\n"
      "}\n"},
     {{EOpMod, ParamType::Float3, ParamType::Float1},
-     "float3 webgl_mod_emu(float3 x, float y)\n"
+     "float3 mod_emu(float3 x, float y)\n"
      "{\n"
      "    return x - y * floor(x / y);\n"
      "}\n"},
     {{EOpMod, ParamType::Float4, ParamType::Float4},
-     "float4 webgl_mod_emu(float4 x, float4 y)\n"
+     "float4 mod_emu(float4 x, float4 y)\n"
      "{\n"
      "    return x - y * floor(x / y);\n"
      "}\n"},
     {{EOpMod, ParamType::Float4, ParamType::Float1},
-     "float4 webgl_mod_emu(float4 x, float y)\n"
+     "float4 mod_emu(float4 x, float y)\n"
      "{\n"
      "    return x - y * floor(x / y);\n"
      "}\n"},
     {{EOpFrexp, ParamType::Float1, ParamType::Int1},
-     "float webgl_frexp_emu(float x, out int exp)\n"
+     "float frexp_emu(float x, out int exp)\n"
      "{\n"
      "    float fexp;\n"
      "    float mantissa = frexp(abs(x), fexp) * sign(x);\n"
@@ -72,7 +72,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    return mantissa;\n"
      "}\n"},
     {{EOpFrexp, ParamType::Float2, ParamType::Int2},
-     "float2 webgl_frexp_emu(float2 x, out int2 exp)\n"
+     "float2 frexp_emu(float2 x, out int2 exp)\n"
      "{\n"
      "    float2 fexp;\n"
      "    float2 mantissa = frexp(abs(x), fexp) * sign(x);\n"
@@ -80,7 +80,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    return mantissa;\n"
      "}\n"},
     {{EOpFrexp, ParamType::Float3, ParamType::Int3},
-     "float3 webgl_frexp_emu(float3 x, out int3 exp)\n"
+     "float3 frexp_emu(float3 x, out int3 exp)\n"
      "{\n"
      "    float3 fexp;\n"
      "    float3 mantissa = frexp(abs(x), fexp) * sign(x);\n"
@@ -88,7 +88,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    return mantissa;\n"
      "}\n"},
     {{EOpFrexp, ParamType::Float4, ParamType::Int4},
-     "float4 webgl_frexp_emu(float4 x, out int4 exp)\n"
+     "float4 frexp_emu(float4 x, out int4 exp)\n"
      "{\n"
      "    float4 fexp;\n"
      "    float4 mantissa = frexp(abs(x), fexp) * sign(x);\n"
@@ -96,27 +96,27 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    return mantissa;\n"
      "}\n"},
     {{EOpLdexp, ParamType::Float1, ParamType::Int1},
-     "float webgl_ldexp_emu(float x, int exp)\n"
+     "float ldexp_emu(float x, int exp)\n"
      "{\n"
      "    return ldexp(x, float(exp));\n"
      "}\n"},
     {{EOpLdexp, ParamType::Float2, ParamType::Int2},
-     "float2 webgl_ldexp_emu(float2 x, int2 exp)\n"
+     "float2 ldexp_emu(float2 x, int2 exp)\n"
      "{\n"
      "    return ldexp(x, float2(exp));\n"
      "}\n"},
     {{EOpLdexp, ParamType::Float3, ParamType::Int3},
-     "float3 webgl_ldexp_emu(float3 x, int3 exp)\n"
+     "float3 ldexp_emu(float3 x, int3 exp)\n"
      "{\n"
      "    return ldexp(x, float3(exp));\n"
      "}\n"},
     {{EOpLdexp, ParamType::Float4, ParamType::Int4},
-     "float4 webgl_ldexp_emu(float4 x, int4 exp)\n"
+     "float4 ldexp_emu(float4 x, int4 exp)\n"
      "{\n"
      "    return ldexp(x, float4(exp));\n"
      "}\n"},
     {{EOpFaceforward, ParamType::Float1, ParamType::Float1, ParamType::Float1},
-     "float webgl_faceforward_emu(float N, float I, float Nref)\n"
+     "float faceforward_emu(float N, float I, float Nref)\n"
      "{\n"
      "    if(dot(Nref, I) >= 0)\n"
      "    {\n"
@@ -128,7 +128,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    }\n"
      "}\n"},
     {{EOpFaceforward, ParamType::Float2, ParamType::Float2, ParamType::Float2},
-     "float2 webgl_faceforward_emu(float2 N, float2 I, float2 Nref)\n"
+     "float2 faceforward_emu(float2 N, float2 I, float2 Nref)\n"
      "{\n"
      "    if(dot(Nref, I) >= 0)\n"
      "    {\n"
@@ -140,7 +140,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    }\n"
      "}\n"},
     {{EOpFaceforward, ParamType::Float3, ParamType::Float3, ParamType::Float3},
-     "float3 webgl_faceforward_emu(float3 N, float3 I, float3 Nref)\n"
+     "float3 faceforward_emu(float3 N, float3 I, float3 Nref)\n"
      "{\n"
      "    if(dot(Nref, I) >= 0)\n"
      "    {\n"
@@ -152,7 +152,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    }\n"
      "}\n"},
     {{EOpFaceforward, ParamType::Float4, ParamType::Float4, ParamType::Float4},
-     "float4 webgl_faceforward_emu(float4 N, float4 I, float4 Nref)\n"
+     "float4 faceforward_emu(float4 N, float4 I, float4 Nref)\n"
      "{\n"
      "    if(dot(Nref, I) >= 0)\n"
      "    {\n"
@@ -164,20 +164,20 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    }\n"
      "}\n"},
     {{EOpAtan, ParamType::Float1, ParamType::Float1},
-     "float webgl_atan_emu(float y, float x)\n"
+     "float atan_emu(float y, float x)\n"
      "{\n"
      "    if(x == 0 && y == 0) x = 1;\n"
      "    return atan2(y, x);\n"
      "}\n"},
     {{EOpAtan, ParamType::Float2, ParamType::Float2},
-     "float2 webgl_atan_emu(float2 y, float2 x)\n"
+     "float2 atan_emu(float2 y, float2 x)\n"
      "{\n"
      "    if(x[0] == 0 && y[0] == 0) x[0] = 1;\n"
      "    if(x[1] == 0 && y[1] == 0) x[1] = 1;\n"
      "    return float2(atan2(y[0], x[0]), atan2(y[1], x[1]));\n"
      "}\n"},
     {{EOpAtan, ParamType::Float3, ParamType::Float3},
-     "float3 webgl_atan_emu(float3 y, float3 x)\n"
+     "float3 atan_emu(float3 y, float3 x)\n"
      "{\n"
      "    if(x[0] == 0 && y[0] == 0) x[0] = 1;\n"
      "    if(x[1] == 0 && y[1] == 0) x[1] = 1;\n"
@@ -185,7 +185,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    return float3(atan2(y[0], x[0]), atan2(y[1], x[1]), atan2(y[2], x[2]));\n"
      "}\n"},
     {{EOpAtan, ParamType::Float4, ParamType::Float4},
-     "float4 webgl_atan_emu(float4 y, float4 x)\n"
+     "float4 atan_emu(float4 y, float4 x)\n"
      "{\n"
      "    if(x[0] == 0 && y[0] == 0) x[0] = 1;\n"
      "    if(x[1] == 0 && y[1] == 0) x[1] = 1;\n"
@@ -195,72 +195,72 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    x[2]), atan2(y[3], x[3]));\n"
      "}\n"},
     {{EOpAsinh, ParamType::Float1},
-     "float webgl_asinh_emu(in float x)\n"
+     "float asinh_emu(in float x)\n"
      "{\n"
      "    return log(x + sqrt(pow(x, 2.0) + 1.0));\n"
      "}\n"},
     {{EOpAsinh, ParamType::Float2},
-     "float2 webgl_asinh_emu(in float2 x)\n"
+     "float2 asinh_emu(in float2 x)\n"
      "{\n"
      "    return log(x + sqrt(pow(x, 2.0) + 1.0));\n"
      "}\n"},
     {{EOpAsinh, ParamType::Float3},
-     "float3 webgl_asinh_emu(in float3 x)\n"
+     "float3 asinh_emu(in float3 x)\n"
      "{\n"
      "    return log(x + sqrt(pow(x, 2.0) + 1.0));\n"
      "}\n"},
     {{EOpAsinh, ParamType::Float4},
-     "float4 webgl_asinh_emu(in float4 x)\n"
+     "float4 asinh_emu(in float4 x)\n"
      "{\n"
      "    return log(x + sqrt(pow(x, 2.0) + 1.0));\n"
      "}\n"},
     {{EOpAcosh, ParamType::Float1},
-     "float webgl_acosh_emu(in float x)\n"
+     "float acosh_emu(in float x)\n"
      "{\n"
      "    return log(x + sqrt(x + 1.0) * sqrt(x - 1.0));\n"
      "}\n"},
     {{EOpAcosh, ParamType::Float2},
-     "float2 webgl_acosh_emu(in float2 x)\n"
+     "float2 acosh_emu(in float2 x)\n"
      "{\n"
      "    return log(x + sqrt(x + 1.0) * sqrt(x - 1.0));\n"
      "}\n"},
     {{EOpAcosh, ParamType::Float3},
-     "float3 webgl_acosh_emu(in float3 x)\n"
+     "float3 acosh_emu(in float3 x)\n"
      "{\n"
      "    return log(x + sqrt(x + 1.0) * sqrt(x - 1.0));\n"
      "}\n"},
     {{EOpAcosh, ParamType::Float4},
-     "float4 webgl_acosh_emu(in float4 x)\n"
+     "float4 acosh_emu(in float4 x)\n"
      "{\n"
      "    return log(x + sqrt(x + 1.0) * sqrt(x - 1.0));\n"
      "}\n"},
     {{EOpAtanh, ParamType::Float1},
-     "float webgl_atanh_emu(in float x)\n"
+     "float atanh_emu(in float x)\n"
      "{\n"
      "    return 0.5 * log((1.0 + x) / (1.0 - x));\n"
      "}\n"},
     {{EOpAtanh, ParamType::Float2},
-     "float2 webgl_atanh_emu(in float2 x)\n"
+     "float2 atanh_emu(in float2 x)\n"
      "{\n"
      "    return 0.5 * log((1.0 + x) / (1.0 - x));\n"
      "}\n"},
     {{EOpAtanh, ParamType::Float3},
-     "float3 webgl_atanh_emu(in float3 x)\n"
+     "float3 atanh_emu(in float3 x)\n"
      "{\n"
      "    return 0.5 * log((1.0 + x) / (1.0 - x));\n"
      "}\n"},
     {{EOpAtanh, ParamType::Float4},
-     "float4 webgl_atanh_emu(in float4 x)\n"
+     "float4 atanh_emu(in float4 x)\n"
      "{\n"
      "    return 0.5 * log((1.0 + x) / (1.0 - x));\n"
      "}\n"},
     {{EOpRoundEven, ParamType::Float1},
-     "float webgl_roundEven_emu(in float x)\n"
+     "float roundEven_emu(in float x)\n"
      "{\n"
      "    return (frac(x) == 0.5 && trunc(x) % 2.0 == 0.0) ? trunc(x) : round(x);\n"
      "}\n"},
     {{EOpRoundEven, ParamType::Float2},
-     "float2 webgl_roundEven_emu(in float2 x)\n"
+     "float2 roundEven_emu(in float2 x)\n"
      "{\n"
      "    float2 v;\n"
      "    v[0] = (frac(x[0]) == 0.5 && trunc(x[0]) % 2.0 == 0.0) ? trunc(x[0]) : round(x[0]);\n"
@@ -268,7 +268,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    return v;\n"
      "}\n"},
     {{EOpRoundEven, ParamType::Float3},
-     "float3 webgl_roundEven_emu(in float3 x)\n"
+     "float3 roundEven_emu(in float3 x)\n"
      "{\n"
      "    float3 v;\n"
      "    v[0] = (frac(x[0]) == 0.5 && trunc(x[0]) % 2.0 == 0.0) ? trunc(x[0]) : round(x[0]);\n"
@@ -277,7 +277,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    return v;\n"
      "}\n"},
     {{EOpRoundEven, ParamType::Float4},
-     "float4 webgl_roundEven_emu(in float4 x)\n"
+     "float4 roundEven_emu(in float4 x)\n"
      "{\n"
      "    float4 v;\n"
      "    v[0] = (frac(x[0]) == 0.5 && trunc(x[0]) % 2.0 == 0.0) ? trunc(x[0]) : round(x[0]);\n"
@@ -290,7 +290,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "int webgl_toSnorm16(in float x) {\n"
      "    return int(round(clamp(x, -1.0, 1.0) * 32767.0));\n"
      "}\n"
-     "uint webgl_packSnorm2x16_emu(in float2 v)\n"
+     "uint packSnorm2x16_emu(in float2 v)\n"
      "{\n"
      "    int x = webgl_toSnorm16(v.x);\n"
      "    int y = webgl_toSnorm16(v.y);\n"
@@ -300,14 +300,14 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "uint webgl_toUnorm16(in float x) {\n"
      "    return uint(round(clamp(x, 0.0, 1.0) * 65535.0));\n"
      "}\n"
-     "uint webgl_packUnorm2x16_emu(in float2 v)\n"
+     "uint packUnorm2x16_emu(in float2 v)\n"
      "{\n"
      "    uint x = webgl_toUnorm16(v.x);\n"
      "    uint y = webgl_toUnorm16(v.y);\n"
      "    return (y << 16) | x;\n"
      "}\n"},
     {{EOpPackHalf2x16, ParamType::Float2},
-     "uint webgl_packHalf2x16_emu(in float2 v)\n"
+     "uint packHalf2x16_emu(in float2 v)\n"
      "{\n"
      "    uint x = f32tof16(v.x);\n"
      "    uint y = f32tof16(v.y);\n"
@@ -318,7 +318,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    int xi = asint(x & 0x7fffu) - asint(x & 0x8000u);\n"
      "    return clamp(float(xi) / 32767.0, -1.0, 1.0);\n"
      "}\n"
-     "float2 webgl_unpackSnorm2x16_emu(in uint u)\n"
+     "float2 unpackSnorm2x16_emu(in uint u)\n"
      "{\n"
      "    uint y = (u >> 16);\n"
      "    uint x = u;\n"
@@ -328,14 +328,14 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "float webgl_fromUnorm16(in uint x) {\n"
      "    return float(x) / 65535.0;\n"
      "}\n"
-     "float2 webgl_unpackUnorm2x16_emu(in uint u)\n"
+     "float2 unpackUnorm2x16_emu(in uint u)\n"
      "{\n"
      "    uint y = (u >> 16);\n"
      "    uint x = u & 0xffffu;\n"
      "    return float2(webgl_fromUnorm16(x), webgl_fromUnorm16(y));\n"
      "}\n"},
     {{EOpUnpackHalf2x16, ParamType::Uint1},
-     "float2 webgl_unpackHalf2x16_emu(in uint u)\n"
+     "float2 unpackHalf2x16_emu(in uint u)\n"
      "{\n"
      "    uint y = (u >> 16);\n"
      "    uint x = u & 0xffffu;\n"
@@ -345,7 +345,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "int webgl_toSnorm8(in float x) {\n"
      "    return int(round(clamp(x, -1.0, 1.0) * 127.0));\n"
      "}\n"
-     "uint webgl_packSnorm4x8_emu(in float4 v)\n"
+     "uint packSnorm4x8_emu(in float4 v)\n"
      "{\n"
      "    int x = webgl_toSnorm8(v.x);\n"
      "    int y = webgl_toSnorm8(v.y);\n"
@@ -358,7 +358,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "uint webgl_toUnorm8(in float x) {\n"
      "    return uint(round(clamp(x, 0.0, 1.0) * 255.0));\n"
      "}\n"
-     "uint webgl_packUnorm4x8_emu(in float4 v)\n"
+     "uint packUnorm4x8_emu(in float4 v)\n"
      "{\n"
      "    uint x = webgl_toUnorm8(v.x);\n"
      "    uint y = webgl_toUnorm8(v.y);\n"
@@ -371,7 +371,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    int xi = asint(x & 0x7fu) - asint(x & 0x80u);\n"
      "    return clamp(float(xi) / 127.0, -1.0, 1.0);\n"
      "}\n"
-     "float4 webgl_unpackSnorm4x8_emu(in uint u)\n"
+     "float4 unpackSnorm4x8_emu(in uint u)\n"
      "{\n"
      "    uint w = (u >> 24);\n"
      "    uint z = (u >> 16);\n"
@@ -384,7 +384,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "float webgl_fromUnorm8(in uint x) {\n"
      "    return float(x) / 255.0;\n"
      "}\n"
-     "float4 webgl_unpackUnorm4x8_emu(in uint u)\n"
+     "float4 unpackUnorm4x8_emu(in uint u)\n"
      "{\n"
      "    uint w = (u >> 24) & 0xffu;\n"
      "    uint z = (u >> 16) & 0xffu;\n"
@@ -403,47 +403,47 @@ constexpr FunctionPair g_hlslFunctions[] = {
     // transpose of r, we simply can build a column matrix out of the original
     // vector instead of a row matrix.
     {{EOpOuterProduct, ParamType::Float2, ParamType::Float2},
-     "float2x2 webgl_outerProduct_emu(in float2 c, in float2 r)\n"
+     "float2x2 outerProduct_emu(in float2 c, in float2 r)\n"
      "{\n"
      "    return mul(float2x1(r), float1x2(c));\n"
      "}\n"},
     {{EOpOuterProduct, ParamType::Float3, ParamType::Float3},
-     "float3x3 webgl_outerProduct_emu(in float3 c, in float3 r)\n"
+     "float3x3 outerProduct_emu(in float3 c, in float3 r)\n"
      "{\n"
      "    return mul(float3x1(r), float1x3(c));\n"
      "}\n"},
     {{EOpOuterProduct, ParamType::Float4, ParamType::Float4},
-     "float4x4 webgl_outerProduct_emu(in float4 c, in float4 r)\n"
+     "float4x4 outerProduct_emu(in float4 c, in float4 r)\n"
      "{\n"
      "    return mul(float4x1(r), float1x4(c));\n"
      "}\n"},
     {{EOpOuterProduct, ParamType::Float3, ParamType::Float2},
-     "float2x3 webgl_outerProduct_emu(in float3 c, in float2 r)\n"
+     "float2x3 outerProduct_emu(in float3 c, in float2 r)\n"
      "{\n"
      "    return mul(float2x1(r), float1x3(c));\n"
      "}\n"},
     {{EOpOuterProduct, ParamType::Float2, ParamType::Float3},
-     "float3x2 webgl_outerProduct_emu(in float2 c, in float3 r)\n"
+     "float3x2 outerProduct_emu(in float2 c, in float3 r)\n"
      "{\n"
      "    return mul(float3x1(r), float1x2(c));\n"
      "}\n"},
     {{EOpOuterProduct, ParamType::Float4, ParamType::Float2},
-     "float2x4 webgl_outerProduct_emu(in float4 c, in float2 r)\n"
+     "float2x4 outerProduct_emu(in float4 c, in float2 r)\n"
      "{\n"
      "    return mul(float2x1(r), float1x4(c));\n"
      "}\n"},
     {{EOpOuterProduct, ParamType::Float2, ParamType::Float4},
-     "float4x2 webgl_outerProduct_emu(in float2 c, in float4 r)\n"
+     "float4x2 outerProduct_emu(in float2 c, in float4 r)\n"
      "{\n"
      "    return mul(float4x1(r), float1x2(c));\n"
      "}\n"},
     {{EOpOuterProduct, ParamType::Float4, ParamType::Float3},
-     "float3x4 webgl_outerProduct_emu(in float4 c, in float3 r)\n"
+     "float3x4 outerProduct_emu(in float4 c, in float3 r)\n"
      "{\n"
      "    return mul(float3x1(r), float1x4(c));\n"
      "}\n"},
     {{EOpOuterProduct, ParamType::Float3, ParamType::Float4},
-     "float4x3 webgl_outerProduct_emu(in float3 c, in float4 r)\n"
+     "float4x3 outerProduct_emu(in float3 c, in float4 r)\n"
      "{\n"
      "    return mul(float4x1(r), float1x3(c));\n"
      "}\n"},
@@ -459,14 +459,14 @@ constexpr FunctionPair g_hlslFunctions[] = {
     // We don't need to care about divide-by-zero since results are undefined
     // for singular or poorly-conditioned matrices.
     {{EOpInverse, ParamType::Mat2},
-     "float2x2 webgl_inverse_emu(in float2x2 m)\n"
+     "float2x2 inverse_emu(in float2x2 m)\n"
      "{\n"
      "    float2x2 cof = { m[1][1], -m[0][1], -m[1][0], m[0][0] };\n"
      "    return cof / determinant(transpose(m));\n"
      "}\n"},
     // cofAB is the cofactor for column A and row B.
     {{EOpInverse, ParamType::Mat3},
-     "float3x3 webgl_inverse_emu(in float3x3 m)\n"
+     "float3x3 inverse_emu(in float3x3 m)\n"
      "{\n"
      "    float cof00 = m[1][1] * m[2][2] - m[2][1] * m[1][2];\n"
      "    float cof01 = -(m[1][0] * m[2][2] - m[2][0] * m[1][2]);\n"
@@ -481,7 +481,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    return cof / determinant(transpose(m));\n"
      "}\n"},
     {{EOpInverse, ParamType::Mat4},
-     "float4x4 webgl_inverse_emu(in float4x4 m)\n"
+     "float4x4 inverse_emu(in float4x4 m)\n"
      "{\n"
      "    float cof00 = m[1][1] * m[2][2] * m[3][3] + m[2][1] * m[3][2] * m[1][3] + m[3][1] * \n"
      "    m[1][2] * m[2][3]\n"
@@ -557,27 +557,27 @@ constexpr FunctionPair g_hlslFunctions[] = {
     // returned. For a component of 'a' that is true, the corresponding component of 'y' is
     // returned.
     {{EOpMix, ParamType::Float1, ParamType::Float1, ParamType::Bool1},
-     "float webgl_mix_emu(float x, float y, bool a)\n"
+     "float mix_emu(float x, float y, bool a)\n"
      "{\n"
      "    return a ? y : x;\n"
      "}\n"},
     {{EOpMix, ParamType::Float2, ParamType::Float2, ParamType::Bool2},
-     "float2 webgl_mix_emu(float2 x, float2 y, bool2 a)\n"
+     "float2 mix_emu(float2 x, float2 y, bool2 a)\n"
      "{\n"
      "    return a ? y : x;\n"
      "}\n"},
     {{EOpMix, ParamType::Float3, ParamType::Float3, ParamType::Bool3},
-     "float3 webgl_mix_emu(float3 x, float3 y, bool3 a)\n"
+     "float3 mix_emu(float3 x, float3 y, bool3 a)\n"
      "{\n"
      "    return a ? y : x;\n"
      "}\n"},
     {{EOpMix, ParamType::Float4, ParamType::Float4, ParamType::Bool4},
-     "float4 webgl_mix_emu(float4 x, float4 y, bool4 a)\n"
+     "float4 mix_emu(float4 x, float4 y, bool4 a)\n"
      "{\n"
      "    return a ? y : x;\n"
      "}\n"},
     {{EOpBitfieldExtract, ParamType::Uint1, ParamType::Int1, ParamType::Int1},
-     "uint webgl_bitfieldExtract_emu(uint value, int offset, int bits)\n"
+     "uint bitfieldExtract_emu(uint value, int offset, int bits)\n"
      "{\n"
      "    if (offset < 0 || bits <= 0 || offset >= 32 || bits > 32 || offset + bits > 32)\n"
      "    {\n"
@@ -588,7 +588,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    return (value & mask) >> offset;\n"
      "}\n"},
     {{EOpBitfieldExtract, ParamType::Uint2, ParamType::Int1, ParamType::Int1},
-     "uint2 webgl_bitfieldExtract_emu(uint2 value, int offset, int bits)\n"
+     "uint2 bitfieldExtract_emu(uint2 value, int offset, int bits)\n"
      "{\n"
      "    if (offset < 0 || bits <= 0 || offset >= 32 || bits > 32 || offset + bits > 32)\n"
      "    {\n"
@@ -599,7 +599,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    return (value & mask) >> offset;\n"
      "}\n"},
     {{EOpBitfieldExtract, ParamType::Uint3, ParamType::Int1, ParamType::Int1},
-     "uint3 webgl_bitfieldExtract_emu(uint3 value, int offset, int bits)\n"
+     "uint3 bitfieldExtract_emu(uint3 value, int offset, int bits)\n"
      "{\n"
      "    if (offset < 0 || bits <= 0 || offset >= 32 || bits > 32 || offset + bits > 32)\n"
      "    {\n"
@@ -610,7 +610,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    return (value & mask) >> offset;\n"
      "}\n"},
     {{EOpBitfieldExtract, ParamType::Uint4, ParamType::Int1, ParamType::Int1},
-     "uint4 webgl_bitfieldExtract_emu(uint4 value, int offset, int bits)\n"
+     "uint4 bitfieldExtract_emu(uint4 value, int offset, int bits)\n"
      "{\n"
      "    if (offset < 0 || bits <= 0 || offset >= 32 || bits > 32 || offset + bits > 32)\n"
      "    {\n"
@@ -621,7 +621,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    return (value & mask) >> offset;\n"
      "}\n"},
     {{EOpBitfieldExtract, ParamType::Int1, ParamType::Int1, ParamType::Int1},
-     "int webgl_bitfieldExtract_emu(int value, int offset, int bits)\n"
+     "int bitfieldExtract_emu(int value, int offset, int bits)\n"
      "{\n"
      "    if (offset < 0 || bits <= 0 || offset >= 32 || bits > 32 || offset + bits > 32)\n"
      "    {\n"
@@ -638,7 +638,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    return asint(resultUnsigned);\n"
      "}\n"},
     {{EOpBitfieldExtract, ParamType::Int2, ParamType::Int1, ParamType::Int1},
-     "int2 webgl_bitfieldExtract_emu(int2 value, int offset, int bits)\n"
+     "int2 bitfieldExtract_emu(int2 value, int offset, int bits)\n"
      "{\n"
      "    if (offset < 0 || bits <= 0 || offset >= 32 || bits > 32 || offset + bits > 32)\n"
      "    {\n"
@@ -655,7 +655,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    return asint(resultUnsigned);\n"
      "}\n"},
     {{EOpBitfieldExtract, ParamType::Int3, ParamType::Int1, ParamType::Int1},
-     "int3 webgl_bitfieldExtract_emu(int3 value, int offset, int bits)\n"
+     "int3 bitfieldExtract_emu(int3 value, int offset, int bits)\n"
      "{\n"
      "    if (offset < 0 || bits <= 0 || offset >= 32 || bits > 32 || offset + bits > 32)\n"
      "    {\n"
@@ -672,7 +672,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    return asint(resultUnsigned);\n"
      "}\n"},
     {{EOpBitfieldExtract, ParamType::Int4, ParamType::Int1, ParamType::Int1},
-     "int4 webgl_bitfieldExtract_emu(int4 value, int offset, int bits)\n"
+     "int4 bitfieldExtract_emu(int4 value, int offset, int bits)\n"
      "{\n"
      "    if (offset < 0 || bits <= 0 || offset >= 32 || bits > 32 || offset + bits > 32)\n"
      "    {\n"
@@ -689,7 +689,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    return asint(resultUnsigned);\n"
      "}\n"},
     {{EOpBitfieldInsert, ParamType::Uint1, ParamType::Uint1, ParamType::Int1, ParamType::Int1},
-     "uint webgl_bitfieldInsert_emu(uint base, uint insert, int offset, int bits)\n"
+     "uint bitfieldInsert_emu(uint base, uint insert, int offset, int bits)\n"
      "{\n"
      "    if (offset < 0 || bits <= 0 || offset >= 32 || bits > 32 || offset + bits > 32)\n"
      "    {\n"
@@ -701,7 +701,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    return (base & baseMask) | ((insert << offset) & insertMask);\n"
      "}\n"},
     {{EOpBitfieldInsert, ParamType::Uint2, ParamType::Uint2, ParamType::Int1, ParamType::Int1},
-     "uint2 webgl_bitfieldInsert_emu(uint2 base, uint2 insert, int offset, int bits)\n"
+     "uint2 bitfieldInsert_emu(uint2 base, uint2 insert, int offset, int bits)\n"
      "{\n"
      "    if (offset < 0 || bits <= 0 || offset >= 32 || bits > 32 || offset + bits > 32)\n"
      "    {\n"
@@ -713,7 +713,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    return (base & baseMask) | ((insert << offset) & insertMask);\n"
      "}\n"},
     {{EOpBitfieldInsert, ParamType::Uint3, ParamType::Uint3, ParamType::Int1, ParamType::Int1},
-     "uint3 webgl_bitfieldInsert_emu(uint3 base, uint3 insert, int offset, int bits)\n"
+     "uint3 bitfieldInsert_emu(uint3 base, uint3 insert, int offset, int bits)\n"
      "{\n"
      "    if (offset < 0 || bits <= 0 || offset >= 32 || bits > 32 || offset + bits > 32)\n"
      "    {\n"
@@ -725,7 +725,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    return (base & baseMask) | ((insert << offset) & insertMask);\n"
      "}\n"},
     {{EOpBitfieldInsert, ParamType::Uint4, ParamType::Uint4, ParamType::Int1, ParamType::Int1},
-     "uint4 webgl_bitfieldInsert_emu(uint4 base, uint4 insert, int offset, int bits)\n"
+     "uint4 bitfieldInsert_emu(uint4 base, uint4 insert, int offset, int bits)\n"
      "{\n"
      "    if (offset < 0 || bits <= 0 || offset >= 32 || bits > 32 || offset + bits > 32)\n"
      "    {\n"
@@ -737,7 +737,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    return (base & baseMask) | ((insert << offset) & insertMask);\n"
      "}\n"},
     {{EOpBitfieldInsert, ParamType::Int1, ParamType::Int1, ParamType::Int1, ParamType::Int1},
-     "int webgl_bitfieldInsert_emu(int base, int insert, int offset, int bits)\n"
+     "int bitfieldInsert_emu(int base, int insert, int offset, int bits)\n"
      "{\n"
      "    if (offset < 0 || bits <= 0 || offset >= 32 || bits > 32 || offset + bits > 32)\n"
      "    {\n"
@@ -751,7 +751,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    return asint(resultUnsigned);\n"
      "}\n"},
     {{EOpBitfieldInsert, ParamType::Int2, ParamType::Int2, ParamType::Int1, ParamType::Int1},
-     "int2 webgl_bitfieldInsert_emu(int2 base, int2 insert, int offset, int bits)\n"
+     "int2 bitfieldInsert_emu(int2 base, int2 insert, int offset, int bits)\n"
      "{\n"
      "    if (offset < 0 || bits <= 0 || offset >= 32 || bits > 32 || offset + bits > 32)\n"
      "    {\n"
@@ -765,7 +765,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    return asint(resultUnsigned);\n"
      "}\n"},
     {{EOpBitfieldInsert, ParamType::Int3, ParamType::Int3, ParamType::Int1, ParamType::Int1},
-     "int3 webgl_bitfieldInsert_emu(int3 base, int3 insert, int offset, int bits)\n"
+     "int3 bitfieldInsert_emu(int3 base, int3 insert, int offset, int bits)\n"
      "{\n"
      "    if (offset < 0 || bits <= 0 || offset >= 32 || bits > 32 || offset + bits > 32)\n"
      "    {\n"
@@ -779,7 +779,7 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    return asint(resultUnsigned);\n"
      "}\n"},
     {{EOpBitfieldInsert, ParamType::Int4, ParamType::Int4, ParamType::Int1, ParamType::Int1},
-     "int4 webgl_bitfieldInsert_emu(int4 base, int4 insert, int offset, int bits)\n"
+     "int4 bitfieldInsert_emu(int4 base, int4 insert, int offset, int bits)\n"
      "{\n"
      "    if (offset < 0 || bits <= 0 || offset >= 32 || bits > 32 || offset + bits > 32)\n"
      "    {\n"
@@ -793,49 +793,49 @@ constexpr FunctionPair g_hlslFunctions[] = {
      "    return asint(resultUnsigned);\n"
      "}\n"},
     {{EOpUaddCarry, ParamType::Uint1, ParamType::Uint1, ParamType::Uint1},
-     "uint webgl_uaddCarry_emu(uint x, uint y, out uint carry)\n"
+     "uint uaddCarry_emu(uint x, uint y, out uint carry)\n"
      "{\n"
      "    carry = uint(x > (0xffffffffu - y));\n"
      "    return x + y;\n"
      "}\n"},
     {{EOpUaddCarry, ParamType::Uint2, ParamType::Uint2, ParamType::Uint2},
-     "uint2 webgl_uaddCarry_emu(uint2 x, uint2 y, out uint2 carry)\n"
+     "uint2 uaddCarry_emu(uint2 x, uint2 y, out uint2 carry)\n"
      "{\n"
      "    carry = uint2(x > (0xffffffffu - y));\n"
      "    return x + y;\n"
      "}\n"},
     {{EOpUaddCarry, ParamType::Uint3, ParamType::Uint3, ParamType::Uint3},
-     "uint3 webgl_uaddCarry_emu(uint3 x, uint3 y, out uint3 carry)\n"
+     "uint3 uaddCarry_emu(uint3 x, uint3 y, out uint3 carry)\n"
      "{\n"
      "    carry = uint3(x > (0xffffffffu - y));\n"
      "    return x + y;\n"
      "}\n"},
     {{EOpUaddCarry, ParamType::Uint4, ParamType::Uint4, ParamType::Uint4},
-     "uint4 webgl_uaddCarry_emu(uint4 x, uint4 y, out uint4 carry)\n"
+     "uint4 uaddCarry_emu(uint4 x, uint4 y, out uint4 carry)\n"
      "{\n"
      "    carry = uint4(x > (0xffffffffu - y));\n"
      "    return x + y;\n"
      "}\n"},
     {{EOpUsubBorrow, ParamType::Uint1, ParamType::Uint1, ParamType::Uint1},
-     "uint webgl_usubBorrow_emu(uint x, uint y, out uint borrow)\n"
+     "uint usubBorrow_emu(uint x, uint y, out uint borrow)\n"
      "{\n"
      "    borrow = uint(x < y);\n"
      "    return x - y;\n"
      "}\n"},
     {{EOpUsubBorrow, ParamType::Uint2, ParamType::Uint2, ParamType::Uint2},
-     "uint2 webgl_usubBorrow_emu(uint2 x, uint2 y, out uint2 borrow)\n"
+     "uint2 usubBorrow_emu(uint2 x, uint2 y, out uint2 borrow)\n"
      "{\n"
      "    borrow = uint2(x < y);\n"
      "    return x - y;\n"
      "}\n"},
     {{EOpUsubBorrow, ParamType::Uint3, ParamType::Uint3, ParamType::Uint3},
-     "uint3 webgl_usubBorrow_emu(uint3 x, uint3 y, out uint3 borrow)\n"
+     "uint3 usubBorrow_emu(uint3 x, uint3 y, out uint3 borrow)\n"
      "{\n"
      "    borrow = uint3(x < y);\n"
      "    return x - y;\n"
      "}\n"},
     {{EOpUsubBorrow, ParamType::Uint4, ParamType::Uint4, ParamType::Uint4},
-     "uint4 webgl_usubBorrow_emu(uint4 x, uint4 y, out uint4 borrow)\n"
+     "uint4 usubBorrow_emu(uint4 x, uint4 y, out uint4 borrow)\n"
      "{\n"
      "    borrow = uint4(x < y);\n"
      "    return x - y;\n"

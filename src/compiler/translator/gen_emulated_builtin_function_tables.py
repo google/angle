@@ -105,7 +105,7 @@ def gen_emulated_function(data):
    if 'comment' in data:
       func += "".join([ "// " + line + "\n" for line in data['comment'] ])
 
-   sig = data['return_type'] + ' webgl_' + data['op'] + '_emu(' + ', '.join(data['args']) + ')'
+   sig = data['return_type'] + ' ' + data['op'] + '_emu(' + ', '.join(data['args']) + ')'
    body = [ sig, '{' ] + ['    ' + line for line in data['body']] + ['}']
 
    func += "{\n"
