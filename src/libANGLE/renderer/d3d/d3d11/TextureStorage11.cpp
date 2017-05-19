@@ -57,22 +57,10 @@ TextureStorage11::TextureStorage11(Renderer11 *renderer,
       mBindFlags(bindFlags),
       mMiscFlags(miscFlags)
 {
-    mLevelSRVs.fill(nullptr);
-    mLevelBlitSRVs.fill(nullptr);
 }
 
 TextureStorage11::~TextureStorage11()
 {
-    for (unsigned int level = 0; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
-    {
-        SafeRelease(mLevelSRVs[level]);
-        SafeRelease(mLevelBlitSRVs[level]);
-    }
-
-    for (SRVCache::iterator i = mSrvCache.begin(); i != mSrvCache.end(); i++)
-    {
-        SafeRelease(i->second);
-    }
     mSrvCache.clear();
     SafeRelease(mDropStencilTexture);
 }
@@ -180,8 +168,7 @@ UINT TextureStorage11::getSubresourceIndex(const gl::ImageIndex &index) const
     return subresource;
 }
 
-gl::Error TextureStorage11::getSRV(const gl::TextureState &textureState,
-                                   ID3D11ShaderResourceView **outSRV)
+gl::Error TextureStorage11::getSRV(const gl::TextureState &textureState, d3d11::SharedSRV *outSRV)
 {
     // Make sure to add the level offset for our tiny compressed texture workaround
     const GLuint effectiveBaseLevel = textureState.getEffectiveBaseLevel();
@@ -234,7 +221,6 @@ gl::Error TextureStorage11::getSRV(const gl::TextureState &textureState,
         auto srvEntry = mSrvCache.find(key);
         if (result == DropStencil::CREATED && srvEntry != mSrvCache.end())
         {
-            SafeRelease(srvEntry->second);
             mSrvCache.erase(key);
         }
     }
@@ -244,8 +230,7 @@ gl::Error TextureStorage11::getSRV(const gl::TextureState &textureState,
     return gl::NoError();
 }
 
-gl::Error TextureStorage11::getCachedOrCreateSRV(const SRVKey &key,
-                                                 ID3D11ShaderResourceView **outSRV)
+gl::Error TextureStorage11::getCachedOrCreateSRV(const SRVKey &key, d3d11::SharedSRV *outSRV)
 {
     auto iter = mSrvCache.find(key);
     if (iter != mSrvCache.end())
@@ -277,7 +262,7 @@ gl::Error TextureStorage11::getCachedOrCreateSRV(const SRVKey &key,
         format = mFormatInfo.srvFormat;
     }
 
-    ID3D11ShaderResourceView *srv = nullptr;
+    d3d11::SharedSRV srv;
 
     ANGLE_TRY(createSRV(key.baseLevel, key.mipLevels, format, texture, &srv));
 
@@ -287,22 +272,19 @@ gl::Error TextureStorage11::getCachedOrCreateSRV(const SRVKey &key,
     return gl::NoError();
 }
 
-gl::Error TextureStorage11::getSRVLevel(int mipLevel,
-                                        bool blitSRV,
-                                        ID3D11ShaderResourceView **outSRV)
+gl::Error TextureStorage11::getSRVLevel(int mipLevel, bool blitSRV, const d3d11::SharedSRV **outSRV)
 {
     ASSERT(mipLevel >= 0 && mipLevel < getLevelCount());
 
     auto &levelSRVs      = (blitSRV) ? mLevelBlitSRVs : mLevelSRVs;
     auto &otherLevelSRVs = (blitSRV) ? mLevelSRVs : mLevelBlitSRVs;
 
-    if (!levelSRVs[mipLevel])
+    if (!levelSRVs[mipLevel].valid())
     {
         // Only create a different SRV for blit if blit format is different from regular srv format
-        if (otherLevelSRVs[mipLevel] && mFormatInfo.srvFormat == mFormatInfo.blitSRVFormat)
+        if (otherLevelSRVs[mipLevel].valid() && mFormatInfo.srvFormat == mFormatInfo.blitSRVFormat)
         {
             levelSRVs[mipLevel] = otherLevelSRVs[mipLevel];
-            levelSRVs[mipLevel]->AddRef();
         }
         else
         {
@@ -315,14 +297,12 @@ gl::Error TextureStorage11::getSRVLevel(int mipLevel,
         }
     }
 
-    *outSRV = levelSRVs[mipLevel];
+    *outSRV = &levelSRVs[mipLevel];
 
     return gl::NoError();
 }
 
-gl::Error TextureStorage11::getSRVLevels(GLint baseLevel,
-                                         GLint maxLevel,
-                                         ID3D11ShaderResourceView **outSRV)
+gl::Error TextureStorage11::getSRVLevels(GLint baseLevel, GLint maxLevel, d3d11::SharedSRV *outSRV)
 {
     unsigned int mipLevels = maxLevel - baseLevel + 1;
 
@@ -362,7 +342,7 @@ gl::Error TextureStorage11::generateSwizzles(const gl::SwizzleState &swizzleTarg
         if (mSwizzleCache[level] != swizzleTarget)
         {
             // Need to re-render the swizzle for this level
-            ID3D11ShaderResourceView *sourceSRV = nullptr;
+            const d3d11::SharedSRV *sourceSRV = nullptr;
             ANGLE_TRY(getSRVLevel(level, true, &sourceSRV));
 
             const d3d11::RenderTargetView *destRTV;
@@ -372,7 +352,7 @@ gl::Error TextureStorage11::generateSwizzles(const gl::SwizzleState &swizzleTarg
 
             Blit11 *blitter = mRenderer->getBlitter();
 
-            ANGLE_TRY(blitter->swizzleTexture(sourceSRV, *destRTV, size, swizzleTarget));
+            ANGLE_TRY(blitter->swizzleTexture(*sourceSRV, *destRTV, size, swizzleTarget));
 
             mSwizzleCache[level] = swizzleTarget;
         }
@@ -529,7 +509,7 @@ gl::Error TextureStorage11::generateMipmap(const gl::ImageIndex &sourceIndex,
     ANGLE_TRY(getRenderTarget(destIndex, &dest));
 
     auto rt11                              = GetAs<RenderTarget11>(source);
-    ID3D11ShaderResourceView *sourceSRV    = rt11->getBlitShaderResourceView();
+    const d3d11::SharedSRV &sourceSRV      = rt11->getBlitShaderResourceView();
     const d3d11::RenderTargetView &destRTV = rt11->getRenderTargetView();
 
     gl::Box sourceArea(0, 0, 0, source->getWidth(), source->getHeight(), source->getDepth());
@@ -555,25 +535,12 @@ void TextureStorage11::verifySwizzleExists(const gl::SwizzleState &swizzleState)
 void TextureStorage11::clearSRVCache()
 {
     markDirty();
-
-    auto iter = mSrvCache.begin();
-    while (iter != mSrvCache.end())
-    {
-        if (!iter->first.swizzle)
-        {
-            SafeRelease(iter->second);
-            iter = mSrvCache.erase(iter);
-        }
-        else
-        {
-            iter++;
-        }
-    }
+    mSrvCache.clear();
 
     for (size_t level = 0; level < mLevelSRVs.size(); level++)
     {
-        SafeRelease(mLevelSRVs[level]);
-        SafeRelease(mLevelBlitSRVs[level]);
+        mLevelSRVs[level].reset();
+        mLevelBlitSRVs[level].reset();
     }
 }
 
@@ -1069,10 +1036,10 @@ gl::Error TextureStorage11_2D::getRenderTarget(const gl::ImageIndex &index, Rend
     ID3D11Resource *texture = nullptr;
     ANGLE_TRY(getResource(&texture));
 
-    ID3D11ShaderResourceView *srv = nullptr;
+    const d3d11::SharedSRV *srv = nullptr;
     ANGLE_TRY(getSRVLevel(level, false, &srv));
 
-    ID3D11ShaderResourceView *blitSRV = nullptr;
+    const d3d11::SharedSRV *blitSRV = nullptr;
     ANGLE_TRY(getSRVLevel(level, true, &blitSRV));
 
     if (mUseLevelZeroTexture)
@@ -1088,8 +1055,9 @@ gl::Error TextureStorage11_2D::getRenderTarget(const gl::ImageIndex &index, Rend
             ANGLE_TRY(mRenderer->allocateResource(rtvDesc, mLevelZeroTexture, &rtv));
 
             mLevelZeroRenderTarget = new TextureRenderTarget11(
-                std::move(rtv), mLevelZeroTexture, nullptr, nullptr, mFormatInfo.internalFormat,
-                getFormatSet(), getLevelWidth(level), getLevelHeight(level), 1, 0);
+                std::move(rtv), mLevelZeroTexture, d3d11::SharedSRV(), d3d11::SharedSRV(),
+                mFormatInfo.internalFormat, getFormatSet(), getLevelWidth(level),
+                getLevelHeight(level), 1, 0);
         }
 
         *outRT = mLevelZeroRenderTarget;
@@ -1107,7 +1075,7 @@ gl::Error TextureStorage11_2D::getRenderTarget(const gl::ImageIndex &index, Rend
         ANGLE_TRY(mRenderer->allocateResource(rtvDesc, texture, &rtv));
 
         mRenderTarget[level] = new TextureRenderTarget11(
-            std::move(rtv), texture, srv, blitSRV, mFormatInfo.internalFormat, getFormatSet(),
+            std::move(rtv), texture, *srv, *blitSRV, mFormatInfo.internalFormat, getFormatSet(),
             getLevelWidth(level), getLevelHeight(level), 1, 0);
 
         *outRT = mRenderTarget[level];
@@ -1126,7 +1094,7 @@ gl::Error TextureStorage11_2D::getRenderTarget(const gl::ImageIndex &index, Rend
     ANGLE_TRY(mRenderer->allocateResource(dsvDesc, texture, &dsv));
 
     mRenderTarget[level] = new TextureRenderTarget11(
-        std::move(dsv), texture, srv, mFormatInfo.internalFormat, getFormatSet(),
+        std::move(dsv), texture, *srv, mFormatInfo.internalFormat, getFormatSet(),
         getLevelWidth(level), getLevelHeight(level), 1, 0);
 
     *outRT = mRenderTarget[level];
@@ -1137,7 +1105,7 @@ gl::Error TextureStorage11_2D::createSRV(int baseLevel,
                                          int mipLevels,
                                          DXGI_FORMAT format,
                                          ID3D11Resource *texture,
-                                         ID3D11ShaderResourceView **outSRV) const
+                                         d3d11::SharedSRV *outSRV) const
 {
     ASSERT(outSRV);
 
@@ -1170,17 +1138,8 @@ gl::Error TextureStorage11_2D::createSRV(int baseLevel,
         }
     }
 
-    ID3D11Device *device = mRenderer->getDevice();
-    HRESULT result       = device->CreateShaderResourceView(srvTexture, &srvDesc, outSRV);
-
-    ASSERT(result == E_OUTOFMEMORY || SUCCEEDED(result));
-    if (FAILED(result))
-    {
-        return gl::Error(GL_OUT_OF_MEMORY,
-                         "Failed to create internal texture storage SRV, result: 0x%X.", result);
-    }
-
-    d3d11::SetDebugName(*outSRV, "TexStorage2D.SRV");
+    ANGLE_TRY(mRenderer->allocateResource(srvDesc, srvTexture, outSRV));
+    outSRV->setDebugName("TexStorage2D.SRV");
 
     return gl::NoError();
 }
@@ -1378,7 +1337,7 @@ gl::Error TextureStorage11_External::createSRV(int baseLevel,
                                                int mipLevels,
                                                DXGI_FORMAT format,
                                                ID3D11Resource *texture,
-                                               ID3D11ShaderResourceView **outSRV) const
+                                               d3d11::SharedSRV *outSRV) const
 {
     // Since external textures are treates as non-mipmapped textures, we ignore mipmap levels and
     // use the specified subresource ID the storage was created with.
@@ -1396,17 +1355,8 @@ gl::Error TextureStorage11_External::createSRV(int baseLevel,
 
     ID3D11Resource *srvTexture = texture;
 
-    ID3D11Device *device = mRenderer->getDevice();
-    HRESULT result       = device->CreateShaderResourceView(srvTexture, &srvDesc, outSRV);
-
-    ASSERT(result == E_OUTOFMEMORY || SUCCEEDED(result));
-    if (FAILED(result))
-    {
-        return gl::Error(GL_OUT_OF_MEMORY,
-                         "Failed to create internal texture storage SRV, result: 0x%X.", result);
-    }
-
-    d3d11::SetDebugName(*outSRV, "TexStorage2D.SRV");
+    ANGLE_TRY(mRenderer->allocateResource(srvDesc, srvTexture, outSRV));
+    outSRV->setDebugName("TexStorage2D.SRV");
 
     return gl::NoError();
 }
@@ -1460,7 +1410,7 @@ gl::Error TextureStorage11_EGLImage::getResource(ID3D11Resource **outResource)
 }
 
 gl::Error TextureStorage11_EGLImage::getSRV(const gl::TextureState &textureState,
-                                            ID3D11ShaderResourceView **outSRV)
+                                            d3d11::SharedSRV *outSRV)
 {
     ANGLE_TRY(checkForUpdatedRenderTarget());
     return TextureStorage11::getSRV(textureState, outSRV);
@@ -1606,7 +1556,7 @@ gl::Error TextureStorage11_EGLImage::createSRV(int baseLevel,
                                                int mipLevels,
                                                DXGI_FORMAT format,
                                                ID3D11Resource *texture,
-                                               ID3D11ShaderResourceView **outSRV) const
+                                               d3d11::SharedSRV *outSRV) const
 {
     ASSERT(baseLevel == 0);
     ASSERT(mipLevels == 1);
@@ -1622,18 +1572,8 @@ gl::Error TextureStorage11_EGLImage::createSRV(int baseLevel,
         srvDesc.Texture2D.MostDetailedMip = mTopLevel + baseLevel;
         srvDesc.Texture2D.MipLevels       = mipLevels;
 
-        ID3D11Device *device = mRenderer->getDevice();
-        HRESULT result       = device->CreateShaderResourceView(texture, &srvDesc, outSRV);
-
-        ASSERT(result == E_OUTOFMEMORY || SUCCEEDED(result));
-        if (FAILED(result))
-        {
-            return gl::Error(GL_OUT_OF_MEMORY,
-                             "Failed to create internal texture storage SRV, result: 0x%X.",
-                             result);
-        }
-
-        d3d11::SetDebugName(*outSRV, "TexStorageEGLImage.SRV");
+        ANGLE_TRY(mRenderer->allocateResource(srvDesc, texture, outSRV));
+        outSRV->setDebugName("TexStorageEGLImage.SRV");
     }
     else
     {
@@ -1643,7 +1583,6 @@ gl::Error TextureStorage11_EGLImage::createSRV(int baseLevel,
         ASSERT(texture == renderTarget->getTexture());
 
         *outSRV = renderTarget->getShaderResourceView();
-        (*outSRV)->AddRef();
     }
 
     return gl::NoError();
@@ -2005,9 +1944,8 @@ gl::Error TextureStorage11_Cube::ensureTextureExists(int mipLevels)
 gl::Error TextureStorage11_Cube::createRenderTargetSRV(ID3D11Resource *texture,
                                                        const gl::ImageIndex &index,
                                                        DXGI_FORMAT resourceFormat,
-                                                       ID3D11ShaderResourceView **srv) const
+                                                       d3d11::SharedSRV *srv) const
 {
-    ID3D11Device *device = mRenderer->getDevice();
     D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
     srvDesc.Format                         = resourceFormat;
     srvDesc.Texture2DArray.MostDetailedMip = mTopLevel + index.mipIndex;
@@ -2025,16 +1963,7 @@ gl::Error TextureStorage11_Cube::createRenderTargetSRV(ID3D11Resource *texture,
         srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
     }
 
-    HRESULT result = device->CreateShaderResourceView(texture, &srvDesc, srv);
-
-    ASSERT(result == E_OUTOFMEMORY || SUCCEEDED(result));
-    if (FAILED(result))
-    {
-        return gl::Error(
-            GL_OUT_OF_MEMORY,
-            "Failed to create internal shader resource view for texture storage, result: 0x%X.",
-            result);
-    }
+    ANGLE_TRY(mRenderer->allocateResource(srvDesc, texture, srv));
     return gl::NoError();
 }
 
@@ -2067,8 +1996,9 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::ImageIndex &index,
                 ANGLE_TRY(mRenderer->allocateResource(rtvDesc, mLevelZeroTexture, &rtv));
 
                 mLevelZeroRenderTarget[faceIndex] = new TextureRenderTarget11(
-                    std::move(rtv), mLevelZeroTexture, nullptr, nullptr, mFormatInfo.internalFormat,
-                    getFormatSet(), getLevelWidth(level), getLevelHeight(level), 1, 0);
+                    std::move(rtv), mLevelZeroTexture, d3d11::SharedSRV(), d3d11::SharedSRV(),
+                    mFormatInfo.internalFormat, getFormatSet(), getLevelWidth(level),
+                    getLevelHeight(level), 1, 0);
             }
 
             ASSERT(outRT);
@@ -2076,26 +2006,19 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::ImageIndex &index,
             return gl::NoError();
         }
 
-        ID3D11ShaderResourceView *srv = nullptr;
+        d3d11::SharedSRV srv;
         ANGLE_TRY(createRenderTargetSRV(texture, index, mFormatInfo.srvFormat, &srv));
-        ID3D11ShaderResourceView *blitSRV = nullptr;
+        d3d11::SharedSRV blitSRV;
         if (mFormatInfo.blitSRVFormat != mFormatInfo.srvFormat)
         {
-            gl::Error error =
-                createRenderTargetSRV(texture, index, mFormatInfo.blitSRVFormat, &blitSRV);
-            if (error.isError())
-            {
-                SafeRelease(srv);
-                return error;
-            }
+            ANGLE_TRY(createRenderTargetSRV(texture, index, mFormatInfo.blitSRVFormat, &blitSRV));
         }
         else
         {
             blitSRV = srv;
-            blitSRV->AddRef();
         }
 
-        d3d11::SetDebugName(srv, "TexStorageCube.RenderTargetSRV");
+        srv.setDebugName("TexStorageCube.RenderTargetSRV");
 
         if (mFormatInfo.rtvFormat != DXGI_FORMAT_UNKNOWN)
         {
@@ -2107,23 +2030,12 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::ImageIndex &index,
             rtvDesc.Texture2DArray.ArraySize       = 1;
 
             d3d11::RenderTargetView rtv;
-            gl::Error err = mRenderer->allocateResource(rtvDesc, texture, &rtv);
-
-            if (err.isError())
-            {
-                SafeRelease(srv);
-                SafeRelease(blitSRV);
-                return err;
-            }
-
+            ANGLE_TRY(mRenderer->allocateResource(rtvDesc, texture, &rtv));
             rtv.setDebugName("TexStorageCube.RenderTargetRTV");
 
             mRenderTarget[faceIndex][level] = new TextureRenderTarget11(
                 std::move(rtv), texture, srv, blitSRV, mFormatInfo.internalFormat, getFormatSet(),
                 getLevelWidth(level), getLevelHeight(level), 1, 0);
-
-            SafeRelease(srv);
-            SafeRelease(blitSRV);
         }
         else if (mFormatInfo.dsvFormat != DXGI_FORMAT_UNKNOWN)
         {
@@ -2136,22 +2048,12 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::ImageIndex &index,
             dsvDesc.Texture2DArray.ArraySize       = 1;
 
             d3d11::DepthStencilView dsv;
-            gl::Error err = mRenderer->allocateResource(dsvDesc, texture, &dsv);
-            if (err.isError())
-            {
-                SafeRelease(srv);
-                SafeRelease(blitSRV);
-                return err;
-            }
+            ANGLE_TRY(mRenderer->allocateResource(dsvDesc, texture, &dsv));
             dsv.setDebugName("TexStorageCube.RenderTargetDSV");
 
             mRenderTarget[faceIndex][level] = new TextureRenderTarget11(
                 std::move(dsv), texture, srv, mFormatInfo.internalFormat, getFormatSet(),
                 getLevelWidth(level), getLevelHeight(level), 1, 0);
-
-            // RenderTarget will take ownership of these resources
-            SafeRelease(srv);
-            SafeRelease(blitSRV);
         }
         else
         {
@@ -2168,7 +2070,7 @@ gl::Error TextureStorage11_Cube::createSRV(int baseLevel,
                                            int mipLevels,
                                            DXGI_FORMAT format,
                                            ID3D11Resource *texture,
-                                           ID3D11ShaderResourceView **outSRV) const
+                                           d3d11::SharedSRV *outSRV) const
 {
     ASSERT(outSRV);
 
@@ -2216,17 +2118,8 @@ gl::Error TextureStorage11_Cube::createSRV(int baseLevel,
         }
     }
 
-    ID3D11Device *device = mRenderer->getDevice();
-    HRESULT result       = device->CreateShaderResourceView(srvTexture, &srvDesc, outSRV);
-
-    ASSERT(result == E_OUTOFMEMORY || SUCCEEDED(result));
-    if (FAILED(result))
-    {
-        return gl::Error(GL_OUT_OF_MEMORY,
-                         "Failed to create internal texture storage SRV, result: 0x%X.", result);
-    }
-
-    d3d11::SetDebugName(*outSRV, "TexStorageCube.SRV");
+    ANGLE_TRY(mRenderer->allocateResource(srvDesc, srvTexture, outSRV));
+    outSRV->setDebugName("TexStorageCube.SRV");
 
     return gl::NoError();
 }
@@ -2526,7 +2419,7 @@ gl::Error TextureStorage11_3D::createSRV(int baseLevel,
                                          int mipLevels,
                                          DXGI_FORMAT format,
                                          ID3D11Resource *texture,
-                                         ID3D11ShaderResourceView **outSRV) const
+                                         d3d11::SharedSRV *outSRV) const
 {
     ASSERT(outSRV);
 
@@ -2536,17 +2429,8 @@ gl::Error TextureStorage11_3D::createSRV(int baseLevel,
     srvDesc.Texture3D.MostDetailedMip = baseLevel;
     srvDesc.Texture3D.MipLevels       = mipLevels;
 
-    ID3D11Device *device = mRenderer->getDevice();
-    HRESULT result       = device->CreateShaderResourceView(texture, &srvDesc, outSRV);
-
-    ASSERT(result == E_OUTOFMEMORY || SUCCEEDED(result));
-    if (FAILED(result))
-    {
-        return gl::Error(GL_OUT_OF_MEMORY,
-                         "Failed to create internal texture storage SRV, result: 0x%X.", result);
-    }
-
-    d3d11::SetDebugName(*outSRV, "TexStorage3D.SRV");
+    ANGLE_TRY(mRenderer->allocateResource(srvDesc, texture, outSRV));
+    outSRV->setDebugName("TexStorage3D.SRV");
 
     return gl::NoError();
 }
@@ -2565,10 +2449,10 @@ gl::Error TextureStorage11_3D::getRenderTarget(const gl::ImageIndex &index, Rend
             ID3D11Resource *texture = nullptr;
             ANGLE_TRY(getResource(&texture));
 
-            ID3D11ShaderResourceView *srv = nullptr;
+            const d3d11::SharedSRV *srv = nullptr;
             ANGLE_TRY(getSRVLevel(mipLevel, false, &srv));
 
-            ID3D11ShaderResourceView *blitSRV = nullptr;
+            const d3d11::SharedSRV *blitSRV = nullptr;
             ANGLE_TRY(getSRVLevel(mipLevel, true, &blitSRV));
 
             D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
@@ -2579,18 +2463,11 @@ gl::Error TextureStorage11_3D::getRenderTarget(const gl::ImageIndex &index, Rend
             rtvDesc.Texture3D.WSize       = static_cast<UINT>(-1);
 
             d3d11::RenderTargetView rtv;
-            gl::Error err = mRenderer->allocateResource(rtvDesc, texture, &rtv);
-            if (err.isError())
-            {
-                SafeRelease(srv);
-                SafeRelease(blitSRV);
-                return err;
-            }
-
+            ANGLE_TRY(mRenderer->allocateResource(rtvDesc, texture, &rtv));
             rtv.setDebugName("TexStorage3D.RTV");
 
             mLevelRenderTargets[mipLevel] = new TextureRenderTarget11(
-                std::move(rtv), texture, srv, blitSRV, mFormatInfo.internalFormat, getFormatSet(),
+                std::move(rtv), texture, *srv, *blitSRV, mFormatInfo.internalFormat, getFormatSet(),
                 getLevelWidth(mipLevel), getLevelHeight(mipLevel), getLevelDepth(mipLevel), 0);
         }
 
@@ -2608,8 +2485,8 @@ gl::Error TextureStorage11_3D::getRenderTarget(const gl::ImageIndex &index, Rend
         ANGLE_TRY(getResource(&texture));
 
         // TODO, what kind of SRV is expected here?
-        ID3D11ShaderResourceView *srv     = nullptr;
-        ID3D11ShaderResourceView *blitSRV = nullptr;
+        const d3d11::SharedSRV srv;
+        const d3d11::SharedSRV blitSRV;
 
         D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
         rtvDesc.Format                = mFormatInfo.rtvFormat;
@@ -2619,14 +2496,7 @@ gl::Error TextureStorage11_3D::getRenderTarget(const gl::ImageIndex &index, Rend
         rtvDesc.Texture3D.WSize       = 1;
 
         d3d11::RenderTargetView rtv;
-        gl::Error err = mRenderer->allocateResource(rtvDesc, texture, &rtv);
-        if (err.isError())
-        {
-            SafeRelease(srv);
-            SafeRelease(blitSRV);
-            return err;
-        }
-
+        ANGLE_TRY(mRenderer->allocateResource(rtvDesc, texture, &rtv));
         rtv.setDebugName("TexStorage3D.LayerRTV");
 
         mLevelLayerRenderTargets[key] = new TextureRenderTarget11(
@@ -2875,7 +2745,7 @@ gl::Error TextureStorage11_2DArray::createSRV(int baseLevel,
                                               int mipLevels,
                                               DXGI_FORMAT format,
                                               ID3D11Resource *texture,
-                                              ID3D11ShaderResourceView **outSRV) const
+                                              d3d11::SharedSRV *outSRV) const
 {
     D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
     srvDesc.Format                         = format;
@@ -2885,17 +2755,8 @@ gl::Error TextureStorage11_2DArray::createSRV(int baseLevel,
     srvDesc.Texture2DArray.FirstArraySlice = 0;
     srvDesc.Texture2DArray.ArraySize       = mTextureDepth;
 
-    ID3D11Device *device = mRenderer->getDevice();
-    HRESULT result       = device->CreateShaderResourceView(texture, &srvDesc, outSRV);
-
-    ASSERT(result == E_OUTOFMEMORY || SUCCEEDED(result));
-    if (FAILED(result))
-    {
-        return gl::Error(GL_OUT_OF_MEMORY,
-                         "Failed to create internal texture storage SRV, result: 0x%X.", result);
-    }
-
-    d3d11::SetDebugName(*outSRV, "TexStorage2DArray.SRV");
+    ANGLE_TRY(mRenderer->allocateResource(srvDesc, texture, outSRV));
+    outSRV->setDebugName("TexStorage2DArray.SRV");
 
     return gl::NoError();
 }
@@ -2903,9 +2764,8 @@ gl::Error TextureStorage11_2DArray::createSRV(int baseLevel,
 gl::Error TextureStorage11_2DArray::createRenderTargetSRV(ID3D11Resource *texture,
                                                           const gl::ImageIndex &index,
                                                           DXGI_FORMAT resourceFormat,
-                                                          ID3D11ShaderResourceView **srv) const
+                                                          d3d11::SharedSRV *srv) const
 {
-    ID3D11Device *device = mRenderer->getDevice();
     D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
     srvDesc.Format                         = resourceFormat;
     srvDesc.ViewDimension                  = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
@@ -2914,16 +2774,7 @@ gl::Error TextureStorage11_2DArray::createRenderTargetSRV(ID3D11Resource *textur
     srvDesc.Texture2DArray.FirstArraySlice = index.layerIndex;
     srvDesc.Texture2DArray.ArraySize       = 1;
 
-    HRESULT result = device->CreateShaderResourceView(texture, &srvDesc, srv);
-
-    ASSERT(result == E_OUTOFMEMORY || SUCCEEDED(result));
-    if (FAILED(result))
-    {
-        return gl::Error(
-            GL_OUT_OF_MEMORY,
-            "Failed to create internal shader resource view for texture storage, result: 0x%X.",
-            result);
-    }
+    ANGLE_TRY(mRenderer->allocateResource(srvDesc, texture, srv));
 
     return gl::NoError();
 }
@@ -2943,26 +2794,19 @@ gl::Error TextureStorage11_2DArray::getRenderTarget(const gl::ImageIndex &index,
     {
         ID3D11Resource *texture = nullptr;
         ANGLE_TRY(getResource(&texture));
-        ID3D11ShaderResourceView *srv;
+        d3d11::SharedSRV srv;
         ANGLE_TRY(createRenderTargetSRV(texture, index, mFormatInfo.srvFormat, &srv));
-        ID3D11ShaderResourceView *blitSRV;
+        d3d11::SharedSRV blitSRV;
         if (mFormatInfo.blitSRVFormat != mFormatInfo.srvFormat)
         {
-            gl::Error error =
-                createRenderTargetSRV(texture, index, mFormatInfo.blitSRVFormat, &blitSRV);
-            if (error.isError())
-            {
-                SafeRelease(srv);
-                return error;
-            }
+            ANGLE_TRY(createRenderTargetSRV(texture, index, mFormatInfo.blitSRVFormat, &blitSRV));
         }
         else
         {
             blitSRV = srv;
-            blitSRV->AddRef();
         }
 
-        d3d11::SetDebugName(srv, "TexStorage2DArray.RenderTargetSRV");
+        srv.setDebugName("TexStorage2DArray.RenderTargetSRV");
 
         if (mFormatInfo.rtvFormat != DXGI_FORMAT_UNKNOWN)
         {
@@ -2974,23 +2818,12 @@ gl::Error TextureStorage11_2DArray::getRenderTarget(const gl::ImageIndex &index,
             rtvDesc.Texture2DArray.ArraySize       = 1;
 
             d3d11::RenderTargetView rtv;
-            gl::Error err = mRenderer->allocateResource(rtvDesc, texture, &rtv);
-            if (err.isError())
-            {
-                SafeRelease(srv);
-                SafeRelease(blitSRV);
-                return err;
-            }
-
+            ANGLE_TRY(mRenderer->allocateResource(rtvDesc, texture, &rtv));
             rtv.setDebugName("TexStorage2DArray.RenderTargetRTV");
 
             mRenderTargets[key] = new TextureRenderTarget11(
                 std::move(rtv), texture, srv, blitSRV, mFormatInfo.internalFormat, getFormatSet(),
                 getLevelWidth(mipLevel), getLevelHeight(mipLevel), 1, 0);
-
-            // RenderTarget will take ownership of these resources
-            SafeRelease(srv);
-            SafeRelease(blitSRV);
         }
         else
         {
@@ -3005,23 +2838,12 @@ gl::Error TextureStorage11_2DArray::getRenderTarget(const gl::ImageIndex &index,
             dsvDesc.Flags                          = 0;
 
             d3d11::DepthStencilView dsv;
-            gl::Error err = mRenderer->allocateResource(dsvDesc, texture, &dsv);
-            if (err.isError())
-            {
-                SafeRelease(srv);
-                SafeRelease(blitSRV);
-                return err;
-            }
-
+            ANGLE_TRY(mRenderer->allocateResource(dsvDesc, texture, &dsv));
             dsv.setDebugName("TexStorage2DArray.RenderTargetDSV");
 
             mRenderTargets[key] = new TextureRenderTarget11(
                 std::move(dsv), texture, srv, mFormatInfo.internalFormat, getFormatSet(),
                 getLevelWidth(mipLevel), getLevelHeight(mipLevel), 1, 0);
-
-            // RenderTarget will take ownership of these resources
-            SafeRelease(srv);
-            SafeRelease(blitSRV);
         }
     }
 

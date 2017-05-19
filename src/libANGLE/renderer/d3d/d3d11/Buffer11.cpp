@@ -172,7 +172,7 @@ class Buffer11::NativeStorage : public Buffer11::BufferStorage
 
     ID3D11Buffer *mNativeStorage;
     const OnBufferDataDirtyChannel *mOnStorageChanged;
-    std::map<DXGI_FORMAT, ID3D11ShaderResourceView *> mBufferResourceViews;
+    std::map<DXGI_FORMAT, d3d11::ShaderResourceView> mBufferResourceViews;
 };
 
 // A emulated indexed buffer storage represents an underlying D3D11 buffer for data
@@ -1181,11 +1181,8 @@ gl::ErrorOrResult<ID3D11ShaderResourceView *> Buffer11::NativeStorage::getSRVFor
 
     if (bufferSRVIt != mBufferResourceViews.end())
     {
-        return bufferSRVIt->second;
+        return bufferSRVIt->second.get();
     }
-
-    ID3D11Device *device                = mRenderer->getDevice();
-    ID3D11ShaderResourceView *bufferSRV = nullptr;
 
     const d3d11::DXGIFormatSize &dxgiFormatInfo = d3d11::GetDXGIFormatSizeInfo(srvFormat);
 
@@ -1195,25 +1192,14 @@ gl::ErrorOrResult<ID3D11ShaderResourceView *> Buffer11::NativeStorage::getSRVFor
     bufferSRVDesc.ViewDimension        = D3D11_SRV_DIMENSION_BUFFER;
     bufferSRVDesc.Format               = srvFormat;
 
-    HRESULT result = device->CreateShaderResourceView(mNativeStorage, &bufferSRVDesc, &bufferSRV);
-    ASSERT(SUCCEEDED(result));
-    if (FAILED(result))
-    {
-        return gl::Error(GL_OUT_OF_MEMORY,
-                         "Error creating buffer SRV in Buffer11::NativeStorage::getSRVForFormat");
-    }
+    ANGLE_TRY(mRenderer->allocateResource(bufferSRVDesc, mNativeStorage,
+                                          &mBufferResourceViews[srvFormat]));
 
-    mBufferResourceViews[srvFormat] = bufferSRV;
-
-    return bufferSRV;
+    return mBufferResourceViews[srvFormat].get();
 }
 
 void Buffer11::NativeStorage::clearSRVs()
 {
-    for (auto &srv : mBufferResourceViews)
-    {
-        SafeRelease(srv.second);
-    }
     mBufferResourceViews.clear();
 }
 

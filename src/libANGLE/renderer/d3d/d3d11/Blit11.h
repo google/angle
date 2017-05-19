@@ -27,12 +27,12 @@ class Blit11 : angle::NonCopyable
     explicit Blit11(Renderer11 *renderer);
     ~Blit11();
 
-    gl::Error swizzleTexture(ID3D11ShaderResourceView *source,
+    gl::Error swizzleTexture(const d3d11::SharedSRV &source,
                              const d3d11::RenderTargetView &dest,
                              const gl::Extents &size,
                              const gl::SwizzleState &swizzleTarget);
 
-    gl::Error copyTexture(ID3D11ShaderResourceView *source,
+    gl::Error copyTexture(const d3d11::SharedSRV &source,
                           const gl::Box &sourceArea,
                           const gl::Extents &sourceSize,
                           const d3d11::RenderTargetView &dest,
@@ -55,7 +55,7 @@ class Blit11 : angle::NonCopyable
                           const gl::Extents &destSize,
                           const gl::Rectangle *scissor);
 
-    gl::Error copyDepth(ID3D11ShaderResourceView *source,
+    gl::Error copyDepth(const d3d11::SharedSRV &source,
                         const gl::Box &sourceArea,
                         const gl::Extents &sourceSize,
                         const d3d11::DepthStencilView &dest,
@@ -286,7 +286,7 @@ class Blit11 : angle::NonCopyable
     d3d11::LazyShader<ID3D11PixelShader> mResolveDepthPS;
     d3d11::LazyShader<ID3D11PixelShader> mResolveDepthStencilPS;
     d3d11::LazyShader<ID3D11PixelShader> mResolveStencilPS;
-    angle::ComPtr<ID3D11ShaderResourceView> mStencilSRV;
+    d3d11::ShaderResourceView mStencilSRV;
     TextureHelper11 mResolvedDepthStencil;
     d3d11::RenderTargetView mResolvedDepthStencilRTView;
     TextureHelper11 mResolvedDepth;

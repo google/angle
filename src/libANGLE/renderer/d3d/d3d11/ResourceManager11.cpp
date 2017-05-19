@@ -26,9 +26,9 @@ size_t ComputeMemoryUsage(const T *desc)
 HRESULT CreateResource(ID3D11Device *device,
                        const D3D11_DEPTH_STENCIL_VIEW_DESC *desc,
                        ID3D11Resource *resource,
-                       ID3D11DepthStencilView **depthStencilView)
+                       ID3D11DepthStencilView **resourceOut)
 {
-    return device->CreateDepthStencilView(resource, desc, depthStencilView);
+    return device->CreateDepthStencilView(resource, desc, resourceOut);
 }
 
 HRESULT CreateResource(ID3D11Device *device,
@@ -37,6 +37,14 @@ HRESULT CreateResource(ID3D11Device *device,
                        ID3D11RenderTargetView **renderTargetView)
 {
     return device->CreateRenderTargetView(resource, desc, renderTargetView);
+}
+
+HRESULT CreateResource(ID3D11Device *device,
+                       const D3D11_SHADER_RESOURCE_VIEW_DESC *desc,
+                       ID3D11Resource *resource,
+                       ID3D11ShaderResourceView **resourceOut)
+{
+    return device->CreateShaderResourceView(resource, desc, resourceOut);
 }
 
 #define ANGLE_RESOURCE_STRINGIFY_OP(NAME, RESTYPE, D3D11TYPE, DESCTYPE, INITDATATYPE) #RESTYPE
