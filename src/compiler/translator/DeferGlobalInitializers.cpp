@@ -3,11 +3,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// DeferGlobalInitializers is an AST traverser that moves global initializers into a function, and
-// adds a function call to that function in the beginning of main().
-// This enables initialization of globals with uniforms or non-constant globals, as allowed by
-// the WebGL spec. Some initializers referencing non-constants may need to be unfolded into if
-// statements in HLSL - this kind of steps should be done after DeferGlobalInitializers is run.
+// DeferGlobalInitializers is an AST traverser that moves global initializers into a block in the
+// beginning of main(). This enables initialization of globals with uniforms or non-constant
+// globals, as allowed by the WebGL spec. Some initializers referencing non-constants may need to be
+// unfolded into if statements in HLSL - this kind of steps should be done after
+// DeferGlobalInitializers is run.
 //
 
 #include "compiler/translator/DeferGlobalInitializers.h"
@@ -80,34 +80,17 @@ void GetDeferredInitializers(TIntermDeclaration *declaration,
     }
 }
 
-void InsertInitFunction(TIntermBlock *root, TIntermSequence *deferredInitializers)
+void InsertInitCodeToMain(TIntermBlock *root, TIntermSequence *deferredInitializers)
 {
-    TSymbolUniqueId initFunctionId;
-    const char *functionName = "initializeGlobals";
+    // Insert init code as a block to the beginning of the main() function.
+    TIntermBlock *initGlobalsBlock = new TIntermBlock();
+    initGlobalsBlock->getSequence()->swap(*deferredInitializers);
 
-    // Add function prototype to the beginning of the shader
-    TIntermFunctionPrototype *functionPrototypeNode =
-        TIntermTraverser::CreateInternalFunctionPrototypeNode(TType(EbtVoid), functionName,
-                                                              initFunctionId);
-    root->getSequence()->insert(root->getSequence()->begin(), functionPrototypeNode);
-
-    // Add function definition to the end of the shader
-    TIntermBlock *functionBodyNode = new TIntermBlock();
-    functionBodyNode->getSequence()->swap(*deferredInitializers);
-    TIntermFunctionDefinition *functionDefinition =
-        TIntermTraverser::CreateInternalFunctionDefinitionNode(TType(EbtVoid), functionName,
-                                                               functionBodyNode, initFunctionId);
-    root->getSequence()->push_back(functionDefinition);
-
-    // Insert call into main function
     TIntermFunctionDefinition *main = FindMain(root);
     ASSERT(main != nullptr);
-    TIntermAggregate *functionCallNode = TIntermTraverser::CreateInternalFunctionCallNode(
-        TType(EbtVoid), functionName, initFunctionId, nullptr);
-
     TIntermBlock *mainBody = main->getBody();
     ASSERT(mainBody != nullptr);
-    mainBody->getSequence()->insert(mainBody->getSequence()->begin(), functionCallNode);
+    mainBody->getSequence()->insert(mainBody->getSequence()->begin(), initGlobalsBlock);
 }
 
 }  // namespace
@@ -130,7 +113,7 @@ void DeferGlobalInitializers(TIntermBlock *root)
     // Add the function with initialization and the call to that.
     if (!deferredInitializers->empty())
     {
-        InsertInitFunction(root, deferredInitializers);
+        InsertInitCodeToMain(root, deferredInitializers);
     }
 }
 
