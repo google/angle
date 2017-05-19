@@ -9,6 +9,8 @@
 // unfolded into if statements in HLSL - this kind of steps should be done after
 // DeferGlobalInitializers is run.
 //
+// It can also initialize all uninitialized globals.
+//
 
 #ifndef COMPILER_TRANSLATOR_DEFERGLOBALINITIALIZERS_H_
 #define COMPILER_TRANSLATOR_DEFERGLOBALINITIALIZERS_H_
@@ -17,7 +19,7 @@ class TIntermBlock;
 
 namespace sh
 {
-void DeferGlobalInitializers(TIntermBlock *root);
+void DeferGlobalInitializers(TIntermBlock *root, bool initializeUninitializedGlobals);
 }  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_DEFERGLOBALINITIALIZERS_H_

@@ -172,6 +172,7 @@ class TCompiler : public TShHandleBase
 
     virtual bool shouldFlattenPragmaStdglInvariantAll() = 0;
     virtual bool shouldCollectVariables(ShCompileOptions compileOptions);
+    virtual bool needToInitializeGlobalsInAST() const { return IsWebGLBasedSpec(shaderSpec); }
 
     bool wereVariablesCollected() const;
     std::vector<sh::Attribute> attributes;

@@ -9,10 +9,13 @@
 // unfolded into if statements in HLSL - this kind of steps should be done after
 // DeferGlobalInitializers is run.
 //
+// It can also initialize all uninitialized globals.
+//
 
 #include "compiler/translator/DeferGlobalInitializers.h"
 
 #include "compiler/translator/FindMain.h"
+#include "compiler/translator/InitializeVariables.h"
 #include "compiler/translator/IntermNode.h"
 #include "compiler/translator/SymbolTable.h"
 
@@ -23,6 +26,7 @@ namespace
 {
 
 void GetDeferredInitializers(TIntermDeclaration *declaration,
+                             bool initializeUninitializedGlobals,
                              TIntermSequence *deferredInitializersOut)
 {
     // We iterate with an index instead of using an iterator since we're replacing the children of
@@ -77,6 +81,17 @@ void GetDeferredInitializers(TIntermDeclaration *declaration,
                 declaration->replaceChildNode(init, symbolNode);
             }
         }
+        else if (initializeUninitializedGlobals)
+        {
+            TIntermSymbol *symbolNode = declarator->getAsSymbolNode();
+            ASSERT(symbolNode);
+            if (symbolNode->getQualifier() == EvqGlobal && symbolNode->getSymbol() != "")
+            {
+                TIntermSequence *initCode = CreateInitCode(symbolNode);
+                deferredInitializersOut->insert(deferredInitializersOut->end(), initCode->begin(),
+                                                initCode->end());
+            }
+        }
     }
 }
 
@@ -95,18 +110,19 @@ void InsertInitCodeToMain(TIntermBlock *root, TIntermSequence *deferredInitializ
 
 }  // namespace
 
-void DeferGlobalInitializers(TIntermBlock *root)
+void DeferGlobalInitializers(TIntermBlock *root, bool initializeUninitializedGlobals)
 {
     TIntermSequence *deferredInitializers = new TIntermSequence();
 
     // Loop over all global statements and process the declarations. This is simpler than using a
     // traverser.
-    for (TIntermNode *declaration : *root->getSequence())
+    for (TIntermNode *statement : *root->getSequence())
     {
-        TIntermDeclaration *asVariableDeclaration = declaration->getAsDeclarationNode();
-        if (asVariableDeclaration)
+        TIntermDeclaration *declaration = statement->getAsDeclarationNode();
+        if (declaration)
         {
-            GetDeferredInitializers(asVariableDeclaration, deferredInitializers);
+            GetDeferredInitializers(declaration, initializeUninitializedGlobals,
+                                    deferredInitializers);
         }
     }
 
