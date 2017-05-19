@@ -796,7 +796,7 @@ void Renderer11::initializeDevice()
     populateRenderer11DeviceCaps();
 
     mStateCache.initialize(mDevice);
-    mInputLayoutCache.initialize(mDevice, mDeviceContext);
+    mInputLayoutCache.initialize();
 
     ASSERT(!mVertexDataManager && !mIndexDataManager);
     mVertexDataManager = new VertexDataManager(this);
@@ -1811,8 +1811,9 @@ gl::Error Renderer11::applyVertexBuffer(const gl::State &state,
     }
     const auto &vertexArrayAttribs  = vertexArray11->getTranslatedAttribs();
     const auto &currentValueAttribs = mStateManager.getCurrentValueAttribs();
-    ANGLE_TRY(mInputLayoutCache.applyVertexBuffers(state, vertexArrayAttribs, currentValueAttribs,
-                                                   mode, first, indexInfo, numIndicesPerInstance));
+    ANGLE_TRY(mInputLayoutCache.applyVertexBuffers(this, state, vertexArrayAttribs,
+                                                   currentValueAttribs, mode, first, indexInfo,
+                                                   numIndicesPerInstance));
 
     // InputLayoutCache::applyVertexBuffers calls through to the Bufer11 to get the native vertex
     // buffer (ID3D11Buffer *). Because we allocate these buffers lazily, this will trigger
@@ -1994,8 +1995,8 @@ gl::Error Renderer11::drawArraysImpl(const gl::ContextState &data,
             // offsets.
             for (GLsizei i = 0; i < instances; i++)
             {
-                ANGLE_TRY(
-                    mInputLayoutCache.updateVertexOffsetsForPointSpritesEmulation(startVertex, i));
+                ANGLE_TRY(mInputLayoutCache.updateVertexOffsetsForPointSpritesEmulation(
+                    this, startVertex, i));
                 mDeviceContext->DrawIndexedInstanced(6, count, 0, 0, 0);
             }
         }
@@ -2057,8 +2058,8 @@ gl::Error Renderer11::drawElementsImpl(const gl::ContextState &data,
             // offsets.
             for (GLsizei i = 0; i < instances; i++)
             {
-                ANGLE_TRY(
-                    mInputLayoutCache.updateVertexOffsetsForPointSpritesEmulation(startVertex, i));
+                ANGLE_TRY(mInputLayoutCache.updateVertexOffsetsForPointSpritesEmulation(
+                    this, startVertex, i));
                 mDeviceContext->DrawIndexedInstanced(6, elementsToRender, 0, 0, 0);
             }
         }
