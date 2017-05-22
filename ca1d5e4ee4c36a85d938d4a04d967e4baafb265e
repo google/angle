@@ -139,6 +139,24 @@
       "revId": "ca1d5e4ee4c36a85d938d4a04d967e4baafb265e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eef7e38b_5d46e8df",
+        "filename": "src/compiler/translator/InitializeVariables.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-22T22:45:42Z",
+      "side": 1,
+      "message": "No problem leaving it as is for now.",
+      "parentUuid": "fdfda78e_66015e80",
+      "revId": "ca1d5e4ee4c36a85d938d4a04d967e4baafb265e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
