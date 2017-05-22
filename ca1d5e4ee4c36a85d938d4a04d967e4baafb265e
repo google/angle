@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5d8e2678_047f7547",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-22T13:02:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3bbdc468_58fed6cc",
+      "revId": "ca1d5e4ee4c36a85d938d4a04d967e4baafb265e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7aaf4b19_37eba815",
         "filename": "src/compiler/translator/InitializeVariables.cpp",
         "patchSetId": 11
@@ -33,6 +51,24 @@
       "revId": "ca1d5e4ee4c36a85d938d4a04d967e4baafb265e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7aaea94_0a343a59",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-22T13:02:27Z",
+      "side": 1,
+      "message": "Done. This actually made me notice one bug, the code was not creating a copy of the initializedSymbol node in one case where it should have. Now it\u0027s a bit suboptimal since it creates some extra copies of nodes, but I don\u0027t think there\u0027s a way to optimize it without also making the code less maintainable.",
+      "parentUuid": "7aaf4b19_37eba815",
+      "revId": "ca1d5e4ee4c36a85d938d4a04d967e4baafb265e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "3ad66a3b_844349f8",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-22T13:02:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2f8fb8e5_f8834ea6",
+      "revId": "ca1d5e4ee4c36a85d938d4a04d967e4baafb265e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6e8ca37f_58ccfbb4",
         "filename": "src/compiler/translator/InitializeVariables.h",
         "patchSetId": 11
@@ -64,6 +118,24 @@
       "writtenOn": "2017-05-22T10:17:20Z",
       "side": 1,
       "message": "nit: this isn\u0027t used outside of InitializeVariables.cpp yet but I assume it will be in follow up CLs?",
+      "revId": "ca1d5e4ee4c36a85d938d4a04d967e4baafb265e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fdfda78e_66015e80",
+        "filename": "src/compiler/translator/InitializeVariables.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-22T13:02:27Z",
+      "side": 1,
+      "message": "Yes, you\u0027re right. I can clean it up in this CL if needed, but would rather leave it as it is.",
+      "parentUuid": "6e8ca37f_58ccfbb4",
       "revId": "ca1d5e4ee4c36a85d938d4a04d967e4baafb265e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
