@@ -217,7 +217,7 @@ class InstancingTest : public ANGLETest
         ANGLE_GL_PROGRAM(program, vs, fs);
 
         // Get the attribute locations
-        GLint positionLoc = glGetAttribLocation(program, "a_position");
+        GLint positionLoc    = glGetAttribLocation(program, "a_position");
         GLint instancePosLoc = glGetAttribLocation(program, "a_instancePos");
 
         // If this ASSERT fails then the vertex shader code should be refactored
@@ -446,6 +446,102 @@ TEST_P(InstancingTestPoints, DrawElements)
     checkQuads();
 }
 
+class InstancingTestES31 : public InstancingTest
+{
+  public:
+    InstancingTestES31() {}
+};
+
+// Verify that VertexAttribDivisor can update both binding divisor and attribBinding.
+TEST_P(InstancingTestES31, UpdateAttribBindingByVertexAttribDivisor)
+{
+    const std::string vs =
+        "attribute vec3 a_instancePos;\n"
+        "attribute vec3 a_position;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(a_position.xyz + a_instancePos.xyz, 1.0);\n"
+        "}\n";
+
+    const std::string fs =
+        "precision mediump float;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vec4(1.0, 0, 0, 1.0);\n"
+        "}\n";
+
+    constexpr GLsizei kFloatStride = 4;
+
+    ANGLE_GL_PROGRAM(program, vs, fs);
+    glUseProgram(program);
+
+    // Get the attribute locations
+    GLint positionLoc    = glGetAttribLocation(program, "a_position");
+    GLint instancePosLoc = glGetAttribLocation(program, "a_instancePos");
+    ASSERT_NE(-1, positionLoc);
+    ASSERT_NE(-1, instancePosLoc);
+    ASSERT_GL_NO_ERROR();
+
+    GLuint vao;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+
+    GLBuffer quadBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, quadBuffer);
+    glBufferData(GL_ARRAY_BUFFER, mQuadVertices.size() * kFloatStride, mQuadVertices.data(),
+                 GL_STATIC_DRAW);
+    GLBuffer instancesBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, instancesBuffer);
+    glBufferData(GL_ARRAY_BUFFER, mInstances.size() * kFloatStride, mInstances.data(),
+                 GL_STATIC_DRAW);
+
+    // Set the formats by VertexAttribFormat
+    glVertexAttribFormat(positionLoc, 3, GL_FLOAT, GL_FALSE, 0);
+    glVertexAttribFormat(instancePosLoc, 3, GL_FLOAT, GL_FALSE, 0);
+    glEnableVertexAttribArray(positionLoc);
+    glEnableVertexAttribArray(instancePosLoc);
+
+    const GLint positionBinding = instancePosLoc;
+    const GLint instanceBinding = positionLoc;
+
+    // Load the vertex position into the binding indexed positionBinding (== instancePosLoc)
+    // Load the instance position into the binding indexed instanceBinding (== positionLoc)
+    glBindVertexBuffer(positionBinding, quadBuffer, 0, kFloatStride * 3);
+    glBindVertexBuffer(instanceBinding, instancesBuffer, 0, kFloatStride * 3);
+
+    // The attribute indexed positionLoc is using the binding indexed positionBinding
+    // The attribute indexed instancePosLoc is using the binding indexed instanceBinding
+    glVertexAttribBinding(positionLoc, positionBinding);
+    glVertexAttribBinding(instancePosLoc, instanceBinding);
+
+    // Enable instancing on the binding indexed instanceBinding
+    glVertexBindingDivisor(instanceBinding, 1);
+
+    // Do the first instanced draw
+    glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(mIndices.size()), GL_UNSIGNED_SHORT,
+                            mIndices.data(), static_cast<GLsizei>(mInstances.size()) / 3);
+    checkQuads();
+
+    // Load the vertex position into the binding indexed positionLoc.
+    // Load the instance position into the binding indexed instancePosLoc.
+    glBindVertexBuffer(positionLoc, quadBuffer, 0, kFloatStride * 3);
+    glBindVertexBuffer(instancePosLoc, instancesBuffer, 0, kFloatStride * 3);
+
+    // The attribute indexed positionLoc is using the binding indexed positionLoc.
+    glVertexAttribBinding(positionLoc, positionLoc);
+
+    // Call VertexAttribDivisor to both enable instancing on instancePosLoc and set the attribute
+    // indexed instancePosLoc using the binding indexed instancePosLoc.
+    glVertexAttribDivisor(instancePosLoc, 1);
+
+    // Do the second instanced draw
+    glDrawElementsInstanced(GL_TRIANGLES, static_cast<GLsizei>(mIndices.size()), GL_UNSIGNED_SHORT,
+                            mIndices.data(), static_cast<GLsizei>(mInstances.size()) / 3);
+    checkQuads();
+
+    glDeleteVertexArrays(1, &vao);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against. We test on D3D9 and D3D11 9_3 because they use special codepaths
 // when attribute zero is instanced, unlike D3D11.
@@ -460,3 +556,7 @@ ANGLE_INSTANTIATE_TEST(InstancingTestAllConfigs,
 ANGLE_INSTANTIATE_TEST(InstancingTestNo9_3, ES2_D3D9(), ES2_D3D11());
 
 ANGLE_INSTANTIATE_TEST(InstancingTestPoints, ES2_D3D11(), ES2_D3D11_FL9_3());
+
+// TODO(jiawei.shao@intel.com): Add D3D11 when Vertex Attrib Binding is supported on D3D11
+// back-ends.
+ANGLE_INSTANTIATE_TEST(InstancingTestES31, ES31_OPENGL(), ES31_OPENGLES());

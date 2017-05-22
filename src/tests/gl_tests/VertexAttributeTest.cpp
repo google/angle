@@ -141,7 +141,26 @@ class VertexAttributeTest : public ANGLETest
         EXPECT_PIXEL_EQ(midPixelX, (midPixelY + viewportSize[3]) / 2, 255, 255, 255, 255);
     }
 
-    void runTest(const TestData &test)
+    void checkPixelsUnEqual()
+    {
+        GLint viewportSize[4];
+        glGetIntegerv(GL_VIEWPORT, viewportSize);
+
+        GLint midPixelX = (viewportSize[0] + viewportSize[2]) / 2;
+        GLint midPixelY = (viewportSize[1] + viewportSize[3]) / 2;
+
+        // We need to offset our checks from triangle edges to ensure we don't fall on a single tri
+        // Avoid making assumptions of drawQuad with four checks to check the four possible tri
+        // regions
+        EXPECT_PIXEL_NE((midPixelX + viewportSize[0]) / 2, midPixelY, 255, 255, 255, 255);
+        EXPECT_PIXEL_NE((midPixelX + viewportSize[2]) / 2, midPixelY, 255, 255, 255, 255);
+        EXPECT_PIXEL_NE(midPixelX, (midPixelY + viewportSize[1]) / 2, 255, 255, 255, 255);
+        EXPECT_PIXEL_NE(midPixelX, (midPixelY + viewportSize[3]) / 2, 255, 255, 255, 255);
+    }
+
+    void runTest(const TestData &test) { runTest(test, true); }
+
+    void runTest(const TestData &test, bool checkPixelEqual)
     {
         // TODO(geofflang): Figure out why this is broken on AMD OpenGL
         if (IsAMD() && getPlatformRenderer() == EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE)
@@ -160,7 +179,14 @@ class VertexAttributeTest : public ANGLETest
             glDisableVertexAttribArray(mTestAttrib);
             glDisableVertexAttribArray(mExpectedAttrib);
 
-            checkPixels();
+            if (checkPixelEqual)
+            {
+                checkPixels();
+            }
+            else
+            {
+                checkPixelsUnEqual();
+            }
         }
     }
 
@@ -394,6 +420,136 @@ TEST_P(VertexAttributeTest, ShortNormalized)
 
     TestData data(GL_SHORT, GL_TRUE, Source::IMMEDIATE, inputData.data(), expectedData.data());
     runTest(data);
+}
+
+// Verify that using the same client memory pointer in different format won't mess up the draw.
+TEST_P(VertexAttributeTest, UsingDifferentFormatAndSameClientMemoryPointer)
+{
+    std::array<GLshort, kVertexCount> inputData = {
+        {0, 1, 2, 3, -1, -2, -3, -4, 32766, 32767, -32768, -32767, -32766}};
+
+    std::array<GLfloat, kVertexCount> unnormalizedExpectedData;
+    for (size_t i = 0; i < kVertexCount; i++)
+    {
+        unnormalizedExpectedData[i] = inputData[i];
+    }
+
+    TestData unnormalizedData(GL_SHORT, GL_FALSE, Source::IMMEDIATE, inputData.data(),
+                              unnormalizedExpectedData.data());
+    runTest(unnormalizedData);
+
+    std::array<GLfloat, kVertexCount> normalizedExpectedData;
+    for (size_t i = 0; i < kVertexCount; i++)
+    {
+        inputData[i]              = -inputData[i];
+        normalizedExpectedData[i] = Normalize(inputData[i]);
+    }
+
+    TestData normalizedData(GL_SHORT, GL_TRUE, Source::IMMEDIATE, inputData.data(),
+                            normalizedExpectedData.data());
+    runTest(normalizedData);
+}
+
+// Verify that vertex format is updated correctly when the client memory pointer is same.
+TEST_P(VertexAttributeTest, NegativeUsingDifferentFormatAndSameClientMemoryPointer)
+{
+    std::array<GLshort, kVertexCount> inputData = {
+        {0, 1, 2, 3, -1, -2, -3, -4, 32766, 32767, -32768, -32767, -32766}};
+
+    std::array<GLfloat, kVertexCount> unnormalizedExpectedData;
+    for (size_t i = 0; i < kVertexCount; i++)
+    {
+        unnormalizedExpectedData[i] = inputData[i];
+    }
+
+    // Use unnormalized short as the format of the data in client memory pointer in the first draw.
+    TestData unnormalizedData(GL_SHORT, GL_FALSE, Source::IMMEDIATE, inputData.data(),
+                              unnormalizedExpectedData.data());
+    runTest(unnormalizedData);
+
+    // Use normalized short as the format of the data in client memory pointer in the second draw,
+    // but mExpectedAttrib is the same as the first draw.
+    TestData normalizedData(GL_SHORT, GL_TRUE, Source::IMMEDIATE, inputData.data(),
+                            unnormalizedExpectedData.data());
+    runTest(normalizedData, false);
+}
+
+// Verify that using different vertex format and same buffer won't mess up the draw.
+TEST_P(VertexAttributeTest, UsingDifferentFormatAndSameBuffer)
+{
+    std::array<GLshort, kVertexCount> inputData = {
+        {0, 1, 2, 3, -1, -2, -3, -4, 32766, 32767, -32768, -32767, -32766}};
+
+    std::array<GLfloat, kVertexCount> unnormalizedExpectedData;
+    std::array<GLfloat, kVertexCount> normalizedExpectedData;
+    for (size_t i = 0; i < kVertexCount; i++)
+    {
+        unnormalizedExpectedData[i] = inputData[i];
+        normalizedExpectedData[i]   = Normalize(inputData[i]);
+    }
+
+    // Use unnormalized short as the format of the data in mBuffer in the first draw.
+    TestData unnormalizedData(GL_SHORT, GL_FALSE, Source::BUFFER, inputData.data(),
+                              unnormalizedExpectedData.data());
+    runTest(unnormalizedData);
+
+    // Use normalized short as the format of the data in mBuffer in the second draw.
+    TestData normalizedData(GL_SHORT, GL_TRUE, Source::BUFFER, inputData.data(),
+                            normalizedExpectedData.data());
+    runTest(normalizedData);
+}
+
+// Verify that vertex format is updated correctly when the buffer is same.
+TEST_P(VertexAttributeTest, NegativeUsingDifferentFormatAndSameBuffer)
+{
+    std::array<GLshort, kVertexCount> inputData = {
+        {0, 1, 2, 3, -1, -2, -3, -4, 32766, 32767, -32768, -32767, -32766}};
+
+    std::array<GLfloat, kVertexCount> unnormalizedExpectedData;
+    for (size_t i = 0; i < kVertexCount; i++)
+    {
+        unnormalizedExpectedData[i] = inputData[i];
+    }
+
+    // Use unnormalized short as the format of the data in mBuffer in the first draw.
+    TestData unnormalizedData(GL_SHORT, GL_FALSE, Source::BUFFER, inputData.data(),
+                              unnormalizedExpectedData.data());
+    runTest(unnormalizedData);
+
+    // Use normalized short as the format of the data in mBuffer in the second draw, but
+    // mExpectedAttrib is the same as the first draw.
+    TestData normalizedData(GL_SHORT, GL_TRUE, Source::BUFFER, inputData.data(),
+                            unnormalizedExpectedData.data());
+
+    // The check should fail because the test data is changed while the expected data is the same.
+    runTest(normalizedData, false);
+}
+
+// Verify that mixed using buffer and client memory pointer won't mess up the draw.
+TEST_P(VertexAttributeTest, MixedUsingBufferAndClientMemoryPointer)
+{
+    std::array<GLshort, kVertexCount> inputData = {
+        {0, 1, 2, 3, -1, -2, -3, -4, 32766, 32767, -32768, -32767, -32766}};
+
+    std::array<GLfloat, kVertexCount> unnormalizedExpectedData;
+    std::array<GLfloat, kVertexCount> normalizedExpectedData;
+    for (size_t i = 0; i < kVertexCount; i++)
+    {
+        unnormalizedExpectedData[i] = inputData[i];
+        normalizedExpectedData[i]   = Normalize(inputData[i]);
+    }
+
+    TestData unnormalizedData(GL_SHORT, GL_FALSE, Source::IMMEDIATE, inputData.data(),
+                              unnormalizedExpectedData.data());
+    runTest(unnormalizedData);
+
+    TestData unnormalizedBufferData(GL_SHORT, GL_FALSE, Source::BUFFER, inputData.data(),
+                                    unnormalizedExpectedData.data());
+    runTest(unnormalizedBufferData);
+
+    TestData normalizedData(GL_SHORT, GL_TRUE, Source::IMMEDIATE, inputData.data(),
+                            normalizedExpectedData.data());
+    runTest(normalizedData);
 }
 
 class VertexAttributeTestES3 : public VertexAttributeTest
@@ -709,42 +865,66 @@ class VertexAttributeTestES31 : public VertexAttributeTestES3
   protected:
     VertexAttributeTestES31() {}
 
-    void drawArraysWithStrideAndOffset(GLint stride, GLsizeiptr offset)
+    void initTest()
     {
-        GLint floatStride      = stride ? (stride / TypeStride(GL_FLOAT)) : 1;
-        GLsizeiptr floatOffset = offset / TypeStride(GL_FLOAT);
-
-        size_t floatCount    = static_cast<size_t>(floatOffset) + kVertexCount * floatStride;
-        GLsizeiptr inputSize = static_cast<GLsizeiptr>(floatCount) * TypeStride(GL_FLOAT);
-
         initBasicProgram();
         glUseProgram(mProgram);
 
-        std::vector<GLfloat> inputData(floatCount);
-        std::array<GLfloat, kVertexCount> expectedData;
-
-        for (size_t count = 0; count < kVertexCount; ++count)
-        {
-            inputData[floatOffset + count * floatStride] = static_cast<GLfloat>(count);
-            expectedData[count]                          = static_cast<GLfloat>(count);
-        }
+        glGenVertexArrays(1, &mVAO);
+        glBindVertexArray(mVAO);
 
         auto quadVertices = GetQuadVertices();
         GLsizeiptr quadVerticesSize =
             static_cast<GLsizeiptr>(quadVertices.size() * sizeof(quadVertices[0]));
         glGenBuffers(1, &mQuadBuffer);
         glBindBuffer(GL_ARRAY_BUFFER, mQuadBuffer);
-        glBufferData(GL_ARRAY_BUFFER, quadVerticesSize, nullptr, GL_STATIC_DRAW);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, quadVerticesSize, quadVertices.data());
+        glBufferData(GL_ARRAY_BUFFER, quadVerticesSize, quadVertices.data(), GL_STATIC_DRAW);
 
         GLint positionLocation = glGetAttribLocation(mProgram, "position");
         ASSERT_NE(-1, positionLocation);
         glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
         glEnableVertexAttribArray(positionLocation);
 
+        std::array<GLfloat, kVertexCount> expectedData;
+        for (size_t count = 0; count < kVertexCount; ++count)
+        {
+            expectedData[count] = static_cast<GLfloat>(count);
+        }
+
+        const GLsizei kExpectedDataSize = kVertexCount * kFloatStride;
+        glGenBuffers(1, &mExpectedBuffer);
+        glBindBuffer(GL_ARRAY_BUFFER, mExpectedBuffer);
+        glBufferData(GL_ARRAY_BUFFER, kExpectedDataSize, expectedData.data(), GL_STATIC_DRAW);
+        glVertexAttribPointer(mExpectedAttrib, 1, GL_FLOAT, GL_FALSE, 0, nullptr);
+        glEnableVertexAttribArray(mExpectedAttrib);
+    }
+
+    void TearDown() override
+    {
+        VertexAttributeTestES3::TearDown();
+
+        glDeleteBuffers(1, &mExpectedBuffer);
+        glDeleteVertexArrays(1, &mVAO);
+    }
+
+    void drawArraysWithStrideAndOffset(GLint stride, GLsizeiptr offset)
+    {
+        initTest();
+
+        GLint floatStride      = stride ? (stride / kFloatStride) : 1;
+        GLsizeiptr floatOffset = offset / kFloatStride;
+        size_t floatCount      = static_cast<size_t>(floatOffset) + kVertexCount * floatStride;
+        GLsizeiptr inputSize   = static_cast<GLsizeiptr>(floatCount) * kFloatStride;
+
+        std::vector<GLfloat> inputData(floatCount);
+        for (size_t count = 0; count < kVertexCount; ++count)
+        {
+            inputData[floatOffset + count * floatStride] = static_cast<GLfloat>(count);
+        }
+
         // Ensure inputSize, inputStride and inputOffset are multiples of TypeStride(GL_FLOAT).
-        GLsizei inputStride    = stride ? floatStride * TypeStride(GL_FLOAT) : 0;
-        GLsizeiptr inputOffset = floatOffset * TypeStride(GL_FLOAT);
+        GLsizei inputStride    = stride ? floatStride * kFloatStride : 0;
+        GLsizeiptr inputOffset = floatOffset * kFloatStride;
         glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
         glBufferData(GL_ARRAY_BUFFER, inputSize, nullptr, GL_STATIC_DRAW);
         glBufferSubData(GL_ARRAY_BUFFER, 0, inputSize, inputData.data());
@@ -752,15 +932,16 @@ class VertexAttributeTestES31 : public VertexAttributeTestES3
                               reinterpret_cast<const void *>(inputOffset));
         glEnableVertexAttribArray(mTestAttrib);
 
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glVertexAttribPointer(mExpectedAttrib, 1, GL_FLOAT, GL_FALSE, 0, expectedData.data());
-        glEnableVertexAttribArray(mExpectedAttrib);
-
         glDrawArrays(GL_TRIANGLES, 0, 6);
         checkPixels();
 
         EXPECT_GL_NO_ERROR();
     }
+
+    GLuint mVAO;
+    GLuint mExpectedBuffer;
+
+    const GLsizei kFloatStride = TypeStride(GL_FLOAT);
 
     // Set the maximum value for stride if the stride is too large.
     static constexpr GLint MAX_STRIDE_FOR_TEST = 4095;
@@ -797,6 +978,93 @@ TEST_P(VertexAttributeTestES31, DrawArraysWithLargeStride)
 
     GLint largeStride = (maxStride < MAX_STRIDE_FOR_TEST) ? maxStride : MAX_STRIDE_FOR_TEST;
     drawArraysWithStrideAndOffset(largeStride, 0);
+}
+
+// TODO(jiawei.shao@intel.com): Merge it into VertexAttributeTestES31 when Vertex Attrib
+// Binding is supported on D3D11 back-ends.
+class VertexAttributeTestES31_OpenGL : public VertexAttributeTestES31
+{
+  protected:
+    VertexAttributeTestES31_OpenGL() {}
+};
+
+// Verify that using VertexAttribBinding after VertexAttribPointer won't mess up the draw.
+TEST_P(VertexAttributeTestES31_OpenGL, ChangeAttribBindingAfterVertexAttribPointer)
+{
+    initTest();
+
+    constexpr GLint kInputStride = 2;
+    constexpr GLint kFloatOffset = 10;
+    std::array<GLfloat, kVertexCount + kFloatOffset> inputData1;
+    std::array<GLfloat, kVertexCount * kInputStride> inputData2;
+    for (size_t count = 0; count < kVertexCount; ++count)
+    {
+        inputData1[kFloatOffset + count] = static_cast<GLfloat>(count);
+        inputData2[count * kInputStride] = static_cast<GLfloat>(count);
+    }
+
+    GLBuffer mBuffer1;
+    glBindBuffer(GL_ARRAY_BUFFER, mBuffer1);
+    glBufferData(GL_ARRAY_BUFFER, inputData1.size() * kFloatStride, inputData1.data(),
+                 GL_STATIC_DRAW);
+    // Update the format indexed mTestAttrib and the binding indexed mTestAttrib by
+    // VertexAttribPointer.
+    const GLintptr kOffset = static_cast<GLintptr>(kFloatStride * kFloatOffset);
+    glVertexAttribPointer(mTestAttrib, 1, GL_FLOAT, GL_FALSE, 0,
+                          reinterpret_cast<const GLvoid *>(kOffset));
+    glEnableVertexAttribArray(mTestAttrib);
+
+    constexpr GLint kTestBinding = 10;
+    ASSERT_NE(mTestAttrib, kTestBinding);
+
+    GLBuffer mBuffer2;
+    glBindBuffer(GL_ARRAY_BUFFER, mBuffer2);
+    glBufferData(GL_ARRAY_BUFFER, inputData2.size() * kFloatStride, inputData2.data(),
+                 GL_STATIC_DRAW);
+    glBindVertexBuffer(kTestBinding, mBuffer2, 0, kFloatStride * kInputStride);
+
+    // The attribute indexed mTestAttrib is using the binding indexed kTestBinding in the first
+    // draw.
+    glVertexAttribBinding(mTestAttrib, kTestBinding);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    checkPixels();
+    EXPECT_GL_NO_ERROR();
+
+    // The attribute indexed mTestAttrib is using the binding indexed mTestAttrib which should be
+    // set after the call VertexAttribPointer before the first draw.
+    glVertexAttribBinding(mTestAttrib, mTestAttrib);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    checkPixels();
+    EXPECT_GL_NO_ERROR();
+}
+
+// Verify that using VertexAttribFormat after VertexAttribPointer won't mess up the draw.
+TEST_P(VertexAttributeTestES31_OpenGL, ChangeAttribFormatAfterVertexAttribPointer)
+{
+    initTest();
+
+    constexpr GLuint kFloatOffset = 10;
+    std::array<GLfloat, kVertexCount + kFloatOffset> inputData;
+    for (size_t count = 0; count < kVertexCount; ++count)
+    {
+        inputData[kFloatOffset + count] = static_cast<GLfloat>(count);
+    }
+
+    glBindBuffer(GL_ARRAY_BUFFER, mBuffer);
+    glBufferData(GL_ARRAY_BUFFER, inputData.size() * kFloatStride, inputData.data(),
+                 GL_STATIC_DRAW);
+
+    // Call VertexAttribPointer on mTestAttrib. Now the relativeOffset of mTestAttrib should be 0.
+    const GLuint kOffset = static_cast<GLuint>(kFloatStride * kFloatOffset);
+    glVertexAttribPointer(mTestAttrib, 1, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(mTestAttrib);
+
+    // Call VertexAttribFormat on mTestAttrib to modify the relativeOffset to kOffset.
+    glVertexAttribFormat(mTestAttrib, 1, GL_FLOAT, GL_FALSE, kOffset);
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    checkPixels();
+    EXPECT_GL_NO_ERROR();
 }
 
 class VertexAttributeCachingTest : public VertexAttributeTest
@@ -1075,6 +1343,8 @@ ANGLE_INSTANTIATE_TEST(VertexAttributeTest,
 ANGLE_INSTANTIATE_TEST(VertexAttributeTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 
 ANGLE_INSTANTIATE_TEST(VertexAttributeTestES31, ES31_D3D11(), ES31_OPENGL(), ES31_OPENGLES());
+
+ANGLE_INSTANTIATE_TEST(VertexAttributeTestES31_OpenGL, ES31_OPENGL(), ES31_OPENGLES());
 
 ANGLE_INSTANTIATE_TEST(VertexAttributeCachingTest,
                        ES2_D3D9(),

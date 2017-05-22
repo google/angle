@@ -131,6 +131,9 @@ GLColor32F ReadColor32F(GLint x, GLint y);
 #define EXPECT_PIXEL_EQ(x, y, r, g, b, a) \
     EXPECT_EQ(angle::MakeGLColor(r, g, b, a), angle::ReadColor(x, y))
 
+#define EXPECT_PIXEL_NE(x, y, r, g, b, a) \
+    EXPECT_NE(angle::MakeGLColor(r, g, b, a), angle::ReadColor(x, y))
+
 #define EXPECT_PIXEL_32F_EQ(x, y, r, g, b, a) \
     EXPECT_EQ(angle::MakeGLColor32F(r, g, b, a), angle::ReadColor32F(x, y))
 

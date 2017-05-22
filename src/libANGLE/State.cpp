@@ -1063,9 +1063,9 @@ void State::bindVertexBuffer(const Context *context,
     mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
 }
 
-void State::setVertexAttribBinding(GLuint attribIndex, GLuint bindingIndex)
+void State::setVertexAttribBinding(const Context *context, GLuint attribIndex, GLuint bindingIndex)
 {
-    getVertexArray()->setVertexAttribBinding(attribIndex, bindingIndex);
+    getVertexArray()->setVertexAttribBinding(context, attribIndex, bindingIndex);
     mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
 }
 
@@ -1360,24 +1360,24 @@ void State::setVertexAttribi(GLuint index, const GLint values[4])
     mDirtyBits.set(DIRTY_BIT_CURRENT_VALUE_0 + index);
 }
 
-void State::setVertexAttribState(const Context *context,
-                                 unsigned int attribNum,
-                                 Buffer *boundBuffer,
-                                 GLint size,
-                                 GLenum type,
-                                 bool normalized,
-                                 bool pureInteger,
-                                 GLsizei stride,
-                                 const void *pointer)
+void State::setVertexAttribPointer(const Context *context,
+                                   unsigned int attribNum,
+                                   Buffer *boundBuffer,
+                                   GLint size,
+                                   GLenum type,
+                                   bool normalized,
+                                   bool pureInteger,
+                                   GLsizei stride,
+                                   const void *pointer)
 {
-    getVertexArray()->setAttributeState(context, attribNum, boundBuffer, size, type, normalized,
-                                        pureInteger, stride, pointer);
+    getVertexArray()->setVertexAttribPointer(context, attribNum, boundBuffer, size, type,
+                                             normalized, pureInteger, stride, pointer);
     mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
 }
 
-void State::setVertexAttribDivisor(GLuint index, GLuint divisor)
+void State::setVertexAttribDivisor(const Context *context, GLuint index, GLuint divisor)
 {
-    getVertexArray()->setVertexAttribDivisor(index, divisor);
+    getVertexArray()->setVertexAttribDivisor(context, index, divisor);
     mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
 }
 

@@ -62,7 +62,7 @@ struct VertexAttribute final : private angle::NonCopyable
     bool pureInteger;
 
     const void *pointer;
-    GLintptr relativeOffset;
+    GLuint relativeOffset;
 
     GLuint vertexAttribArrayStride;  // ONLY for queries of VERTEX_ATTRIB_ARRAY_STRIDE
     GLuint bindingIndex;

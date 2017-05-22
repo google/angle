@@ -50,7 +50,7 @@ void VertexArray11::syncState(const gl::Context *context,
         if (dirtyBit == gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER)
             continue;
 
-        size_t index = gl::VertexArray::GetAttribIndex(dirtyBit);
+        size_t index = gl::VertexArray::GetVertexIndexFromDirtyBit(dirtyBit);
         // TODO(jiawei.shao@intel.com): Vertex Attrib Bindings
         ASSERT(index == mData.getBindingIndexFromAttribIndex(index));
         mAttribsToUpdate.set(index);

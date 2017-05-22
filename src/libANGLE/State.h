@@ -273,16 +273,16 @@ class State : angle::NonCopyable
     void setVertexAttribf(GLuint index, const GLfloat values[4]);
     void setVertexAttribu(GLuint index, const GLuint values[4]);
     void setVertexAttribi(GLuint index, const GLint values[4]);
-    void setVertexAttribState(const Context *context,
-                              unsigned int attribNum,
-                              Buffer *boundBuffer,
-                              GLint size,
-                              GLenum type,
-                              bool normalized,
-                              bool pureInteger,
-                              GLsizei stride,
-                              const void *pointer);
-    void setVertexAttribDivisor(GLuint index, GLuint divisor);
+    void setVertexAttribPointer(const Context *context,
+                                unsigned int attribNum,
+                                Buffer *boundBuffer,
+                                GLint size,
+                                GLenum type,
+                                bool normalized,
+                                bool pureInteger,
+                                GLsizei stride,
+                                const void *pointer);
+    void setVertexAttribDivisor(const Context *context, GLuint index, GLuint divisor);
     const VertexAttribCurrentValueData &getVertexAttribCurrentValue(size_t attribNum) const;
     const void *getVertexAttribPointer(unsigned int attribNum) const;
     void bindVertexBuffer(const Context *context,
@@ -296,7 +296,7 @@ class State : angle::NonCopyable
                                bool normalized,
                                bool pureInteger,
                                GLuint relativeOffset);
-    void setVertexAttribBinding(GLuint attribIndex, GLuint bindingIndex);
+    void setVertexAttribBinding(const Context *context, GLuint attribIndex, GLuint bindingIndex);
     void setVertexBindingDivisor(GLuint bindingIndex, GLuint divisor);
 
     // Pixel pack state manipulation
