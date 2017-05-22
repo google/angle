@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4bd713fd_283b8e48",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-22T10:17:20Z",
+      "side": 0,
+      "message": "Checked the code preserves this.",
+      "revId": "9676d1af51ff860d177540a7ae455ad3073e81af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

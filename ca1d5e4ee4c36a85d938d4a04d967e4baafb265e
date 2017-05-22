@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3bbdc468_58fed6cc",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-22T10:17:20Z",
+      "side": 1,
+      "message": "nit: it seems the code could be slightly simpler if the initSequence was passed to the function to avoid the initSequence-\u003einsert(....) statements.",
+      "revId": "ca1d5e4ee4c36a85d938d4a04d967e4baafb265e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7aaf4b19_37eba815",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-22T10:17:20Z",
+      "side": 1,
+      "message": "nit: initializedSymbol could be a const pointer.",
+      "revId": "ca1d5e4ee4c36a85d938d4a04d967e4baafb265e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2f8fb8e5_f8834ea6",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-22T10:17:20Z",
+      "side": 1,
+      "message": "nit: all code paths will create a new TIntermSequence so either it should be factored in this function, or done inside CreateZeroInitAssignement.",
+      "revId": "ca1d5e4ee4c36a85d938d4a04d967e4baafb265e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6e8ca37f_58ccfbb4",
+        "filename": "src/compiler/translator/InitializeVariables.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-22T10:17:20Z",
+      "side": 1,
+      "message": "nit: this isn\u0027t used outside of InitializeVariables.cpp yet but I assume it will be in follow up CLs?",
+      "revId": "ca1d5e4ee4c36a85d938d4a04d967e4baafb265e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
