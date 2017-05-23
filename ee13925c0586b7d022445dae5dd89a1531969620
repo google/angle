@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c1f3e2a2_8d9f601a",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1120,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-05-23T03:26:26Z",
+      "side": 1,
+      "message": "Please merge them to one line and use \u0027git cl format\u0027 to realign.",
+      "range": {
+        "startLine": 1116,
+        "startChar": 0,
+        "endLine": 1120,
+        "endChar": 34
+      },
+      "revId": "ee13925c0586b7d022445dae5dd89a1531969620",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "80af536a_b8c1e9e9",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-05-23T03:26:26Z",
+      "side": 1,
+      "message": "Why you choose GL_R32UI as the default value?",
+      "revId": "ee13925c0586b7d022445dae5dd89a1531969620",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
