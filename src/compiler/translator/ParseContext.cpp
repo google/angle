@@ -640,6 +640,12 @@ bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
             const TIntermTyped *argTyped = arg->getAsTyped();
             ASSERT(argTyped != nullptr);
 
+            if (argTyped->getBasicType() == EbtStruct)
+            {
+                error(line, "a struct cannot be used as a constructor argument for this type",
+                      "constructor");
+                return false;
+            }
             if (argTyped->getType().isArray())
             {
                 error(line, "constructing from a non-dereferenced array", "constructor");
@@ -655,7 +661,7 @@ bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
             {
                 overFull = true;
             }
-            if (type.getBasicType() != EbtStruct && !type.isArray() && size >= type.getObjectSize())
+            if (size >= type.getObjectSize())
             {
                 full = true;
             }

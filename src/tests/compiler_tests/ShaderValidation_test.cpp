@@ -3858,3 +3858,24 @@ TEST_F(FragmentShaderValidationTest, InvalidInterfaceBlockTernaryExpression)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test that a struct can not be used as a constructor argument for a scalar.
+TEST_F(FragmentShaderValidationTest, StructAsBoolConstructorArgument)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "struct my_struct\n"
+        "{\n"
+        "    float f;\n"
+        "};\n"
+        "my_struct a = my_struct(1.0);\n"
+        "void main(void)\n"
+        "{\n"
+        "    bool test = bool(a);\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
