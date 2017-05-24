@@ -80,7 +80,7 @@ SwapChain11::SwapChain11(Renderer11 *renderer,
       mDepthStencilTexture(),
       mDepthStencilDSView(),
       mDepthStencilSRView(),
-      mQuadVB(nullptr),
+      mQuadVB(),
       mPassThroughSampler(nullptr),
       mPassThroughIL(nullptr),
       mPassThroughVS(nullptr),
@@ -120,7 +120,7 @@ void SwapChain11::release()
     mDepthStencilTexture.reset();
     mDepthStencilDSView.reset();
     mDepthStencilSRView.reset();
-    SafeRelease(mQuadVB);
+    mQuadVB.reset();
     SafeRelease(mPassThroughSampler);
     SafeRelease(mPassThroughIL);
     SafeRelease(mPassThroughVS);
@@ -611,7 +611,7 @@ void SwapChain11::initPassThroughResources()
     ASSERT(device != nullptr);
 
     // Make sure our resources are all not allocated, when we create
-    ASSERT(mQuadVB == nullptr && mPassThroughSampler == nullptr);
+    ASSERT(!mQuadVB.valid() && mPassThroughSampler == nullptr);
     ASSERT(mPassThroughIL == nullptr && mPassThroughVS == nullptr && mPassThroughPS == nullptr);
 
     D3D11_BUFFER_DESC vbDesc;
@@ -622,9 +622,9 @@ void SwapChain11::initPassThroughResources()
     vbDesc.MiscFlags = 0;
     vbDesc.StructureByteStride = 0;
 
-    HRESULT result = device->CreateBuffer(&vbDesc, nullptr, &mQuadVB);
-    ASSERT(SUCCEEDED(result));
-    d3d11::SetDebugName(mQuadVB, "Swap chain quad vertex buffer");
+    gl::Error err = mRenderer->allocateResource(vbDesc, &mQuadVB);
+    ASSERT(!err.isError());
+    mQuadVB.setDebugName("Swap chain quad vertex buffer");
 
     D3D11_SAMPLER_DESC samplerDesc;
     samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
@@ -641,7 +641,7 @@ void SwapChain11::initPassThroughResources()
     samplerDesc.MinLOD = 0;
     samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-    result = device->CreateSamplerState(&samplerDesc, &mPassThroughSampler);
+    HRESULT result = device->CreateSamplerState(&samplerDesc, &mPassThroughSampler);
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mPassThroughSampler, "Swap chain pass through sampler");
 
@@ -729,7 +729,8 @@ EGLint SwapChain11::copyOffscreenToBackbuffer(EGLint x, EGLint y, EGLint width, 
 
     // Set vertices
     D3D11_MAPPED_SUBRESOURCE mappedResource;
-    HRESULT result = deviceContext->Map(mQuadVB, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    HRESULT result =
+        deviceContext->Map(mQuadVB.get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result))
     {
         return EGL_BAD_ACCESS;
@@ -763,11 +764,12 @@ EGLint SwapChain11::copyOffscreenToBackbuffer(EGLint x, EGLint y, EGLint width, 
     d3d11::SetPositionTexCoordVertex(&vertices[2], x2, y1, u2, v1);
     d3d11::SetPositionTexCoordVertex(&vertices[3], x2, y2, u2, v2);
 
-    deviceContext->Unmap(mQuadVB, 0);
+    deviceContext->Unmap(mQuadVB.get(), 0);
 
     static UINT stride = sizeof(d3d11::PositionTexCoordVertex);
     static UINT startIdx = 0;
-    deviceContext->IASetVertexBuffers(0, 1, &mQuadVB, &stride, &startIdx);
+    ID3D11Buffer *vertexBuffer = mQuadVB.get();
+    deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &startIdx);
 
     // Apply state
     deviceContext->OMSetDepthStencilState(nullptr, 0xFFFFFFFF);

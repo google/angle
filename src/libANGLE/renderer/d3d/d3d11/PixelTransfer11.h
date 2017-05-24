@@ -11,13 +11,13 @@
 #ifndef LIBANGLE_RENDERER_D3D_D3D11_PIXELTRANSFER11_H_
 #define LIBANGLE_RENDERER_D3D_D3D11_PIXELTRANSFER11_H_
 
-#include "libANGLE/Error.h"
-
-#include "common/platform.h"
-
 #include <GLES2/gl2.h>
 
 #include <map>
+
+#include "common/platform.h"
+#include "libANGLE/Error.h"
+#include "libANGLE/renderer/d3d/d3d11/ResourceManager11.h"
 
 namespace gl
 {
@@ -76,7 +76,7 @@ class PixelTransfer11
     std::map<GLenum, ID3D11PixelShader *> mBufferToTexturePSMap;
     ID3D11VertexShader *mBufferToTextureVS;
     ID3D11GeometryShader *mBufferToTextureGS;
-    ID3D11Buffer *mParamsConstantBuffer;
+    d3d11::Buffer mParamsConstantBuffer;
     CopyShaderParams mParamsData;
 
     ID3D11RasterizerState *mCopyRasterizerState;

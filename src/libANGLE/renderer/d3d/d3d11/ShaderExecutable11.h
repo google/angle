@@ -11,6 +11,7 @@
 #define LIBANGLE_RENDERER_D3D_D3D11_SHADEREXECUTABLE11_H_
 
 #include "libANGLE/renderer/d3d/ShaderExecutableD3D.h"
+#include "libANGLE/renderer/d3d/d3d11/ResourceManager11.h"
 
 namespace rx
 {
@@ -44,15 +45,15 @@ class ShaderExecutable11 : public ShaderExecutableD3D
 class UniformStorage11 : public UniformStorageD3D
 {
   public:
-    UniformStorage11(Renderer11 *renderer, size_t initialSize);
+    UniformStorage11(size_t initialSize);
     virtual ~UniformStorage11();
 
-    ID3D11Buffer *getConstantBuffer() const { return mConstantBuffer; }
+    gl::Error getConstantBuffer(Renderer11 *renderer, const d3d11::Buffer **bufferOut);
 
   private:
-    ID3D11Buffer *mConstantBuffer;
+    d3d11::Buffer mConstantBuffer;
 };
 
-}
+}  // namespace rx
 
 #endif // LIBANGLE_RENDERER_D3D_D3D11_SHADEREXECUTABLE11_H_

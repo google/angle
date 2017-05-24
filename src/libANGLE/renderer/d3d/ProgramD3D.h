@@ -248,18 +248,9 @@ class ProgramD3D : public ProgramImpl
 
     void setUniformBlockBinding(GLuint uniformBlockIndex, GLuint uniformBlockBinding) override;
 
-    const UniformStorageD3D &getVertexUniformStorage() const
-    {
-        return *mVertexUniformStorage.get();
-    }
-    const UniformStorageD3D &getFragmentUniformStorage() const
-    {
-        return *mFragmentUniformStorage.get();
-    }
-    const UniformStorageD3D &getComputeUniformStorage() const
-    {
-        return *mComputeUniformStorage.get();
-    }
+    UniformStorageD3D &getVertexUniformStorage() const { return *mVertexUniformStorage.get(); }
+    UniformStorageD3D &getFragmentUniformStorage() const { return *mFragmentUniformStorage.get(); }
+    UniformStorageD3D &getComputeUniformStorage() const { return *mComputeUniformStorage.get(); }
 
     unsigned int getSerial() const;
 

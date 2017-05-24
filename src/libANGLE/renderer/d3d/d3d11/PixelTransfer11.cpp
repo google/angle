@@ -38,7 +38,7 @@ PixelTransfer11::PixelTransfer11(Renderer11 *renderer)
       mResourcesLoaded(false),
       mBufferToTextureVS(nullptr),
       mBufferToTextureGS(nullptr),
-      mParamsConstantBuffer(nullptr),
+      mParamsConstantBuffer(),
       mCopyRasterizerState(nullptr),
       mCopyDepthStencilState(nullptr)
 {
@@ -55,7 +55,6 @@ PixelTransfer11::~PixelTransfer11()
 
     SafeRelease(mBufferToTextureVS);
     SafeRelease(mBufferToTextureGS);
-    SafeRelease(mParamsConstantBuffer);
     SafeRelease(mCopyRasterizerState);
     SafeRelease(mCopyDepthStencilState);
 }
@@ -120,13 +119,8 @@ gl::Error PixelTransfer11::loadResources()
     constantBufferDesc.MiscFlags = 0;
     constantBufferDesc.StructureByteStride = 0;
 
-    result = device->CreateBuffer(&constantBufferDesc, nullptr, &mParamsConstantBuffer);
-    ASSERT(SUCCEEDED(result));
-    if (FAILED(result))
-    {
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to create internal pixel transfer constant buffer, result: 0x%X.", result);
-    }
-    d3d11::SetDebugName(mParamsConstantBuffer, "PixelTransfer11 constant buffer");
+    ANGLE_TRY(mRenderer->allocateResource(constantBufferDesc, &mParamsConstantBuffer));
+    mParamsConstantBuffer.setDebugName("PixelTransfer11 constant buffer");
 
     // init shaders
     mBufferToTextureVS = d3d11::CompileVS(device, g_VS_BufferToTexture, "BufferToTexture VS");
@@ -239,11 +233,12 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::PixelUnpackState &unpac
 
     if (!StructEquals(mParamsData, shaderParams))
     {
-        d3d11::SetBufferData(deviceContext, mParamsConstantBuffer, shaderParams);
+        d3d11::SetBufferData(deviceContext, mParamsConstantBuffer.get(), shaderParams);
         mParamsData = shaderParams;
     }
 
-    deviceContext->VSSetConstantBuffers(0, 1, &mParamsConstantBuffer);
+    ID3D11Buffer *paramsBuffer = mParamsConstantBuffer.get();
+    deviceContext->VSSetConstantBuffers(0, 1, &paramsBuffer);
 
     // Set the viewport
     D3D11_VIEWPORT viewport;

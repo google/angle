@@ -89,30 +89,33 @@ ID3D11ComputeShader *ShaderExecutable11::getComputeShader() const
     return mComputeExecutable;
 }
 
-UniformStorage11::UniformStorage11(Renderer11 *renderer, size_t initialSize)
-    : UniformStorageD3D(initialSize), mConstantBuffer(nullptr)
+UniformStorage11::UniformStorage11(size_t initialSize)
+    : UniformStorageD3D(initialSize), mConstantBuffer()
 {
-    ID3D11Device *d3d11Device = renderer->getDevice();
+}
 
-    if (initialSize > 0)
+UniformStorage11::~UniformStorage11()
+{
+}
+
+gl::Error UniformStorage11::getConstantBuffer(Renderer11 *renderer, const d3d11::Buffer **bufferOut)
+{
+    if (size() > 0 && !mConstantBuffer.valid())
     {
         D3D11_BUFFER_DESC constantBufferDescription = {0};
-        constantBufferDescription.ByteWidth           = static_cast<unsigned int>(initialSize);
+
+        constantBufferDescription.ByteWidth           = static_cast<unsigned int>(size());
         constantBufferDescription.Usage = D3D11_USAGE_DYNAMIC;
         constantBufferDescription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
         constantBufferDescription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
         constantBufferDescription.MiscFlags = 0;
         constantBufferDescription.StructureByteStride = 0;
 
-        HRESULT result =
-            d3d11Device->CreateBuffer(&constantBufferDescription, nullptr, &mConstantBuffer);
-        ASSERT(SUCCEEDED(result));
+        ANGLE_TRY(renderer->allocateResource(constantBufferDescription, &mConstantBuffer));
     }
+
+    *bufferOut = &mConstantBuffer;
+    return gl::NoError();
 }
 
-UniformStorage11::~UniformStorage11()
-{
-    SafeRelease(mConstantBuffer);
-}
-
-}
+}  // namespace rx

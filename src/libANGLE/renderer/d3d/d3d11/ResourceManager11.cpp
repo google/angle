@@ -51,6 +51,12 @@ size_t ComputeMemoryUsage(const D3D11_TEXTURE3D_DESC *desc)
                                     desc->MipLevels);
 }
 
+size_t ComputeMemoryUsage(const D3D11_BUFFER_DESC *desc)
+{
+    ASSERT(desc);
+    return static_cast<size_t>(desc->ByteWidth);
+}
+
 template <typename T>
 size_t ComputeMemoryUsage(const T *desc)
 {
@@ -74,10 +80,20 @@ size_t ComputeGenericMemoryUsage(ResourceType resourceType, ID3D11DeviceChild *r
             return ComputeGenericMemoryUsage<ResourceType::Texture2D>(resource);
         case ResourceType::Texture3D:
             return ComputeGenericMemoryUsage<ResourceType::Texture3D>(resource);
+        case ResourceType::Buffer:
+            return ComputeGenericMemoryUsage<ResourceType::Buffer>(resource);
 
         default:
             return 0;
     }
+}
+
+HRESULT CreateResource(ID3D11Device *device,
+                       const D3D11_BUFFER_DESC *desc,
+                       const D3D11_SUBRESOURCE_DATA *initData,
+                       ID3D11Buffer **buffer)
+{
+    return device->CreateBuffer(desc, initData, buffer);
 }
 
 HRESULT CreateResource(ID3D11Device *device,

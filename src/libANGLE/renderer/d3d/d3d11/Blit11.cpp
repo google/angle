@@ -556,7 +556,7 @@ DXGI_FORMAT GetStencilSRVFormat(const d3d11::Format &formatSet)
 Blit11::Blit11(Renderer11 *renderer)
     : mRenderer(renderer),
       mResourcesInitialized(false),
-      mVertexBuffer(nullptr),
+      mVertexBuffer(),
       mPointSampler(nullptr),
       mLinearSampler(nullptr),
       mScissorEnabledRasterizerState(nullptr),
@@ -579,7 +579,7 @@ Blit11::Blit11(Renderer11 *renderer)
       mQuad3DVS(g_VS_Passthrough3D, ArraySize(g_VS_Passthrough3D), "Blit11 3D vertex shader"),
       mQuad3DGS(g_GS_Passthrough3D, ArraySize(g_GS_Passthrough3D), "Blit11 3D geometry shader"),
       mAlphaMaskBlendState(GetAlphaMaskBlendStateDesc(), "Blit11 Alpha Mask Blend"),
-      mSwizzleCB(nullptr),
+      mSwizzleCB(),
       mResolveDepthStencilVS(g_VS_ResolveDepthStencil,
                              ArraySize(g_VS_ResolveDepthStencil),
                              "Blit11::mResolveDepthStencilVS"),
@@ -632,13 +632,8 @@ gl::Error Blit11::initResources()
     vbDesc.MiscFlags           = 0;
     vbDesc.StructureByteStride = 0;
 
-    result = device->CreateBuffer(&vbDesc, nullptr, mVertexBuffer.GetAddressOf());
-    ASSERT(SUCCEEDED(result));
-    if (FAILED(result))
-    {
-        return gl::OutOfMemory() << "Failed to create blit vertex buffer, " << result;
-    }
-    d3d11::SetDebugName(mVertexBuffer, "Blit11 vertex buffer");
+    ANGLE_TRY(mRenderer->allocateResource(vbDesc, &mVertexBuffer));
+    mVertexBuffer.setDebugName("Blit11 vertex buffer");
 
     D3D11_SAMPLER_DESC pointSamplerDesc;
     pointSamplerDesc.Filter         = D3D11_FILTER_MIN_MAG_POINT_MIP_LINEAR;
@@ -751,13 +746,8 @@ gl::Error Blit11::initResources()
     swizzleBufferDesc.MiscFlags           = 0;
     swizzleBufferDesc.StructureByteStride = 0;
 
-    result = device->CreateBuffer(&swizzleBufferDesc, nullptr, mSwizzleCB.GetAddressOf());
-    ASSERT(SUCCEEDED(result));
-    if (FAILED(result))
-    {
-        return gl::OutOfMemory() << "Failed to create blit swizzle buffer, " << result;
-    }
-    d3d11::SetDebugName(mSwizzleCB, "Blit11 swizzle constant buffer");
+    ANGLE_TRY(mRenderer->allocateResource(swizzleBufferDesc, &mSwizzleCB));
+    mSwizzleCB.setDebugName("Blit11 swizzle constant buffer");
 
     mResourcesInitialized = true;
 
@@ -1076,7 +1066,7 @@ gl::Error Blit11::swizzleTexture(const d3d11::SharedSRV &source,
     // Set vertices
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     result =
-        deviceContext->Map(mVertexBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+        deviceContext->Map(mVertexBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result))
     {
         return gl::OutOfMemory() << "Failed to map internal vertex buffer for swizzle, " << result;
@@ -1093,10 +1083,10 @@ gl::Error Blit11::swizzleTexture(const d3d11::SharedSRV &source,
     support.vertexWriteFunction(area, size, area, size, mappedResource.pData, &stride, &drawCount,
                                 &topology);
 
-    deviceContext->Unmap(mVertexBuffer.Get(), 0);
+    deviceContext->Unmap(mVertexBuffer.get(), 0);
 
     // Set constant buffer
-    result = deviceContext->Map(mSwizzleCB.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+    result = deviceContext->Map(mSwizzleCB.get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result))
     {
         return gl::OutOfMemory() << "Failed to map internal constant buffer for swizzle, "
@@ -1109,13 +1099,15 @@ gl::Error Blit11::swizzleTexture(const d3d11::SharedSRV &source,
     swizzleIndices[2]            = GetSwizzleIndex(swizzleTarget.swizzleBlue);
     swizzleIndices[3]            = GetSwizzleIndex(swizzleTarget.swizzleAlpha);
 
-    deviceContext->Unmap(mSwizzleCB.Get(), 0);
+    deviceContext->Unmap(mSwizzleCB.get(), 0);
 
     // Apply vertex buffer
-    deviceContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), &stride, &startIdx);
+    ID3D11Buffer *vertexBuffer = mVertexBuffer.get();
+    deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &startIdx);
 
     // Apply constant buffer
-    deviceContext->PSSetConstantBuffers(0, 1, mSwizzleCB.GetAddressOf());
+    ID3D11Buffer *constantBuffer = mSwizzleCB.get();
+    deviceContext->PSSetConstantBuffers(0, 1, &constantBuffer);
 
     // Apply state
     deviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);
@@ -1210,7 +1202,7 @@ gl::Error Blit11::copyTexture(const d3d11::SharedSRV &source,
     // Set vertices
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     result =
-        deviceContext->Map(mVertexBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+        deviceContext->Map(mVertexBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result))
     {
         return gl::OutOfMemory() << "Failed to map internal vertex buffer for texture copy, "
@@ -1225,10 +1217,11 @@ gl::Error Blit11::copyTexture(const d3d11::SharedSRV &source,
     support.vertexWriteFunction(sourceArea, sourceSize, destArea, destSize, mappedResource.pData,
                                 &stride, &drawCount, &topology);
 
-    deviceContext->Unmap(mVertexBuffer.Get(), 0);
+    deviceContext->Unmap(mVertexBuffer.get(), 0);
 
     // Apply vertex buffer
-    deviceContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), &stride, &startIdx);
+    ID3D11Buffer *vertexBuffer = mVertexBuffer.get();
+    deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &startIdx);
 
     // Apply state
     if (maskOffAlpha)
@@ -1349,7 +1342,7 @@ gl::Error Blit11::copyDepth(const d3d11::SharedSRV &source,
     // Set vertices
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     result =
-        deviceContext->Map(mVertexBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+        deviceContext->Map(mVertexBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
     if (FAILED(result))
     {
         return gl::OutOfMemory() << "Failed to map internal vertex buffer for texture copy, "
@@ -1364,10 +1357,11 @@ gl::Error Blit11::copyDepth(const d3d11::SharedSRV &source,
     Write2DVertices(sourceArea, sourceSize, destArea, destSize, mappedResource.pData, &stride,
                     &drawCount, &topology);
 
-    deviceContext->Unmap(mVertexBuffer.Get(), 0);
+    deviceContext->Unmap(mVertexBuffer.get(), 0);
 
     // Apply vertex buffer
-    deviceContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), &stride, &startIdx);
+    ID3D11Buffer *vertexBuffer = mVertexBuffer.get();
+    deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &startIdx);
 
     // Apply state
     deviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);

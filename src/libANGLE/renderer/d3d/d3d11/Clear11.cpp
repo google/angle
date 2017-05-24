@@ -154,8 +154,8 @@ Clear11::Clear11(Renderer11 *renderer)
       mScissorEnabledRasterizerState(nullptr),
       mScissorDisabledRasterizerState(nullptr),
       mShaderManager(),
-      mConstantBuffer(nullptr),
-      mVertexBuffer(nullptr),
+      mConstantBuffer(),
+      mVertexBuffer(),
       mShaderData({})
 {
     TRACE_EVENT0("gpu.angle", "Clear11::Clear11");
@@ -172,55 +172,6 @@ Clear11::Clear11(Renderer11 *renderer)
 
     static_assert((sizeof(RtvDsvClearInfo<float>) % 16 == 0),
                   "The size of RtvDsvClearInfo<float> should be a multiple of 16bytes.");
-
-    // Create constant buffer for color & depth data
-
-    D3D11_BUFFER_DESC bufferDesc;
-    bufferDesc.ByteWidth           = g_ConstantBufferSize;
-    bufferDesc.Usage               = D3D11_USAGE_DYNAMIC;
-    bufferDesc.BindFlags           = D3D11_BIND_CONSTANT_BUFFER;
-    bufferDesc.CPUAccessFlags      = D3D11_CPU_ACCESS_WRITE;
-    bufferDesc.MiscFlags           = 0;
-    bufferDesc.StructureByteStride = 0;
-
-    D3D11_SUBRESOURCE_DATA initialData;
-    initialData.pSysMem          = &mShaderData;
-    initialData.SysMemPitch      = g_ConstantBufferSize;
-    initialData.SysMemSlicePitch = g_ConstantBufferSize;
-
-    result = device->CreateBuffer(&bufferDesc, &initialData, mConstantBuffer.GetAddressOf());
-    ASSERT(SUCCEEDED(result));
-    d3d11::SetDebugName(mConstantBuffer, "Clear11 Constant Buffer");
-
-    const D3D_FEATURE_LEVEL featureLevel = mRenderer->getRenderer11DeviceCaps().featureLevel;
-
-    if (featureLevel <= D3D_FEATURE_LEVEL_9_3)
-    {
-        // Create vertex buffer with vertices for a quad covering the entire surface
-
-        static_assert((sizeof(d3d11::PositionVertex) % 16) == 0,
-                      "d3d11::PositionVertex should be a multiple of 16 bytes");
-        const d3d11::PositionVertex vbData[6] = {
-            {-1.0f, 1.0f, 0.0f, 1.0f}, {1.0f, -1.0f, 0.0f, 1.0f}, {-1.0f, -1.0f, 0.0f, 1.0f},
-            {-1.0f, 1.0f, 0.0f, 1.0f}, {1.0f, 1.0f, 0.0f, 1.0f},  {1.0f, -1.0f, 0.0f, 1.0f}};
-
-        const UINT vbSize = sizeof(vbData);
-
-        bufferDesc.ByteWidth           = vbSize;
-        bufferDesc.Usage               = D3D11_USAGE_IMMUTABLE;
-        bufferDesc.BindFlags           = D3D11_BIND_VERTEX_BUFFER;
-        bufferDesc.CPUAccessFlags      = 0;
-        bufferDesc.MiscFlags           = 0;
-        bufferDesc.StructureByteStride = 0;
-
-        initialData.pSysMem          = vbData;
-        initialData.SysMemPitch      = vbSize;
-        initialData.SysMemSlicePitch = initialData.SysMemPitch;
-
-        result = device->CreateBuffer(&bufferDesc, &initialData, mVertexBuffer.GetAddressOf());
-        ASSERT(SUCCEEDED(result));
-        d3d11::SetDebugName(mVertexBuffer, "Clear11 Vertex Buffer");
-    }
 
     // Create Rasterizer States
     D3D11_RASTERIZER_DESC rsDesc;
@@ -280,6 +231,75 @@ Clear11::Clear11(Renderer11 *renderer)
 
 Clear11::~Clear11()
 {
+}
+
+bool Clear11::useVertexBuffer() const
+{
+    return (mRenderer->getRenderer11DeviceCaps().featureLevel <= D3D_FEATURE_LEVEL_9_3);
+}
+
+gl::Error Clear11::ensureConstantBufferCreated()
+{
+    if (mConstantBuffer.valid())
+    {
+        return gl::NoError();
+    }
+
+    // Create constant buffer for color & depth data
+
+    D3D11_BUFFER_DESC bufferDesc;
+    bufferDesc.ByteWidth           = g_ConstantBufferSize;
+    bufferDesc.Usage               = D3D11_USAGE_DYNAMIC;
+    bufferDesc.BindFlags           = D3D11_BIND_CONSTANT_BUFFER;
+    bufferDesc.CPUAccessFlags      = D3D11_CPU_ACCESS_WRITE;
+    bufferDesc.MiscFlags           = 0;
+    bufferDesc.StructureByteStride = 0;
+
+    D3D11_SUBRESOURCE_DATA initialData;
+    initialData.pSysMem          = &mShaderData;
+    initialData.SysMemPitch      = g_ConstantBufferSize;
+    initialData.SysMemSlicePitch = g_ConstantBufferSize;
+
+    ANGLE_TRY(mRenderer->allocateResource(bufferDesc, &initialData, &mConstantBuffer));
+    mConstantBuffer.setDebugName("Clear11 Constant Buffer");
+    return gl::NoError();
+}
+
+gl::Error Clear11::ensureVertexBufferCreated()
+{
+    ASSERT(useVertexBuffer());
+
+    if (mVertexBuffer.valid())
+    {
+        return gl::NoError();
+    }
+
+    // Create vertex buffer with vertices for a quad covering the entire surface
+
+    static_assert((sizeof(d3d11::PositionVertex) % 16) == 0,
+                  "d3d11::PositionVertex should be a multiple of 16 bytes");
+    const d3d11::PositionVertex vbData[6] = {{-1.0f, 1.0f, 0.0f, 1.0f},  {1.0f, -1.0f, 0.0f, 1.0f},
+                                             {-1.0f, -1.0f, 0.0f, 1.0f}, {-1.0f, 1.0f, 0.0f, 1.0f},
+                                             {1.0f, 1.0f, 0.0f, 1.0f},   {1.0f, -1.0f, 0.0f, 1.0f}};
+
+    const UINT vbSize = sizeof(vbData);
+
+    D3D11_BUFFER_DESC bufferDesc;
+    bufferDesc.ByteWidth           = vbSize;
+    bufferDesc.Usage               = D3D11_USAGE_IMMUTABLE;
+    bufferDesc.BindFlags           = D3D11_BIND_VERTEX_BUFFER;
+    bufferDesc.CPUAccessFlags      = 0;
+    bufferDesc.MiscFlags           = 0;
+    bufferDesc.StructureByteStride = 0;
+
+    D3D11_SUBRESOURCE_DATA initialData;
+    initialData.pSysMem          = vbData;
+    initialData.SysMemPitch      = vbSize;
+    initialData.SysMemSlicePitch = initialData.SysMemPitch;
+
+    ANGLE_TRY(mRenderer->allocateResource(bufferDesc, &initialData, &mVertexBuffer));
+    mVertexBuffer.setDebugName("Clear11 Vertex Buffer");
+    return gl::NoError();
 }
 
 gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
@@ -619,12 +639,14 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
             break;
     }
 
+    ANGLE_TRY(ensureConstantBufferCreated());
+
     if (dirtyCb)
     {
         // Update the constant buffer with the updated cache contents
         // TODO(Shahmeer): Consider using UpdateSubresource1 D3D11_COPY_DISCARD where possible.
         D3D11_MAPPED_SUBRESOURCE mappedResource;
-        HRESULT result = deviceContext->Map(mConstantBuffer.Get(), 0, D3D11_MAP_WRITE_DISCARD, 0,
+        HRESULT result = deviceContext->Map(mConstantBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0,
                                             &mappedResource);
         if (FAILED(result))
         {
@@ -632,7 +654,7 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
         }
 
         memcpy(mappedResource.pData, &mShaderData, g_ConstantBufferSize);
-        deviceContext->Unmap(mConstantBuffer.Get(), 0);
+        deviceContext->Unmap(mConstantBuffer.get(), 0);
     }
 
     // Set the viewport to be the same size as the framebuffer
@@ -674,17 +696,19 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
     deviceContext->VSSetShader(vs, nullptr, 0);
     deviceContext->GSSetShader(nullptr, nullptr, 0);
     deviceContext->PSSetShader(ps, nullptr, 0);
-    deviceContext->PSSetConstantBuffers(0, 1, mConstantBuffer.GetAddressOf());
+    ID3D11Buffer *constantBuffer = mConstantBuffer.get();
+    deviceContext->PSSetConstantBuffers(0, 1, &constantBuffer);
 
     // Bind IL & VB if needed
     deviceContext->IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);
     deviceContext->IASetInputLayout(il);
 
-    if (mVertexBuffer.Get())
+    if (useVertexBuffer())
     {
+        ANGLE_TRY(ensureVertexBufferCreated());
         const UINT offset = 0;
-        deviceContext->IASetVertexBuffers(0, 1, mVertexBuffer.GetAddressOf(), &g_VertexSize,
-                                          &offset);
+        ID3D11Buffer *vertexBuffer = mVertexBuffer.get();
+        deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &g_VertexSize, &offset);
     }
     else
     {

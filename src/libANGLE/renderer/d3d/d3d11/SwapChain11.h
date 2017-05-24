@@ -98,7 +98,7 @@ class SwapChain11 final : public SwapChainD3D
     d3d11::DepthStencilView mDepthStencilDSView;
     d3d11::SharedSRV mDepthStencilSRView;
 
-    ID3D11Buffer *mQuadVB;
+    d3d11::Buffer mQuadVB;
     ID3D11SamplerState *mPassThroughSampler;
     ID3D11InputLayout *mPassThroughIL;
     ID3D11VertexShader *mPassThroughVS;

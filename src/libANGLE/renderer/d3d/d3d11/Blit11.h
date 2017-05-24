@@ -277,7 +277,7 @@ class Blit11 : angle::NonCopyable
     std::map<SwizzleShaderType, Shader> mSwizzleShaderMap;
 
     bool mResourcesInitialized;
-    angle::ComPtr<ID3D11Buffer> mVertexBuffer;
+    d3d11::Buffer mVertexBuffer;
     angle::ComPtr<ID3D11SamplerState> mPointSampler;
     angle::ComPtr<ID3D11SamplerState> mLinearSampler;
     angle::ComPtr<ID3D11RasterizerState> mScissorEnabledRasterizerState;
@@ -294,7 +294,7 @@ class Blit11 : angle::NonCopyable
 
     d3d11::LazyBlendState mAlphaMaskBlendState;
 
-    angle::ComPtr<ID3D11Buffer> mSwizzleCB;
+    d3d11::Buffer mSwizzleCB;
 
     d3d11::LazyShader<ID3D11VertexShader> mResolveDepthStencilVS;
     d3d11::LazyShader<ID3D11PixelShader> mResolveDepthPS;

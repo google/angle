@@ -64,6 +64,10 @@ class Clear11 : angle::NonCopyable
         d3d11::LazyShader<ID3D11PixelShader> mPsSInt;
     };
 
+    bool useVertexBuffer() const;
+    gl::Error ensureConstantBufferCreated();
+    gl::Error ensureVertexBufferCreated();
+
     Renderer11 *mRenderer;
 
     // States
@@ -74,13 +78,13 @@ class Clear11 : angle::NonCopyable
 
     // Shaders and shader resources
     ShaderManager mShaderManager;
-    angle::ComPtr<ID3D11Buffer> mConstantBuffer;
-    angle::ComPtr<ID3D11Buffer> mVertexBuffer;
+    d3d11::Buffer mConstantBuffer;
+    d3d11::Buffer mVertexBuffer;
 
     // Buffer data and draw parameters
     RtvDsvClearInfo<float> mShaderData;
 };
 
-}
+}  // namespace rx
 
 #endif // LIBANGLE_RENDERER_D3D_D3D11_CLEAR11_H_

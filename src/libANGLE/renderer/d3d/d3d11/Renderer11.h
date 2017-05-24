@@ -541,7 +541,7 @@ class Renderer11 : public RendererD3D
                                       const TShaderConstants &constants,
                                       SamplerMetadataD3D11 *samplerMetadata,
                                       size_t samplerMetadataReferencedBytes,
-                                      ID3D11Buffer *driverConstantBuffer);
+                                      const d3d11::Buffer &driverConstantBuffer);
 
     gl::Error copyImageInternal(const gl::Framebuffer *framebuffer,
                                 const gl::Rectangle &sourceRect,
@@ -603,27 +603,27 @@ class Renderer11 : public RendererD3D
     uintptr_t mAppliedComputeShader;
 
     dx_VertexConstants11 mAppliedVertexConstants;
-    ID3D11Buffer *mDriverConstantBufferVS;
+    d3d11::Buffer mDriverConstantBufferVS;
     SamplerMetadataD3D11 mSamplerMetadataVS;
-    ID3D11Buffer *mCurrentVertexConstantBuffer;
+    uintptr_t mCurrentVertexConstantBuffer;
     unsigned int mCurrentConstantBufferVS[gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS];
     GLintptr mCurrentConstantBufferVSOffset[gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS];
     GLsizeiptr mCurrentConstantBufferVSSize[gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS];
 
     dx_PixelConstants11 mAppliedPixelConstants;
-    ID3D11Buffer *mDriverConstantBufferPS;
+    d3d11::Buffer mDriverConstantBufferPS;
     SamplerMetadataD3D11 mSamplerMetadataPS;
-    ID3D11Buffer *mCurrentPixelConstantBuffer;
+    uintptr_t mCurrentPixelConstantBuffer;
     unsigned int mCurrentConstantBufferPS[gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS];
     GLintptr mCurrentConstantBufferPSOffset[gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS];
     GLsizeiptr mCurrentConstantBufferPSSize[gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS];
 
     dx_ComputeConstants11 mAppliedComputeConstants;
-    ID3D11Buffer *mDriverConstantBufferCS;
+    d3d11::Buffer mDriverConstantBufferCS;
     SamplerMetadataD3D11 mSamplerMetadataCS;
-    ID3D11Buffer *mCurrentComputeConstantBuffer;
+    uintptr_t mCurrentComputeConstantBuffer;
 
-    ID3D11Buffer *mCurrentGeometryConstantBuffer;
+    uintptr_t mCurrentGeometryConstantBuffer;
 
     // Vertex, index and input layouts
     VertexDataManager *mVertexDataManager;
