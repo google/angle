@@ -164,6 +164,30 @@
       "revId": "ba419cf86f9d6eb5b8464864be8fc01df5943975",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8d4cfd98_cacffd71",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1017,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-24T19:05:21Z",
+      "side": 1,
+      "message": "Yea, I don\u0027t see the drawback of this approach though.   A single definition and each test can have its own with the same name.",
+      "parentUuid": "ce3f4098_2488d3ab",
+      "range": {
+        "startLine": 1017,
+        "startChar": 3,
+        "endLine": 1017,
+        "endChar": 49
+      },
+      "revId": "ba419cf86f9d6eb5b8464864be8fc01df5943975",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
