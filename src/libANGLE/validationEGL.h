@@ -123,7 +123,12 @@ Error ValidateCompatibleConfigs(const Display *display,
                                 const Config *config2,
                                 EGLint surfaceType);
 
-Error ValidatePlatformType(const ClientExtensions &clientExtensions, EGLint platformType);
-}  // namespace gl
+Error ValidateGetPlatformDisplay(EGLenum platform,
+                                 void *native_display,
+                                 const EGLAttrib *attrib_list);
+Error ValidateGetPlatformDisplayEXT(EGLenum platform,
+                                    void *native_display,
+                                    const EGLint *attrib_list);
+}  // namespace egl
 
 #endif // LIBANGLE_VALIDATIONEGL_H_

@@ -219,7 +219,7 @@ gl::Error HLSLCompiler::compileToBinary(gl::InfoLog &infoLog, const std::string 
             infoLog.appendSanitized(message.c_str());
 
             // This produces unbelievable amounts of spam in about:gpu.
-            //WARN() << std::endl << hlsl;
+            // WARN() << std::endl << hlsl;
 
             WARN() << std::endl << message;
 

@@ -21,6 +21,8 @@
 
 #include <EGL/eglext.h>
 
+namespace egl
+{
 namespace
 {
 size_t GetMaximumMipLevel(const gl::Context *context, GLenum target)
@@ -91,43 +93,43 @@ bool CubeTextureHasUnspecifiedLevel0Face(const gl::Texture *texture)
     return false;
 }
 
-egl::Error ValidateStreamAttribute(const EGLAttrib attribute,
-                                   const EGLAttrib value,
-                                   const egl::DisplayExtensions &extensions)
+Error ValidateStreamAttribute(const EGLAttrib attribute,
+                              const EGLAttrib value,
+                              const DisplayExtensions &extensions)
 {
     switch (attribute)
     {
         case EGL_STREAM_STATE_KHR:
         case EGL_PRODUCER_FRAME_KHR:
         case EGL_CONSUMER_FRAME_KHR:
-            return egl::Error(EGL_BAD_ACCESS, "Attempt to initialize readonly parameter");
+            return Error(EGL_BAD_ACCESS, "Attempt to initialize readonly parameter");
         case EGL_CONSUMER_LATENCY_USEC_KHR:
             // Technically not in spec but a latency < 0 makes no sense so we check it
             if (value < 0)
             {
-                return egl::Error(EGL_BAD_PARAMETER, "Latency must be positive");
+                return Error(EGL_BAD_PARAMETER, "Latency must be positive");
             }
             break;
         case EGL_CONSUMER_ACQUIRE_TIMEOUT_USEC_KHR:
             if (!extensions.streamConsumerGLTexture)
             {
-                return egl::Error(EGL_BAD_ATTRIBUTE, "Consumer GL extension not enabled");
+                return Error(EGL_BAD_ATTRIBUTE, "Consumer GL extension not enabled");
             }
             // Again not in spec but it should be positive anyways
             if (value < 0)
             {
-                return egl::Error(EGL_BAD_PARAMETER, "Timeout must be positive");
+                return Error(EGL_BAD_PARAMETER, "Timeout must be positive");
             }
             break;
         default:
-            return egl::Error(EGL_BAD_ATTRIBUTE, "Invalid stream attribute");
+            return Error(EGL_BAD_ATTRIBUTE, "Invalid stream attribute");
     }
-    return egl::Error(EGL_SUCCESS);
+    return Error(EGL_SUCCESS);
 }
 
-egl::Error ValidateCreateImageKHRMipLevelCommon(gl::Context *context,
-                                                const gl::Texture *texture,
-                                                EGLAttrib level)
+Error ValidateCreateImageKHRMipLevelCommon(gl::Context *context,
+                                           const gl::Texture *texture,
+                                           EGLAttrib level)
 {
     // Note that the spec EGL_KHR_create_image spec does not explicitly specify an error
     // when the level is outside the base/max level range, but it does mention that the
@@ -138,21 +140,21 @@ egl::Error ValidateCreateImageKHRMipLevelCommon(gl::Context *context,
         (!texture->isMipmapComplete() || static_cast<GLuint>(level) < effectiveBaseLevel ||
          static_cast<GLuint>(level) > texture->getTextureState().getMipmapMaxLevel()))
     {
-        return egl::Error(EGL_BAD_PARAMETER, "texture must be complete if level is non-zero.");
+        return Error(EGL_BAD_PARAMETER, "texture must be complete if level is non-zero.");
     }
 
     if (level == 0 && !texture->isMipmapComplete() &&
         TextureHasNonZeroMipLevelsSpecified(context, texture))
     {
-        return egl::Error(EGL_BAD_PARAMETER,
-                          "if level is zero and the texture is incomplete, it must have no mip "
-                          "levels specified except zero.");
+        return Error(EGL_BAD_PARAMETER,
+                     "if level is zero and the texture is incomplete, it must have no mip "
+                     "levels specified except zero.");
     }
 
-    return egl::Error(EGL_SUCCESS);
+    return Error(EGL_SUCCESS);
 }
 
-egl::Error ValidateConfigAttribute(const egl::Display *display, EGLAttrib attribute)
+Error ValidateConfigAttribute(const Display *display, EGLAttrib attribute)
 {
     switch (attribute)
     {
@@ -194,40 +196,284 @@ egl::Error ValidateConfigAttribute(const egl::Display *display, EGLAttrib attrib
         case EGL_OPTIMAL_SURFACE_ORIENTATION_ANGLE:
             if (!display->getExtensions().surfaceOrientation)
             {
-                return egl::Error(EGL_BAD_ATTRIBUTE,
-                                  "EGL_ANGLE_surface_orientation is not enabled.");
+                return Error(EGL_BAD_ATTRIBUTE, "EGL_ANGLE_surface_orientation is not enabled.");
             }
             break;
 
         case EGL_COLOR_COMPONENT_TYPE_EXT:
             if (!display->getExtensions().pixelFormatFloat)
             {
-                return egl::Error(EGL_BAD_ATTRIBUTE, "EGL_EXT_pixel_format_float is not enabled.");
+                return Error(EGL_BAD_ATTRIBUTE, "EGL_EXT_pixel_format_float is not enabled.");
             }
             break;
 
         default:
-            return egl::Error(EGL_BAD_ATTRIBUTE, "Unknown attribute.");
+            return Error(EGL_BAD_ATTRIBUTE, "Unknown attribute.");
     }
 
-    return egl::NoError();
+    return NoError();
 }
 
-egl::Error ValidateConfigAttributes(const egl::Display *display,
-                                    const egl::AttributeMap &attributes)
+Error ValidateConfigAttributes(const Display *display, const AttributeMap &attributes)
 {
     for (const auto &attrib : attributes)
     {
         ANGLE_TRY(ValidateConfigAttribute(display, attrib.first));
     }
 
-    return egl::NoError();
+    return NoError();
+}
+
+Error ValidatePlatformType(const ClientExtensions &clientExtensions, EGLAttrib platformType)
+{
+    switch (platformType)
+    {
+        case EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE:
+            break;
+
+        case EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE:
+        case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE:
+            if (!clientExtensions.platformANGLED3D)
+            {
+                return Error(EGL_BAD_ATTRIBUTE, "Direct3D platform is unsupported.");
+            }
+            break;
+
+        case EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE:
+        case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE:
+            if (!clientExtensions.platformANGLEOpenGL)
+            {
+                return Error(EGL_BAD_ATTRIBUTE, "OpenGL platform is unsupported.");
+            }
+            break;
+
+        case EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE:
+            if (!clientExtensions.platformANGLENULL)
+            {
+                return Error(EGL_BAD_ATTRIBUTE,
+                             "Display type "
+                             "EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE "
+                             "requires EGL_ANGLE_platform_angle_null.");
+            }
+            break;
+
+        case EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE:
+            if (!clientExtensions.platformANGLEVulkan)
+            {
+                return Error(EGL_BAD_ATTRIBUTE, "Vulkan platform is unsupported.");
+            }
+            break;
+
+        default:
+            return Error(EGL_BAD_ATTRIBUTE, "Unknown platform type.");
+    }
+
+    return Error(EGL_SUCCESS);
+}
+
+Error ValidateGetPlatformDisplayCommon(EGLenum platform,
+                                       void *native_display,
+                                       const AttributeMap &attribMap)
+{
+    const ClientExtensions &clientExtensions = Display::getClientExtensions();
+
+    switch (platform)
+    {
+        case EGL_PLATFORM_ANGLE_ANGLE:
+            if (!clientExtensions.platformANGLE)
+            {
+                return Error(EGL_BAD_PARAMETER, "Platform ANGLE extension is not active");
+            }
+            break;
+        case EGL_PLATFORM_DEVICE_EXT:
+            if (!clientExtensions.platformDevice)
+            {
+                return Error(EGL_BAD_PARAMETER, "Platform Device extension is not active");
+            }
+            break;
+        default:
+            return Error(EGL_BAD_CONFIG, "Bad platform type.");
+    }
+
+    if (platform == EGL_PLATFORM_ANGLE_ANGLE)
+    {
+        EGLAttrib platformType       = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
+        EGLAttrib deviceType         = EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE;
+        bool enableAutoTrimSpecified = false;
+        bool deviceTypeSpecified     = false;
+        bool presentPathSpecified    = false;
+
+        Optional<EGLAttrib> majorVersion;
+        Optional<EGLAttrib> minorVersion;
+
+        for (const auto &curAttrib : attribMap)
+        {
+            switch (curAttrib.first)
+            {
+                case EGL_PLATFORM_ANGLE_TYPE_ANGLE:
+                {
+                    ANGLE_TRY(ValidatePlatformType(clientExtensions, curAttrib.second));
+                    platformType = curAttrib.second;
+                    break;
+                }
+
+                case EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE:
+                    if (curAttrib.second != EGL_DONT_CARE)
+                    {
+                        majorVersion = curAttrib.second;
+                    }
+                    break;
+
+                case EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE:
+                    if (curAttrib.second != EGL_DONT_CARE)
+                    {
+                        minorVersion = curAttrib.second;
+                    }
+                    break;
+
+                case EGL_PLATFORM_ANGLE_ENABLE_AUTOMATIC_TRIM_ANGLE:
+                    switch (curAttrib.second)
+                    {
+                        case EGL_TRUE:
+                        case EGL_FALSE:
+                            break;
+                        default:
+                            return Error(EGL_BAD_ATTRIBUTE, "Invalid automatic trim attribute");
+                    }
+                    enableAutoTrimSpecified = true;
+                    break;
+
+                case EGL_EXPERIMENTAL_PRESENT_PATH_ANGLE:
+                    if (!clientExtensions.experimentalPresentPath)
+                    {
+                        return Error(EGL_BAD_ATTRIBUTE,
+                                     "EGL_ANGLE_experimental_present_path extension not active");
+                    }
+
+                    switch (curAttrib.second)
+                    {
+                        case EGL_EXPERIMENTAL_PRESENT_PATH_FAST_ANGLE:
+                        case EGL_EXPERIMENTAL_PRESENT_PATH_COPY_ANGLE:
+                            break;
+                        default:
+                            return Error(EGL_BAD_ATTRIBUTE,
+                                         "Invalid value for EGL_EXPERIMENTAL_PRESENT_PATH_ANGLE");
+                    }
+                    presentPathSpecified = true;
+                    break;
+
+                case EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE:
+                    switch (curAttrib.second)
+                    {
+                        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE:
+                        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE:
+                        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_REFERENCE_ANGLE:
+                            deviceTypeSpecified = true;
+                            break;
+
+                        case EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE:
+                            // This is a hidden option, accepted by the OpenGL back-end.
+                            break;
+
+                        default:
+                            return Error(EGL_BAD_ATTRIBUTE,
+                                         "Invalid value for "
+                                         "EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE "
+                                         "attrib");
+                    }
+                    deviceType = curAttrib.second;
+                    break;
+
+                case EGL_PLATFORM_ANGLE_ENABLE_VALIDATION_LAYER_ANGLE:
+                    if (!clientExtensions.platformANGLEVulkan)
+                    {
+                        return Error(EGL_BAD_ATTRIBUTE,
+                                     "EGL_ANGLE_platform_angle_vulkan extension not active");
+                    }
+                    if (platformType != EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
+                    {
+                        return Error(EGL_BAD_ATTRIBUTE,
+                                     "Validation can only be enabled for the Vulkan back-end.");
+                    }
+                    if (curAttrib.second != EGL_TRUE && curAttrib.second != EGL_FALSE)
+                    {
+                        return Error(EGL_BAD_ATTRIBUTE,
+                                     "Validation layer attribute must be EGL_TRUE or EGL_FALSE.");
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        if (!majorVersion.valid() && minorVersion.valid())
+        {
+            return Error(EGL_BAD_ATTRIBUTE,
+                         "Must specify major version if you specify a minor version.");
+        }
+
+        if (deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE &&
+            platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+        {
+            return Error(EGL_BAD_ATTRIBUTE,
+                         "EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE requires a device type of "
+                         "EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE.");
+        }
+
+        if (enableAutoTrimSpecified && platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+        {
+            return Error(EGL_BAD_ATTRIBUTE,
+                         "EGL_PLATFORM_ANGLE_ENABLE_AUTOMATIC_TRIM_ANGLE requires a device type of "
+                         "EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE.");
+        }
+
+        if (presentPathSpecified && platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+        {
+            return Error(EGL_BAD_ATTRIBUTE,
+                         "EGL_EXPERIMENTAL_PRESENT_PATH_ANGLE requires a device type of "
+                         "EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE.");
+        }
+
+        if (deviceTypeSpecified && platformType != EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE &&
+            platformType != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE)
+        {
+            return Error(
+                EGL_BAD_ATTRIBUTE,
+                "EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE requires a device type of "
+                "EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE or EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE.");
+        }
+
+        if (platformType == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
+        {
+            if ((majorVersion.valid() && majorVersion.value() != 1) ||
+                (minorVersion.valid() && minorVersion.value() != 0))
+            {
+                return Error(
+                    EGL_BAD_ATTRIBUTE,
+                    "EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE currently only supports Vulkan 1.0.");
+            }
+        }
+    }
+    else if (platform == EGL_PLATFORM_DEVICE_EXT)
+    {
+        Device *eglDevice = reinterpret_cast<Device *>(native_display);
+        if (eglDevice == nullptr || !Device::IsValidDevice(eglDevice))
+        {
+            return Error(EGL_BAD_ATTRIBUTE,
+                         "native_display should be a valid EGL device if platform equals "
+                         "EGL_PLATFORM_DEVICE_EXT");
+        }
+    }
+    else
+    {
+        UNREACHABLE();
+    }
+
+    return NoError();
 }
 
 }  // namespace
-
-namespace egl
-{
 
 Error ValidateDisplay(const Display *display)
 {
@@ -965,7 +1211,7 @@ Error ValidateMakeCurrent(Display *display, EGLSurface draw, EGLSurface read, gl
                                                 context->getConfig(), drawSurface->getType()));
         }
     }
-    return egl::NoError();
+    return NoError();
 }
 
 Error ValidateCompatibleConfigs(const Display *display,
@@ -1789,7 +2035,7 @@ Error ValidateStreamPostD3DTextureNV12ANGLE(const Display *display,
 
     if (texture == nullptr)
     {
-        return egl::Error(EGL_BAD_PARAMETER, "Texture is null");
+        return Error(EGL_BAD_PARAMETER, "Texture is null");
     }
 
     return stream->validateD3D11NV12Texture(texture);
@@ -1827,17 +2073,17 @@ Error ValidateGetSyncValuesCHROMIUM(const Display *display,
 
     if (ust == nullptr)
     {
-        return egl::Error(EGL_BAD_PARAMETER, "ust is null");
+        return Error(EGL_BAD_PARAMETER, "ust is null");
     }
 
     if (msc == nullptr)
     {
-        return egl::Error(EGL_BAD_PARAMETER, "msc is null");
+        return Error(EGL_BAD_PARAMETER, "msc is null");
     }
 
     if (sbc == nullptr)
     {
-        return egl::Error(EGL_BAD_PARAMETER, "sbc is null");
+        return Error(EGL_BAD_PARAMETER, "sbc is null");
     }
 
     return Error(EGL_SUCCESS);
@@ -1914,51 +2160,20 @@ Error ValidateGetConfigs(const Display *display, EGLint configSize, EGLint *numC
     return NoError();
 }
 
-Error ValidatePlatformType(const ClientExtensions &clientExtensions, EGLint platformType)
+Error ValidateGetPlatformDisplay(EGLenum platform,
+                                 void *native_display,
+                                 const EGLAttrib *attrib_list)
 {
-    switch (platformType)
-    {
-        case EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE:
-            break;
+    const auto &attribMap = AttributeMap::CreateFromAttribArray(attrib_list);
+    return ValidateGetPlatformDisplayCommon(platform, native_display, attribMap);
+}
 
-        case EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE:
-        case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE:
-            if (!clientExtensions.platformANGLED3D)
-            {
-                return Error(EGL_BAD_ATTRIBUTE, "Direct3D platform is unsupported.");
-            }
-            break;
-
-        case EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE:
-        case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE:
-            if (!clientExtensions.platformANGLEOpenGL)
-            {
-                return Error(EGL_BAD_ATTRIBUTE, "OpenGL platform is unsupported.");
-            }
-            break;
-
-        case EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE:
-            if (!clientExtensions.platformANGLENULL)
-            {
-                return Error(EGL_BAD_ATTRIBUTE,
-                             "Display type "
-                             "EGL_PLATFORM_ANGLE_TYPE_NULL_ANGLE "
-                             "requires EGL_ANGLE_platform_angle_null.");
-            }
-            break;
-
-        case EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE:
-            if (!clientExtensions.platformANGLEVulkan)
-            {
-                return Error(EGL_BAD_ATTRIBUTE, "Vulkan platform is unsupported.");
-            }
-            break;
-
-        default:
-            return Error(EGL_BAD_ATTRIBUTE, "Unknown platform type.");
-    }
-
-    return Error(EGL_SUCCESS);
+Error ValidateGetPlatformDisplayEXT(EGLenum platform,
+                                    void *native_display,
+                                    const EGLint *attrib_list)
+{
+    const auto &attribMap = AttributeMap::CreateFromIntArray(attrib_list);
+    return ValidateGetPlatformDisplayCommon(platform, native_display, attribMap);
 }
 
 }  // namespace egl

@@ -161,13 +161,7 @@ bool EGLWindow::initializeGL(OSWindow *osWindow)
 
 bool EGLWindow::initializeDisplayAndSurface(OSWindow *osWindow)
 {
-    PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT = reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(eglGetProcAddress("eglGetPlatformDisplayEXT"));
-    if (!eglGetPlatformDisplayEXT)
-    {
-        return false;
-    }
-
-    std::vector<EGLint> displayAttributes;
+    std::vector<EGLAttrib> displayAttributes;
     displayAttributes.push_back(EGL_PLATFORM_ANGLE_TYPE_ANGLE);
     displayAttributes.push_back(mPlatform.renderer);
     displayAttributes.push_back(EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE);
@@ -204,9 +198,9 @@ bool EGLWindow::initializeDisplayAndSurface(OSWindow *osWindow)
 
     displayAttributes.push_back(EGL_NONE);
 
-    mDisplay = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE,
-                                        reinterpret_cast<void *>(osWindow->getNativeDisplay()),
-                                        &displayAttributes[0]);
+    mDisplay = eglGetPlatformDisplay(EGL_PLATFORM_ANGLE_ANGLE,
+                                     reinterpret_cast<void *>(osWindow->getNativeDisplay()),
+                                     &displayAttributes[0]);
     if (mDisplay == EGL_NO_DISPLAY)
     {
         destroyGL();

@@ -1196,9 +1196,29 @@ EGLDisplay EGLAPIENTRY GetPlatformDisplay(EGLenum platform,
         platform, native_display, attrib_list);
     Thread *thread = GetCurrentThread();
 
-    UNIMPLEMENTED();
-    thread->setError(Error(EGL_BAD_DISPLAY, "eglGetPlatformDisplay unimplemented."));
-    return EGL_NO_DISPLAY;
+    Error err = ValidateGetPlatformDisplay(platform, native_display, attrib_list);
+    thread->setError(err);
+    if (err.isError())
+    {
+        return EGL_NO_DISPLAY;
+    }
+
+    if (platform == EGL_PLATFORM_ANGLE_ANGLE)
+    {
+        return Display::GetDisplayFromNativeDisplay(
+            gl::bitCast<EGLNativeDisplayType>(native_display),
+            AttributeMap::CreateFromAttribArray(attrib_list));
+    }
+    else if (platform == EGL_PLATFORM_DEVICE_EXT)
+    {
+        Device *eglDevice = reinterpret_cast<Device *>(native_display);
+        return Display::GetDisplayFromDevice(eglDevice);
+    }
+    else
+    {
+        UNREACHABLE();
+        return EGL_NO_DISPLAY;
+    }
 }
 
 EGLSurface EGLAPIENTRY CreatePlatformWindowSurface(EGLDisplay dpy,
