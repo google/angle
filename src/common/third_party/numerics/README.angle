@@ -10,7 +10,12 @@ License: Chromium
 License File: LICENSE in Chromium/src
 
 Description:
-base::numerics is a library for doing some simple safe math and conversions. To update the checkout, simply
-overwrite the base/numerics folder with Chromium's latest. The only modifications are to the base/logging.h
-file which defines CHECK to be ASSERT to be compatible with ANGLE.
+base::numerics is a library for doing some simple safe math and conversions.
+To update the checkout, simply overwrite the base/numerics folder with
+Chromium's latest.
 
+Modifications:
+
+- base/logging.h defines CHECK to be ASSERT to be compatible with ANGLE.
+- base/numerics/*.h uses namespace angle::base instead of base:: to avoid ODR
+  violations when ANGLE code is mixed with Chromium code.

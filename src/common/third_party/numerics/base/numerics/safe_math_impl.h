@@ -16,6 +16,9 @@
 
 #include "base/numerics/safe_conversions.h"
 
+namespace angle
+{
+
 namespace base
 {
 namespace internal
@@ -566,5 +569,7 @@ struct IsIntegerArithmeticSafe
 
 }  // namespace internal
 }  // namespace base
+
+}  // namespace angle
 
 #endif  // BASE_NUMERICS_SAFE_MATH_IMPL_H_

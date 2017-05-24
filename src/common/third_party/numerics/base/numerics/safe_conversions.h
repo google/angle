@@ -13,6 +13,9 @@
 #include "base/logging.h"
 #include "base/numerics/safe_conversions_impl.h"
 
+namespace angle
+{
+
 namespace base
 {
 
@@ -170,5 +173,7 @@ class StrictNumeric
 typedef StrictNumeric<size_t> SizeT;
 
 }  // namespace base
+
+}  // namespace angle
 
 #endif  // BASE_NUMERICS_SAFE_CONVERSIONS_H_

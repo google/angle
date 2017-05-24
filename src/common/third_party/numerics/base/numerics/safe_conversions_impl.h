@@ -11,6 +11,9 @@
 #include <climits>
 #include <limits>
 
+namespace angle
+{
+
 namespace base
 {
 namespace internal
@@ -265,5 +268,7 @@ constexpr RangeConstraint DstRangeRelationToSrcRange(Src value)
 
 }  // namespace internal
 }  // namespace base
+
+}  // namespace angle
 
 #endif  // BASE_NUMERICS_SAFE_CONVERSIONS_IMPL_H_

@@ -13,6 +13,9 @@
 #include "base/logging.h"
 #include "base/numerics/safe_math_impl.h"
 
+namespace angle
+{
+
 namespace base
 {
 
@@ -320,5 +323,7 @@ BASE_NUMERIC_ARITHMETIC_OPERATORS(Mod, %, %=)
 using internal::CheckedNumeric;
 
 }  // namespace base
+
+}  // namespace angle
 
 #endif  // BASE_NUMERICS_SAFE_MATH_H_
