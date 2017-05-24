@@ -157,7 +157,7 @@ void RoundingHelperWriter::writeCompoundAssignmentHelper(TInfoSinkBase &sink,
         "}\n";
     sink <<
         lTypeStr << " angle_compound_" << opNameStr << "_frl(inout " << lTypeStr << " x, in " << rTypeStr << " y) {\n"
-        "    x = angle_frl(angle_frm(x) " << opStr << " y);\n"
+        "    x = angle_frl(angle_frl(x) " << opStr << " y);\n"
         "    return x;\n"
         "}\n";
     // clang-format on
@@ -464,7 +464,7 @@ TIntermAggregate *createCompoundAssignmentFunctionCallNode(TIntermTyped *left,
     TIntermSequence *arguments = new TIntermSequence();
     arguments->push_back(left);
     arguments->push_back(right);
-    return createInternalFunctionCallNode(TType(EbtVoid), functionName, arguments);
+    return createInternalFunctionCallNode(left->getType(), functionName, arguments);
 }
 
 bool ParentUsesResult(TIntermNode *parent, TIntermTyped *node)

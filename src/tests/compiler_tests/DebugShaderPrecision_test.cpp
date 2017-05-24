@@ -1042,3 +1042,20 @@ TEST(DebugShaderPrecisionNegativeTest, HLSL3Unsupported)
                                    shaderString, &resources, 0, &translatedCode, &infoLog));
 }
 #endif  // defined(ANGLE_ENABLE_HLSL)
+
+// Test that compound assignment inside an expression compiles correctly. This is a test for a bug
+// where incorrect type information on the compound assignment call node caused an assert to trigger
+// in the debug build.
+TEST_F(DebugShaderPrecisionTest, CompoundAssignmentInsideExpression)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "   float f = 0.0;\n"
+        "   my_FragColor = vec4(abs(f += 1.0), 0, 0, 1);\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(foundInAllGLSLCode("abs(angle_compound_add_frm(f, 1.0))"));
+}
