@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7548f3ad_1d1cd598",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1766,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-24T15:49:58Z",
+      "side": 1,
+      "message": "Yes, covered in the next commit.",
+      "parentUuid": "3821bc85_7f6995e9",
+      "range": {
+        "startLine": 1766,
+        "startChar": 8,
+        "endLine": 1766,
+        "endChar": 21
+      },
+      "revId": "ba419cf86f9d6eb5b8464864be8fc01df5943975",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "29faa876_62025671",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
         "patchSetId": 16
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "21419cea_5add4ab0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 862,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-24T15:49:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29faa876_62025671",
+      "range": {
+        "startLine": 850,
+        "startChar": 8,
+        "endLine": 862,
+        "endChar": 10
+      },
+      "revId": "ba419cf86f9d6eb5b8464864be8fc01df5943975",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "64366548_9989cb1e",
         "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
         "patchSetId": 16
@@ -59,6 +107,30 @@
       "writtenOn": "2017-05-18T19:45:51Z",
       "side": 1,
       "message": "these lambdas don\u0027t really seem necessary. maybe in the future you can try to avoid using this kind of coding style?",
+      "range": {
+        "startLine": 1017,
+        "startChar": 3,
+        "endLine": 1017,
+        "endChar": 49
+      },
+      "revId": "ba419cf86f9d6eb5b8464864be8fc01df5943975",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "05e79cf1_f1c50423",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1017,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-24T15:49:58Z",
+      "side": 1,
+      "message": "These lambdas let me scope the re-used test function instead of adding methods to the test fixture, they differ a bit for each test  so I think it makes it more readable when they\u0027re close to the test itself.",
+      "parentUuid": "64366548_9989cb1e",
       "range": {
         "startLine": 1017,
         "startChar": 3,
