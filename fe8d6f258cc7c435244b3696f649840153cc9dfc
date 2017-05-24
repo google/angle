@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d809b8f1_ca13e808",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2829,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-24T17:27:20Z",
+      "side": 1,
+      "message": "nit: can add IsOpenGL for consistency. (say if someone were to write a metal back-end. not that that\u0027s happening)",
+      "range": {
+        "startLine": 2829,
+        "startChar": 8,
+        "endLine": 2829,
+        "endChar": 13
+      },
+      "revId": "fe8d6f258cc7c435244b3696f649840153cc9dfc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32079df9_407f0640",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2833,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-24T17:27:20Z",
+      "side": 1,
+      "message": "nit: can you put the comment before the error message?",
+      "range": {
+        "startLine": 2833,
+        "startChar": 8,
+        "endLine": 2833,
+        "endChar": 35
+      },
+      "revId": "fe8d6f258cc7c435244b3696f649840153cc9dfc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "07d886bb_4f2db976",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2870,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-24T17:27:20Z",
+      "side": 1,
+      "message": "same for the other two tests",
+      "range": {
+        "startLine": 2870,
+        "startChar": 4,
+        "endLine": 2870,
+        "endChar": 16
+      },
+      "revId": "fe8d6f258cc7c435244b3696f649840153cc9dfc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
