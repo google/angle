@@ -178,6 +178,19 @@ TEST_P(RobustResourceInitTest, BufferData)
     EXPECT_EQ(expected, actual);
 }
 
+// Regression test for passing a zero size init buffer with the extension.
+TEST_P(RobustResourceInitTest, BufferDataZeroSize)
+{
+    if (!setup())
+    {
+        return;
+    }
+
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_STATIC_DRAW);
+}
+
 ANGLE_INSTANTIATE_TEST(RobustResourceInitTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
