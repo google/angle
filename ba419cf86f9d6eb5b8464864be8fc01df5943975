@@ -140,6 +140,30 @@
       "revId": "ba419cf86f9d6eb5b8464864be8fc01df5943975",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ce3f4098_2488d3ab",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1017,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-24T18:57:56Z",
+      "side": 1,
+      "message": "What I do in that case is make it a fixture function, and define the function close to the test. You can see examples in the FBO tests for WebGL.",
+      "parentUuid": "05e79cf1_f1c50423",
+      "range": {
+        "startLine": 1017,
+        "startChar": 3,
+        "endLine": 1017,
+        "endChar": 49
+      },
+      "revId": "ba419cf86f9d6eb5b8464864be8fc01df5943975",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
