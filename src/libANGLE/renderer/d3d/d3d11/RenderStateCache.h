@@ -10,10 +10,11 @@
 #ifndef LIBANGLE_RENDERER_D3D_D3D11_RENDERSTATECACHE_H_
 #define LIBANGLE_RENDERER_D3D_D3D11_RENDERSTATECACHE_H_
 
-#include "libANGLE/angletypes.h"
-#include "libANGLE/Error.h"
 #include "common/angleutils.h"
+#include "libANGLE/Error.h"
+#include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
+#include "third_party/mrucache/base/containers/mru_cache.h"
 
 #include <unordered_map>
 
@@ -86,36 +87,33 @@ class RenderStateCache : angle::NonCopyable
 
   private:
     Renderer11 *mRenderer;
-    unsigned long long mCounter;
+
+    // MSDN's documentation of ID3D11Device::CreateBlendState, ID3D11Device::CreateRasterizerState,
+    // ID3D11Device::CreateDepthStencilState and ID3D11Device::CreateSamplerState claims the maximum
+    // number of unique states of each type an application can create is 4096
+    // TODO(ShahmeerEsmail): Revisit the cache sizes to make sure they are appropriate for most
+    // scenarios.
+    static constexpr unsigned int kMaxStates = 4096;
+
+    // The cache tries to clean up this many states at once.
+    static constexpr unsigned int kGCLimit = 128;
 
     // Blend state cache
-    static const unsigned int kMaxBlendStates;
-
-    typedef std::pair<d3d11::BlendState, unsigned long long> BlendStateCounterPair;
-    typedef std::unordered_map<d3d11::BlendStateKey, BlendStateCounterPair> BlendStateMap;
+    using BlendStateMap = angle::base::HashingMRUCache<d3d11::BlendStateKey, d3d11::BlendState>;
     BlendStateMap mBlendStateCache;
 
     // Rasterizer state cache
-    static const unsigned int kMaxRasterizerStates;
-
-    typedef std::pair<d3d11::RasterizerState, unsigned long long> RasterizerStateCounterPair;
-    typedef std::unordered_map<d3d11::RasterizerStateKey, RasterizerStateCounterPair>
-        RasterizerStateMap;
+    using RasterizerStateMap =
+        angle::base::HashingMRUCache<d3d11::RasterizerStateKey, d3d11::RasterizerState>;
     RasterizerStateMap mRasterizerStateCache;
 
     // Depth stencil state cache
-    static const unsigned int kMaxDepthStencilStates;
-
-    typedef std::pair<d3d11::DepthStencilState, unsigned long long> DepthStencilStateCounterPair;
-    typedef std::unordered_map<gl::DepthStencilState, DepthStencilStateCounterPair>
-        DepthStencilStateMap;
+    using DepthStencilStateMap =
+        angle::base::HashingMRUCache<gl::DepthStencilState, d3d11::DepthStencilState>;
     DepthStencilStateMap mDepthStencilStateCache;
 
     // Sample state cache
-    static const unsigned int kMaxSamplerStates;
-
-    typedef std::pair<d3d11::SamplerState, unsigned long long> SamplerStateCounterPair;
-    typedef std::unordered_map<gl::SamplerState, SamplerStateCounterPair> SamplerStateMap;
+    using SamplerStateMap = angle::base::HashingMRUCache<gl::SamplerState, d3d11::SamplerState>;
     SamplerStateMap mSamplerStateCache;
 };
 

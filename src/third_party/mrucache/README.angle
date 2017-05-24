@@ -1,0 +1,21 @@
+Name: Chromium: base/containers/MRUCache
+Short Name: base::MRUCache
+Version:
+URL: https://chromium.googlesource.com/chromium/src/base/+/master/containers/mru_cache.h
+SOURCE CODE: Copy the Chromium folder manually into this folder and run git cl format.
+Date: 24/05/2017
+Revision: d20ef132b529ecce1032005476f936e05cf708c0 (Chromium)
+Security Critical: no
+License: Chromium
+License File: LICENSE in Chromium/src
+
+Description:
+base::MRUCache is a few collections of most-recently-used caching structures.
+To update the checkout, simply overwrite the folder with Chromium's latest, and apply
+the appropriate namespace.
+
+Modifications:
+
+- base/logging.h defines CHECK to be ASSERT to be compatible with ANGLE.
+- base/numerics/*.h uses namespace angle::base instead of base:: to avoid ODR
+  violations when ANGLE code is mixed with Chromium code.

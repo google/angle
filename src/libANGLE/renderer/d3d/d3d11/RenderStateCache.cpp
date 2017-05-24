@@ -23,6 +23,22 @@ namespace rx
 {
 using namespace gl_d3d11;
 
+namespace
+{
+template <typename T>
+void TrimCache(unsigned int maxStates, unsigned int gcLimit, const char *name, T *cache)
+{
+    unsigned int kGarbageCollectionLimit = maxStates / 2 + gcLimit;
+
+    if (cache->size() >= kGarbageCollectionLimit)
+    {
+        WARN() << "Overflowed the limit of " << (maxStates / 2) << " " << name
+               << " states, removing the least recently used to make room.";
+        cache->ShrinkToSize(maxStates / 2);
+    }
+}
+}  // anonymous namespace
+
 template <typename T>
 std::size_t ComputeGenericHash(const T &key)
 {
@@ -38,23 +54,12 @@ template std::size_t ComputeGenericHash(const rx::d3d11::RasterizerStateKey &);
 template std::size_t ComputeGenericHash(const gl::DepthStencilState &);
 template std::size_t ComputeGenericHash(const gl::SamplerState &);
 
-// MSDN's documentation of ID3D11Device::CreateBlendState, ID3D11Device::CreateRasterizerState,
-// ID3D11Device::CreateDepthStencilState and ID3D11Device::CreateSamplerState claims the maximum
-// number of unique states of each type an application can create is 4096
-// TODO(ShahmeerEsmail): Revisit the cache sizes to make sure they are appropriate for most
-// scenarios.
-const unsigned int RenderStateCache::kMaxBlendStates        = 2048;
-const unsigned int RenderStateCache::kMaxRasterizerStates   = 2048;
-const unsigned int RenderStateCache::kMaxDepthStencilStates = 2048;
-const unsigned int RenderStateCache::kMaxSamplerStates      = 2048;
-
 RenderStateCache::RenderStateCache(Renderer11 *renderer)
     : mRenderer(renderer),
-      mCounter(0),
-      mBlendStateCache(kMaxBlendStates),
-      mRasterizerStateCache(kMaxRasterizerStates),
-      mDepthStencilStateCache(kMaxDepthStencilStates),
-      mSamplerStateCache(kMaxSamplerStates)
+      mBlendStateCache(kMaxStates),
+      mRasterizerStateCache(kMaxStates),
+      mDepthStencilStateCache(kMaxStates),
+      mSamplerStateCache(kMaxStates)
 {
 }
 
@@ -64,10 +69,10 @@ RenderStateCache::~RenderStateCache()
 
 void RenderStateCache::clear()
 {
-    mBlendStateCache.clear();
-    mRasterizerStateCache.clear();
-    mDepthStencilStateCache.clear();
-    mSamplerStateCache.clear();
+    mBlendStateCache.Clear();
+    mRasterizerStateCache.Clear();
+    mDepthStencilStateCache.Clear();
+    mSamplerStateCache.Clear();
 }
 
 // static
@@ -115,68 +120,50 @@ d3d11::BlendStateKey RenderStateCache::GetBlendStateKey(const gl::Framebuffer *f
 gl::Error RenderStateCache::getBlendState(const d3d11::BlendStateKey &key,
                                           ID3D11BlendState **outBlendState)
 {
-    BlendStateMap::iterator keyIter = mBlendStateCache.find(key);
+    auto keyIter = mBlendStateCache.Get(key);
     if (keyIter != mBlendStateCache.end())
     {
-        BlendStateCounterPair &state = keyIter->second;
-        state.second = mCounter++;
-        *outBlendState               = state.first.get();
+        *outBlendState = keyIter->second.get();
         return gl::NoError();
     }
-    else
+
+    TrimCache(kMaxStates, kGCLimit, "blend", &mBlendStateCache);
+
+    // Create a new blend state and insert it into the cache
+    D3D11_BLEND_DESC blendDesc;
+    D3D11_RENDER_TARGET_BLEND_DESC &rtDesc0 = blendDesc.RenderTarget[0];
+    const gl::BlendState &blendState        = key.blendState;
+
+    blendDesc.AlphaToCoverageEnable  = blendState.sampleAlphaToCoverage;
+    blendDesc.IndependentBlendEnable = key.mrt ? TRUE : FALSE;
+
+    rtDesc0 = {};
+
+    if (blendState.blend)
     {
-        if (mBlendStateCache.size() >= kMaxBlendStates)
-        {
-            WARN() << "Overflowed the limit of " << kMaxBlendStates
-                   << " blend states, removing the least recently used to make room.";
-
-            BlendStateMap::iterator leastRecentlyUsed = mBlendStateCache.begin();
-            for (BlendStateMap::iterator i = mBlendStateCache.begin(); i != mBlendStateCache.end(); i++)
-            {
-                if (i->second.second < leastRecentlyUsed->second.second)
-                {
-                    leastRecentlyUsed = i;
-                }
-            }
-            mBlendStateCache.erase(leastRecentlyUsed);
-        }
-
-        // Create a new blend state and insert it into the cache
-        D3D11_BLEND_DESC blendDesc;
-        D3D11_RENDER_TARGET_BLEND_DESC &rtDesc0 = blendDesc.RenderTarget[0];
-        const gl::BlendState &blendState        = key.blendState;
-
-        blendDesc.AlphaToCoverageEnable  = blendState.sampleAlphaToCoverage;
-        blendDesc.IndependentBlendEnable = key.mrt ? TRUE : FALSE;
-
-        rtDesc0 = {};
-
-        if (blendState.blend)
-        {
-            rtDesc0.BlendEnable    = true;
-            rtDesc0.SrcBlend       = gl_d3d11::ConvertBlendFunc(blendState.sourceBlendRGB, false);
-            rtDesc0.DestBlend      = gl_d3d11::ConvertBlendFunc(blendState.destBlendRGB, false);
-            rtDesc0.BlendOp        = gl_d3d11::ConvertBlendOp(blendState.blendEquationRGB);
-            rtDesc0.SrcBlendAlpha  = gl_d3d11::ConvertBlendFunc(blendState.sourceBlendAlpha, true);
-            rtDesc0.DestBlendAlpha = gl_d3d11::ConvertBlendFunc(blendState.destBlendAlpha, true);
-            rtDesc0.BlendOpAlpha   = gl_d3d11::ConvertBlendOp(blendState.blendEquationAlpha);
-        }
-
-        rtDesc0.RenderTargetWriteMask = key.rtvMasks[0];
-
-        for (unsigned int i = 1; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; i++)
-        {
-            blendDesc.RenderTarget[i]                       = rtDesc0;
-            blendDesc.RenderTarget[i].RenderTargetWriteMask = key.rtvMasks[i];
-        }
-
-        d3d11::BlendState d3dBlendState;
-        ANGLE_TRY(mRenderer->allocateResource(blendDesc, &d3dBlendState));
-        *outBlendState = d3dBlendState.get();
-        mBlendStateCache[key] = std::make_pair(std::move(d3dBlendState), mCounter++);
-
-        return gl::NoError();
+        rtDesc0.BlendEnable    = true;
+        rtDesc0.SrcBlend       = gl_d3d11::ConvertBlendFunc(blendState.sourceBlendRGB, false);
+        rtDesc0.DestBlend      = gl_d3d11::ConvertBlendFunc(blendState.destBlendRGB, false);
+        rtDesc0.BlendOp        = gl_d3d11::ConvertBlendOp(blendState.blendEquationRGB);
+        rtDesc0.SrcBlendAlpha  = gl_d3d11::ConvertBlendFunc(blendState.sourceBlendAlpha, true);
+        rtDesc0.DestBlendAlpha = gl_d3d11::ConvertBlendFunc(blendState.destBlendAlpha, true);
+        rtDesc0.BlendOpAlpha   = gl_d3d11::ConvertBlendOp(blendState.blendEquationAlpha);
     }
+
+    rtDesc0.RenderTargetWriteMask = key.rtvMasks[0];
+
+    for (unsigned int i = 1; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; i++)
+    {
+        blendDesc.RenderTarget[i]                       = rtDesc0;
+        blendDesc.RenderTarget[i].RenderTargetWriteMask = key.rtvMasks[i];
+    }
+
+    d3d11::BlendState d3dBlendState;
+    ANGLE_TRY(mRenderer->allocateResource(blendDesc, &d3dBlendState));
+    *outBlendState = d3dBlendState.get();
+    mBlendStateCache.Put(key, std::move(d3dBlendState));
+
+    return gl::NoError();
 }
 
 gl::Error RenderStateCache::getRasterizerState(const gl::RasterizerState &rasterState, bool scissorEnabled,
@@ -186,98 +173,65 @@ gl::Error RenderStateCache::getRasterizerState(const gl::RasterizerState &raster
     key.rasterizerState = rasterState;
     key.scissorEnabled = scissorEnabled;
 
-    RasterizerStateMap::iterator keyIter = mRasterizerStateCache.find(key);
+    auto keyIter = mRasterizerStateCache.Get(key);
     if (keyIter != mRasterizerStateCache.end())
     {
-        RasterizerStateCounterPair &state = keyIter->second;
-        state.second = mCounter++;
-        *outRasterizerState               = state.first.get();
+        *outRasterizerState = keyIter->second.get();
         return gl::NoError();
+    }
+
+    TrimCache(kMaxStates, kGCLimit, "rasterizer", &mRasterizerStateCache);
+
+    D3D11_CULL_MODE cullMode =
+        gl_d3d11::ConvertCullMode(rasterState.cullFace, rasterState.cullMode);
+
+    // Disable culling if drawing points
+    if (rasterState.pointDrawMode)
+    {
+        cullMode = D3D11_CULL_NONE;
+    }
+
+    D3D11_RASTERIZER_DESC rasterDesc;
+    rasterDesc.FillMode              = D3D11_FILL_SOLID;
+    rasterDesc.CullMode              = cullMode;
+    rasterDesc.FrontCounterClockwise = (rasterState.frontFace == GL_CCW) ? FALSE : TRUE;
+    rasterDesc.DepthBiasClamp = 0.0f;  // MSDN documentation of DepthBiasClamp implies a value of
+                                       // zero will preform no clamping, must be tested though.
+    rasterDesc.DepthClipEnable       = TRUE;
+    rasterDesc.ScissorEnable         = scissorEnabled ? TRUE : FALSE;
+    rasterDesc.MultisampleEnable     = rasterState.multiSample;
+    rasterDesc.AntialiasedLineEnable = FALSE;
+
+    if (rasterState.polygonOffsetFill)
+    {
+        rasterDesc.SlopeScaledDepthBias = rasterState.polygonOffsetFactor;
+        rasterDesc.DepthBias            = (INT)rasterState.polygonOffsetUnits;
     }
     else
     {
-        if (mRasterizerStateCache.size() >= kMaxRasterizerStates)
-        {
-            WARN() << "Overflowed the limit of " << kMaxRasterizerStates
-                   << " rasterizer states, removing the least recently used to make room.";
-
-            RasterizerStateMap::iterator leastRecentlyUsed = mRasterizerStateCache.begin();
-            for (RasterizerStateMap::iterator i = mRasterizerStateCache.begin(); i != mRasterizerStateCache.end(); i++)
-            {
-                if (i->second.second < leastRecentlyUsed->second.second)
-                {
-                    leastRecentlyUsed = i;
-                }
-            }
-            mRasterizerStateCache.erase(leastRecentlyUsed);
-        }
-
-        D3D11_CULL_MODE cullMode = gl_d3d11::ConvertCullMode(rasterState.cullFace, rasterState.cullMode);
-
-        // Disable culling if drawing points
-        if (rasterState.pointDrawMode)
-        {
-            cullMode = D3D11_CULL_NONE;
-        }
-
-        D3D11_RASTERIZER_DESC rasterDesc;
-        rasterDesc.FillMode = D3D11_FILL_SOLID;
-        rasterDesc.CullMode = cullMode;
-        rasterDesc.FrontCounterClockwise = (rasterState.frontFace == GL_CCW) ? FALSE: TRUE;
-        rasterDesc.DepthBiasClamp = 0.0f; // MSDN documentation of DepthBiasClamp implies a value of zero will preform no clamping, must be tested though.
-        rasterDesc.DepthClipEnable = TRUE;
-        rasterDesc.ScissorEnable = scissorEnabled ? TRUE : FALSE;
-        rasterDesc.MultisampleEnable = rasterState.multiSample;
-        rasterDesc.AntialiasedLineEnable = FALSE;
-
-        if (rasterState.polygonOffsetFill)
-        {
-            rasterDesc.SlopeScaledDepthBias = rasterState.polygonOffsetFactor;
-            rasterDesc.DepthBias = (INT)rasterState.polygonOffsetUnits;
-        }
-        else
-        {
-            rasterDesc.SlopeScaledDepthBias = 0.0f;
-            rasterDesc.DepthBias = 0;
-        }
-
-        d3d11::RasterizerState dx11RasterizerState;
-        ANGLE_TRY(mRenderer->allocateResource(rasterDesc, &dx11RasterizerState));
-        *outRasterizerState = dx11RasterizerState.get();
-        mRasterizerStateCache.insert(
-            std::make_pair(key, std::make_pair(std::move(dx11RasterizerState), mCounter++)));
-
-        return gl::NoError();
+        rasterDesc.SlopeScaledDepthBias = 0.0f;
+        rasterDesc.DepthBias            = 0;
     }
+
+    d3d11::RasterizerState dx11RasterizerState;
+    ANGLE_TRY(mRenderer->allocateResource(rasterDesc, &dx11RasterizerState));
+    *outRasterizerState = dx11RasterizerState.get();
+    mRasterizerStateCache.Put(key, std::move(dx11RasterizerState));
+
+    return gl::NoError();
 }
 
 gl::Error RenderStateCache::getDepthStencilState(const gl::DepthStencilState &glState,
                                                  ID3D11DepthStencilState **outDSState)
 {
-    auto keyIter = mDepthStencilStateCache.find(glState);
+    auto keyIter = mDepthStencilStateCache.Get(glState);
     if (keyIter != mDepthStencilStateCache.end())
     {
-        DepthStencilStateCounterPair &state = keyIter->second;
-        state.second = mCounter++;
-        *outDSState                         = state.first.get();
+        *outDSState = keyIter->second.get();
         return gl::NoError();
     }
 
-    if (mDepthStencilStateCache.size() >= kMaxDepthStencilStates)
-    {
-        WARN() << "Overflowed the limit of " << kMaxDepthStencilStates
-               << " depth stencil states, removing the least recently used to make room.";
-
-        auto leastRecentlyUsed = mDepthStencilStateCache.begin();
-        for (auto i = mDepthStencilStateCache.begin(); i != mDepthStencilStateCache.end(); i++)
-        {
-            if (i->second.second < leastRecentlyUsed->second.second)
-            {
-                leastRecentlyUsed = i;
-            }
-        }
-        mDepthStencilStateCache.erase(leastRecentlyUsed);
-    }
+    TrimCache(kMaxStates, kGCLimit, "depth stencil", &mDepthStencilStateCache);
 
     D3D11_DEPTH_STENCIL_DESC dsDesc     = {0};
     dsDesc.DepthEnable                  = glState.depthTest ? TRUE : FALSE;
@@ -298,77 +252,60 @@ gl::Error RenderStateCache::getDepthStencilState(const gl::DepthStencilState &gl
     d3d11::DepthStencilState dx11DepthStencilState;
     ANGLE_TRY(mRenderer->allocateResource(dsDesc, &dx11DepthStencilState));
     *outDSState = dx11DepthStencilState.get();
-    mDepthStencilStateCache.insert(
-        std::make_pair(glState, std::make_pair(std::move(dx11DepthStencilState), mCounter++)));
+    mDepthStencilStateCache.Put(glState, std::move(dx11DepthStencilState));
 
     return gl::NoError();
 }
 
 gl::Error RenderStateCache::getSamplerState(const gl::SamplerState &samplerState, ID3D11SamplerState **outSamplerState)
 {
-    SamplerStateMap::iterator keyIter = mSamplerStateCache.find(samplerState);
+    auto keyIter = mSamplerStateCache.Get(samplerState);
     if (keyIter != mSamplerStateCache.end())
     {
-        SamplerStateCounterPair &state = keyIter->second;
-        state.second = mCounter++;
-        *outSamplerState               = state.first.get();
+        *outSamplerState = keyIter->second.get();
         return gl::NoError();
     }
-    else
+
+    TrimCache(kMaxStates, kGCLimit, "sampler stencil", &mSamplerStateCache);
+
+    const auto &featureLevel = mRenderer->getRenderer11DeviceCaps().featureLevel;
+
+    D3D11_SAMPLER_DESC samplerDesc;
+    samplerDesc.Filter =
+        gl_d3d11::ConvertFilter(samplerState.minFilter, samplerState.magFilter,
+                                samplerState.maxAnisotropy, samplerState.compareMode);
+    samplerDesc.AddressU   = gl_d3d11::ConvertTextureWrap(samplerState.wrapS);
+    samplerDesc.AddressV   = gl_d3d11::ConvertTextureWrap(samplerState.wrapT);
+    samplerDesc.AddressW   = gl_d3d11::ConvertTextureWrap(samplerState.wrapR);
+    samplerDesc.MipLODBias = 0;
+    samplerDesc.MaxAnisotropy =
+        gl_d3d11::ConvertMaxAnisotropy(samplerState.maxAnisotropy, featureLevel);
+    samplerDesc.ComparisonFunc = gl_d3d11::ConvertComparison(samplerState.compareFunc);
+    samplerDesc.BorderColor[0] = 0.0f;
+    samplerDesc.BorderColor[1] = 0.0f;
+    samplerDesc.BorderColor[2] = 0.0f;
+    samplerDesc.BorderColor[3] = 0.0f;
+    samplerDesc.MinLOD         = samplerState.minLod;
+    samplerDesc.MaxLOD         = samplerState.maxLod;
+
+    if (mRenderer->getRenderer11DeviceCaps().featureLevel <= D3D_FEATURE_LEVEL_9_3)
     {
-        if (mSamplerStateCache.size() >= kMaxSamplerStates)
-        {
-            WARN() << "Overflowed the limit of " << kMaxSamplerStates
-                   << " sampler states, removing the least recently used to make room.";
+        // Check that maxLOD is nearly FLT_MAX (1000.0f is the default), since 9_3 doesn't support
+        // anything other than FLT_MAX. Note that Feature Level 9_* only supports GL ES 2.0, so the
+        // consumer of ANGLE can't modify the Max LOD themselves.
+        ASSERT(samplerState.maxLod >= 999.9f);
 
-            SamplerStateMap::iterator leastRecentlyUsed = mSamplerStateCache.begin();
-            for (SamplerStateMap::iterator i = mSamplerStateCache.begin(); i != mSamplerStateCache.end(); i++)
-            {
-                if (i->second.second < leastRecentlyUsed->second.second)
-                {
-                    leastRecentlyUsed = i;
-                }
-            }
-            mSamplerStateCache.erase(leastRecentlyUsed);
-        }
-
-        const auto &featureLevel = mRenderer->getRenderer11DeviceCaps().featureLevel;
-
-        D3D11_SAMPLER_DESC samplerDesc;
-        samplerDesc.Filter = gl_d3d11::ConvertFilter(samplerState.minFilter, samplerState.magFilter,
-                                                     samplerState.maxAnisotropy, samplerState.compareMode);
-        samplerDesc.AddressU = gl_d3d11::ConvertTextureWrap(samplerState.wrapS);
-        samplerDesc.AddressV = gl_d3d11::ConvertTextureWrap(samplerState.wrapT);
-        samplerDesc.AddressW = gl_d3d11::ConvertTextureWrap(samplerState.wrapR);
-        samplerDesc.MipLODBias = 0;
-        samplerDesc.MaxAnisotropy =
-            gl_d3d11::ConvertMaxAnisotropy(samplerState.maxAnisotropy, featureLevel);
-        samplerDesc.ComparisonFunc = gl_d3d11::ConvertComparison(samplerState.compareFunc);
-        samplerDesc.BorderColor[0] = 0.0f;
-        samplerDesc.BorderColor[1] = 0.0f;
-        samplerDesc.BorderColor[2] = 0.0f;
-        samplerDesc.BorderColor[3] = 0.0f;
-        samplerDesc.MinLOD = samplerState.minLod;
-        samplerDesc.MaxLOD = samplerState.maxLod;
-
-        if (mRenderer->getRenderer11DeviceCaps().featureLevel <= D3D_FEATURE_LEVEL_9_3)
-        {
-            // Check that maxLOD is nearly FLT_MAX (1000.0f is the default), since 9_3 doesn't support anything other than FLT_MAX.
-            // Note that Feature Level 9_* only supports GL ES 2.0, so the consumer of ANGLE can't modify the Max LOD themselves.
-            ASSERT(samplerState.maxLod >= 999.9f);
-
-            // Now just set MaxLOD to FLT_MAX. Other parts of the renderer (e.g. the non-zero max LOD workaround) should take account of this.
-            samplerDesc.MaxLOD = FLT_MAX;
-        }
-
-        d3d11::SamplerState dx11SamplerState;
-        ANGLE_TRY(mRenderer->allocateResource(samplerDesc, &dx11SamplerState));
-        *outSamplerState = dx11SamplerState.get();
-        mSamplerStateCache.insert(
-            std::make_pair(samplerState, std::make_pair(std::move(dx11SamplerState), mCounter++)));
-
-        return gl::NoError();
+        // Now just set MaxLOD to FLT_MAX. Other parts of the renderer (e.g. the non-zero max LOD
+        // workaround) should take account of this.
+        samplerDesc.MaxLOD = FLT_MAX;
     }
+
+    d3d11::SamplerState dx11SamplerState;
+    ANGLE_TRY(mRenderer->allocateResource(samplerDesc, &dx11SamplerState));
+    *outSamplerState = dx11SamplerState.get();
+    mSamplerStateCache.Put(samplerState, std::move(dx11SamplerState));
+
+    return gl::NoError();
 }
 
 }  // namespace rx

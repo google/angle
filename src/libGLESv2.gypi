@@ -265,6 +265,9 @@
             'third_party/murmurhash/MurmurHash3.cpp',
             'third_party/murmurhash/MurmurHash3.h',
             'third_party/trace_event/trace_event.h',
+            'third_party/mrucache/base/containers/mru_cache.h',
+            'third_party/mrucache/base/logging.h',
+            'third_party/mrucache/base/macros.h',
         ],
         'libangle_d3d_shared_sources':
         [
@@ -891,6 +894,7 @@
                 '.',
                 '../include',
                 'third_party/khronos',
+                'third_party/mrucache',
             ],
             'sources':
             [
@@ -913,6 +917,7 @@
                 [
                     '<(angle_path)/src',
                     '<(angle_path)/include',
+                    '<(angle_path)/src/third_party/mrucache',
                 ],
                 'defines':
                 [
