@@ -404,6 +404,11 @@ class Renderer11 : public RendererD3D
                                    const std::vector<D3DUniform *> &uniformArray) override;
     gl::Error applyComputeShader(const gl::ContextState &data);
 
+    gl::ErrorOrResult<TextureHelper11> createStagingTexture(GLenum textureType,
+                                                            const d3d11::Format &formatSet,
+                                                            const gl::Extents &size,
+                                                            StagingAccess readAndWriteAccess);
+
     template <typename DescT, typename InitDataT, typename ResourceT>
     gl::Error allocateResource(const DescT &desc, InitDataT *initData, ResourceT *resourceOut)
     {

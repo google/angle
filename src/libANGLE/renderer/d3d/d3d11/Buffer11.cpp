@@ -1465,8 +1465,8 @@ gl::Error Buffer11::PackStorage::packPixels(const gl::FramebufferAttachment &rea
         mStagingTexture.getExtents() != srcTextureSize)
     {
         ANGLE_TRY_RESULT(
-            CreateStagingTexture(srcTexture.getTextureType(), srcTexture.getFormatSet(),
-                                 srcTextureSize, StagingAccess::READ, mRenderer->getDevice()),
+            mRenderer->createStagingTexture(srcTexture.getTextureType(), srcTexture.getFormatSet(),
+                                            srcTextureSize, StagingAccess::READ),
             mStagingTexture);
     }
 
