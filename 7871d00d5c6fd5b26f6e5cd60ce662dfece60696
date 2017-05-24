@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df96e02c_50354dea",
+        "filename": "src/libANGLE/renderer/d3d/HLSLCompiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-24T19:33:46Z",
+      "side": 1,
+      "message": "unrelated style fix. left it in because I was too lazy to make a separate CL.",
+      "range": {
+        "startLine": 222,
+        "startChar": 15,
+        "endLine": 222,
+        "endChar": 21
+      },
+      "revId": "7871d00d5c6fd5b26f6e5cd60ce662dfece60696",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
