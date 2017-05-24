@@ -17,10 +17,67 @@ namespace rx
 
 namespace
 {
+size_t ComputeMippedMemoryUsage(unsigned int width,
+                                unsigned int height,
+                                unsigned int depth,
+                                size_t pixelSize,
+                                unsigned int mipLevels)
+{
+    size_t sizeSum = 0;
+
+    for (unsigned int level = 0; level < mipLevels; ++level)
+    {
+        unsigned int mipWidth  = std::max(width >> level, 1u);
+        unsigned int mipHeight = std::max(height >> level, 1u);
+        unsigned int mipDepth  = std::max(depth >> level, 1u);
+        sizeSum += static_cast<size_t>(mipWidth * mipHeight * mipDepth) * pixelSize;
+    }
+
+    return sizeSum;
+}
+
+size_t ComputeMemoryUsage(const D3D11_TEXTURE2D_DESC *desc)
+{
+    ASSERT(desc);
+    size_t pixelBytes = static_cast<size_t>(d3d11::GetDXGIFormatSizeInfo(desc->Format).pixelBytes);
+    return ComputeMippedMemoryUsage(desc->Width, desc->Height, 1, pixelBytes, desc->MipLevels);
+}
+
+size_t ComputeMemoryUsage(const D3D11_TEXTURE3D_DESC *desc)
+{
+    ASSERT(desc);
+    size_t pixelBytes = static_cast<size_t>(d3d11::GetDXGIFormatSizeInfo(desc->Format).pixelBytes);
+    return ComputeMippedMemoryUsage(desc->Width, desc->Height, desc->Depth, pixelBytes,
+                                    desc->MipLevels);
+}
+
 template <typename T>
 size_t ComputeMemoryUsage(const T *desc)
 {
     return 0;
+}
+
+template <ResourceType ResourceT>
+size_t ComputeGenericMemoryUsage(ID3D11DeviceChild *genericResource)
+{
+    auto *typedResource = static_cast<GetD3D11Type<ResourceT> *>(genericResource);
+    GetDescType<ResourceT> desc;
+    typedResource->GetDesc(&desc);
+    return ComputeMemoryUsage(&desc);
+}
+
+size_t ComputeGenericMemoryUsage(ResourceType resourceType, ID3D11DeviceChild *resource)
+{
+    switch (resourceType)
+    {
+        case ResourceType::Texture2D:
+            return ComputeGenericMemoryUsage<ResourceType::Texture2D>(resource);
+        case ResourceType::Texture3D:
+            return ComputeGenericMemoryUsage<ResourceType::Texture3D>(resource);
+
+        default:
+            return 0;
+    }
 }
 
 HRESULT CreateResource(ID3D11Device *device,
@@ -45,6 +102,22 @@ HRESULT CreateResource(ID3D11Device *device,
                        ID3D11ShaderResourceView **resourceOut)
 {
     return device->CreateShaderResourceView(resource, desc, resourceOut);
+}
+
+HRESULT CreateResource(ID3D11Device *device,
+                       const D3D11_TEXTURE2D_DESC *desc,
+                       const D3D11_SUBRESOURCE_DATA *initData,
+                       ID3D11Texture2D **texture)
+{
+    return device->CreateTexture2D(desc, initData, texture);
+}
+
+HRESULT CreateResource(ID3D11Device *device,
+                       const D3D11_TEXTURE3D_DESC *desc,
+                       const D3D11_SUBRESOURCE_DATA *initData,
+                       ID3D11Texture3D **texture)
+{
+    return device->CreateTexture3D(desc, initData, texture);
 }
 
 #define ANGLE_RESOURCE_STRINGIFY_OP(NAME, RESTYPE, D3D11TYPE, DESCTYPE, INITDATATYPE) #RESTYPE
@@ -113,6 +186,19 @@ void ResourceManager11::decrResource(ResourceType resourceType, size_t memorySiz
     mAllocatedResourceCounts[ResourceTypeIndex(resourceType)]--;
     ASSERT(mAllocatedResourceDeviceMemory[ResourceTypeIndex(resourceType)] >= memorySize);
     mAllocatedResourceDeviceMemory[ResourceTypeIndex(resourceType)] -= memorySize;
+}
+
+void ResourceManager11::onReleaseResource(ResourceType resourceType, ID3D11Resource *resource)
+{
+    ASSERT(resource);
+    decrResource(resourceType, ComputeGenericMemoryUsage(resourceType, resource));
+}
+
+template <>
+void ResourceManager11::onRelease(ID3D11Resource *resource)
+{
+    // For untyped ID3D11Resource, they must call onReleaseResource.
+    UNREACHABLE();
 }
 
 template <typename T>

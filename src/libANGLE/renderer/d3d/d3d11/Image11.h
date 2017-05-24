@@ -10,10 +10,10 @@
 #ifndef LIBANGLE_RENDERER_D3D_D3D11_IMAGE11_H_
 #define LIBANGLE_RENDERER_D3D_D3D11_IMAGE11_H_
 
-#include "libANGLE/renderer/d3d/ImageD3D.h"
-#include "libANGLE/ImageIndex.h"
-
 #include "common/debug.h"
+#include "libANGLE/ImageIndex.h"
+#include "libANGLE/renderer/d3d/ImageD3D.h"
+#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 
 namespace gl
 {
@@ -71,14 +71,15 @@ class Image11 : public ImageD3D
                                     const TextureHelper11 &textureHelper,
                                     UINT sourceSubResource);
 
-    gl::Error getStagingTexture(ID3D11Resource **outStagingTexture, unsigned int *outSubresourceIndex);
+    gl::Error getStagingTexture(const TextureHelper11 **outStagingTexture,
+                                unsigned int *outSubresourceIndex);
     gl::Error createStagingTexture();
     void releaseStagingTexture();
 
     Renderer11 *mRenderer;
 
     DXGI_FORMAT mDXGIFormat;
-    ID3D11Resource *mStagingTexture;
+    TextureHelper11 mStagingTexture;
     unsigned int mStagingSubresource;
 
     bool mRecoverFromStorage;

@@ -3404,13 +3404,13 @@ gl::Error Renderer11::copyTexture(const gl::Texture *source,
         source->getFormat(GL_TEXTURE_2D, sourceLevel).info->format == destFormat &&
         sourceStorage11->getFormatSet().texFormat == destStorage11->getFormatSet().texFormat)
     {
-        ID3D11Resource *sourceResource = nullptr;
+        const TextureHelper11 *sourceResource = nullptr;
         ANGLE_TRY(sourceStorage11->getResource(&sourceResource));
 
         gl::ImageIndex sourceIndex = gl::ImageIndex::Make2D(sourceLevel);
         UINT sourceSubresource     = sourceStorage11->getSubresourceIndex(sourceIndex);
 
-        ID3D11Resource *destResource = nullptr;
+        const TextureHelper11 *destResource = nullptr;
         ANGLE_TRY(destStorage11->getResource(&destResource));
 
         gl::ImageIndex destIndex = gl::ImageIndex::MakeGeneric(destTarget, destLevel);
@@ -3425,8 +3425,8 @@ gl::Error Renderer11::copyTexture(const gl::Texture *source,
             1u,
         };
 
-        mDeviceContext->CopySubresourceRegion(destResource, destSubresource, destOffset.x,
-                                              destOffset.y, destOffset.z, sourceResource,
+        mDeviceContext->CopySubresourceRegion(destResource->get(), destSubresource, destOffset.x,
+                                              destOffset.y, destOffset.z, sourceResource->get(),
                                               sourceSubresource, &sourceBox);
     }
     else
@@ -3477,7 +3477,7 @@ gl::Error Renderer11::copyCompressedTexture(const gl::Texture *source,
     TextureStorage11_2D *destStorage11 = GetAs<TextureStorage11_2D>(storage);
     ASSERT(destStorage11);
 
-    ID3D11Resource *destResource = nullptr;
+    const TextureHelper11 *destResource = nullptr;
     ANGLE_TRY(destStorage11->getResource(&destResource));
 
     gl::ImageIndex destIndex = gl::ImageIndex::Make2D(destLevel);
@@ -3492,14 +3492,14 @@ gl::Error Renderer11::copyCompressedTexture(const gl::Texture *source,
     TextureStorage11_2D *sourceStorage11 = GetAs<TextureStorage11_2D>(sourceStorage);
     ASSERT(sourceStorage11);
 
-    ID3D11Resource *sourceResource = nullptr;
+    const TextureHelper11 *sourceResource = nullptr;
     ANGLE_TRY(sourceStorage11->getResource(&sourceResource));
 
     gl::ImageIndex sourceIndex = gl::ImageIndex::Make2D(sourceLevel);
     UINT sourceSubresource     = sourceStorage11->getSubresourceIndex(sourceIndex);
 
-    mDeviceContext->CopySubresourceRegion(destResource, destSubresource, 0, 0, 0, sourceResource,
-                                          sourceSubresource, nullptr);
+    mDeviceContext->CopySubresourceRegion(destResource->get(), destSubresource, 0, 0, 0,
+                                          sourceResource->get(), sourceSubresource, nullptr);
 
     return gl::NoError();
 }
@@ -3555,14 +3555,8 @@ gl::Error Renderer11::createRenderTarget(int width,
         // The format must be either an RTV or a DSV
         ASSERT(bindRTV != bindDSV);
 
-        ID3D11Texture2D *texture = nullptr;
-        HRESULT result           = mDevice->CreateTexture2D(&desc, nullptr, &texture);
-        if (FAILED(result))
-        {
-            ASSERT(result == E_OUTOFMEMORY);
-            return gl::Error(GL_OUT_OF_MEMORY,
-                             "Failed to create render target texture, result: 0x%X.", result);
-        }
+        TextureHelper11 texture;
+        ANGLE_TRY(allocateTexture(desc, formatInfo, &texture));
 
         d3d11::SharedSRV srv;
         d3d11::SharedSRV blitSRV;
@@ -3575,12 +3569,7 @@ gl::Error Renderer11::createRenderTarget(int width,
             srvDesc.Texture2D.MostDetailedMip = 0;
             srvDesc.Texture2D.MipLevels       = 1;
 
-            gl::Error err = allocateResource(srvDesc, texture, &srv);
-            if (err.isError())
-            {
-                SafeRelease(texture);
-                return err;
-            }
+            ANGLE_TRY(allocateResource(srvDesc, texture.get(), &srv));
 
             if (formatInfo.blitSRVFormat != formatInfo.srvFormat)
             {
@@ -3592,12 +3581,7 @@ gl::Error Renderer11::createRenderTarget(int width,
                 blitSRVDesc.Texture2D.MostDetailedMip = 0;
                 blitSRVDesc.Texture2D.MipLevels       = 1;
 
-                err = allocateResource(blitSRVDesc, texture, &blitSRV);
-                if (err.isError())
-                {
-                    SafeRelease(texture);
-                    return err;
-                }
+                ANGLE_TRY(allocateResource(blitSRVDesc, texture.get(), &blitSRV));
             }
             else
             {
@@ -3615,12 +3599,7 @@ gl::Error Renderer11::createRenderTarget(int width,
             dsvDesc.Flags              = 0;
 
             d3d11::DepthStencilView dsv;
-            gl::Error err = allocateResource(dsvDesc, texture, &dsv);
-            if (err.isError())
-            {
-                SafeRelease(texture);
-                return err;
-            }
+            ANGLE_TRY(allocateResource(dsvDesc, texture.get(), &dsv));
 
             *outRT = new TextureRenderTarget11(std::move(dsv), texture, srv, format, formatInfo,
                                                width, height, 1, supportedSamples);
@@ -3634,12 +3613,7 @@ gl::Error Renderer11::createRenderTarget(int width,
             rtvDesc.Texture2D.MipSlice = 0;
 
             d3d11::RenderTargetView rtv;
-            gl::Error err = allocateResource(rtvDesc, texture, &rtv);
-            if (err.isError())
-            {
-                SafeRelease(texture);
-                return err;
-            }
+            ANGLE_TRY(allocateResource(rtvDesc, texture.get(), &rtv));
 
             if (formatInfo.dataInitializerFunction != nullptr)
             {
@@ -3654,14 +3628,13 @@ gl::Error Renderer11::createRenderTarget(int width,
         {
             UNREACHABLE();
         }
-
-        SafeRelease(texture);
     }
     else
     {
-        *outRT = new TextureRenderTarget11(
-            d3d11::RenderTargetView(), nullptr, d3d11::SharedSRV(), d3d11::SharedSRV(), format,
-            d3d11::Format::Get(GL_NONE, mRenderer11DeviceCaps), width, height, 1, supportedSamples);
+        *outRT = new TextureRenderTarget11(d3d11::RenderTargetView(), TextureHelper11(),
+                                           d3d11::SharedSRV(), d3d11::SharedSRV(), format,
+                                           d3d11::Format::Get(GL_NONE, mRenderer11DeviceCaps),
+                                           width, height, 1, supportedSamples);
     }
 
     return gl::NoError();
@@ -3678,8 +3651,8 @@ gl::Error Renderer11::createRenderTargetCopy(RenderTargetD3D *source, RenderTarg
     RenderTarget11 *source11 = GetAs<RenderTarget11>(source);
     RenderTarget11 *dest11   = GetAs<RenderTarget11>(newRT);
 
-    mDeviceContext->CopySubresourceRegion(dest11->getTexture(), dest11->getSubresourceIndex(), 0, 0,
-                                          0, source11->getTexture(),
+    mDeviceContext->CopySubresourceRegion(dest11->getTexture().get(), dest11->getSubresourceIndex(),
+                                          0, 0, 0, source11->getTexture().get(),
                                           source11->getSubresourceIndex(), nullptr);
     *outRT = newRT;
     return gl::NoError();
@@ -4078,14 +4051,11 @@ gl::Error Renderer11::readFromAttachment(const gl::FramebufferAttachment &srcAtt
 
     const bool invertTexture = UsePresentPathFast(this, &srcAttachment);
 
-    RenderTargetD3D *renderTarget = nullptr;
-    ANGLE_TRY(srcAttachment.getRenderTarget(&renderTarget));
+    RenderTarget11 *rt11 = nullptr;
+    ANGLE_TRY(srcAttachment.getRenderTarget(&rt11));
+    ASSERT(rt11->getTexture().valid());
 
-    RenderTarget11 *rt11 = GetAs<RenderTarget11>(renderTarget);
-    ASSERT(rt11->getTexture());
-
-    TextureHelper11 textureHelper =
-        TextureHelper11::MakeAndReference(rt11->getTexture(), rt11->getFormatSet());
+    const TextureHelper11 &textureHelper = rt11->getTexture();
     unsigned int sourceSubResource = rt11->getSubresourceIndex();
 
     const gl::Extents &texSize = textureHelper.getExtents();
@@ -4129,7 +4099,7 @@ gl::Error Renderer11::readFromAttachment(const gl::FramebufferAttachment &srcAtt
     // For 2D multisampled textures, it points to the multisampled resolve texture.
     const TextureHelper11 *srcTexture = &textureHelper;
 
-    if (textureHelper.getTextureType() == GL_TEXTURE_2D && textureHelper.getSampleCount() > 1)
+    if (textureHelper.is2D() && textureHelper.getSampleCount() > 1)
     {
         D3D11_TEXTURE2D_DESC resolveDesc;
         resolveDesc.Width              = static_cast<UINT>(texSize.width);
@@ -4144,20 +4114,11 @@ gl::Error Renderer11::readFromAttachment(const gl::FramebufferAttachment &srcAtt
         resolveDesc.CPUAccessFlags     = 0;
         resolveDesc.MiscFlags          = 0;
 
-        ID3D11Texture2D *resolveTex2D = nullptr;
-        HRESULT result = mDevice->CreateTexture2D(&resolveDesc, nullptr, &resolveTex2D);
-        if (FAILED(result))
-        {
-            return gl::Error(GL_OUT_OF_MEMORY,
-                             "Renderer11::readTextureData failed to create internal resolve "
-                             "texture for ReadPixels, HRESULT: 0x%X.",
-                             result);
-        }
+        ANGLE_TRY(
+            allocateTexture(resolveDesc, textureHelper.getFormatSet(), &resolvedTextureHelper));
 
-        mDeviceContext->ResolveSubresource(resolveTex2D, 0, textureHelper.getTexture2D(),
+        mDeviceContext->ResolveSubresource(resolvedTextureHelper.get(), 0, textureHelper.get(),
                                            sourceSubResource, textureHelper.getFormat());
-        resolvedTextureHelper =
-            TextureHelper11::MakeAndReference(resolveTex2D, textureHelper.getFormatSet());
 
         sourceSubResource = 0;
         srcTexture        = &resolvedTextureHelper;
@@ -4171,14 +4132,14 @@ gl::Error Renderer11::readFromAttachment(const gl::FramebufferAttachment &srcAtt
 
     // Select the correct layer from a 3D attachment
     srcBox.front = 0;
-    if (textureHelper.getTextureType() == GL_TEXTURE_3D)
+    if (textureHelper.is3D())
     {
         srcBox.front = static_cast<UINT>(srcAttachment.layer());
     }
     srcBox.back = srcBox.front + 1;
 
-    mDeviceContext->CopySubresourceRegion(stagingHelper.getResource(), 0, 0, 0, 0,
-                                          srcTexture->getResource(), sourceSubResource, &srcBox);
+    mDeviceContext->CopySubresourceRegion(stagingHelper.get(), 0, 0, 0, 0, srcTexture->get(),
+                                          sourceSubResource, &srcBox);
 
     if (!invertTexture)
     {
@@ -4207,7 +4168,7 @@ gl::Error Renderer11::packPixels(const TextureHelper11 &textureHelper,
                                  const PackPixelsParams &params,
                                  uint8_t *pixelsOut)
 {
-    ID3D11Resource *readResource = textureHelper.getResource();
+    ID3D11Resource *readResource = textureHelper.get();
 
     D3D11_MAPPED_SUBRESOURCE mapping;
     HRESULT hr = mDeviceContext->Map(readResource, 0, D3D11_MAP_READ, 0, &mapping);
@@ -4253,8 +4214,7 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRectIn,
                << "Failed to retrieve the internal draw render target from the draw framebuffer.";
     }
 
-    TextureHelper11 drawTexture = TextureHelper11::MakeAndReference(
-        drawRenderTarget11->getTexture(), drawRenderTarget11->getFormatSet());
+    const TextureHelper11 &drawTexture = drawRenderTarget11->getTexture();
     unsigned int drawSubresource    = drawRenderTarget11->getSubresourceIndex();
 
     RenderTarget11 *readRenderTarget11 = GetAs<RenderTarget11>(readRenderTarget);
@@ -4283,14 +4243,13 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRectIn,
             viewDesc.Texture2D.MipLevels       = 1;
             viewDesc.Texture2D.MostDetailedMip = 0;
 
-            ANGLE_TRY(allocateResource(viewDesc, readTexture.getResource(), &readSRV));
+            ANGLE_TRY(allocateResource(viewDesc, readTexture.get(), &readSRV));
         }
     }
     else
     {
         ASSERT(readRenderTarget11);
-        readTexture = TextureHelper11::MakeAndReference(readRenderTarget11->getTexture(),
-                                                        readRenderTarget11->getFormatSet());
+        readTexture     = readRenderTarget11->getTexture();
         readSubresource = readRenderTarget11->getSubresourceIndex();
         readSRV         = readRenderTarget11->getBlitShaderResourceView();
         if (!readSRV.valid())
@@ -4456,9 +4415,8 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRectIn,
         // We also require complete framebuffer copies for depth-stencil blit.
         D3D11_BOX *pSrcBox = wholeBufferCopy ? nullptr : &readBox;
 
-        mDeviceContext->CopySubresourceRegion(drawTexture.getResource(), drawSubresource, dstX,
-                                              dstY, 0, readTexture.getResource(), readSubresource,
-                                              pSrcBox);
+        mDeviceContext->CopySubresourceRegion(drawTexture.get(), drawSubresource, dstX, dstY, 0,
+                                              readTexture.get(), readSubresource, pSrcBox);
     }
     else
     {
@@ -4576,17 +4534,12 @@ Renderer11::resolveMultisampledTexture(RenderTarget11 *renderTarget, bool depth,
     resolveDesc.CPUAccessFlags     = 0;
     resolveDesc.MiscFlags          = 0;
 
-    ID3D11Texture2D *resolveTexture = nullptr;
-    HRESULT result = mDevice->CreateTexture2D(&resolveDesc, nullptr, &resolveTexture);
-    if (FAILED(result))
-    {
-        return gl::Error(GL_OUT_OF_MEMORY,
-                         "Failed to create a multisample resolve texture, HRESULT: 0x%X.", result);
-    }
+    TextureHelper11 resolveTexture;
+    ANGLE_TRY(allocateTexture(resolveDesc, formatSet, &resolveTexture));
 
-    mDeviceContext->ResolveSubresource(resolveTexture, 0, renderTarget->getTexture(),
+    mDeviceContext->ResolveSubresource(resolveTexture.get(), 0, renderTarget->getTexture().get(),
                                        renderTarget->getSubresourceIndex(), formatSet.texFormat);
-    return TextureHelper11::MakeAndPossess2D(resolveTexture, renderTarget->getFormatSet());
+    return resolveTexture;
 }
 
 bool Renderer11::getLUID(LUID *adapterLuid) const
@@ -4992,12 +4945,12 @@ gl::Error Renderer11::applyComputeUniforms(const ProgramD3D &programD3D,
 }
 
 gl::ErrorOrResult<TextureHelper11> Renderer11::createStagingTexture(
-    GLenum textureType,
+    ResourceType textureType,
     const d3d11::Format &formatSet,
     const gl::Extents &size,
     StagingAccess readAndWriteAccess)
 {
-    if (textureType == GL_TEXTURE_2D)
+    if (textureType == ResourceType::Texture2D)
     {
         D3D11_TEXTURE2D_DESC stagingDesc;
         stagingDesc.Width              = size.width;
@@ -5017,16 +4970,11 @@ gl::ErrorOrResult<TextureHelper11> Renderer11::createStagingTexture(
             stagingDesc.CPUAccessFlags |= D3D11_CPU_ACCESS_WRITE;
         }
 
-        ID3D11Texture2D *stagingTex = nullptr;
-        HRESULT result              = mDevice->CreateTexture2D(&stagingDesc, nullptr, &stagingTex);
-        if (FAILED(result))
-        {
-            return gl::Error(GL_OUT_OF_MEMORY, "createStagingTexture failed, HRESULT: 0x%X.",
-                             result);
-        }
-        return TextureHelper11::MakeAndPossess2D(stagingTex, formatSet);
+        TextureHelper11 stagingTex;
+        ANGLE_TRY(allocateTexture(stagingDesc, formatSet, &stagingTex));
+        return stagingTex;
     }
-    ASSERT(textureType == GL_TEXTURE_3D);
+    ASSERT(textureType == ResourceType::Texture3D);
 
     D3D11_TEXTURE3D_DESC stagingDesc;
     stagingDesc.Width          = size.width;
@@ -5039,14 +4987,31 @@ gl::ErrorOrResult<TextureHelper11> Renderer11::createStagingTexture(
     stagingDesc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
     stagingDesc.MiscFlags      = 0;
 
-    ID3D11Texture3D *stagingTex = nullptr;
-    HRESULT result              = mDevice->CreateTexture3D(&stagingDesc, nullptr, &stagingTex);
-    if (FAILED(result))
-    {
-        return gl::Error(GL_OUT_OF_MEMORY, "createStagingTexture failed, HRESULT: 0x%X.", result);
-    }
+    TextureHelper11 stagingTex;
+    ANGLE_TRY(allocateTexture(stagingDesc, formatSet, &stagingTex));
+    return stagingTex;
+}
 
-    return TextureHelper11::MakeAndPossess3D(stagingTex, formatSet);
+gl::Error Renderer11::allocateTexture(const D3D11_TEXTURE2D_DESC &desc,
+                                      const d3d11::Format &format,
+                                      const D3D11_SUBRESOURCE_DATA *initData,
+                                      TextureHelper11 *textureOut)
+{
+    d3d11::Texture2D texture;
+    ANGLE_TRY(mResourceManager11.allocate(this, &desc, initData, &texture));
+    textureOut->init(std::move(texture), desc, format);
+    return gl::NoError();
+}
+
+gl::Error Renderer11::allocateTexture(const D3D11_TEXTURE3D_DESC &desc,
+                                      const d3d11::Format &format,
+                                      const D3D11_SUBRESOURCE_DATA *initData,
+                                      TextureHelper11 *textureOut)
+{
+    d3d11::Texture3D texture;
+    ANGLE_TRY(mResourceManager11.allocate(this, &desc, initData, &texture));
+    textureOut->init(std::move(texture), desc, format);
+    return gl::NoError();
 }
 
 }  // namespace rx

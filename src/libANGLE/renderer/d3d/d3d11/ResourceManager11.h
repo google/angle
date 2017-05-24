@@ -22,15 +22,18 @@ class Renderer11;
 class ResourceManager11;
 template <typename T>
 class SharedResource11;
+class TextureHelper11;
 
 // Format: ResourceType, D3D11 type, DESC type, init data type.
-#define ANGLE_RESOURCE_TYPE_OP(NAME, OP)                                                    \
-    OP(NAME, DepthStencilView, ID3D11DepthStencilView, D3D11_DEPTH_STENCIL_VIEW_DESC,       \
-       ID3D11Resource)                                                                      \
-    OP(NAME, RenderTargetView, ID3D11RenderTargetView, D3D11_RENDER_TARGET_VIEW_DESC,       \
-       ID3D11Resource)                                                                      \
-    OP(NAME, ShaderResourceView, ID3D11ShaderResourceView, D3D11_SHADER_RESOURCE_VIEW_DESC, \
-       ID3D11Resource)
+#define ANGLE_RESOURCE_TYPE_OP(NAME, OP)                                                     \
+    OP(NAME, DepthStencilView, ID3D11DepthStencilView, D3D11_DEPTH_STENCIL_VIEW_DESC,        \
+       ID3D11Resource)                                                                       \
+    OP(NAME, RenderTargetView, ID3D11RenderTargetView, D3D11_RENDER_TARGET_VIEW_DESC,        \
+       ID3D11Resource)                                                                       \
+    OP(NAME, ShaderResourceView, ID3D11ShaderResourceView, D3D11_SHADER_RESOURCE_VIEW_DESC,  \
+       ID3D11Resource)                                                                       \
+    OP(NAME, Texture2D, ID3D11Texture2D, D3D11_TEXTURE2D_DESC, const D3D11_SUBRESOURCE_DATA) \
+    OP(NAME, Texture3D, ID3D11Texture3D, D3D11_TEXTURE3D_DESC, const D3D11_SUBRESOURCE_DATA)
 
 #define ANGLE_RESOURCE_TYPE_LIST(NAME, RESTYPE, D3D11TYPE, DESCTYPE, INITDATATYPE) RESTYPE,
 
@@ -157,6 +160,8 @@ class Resource11Base : angle::NonCopyable
     void reset() { mData.reset(new DataT()); }
 
   protected:
+    friend class TextureHelper11;
+
     Resource11Base() : mData(new DataT()) {}
 
     Resource11Base(Resource11Base &&movedObj) : mData(new DataT())
@@ -268,6 +273,7 @@ class ResourceManager11 final : angle::NonCopyable
 
     template <typename T>
     void onRelease(T *resource);
+    void onReleaseResource(ResourceType resourceType, ID3D11Resource *resource);
 
   private:
     void incrResource(ResourceType resourceType, size_t memorySize);

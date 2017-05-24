@@ -53,7 +53,7 @@ TextureStorage11::TextureStorage11(Renderer11 *renderer,
       mTextureWidth(0),
       mTextureHeight(0),
       mTextureDepth(0),
-      mDropStencilTexture(nullptr),
+      mDropStencilTexture(),
       mBindFlags(bindFlags),
       mMiscFlags(miscFlags)
 {
@@ -62,7 +62,6 @@ TextureStorage11::TextureStorage11(Renderer11 *renderer,
 TextureStorage11::~TextureStorage11()
 {
     mSrvCache.clear();
-    SafeRelease(mDropStencilTexture);
 }
 
 DWORD TextureStorage11::GetTextureBindFlags(GLenum internalFormat,
@@ -239,7 +238,7 @@ gl::Error TextureStorage11::getCachedOrCreateSRV(const SRVKey &key, d3d11::Share
         return gl::NoError();
     }
 
-    ID3D11Resource *texture = nullptr;
+    const TextureHelper11 *texture = nullptr;
     DXGI_FORMAT format      = DXGI_FORMAT_UNKNOWN;
 
     if (key.swizzle)
@@ -252,8 +251,8 @@ gl::Error TextureStorage11::getCachedOrCreateSRV(const SRVKey &key, d3d11::Share
     }
     else if (key.dropStencil)
     {
-        ASSERT(mDropStencilTexture);
-        texture = mDropStencilTexture;
+        ASSERT(mDropStencilTexture.valid());
+        texture = &mDropStencilTexture;
         format  = DXGI_FORMAT_R32_FLOAT;
     }
     else
@@ -264,7 +263,7 @@ gl::Error TextureStorage11::getCachedOrCreateSRV(const SRVKey &key, d3d11::Share
 
     d3d11::SharedSRV srv;
 
-    ANGLE_TRY(createSRV(key.baseLevel, key.mipLevels, format, texture, &srv));
+    ANGLE_TRY(createSRV(key.baseLevel, key.mipLevels, format, *texture, &srv));
 
     mSrvCache.insert(std::make_pair(key, srv));
     *outSRV = srv;
@@ -288,12 +287,12 @@ gl::Error TextureStorage11::getSRVLevel(int mipLevel, bool blitSRV, const d3d11:
         }
         else
         {
-            ID3D11Resource *resource = nullptr;
+            const TextureHelper11 *resource = nullptr;
             ANGLE_TRY(getResource(&resource));
 
             DXGI_FORMAT resourceFormat =
                 blitSRV ? mFormatInfo.blitSRVFormat : mFormatInfo.srvFormat;
-            ANGLE_TRY(createSRV(mipLevel, 1, resourceFormat, resource, &levelSRVs[mipLevel]));
+            ANGLE_TRY(createSRV(mipLevel, 1, resourceFormat, *resource, &levelSRVs[mipLevel]));
         }
     }
 
@@ -370,7 +369,7 @@ void TextureStorage11::markLevelDirty(int mipLevel)
         mSwizzleCache[mipLevel] = gl::SwizzleState();
     }
 
-    SafeRelease(mDropStencilTexture);
+    mDropStencilTexture.reset();
 }
 
 void TextureStorage11::markDirty()
@@ -381,12 +380,12 @@ void TextureStorage11::markDirty()
     }
 }
 
-gl::Error TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture,
+gl::Error TextureStorage11::updateSubresourceLevel(const TextureHelper11 &srcTexture,
                                                    unsigned int sourceSubresource,
                                                    const gl::ImageIndex &index,
                                                    const gl::Box &copyArea)
 {
-    ASSERT(srcTexture);
+    ASSERT(srcTexture.valid());
 
     const GLint level = index.mipIndex;
 
@@ -398,7 +397,7 @@ gl::Error TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture,
                     copyArea.width == texSize.width && copyArea.height == texSize.height &&
                     copyArea.depth == texSize.depth;
 
-    ID3D11Resource *dstTexture = nullptr;
+    const TextureHelper11 *dstTexture = nullptr;
 
     // If the zero-LOD workaround is active and we want to update a level greater than zero, then we
     // should update the mipmapped texture, even if mapmaps are currently disabled.
@@ -413,7 +412,7 @@ gl::Error TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture,
 
     unsigned int dstSubresource = getSubresourceIndex(index);
 
-    ASSERT(dstTexture);
+    ASSERT(dstTexture->valid());
 
     const d3d11::DXGIFormatSize &dxgiFormatSizeInfo =
         d3d11::GetDXGIFormatSizeInfo(mFormatInfo.texFormat);
@@ -421,10 +420,8 @@ gl::Error TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture,
     {
         // CopySubresourceRegion cannot copy partial depth stencils, use the blitter instead
         Blit11 *blitter        = mRenderer->getBlitter();
-        TextureHelper11 source = TextureHelper11::MakeAndReference(srcTexture, getFormatSet());
-        TextureHelper11 dest   = TextureHelper11::MakeAndReference(dstTexture, getFormatSet());
-        return blitter->copyDepthStencil(source, sourceSubresource, copyArea, texSize, dest,
-                                         dstSubresource, copyArea, texSize, nullptr);
+        return blitter->copyDepthStencil(srcTexture, sourceSubresource, copyArea, texSize,
+                                         *dstTexture, dstSubresource, copyArea, texSize, nullptr);
     }
 
     D3D11_BOX srcBox;
@@ -439,19 +436,20 @@ gl::Error TextureStorage11::updateSubresourceLevel(ID3D11Resource *srcTexture,
 
     ID3D11DeviceContext *context = mRenderer->getDeviceContext();
 
-    context->CopySubresourceRegion(dstTexture, dstSubresource, copyArea.x, copyArea.y, copyArea.z,
-                                   srcTexture, sourceSubresource, fullCopy ? nullptr : &srcBox);
+    context->CopySubresourceRegion(dstTexture->get(), dstSubresource, copyArea.x, copyArea.y,
+                                   copyArea.z, srcTexture.get(), sourceSubresource,
+                                   fullCopy ? nullptr : &srcBox);
     return gl::NoError();
 }
 
-gl::Error TextureStorage11::copySubresourceLevel(ID3D11Resource *dstTexture,
+gl::Error TextureStorage11::copySubresourceLevel(const TextureHelper11 &dstTexture,
                                                  unsigned int dstSubresource,
                                                  const gl::ImageIndex &index,
                                                  const gl::Box &region)
 {
-    ASSERT(dstTexture);
+    ASSERT(dstTexture.valid());
 
-    ID3D11Resource *srcTexture = nullptr;
+    const TextureHelper11 *srcTexture = nullptr;
 
     // If the zero-LOD workaround is active and we want to update a level greater than zero, then we
     // should update the mipmapped texture, even if mapmaps are currently disabled.
@@ -464,7 +462,7 @@ gl::Error TextureStorage11::copySubresourceLevel(ID3D11Resource *dstTexture,
         ANGLE_TRY(getResource(&srcTexture));
     }
 
-    ASSERT(srcTexture);
+    ASSERT(srcTexture->valid());
 
     unsigned int srcSubresource = getSubresourceIndex(index);
 
@@ -489,8 +487,8 @@ gl::Error TextureStorage11::copySubresourceLevel(ID3D11Resource *dstTexture,
         pSrcBox       = &srcBox;
     }
 
-    context->CopySubresourceRegion(dstTexture, dstSubresource, region.x, region.y, region.z,
-                                   srcTexture, srcSubresource, pSrcBox);
+    context->CopySubresourceRegion(dstTexture.get(), dstSubresource, region.x, region.y, region.z,
+                                   srcTexture->get(), srcSubresource, pSrcBox);
 
     return gl::NoError();
 }
@@ -548,15 +546,15 @@ gl::Error TextureStorage11::copyToStorage(TextureStorage *destStorage)
 {
     ASSERT(destStorage);
 
-    ID3D11Resource *sourceResouce = nullptr;
+    const TextureHelper11 *sourceResouce = nullptr;
     ANGLE_TRY(getResource(&sourceResouce));
 
     TextureStorage11 *dest11     = GetAs<TextureStorage11>(destStorage);
-    ID3D11Resource *destResource = nullptr;
+    const TextureHelper11 *destResource = nullptr;
     ANGLE_TRY(dest11->getResource(&destResource));
 
     ID3D11DeviceContext *immediateContext = mRenderer->getDeviceContext();
-    immediateContext->CopyResource(destResource, sourceResouce);
+    immediateContext->CopyResource(destResource->get(), sourceResouce->get());
 
     dest11->markDirty();
 
@@ -574,9 +572,9 @@ gl::Error TextureStorage11::setData(const gl::ImageIndex &index,
 
     markLevelDirty(index.mipIndex);
 
-    ID3D11Resource *resource = nullptr;
+    const TextureHelper11 *resource = nullptr;
     ANGLE_TRY(getResource(&resource));
-    ASSERT(resource);
+    ASSERT(resource && resource->valid());
 
     UINT destSubresource = getSubresourceIndex(index);
 
@@ -653,12 +651,12 @@ gl::Error TextureStorage11::setData(const gl::ImageIndex &index,
         destD3DBox.front  = destBox->z;
         destD3DBox.back   = destBox->z + destBox->depth;
 
-        immediateContext->UpdateSubresource(resource, destSubresource, &destD3DBox, data,
+        immediateContext->UpdateSubresource(resource->get(), destSubresource, &destD3DBox, data,
                                             bufferRowPitch, bufferDepthPitch);
     }
     else
     {
-        immediateContext->UpdateSubresource(resource, destSubresource, nullptr, data,
+        immediateContext->UpdateSubresource(resource->get(), destSubresource, nullptr, data,
                                             bufferRowPitch, bufferDepthPitch);
     }
 
@@ -677,13 +675,11 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer11 *renderer, SwapChain11 *swap
                        0,
                        swapchain->getRenderTargetInternalFormat()),
       mTexture(swapchain->getOffscreenTexture()),
-      mLevelZeroTexture(nullptr),
+      mLevelZeroTexture(),
       mLevelZeroRenderTarget(nullptr),
       mUseLevelZeroTexture(false),
-      mSwizzleTexture(nullptr)
+      mSwizzleTexture()
 {
-    mTexture->AddRef();
-
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
     {
         mAssociatedImages[i]     = nullptr;
@@ -691,7 +687,7 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer11 *renderer, SwapChain11 *swap
     }
 
     D3D11_TEXTURE2D_DESC texDesc;
-    mTexture->GetDesc(&texDesc);
+    mTexture.getDesc(&texDesc);
     mMipLevels     = texDesc.MipLevels;
     mTextureWidth  = texDesc.Width;
     mTextureHeight = texDesc.Height;
@@ -714,12 +710,12 @@ TextureStorage11_2D::TextureStorage11_2D(Renderer11 *renderer,
                               renderTarget,
                               levels),
           internalformat),
-      mTexture(nullptr),
+      mTexture(),
       mHasKeyedMutex(false),
-      mLevelZeroTexture(nullptr),
+      mLevelZeroTexture(),
       mLevelZeroRenderTarget(nullptr),
       mUseLevelZeroTexture(hintLevelZeroOnly && levels > 1),
-      mSwizzleTexture(nullptr)
+      mSwizzleTexture()
 {
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
     {
@@ -756,10 +752,6 @@ TextureStorage11_2D::~TextureStorage11_2D()
         }
     }
 
-    SafeRelease(mTexture);
-    SafeRelease(mSwizzleTexture);
-
-    SafeRelease(mLevelZeroTexture);
     SafeDelete(mLevelZeroRenderTarget);
 
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
@@ -786,36 +778,36 @@ gl::Error TextureStorage11_2D::copyToStorage(TextureStorage *destStorage)
     {
         // If either mTexture or mLevelZeroTexture exist, then we need to copy them into the
         // corresponding textures in destStorage.
-        if (mTexture)
+        if (mTexture.valid())
         {
             ANGLE_TRY(dest11->useLevelZeroWorkaroundTexture(false));
 
-            ID3D11Resource *destResource = nullptr;
+            const TextureHelper11 *destResource = nullptr;
             ANGLE_TRY(dest11->getResource(&destResource));
 
-            immediateContext->CopyResource(destResource, mTexture);
+            immediateContext->CopyResource(destResource->get(), mTexture.get());
         }
 
-        if (mLevelZeroTexture)
+        if (mLevelZeroTexture.valid())
         {
             ANGLE_TRY(dest11->useLevelZeroWorkaroundTexture(true));
 
-            ID3D11Resource *destResource = nullptr;
+            const TextureHelper11 *destResource = nullptr;
             ANGLE_TRY(dest11->getResource(&destResource));
 
-            immediateContext->CopyResource(destResource, mLevelZeroTexture);
+            immediateContext->CopyResource(destResource->get(), mLevelZeroTexture.get());
         }
 
         return gl::NoError();
     }
 
-    ID3D11Resource *sourceResouce = nullptr;
+    const TextureHelper11 *sourceResouce = nullptr;
     ANGLE_TRY(getResource(&sourceResouce));
 
-    ID3D11Resource *destResource = nullptr;
+    const TextureHelper11 *destResource = nullptr;
     ANGLE_TRY(dest11->getResource(&destResource));
 
-    immediateContext->CopyResource(destResource, sourceResouce);
+    immediateContext->CopyResource(destResource->get(), sourceResouce->get());
     dest11->markDirty();
 
     return gl::NoError();
@@ -827,28 +819,30 @@ gl::Error TextureStorage11_2D::useLevelZeroWorkaroundTexture(bool useLevelZeroTe
 
     if (useLevelZeroTexture && mMipLevels > 1)
     {
-        if (!mUseLevelZeroTexture && mTexture)
+        if (!mUseLevelZeroTexture && mTexture.valid())
         {
             ANGLE_TRY(ensureTextureExists(1));
 
             // Pull data back from the mipped texture if necessary.
-            ASSERT(mLevelZeroTexture);
+            ASSERT(mLevelZeroTexture.valid());
             ID3D11DeviceContext *context = mRenderer->getDeviceContext();
-            context->CopySubresourceRegion(mLevelZeroTexture, 0, 0, 0, 0, mTexture, 0, nullptr);
+            context->CopySubresourceRegion(mLevelZeroTexture.get(), 0, 0, 0, 0, mTexture.get(), 0,
+                                           nullptr);
         }
 
         mUseLevelZeroTexture = true;
     }
     else
     {
-        if (mUseLevelZeroTexture && mLevelZeroTexture)
+        if (mUseLevelZeroTexture && mLevelZeroTexture.valid())
         {
             ANGLE_TRY(ensureTextureExists(mMipLevels));
 
             // Pull data back from the level zero texture if necessary.
-            ASSERT(mTexture);
+            ASSERT(mTexture.valid());
             ID3D11DeviceContext *context = mRenderer->getDeviceContext();
-            context->CopySubresourceRegion(mTexture, 0, 0, 0, 0, mLevelZeroTexture, 0, nullptr);
+            context->CopySubresourceRegion(mTexture.get(), 0, 0, 0, 0, mLevelZeroTexture.get(), 0,
+                                           nullptr);
         }
 
         mUseLevelZeroTexture = false;
@@ -932,30 +926,30 @@ gl::Error TextureStorage11_2D::releaseAssociatedImage(const gl::ImageIndex &inde
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_2D::getResource(ID3D11Resource **outResource)
+gl::Error TextureStorage11_2D::getResource(const TextureHelper11 **outResource)
 {
     if (mUseLevelZeroTexture && mMipLevels > 1)
     {
         ANGLE_TRY(ensureTextureExists(1));
 
-        *outResource = mLevelZeroTexture;
+        *outResource = &mLevelZeroTexture;
         return gl::NoError();
     }
 
     ANGLE_TRY(ensureTextureExists(mMipLevels));
 
-    *outResource = mTexture;
+    *outResource = &mTexture;
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_2D::getMippedResource(ID3D11Resource **outResource)
+gl::Error TextureStorage11_2D::getMippedResource(const TextureHelper11 **outResource)
 {
     // This shouldn't be called unless the zero max LOD workaround is active.
     ASSERT(mRenderer->getWorkarounds().zeroMaxLodWorkaround);
 
     ANGLE_TRY(ensureTextureExists(mMipLevels));
 
-    *outResource = mTexture;
+    *outResource = &mTexture;
     return gl::NoError();
 }
 
@@ -965,15 +959,13 @@ gl::Error TextureStorage11_2D::ensureTextureExists(int mipLevels)
     bool useLevelZeroTexture = mRenderer->getWorkarounds().zeroMaxLodWorkaround
                                    ? (mipLevels == 1) && (mMipLevels > 1)
                                    : false;
-    ID3D11Texture2D **outputTexture = useLevelZeroTexture ? &mLevelZeroTexture : &mTexture;
+    TextureHelper11 *outputTexture = useLevelZeroTexture ? &mLevelZeroTexture : &mTexture;
 
     // if the width or height is not positive this should be treated as an incomplete texture
     // we handle that here by skipping the d3d texture creation
-    if (*outputTexture == nullptr && mTextureWidth > 0 && mTextureHeight > 0)
+    if (!outputTexture->valid() && mTextureWidth > 0 && mTextureHeight > 0)
     {
         ASSERT(mipLevels > 0);
-
-        ID3D11Device *device = mRenderer->getDevice();
 
         D3D11_TEXTURE2D_DESC desc;
         desc.Width              = mTextureWidth;  // Compressed texture size constraints?
@@ -988,23 +980,8 @@ gl::Error TextureStorage11_2D::ensureTextureExists(int mipLevels)
         desc.CPUAccessFlags     = 0;
         desc.MiscFlags          = getMiscFlags();
 
-        HRESULT result = device->CreateTexture2D(&desc, nullptr, outputTexture);
-
-        // this can happen from windows TDR
-        if (d3d11::isDeviceLostError(result))
-        {
-            mRenderer->notifyDeviceLost();
-            return gl::Error(GL_OUT_OF_MEMORY, "Failed to create 2D texture storage, result: 0x%X.",
-                             result);
-        }
-        else if (FAILED(result))
-        {
-            ASSERT(result == E_OUTOFMEMORY);
-            return gl::Error(GL_OUT_OF_MEMORY, "Failed to create 2D texture storage, result: 0x%X.",
-                             result);
-        }
-
-        d3d11::SetDebugName(*outputTexture, "TexStorage2D.Texture");
+        ANGLE_TRY(mRenderer->allocateTexture(desc, mFormatInfo, outputTexture));
+        outputTexture->setDebugName("TexStorage2D.Texture");
     }
 
     return gl::NoError();
@@ -1033,7 +1010,7 @@ gl::Error TextureStorage11_2D::getRenderTarget(const gl::ImageIndex &index, Rend
         return gl::NoError();
     }
 
-    ID3D11Resource *texture = nullptr;
+    const TextureHelper11 *texture = nullptr;
     ANGLE_TRY(getResource(&texture));
 
     const d3d11::SharedSRV *srv = nullptr;
@@ -1052,7 +1029,7 @@ gl::Error TextureStorage11_2D::getRenderTarget(const gl::ImageIndex &index, Rend
             rtvDesc.Texture2D.MipSlice = mTopLevel + level;
 
             d3d11::RenderTargetView rtv;
-            ANGLE_TRY(mRenderer->allocateResource(rtvDesc, mLevelZeroTexture, &rtv));
+            ANGLE_TRY(mRenderer->allocateResource(rtvDesc, mLevelZeroTexture.get(), &rtv));
 
             mLevelZeroRenderTarget = new TextureRenderTarget11(
                 std::move(rtv), mLevelZeroTexture, d3d11::SharedSRV(), d3d11::SharedSRV(),
@@ -1072,10 +1049,10 @@ gl::Error TextureStorage11_2D::getRenderTarget(const gl::ImageIndex &index, Rend
         rtvDesc.Texture2D.MipSlice = mTopLevel + level;
 
         d3d11::RenderTargetView rtv;
-        ANGLE_TRY(mRenderer->allocateResource(rtvDesc, texture, &rtv));
+        ANGLE_TRY(mRenderer->allocateResource(rtvDesc, texture->get(), &rtv));
 
         mRenderTarget[level] = new TextureRenderTarget11(
-            std::move(rtv), texture, *srv, *blitSRV, mFormatInfo.internalFormat, getFormatSet(),
+            std::move(rtv), *texture, *srv, *blitSRV, mFormatInfo.internalFormat, getFormatSet(),
             getLevelWidth(level), getLevelHeight(level), 1, 0);
 
         *outRT = mRenderTarget[level];
@@ -1091,10 +1068,10 @@ gl::Error TextureStorage11_2D::getRenderTarget(const gl::ImageIndex &index, Rend
     dsvDesc.Flags              = 0;
 
     d3d11::DepthStencilView dsv;
-    ANGLE_TRY(mRenderer->allocateResource(dsvDesc, texture, &dsv));
+    ANGLE_TRY(mRenderer->allocateResource(dsvDesc, texture->get(), &dsv));
 
     mRenderTarget[level] = new TextureRenderTarget11(
-        std::move(dsv), texture, *srv, mFormatInfo.internalFormat, getFormatSet(),
+        std::move(dsv), *texture, *srv, mFormatInfo.internalFormat, getFormatSet(),
         getLevelWidth(level), getLevelHeight(level), 1, 0);
 
     *outRT = mRenderTarget[level];
@@ -1104,7 +1081,7 @@ gl::Error TextureStorage11_2D::getRenderTarget(const gl::ImageIndex &index, Rend
 gl::Error TextureStorage11_2D::createSRV(int baseLevel,
                                          int mipLevels,
                                          DXGI_FORMAT format,
-                                         ID3D11Resource *texture,
+                                         const TextureHelper11 &texture,
                                          d3d11::SharedSRV *outSRV) const
 {
     ASSERT(outSRV);
@@ -1115,7 +1092,7 @@ gl::Error TextureStorage11_2D::createSRV(int baseLevel,
     srvDesc.Texture2D.MostDetailedMip = mTopLevel + baseLevel;
     srvDesc.Texture2D.MipLevels       = mipLevels;
 
-    ID3D11Resource *srvTexture = texture;
+    const TextureHelper11 *srvTexture = &texture;
 
     if (mRenderer->getWorkarounds().zeroMaxLodWorkaround)
     {
@@ -1127,37 +1104,37 @@ gl::Error TextureStorage11_2D::createSRV(int baseLevel,
         if (mipLevels == 1 && mMipLevels > 1)
         {
             // We must use a SRV on the level-zero-only texture.
-            ASSERT(mLevelZeroTexture != nullptr && texture == mLevelZeroTexture);
-            srvTexture = mLevelZeroTexture;
+            ASSERT(mLevelZeroTexture.valid() && texture == mLevelZeroTexture);
+            srvTexture = &mLevelZeroTexture;
         }
         else
         {
             ASSERT(mipLevels == static_cast<int>(mMipLevels));
-            ASSERT(mTexture != nullptr && texture == mTexture);
-            srvTexture = mTexture;
+            ASSERT(mTexture.valid() && texture == mTexture);
+            srvTexture = &mTexture;
         }
     }
 
-    ANGLE_TRY(mRenderer->allocateResource(srvDesc, srvTexture, outSRV));
+    ANGLE_TRY(mRenderer->allocateResource(srvDesc, srvTexture->get(), outSRV));
     outSRV->setDebugName("TexStorage2D.SRV");
 
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_2D::getSwizzleTexture(ID3D11Resource **outTexture)
+gl::Error TextureStorage11_2D::getSwizzleTexture(const TextureHelper11 **outTexture)
 {
     ASSERT(outTexture);
 
-    if (!mSwizzleTexture)
+    if (!mSwizzleTexture.valid())
     {
-        ID3D11Device *device = mRenderer->getDevice();
+        const auto &format = mFormatInfo.getSwizzleFormat(mRenderer->getRenderer11DeviceCaps());
 
         D3D11_TEXTURE2D_DESC desc;
         desc.Width              = mTextureWidth;
         desc.Height             = mTextureHeight;
         desc.MipLevels          = mMipLevels;
         desc.ArraySize          = 1;
-        desc.Format = mFormatInfo.getSwizzleFormat(mRenderer->getRenderer11DeviceCaps()).texFormat;
+        desc.Format             = format.texFormat;
         desc.SampleDesc.Count   = 1;
         desc.SampleDesc.Quality = 0;
         desc.Usage              = D3D11_USAGE_DEFAULT;
@@ -1165,19 +1142,11 @@ gl::Error TextureStorage11_2D::getSwizzleTexture(ID3D11Resource **outTexture)
         desc.CPUAccessFlags     = 0;
         desc.MiscFlags          = 0;
 
-        HRESULT result = device->CreateTexture2D(&desc, nullptr, &mSwizzleTexture);
-
-        ASSERT(result == E_OUTOFMEMORY || SUCCEEDED(result));
-        if (FAILED(result))
-        {
-            return gl::Error(GL_OUT_OF_MEMORY,
-                             "Failed to create internal swizzle texture, result: 0x%X.", result);
-        }
-
-        d3d11::SetDebugName(mSwizzleTexture, "TexStorage2D.SwizzleTexture");
+        ANGLE_TRY(mRenderer->allocateTexture(desc, format, &mSwizzleTexture));
+        mSwizzleTexture.setDebugName("TexStorage2D.SwizzleTexture");
     }
 
-    *outTexture = mSwizzleTexture;
+    *outTexture = &mSwizzleTexture;
     return gl::NoError();
 }
 
@@ -1189,7 +1158,7 @@ gl::Error TextureStorage11_2D::getSwizzleRenderTarget(int mipLevel,
 
     if (!mSwizzleRenderTargets[mipLevel].valid())
     {
-        ID3D11Resource *swizzleTexture = nullptr;
+        const TextureHelper11 *swizzleTexture = nullptr;
         ANGLE_TRY(getSwizzleTexture(&swizzleTexture));
 
         D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
@@ -1198,7 +1167,7 @@ gl::Error TextureStorage11_2D::getSwizzleRenderTarget(int mipLevel,
         rtvDesc.ViewDimension      = D3D11_RTV_DIMENSION_TEXTURE2D;
         rtvDesc.Texture2D.MipSlice = mTopLevel + mipLevel;
 
-        ANGLE_TRY(mRenderer->allocateResource(rtvDesc, mSwizzleTexture,
+        ANGLE_TRY(mRenderer->allocateResource(rtvDesc, mSwizzleTexture.get(),
                                               &mSwizzleRenderTargets[mipLevel]));
     }
 
@@ -1208,7 +1177,7 @@ gl::Error TextureStorage11_2D::getSwizzleRenderTarget(int mipLevel,
 
 gl::ErrorOrResult<TextureStorage11::DropStencil> TextureStorage11_2D::ensureDropStencilTexture()
 {
-    if (mDropStencilTexture)
+    if (mDropStencilTexture.valid())
     {
         return DropStencil::ALREADY_EXISTS;
     }
@@ -1226,14 +1195,10 @@ gl::ErrorOrResult<TextureStorage11::DropStencil> TextureStorage11_2D::ensureDrop
     dropDesc.Usage                = D3D11_USAGE_DEFAULT;
     dropDesc.Width                = mTextureWidth;
 
-    ID3D11Device *device = mRenderer->getDevice();
-
-    HRESULT hr = device->CreateTexture2D(&dropDesc, nullptr, &mDropStencilTexture);
-    if (FAILED(hr))
-    {
-        return gl::InternalError() << "Error creating drop stencil texture.";
-    }
-    d3d11::SetDebugName(mDropStencilTexture, "TexStorage2D.DropStencil");
+    const auto &format =
+        d3d11::Format::Get(GL_DEPTH_COMPONENT32F, mRenderer->getRenderer11DeviceCaps());
+    ANGLE_TRY(mRenderer->allocateTexture(dropDesc, format, &mDropStencilTexture));
+    mDropStencilTexture.setDebugName("TexStorage2D.DropStencil");
 
     ANGLE_TRY(initDropStencilTexture(gl::ImageIndexIterator::Make2D(0, mMipLevels)));
 
@@ -1248,13 +1213,13 @@ TextureStorage11_External::TextureStorage11_External(
 {
     ASSERT(stream->getProducerType() == egl::Stream::ProducerType::D3D11TextureNV12);
     StreamProducerNV12 *producer = static_cast<StreamProducerNV12 *>(stream->getImplementation());
-    mTexture                     = producer->getD3DTexture();
+    mTexture.set(producer->getD3DTexture(), mFormatInfo);
     mSubresourceIndex            = producer->getArraySlice();
-    mTexture->AddRef();
+    mTexture.get()->AddRef();
     mMipLevels = 1;
 
     D3D11_TEXTURE2D_DESC desc;
-    mTexture->GetDesc(&desc);
+    mTexture.getDesc(&desc);
     mTextureWidth  = desc.Width;
     mTextureHeight = desc.Height;
     mTextureDepth  = 1;
@@ -1263,7 +1228,6 @@ TextureStorage11_External::TextureStorage11_External(
 
 TextureStorage11_External::~TextureStorage11_External()
 {
-    SafeRelease(mTexture);
     if (mHasKeyedMutex)
     {
         // If the keyed mutex is released that will unbind it and cause the state cache to become
@@ -1313,15 +1277,15 @@ gl::Error TextureStorage11_External::releaseAssociatedImage(const gl::ImageIndex
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_External::getResource(ID3D11Resource **outResource)
+gl::Error TextureStorage11_External::getResource(const TextureHelper11 **outResource)
 {
-    *outResource = mTexture;
+    *outResource = &mTexture;
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_External::getMippedResource(ID3D11Resource **outResource)
+gl::Error TextureStorage11_External::getMippedResource(const TextureHelper11 **outResource)
 {
-    *outResource = mTexture;
+    *outResource = &mTexture;
     return gl::NoError();
 }
 
@@ -1336,7 +1300,7 @@ gl::Error TextureStorage11_External::getRenderTarget(const gl::ImageIndex &index
 gl::Error TextureStorage11_External::createSRV(int baseLevel,
                                                int mipLevels,
                                                DXGI_FORMAT format,
-                                               ID3D11Resource *texture,
+                                               const TextureHelper11 &texture,
                                                d3d11::SharedSRV *outSRV) const
 {
     // Since external textures are treates as non-mipmapped textures, we ignore mipmap levels and
@@ -1353,15 +1317,13 @@ gl::Error TextureStorage11_External::createSRV(int baseLevel,
     srvDesc.Texture2DArray.FirstArraySlice = mSubresourceIndex;
     srvDesc.Texture2DArray.ArraySize       = 1;
 
-    ID3D11Resource *srvTexture = texture;
-
-    ANGLE_TRY(mRenderer->allocateResource(srvDesc, srvTexture, outSRV));
+    ANGLE_TRY(mRenderer->allocateResource(srvDesc, texture.get(), outSRV));
     outSRV->setDebugName("TexStorage2D.SRV");
 
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_External::getSwizzleTexture(ID3D11Resource **outTexture)
+gl::Error TextureStorage11_External::getSwizzleTexture(const TextureHelper11 **outTexture)
 {
     UNIMPLEMENTED();
     return gl::Error(GL_INVALID_OPERATION);
@@ -1383,7 +1345,7 @@ TextureStorage11_EGLImage::TextureStorage11_EGLImage(Renderer11 *renderer,
                        renderTarget11->getInternalFormat()),
       mImage(eglImage),
       mCurrentRenderTarget(0),
-      mSwizzleTexture(nullptr),
+      mSwizzleTexture(),
       mSwizzleRenderTargets(gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS)
 {
     mCurrentRenderTarget = reinterpret_cast<uintptr_t>(renderTarget11);
@@ -1396,16 +1358,15 @@ TextureStorage11_EGLImage::TextureStorage11_EGLImage(Renderer11 *renderer,
 
 TextureStorage11_EGLImage::~TextureStorage11_EGLImage()
 {
-    SafeRelease(mSwizzleTexture);
 }
 
-gl::Error TextureStorage11_EGLImage::getResource(ID3D11Resource **outResource)
+gl::Error TextureStorage11_EGLImage::getResource(const TextureHelper11 **outResource)
 {
     ANGLE_TRY(checkForUpdatedRenderTarget());
 
     RenderTarget11 *renderTarget11 = nullptr;
     ANGLE_TRY(getImageRenderTarget(&renderTarget11));
-    *outResource = renderTarget11->getTexture();
+    *outResource = &renderTarget11->getTexture();
     return gl::NoError();
 }
 
@@ -1416,7 +1377,7 @@ gl::Error TextureStorage11_EGLImage::getSRV(const gl::TextureState &textureState
     return TextureStorage11::getSRV(textureState, outSRV);
 }
 
-gl::Error TextureStorage11_EGLImage::getMippedResource(ID3D11Resource **)
+gl::Error TextureStorage11_EGLImage::getMippedResource(const TextureHelper11 **)
 {
     // This shouldn't be called unless the zero max LOD workaround is active.
     // EGL images are unavailable in this configuration.
@@ -1437,16 +1398,16 @@ gl::Error TextureStorage11_EGLImage::getRenderTarget(const gl::ImageIndex &index
 
 gl::Error TextureStorage11_EGLImage::copyToStorage(TextureStorage *destStorage)
 {
-    ID3D11Resource *sourceResouce = nullptr;
+    const TextureHelper11 *sourceResouce = nullptr;
     ANGLE_TRY(getResource(&sourceResouce));
 
     ASSERT(destStorage);
     TextureStorage11_2D *dest11  = GetAs<TextureStorage11_2D>(destStorage);
-    ID3D11Resource *destResource = nullptr;
+    const TextureHelper11 *destResource = nullptr;
     ANGLE_TRY(dest11->getResource(&destResource));
 
     ID3D11DeviceContext *immediateContext = mRenderer->getDeviceContext();
-    immediateContext->CopyResource(destResource, sourceResouce);
+    immediateContext->CopyResource(destResource->get(), sourceResouce->get());
 
     dest11->markDirty();
 
@@ -1476,20 +1437,20 @@ gl::Error TextureStorage11_EGLImage::useLevelZeroWorkaroundTexture(bool)
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error TextureStorage11_EGLImage::getSwizzleTexture(ID3D11Resource **outTexture)
+gl::Error TextureStorage11_EGLImage::getSwizzleTexture(const TextureHelper11 **outTexture)
 {
     ASSERT(outTexture);
 
-    if (!mSwizzleTexture)
+    if (!mSwizzleTexture.valid())
     {
-        ID3D11Device *device = mRenderer->getDevice();
+        const auto &format = mFormatInfo.getSwizzleFormat(mRenderer->getRenderer11DeviceCaps());
 
         D3D11_TEXTURE2D_DESC desc;
         desc.Width              = mTextureWidth;
         desc.Height             = mTextureHeight;
         desc.MipLevels          = mMipLevels;
         desc.ArraySize          = 1;
-        desc.Format = mFormatInfo.getSwizzleFormat(mRenderer->getRenderer11DeviceCaps()).texFormat;
+        desc.Format             = format.texFormat;
         desc.SampleDesc.Count   = 1;
         desc.SampleDesc.Quality = 0;
         desc.Usage              = D3D11_USAGE_DEFAULT;
@@ -1497,19 +1458,11 @@ gl::Error TextureStorage11_EGLImage::getSwizzleTexture(ID3D11Resource **outTextu
         desc.CPUAccessFlags     = 0;
         desc.MiscFlags          = 0;
 
-        HRESULT result = device->CreateTexture2D(&desc, nullptr, &mSwizzleTexture);
-
-        ASSERT(result == E_OUTOFMEMORY || SUCCEEDED(result));
-        if (FAILED(result))
-        {
-            return gl::Error(GL_OUT_OF_MEMORY,
-                             "Failed to create internal swizzle texture, result: 0x%X.", result);
-        }
-
-        d3d11::SetDebugName(mSwizzleTexture, "TexStorageEGLImage.SwizzleTexture");
+        ANGLE_TRY(mRenderer->allocateTexture(desc, format, &mSwizzleTexture));
+        mSwizzleTexture.setDebugName("TexStorageEGLImage.SwizzleTexture");
     }
 
-    *outTexture = mSwizzleTexture;
+    *outTexture = &mSwizzleTexture;
     return gl::NoError();
 }
 
@@ -1521,7 +1474,7 @@ gl::Error TextureStorage11_EGLImage::getSwizzleRenderTarget(int mipLevel,
 
     if (!mSwizzleRenderTargets[mipLevel].valid())
     {
-        ID3D11Resource *swizzleTexture = nullptr;
+        const TextureHelper11 *swizzleTexture = nullptr;
         ANGLE_TRY(getSwizzleTexture(&swizzleTexture));
 
         D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
@@ -1530,7 +1483,7 @@ gl::Error TextureStorage11_EGLImage::getSwizzleRenderTarget(int mipLevel,
         rtvDesc.ViewDimension      = D3D11_RTV_DIMENSION_TEXTURE2D;
         rtvDesc.Texture2D.MipSlice = mTopLevel + mipLevel;
 
-        ANGLE_TRY(mRenderer->allocateResource(rtvDesc, mSwizzleTexture,
+        ANGLE_TRY(mRenderer->allocateResource(rtvDesc, mSwizzleTexture.get(),
                                               &mSwizzleRenderTargets[mipLevel]));
     }
 
@@ -1555,7 +1508,7 @@ gl::Error TextureStorage11_EGLImage::checkForUpdatedRenderTarget()
 gl::Error TextureStorage11_EGLImage::createSRV(int baseLevel,
                                                int mipLevels,
                                                DXGI_FORMAT format,
-                                               ID3D11Resource *texture,
+                                               const TextureHelper11 &texture,
                                                d3d11::SharedSRV *outSRV) const
 {
     ASSERT(baseLevel == 0);
@@ -1572,7 +1525,7 @@ gl::Error TextureStorage11_EGLImage::createSRV(int baseLevel,
         srvDesc.Texture2D.MostDetailedMip = mTopLevel + baseLevel;
         srvDesc.Texture2D.MipLevels       = mipLevels;
 
-        ANGLE_TRY(mRenderer->allocateResource(srvDesc, texture, outSRV));
+        ANGLE_TRY(mRenderer->allocateResource(srvDesc, texture.get(), outSRV));
         outSRV->setDebugName("TexStorageEGLImage.SRV");
     }
     else
@@ -1610,10 +1563,10 @@ TextureStorage11_Cube::TextureStorage11_Cube(Renderer11 *renderer,
                               renderTarget,
                               levels),
           internalformat),
-      mTexture(nullptr),
-      mLevelZeroTexture(nullptr),
+      mTexture(),
+      mLevelZeroTexture(),
       mUseLevelZeroTexture(hintLevelZeroOnly && levels > 1),
-      mSwizzleTexture(nullptr)
+      mSwizzleTexture()
 {
     for (unsigned int level = 0; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
     {
@@ -1658,10 +1611,6 @@ TextureStorage11_Cube::~TextureStorage11_Cube()
             }
         }
     }
-
-    SafeRelease(mTexture);
-    SafeRelease(mSwizzleTexture);
-    SafeRelease(mLevelZeroTexture);
 
     for (unsigned int face = 0; face < CUBE_FACE_COUNT; face++)
     {
@@ -1709,36 +1658,36 @@ gl::Error TextureStorage11_Cube::copyToStorage(TextureStorage *destStorage)
 
         // If either mTexture or mLevelZeroTexture exist, then we need to copy them into the
         // corresponding textures in destStorage.
-        if (mTexture)
+        if (mTexture.valid())
         {
             ANGLE_TRY(dest11->useLevelZeroWorkaroundTexture(false));
 
-            ID3D11Resource *destResource = nullptr;
+            const TextureHelper11 *destResource = nullptr;
             ANGLE_TRY(dest11->getResource(&destResource));
 
-            immediateContext->CopyResource(destResource, mTexture);
+            immediateContext->CopyResource(destResource->get(), mTexture.get());
         }
 
-        if (mLevelZeroTexture)
+        if (mLevelZeroTexture.valid())
         {
             ANGLE_TRY(dest11->useLevelZeroWorkaroundTexture(true));
 
-            ID3D11Resource *destResource = nullptr;
+            const TextureHelper11 *destResource = nullptr;
             ANGLE_TRY(dest11->getResource(&destResource));
 
-            immediateContext->CopyResource(destResource, mLevelZeroTexture);
+            immediateContext->CopyResource(destResource->get(), mLevelZeroTexture.get());
         }
     }
     else
     {
-        ID3D11Resource *sourceResouce = nullptr;
+        const TextureHelper11 *sourceResouce = nullptr;
         ANGLE_TRY(getResource(&sourceResouce));
 
-        ID3D11Resource *destResource = nullptr;
+        const TextureHelper11 *destResource = nullptr;
         ANGLE_TRY(dest11->getResource(&destResource));
 
         ID3D11DeviceContext *immediateContext = mRenderer->getDeviceContext();
-        immediateContext->CopyResource(destResource, sourceResouce);
+        immediateContext->CopyResource(destResource->get(), sourceResouce->get());
     }
 
     dest11->markDirty();
@@ -1750,18 +1699,19 @@ gl::Error TextureStorage11_Cube::useLevelZeroWorkaroundTexture(bool useLevelZero
 {
     if (useLevelZeroTexture && mMipLevels > 1)
     {
-        if (!mUseLevelZeroTexture && mTexture)
+        if (!mUseLevelZeroTexture && mTexture.valid())
         {
             ANGLE_TRY(ensureTextureExists(1));
 
             // Pull data back from the mipped texture if necessary.
-            ASSERT(mLevelZeroTexture);
+            ASSERT(mLevelZeroTexture.valid());
             ID3D11DeviceContext *context = mRenderer->getDeviceContext();
 
             for (int face = 0; face < 6; face++)
             {
-                context->CopySubresourceRegion(mLevelZeroTexture, D3D11CalcSubresource(0, face, 1),
-                                               0, 0, 0, mTexture, face * mMipLevels, nullptr);
+                context->CopySubresourceRegion(mLevelZeroTexture.get(),
+                                               D3D11CalcSubresource(0, face, 1), 0, 0, 0,
+                                               mTexture.get(), face * mMipLevels, nullptr);
             }
         }
 
@@ -1769,18 +1719,19 @@ gl::Error TextureStorage11_Cube::useLevelZeroWorkaroundTexture(bool useLevelZero
     }
     else
     {
-        if (mUseLevelZeroTexture && mLevelZeroTexture)
+        if (mUseLevelZeroTexture && mLevelZeroTexture.valid())
         {
             ANGLE_TRY(ensureTextureExists(mMipLevels));
 
             // Pull data back from the level zero texture if necessary.
-            ASSERT(mTexture);
+            ASSERT(mTexture.valid());
             ID3D11DeviceContext *context = mRenderer->getDeviceContext();
 
             for (int face = 0; face < 6; face++)
             {
-                context->CopySubresourceRegion(mTexture, D3D11CalcSubresource(0, face, mMipLevels),
-                                               0, 0, 0, mLevelZeroTexture, face, nullptr);
+                context->CopySubresourceRegion(mTexture.get(),
+                                               D3D11CalcSubresource(0, face, mMipLevels), 0, 0, 0,
+                                               mLevelZeroTexture.get(), face, nullptr);
             }
         }
 
@@ -1864,29 +1815,29 @@ gl::Error TextureStorage11_Cube::releaseAssociatedImage(const gl::ImageIndex &in
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_Cube::getResource(ID3D11Resource **outResource)
+gl::Error TextureStorage11_Cube::getResource(const TextureHelper11 **outResource)
 {
     if (mUseLevelZeroTexture && mMipLevels > 1)
     {
         ANGLE_TRY(ensureTextureExists(1));
-        *outResource = mLevelZeroTexture;
+        *outResource = &mLevelZeroTexture;
         return gl::NoError();
     }
     else
     {
         ANGLE_TRY(ensureTextureExists(mMipLevels));
-        *outResource = mTexture;
+        *outResource = &mTexture;
         return gl::NoError();
     }
 }
 
-gl::Error TextureStorage11_Cube::getMippedResource(ID3D11Resource **outResource)
+gl::Error TextureStorage11_Cube::getMippedResource(const TextureHelper11 **outResource)
 {
     // This shouldn't be called unless the zero max LOD workaround is active.
     ASSERT(mRenderer->getWorkarounds().zeroMaxLodWorkaround);
 
     ANGLE_TRY(ensureTextureExists(mMipLevels));
-    *outResource = mTexture;
+    *outResource = &mTexture;
     return gl::NoError();
 }
 
@@ -1896,15 +1847,13 @@ gl::Error TextureStorage11_Cube::ensureTextureExists(int mipLevels)
     bool useLevelZeroTexture = mRenderer->getWorkarounds().zeroMaxLodWorkaround
                                    ? (mipLevels == 1) && (mMipLevels > 1)
                                    : false;
-    ID3D11Texture2D **outputTexture = useLevelZeroTexture ? &mLevelZeroTexture : &mTexture;
+    TextureHelper11 *outputTexture = useLevelZeroTexture ? &mLevelZeroTexture : &mTexture;
 
     // if the size is not positive this should be treated as an incomplete texture
     // we handle that here by skipping the d3d texture creation
-    if (*outputTexture == nullptr && mTextureWidth > 0 && mTextureHeight > 0)
+    if (!outputTexture->valid() && mTextureWidth > 0 && mTextureHeight > 0)
     {
         ASSERT(mMipLevels > 0);
-
-        ID3D11Device *device = mRenderer->getDevice();
 
         D3D11_TEXTURE2D_DESC desc;
         desc.Width              = mTextureWidth;
@@ -1919,29 +1868,14 @@ gl::Error TextureStorage11_Cube::ensureTextureExists(int mipLevels)
         desc.CPUAccessFlags     = 0;
         desc.MiscFlags          = D3D11_RESOURCE_MISC_TEXTURECUBE | getMiscFlags();
 
-        HRESULT result = device->CreateTexture2D(&desc, nullptr, outputTexture);
-
-        // this can happen from windows TDR
-        if (d3d11::isDeviceLostError(result))
-        {
-            mRenderer->notifyDeviceLost();
-            return gl::Error(GL_OUT_OF_MEMORY,
-                             "Failed to create cube texture storage, result: 0x%X.", result);
-        }
-        else if (FAILED(result))
-        {
-            ASSERT(result == E_OUTOFMEMORY);
-            return gl::Error(GL_OUT_OF_MEMORY,
-                             "Failed to create cube texture storage, result: 0x%X.", result);
-        }
-
-        d3d11::SetDebugName(*outputTexture, "TexStorageCube.Texture");
+        ANGLE_TRY(mRenderer->allocateTexture(desc, mFormatInfo, outputTexture));
+        outputTexture->setDebugName("TexStorageCube.Texture");
     }
 
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_Cube::createRenderTargetSRV(ID3D11Resource *texture,
+gl::Error TextureStorage11_Cube::createRenderTargetSRV(const TextureHelper11 &texture,
                                                        const gl::ImageIndex &index,
                                                        DXGI_FORMAT resourceFormat,
                                                        d3d11::SharedSRV *srv) const
@@ -1963,7 +1897,7 @@ gl::Error TextureStorage11_Cube::createRenderTargetSRV(ID3D11Resource *texture,
         srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
     }
 
-    ANGLE_TRY(mRenderer->allocateResource(srvDesc, texture, srv));
+    ANGLE_TRY(mRenderer->allocateResource(srvDesc, texture.get(), srv));
     return gl::NoError();
 }
 
@@ -1978,7 +1912,7 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::ImageIndex &index,
 
     if (!mRenderTarget[faceIndex][level])
     {
-        ID3D11Resource *texture = nullptr;
+        const TextureHelper11 *texture = nullptr;
         ANGLE_TRY(getResource(&texture));
 
         if (mUseLevelZeroTexture)
@@ -1993,7 +1927,7 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::ImageIndex &index,
                 rtvDesc.Texture2DArray.ArraySize       = 1;
 
                 d3d11::RenderTargetView rtv;
-                ANGLE_TRY(mRenderer->allocateResource(rtvDesc, mLevelZeroTexture, &rtv));
+                ANGLE_TRY(mRenderer->allocateResource(rtvDesc, mLevelZeroTexture.get(), &rtv));
 
                 mLevelZeroRenderTarget[faceIndex] = new TextureRenderTarget11(
                     std::move(rtv), mLevelZeroTexture, d3d11::SharedSRV(), d3d11::SharedSRV(),
@@ -2007,11 +1941,11 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::ImageIndex &index,
         }
 
         d3d11::SharedSRV srv;
-        ANGLE_TRY(createRenderTargetSRV(texture, index, mFormatInfo.srvFormat, &srv));
+        ANGLE_TRY(createRenderTargetSRV(*texture, index, mFormatInfo.srvFormat, &srv));
         d3d11::SharedSRV blitSRV;
         if (mFormatInfo.blitSRVFormat != mFormatInfo.srvFormat)
         {
-            ANGLE_TRY(createRenderTargetSRV(texture, index, mFormatInfo.blitSRVFormat, &blitSRV));
+            ANGLE_TRY(createRenderTargetSRV(*texture, index, mFormatInfo.blitSRVFormat, &blitSRV));
         }
         else
         {
@@ -2030,11 +1964,11 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::ImageIndex &index,
             rtvDesc.Texture2DArray.ArraySize       = 1;
 
             d3d11::RenderTargetView rtv;
-            ANGLE_TRY(mRenderer->allocateResource(rtvDesc, texture, &rtv));
+            ANGLE_TRY(mRenderer->allocateResource(rtvDesc, texture->get(), &rtv));
             rtv.setDebugName("TexStorageCube.RenderTargetRTV");
 
             mRenderTarget[faceIndex][level] = new TextureRenderTarget11(
-                std::move(rtv), texture, srv, blitSRV, mFormatInfo.internalFormat, getFormatSet(),
+                std::move(rtv), *texture, srv, blitSRV, mFormatInfo.internalFormat, getFormatSet(),
                 getLevelWidth(level), getLevelHeight(level), 1, 0);
         }
         else if (mFormatInfo.dsvFormat != DXGI_FORMAT_UNKNOWN)
@@ -2048,11 +1982,11 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::ImageIndex &index,
             dsvDesc.Texture2DArray.ArraySize       = 1;
 
             d3d11::DepthStencilView dsv;
-            ANGLE_TRY(mRenderer->allocateResource(dsvDesc, texture, &dsv));
+            ANGLE_TRY(mRenderer->allocateResource(dsvDesc, texture->get(), &dsv));
             dsv.setDebugName("TexStorageCube.RenderTargetDSV");
 
             mRenderTarget[faceIndex][level] = new TextureRenderTarget11(
-                std::move(dsv), texture, srv, mFormatInfo.internalFormat, getFormatSet(),
+                std::move(dsv), *texture, srv, mFormatInfo.internalFormat, getFormatSet(),
                 getLevelWidth(level), getLevelHeight(level), 1, 0);
         }
         else
@@ -2069,7 +2003,7 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::ImageIndex &index,
 gl::Error TextureStorage11_Cube::createSRV(int baseLevel,
                                            int mipLevels,
                                            DXGI_FORMAT format,
-                                           ID3D11Resource *texture,
+                                           const TextureHelper11 &texture,
                                            d3d11::SharedSRV *outSRV) const
 {
     ASSERT(outSRV);
@@ -2095,7 +2029,7 @@ gl::Error TextureStorage11_Cube::createSRV(int baseLevel,
         srvDesc.TextureCube.MostDetailedMip = mTopLevel + baseLevel;
     }
 
-    ID3D11Resource *srvTexture = texture;
+    const TextureHelper11 *srvTexture = &texture;
 
     if (mRenderer->getWorkarounds().zeroMaxLodWorkaround)
     {
@@ -2107,37 +2041,37 @@ gl::Error TextureStorage11_Cube::createSRV(int baseLevel,
         if (mipLevels == 1 && mMipLevels > 1)
         {
             // We must use a SRV on the level-zero-only texture.
-            ASSERT(mLevelZeroTexture != nullptr && texture == mLevelZeroTexture);
-            srvTexture = mLevelZeroTexture;
+            ASSERT(mLevelZeroTexture.valid() && texture == mLevelZeroTexture);
+            srvTexture = &mLevelZeroTexture;
         }
         else
         {
             ASSERT(mipLevels == static_cast<int>(mMipLevels));
-            ASSERT(mTexture != nullptr && texture == mTexture);
-            srvTexture = mTexture;
+            ASSERT(mTexture.valid() && texture == mTexture);
+            srvTexture = &mTexture;
         }
     }
 
-    ANGLE_TRY(mRenderer->allocateResource(srvDesc, srvTexture, outSRV));
+    ANGLE_TRY(mRenderer->allocateResource(srvDesc, srvTexture->get(), outSRV));
     outSRV->setDebugName("TexStorageCube.SRV");
 
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_Cube::getSwizzleTexture(ID3D11Resource **outTexture)
+gl::Error TextureStorage11_Cube::getSwizzleTexture(const TextureHelper11 **outTexture)
 {
     ASSERT(outTexture);
 
-    if (!mSwizzleTexture)
+    if (!mSwizzleTexture.valid())
     {
-        ID3D11Device *device = mRenderer->getDevice();
+        const auto &format = mFormatInfo.getSwizzleFormat(mRenderer->getRenderer11DeviceCaps());
 
         D3D11_TEXTURE2D_DESC desc;
         desc.Width              = mTextureWidth;
         desc.Height             = mTextureHeight;
         desc.MipLevels          = mMipLevels;
         desc.ArraySize          = CUBE_FACE_COUNT;
-        desc.Format = mFormatInfo.getSwizzleFormat(mRenderer->getRenderer11DeviceCaps()).texFormat;
+        desc.Format             = format.texFormat;
         desc.SampleDesc.Count   = 1;
         desc.SampleDesc.Quality = 0;
         desc.Usage              = D3D11_USAGE_DEFAULT;
@@ -2145,19 +2079,11 @@ gl::Error TextureStorage11_Cube::getSwizzleTexture(ID3D11Resource **outTexture)
         desc.CPUAccessFlags     = 0;
         desc.MiscFlags          = D3D11_RESOURCE_MISC_TEXTURECUBE;
 
-        HRESULT result = device->CreateTexture2D(&desc, nullptr, &mSwizzleTexture);
-
-        ASSERT(result == E_OUTOFMEMORY || SUCCEEDED(result));
-        if (FAILED(result))
-        {
-            return gl::Error(GL_OUT_OF_MEMORY,
-                             "Failed to create internal swizzle texture, result: 0x%X.", result);
-        }
-
-        d3d11::SetDebugName(*outTexture, "TexStorageCube.SwizzleTexture");
+        ANGLE_TRY(mRenderer->allocateTexture(desc, format, &mSwizzleTexture));
+        mSwizzleTexture.setDebugName("TexStorageCube.SwizzleTexture");
     }
 
-    *outTexture = mSwizzleTexture;
+    *outTexture = &mSwizzleTexture;
     return gl::NoError();
 }
 
@@ -2169,7 +2095,7 @@ gl::Error TextureStorage11_Cube::getSwizzleRenderTarget(int mipLevel,
 
     if (!mSwizzleRenderTargets[mipLevel].valid())
     {
-        ID3D11Resource *swizzleTexture = nullptr;
+        const TextureHelper11 *swizzleTexture = nullptr;
         ANGLE_TRY(getSwizzleTexture(&swizzleTexture));
 
         D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
@@ -2180,7 +2106,7 @@ gl::Error TextureStorage11_Cube::getSwizzleRenderTarget(int mipLevel,
         rtvDesc.Texture2DArray.FirstArraySlice = 0;
         rtvDesc.Texture2DArray.ArraySize       = CUBE_FACE_COUNT;
 
-        ANGLE_TRY(mRenderer->allocateResource(rtvDesc, mSwizzleTexture,
+        ANGLE_TRY(mRenderer->allocateResource(rtvDesc, mSwizzleTexture.get(),
                                               &mSwizzleRenderTargets[mipLevel]));
     }
 
@@ -2190,12 +2116,8 @@ gl::Error TextureStorage11_Cube::getSwizzleRenderTarget(int mipLevel,
 
 gl::Error TextureStorage11::initDropStencilTexture(const gl::ImageIndexIterator &it)
 {
-    ID3D11Resource *resource = nullptr;
-    ANGLE_TRY(getResource(&resource));
-    TextureHelper11 sourceTexture = TextureHelper11::MakeAndReference(resource, mFormatInfo);
-    TextureHelper11 destTexture   = TextureHelper11::MakeAndReference(
-        mDropStencilTexture,
-        d3d11::Format::Get(GL_DEPTH_COMPONENT32F, mRenderer->getRenderer11DeviceCaps()));
+    const TextureHelper11 *sourceTexture = nullptr;
+    ANGLE_TRY(getResource(&sourceTexture));
 
     gl::ImageIndexIterator itCopy = it;
 
@@ -2206,9 +2128,9 @@ gl::Error TextureStorage11::initDropStencilTexture(const gl::ImageIndexIterator 
                           1);
         gl::Extents wholeSize(wholeArea.width, wholeArea.height, 1);
         UINT subresource = getSubresourceIndex(index);
-        ANGLE_TRY(mRenderer->getBlitter()->copyDepthStencil(sourceTexture, subresource, wholeArea,
-                                                            wholeSize, destTexture, subresource,
-                                                            wholeArea, wholeSize, nullptr));
+        ANGLE_TRY(mRenderer->getBlitter()->copyDepthStencil(
+            *sourceTexture, subresource, wholeArea, wholeSize, mDropStencilTexture, subresource,
+            wholeArea, wholeSize, nullptr));
     }
 
     return gl::NoError();
@@ -2216,7 +2138,7 @@ gl::Error TextureStorage11::initDropStencilTexture(const gl::ImageIndexIterator 
 
 gl::ErrorOrResult<TextureStorage11::DropStencil> TextureStorage11_Cube::ensureDropStencilTexture()
 {
-    if (mDropStencilTexture)
+    if (mDropStencilTexture.valid())
     {
         return DropStencil::ALREADY_EXISTS;
     }
@@ -2234,14 +2156,10 @@ gl::ErrorOrResult<TextureStorage11::DropStencil> TextureStorage11_Cube::ensureDr
     dropDesc.Usage                = D3D11_USAGE_DEFAULT;
     dropDesc.Width                = mTextureWidth;
 
-    ID3D11Device *device = mRenderer->getDevice();
-
-    HRESULT hr = device->CreateTexture2D(&dropDesc, nullptr, &mDropStencilTexture);
-    if (FAILED(hr))
-    {
-        return gl::InternalError() << "Error creating drop stencil texture.";
-    }
-    d3d11::SetDebugName(mDropStencilTexture, "TexStorageCube.DropStencil");
+    const auto &format =
+        d3d11::Format::Get(GL_DEPTH_COMPONENT32F, mRenderer->getRenderer11DeviceCaps());
+    ANGLE_TRY(mRenderer->allocateTexture(dropDesc, format, &mDropStencilTexture));
+    mDropStencilTexture.setDebugName("TexStorageCube.DropStencil");
 
     ANGLE_TRY(initDropStencilTexture(gl::ImageIndexIterator::MakeCube(0, mMipLevels)));
 
@@ -2264,9 +2182,6 @@ TextureStorage11_3D::TextureStorage11_3D(Renderer11 *renderer,
                               levels),
           internalformat)
 {
-    mTexture        = nullptr;
-    mSwizzleTexture = nullptr;
-
     for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
     {
         mAssociatedImages[i]     = nullptr;
@@ -2295,9 +2210,6 @@ TextureStorage11_3D::~TextureStorage11_3D()
             mAssociatedImages[i]->recoverFromAssociatedStorage();
         }
     }
-
-    SafeRelease(mTexture);
-    SafeRelease(mSwizzleTexture);
 
     for (RenderTargetMap::iterator i = mLevelLayerRenderTargets.begin();
          i != mLevelLayerRenderTargets.end(); i++)
@@ -2371,15 +2283,13 @@ gl::Error TextureStorage11_3D::releaseAssociatedImage(const gl::ImageIndex &inde
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_3D::getResource(ID3D11Resource **outResource)
+gl::Error TextureStorage11_3D::getResource(const TextureHelper11 **outResource)
 {
     // If the width, height or depth are not positive this should be treated as an incomplete
     // texture. We handle that here by skipping the d3d texture creation.
-    if (mTexture == nullptr && mTextureWidth > 0 && mTextureHeight > 0 && mTextureDepth > 0)
+    if (!mTexture.valid() && mTextureWidth > 0 && mTextureHeight > 0 && mTextureDepth > 0)
     {
         ASSERT(mMipLevels > 0);
-
-        ID3D11Device *device = mRenderer->getDevice();
 
         D3D11_TEXTURE3D_DESC desc;
         desc.Width          = mTextureWidth;
@@ -2392,33 +2302,18 @@ gl::Error TextureStorage11_3D::getResource(ID3D11Resource **outResource)
         desc.CPUAccessFlags = 0;
         desc.MiscFlags      = getMiscFlags();
 
-        HRESULT result = device->CreateTexture3D(&desc, nullptr, &mTexture);
-
-        // this can happen from windows TDR
-        if (d3d11::isDeviceLostError(result))
-        {
-            mRenderer->notifyDeviceLost();
-            return gl::Error(GL_OUT_OF_MEMORY, "Failed to create 3D texture storage, result: 0x%X.",
-                             result);
-        }
-        else if (FAILED(result))
-        {
-            ASSERT(result == E_OUTOFMEMORY);
-            return gl::Error(GL_OUT_OF_MEMORY, "Failed to create 3D texture storage, result: 0x%X.",
-                             result);
-        }
-
-        d3d11::SetDebugName(mTexture, "TexStorage3D.Texture");
+        ANGLE_TRY(mRenderer->allocateTexture(desc, mFormatInfo, &mTexture));
+        mTexture.setDebugName("TexStorage3D.Texture");
     }
 
-    *outResource = mTexture;
+    *outResource = &mTexture;
     return gl::NoError();
 }
 
 gl::Error TextureStorage11_3D::createSRV(int baseLevel,
                                          int mipLevels,
                                          DXGI_FORMAT format,
-                                         ID3D11Resource *texture,
+                                         const TextureHelper11 &texture,
                                          d3d11::SharedSRV *outSRV) const
 {
     ASSERT(outSRV);
@@ -2429,7 +2324,7 @@ gl::Error TextureStorage11_3D::createSRV(int baseLevel,
     srvDesc.Texture3D.MostDetailedMip = baseLevel;
     srvDesc.Texture3D.MipLevels       = mipLevels;
 
-    ANGLE_TRY(mRenderer->allocateResource(srvDesc, texture, outSRV));
+    ANGLE_TRY(mRenderer->allocateResource(srvDesc, texture.get(), outSRV));
     outSRV->setDebugName("TexStorage3D.SRV");
 
     return gl::NoError();
@@ -2446,7 +2341,7 @@ gl::Error TextureStorage11_3D::getRenderTarget(const gl::ImageIndex &index, Rend
     {
         if (!mLevelRenderTargets[mipLevel])
         {
-            ID3D11Resource *texture = nullptr;
+            const TextureHelper11 *texture = nullptr;
             ANGLE_TRY(getResource(&texture));
 
             const d3d11::SharedSRV *srv = nullptr;
@@ -2463,12 +2358,13 @@ gl::Error TextureStorage11_3D::getRenderTarget(const gl::ImageIndex &index, Rend
             rtvDesc.Texture3D.WSize       = static_cast<UINT>(-1);
 
             d3d11::RenderTargetView rtv;
-            ANGLE_TRY(mRenderer->allocateResource(rtvDesc, texture, &rtv));
+            ANGLE_TRY(mRenderer->allocateResource(rtvDesc, texture->get(), &rtv));
             rtv.setDebugName("TexStorage3D.RTV");
 
             mLevelRenderTargets[mipLevel] = new TextureRenderTarget11(
-                std::move(rtv), texture, *srv, *blitSRV, mFormatInfo.internalFormat, getFormatSet(),
-                getLevelWidth(mipLevel), getLevelHeight(mipLevel), getLevelDepth(mipLevel), 0);
+                std::move(rtv), *texture, *srv, *blitSRV, mFormatInfo.internalFormat,
+                getFormatSet(), getLevelWidth(mipLevel), getLevelHeight(mipLevel),
+                getLevelDepth(mipLevel), 0);
         }
 
         ASSERT(outRT);
@@ -2481,7 +2377,7 @@ gl::Error TextureStorage11_3D::getRenderTarget(const gl::ImageIndex &index, Rend
     LevelLayerKey key(mipLevel, layer);
     if (mLevelLayerRenderTargets.find(key) == mLevelLayerRenderTargets.end())
     {
-        ID3D11Resource *texture = nullptr;
+        const TextureHelper11 *texture = nullptr;
         ANGLE_TRY(getResource(&texture));
 
         // TODO, what kind of SRV is expected here?
@@ -2496,11 +2392,11 @@ gl::Error TextureStorage11_3D::getRenderTarget(const gl::ImageIndex &index, Rend
         rtvDesc.Texture3D.WSize       = 1;
 
         d3d11::RenderTargetView rtv;
-        ANGLE_TRY(mRenderer->allocateResource(rtvDesc, texture, &rtv));
+        ANGLE_TRY(mRenderer->allocateResource(rtvDesc, texture->get(), &rtv));
         rtv.setDebugName("TexStorage3D.LayerRTV");
 
         mLevelLayerRenderTargets[key] = new TextureRenderTarget11(
-            std::move(rtv), texture, srv, blitSRV, mFormatInfo.internalFormat, getFormatSet(),
+            std::move(rtv), *texture, srv, blitSRV, mFormatInfo.internalFormat, getFormatSet(),
             getLevelWidth(mipLevel), getLevelHeight(mipLevel), 1, 0);
     }
 
@@ -2509,38 +2405,30 @@ gl::Error TextureStorage11_3D::getRenderTarget(const gl::ImageIndex &index, Rend
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_3D::getSwizzleTexture(ID3D11Resource **outTexture)
+gl::Error TextureStorage11_3D::getSwizzleTexture(const TextureHelper11 **outTexture)
 {
     ASSERT(outTexture);
 
-    if (!mSwizzleTexture)
+    if (!mSwizzleTexture.valid())
     {
-        ID3D11Device *device = mRenderer->getDevice();
+        const auto &format = mFormatInfo.getSwizzleFormat(mRenderer->getRenderer11DeviceCaps());
 
         D3D11_TEXTURE3D_DESC desc;
         desc.Width          = mTextureWidth;
         desc.Height         = mTextureHeight;
         desc.Depth          = mTextureDepth;
         desc.MipLevels      = mMipLevels;
-        desc.Format = mFormatInfo.getSwizzleFormat(mRenderer->getRenderer11DeviceCaps()).texFormat;
+        desc.Format         = format.texFormat;
         desc.Usage          = D3D11_USAGE_DEFAULT;
         desc.BindFlags      = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
         desc.CPUAccessFlags = 0;
         desc.MiscFlags      = 0;
 
-        HRESULT result = device->CreateTexture3D(&desc, nullptr, &mSwizzleTexture);
-
-        ASSERT(result == E_OUTOFMEMORY || SUCCEEDED(result));
-        if (FAILED(result))
-        {
-            return gl::Error(GL_OUT_OF_MEMORY,
-                             "Failed to create internal swizzle texture, result: 0x%X.", result);
-        }
-
-        d3d11::SetDebugName(mSwizzleTexture, "TexStorage3D.SwizzleTexture");
+        ANGLE_TRY(mRenderer->allocateTexture(desc, format, &mSwizzleTexture));
+        mSwizzleTexture.setDebugName("TexStorage3D.SwizzleTexture");
     }
 
-    *outTexture = mSwizzleTexture;
+    *outTexture = &mSwizzleTexture;
     return gl::NoError();
 }
 
@@ -2552,7 +2440,7 @@ gl::Error TextureStorage11_3D::getSwizzleRenderTarget(int mipLevel,
 
     if (!mSwizzleRenderTargets[mipLevel].valid())
     {
-        ID3D11Resource *swizzleTexture = nullptr;
+        const TextureHelper11 *swizzleTexture = nullptr;
         ANGLE_TRY(getSwizzleTexture(&swizzleTexture));
 
         D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
@@ -2563,7 +2451,7 @@ gl::Error TextureStorage11_3D::getSwizzleRenderTarget(int mipLevel,
         rtvDesc.Texture3D.FirstWSlice = 0;
         rtvDesc.Texture3D.WSize       = static_cast<UINT>(-1);
 
-        ANGLE_TRY(mRenderer->allocateResource(rtvDesc, mSwizzleTexture,
+        ANGLE_TRY(mRenderer->allocateResource(rtvDesc, mSwizzleTexture.get(),
                                               &mSwizzleRenderTargets[mipLevel]));
         mSwizzleRenderTargets[mipLevel].setDebugName("TexStorage3D.SwizzleRTV");
     }
@@ -2588,9 +2476,6 @@ TextureStorage11_2DArray::TextureStorage11_2DArray(Renderer11 *renderer,
                               levels),
           internalformat)
 {
-    mTexture        = nullptr;
-    mSwizzleTexture = nullptr;
-
     // adjust size if needed for compressed textures
     d3d11::MakeValidSize(false, mFormatInfo.texFormat, &width, &height, &mTopLevel);
 
@@ -2614,9 +2499,6 @@ TextureStorage11_2DArray::~TextureStorage11_2DArray()
         }
     }
     mAssociatedImages.clear();
-
-    SafeRelease(mTexture);
-    SafeRelease(mSwizzleTexture);
 
     for (RenderTargetMap::iterator i = mRenderTargets.begin(); i != mRenderTargets.end(); i++)
     {
@@ -2695,15 +2577,13 @@ gl::Error TextureStorage11_2DArray::releaseAssociatedImage(const gl::ImageIndex 
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_2DArray::getResource(ID3D11Resource **outResource)
+gl::Error TextureStorage11_2DArray::getResource(const TextureHelper11 **outResource)
 {
     // if the width, height or depth is not positive this should be treated as an incomplete texture
     // we handle that here by skipping the d3d texture creation
-    if (mTexture == nullptr && mTextureWidth > 0 && mTextureHeight > 0 && mTextureDepth > 0)
+    if (!mTexture.valid() && mTextureWidth > 0 && mTextureHeight > 0 && mTextureDepth > 0)
     {
         ASSERT(mMipLevels > 0);
-
-        ID3D11Device *device = mRenderer->getDevice();
 
         D3D11_TEXTURE2D_DESC desc;
         desc.Width              = mTextureWidth;
@@ -2718,33 +2598,18 @@ gl::Error TextureStorage11_2DArray::getResource(ID3D11Resource **outResource)
         desc.CPUAccessFlags     = 0;
         desc.MiscFlags          = getMiscFlags();
 
-        HRESULT result = device->CreateTexture2D(&desc, nullptr, &mTexture);
-
-        // this can happen from windows TDR
-        if (d3d11::isDeviceLostError(result))
-        {
-            mRenderer->notifyDeviceLost();
-            return gl::Error(GL_OUT_OF_MEMORY,
-                             "Failed to create 2D array texture storage, result: 0x%X.", result);
-        }
-        else if (FAILED(result))
-        {
-            ASSERT(result == E_OUTOFMEMORY);
-            return gl::Error(GL_OUT_OF_MEMORY,
-                             "Failed to create 2D array texture storage, result: 0x%X.", result);
-        }
-
-        d3d11::SetDebugName(mTexture, "TexStorage2DArray.Texture");
+        ANGLE_TRY(mRenderer->allocateTexture(desc, mFormatInfo, &mTexture));
+        mTexture.setDebugName("TexStorage2DArray.Texture");
     }
 
-    *outResource = mTexture;
+    *outResource = &mTexture;
     return gl::NoError();
 }
 
 gl::Error TextureStorage11_2DArray::createSRV(int baseLevel,
                                               int mipLevels,
                                               DXGI_FORMAT format,
-                                              ID3D11Resource *texture,
+                                              const TextureHelper11 &texture,
                                               d3d11::SharedSRV *outSRV) const
 {
     D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
@@ -2755,13 +2620,13 @@ gl::Error TextureStorage11_2DArray::createSRV(int baseLevel,
     srvDesc.Texture2DArray.FirstArraySlice = 0;
     srvDesc.Texture2DArray.ArraySize       = mTextureDepth;
 
-    ANGLE_TRY(mRenderer->allocateResource(srvDesc, texture, outSRV));
+    ANGLE_TRY(mRenderer->allocateResource(srvDesc, texture.get(), outSRV));
     outSRV->setDebugName("TexStorage2DArray.SRV");
 
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_2DArray::createRenderTargetSRV(ID3D11Resource *texture,
+gl::Error TextureStorage11_2DArray::createRenderTargetSRV(const TextureHelper11 &texture,
                                                           const gl::ImageIndex &index,
                                                           DXGI_FORMAT resourceFormat,
                                                           d3d11::SharedSRV *srv) const
@@ -2774,7 +2639,7 @@ gl::Error TextureStorage11_2DArray::createRenderTargetSRV(ID3D11Resource *textur
     srvDesc.Texture2DArray.FirstArraySlice = index.layerIndex;
     srvDesc.Texture2DArray.ArraySize       = 1;
 
-    ANGLE_TRY(mRenderer->allocateResource(srvDesc, texture, srv));
+    ANGLE_TRY(mRenderer->allocateResource(srvDesc, texture.get(), srv));
 
     return gl::NoError();
 }
@@ -2792,14 +2657,14 @@ gl::Error TextureStorage11_2DArray::getRenderTarget(const gl::ImageIndex &index,
     LevelLayerKey key(mipLevel, layer);
     if (mRenderTargets.find(key) == mRenderTargets.end())
     {
-        ID3D11Resource *texture = nullptr;
+        const TextureHelper11 *texture = nullptr;
         ANGLE_TRY(getResource(&texture));
         d3d11::SharedSRV srv;
-        ANGLE_TRY(createRenderTargetSRV(texture, index, mFormatInfo.srvFormat, &srv));
+        ANGLE_TRY(createRenderTargetSRV(*texture, index, mFormatInfo.srvFormat, &srv));
         d3d11::SharedSRV blitSRV;
         if (mFormatInfo.blitSRVFormat != mFormatInfo.srvFormat)
         {
-            ANGLE_TRY(createRenderTargetSRV(texture, index, mFormatInfo.blitSRVFormat, &blitSRV));
+            ANGLE_TRY(createRenderTargetSRV(*texture, index, mFormatInfo.blitSRVFormat, &blitSRV));
         }
         else
         {
@@ -2818,11 +2683,11 @@ gl::Error TextureStorage11_2DArray::getRenderTarget(const gl::ImageIndex &index,
             rtvDesc.Texture2DArray.ArraySize       = 1;
 
             d3d11::RenderTargetView rtv;
-            ANGLE_TRY(mRenderer->allocateResource(rtvDesc, texture, &rtv));
+            ANGLE_TRY(mRenderer->allocateResource(rtvDesc, texture->get(), &rtv));
             rtv.setDebugName("TexStorage2DArray.RenderTargetRTV");
 
             mRenderTargets[key] = new TextureRenderTarget11(
-                std::move(rtv), texture, srv, blitSRV, mFormatInfo.internalFormat, getFormatSet(),
+                std::move(rtv), *texture, srv, blitSRV, mFormatInfo.internalFormat, getFormatSet(),
                 getLevelWidth(mipLevel), getLevelHeight(mipLevel), 1, 0);
         }
         else
@@ -2838,11 +2703,11 @@ gl::Error TextureStorage11_2DArray::getRenderTarget(const gl::ImageIndex &index,
             dsvDesc.Flags                          = 0;
 
             d3d11::DepthStencilView dsv;
-            ANGLE_TRY(mRenderer->allocateResource(dsvDesc, texture, &dsv));
+            ANGLE_TRY(mRenderer->allocateResource(dsvDesc, texture->get(), &dsv));
             dsv.setDebugName("TexStorage2DArray.RenderTargetDSV");
 
             mRenderTargets[key] = new TextureRenderTarget11(
-                std::move(dsv), texture, srv, mFormatInfo.internalFormat, getFormatSet(),
+                std::move(dsv), *texture, srv, mFormatInfo.internalFormat, getFormatSet(),
                 getLevelWidth(mipLevel), getLevelHeight(mipLevel), 1, 0);
         }
     }
@@ -2852,18 +2717,18 @@ gl::Error TextureStorage11_2DArray::getRenderTarget(const gl::ImageIndex &index,
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_2DArray::getSwizzleTexture(ID3D11Resource **outTexture)
+gl::Error TextureStorage11_2DArray::getSwizzleTexture(const TextureHelper11 **outTexture)
 {
-    if (!mSwizzleTexture)
+    if (!mSwizzleTexture.valid())
     {
-        ID3D11Device *device = mRenderer->getDevice();
+        const auto &format = mFormatInfo.getSwizzleFormat(mRenderer->getRenderer11DeviceCaps());
 
         D3D11_TEXTURE2D_DESC desc;
         desc.Width              = mTextureWidth;
         desc.Height             = mTextureHeight;
         desc.MipLevels          = mMipLevels;
         desc.ArraySize          = mTextureDepth;
-        desc.Format = mFormatInfo.getSwizzleFormat(mRenderer->getRenderer11DeviceCaps()).texFormat;
+        desc.Format             = format.texFormat;
         desc.SampleDesc.Count   = 1;
         desc.SampleDesc.Quality = 0;
         desc.Usage              = D3D11_USAGE_DEFAULT;
@@ -2871,19 +2736,11 @@ gl::Error TextureStorage11_2DArray::getSwizzleTexture(ID3D11Resource **outTextur
         desc.CPUAccessFlags     = 0;
         desc.MiscFlags          = 0;
 
-        HRESULT result = device->CreateTexture2D(&desc, nullptr, &mSwizzleTexture);
-
-        ASSERT(result == E_OUTOFMEMORY || SUCCEEDED(result));
-        if (FAILED(result))
-        {
-            return gl::Error(GL_OUT_OF_MEMORY,
-                             "Failed to create internal swizzle texture, result: 0x%X.", result);
-        }
-
-        d3d11::SetDebugName(*outTexture, "TexStorage2DArray.SwizzleTexture");
+        ANGLE_TRY(mRenderer->allocateTexture(desc, format, &mSwizzleTexture));
+        mSwizzleTexture.setDebugName("TexStorage2DArray.SwizzleTexture");
     }
 
-    *outTexture = mSwizzleTexture;
+    *outTexture = &mSwizzleTexture;
     return gl::NoError();
 }
 
@@ -2895,7 +2752,7 @@ gl::Error TextureStorage11_2DArray::getSwizzleRenderTarget(int mipLevel,
 
     if (!mSwizzleRenderTargets[mipLevel].valid())
     {
-        ID3D11Resource *swizzleTexture = nullptr;
+        const TextureHelper11 *swizzleTexture = nullptr;
         ANGLE_TRY(getSwizzleTexture(&swizzleTexture));
 
         D3D11_RENDER_TARGET_VIEW_DESC rtvDesc;
@@ -2906,7 +2763,7 @@ gl::Error TextureStorage11_2DArray::getSwizzleRenderTarget(int mipLevel,
         rtvDesc.Texture2DArray.FirstArraySlice = 0;
         rtvDesc.Texture2DArray.ArraySize       = mTextureDepth;
 
-        ANGLE_TRY(mRenderer->allocateResource(rtvDesc, mSwizzleTexture,
+        ANGLE_TRY(mRenderer->allocateResource(rtvDesc, mSwizzleTexture.get(),
                                               &mSwizzleRenderTargets[mipLevel]));
     }
 
@@ -2917,7 +2774,7 @@ gl::Error TextureStorage11_2DArray::getSwizzleRenderTarget(int mipLevel,
 gl::ErrorOrResult<TextureStorage11::DropStencil>
 TextureStorage11_2DArray::ensureDropStencilTexture()
 {
-    if (mDropStencilTexture)
+    if (mDropStencilTexture.valid())
     {
         return DropStencil::ALREADY_EXISTS;
     }
@@ -2935,14 +2792,10 @@ TextureStorage11_2DArray::ensureDropStencilTexture()
     dropDesc.Usage                = D3D11_USAGE_DEFAULT;
     dropDesc.Width                = mTextureWidth;
 
-    ID3D11Device *device = mRenderer->getDevice();
-
-    HRESULT hr = device->CreateTexture2D(&dropDesc, nullptr, &mDropStencilTexture);
-    if (FAILED(hr))
-    {
-        return gl::InternalError() << "Error creating drop stencil texture.";
-    }
-    d3d11::SetDebugName(mDropStencilTexture, "TexStorage2DArray.DropStencil");
+    const auto &format =
+        d3d11::Format::Get(GL_DEPTH_COMPONENT32F, mRenderer->getRenderer11DeviceCaps());
+    ANGLE_TRY(mRenderer->allocateTexture(dropDesc, format, &mDropStencilTexture));
+    mDropStencilTexture.setDebugName("TexStorage2DArray.DropStencil");
 
     std::vector<GLsizei> layerCounts(mMipLevels, mTextureDepth);
 

@@ -13,7 +13,7 @@
 #include "libANGLE/Error.h"
 #include "libANGLE/Texture.h"
 #include "libANGLE/renderer/d3d/TextureStorage.h"
-#include "libANGLE/renderer/d3d/d3d11/ResourceManager11.h"
+#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 #include "libANGLE/renderer/d3d/d3d11/texture_format_table.h"
 
 #include <array>
@@ -50,11 +50,15 @@ class TextureStorage11 : public TextureStorage
     void markLevelDirty(int mipLevel);
     void markDirty();
 
-    gl::Error updateSubresourceLevel(ID3D11Resource *texture, unsigned int sourceSubresource,
-                                     const gl::ImageIndex &index, const gl::Box &copyArea);
+    gl::Error updateSubresourceLevel(const TextureHelper11 &texture,
+                                     unsigned int sourceSubresource,
+                                     const gl::ImageIndex &index,
+                                     const gl::Box &copyArea);
 
-    gl::Error copySubresourceLevel(ID3D11Resource* dstTexture, unsigned int dstSubresource,
-                                   const gl::ImageIndex &index, const gl::Box &region);
+    gl::Error copySubresourceLevel(const TextureHelper11 &dstTexture,
+                                   unsigned int dstSubresource,
+                                   const gl::ImageIndex &index,
+                                   const gl::Box &region);
 
     // TextureStorage virtual functions
     int getTopLevel() const override;
@@ -74,7 +78,7 @@ class TextureStorage11 : public TextureStorage
 
     virtual gl::Error getSRV(const gl::TextureState &textureState, d3d11::SharedSRV *outSRV);
     virtual UINT getSubresourceIndex(const gl::ImageIndex &index) const;
-    virtual gl::Error getResource(ID3D11Resource **outResource) = 0;
+    virtual gl::Error getResource(const TextureHelper11 **outResource) = 0;
     virtual void associateImage(Image11* image, const gl::ImageIndex &index) = 0;
     virtual void disassociateImage(const gl::ImageIndex &index, Image11* expectedImage) = 0;
     virtual void verifyAssociatedImageValid(const gl::ImageIndex &index,
@@ -88,9 +92,12 @@ class TextureStorage11 : public TextureStorage
     int getLevelDepth(int mipLevel) const;
 
     // Some classes (e.g. TextureStorage11_2D) will override getMippedResource.
-    virtual gl::Error getMippedResource(ID3D11Resource **outResource) { return getResource(outResource); }
+    virtual gl::Error getMippedResource(const TextureHelper11 **outResource)
+    {
+        return getResource(outResource);
+    }
 
-    virtual gl::Error getSwizzleTexture(ID3D11Resource **outTexture) = 0;
+    virtual gl::Error getSwizzleTexture(const TextureHelper11 **outTexture) = 0;
     virtual gl::Error getSwizzleRenderTarget(int mipLevel,
                                              const d3d11::RenderTargetView **outRTV) = 0;
     gl::Error getSRVLevel(int mipLevel, bool blitSRV, const d3d11::SharedSRV **outSRV);
@@ -108,7 +115,7 @@ class TextureStorage11 : public TextureStorage
     virtual gl::Error createSRV(int baseLevel,
                                 int mipLevels,
                                 DXGI_FORMAT format,
-                                ID3D11Resource *texture,
+                                const TextureHelper11 &texture,
                                 d3d11::SharedSRV *outSRV) const = 0;
 
     void verifySwizzleExists(const gl::SwizzleState &swizzleState);
@@ -126,7 +133,7 @@ class TextureStorage11 : public TextureStorage
     unsigned int mTextureDepth;
 
     gl::SwizzleState mSwizzleCache[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
-    ID3D11Texture2D *mDropStencilTexture;
+    TextureHelper11 mDropStencilTexture;
 
   private:
     const UINT mBindFlags;
@@ -159,8 +166,8 @@ class TextureStorage11_2D : public TextureStorage11
     TextureStorage11_2D(Renderer11 *renderer, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels, bool hintLevelZeroOnly = false);
     ~TextureStorage11_2D() override;
 
-    gl::Error getResource(ID3D11Resource **outResource) override;
-    gl::Error getMippedResource(ID3D11Resource **outResource) override;
+    gl::Error getResource(const TextureHelper11 **outResource) override;
+    gl::Error getMippedResource(const TextureHelper11 **outResource) override;
     gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT) override;
 
     gl::Error copyToStorage(TextureStorage *destStorage) override;
@@ -173,7 +180,7 @@ class TextureStorage11_2D : public TextureStorage11
     gl::Error useLevelZeroWorkaroundTexture(bool useLevelZeroTexture) override;
 
   protected:
-    gl::Error getSwizzleTexture(ID3D11Resource **outTexture) override;
+    gl::Error getSwizzleTexture(const TextureHelper11 **outTexture) override;
     gl::Error getSwizzleRenderTarget(int mipLevel, const d3d11::RenderTargetView **outRTV) override;
 
     gl::ErrorOrResult<DropStencil> ensureDropStencilTexture() override;
@@ -184,10 +191,10 @@ class TextureStorage11_2D : public TextureStorage11
     gl::Error createSRV(int baseLevel,
                         int mipLevels,
                         DXGI_FORMAT format,
-                        ID3D11Resource *texture,
+                        const TextureHelper11 &texture,
                         d3d11::SharedSRV *outSRV) const override;
 
-    ID3D11Texture2D *mTexture;
+    TextureHelper11 mTexture;
     RenderTarget11 *mRenderTarget[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
     bool mHasKeyedMutex;
 
@@ -200,12 +207,12 @@ class TextureStorage11_2D : public TextureStorage11
     // One example of this is an application that creates a texture, calls glGenerateMipmap, and then disables mipmaps on the texture.
     // A more likely example is an app that creates an empty texture, renders to it, and then calls glGenerateMipmap
     // TODO: In this rendering scenario, release the mLevelZeroTexture after mTexture has been created to save memory.
-    ID3D11Texture2D *mLevelZeroTexture;
+    TextureHelper11 mLevelZeroTexture;
     RenderTarget11 *mLevelZeroRenderTarget;
     bool mUseLevelZeroTexture;
 
     // Swizzle-related variables
-    ID3D11Texture2D *mSwizzleTexture;
+    TextureHelper11 mSwizzleTexture;
     d3d11::RenderTargetView mSwizzleRenderTargets[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
     Image11 *mAssociatedImages[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
@@ -219,8 +226,8 @@ class TextureStorage11_External : public TextureStorage11
                               const egl::Stream::GLTextureDescription &glDesc);
     ~TextureStorage11_External() override;
 
-    gl::Error getResource(ID3D11Resource **outResource) override;
-    gl::Error getMippedResource(ID3D11Resource **outResource) override;
+    gl::Error getResource(const TextureHelper11 **outResource) override;
+    gl::Error getMippedResource(const TextureHelper11 **outResource) override;
     gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT) override;
 
     gl::Error copyToStorage(TextureStorage *destStorage) override;
@@ -231,17 +238,17 @@ class TextureStorage11_External : public TextureStorage11
     gl::Error releaseAssociatedImage(const gl::ImageIndex &index, Image11 *incomingImage) override;
 
   protected:
-    gl::Error getSwizzleTexture(ID3D11Resource **outTexture) override;
+    gl::Error getSwizzleTexture(const TextureHelper11 **outTexture) override;
     gl::Error getSwizzleRenderTarget(int mipLevel, const d3d11::RenderTargetView **outRTV) override;
 
   private:
     gl::Error createSRV(int baseLevel,
                         int mipLevels,
                         DXGI_FORMAT format,
-                        ID3D11Resource *texture,
+                        const TextureHelper11 &texture,
                         d3d11::SharedSRV *outSRV) const override;
 
-    ID3D11Texture2D *mTexture;
+    TextureHelper11 mTexture;
     int mSubresourceIndex;
     bool mHasKeyedMutex;
 
@@ -256,9 +263,9 @@ class TextureStorage11_EGLImage final : public TextureStorage11
                               RenderTarget11 *renderTarget11);
     ~TextureStorage11_EGLImage() override;
 
-    gl::Error getResource(ID3D11Resource **outResource) override;
+    gl::Error getResource(const TextureHelper11 **outResource) override;
     gl::Error getSRV(const gl::TextureState &textureState, d3d11::SharedSRV *outSRV) override;
-    gl::Error getMippedResource(ID3D11Resource **outResource) override;
+    gl::Error getMippedResource(const TextureHelper11 **outResource) override;
     gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT) override;
 
     gl::Error copyToStorage(TextureStorage *destStorage) override;
@@ -271,7 +278,7 @@ class TextureStorage11_EGLImage final : public TextureStorage11
     gl::Error useLevelZeroWorkaroundTexture(bool useLevelZeroTexture) override;
 
   protected:
-    gl::Error getSwizzleTexture(ID3D11Resource **outTexture) override;
+    gl::Error getSwizzleTexture(const TextureHelper11 **outTexture) override;
     gl::Error getSwizzleRenderTarget(int mipLevel, const d3d11::RenderTargetView **outRTV) override;
 
   private:
@@ -282,7 +289,7 @@ class TextureStorage11_EGLImage final : public TextureStorage11
     gl::Error createSRV(int baseLevel,
                         int mipLevels,
                         DXGI_FORMAT format,
-                        ID3D11Resource *texture,
+                        const TextureHelper11 &texture,
                         d3d11::SharedSRV *outSRV) const override;
 
     gl::Error getImageRenderTarget(RenderTarget11 **outRT) const;
@@ -291,7 +298,7 @@ class TextureStorage11_EGLImage final : public TextureStorage11
     uintptr_t mCurrentRenderTarget;
 
     // Swizzle-related variables
-    ID3D11Texture2D *mSwizzleTexture;
+    TextureHelper11 mSwizzleTexture;
     std::vector<d3d11::RenderTargetView> mSwizzleRenderTargets;
 };
 
@@ -303,8 +310,8 @@ class TextureStorage11_Cube : public TextureStorage11
 
     UINT getSubresourceIndex(const gl::ImageIndex &index) const override;
 
-    gl::Error getResource(ID3D11Resource **outResource) override;
-    gl::Error getMippedResource(ID3D11Resource **outResource) override;
+    gl::Error getResource(const TextureHelper11 **outResource) override;
+    gl::Error getMippedResource(const TextureHelper11 **outResource) override;
     gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT) override;
 
     gl::Error copyToStorage(TextureStorage *destStorage) override;
@@ -317,7 +324,7 @@ class TextureStorage11_Cube : public TextureStorage11
     gl::Error useLevelZeroWorkaroundTexture(bool useLevelZeroTexture) override;
 
   protected:
-    gl::Error getSwizzleTexture(ID3D11Resource **outTexture) override;
+    gl::Error getSwizzleTexture(const TextureHelper11 **outTexture) override;
     gl::Error getSwizzleRenderTarget(int mipLevel, const d3d11::RenderTargetView **outRTV) override;
 
     gl::ErrorOrResult<DropStencil> ensureDropStencilTexture() override;
@@ -328,24 +335,24 @@ class TextureStorage11_Cube : public TextureStorage11
     gl::Error createSRV(int baseLevel,
                         int mipLevels,
                         DXGI_FORMAT format,
-                        ID3D11Resource *texture,
+                        const TextureHelper11 &texture,
                         d3d11::SharedSRV *outSRV) const override;
-    gl::Error createRenderTargetSRV(ID3D11Resource *texture,
+    gl::Error createRenderTargetSRV(const TextureHelper11 &texture,
                                     const gl::ImageIndex &index,
                                     DXGI_FORMAT resourceFormat,
                                     d3d11::SharedSRV *srv) const;
 
     static const size_t CUBE_FACE_COUNT = 6;
 
-    ID3D11Texture2D *mTexture;
+    TextureHelper11 mTexture;
     RenderTarget11 *mRenderTarget[CUBE_FACE_COUNT][gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
     // Level-zero workaround members. See TextureStorage11_2D's workaround members for a description.
-    ID3D11Texture2D *mLevelZeroTexture;
+    TextureHelper11 mLevelZeroTexture;
     RenderTarget11 *mLevelZeroRenderTarget[CUBE_FACE_COUNT];
     bool mUseLevelZeroTexture;
 
-    ID3D11Texture2D *mSwizzleTexture;
+    TextureHelper11 mSwizzleTexture;
     d3d11::RenderTargetView mSwizzleRenderTargets[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
     Image11 *mAssociatedImages[CUBE_FACE_COUNT][gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
@@ -358,7 +365,7 @@ class TextureStorage11_3D : public TextureStorage11
                         GLsizei width, GLsizei height, GLsizei depth, int levels);
     ~TextureStorage11_3D() override;
 
-    gl::Error getResource(ID3D11Resource **outResource) override;
+    gl::Error getResource(const TextureHelper11 **outResource) override;
 
     // Handles both layer and non-layer RTs
     gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT) override;
@@ -369,14 +376,14 @@ class TextureStorage11_3D : public TextureStorage11
     gl::Error releaseAssociatedImage(const gl::ImageIndex &index, Image11 *incomingImage) override;
 
   protected:
-    gl::Error getSwizzleTexture(ID3D11Resource **outTexture) override;
+    gl::Error getSwizzleTexture(const TextureHelper11 **outTexture) override;
     gl::Error getSwizzleRenderTarget(int mipLevel, const d3d11::RenderTargetView **outRTV) override;
 
   private:
     gl::Error createSRV(int baseLevel,
                         int mipLevels,
                         DXGI_FORMAT format,
-                        ID3D11Resource *texture,
+                        const TextureHelper11 &texture,
                         d3d11::SharedSRV *outSRV) const override;
 
     typedef std::pair<int, int> LevelLayerKey;
@@ -385,8 +392,8 @@ class TextureStorage11_3D : public TextureStorage11
 
     RenderTarget11 *mLevelRenderTargets[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
-    ID3D11Texture3D *mTexture;
-    ID3D11Texture3D *mSwizzleTexture;
+    TextureHelper11 mTexture;
+    TextureHelper11 mSwizzleTexture;
     d3d11::RenderTargetView mSwizzleRenderTargets[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
     Image11 *mAssociatedImages[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
@@ -399,7 +406,7 @@ class TextureStorage11_2DArray : public TextureStorage11
                              GLsizei width, GLsizei height, GLsizei depth, int levels);
     ~TextureStorage11_2DArray() override;
 
-    gl::Error getResource(ID3D11Resource **outResource) override;
+    gl::Error getResource(const TextureHelper11 **outResource) override;
     gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT) override;
 
     void associateImage(Image11 *image, const gl::ImageIndex &index) override;
@@ -408,7 +415,7 @@ class TextureStorage11_2DArray : public TextureStorage11
     gl::Error releaseAssociatedImage(const gl::ImageIndex &index, Image11 *incomingImage) override;
 
   protected:
-    gl::Error getSwizzleTexture(ID3D11Resource **outTexture) override;
+    gl::Error getSwizzleTexture(const TextureHelper11 **outTexture) override;
     gl::Error getSwizzleRenderTarget(int mipLevel, const d3d11::RenderTargetView **outRTV) override;
 
     gl::ErrorOrResult<DropStencil> ensureDropStencilTexture() override;
@@ -417,9 +424,9 @@ class TextureStorage11_2DArray : public TextureStorage11
     gl::Error createSRV(int baseLevel,
                         int mipLevels,
                         DXGI_FORMAT format,
-                        ID3D11Resource *texture,
+                        const TextureHelper11 &texture,
                         d3d11::SharedSRV *outSRV) const override;
-    gl::Error createRenderTargetSRV(ID3D11Resource *texture,
+    gl::Error createRenderTargetSRV(const TextureHelper11 &texture,
                                     const gl::ImageIndex &index,
                                     DXGI_FORMAT resourceFormat,
                                     d3d11::SharedSRV *srv) const;
@@ -428,9 +435,9 @@ class TextureStorage11_2DArray : public TextureStorage11
     typedef std::map<LevelLayerKey, RenderTarget11*> RenderTargetMap;
     RenderTargetMap mRenderTargets;
 
-    ID3D11Texture2D *mTexture;
+    TextureHelper11 mTexture;
 
-    ID3D11Texture2D *mSwizzleTexture;
+    TextureHelper11 mSwizzleTexture;
     d3d11::RenderTargetView mSwizzleRenderTargets[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
     typedef std::map<LevelLayerKey, Image11*> ImageMap;

@@ -1451,17 +1451,14 @@ gl::Error Buffer11::PackStorage::packPixels(const gl::FramebufferAttachment &rea
     RenderTarget11 *renderTarget = nullptr;
     ANGLE_TRY(readAttachment.getRenderTarget(&renderTarget));
 
-    ID3D11Resource *renderTargetResource = renderTarget->getTexture();
-    ASSERT(renderTargetResource);
-
+    const TextureHelper11 &srcTexture = renderTarget->getTexture();
+    ASSERT(srcTexture.valid());
     unsigned int srcSubresource = renderTarget->getSubresourceIndex();
-    TextureHelper11 srcTexture =
-        TextureHelper11::MakeAndReference(renderTargetResource, renderTarget->getFormatSet());
 
     mQueuedPackCommand.reset(new PackPixelsParams(params));
 
     gl::Extents srcTextureSize(params.area.width, params.area.height, 1);
-    if (!mStagingTexture.getResource() || mStagingTexture.getFormat() != srcTexture.getFormat() ||
+    if (!mStagingTexture.get() || mStagingTexture.getFormat() != srcTexture.getFormat() ||
         mStagingTexture.getExtents() != srcTextureSize)
     {
         ANGLE_TRY_RESULT(
@@ -1482,15 +1479,15 @@ gl::Error Buffer11::PackStorage::packPixels(const gl::FramebufferAttachment &rea
 
     // Select the correct layer from a 3D attachment
     srcBox.front = 0;
-    if (mStagingTexture.getTextureType() == GL_TEXTURE_3D)
+    if (mStagingTexture.is3D())
     {
         srcBox.front = static_cast<UINT>(readAttachment.layer());
     }
     srcBox.back = srcBox.front + 1;
 
     // Asynchronous copy
-    immediateContext->CopySubresourceRegion(mStagingTexture.getResource(), 0, 0, 0, 0,
-                                            srcTexture.getResource(), srcSubresource, &srcBox);
+    immediateContext->CopySubresourceRegion(mStagingTexture.get(), 0, 0, 0, 0, srcTexture.get(),
+                                            srcSubresource, &srcBox);
 
     return gl::NoError();
 }
