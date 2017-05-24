@@ -9,7 +9,7 @@ glslang_dir = "$third_party_dir/glslang-angle/src"
 spirv_headers_dir = "$third_party_dir/spirv-headers/src"
 spirv_tools_dir = "$third_party_dir/spirv-tools-angle/src"
 vulkan_layers_dir = "$third_party_dir/vulkan-validation-layers/src"
-raw_vulkan_layers_dir = rebase_path(vulkan_layers_dir)
+raw_vulkan_layers_dir = rebase_path(vulkan_layers_dir, root_build_dir)
 
 vulkan_gypi =
     exec_script("//build/gypi_to_gn.py",
@@ -45,7 +45,7 @@ if (is_win) {
 }
 
 vulkan_gen_dir = "$target_gen_dir/angle/vulkan"
-raw_vulkan_gen_dir = rebase_path(vulkan_gen_dir)
+raw_vulkan_gen_dir = rebase_path(vulkan_gen_dir, root_build_dir)
 
 # Vulkan helper scripts
 # ---------------------
@@ -233,9 +233,9 @@ static_library("vulkan_loader") {
 
 spirv_source_dir = "$spirv_tools_dir/source"
 spirv_include_dir = "$spirv_headers_dir/include/spirv"
-raw_spirv_source_dir = rebase_path(spirv_source_dir)
-raw_spirv_include_dir = rebase_path(spirv_include_dir)
-raw_spirv_headers_dir = rebase_path(spirv_headers_dir)
+raw_spirv_source_dir = rebase_path(spirv_source_dir, root_build_dir)
+raw_spirv_include_dir = rebase_path(spirv_include_dir, root_build_dir)
+raw_spirv_headers_dir = rebase_path(spirv_headers_dir, root_build_dir)
 
 action("spirv_tools_gen_tables_1_0") {
   script = "$spirv_tools_dir/utils/generate_grammar_tables.py"
@@ -435,7 +435,7 @@ action("vulkan_gen_json_files") {
   # The layer JSON files are part of the necessary data deps.
   outputs = vulkan_gen_json_files_outputs
   data = vulkan_gen_json_files_outputs
-  args += [ rebase_path("$root_out_dir/$data_dir") ]
+  args += [ rebase_path("$root_out_dir/$data_dir", root_build_dir) ]
 }
 
 source_set("vulkan_layer_utils") {
