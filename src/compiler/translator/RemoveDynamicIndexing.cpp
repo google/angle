@@ -355,6 +355,7 @@ TIntermAggregate *CreateIndexFunctionCall(TIntermBinary *node,
     TIntermAggregate *indexingCall = TIntermTraverser::CreateInternalFunctionCallNode(
         fieldType, functionName.c_str(), functionId, arguments);
     indexingCall->setLine(node->getLine());
+    indexingCall->getFunctionSymbolInfo()->setKnownToNotHaveSideEffects(true);
     return indexingCall;
 }
 

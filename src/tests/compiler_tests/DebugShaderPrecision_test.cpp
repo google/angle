@@ -1059,3 +1059,19 @@ TEST_F(DebugShaderPrecisionTest, CompoundAssignmentInsideExpression)
     compile(shaderString);
     ASSERT_TRUE(foundInAllGLSLCode("abs(angle_compound_add_frm(f, 1.0))"));
 }
+
+// Test that having rounded values inside the right hand side of logical or doesn't trigger asserts
+// in HLSL output.
+TEST_F(DebugShaderPrecisionTest, RoundedValueOnRightSideOfLogicalOr)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "uniform float u1, u2;\n"
+        "void main() {\n"
+        "   my_FragColor = vec4(u1 == 0.0 || u2 == 0.0);\n"
+        "}\n";
+    compile(shaderString);
+    ASSERT_TRUE(foundInHLSLCode("angle_frm(_u2) == 0.0"));
+}

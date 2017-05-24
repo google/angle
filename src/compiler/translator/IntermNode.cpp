@@ -462,6 +462,23 @@ TString TIntermAggregate::getSymbolTableMangledName() const
     }
 }
 
+bool TIntermAggregate::hasSideEffects() const
+{
+    if (isFunctionCall() && mFunctionInfo.isKnownToNotHaveSideEffects())
+    {
+        for (TIntermNode *arg : mArguments)
+        {
+            if (arg->getAsTyped()->hasSideEffects())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    // Conservatively assume most aggregate operators have side-effects
+    return true;
+}
+
 void TIntermBlock::appendStatement(TIntermNode *statement)
 {
     // Declaration nodes with no children can appear if all the declarators just added constants to
@@ -652,12 +669,13 @@ void TFunctionSymbolInfo::setFromFunction(const TFunction &function)
     setId(TSymbolUniqueId(function));
 }
 
-TFunctionSymbolInfo::TFunctionSymbolInfo(const TSymbolUniqueId &id) : mId(new TSymbolUniqueId(id))
+TFunctionSymbolInfo::TFunctionSymbolInfo(const TSymbolUniqueId &id)
+    : mId(new TSymbolUniqueId(id)), mKnownToNotHaveSideEffects(false)
 {
 }
 
 TFunctionSymbolInfo::TFunctionSymbolInfo(const TFunctionSymbolInfo &info)
-    : mName(info.mName), mId(nullptr)
+    : mName(info.mName), mId(nullptr), mKnownToNotHaveSideEffects(info.mKnownToNotHaveSideEffects)
 {
     if (info.mId)
     {

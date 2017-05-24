@@ -110,6 +110,7 @@
         # TODO(jmadill): should probably call this windows sources
         'angle_unittests_hlsl_sources':
         [
+            '<(angle_path)/src/tests/compiler_tests/HLSLOutput_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/UnrollFlatten_test.cpp',
         ],
     },

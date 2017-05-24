@@ -448,7 +448,10 @@ TIntermAggregate *createRoundingFunctionCallNode(TIntermTyped *roundedChild)
         roundFunctionName      = "angle_frl";
     TIntermSequence *arguments = new TIntermSequence();
     arguments->push_back(roundedChild);
-    return createInternalFunctionCallNode(roundedChild->getType(), roundFunctionName, arguments);
+    TIntermAggregate *callNode =
+        createInternalFunctionCallNode(roundedChild->getType(), roundFunctionName, arguments);
+    callNode->getFunctionSymbolInfo()->setKnownToNotHaveSideEffects(true);
+    return callNode;
 }
 
 TIntermAggregate *createCompoundAssignmentFunctionCallNode(TIntermTyped *left,

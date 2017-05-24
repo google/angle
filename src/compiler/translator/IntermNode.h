@@ -148,6 +148,9 @@ class TIntermTyped : public TIntermNode
 
     TIntermTyped *getAsTyped() override { return this; }
 
+    // True if executing the expression represented by this node affects state, like values of
+    // variables. False if the executing the expression only computes its return value without
+    // affecting state. May return true conservatively.
     virtual bool hasSideEffects() const = 0;
 
     void setType(const TType &t) { mType = t; }
@@ -534,7 +537,7 @@ class TFunctionSymbolInfo
   public:
     POOL_ALLOCATOR_NEW_DELETE();
     TFunctionSymbolInfo(const TSymbolUniqueId &id);
-    TFunctionSymbolInfo() : mId(nullptr) {}
+    TFunctionSymbolInfo() : mId(nullptr), mKnownToNotHaveSideEffects(false) {}
 
     TFunctionSymbolInfo(const TFunctionSymbolInfo &info);
     TFunctionSymbolInfo &operator=(const TFunctionSymbolInfo &info);
@@ -548,12 +551,19 @@ class TFunctionSymbolInfo
     void setName(const TString &name) { mName.setString(name); }
     bool isMain() const { return mName.getString() == "main"; }
 
+    void setKnownToNotHaveSideEffects(bool knownToNotHaveSideEffects)
+    {
+        mKnownToNotHaveSideEffects = knownToNotHaveSideEffects;
+    }
+    bool isKnownToNotHaveSideEffects() const { return mKnownToNotHaveSideEffects; }
+
     void setId(const TSymbolUniqueId &functionId);
     const TSymbolUniqueId &getId() const;
 
   private:
     TName mName;
     TSymbolUniqueId *mId;
+    bool mKnownToNotHaveSideEffects;
 };
 
 typedef TVector<TIntermNode *> TIntermSequence;
@@ -617,8 +627,8 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
     void traverse(TIntermTraverser *it) override;
     bool replaceChildNode(TIntermNode *original, TIntermNode *replacement) override;
 
-    // Conservatively assume function calls and other aggregate operators have side-effects
-    bool hasSideEffects() const override { return true; }
+    bool hasSideEffects() const override;
+
     TIntermTyped *fold(TDiagnostics *diagnostics);
 
     TIntermSequence *getSequence() override { return &mArguments; }
