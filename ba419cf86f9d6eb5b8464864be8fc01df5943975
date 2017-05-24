@@ -236,6 +236,30 @@
       "revId": "ba419cf86f9d6eb5b8464864be8fc01df5943975",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8cdff6b_4f2576a5",
+        "filename": "src/tests/gl_tests/CopyTextureTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1017,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-24T19:37:46Z",
+      "side": 1,
+      "message": "Sorry, I did not notice you needed templates, it seems like the code above doesn\u0027t use them. Long story short, use lambdas where appropriate (callbacks to std::algorithm type functions), and otherwise don\u0027t use them.\n\nhttps://google.github.io/styleguide/cppguide.html#Lambda_expressions",
+      "parentUuid": "344bebfc_6f3dd5bd",
+      "range": {
+        "startLine": 1017,
+        "startChar": 3,
+        "endLine": 1017,
+        "endChar": 49
+      },
+      "revId": "ba419cf86f9d6eb5b8464864be8fc01df5943975",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
