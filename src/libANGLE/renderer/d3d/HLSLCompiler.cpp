@@ -217,7 +217,10 @@ gl::Error HLSLCompiler::compileToBinary(gl::InfoLog &infoLog, const std::string 
             SafeRelease(errorMessage);
 
             infoLog.appendSanitized(message.c_str());
-            WARN() << std::endl << hlsl;
+
+            // This produces unbelievable amounts of spam in about:gpu.
+            //WARN() << std::endl << hlsl;
+
             WARN() << std::endl << message;
 
             if ((message.find("error X3531:") != std::string::npos ||  // "can't unroll loops marked with loop attribute"
