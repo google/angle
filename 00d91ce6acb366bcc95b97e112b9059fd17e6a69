@@ -22,6 +22,30 @@
       "revId": "00d91ce6acb366bcc95b97e112b9059fd17e6a69",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "639b6db6_6787976f",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 751,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-25T14:19:08Z",
+      "side": 1,
+      "message": "Yea, c++ doesn\u0027t have ||\u003d but doesn\u0027t need it. https://stackoverflow.com/questions/2488406/why-doesnt-c-have-or-for-booleans says that |\u003d is perfectly safe for bools.",
+      "parentUuid": "82ce1ed3_23fc2ad9",
+      "range": {
+        "startLine": 751,
+        "startChar": 28,
+        "endLine": 751,
+        "endChar": 30
+      },
+      "revId": "00d91ce6acb366bcc95b97e112b9059fd17e6a69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
