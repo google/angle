@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6ce9ab72_90626f1b",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-25T17:55:51Z",
+      "side": 1,
+      "message": "Removes some boilderplate code needed to get an image and make sure it has up-to-date data.",
+      "parentUuid": "bfd9f20d_41fb86ab",
+      "revId": "2615790dfa2af3119e45004571bd494170d331b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9a928646_71e53c4c",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2017-05-25T17:32:17Z",
       "side": 1,
       "message": "nit: the method name could mention that it is a CPU readback. As is it looks like it could be the general implementation of copytexture",
+      "revId": "2615790dfa2af3119e45004571bd494170d331b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5b6a6b9c_50cbe9ba",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-25T17:55:51Z",
+      "side": 1,
+      "message": "Most methods on the ImageD3D classes do CPU readbacks so I think it\u0027s safe.",
+      "parentUuid": "9a928646_71e53c4c",
       "revId": "2615790dfa2af3119e45004571bd494170d331b0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
