@@ -87,52 +87,16 @@ void State::initialize(const Caps &caps,
     mDepthClearValue = 1.0f;
     mStencilClearValue = 0;
 
-    mRasterizer.rasterizerDiscard = false;
-    mRasterizer.cullFace = false;
-    mRasterizer.cullMode = GL_BACK;
-    mRasterizer.frontFace = GL_CCW;
-    mRasterizer.polygonOffsetFill = false;
-    mRasterizer.polygonOffsetFactor = 0.0f;
-    mRasterizer.polygonOffsetUnits = 0.0f;
-    mRasterizer.pointDrawMode = false;
-    mRasterizer.multiSample = false;
     mScissorTest = false;
     mScissor.x = 0;
     mScissor.y = 0;
     mScissor.width = 0;
     mScissor.height = 0;
 
-    mBlend.blend = false;
-    mBlend.sourceBlendRGB = GL_ONE;
-    mBlend.sourceBlendAlpha = GL_ONE;
-    mBlend.destBlendRGB = GL_ZERO;
-    mBlend.destBlendAlpha = GL_ZERO;
-    mBlend.blendEquationRGB = GL_FUNC_ADD;
-    mBlend.blendEquationAlpha = GL_FUNC_ADD;
-    mBlend.sampleAlphaToCoverage = false;
-    mBlend.dither = true;
-
     mBlendColor.red = 0;
     mBlendColor.green = 0;
     mBlendColor.blue = 0;
     mBlendColor.alpha = 0;
-
-    mDepthStencil.depthTest = false;
-    mDepthStencil.depthFunc = GL_LESS;
-    mDepthStencil.depthMask = true;
-    mDepthStencil.stencilTest = false;
-    mDepthStencil.stencilFunc = GL_ALWAYS;
-    mDepthStencil.stencilMask = static_cast<GLuint>(-1);
-    mDepthStencil.stencilWritemask = static_cast<GLuint>(-1);
-    mDepthStencil.stencilBackFunc = GL_ALWAYS;
-    mDepthStencil.stencilBackMask = static_cast<GLuint>(-1);
-    mDepthStencil.stencilBackWritemask = static_cast<GLuint>(-1);
-    mDepthStencil.stencilFail = GL_KEEP;
-    mDepthStencil.stencilPassDepthFail = GL_KEEP;
-    mDepthStencil.stencilPassDepthPass = GL_KEEP;
-    mDepthStencil.stencilBackFail = GL_KEEP;
-    mDepthStencil.stencilBackPassDepthFail = GL_KEEP;
-    mDepthStencil.stencilBackPassDepthPass = GL_KEEP;
 
     mStencilRef = 0;
     mStencilBackRef = 0;

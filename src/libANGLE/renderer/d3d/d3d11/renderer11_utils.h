@@ -120,12 +120,30 @@ struct PositionVertex
     float x, y, z, w;
 };
 
-struct BlendStateKey
+struct BlendStateKey final
 {
+    // This will zero-initialize the struct, including padding.
+    BlendStateKey();
+
     gl::BlendState blendState;
     bool mrt;
     uint8_t rtvMasks[D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT];
 };
+
+bool operator==(const BlendStateKey &a, const BlendStateKey &b);
+bool operator!=(const BlendStateKey &a, const BlendStateKey &b);
+
+struct RasterizerStateKey final
+{
+    // This will zero-initialize the struct, including padding.
+    RasterizerStateKey();
+
+    gl::RasterizerState rasterizerState;
+    bool scissorEnabled;
+};
+
+bool operator==(const RasterizerStateKey &a, const RasterizerStateKey &b);
+bool operator!=(const RasterizerStateKey &a, const RasterizerStateKey &b);
 
 HRESULT SetDebugName(ID3D11DeviceChild *resource, const char *name);
 

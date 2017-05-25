@@ -155,4 +155,4 @@ rx::SamplerImpl *Sampler::getImplementation() const
     return mImpl;
 }
 
-}
+}  // namespace gl
