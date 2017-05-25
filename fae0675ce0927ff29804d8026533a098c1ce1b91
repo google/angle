@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4280b8ae_14e5fda1",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-05-25T01:13:15Z",
+      "side": 1,
+      "message": "Can you change it to C++ style cast  - static_cast\u003cchar *\u003e()?",
+      "range": {
+        "startLine": 38,
+        "startChar": 32,
+        "endLine": 38,
+        "endChar": 40
+      },
+      "revId": "fae0675ce0927ff29804d8026533a098c1ce1b91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e690bd7a_098575f7",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-05-25T01:13:15Z",
+      "side": 1,
+      "message": "Use ANGLE_GL_PROGRAM ?",
+      "revId": "fae0675ce0927ff29804d8026533a098c1ce1b91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
