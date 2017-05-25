@@ -278,11 +278,11 @@ class Blit11 : angle::NonCopyable
 
     bool mResourcesInitialized;
     d3d11::Buffer mVertexBuffer;
-    angle::ComPtr<ID3D11SamplerState> mPointSampler;
-    angle::ComPtr<ID3D11SamplerState> mLinearSampler;
-    angle::ComPtr<ID3D11RasterizerState> mScissorEnabledRasterizerState;
-    angle::ComPtr<ID3D11RasterizerState> mScissorDisabledRasterizerState;
-    angle::ComPtr<ID3D11DepthStencilState> mDepthStencilState;
+    d3d11::SamplerState mPointSampler;
+    d3d11::SamplerState mLinearSampler;
+    d3d11::RasterizerState mScissorEnabledRasterizerState;
+    d3d11::RasterizerState mScissorDisabledRasterizerState;
+    d3d11::DepthStencilState mDepthStencilState;
 
     d3d11::LazyInputLayout mQuad2DIL;
     d3d11::LazyShader<ID3D11VertexShader> mQuad2DVS;

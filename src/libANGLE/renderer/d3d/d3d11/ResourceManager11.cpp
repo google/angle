@@ -89,11 +89,27 @@ size_t ComputeGenericMemoryUsage(ResourceType resourceType, ID3D11DeviceChild *r
 }
 
 HRESULT CreateResource(ID3D11Device *device,
+                       const D3D11_BLEND_DESC *desc,
+                       void * /*initData*/,
+                       ID3D11BlendState **blendState)
+{
+    return device->CreateBlendState(desc, blendState);
+}
+
+HRESULT CreateResource(ID3D11Device *device,
                        const D3D11_BUFFER_DESC *desc,
                        const D3D11_SUBRESOURCE_DATA *initData,
                        ID3D11Buffer **buffer)
 {
     return device->CreateBuffer(desc, initData, buffer);
+}
+
+HRESULT CreateResource(ID3D11Device *device,
+                       const D3D11_DEPTH_STENCIL_DESC *desc,
+                       void * /*initData*/,
+                       ID3D11DepthStencilState **resourceOut)
+{
+    return device->CreateDepthStencilState(desc, resourceOut);
 }
 
 HRESULT CreateResource(ID3D11Device *device,
@@ -105,11 +121,27 @@ HRESULT CreateResource(ID3D11Device *device,
 }
 
 HRESULT CreateResource(ID3D11Device *device,
+                       const D3D11_RASTERIZER_DESC *desc,
+                       void * /*initData*/,
+                       ID3D11RasterizerState **rasterizerState)
+{
+    return device->CreateRasterizerState(desc, rasterizerState);
+}
+
+HRESULT CreateResource(ID3D11Device *device,
                        const D3D11_RENDER_TARGET_VIEW_DESC *desc,
                        ID3D11Resource *resource,
                        ID3D11RenderTargetView **renderTargetView)
 {
     return device->CreateRenderTargetView(resource, desc, renderTargetView);
+}
+
+HRESULT CreateResource(ID3D11Device *device,
+                       const D3D11_SAMPLER_DESC *desc,
+                       void * /*initData*/,
+                       ID3D11SamplerState **resourceOut)
+{
+    return device->CreateSamplerState(desc, resourceOut);
 }
 
 HRESULT CreateResource(ID3D11Device *device,

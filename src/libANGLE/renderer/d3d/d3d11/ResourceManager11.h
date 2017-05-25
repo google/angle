@@ -26,11 +26,15 @@ class TextureHelper11;
 
 // Format: ResourceType, D3D11 type, DESC type, init data type.
 #define ANGLE_RESOURCE_TYPE_OP(NAME, OP)                                                     \
+    OP(NAME, BlendState, ID3D11BlendState, D3D11_BLEND_DESC, void)                           \
     OP(NAME, Buffer, ID3D11Buffer, D3D11_BUFFER_DESC, const D3D11_SUBRESOURCE_DATA)          \
+    OP(NAME, DepthStencilState, ID3D11DepthStencilState, D3D11_DEPTH_STENCIL_DESC, void)     \
     OP(NAME, DepthStencilView, ID3D11DepthStencilView, D3D11_DEPTH_STENCIL_VIEW_DESC,        \
        ID3D11Resource)                                                                       \
+    OP(NAME, RasterizerState, ID3D11RasterizerState, D3D11_RASTERIZER_DESC, void)            \
     OP(NAME, RenderTargetView, ID3D11RenderTargetView, D3D11_RENDER_TARGET_VIEW_DESC,        \
        ID3D11Resource)                                                                       \
+    OP(NAME, SamplerState, ID3D11SamplerState, D3D11_SAMPLER_DESC, void)                     \
     OP(NAME, ShaderResourceView, ID3D11ShaderResourceView, D3D11_SHADER_RESOURCE_VIEW_DESC,  \
        ID3D11Resource)                                                                       \
     OP(NAME, Texture2D, ID3D11Texture2D, D3D11_TEXTURE2D_DESC, const D3D11_SUBRESOURCE_DATA) \

@@ -67,12 +67,14 @@ class Clear11 : angle::NonCopyable
     bool useVertexBuffer() const;
     gl::Error ensureConstantBufferCreated();
     gl::Error ensureVertexBufferCreated();
+    gl::Error ensureResourcesInitialized();
 
     Renderer11 *mRenderer;
+    bool mResourcesInitialized;
 
     // States
-    angle::ComPtr<ID3D11RasterizerState> mScissorEnabledRasterizerState;
-    angle::ComPtr<ID3D11RasterizerState> mScissorDisabledRasterizerState;
+    d3d11::RasterizerState mScissorEnabledRasterizerState;
+    d3d11::RasterizerState mScissorDisabledRasterizerState;
     gl::DepthStencilState mDepthStencilStateKey;
     d3d11::BlendStateKey mBlendStateKey;
 

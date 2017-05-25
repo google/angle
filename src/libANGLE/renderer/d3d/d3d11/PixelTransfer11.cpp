@@ -39,8 +39,8 @@ PixelTransfer11::PixelTransfer11(Renderer11 *renderer)
       mBufferToTextureVS(nullptr),
       mBufferToTextureGS(nullptr),
       mParamsConstantBuffer(),
-      mCopyRasterizerState(nullptr),
-      mCopyDepthStencilState(nullptr)
+      mCopyRasterizerState(),
+      mCopyDepthStencilState()
 {
 }
 
@@ -55,8 +55,6 @@ PixelTransfer11::~PixelTransfer11()
 
     SafeRelease(mBufferToTextureVS);
     SafeRelease(mBufferToTextureGS);
-    SafeRelease(mCopyRasterizerState);
-    SafeRelease(mCopyDepthStencilState);
 }
 
 gl::Error PixelTransfer11::loadResources()
@@ -65,9 +63,6 @@ gl::Error PixelTransfer11::loadResources()
     {
         return gl::NoError();
     }
-
-    HRESULT result = S_OK;
-    ID3D11Device *device = mRenderer->getDevice();
 
     D3D11_RASTERIZER_DESC rasterDesc;
     rasterDesc.FillMode = D3D11_FILL_SOLID;
@@ -81,12 +76,7 @@ gl::Error PixelTransfer11::loadResources()
     rasterDesc.MultisampleEnable = FALSE;
     rasterDesc.AntialiasedLineEnable = FALSE;
 
-    result = device->CreateRasterizerState(&rasterDesc, &mCopyRasterizerState);
-    ASSERT(SUCCEEDED(result));
-    if (FAILED(result))
-    {
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to create internal pixel transfer rasterizer state, result: 0x%X.", result);
-    }
+    ANGLE_TRY(mRenderer->allocateResource(rasterDesc, &mCopyRasterizerState));
 
     D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
     depthStencilDesc.DepthEnable = true;
@@ -104,12 +94,7 @@ gl::Error PixelTransfer11::loadResources()
     depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
     depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
-    result = device->CreateDepthStencilState(&depthStencilDesc, &mCopyDepthStencilState);
-    ASSERT(SUCCEEDED(result));
-    if (FAILED(result))
-    {
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to create internal pixel transfer depth stencil state, result: 0x%X.", result);
-    }
+    ANGLE_TRY(mRenderer->allocateResource(depthStencilDesc, &mCopyDepthStencilState));
 
     D3D11_BUFFER_DESC constantBufferDesc = { 0 };
     constantBufferDesc.ByteWidth = roundUp<UINT>(sizeof(CopyShaderParams), 32u);
@@ -123,6 +108,7 @@ gl::Error PixelTransfer11::loadResources()
     mParamsConstantBuffer.setDebugName("PixelTransfer11 constant buffer");
 
     // init shaders
+    ID3D11Device *device = mRenderer->getDevice();
     mBufferToTextureVS = d3d11::CompileVS(device, g_VS_BufferToTexture, "BufferToTexture VS");
     if (!mBufferToTextureVS)
     {
@@ -226,8 +212,8 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::PixelUnpackState &unpac
 
     deviceContext->IASetVertexBuffers(0, 1, &nullBuffer, &zero, &zero);
     deviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);
-    deviceContext->OMSetDepthStencilState(mCopyDepthStencilState, 0xFFFFFFFF);
-    deviceContext->RSSetState(mCopyRasterizerState);
+    deviceContext->OMSetDepthStencilState(mCopyDepthStencilState.get(), 0xFFFFFFFF);
+    deviceContext->RSSetState(mCopyRasterizerState.get());
 
     stateManager->setOneTimeRenderTarget(textureRTV.get(), nullptr);
 

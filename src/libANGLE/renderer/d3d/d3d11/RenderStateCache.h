@@ -32,7 +32,6 @@ class RenderStateCache : angle::NonCopyable
     RenderStateCache(Renderer11 *renderer);
     virtual ~RenderStateCache();
 
-    void initialize(ID3D11Device *device);
     void clear();
 
     static d3d11::BlendStateKey GetBlendStateKey(const gl::Framebuffer *framebuffer,
@@ -55,7 +54,7 @@ class RenderStateCache : angle::NonCopyable
     typedef std::size_t (*BlendStateHashFunction)(const d3d11::BlendStateKey &);
     typedef bool (*BlendStateEqualityFunction)(const d3d11::BlendStateKey &,
                                                const d3d11::BlendStateKey &);
-    typedef std::pair<ID3D11BlendState*, unsigned long long> BlendStateCounterPair;
+    typedef std::pair<d3d11::BlendState, unsigned long long> BlendStateCounterPair;
     typedef std::unordered_map<d3d11::BlendStateKey,
                                BlendStateCounterPair,
                                BlendStateHashFunction,
@@ -75,7 +74,7 @@ class RenderStateCache : angle::NonCopyable
 
     typedef std::size_t (*RasterizerStateHashFunction)(const RasterizerStateKey &);
     typedef bool (*RasterizerStateEqualityFunction)(const RasterizerStateKey &, const RasterizerStateKey &);
-    typedef std::pair<ID3D11RasterizerState*, unsigned long long> RasterizerStateCounterPair;
+    typedef std::pair<d3d11::RasterizerState, unsigned long long> RasterizerStateCounterPair;
     typedef std::unordered_map<RasterizerStateKey, RasterizerStateCounterPair, RasterizerStateHashFunction, RasterizerStateEqualityFunction> RasterizerStateMap;
     RasterizerStateMap mRasterizerStateCache;
 
@@ -86,7 +85,7 @@ class RenderStateCache : angle::NonCopyable
 
     typedef std::size_t (*DepthStencilStateHashFunction)(const gl::DepthStencilState &);
     typedef bool (*DepthStencilStateEqualityFunction)(const gl::DepthStencilState &, const gl::DepthStencilState &);
-    typedef std::pair<ID3D11DepthStencilState*, unsigned long long> DepthStencilStateCounterPair;
+    typedef std::pair<d3d11::DepthStencilState, unsigned long long> DepthStencilStateCounterPair;
     typedef std::unordered_map<gl::DepthStencilState,
                                DepthStencilStateCounterPair,
                                DepthStencilStateHashFunction,
@@ -100,16 +99,14 @@ class RenderStateCache : angle::NonCopyable
 
     typedef std::size_t (*SamplerStateHashFunction)(const gl::SamplerState &);
     typedef bool (*SamplerStateEqualityFunction)(const gl::SamplerState &, const gl::SamplerState &);
-    typedef std::pair<ID3D11SamplerState*, unsigned long long> SamplerStateCounterPair;
+    typedef std::pair<d3d11::SamplerState, unsigned long long> SamplerStateCounterPair;
     typedef std::unordered_map<gl::SamplerState,
                                SamplerStateCounterPair,
                                SamplerStateHashFunction,
                                SamplerStateEqualityFunction> SamplerStateMap;
     SamplerStateMap mSamplerStateCache;
-
-    ID3D11Device *mDevice;
 };
 
-}
+}  // namespace rx
 
 #endif // LIBANGLE_RENDERER_D3D_D3D11_RENDERSTATECACHE_H_

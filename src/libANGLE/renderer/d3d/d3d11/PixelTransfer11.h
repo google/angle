@@ -79,11 +79,10 @@ class PixelTransfer11
     d3d11::Buffer mParamsConstantBuffer;
     CopyShaderParams mParamsData;
 
-    ID3D11RasterizerState *mCopyRasterizerState;
-    ID3D11DepthStencilState *mCopyDepthStencilState;
-
+    d3d11::RasterizerState mCopyRasterizerState;
+    d3d11::DepthStencilState mCopyDepthStencilState;
 };
 
-}
+}  // namespace rx
 
 #endif // LIBANGLE_RENDERER_D3D_D3D11_PIXELTRANSFER11_H_

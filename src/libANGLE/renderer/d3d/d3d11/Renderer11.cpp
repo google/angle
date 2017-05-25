@@ -791,7 +791,7 @@ void Renderer11::initializeDevice()
 
     populateRenderer11DeviceCaps();
 
-    mStateCache.initialize(mDevice);
+    mStateCache.clear();
     mInputLayoutCache.initialize();
 
     ASSERT(!mVertexDataManager && !mIndexDataManager);

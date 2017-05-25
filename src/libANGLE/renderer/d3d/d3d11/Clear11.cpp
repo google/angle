@@ -151,17 +151,28 @@ void Clear11::ShaderManager::getShadersAndLayout(ID3D11Device *device,
 
 Clear11::Clear11(Renderer11 *renderer)
     : mRenderer(renderer),
-      mScissorEnabledRasterizerState(nullptr),
-      mScissorDisabledRasterizerState(nullptr),
+      mResourcesInitialized(false),
+      mScissorEnabledRasterizerState(),
+      mScissorDisabledRasterizerState(),
       mShaderManager(),
       mConstantBuffer(),
       mVertexBuffer(),
       mShaderData({})
 {
-    TRACE_EVENT0("gpu.angle", "Clear11::Clear11");
+}
 
-    HRESULT result;
-    ID3D11Device *device = renderer->getDevice();
+Clear11::~Clear11()
+{
+}
+
+gl::Error Clear11::ensureResourcesInitialized()
+{
+    if (mResourcesInitialized)
+    {
+        return gl::NoError();
+    }
+
+    TRACE_EVENT0("gpu.angle", "Clear11::ensureResourcesInitialized");
 
     static_assert((sizeof(RtvDsvClearInfo<float>) == sizeof(RtvDsvClearInfo<int>)),
                   "Size of rx::RtvDsvClearInfo<float> is not equal to rx::RtvDsvClearInfo<int>");
@@ -186,16 +197,12 @@ Clear11::Clear11(Renderer11 *renderer)
     rsDesc.MultisampleEnable     = FALSE;
     rsDesc.AntialiasedLineEnable = FALSE;
 
-    result = device->CreateRasterizerState(&rsDesc, mScissorDisabledRasterizerState.GetAddressOf());
-    ASSERT(SUCCEEDED(result));
-    d3d11::SetDebugName(mScissorDisabledRasterizerState,
-                        "Clear11 Rasterizer State with scissor disabled");
+    ANGLE_TRY(mRenderer->allocateResource(rsDesc, &mScissorDisabledRasterizerState));
+    mScissorDisabledRasterizerState.setDebugName("Clear11 Rasterizer State with scissor disabled");
 
     rsDesc.ScissorEnable = TRUE;
-    result = device->CreateRasterizerState(&rsDesc, mScissorEnabledRasterizerState.GetAddressOf());
-    ASSERT(SUCCEEDED(result));
-    d3d11::SetDebugName(mScissorEnabledRasterizerState,
-                        "Clear11 Rasterizer State with scissor enabled");
+    ANGLE_TRY(mRenderer->allocateResource(rsDesc, &mScissorEnabledRasterizerState));
+    mScissorEnabledRasterizerState.setDebugName("Clear11 Rasterizer State with scissor enabled");
 
     // Initialize Depthstencil state with defaults
     mDepthStencilStateKey.depthTest                = false;
@@ -227,10 +234,9 @@ Clear11::Clear11(Renderer11 *renderer)
     mBlendStateKey.blendState.dither                = true;
     mBlendStateKey.mrt                              = false;
     memset(mBlendStateKey.rtvMasks, 0, sizeof(mBlendStateKey.rtvMasks));
-}
 
-Clear11::~Clear11()
-{
+    mResourcesInitialized = true;
+    return gl::NoError();
 }
 
 bool Clear11::useVertexBuffer() const
@@ -305,6 +311,8 @@ gl::Error Clear11::ensureVertexBufferCreated()
 gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
                                     const gl::FramebufferState &fboData)
 {
+    ANGLE_TRY(ensureResourcesInitialized());
+
     const auto &colorAttachments  = fboData.getColorAttachments();
     const auto &drawBufferStates  = fboData.getDrawBufferStates();
     const gl::FramebufferAttachment *depthStencilAttachment = fboData.getDepthOrStencilAttachment();
@@ -676,11 +684,11 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
         const D3D11_RECT scissorRect = {clearParams.scissor.x, clearParams.scissor.y,
                                         clearParams.scissor.x1(), clearParams.scissor.y1()};
         deviceContext->RSSetScissorRects(1, &scissorRect);
-        deviceContext->RSSetState(mScissorEnabledRasterizerState.Get());
+        deviceContext->RSSetState(mScissorEnabledRasterizerState.get());
     }
     else
     {
-        deviceContext->RSSetState(mScissorDisabledRasterizerState.Get());
+        deviceContext->RSSetState(mScissorDisabledRasterizerState.get());
     }
 
     // Get Shaders

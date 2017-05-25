@@ -1947,18 +1947,9 @@ LazyBlendState::LazyBlendState(const D3D11_BLEND_DESC &desc, const char *debugNa
 {
 }
 
-ID3D11BlendState *LazyBlendState::resolve(ID3D11Device *device)
+gl::Error LazyBlendState::resolve(Renderer11 *renderer)
 {
-    checkAssociatedDevice(device);
-
-    if (mResource == nullptr)
-    {
-        HRESULT result = device->CreateBlendState(&mDesc, &mResource);
-        ASSERT(SUCCEEDED(result));
-        d3d11::SetDebugName(mResource, mDebugName);
-    }
-
-    return mResource;
+    return resolveImpl(renderer, mDesc, mDebugName);
 }
 
 angle::WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,

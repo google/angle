@@ -240,6 +240,37 @@ class LazyResource : angle::NonCopyable
     ID3D11Device *mAssociatedDevice;
 };
 
+template <ResourceType ResourceT>
+class LazyResource2 : angle::NonCopyable
+{
+  public:
+    LazyResource2() : mResource() {}
+    virtual ~LazyResource2() {}
+
+    virtual gl::Error resolve(Renderer11 *renderer) = 0;
+    void reset() { mResource.reset(); }
+    GetD3D11Type<ResourceT> *get() const
+    {
+        ASSERT(mResource.valid());
+        return mResource.get();
+    }
+
+  protected:
+    gl::Error resolveImpl(Renderer11 *renderer,
+                          const GetDescType<ResourceT> &desc,
+                          const char *name)
+    {
+        if (!mResource.valid())
+        {
+            ANGLE_TRY(renderer->allocateResource(desc, &mResource));
+            mResource.setDebugName(name);
+        }
+        return gl::NoError();
+    }
+
+    Resource11<GetD3D11Type<ResourceT>> mResource;
+};
+
 template <typename ResourceType>
 void LazyResource<ResourceType>::checkAssociatedDevice(ID3D11Device *device)
 {
@@ -320,12 +351,12 @@ class LazyInputLayout final : public LazyResource<ID3D11InputLayout>
     const char *mDebugName;
 };
 
-class LazyBlendState final : public LazyResource<ID3D11BlendState>
+class LazyBlendState final : public LazyResource2<ResourceType::BlendState>
 {
   public:
     LazyBlendState(const D3D11_BLEND_DESC &desc, const char *debugName);
 
-    ID3D11BlendState *resolve(ID3D11Device *device) override;
+    gl::Error resolve(Renderer11 *renderer);
 
   private:
     D3D11_BLEND_DESC mDesc;

@@ -81,11 +81,11 @@ SwapChain11::SwapChain11(Renderer11 *renderer,
       mDepthStencilDSView(),
       mDepthStencilSRView(),
       mQuadVB(),
-      mPassThroughSampler(nullptr),
+      mPassThroughSampler(),
       mPassThroughIL(nullptr),
       mPassThroughVS(nullptr),
       mPassThroughPS(nullptr),
-      mPassThroughRS(nullptr),
+      mPassThroughRS(),
       mColorRenderTarget(this, renderer, false),
       mDepthStencilRenderTarget(this, renderer, true),
       mEGLSamples(samples)
@@ -121,11 +121,11 @@ void SwapChain11::release()
     mDepthStencilDSView.reset();
     mDepthStencilSRView.reset();
     mQuadVB.reset();
-    SafeRelease(mPassThroughSampler);
+    mPassThroughSampler.reset();
     SafeRelease(mPassThroughIL);
     SafeRelease(mPassThroughVS);
     SafeRelease(mPassThroughPS);
-    SafeRelease(mPassThroughRS);
+    mPassThroughRS.reset();
 
     if (!mAppCreatedShareHandle)
     {
@@ -611,7 +611,7 @@ void SwapChain11::initPassThroughResources()
     ASSERT(device != nullptr);
 
     // Make sure our resources are all not allocated, when we create
-    ASSERT(!mQuadVB.valid() && mPassThroughSampler == nullptr);
+    ASSERT(!mQuadVB.valid() && !mPassThroughSampler.valid());
     ASSERT(mPassThroughIL == nullptr && mPassThroughVS == nullptr && mPassThroughPS == nullptr);
 
     D3D11_BUFFER_DESC vbDesc;
@@ -641,9 +641,9 @@ void SwapChain11::initPassThroughResources()
     samplerDesc.MinLOD = 0;
     samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-    HRESULT result = device->CreateSamplerState(&samplerDesc, &mPassThroughSampler);
-    ASSERT(SUCCEEDED(result));
-    d3d11::SetDebugName(mPassThroughSampler, "Swap chain pass through sampler");
+    err = mRenderer->allocateResource(samplerDesc, &mPassThroughSampler);
+    ASSERT(!err.isError());
+    mPassThroughSampler.setDebugName("Swap chain pass through sampler");
 
     D3D11_INPUT_ELEMENT_DESC quadLayout[] =
     {
@@ -651,7 +651,8 @@ void SwapChain11::initPassThroughResources()
         { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 8, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
 
-    result = device->CreateInputLayout(quadLayout, 2, g_VS_Passthrough2D, sizeof(g_VS_Passthrough2D), &mPassThroughIL);
+    HRESULT result = device->CreateInputLayout(quadLayout, 2, g_VS_Passthrough2D,
+                                               sizeof(g_VS_Passthrough2D), &mPassThroughIL);
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mPassThroughIL, "Swap chain pass through layout");
 
@@ -686,9 +687,10 @@ void SwapChain11::initPassThroughResources()
     rasterizerDesc.ScissorEnable         = FALSE;
     rasterizerDesc.MultisampleEnable     = FALSE;
     rasterizerDesc.AntialiasedLineEnable = FALSE;
-    result = device->CreateRasterizerState(&rasterizerDesc, &mPassThroughRS);
-    ASSERT(SUCCEEDED(result));
-    d3d11::SetDebugName(mPassThroughRS, "Swap chain pass through rasterizer state");
+
+    err = mRenderer->allocateResource(rasterizerDesc, &mPassThroughRS);
+    ASSERT(!err.isError());
+    mPassThroughRS.setDebugName("Swap chain pass through rasterizer state");
 
     mPassThroughResourcesInit = true;
 }
@@ -777,7 +779,7 @@ EGLint SwapChain11::copyOffscreenToBackbuffer(EGLint x, EGLint y, EGLint width, 
     static const float blendFactor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
     deviceContext->OMSetBlendState(nullptr, blendFactor, 0xFFFFFFF);
 
-    deviceContext->RSSetState(mPassThroughRS);
+    deviceContext->RSSetState(mPassThroughRS.get());
 
     // Apply shaders
     deviceContext->IASetInputLayout(mPassThroughIL);
@@ -803,7 +805,9 @@ EGLint SwapChain11::copyOffscreenToBackbuffer(EGLint x, EGLint y, EGLint width, 
 
     // Apply textures
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, mOffscreenSRView.get());
-    deviceContext->PSSetSamplers(0, 1, &mPassThroughSampler);
+
+    ID3D11SamplerState *samplerState = mPassThroughSampler.get();
+    deviceContext->PSSetSamplers(0, 1, &samplerState);
 
     // Draw
     deviceContext->Draw(4, 0);
