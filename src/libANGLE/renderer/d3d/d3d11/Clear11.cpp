@@ -605,7 +605,7 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
         memcpy(mBlendStateKey.rtvMasks, &rtvMasks[0], sizeof(mBlendStateKey.rtvMasks));
 
         // Get BlendState
-        ANGLE_TRY(mRenderer->getStateCache().getBlendState(mBlendStateKey, &blendState));
+        ANGLE_TRY(mRenderer->getBlendState(mBlendStateKey, &blendState));
     }
 
     const UINT stencilValue          = clearParams.stencilValue & 0xFF;
@@ -621,7 +621,7 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
         mDepthStencilStateKey.stencilTest      = clearParams.clearStencil;
 
         // Get DepthStencilState
-        ANGLE_TRY(mRenderer->getStateCache().getDepthStencilState(mDepthStencilStateKey, &dsState));
+        ANGLE_TRY(mRenderer->getDepthStencilState(mDepthStencilStateKey, &dsState));
         zValue = clearParams.clearDepth ? &clearParams.depthValue : nullptr;
     }
 

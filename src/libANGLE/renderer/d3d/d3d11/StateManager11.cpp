@@ -505,7 +505,7 @@ gl::Error StateManager11::setBlendState(const gl::Framebuffer *framebuffer,
     ID3D11BlendState *dxBlendState = nullptr;
     const d3d11::BlendStateKey &key = RenderStateCache::GetBlendStateKey(framebuffer, blendState);
 
-    ANGLE_TRY(mRenderer->getStateCache().getBlendState(key, &dxBlendState));
+    ANGLE_TRY(mRenderer->getBlendState(key, &dxBlendState));
 
     ASSERT(dxBlendState != nullptr);
 
@@ -593,7 +593,7 @@ gl::Error StateManager11::setDepthStencilState(const gl::State &glState)
         dsStateKey.stencilTest          = false;
     }
 
-    ANGLE_TRY(mRenderer->getStateCache().getDepthStencilState(dsStateKey, &dxDepthStencilState));
+    ANGLE_TRY(mRenderer->getDepthStencilState(dsStateKey, &dxDepthStencilState));
 
     ASSERT(dxDepthStencilState);
 
@@ -642,13 +642,12 @@ gl::Error StateManager11::setRasterizerState(const gl::RasterizerState &rasterSt
             modifiedRasterState.frontFace = GL_CCW;
         }
 
-        ANGLE_TRY(mRenderer->getStateCache().getRasterizerState(
-            modifiedRasterState, mCurScissorEnabled, &dxRasterState));
+        ANGLE_TRY(
+            mRenderer->getRasterizerState(modifiedRasterState, mCurScissorEnabled, &dxRasterState));
     }
     else
     {
-        ANGLE_TRY(mRenderer->getStateCache().getRasterizerState(rasterState, mCurScissorEnabled,
-                                                                &dxRasterState));
+        ANGLE_TRY(mRenderer->getRasterizerState(rasterState, mCurScissorEnabled, &dxRasterState));
     }
 
     mRenderer->getDeviceContext()->RSSetState(dxRasterState);

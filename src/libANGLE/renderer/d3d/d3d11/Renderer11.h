@@ -314,7 +314,14 @@ class Renderer11 : public RendererD3D
     ID3D11DeviceContext1 *getDeviceContext1IfSupported() { return mDeviceContext1; };
     IDXGIFactory *getDxgiFactory() { return mDxgiFactory; };
 
-    RenderStateCache &getStateCache() { return mStateCache; }
+    gl::Error getBlendState(const d3d11::BlendStateKey &key, ID3D11BlendState **outBlendState);
+    gl::Error getRasterizerState(const gl::RasterizerState &rasterState,
+                                 bool scissorEnabled,
+                                 ID3D11RasterizerState **outRasterizerState);
+    gl::Error getDepthStencilState(const gl::DepthStencilState &dsState,
+                                   ID3D11DepthStencilState **outDSState);
+    gl::Error getSamplerState(const gl::SamplerState &samplerState,
+                              ID3D11SamplerState **outSamplerState);
 
     Blit11 *getBlitter() { return mBlit; }
     Clear11 *getClearer() { return mClear; }

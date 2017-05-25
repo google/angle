@@ -381,7 +381,7 @@ const uint32_t ScratchMemoryBufferLifetime = 1000;
 
 Renderer11::Renderer11(egl::Display *display)
     : RendererD3D(display),
-      mStateCache(this),
+      mStateCache(),
       mStateManager(this),
       mLastHistogramUpdateTime(
           ANGLEPlatformCurrent()->monotonicallyIncreasingTime(ANGLEPlatformCurrent())),
@@ -1445,7 +1445,7 @@ gl::Error Renderer11::setSamplerState(gl::SamplerType type,
             memcmp(&samplerState, &mCurPixelSamplerStates[index], sizeof(gl::SamplerState)) != 0)
         {
             ID3D11SamplerState *dxSamplerState = nullptr;
-            ANGLE_TRY(mStateCache.getSamplerState(samplerState, &dxSamplerState));
+            ANGLE_TRY(mStateCache.getSamplerState(this, samplerState, &dxSamplerState));
 
             ASSERT(dxSamplerState != nullptr);
             mDeviceContext->PSSetSamplers(index, 1, &dxSamplerState);
@@ -1465,7 +1465,7 @@ gl::Error Renderer11::setSamplerState(gl::SamplerType type,
             memcmp(&samplerState, &mCurVertexSamplerStates[index], sizeof(gl::SamplerState)) != 0)
         {
             ID3D11SamplerState *dxSamplerState = nullptr;
-            ANGLE_TRY(mStateCache.getSamplerState(samplerState, &dxSamplerState));
+            ANGLE_TRY(mStateCache.getSamplerState(this, samplerState, &dxSamplerState));
 
             ASSERT(dxSamplerState != nullptr);
             mDeviceContext->VSSetSamplers(index, 1, &dxSamplerState);
@@ -1485,7 +1485,7 @@ gl::Error Renderer11::setSamplerState(gl::SamplerType type,
             memcmp(&samplerState, &mCurComputeSamplerStates[index], sizeof(gl::SamplerState)) != 0)
         {
             ID3D11SamplerState *dxSamplerState = nullptr;
-            ANGLE_TRY(mStateCache.getSamplerState(samplerState, &dxSamplerState));
+            ANGLE_TRY(mStateCache.getSamplerState(this, samplerState, &dxSamplerState));
 
             ASSERT(dxSamplerState != nullptr);
             mDeviceContext->CSSetSamplers(index, 1, &dxSamplerState);
@@ -5013,6 +5013,31 @@ gl::Error Renderer11::allocateTexture(const D3D11_TEXTURE3D_DESC &desc,
     ANGLE_TRY(mResourceManager11.allocate(this, &desc, initData, &texture));
     textureOut->init(std::move(texture), desc, format);
     return gl::NoError();
+}
+
+gl::Error Renderer11::getBlendState(const d3d11::BlendStateKey &key,
+                                    ID3D11BlendState **outBlendState)
+{
+    return mStateCache.getBlendState(this, key, outBlendState);
+}
+
+gl::Error Renderer11::getRasterizerState(const gl::RasterizerState &rasterState,
+                                         bool scissorEnabled,
+                                         ID3D11RasterizerState **outRasterizerState)
+{
+    return mStateCache.getRasterizerState(this, rasterState, scissorEnabled, outRasterizerState);
+}
+
+gl::Error Renderer11::getDepthStencilState(const gl::DepthStencilState &dsState,
+                                           ID3D11DepthStencilState **outDSState)
+{
+    return mStateCache.getDepthStencilState(this, dsState, outDSState);
+}
+
+gl::Error Renderer11::getSamplerState(const gl::SamplerState &samplerState,
+                                      ID3D11SamplerState **outSamplerState)
+{
+    return mStateCache.getSamplerState(this, samplerState, outSamplerState);
 }
 
 }  // namespace rx

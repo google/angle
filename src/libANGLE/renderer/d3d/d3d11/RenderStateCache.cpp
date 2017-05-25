@@ -54,9 +54,8 @@ template std::size_t ComputeGenericHash(const rx::d3d11::RasterizerStateKey &);
 template std::size_t ComputeGenericHash(const gl::DepthStencilState &);
 template std::size_t ComputeGenericHash(const gl::SamplerState &);
 
-RenderStateCache::RenderStateCache(Renderer11 *renderer)
-    : mRenderer(renderer),
-      mBlendStateCache(kMaxStates),
+RenderStateCache::RenderStateCache()
+    : mBlendStateCache(kMaxStates),
       mRasterizerStateCache(kMaxStates),
       mDepthStencilStateCache(kMaxStates),
       mSamplerStateCache(kMaxStates)
@@ -117,7 +116,8 @@ d3d11::BlendStateKey RenderStateCache::GetBlendStateKey(const gl::Framebuffer *f
     return key;
 }
 
-gl::Error RenderStateCache::getBlendState(const d3d11::BlendStateKey &key,
+gl::Error RenderStateCache::getBlendState(Renderer11 *renderer,
+                                          const d3d11::BlendStateKey &key,
                                           ID3D11BlendState **outBlendState)
 {
     auto keyIter = mBlendStateCache.Get(key);
@@ -159,14 +159,16 @@ gl::Error RenderStateCache::getBlendState(const d3d11::BlendStateKey &key,
     }
 
     d3d11::BlendState d3dBlendState;
-    ANGLE_TRY(mRenderer->allocateResource(blendDesc, &d3dBlendState));
+    ANGLE_TRY(renderer->allocateResource(blendDesc, &d3dBlendState));
     *outBlendState = d3dBlendState.get();
     mBlendStateCache.Put(key, std::move(d3dBlendState));
 
     return gl::NoError();
 }
 
-gl::Error RenderStateCache::getRasterizerState(const gl::RasterizerState &rasterState, bool scissorEnabled,
+gl::Error RenderStateCache::getRasterizerState(Renderer11 *renderer,
+                                               const gl::RasterizerState &rasterState,
+                                               bool scissorEnabled,
                                                ID3D11RasterizerState **outRasterizerState)
 {
     d3d11::RasterizerStateKey key;
@@ -214,14 +216,15 @@ gl::Error RenderStateCache::getRasterizerState(const gl::RasterizerState &raster
     }
 
     d3d11::RasterizerState dx11RasterizerState;
-    ANGLE_TRY(mRenderer->allocateResource(rasterDesc, &dx11RasterizerState));
+    ANGLE_TRY(renderer->allocateResource(rasterDesc, &dx11RasterizerState));
     *outRasterizerState = dx11RasterizerState.get();
     mRasterizerStateCache.Put(key, std::move(dx11RasterizerState));
 
     return gl::NoError();
 }
 
-gl::Error RenderStateCache::getDepthStencilState(const gl::DepthStencilState &glState,
+gl::Error RenderStateCache::getDepthStencilState(Renderer11 *renderer,
+                                                 const gl::DepthStencilState &glState,
                                                  ID3D11DepthStencilState **outDSState)
 {
     auto keyIter = mDepthStencilStateCache.Get(glState);
@@ -250,14 +253,16 @@ gl::Error RenderStateCache::getDepthStencilState(const gl::DepthStencilState &gl
     dsDesc.BackFace.StencilFunc         = ConvertComparison(glState.stencilBackFunc);
 
     d3d11::DepthStencilState dx11DepthStencilState;
-    ANGLE_TRY(mRenderer->allocateResource(dsDesc, &dx11DepthStencilState));
+    ANGLE_TRY(renderer->allocateResource(dsDesc, &dx11DepthStencilState));
     *outDSState = dx11DepthStencilState.get();
     mDepthStencilStateCache.Put(glState, std::move(dx11DepthStencilState));
 
     return gl::NoError();
 }
 
-gl::Error RenderStateCache::getSamplerState(const gl::SamplerState &samplerState, ID3D11SamplerState **outSamplerState)
+gl::Error RenderStateCache::getSamplerState(Renderer11 *renderer,
+                                            const gl::SamplerState &samplerState,
+                                            ID3D11SamplerState **outSamplerState)
 {
     auto keyIter = mSamplerStateCache.Get(samplerState);
     if (keyIter != mSamplerStateCache.end())
@@ -268,7 +273,7 @@ gl::Error RenderStateCache::getSamplerState(const gl::SamplerState &samplerState
 
     TrimCache(kMaxStates, kGCLimit, "sampler stencil", &mSamplerStateCache);
 
-    const auto &featureLevel = mRenderer->getRenderer11DeviceCaps().featureLevel;
+    const auto &featureLevel = renderer->getRenderer11DeviceCaps().featureLevel;
 
     D3D11_SAMPLER_DESC samplerDesc;
     samplerDesc.Filter =
@@ -288,7 +293,7 @@ gl::Error RenderStateCache::getSamplerState(const gl::SamplerState &samplerState
     samplerDesc.MinLOD         = samplerState.minLod;
     samplerDesc.MaxLOD         = samplerState.maxLod;
 
-    if (mRenderer->getRenderer11DeviceCaps().featureLevel <= D3D_FEATURE_LEVEL_9_3)
+    if (featureLevel <= D3D_FEATURE_LEVEL_9_3)
     {
         // Check that maxLOD is nearly FLT_MAX (1000.0f is the default), since 9_3 doesn't support
         // anything other than FLT_MAX. Note that Feature Level 9_* only supports GL ES 2.0, so the
@@ -301,7 +306,7 @@ gl::Error RenderStateCache::getSamplerState(const gl::SamplerState &samplerState
     }
 
     d3d11::SamplerState dx11SamplerState;
-    ANGLE_TRY(mRenderer->allocateResource(samplerDesc, &dx11SamplerState));
+    ANGLE_TRY(renderer->allocateResource(samplerDesc, &dx11SamplerState));
     *outSamplerState = dx11SamplerState.get();
     mSamplerStateCache.Put(samplerState, std::move(dx11SamplerState));
 
