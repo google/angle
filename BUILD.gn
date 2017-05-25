@@ -562,6 +562,7 @@ shared_library("libGLESv2") {
   deps = [
     ":includes",
     ":libANGLE",
+    "//build/config:exe_and_shlib_deps",
   ]
 }
 
@@ -619,6 +620,7 @@ shared_library("libEGL") {
   deps = [
     ":includes",
     ":libGLESv2",
+    "//build/config:exe_and_shlib_deps",
   ]
 }
 
@@ -732,6 +734,8 @@ foreach(is_shared_library,
 
     if (is_shared_library) {
       defines = [ "LIBANGLE_UTIL_IMPLEMENTATION" ]
+
+      deps += [ "//build/config:exe_and_shlib_deps" ]
 
       if (is_mac && !is_component_build) {
         ldflags = [

@@ -469,6 +469,7 @@ foreach(layer_info, layers) {
     deps = [
       ":vulkan_layer_table",
       ":vulkan_layer_utils",
+      "//build/config:exe_and_shlib_deps",
     ]
     if (layer_info[2] != "") {
       deps += [ layer_info[2] ]
