@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bfd9f20d_41fb86ab",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-25T17:32:17Z",
+      "side": 1,
+      "message": "what is the purpose of this?",
+      "revId": "2615790dfa2af3119e45004571bd494170d331b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9a928646_71e53c4c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-25T17:32:17Z",
+      "side": 1,
+      "message": "nit: the method name could mention that it is a CPU readback. As is it looks like it could be the general implementation of copytexture",
+      "revId": "2615790dfa2af3119e45004571bd494170d331b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
