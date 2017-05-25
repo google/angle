@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "82ce1ed3_23fc2ad9",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 751,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-25T14:13:32Z",
+      "side": 1,
+      "message": "nit: |\u003d is a bitwise operator, prefer a \u003d a || b (I\u0027m not sure if there is a ||\u003d operator, but I don\u0027t think so).",
+      "range": {
+        "startLine": 751,
+        "startChar": 28,
+        "endLine": 751,
+        "endChar": 30
+      },
+      "revId": "00d91ce6acb366bcc95b97e112b9059fd17e6a69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
