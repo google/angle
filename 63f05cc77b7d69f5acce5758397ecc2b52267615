@@ -16,6 +16,24 @@
       "revId": "63f05cc77b7d69f5acce5758397ecc2b52267615",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa339a40_8b96f5ad",
+        "filename": "src/tests/compiler_tests/HLSLOutput_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-26T14:05:10Z",
+      "side": 1,
+      "message": "There isn\u0027t currently any other test file where this test would fit in a natural way. I had copied some of the code here from DebugShaderPrecisionTest and kept the foundInHLSLCode function for future tests - but it\u0027s probably neater to just not have the function here until it\u0027s needed. I removed it now.\n\nAnother option would be to refactor the tests so that there\u0027d be a common base class for tests that look at HLSL output. But that easily ends up in a mess since HLSL support can be toggled at compile time.",
+      "parentUuid": "251423f9_d99340e4",
+      "revId": "63f05cc77b7d69f5acce5758397ecc2b52267615",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
