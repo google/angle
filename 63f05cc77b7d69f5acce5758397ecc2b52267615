@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "251423f9_d99340e4",
+        "filename": "src/tests/compiler_tests/HLSLOutput_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-26T13:32:51Z",
+      "side": 1,
+      "message": "nit: this isn\u0027t used in the test so maybe the test code be moved to an existing file?",
+      "revId": "63f05cc77b7d69f5acce5758397ecc2b52267615",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
