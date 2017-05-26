@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dd88b1e0_452f0d4e",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-05-26T09:36:32Z",
+      "side": 1,
+      "message": "I think the right fixing position should be here. Change it like below:\nif ((samples-\u003evalue() !\u003d 0 )\u0026\u0026 ((attachment.getSamples() % samples-\u003evalue()) !\u003d 0))\n\nAnd keep line 138 unchanged.\n\nIn your current fix, it will result that you never go to line 124 even *sample \u003d0 and attachment.getSamples() !\u003d samples-\u003evalue() and context-\u003egetExtensions().framebufferMixedSamples \u003d false.\n\nFor example, if all color attachments\u0027s samples are 0, depth attachment\u0027s samples is 4. But context-\u003egetExtensions().framebufferMixedSamples \u003d false. The original logic will go to line 125 and return false.  But your current change will skip it.\n\nAlso it won\u0027t check if the first color attachment is equal to the second attachment if the first \u0027s samples is 0",
+      "range": {
+        "startLine": 129,
+        "startChar": 16,
+        "endLine": 129,
+        "endChar": 70
+      },
+      "revId": "84fe471b97954983692b048271af33bf56a137a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
