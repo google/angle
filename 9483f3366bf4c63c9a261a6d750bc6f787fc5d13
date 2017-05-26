@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "09de4a92_fb3c61a7",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 796,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-26T14:58:12Z",
+      "side": 1,
+      "message": "Just to be sure, the duplication here is because unsigned int aren\u0027t available in ESSL 1?",
+      "revId": "9483f3366bf4c63c9a261a6d750bc6f787fc5d13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a6963a44_a781d12f",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-26T14:58:12Z",
+      "side": 1,
+      "message": "What are the changes to this shader for?",
+      "revId": "9483f3366bf4c63c9a261a6d750bc6f787fc5d13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
