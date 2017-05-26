@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bed6e94e_c0226d1a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/ResourceManager11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-26T15:30:59Z",
+      "side": 1,
+      "message": "This would divide the size in half for each mip, shouldn\u0027t it be a quarter? Also, I\u0027m not sure this is sufficient, once the lower mips become of size 1xH or Wx1 then it divides in half for each mip.",
+      "range": {
+        "startLine": 25,
+        "startChar": 19,
+        "endLine": 25,
+        "endChar": 41
+      },
+      "revId": "1ae019993d60e47f2383829bb74de1d1ed50bd4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
