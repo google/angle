@@ -78,69 +78,6 @@ bool CheckAttachmentCompleteness(const Context *context, const FramebufferAttach
     return true;
 };
 
-bool CheckAttachmentSampleCompleteness(const Context *context,
-                                       const FramebufferAttachment &attachment,
-                                       bool colorAttachment,
-                                       Optional<int> *samples,
-                                       Optional<GLboolean> *fixedSampleLocations)
-{
-    ASSERT(attachment.isAttached());
-
-    if (attachment.type() == GL_TEXTURE)
-    {
-        const Texture *texture = attachment.getTexture();
-        ASSERT(texture);
-
-        const ImageIndex &attachmentImageIndex = attachment.getTextureImageIndex();
-
-        // ES3.1 (section 9.4) requires that the value of TEXTURE_FIXED_SAMPLE_LOCATIONS should be
-        // the same for all attached textures.
-        GLboolean fixedSampleloc = texture->getFixedSampleLocations(attachmentImageIndex.type,
-                                                                    attachmentImageIndex.mipIndex);
-        if (fixedSampleLocations->valid() && fixedSampleloc != fixedSampleLocations->value())
-        {
-            return false;
-        }
-        else
-        {
-            *fixedSampleLocations = fixedSampleloc;
-        }
-    }
-
-    if (samples->valid())
-    {
-        if (attachment.getSamples() != samples->value())
-        {
-            if (colorAttachment)
-            {
-                // APPLE_framebuffer_multisample, which EXT_draw_buffers refers to, requires that
-                // all color attachments have the same number of samples for the FBO to be complete.
-                return false;
-            }
-            else
-            {
-                // CHROMIUM_framebuffer_mixed_samples allows a framebuffer to be considered complete
-                // when its depth or stencil samples are a multiple of the number of color samples.
-                if (!context->getExtensions().framebufferMixedSamples)
-                {
-                    return false;
-                }
-
-                if ((attachment.getSamples() % samples->value()) != 0)
-                {
-                    return false;
-                }
-            }
-        }
-    }
-    else
-    {
-        *samples = attachment.getSamples();
-    }
-
-    return true;
-}
-
 }  // anonymous namespace
 
 // This constructor is only used for default framebuffers.
@@ -704,9 +641,9 @@ GLenum Framebuffer::checkStatusImpl(const Context *context)
 
     ASSERT(mId != 0);
 
-    bool hasAttachments = false;
-    Optional<unsigned int> colorbufferSize;
-    Optional<int> samples;
+    unsigned int colorbufferSize = 0;
+    int samples                  = -1;
+    bool missingAttachment       = true;
     Optional<GLboolean> fixedSampleLocations;
     bool hasRenderbuffer = false;
 
@@ -725,31 +662,51 @@ GLenum Framebuffer::checkStatusImpl(const Context *context)
                 return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
             }
 
-            if (!CheckAttachmentSampleCompleteness(context, colorAttachment, true, &samples,
-                                                   &fixedSampleLocations))
+            if (colorAttachment.type() == GL_TEXTURE)
             {
-                return GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE;
+                // ES3.1 (section 9.4) requires that the value of TEXTURE_FIXED_SAMPLE_LOCATIONS
+                // should be the same for all attached textures.
+                GLboolean fixedSampleloc = colorAttachment.getTexture()->getFixedSampleLocations(
+                    colorAttachment.getTextureImageIndex().type, 0);
+                if (fixedSampleLocations.valid() && fixedSampleloc != fixedSampleLocations.value())
+                {
+                    return GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE;
+                }
+                else
+                {
+                    fixedSampleLocations = fixedSampleloc;
+                }
+            }
+            else if (colorAttachment.type() == GL_RENDERBUFFER)
+            {
+                hasRenderbuffer = true;
             }
 
-            // in GLES 2.0, all color attachments attachments must have the same number of bitplanes
-            // in GLES 3.0, there is no such restriction
-            if (state.getClientMajorVersion() < 3)
+            if (!missingAttachment)
             {
-                if (colorbufferSize.valid())
+                // APPLE_framebuffer_multisample, which EXT_draw_buffers refers to, requires that
+                // all color attachments have the same number of samples for the FBO to be complete.
+                if (colorAttachment.getSamples() != samples)
                 {
-                    if (format.pixelBytes != colorbufferSize.value())
+                    return GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_EXT;
+                }
+
+                // in GLES 2.0, all color attachments attachments must have the same number of
+                // bitplanes in GLES 3.0, there is no such restriction
+                if (state.getClientMajorVersion() < 3)
+                {
+                    if (format.pixelBytes != colorbufferSize)
                     {
                         return GL_FRAMEBUFFER_UNSUPPORTED;
                     }
                 }
-                else
-                {
-                    colorbufferSize = format.pixelBytes;
-                }
             }
-
-            hasRenderbuffer = hasRenderbuffer || (colorAttachment.type() == GL_RENDERBUFFER);
-            hasAttachments  = true;
+            else
+            {
+                samples           = colorAttachment.getSamples();
+                colorbufferSize   = format.pixelBytes;
+                missingAttachment = false;
+            }
         }
     }
 
@@ -767,14 +724,25 @@ GLenum Framebuffer::checkStatusImpl(const Context *context)
             return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
         }
 
-        if (!CheckAttachmentSampleCompleteness(context, depthAttachment, false, &samples,
-                                               &fixedSampleLocations))
+        if (missingAttachment)
         {
-            return GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE;
+            samples           = depthAttachment.getSamples();
+            missingAttachment = false;
         }
+        else if (samples != depthAttachment.getSamples())
+        {
+            // CHROMIUM_framebuffer_mixed_samples allows a framebuffer to be
+            // considered complete when its depth or stencil samples are a
+            // multiple of the number of color samples.
+            const bool mixedSamples = state.getExtensions().framebufferMixedSamples;
+            if (!mixedSamples)
+                return GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_ANGLE;
 
-        hasRenderbuffer = hasRenderbuffer || (depthAttachment.type() == GL_RENDERBUFFER);
-        hasAttachments  = true;
+            const int colorSamples = samples ? samples : 1;
+            const int depthSamples = depthAttachment.getSamples();
+            if ((depthSamples % colorSamples) != 0)
+                return GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_ANGLE;
+        }
     }
 
     const FramebufferAttachment &stencilAttachment = mState.mStencilAttachment;
@@ -791,21 +759,30 @@ GLenum Framebuffer::checkStatusImpl(const Context *context)
             return GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
         }
 
-        if (!CheckAttachmentSampleCompleteness(context, stencilAttachment, false, &samples,
-                                               &fixedSampleLocations))
+        if (missingAttachment)
         {
-            return GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE;
+            samples           = stencilAttachment.getSamples();
+            missingAttachment = false;
+        }
+        else if (samples != stencilAttachment.getSamples())
+        {
+            // see the comments in depth attachment check.
+            const bool mixedSamples = state.getExtensions().framebufferMixedSamples;
+            if (!mixedSamples)
+                return GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_ANGLE;
+
+            const int colorSamples   = samples ? samples : 1;
+            const int stencilSamples = stencilAttachment.getSamples();
+            if ((stencilSamples % colorSamples) != 0)
+                return GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_ANGLE;
         }
 
-        hasRenderbuffer = hasRenderbuffer || (stencilAttachment.type() == GL_RENDERBUFFER);
-        hasAttachments  = true;
-    }
-
-    // Starting from ES 3.0 stencil and depth, if present, should be the same image
-    if (state.getClientMajorVersion() >= 3 && depthAttachment.isAttached() &&
-        stencilAttachment.isAttached() && stencilAttachment != depthAttachment)
-    {
-        return GL_FRAMEBUFFER_UNSUPPORTED;
+        // Starting from ES 3.0 stencil and depth, if present, should be the same image
+        if (state.getClientMajorVersion() >= 3 && depthAttachment.isAttached() &&
+            stencilAttachment != depthAttachment)
+        {
+            return GL_FRAMEBUFFER_UNSUPPORTED;
+        }
     }
 
     // Special additional validation for WebGL 1 DEPTH/STENCIL/DEPTH_STENCIL.
@@ -836,12 +813,14 @@ GLenum Framebuffer::checkStatusImpl(const Context *context)
         }
     }
 
-    // ES3.1(section 9.4) requires that if no image is attached to the framebuffer, and either the
-    // value of the framebuffer's FRAMEBUFFER_DEFAULT_WIDTH or FRAMEBUFFER_DEFAULT_HEIGHT parameters
-    // is zero, the framebuffer is considered incomplete.
+    // ES3.1(section 9.4) requires that if no image is attached to the
+    // framebuffer, and either the value of the framebuffer's FRAMEBUFFER_DEFAULT_WIDTH
+    // or FRAMEBUFFER_DEFAULT_HEIGHT parameters is zero, the framebuffer is
+    // considered incomplete.
     GLint defaultWidth  = mState.getDefaultWidth();
     GLint defaultHeight = mState.getDefaultHeight();
-    if (!hasAttachments && (defaultWidth == 0 || defaultHeight == 0))
+
+    if (missingAttachment && (defaultWidth == 0 || defaultHeight == 0))
     {
         return GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT;
     }
@@ -854,8 +833,9 @@ GLenum Framebuffer::checkStatusImpl(const Context *context)
         return GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS;
     }
 
-    // ES3.1(section 9.4) requires that if the attached images are a mix of renderbuffers and
-    // textures, the value of TEXTURE_FIXED_SAMPLE_LOCATIONS must be TRUE for all attached textures.
+    // ES3.1(section 9.4) requires that if the attached images are a mix of renderbuffers
+    // and textures, the value of TEXTURE_FIXED_SAMPLE_LOCATIONS must be TRUE for all
+    // attached textures.
     if (fixedSampleLocations.valid() && hasRenderbuffer && !fixedSampleLocations.value())
     {
         return GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE;
