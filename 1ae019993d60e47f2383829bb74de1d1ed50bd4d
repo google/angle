@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "58ae001b_102f13f7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/ResourceManager11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-26T15:32:00Z",
+      "side": 1,
+      "message": "Computation here do not take into account that textures are square/cube and not lines. Also there could be an explicit computation of the sum of the geometric serie.",
+      "revId": "1ae019993d60e47f2383829bb74de1d1ed50bd4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bed6e94e_c0226d1a",
         "filename": "src/libANGLE/renderer/d3d/d3d11/ResourceManager11.cpp",
         "patchSetId": 7
