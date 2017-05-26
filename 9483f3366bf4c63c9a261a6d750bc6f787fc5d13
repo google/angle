@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b1b1faff_7a6c1d2b",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 796,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-26T15:03:01Z",
+      "side": 1,
+      "message": "Yes. Should I add a comment here?",
+      "parentUuid": "09de4a92_fb3c61a7",
+      "revId": "9483f3366bf4c63c9a261a6d750bc6f787fc5d13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a6963a44_a781d12f",
         "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2017-05-26T14:58:12Z",
       "side": 1,
       "message": "What are the changes to this shader for?",
+      "revId": "9483f3366bf4c63c9a261a6d750bc6f787fc5d13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a9c4bf46_6f91ac8e",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-26T15:03:01Z",
+      "side": 1,
+      "message": "I wanted to add coverage for using a vertex shader input variable in a multiview shader. This patch has some new validation code disallowing \"in\" qualifier in ESSL 1.00 multiview vertex shaders, the changes to the test make sure that \"in\" is still allowed in ESSL 3.00 multiview vertex shaders.",
+      "parentUuid": "a6963a44_a781d12f",
       "revId": "9483f3366bf4c63c9a261a6d750bc6f787fc5d13",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
