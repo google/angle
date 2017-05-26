@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d70194d_d23bf86c",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-26T05:06:03Z",
+      "side": 0,
+      "message": "The type of *samples  is Optional\u003cint\u003e. One of its constructors is Optional\u003cint\u003e (int):\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/common/Optional.h?l\u003d20 \nIf the attachment isn\u0027t multisampled, attachment.getSamples() returns 0, so *samples \u003d 0 means:\nsamples-\u003emValid \u003d true;\nsamples-\u003emValue \u003d 0;\nIt is not a correct state and if we use such samples as the parameter in this function, we will meet a divide-by-zero error in line 129.\nOne of such situation is in Framebuffer::checkStatusImpl(). where samples will be passed into CheckAttachmentSampleCompleteness in checking color, depth and stencil attachments:\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/Framebuffer.cpp?l\u003d701",
+      "revId": "ff77c359221485886b8207e8afd23c11e0768cf4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
