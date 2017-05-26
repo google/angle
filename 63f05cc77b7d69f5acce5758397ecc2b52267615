@@ -34,6 +34,24 @@
       "revId": "63f05cc77b7d69f5acce5758397ecc2b52267615",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eae42107_5dccf268",
+        "filename": "src/tests/compiler_tests/HLSLOutput_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-26T14:08:03Z",
+      "side": 1,
+      "message": "Good point thanks for the explanation. Given this is testing code and that it would still need build-system support, I don\u0027t think we need to refactor test to have a base class for HLSL output tests.",
+      "parentUuid": "fa339a40_8b96f5ad",
+      "revId": "63f05cc77b7d69f5acce5758397ecc2b52267615",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
