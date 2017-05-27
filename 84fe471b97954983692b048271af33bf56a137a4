@@ -22,6 +22,30 @@
       "revId": "84fe471b97954983692b048271af33bf56a137a4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d1397f3_80b54b37",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-27T00:19:47Z",
+      "side": 1,
+      "message": "You mean the program will go to line 125 just after checking all color attachments and during checking depth attachments in your example?\n\nAt this time sample-\u003evalid is still false because no value was set to *sample yet, so it should jump to line 138 instead of checking if all the sample values are same because the color attachments are not multisampled.\n\nWhen checking depth attachment, the sample is 4, so *sample will be assigned 4 at line 138, then this value can be used to check the stencil attachment, where we can reach line 124.\n\nSo when *sample \u003d0 and attachment.getSamples() !\u003d samples-\u003evalue() and context-\u003egetExtensions().framebufferMixedSamples \u003d false, it is correct logic not to run into line 124.",
+      "parentUuid": "dd88b1e0_452f0d4e",
+      "range": {
+        "startLine": 129,
+        "startChar": 16,
+        "endLine": 129,
+        "endChar": 70
+      },
+      "revId": "84fe471b97954983692b048271af33bf56a137a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
