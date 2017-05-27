@@ -46,6 +46,30 @@
       "revId": "84fe471b97954983692b048271af33bf56a137a4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1816524f_dc6deac7",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-05-27T01:22:23Z",
+      "side": 1,
+      "message": "Let\u0027s take a simple example. I assume there are 4 color attachments.  The samples of them are 0, 4, 4, 4.  In your current logic. When check the first color attachment, since the attachment.getSamples is 0, it will not do *samples \u003d currentSamples. So samples-\u003evalid() is still false. Next, we will check the second color attachment, since samples-\u003evalid() is still false, it will go to else and let *samples \u003d 4.  Now samples-\u003evalid() will be true. But in fact, the color attachment 1 and 2 don\u0027t have the same samples. It should return false. However, your current logic will skip it.  So your current fix will change the original logic. And that\u0027t not correct.  Please correct me if I am wrong.",
+      "parentUuid": "6d1397f3_80b54b37",
+      "range": {
+        "startLine": 129,
+        "startChar": 16,
+        "endLine": 129,
+        "endChar": 70
+      },
+      "revId": "84fe471b97954983692b048271af33bf56a137a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
