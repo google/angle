@@ -424,7 +424,11 @@ class Program final : angle::NonCopyable, public LabeledObject
     GLsizei getTransformFeedbackVaryingMaxLength() const;
     GLenum getTransformFeedbackBufferMode() const;
 
-    static bool linkValidateInterfaceBlockFields(InfoLog &infoLog, const std::string &uniformName, const sh::InterfaceBlockField &vertexUniform, const sh::InterfaceBlockField &fragmentUniform);
+    static bool linkValidateInterfaceBlockFields(InfoLog &infoLog,
+                                                 const std::string &uniformName,
+                                                 const sh::InterfaceBlockField &vertexUniform,
+                                                 const sh::InterfaceBlockField &fragmentUniform,
+                                                 bool webglCompatibility);
 
     void addRef();
     void release(const Context *context);
@@ -495,8 +499,9 @@ class Program final : angle::NonCopyable, public LabeledObject
     bool validateVertexAndFragmentInterfaceBlocks(
         const std::vector<sh::InterfaceBlock> &vertexInterfaceBlocks,
         const std::vector<sh::InterfaceBlock> &fragmentInterfaceBlocks,
-        InfoLog &infoLog) const;
-    bool linkUniformBlocks(InfoLog &infoLog, const Caps &caps);
+        InfoLog &infoLog,
+        bool webglCompatibility) const;
+    bool linkUniformBlocks(InfoLog &infoLog, const Caps &caps, bool webglCompatibility);
     bool linkVaryings(InfoLog &infoLog) const;
 
     bool linkUniforms(InfoLog &infoLog, const Caps &caps, const Bindings &uniformLocationBindings);
@@ -504,7 +509,8 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     bool areMatchingInterfaceBlocks(InfoLog &infoLog,
                                     const sh::InterfaceBlock &vertexInterfaceBlock,
-                                    const sh::InterfaceBlock &fragmentInterfaceBlock) const;
+                                    const sh::InterfaceBlock &fragmentInterfaceBlock,
+                                    bool webglCompatibility) const;
 
     static bool linkValidateVaryings(InfoLog &infoLog,
                                      const std::string &varyingName,

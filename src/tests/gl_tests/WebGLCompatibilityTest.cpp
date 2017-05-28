@@ -2824,6 +2824,40 @@ TEST_P(WebGLCompatibilityTest, DrawBuffers)
     }
 }
 
+// Linking should fail when corresponding vertex/fragment uniform blocks have different precision
+// qualifiers.
+TEST_P(WebGL2CompatibilityTest, UniformBlockPrecisionMismatch)
+{
+    const std::string vertexShader =
+        "#version 300 es\n"
+        "uniform Block { mediump vec4 val; };\n"
+        "void main() { gl_Position = val; }\n";
+    const std::string fragmentShader =
+        "#version 300 es\n"
+        "uniform Block { highp vec4 val; };\n"
+        "out highp vec4 out_FragColor;\n"
+        "void main() { out_FragColor = val; }\n";
+
+    GLuint vs = CompileShader(GL_VERTEX_SHADER, vertexShader);
+    ASSERT_NE(0u, vs);
+    GLuint fs = CompileShader(GL_FRAGMENT_SHADER, fragmentShader);
+    ASSERT_NE(0u, fs);
+
+    GLuint program = glCreateProgram();
+
+    glAttachShader(program, vs);
+    glDeleteShader(vs);
+    glAttachShader(program, fs);
+    glDeleteShader(fs);
+
+    glLinkProgram(program);
+    GLint linkStatus;
+    glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
+    ASSERT_EQ(0, linkStatus);
+
+    glDeleteProgram(program);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(WebGLCompatibilityTest,
