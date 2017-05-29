@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7c73454f_e53c62db",
+        "filename": "src/image_util/imageformats.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-29T19:23:53Z",
+      "side": 1,
+      "message": "This one was required because it was the only struct that doesn\u0027t have the function so it generated link errors now that it is in the format tables.",
+      "parentUuid": "74100c5d_1b8b0df7",
+      "range": {
+        "startLine": 168,
+        "startChar": 16,
+        "endLine": 168,
+        "endChar": 26
+      },
+      "revId": "2615790dfa2af3119e45004571bd494170d331b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bfd9f20d_41fb86ab",
         "filename": "src/libANGLE/renderer/d3d/TextureD3D.h",
         "patchSetId": 4
@@ -78,6 +102,24 @@
     },
     {
       "key": {
+        "uuid": "58144e04_538f8536",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-29T19:23:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2b14bf86_3b15e9ba",
+      "revId": "2615790dfa2af3119e45004571bd494170d331b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "086aed30_9fcb9015",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
         "patchSetId": 4
@@ -89,6 +131,30 @@
       "writtenOn": "2017-05-29T18:04:23Z",
       "side": 1,
       "message": "does git cl format line these up? not sure if it handles compound assignment.",
+      "range": {
+        "startLine": 35,
+        "startChar": 15,
+        "endLine": 35,
+        "endChar": 17
+      },
+      "revId": "2615790dfa2af3119e45004571bd494170d331b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "916e6bd2_b40d59a0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-29T19:23:53Z",
+      "side": 1,
+      "message": "Nope :(",
+      "parentUuid": "086aed30_9fcb9015",
       "range": {
         "startLine": 35,
         "startChar": 15,
