@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "74100c5d_1b8b0df7",
+        "filename": "src/image_util/imageformats.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-29T18:04:23Z",
+      "side": 1,
+      "message": "this is a pretty specific conversion to the extension.. i think the design is a bit over-general here for all colors, but don\u0027t really have any better suggestions at the moment.",
+      "range": {
+        "startLine": 168,
+        "startChar": 16,
+        "endLine": 168,
+        "endChar": 26
+      },
+      "revId": "2615790dfa2af3119e45004571bd494170d331b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bfd9f20d_41fb86ab",
         "filename": "src/libANGLE/renderer/d3d/TextureD3D.h",
         "patchSetId": 4
@@ -31,6 +54,47 @@
       "side": 1,
       "message": "Removes some boilderplate code needed to get an image and make sure it has up-to-date data.",
       "parentUuid": "bfd9f20d_41fb86ab",
+      "revId": "2615790dfa2af3119e45004571bd494170d331b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2b14bf86_3b15e9ba",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-29T18:04:23Z",
+      "side": 1,
+      "message": "you could make rename this getImageAndSyncFromStorage to clarify its intent.",
+      "parentUuid": "bfd9f20d_41fb86ab",
+      "revId": "2615790dfa2af3119e45004571bd494170d331b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "086aed30_9fcb9015",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-29T18:04:23Z",
+      "side": 1,
+      "message": "does git cl format line these up? not sure if it handles compound assignment.",
+      "range": {
+        "startLine": 35,
+        "startChar": 15,
+        "endLine": 35,
+        "endChar": 17
+      },
       "revId": "2615790dfa2af3119e45004571bd494170d331b0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
