@@ -22,6 +22,30 @@
       "revId": "c299daed33aad1c38a90135e2cc01d57dab5760c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6f9f5e83_6774e620",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 5
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-29T14:55:03Z",
+      "side": 1,
+      "message": "There are two different extensions on native and WebGL has sort of inherited that. One of them has more restrictions so that it is compatible with more hardware, the other is more flexible. It is a possibility that we might drop the restricted one if it seems like it doesn\u0027t buy much more compatibility or perf, but I don\u0027t think we\u0027re far enough in the development of the extension to make that call.\n\nSo: I\u0027ll keep the code as is at least for now, but if the situation changes in the future and there will only be one extension, it would make sense to change it the way you suggested.",
+      "parentUuid": "56542c35_8509de40",
+      "range": {
+        "startLine": 206,
+        "startChar": 32,
+        "endLine": 206,
+        "endChar": 64
+      },
+      "revId": "c299daed33aad1c38a90135e2cc01d57dab5760c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
