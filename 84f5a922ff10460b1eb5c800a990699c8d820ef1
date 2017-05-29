@@ -22,6 +22,30 @@
       "revId": "84f5a922ff10460b1eb5c800a990699c8d820ef1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc8dd2e5_434b18a6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-29T15:46:23Z",
+      "side": 1,
+      "message": "It\u0027s probably a good suggestion, but it\u0027s going away in a few patches so if it\u0027s OK I\u0027ll leave it for now to avoid the rebasing.",
+      "parentUuid": "9de936e4_aff0e305",
+      "range": {
+        "startLine": 244,
+        "startChar": 6,
+        "endLine": 244,
+        "endChar": 20
+      },
+      "revId": "84f5a922ff10460b1eb5c800a990699c8d820ef1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
