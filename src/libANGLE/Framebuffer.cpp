@@ -126,7 +126,7 @@ bool CheckAttachmentSampleCompleteness(const Context *context,
                     return false;
                 }
 
-                if ((attachment.getSamples() % samples->value()) != 0)
+                if ((attachment.getSamples() % std::max(samples->value(), 1)) != 0)
                 {
                     return false;
                 }
