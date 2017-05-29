@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "36885fe2_4cf9f9b3",
+        "filename": "src/libANGLE/angletypes.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-29T19:41:25Z",
+      "side": 1,
+      "message": "Can we just move these into the constructor?  It looks like reset is only called in State::initialize and I think we can just skip that because initialize is only called once and isn\u0027t used to reset values.",
+      "range": {
+        "startLine": 50,
+        "startChar": 4,
+        "endLine": 58,
+        "endChar": 32
+      },
+      "revId": "68702c7b36890a641ad2fd2941970f3e734a4070",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
