@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5cbcf0fc_d7c35998",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-29T20:58:03Z",
+      "side": 1,
+      "message": "nit: comment about what this function does.",
+      "revId": "f5a6a3f908eb0e5c1477e8d460f224de48ed5727",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "095a19b1_0848adf2",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-29T20:58:03Z",
+      "side": 1,
+      "message": "nit: make the skip color a GLColor",
+      "revId": "f5a6a3f908eb0e5c1477e8d460f224de48ed5727",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fbb25afb_a1fa1881",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-29T20:58:03Z",
+      "side": 1,
+      "message": "I think this would become more readable if it was expressed in term of GLColors.",
+      "revId": "f5a6a3f908eb0e5c1477e8d460f224de48ed5727",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8123ed78_96a58353",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-29T20:58:03Z",
+      "side": 1,
+      "message": "nit: please make this a bit more breathable, as well as in tests below.",
+      "revId": "f5a6a3f908eb0e5c1477e8d460f224de48ed5727",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "abf9e6a1_54dfbfc7",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-29T20:58:03Z",
+      "side": 1,
+      "message": "nit: from what I understand, this test doesn\u0027t robust buffer initialization because the texture, default FBO and texture copy all have the same size. I suggest adding width and height parameters to setupTexture so that it can be made bigger than the default FBO.",
+      "revId": "f5a6a3f908eb0e5c1477e8d460f224de48ed5727",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "faa690c8_fc9b7eaf",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 419,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-29T20:58:03Z",
+      "side": 1,
+      "message": "Could we have another test for a partially initialized default framebuffer (scissored clear) then readpixels?",
+      "revId": "f5a6a3f908eb0e5c1477e8d460f224de48ed5727",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
