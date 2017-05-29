@@ -23,6 +23,21 @@ namespace rx
 {
 using namespace gl_d3d11;
 
+template <typename T>
+std::size_t ComputeGenericHash(const T &key)
+{
+    static const unsigned int seed = 0xABCDEF98;
+
+    std::size_t hash = 0;
+    MurmurHash3_x86_32(&key, sizeof(key), seed, &hash);
+    return hash;
+}
+
+template std::size_t ComputeGenericHash(const rx::d3d11::BlendStateKey &);
+template std::size_t ComputeGenericHash(const rx::d3d11::RasterizerStateKey &);
+template std::size_t ComputeGenericHash(const gl::DepthStencilState &);
+template std::size_t ComputeGenericHash(const gl::SamplerState &);
+
 // MSDN's documentation of ID3D11Device::CreateBlendState, ID3D11Device::CreateRasterizerState,
 // ID3D11Device::CreateDepthStencilState and ID3D11Device::CreateSamplerState claims the maximum
 // number of unique states of each type an application can create is 4096
@@ -36,10 +51,10 @@ const unsigned int RenderStateCache::kMaxSamplerStates      = 2048;
 RenderStateCache::RenderStateCache(Renderer11 *renderer)
     : mRenderer(renderer),
       mCounter(0),
-      mBlendStateCache(kMaxBlendStates, HashBlendState),
-      mRasterizerStateCache(kMaxRasterizerStates, HashRasterizerState),
-      mDepthStencilStateCache(kMaxDepthStencilStates, HashDepthStencilState),
-      mSamplerStateCache(kMaxSamplerStates, HashSamplerState)
+      mBlendStateCache(kMaxBlendStates),
+      mRasterizerStateCache(kMaxRasterizerStates),
+      mDepthStencilStateCache(kMaxDepthStencilStates),
+      mSamplerStateCache(kMaxSamplerStates)
 {
 }
 
@@ -53,16 +68,6 @@ void RenderStateCache::clear()
     mRasterizerStateCache.clear();
     mDepthStencilStateCache.clear();
     mSamplerStateCache.clear();
-}
-
-// static
-std::size_t RenderStateCache::HashBlendState(const d3d11::BlendStateKey &blendState)
-{
-    static const unsigned int seed = 0xABCDEF98;
-
-    std::size_t hash = 0;
-    MurmurHash3_x86_32(&blendState, sizeof(d3d11::BlendStateKey), seed, &hash);
-    return hash;
 }
 
 // static
@@ -174,16 +179,6 @@ gl::Error RenderStateCache::getBlendState(const d3d11::BlendStateKey &key,
     }
 }
 
-// static
-std::size_t RenderStateCache::HashRasterizerState(const d3d11::RasterizerStateKey &rasterState)
-{
-    static const unsigned int seed = 0xABCDEF98;
-
-    std::size_t hash = 0;
-    MurmurHash3_x86_32(&rasterState, sizeof(d3d11::RasterizerStateKey), seed, &hash);
-    return hash;
-}
-
 gl::Error RenderStateCache::getRasterizerState(const gl::RasterizerState &rasterState, bool scissorEnabled,
                                                ID3D11RasterizerState **outRasterizerState)
 {
@@ -256,16 +251,6 @@ gl::Error RenderStateCache::getRasterizerState(const gl::RasterizerState &raster
     }
 }
 
-// static
-std::size_t RenderStateCache::HashDepthStencilState(const gl::DepthStencilState &dsState)
-{
-    static const unsigned int seed = 0xABCDEF98;
-
-    std::size_t hash = 0;
-    MurmurHash3_x86_32(&dsState, sizeof(gl::DepthStencilState), seed, &hash);
-    return hash;
-}
-
 gl::Error RenderStateCache::getDepthStencilState(const gl::DepthStencilState &glState,
                                                  ID3D11DepthStencilState **outDSState)
 {
@@ -317,16 +302,6 @@ gl::Error RenderStateCache::getDepthStencilState(const gl::DepthStencilState &gl
         std::make_pair(glState, std::make_pair(std::move(dx11DepthStencilState), mCounter++)));
 
     return gl::NoError();
-}
-
-// static
-std::size_t RenderStateCache::HashSamplerState(const gl::SamplerState &samplerState)
-{
-    static const unsigned int seed = 0xABCDEF98;
-
-    std::size_t hash = 0;
-    MurmurHash3_x86_32(&samplerState, sizeof(gl::SamplerState), seed, &hash);
-    return hash;
 }
 
 gl::Error RenderStateCache::getSamplerState(const gl::SamplerState &samplerState, ID3D11SamplerState **outSamplerState)

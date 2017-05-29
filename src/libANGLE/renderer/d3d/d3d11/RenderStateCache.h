@@ -24,6 +24,48 @@ class Framebuffer;
 
 namespace rx
 {
+template <typename T>
+std::size_t ComputeGenericHash(const T &key);
+}  // namespace rx
+
+namespace std
+{
+template <>
+struct hash<rx::d3d11::BlendStateKey>
+{
+    size_t operator()(const rx::d3d11::BlendStateKey &key) const
+    {
+        return rx::ComputeGenericHash(key);
+    }
+};
+
+template <>
+struct hash<rx::d3d11::RasterizerStateKey>
+{
+    size_t operator()(const rx::d3d11::RasterizerStateKey &key) const
+    {
+        return rx::ComputeGenericHash(key);
+    }
+};
+
+template <>
+struct hash<gl::DepthStencilState>
+{
+    size_t operator()(const gl::DepthStencilState &key) const
+    {
+        return rx::ComputeGenericHash(key);
+    }
+};
+
+template <>
+struct hash<gl::SamplerState>
+{
+    size_t operator()(const gl::SamplerState &key) const { return rx::ComputeGenericHash(key); }
+};
+}  // namespace std
+
+namespace rx
+{
 class Renderer11;
 
 class RenderStateCache : angle::NonCopyable
@@ -47,47 +89,33 @@ class RenderStateCache : angle::NonCopyable
     unsigned long long mCounter;
 
     // Blend state cache
-    static std::size_t HashBlendState(const d3d11::BlendStateKey &blendState);
     static const unsigned int kMaxBlendStates;
 
-    typedef std::size_t (*BlendStateHashFunction)(const d3d11::BlendStateKey &);
     typedef std::pair<d3d11::BlendState, unsigned long long> BlendStateCounterPair;
-    typedef std::unordered_map<d3d11::BlendStateKey, BlendStateCounterPair, BlendStateHashFunction>
-        BlendStateMap;
+    typedef std::unordered_map<d3d11::BlendStateKey, BlendStateCounterPair> BlendStateMap;
     BlendStateMap mBlendStateCache;
 
     // Rasterizer state cache
-    static std::size_t HashRasterizerState(const d3d11::RasterizerStateKey &rasterState);
     static const unsigned int kMaxRasterizerStates;
 
-    typedef std::size_t (*RasterizerStateHashFunction)(const d3d11::RasterizerStateKey &);
     typedef std::pair<d3d11::RasterizerState, unsigned long long> RasterizerStateCounterPair;
-    typedef std::unordered_map<d3d11::RasterizerStateKey,
-                               RasterizerStateCounterPair,
-                               RasterizerStateHashFunction>
+    typedef std::unordered_map<d3d11::RasterizerStateKey, RasterizerStateCounterPair>
         RasterizerStateMap;
     RasterizerStateMap mRasterizerStateCache;
 
     // Depth stencil state cache
-    static std::size_t HashDepthStencilState(const gl::DepthStencilState &dsState);
     static const unsigned int kMaxDepthStencilStates;
 
-    typedef std::size_t (*DepthStencilStateHashFunction)(const gl::DepthStencilState &);
     typedef std::pair<d3d11::DepthStencilState, unsigned long long> DepthStencilStateCounterPair;
-    typedef std::unordered_map<gl::DepthStencilState,
-                               DepthStencilStateCounterPair,
-                               DepthStencilStateHashFunction>
+    typedef std::unordered_map<gl::DepthStencilState, DepthStencilStateCounterPair>
         DepthStencilStateMap;
     DepthStencilStateMap mDepthStencilStateCache;
 
     // Sample state cache
-    static std::size_t HashSamplerState(const gl::SamplerState &samplerState);
     static const unsigned int kMaxSamplerStates;
 
-    typedef std::size_t (*SamplerStateHashFunction)(const gl::SamplerState &);
     typedef std::pair<d3d11::SamplerState, unsigned long long> SamplerStateCounterPair;
-    typedef std::unordered_map<gl::SamplerState, SamplerStateCounterPair, SamplerStateHashFunction>
-        SamplerStateMap;
+    typedef std::unordered_map<gl::SamplerState, SamplerStateCounterPair> SamplerStateMap;
     SamplerStateMap mSamplerStateCache;
 };
 
