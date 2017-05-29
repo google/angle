@@ -22,6 +22,30 @@
       "revId": "68702c7b36890a641ad2fd2941970f3e734a4070",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "36ef2368_c7ddc8b1",
+        "filename": "src/libANGLE/angletypes.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-29T19:47:28Z",
+      "side": 1,
+      "message": "Done. Was mostly a relic of an older design.",
+      "parentUuid": "36885fe2_4cf9f9b3",
+      "range": {
+        "startLine": 50,
+        "startChar": 4,
+        "endLine": 58,
+        "endChar": 32
+      },
+      "revId": "68702c7b36890a641ad2fd2941970f3e734a4070",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
