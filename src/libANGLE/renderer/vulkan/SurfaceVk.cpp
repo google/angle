@@ -47,7 +47,8 @@ VkPresentModeKHR GetDesiredPresentMode(const std::vector<VkPresentModeKHR> &pres
         }
     }
 
-    ERR() << "Desired present mode not available. Falling back to " << presentModes[0];
+    WARN() << "Present mode " << bestChoice << " not available. Falling back to "
+           << presentModes[0];
     return presentModes[0];
 }
 

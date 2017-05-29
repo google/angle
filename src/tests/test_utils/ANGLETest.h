@@ -18,6 +18,7 @@
 #include "angle_test_configs.h"
 #include "common/angleutils.h"
 #include "common/vector_utils.h"
+#include "platform/Platform.h"
 #include "shader_utils.h"
 #include "system_utils.h"
 
@@ -305,6 +306,7 @@ class ANGLETest : public ::testing::TestWithParam<angle::PlatformParameters>
     // Used for indexed quad rendering
     GLuint mQuadVertexBuffer;
 
+    angle::PlatformMethods mPlatformMethods;
     TestPlatformContext mPlatformContext;
 
     bool mDeferContextInit;

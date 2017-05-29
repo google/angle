@@ -12,6 +12,9 @@
 #include "OSWindow.h"
 #include "common/debug.h"
 
+// TODO(jmadill): Clean this up at some point.
+#define EGL_PLATFORM_ANGLE_PLATFORM_METHODS_ANGLEX 0x9999
+
 EGLPlatformParameters::EGLPlatformParameters()
     : renderer(EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE),
       majorVersion(EGL_DONT_CARE),
@@ -118,7 +121,8 @@ EGLWindow::EGLWindow(EGLint glesMajorVersion,
       mClientArraysEnabled(true),
       mRobustResourceInit(false),
       mSwapInterval(-1),
-      mSamples(-1)
+      mSamples(-1),
+      mPlatformMethods(nullptr)
 {
 }
 
@@ -194,6 +198,13 @@ bool EGLWindow::initializeDisplayAndSurface(OSWindow *osWindow)
     {
         displayAttributes.push_back(EGL_PLATFORM_ANGLE_ENABLE_VALIDATION_LAYER_ANGLE);
         displayAttributes.push_back(mVulkanLayersEnabled.value() ? EGL_TRUE : EGL_FALSE);
+    }
+
+    if (mPlatformMethods)
+    {
+        static_assert(sizeof(EGLAttrib) == sizeof(mPlatformMethods), "Unexpected pointer size");
+        displayAttributes.push_back(EGL_PLATFORM_ANGLE_PLATFORM_METHODS_ANGLEX);
+        displayAttributes.push_back(reinterpret_cast<EGLAttrib>(mPlatformMethods));
     }
 
     displayAttributes.push_back(EGL_NONE);

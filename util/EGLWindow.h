@@ -30,6 +30,11 @@ class OSWindow;
 #define EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE 0x6AC0
 #endif
 
+namespace angle
+{
+struct PlatformMethods;
+}
+
 struct ANGLE_EXPORT EGLPlatformParameters
 {
     EGLint renderer;
@@ -83,6 +88,10 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     void setClientArraysEnabled(bool enabled) { mClientArraysEnabled = enabled; }
     void setRobustResourceInit(bool enabled) { mRobustResourceInit = enabled; }
     void setSwapInterval(EGLint swapInterval) { mSwapInterval = swapInterval; }
+    void setPlatformMethods(angle::PlatformMethods *platformMethods)
+    {
+        mPlatformMethods = platformMethods;
+    }
 
     static EGLBoolean FindEGLConfig(EGLDisplay dpy, const EGLint *attrib_list, EGLConfig *config);
 
@@ -104,6 +113,7 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     bool isMultisample() const { return mMultisample; }
     bool isDebugEnabled() const { return mDebug; }
     EGLint getSwapInterval() const { return mSwapInterval; }
+    const angle::PlatformMethods *getPlatformMethods() const { return mPlatformMethods; }
 
     // Internally initializes the Display, Surface and Context.
     bool initializeGL(OSWindow *osWindow);
@@ -145,6 +155,7 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     EGLint mSwapInterval;
     EGLint mSamples;
     Optional<bool> mVulkanLayersEnabled;
+    angle::PlatformMethods *mPlatformMethods;
 };
 
 #endif // UTIL_EGLWINDOW_H_

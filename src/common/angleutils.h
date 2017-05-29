@@ -183,6 +183,9 @@ std::string ToString(const T &value)
 // Hidden enum for the NULL D3D device type.
 #define EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE 0x6AC0
 
+// TODO(jmadill): Clean this up at some point.
+#define EGL_PLATFORM_ANGLE_PLATFORM_METHODS_ANGLEX 0x9999
+
 #define ANGLE_TRY_CHECKED_MATH(result)                               \
     if (!result.IsValid())                                           \
     {                                                                \
