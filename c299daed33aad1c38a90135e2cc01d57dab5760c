@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "56542c35_8509de40",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 5
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-29T14:40:00Z",
+      "side": 1,
+      "message": "instead of specializing your support function on multiview, can you use something like ES2_extension_keyword_else_ident_ES3_keyword?\n\nedit: saw that you use two extensions for multiview now. I haven\u0027t been following this so don\u0027t know why, but I can see why using the macro as you have it here makes sense.",
+      "range": {
+        "startLine": 206,
+        "startChar": 32,
+        "endLine": 206,
+        "endChar": 64
+      },
+      "revId": "c299daed33aad1c38a90135e2cc01d57dab5760c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
