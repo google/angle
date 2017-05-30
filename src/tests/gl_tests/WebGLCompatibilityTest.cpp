@@ -2497,6 +2497,70 @@ TEST_P(WebGL2CompatibilityTest, FragmentShaderColorBufferTypeMissmatch)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Verify that errors are generated when the vertex shader intput doesn't match the bound attribute
+// types
+TEST_P(WebGL2CompatibilityTest, VertexShaderAttributeTypeMissmatch)
+{
+    const std::string vertexShader =
+        "#version 300 es\n"
+        "in vec4 floatInput;\n"
+        "in uvec4 uintInput;\n"
+        "in ivec4 intInput;\n"
+        "void main() {\n"
+        "    gl_Position = vec4(floatInput.x, uintInput.x, intInput.x, 1);\n"
+        "}\n";
+
+    const std::string fragmentShader =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 outputColor;\n"
+        "void main() {\n"
+        "    outputColor = vec4(0, 0, 0, 1);"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+    glUseProgram(program.get());
+
+    GLint floatLocation = glGetAttribLocation(program, "floatInput");
+    GLint uintLocation  = glGetAttribLocation(program, "uintInput");
+    GLint intLocation   = glGetAttribLocation(program, "intInput");
+
+    // Default attributes are of float types
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Set the default attributes to the correct types, should succeed
+    glVertexAttribI4ui(uintLocation, 0, 0, 0, 1);
+    glVertexAttribI4i(intLocation, 0, 0, 0, 1);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_NO_ERROR();
+
+    // Change the default float attribute to an integer, should fail
+    glVertexAttribI4ui(floatLocation, 0, 0, 0, 1);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Use a buffer for some attributes
+    GLBuffer buffer;
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, 1024, nullptr, GL_STATIC_DRAW);
+    glEnableVertexAttribArray(floatLocation);
+    glVertexAttribPointer(floatLocation, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_NO_ERROR();
+
+    // Use a float pointer attrib for a uint input
+    glEnableVertexAttribArray(uintLocation);
+    glVertexAttribPointer(uintLocation, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Use a uint pointer for the uint input
+    glVertexAttribIPointer(uintLocation, 4, GL_UNSIGNED_INT, 0, nullptr);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(WebGLCompatibilityTest,

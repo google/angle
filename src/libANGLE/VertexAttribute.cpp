@@ -132,4 +132,31 @@ size_t ComputeVertexBindingElementCount(const VertexBinding &binding,
     return drawCount;
 }
 
+GLenum GetVertexAttributeBaseType(const VertexAttribute &attrib)
+{
+    if (attrib.pureInteger)
+    {
+        switch (attrib.type)
+        {
+            case GL_BYTE:
+            case GL_SHORT:
+            case GL_INT:
+                return GL_INT;
+
+            case GL_UNSIGNED_BYTE:
+            case GL_UNSIGNED_SHORT:
+            case GL_UNSIGNED_INT:
+                return GL_UNSIGNED_INT;
+
+            default:
+                UNREACHABLE();
+                return GL_NONE;
+        }
+    }
+    else
+    {
+        return GL_FLOAT;
+    }
+}
+
 }  // namespace gl

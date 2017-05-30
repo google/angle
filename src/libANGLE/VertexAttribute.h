@@ -65,6 +65,8 @@ size_t ComputeVertexBindingElementCount(const VertexBinding &binding,
                                         size_t drawCount,
                                         size_t instanceCount);
 
+GLenum GetVertexAttributeBaseType(const VertexAttribute &attrib);
+
 struct VertexAttribCurrentValueData
 {
     union {

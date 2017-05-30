@@ -740,6 +740,32 @@ bool ValidateFragmentShaderColorBufferTypeMatch(ValidationContext *context)
     return true;
 }
 
+bool ValidateVertexShaderAttributeTypeMatch(ValidationContext *context)
+{
+    const Program *program = context->getGLState().getProgram();
+    const VertexArray *vao = context->getGLState().getVertexArray();
+
+    for (const auto &shaderAttribute : program->getAttributes())
+    {
+        GLenum shaderInputType = VariableComponentType(shaderAttribute.type);
+
+        const auto &attrib = vao->getVertexAttribute(shaderAttribute.location);
+        const auto &currentValue =
+            context->getGLState().getVertexAttribCurrentValue(shaderAttribute.location);
+        GLenum vertexType = attrib.enabled ? GetVertexAttributeBaseType(attrib) : currentValue.Type;
+
+        if (shaderInputType != GL_NONE && vertexType != GL_NONE && shaderInputType != vertexType)
+        {
+            context->handleError(Error(
+                GL_INVALID_OPERATION,
+                "Vertex shader input type does not match the type of the bound vertex attribute."));
+            return false;
+        }
+    }
+
+    return true;
+}
+
 }  // anonymous namespace
 
 bool ValidTextureTarget(const ValidationContext *context, GLenum target)
@@ -2744,6 +2770,12 @@ bool ValidateDrawBase(ValidationContext *context, GLenum mode, GLsizei count)
             context->handleError(
                 Error(GL_INVALID_OPERATION,
                       "Rendering feedback loop formed between Framebuffer and active Texture."));
+            return false;
+        }
+
+        // Detect that the vertex shader input types match the attribute types
+        if (!ValidateVertexShaderAttributeTypeMatch(context))
+        {
             return false;
         }
 
