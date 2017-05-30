@@ -501,21 +501,17 @@ TEST_P(TransformFeedbackTest, MultiplePaused)
 // contexts returns the correct results.  Helps expose bugs in ANGLE's virtual contexts.
 TEST_P(TransformFeedbackTest, MultiContext)
 {
-#if defined(ANGLE_PLATFORM_APPLE)
-    if ((IsNVIDIA() || IsAMD() || IsIntel()) && GetParam() == ES3_OPENGL())
+    if (IsOSX() && (IsNVIDIA() || IsAMD() || IsIntel()) && IsOpenGL())
     {
-        std::cout << "Test skipped on NVidia, AMD and Intel OpenGL on OSX." << std::endl;
+        std::cout << "Test skipped on NVIDIA, AMD and Intel OpenGL on OSX." << std::endl;
         return;
     }
-#endif
 
-#if defined(ANGLE_PLATFORM_LINUX)
-    if (IsAMD() && GetParam() == ES3_OPENGL())
+    if (IsLinux() && IsAMD() && IsOpenGL())
     {
         std::cout << "Test skipped on AMD OpenGL on Linux." << std::endl;
         return;
     }
-#endif
 
     EGLint contextAttributes[] = {
         EGL_CONTEXT_MAJOR_VERSION_KHR,

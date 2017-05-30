@@ -355,9 +355,11 @@ TEST_P(ClearTestES3, MixedSRGBClear)
 // flush or finish after ClearBufferfv or each draw.
 TEST_P(ClearTestES3, RepeatedClear)
 {
-    if (IsD3D11() && (IsNVIDIA() || IsIntel()))
+    if (IsD3D11() && IsIntel())
     {
-        std::cout << "Test skipped on Nvidia and Intel D3D11." << std::endl;
+        // Note that there's been a bug affecting this test on NVIDIA drivers as well, until fall
+        // 2016 driver releases.
+        std::cout << "Test skipped on Intel D3D11." << std::endl;
         return;
     }
 

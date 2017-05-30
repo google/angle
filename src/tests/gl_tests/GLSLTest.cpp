@@ -1086,8 +1086,9 @@ TEST_P(GLSLTest_ES3, MissingReturnArrayOfStructs)
 // Verify that functions without return statements still compile
 TEST_P(GLSLTest_ES3, MissingReturnStructOfArrays)
 {
-    // TODO(cwallez) remove the suppression once NVIDIA removes the restriction for
-    // GLSL >= 300. It was defined only in GLSL 2.0, section 6.1.
+    // TODO(cwallez) remove the suppression once NVIDIA drivers are updated across trybots, drivers
+    // since late 2016 should have the fix. Last check on 2017-05-30 revealed that the Windows
+    // Server 2008 bots still had the old, failing drivers.
     if (IsNVIDIA() && IsOpenGLES())
     {
         std::cout << "Test skipped on NVIDIA OpenGL ES because it disallows returning "
