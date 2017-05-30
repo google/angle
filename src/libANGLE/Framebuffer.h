@@ -167,6 +167,7 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
     const std::vector<GLenum> &getDrawBufferStates() const;
     void setDrawBuffers(size_t count, const GLenum *buffers);
     const FramebufferAttachment *getDrawBuffer(size_t drawBuffer) const;
+    GLenum getDrawbufferWriteType(size_t drawBuffer) const;
     bool hasEnabledDrawBuffer() const;
 
     GLenum getReadBufferState() const;

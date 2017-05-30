@@ -279,6 +279,9 @@ class ProgramState final : angle::NonCopyable
     // TODO(jmadill): use unordered/hash map when available
     std::map<int, VariableLocation> mOutputLocations;
 
+    // Fragment output variable base types: FLOAT, INT, or UINT.  Ordered by location.
+    std::vector<GLenum> mOutputVariableTypes;
+
     bool mBinaryRetrieveableHint;
     bool mSeparable;
 };
@@ -354,6 +357,10 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     GLint getFragDataLocation(const std::string &name) const;
     size_t getOutputResourceCount() const;
+    const std::vector<GLenum> &getOutputVariableTypes() const
+    {
+        return mState.mOutputVariableTypes;
+    }
 
     void getActiveUniform(GLuint index,
                           GLsizei bufsize,

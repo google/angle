@@ -2333,6 +2333,98 @@ TEST_P(WebGL2CompatibilityTest, BlitFramebufferSameImage)
     ASSERT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Verify that errors are generated when the fragment shader output doesn't match the bound color
+// buffer types
+TEST_P(WebGL2CompatibilityTest, FragmentShaderColorBufferTypeMissmatch)
+{
+    const std::string vertexShader =
+        "#version 300 es\n"
+        "void main() {\n"
+        "    gl_Position = vec4(0, 0, 0, 1);\n"
+        "}\n";
+
+    const std::string fragmentShader =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "layout(location = 0) out vec4 floatOutput;\n"
+        "layout(location = 1) out uvec4 uintOutput;\n"
+        "layout(location = 2) out ivec4 intOutput;\n"
+        "void main() {\n"
+        "    floatOutput = vec4(0, 0, 0, 1);\n"
+        "    uintOutput = uvec4(0, 0, 0, 1);\n"
+        "    intOutput = ivec4(0, 0, 0, 1);\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+    glUseProgram(program.get());
+
+    GLuint floatLocation = glGetFragDataLocation(program, "floatOutput");
+    GLuint uintLocation  = glGetFragDataLocation(program, "uintOutput");
+    GLuint intLocation   = glGetFragDataLocation(program, "intOutput");
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    GLRenderbuffer floatRenderbuffer;
+    glBindRenderbuffer(GL_RENDERBUFFER, floatRenderbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 1, 1);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + floatLocation, GL_RENDERBUFFER,
+                              floatRenderbuffer);
+
+    GLRenderbuffer uintRenderbuffer;
+    glBindRenderbuffer(GL_RENDERBUFFER, uintRenderbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8UI, 1, 1);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + uintLocation, GL_RENDERBUFFER,
+                              uintRenderbuffer);
+
+    GLRenderbuffer intRenderbuffer;
+    glBindRenderbuffer(GL_RENDERBUFFER, intRenderbuffer);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8I, 1, 1);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + intLocation, GL_RENDERBUFFER,
+                              intRenderbuffer);
+
+    ASSERT_GL_NO_ERROR();
+
+    GLint maxDrawBuffers = 0;
+    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
+    std::vector<GLenum> drawBuffers(static_cast<size_t>(maxDrawBuffers), GL_NONE);
+    drawBuffers[floatLocation] = GL_COLOR_ATTACHMENT0 + floatLocation;
+    drawBuffers[uintLocation]  = GL_COLOR_ATTACHMENT0 + uintLocation;
+    drawBuffers[intLocation]   = GL_COLOR_ATTACHMENT0 + intLocation;
+
+    glDrawBuffers(maxDrawBuffers, drawBuffers.data());
+
+    // Check that the correct case generates no errors
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_NO_ERROR();
+
+    // Unbind some buffers and verify that there are still no errors
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + uintLocation, GL_RENDERBUFFER,
+                              0);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + intLocation, GL_RENDERBUFFER,
+                              0);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_NO_ERROR();
+
+    // Swap the int and uint buffers to and verify that an error is generated
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + uintLocation, GL_RENDERBUFFER,
+                              intRenderbuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + intLocation, GL_RENDERBUFFER,
+                              uintRenderbuffer);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    // Swap the float and uint buffers to and verify that an error is generated
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + uintLocation, GL_RENDERBUFFER,
+                              floatRenderbuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + floatLocation, GL_RENDERBUFFER,
+                              uintRenderbuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + intLocation, GL_RENDERBUFFER,
+                              intRenderbuffer);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(WebGLCompatibilityTest,

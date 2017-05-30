@@ -642,6 +642,26 @@ const FramebufferAttachment *Framebuffer::getDrawBuffer(size_t drawBuffer) const
     return mState.getDrawBuffer(drawBuffer);
 }
 
+GLenum Framebuffer::getDrawbufferWriteType(size_t drawBuffer) const
+{
+    const FramebufferAttachment *attachment = mState.getDrawBuffer(drawBuffer);
+    if (attachment == nullptr)
+    {
+        return GL_NONE;
+    }
+
+    GLenum componentType = attachment->getFormat().info->componentType;
+    switch (componentType)
+    {
+        case GL_INT:
+        case GL_UNSIGNED_INT:
+            return componentType;
+
+        default:
+            return GL_FLOAT;
+    }
+}
+
 bool Framebuffer::hasEnabledDrawBuffer() const
 {
     for (size_t drawbufferIdx = 0; drawbufferIdx < mState.mDrawBufferStates.size(); ++drawbufferIdx)

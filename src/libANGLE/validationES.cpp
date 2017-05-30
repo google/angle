@@ -718,6 +718,28 @@ bool ValidateUniformMatrixValue(ValidationContext *context, GLenum valueType, GL
     return false;
 }
 
+bool ValidateFragmentShaderColorBufferTypeMatch(ValidationContext *context)
+{
+    const Program *program         = context->getGLState().getProgram();
+    const Framebuffer *framebuffer = context->getGLState().getDrawFramebuffer();
+
+    const auto &programOutputTypes = program->getOutputVariableTypes();
+    for (size_t drawBufferIdx = 0; drawBufferIdx < programOutputTypes.size(); drawBufferIdx++)
+    {
+        GLenum outputType = programOutputTypes[drawBufferIdx];
+        GLenum inputType  = framebuffer->getDrawbufferWriteType(drawBufferIdx);
+        if (outputType != GL_NONE && inputType != GL_NONE && inputType != outputType)
+        {
+            context->handleError(Error(GL_INVALID_OPERATION,
+                                       "Fragment shader output type does not match the bound "
+                                       "framebuffer attachment type."));
+            return false;
+        }
+    }
+
+    return true;
+}
+
 }  // anonymous namespace
 
 bool ValidTextureTarget(const ValidationContext *context, GLenum target)
@@ -2713,14 +2735,21 @@ bool ValidateDrawBase(ValidationContext *context, GLenum mode, GLsizei count)
         }
     }
 
-    // Detect rendering feedback loops for WebGL.
+    // Do some additonal WebGL-specific validation
     if (context->getExtensions().webglCompatibility)
     {
+        // Detect rendering feedback loops for WebGL.
         if (framebuffer->formsRenderingFeedbackLoopWith(state))
         {
             context->handleError(
                 Error(GL_INVALID_OPERATION,
                       "Rendering feedback loop formed between Framebuffer and active Texture."));
+            return false;
+        }
+
+        // Detect that the color buffer types match the fragment shader output types
+        if (!ValidateFragmentShaderColorBufferTypeMatch(context))
+        {
             return false;
         }
     }
