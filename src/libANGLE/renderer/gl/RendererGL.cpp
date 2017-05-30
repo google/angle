@@ -12,6 +12,7 @@
 
 #include "common/debug.h"
 #include "libANGLE/AttributeMap.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/ContextState.h"
 #include "libANGLE/Path.h"
 #include "libANGLE/Surface.h"
@@ -252,13 +253,22 @@ gl::Error RendererGL::drawArrays(const gl::Context *context,
                                  GLint first,
                                  GLsizei count)
 {
-    ANGLE_TRY(mStateManager->setDrawArraysState(context, first, count, 0));
+    const gl::Program *program  = context->getGLState().getProgram();
+    const bool usesMultiview    = program->usesMultiview();
+    const GLsizei instanceCount = usesMultiview ? program->getNumViews() : 0;
 
+    ANGLE_TRY(mStateManager->setDrawArraysState(context, first, count, instanceCount));
     if (!mSkipDrawCalls)
     {
-        mFunctions->drawArrays(mode, first, count);
+        if (!usesMultiview)
+        {
+            mFunctions->drawArrays(mode, first, count);
+        }
+        else
+        {
+            mFunctions->drawArraysInstanced(mode, first, count, instanceCount);
+        }
     }
-
     return gl::NoError();
 }
 
@@ -268,13 +278,18 @@ gl::Error RendererGL::drawArraysInstanced(const gl::Context *context,
                                           GLsizei count,
                                           GLsizei instanceCount)
 {
-    ANGLE_TRY(mStateManager->setDrawArraysState(context, first, count, instanceCount));
-
-    if (!mSkipDrawCalls)
+    GLsizei adjustedInstanceCount = instanceCount;
+    const gl::Program *program    = context->getGLState().getProgram();
+    if (program->usesMultiview())
     {
-        mFunctions->drawArraysInstanced(mode, first, count, instanceCount);
+        adjustedInstanceCount *= program->getNumViews();
     }
 
+    ANGLE_TRY(mStateManager->setDrawArraysState(context, first, count, adjustedInstanceCount));
+    if (!mSkipDrawCalls)
+    {
+        mFunctions->drawArraysInstanced(mode, first, count, adjustedInstanceCount);
+    }
     return gl::NoError();
 }
 
@@ -284,14 +299,24 @@ gl::Error RendererGL::drawElements(const gl::Context *context,
                                    GLenum type,
                                    const void *indices)
 {
+    const gl::Program *program  = context->getGLState().getProgram();
+    const bool usesMultiview    = program->usesMultiview();
+    const GLsizei instanceCount = usesMultiview ? program->getNumViews() : 0;
     const void *drawIndexPtr = nullptr;
-    ANGLE_TRY(mStateManager->setDrawElementsState(context, count, type, indices, 0, &drawIndexPtr));
 
+    ANGLE_TRY(mStateManager->setDrawElementsState(context, count, type, indices, instanceCount,
+                                                  &drawIndexPtr));
     if (!mSkipDrawCalls)
     {
-        mFunctions->drawElements(mode, count, type, drawIndexPtr);
+        if (!usesMultiview)
+        {
+            mFunctions->drawElements(mode, count, type, drawIndexPtr);
+        }
+        else
+        {
+            mFunctions->drawElementsInstanced(mode, count, type, drawIndexPtr, instanceCount);
+        }
     }
-
     return gl::NoError();
 }
 
@@ -302,15 +327,21 @@ gl::Error RendererGL::drawElementsInstanced(const gl::Context *context,
                                             const void *indices,
                                             GLsizei instances)
 {
+    GLsizei adjustedInstanceCount = instances;
+    const gl::Program *program    = context->getGLState().getProgram();
+    if (program->usesMultiview())
+    {
+        adjustedInstanceCount *= program->getNumViews();
+    }
     const void *drawIndexPointer = nullptr;
-    ANGLE_TRY(mStateManager->setDrawElementsState(context, count, type, indices, instances,
-                                                  &drawIndexPointer));
 
+    ANGLE_TRY(mStateManager->setDrawElementsState(context, count, type, indices,
+                                                  adjustedInstanceCount, &drawIndexPointer));
     if (!mSkipDrawCalls)
     {
-        mFunctions->drawElementsInstanced(mode, count, type, drawIndexPointer, instances);
+        mFunctions->drawElementsInstanced(mode, count, type, drawIndexPointer,
+                                          adjustedInstanceCount);
     }
-
     return gl::NoError();
 }
 
@@ -322,15 +353,24 @@ gl::Error RendererGL::drawRangeElements(const gl::Context *context,
                                         GLenum type,
                                         const void *indices)
 {
+    const gl::Program *program   = context->getGLState().getProgram();
+    const bool usesMultiview     = program->usesMultiview();
+    const GLsizei instanceCount  = usesMultiview ? program->getNumViews() : 0;
     const void *drawIndexPointer = nullptr;
-    ANGLE_TRY(
-        mStateManager->setDrawElementsState(context, count, type, indices, 0, &drawIndexPointer));
 
+    ANGLE_TRY(mStateManager->setDrawElementsState(context, count, type, indices, instanceCount,
+                                                  &drawIndexPointer));
     if (!mSkipDrawCalls)
     {
-        mFunctions->drawRangeElements(mode, start, end, count, type, drawIndexPointer);
+        if (!usesMultiview)
+        {
+            mFunctions->drawRangeElements(mode, start, end, count, type, drawIndexPointer);
+        }
+        else
+        {
+            mFunctions->drawElementsInstanced(mode, count, type, drawIndexPointer, instanceCount);
+        }
     }
-
     return gl::NoError();
 }
 

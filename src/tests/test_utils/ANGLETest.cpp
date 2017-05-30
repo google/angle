@@ -412,6 +412,18 @@ void ANGLETestBase::drawQuad(GLuint program,
                              GLfloat positionAttribXYScale,
                              bool useVertexBuffer)
 {
+    drawQuad(program, positionAttribName, positionAttribZ, positionAttribXYScale, useVertexBuffer,
+             false, 0u);
+}
+
+void ANGLETestBase::drawQuad(GLuint program,
+                             const std::string &positionAttribName,
+                             GLfloat positionAttribZ,
+                             GLfloat positionAttribXYScale,
+                             bool useVertexBuffer,
+                             bool useInstancedDrawCalls,
+                             GLuint numInstances)
+{
     GLint previousProgram = 0;
     glGetIntegerv(GL_CURRENT_PROGRAM, &previousProgram);
     if (previousProgram != static_cast<GLint>(program))
@@ -441,7 +453,14 @@ void ANGLETestBase::drawQuad(GLuint program,
     }
     glEnableVertexAttribArray(positionLocation);
 
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    if (useInstancedDrawCalls)
+    {
+        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, numInstances);
+    }
+    else
+    {
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+    }
 
     glDisableVertexAttribArray(positionLocation);
     glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
@@ -472,6 +491,17 @@ void ANGLETestBase::drawIndexedQuad(GLuint program,
                                     GLfloat positionAttribZ,
                                     GLfloat positionAttribXYScale,
                                     bool useIndexBuffer)
+{
+    drawIndexedQuad(program, positionAttribName, positionAttribZ, positionAttribXYScale,
+                    useIndexBuffer, false);
+}
+
+void ANGLETestBase::drawIndexedQuad(GLuint program,
+                                    const std::string &positionAttribName,
+                                    GLfloat positionAttribZ,
+                                    GLfloat positionAttribXYScale,
+                                    bool useIndexBuffer,
+                                    bool restrictedRange)
 {
     GLint positionLocation = glGetAttribLocation(program, positionAttribName.c_str());
 
@@ -506,7 +536,14 @@ void ANGLETestBase::drawIndexedQuad(GLuint program,
         indices = angle::IndexedQuadIndices;
     }
 
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
+    if (!restrictedRange)
+    {
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, indices);
+    }
+    else
+    {
+        glDrawRangeElements(GL_TRIANGLES, 0, 3, 6, GL_UNSIGNED_SHORT, indices);
+    }
 
     if (useIndexBuffer)
     {

@@ -246,6 +246,13 @@ class ANGLETestBase
                   GLfloat positionAttribZ,
                   GLfloat positionAttribXYScale,
                   bool useVertexBuffer);
+    void drawQuad(GLuint program,
+                  const std::string &positionAttribName,
+                  GLfloat positionAttribZ,
+                  GLfloat positionAttribXYScale,
+                  bool useVertexBuffer,
+                  bool useInstancedDrawCalls,
+                  GLuint numInstances);
     static std::array<angle::Vector3, 6> GetQuadVertices();
     void drawIndexedQuad(GLuint program,
                          const std::string &positionAttribName,
@@ -259,6 +266,13 @@ class ANGLETestBase
                          GLfloat positionAttribZ,
                          GLfloat positionAttribXYScale,
                          bool useBufferObject);
+
+    void drawIndexedQuad(GLuint program,
+                         const std::string &positionAttribName,
+                         GLfloat positionAttribZ,
+                         GLfloat positionAttribXYScale,
+                         bool useBufferObject,
+                         bool restrictedRange);
 
     static GLuint compileShader(GLenum type, const std::string &source);
     static bool extensionEnabled(const std::string &extName);
