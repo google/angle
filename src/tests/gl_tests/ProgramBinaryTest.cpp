@@ -79,6 +79,25 @@ class ProgramBinaryTest : public ANGLETest
         return formatCount;
     }
 
+    bool supported() const
+    {
+        if (!extensionEnabled("GL_OES_get_program_binary"))
+        {
+            std::cout << "Test skipped because GL_OES_get_program_binary is not available."
+                      << std::endl;
+            return false;
+        }
+
+        if (getAvailableProgramBinaryFormatCount() == 0)
+        {
+            std::cout << "Test skipped because no program binary formats are available."
+                      << std::endl;
+            return false;
+        }
+
+        return true;
+    }
+
     GLuint mProgram;
     GLuint mBuffer;
 };
@@ -87,16 +106,8 @@ class ProgramBinaryTest : public ANGLETest
 // should not internally cause a vertex shader recompile (for conversion).
 TEST_P(ProgramBinaryTest, FloatDynamicShaderSize)
 {
-    if (!extensionEnabled("GL_OES_get_program_binary"))
+    if (!supported())
     {
-        std::cout << "Test skipped because GL_OES_get_program_binary is not available."
-                  << std::endl;
-        return;
-    }
-
-    if (getAvailableProgramBinaryFormatCount() == 0)
-    {
-        std::cout << "Test skipped because no program binary formats are available." << std::endl;
         return;
     }
 
@@ -146,16 +157,8 @@ TEST_P(ProgramBinaryTest, DynamicShadersSignatureBug)
 // This tests the ability to successfully save and load a program binary.
 TEST_P(ProgramBinaryTest, SaveAndLoadBinary)
 {
-    if (!extensionEnabled("GL_OES_get_program_binary"))
+    if (!supported())
     {
-        std::cout << "Test skipped because GL_OES_get_program_binary is not available."
-                  << std::endl;
-        return;
-    }
-
-    if (getAvailableProgramBinaryFormatCount() == 0)
-    {
-        std::cout << "Test skipped because no program binary formats are available." << std::endl;
         return;
     }
 
@@ -213,6 +216,39 @@ TEST_P(ProgramBinaryTest, SaveAndLoadBinary)
 
         glDeleteProgram(program2);
     }
+}
+
+// Ensures that we init the compiler before calling ProgramBinary.
+TEST_P(ProgramBinaryTest, CallProgramBinaryBeforeLink)
+{
+    if (!supported())
+    {
+        return;
+    }
+
+    // Initialize a simple program.
+    glUseProgram(mProgram);
+
+    GLsizei length = 0;
+    glGetProgramiv(mProgram, GL_PROGRAM_BINARY_LENGTH, &length);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GT(length, 0);
+
+    GLsizei readLength  = 0;
+    GLenum binaryFormat = GL_NONE;
+    std::vector<uint8_t> binaryBlob(length);
+    glGetProgramBinaryOES(mProgram, length, &readLength, &binaryFormat, binaryBlob.data());
+    ASSERT_GL_NO_ERROR();
+
+    // Shutdown and restart GL entirely.
+    TearDown();
+    SetUp();
+
+    ANGLE_GL_BINARY_OES_PROGRAM(binaryProgram, binaryBlob, binaryFormat);
+    ASSERT_GL_NO_ERROR();
+
+    drawQuad(binaryProgram, "inputAttribute", 0.5f);
+    ASSERT_GL_NO_ERROR();
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
