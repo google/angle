@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "02f89abd_7bd75351",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/ResourceManager11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-30T20:58:19Z",
+      "side": 1,
+      "message": "Can this  be implemented at the declaration above instead?",
+      "range": {
+        "startLine": 258,
+        "startChar": 0,
+        "endLine": 263,
+        "endChar": 1
+      },
+      "revId": "38a600149e4e2e7698c0deb290ec3cb843d80309",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
