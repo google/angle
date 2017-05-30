@@ -133,8 +133,6 @@ class TCompiler : public TShHandleBase
     void setResourceString();
     // Return false if the call depth is exceeded.
     bool checkCallDepth();
-    // Returns true if a program has no conflicting or missing fragment outputs
-    bool validateOutputs(TIntermNode *root);
     // Add emulated functions to the built-in function emulator.
     virtual void initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu,
                                              ShCompileOptions compileOptions){};
