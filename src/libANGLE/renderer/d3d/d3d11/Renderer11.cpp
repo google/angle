@@ -1508,7 +1508,7 @@ gl::Error Renderer11::setSamplerState(gl::SamplerType type,
 
 gl::Error Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *texture)
 {
-    d3d11::SharedSRV textureSRV;
+    const d3d11::SharedSRV *textureSRV = nullptr;
 
     if (texture)
     {
@@ -1524,9 +1524,9 @@ gl::Error Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *t
 
         ANGLE_TRY(storage11->getSRV(texture->getTextureState(), &textureSRV));
 
-        // If we get NULL back from getSRV here, something went wrong in the texture class and we're
-        // unexpectedly missing the shader resource view
-        ASSERT(textureSRV.valid());
+        // If we get an invalid SRV here, something went wrong in the texture class and we're
+        // unexpectedly missing the shader resource view.
+        ASSERT(textureSRV->valid());
 
         textureImpl->resetDirty();
     }
@@ -1536,7 +1536,7 @@ gl::Error Renderer11::setTexture(gl::SamplerType type, int index, gl::Texture *t
            (type == gl::SAMPLER_VERTEX &&
             static_cast<unsigned int>(index) < getNativeCaps().maxVertexTextureImageUnits));
 
-    mStateManager.setShaderResource(type, index, textureSRV.get());
+    mStateManager.setShaderResource(type, index, textureSRV->get());
 
     return gl::NoError();
 }
@@ -3421,7 +3421,7 @@ gl::Error Renderer11::copyTexture(const gl::Texture *source,
     }
     else
     {
-        d3d11::SharedSRV sourceSRV;
+        const d3d11::SharedSRV *sourceSRV = nullptr;
         ANGLE_TRY(sourceStorage11->getSRVLevels(sourceLevel, sourceLevel, &sourceSRV));
 
         gl::ImageIndex destIndex             = gl::ImageIndex::MakeGeneric(destTarget, destLevel);
@@ -3449,7 +3449,7 @@ gl::Error Renderer11::copyTexture(const gl::Texture *source,
         // Use nearest filtering because source and destination are the same size for the direct
         // copy
         GLenum sourceFormat = source->getFormat(GL_TEXTURE_2D, sourceLevel).info->format;
-        ANGLE_TRY(mBlit->copyTexture(sourceSRV, sourceArea, sourceSize, sourceFormat, destRTV,
+        ANGLE_TRY(mBlit->copyTexture(*sourceSRV, sourceArea, sourceSize, sourceFormat, destRTV,
                                      destArea, destSize, nullptr, destFormat, GL_NEAREST, false,
                                      unpackPremultiplyAlpha, unpackUnmultiplyAlpha));
     }
@@ -3575,7 +3575,7 @@ gl::Error Renderer11::createRenderTarget(int width,
             }
             else
             {
-                blitSRV = srv;
+                blitSRV = srv.makeCopy();
             }
         }
 
@@ -3957,11 +3957,11 @@ gl::Error Renderer11::generateMipmapUsingD3D(TextureStorage *storage,
     ASSERT(storage11->isRenderTarget());
     ASSERT(storage11->supportsNativeMipmapFunction());
 
-    d3d11::SharedSRV srv;
+    const d3d11::SharedSRV *srv = nullptr;
     ANGLE_TRY(storage11->getSRVLevels(textureState.getEffectiveBaseLevel(),
                                       textureState.getEffectiveMaxLevel(), &srv));
 
-    mDeviceContext->GenerateMips(srv.get());
+    mDeviceContext->GenerateMips(srv->get());
 
     return gl::NoError();
 }
@@ -4255,11 +4255,11 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Rectangle &readRectIn,
         ASSERT(readRenderTarget11);
         readTexture     = readRenderTarget11->getTexture();
         readSubresource = readRenderTarget11->getSubresourceIndex();
-        readSRV         = readRenderTarget11->getBlitShaderResourceView();
+        readSRV         = readRenderTarget11->getBlitShaderResourceView().makeCopy();
         if (!readSRV.valid())
         {
             ASSERT(depthBlit || stencilBlit);
-            readSRV = readRenderTarget11->getShaderResourceView();
+            readSRV = readRenderTarget11->getShaderResourceView().makeCopy();
         }
         ASSERT(readSRV.valid());
     }

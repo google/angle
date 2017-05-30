@@ -231,8 +231,8 @@ TextureRenderTarget11::TextureRenderTarget11(d3d11::RenderTargetView &&rtv,
       mTexture(resource),
       mRenderTarget(std::move(rtv)),
       mDepthStencil(),
-      mShaderResource(srv),
-      mBlitShaderResource(blitSRV)
+      mShaderResource(srv.makeCopy()),
+      mBlitShaderResource(blitSRV.makeCopy())
 {
     if (mRenderTarget.valid() && mTexture.valid())
     {
@@ -260,7 +260,7 @@ TextureRenderTarget11::TextureRenderTarget11(d3d11::DepthStencilView &&dsv,
       mTexture(resource),
       mRenderTarget(),
       mDepthStencil(std::move(dsv)),
-      mShaderResource(srv),
+      mShaderResource(srv.makeCopy()),
       mBlitShaderResource()
 {
     if (mDepthStencil.valid() && mTexture.valid())

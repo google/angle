@@ -45,7 +45,7 @@ class TextureStorage11 : public TextureStorage
     UINT getBindFlags() const;
     UINT getMiscFlags() const;
     const d3d11::Format &getFormatSet() const;
-    gl::Error getSRVLevels(GLint baseLevel, GLint maxLevel, d3d11::SharedSRV *outSRV);
+    gl::Error getSRVLevels(GLint baseLevel, GLint maxLevel, const d3d11::SharedSRV **outSRV);
     gl::Error generateSwizzles(const gl::SwizzleState &swizzleTarget);
     void markLevelDirty(int mipLevel);
     void markDirty();
@@ -76,7 +76,7 @@ class TextureStorage11 : public TextureStorage
                       const gl::PixelUnpackState &unpack,
                       const uint8_t *pixelData) override;
 
-    virtual gl::Error getSRV(const gl::TextureState &textureState, d3d11::SharedSRV *outSRV);
+    virtual gl::Error getSRV(const gl::TextureState &textureState, const d3d11::SharedSRV **outSRV);
     virtual UINT getSubresourceIndex(const gl::ImageIndex &index) const;
     virtual gl::Error getResource(const TextureHelper11 **outResource) = 0;
     virtual void associateImage(Image11* image, const gl::ImageIndex &index) = 0;
@@ -152,7 +152,7 @@ class TextureStorage11 : public TextureStorage
     };
     typedef std::map<SRVKey, d3d11::SharedSRV> SRVCache;
 
-    gl::Error getCachedOrCreateSRV(const SRVKey &key, d3d11::SharedSRV *outSRV);
+    gl::Error getCachedOrCreateSRV(const SRVKey &key, const d3d11::SharedSRV **outSRV);
 
     SRVCache mSrvCache;
     std::array<d3d11::SharedSRV, gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS> mLevelSRVs;
@@ -264,7 +264,8 @@ class TextureStorage11_EGLImage final : public TextureStorage11
     ~TextureStorage11_EGLImage() override;
 
     gl::Error getResource(const TextureHelper11 **outResource) override;
-    gl::Error getSRV(const gl::TextureState &textureState, d3d11::SharedSRV *outSRV) override;
+    gl::Error getSRV(const gl::TextureState &textureState,
+                     const d3d11::SharedSRV **outSRV) override;
     gl::Error getMippedResource(const TextureHelper11 **outResource) override;
     gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT) override;
 

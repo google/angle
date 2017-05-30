@@ -231,12 +231,11 @@ class SharedResource11 : public Resource11Base<T, std::shared_ptr, TypedData<T>>
         return *this;
     }
 
-    SharedResource11(const SharedResource11 &sharedObj) { this->mData = sharedObj.mData; }
-
-    SharedResource11 &operator=(const SharedResource11 &sharedObj)
+    SharedResource11 makeCopy() const
     {
-        this->mData = sharedObj.mData;
-        return *this;
+        SharedResource11 copy;
+        copy.mData = this->mData;
+        return std::move(copy);
     }
 
   private:

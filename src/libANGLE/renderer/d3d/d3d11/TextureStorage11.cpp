@@ -167,7 +167,8 @@ UINT TextureStorage11::getSubresourceIndex(const gl::ImageIndex &index) const
     return subresource;
 }
 
-gl::Error TextureStorage11::getSRV(const gl::TextureState &textureState, d3d11::SharedSRV *outSRV)
+gl::Error TextureStorage11::getSRV(const gl::TextureState &textureState,
+                                   const d3d11::SharedSRV **outSRV)
 {
     // Make sure to add the level offset for our tiny compressed texture workaround
     const GLuint effectiveBaseLevel = textureState.getEffectiveBaseLevel();
@@ -229,12 +230,12 @@ gl::Error TextureStorage11::getSRV(const gl::TextureState &textureState, d3d11::
     return gl::NoError();
 }
 
-gl::Error TextureStorage11::getCachedOrCreateSRV(const SRVKey &key, d3d11::SharedSRV *outSRV)
+gl::Error TextureStorage11::getCachedOrCreateSRV(const SRVKey &key, const d3d11::SharedSRV **outSRV)
 {
     auto iter = mSrvCache.find(key);
     if (iter != mSrvCache.end())
     {
-        *outSRV = iter->second;
+        *outSRV = &iter->second;
         return gl::NoError();
     }
 
@@ -265,8 +266,8 @@ gl::Error TextureStorage11::getCachedOrCreateSRV(const SRVKey &key, d3d11::Share
 
     ANGLE_TRY(createSRV(key.baseLevel, key.mipLevels, format, *texture, &srv));
 
-    mSrvCache.insert(std::make_pair(key, srv));
-    *outSRV = srv;
+    const auto &insertIt = mSrvCache.insert(std::make_pair(key, std::move(srv)));
+    *outSRV              = &insertIt.first->second;
 
     return gl::NoError();
 }
@@ -283,7 +284,7 @@ gl::Error TextureStorage11::getSRVLevel(int mipLevel, bool blitSRV, const d3d11:
         // Only create a different SRV for blit if blit format is different from regular srv format
         if (otherLevelSRVs[mipLevel].valid() && mFormatInfo.srvFormat == mFormatInfo.blitSRVFormat)
         {
-            levelSRVs[mipLevel] = otherLevelSRVs[mipLevel];
+            levelSRVs[mipLevel] = otherLevelSRVs[mipLevel].makeCopy();
         }
         else
         {
@@ -301,7 +302,9 @@ gl::Error TextureStorage11::getSRVLevel(int mipLevel, bool blitSRV, const d3d11:
     return gl::NoError();
 }
 
-gl::Error TextureStorage11::getSRVLevels(GLint baseLevel, GLint maxLevel, d3d11::SharedSRV *outSRV)
+gl::Error TextureStorage11::getSRVLevels(GLint baseLevel,
+                                         GLint maxLevel,
+                                         const d3d11::SharedSRV **outSRV)
 {
     unsigned int mipLevels = maxLevel - baseLevel + 1;
 
@@ -1371,7 +1374,7 @@ gl::Error TextureStorage11_EGLImage::getResource(const TextureHelper11 **outReso
 }
 
 gl::Error TextureStorage11_EGLImage::getSRV(const gl::TextureState &textureState,
-                                            d3d11::SharedSRV *outSRV)
+                                            const d3d11::SharedSRV **outSRV)
 {
     ANGLE_TRY(checkForUpdatedRenderTarget());
     return TextureStorage11::getSRV(textureState, outSRV);
@@ -1535,7 +1538,7 @@ gl::Error TextureStorage11_EGLImage::createSRV(int baseLevel,
 
         ASSERT(texture == renderTarget->getTexture());
 
-        *outSRV = renderTarget->getShaderResourceView();
+        *outSRV = renderTarget->getShaderResourceView().makeCopy();
     }
 
     return gl::NoError();
@@ -1949,7 +1952,7 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::ImageIndex &index,
         }
         else
         {
-            blitSRV = srv;
+            blitSRV = srv.makeCopy();
         }
 
         srv.setDebugName("TexStorageCube.RenderTargetSRV");
@@ -2668,7 +2671,7 @@ gl::Error TextureStorage11_2DArray::getRenderTarget(const gl::ImageIndex &index,
         }
         else
         {
-            blitSRV = srv;
+            blitSRV = srv.makeCopy();
         }
 
         srv.setDebugName("TexStorage2DArray.RenderTargetSRV");
