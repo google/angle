@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "327b4881_be2fb8ee",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-30T13:20:53Z",
+      "side": 1,
+      "message": "nit: needToInitialize...",
+      "revId": "8a1d5801e180aa814edd31e1b5346be36b919778",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
