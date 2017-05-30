@@ -22,6 +22,23 @@
       "revId": "38a600149e4e2e7698c0deb290ec3cb843d80309",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e75411d9_e5776e86",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/ResourceManager11.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-05-30T21:34:38Z",
+      "side": 1,
+      "message": "nit: I don\u0027t see where this include is used.",
+      "revId": "38a600149e4e2e7698c0deb290ec3cb843d80309",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
