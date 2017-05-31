@@ -781,6 +781,31 @@ bool ValidCap(const Context *context, GLenum cap, bool queryOnly)
     }
 }
 
+// Return true if a character belongs to the ASCII subset as defined in GLSL ES 1.0 spec section
+// 3.1.
+bool IsValidESSLCharacter(unsigned char c)
+{
+    // Printing characters are valid except " $ ` @ \ ' DEL.
+    if (c >= 32 && c <= 126 && c != '"' && c != '$' && c != '`' && c != '@' && c != '\\' &&
+        c != '\'')
+    {
+        return true;
+    }
+
+    // Horizontal tab, line feed, vertical tab, form feed, carriage return are also valid.
+    if (c >= 9 && c <= 13)
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool IsValidESSLString(const char *str, size_t len)
+{
+    return len == 0 || std::find_if_not(str, str + len, IsValidESSLCharacter) == str + len;
+}
+
 }  // anonymous namespace
 
 bool ValidateES2TexImageParameters(Context *context,
@@ -2658,6 +2683,14 @@ bool ValidateBindUniformLocationCHROMIUM(Context *context,
         return false;
     }
 
+    // The WebGL spec (section 6.20) disallows strings containing invalid ESSL characters for
+    // shader-related entry points
+    if (context->getExtensions().webglCompatibility && !IsValidESSLString(name, strlen(name)))
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Uniform name contains invalid characters"));
+        return false;
+    }
+
     if (strncmp(name, "gl_", 3) == 0)
     {
         context->handleError(
@@ -4002,6 +4035,14 @@ bool ValidateBindAttribLocation(ValidationContext *context,
         return false;
     }
 
+    // The WebGL spec (section 6.20) disallows strings containing invalid ESSL characters for
+    // shader-related entry points
+    if (context->getExtensions().webglCompatibility && !IsValidESSLString(name, strlen(name)))
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Attribute name contains invalid characters"));
+        return false;
+    }
+
     return GetValidProgram(context, program) != nullptr;
 }
 
@@ -4732,6 +4773,14 @@ bool ValidateGetAttachedShaders(ValidationContext *context,
 
 bool ValidateGetAttribLocation(ValidationContext *context, GLuint program, const GLchar *name)
 {
+    // The WebGL spec (section 6.20) disallows strings containing invalid ESSL characters for
+    // shader-related entry points
+    if (context->getExtensions().webglCompatibility && !IsValidESSLString(name, strlen(name)))
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Attribute name contains invalid characters"));
+        return false;
+    }
+
     Program *programObject = GetValidProgram(context, program);
 
     if (!programObject)
@@ -4879,6 +4928,14 @@ bool ValidateGetUniformLocation(ValidationContext *context, GLuint program, cons
 {
     if (strstr(name, "gl_") == name)
     {
+        return false;
+    }
+
+    // The WebGL spec (section 6.20) disallows strings containing invalid ESSL characters for
+    // shader-related entry points
+    if (context->getExtensions().webglCompatibility && !IsValidESSLString(name, strlen(name)))
+    {
+        context->handleError(Error(GL_INVALID_VALUE, "Uniform name contains invalid characters"));
         return false;
     }
 
@@ -5095,6 +5152,22 @@ bool ValidateShaderSource(ValidationContext *context,
     {
         context->handleError(Error(GL_INVALID_VALUE, "Count must be non-negative."));
         return false;
+    }
+
+    // The WebGL spec (section 6.20) disallows strings containing invalid ESSL characters for
+    // shader-related entry points
+    if (context->getExtensions().webglCompatibility)
+    {
+        for (GLsizei i = 0; i < count; i++)
+        {
+            size_t len = length ? static_cast<size_t>(length[i]) : strlen(string[i]);
+            if (!IsValidESSLString(string[i], len))
+            {
+                context->handleError(
+                    Error(GL_INVALID_VALUE, "Shader source contains invalid characters"));
+                return false;
+            }
+        }
     }
 
     Shader *shaderObject = GetValidShader(context, shader);

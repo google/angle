@@ -837,6 +837,78 @@ TEST_P(WebGLCompatibilityTest, BlendWithConstantColor)
     }
 }
 
+// Test that binding/querying uniforms and attributes with invalid names generates errors
+TEST_P(WebGLCompatibilityTest, InvalidAttributeAndUniformNames)
+{
+    const std::string validAttribName =
+        "abcdefghijklmnopqrstuvwxyz_ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+    const std::string validUniformName =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_1234567890";
+    const char invalidSet[] = {'"', '$', '`', '@', '\\', '\''};
+
+    std::string vert = "attribute float ";
+    vert += validAttribName;
+    vert +=
+        ";\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(1.0);\n"
+        "}\n";
+
+    std::string frag =
+        "precision highp float;\n"
+        "uniform vec4 ";
+    frag += validUniformName;
+    frag +=
+        ";\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vec4(1.0);\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, vert, frag);
+    EXPECT_GL_NO_ERROR();
+
+    for (char invalidChar : invalidSet)
+    {
+        std::string invalidName = validAttribName + invalidChar;
+        glGetAttribLocation(program, invalidName.c_str());
+        EXPECT_GL_ERROR(GL_INVALID_VALUE)
+            << "glGetAttribLocation unexpectedly succeeded for name \"" << invalidName << "\".";
+
+        glBindAttribLocation(program, 0, invalidName.c_str());
+        EXPECT_GL_ERROR(GL_INVALID_VALUE)
+            << "glBindAttribLocation unexpectedly succeeded for name \"" << invalidName << "\".";
+    }
+
+    for (char invalidChar : invalidSet)
+    {
+        std::string invalidName = validUniformName + invalidChar;
+        glGetUniformLocation(program, invalidName.c_str());
+        EXPECT_GL_ERROR(GL_INVALID_VALUE)
+            << "glGetUniformLocation unexpectedly succeeded for name \"" << invalidName << "\".";
+    }
+
+    for (char invalidChar : invalidSet)
+    {
+        std::string invalidAttribName = validAttribName + invalidChar;
+        const char *invalidVert[] = {
+            "attribute float ",
+            invalidAttribName.c_str(),
+            ";\n",
+            "void main()\n",
+            "{\n",
+            "    gl_Position = vec4(1.0);\n",
+            "}\n",
+        };
+
+        GLuint shader = glCreateShader(GL_VERTEX_SHADER);
+        glShaderSource(shader, static_cast<GLsizei>(ArraySize(invalidVert)), invalidVert, nullptr);
+        EXPECT_GL_ERROR(GL_INVALID_VALUE);
+        glDeleteShader(shader);
+    }
+}
+
 // Test the checks for OOB reads in the vertex buffers, instanced version
 TEST_P(WebGL2CompatibilityTest, DrawArraysBufferOutOfBoundsInstanced)
 {
