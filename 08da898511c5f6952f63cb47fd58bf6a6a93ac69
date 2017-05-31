@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b139402d_f9dc9708",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2738,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-05-31T20:58:33Z",
+      "side": 1,
+      "message": "This comment is not longer applicable to the entire \u0027if\u0027 block below it.  I\u0027d just delete it; I don\u0027t think it adds anything.  If you like it move it above \u0027if (framebuffer-\u003eformsRenderingFeedbackLoopWith(state)\u0027",
+      "range": {
+        "startLine": 2738,
+        "startChar": 43,
+        "endLine": 2738,
+        "endChar": 48
+      },
+      "revId": "08da898511c5f6952f63cb47fd58bf6a6a93ac69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f020d265_213ca026",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2748,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-05-31T20:58:33Z",
+      "side": 1,
+      "message": "In my opinion this section is more deserving of a comment , but suit yourself.",
+      "revId": "08da898511c5f6952f63cb47fd58bf6a6a93ac69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
