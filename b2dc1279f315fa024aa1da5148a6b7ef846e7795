@@ -16,6 +16,24 @@
       "revId": "b2dc1279f315fa024aa1da5148a6b7ef846e7795",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dc10ba9c_d80afbb5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/RenderStateCache.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-05-31T14:56:04Z",
+      "side": 1,
+      "message": "Nope, removed.",
+      "parentUuid": "45d639ae_da01abed",
+      "revId": "b2dc1279f315fa024aa1da5148a6b7ef846e7795",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
