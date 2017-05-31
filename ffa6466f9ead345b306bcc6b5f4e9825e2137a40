@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "48ae6ce5_1fb296b7",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2855,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-05-31T14:04:05Z",
+      "side": 1,
+      "message": "Moved here.",
+      "range": {
+        "startLine": 2852,
+        "startChar": 0,
+        "endLine": 2855,
+        "endChar": 83
+      },
+      "revId": "ffa6466f9ead345b306bcc6b5f4e9825e2137a40",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d5ab274e_ff07aaa0",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 824,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-05-31T14:04:05Z",
+      "side": 1,
+      "message": "The new test case.",
+      "range": {
+        "startLine": 796,
+        "startChar": 0,
+        "endLine": 824,
+        "endChar": 1
+      },
+      "revId": "ffa6466f9ead345b306bcc6b5f4e9825e2137a40",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
