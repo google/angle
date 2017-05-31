@@ -56,12 +56,8 @@ egl::Error DeviceD3D::initialize(void *device,
         return egl::Error(EGL_BAD_DEVICE_EXT);
     }
 
-    mDevice                  = device;
-    mDeviceType              = deviceType;
-    mDeviceExternallySourced = !!deviceExternallySourced;
-
 #if defined(ANGLE_ENABLE_D3D11)
-    if (mDeviceType == EGL_D3D11_DEVICE_ANGLE)
+    if (deviceType == EGL_D3D11_DEVICE_ANGLE)
     {
         // Validate the device
         IUnknown *iunknown = reinterpret_cast<IUnknown *>(device);
@@ -81,10 +77,13 @@ egl::Error DeviceD3D::initialize(void *device,
     else
 #endif
     {
-        ASSERT(!mDeviceExternallySourced);
+        ASSERT(deviceExternallySourced == EGL_FALSE);
     }
 
-    mIsInitialized = true;
+    mDevice                  = device;
+    mDeviceType              = deviceType;
+    mDeviceExternallySourced = !!deviceExternallySourced;
+    mIsInitialized           = true;
 
     return egl::Error(EGL_SUCCESS);
 }
