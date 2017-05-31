@@ -16,6 +16,24 @@
       "revId": "1a7e8615e3c27b786fd055f940fb76b27664d4e0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f6aaf902_4c3f15da",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-05-31T13:06:05Z",
+      "side": 1,
+      "message": "Lucky to have someone sharp as you spotting it!\n\nI was probably with this rule in my mind.\nESSL 3.10 section 4.4.4 page 58:\n\"Any uniform or shader storage block declared without a binding qualifier is initially assigned to block binding point zero.\"\n\nHaving thought it over, I am a bit in favor of your point that layout qualifiers matching should supersede that rule.  Now I still need to find a right timing to apply that rule.",
+      "parentUuid": "5825f201_6cdbbe70",
+      "revId": "1a7e8615e3c27b786fd055f940fb76b27664d4e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
