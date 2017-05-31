@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "15f1814a_3b3c0fed",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/ResourceManager11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-05-31T14:39:58Z",
+      "side": 1,
+      "message": "Will this init all textures? I don\u0027t see where the robust resource init context flag is used.",
+      "range": {
+        "startLine": 300,
+        "startChar": 4,
+        "endLine": 303,
+        "endChar": 5
+      },
+      "revId": "38a600149e4e2e7698c0deb290ec3cb843d80309",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e75411d9_e5776e86",
         "filename": "src/libANGLE/renderer/d3d/d3d11/ResourceManager11.h",
         "patchSetId": 9
