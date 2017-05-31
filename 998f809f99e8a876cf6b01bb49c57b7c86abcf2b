@@ -1,0 +1,463 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f3f64414_34068040",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 1,
+      "message": "I add the dirty bits for VertexAttribDivisor. Now the usage of the dirty bits are much clearer:\nThat the dirty bit is set only means the corresponding APIs have been called.",
+      "revId": "998f809f99e8a876cf6b01bb49c57b7c86abcf2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6574cc47_79cf60d9",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 1,
+      "message": "These impl functions are not only for Vertex Attrib Binding APIs but also for the implementation of VertexAttribPointer and VertexAttribDivisor. In these functions the dirty bits won\u0027t be set.",
+      "revId": "998f809f99e8a876cf6b01bb49c57b7c86abcf2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94a62c91_9ac59574",
+        "filename": "src/libANGLE/VertexArray_unittest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 1,
+      "message": "Added the check for dirty bits on VertexAttribDivisor.",
+      "revId": "998f809f99e8a876cf6b01bb49c57b7c86abcf2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "78006611_bcb5eddc",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 1,
+      "message": "In ES3.1 SPEC (Page 241. chapter 10.3.1), the header of VertexAttribFormat should be:\nvoid VertexAttribFormat( uint attribindex, int size, enum type, boolean normalized, uint relativeoffset );\nvoid VertexAttribIFormat( uint attribindex, int size, enum type, uint relativeoffset );\n\nI think it is better to define relativeOffset as GLuint to match the definition here.",
+      "revId": "998f809f99e8a876cf6b01bb49c57b7c86abcf2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3b0a7795_b70730eb",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 398,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 1,
+      "message": "Now the type of attrib.relativeOffset is GLuint instead of GLintptr, thus we don\u0027t need to consider the overflow issue.",
+      "revId": "998f809f99e8a876cf6b01bb49c57b7c86abcf2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38be5e12_c7266e73",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 1,
+      "message": "When the driver supports Vertex Attrib Binding, we can just update the binding buffer to mStreamingArrayBuffer by BindVertexBuffer instead of two GL calls (BindBuffer and VertexAttribPointer)",
+      "revId": "998f809f99e8a876cf6b01bb49c57b7c86abcf2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94e5df52_d525426c",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 1,
+      "message": "This function is only used on drivers without Vertex Attrib Binding. Its structure is similar to the former\u0027s.",
+      "revId": "998f809f99e8a876cf6b01bb49c57b7c86abcf2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d92eec8e_4723f5f8",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 523,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 1,
+      "message": "This function is only used on drivers without Vertex Attrib Binding. Its structure is similar to the former\u0027s.",
+      "revId": "998f809f99e8a876cf6b01bb49c57b7c86abcf2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "004165c2_ebc2851c",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 1,
+      "message": "As the comment\u0027s saying, there are some conditions that aren\u0027t suitable to call VertexAttribPointer because it may cause redundant Vertex Attrib Binding calls.\nAt this time I decide not to use VertexAttribPointer but split it into three Vertex Attrib Binding calls.",
+      "revId": "998f809f99e8a876cf6b01bb49c57b7c86abcf2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "99cdba49_0647e178",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 565,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 1,
+      "message": "Check format, binding and attribBinding separately to choose the most suitable GL calls.",
+      "revId": "998f809f99e8a876cf6b01bb49c57b7c86abcf2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "03a1c8f3_81483b81",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 1,
+      "message": "When the attribute needs streaming (is enabled and using client memory pointer), we cannot set the binding buffer, but we can set the format for it.\nThen next time if the format doesn\u0027t change we can just use bindVertexBuffer instead of BindBuffer + VertexAttribPointer.",
+      "revId": "998f809f99e8a876cf6b01bb49c57b7c86abcf2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e20801f_df9a5e94",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 598,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 1,
+      "message": "Use VertexAttribPointer if all three parts need be updated.",
+      "revId": "998f809f99e8a876cf6b01bb49c57b7c86abcf2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5ea474b2_94a2b828",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 620,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 1,
+      "message": "Only update the dirty part by the corresponding Vertex Attrib Binding APIs.",
+      "revId": "998f809f99e8a876cf6b01bb49c57b7c86abcf2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "401fcc36_a3f6314b",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 627,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 1,
+      "message": "We don\u0027t need to clear the possible Vertex Attrib Binding bits on the attribute using client memory pointer because as Vertex Attrib Binding APIs aren\u0027t available on the default VAO, they should not be set at all.",
+      "revId": "998f809f99e8a876cf6b01bb49c57b7c86abcf2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee501004_250b332d",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 639,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 1,
+      "message": "I admit it is trivial to use VertexBindingDivisor instead of VertexAttribDivisor, so I wonder if we need to do such kind of optimization here.",
+      "revId": "998f809f99e8a876cf6b01bb49c57b7c86abcf2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f97d902_2383baf2",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 695,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 1,
+      "message": "If it isn\u0027t suitable for VertexAttribPointer, only call VertexAttribFormat and don\u0027t consider the binding and the attribBinding.",
+      "revId": "998f809f99e8a876cf6b01bb49c57b7c86abcf2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf4aca4a_ec27c8c5",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 705,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 1,
+      "message": "The binding and the attribBinding are regarded as dirty only when:\n1. the corresponding bit is set (which means the API has been called)\n2. the new state is different from the cache.",
+      "revId": "998f809f99e8a876cf6b01bb49c57b7c86abcf2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa290799_3f0fd94e",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 754,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 1,
+      "message": "If it isn\u0027t suitable for VertexAttribDivisor, just call VertexAttribBinding.",
+      "revId": "998f809f99e8a876cf6b01bb49c57b7c86abcf2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f49bd8e8_897e73cb",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 818,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 1,
+      "message": "You can see there should be two GL calls (BindBuffer and VertexAttribPointer) if we want to use VertexAttribPointer.",
+      "revId": "998f809f99e8a876cf6b01bb49c57b7c86abcf2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4d3c6ea3_11b8eb55",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 907,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 1,
+      "message": "The process of syncState with Vertex Attrib Binding varies widely from that without this feature, so I decide to use another function to implement this logic.",
+      "revId": "998f809f99e8a876cf6b01bb49c57b7c86abcf2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8bc401fd_17766fb7",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 936,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 1,
+      "message": "All Vertex Attrib Binding APIs should not be called on drivers that don\u0027t support ES3.1.",
+      "revId": "998f809f99e8a876cf6b01bb49c57b7c86abcf2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d4b5c56c_152728f6",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 946,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 1,
+      "message": "In for (size_t dirtyBit : dirtyBits), the value of dirtyBits won\u0027t be changed, so I decide to iterate dirtyBits by the index since the dirtyBits may be set or reset during the process of the for-loop.",
+      "revId": "998f809f99e8a876cf6b01bb49c57b7c86abcf2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "993e3d94_699b93ba",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 1,
+      "message": "On platforms that supports Vertex Attrib Binding we can use more APIs to update vertex attributes, and the process is different from those without this features.\n\nThere are some overlays among ES3.0 APIs (VertexAttribPointer and VertexAttribDivisor) and Vertex Attrib Binding APIs. For example if we decide to call VertexAttribPointer, we don\u0027t need to call VertexAttribFormat, BindVertexBuffer or VertexAttribBinding because the format, binding and attribBinding have all been updated by VertexAttribPointer. \n\nSo in these functions dirtyBits may be updated to avoid  such kinds of redandant GL calls.",
+      "revId": "998f809f99e8a876cf6b01bb49c57b7c86abcf2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9852e41a_9432476f",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 1,
+      "message": "All the syncWith* functions have two tasks:\n1. make GL calls\n2. update related caches\n\nThe checks between the new states and the caches are reserved in the update* functions.\n\nI use this structure because it can let us choose the most suitable GL calls by these checks in the update* functions.\n\n e.g.\n1. In updateAttribPointerES31, when we find only the binding is dirty and both the format and the attribBinding are all clean, we can use one simpler GL call (BindVertexBuffer) instead of two GL calls (BindBuffer and VertexAttribPointer)\n2. In updateAttribFormat, when we find the format, the binding and the attribBinding are all dirty and match the condition to use VertexAttribPointer, we can use two GL calls (BindBuffer and VertexAttribPointer) instead of three (VertexAttribFormat, VertexAttribBinding and BindVertexBuffer)",
+      "revId": "998f809f99e8a876cf6b01bb49c57b7c86abcf2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "013b4bb5_6f4c0218",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 1,
+      "message": "It is annoying to see these changes in this patch. That\u0027s exactly why I  wrote https://chromium-review.googlesource.com/c/513492",
+      "revId": "998f809f99e8a876cf6b01bb49c57b7c86abcf2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "602250bc_99cf1f17",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 441,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 1,
+      "message": "This test is to verify if the merge of VertexAttribBinding and VertexBindingDivisor can be executed correctly.",
+      "revId": "998f809f99e8a876cf6b01bb49c57b7c86abcf2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "baf42c9e_b0b13663",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 852,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 1,
+      "message": "This class will be merged into VertexAttributeTestES31 in the patch that enables Vertex Attrib Binding on D3D11 back-ends.",
+      "revId": "998f809f99e8a876cf6b01bb49c57b7c86abcf2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

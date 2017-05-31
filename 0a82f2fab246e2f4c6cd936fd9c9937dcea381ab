@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0f9aae1e_5c3cd4fa",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 3705,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 0,
+      "message": "I think it is better to call this \u0027setVertexAttribPointer\u0027",
+      "revId": "0a82f2fab246e2f4c6cd936fd9c9937dcea381ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "11e542b7_78c31951",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 0,
+      "message": "In original implementation VertexAttribDivisor owns no dirty bits at all, which I think is not a good design.\nIn this patch I have added a dirty bit for VertexAttribDivisor.",
+      "revId": "0a82f2fab246e2f4c6cd936fd9c9937dcea381ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc53c2b5_37cccf21",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-05-31T07:50:48Z",
+      "side": 0,
+      "message": "In original code, call VertexAttribPointer will set four dirty bits: \n- VertexAttribFormat\n- VertexAttribBinding\n- BindVertexBuffer\n- VertexAttribPointer\n\nNow only the bit for VertexAttribPointer will be set.",
+      "revId": "0a82f2fab246e2f4c6cd936fd9c9937dcea381ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
