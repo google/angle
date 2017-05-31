@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5825f201_6cdbbe70",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 552,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-05-31T11:25:26Z",
+      "side": 1,
+      "message": "I think there\u0027s one more bug here, that you can repro with the below shaders:\n\n    const std::string \u0026vertexShaderSource \u003d\n        \"#version 310 es\\n\"\n        \"in vec4 position;\\n\"\n        \"uniform uni\\n\"\n        \"{\\n\"\n        \"    vec4 color;\\n\"\n        \"} block;\\n\"\n        \"void main()\\n\"\n        \"{\\n\"\n        \"    gl_Position \u003d position + block.color;\\n\"\n        \"}\";\n    const std::string \u0026fragmentShaderSource \u003d\n        \"#version 310 es\\n\"\n        \"precision highp float;\\n\"\n        \"layout(binding \u003d 0) uniform uni\\n\"\n        \"{\\n\"\n        \"    vec4 color;\\n\"\n        \"} block;\\n\"\n        \"out vec4 fragColor;\\n\"\n        \"void main()\\n\"\n        \"{\\n\"\n        \"    fragColor \u003d block.color;\\n\"\n        \"}\";\n\nLinking these shaders succeeds, though it should fail due to one shader specifying the block binding and the other not specifying it. See ESSL 3.10 section 9.2. Please add a test (or check if there\u0027s a dEQP test covering this) and fix this so that unspecified binding doesn\u0027t match with binding 0.",
+      "revId": "1a7e8615e3c27b786fd055f940fb76b27664d4e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
