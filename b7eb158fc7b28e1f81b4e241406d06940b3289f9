@@ -1,0 +1,303 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f3fbce90_cca62bca",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-01T18:12:57Z",
+      "side": 1,
+      "message": "nit: can return const \u0026. also can you make a using declaration for this type?",
+      "range": {
+        "startLine": 75,
+        "startChar": 4,
+        "endLine": 75,
+        "endChar": 50
+      },
+      "revId": "b7eb158fc7b28e1f81b4e241406d06940b3289f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b557c821_68d59553",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-01T18:12:57Z",
+      "side": 1,
+      "message": "nit : remove ;",
+      "range": {
+        "startLine": 78,
+        "startChar": 5,
+        "endLine": 78,
+        "endChar": 6
+      },
+      "revId": "b7eb158fc7b28e1f81b4e241406d06940b3289f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d197af14_2429f21e",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 949,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-01T18:12:57Z",
+      "side": 1,
+      "message": "this can be a static assert (size is constexpr). Also could use a small clarification in the static_assert explaining what you\u0027re verifying.",
+      "range": {
+        "startLine": 949,
+        "startChar": 50,
+        "endLine": 949,
+        "endChar": 70
+      },
+      "revId": "b7eb158fc7b28e1f81b4e241406d06940b3289f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f11796f2_93cfaa21",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2710,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-01T18:12:57Z",
+      "side": 1,
+      "message": "should we ASSERT the index is in bounds now? is it an error to compile a shader with \u003e MAX_DRAW_BUFFERS?",
+      "range": {
+        "startLine": 2710,
+        "startChar": 19,
+        "endLine": 2710,
+        "endChar": 41
+      },
+      "revId": "b7eb158fc7b28e1f81b4e241406d06940b3289f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee19a747_c3535c26",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-01T18:12:57Z",
+      "side": 1,
+      "message": "also can return const \u0026",
+      "range": {
+        "startLine": 231,
+        "startChar": 4,
+        "endLine": 231,
+        "endChar": 54
+      },
+      "revId": "b7eb158fc7b28e1f81b4e241406d06940b3289f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98d78694_8a5e9a7c",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-01T18:12:57Z",
+      "side": 1,
+      "message": "You can probably make this code a little bit smaller.\n\nI think the bitset you want is a product of \"on\" in the mState.getEnabledDrawBuffers() and \"off\" in maxSet (really active output variables). So you can get this by (A \u0026 !B), where A is the FBO enabled buffers and B is the program active outputs. Then, you can take a copy of the current enabled draw buffer set from the state (getDrawBufferStates) and force any 1 bits from the (A \u0026 !B) set to GL_NONE, using the bitset iterator. LMK if this makes sense, it sounds confusing explaining it. :)",
+      "range": {
+        "startLine": 499,
+        "startChar": 8,
+        "endLine": 518,
+        "endChar": 62
+      },
+      "revId": "b7eb158fc7b28e1f81b4e241406d06940b3289f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d0d5d758_6566186e",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-01T18:12:57Z",
+      "side": 1,
+      "message": "again, const \u0026. I guess you\u0027re assuming copies are cheap, but it still makes me suspicious. I\u0027d be willing to entertain the idea that I\u0027m wrong. :)",
+      "range": {
+        "startLine": 90,
+        "startChar": 35,
+        "endLine": 90,
+        "endChar": 84
+      },
+      "revId": "b7eb158fc7b28e1f81b4e241406d06940b3289f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "75a5f4b3_1df62102",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 884,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-01T18:12:57Z",
+      "side": 1,
+      "message": "Unfortunately I find the mathematical set terminology confusing and requires some mental juggling to understand - can we rename these to use the OpenGL terms? Something like, maskOutInactiveOutputDrawBuffers.. or something that uses the same terminology? Sorry to ask for a rename but it would help the reader I think.",
+      "range": {
+        "startLine": 884,
+        "startChar": 23,
+        "endLine": 884,
+        "endChar": 48
+      },
+      "revId": "b7eb158fc7b28e1f81b4e241406d06940b3289f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "046464e5_e79cf10b",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2428,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-01T18:12:57Z",
+      "side": 1,
+      "message": "comment before every test.",
+      "range": {
+        "startLine": 2428,
+        "startChar": 0,
+        "endLine": 2428,
+        "endChar": 6
+      },
+      "revId": "b7eb158fc7b28e1f81b4e241406d06940b3289f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f4c809d2_5692c440",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2428,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-01T18:12:57Z",
+      "side": 1,
+      "message": "any chance of splitting this up into a couple smaller tests with a setup method?",
+      "range": {
+        "startLine": 2428,
+        "startChar": 31,
+        "endLine": 2428,
+        "endChar": 42
+      },
+      "revId": "b7eb158fc7b28e1f81b4e241406d06940b3289f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c34684cb_9158f366",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2432,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-01T18:12:57Z",
+      "side": 1,
+      "message": "you can just replace this with \" \u003c\u003c GetParam() \u003c\u003c std::endl;",
+      "range": {
+        "startLine": 2432,
+        "startChar": 38,
+        "endLine": 2432,
+        "endChar": 94
+      },
+      "revId": "b7eb158fc7b28e1f81b4e241406d06940b3289f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9ba6ab8_75dc54f2",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2459,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-01T18:12:57Z",
+      "side": 1,
+      "message": "maybe make this a setup method?",
+      "range": {
+        "startLine": 2438,
+        "startChar": 0,
+        "endLine": 2459,
+        "endChar": 0
+      },
+      "revId": "b7eb158fc7b28e1f81b4e241406d06940b3289f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "18e3ae93_c33c83cf",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2502,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-01T18:12:57Z",
+      "side": 1,
+      "message": "you can make this a helper method in the fixture.",
+      "range": {
+        "startLine": 2493,
+        "startChar": 0,
+        "endLine": 2502,
+        "endChar": 6
+      },
+      "revId": "b7eb158fc7b28e1f81b4e241406d06940b3289f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

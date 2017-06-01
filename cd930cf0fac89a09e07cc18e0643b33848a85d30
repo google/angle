@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "46f5023b_7c184dbf",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1247,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-01T18:12:57Z",
+      "side": 0,
+      "message": "why this? feels like a bug - make sure this is covered by a test if so.",
+      "range": {
+        "startLine": 1246,
+        "startChar": 0,
+        "endLine": 1247,
+        "endChar": 64
+      },
+      "revId": "cd930cf0fac89a09e07cc18e0643b33848a85d30",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
