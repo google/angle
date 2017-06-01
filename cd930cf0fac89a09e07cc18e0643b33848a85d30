@@ -22,6 +22,30 @@
       "revId": "cd930cf0fac89a09e07cc18e0643b33848a85d30",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "62497e14_fc964d36",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1247,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-06-01T22:07:02Z",
+      "side": 0,
+      "message": "The removal is just a cleanup:\n - This statement doesn\u0027t have an effect on this CL because it only restricts mEnabledDrawBuffers more when an attachment is removed.\n - It doesn\u0027t affect the rendering feedback loop checks because the check looks whether the attachment is present or not.",
+      "parentUuid": "46f5023b_7c184dbf",
+      "range": {
+        "startLine": 1246,
+        "startChar": 0,
+        "endLine": 1247,
+        "endChar": 64
+      },
+      "revId": "cd930cf0fac89a09e07cc18e0643b33848a85d30",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
