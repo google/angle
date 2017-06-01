@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4ecd890a_7b76e246",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-06-01T20:23:41Z",
+      "side": 1,
+      "message": "As mentioned in the other review: \n\n\u003e nit: from what I understand, this test doesn\u0027t robust buffer initialization because the texture, default FBO and texture copy all have the same size. I suggest adding width and height parameters to setupTexture so that it can be made bigger than the default FBO.\n\nIn follow up tests you are going to need to control the size of the texture, so you could add width and height parameters here. (same thing for 3D textures)",
+      "revId": "2ec8ffe3a228b2217267f4a786d2a3c195ef124e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5b01429a_f6c7d794",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-06-01T20:23:41Z",
+      "side": 1,
+      "message": "nit: comment as to what skipped mean.",
+      "revId": "2ec8ffe3a228b2217267f4a786d2a3c195ef124e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
