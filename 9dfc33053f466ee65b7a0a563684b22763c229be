@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c0350214_9074a827",
+        "filename": "extensions/EGL_ANGLE_display_robust_resource_initialization.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-01T15:29:29Z",
+      "side": 1,
+      "message": "I\u0027d add the additional line: Requires \"EGL_EXT_client_extensions to query its existence without a display.\" or mention that this is a client extension instead of a display extension.",
+      "revId": "9dfc33053f466ee65b7a0a563684b22763c229be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
