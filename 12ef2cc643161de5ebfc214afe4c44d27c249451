@@ -117,6 +117,30 @@
     },
     {
       "key": {
+        "uuid": "fefe1cc2_1be5ff8c",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-06-01T20:57:42Z",
+      "side": 1,
+      "message": "I pass the address to glDrawElements elsewhere.  So I guess I\u0027ll use a plain old static C-style array?  i.e.\nstatic const GLushort IndexedQuadIndices[6] \u003d {0,1,2,0,2,3};",
+      "parentUuid": "62572c03_824c7fbc",
+      "range": {
+        "startLine": 94,
+        "startChar": 4,
+        "endLine": 94,
+        "endChar": 11
+      },
+      "revId": "12ef2cc643161de5ebfc214afe4c44d27c249451",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9ac2a40d_8363a18c",
         "filename": "src/tests/test_utils/ANGLETest.cpp",
         "patchSetId": 5
