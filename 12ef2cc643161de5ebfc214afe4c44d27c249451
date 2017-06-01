@@ -141,6 +141,30 @@
     },
     {
       "key": {
+        "uuid": "4144193b_07aac0c4",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-01T21:08:36Z",
+      "side": 1,
+      "message": "make it a constexpr static value local to the file. then it\u0027s not going to be a problem with initialization. probably okay in the function scope too but feels better local to the file.",
+      "parentUuid": "fefe1cc2_1be5ff8c",
+      "range": {
+        "startLine": 94,
+        "startChar": 4,
+        "endLine": 94,
+        "endChar": 11
+      },
+      "revId": "12ef2cc643161de5ebfc214afe4c44d27c249451",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9ac2a40d_8363a18c",
         "filename": "src/tests/test_utils/ANGLETest.cpp",
         "patchSetId": 5
