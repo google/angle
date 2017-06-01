@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "c90a236e_f9f4f3e2",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1180,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-01T13:16:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b2a6595_26fa79d6",
+      "revId": "3ad170205712733dc15439f689f04422f42dc027",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c8fae643_8ee204be",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 11
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "d559d0c7_ec981a73",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1315,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-01T13:16:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c8fae643_8ee204be",
+      "revId": "3ad170205712733dc15439f689f04422f42dc027",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "04c4425a_a9b023e9",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 11
@@ -50,6 +86,24 @@
       "revId": "3ad170205712733dc15439f689f04422f42dc027",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b83f989_682e7b3b",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1323,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-01T13:16:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "04c4425a_a9b023e9",
+      "revId": "3ad170205712733dc15439f689f04422f42dc027",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -93,6 +147,24 @@
     },
     {
       "key": {
+        "uuid": "84d12758_f38f330b",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2477,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-01T13:16:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b8874ea2_e0ce9eab",
+      "revId": "3ad170205712733dc15439f689f04422f42dc027",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "55d56c2e_ec2042cc",
         "filename": "src/compiler/translator/ParseContext.h",
         "patchSetId": 11
@@ -133,6 +205,24 @@
     },
     {
       "key": {
+        "uuid": "8b515461_89a56ab6",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-01T13:16:42Z",
+      "side": 1,
+      "message": "You are right. Actually same should be done for \u0027binding\u0027 but not \u0027location\u0027 according to ESSL 3.10 section 9.2.1.",
+      "parentUuid": "54461a68_2164a999",
+      "revId": "3ad170205712733dc15439f689f04422f42dc027",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "29e097bf_592171e7",
         "filename": "src/tests/compiler_tests/AtomicCounter_test.cpp",
         "patchSetId": 11
@@ -170,6 +260,24 @@
       "revId": "3ad170205712733dc15439f689f04422f42dc027",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9a60b6d0_0aed956d",
+        "filename": "src/tests/compiler_tests/AtomicCounter_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-01T13:16:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "757a3706_caa51549",
+      "revId": "3ad170205712733dc15439f689f04422f42dc027",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
