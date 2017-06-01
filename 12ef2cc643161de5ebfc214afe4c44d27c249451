@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "932e380d_af09b8be",
+        "filename": "src/tests/gl_tests/WebGLFramebufferTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 719,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-01T19:42:48Z",
+      "side": 1,
+      "message": "nit: final/NonCopyable",
+      "range": {
+        "startLine": 719,
+        "startChar": 6,
+        "endLine": 719,
+        "endChar": 15
+      },
+      "revId": "12ef2cc643161de5ebfc214afe4c44d27c249451",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d3469b8_38f0d9e1",
+        "filename": "src/tests/gl_tests/WebGLFramebufferTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 754,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-01T19:42:48Z",
+      "side": 1,
+      "message": "use mDepthBuffer style, etc.",
+      "range": {
+        "startLine": 754,
+        "startChar": 19,
+        "endLine": 754,
+        "endChar": 30
+      },
+      "revId": "12ef2cc643161de5ebfc214afe4c44d27c249451",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee4cf447_106bab92",
+        "filename": "src/tests/gl_tests/WebGLFramebufferTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 760,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-01T19:42:48Z",
+      "side": 1,
+      "message": "nit: Caps for static methods.",
+      "range": {
+        "startLine": 760,
+        "startChar": 5,
+        "endLine": 760,
+        "endChar": 33
+      },
+      "revId": "12ef2cc643161de5ebfc214afe4c44d27c249451",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67ad3ea6_854c7ada",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-01T19:42:48Z",
+      "side": 1,
+      "message": "nit: prefix with // static",
+      "range": {
+        "startLine": 92,
+        "startChar": 0,
+        "endLine": 92,
+        "endChar": 6
+      },
+      "revId": "12ef2cc643161de5ebfc214afe4c44d27c249451",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "62572c03_824c7fbc",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-01T19:42:48Z",
+      "side": 1,
+      "message": "you can make this non-static. statics can be bad.",
+      "range": {
+        "startLine": 94,
+        "startChar": 4,
+        "endLine": 94,
+        "endChar": 11
+      },
+      "revId": "12ef2cc643161de5ebfc214afe4c44d27c249451",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ac2a40d_8363a18c",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-01T19:42:48Z",
+      "side": 1,
+      "message": "you should check and restore the previous binding.",
+      "range": {
+        "startLine": 500,
+        "startChar": 8,
+        "endLine": 500,
+        "endChar": 35
+      },
+      "revId": "12ef2cc643161de5ebfc214afe4c44d27c249451",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
