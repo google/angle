@@ -268,13 +268,14 @@ void ANGLESetDefaultDisplayPlatform(angle::EGLDisplayType display)
 
 }  // anonymous namespace
 
+// static
 Display *Display::GetDisplayFromNativeDisplay(EGLNativeDisplayType nativeDisplay,
                                               const AttributeMap &attribMap)
 {
     Display *display = nullptr;
 
-    ANGLEPlatformDisplayMap *displays            = GetANGLEPlatformDisplayMap();
-    ANGLEPlatformDisplayMap::const_iterator iter = displays->find(nativeDisplay);
+    ANGLEPlatformDisplayMap *displays = GetANGLEPlatformDisplayMap();
+    const auto &iter                  = displays->find(nativeDisplay);
     if (iter != displays->end())
     {
         display = iter->second;
@@ -308,7 +309,8 @@ Display *Display::GetDisplayFromNativeDisplay(EGLNativeDisplayType nativeDisplay
     return display;
 }
 
-Display *Display::GetDisplayFromDevice(Device *device)
+// static
+Display *Display::GetDisplayFromDevice(Device *device, const AttributeMap &attribMap)
 {
     Display *display = nullptr;
 
@@ -330,7 +332,7 @@ Display *Display::GetDisplayFromDevice(Device *device)
     if (display == nullptr)
     {
         // See if the eglDevice is in use by a Display created using the DEVICE platform
-        DevicePlatformDisplayMap::const_iterator iter = devicePlatformDisplays->find(device);
+        const auto &iter = devicePlatformDisplays->find(device);
         if (iter != devicePlatformDisplays->end())
         {
             display = iter->second;
@@ -348,7 +350,7 @@ Display *Display::GetDisplayFromDevice(Device *device)
     if (!display->isInitialized())
     {
         rx::DisplayImpl *impl = CreateDisplayFromDevice(device, display->getState());
-        display->setAttributes(impl, egl::AttributeMap());
+        display->setAttributes(impl, attribMap);
     }
 
     return display;
@@ -714,8 +716,9 @@ Error Display::createContext(const Config *configuration, gl::Context *shareCont
         shareTextures = mTextureManager;
     }
 
-    gl::Context *context = new gl::Context(mImplementation, configuration, shareContext,
-                                           shareTextures, attribs, mDisplayExtensions);
+    gl::Context *context =
+        new gl::Context(mImplementation, configuration, shareContext, shareTextures, attribs,
+                        mDisplayExtensions, isRobustResourceInitEnabled());
 
     ASSERT(context != nullptr);
     mContextSet.insert(context);
@@ -934,6 +937,9 @@ static ClientExtensions GenerateClientExtensions()
 
     extensions.clientGetAllProcAddresses = true;
 
+    // TODO(jmadill): Not fully implemented yet, but exposed everywhere.
+    extensions.displayRobustResourceInitialization = true;
+
     return extensions;
 }
 
@@ -947,15 +953,18 @@ static std::string GenerateExtensionsString(const T &extensions)
     return stream.str();
 }
 
-const ClientExtensions &Display::getClientExtensions()
+// static
+const ClientExtensions &Display::GetClientExtensions()
 {
     static const ClientExtensions clientExtensions = GenerateClientExtensions();
     return clientExtensions;
 }
 
-const std::string &Display::getClientExtensionString()
+// static
+const std::string &Display::GetClientExtensionString()
 {
-    static const std::string clientExtensionsString = GenerateExtensionsString(getClientExtensions());
+    static const std::string clientExtensionsString =
+        GenerateExtensionsString(GetClientExtensions());
     return clientExtensionsString;
 }
 
@@ -1063,4 +1072,11 @@ gl::Version Display::getMaxSupportedESVersion() const
 {
     return mImplementation->getMaxSupportedESVersion();
 }
+
+bool Display::isRobustResourceInitEnabled() const
+{
+    return (mAttributeMap.get(EGL_DISPLAY_ROBUST_RESOURCE_INITIALIZATION_ANGLE, EGL_FALSE) ==
+            EGL_TRUE);
+}
+
 }  // namespace egl

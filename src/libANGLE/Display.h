@@ -54,12 +54,12 @@ class Display final : angle::NonCopyable
     Error initialize();
     void terminate();
 
-    static egl::Display *GetDisplayFromDevice(Device *device);
+    static egl::Display *GetDisplayFromDevice(Device *device, const AttributeMap &attribMap);
     static egl::Display *GetDisplayFromNativeDisplay(EGLNativeDisplayType nativeDisplay,
                                                      const AttributeMap &attribMap);
 
-    static const ClientExtensions &getClientExtensions();
-    static const std::string &getClientExtensionString();
+    static const ClientExtensions &GetClientExtensions();
+    static const std::string &GetClientExtensionString();
 
     std::vector<const Config*> getConfigs(const egl::AttributeMap &attribs) const;
 
@@ -132,6 +132,8 @@ class Display final : angle::NonCopyable
     gl::Version getMaxSupportedESVersion() const;
 
     const DisplayState &getState() const { return mState; }
+
+    bool isRobustResourceInitEnabled() const;
 
   private:
     Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDevice);

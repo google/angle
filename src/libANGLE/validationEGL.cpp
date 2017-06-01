@@ -275,7 +275,7 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
                                        void *native_display,
                                        const AttributeMap &attribMap)
 {
-    const ClientExtensions &clientExtensions = Display::getClientExtensions();
+    const ClientExtensions &clientExtensions = Display::GetClientExtensions();
 
     switch (platform)
     {
@@ -308,31 +308,33 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
 
         for (const auto &curAttrib : attribMap)
         {
+            const EGLAttrib value = curAttrib.second;
+
             switch (curAttrib.first)
             {
                 case EGL_PLATFORM_ANGLE_TYPE_ANGLE:
                 {
-                    ANGLE_TRY(ValidatePlatformType(clientExtensions, curAttrib.second));
-                    platformType = curAttrib.second;
+                    ANGLE_TRY(ValidatePlatformType(clientExtensions, value));
+                    platformType = value;
                     break;
                 }
 
                 case EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE:
-                    if (curAttrib.second != EGL_DONT_CARE)
+                    if (value != EGL_DONT_CARE)
                     {
-                        majorVersion = curAttrib.second;
+                        majorVersion = value;
                     }
                     break;
 
                 case EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE:
-                    if (curAttrib.second != EGL_DONT_CARE)
+                    if (value != EGL_DONT_CARE)
                     {
-                        minorVersion = curAttrib.second;
+                        minorVersion = value;
                     }
                     break;
 
                 case EGL_PLATFORM_ANGLE_ENABLE_AUTOMATIC_TRIM_ANGLE:
-                    switch (curAttrib.second)
+                    switch (value)
                     {
                         case EGL_TRUE:
                         case EGL_FALSE:
@@ -350,7 +352,7 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
                                      "EGL_ANGLE_experimental_present_path extension not active");
                     }
 
-                    switch (curAttrib.second)
+                    switch (value)
                     {
                         case EGL_EXPERIMENTAL_PRESENT_PATH_FAST_ANGLE:
                         case EGL_EXPERIMENTAL_PRESENT_PATH_COPY_ANGLE:
@@ -363,7 +365,7 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
                     break;
 
                 case EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE:
-                    switch (curAttrib.second)
+                    switch (value)
                     {
                         case EGL_PLATFORM_ANGLE_DEVICE_TYPE_HARDWARE_ANGLE:
                         case EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE:
@@ -381,7 +383,7 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
                                          "EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE "
                                          "attrib");
                     }
-                    deviceType = curAttrib.second;
+                    deviceType = value;
                     break;
 
                 case EGL_PLATFORM_ANGLE_ENABLE_VALIDATION_LAYER_ANGLE:
@@ -395,10 +397,25 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
                         return Error(EGL_BAD_ATTRIBUTE,
                                      "Validation can only be enabled for the Vulkan back-end.");
                     }
-                    if (curAttrib.second != EGL_TRUE && curAttrib.second != EGL_FALSE)
+                    if (value != EGL_TRUE && value != EGL_FALSE)
                     {
                         return Error(EGL_BAD_ATTRIBUTE,
                                      "Validation layer attribute must be EGL_TRUE or EGL_FALSE.");
+                    }
+                    break;
+
+                case EGL_DISPLAY_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
+                    if (!clientExtensions.displayRobustResourceInitialization)
+                    {
+                        return Error(EGL_BAD_ATTRIBUTE,
+                                     "Attribute EGL_DISPLAY_ROBUST_RESOURCE_INITIALIZATION_ANGLE "
+                                     "requires EGL_ANGLE_display_robust_resource_initialization.");
+                    }
+                    if (value != EGL_TRUE && value != EGL_FALSE)
+                    {
+                        return Error(EGL_BAD_ATTRIBUTE,
+                                     "EGL_DISPLAY_ROBUST_RESOURCE_INITIALIZATION_ANGLE must be "
+                                     "either EGL_TRUE or EGL_FALSE.");
                     }
                     break;
 
@@ -707,21 +724,6 @@ Error ValidateCreateContext(Display *display, Config *configuration, gl::Context
                   return Error(EGL_BAD_ATTRIBUTE,
                                "EGL_CONTEXT_CLIENT_ARRAYS_ENABLED_ANGLE must be EGL_TRUE or "
                                "EGL_FALSE.");
-              }
-              break;
-
-          case EGL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
-              if (!display->getExtensions().createContextRobustResourceInitialization)
-              {
-                  return Error(EGL_BAD_ATTRIBUTE,
-                               "Attribute EGL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE "
-                               "requires EGL_ANGLE_create_context_robust_resource_initialization.");
-              }
-              if (value != EGL_TRUE && value != EGL_FALSE)
-              {
-                  return Error(EGL_BAD_ATTRIBUTE,
-                               "EGL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE must be "
-                               "either EGL_TRUE or EGL_FALSE.");
               }
               break;
 
@@ -1533,7 +1535,7 @@ Error ValidateCreateDeviceANGLE(EGLint device_type,
                                 void *native_device,
                                 const EGLAttrib *attrib_list)
 {
-    const ClientExtensions &clientExtensions = Display::getClientExtensions();
+    const ClientExtensions &clientExtensions = Display::GetClientExtensions();
     if (!clientExtensions.deviceCreation)
     {
         return Error(EGL_BAD_ACCESS, "Device creation extension not active");
@@ -1561,7 +1563,7 @@ Error ValidateCreateDeviceANGLE(EGLint device_type,
 
 Error ValidateReleaseDeviceANGLE(Device *device)
 {
-    const ClientExtensions &clientExtensions = Display::getClientExtensions();
+    const ClientExtensions &clientExtensions = Display::GetClientExtensions();
     if (!clientExtensions.deviceCreation)
     {
         return Error(EGL_BAD_ACCESS, "Device creation extension not active");

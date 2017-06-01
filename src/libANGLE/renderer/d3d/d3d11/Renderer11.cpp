@@ -1147,8 +1147,6 @@ void Renderer11::generateDisplayExtensions(egl::DisplayExtensions *outExtensions
     // Contexts are virtualized so textures can be shared globally
     outExtensions->displayTextureShareGroup = true;
 
-    outExtensions->createContextRobustResourceInitialization = true;
-
     // getSyncValues requires direct composition.
     outExtensions->getSyncValues = outExtensions->directComposition;
 }

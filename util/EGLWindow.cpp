@@ -119,7 +119,7 @@ EGLWindow::EGLWindow(EGLint glesMajorVersion,
       mWebGLCompatibility(false),
       mBindGeneratesResource(true),
       mClientArraysEnabled(true),
-      mRobustResourceInit(false),
+      mRobustResourceInit(),
       mSwapInterval(-1),
       mSamples(-1),
       mPlatformMethods(nullptr)
@@ -205,6 +205,20 @@ bool EGLWindow::initializeDisplayAndSurface(OSWindow *osWindow)
         static_assert(sizeof(EGLAttrib) == sizeof(mPlatformMethods), "Unexpected pointer size");
         displayAttributes.push_back(EGL_PLATFORM_ANGLE_PLATFORM_METHODS_ANGLEX);
         displayAttributes.push_back(reinterpret_cast<EGLAttrib>(mPlatformMethods));
+    }
+
+    if (mRobustResourceInit.valid() &&
+        !ClientExtensionEnabled("EGL_ANGLE_display_robust_resource_initialization"))
+    {
+        // Non-default state requested without the extension present
+        destroyGL();
+        return false;
+    }
+
+    if (mRobustResourceInit.valid())
+    {
+        displayAttributes.push_back(EGL_DISPLAY_ROBUST_RESOURCE_INITIALIZATION_ANGLE);
+        displayAttributes.push_back(mRobustResourceInit.value() ? EGL_TRUE : EGL_FALSE);
     }
 
     displayAttributes.push_back(EGL_NONE);
@@ -324,16 +338,6 @@ bool EGLWindow::initializeContext()
         return false;
     }
 
-    bool hasRobustResourceInit =
-        strstr(displayExtensions, "EGL_ANGLE_create_context_robust_resource_initialization") !=
-        nullptr;
-    if (mRobustResourceInit && !hasRobustResourceInit)
-    {
-        // Non-default state requested without the extension present
-        destroyGL();
-        return false;
-    }
-
     eglBindAPI(EGL_OPENGL_ES_API);
     if (eglGetError() != EGL_SUCCESS)
     {
@@ -376,12 +380,6 @@ bool EGLWindow::initializeContext()
         {
             contextAttributes.push_back(EGL_CONTEXT_CLIENT_ARRAYS_ENABLED_ANGLE);
             contextAttributes.push_back(mClientArraysEnabled ? EGL_TRUE : EGL_FALSE);
-        }
-
-        if (hasRobustResourceInit)
-        {
-            contextAttributes.push_back(EGL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE);
-            contextAttributes.push_back(mRobustResourceInit ? EGL_TRUE : EGL_FALSE);
         }
     }
     contextAttributes.push_back(EGL_NONE);
@@ -475,4 +473,17 @@ EGLBoolean EGLWindow::FindEGLConfig(EGLDisplay dpy, const EGLint *attrib_list, E
     }
 
     return EGL_FALSE;
+}
+
+// static
+bool EGLWindow::ClientExtensionEnabled(const std::string &extName)
+{
+    return CheckExtensionExists(eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS), extName);
+}
+
+bool CheckExtensionExists(const char *allExtensions, const std::string &extName)
+{
+    const std::string paddedExtensions = std::string(" ") + allExtensions + std::string(" ");
+    return paddedExtensions.find(std::string(" ") + extName + std::string(" ")) !=
+           std::string::npos;
 }

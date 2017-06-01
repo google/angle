@@ -149,7 +149,7 @@ const char *EGLAPIENTRY QueryString(EGLDisplay dpy, EGLint name)
         case EGL_EXTENSIONS:
             if (display == EGL_NO_DISPLAY)
             {
-                result = Display::getClientExtensionString().c_str();
+                result = Display::GetClientExtensionString().c_str();
             }
             else
             {
@@ -1203,16 +1203,16 @@ EGLDisplay EGLAPIENTRY GetPlatformDisplay(EGLenum platform,
         return EGL_NO_DISPLAY;
     }
 
+    const auto &attribMap = AttributeMap::CreateFromAttribArray(attrib_list);
     if (platform == EGL_PLATFORM_ANGLE_ANGLE)
     {
         return Display::GetDisplayFromNativeDisplay(
-            gl::bitCast<EGLNativeDisplayType>(native_display),
-            AttributeMap::CreateFromAttribArray(attrib_list));
+            gl::bitCast<EGLNativeDisplayType>(native_display), attribMap);
     }
     else if (platform == EGL_PLATFORM_DEVICE_EXT)
     {
         Device *eglDevice = reinterpret_cast<Device *>(native_display);
-        return Display::GetDisplayFromDevice(eglDevice);
+        return Display::GetDisplayFromDevice(eglDevice, attribMap);
     }
     else
     {

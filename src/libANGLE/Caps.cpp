@@ -1075,8 +1075,7 @@ DisplayExtensions::DisplayExtensions()
       pixelFormatFloat(false),
       surfacelessContext(false),
       displayTextureShareGroup(false),
-      createContextClientArrays(false),
-      createContextRobustResourceInitialization(false)
+      createContextClientArrays(false)
 {
 }
 
@@ -1119,7 +1118,6 @@ std::vector<std::string> DisplayExtensions::getStrings() const
     InsertExtensionString("EGL_KHR_surfaceless_context",                         surfacelessContext,                 &extensionStrings);
     InsertExtensionString("EGL_ANGLE_display_texture_share_group",               displayTextureShareGroup,           &extensionStrings);
     InsertExtensionString("EGL_ANGLE_create_context_client_arrays",              createContextClientArrays,          &extensionStrings);
-    InsertExtensionString("EGL_ANGLE_create_context_robust_resource_initialization", createContextRobustResourceInitialization, &extensionStrings);
     // TODO(jmadill): Enable this when complete.
     //InsertExtensionString("KHR_create_context_no_error",                       createContextNoError,               &extensionStrings);
     // clang-format on
@@ -1154,7 +1152,8 @@ ClientExtensions::ClientExtensions()
       deviceCreationD3D11(false),
       x11Visual(false),
       experimentalPresentPath(false),
-      clientGetAllProcAddresses(false)
+      clientGetAllProcAddresses(false),
+      displayRobustResourceInitialization(false)
 {
 }
 
@@ -1177,9 +1176,10 @@ std::vector<std::string> ClientExtensions::getStrings() const
     InsertExtensionString("EGL_ANGLE_x11_visual",                  x11Visual,                 &extensionStrings);
     InsertExtensionString("EGL_ANGLE_experimental_present_path",   experimentalPresentPath,   &extensionStrings);
     InsertExtensionString("EGL_KHR_client_get_all_proc_addresses", clientGetAllProcAddresses, &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_display_robust_resource_initialization", displayRobustResourceInitialization, &extensionStrings);
     // clang-format on
 
     return extensionStrings;
 }
 
-}
+}  // namespace egl

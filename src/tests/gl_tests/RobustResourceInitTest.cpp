@@ -23,20 +23,14 @@ class RobustResourceInitTest : public ANGLETest
         setConfigGreenBits(8);
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
-
-        // Defer context init until the test body.
-        setDeferContextInit(true);
-        setRobustResourceInit(true);
     }
 
     bool hasEGLExtension()
     {
-        EGLDisplay display = getEGLWindow()->getDisplay();
-        ASSERT(display != EGL_NO_DISPLAY);
-
-        return (eglDisplayExtensionEnabled(
-            display, "EGL_ANGLE_create_context_robust_resource_initialization"));
+        return eglClientExtensionEnabled("EGL_ANGLE_display_robust_resource_initialization");
     }
+
+    bool hasGLExtension() { return extensionEnabled("GL_ANGLE_robust_resource_initialization"); }
 
     bool setup()
     {
@@ -45,27 +39,22 @@ class RobustResourceInitTest : public ANGLETest
             return false;
         }
 
-        if (!getEGLWindow()->initializeContext())
-        {
-            EXPECT_TRUE(false);
-            return false;
-        }
+        TearDown();
+        setRobustResourceInit(true);
+        SetUp();
 
         return true;
     }
 };
 
-// Context creation should fail if EGL_ANGLE_create_context_robust_resource_initialization
+// Display creation should fail if EGL_ANGLE_display_robust_resource_initialization
 // is not available, and succeed otherwise.
 TEST_P(RobustResourceInitTest, ExtensionInit)
 {
-    if (hasEGLExtension())
+    if (setup())
     {
-        // Context creation shold succeed with robust resource init enabled.
-        EXPECT_TRUE(getEGLWindow()->initializeContext());
-
         // Robust resource init extension should be available.
-        EXPECT_TRUE(extensionEnabled("GL_ANGLE_robust_resource_initialization"));
+        EXPECT_TRUE(hasGLExtension());
 
         // Querying the state value should return true.
         GLboolean enabled = 0;
@@ -77,15 +66,8 @@ TEST_P(RobustResourceInitTest, ExtensionInit)
     }
     else
     {
-        // Context creation should fail with robust resource init enabled.
-        EXPECT_FALSE(getEGLWindow()->initializeContext());
-
-        // Context creation should succeed with robust resource init disabled.
-        setRobustResourceInit(false);
-        ASSERT_TRUE(getEGLWindow()->initializeGL(GetOSWindow()));
-
         // If context extension string exposed, check queries.
-        if (extensionEnabled("GL_ANGLE_robust_resource_initialization"))
+        if (hasGLExtension())
         {
             GLboolean enabled = 0;
             glGetBooleanv(GL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE, &enabled);
@@ -115,11 +97,8 @@ TEST_P(RobustResourceInitTest, QueriesOnNonRobustContext)
         return;
     }
 
-    setRobustResourceInit(false);
-    EXPECT_TRUE(getEGLWindow()->initializeContext());
-
     // If context extension string exposed, check queries.
-    ASSERT_TRUE(extensionEnabled("GL_ANGLE_robust_resource_initialization"));
+    ASSERT_TRUE(hasGLExtension());
 
     // Querying robust resource init should return INVALID_ENUM.
     GLboolean enabled = 0;

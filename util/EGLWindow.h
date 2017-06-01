@@ -127,6 +127,8 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     void destroyGL();
     bool isGLInitialized() const;
 
+    static bool ClientExtensionEnabled(const std::string &extName);
+
   private:
     EGLConfig mConfig;
     EGLDisplay mDisplay;
@@ -151,11 +153,13 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     bool mWebGLCompatibility;
     bool mBindGeneratesResource;
     bool mClientArraysEnabled;
-    bool mRobustResourceInit;
+    Optional<bool> mRobustResourceInit;
     EGLint mSwapInterval;
     EGLint mSamples;
     Optional<bool> mVulkanLayersEnabled;
     angle::PlatformMethods *mPlatformMethods;
 };
+
+ANGLE_EXPORT bool CheckExtensionExists(const char *allExtensions, const std::string &extName);
 
 #endif // UTIL_EGLWINDOW_H_

@@ -64,7 +64,8 @@ class Context final : public ValidationContext
             const Context *shareContext,
             TextureManager *shareTextures,
             const egl::AttributeMap &attribs,
-            const egl::DisplayExtensions &displayExtensions);
+            const egl::DisplayExtensions &displayExtensions,
+            bool robustResourceInit);
 
     void destroy(egl::Display *display);
     ~Context() override;

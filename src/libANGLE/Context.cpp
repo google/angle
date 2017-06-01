@@ -20,6 +20,7 @@
 #include "common/version.h"
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Compiler.h"
+#include "libANGLE/Display.h"
 #include "libANGLE/Fence.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
@@ -203,11 +204,6 @@ bool GetClientArraysEnabled(const egl::AttributeMap &attribs)
     return (attribs.get(EGL_CONTEXT_CLIENT_ARRAYS_ENABLED_ANGLE, EGL_TRUE) == EGL_TRUE);
 }
 
-bool GetRobustResourceInit(const egl::AttributeMap &attribs)
-{
-    return (attribs.get(EGL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE, EGL_FALSE) == EGL_TRUE);
-}
-
 std::string GetObjectLabelFromPointer(GLsizei length, const GLchar *label)
 {
     std::string labelName;
@@ -248,7 +244,8 @@ Context::Context(rx::EGLImplFactory *implFactory,
                  const Context *shareContext,
                  TextureManager *shareTextures,
                  const egl::AttributeMap &attribs,
-                 const egl::DisplayExtensions &displayExtensions)
+                 const egl::DisplayExtensions &displayExtensions,
+                 bool robustResourceInit)
 
     : ValidationContext(shareContext,
                         shareTextures,
@@ -284,7 +281,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
 
     mGLState.initialize(mCaps, mExtensions, getClientVersion(), GetDebug(attribs),
                         GetBindGeneratesResource(attribs), GetClientArraysEnabled(attribs),
-                        GetRobustResourceInit(attribs));
+                        robustResourceInit);
 
     mFenceNVHandleAllocator.setBaseHandle(0);
 
@@ -2670,7 +2667,7 @@ void Context::initCaps(const egl::DisplayExtensions &displayExtensions)
 
     // Determine robust resource init availability from EGL.
     mExtensions.robustResourceInitialization =
-        displayExtensions.createContextRobustResourceInitialization;
+        egl::Display::GetClientExtensions().displayRobustResourceInitialization;
 
     // Apply implementation limits
     mCaps.maxVertexAttributes = std::min<GLuint>(mCaps.maxVertexAttributes, MAX_VERTEX_ATTRIBS);

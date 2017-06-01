@@ -667,9 +667,6 @@ struct DisplayExtensions
 
     // EGL_ANGLE_create_context_client_arrays
     bool createContextClientArrays;
-
-    // EGL_ANGLE_create_context_robust_resource_initialization
-    bool createContextRobustResourceInitialization;
 };
 
 struct DeviceExtensions
@@ -728,6 +725,9 @@ struct ClientExtensions
 
     // EGL_KHR_client_get_all_proc_addresses
     bool clientGetAllProcAddresses;
+
+    // EGL_ANGLE_display_robust_resource_initialization
+    bool displayRobustResourceInitialization;
 };
 
 }  // namespace egl

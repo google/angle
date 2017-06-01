@@ -590,33 +590,26 @@ void ANGLETest::checkD3D11SDKLayersMessages()
 #endif
 }
 
-static bool checkExtensionExists(const char *allExtensions, const std::string &extName)
-{
-    const std::string paddedExtensions = std::string(" ") + allExtensions + std::string(" ");
-    return paddedExtensions.find(std::string(" ") + extName + std::string(" ")) !=
-           std::string::npos;
-}
-
 bool ANGLETest::extensionEnabled(const std::string &extName)
 {
-    return checkExtensionExists(reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS)),
+    return CheckExtensionExists(reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS)),
                                 extName);
 }
 
 bool ANGLETest::extensionRequestable(const std::string &extName)
 {
-    return checkExtensionExists(
+    return CheckExtensionExists(
         reinterpret_cast<const char *>(glGetString(GL_REQUESTABLE_EXTENSIONS_ANGLE)), extName);
 }
 
 bool ANGLETest::eglDisplayExtensionEnabled(EGLDisplay display, const std::string &extName)
 {
-    return checkExtensionExists(eglQueryString(display, EGL_EXTENSIONS), extName);
+    return CheckExtensionExists(eglQueryString(display, EGL_EXTENSIONS), extName);
 }
 
 bool ANGLETest::eglClientExtensionEnabled(const std::string &extName)
 {
-    return checkExtensionExists(eglQueryString(EGL_NO_DISPLAY, EGL_EXTENSIONS), extName);
+    return EGLWindow::ClientExtensionEnabled(extName);
 }
 
 bool ANGLETest::eglDeviceExtensionEnabled(EGLDeviceEXT device, const std::string &extName)
@@ -624,7 +617,7 @@ bool ANGLETest::eglDeviceExtensionEnabled(EGLDeviceEXT device, const std::string
     PFNEGLQUERYDEVICESTRINGEXTPROC eglQueryDeviceStringEXT =
         reinterpret_cast<PFNEGLQUERYDEVICESTRINGEXTPROC>(
             eglGetProcAddress("eglQueryDeviceStringEXT"));
-    return checkExtensionExists(eglQueryDeviceStringEXT(device, EGL_EXTENSIONS), extName);
+    return CheckExtensionExists(eglQueryDeviceStringEXT(device, EGL_EXTENSIONS), extName);
 }
 
 void ANGLETest::setWindowWidth(int width)
