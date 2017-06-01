@@ -8,18 +8,19 @@
 
 #include "libANGLE/renderer/d3d/d3d9/Framebuffer9.h"
 
+#include "libANGLE/Context.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Texture.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/ContextImpl.h"
-#include "libANGLE/renderer/renderer_utils.h"
 #include "libANGLE/renderer/d3d/TextureD3D.h"
-#include "libANGLE/renderer/d3d/d3d9/Renderer9.h"
 #include "libANGLE/renderer/d3d/d3d9/RenderTarget9.h"
+#include "libANGLE/renderer/d3d/d3d9/Renderer9.h"
 #include "libANGLE/renderer/d3d/d3d9/TextureStorage9.h"
 #include "libANGLE/renderer/d3d/d3d9/formatutils9.h"
 #include "libANGLE/renderer/d3d/d3d9/renderer9_utils.h"
+#include "libANGLE/renderer/renderer_utils.h"
 
 namespace rx
 {
@@ -55,17 +56,13 @@ gl::Error Framebuffer9::invalidateSub(size_t, const GLenum *, const gl::Rectangl
     return gl::NoError();
 }
 
-gl::Error Framebuffer9::clearImpl(ContextImpl *context, const ClearParameters &clearParams)
+gl::Error Framebuffer9::clearImpl(const gl::Context *context, const ClearParameters &clearParams)
 {
     const gl::FramebufferAttachment *colorAttachment        = mState.getColorAttachment(0);
     const gl::FramebufferAttachment *depthStencilAttachment = mState.getDepthOrStencilAttachment();
 
-    gl::Error error =
-        mRenderer->applyRenderTarget(context, colorAttachment, depthStencilAttachment);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(mRenderer->applyRenderTarget(context->getImplementation(), colorAttachment,
+                                           depthStencilAttachment));
 
     const gl::State &glState = context->getGLState();
     float nearZ              = glState.getNearPlane();

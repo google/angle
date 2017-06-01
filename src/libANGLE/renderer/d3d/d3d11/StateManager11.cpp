@@ -986,7 +986,7 @@ void StateManager11::deinitialize()
     mCurrentValueAttribs.clear();
 }
 
-gl::Error StateManager11::syncFramebuffer(ContextImpl *contextImpl, gl::Framebuffer *framebuffer)
+gl::Error StateManager11::syncFramebuffer(const gl::Context *context, gl::Framebuffer *framebuffer)
 {
     Framebuffer11 *framebuffer11 = GetImplAs<Framebuffer11>(framebuffer);
     ANGLE_TRY(framebuffer11->markAttachmentsDirty());
@@ -994,7 +994,7 @@ gl::Error StateManager11::syncFramebuffer(ContextImpl *contextImpl, gl::Framebuf
     if (framebuffer11->hasAnyInternalDirtyBit())
     {
         ASSERT(framebuffer->id() != 0);
-        framebuffer11->syncInternalState(contextImpl);
+        framebuffer11->syncInternalState(context);
     }
 
     if (!mRenderTargetIsDirty)

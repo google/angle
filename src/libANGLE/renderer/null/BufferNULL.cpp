@@ -29,7 +29,7 @@ BufferNULL::~BufferNULL()
     ASSERT(memoryReleaseResult);
 }
 
-gl::Error BufferNULL::setData(ContextImpl *context,
+gl::Error BufferNULL::setData(const gl::Context *context,
                               GLenum target,
                               const void *data,
                               size_t size,
@@ -48,7 +48,7 @@ gl::Error BufferNULL::setData(ContextImpl *context,
     return gl::NoError();
 }
 
-gl::Error BufferNULL::setSubData(ContextImpl *context,
+gl::Error BufferNULL::setSubData(const gl::Context *context,
                                  GLenum target,
                                  const void *data,
                                  size_t size,
@@ -61,7 +61,7 @@ gl::Error BufferNULL::setSubData(ContextImpl *context,
     return gl::NoError();
 }
 
-gl::Error BufferNULL::copySubData(ContextImpl *context,
+gl::Error BufferNULL::copySubData(const gl::Context *context,
                                   BufferImpl *source,
                                   GLintptr sourceOffset,
                                   GLintptr destOffset,
@@ -75,13 +75,13 @@ gl::Error BufferNULL::copySubData(ContextImpl *context,
     return gl::NoError();
 }
 
-gl::Error BufferNULL::map(ContextImpl *context, GLenum access, void **mapPtr)
+gl::Error BufferNULL::map(const gl::Context *context, GLenum access, void **mapPtr)
 {
     *mapPtr = mData.data();
     return gl::NoError();
 }
 
-gl::Error BufferNULL::mapRange(ContextImpl *context,
+gl::Error BufferNULL::mapRange(const gl::Context *context,
                                size_t offset,
                                size_t length,
                                GLbitfield access,
@@ -91,7 +91,7 @@ gl::Error BufferNULL::mapRange(ContextImpl *context,
     return gl::NoError();
 }
 
-gl::Error BufferNULL::unmap(ContextImpl *context, GLboolean *result)
+gl::Error BufferNULL::unmap(const gl::Context *context, GLboolean *result)
 {
     *result = GL_TRUE;
     return gl::NoError();

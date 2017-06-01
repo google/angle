@@ -55,7 +55,7 @@ BufferGL::~BufferGL()
     mBufferID = 0;
 }
 
-gl::Error BufferGL::setData(ContextImpl * /*context*/,
+gl::Error BufferGL::setData(const gl::Context * /*context*/,
                             GLenum /*target*/,
                             const void *data,
                             size_t size,
@@ -82,7 +82,7 @@ gl::Error BufferGL::setData(ContextImpl * /*context*/,
     return gl::NoError();
 }
 
-gl::Error BufferGL::setSubData(ContextImpl * /*context*/,
+gl::Error BufferGL::setSubData(const gl::Context * /*context*/,
                                GLenum /*target*/,
                                const void *data,
                                size_t size,
@@ -99,7 +99,7 @@ gl::Error BufferGL::setSubData(ContextImpl * /*context*/,
     return gl::NoError();
 }
 
-gl::Error BufferGL::copySubData(ContextImpl *context,
+gl::Error BufferGL::copySubData(const gl::Context *context,
                                 BufferImpl *source,
                                 GLintptr sourceOffset,
                                 GLintptr destOffset,
@@ -122,7 +122,7 @@ gl::Error BufferGL::copySubData(ContextImpl *context,
     return gl::NoError();
 }
 
-gl::Error BufferGL::map(ContextImpl *context, GLenum access, void **mapPtr)
+gl::Error BufferGL::map(const gl::Context *context, GLenum access, void **mapPtr)
 {
     if (mShadowBufferData)
     {
@@ -148,7 +148,7 @@ gl::Error BufferGL::map(ContextImpl *context, GLenum access, void **mapPtr)
     return gl::NoError();
 }
 
-gl::Error BufferGL::mapRange(ContextImpl *context,
+gl::Error BufferGL::mapRange(const gl::Context *context,
                              size_t offset,
                              size_t length,
                              GLbitfield access,
@@ -171,7 +171,7 @@ gl::Error BufferGL::mapRange(ContextImpl *context,
     return gl::NoError();
 }
 
-gl::Error BufferGL::unmap(ContextImpl *context, GLboolean *result)
+gl::Error BufferGL::unmap(const gl::Context *context, GLboolean *result)
 {
     ASSERT(result);
     ASSERT(mIsMapped);

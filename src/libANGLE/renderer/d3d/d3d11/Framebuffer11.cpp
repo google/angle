@@ -104,7 +104,7 @@ gl::Error Framebuffer11::markAttachmentsDirty() const
     return gl::NoError();
 }
 
-gl::Error Framebuffer11::clearImpl(ContextImpl *context, const ClearParameters &clearParams)
+gl::Error Framebuffer11::clearImpl(const gl::Context *context, const ClearParameters &clearParams)
 {
     Clear11 *clearer = mRenderer->getClearer();
 
@@ -376,7 +376,8 @@ void Framebuffer11::updateDepthStencilRenderTarget()
                              &mDepthStencilRenderTargetDirty);
 }
 
-void Framebuffer11::syncState(ContextImpl *contextImpl, const gl::Framebuffer::DirtyBits &dirtyBits)
+void Framebuffer11::syncState(const gl::Context *context,
+                              const gl::Framebuffer::DirtyBits &dirtyBits)
 {
     mRenderer->getStateManager()->invalidateRenderTarget();
 
@@ -409,7 +410,7 @@ void Framebuffer11::syncState(ContextImpl *contextImpl, const gl::Framebuffer::D
     // We should not have dirtied any additional state during our sync.
     ASSERT(!mInternalDirtyBits.any());
 
-    FramebufferD3D::syncState(contextImpl, dirtyBits);
+    FramebufferD3D::syncState(context, dirtyBits);
 }
 
 void Framebuffer11::signal(size_t channelID)
@@ -438,9 +439,9 @@ bool Framebuffer11::hasAnyInternalDirtyBit() const
     return mInternalDirtyBits.any();
 }
 
-void Framebuffer11::syncInternalState(ContextImpl *contextImpl)
+void Framebuffer11::syncInternalState(const gl::Context *context)
 {
-    syncState(contextImpl, gl::Framebuffer::DirtyBits());
+    syncState(context, gl::Framebuffer::DirtyBits());
 }
 
 }  // namespace rx

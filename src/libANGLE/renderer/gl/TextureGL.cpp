@@ -148,7 +148,7 @@ TextureGL::~TextureGL()
     mTextureID = 0;
 }
 
-gl::Error TextureGL::setImage(ContextImpl *contextImpl,
+gl::Error TextureGL::setImage(const gl::Context *context,
                               GLenum target,
                               size_t level,
                               GLenum internalFormat,
@@ -250,7 +250,7 @@ void TextureGL::reserveTexImageToBeFilled(GLenum target,
     setImageHelper(target, level, internalFormat, size, format, type, nullptr);
 }
 
-gl::Error TextureGL::setSubImage(ContextImpl *contextImpl,
+gl::Error TextureGL::setSubImage(const gl::Context *context,
                                  GLenum target,
                                  size_t level,
                                  const gl::Box &area,
@@ -449,7 +449,7 @@ gl::Error TextureGL::setSubImagePaddingWorkaround(GLenum target,
     return gl::NoError();
 }
 
-gl::Error TextureGL::setCompressedImage(ContextImpl *contextImpl,
+gl::Error TextureGL::setCompressedImage(const gl::Context *context,
                                         GLenum target,
                                         size_t level,
                                         GLenum internalFormat,
@@ -488,7 +488,7 @@ gl::Error TextureGL::setCompressedImage(ContextImpl *contextImpl,
     return gl::NoError();
 }
 
-gl::Error TextureGL::setCompressedSubImage(ContextImpl *contextImpl,
+gl::Error TextureGL::setCompressedSubImage(const gl::Context *context,
                                            GLenum target,
                                            size_t level,
                                            const gl::Box &area,
@@ -528,7 +528,7 @@ gl::Error TextureGL::setCompressedSubImage(ContextImpl *contextImpl,
     return gl::NoError();
 }
 
-gl::Error TextureGL::copyImage(ContextImpl *contextImpl,
+gl::Error TextureGL::copyImage(const gl::Context *context,
                                GLenum target,
                                size_t level,
                                const gl::Rectangle &sourceArea,
@@ -574,7 +574,7 @@ gl::Error TextureGL::copyImage(ContextImpl *contextImpl,
     return gl::NoError();
 }
 
-gl::Error TextureGL::copySubImage(ContextImpl *contextImpl,
+gl::Error TextureGL::copySubImage(const gl::Context *context,
                                   GLenum target,
                                   size_t level,
                                   const gl::Offset &destOffset,
@@ -621,7 +621,7 @@ gl::Error TextureGL::copySubImage(ContextImpl *contextImpl,
     return gl::NoError();
 }
 
-gl::Error TextureGL::copyTexture(ContextImpl *contextImpl,
+gl::Error TextureGL::copyTexture(const gl::Context *context,
                                  GLenum target,
                                  size_t level,
                                  GLenum internalFormat,
@@ -645,7 +645,7 @@ gl::Error TextureGL::copyTexture(ContextImpl *contextImpl,
                                 unpackUnmultiplyAlpha, source);
 }
 
-gl::Error TextureGL::copySubTexture(ContextImpl *contextImpl,
+gl::Error TextureGL::copySubTexture(const gl::Context *context,
                                     GLenum target,
                                     size_t level,
                                     const gl::Offset &destOffset,
@@ -698,7 +698,7 @@ gl::Error TextureGL::copySubTextureHelper(GLenum target,
         unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
 }
 
-gl::Error TextureGL::setStorage(ContextImpl *contextImpl,
+gl::Error TextureGL::setStorage(const gl::Context *context,
                                 GLenum target,
                                 size_t levels,
                                 GLenum internalFormat,
@@ -864,7 +864,7 @@ gl::Error TextureGL::setStorage(ContextImpl *contextImpl,
     return gl::NoError();
 }
 
-gl::Error TextureGL::setStorageMultisample(ContextImpl *contextImpl,
+gl::Error TextureGL::setStorageMultisample(const gl::Context *context,
                                            GLenum target,
                                            GLsizei samples,
                                            GLint internalFormat,
@@ -894,7 +894,7 @@ gl::Error TextureGL::setImageExternal(GLenum target,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error TextureGL::generateMipmap(ContextImpl *contextImpl)
+gl::Error TextureGL::generateMipmap(const gl::Context *context)
 {
     mStateManager->bindTexture(getTarget(), mTextureID);
     mFunctions->generateMipmap(getTarget());

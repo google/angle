@@ -41,11 +41,11 @@ class D3DTextureSurfaceWGL : public SurfaceGL
                                                      EGLClientBuffer clientBuffer,
                                                      ID3D11Device *d3d11Device);
 
-    egl::Error initialize(const DisplayImpl *displayImpl) override;
+    egl::Error initialize(const egl::Display *display) override;
     egl::Error makeCurrent() override;
     egl::Error unMakeCurrent() override;
 
-    egl::Error swap(const DisplayImpl *displayImpl) override;
+    egl::Error swap(const egl::Display *display) override;
     egl::Error postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height) override;
     egl::Error querySurfacePointerANGLE(EGLint attribute, void **value) override;
     egl::Error bindTexImage(gl::Texture *texture, EGLint buffer) override;

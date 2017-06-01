@@ -14,6 +14,8 @@
 
 #include "common/debug.h"
 #include "image_util/imageformats.h"
+#include "libANGLE/Context.h"
+#include "libANGLE/Display.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/renderer_utils.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
@@ -91,17 +93,17 @@ FramebufferVk::~FramebufferVk()
 {
 }
 
-void FramebufferVk::destroy(ContextImpl *contextImpl)
+void FramebufferVk::destroy(const gl::Context *context)
 {
-    VkDevice device = GetAs<ContextVk>(contextImpl)->getDevice();
+    VkDevice device = GetImplAs<ContextVk>(context)->getDevice();
 
     mRenderPass.destroy(device);
     mFramebuffer.destroy(device);
 }
 
-void FramebufferVk::destroyDefault(DisplayImpl *displayImpl)
+void FramebufferVk::destroyDefault(const egl::Display *display)
 {
-    VkDevice device = GetAs<DisplayVk>(displayImpl)->getRenderer()->getDevice();
+    VkDevice device = GetImplAs<DisplayVk>(display)->getRenderer()->getDevice();
 
     mRenderPass.destroy(device);
     mFramebuffer.destroy(device);
@@ -127,9 +129,9 @@ gl::Error FramebufferVk::invalidateSub(size_t count,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error FramebufferVk::clear(ContextImpl *context, GLbitfield mask)
+gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
 {
-    ContextVk *contextVk = GetAs<ContextVk>(context);
+    ContextVk *contextVk = GetImplAs<ContextVk>(context);
 
     if (mState.getDepthAttachment() && (mask & GL_DEPTH_BUFFER_BIT) != 0)
     {
@@ -180,7 +182,7 @@ gl::Error FramebufferVk::clear(ContextImpl *context, GLbitfield mask)
     return gl::NoError();
 }
 
-gl::Error FramebufferVk::clearBufferfv(ContextImpl *context,
+gl::Error FramebufferVk::clearBufferfv(const gl::Context *context,
                                        GLenum buffer,
                                        GLint drawbuffer,
                                        const GLfloat *values)
@@ -189,7 +191,7 @@ gl::Error FramebufferVk::clearBufferfv(ContextImpl *context,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error FramebufferVk::clearBufferuiv(ContextImpl *context,
+gl::Error FramebufferVk::clearBufferuiv(const gl::Context *context,
                                         GLenum buffer,
                                         GLint drawbuffer,
                                         const GLuint *values)
@@ -198,7 +200,7 @@ gl::Error FramebufferVk::clearBufferuiv(ContextImpl *context,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error FramebufferVk::clearBufferiv(ContextImpl *context,
+gl::Error FramebufferVk::clearBufferiv(const gl::Context *context,
                                        GLenum buffer,
                                        GLint drawbuffer,
                                        const GLint *values)
@@ -207,7 +209,7 @@ gl::Error FramebufferVk::clearBufferiv(ContextImpl *context,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error FramebufferVk::clearBufferfi(ContextImpl *context,
+gl::Error FramebufferVk::clearBufferfi(const gl::Context *context,
                                        GLenum buffer,
                                        GLint drawbuffer,
                                        GLfloat depth,
@@ -245,7 +247,7 @@ GLenum FramebufferVk::getImplementationColorReadType() const
     return errOrResult.getResult()->type;
 }
 
-gl::Error FramebufferVk::readPixels(ContextImpl *context,
+gl::Error FramebufferVk::readPixels(const gl::Context *context,
                                     const gl::Rectangle &area,
                                     GLenum format,
                                     GLenum type,
@@ -258,7 +260,7 @@ gl::Error FramebufferVk::readPixels(ContextImpl *context,
     RenderTargetVk *renderTarget = nullptr;
     ANGLE_TRY(readAttachment->getRenderTarget(&renderTarget));
 
-    ContextVk *contextVk = GetAs<ContextVk>(context);
+    ContextVk *contextVk = GetImplAs<ContextVk>(context);
     RendererVk *renderer = contextVk->getRenderer();
     VkDevice device      = renderer->getDevice();
 
@@ -318,7 +320,7 @@ gl::Error FramebufferVk::readPixels(ContextImpl *context,
     return vk::NoError();
 }
 
-gl::Error FramebufferVk::blit(ContextImpl *context,
+gl::Error FramebufferVk::blit(const gl::Context *context,
                               const gl::Rectangle &sourceArea,
                               const gl::Rectangle &destArea,
                               GLbitfield mask,
@@ -334,9 +336,10 @@ bool FramebufferVk::checkStatus() const
     return bool();
 }
 
-void FramebufferVk::syncState(ContextImpl *contextImpl, const gl::Framebuffer::DirtyBits &dirtyBits)
+void FramebufferVk::syncState(const gl::Context *context,
+                              const gl::Framebuffer::DirtyBits &dirtyBits)
 {
-    auto contextVk = GetAs<ContextVk>(contextImpl);
+    auto contextVk = GetImplAs<ContextVk>(context);
 
     ASSERT(dirtyBits.any());
 

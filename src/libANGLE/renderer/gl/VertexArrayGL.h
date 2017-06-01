@@ -41,7 +41,8 @@ class VertexArrayGL : public VertexArrayImpl
     GLuint getVertexArrayID() const;
     GLuint getAppliedElementArrayBufferID() const;
 
-    void syncState(ContextImpl *contextImpl, const gl::VertexArray::DirtyBits &dirtyBits) override;
+    void syncState(const gl::Context *context,
+                   const gl::VertexArray::DirtyBits &dirtyBits) override;
 
   private:
     gl::Error syncDrawState(const gl::AttributesMask &activeAttributesMask,

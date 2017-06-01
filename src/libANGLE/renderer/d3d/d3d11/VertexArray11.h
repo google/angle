@@ -24,7 +24,8 @@ class VertexArray11 : public VertexArrayImpl, public OnBufferDataDirtyReceiver
     VertexArray11(const gl::VertexArrayState &data);
     ~VertexArray11() override;
 
-    void syncState(ContextImpl *contextImpl, const gl::VertexArray::DirtyBits &dirtyBits) override;
+    void syncState(const gl::Context *context,
+                   const gl::VertexArray::DirtyBits &dirtyBits) override;
     // This will flush any pending attrib updates and then check the dynamic attribs mask.
     bool hasDynamicAttrib(const gl::State &state);
     gl::Error updateDirtyAndDynamicAttribs(VertexDataManager *vertexDataManager,

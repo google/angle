@@ -148,7 +148,7 @@ class Renderer11 : public RendererD3D
                                 const std::vector<GLint> &vertexUniformBuffers,
                                 const std::vector<GLint> &fragmentUniformBuffers) override;
 
-    gl::Error updateState(ContextImpl *contextImpl, GLenum drawMode);
+    gl::Error updateState(const gl::Context *context, GLenum drawMode);
 
     bool applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSize);
     gl::Error applyUniforms(const ProgramD3D &programD3D,
@@ -384,13 +384,13 @@ class Renderer11 : public RendererD3D
 
     egl::Error getEGLDevice(DeviceImpl **device) override;
 
-    gl::Error genericDrawArrays(Context11 *context,
+    gl::Error genericDrawArrays(const gl::Context *context,
                                 GLenum mode,
                                 GLint first,
                                 GLsizei count,
                                 GLsizei instances);
 
-    gl::Error genericDrawElements(Context11 *context,
+    gl::Error genericDrawElements(const gl::Context *context,
                                   GLenum mode,
                                   GLsizei count,
                                   GLenum type,
@@ -398,7 +398,7 @@ class Renderer11 : public RendererD3D
                                   GLsizei instances,
                                   const gl::IndexRange &indexRange);
 
-    gl::Error genericDrawIndirect(Context11 *context,
+    gl::Error genericDrawIndirect(const gl::Context *context,
                                   GLenum mode,
                                   GLenum type,
                                   const void *indirect);

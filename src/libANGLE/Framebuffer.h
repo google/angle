@@ -23,7 +23,6 @@
 
 namespace rx
 {
-class ContextImpl;
 class GLImplFactory;
 class FramebufferImpl;
 class RenderbufferImpl;
@@ -211,20 +210,20 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
     Error invalidate(size_t count, const GLenum *attachments);
     Error invalidateSub(size_t count, const GLenum *attachments, const gl::Rectangle &area);
 
-    Error clear(rx::ContextImpl *context, GLbitfield mask);
-    Error clearBufferfv(rx::ContextImpl *context,
+    Error clear(const gl::Context *context, GLbitfield mask);
+    Error clearBufferfv(const gl::Context *context,
                         GLenum buffer,
                         GLint drawbuffer,
                         const GLfloat *values);
-    Error clearBufferuiv(rx::ContextImpl *context,
+    Error clearBufferuiv(const gl::Context *context,
                          GLenum buffer,
                          GLint drawbuffer,
                          const GLuint *values);
-    Error clearBufferiv(rx::ContextImpl *context,
+    Error clearBufferiv(const gl::Context *context,
                         GLenum buffer,
                         GLint drawbuffer,
                         const GLint *values);
-    Error clearBufferfi(rx::ContextImpl *context,
+    Error clearBufferfi(const gl::Context *context,
                         GLenum buffer,
                         GLint drawbuffer,
                         GLfloat depth,
@@ -232,13 +231,13 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
 
     GLenum getImplementationColorReadFormat() const;
     GLenum getImplementationColorReadType() const;
-    Error readPixels(rx::ContextImpl *context,
+    Error readPixels(const gl::Context *context,
                      const gl::Rectangle &area,
                      GLenum format,
                      GLenum type,
                      void *pixels) const;
 
-    Error blit(rx::ContextImpl *context,
+    Error blit(const gl::Context *context,
                const Rectangle &sourceArea,
                const Rectangle &destArea,
                GLbitfield mask,

@@ -480,12 +480,12 @@ Framebuffer::~Framebuffer()
 
 void Framebuffer::destroy(const Context *context)
 {
-    mImpl->destroy(rx::SafeGetImpl(context));
+    mImpl->destroy(context);
 }
 
 void Framebuffer::destroyDefault(const egl::Display *display)
 {
-    mImpl->destroyDefault(rx::SafeGetImpl(display));
+    mImpl->destroyDefault(display);
 }
 
 void Framebuffer::setLabel(const std::string &label)
@@ -934,7 +934,7 @@ Error Framebuffer::invalidateSub(size_t count, const GLenum *attachments, const 
     return mImpl->invalidateSub(count, attachments, area);
 }
 
-Error Framebuffer::clear(rx::ContextImpl *context, GLbitfield mask)
+Error Framebuffer::clear(const gl::Context *context, GLbitfield mask)
 {
     if (context->getGLState().isRasterizerDiscardEnabled())
     {
@@ -944,7 +944,7 @@ Error Framebuffer::clear(rx::ContextImpl *context, GLbitfield mask)
     return mImpl->clear(context, mask);
 }
 
-Error Framebuffer::clearBufferfv(rx::ContextImpl *context,
+Error Framebuffer::clearBufferfv(const gl::Context *context,
                                  GLenum buffer,
                                  GLint drawbuffer,
                                  const GLfloat *values)
@@ -957,7 +957,7 @@ Error Framebuffer::clearBufferfv(rx::ContextImpl *context,
     return mImpl->clearBufferfv(context, buffer, drawbuffer, values);
 }
 
-Error Framebuffer::clearBufferuiv(rx::ContextImpl *context,
+Error Framebuffer::clearBufferuiv(const gl::Context *context,
                                   GLenum buffer,
                                   GLint drawbuffer,
                                   const GLuint *values)
@@ -970,7 +970,7 @@ Error Framebuffer::clearBufferuiv(rx::ContextImpl *context,
     return mImpl->clearBufferuiv(context, buffer, drawbuffer, values);
 }
 
-Error Framebuffer::clearBufferiv(rx::ContextImpl *context,
+Error Framebuffer::clearBufferiv(const gl::Context *context,
                                  GLenum buffer,
                                  GLint drawbuffer,
                                  const GLint *values)
@@ -983,7 +983,7 @@ Error Framebuffer::clearBufferiv(rx::ContextImpl *context,
     return mImpl->clearBufferiv(context, buffer, drawbuffer, values);
 }
 
-Error Framebuffer::clearBufferfi(rx::ContextImpl *context,
+Error Framebuffer::clearBufferfi(const gl::Context *context,
                                  GLenum buffer,
                                  GLint drawbuffer,
                                  GLfloat depth,
@@ -1007,7 +1007,7 @@ GLenum Framebuffer::getImplementationColorReadType() const
     return mImpl->getImplementationColorReadType();
 }
 
-Error Framebuffer::readPixels(rx::ContextImpl *context,
+Error Framebuffer::readPixels(const gl::Context *context,
                               const Rectangle &area,
                               GLenum format,
                               GLenum type,
@@ -1024,7 +1024,7 @@ Error Framebuffer::readPixels(rx::ContextImpl *context,
     return NoError();
 }
 
-Error Framebuffer::blit(rx::ContextImpl *context,
+Error Framebuffer::blit(const gl::Context *context,
                         const Rectangle &sourceArea,
                         const Rectangle &destArea,
                         GLbitfield mask,
@@ -1272,7 +1272,7 @@ void Framebuffer::syncState(const Context *context)
 {
     if (mDirtyBits.any())
     {
-        mImpl->syncState(rx::SafeGetImpl(context), mDirtyBits);
+        mImpl->syncState(context, mDirtyBits);
         mDirtyBits.reset();
         if (mId != 0)
         {

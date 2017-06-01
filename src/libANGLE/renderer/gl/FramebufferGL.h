@@ -45,20 +45,20 @@ class FramebufferGL : public FramebufferImpl
                             const GLenum *attachments,
                             const gl::Rectangle &area) override;
 
-    gl::Error clear(ContextImpl *context, GLbitfield mask) override;
-    gl::Error clearBufferfv(ContextImpl *context,
+    gl::Error clear(const gl::Context *context, GLbitfield mask) override;
+    gl::Error clearBufferfv(const gl::Context *context,
                             GLenum buffer,
                             GLint drawbuffer,
                             const GLfloat *values) override;
-    gl::Error clearBufferuiv(ContextImpl *context,
+    gl::Error clearBufferuiv(const gl::Context *context,
                              GLenum buffer,
                              GLint drawbuffer,
                              const GLuint *values) override;
-    gl::Error clearBufferiv(ContextImpl *context,
+    gl::Error clearBufferiv(const gl::Context *context,
                             GLenum buffer,
                             GLint drawbuffer,
                             const GLint *values) override;
-    gl::Error clearBufferfi(ContextImpl *context,
+    gl::Error clearBufferfi(const gl::Context *context,
                             GLenum buffer,
                             GLint drawbuffer,
                             GLfloat depth,
@@ -66,13 +66,13 @@ class FramebufferGL : public FramebufferImpl
 
     GLenum getImplementationColorReadFormat() const override;
     GLenum getImplementationColorReadType() const override;
-    gl::Error readPixels(ContextImpl *context,
+    gl::Error readPixels(const gl::Context *context,
                          const gl::Rectangle &area,
                          GLenum format,
                          GLenum type,
                          void *pixels) const override;
 
-    gl::Error blit(ContextImpl *context,
+    gl::Error blit(const gl::Context *context,
                    const gl::Rectangle &sourceArea,
                    const gl::Rectangle &destArea,
                    GLbitfield mask,
@@ -82,14 +82,15 @@ class FramebufferGL : public FramebufferImpl
 
     bool checkStatus() const override;
 
-    void syncState(ContextImpl *contextImpl, const gl::Framebuffer::DirtyBits &dirtyBits) override;
+    void syncState(const gl::Context *context,
+                   const gl::Framebuffer::DirtyBits &dirtyBits) override;
 
     GLuint getFramebufferID() const;
     bool isDefault() const;
 
   private:
-    void syncClearState(ContextImpl *context, GLbitfield mask);
-    void syncClearBufferState(ContextImpl *context, GLenum buffer, GLint drawBuffer);
+    void syncClearState(const gl::Context *context, GLbitfield mask);
+    void syncClearBufferState(const gl::Context *context, GLenum buffer, GLint drawBuffer);
 
     bool modifyInvalidateAttachmentsForEmulatedDefaultFBO(
         size_t count,

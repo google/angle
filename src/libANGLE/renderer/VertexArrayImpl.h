@@ -22,7 +22,10 @@ class VertexArrayImpl : angle::NonCopyable
   public:
     VertexArrayImpl(const gl::VertexArrayState &data) : mData(data) {}
     virtual ~VertexArrayImpl() { }
-    virtual void syncState(ContextImpl *contextImpl, const gl::VertexArray::DirtyBits &dirtyBits) {}
+    virtual void syncState(const gl::Context *context, const gl::VertexArray::DirtyBits &dirtyBits)
+    {
+    }
+
   protected:
     const gl::VertexArrayState &mData;
 };

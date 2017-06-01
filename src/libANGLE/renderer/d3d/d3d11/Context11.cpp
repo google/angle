@@ -149,39 +149,44 @@ gl::Error Context11::finish()
     return mRenderer->finish();
 }
 
-gl::Error Context11::drawArrays(GLenum mode, GLint first, GLsizei count)
+gl::Error Context11::drawArrays(const gl::Context *context, GLenum mode, GLint first, GLsizei count)
 {
-    return mRenderer->genericDrawArrays(this, mode, first, count, 0);
+    return mRenderer->genericDrawArrays(context, mode, first, count, 0);
 }
 
-gl::Error Context11::drawArraysInstanced(GLenum mode,
+gl::Error Context11::drawArraysInstanced(const gl::Context *context,
+                                         GLenum mode,
                                          GLint first,
                                          GLsizei count,
                                          GLsizei instanceCount)
 {
-    return mRenderer->genericDrawArrays(this, mode, first, count, instanceCount);
+    return mRenderer->genericDrawArrays(context, mode, first, count, instanceCount);
 }
 
-gl::Error Context11::drawElements(GLenum mode,
+gl::Error Context11::drawElements(const gl::Context *context,
+                                  GLenum mode,
                                   GLsizei count,
                                   GLenum type,
                                   const void *indices,
                                   const gl::IndexRange &indexRange)
 {
-    return mRenderer->genericDrawElements(this, mode, count, type, indices, 0, indexRange);
+    return mRenderer->genericDrawElements(context, mode, count, type, indices, 0, indexRange);
 }
 
-gl::Error Context11::drawElementsInstanced(GLenum mode,
+gl::Error Context11::drawElementsInstanced(const gl::Context *context,
+                                           GLenum mode,
                                            GLsizei count,
                                            GLenum type,
                                            const void *indices,
                                            GLsizei instances,
                                            const gl::IndexRange &indexRange)
 {
-    return mRenderer->genericDrawElements(this, mode, count, type, indices, instances, indexRange);
+    return mRenderer->genericDrawElements(context, mode, count, type, indices, instances,
+                                          indexRange);
 }
 
-gl::Error Context11::drawRangeElements(GLenum mode,
+gl::Error Context11::drawRangeElements(const gl::Context *context,
+                                       GLenum mode,
                                        GLuint start,
                                        GLuint end,
                                        GLsizei count,
@@ -189,17 +194,22 @@ gl::Error Context11::drawRangeElements(GLenum mode,
                                        const void *indices,
                                        const gl::IndexRange &indexRange)
 {
-    return mRenderer->genericDrawElements(this, mode, count, type, indices, 0, indexRange);
+    return mRenderer->genericDrawElements(context, mode, count, type, indices, 0, indexRange);
 }
 
-gl::Error Context11::drawArraysIndirect(GLenum mode, const void *indirect)
+gl::Error Context11::drawArraysIndirect(const gl::Context *context,
+                                        GLenum mode,
+                                        const void *indirect)
 {
-    return mRenderer->genericDrawIndirect(this, mode, GL_NONE, indirect);
+    return mRenderer->genericDrawIndirect(context, mode, GL_NONE, indirect);
 }
 
-gl::Error Context11::drawElementsIndirect(GLenum mode, GLenum type, const void *indirect)
+gl::Error Context11::drawElementsIndirect(const gl::Context *context,
+                                          GLenum mode,
+                                          GLenum type,
+                                          const void *indirect)
 {
-    return mRenderer->genericDrawIndirect(this, mode, type, indirect);
+    return mRenderer->genericDrawIndirect(context, mode, type, indirect);
 }
 
 GLenum Context11::getResetStatus()

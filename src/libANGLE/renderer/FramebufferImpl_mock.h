@@ -27,26 +27,30 @@ class MockFramebufferImpl : public rx::FramebufferImpl
     MOCK_METHOD2(invalidate, gl::Error(size_t, const GLenum *));
     MOCK_METHOD3(invalidateSub, gl::Error(size_t, const GLenum *, const gl::Rectangle &));
 
-    MOCK_METHOD2(clear, gl::Error(ContextImpl *, GLbitfield));
-    MOCK_METHOD4(clearBufferfv, gl::Error(ContextImpl *, GLenum, GLint, const GLfloat *));
-    MOCK_METHOD4(clearBufferuiv, gl::Error(ContextImpl *, GLenum, GLint, const GLuint *));
-    MOCK_METHOD4(clearBufferiv, gl::Error(ContextImpl *, GLenum, GLint, const GLint *));
-    MOCK_METHOD5(clearBufferfi, gl::Error(ContextImpl *, GLenum, GLint, GLfloat, GLint));
+    MOCK_METHOD2(clear, gl::Error(const gl::Context *, GLbitfield));
+    MOCK_METHOD4(clearBufferfv, gl::Error(const gl::Context *, GLenum, GLint, const GLfloat *));
+    MOCK_METHOD4(clearBufferuiv, gl::Error(const gl::Context *, GLenum, GLint, const GLuint *));
+    MOCK_METHOD4(clearBufferiv, gl::Error(const gl::Context *, GLenum, GLint, const GLint *));
+    MOCK_METHOD5(clearBufferfi, gl::Error(const gl::Context *, GLenum, GLint, GLfloat, GLint));
 
     MOCK_CONST_METHOD0(getImplementationColorReadFormat, GLenum());
     MOCK_CONST_METHOD0(getImplementationColorReadType, GLenum());
-    MOCK_CONST_METHOD5(readPixels,
-                       gl::Error(ContextImpl *, const gl::Rectangle &, GLenum, GLenum, void *));
+    MOCK_CONST_METHOD5(
+        readPixels,
+        gl::Error(const gl::Context *, const gl::Rectangle &, GLenum, GLenum, void *));
 
     MOCK_CONST_METHOD2(getSamplePosition, gl::Error(size_t, GLfloat *));
 
-    MOCK_METHOD5(
-        blit,
-        gl::Error(ContextImpl *, const gl::Rectangle &, const gl::Rectangle &, GLbitfield, GLenum));
+    MOCK_METHOD5(blit,
+                 gl::Error(const gl::Context *,
+                           const gl::Rectangle &,
+                           const gl::Rectangle &,
+                           GLbitfield,
+                           GLenum));
 
     MOCK_CONST_METHOD0(checkStatus, bool());
 
-    MOCK_METHOD2(syncState, void(ContextImpl *, const gl::Framebuffer::DirtyBits &));
+    MOCK_METHOD2(syncState, void(const gl::Context *, const gl::Framebuffer::DirtyBits &));
 
     MOCK_METHOD0(destructor, void());
 };

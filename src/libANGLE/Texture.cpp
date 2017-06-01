@@ -882,8 +882,8 @@ Error Texture::setImage(const Context *context,
     releaseTexImageInternal();
     orphanImages();
 
-    ANGLE_TRY(mTexture->setImage(rx::SafeGetImpl(context), target, level, internalFormat, size,
-                                 format, type, unpackState, pixels));
+    ANGLE_TRY(mTexture->setImage(context, target, level, internalFormat, size, format, type,
+                                 unpackState, pixels));
 
     mState.setImageDesc(target, level, ImageDesc(size, Format(internalFormat, type)));
     mDirtyChannel.signal();
@@ -902,8 +902,7 @@ Error Texture::setSubImage(const Context *context,
 {
     ASSERT(target == mState.mTarget ||
            (mState.mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
-    return mTexture->setSubImage(rx::SafeGetImpl(context), target, level, area, format, type,
-                                 unpackState, pixels);
+    return mTexture->setSubImage(context, target, level, area, format, type, unpackState, pixels);
 }
 
 Error Texture::setCompressedImage(const Context *context,
@@ -922,8 +921,8 @@ Error Texture::setCompressedImage(const Context *context,
     releaseTexImageInternal();
     orphanImages();
 
-    ANGLE_TRY(mTexture->setCompressedImage(rx::SafeGetImpl(context), target, level, internalFormat,
-                                           size, unpackState, imageSize, pixels));
+    ANGLE_TRY(mTexture->setCompressedImage(context, target, level, internalFormat, size,
+                                           unpackState, imageSize, pixels));
 
     mState.setImageDesc(target, level, ImageDesc(size, Format(internalFormat)));
     mDirtyChannel.signal();
@@ -943,8 +942,8 @@ Error Texture::setCompressedSubImage(const Context *context,
     ASSERT(target == mState.mTarget ||
            (mState.mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
 
-    return mTexture->setCompressedSubImage(rx::SafeGetImpl(context), target, level, area, format,
-                                           unpackState, imageSize, pixels);
+    return mTexture->setCompressedSubImage(context, target, level, area, format, unpackState,
+                                           imageSize, pixels);
 }
 
 Error Texture::copyImage(const Context *context,
@@ -961,8 +960,7 @@ Error Texture::copyImage(const Context *context,
     releaseTexImageInternal();
     orphanImages();
 
-    ANGLE_TRY(mTexture->copyImage(rx::SafeGetImpl(context), target, level, sourceArea,
-                                  internalFormat, source));
+    ANGLE_TRY(mTexture->copyImage(context, target, level, sourceArea, internalFormat, source));
 
     const InternalFormat &internalFormatInfo =
         GetInternalFormatInfo(internalFormat, GL_UNSIGNED_BYTE);
@@ -983,8 +981,7 @@ Error Texture::copySubImage(const Context *context,
     ASSERT(target == mState.mTarget ||
            (mState.mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
 
-    return mTexture->copySubImage(rx::SafeGetImpl(context), target, level, destOffset, sourceArea,
-                                  source);
+    return mTexture->copySubImage(context, target, level, destOffset, sourceArea, source);
 }
 
 Error Texture::copyTexture(const Context *context,
@@ -1005,9 +1002,9 @@ Error Texture::copyTexture(const Context *context,
     releaseTexImageInternal();
     orphanImages();
 
-    ANGLE_TRY(mTexture->copyTexture(rx::SafeGetImpl(context), target, level, internalFormat, type,
-                                    sourceLevel, unpackFlipY, unpackPremultiplyAlpha,
-                                    unpackUnmultiplyAlpha, source));
+    ANGLE_TRY(mTexture->copyTexture(context, target, level, internalFormat, type, sourceLevel,
+                                    unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha,
+                                    source));
 
     const auto &sourceDesc   = source->mState.getImageDesc(source->getTarget(), 0);
     const InternalFormat &internalFormatInfo = GetInternalFormatInfo(internalFormat, type);
@@ -1031,9 +1028,9 @@ Error Texture::copySubTexture(const Context *context,
     ASSERT(target == mState.mTarget ||
            (mState.mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
 
-    return mTexture->copySubTexture(rx::SafeGetImpl(context), target, level, destOffset,
-                                    sourceLevel, sourceArea, unpackFlipY, unpackPremultiplyAlpha,
-                                    unpackUnmultiplyAlpha, source);
+    return mTexture->copySubTexture(context, target, level, destOffset, sourceLevel, sourceArea,
+                                    unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha,
+                                    source);
 }
 
 Error Texture::copyCompressedTexture(const Context *context, const Texture *source)
@@ -1042,7 +1039,7 @@ Error Texture::copyCompressedTexture(const Context *context, const Texture *sour
     releaseTexImageInternal();
     orphanImages();
 
-    ANGLE_TRY(mTexture->copyCompressedTexture(rx::SafeGetImpl(context), source));
+    ANGLE_TRY(mTexture->copyCompressedTexture(context, source));
 
     ASSERT(source->getTarget() != GL_TEXTURE_CUBE_MAP && getTarget() != GL_TEXTURE_CUBE_MAP);
     const auto &sourceDesc = source->mState.getImageDesc(source->getTarget(), 0);
@@ -1063,7 +1060,7 @@ Error Texture::setStorage(const Context *context,
     releaseTexImageInternal();
     orphanImages();
 
-    ANGLE_TRY(mTexture->setStorage(rx::SafeGetImpl(context), target, levels, internalFormat, size));
+    ANGLE_TRY(mTexture->setStorage(context, target, levels, internalFormat, size));
 
     mState.mImmutableFormat = true;
     mState.mImmutableLevels = static_cast<GLuint>(levels);
@@ -1095,8 +1092,8 @@ Error Texture::setStorageMultisample(const Context *context,
     releaseTexImageInternal();
     orphanImages();
 
-    ANGLE_TRY(mTexture->setStorageMultisample(rx::SafeGetImpl(context), target, samples,
-                                              internalFormat, size, fixedSampleLocations));
+    ANGLE_TRY(mTexture->setStorageMultisample(context, target, samples, internalFormat, size,
+                                              fixedSampleLocations));
 
     mState.mImmutableFormat = true;
     mState.mImmutableLevels = static_cast<GLuint>(1);
@@ -1127,7 +1124,7 @@ Error Texture::generateMipmap(const Context *context)
     if (maxLevel > baseLevel)
     {
         syncImplState();
-        ANGLE_TRY(mTexture->generateMipmap(rx::SafeGetImpl(context)));
+        ANGLE_TRY(mTexture->generateMipmap(context));
 
         const ImageDesc &baseImageInfo =
             mState.getImageDesc(mState.getBaseImageTarget(), baseLevel);

@@ -59,7 +59,7 @@ class TextureGL : public TextureImpl
               BlitGL *blitter);
     ~TextureGL() override;
 
-    gl::Error setImage(ContextImpl *contextImpl,
+    gl::Error setImage(const gl::Context *context,
                        GLenum target,
                        size_t level,
                        GLenum internalFormat,
@@ -68,7 +68,7 @@ class TextureGL : public TextureImpl
                        GLenum type,
                        const gl::PixelUnpackState &unpack,
                        const uint8_t *pixels) override;
-    gl::Error setSubImage(ContextImpl *contextImpl,
+    gl::Error setSubImage(const gl::Context *context,
                           GLenum target,
                           size_t level,
                           const gl::Box &area,
@@ -77,7 +77,7 @@ class TextureGL : public TextureImpl
                           const gl::PixelUnpackState &unpack,
                           const uint8_t *pixels) override;
 
-    gl::Error setCompressedImage(ContextImpl *contextImpl,
+    gl::Error setCompressedImage(const gl::Context *context,
                                  GLenum target,
                                  size_t level,
                                  GLenum internalFormat,
@@ -85,7 +85,7 @@ class TextureGL : public TextureImpl
                                  const gl::PixelUnpackState &unpack,
                                  size_t imageSize,
                                  const uint8_t *pixels) override;
-    gl::Error setCompressedSubImage(ContextImpl *contextImpl,
+    gl::Error setCompressedSubImage(const gl::Context *context,
                                     GLenum target,
                                     size_t level,
                                     const gl::Box &area,
@@ -94,20 +94,20 @@ class TextureGL : public TextureImpl
                                     size_t imageSize,
                                     const uint8_t *pixels) override;
 
-    gl::Error copyImage(ContextImpl *contextImpl,
+    gl::Error copyImage(const gl::Context *context,
                         GLenum target,
                         size_t level,
                         const gl::Rectangle &sourceArea,
                         GLenum internalFormat,
                         const gl::Framebuffer *source) override;
-    gl::Error copySubImage(ContextImpl *contextImpl,
+    gl::Error copySubImage(const gl::Context *context,
                            GLenum target,
                            size_t level,
                            const gl::Offset &destOffset,
                            const gl::Rectangle &sourceArea,
                            const gl::Framebuffer *source) override;
 
-    gl::Error copyTexture(ContextImpl *contextImpl,
+    gl::Error copyTexture(const gl::Context *context,
                           GLenum target,
                           size_t level,
                           GLenum internalFormat,
@@ -117,7 +117,7 @@ class TextureGL : public TextureImpl
                           bool unpackPremultiplyAlpha,
                           bool unpackUnmultiplyAlpha,
                           const gl::Texture *source) override;
-    gl::Error copySubTexture(ContextImpl *contextImpl,
+    gl::Error copySubTexture(const gl::Context *context,
                              GLenum target,
                              size_t level,
                              const gl::Offset &destOffset,
@@ -138,13 +138,13 @@ class TextureGL : public TextureImpl
                                    bool unpackUnmultiplyAlpha,
                                    const gl::Texture *source);
 
-    gl::Error setStorage(ContextImpl *contextImpl,
+    gl::Error setStorage(const gl::Context *context,
                          GLenum target,
                          size_t levels,
                          GLenum internalFormat,
                          const gl::Extents &size) override;
 
-    gl::Error setStorageMultisample(ContextImpl *contextImpl,
+    gl::Error setStorageMultisample(const gl::Context *context,
                                     GLenum target,
                                     GLsizei samples,
                                     GLint internalFormat,
@@ -155,7 +155,7 @@ class TextureGL : public TextureImpl
                                egl::Stream *stream,
                                const egl::Stream::GLTextureDescription &desc) override;
 
-    gl::Error generateMipmap(ContextImpl *contextImpl) override;
+    gl::Error generateMipmap(const gl::Context *context) override;
 
     void bindTexImage(egl::Surface *surface) override;
     void releaseTexImage() override;

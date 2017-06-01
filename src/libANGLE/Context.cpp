@@ -1821,7 +1821,7 @@ void Context::texParameteriv(GLenum target, GLenum pname, const GLint *params)
 void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
 {
     syncRendererState();
-    auto error = mImplementation->drawArrays(mode, first, count);
+    auto error = mImplementation->drawArrays(this, mode, first, count);
     handleError(error);
     if (!error.isError())
     {
@@ -1832,7 +1832,7 @@ void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
 void Context::drawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei instanceCount)
 {
     syncRendererState();
-    auto error = mImplementation->drawArraysInstanced(mode, first, count, instanceCount);
+    auto error = mImplementation->drawArraysInstanced(this, mode, first, count, instanceCount);
     handleError(error);
     if (!error.isError())
     {
@@ -1844,7 +1844,7 @@ void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void *
 {
     syncRendererState();
     const IndexRange &indexRange = getParams<HasIndexRange>().getIndexRange().value();
-    handleError(mImplementation->drawElements(mode, count, type, indices, indexRange));
+    handleError(mImplementation->drawElements(this, mode, count, type, indices, indexRange));
 }
 
 void Context::drawElementsInstanced(GLenum mode,
@@ -1855,8 +1855,8 @@ void Context::drawElementsInstanced(GLenum mode,
 {
     syncRendererState();
     const IndexRange &indexRange = getParams<HasIndexRange>().getIndexRange().value();
-    handleError(
-        mImplementation->drawElementsInstanced(mode, count, type, indices, instances, indexRange));
+    handleError(mImplementation->drawElementsInstanced(this, mode, count, type, indices, instances,
+                                                       indexRange));
 }
 
 void Context::drawRangeElements(GLenum mode,
@@ -1868,20 +1868,20 @@ void Context::drawRangeElements(GLenum mode,
 {
     syncRendererState();
     const IndexRange &indexRange = getParams<HasIndexRange>().getIndexRange().value();
-    handleError(
-        mImplementation->drawRangeElements(mode, start, end, count, type, indices, indexRange));
+    handleError(mImplementation->drawRangeElements(this, mode, start, end, count, type, indices,
+                                                   indexRange));
 }
 
 void Context::drawArraysIndirect(GLenum mode, const void *indirect)
 {
     syncRendererState();
-    handleError(mImplementation->drawArraysIndirect(mode, indirect));
+    handleError(mImplementation->drawArraysIndirect(this, mode, indirect));
 }
 
 void Context::drawElementsIndirect(GLenum mode, GLenum type, const void *indirect)
 {
     syncRendererState();
-    handleError(mImplementation->drawElementsIndirect(mode, type, indirect));
+    handleError(mImplementation->drawElementsIndirect(this, mode, type, indirect));
 }
 
 void Context::flush()
@@ -2782,34 +2782,31 @@ void Context::blitFramebuffer(GLint srcX0,
 
     syncStateForBlit();
 
-    handleError(drawFramebuffer->blit(mImplementation.get(), srcArea, dstArea, mask, filter));
+    handleError(drawFramebuffer->blit(this, srcArea, dstArea, mask, filter));
 }
 
 void Context::clear(GLbitfield mask)
 {
     syncStateForClear();
-    handleError(mGLState.getDrawFramebuffer()->clear(mImplementation.get(), mask));
+    handleError(mGLState.getDrawFramebuffer()->clear(this, mask));
 }
 
 void Context::clearBufferfv(GLenum buffer, GLint drawbuffer, const GLfloat *values)
 {
     syncStateForClear();
-    handleError(mGLState.getDrawFramebuffer()->clearBufferfv(mImplementation.get(), buffer,
-                                                             drawbuffer, values));
+    handleError(mGLState.getDrawFramebuffer()->clearBufferfv(this, buffer, drawbuffer, values));
 }
 
 void Context::clearBufferuiv(GLenum buffer, GLint drawbuffer, const GLuint *values)
 {
     syncStateForClear();
-    handleError(mGLState.getDrawFramebuffer()->clearBufferuiv(mImplementation.get(), buffer,
-                                                              drawbuffer, values));
+    handleError(mGLState.getDrawFramebuffer()->clearBufferuiv(this, buffer, drawbuffer, values));
 }
 
 void Context::clearBufferiv(GLenum buffer, GLint drawbuffer, const GLint *values)
 {
     syncStateForClear();
-    handleError(mGLState.getDrawFramebuffer()->clearBufferiv(mImplementation.get(), buffer,
-                                                             drawbuffer, values));
+    handleError(mGLState.getDrawFramebuffer()->clearBufferiv(this, buffer, drawbuffer, values));
 }
 
 void Context::clearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, GLint stencil)
@@ -2825,8 +2822,7 @@ void Context::clearBufferfi(GLenum buffer, GLint drawbuffer, GLfloat depth, GLin
     }
 
     syncStateForClear();
-    handleError(framebufferObject->clearBufferfi(mImplementation.get(), buffer, drawbuffer, depth,
-                                                 stencil));
+    handleError(framebufferObject->clearBufferfi(this, buffer, drawbuffer, depth, stencil));
 }
 
 void Context::readPixels(GLint x,
@@ -2848,7 +2844,7 @@ void Context::readPixels(GLint x,
     ASSERT(framebufferObject);
 
     Rectangle area(x, y, width, height);
-    handleError(framebufferObject->readPixels(mImplementation.get(), area, format, type, pixels));
+    handleError(framebufferObject->readPixels(this, area, format, type, pixels));
 }
 
 void Context::copyTexImage2D(GLenum target,

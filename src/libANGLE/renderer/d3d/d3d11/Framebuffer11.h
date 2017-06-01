@@ -30,7 +30,8 @@ class Framebuffer11 : public FramebufferD3D, public OnRenderTargetDirtyReceiver
     // Invalidate the cached swizzles of all bound texture attachments.
     gl::Error markAttachmentsDirty() const;
 
-    void syncState(ContextImpl *contextImpl, const gl::Framebuffer::DirtyBits &dirtyBits) override;
+    void syncState(const gl::Context *context,
+                   const gl::Framebuffer::DirtyBits &dirtyBits) override;
 
     const RenderTargetArray &getCachedColorRenderTargets() const
     {
@@ -42,14 +43,14 @@ class Framebuffer11 : public FramebufferD3D, public OnRenderTargetDirtyReceiver
     }
 
     bool hasAnyInternalDirtyBit() const;
-    void syncInternalState(ContextImpl *contextImpl);
+    void syncInternalState(const gl::Context *context);
 
     void signal(size_t channelID) override;
 
     gl::Error getSamplePosition(size_t index, GLfloat *xy) const override;
 
   private:
-    gl::Error clearImpl(ContextImpl *context, const ClearParameters &clearParams) override;
+    gl::Error clearImpl(const gl::Context *context, const ClearParameters &clearParams) override;
 
     gl::Error readPixelsImpl(const gl::Rectangle &area,
                              GLenum format,

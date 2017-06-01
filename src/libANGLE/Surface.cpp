@@ -97,14 +97,14 @@ void Surface::destroy(const Display *display)
     }
     if (mImplementation)
     {
-        mImplementation->destroy(rx::SafeGetImpl(display));
+        mImplementation->destroy(display);
     }
     delete this;
 }
 
 Error Surface::initialize(const Display &display)
 {
-    ANGLE_TRY(mImplementation->initialize(display.getImplementation()));
+    ANGLE_TRY(mImplementation->initialize(&display));
 
     // Initialized here since impl is nullptr in the constructor.
     // Must happen after implementation initialize for Android.
@@ -149,7 +149,7 @@ EGLint Surface::getType() const
 
 Error Surface::swap(const Display &display)
 {
-    return mImplementation->swap(display.getImplementation());
+    return mImplementation->swap(&display);
 }
 
 Error Surface::swapWithDamage(EGLint *rects, EGLint n_rects)

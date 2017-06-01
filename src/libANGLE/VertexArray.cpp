@@ -218,7 +218,7 @@ void VertexArray::syncImplState(const Context *context)
 {
     if (mDirtyBits.any())
     {
-        mVertexArray->syncState(rx::SafeGetImpl(context), mDirtyBits);
+        mVertexArray->syncState(context, mDirtyBits);
         mDirtyBits.reset();
     }
 }

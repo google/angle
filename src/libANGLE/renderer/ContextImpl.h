@@ -36,24 +36,31 @@ class ContextImpl : public GLImplFactory
     virtual gl::Error finish() = 0;
 
     // Drawing methods.
-    virtual gl::Error drawArrays(GLenum mode, GLint first, GLsizei count) = 0;
-    virtual gl::Error drawArraysInstanced(GLenum mode,
+    virtual gl::Error drawArrays(const gl::Context *context,
+                                 GLenum mode,
+                                 GLint first,
+                                 GLsizei count) = 0;
+    virtual gl::Error drawArraysInstanced(const gl::Context *context,
+                                          GLenum mode,
                                           GLint first,
                                           GLsizei count,
                                           GLsizei instanceCount) = 0;
 
-    virtual gl::Error drawElements(GLenum mode,
+    virtual gl::Error drawElements(const gl::Context *context,
+                                   GLenum mode,
                                    GLsizei count,
                                    GLenum type,
                                    const void *indices,
                                    const gl::IndexRange &indexRange) = 0;
-    virtual gl::Error drawElementsInstanced(GLenum mode,
+    virtual gl::Error drawElementsInstanced(const gl::Context *context,
+                                            GLenum mode,
                                             GLsizei count,
                                             GLenum type,
                                             const void *indices,
                                             GLsizei instances,
                                             const gl::IndexRange &indexRange) = 0;
-    virtual gl::Error drawRangeElements(GLenum mode,
+    virtual gl::Error drawRangeElements(const gl::Context *context,
+                                        GLenum mode,
                                         GLuint start,
                                         GLuint end,
                                         GLsizei count,
@@ -61,8 +68,13 @@ class ContextImpl : public GLImplFactory
                                         const void *indices,
                                         const gl::IndexRange &indexRange) = 0;
 
-    virtual gl::Error drawArraysIndirect(GLenum mode, const void *indirect) = 0;
-    virtual gl::Error drawElementsIndirect(GLenum mode, GLenum type, const void *indirect) = 0;
+    virtual gl::Error drawArraysIndirect(const gl::Context *context,
+                                         GLenum mode,
+                                         const void *indirect) = 0;
+    virtual gl::Error drawElementsIndirect(const gl::Context *context,
+                                           GLenum mode,
+                                           GLenum type,
+                                           const void *indirect) = 0;
 
     // CHROMIUM_path_rendering path drawing methods.
     virtual void stencilFillPath(const gl::Path *path, GLenum fillMode, GLuint mask);

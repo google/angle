@@ -31,8 +31,8 @@ class FramebufferVk : public FramebufferImpl, public ResourceVk
                                            WindowSurfaceVk *backbuffer);
 
     ~FramebufferVk() override;
-    void destroy(ContextImpl *contextImpl) override;
-    void destroyDefault(DisplayImpl *displayImpl) override;
+    void destroy(const gl::Context *context) override;
+    void destroyDefault(const egl::Display *display) override;
 
     gl::Error discard(size_t count, const GLenum *attachments) override;
     gl::Error invalidate(size_t count, const GLenum *attachments) override;
@@ -40,20 +40,20 @@ class FramebufferVk : public FramebufferImpl, public ResourceVk
                             const GLenum *attachments,
                             const gl::Rectangle &area) override;
 
-    gl::Error clear(ContextImpl *context, GLbitfield mask) override;
-    gl::Error clearBufferfv(ContextImpl *context,
+    gl::Error clear(const gl::Context *context, GLbitfield mask) override;
+    gl::Error clearBufferfv(const gl::Context *context,
                             GLenum buffer,
                             GLint drawbuffer,
                             const GLfloat *values) override;
-    gl::Error clearBufferuiv(ContextImpl *context,
+    gl::Error clearBufferuiv(const gl::Context *context,
                              GLenum buffer,
                              GLint drawbuffer,
                              const GLuint *values) override;
-    gl::Error clearBufferiv(ContextImpl *context,
+    gl::Error clearBufferiv(const gl::Context *context,
                             GLenum buffer,
                             GLint drawbuffer,
                             const GLint *values) override;
-    gl::Error clearBufferfi(ContextImpl *context,
+    gl::Error clearBufferfi(const gl::Context *context,
                             GLenum buffer,
                             GLint drawbuffer,
                             GLfloat depth,
@@ -61,13 +61,13 @@ class FramebufferVk : public FramebufferImpl, public ResourceVk
 
     GLenum getImplementationColorReadFormat() const override;
     GLenum getImplementationColorReadType() const override;
-    gl::Error readPixels(ContextImpl *context,
+    gl::Error readPixels(const gl::Context *context,
                          const gl::Rectangle &area,
                          GLenum format,
                          GLenum type,
                          void *pixels) const override;
 
-    gl::Error blit(ContextImpl *context,
+    gl::Error blit(const gl::Context *context,
                    const gl::Rectangle &sourceArea,
                    const gl::Rectangle &destArea,
                    GLbitfield mask,
@@ -75,7 +75,8 @@ class FramebufferVk : public FramebufferImpl, public ResourceVk
 
     bool checkStatus() const override;
 
-    void syncState(ContextImpl *contextImpl, const gl::Framebuffer::DirtyBits &dirtyBits) override;
+    void syncState(const gl::Context *context,
+                   const gl::Framebuffer::DirtyBits &dirtyBits) override;
 
     gl::Error getSamplePosition(size_t index, GLfloat *xy) const override;
 

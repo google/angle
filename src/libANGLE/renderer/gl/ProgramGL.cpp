@@ -8,17 +8,18 @@
 
 #include "libANGLE/renderer/gl/ProgramGL.h"
 
-#include "common/bitset_utils.h"
 #include "common/angleutils.h"
+#include "common/bitset_utils.h"
 #include "common/debug.h"
 #include "common/string_utils.h"
 #include "common/utilities.h"
+#include "libANGLE/Context.h"
+#include "libANGLE/Uniform.h"
 #include "libANGLE/renderer/gl/ContextGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/ShaderGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
 #include "libANGLE/renderer/gl/WorkaroundsGL.h"
-#include "libANGLE/Uniform.h"
 #include "platform/Platform.h"
 
 namespace rx
@@ -48,7 +49,7 @@ ProgramGL::~ProgramGL()
     mProgramID = 0;
 }
 
-LinkResult ProgramGL::load(const ContextImpl *contextImpl,
+LinkResult ProgramGL::load(const gl::Context *context,
                            gl::InfoLog &infoLog,
                            gl::BinaryInputStream *stream)
 {
@@ -72,7 +73,7 @@ LinkResult ProgramGL::load(const ContextImpl *contextImpl,
     postLink();
 
     // Re-apply UBO bindings to work around driver bugs.
-    const WorkaroundsGL &workaroundsGL = GetAs<ContextGL>(contextImpl)->getWorkaroundsGL();
+    const WorkaroundsGL &workaroundsGL = GetImplAs<ContextGL>(context)->getWorkaroundsGL();
     if (workaroundsGL.reapplyUBOBindingsAfterLoadingBinaryProgram)
     {
         for (size_t bindingIndex : mState.getActiveUniformBlockBindingsMask())
@@ -117,7 +118,7 @@ void ProgramGL::setSeparable(bool separable)
     mFunctions->programParameteri(mProgramID, GL_PROGRAM_SEPARABLE, separable ? GL_TRUE : GL_FALSE);
 }
 
-LinkResult ProgramGL::link(ContextImpl *contextImpl,
+LinkResult ProgramGL::link(const gl::Context *context,
                            const gl::VaryingPacking &packing,
                            gl::InfoLog &infoLog)
 {

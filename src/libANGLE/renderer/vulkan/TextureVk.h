@@ -21,7 +21,7 @@ class TextureVk : public TextureImpl
     TextureVk(const gl::TextureState &state);
     ~TextureVk() override;
 
-    gl::Error setImage(ContextImpl *contextImpl,
+    gl::Error setImage(const gl::Context *context,
                        GLenum target,
                        size_t level,
                        GLenum internalFormat,
@@ -30,7 +30,7 @@ class TextureVk : public TextureImpl
                        GLenum type,
                        const gl::PixelUnpackState &unpack,
                        const uint8_t *pixels) override;
-    gl::Error setSubImage(ContextImpl *contextImpl,
+    gl::Error setSubImage(const gl::Context *context,
                           GLenum target,
                           size_t level,
                           const gl::Box &area,
@@ -39,7 +39,7 @@ class TextureVk : public TextureImpl
                           const gl::PixelUnpackState &unpack,
                           const uint8_t *pixels) override;
 
-    gl::Error setCompressedImage(ContextImpl *contextImpl,
+    gl::Error setCompressedImage(const gl::Context *context,
                                  GLenum target,
                                  size_t level,
                                  GLenum internalFormat,
@@ -47,7 +47,7 @@ class TextureVk : public TextureImpl
                                  const gl::PixelUnpackState &unpack,
                                  size_t imageSize,
                                  const uint8_t *pixels) override;
-    gl::Error setCompressedSubImage(ContextImpl *contextImpl,
+    gl::Error setCompressedSubImage(const gl::Context *context,
                                     GLenum target,
                                     size_t level,
                                     const gl::Box &area,
@@ -56,20 +56,20 @@ class TextureVk : public TextureImpl
                                     size_t imageSize,
                                     const uint8_t *pixels) override;
 
-    gl::Error copyImage(ContextImpl *contextImpl,
+    gl::Error copyImage(const gl::Context *context,
                         GLenum target,
                         size_t level,
                         const gl::Rectangle &sourceArea,
                         GLenum internalFormat,
                         const gl::Framebuffer *source) override;
-    gl::Error copySubImage(ContextImpl *contextImpl,
+    gl::Error copySubImage(const gl::Context *context,
                            GLenum target,
                            size_t level,
                            const gl::Offset &destOffset,
                            const gl::Rectangle &sourceArea,
                            const gl::Framebuffer *source) override;
 
-    gl::Error setStorage(ContextImpl *contextImpl,
+    gl::Error setStorage(const gl::Context *context,
                          GLenum target,
                          size_t levels,
                          GLenum internalFormat,
@@ -81,7 +81,7 @@ class TextureVk : public TextureImpl
                                egl::Stream *stream,
                                const egl::Stream::GLTextureDescription &desc) override;
 
-    gl::Error generateMipmap(ContextImpl *contextImpl) override;
+    gl::Error generateMipmap(const gl::Context *context) override;
 
     void setBaseLevel(GLuint baseLevel) override;
 
@@ -94,7 +94,7 @@ class TextureVk : public TextureImpl
 
     void syncState(const gl::Texture::DirtyBits &dirtyBits) override;
 
-    gl::Error setStorageMultisample(ContextImpl *contextImpl,
+    gl::Error setStorageMultisample(const gl::Context *context,
                                     GLenum target,
                                     GLsizei samples,
                                     GLint internalformat,

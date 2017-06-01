@@ -78,7 +78,7 @@ class MockBufferD3D : public rx::BufferD3D
     MockBufferD3D(rx::BufferFactoryD3D *factory) : BufferD3D(mockState, factory), mData() {}
 
     // BufferImpl
-    gl::Error setData(rx::ContextImpl *context,
+    gl::Error setData(const gl::Context *context,
                       GLenum target,
                       const void *data,
                       size_t size,
@@ -92,13 +92,12 @@ class MockBufferD3D : public rx::BufferD3D
         return gl::NoError();
     }
 
-    MOCK_METHOD5(setSubData, gl::Error(rx::ContextImpl *, GLenum, const void *, size_t, size_t));
+    MOCK_METHOD5(setSubData, gl::Error(const gl::Context *, GLenum, const void *, size_t, size_t));
     MOCK_METHOD5(copySubData,
-                 gl::Error(rx::ContextImpl *context, BufferImpl *, GLintptr, GLintptr, GLsizeiptr));
-    MOCK_METHOD3(map, gl::Error(rx::ContextImpl *context, GLenum, void **));
-    MOCK_METHOD5(mapRange,
-                 gl::Error(rx::ContextImpl *context, size_t, size_t, GLbitfield, void **));
-    MOCK_METHOD2(unmap, gl::Error(rx::ContextImpl *context, GLboolean *));
+                 gl::Error(const gl::Context *, BufferImpl *, GLintptr, GLintptr, GLsizeiptr));
+    MOCK_METHOD3(map, gl::Error(const gl::Context *context, GLenum, void **));
+    MOCK_METHOD5(mapRange, gl::Error(const gl::Context *, size_t, size_t, GLbitfield, void **));
+    MOCK_METHOD2(unmap, gl::Error(const gl::Context *context, GLboolean *));
 
     // BufferD3D
     MOCK_METHOD0(markTransformFeedbackUsage, gl::Error());

@@ -447,7 +447,7 @@ void Program::destroy(const Context *context)
         mState.mAttachedComputeShader = nullptr;
     }
 
-    mProgram->destroy(rx::SafeGetImpl(context));
+    mProgram->destroy(context);
 }
 
 void Program::setLabel(const std::string &label)
@@ -672,8 +672,7 @@ Error Program::link(const gl::Context *context)
         }
 
         gl::VaryingPacking noPacking(0, PackMode::ANGLE_RELAXED);
-        ANGLE_TRY_RESULT(mProgram->link(context->getImplementation(), noPacking, mInfoLog),
-                         mLinked);
+        ANGLE_TRY_RESULT(mProgram->link(context, noPacking, mInfoLog), mLinked);
         if (!mLinked)
         {
             return NoError();
@@ -742,8 +741,7 @@ Error Program::link(const gl::Context *context)
             return NoError();
         }
 
-        ANGLE_TRY_RESULT(mProgram->link(context->getImplementation(), varyingPacking, mInfoLog),
-                         mLinked);
+        ANGLE_TRY_RESULT(mProgram->link(context, varyingPacking, mInfoLog), mLinked);
         if (!mLinked)
         {
             return NoError();
@@ -957,7 +955,7 @@ Error Program::loadBinary(const Context *context,
         mState.mSamplerBindings.emplace_back(SamplerBinding(textureType, bindingCount));
     }
 
-    ANGLE_TRY_RESULT(mProgram->load(context->getImplementation(), mInfoLog, &stream), mLinked);
+    ANGLE_TRY_RESULT(mProgram->load(context, mInfoLog, &stream), mLinked);
 
     return NoError();
 #endif  // #if ANGLE_PROGRAM_BINARY_LOAD == ANGLE_ENABLED

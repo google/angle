@@ -19,7 +19,7 @@ TextureImpl::~TextureImpl()
 {
 }
 
-gl::Error TextureImpl::copyTexture(ContextImpl *contextImpl,
+gl::Error TextureImpl::copyTexture(const gl::Context *context,
                                    GLenum target,
                                    size_t level,
                                    GLenum internalFormat,
@@ -34,7 +34,7 @@ gl::Error TextureImpl::copyTexture(ContextImpl *contextImpl,
     return gl::Error(GL_INVALID_OPERATION, "CHROMIUM_copy_texture exposed but not implemented.");
 }
 
-gl::Error TextureImpl::copySubTexture(ContextImpl *contextImpl,
+gl::Error TextureImpl::copySubTexture(const gl::Context *context,
                                       GLenum target,
                                       size_t level,
                                       const gl::Offset &destOffset,
@@ -49,7 +49,7 @@ gl::Error TextureImpl::copySubTexture(ContextImpl *contextImpl,
     return gl::Error(GL_INVALID_OPERATION, "CHROMIUM_copy_texture exposed but not implemented.");
 }
 
-gl::Error TextureImpl::copyCompressedTexture(ContextImpl *contextImpl, const gl::Texture *source)
+gl::Error TextureImpl::copyCompressedTexture(const gl::Context *context, const gl::Texture *source)
 {
     UNREACHABLE();
     return gl::Error(GL_INVALID_OPERATION,

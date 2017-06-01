@@ -10,7 +10,7 @@
 
 #include "common/bitset_utils.h"
 #include "common/debug.h"
-#include "libANGLE/ContextState.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/State.h"
 #include "libANGLE/angletypes.h"
@@ -189,7 +189,7 @@ Error FramebufferGL::invalidateSub(size_t count,
     return NoError();
 }
 
-Error FramebufferGL::clear(ContextImpl *context, GLbitfield mask)
+Error FramebufferGL::clear(const gl::Context *context, GLbitfield mask)
 {
     syncClearState(context, mask);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
@@ -198,7 +198,7 @@ Error FramebufferGL::clear(ContextImpl *context, GLbitfield mask)
     return NoError();
 }
 
-Error FramebufferGL::clearBufferfv(ContextImpl *context,
+Error FramebufferGL::clearBufferfv(const gl::Context *context,
                                    GLenum buffer,
                                    GLint drawbuffer,
                                    const GLfloat *values)
@@ -210,7 +210,7 @@ Error FramebufferGL::clearBufferfv(ContextImpl *context,
     return NoError();
 }
 
-Error FramebufferGL::clearBufferuiv(ContextImpl *context,
+Error FramebufferGL::clearBufferuiv(const gl::Context *context,
                                     GLenum buffer,
                                     GLint drawbuffer,
                                     const GLuint *values)
@@ -222,7 +222,7 @@ Error FramebufferGL::clearBufferuiv(ContextImpl *context,
     return NoError();
 }
 
-Error FramebufferGL::clearBufferiv(ContextImpl *context,
+Error FramebufferGL::clearBufferiv(const gl::Context *context,
                                    GLenum buffer,
                                    GLint drawbuffer,
                                    const GLint *values)
@@ -234,7 +234,7 @@ Error FramebufferGL::clearBufferiv(ContextImpl *context,
     return NoError();
 }
 
-Error FramebufferGL::clearBufferfi(ContextImpl *context,
+Error FramebufferGL::clearBufferfi(const gl::Context *context,
                                    GLenum buffer,
                                    GLint drawbuffer,
                                    GLfloat depth,
@@ -261,7 +261,7 @@ GLenum FramebufferGL::getImplementationColorReadType() const
     return format.info->getReadPixelsType();
 }
 
-Error FramebufferGL::readPixels(ContextImpl *context,
+Error FramebufferGL::readPixels(const gl::Context *context,
                                 const gl::Rectangle &area,
                                 GLenum format,
                                 GLenum type,
@@ -305,7 +305,7 @@ Error FramebufferGL::readPixels(ContextImpl *context,
     return gl::NoError();
 }
 
-Error FramebufferGL::blit(ContextImpl *context,
+Error FramebufferGL::blit(const gl::Context *context,
                           const gl::Rectangle &sourceArea,
                           const gl::Rectangle &destArea,
                           GLbitfield mask,
@@ -411,7 +411,7 @@ bool FramebufferGL::checkStatus() const
     return (status == GL_FRAMEBUFFER_COMPLETE);
 }
 
-void FramebufferGL::syncState(ContextImpl *contextImpl, const Framebuffer::DirtyBits &dirtyBits)
+void FramebufferGL::syncState(const gl::Context *context, const Framebuffer::DirtyBits &dirtyBits)
 {
     // Don't need to sync state for the default FBO.
     if (mIsDefault)
@@ -485,7 +485,7 @@ bool FramebufferGL::isDefault() const
     return mIsDefault;
 }
 
-void FramebufferGL::syncClearState(ContextImpl *context, GLbitfield mask)
+void FramebufferGL::syncClearState(const gl::Context *context, GLbitfield mask)
 {
     if (mFunctions->standard == STANDARD_GL_DESKTOP)
     {
@@ -511,7 +511,9 @@ void FramebufferGL::syncClearState(ContextImpl *context, GLbitfield mask)
     }
 }
 
-void FramebufferGL::syncClearBufferState(ContextImpl *context, GLenum buffer, GLint drawBuffer)
+void FramebufferGL::syncClearBufferState(const gl::Context *context,
+                                         GLenum buffer,
+                                         GLint drawBuffer)
 {
     if (mFunctions->standard == STANDARD_GL_DESKTOP)
     {

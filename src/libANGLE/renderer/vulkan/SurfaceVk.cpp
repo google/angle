@@ -10,6 +10,7 @@
 #include "libANGLE/renderer/vulkan/SurfaceVk.h"
 
 #include "common/debug.h"
+#include "libANGLE/Display.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/vulkan/DisplayVk.h"
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
@@ -65,7 +66,7 @@ OffscreenSurfaceVk::~OffscreenSurfaceVk()
 {
 }
 
-egl::Error OffscreenSurfaceVk::initialize(const DisplayImpl *displayImpl)
+egl::Error OffscreenSurfaceVk::initialize(const egl::Display *display)
 {
     return egl::Error(EGL_SUCCESS);
 }
@@ -76,7 +77,7 @@ FramebufferImpl *OffscreenSurfaceVk::createDefaultFramebuffer(const gl::Framebuf
     return FramebufferVk::CreateUserFBO(state);
 }
 
-egl::Error OffscreenSurfaceVk::swap(const DisplayImpl *displayImpl)
+egl::Error OffscreenSurfaceVk::swap(const egl::Display *display)
 {
     return egl::Error(EGL_SUCCESS);
 }
@@ -170,9 +171,9 @@ WindowSurfaceVk::~WindowSurfaceVk()
     ASSERT(mSwapchain == VK_NULL_HANDLE);
 }
 
-void WindowSurfaceVk::destroy(const DisplayImpl *displayImpl)
+void WindowSurfaceVk::destroy(const egl::Display *display)
 {
-    const DisplayVk *displayVk = GetAs<DisplayVk>(displayImpl);
+    const DisplayVk *displayVk = GetImplAs<DisplayVk>(display);
     RendererVk *rendererVk     = displayVk->getRenderer();
     VkDevice device            = rendererVk->getDevice();
     VkInstance instance        = rendererVk->getInstance();
@@ -211,9 +212,9 @@ void WindowSurfaceVk::destroy(const DisplayImpl *displayImpl)
     }
 }
 
-egl::Error WindowSurfaceVk::initialize(const DisplayImpl *displayImpl)
+egl::Error WindowSurfaceVk::initialize(const egl::Display *display)
 {
-    const DisplayVk *displayVk = GetAs<DisplayVk>(displayImpl);
+    const DisplayVk *displayVk = GetImplAs<DisplayVk>(display);
     return initializeImpl(displayVk->getRenderer()).toEGL(EGL_BAD_SURFACE);
 }
 
@@ -413,9 +414,9 @@ FramebufferImpl *WindowSurfaceVk::createDefaultFramebuffer(const gl::Framebuffer
     return FramebufferVk::CreateDefaultFBO(state, this);
 }
 
-egl::Error WindowSurfaceVk::swap(const DisplayImpl *displayImpl)
+egl::Error WindowSurfaceVk::swap(const egl::Display *display)
 {
-    const DisplayVk *displayVk = GetAs<DisplayVk>(displayImpl);
+    const DisplayVk *displayVk = GetImplAs<DisplayVk>(display);
     return swapImpl(displayVk->getRenderer()).toEGL(EGL_BAD_ALLOC);
 }
 

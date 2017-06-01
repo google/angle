@@ -86,7 +86,7 @@ DXGISwapChainWindowSurfaceWGL::~DXGISwapChainWindowSurfaceWGL()
     SafeRelease(mSwapChain1);
 }
 
-egl::Error DXGISwapChainWindowSurfaceWGL::initialize(const DisplayImpl *displayImpl)
+egl::Error DXGISwapChainWindowSurfaceWGL::initialize(const egl::Display *display)
 {
     if (mOrientation != EGL_SURFACE_ORIENTATION_INVERT_Y_ANGLE)
     {
@@ -128,24 +128,16 @@ egl::Error DXGISwapChainWindowSurfaceWGL::makeCurrent()
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error DXGISwapChainWindowSurfaceWGL::swap(const DisplayImpl *displayImpl)
+egl::Error DXGISwapChainWindowSurfaceWGL::swap(const egl::Display *display)
 {
     mFunctionsGL->flush();
 
-    egl::Error error = setObjectsLocked(false);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(setObjectsLocked(false));
 
     HRESULT result = mSwapChain->Present(mSwapInterval, 0);
     mFirstSwap     = false;
 
-    error = setObjectsLocked(true);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(setObjectsLocked(true));
 
     if (FAILED(result))
     {
@@ -164,11 +156,7 @@ egl::Error DXGISwapChainWindowSurfaceWGL::postSubBuffer(EGLint x,
 
     mFunctionsGL->flush();
 
-    egl::Error error = setObjectsLocked(false);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(setObjectsLocked(false));
 
     HRESULT result = S_OK;
     if (mFirstSwap)
@@ -184,11 +172,7 @@ egl::Error DXGISwapChainWindowSurfaceWGL::postSubBuffer(EGLint x,
         result                         = mSwapChain1->Present1(mSwapInterval, 0, &params);
     }
 
-    error = setObjectsLocked(true);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(setObjectsLocked(true));
 
     if (FAILED(result))
     {

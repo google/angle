@@ -22,7 +22,7 @@ ProgramNULL::~ProgramNULL()
 {
 }
 
-LinkResult ProgramNULL::load(const ContextImpl *contextImpl,
+LinkResult ProgramNULL::load(const gl::Context *contextImpl,
                              gl::InfoLog &infoLog,
                              gl::BinaryInputStream *stream)
 {
@@ -42,7 +42,7 @@ void ProgramNULL::setSeparable(bool separable)
 {
 }
 
-LinkResult ProgramNULL::link(ContextImpl *contextImpl,
+LinkResult ProgramNULL::link(const gl::Context *contextImpl,
                              const gl::VaryingPacking &packing,
                              gl::InfoLog &infoLog)
 {

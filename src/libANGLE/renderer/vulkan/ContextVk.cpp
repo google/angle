@@ -264,7 +264,7 @@ gl::Error ContextVk::initPipeline()
     return gl::NoError();
 }
 
-gl::Error ContextVk::drawArrays(GLenum mode, GLint first, GLsizei count)
+gl::Error ContextVk::drawArrays(const gl::Context *context, GLenum mode, GLint first, GLsizei count)
 {
     if (mode != mCurrentDrawMode)
     {
@@ -326,7 +326,8 @@ gl::Error ContextVk::drawArrays(GLenum mode, GLint first, GLsizei count)
     return gl::NoError();
 }
 
-gl::Error ContextVk::drawArraysInstanced(GLenum mode,
+gl::Error ContextVk::drawArraysInstanced(const gl::Context *context,
+                                         GLenum mode,
                                          GLint first,
                                          GLsizei count,
                                          GLsizei instanceCount)
@@ -335,7 +336,8 @@ gl::Error ContextVk::drawArraysInstanced(GLenum mode,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error ContextVk::drawElements(GLenum mode,
+gl::Error ContextVk::drawElements(const gl::Context *context,
+                                  GLenum mode,
                                   GLsizei count,
                                   GLenum type,
                                   const void *indices,
@@ -345,7 +347,8 @@ gl::Error ContextVk::drawElements(GLenum mode,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error ContextVk::drawElementsInstanced(GLenum mode,
+gl::Error ContextVk::drawElementsInstanced(const gl::Context *context,
+                                           GLenum mode,
                                            GLsizei count,
                                            GLenum type,
                                            const void *indices,
@@ -356,7 +359,8 @@ gl::Error ContextVk::drawElementsInstanced(GLenum mode,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error ContextVk::drawRangeElements(GLenum mode,
+gl::Error ContextVk::drawRangeElements(const gl::Context *context,
+                                       GLenum mode,
                                        GLuint start,
                                        GLuint end,
                                        GLsizei count,
@@ -384,13 +388,18 @@ vk::Error ContextVk::submitCommands(vk::CommandBuffer *commandBuffer)
     return vk::NoError();
 }
 
-gl::Error ContextVk::drawArraysIndirect(GLenum mode, const void *indirect)
+gl::Error ContextVk::drawArraysIndirect(const gl::Context *context,
+                                        GLenum mode,
+                                        const void *indirect)
 {
     UNIMPLEMENTED();
     return gl::InternalError() << "DrawArraysIndirect hasn't been implemented for vulkan backend.";
 }
 
-gl::Error ContextVk::drawElementsIndirect(GLenum mode, GLenum type, const void *indirect)
+gl::Error ContextVk::drawElementsIndirect(const gl::Context *context,
+                                          GLenum mode,
+                                          GLenum type,
+                                          const void *indirect)
 {
     UNIMPLEMENTED();
     return gl::InternalError()

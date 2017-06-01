@@ -55,7 +55,7 @@ PbufferSurfaceCGL::~PbufferSurfaceCGL()
     }
 }
 
-egl::Error PbufferSurfaceCGL::initialize(const DisplayImpl *displayImpl)
+egl::Error PbufferSurfaceCGL::initialize(const egl::Display *display)
 {
     mFunctions->genRenderbuffers(1, &mColorRenderbuffer);
     mStateManager->bindRenderbuffer(GL_RENDERBUFFER, mColorRenderbuffer);
@@ -80,7 +80,7 @@ egl::Error PbufferSurfaceCGL::makeCurrent()
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error PbufferSurfaceCGL::swap(const DisplayImpl *displayImpl)
+egl::Error PbufferSurfaceCGL::swap(const egl::Display *display)
 {
     return egl::Error(EGL_SUCCESS);
 }

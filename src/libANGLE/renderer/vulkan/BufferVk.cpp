@@ -10,6 +10,7 @@
 #include "libANGLE/renderer/vulkan/BufferVk.h"
 
 #include "common/debug.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
 
@@ -24,20 +25,20 @@ BufferVk::~BufferVk()
 {
 }
 
-void BufferVk::destroy(ContextImpl *contextImpl)
+void BufferVk::destroy(const gl::Context *context)
 {
-    VkDevice device = GetAs<ContextVk>(contextImpl)->getDevice();
+    VkDevice device = GetImplAs<ContextVk>(context)->getDevice();
 
     mBuffer.destroy(device);
 }
 
-gl::Error BufferVk::setData(ContextImpl *context,
+gl::Error BufferVk::setData(const gl::Context *context,
                             GLenum target,
                             const void *data,
                             size_t size,
                             GLenum usage)
 {
-    ContextVk *contextVk = GetAs<ContextVk>(context);
+    ContextVk *contextVk = GetImplAs<ContextVk>(context);
     auto device          = contextVk->getDevice();
 
     // TODO(jmadill): Proper usage bit implementation. Likely will involve multiple backing buffers
@@ -93,7 +94,7 @@ gl::Error BufferVk::setData(ContextImpl *context,
     return gl::NoError();
 }
 
-gl::Error BufferVk::setSubData(ContextImpl *context,
+gl::Error BufferVk::setSubData(const gl::Context *context,
                                GLenum target,
                                const void *data,
                                size_t size,
@@ -102,14 +103,14 @@ gl::Error BufferVk::setSubData(ContextImpl *context,
     ASSERT(mBuffer.getHandle() != VK_NULL_HANDLE);
     ASSERT(mBuffer.getMemory().getHandle() != VK_NULL_HANDLE);
 
-    VkDevice device = GetAs<ContextVk>(context)->getDevice();
+    VkDevice device = GetImplAs<ContextVk>(context)->getDevice();
 
     ANGLE_TRY(setDataImpl(device, static_cast<const uint8_t *>(data), size, offset));
 
     return gl::NoError();
 }
 
-gl::Error BufferVk::copySubData(ContextImpl *context,
+gl::Error BufferVk::copySubData(const gl::Context *context,
                                 BufferImpl *source,
                                 GLintptr sourceOffset,
                                 GLintptr destOffset,
@@ -119,12 +120,12 @@ gl::Error BufferVk::copySubData(ContextImpl *context,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error BufferVk::map(ContextImpl *context, GLenum access, void **mapPtr)
+gl::Error BufferVk::map(const gl::Context *context, GLenum access, void **mapPtr)
 {
     ASSERT(mBuffer.getHandle() != VK_NULL_HANDLE);
     ASSERT(mBuffer.getMemory().getHandle() != VK_NULL_HANDLE);
 
-    VkDevice device = GetAs<ContextVk>(context)->getDevice();
+    VkDevice device = GetImplAs<ContextVk>(context)->getDevice();
 
     ANGLE_TRY(mBuffer.getMemory().map(device, 0, mState.getSize(), 0,
                                       reinterpret_cast<uint8_t **>(mapPtr)));
@@ -132,7 +133,7 @@ gl::Error BufferVk::map(ContextImpl *context, GLenum access, void **mapPtr)
     return gl::NoError();
 }
 
-gl::Error BufferVk::mapRange(ContextImpl *context,
+gl::Error BufferVk::mapRange(const gl::Context *context,
                              size_t offset,
                              size_t length,
                              GLbitfield access,
@@ -141,7 +142,7 @@ gl::Error BufferVk::mapRange(ContextImpl *context,
     ASSERT(mBuffer.getHandle() != VK_NULL_HANDLE);
     ASSERT(mBuffer.getMemory().getHandle() != VK_NULL_HANDLE);
 
-    VkDevice device = GetAs<ContextVk>(context)->getDevice();
+    VkDevice device = GetImplAs<ContextVk>(context)->getDevice();
 
     ANGLE_TRY(
         mBuffer.getMemory().map(device, offset, length, 0, reinterpret_cast<uint8_t **>(mapPtr)));
@@ -149,12 +150,12 @@ gl::Error BufferVk::mapRange(ContextImpl *context,
     return gl::NoError();
 }
 
-gl::Error BufferVk::unmap(ContextImpl *context, GLboolean *result)
+gl::Error BufferVk::unmap(const gl::Context *context, GLboolean *result)
 {
     ASSERT(mBuffer.getHandle() != VK_NULL_HANDLE);
     ASSERT(mBuffer.getMemory().getHandle() != VK_NULL_HANDLE);
 
-    VkDevice device = GetAs<ContextVk>(context)->getDevice();
+    VkDevice device = GetImplAs<ContextVk>(context)->getDevice();
 
     mBuffer.getMemory().unmap(device);
 

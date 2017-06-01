@@ -18,41 +18,40 @@
 namespace gl
 {
 class BufferState;
+class Context;
 }
 
 namespace rx
 {
-class ContextImpl;
-
 class BufferImpl : angle::NonCopyable
 {
   public:
     BufferImpl(const gl::BufferState &state) : mState(state) {}
     virtual ~BufferImpl() {}
-    virtual void destroy(ContextImpl *contextImpl) {}
+    virtual void destroy(const gl::Context *context) {}
 
-    virtual gl::Error setData(ContextImpl *context,
+    virtual gl::Error setData(const gl::Context *context,
                               GLenum target,
                               const void *data,
                               size_t size,
                               GLenum usage) = 0;
-    virtual gl::Error setSubData(ContextImpl *context,
+    virtual gl::Error setSubData(const gl::Context *context,
                                  GLenum target,
                                  const void *data,
                                  size_t size,
                                  size_t offset) = 0;
-    virtual gl::Error copySubData(ContextImpl *contextImpl,
+    virtual gl::Error copySubData(const gl::Context *context,
                                   BufferImpl *source,
                                   GLintptr sourceOffset,
                                   GLintptr destOffset,
                                   GLsizeiptr size) = 0;
-    virtual gl::Error map(ContextImpl *contextImpl, GLenum access, void **mapPtr) = 0;
-    virtual gl::Error mapRange(ContextImpl *contextImpl,
+    virtual gl::Error map(const gl::Context *context, GLenum access, void **mapPtr) = 0;
+    virtual gl::Error mapRange(const gl::Context *context,
                                size_t offset,
                                size_t length,
                                GLbitfield access,
                                void **mapPtr) = 0;
-    virtual gl::Error unmap(ContextImpl *contextImpl, GLboolean *result) = 0;
+    virtual gl::Error unmap(const gl::Context *context, GLboolean *result) = 0;
 
     virtual gl::Error getIndexRange(GLenum type,
                                     size_t offset,

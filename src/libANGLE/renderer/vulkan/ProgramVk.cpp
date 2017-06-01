@@ -10,6 +10,7 @@
 #include "libANGLE/renderer/vulkan/ProgramVk.h"
 
 #include "common/debug.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
 #include "libANGLE/renderer/vulkan/GlslangWrapper.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
@@ -25,16 +26,16 @@ ProgramVk::~ProgramVk()
 {
 }
 
-void ProgramVk::destroy(const ContextImpl *contextImpl)
+void ProgramVk::destroy(const gl::Context *contextImpl)
 {
-    VkDevice device = GetAs<ContextVk>(contextImpl)->getDevice();
+    VkDevice device = GetImplAs<ContextVk>(contextImpl)->getDevice();
 
     mLinkedFragmentModule.destroy(device);
     mLinkedVertexModule.destroy(device);
     mPipelineLayout.destroy(device);
 }
 
-LinkResult ProgramVk::load(const ContextImpl *contextImpl,
+LinkResult ProgramVk::load(const gl::Context *contextImpl,
                            gl::InfoLog &infoLog,
                            gl::BinaryInputStream *stream)
 {
@@ -58,11 +59,11 @@ void ProgramVk::setSeparable(bool separable)
     UNIMPLEMENTED();
 }
 
-LinkResult ProgramVk::link(ContextImpl *contextImpl,
+LinkResult ProgramVk::link(const gl::Context *glContext,
                            const gl::VaryingPacking &packing,
                            gl::InfoLog &infoLog)
 {
-    ContextVk *context             = GetAs<ContextVk>(contextImpl);
+    ContextVk *context             = GetImplAs<ContextVk>(glContext);
     RendererVk *renderer           = context->getRenderer();
     GlslangWrapper *glslangWrapper = renderer->getGlslangWrapper();
 

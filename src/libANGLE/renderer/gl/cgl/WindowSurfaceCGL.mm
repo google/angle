@@ -194,7 +194,7 @@ WindowSurfaceCGL::~WindowSurfaceCGL()
     }
 }
 
-egl::Error WindowSurfaceCGL::initialize(const DisplayImpl *displayImpl)
+egl::Error WindowSurfaceCGL::initialize(const egl::Display *display)
 {
     unsigned width  = getWidth();
     unsigned height = getHeight();
@@ -237,7 +237,7 @@ egl::Error WindowSurfaceCGL::makeCurrent()
     return egl::Error(EGL_SUCCESS);
 }
 
-egl::Error WindowSurfaceCGL::swap(const DisplayImpl *displayImpl)
+egl::Error WindowSurfaceCGL::swap(const egl::Display *display)
 {
     mFunctions->flush();
     mSwapState.beingRendered->swapId = ++mCurrentSwapId;

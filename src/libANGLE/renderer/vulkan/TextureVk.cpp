@@ -22,7 +22,7 @@ TextureVk::~TextureVk()
 {
 }
 
-gl::Error TextureVk::setImage(ContextImpl *contextImpl,
+gl::Error TextureVk::setImage(const gl::Context *context,
                               GLenum target,
                               size_t level,
                               GLenum internalFormat,
@@ -36,7 +36,7 @@ gl::Error TextureVk::setImage(ContextImpl *contextImpl,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error TextureVk::setSubImage(ContextImpl *contextImpl,
+gl::Error TextureVk::setSubImage(const gl::Context *context,
                                  GLenum target,
                                  size_t level,
                                  const gl::Box &area,
@@ -49,7 +49,7 @@ gl::Error TextureVk::setSubImage(ContextImpl *contextImpl,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error TextureVk::setCompressedImage(ContextImpl *contextImpl,
+gl::Error TextureVk::setCompressedImage(const gl::Context *context,
                                         GLenum target,
                                         size_t level,
                                         GLenum internalFormat,
@@ -62,7 +62,7 @@ gl::Error TextureVk::setCompressedImage(ContextImpl *contextImpl,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error TextureVk::setCompressedSubImage(ContextImpl *contextImpl,
+gl::Error TextureVk::setCompressedSubImage(const gl::Context *context,
                                            GLenum target,
                                            size_t level,
                                            const gl::Box &area,
@@ -75,7 +75,7 @@ gl::Error TextureVk::setCompressedSubImage(ContextImpl *contextImpl,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error TextureVk::copyImage(ContextImpl *contextImpl,
+gl::Error TextureVk::copyImage(const gl::Context *context,
                                GLenum target,
                                size_t level,
                                const gl::Rectangle &sourceArea,
@@ -86,7 +86,7 @@ gl::Error TextureVk::copyImage(ContextImpl *contextImpl,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error TextureVk::copySubImage(ContextImpl *contextImpl,
+gl::Error TextureVk::copySubImage(const gl::Context *context,
                                   GLenum target,
                                   size_t level,
                                   const gl::Offset &destOffset,
@@ -97,7 +97,7 @@ gl::Error TextureVk::copySubImage(ContextImpl *contextImpl,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error TextureVk::setStorage(ContextImpl *contextImpl,
+gl::Error TextureVk::setStorage(const gl::Context *context,
                                 GLenum target,
                                 size_t levels,
                                 GLenum internalFormat,
@@ -121,7 +121,7 @@ gl::Error TextureVk::setImageExternal(GLenum target,
     return gl::Error(GL_INVALID_OPERATION);
 }
 
-gl::Error TextureVk::generateMipmap(ContextImpl *contextImpl)
+gl::Error TextureVk::generateMipmap(const gl::Context *context)
 {
     UNIMPLEMENTED();
     return gl::Error(GL_INVALID_OPERATION);
@@ -155,7 +155,7 @@ void TextureVk::syncState(const gl::Texture::DirtyBits &dirtyBits)
     UNIMPLEMENTED();
 }
 
-gl::Error TextureVk::setStorageMultisample(ContextImpl *contextImpl,
+gl::Error TextureVk::setStorageMultisample(const gl::Context *context,
                                            GLenum target,
                                            GLsizei samples,
                                            GLint internalformat,

@@ -10,6 +10,7 @@
 
 #include "common/bitset_utils.h"
 #include "common/utilities.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Program.h"
@@ -691,7 +692,7 @@ void ProgramD3D::updateSamplerMapping()
     }
 }
 
-LinkResult ProgramD3D::load(const ContextImpl *contextImpl,
+LinkResult ProgramD3D::load(const gl::Context *context,
                             gl::InfoLog &infoLog,
                             gl::BinaryInputStream *stream)
 {
@@ -1479,11 +1480,11 @@ LinkResult ProgramD3D::compileComputeExecutable(gl::InfoLog &infoLog)
     return mComputeExecutable.get() != nullptr;
 }
 
-LinkResult ProgramD3D::link(ContextImpl *contextImpl,
+LinkResult ProgramD3D::link(const gl::Context *context,
                             const gl::VaryingPacking &packing,
                             gl::InfoLog &infoLog)
 {
-    const auto &data = contextImpl->getContextState();
+    const auto &data = context->getContextState();
 
     reset();
 

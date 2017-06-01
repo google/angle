@@ -541,7 +541,7 @@ void VertexArrayGL::updateAttribDivisor(size_t attribIndex)
     mAppliedBindings[bindingIndex].divisor       = divisor;
 }
 
-void VertexArrayGL::syncState(ContextImpl *contextImpl, const VertexArray::DirtyBits &dirtyBits)
+void VertexArrayGL::syncState(const gl::Context *context, const VertexArray::DirtyBits &dirtyBits)
 {
     mStateManager->bindVertexArray(mVertexArrayID, getAppliedElementArrayBufferID());
 

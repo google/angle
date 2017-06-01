@@ -158,7 +158,7 @@ class ProgramD3D : public ProgramImpl
     bool usesGeometryShader(GLenum drawMode) const;
     bool usesInstancedPointSpriteEmulation() const;
 
-    LinkResult load(const ContextImpl *contextImpl,
+    LinkResult load(const gl::Context *context,
                     gl::InfoLog &infoLog,
                     gl::BinaryInputStream *stream) override;
     gl::Error save(gl::BinaryOutputStream *stream) override;
@@ -178,7 +178,7 @@ class ProgramD3D : public ProgramImpl
                                                     ShaderExecutableD3D **outExecutable,
                                                     gl::InfoLog *infoLog);
     gl::Error getComputeExecutable(ShaderExecutableD3D **outExecutable);
-    LinkResult link(ContextImpl *contextImpl,
+    LinkResult link(const gl::Context *context,
                     const gl::VaryingPacking &packing,
                     gl::InfoLog &infoLog) override;
     GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;

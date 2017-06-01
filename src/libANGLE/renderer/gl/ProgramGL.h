@@ -31,14 +31,14 @@ class ProgramGL : public ProgramImpl
               bool enablePathRendering);
     ~ProgramGL() override;
 
-    LinkResult load(const ContextImpl *contextImpl,
+    LinkResult load(const gl::Context *contextImpl,
                     gl::InfoLog &infoLog,
                     gl::BinaryInputStream *stream) override;
     gl::Error save(gl::BinaryOutputStream *stream) override;
     void setBinaryRetrievableHint(bool retrievable) override;
     void setSeparable(bool separable) override;
 
-    LinkResult link(ContextImpl *contextImpl,
+    LinkResult link(const gl::Context *contextImpl,
                     const gl::VaryingPacking &packing,
                     gl::InfoLog &infoLog) override;
     GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;

@@ -22,7 +22,7 @@ TextureNULL::~TextureNULL()
 {
 }
 
-gl::Error TextureNULL::setImage(ContextImpl *contextImpl,
+gl::Error TextureNULL::setImage(const gl::Context *context,
                                 GLenum target,
                                 size_t level,
                                 GLenum internalFormat,
@@ -37,7 +37,7 @@ gl::Error TextureNULL::setImage(ContextImpl *contextImpl,
     return gl::NoError();
 }
 
-gl::Error TextureNULL::setSubImage(ContextImpl *contextImpl,
+gl::Error TextureNULL::setSubImage(const gl::Context *context,
                                    GLenum target,
                                    size_t level,
                                    const gl::Box &area,
@@ -49,7 +49,7 @@ gl::Error TextureNULL::setSubImage(ContextImpl *contextImpl,
     return gl::NoError();
 }
 
-gl::Error TextureNULL::setCompressedImage(ContextImpl *contextImpl,
+gl::Error TextureNULL::setCompressedImage(const gl::Context *context,
                                           GLenum target,
                                           size_t level,
                                           GLenum internalFormat,
@@ -61,7 +61,7 @@ gl::Error TextureNULL::setCompressedImage(ContextImpl *contextImpl,
     return gl::NoError();
 }
 
-gl::Error TextureNULL::setCompressedSubImage(ContextImpl *contextImpl,
+gl::Error TextureNULL::setCompressedSubImage(const gl::Context *context,
                                              GLenum target,
                                              size_t level,
                                              const gl::Box &area,
@@ -73,7 +73,7 @@ gl::Error TextureNULL::setCompressedSubImage(ContextImpl *contextImpl,
     return gl::NoError();
 }
 
-gl::Error TextureNULL::copyImage(ContextImpl *contextImpl,
+gl::Error TextureNULL::copyImage(const gl::Context *context,
                                  GLenum target,
                                  size_t level,
                                  const gl::Rectangle &sourceArea,
@@ -83,7 +83,7 @@ gl::Error TextureNULL::copyImage(ContextImpl *contextImpl,
     return gl::NoError();
 }
 
-gl::Error TextureNULL::copySubImage(ContextImpl *contextImpl,
+gl::Error TextureNULL::copySubImage(const gl::Context *context,
                                     GLenum target,
                                     size_t level,
                                     const gl::Offset &destOffset,
@@ -93,7 +93,7 @@ gl::Error TextureNULL::copySubImage(ContextImpl *contextImpl,
     return gl::NoError();
 }
 
-gl::Error TextureNULL::setStorage(ContextImpl *contextImpl,
+gl::Error TextureNULL::setStorage(const gl::Context *context,
                                   GLenum target,
                                   size_t levels,
                                   GLenum internalFormat,
@@ -114,7 +114,7 @@ gl::Error TextureNULL::setImageExternal(GLenum target,
     return gl::NoError();
 }
 
-gl::Error TextureNULL::generateMipmap(ContextImpl *contextImpl)
+gl::Error TextureNULL::generateMipmap(const gl::Context *context)
 {
     return gl::NoError();
 }
@@ -135,7 +135,7 @@ void TextureNULL::syncState(const gl::Texture::DirtyBits &dirtyBits)
 {
 }
 
-gl::Error TextureNULL::setStorageMultisample(ContextImpl *contextImpl,
+gl::Error TextureNULL::setStorageMultisample(const gl::Context *context,
                                              GLenum target,
                                              GLsizei samples,
                                              GLint internalformat,

@@ -9,6 +9,7 @@
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
 
 #include "common/bitset_utils.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Surface.h"
@@ -95,13 +96,13 @@ FramebufferD3D::~FramebufferD3D()
 {
 }
 
-gl::Error FramebufferD3D::clear(ContextImpl *context, GLbitfield mask)
+gl::Error FramebufferD3D::clear(const gl::Context *context, GLbitfield mask)
 {
     ClearParameters clearParams = GetClearParameters(context->getGLState(), mask);
     return clearImpl(context, clearParams);
 }
 
-gl::Error FramebufferD3D::clearBufferfv(ContextImpl *context,
+gl::Error FramebufferD3D::clearBufferfv(const gl::Context *context,
                                         GLenum buffer,
                                         GLint drawbuffer,
                                         const GLfloat *values)
@@ -128,7 +129,7 @@ gl::Error FramebufferD3D::clearBufferfv(ContextImpl *context,
     return clearImpl(context, clearParams);
 }
 
-gl::Error FramebufferD3D::clearBufferuiv(ContextImpl *context,
+gl::Error FramebufferD3D::clearBufferuiv(const gl::Context *context,
                                          GLenum buffer,
                                          GLint drawbuffer,
                                          const GLuint *values)
@@ -145,7 +146,7 @@ gl::Error FramebufferD3D::clearBufferuiv(ContextImpl *context,
     return clearImpl(context, clearParams);
 }
 
-gl::Error FramebufferD3D::clearBufferiv(ContextImpl *context,
+gl::Error FramebufferD3D::clearBufferiv(const gl::Context *context,
                                         GLenum buffer,
                                         GLint drawbuffer,
                                         const GLint *values)
@@ -172,7 +173,7 @@ gl::Error FramebufferD3D::clearBufferiv(ContextImpl *context,
     return clearImpl(context, clearParams);
 }
 
-gl::Error FramebufferD3D::clearBufferfi(ContextImpl *context,
+gl::Error FramebufferD3D::clearBufferfi(const gl::Context *context,
                                         GLenum buffer,
                                         GLint drawbuffer,
                                         GLfloat depth,
@@ -234,7 +235,7 @@ GLenum FramebufferD3D::getImplementationColorReadType() const
     return implementationFormatInfo.getReadPixelsType();
 }
 
-gl::Error FramebufferD3D::readPixels(ContextImpl *context,
+gl::Error FramebufferD3D::readPixels(const gl::Context *context,
                                      const gl::Rectangle &area,
                                      GLenum format,
                                      GLenum type,
@@ -256,7 +257,7 @@ gl::Error FramebufferD3D::readPixels(ContextImpl *context,
                           reinterpret_cast<uint8_t *>(pixels) + outputSkipBytes);
 }
 
-gl::Error FramebufferD3D::blit(ContextImpl *context,
+gl::Error FramebufferD3D::blit(const gl::Context *context,
                                const gl::Rectangle &sourceArea,
                                const gl::Rectangle &destArea,
                                GLbitfield mask,
@@ -297,7 +298,7 @@ bool FramebufferD3D::checkStatus() const
     return true;
 }
 
-void FramebufferD3D::syncState(ContextImpl *contextImpl,
+void FramebufferD3D::syncState(const gl::Context *context,
                                const gl::Framebuffer::DirtyBits &dirtyBits)
 {
     bool invalidateColorAttachmentCache = false;

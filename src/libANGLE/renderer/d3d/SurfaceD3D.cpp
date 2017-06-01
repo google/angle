@@ -81,7 +81,7 @@ void SurfaceD3D::releaseSwapChain()
     SafeDelete(mSwapChain);
 }
 
-egl::Error SurfaceD3D::initialize(const DisplayImpl *displayImpl)
+egl::Error SurfaceD3D::initialize(const egl::Display *display)
 {
     if (mNativeWindow->getNativeWindow())
     {
@@ -91,12 +91,7 @@ egl::Error SurfaceD3D::initialize(const DisplayImpl *displayImpl)
         }
     }
 
-    egl::Error error = resetSwapChain();
-    if (error.isError())
-    {
-        return error;
-    }
-
+    ANGLE_TRY(resetSwapChain());
     return egl::Error(EGL_SUCCESS);
 }
 
@@ -285,7 +280,7 @@ bool SurfaceD3D::checkForOutOfDateSwapChain()
     return wasDirty;
 }
 
-egl::Error SurfaceD3D::swap(const DisplayImpl *displayImpl)
+egl::Error SurfaceD3D::swap(const egl::Display *display)
 {
     return swapRect(0, 0, mWidth, mHeight);
 }
