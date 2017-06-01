@@ -182,7 +182,7 @@ class Blit11 : angle::NonCopyable
     struct Shader
     {
         ShaderDimension dimension;
-        ID3D11PixelShader *pixelShader;
+        d3d11::PixelShader pixelShader;
     };
 
     struct ShaderSupport
@@ -247,9 +247,10 @@ class Blit11 : angle::NonCopyable
                              size_t destPixelStride,
                              BlitConvertFunction *convertFunction);
 
-    void addBlitShaderToMap(BlitShaderType blitShaderType,
-                            ShaderDimension dimension,
-                            ID3D11PixelShader *ps);
+    gl::Error addBlitShaderToMap(BlitShaderType blitShaderType,
+                                 ShaderDimension dimension,
+                                 const ShaderData &shaderData,
+                                 const char *name);
 
     gl::Error getBlitShader(GLenum destFormat,
                             GLenum sourceFormat,
@@ -262,9 +263,10 @@ class Blit11 : angle::NonCopyable
                                D3D11_SRV_DIMENSION viewDimension,
                                const Shader **shaderOut);
 
-    void addSwizzleShaderToMap(SwizzleShaderType swizzleShaderType,
-                               ShaderDimension dimension,
-                               ID3D11PixelShader *ps);
+    gl::Error addSwizzleShaderToMap(SwizzleShaderType swizzleShaderType,
+                                    ShaderDimension dimension,
+                                    const ShaderData &shaderData,
+                                    const char *name);
 
     void clearShaderMap();
     void releaseResolveDepthStencilResources();

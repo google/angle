@@ -240,7 +240,7 @@ class Renderer11 : public RendererD3D
     gl::Error createRenderTargetCopy(RenderTargetD3D *source, RenderTargetD3D **outRT) override;
 
     // Shader operations
-    gl::Error loadExecutable(const void *function,
+    gl::Error loadExecutable(const uint8_t *function,
                              size_t length,
                              ShaderType type,
                              const std::vector<D3DVarying> &streamOutVaryings,

@@ -73,9 +73,9 @@ class PixelTransfer11
     Renderer11 *mRenderer;
 
     bool mResourcesLoaded;
-    std::map<GLenum, ID3D11PixelShader *> mBufferToTexturePSMap;
-    ID3D11VertexShader *mBufferToTextureVS;
-    ID3D11GeometryShader *mBufferToTextureGS;
+    std::map<GLenum, d3d11::PixelShader> mBufferToTexturePSMap;
+    d3d11::VertexShader mBufferToTextureVS;
+    d3d11::GeometryShader mBufferToTextureGS;
     d3d11::Buffer mParamsConstantBuffer;
     CopyShaderParams mParamsData;
 

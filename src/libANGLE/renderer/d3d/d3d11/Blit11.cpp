@@ -597,14 +597,6 @@ Blit11::Blit11(Renderer11 *renderer)
 
 Blit11::~Blit11()
 {
-    mQuad2DVS.release();
-    mDepthPS.release();
-
-    mQuad3DVS.release();
-    mQuad3DGS.release();
-
-    clearShaderMap();
-    releaseResolveDepthStencilResources();
 }
 
 gl::Error Blit11::initResources()
@@ -955,13 +947,12 @@ Blit11::SwizzleShaderType Blit11::GetSwizzleShaderType(GLenum type,
 
 gl::Error Blit11::getShaderSupport(const Shader &shader, Blit11::ShaderSupport *supportOut)
 {
-    ID3D11Device *device = mRenderer->getDevice();
-
     if (shader.dimension == SHADER_2D)
     {
         ANGLE_TRY(mQuad2DIL.resolve(mRenderer));
+        ANGLE_TRY(mQuad2DVS.resolve(mRenderer));
         supportOut->inputLayout         = mQuad2DIL.get();
-        supportOut->vertexShader        = mQuad2DVS.resolve(device);
+        supportOut->vertexShader        = mQuad2DVS.get();
         supportOut->geometryShader      = nullptr;
         supportOut->vertexWriteFunction = Write2DVertices;
     }
@@ -969,9 +960,11 @@ gl::Error Blit11::getShaderSupport(const Shader &shader, Blit11::ShaderSupport *
     {
         ASSERT(shader.dimension == SHADER_3D);
         ANGLE_TRY(mQuad3DIL.resolve(mRenderer));
+        ANGLE_TRY(mQuad3DVS.resolve(mRenderer));
+        ANGLE_TRY(mQuad3DGS.resolve(mRenderer));
         supportOut->inputLayout         = mQuad2DIL.get();
-        supportOut->vertexShader        = mQuad3DVS.resolve(device);
-        supportOut->geometryShader      = mQuad3DGS.resolve(device);
+        supportOut->vertexShader        = mQuad3DVS.get();
+        supportOut->geometryShader      = mQuad3DGS.get();
         supportOut->vertexWriteFunction = Write3DVertices;
     }
 
@@ -1088,7 +1081,7 @@ gl::Error Blit11::swizzleTexture(const d3d11::SharedSRV &source,
     deviceContext->IASetPrimitiveTopology(topology);
     deviceContext->VSSetShader(support.vertexShader, nullptr, 0);
 
-    deviceContext->PSSetShader(shader->pixelShader, nullptr, 0);
+    deviceContext->PSSetShader(shader->pixelShader.get(), nullptr, 0);
     deviceContext->GSSetShader(support.geometryShader, nullptr, 0);
 
     // Unset the currently bound shader resource to avoid conflicts
@@ -1228,7 +1221,7 @@ gl::Error Blit11::copyTexture(const d3d11::SharedSRV &source,
     deviceContext->IASetPrimitiveTopology(topology);
     deviceContext->VSSetShader(support.vertexShader, nullptr, 0);
 
-    deviceContext->PSSetShader(shader->pixelShader, nullptr, 0);
+    deviceContext->PSSetShader(shader->pixelShader.get(), nullptr, 0);
     deviceContext->GSSetShader(support.geometryShader, nullptr, 0);
 
     // Unset the currently bound shader resource to avoid conflicts
@@ -1354,20 +1347,16 @@ gl::Error Blit11::copyDepth(const d3d11::SharedSRV &source,
         deviceContext->RSSetState(mScissorDisabledRasterizerState.get());
     }
 
-    ID3D11Device *device         = mRenderer->getDevice();
-    ID3D11VertexShader *quad2DVS = mQuad2DVS.resolve(device);
-    if (quad2DVS == nullptr)
-    {
-        return gl::InternalError() << "Error compiling internal 2D blit vertex shader";
-    }
+    ANGLE_TRY(mQuad2DIL.resolve(mRenderer));
+    ANGLE_TRY(mQuad2DVS.resolve(mRenderer));
+    ANGLE_TRY(mDepthPS.resolve(mRenderer));
 
     // Apply shaders
-    ANGLE_TRY(mQuad2DIL.resolve(mRenderer));
     deviceContext->IASetInputLayout(mQuad2DIL.get());
     deviceContext->IASetPrimitiveTopology(topology);
-    deviceContext->VSSetShader(quad2DVS, nullptr, 0);
+    deviceContext->VSSetShader(mQuad2DVS.get(), nullptr, 0);
 
-    deviceContext->PSSetShader(mDepthPS.resolve(device), nullptr, 0);
+    deviceContext->PSSetShader(mDepthPS.get(), nullptr, 0);
     deviceContext->GSSetShader(nullptr, nullptr, 0);
 
     // Unset the currently bound shader resource to avoid conflicts
@@ -1602,46 +1591,47 @@ gl::Error Blit11::copyAndConvert(const TextureHelper11 &source,
     return gl::NoError();
 }
 
-void Blit11::addBlitShaderToMap(BlitShaderType blitShaderType,
-                                ShaderDimension dimension,
-                                ID3D11PixelShader *ps)
+gl::Error Blit11::addBlitShaderToMap(BlitShaderType blitShaderType,
+                                     ShaderDimension dimension,
+                                     const ShaderData &shaderData,
+                                     const char *name)
 {
     ASSERT(mBlitShaderMap.find(blitShaderType) == mBlitShaderMap.end());
-    ASSERT(ps);
+
+    d3d11::PixelShader ps;
+    ANGLE_TRY(mRenderer->allocateResource(shaderData, &ps));
+    ps.setDebugName(name);
 
     Shader shader;
     shader.dimension   = dimension;
-    shader.pixelShader = ps;
+    shader.pixelShader = std::move(ps);
 
-    mBlitShaderMap[blitShaderType] = shader;
+    mBlitShaderMap[blitShaderType] = std::move(shader);
+    return gl::NoError();
 }
 
-void Blit11::addSwizzleShaderToMap(SwizzleShaderType swizzleShaderType,
-                                   ShaderDimension dimension,
-                                   ID3D11PixelShader *ps)
+gl::Error Blit11::addSwizzleShaderToMap(SwizzleShaderType swizzleShaderType,
+                                        ShaderDimension dimension,
+                                        const ShaderData &shaderData,
+                                        const char *name)
 {
     ASSERT(mSwizzleShaderMap.find(swizzleShaderType) == mSwizzleShaderMap.end());
-    ASSERT(ps);
+
+    d3d11::PixelShader ps;
+    ANGLE_TRY(mRenderer->allocateResource(shaderData, &ps));
+    ps.setDebugName(name);
 
     Shader shader;
     shader.dimension   = dimension;
-    shader.pixelShader = ps;
+    shader.pixelShader = std::move(ps);
 
-    mSwizzleShaderMap[swizzleShaderType] = shader;
+    mSwizzleShaderMap[swizzleShaderType] = std::move(shader);
+    return gl::NoError();
 }
 
 void Blit11::clearShaderMap()
 {
-    for (auto &blitShader : mBlitShaderMap)
-    {
-        SafeRelease(blitShader.second.pixelShader);
-    }
     mBlitShaderMap.clear();
-
-    for (auto &swizzleShader : mSwizzleShaderMap)
-    {
-        SafeRelease(swizzleShader.second.pixelShader);
-    }
     mSwizzleShaderMap.clear();
 }
 
@@ -1671,229 +1661,215 @@ gl::Error Blit11::getBlitShader(GLenum destFormat,
 
     ASSERT(dimension == SHADER_2D || mRenderer->isES3Capable());
 
-    ID3D11Device *device = mRenderer->getDevice();
-
     switch (blitShaderType)
     {
         case BLITSHADER_2D_RGBAF:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_2D,
-                d3d11::CompilePS(device, g_PS_PassthroughRGBA2D, "Blit11 2D RGBA pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D,
+                                         ShaderData(g_PS_PassthroughRGBA2D),
+                                         "Blit11 2D RGBA pixel shader"));
             break;
         case BLITSHADER_2D_BGRAF:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_2D,
-                d3d11::CompilePS(device, g_PS_PassthroughRGBA2D, "Blit11 2D BGRA pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D,
+                                         ShaderData(g_PS_PassthroughRGBA2D),
+                                         "Blit11 2D BGRA pixel shader"));
             break;
         case BLITSHADER_2D_RGBF:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_2D,
-                d3d11::CompilePS(device, g_PS_PassthroughRGB2D, "Blit11 2D RGB pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D,
+                                         ShaderData(g_PS_PassthroughRGB2D),
+                                         "Blit11 2D RGB pixel shader"));
             break;
         case BLITSHADER_2D_RGF:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_2D,
-                d3d11::CompilePS(device, g_PS_PassthroughRG2D, "Blit11 2D RG pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D,
+                                         ShaderData(g_PS_PassthroughRG2D),
+                                         "Blit11 2D RG pixel shader"));
             break;
         case BLITSHADER_2D_RF:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_2D,
-                d3d11::CompilePS(device, g_PS_PassthroughR2D, "Blit11 2D R pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D, ShaderData(g_PS_PassthroughR2D),
+                                         "Blit11 2D R pixel shader"));
             break;
         case BLITSHADER_2D_ALPHA:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_2D,
-                d3d11::CompilePS(device, g_PS_PassthroughRGBA2D, "Blit11 2D alpha pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D,
+                                         ShaderData(g_PS_PassthroughRGBA2D),
+                                         "Blit11 2D alpha pixel shader"));
             break;
         case BLITSHADER_2D_LUMA:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_2D,
-                d3d11::CompilePS(device, g_PS_PassthroughLum2D, "Blit11 2D lum pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D,
+                                         ShaderData(g_PS_PassthroughLum2D),
+                                         "Blit11 2D lum pixel shader"));
             break;
         case BLITSHADER_2D_LUMAALPHA:
-            addBlitShaderToMap(blitShaderType, SHADER_2D,
-                               d3d11::CompilePS(device, g_PS_PassthroughLumAlpha2D,
-                                                "Blit11 2D luminance alpha pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D,
+                                         ShaderData(g_PS_PassthroughLumAlpha2D),
+                                         "Blit11 2D luminance alpha pixel shader"));
             break;
         case BLITSHADER_2D_RGBAUI:
-            addBlitShaderToMap(blitShaderType, SHADER_2D,
-                               d3d11::CompilePS(device, g_PS_PassthroughRGBA2DUI,
-                                                "Blit11 2D RGBA UI pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D,
+                                         ShaderData(g_PS_PassthroughRGBA2DUI),
+                                         "Blit11 2D RGBA UI pixel shader"));
             break;
         case BLITSHADER_2D_RGBAI:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_2D,
-                d3d11::CompilePS(device, g_PS_PassthroughRGBA2DI, "Blit11 2D RGBA I pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D,
+                                         ShaderData(g_PS_PassthroughRGBA2DI),
+                                         "Blit11 2D RGBA I pixel shader"));
             break;
         case BLITSHADER_2D_RGBUI:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_2D,
-                d3d11::CompilePS(device, g_PS_PassthroughRGB2DUI, "Blit11 2D RGB UI pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D,
+                                         ShaderData(g_PS_PassthroughRGB2DUI),
+                                         "Blit11 2D RGB UI pixel shader"));
             break;
         case BLITSHADER_2D_RGBI:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_2D,
-                d3d11::CompilePS(device, g_PS_PassthroughRGB2DI, "Blit11 2D RGB I pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D,
+                                         ShaderData(g_PS_PassthroughRGB2DI),
+                                         "Blit11 2D RGB I pixel shader"));
             break;
         case BLITSHADER_2D_RGUI:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_2D,
-                d3d11::CompilePS(device, g_PS_PassthroughRG2DUI, "Blit11 2D RG UI pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D,
+                                         ShaderData(g_PS_PassthroughRG2DUI),
+                                         "Blit11 2D RG UI pixel shader"));
             break;
         case BLITSHADER_2D_RGI:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_2D,
-                d3d11::CompilePS(device, g_PS_PassthroughRG2DI, "Blit11 2D RG I pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D,
+                                         ShaderData(g_PS_PassthroughRG2DI),
+                                         "Blit11 2D RG I pixel shader"));
             break;
         case BLITSHADER_2D_RUI:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_2D,
-                d3d11::CompilePS(device, g_PS_PassthroughR2DUI, "Blit11 2D R UI pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D,
+                                         ShaderData(g_PS_PassthroughR2DUI),
+                                         "Blit11 2D R UI pixel shader"));
             break;
         case BLITSHADER_2D_RI:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_2D,
-                d3d11::CompilePS(device, g_PS_PassthroughR2DI, "Blit11 2D R I pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D,
+                                         ShaderData(g_PS_PassthroughR2DI),
+                                         "Blit11 2D R I pixel shader"));
             break;
         case BLITSHADER_3D_RGBAF:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_3D,
-                d3d11::CompilePS(device, g_PS_PassthroughRGBA3D, "Blit11 3D RGBA pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_3D,
+                                         ShaderData(g_PS_PassthroughRGBA3D),
+                                         "Blit11 3D RGBA pixel shader"));
             break;
         case BLITSHADER_3D_RGBAUI:
-            addBlitShaderToMap(blitShaderType, SHADER_3D,
-                               d3d11::CompilePS(device, g_PS_PassthroughRGBA3DUI,
-                                                "Blit11 3D UI RGBA pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_3D,
+                                         ShaderData(g_PS_PassthroughRGBA3DUI),
+                                         "Blit11 3D UI RGBA pixel shader"));
             break;
         case BLITSHADER_3D_RGBAI:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_3D,
-                d3d11::CompilePS(device, g_PS_PassthroughRGBA3DI, "Blit11 3D I RGBA pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_3D,
+                                         ShaderData(g_PS_PassthroughRGBA3DI),
+                                         "Blit11 3D I RGBA pixel shader"));
             break;
         case BLITSHADER_3D_BGRAF:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_3D,
-                d3d11::CompilePS(device, g_PS_PassthroughRGBA3D, "Blit11 3D BGRA pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_3D,
+                                         ShaderData(g_PS_PassthroughRGBA3D),
+                                         "Blit11 3D BGRA pixel shader"));
             break;
         case BLITSHADER_3D_RGBF:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_3D,
-                d3d11::CompilePS(device, g_PS_PassthroughRGB3D, "Blit11 3D RGB pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_3D,
+                                         ShaderData(g_PS_PassthroughRGB3D),
+                                         "Blit11 3D RGB pixel shader"));
             break;
         case BLITSHADER_3D_RGBUI:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_3D,
-                d3d11::CompilePS(device, g_PS_PassthroughRGB3DUI, "Blit11 3D RGB UI pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_3D,
+                                         ShaderData(g_PS_PassthroughRGB3DUI),
+                                         "Blit11 3D RGB UI pixel shader"));
             break;
         case BLITSHADER_3D_RGBI:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_3D,
-                d3d11::CompilePS(device, g_PS_PassthroughRGB3DI, "Blit11 3D RGB I pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_3D,
+                                         ShaderData(g_PS_PassthroughRGB3DI),
+                                         "Blit11 3D RGB I pixel shader"));
             break;
         case BLITSHADER_3D_RGF:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_3D,
-                d3d11::CompilePS(device, g_PS_PassthroughRG3D, "Blit11 3D RG pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_3D,
+                                         ShaderData(g_PS_PassthroughRG3D),
+                                         "Blit11 3D RG pixel shader"));
             break;
         case BLITSHADER_3D_RGUI:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_3D,
-                d3d11::CompilePS(device, g_PS_PassthroughRG3DUI, "Blit11 3D RG UI pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_3D,
+                                         ShaderData(g_PS_PassthroughRG3DUI),
+                                         "Blit11 3D RG UI pixel shader"));
             break;
         case BLITSHADER_3D_RGI:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_3D,
-                d3d11::CompilePS(device, g_PS_PassthroughRG3DI, "Blit11 3D RG I pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_3D,
+                                         ShaderData(g_PS_PassthroughRG3DI),
+                                         "Blit11 3D RG I pixel shader"));
             break;
         case BLITSHADER_3D_RF:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_3D,
-                d3d11::CompilePS(device, g_PS_PassthroughR3D, "Blit11 3D R pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_3D, ShaderData(g_PS_PassthroughR3D),
+                                         "Blit11 3D R pixel shader"));
             break;
         case BLITSHADER_3D_RUI:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_3D,
-                d3d11::CompilePS(device, g_PS_PassthroughR3DUI, "Blit11 3D R UI pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_3D,
+                                         ShaderData(g_PS_PassthroughR3DUI),
+                                         "Blit11 3D R UI pixel shader"));
             break;
         case BLITSHADER_3D_RI:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_3D,
-                d3d11::CompilePS(device, g_PS_PassthroughR3DI, "Blit11 3D R I pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_3D,
+                                         ShaderData(g_PS_PassthroughR3DI),
+                                         "Blit11 3D R I pixel shader"));
             break;
         case BLITSHADER_3D_ALPHA:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_3D,
-                d3d11::CompilePS(device, g_PS_PassthroughRGBA3D, "Blit11 3D alpha pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_3D,
+                                         ShaderData(g_PS_PassthroughRGBA3D),
+                                         "Blit11 3D alpha pixel shader"));
             break;
         case BLITSHADER_3D_LUMA:
-            addBlitShaderToMap(blitShaderType, SHADER_3D,
-                               d3d11::CompilePS(device, g_PS_PassthroughLum3D,
-                                                "Blit11 3D luminance pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_3D,
+                                         ShaderData(g_PS_PassthroughLum3D),
+                                         "Blit11 3D luminance pixel shader"));
             break;
         case BLITSHADER_3D_LUMAALPHA:
-            addBlitShaderToMap(blitShaderType, SHADER_3D,
-                               d3d11::CompilePS(device, g_PS_PassthroughLumAlpha3D,
-                                                "Blit11 3D luminance alpha pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_3D,
+                                         ShaderData(g_PS_PassthroughLumAlpha3D),
+                                         "Blit11 3D luminance alpha pixel shader"));
             break;
 
         case BLITSHADER_2D_RGBAF_PREMULTIPLY:
-            addBlitShaderToMap(blitShaderType, SHADER_2D,
-                               d3d11::CompilePS(device, g_PS_FtoF_PM_RGBA,
-                                                "Blit11 2D RGBA premultiply pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D, ShaderData(g_PS_FtoF_PM_RGBA),
+                                         "Blit11 2D RGBA premultiply pixel shader"));
             break;
 
         case BLITSHADER_2D_RGBAF_UNMULTIPLY:
-            addBlitShaderToMap(blitShaderType, SHADER_2D,
-                               d3d11::CompilePS(device, g_PS_FtoF_UM_RGBA,
-                                                "Blit11 2D RGBA unmultiply pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D, ShaderData(g_PS_FtoF_UM_RGBA),
+                                         "Blit11 2D RGBA unmultiply pixel shader"));
             break;
 
         case BLITSHADER_2D_RGBF_PREMULTIPLY:
-            addBlitShaderToMap(blitShaderType, SHADER_2D,
-                               d3d11::CompilePS(device, g_PS_FtoF_PM_RGB,
-                                                "Blit11 2D RGB premultiply pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D, ShaderData(g_PS_FtoF_PM_RGB),
+                                         "Blit11 2D RGB premultiply pixel shader"));
             break;
 
         case BLITSHADER_2D_RGBF_UNMULTIPLY:
-            addBlitShaderToMap(blitShaderType, SHADER_2D,
-                               d3d11::CompilePS(device, g_PS_FtoF_UM_RGB,
-                                                "Blit11 2D RGB unmultiply pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D, ShaderData(g_PS_FtoF_UM_RGB),
+                                         "Blit11 2D RGB unmultiply pixel shader"));
             break;
 
         case BLITSHADER_2D_RGBAF_TOUI:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_2D,
-                d3d11::CompilePS(device, g_PS_FtoU_PT_RGBA, "Blit11 2D RGBA to uint pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D, ShaderData(g_PS_FtoU_PT_RGBA),
+                                         "Blit11 2D RGBA to uint pixel shader"));
             break;
 
         case BLITSHADER_2D_RGBAF_TOUI_PREMULTIPLY:
-            addBlitShaderToMap(blitShaderType, SHADER_2D,
-                               d3d11::CompilePS(device, g_PS_FtoU_PM_RGBA,
-                                                "Blit11 2D RGBA to uint premultiply pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D, ShaderData(g_PS_FtoU_PM_RGBA),
+                                         "Blit11 2D RGBA to uint premultiply pixel shader"));
             break;
 
         case BLITSHADER_2D_RGBAF_TOUI_UNMULTIPLY:
-            addBlitShaderToMap(blitShaderType, SHADER_2D,
-                               d3d11::CompilePS(device, g_PS_FtoU_UM_RGBA,
-                                                "Blit11 2D RGBA to uint unmultiply pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D, ShaderData(g_PS_FtoU_UM_RGBA),
+                                         "Blit11 2D RGBA to uint unmultiply pixel shader"));
             break;
 
         case BLITSHADER_2D_RGBF_TOUI:
-            addBlitShaderToMap(
-                blitShaderType, SHADER_2D,
-                d3d11::CompilePS(device, g_PS_FtoU_PT_RGB, "Blit11 2D RGB to uint pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D, ShaderData(g_PS_FtoU_PT_RGB),
+                                         "Blit11 2D RGB to uint pixel shader"));
             break;
 
         case BLITSHADER_2D_RGBF_TOUI_PREMULTIPLY:
-            addBlitShaderToMap(blitShaderType, SHADER_2D,
-                               d3d11::CompilePS(device, g_PS_FtoU_PM_RGB,
-                                                "Blit11 2D RGB to uint premultiply pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D, ShaderData(g_PS_FtoU_PM_RGB),
+                                         "Blit11 2D RGB to uint premultiply pixel shader"));
             break;
 
         case BLITSHADER_2D_RGBF_TOUI_UNMULTIPLY:
-            addBlitShaderToMap(blitShaderType, SHADER_2D,
-                               d3d11::CompilePS(device, g_PS_FtoU_UM_RGB,
-                                                "Blit11 2D RGB to uint unmultiply pixel shader"));
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D, ShaderData(g_PS_FtoU_UM_RGB),
+                                         "Blit11 2D RGB to uint unmultiply pixel shader"));
             break;
 
         default:
@@ -1928,69 +1904,67 @@ gl::Error Blit11::getSwizzleShader(GLenum type,
     // Swizzling shaders (OpenGL ES 3+)
     ASSERT(mRenderer->isES3Capable());
 
-    ID3D11Device *device = mRenderer->getDevice();
-
     switch (swizzleShaderType)
     {
         case SWIZZLESHADER_2D_FLOAT:
-            addSwizzleShaderToMap(
-                swizzleShaderType, SHADER_2D,
-                d3d11::CompilePS(device, g_PS_SwizzleF2D, "Blit11 2D F swizzle pixel shader"));
+            ANGLE_TRY(addSwizzleShaderToMap(swizzleShaderType, SHADER_2D,
+                                            ShaderData(g_PS_SwizzleF2D),
+                                            "Blit11 2D F swizzle pixel shader"));
             break;
         case SWIZZLESHADER_2D_UINT:
-            addSwizzleShaderToMap(
-                swizzleShaderType, SHADER_2D,
-                d3d11::CompilePS(device, g_PS_SwizzleUI2D, "Blit11 2D UI swizzle pixel shader"));
+            ANGLE_TRY(addSwizzleShaderToMap(swizzleShaderType, SHADER_2D,
+                                            ShaderData(g_PS_SwizzleUI2D),
+                                            "Blit11 2D UI swizzle pixel shader"));
             break;
         case SWIZZLESHADER_2D_INT:
-            addSwizzleShaderToMap(
-                swizzleShaderType, SHADER_2D,
-                d3d11::CompilePS(device, g_PS_SwizzleI2D, "Blit11 2D I swizzle pixel shader"));
+            ANGLE_TRY(addSwizzleShaderToMap(swizzleShaderType, SHADER_2D,
+                                            ShaderData(g_PS_SwizzleI2D),
+                                            "Blit11 2D I swizzle pixel shader"));
             break;
         case SWIZZLESHADER_CUBE_FLOAT:
-            addSwizzleShaderToMap(swizzleShaderType, SHADER_3D,
-                                  d3d11::CompilePS(device, g_PS_SwizzleF2DArray,
-                                                   "Blit11 2D Cube F swizzle pixel shader"));
+            ANGLE_TRY(addSwizzleShaderToMap(swizzleShaderType, SHADER_3D,
+                                            ShaderData(g_PS_SwizzleF2DArray),
+                                            "Blit11 2D Cube F swizzle pixel shader"));
             break;
         case SWIZZLESHADER_CUBE_UINT:
-            addSwizzleShaderToMap(swizzleShaderType, SHADER_3D,
-                                  d3d11::CompilePS(device, g_PS_SwizzleUI2DArray,
-                                                   "Blit11 2D Cube UI swizzle pixel shader"));
+            ANGLE_TRY(addSwizzleShaderToMap(swizzleShaderType, SHADER_3D,
+                                            ShaderData(g_PS_SwizzleUI2DArray),
+                                            "Blit11 2D Cube UI swizzle pixel shader"));
             break;
         case SWIZZLESHADER_CUBE_INT:
-            addSwizzleShaderToMap(swizzleShaderType, SHADER_3D,
-                                  d3d11::CompilePS(device, g_PS_SwizzleI2DArray,
-                                                   "Blit11 2D Cube I swizzle pixel shader"));
+            ANGLE_TRY(addSwizzleShaderToMap(swizzleShaderType, SHADER_3D,
+                                            ShaderData(g_PS_SwizzleI2DArray),
+                                            "Blit11 2D Cube I swizzle pixel shader"));
             break;
         case SWIZZLESHADER_3D_FLOAT:
-            addSwizzleShaderToMap(
-                swizzleShaderType, SHADER_3D,
-                d3d11::CompilePS(device, g_PS_SwizzleF3D, "Blit11 3D F swizzle pixel shader"));
+            ANGLE_TRY(addSwizzleShaderToMap(swizzleShaderType, SHADER_3D,
+                                            ShaderData(g_PS_SwizzleF3D),
+                                            "Blit11 3D F swizzle pixel shader"));
             break;
         case SWIZZLESHADER_3D_UINT:
-            addSwizzleShaderToMap(
-                swizzleShaderType, SHADER_3D,
-                d3d11::CompilePS(device, g_PS_SwizzleUI3D, "Blit11 3D UI swizzle pixel shader"));
+            ANGLE_TRY(addSwizzleShaderToMap(swizzleShaderType, SHADER_3D,
+                                            ShaderData(g_PS_SwizzleUI3D),
+                                            "Blit11 3D UI swizzle pixel shader"));
             break;
         case SWIZZLESHADER_3D_INT:
-            addSwizzleShaderToMap(
-                swizzleShaderType, SHADER_3D,
-                d3d11::CompilePS(device, g_PS_SwizzleI3D, "Blit11 3D I swizzle pixel shader"));
+            ANGLE_TRY(addSwizzleShaderToMap(swizzleShaderType, SHADER_3D,
+                                            ShaderData(g_PS_SwizzleI3D),
+                                            "Blit11 3D I swizzle pixel shader"));
             break;
         case SWIZZLESHADER_ARRAY_FLOAT:
-            addSwizzleShaderToMap(swizzleShaderType, SHADER_3D,
-                                  d3d11::CompilePS(device, g_PS_SwizzleF2DArray,
-                                                   "Blit11 2D Array F swizzle pixel shader"));
+            ANGLE_TRY(addSwizzleShaderToMap(swizzleShaderType, SHADER_3D,
+                                            ShaderData(g_PS_SwizzleF2DArray),
+                                            "Blit11 2D Array F swizzle pixel shader"));
             break;
         case SWIZZLESHADER_ARRAY_UINT:
-            addSwizzleShaderToMap(swizzleShaderType, SHADER_3D,
-                                  d3d11::CompilePS(device, g_PS_SwizzleUI2DArray,
-                                                   "Blit11 2D Array UI swizzle pixel shader"));
+            ANGLE_TRY(addSwizzleShaderToMap(swizzleShaderType, SHADER_3D,
+                                            ShaderData(g_PS_SwizzleUI2DArray),
+                                            "Blit11 2D Array UI swizzle pixel shader"));
             break;
         case SWIZZLESHADER_ARRAY_INT:
-            addSwizzleShaderToMap(swizzleShaderType, SHADER_3D,
-                                  d3d11::CompilePS(device, g_PS_SwizzleI2DArray,
-                                                   "Blit11 2D Array I swizzle pixel shader"));
+            ANGLE_TRY(addSwizzleShaderToMap(swizzleShaderType, SHADER_3D,
+                                            ShaderData(g_PS_SwizzleI2DArray),
+                                            "Blit11 2D Array I swizzle pixel shader"));
             break;
         default:
             UNREACHABLE();
@@ -2009,7 +1983,6 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveDepth(RenderTarget11 *depth)
     ASSERT(mRenderer->getRenderer11DeviceCaps().featureLevel > D3D_FEATURE_LEVEL_10_0);
 
     const auto &extents          = depth->getExtents();
-    ID3D11Device *device         = mRenderer->getDevice();
     ID3D11DeviceContext *context = mRenderer->getDeviceContext();
 
     ANGLE_TRY(initResolveDepthOnly(depth->getFormatSet(), extents));
@@ -2017,10 +1990,13 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveDepth(RenderTarget11 *depth)
     // Notify the Renderer that all state should be invalidated.
     mRenderer->markAllStateDirty();
 
+    ANGLE_TRY(mResolveDepthStencilVS.resolve(mRenderer));
+    ANGLE_TRY(mResolveDepthPS.resolve(mRenderer));
+
     // Apply the necessary state changes to the D3D11 immediate device context.
     context->IASetInputLayout(nullptr);
     context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    context->VSSetShader(mResolveDepthStencilVS.resolve(device), nullptr, 0);
+    context->VSSetShader(mResolveDepthStencilVS.get(), nullptr, 0);
     context->GSSetShader(nullptr, nullptr, 0);
     context->RSSetState(nullptr);
     context->OMSetDepthStencilState(mDepthStencilState.get(), 0xFFFFFFFF);
@@ -2041,7 +2017,7 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveDepth(RenderTarget11 *depth)
 
     context->PSSetShaderResources(0, 1, pixelViews);
 
-    context->PSSetShader(mResolveDepthPS.resolve(device), nullptr, 0);
+    context->PSSetShader(mResolveDepthPS.get(), nullptr, 0);
 
     // Trigger the blit on the GPU.
     context->Draw(6, 0);
@@ -2139,7 +2115,6 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(RenderTarget11 *depthS
 
     ANGLE_TRY(initResolveDepthStencil(extents));
 
-    ID3D11Device *device         = mRenderer->getDevice();
     ID3D11DeviceContext *context = mRenderer->getDeviceContext();
 
     ID3D11Resource *stencilResource = depthStencil->getTexture().get();
@@ -2173,10 +2148,12 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(RenderTarget11 *depthS
 
     ID3D11RenderTargetView *rtvs[] = {mResolvedDepthStencilRTView.get()};
 
+    ANGLE_TRY(mResolveDepthStencilVS.resolve(mRenderer));
+
     // Apply the necessary state changes to the D3D11 immediate device context.
     context->IASetInputLayout(nullptr);
     context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    context->VSSetShader(mResolveDepthStencilVS.resolve(device), nullptr, 0);
+    context->VSSetShader(mResolveDepthStencilVS.get(), nullptr, 0);
     context->GSSetShader(nullptr, nullptr, 0);
     context->RSSetState(nullptr);
     context->OMSetDepthStencilState(nullptr, 0xFFFFFFFF);
@@ -2204,11 +2181,13 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(RenderTarget11 *depthS
     // because SV_StencilRef isn't supported until HLSL 5.1/D3D11.3.
     if (alsoDepth)
     {
-        context->PSSetShader(mResolveDepthStencilPS.resolve(device), nullptr, 0);
+        ANGLE_TRY(mResolveDepthStencilPS.resolve(mRenderer));
+        context->PSSetShader(mResolveDepthStencilPS.get(), nullptr, 0);
     }
     else
     {
-        context->PSSetShader(mResolveStencilPS.resolve(device), nullptr, 0);
+        ANGLE_TRY(mResolveStencilPS.resolve(mRenderer));
+        context->PSSetShader(mResolveStencilPS.get(), nullptr, 0);
     }
 
     // Trigger the blit on the GPU.

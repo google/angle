@@ -94,12 +94,6 @@ Clear11::ShaderManager::ShaderManager()
 
 Clear11::ShaderManager::~ShaderManager()
 {
-    mVs9.release();
-    mPsFloat9.release();
-    mVs.release();
-    mPsFloat.release();
-    mPsUInt.release();
-    mPsSInt.release();
 }
 
 gl::Error Clear11::ShaderManager::getShadersAndLayout(Renderer11 *renderer,
@@ -108,14 +102,12 @@ gl::Error Clear11::ShaderManager::getShadersAndLayout(Renderer11 *renderer,
                                                       ID3D11VertexShader **vs,
                                                       ID3D11PixelShader **ps)
 {
-    auto featureLevel = renderer->getRenderer11DeviceCaps().featureLevel;
-    auto device       = renderer->getDevice();
-
-    if (featureLevel <= D3D_FEATURE_LEVEL_9_3)
+    if (renderer->getRenderer11DeviceCaps().featureLevel <= D3D_FEATURE_LEVEL_9_3)
     {
         ASSERT(clearType == GL_FLOAT);
 
-        *vs = mVs9.resolve(device);
+        ANGLE_TRY(mVs9.resolve(renderer));
+        ANGLE_TRY(mPsFloat9.resolve(renderer));
 
         if (!mIl9.valid())
         {
@@ -128,24 +120,29 @@ gl::Error Clear11::ShaderManager::getShadersAndLayout(Renderer11 *renderer,
             ANGLE_TRY(renderer->allocateResource(ilDescArray, &vertexShader, &mIl9));
         }
 
+        *vs = mVs9.get();
         *il = mIl9.get();
-        *ps = mPsFloat9.resolve(device);
+        *ps = mPsFloat9.get();
         return gl::NoError();
     }
 
-    *vs = mVs.resolve(device);
+    ANGLE_TRY(mVs.resolve(renderer));
+    *vs = mVs.get();
     *il = nullptr;
 
     switch (clearType)
     {
         case GL_FLOAT:
-            *ps = mPsFloat.resolve(device);
+            ANGLE_TRY(mPsFloat.resolve(renderer));
+            *ps = mPsFloat.get();
             break;
         case GL_UNSIGNED_INT:
-            *ps = mPsUInt.resolve(device);
+            ANGLE_TRY(mPsUInt.resolve(renderer));
+            *ps = mPsUInt.get();
             break;
         case GL_INT:
-            *ps = mPsSInt.resolve(device);
+            ANGLE_TRY(mPsSInt.resolve(renderer));
+            *ps = mPsSInt.get();
             break;
         default:
             UNREACHABLE();

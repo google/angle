@@ -13,80 +13,82 @@
 namespace rx
 {
 
-ShaderExecutable11::ShaderExecutable11(const void *function, size_t length, ID3D11PixelShader *executable)
-    : ShaderExecutableD3D(function, length)
+ShaderExecutable11::ShaderExecutable11(const void *function,
+                                       size_t length,
+                                       d3d11::PixelShader &&executable)
+    : ShaderExecutableD3D(function, length),
+      mPixelExecutable(std::move(executable)),
+      mVertexExecutable(),
+      mGeometryExecutable(),
+      mStreamOutExecutable(),
+      mComputeExecutable()
 {
-    mPixelExecutable = executable;
-    mVertexExecutable    = nullptr;
-    mGeometryExecutable  = nullptr;
-    mStreamOutExecutable = nullptr;
-    mComputeExecutable   = nullptr;
-}
-
-ShaderExecutable11::ShaderExecutable11(const void *function, size_t length, ID3D11VertexShader *executable, ID3D11GeometryShader *streamOut)
-    : ShaderExecutableD3D(function, length)
-{
-    mVertexExecutable = executable;
-    mPixelExecutable     = nullptr;
-    mGeometryExecutable  = nullptr;
-    mStreamOutExecutable = streamOut;
-    mComputeExecutable   = nullptr;
-}
-
-ShaderExecutable11::ShaderExecutable11(const void *function, size_t length, ID3D11GeometryShader *executable)
-    : ShaderExecutableD3D(function, length)
-{
-    mGeometryExecutable = executable;
-    mVertexExecutable    = nullptr;
-    mPixelExecutable     = nullptr;
-    mStreamOutExecutable = nullptr;
-    mComputeExecutable   = nullptr;
 }
 
 ShaderExecutable11::ShaderExecutable11(const void *function,
                                        size_t length,
-                                       ID3D11ComputeShader *executable)
-    : ShaderExecutableD3D(function, length)
+                                       d3d11::VertexShader &&executable,
+                                       d3d11::GeometryShader &&streamOut)
+    : ShaderExecutableD3D(function, length),
+      mPixelExecutable(),
+      mVertexExecutable(std::move(executable)),
+      mGeometryExecutable(),
+      mStreamOutExecutable(std::move(streamOut)),
+      mComputeExecutable()
 {
-    mComputeExecutable   = executable;
-    mPixelExecutable     = nullptr;
-    mVertexExecutable    = nullptr;
-    mGeometryExecutable  = nullptr;
-    mStreamOutExecutable = nullptr;
+}
+
+ShaderExecutable11::ShaderExecutable11(const void *function,
+                                       size_t length,
+                                       d3d11::GeometryShader &&executable)
+    : ShaderExecutableD3D(function, length),
+      mPixelExecutable(),
+      mVertexExecutable(),
+      mGeometryExecutable(std::move(executable)),
+      mStreamOutExecutable(),
+      mComputeExecutable()
+{
+}
+
+ShaderExecutable11::ShaderExecutable11(const void *function,
+                                       size_t length,
+                                       d3d11::ComputeShader &&executable)
+    : ShaderExecutableD3D(function, length),
+      mPixelExecutable(),
+      mVertexExecutable(),
+      mGeometryExecutable(),
+      mStreamOutExecutable(),
+      mComputeExecutable(std::move(executable))
+{
 }
 
 ShaderExecutable11::~ShaderExecutable11()
 {
-    SafeRelease(mVertexExecutable);
-    SafeRelease(mPixelExecutable);
-    SafeRelease(mGeometryExecutable);
-    SafeRelease(mStreamOutExecutable);
-    SafeRelease(mComputeExecutable);
 }
 
 ID3D11VertexShader *ShaderExecutable11::getVertexShader() const
 {
-    return mVertexExecutable;
+    return mVertexExecutable.get();
 }
 
 ID3D11PixelShader *ShaderExecutable11::getPixelShader() const
 {
-    return mPixelExecutable;
+    return mPixelExecutable.get();
 }
 
 ID3D11GeometryShader *ShaderExecutable11::getGeometryShader() const
 {
-    return mGeometryExecutable;
+    return mGeometryExecutable.get();
 }
 
 ID3D11GeometryShader *ShaderExecutable11::getStreamOutShader() const
 {
-    return mStreamOutExecutable;
+    return mStreamOutExecutable.get();
 }
 
 ID3D11ComputeShader *ShaderExecutable11::getComputeShader() const
 {
-    return mComputeExecutable;
+    return mComputeExecutable.get();
 }
 
 UniformStorage11::UniformStorage11(size_t initialSize)

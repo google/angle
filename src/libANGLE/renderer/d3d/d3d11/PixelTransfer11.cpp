@@ -36,8 +36,8 @@ namespace rx
 PixelTransfer11::PixelTransfer11(Renderer11 *renderer)
     : mRenderer(renderer),
       mResourcesLoaded(false),
-      mBufferToTextureVS(nullptr),
-      mBufferToTextureGS(nullptr),
+      mBufferToTextureVS(),
+      mBufferToTextureGS(),
       mParamsConstantBuffer(),
       mCopyRasterizerState(),
       mCopyDepthStencilState()
@@ -46,15 +46,6 @@ PixelTransfer11::PixelTransfer11(Renderer11 *renderer)
 
 PixelTransfer11::~PixelTransfer11()
 {
-    for (auto shaderMapIt = mBufferToTexturePSMap.begin(); shaderMapIt != mBufferToTexturePSMap.end(); shaderMapIt++)
-    {
-        SafeRelease(shaderMapIt->second);
-    }
-
-    mBufferToTexturePSMap.clear();
-
-    SafeRelease(mBufferToTextureVS);
-    SafeRelease(mBufferToTextureGS);
 }
 
 gl::Error PixelTransfer11::loadResources()
@@ -108,18 +99,11 @@ gl::Error PixelTransfer11::loadResources()
     mParamsConstantBuffer.setDebugName("PixelTransfer11 constant buffer");
 
     // init shaders
-    ID3D11Device *device = mRenderer->getDevice();
-    mBufferToTextureVS = d3d11::CompileVS(device, g_VS_BufferToTexture, "BufferToTexture VS");
-    if (!mBufferToTextureVS)
-    {
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to create internal buffer to texture vertex shader.");
-    }
+    ANGLE_TRY(mRenderer->allocateResource(ShaderData(g_VS_BufferToTexture), &mBufferToTextureVS));
+    mBufferToTextureVS.setDebugName("BufferToTexture VS");
 
-    mBufferToTextureGS = d3d11::CompileGS(device, g_GS_BufferToTexture, "BufferToTexture GS");
-    if (!mBufferToTextureGS)
-    {
-        return gl::Error(GL_OUT_OF_MEMORY, "Failed to create internal buffer to texture geometry shader.");
-    }
+    ANGLE_TRY(mRenderer->allocateResource(ShaderData(g_GS_BufferToTexture), &mBufferToTextureGS));
+    mBufferToTextureGS.setDebugName("BufferToTexture GS");
 
     ANGLE_TRY(buildShaderMap());
 
@@ -200,10 +184,11 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::PixelUnpackState &unpac
     UINT zero = 0;
 
     // Are we doing a 2D or 3D copy?
-    ID3D11GeometryShader *geometryShader = ((destSize.depth > 1) ? mBufferToTextureGS : nullptr);
+    ID3D11GeometryShader *geometryShader =
+        ((destSize.depth > 1) ? mBufferToTextureGS.get() : nullptr);
     auto stateManager                    = mRenderer->getStateManager();
 
-    deviceContext->VSSetShader(mBufferToTextureVS, nullptr, 0);
+    deviceContext->VSSetShader(mBufferToTextureVS.get(), nullptr, 0);
     deviceContext->GSSetShader(geometryShader, nullptr, 0);
     deviceContext->PSSetShader(pixelShader, nullptr, 0);
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, bufferSRV);
@@ -250,20 +235,24 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::PixelUnpackState &unpac
 
 gl::Error PixelTransfer11::buildShaderMap()
 {
-    ID3D11Device *device = mRenderer->getDevice();
+    d3d11::PixelShader bufferToTextureFloat;
+    d3d11::PixelShader bufferToTextureInt;
+    d3d11::PixelShader bufferToTextureUint;
 
-    mBufferToTexturePSMap[GL_FLOAT]        = d3d11::CompilePS(device, g_PS_BufferToTexture_4F,  "BufferToTexture RGBA ps");
-    mBufferToTexturePSMap[GL_INT]          = d3d11::CompilePS(device, g_PS_BufferToTexture_4I,  "BufferToTexture RGBA-I ps");
-    mBufferToTexturePSMap[GL_UNSIGNED_INT] = d3d11::CompilePS(device, g_PS_BufferToTexture_4UI, "BufferToTexture RGBA-UI ps");
+    ANGLE_TRY(
+        mRenderer->allocateResource(ShaderData(g_PS_BufferToTexture_4F), &bufferToTextureFloat));
+    ANGLE_TRY(
+        mRenderer->allocateResource(ShaderData(g_PS_BufferToTexture_4I), &bufferToTextureInt));
+    ANGLE_TRY(
+        mRenderer->allocateResource(ShaderData(g_PS_BufferToTexture_4UI), &bufferToTextureUint));
 
-    // Check that all the shaders were created successfully
-    for (auto shaderMapIt = mBufferToTexturePSMap.begin(); shaderMapIt != mBufferToTexturePSMap.end(); shaderMapIt++)
-    {
-        if (shaderMapIt->second == nullptr)
-        {
-            return gl::Error(GL_OUT_OF_MEMORY, "Failed to create internal buffer to texture pixel shader.");
-        }
-    }
+    bufferToTextureFloat.setDebugName("BufferToTexture RGBA ps");
+    bufferToTextureInt.setDebugName("BufferToTexture RGBA-I ps");
+    bufferToTextureUint.setDebugName("BufferToTexture RGBA-UI ps");
+
+    mBufferToTexturePSMap[GL_FLOAT]        = std::move(bufferToTextureFloat);
+    mBufferToTexturePSMap[GL_INT]          = std::move(bufferToTextureInt);
+    mBufferToTexturePSMap[GL_UNSIGNED_INT] = std::move(bufferToTextureUint);
 
     return gl::NoError();
 }
@@ -277,7 +266,7 @@ ID3D11PixelShader *PixelTransfer11::findBufferToTexturePS(GLenum internalFormat)
     }
 
     auto shaderMapIt = mBufferToTexturePSMap.find(componentType);
-    return (shaderMapIt == mBufferToTexturePSMap.end() ? nullptr : shaderMapIt->second);
+    return (shaderMapIt == mBufferToTexturePSMap.end() ? nullptr : shaderMapIt->second.get());
 }
 
 }  // namespace rx

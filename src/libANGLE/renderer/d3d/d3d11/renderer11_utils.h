@@ -184,86 +184,12 @@ inline bool isDeviceLostError(HRESULT errorCode)
     }
 }
 
-inline ID3D11VertexShader *CompileVS(ID3D11Device *device, const BYTE *byteCode, size_t N, const char *name)
-{
-    ID3D11VertexShader *vs = nullptr;
-    HRESULT result = device->CreateVertexShader(byteCode, N, nullptr, &vs);
-    ASSERT(SUCCEEDED(result));
-    if (SUCCEEDED(result))
-    {
-        SetDebugName(vs, name);
-        return vs;
-    }
-    return nullptr;
-}
-
-template <unsigned int N>
-ID3D11VertexShader *CompileVS(ID3D11Device *device, const BYTE (&byteCode)[N], const char *name)
-{
-    return CompileVS(device, byteCode, N, name);
-}
-
-inline ID3D11GeometryShader *CompileGS(ID3D11Device *device, const BYTE *byteCode, size_t N, const char *name)
-{
-    ID3D11GeometryShader *gs = nullptr;
-    HRESULT result = device->CreateGeometryShader(byteCode, N, nullptr, &gs);
-    ASSERT(SUCCEEDED(result));
-    if (SUCCEEDED(result))
-    {
-        SetDebugName(gs, name);
-        return gs;
-    }
-    return nullptr;
-}
-
-template <unsigned int N>
-ID3D11GeometryShader *CompileGS(ID3D11Device *device, const BYTE (&byteCode)[N], const char *name)
-{
-    return CompileGS(device, byteCode, N, name);
-}
-
-inline ID3D11PixelShader *CompilePS(ID3D11Device *device, const BYTE *byteCode, size_t N, const char *name)
-{
-    ID3D11PixelShader *ps = nullptr;
-    HRESULT result = device->CreatePixelShader(byteCode, N, nullptr, &ps);
-    ASSERT(SUCCEEDED(result));
-    if (SUCCEEDED(result))
-    {
-        SetDebugName(ps, name);
-        return ps;
-    }
-    return nullptr;
-}
-
-template <unsigned int N>
-ID3D11PixelShader *CompilePS(ID3D11Device *device, const BYTE (&byteCode)[N], const char *name)
-{
-    return CompilePS(device, byteCode, N, name);
-}
-
-template <typename ResourceType>
+template <ResourceType ResourceT>
 class LazyResource : angle::NonCopyable
 {
   public:
-    LazyResource() : mResource(nullptr), mAssociatedDevice(nullptr) {}
-    virtual ~LazyResource() { release(); }
-
-    virtual ResourceType *resolve(ID3D11Device *device) = 0;
-    void release() { SafeRelease(mResource); }
-
-  protected:
-    void checkAssociatedDevice(ID3D11Device *device);
-
-    ResourceType *mResource;
-    ID3D11Device *mAssociatedDevice;
-};
-
-template <ResourceType ResourceT>
-class LazyResource2 : angle::NonCopyable
-{
-  public:
-    constexpr LazyResource2() : mResource() {}
-    virtual ~LazyResource2() {}
+    constexpr LazyResource() : mResource() {}
+    virtual ~LazyResource() {}
 
     virtual gl::Error resolve(Renderer11 *renderer) = 0;
     void reset() { mResource.reset(); }
@@ -290,69 +216,27 @@ class LazyResource2 : angle::NonCopyable
     Resource11<GetD3D11Type<ResourceT>> mResource;
 };
 
-template <typename ResourceType>
-void LazyResource<ResourceType>::checkAssociatedDevice(ID3D11Device *device)
-{
-    ASSERT(mAssociatedDevice == nullptr || device == mAssociatedDevice);
-    mAssociatedDevice = device;
-}
-
 template <typename D3D11ShaderType>
-class LazyShader final : public LazyResource<D3D11ShaderType>
+class LazyShader final : public LazyResource<GetResourceTypeFromD3D11<D3D11ShaderType>()>
 {
   public:
     // All parameters must be constexpr. Not supported in VS2013.
-    LazyShader(const BYTE *byteCode,
-               size_t byteCodeSize,
-               const char *name)
-        : mByteCode(byteCode),
-          mByteCodeSize(byteCodeSize),
-          mName(name)
+    constexpr LazyShader(const BYTE *byteCode, size_t byteCodeSize, const char *name)
+        : mByteCode(byteCode, byteCodeSize), mName(name)
     {
     }
 
-    D3D11ShaderType *resolve(ID3D11Device *device) override;
+    gl::Error resolve(Renderer11 *renderer) override
+    {
+        return this->resolveImpl(renderer, mByteCode, nullptr, mName);
+    }
 
   private:
-    const BYTE *mByteCode;
-    size_t mByteCodeSize;
+    ShaderData mByteCode;
     const char *mName;
 };
 
-template <>
-inline ID3D11VertexShader *LazyShader<ID3D11VertexShader>::resolve(ID3D11Device *device)
-{
-    checkAssociatedDevice(device);
-    if (mResource == nullptr)
-    {
-        mResource = CompileVS(device, mByteCode, mByteCodeSize, mName);
-    }
-    return mResource;
-}
-
-template <>
-inline ID3D11GeometryShader *LazyShader<ID3D11GeometryShader>::resolve(ID3D11Device *device)
-{
-    checkAssociatedDevice(device);
-    if (mResource == nullptr)
-    {
-        mResource = CompileGS(device, mByteCode, mByteCodeSize, mName);
-    }
-    return mResource;
-}
-
-template <>
-inline ID3D11PixelShader *LazyShader<ID3D11PixelShader>::resolve(ID3D11Device *device)
-{
-    checkAssociatedDevice(device);
-    if (mResource == nullptr)
-    {
-        mResource = CompilePS(device, mByteCode, mByteCodeSize, mName);
-    }
-    return mResource;
-}
-
-class LazyInputLayout final : public LazyResource2<ResourceType::InputLayout>
+class LazyInputLayout final : public LazyResource<ResourceType::InputLayout>
 {
   public:
     constexpr LazyInputLayout(const D3D11_INPUT_ELEMENT_DESC *inputDesc,
@@ -374,7 +258,7 @@ class LazyInputLayout final : public LazyResource2<ResourceType::InputLayout>
     const char *mDebugName;
 };
 
-class LazyBlendState final : public LazyResource2<ResourceType::BlendState>
+class LazyBlendState final : public LazyResource<ResourceType::BlendState>
 {
   public:
     LazyBlendState(const D3D11_BLEND_DESC &desc, const char *debugName);

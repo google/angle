@@ -21,10 +21,13 @@ class UniformStorage11;
 class ShaderExecutable11 : public ShaderExecutableD3D
 {
   public:
-    ShaderExecutable11(const void *function, size_t length, ID3D11PixelShader *executable);
-    ShaderExecutable11(const void *function, size_t length, ID3D11VertexShader *executable, ID3D11GeometryShader *streamOut);
-    ShaderExecutable11(const void *function, size_t length, ID3D11GeometryShader *executable);
-    ShaderExecutable11(const void *function, size_t length, ID3D11ComputeShader *executable);
+    ShaderExecutable11(const void *function, size_t length, d3d11::PixelShader &&executable);
+    ShaderExecutable11(const void *function,
+                       size_t length,
+                       d3d11::VertexShader &&executable,
+                       d3d11::GeometryShader &&streamOut);
+    ShaderExecutable11(const void *function, size_t length, d3d11::GeometryShader &&executable);
+    ShaderExecutable11(const void *function, size_t length, d3d11::ComputeShader &&executable);
 
     virtual ~ShaderExecutable11();
 
@@ -35,11 +38,11 @@ class ShaderExecutable11 : public ShaderExecutableD3D
     ID3D11ComputeShader *getComputeShader() const;
 
   private:
-    ID3D11PixelShader *mPixelExecutable;
-    ID3D11VertexShader *mVertexExecutable;
-    ID3D11GeometryShader *mGeometryExecutable;
-    ID3D11GeometryShader *mStreamOutExecutable;
-    ID3D11ComputeShader *mComputeExecutable;
+    d3d11::PixelShader mPixelExecutable;
+    d3d11::VertexShader mVertexExecutable;
+    d3d11::GeometryShader mGeometryExecutable;
+    d3d11::GeometryShader mStreamOutExecutable;
+    d3d11::ComputeShader mComputeExecutable;
 };
 
 class UniformStorage11 : public UniformStorageD3D

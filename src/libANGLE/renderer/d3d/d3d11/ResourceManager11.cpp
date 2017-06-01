@@ -105,6 +105,14 @@ HRESULT CreateResource(ID3D11Device *device,
 }
 
 HRESULT CreateResource(ID3D11Device *device,
+                       const ShaderData *desc,
+                       void * /*initData*/,
+                       ID3D11ComputeShader **resourceOut)
+{
+    return device->CreateComputeShader(desc->get(), desc->size(), nullptr, resourceOut);
+}
+
+HRESULT CreateResource(ID3D11Device *device,
                        const D3D11_DEPTH_STENCIL_DESC *desc,
                        void * /*initData*/,
                        ID3D11DepthStencilState **resourceOut)
@@ -121,12 +129,37 @@ HRESULT CreateResource(ID3D11Device *device,
 }
 
 HRESULT CreateResource(ID3D11Device *device,
+                       const ShaderData *desc,
+                       const std::vector<D3D11_SO_DECLARATION_ENTRY> *initData,
+                       ID3D11GeometryShader **resourceOut)
+{
+    if (initData)
+    {
+        return device->CreateGeometryShaderWithStreamOutput(
+            desc->get(), desc->size(), initData->data(), static_cast<UINT>(initData->size()),
+            nullptr, 0, 0, nullptr, resourceOut);
+    }
+    else
+    {
+        return device->CreateGeometryShader(desc->get(), desc->size(), nullptr, resourceOut);
+    }
+}
+
+HRESULT CreateResource(ID3D11Device *device,
                        const InputElementArray *desc,
                        const ShaderData *initData,
                        ID3D11InputLayout **resourceOut)
 {
     return device->CreateInputLayout(desc->get(), static_cast<UINT>(desc->size()), initData->get(),
                                      initData->size(), resourceOut);
+}
+
+HRESULT CreateResource(ID3D11Device *device,
+                       const ShaderData *desc,
+                       void * /*initData*/,
+                       ID3D11PixelShader **resourceOut)
+{
+    return device->CreatePixelShader(desc->get(), desc->size(), nullptr, resourceOut);
 }
 
 HRESULT CreateResource(ID3D11Device *device,
@@ -175,6 +208,14 @@ HRESULT CreateResource(ID3D11Device *device,
                        ID3D11Texture3D **texture)
 {
     return device->CreateTexture3D(desc, initData, texture);
+}
+
+HRESULT CreateResource(ID3D11Device *device,
+                       const ShaderData *desc,
+                       void * /*initData*/,
+                       ID3D11VertexShader **resourceOut)
+{
+    return device->CreateVertexShader(desc->get(), desc->size(), nullptr, resourceOut);
 }
 
 DXGI_FORMAT GetTypedDepthStencilFormat(DXGI_FORMAT dxgiFormat)

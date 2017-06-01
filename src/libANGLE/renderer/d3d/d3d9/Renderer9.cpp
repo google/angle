@@ -2697,7 +2697,7 @@ gl::Error Renderer9::createRenderTargetCopy(RenderTargetD3D *source, RenderTarge
     return gl::NoError();
 }
 
-gl::Error Renderer9::loadExecutable(const void *function,
+gl::Error Renderer9::loadExecutable(const uint8_t *function,
                                     size_t length,
                                     ShaderType type,
                                     const std::vector<D3DVarying> &streamOutVaryings,
@@ -2817,8 +2817,9 @@ gl::Error Renderer9::compileToExecutable(gl::InfoLog &infoLog,
         return gl::NoError();
     }
 
-    error = loadExecutable(binary->GetBufferPointer(), binary->GetBufferSize(), type,
-                           streamOutVaryings, separatedOutputBuffers, outExectuable);
+    error = loadExecutable(reinterpret_cast<const uint8_t *>(binary->GetBufferPointer()),
+                           binary->GetBufferSize(), type, streamOutVaryings, separatedOutputBuffers,
+                           outExectuable);
 
     SafeRelease(binary);
     if (error.isError())

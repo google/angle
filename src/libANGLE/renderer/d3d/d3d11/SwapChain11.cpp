@@ -83,8 +83,8 @@ SwapChain11::SwapChain11(Renderer11 *renderer,
       mQuadVB(),
       mPassThroughSampler(),
       mPassThroughIL(),
-      mPassThroughVS(nullptr),
-      mPassThroughPS(nullptr),
+      mPassThroughVS(),
+      mPassThroughPS(),
       mPassThroughRS(),
       mColorRenderTarget(this, renderer, false),
       mDepthStencilRenderTarget(this, renderer, true),
@@ -123,8 +123,8 @@ void SwapChain11::release()
     mQuadVB.reset();
     mPassThroughSampler.reset();
     mPassThroughIL.reset();
-    SafeRelease(mPassThroughVS);
-    SafeRelease(mPassThroughPS);
+    mPassThroughVS.reset();
+    mPassThroughPS.reset();
     mPassThroughRS.reset();
 
     if (!mAppCreatedShareHandle)
@@ -612,7 +612,7 @@ void SwapChain11::initPassThroughResources()
 
     // Make sure our resources are all not allocated, when we create
     ASSERT(!mQuadVB.valid() && !mPassThroughSampler.valid());
-    ASSERT(!mPassThroughIL.valid() && mPassThroughVS == nullptr && mPassThroughPS == nullptr);
+    ASSERT(!mPassThroughIL.valid() && !mPassThroughVS.valid() && !mPassThroughPS.valid());
 
     D3D11_BUFFER_DESC vbDesc;
     vbDesc.ByteWidth = sizeof(d3d11::PositionTexCoordVertex) * 4;
@@ -658,24 +658,23 @@ void SwapChain11::initPassThroughResources()
     ASSERT(!err.isError());
     mPassThroughIL.setDebugName("Swap chain pass through layout");
 
-    HRESULT result = device->CreateVertexShader(g_VS_Passthrough2D, sizeof(g_VS_Passthrough2D),
-                                                nullptr, &mPassThroughVS);
-    ASSERT(SUCCEEDED(result));
-    d3d11::SetDebugName(mPassThroughVS, "Swap chain pass through vertex shader");
+    err = mRenderer->allocateResource(vertexShaderData, &mPassThroughVS);
+    ASSERT(!err.isError());
+    mPassThroughVS.setDebugName("Swap chain pass through vertex shader");
 
     if (mEGLSamples <= 1)
     {
-        result = device->CreatePixelShader(g_PS_PassthroughRGBA2D, sizeof(g_PS_PassthroughRGBA2D),
-                                           nullptr, &mPassThroughPS);
+        ShaderData pixelShaderData(g_PS_PassthroughRGBA2D);
+        err = mRenderer->allocateResource(pixelShaderData, &mPassThroughPS);
     }
     else
     {
-        result = device->CreatePixelShader(
-            g_PS_PassthroughRGBA2DMS, sizeof(g_PS_PassthroughRGBA2DMS), nullptr, &mPassThroughPS);
+        ShaderData pixelShaderData(g_PS_PassthroughRGBA2DMS);
+        err = mRenderer->allocateResource(pixelShaderData, &mPassThroughPS);
     }
 
-    ASSERT(SUCCEEDED(result));
-    d3d11::SetDebugName(mPassThroughPS, "Swap chain pass through pixel shader");
+    ASSERT(!err.isError());
+    mPassThroughPS.setDebugName("Swap chain pass through pixel shader");
 
     // Use the default rasterizer state but without culling
     D3D11_RASTERIZER_DESC rasterizerDesc;
@@ -786,8 +785,8 @@ EGLint SwapChain11::copyOffscreenToBackbuffer(EGLint x, EGLint y, EGLint width, 
     // Apply shaders
     deviceContext->IASetInputLayout(mPassThroughIL.get());
     deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-    deviceContext->VSSetShader(mPassThroughVS, nullptr, 0);
-    deviceContext->PSSetShader(mPassThroughPS, nullptr, 0);
+    deviceContext->VSSetShader(mPassThroughVS.get(), nullptr, 0);
+    deviceContext->PSSetShader(mPassThroughPS.get(), nullptr, 0);
     deviceContext->GSSetShader(nullptr, nullptr, 0);
 
     auto stateManager = mRenderer->getStateManager();

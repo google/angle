@@ -3647,26 +3647,22 @@ gl::Error Renderer11::createRenderTargetCopy(RenderTargetD3D *source, RenderTarg
     return gl::NoError();
 }
 
-gl::Error Renderer11::loadExecutable(const void *function,
+gl::Error Renderer11::loadExecutable(const uint8_t *function,
                                      size_t length,
                                      ShaderType type,
                                      const std::vector<D3DVarying> &streamOutVaryings,
                                      bool separatedOutputBuffers,
                                      ShaderExecutableD3D **outExecutable)
 {
+    ShaderData shaderData(function, length);
+
     switch (type)
     {
         case SHADER_VERTEX:
         {
-            ID3D11VertexShader *vertexShader      = nullptr;
-            ID3D11GeometryShader *streamOutShader = nullptr;
-
-            HRESULT result = mDevice->CreateVertexShader(function, length, nullptr, &vertexShader);
-            ASSERT(SUCCEEDED(result));
-            if (FAILED(result))
-            {
-                return gl::OutOfMemory() << "Failed to create vertex shader, " << result;
-            }
+            d3d11::VertexShader vertexShader;
+            d3d11::GeometryShader streamOutShader;
+            ANGLE_TRY(allocateResource(shaderData, &vertexShader));
 
             if (!streamOutVaryings.empty())
             {
@@ -3686,63 +3682,32 @@ gl::Error Renderer11::loadExecutable(const void *function,
                     soDeclaration.push_back(entry);
                 }
 
-                result = mDevice->CreateGeometryShaderWithStreamOutput(
-                    function, static_cast<unsigned int>(length), soDeclaration.data(),
-                    static_cast<unsigned int>(soDeclaration.size()), nullptr, 0, 0, nullptr,
-                    &streamOutShader);
-                ASSERT(SUCCEEDED(result));
-                if (FAILED(result))
-                {
-                    return gl::OutOfMemory() << "Failed to create steam output shader, " << result;
-                }
+                ANGLE_TRY(allocateResource(shaderData, &soDeclaration, &streamOutShader));
             }
 
-            *outExecutable =
-                new ShaderExecutable11(function, length, vertexShader, streamOutShader);
+            *outExecutable = new ShaderExecutable11(function, length, std::move(vertexShader),
+                                                    std::move(streamOutShader));
         }
         break;
         case SHADER_PIXEL:
         {
-            ID3D11PixelShader *pixelShader = nullptr;
-
-            HRESULT result = mDevice->CreatePixelShader(function, length, nullptr, &pixelShader);
-            ASSERT(SUCCEEDED(result));
-            if (FAILED(result))
-            {
-                return gl::OutOfMemory() << "Failed to create pixel shader, " << result;
-            }
-
-            *outExecutable = new ShaderExecutable11(function, length, pixelShader);
+            d3d11::PixelShader pixelShader;
+            ANGLE_TRY(allocateResource(shaderData, &pixelShader));
+            *outExecutable = new ShaderExecutable11(function, length, std::move(pixelShader));
         }
         break;
         case SHADER_GEOMETRY:
         {
-            ID3D11GeometryShader *geometryShader = nullptr;
-
-            HRESULT result =
-                mDevice->CreateGeometryShader(function, length, nullptr, &geometryShader);
-            ASSERT(SUCCEEDED(result));
-            if (FAILED(result))
-            {
-                return gl::OutOfMemory() << "Failed to create geometry shader, " << result;
-            }
-
-            *outExecutable = new ShaderExecutable11(function, length, geometryShader);
+            d3d11::GeometryShader geometryShader;
+            ANGLE_TRY(allocateResource(shaderData, &geometryShader));
+            *outExecutable = new ShaderExecutable11(function, length, std::move(geometryShader));
         }
         break;
         case SHADER_COMPUTE:
         {
-            ID3D11ComputeShader *computeShader = nullptr;
-
-            HRESULT result =
-                mDevice->CreateComputeShader(function, length, nullptr, &computeShader);
-            ASSERT(SUCCEEDED(result));
-            if (FAILED(result))
-            {
-                return gl::OutOfMemory() << "Failed to create compute shader, " << result;
-            }
-
-            *outExecutable = new ShaderExecutable11(function, length, computeShader);
+            d3d11::ComputeShader computeShader;
+            ANGLE_TRY(allocateResource(shaderData, &computeShader));
+            *outExecutable = new ShaderExecutable11(function, length, std::move(computeShader));
         }
         break;
         default:
@@ -3819,6 +3784,7 @@ gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog,
 
     D3D_SHADER_MACRO loopMacros[] = {{"ANGLE_ENABLE_LOOP_FLATTEN", "1"}, {0, 0}};
 
+    // TODO(jmadill): Use ComPtr?
     ID3DBlob *binary = nullptr;
     std::string debugInfo;
     ANGLE_TRY(mCompiler.compileToBinary(infoLog, shaderHLSL, profile, configs, loopMacros, &binary,
@@ -3833,8 +3799,9 @@ gl::Error Renderer11::compileToExecutable(gl::InfoLog &infoLog,
         return gl::NoError();
     }
 
-    gl::Error error = loadExecutable(binary->GetBufferPointer(), binary->GetBufferSize(), type,
-                                     streamOutVaryings, separatedOutputBuffers, outExectuable);
+    gl::Error error = loadExecutable(reinterpret_cast<const uint8_t *>(binary->GetBufferPointer()),
+                                     binary->GetBufferSize(), type, streamOutVaryings,
+                                     separatedOutputBuffers, outExectuable);
 
     SafeRelease(binary);
     if (error.isError())
