@@ -1115,7 +1115,7 @@ GLenum GL_APIENTRY GetError()
 {
     EVENT("()");
 
-    Context *context = GetValidGlobalContext();
+    Context *context = GetGlobalContext();
     if (context)
     {
         context->gatherParams<EntryPoint::GetError>();

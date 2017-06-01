@@ -95,7 +95,7 @@ template_entry_point_def = """{return_type}GL_APIENTRY {name}({params})
 {{
     EVENT("({format_params})"{comma_if_needed}{pass_params});
 
-    Context *context = GetValidGlobalContext();
+    Context *context = {context_getter}();
     if (context)
     {{
         context->gatherParams<EntryPoint::{name}>({pass_params});
@@ -160,6 +160,12 @@ def default_return_value(return_type):
     else:
         print(return_type)
 
+def get_context_getter_function(cmd_name):
+    if cmd_name == "glGetError":
+        return "GetGlobalContext"
+    else:
+        return "GetValidGlobalContext"
+
 def format_entry_point_def(cmd_name, proto, params):
     pass_params = [just_the_name(param) for param in params]
     format_params = [param_format_string(param) for param in params]
@@ -175,7 +181,8 @@ def format_entry_point_def(cmd_name, proto, params):
         validate_params = ", ".join(["context"] + pass_params),
         format_params = ", ".join(format_params),
         return_if_needed = "" if default_return == "" else "return ",
-        default_return_if_needed = "" if default_return == "" else "\n    return " + default_return + ";\n")
+        default_return_if_needed = "" if default_return == "" else "\n    return " + default_return + ";\n",
+        context_getter = get_context_getter_function(cmd_name))
 
 for cmd_name in gles2_commands:
     command_xpath = "command/proto[name='" + cmd_name + "']/.."
