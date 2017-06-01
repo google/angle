@@ -163,6 +163,14 @@ HRESULT CreateResource(ID3D11Device *device,
 }
 
 HRESULT CreateResource(ID3D11Device *device,
+                       const D3D11_QUERY_DESC *desc,
+                       void * /*initData*/,
+                       ID3D11Query **resourceOut)
+{
+    return device->CreateQuery(desc, resourceOut);
+}
+
+HRESULT CreateResource(ID3D11Device *device,
                        const D3D11_RASTERIZER_DESC *desc,
                        void * /*initData*/,
                        ID3D11RasterizerState **rasterizerState)

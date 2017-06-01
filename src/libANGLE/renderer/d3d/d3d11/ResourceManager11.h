@@ -40,6 +40,7 @@ using ShaderData        = WrappedArray<uint8_t>;
        const std::vector<D3D11_SO_DECLARATION_ENTRY>)                                        \
     OP(NAME, InputLayout, ID3D11InputLayout, InputElementArray, const ShaderData)            \
     OP(NAME, PixelShader, ID3D11PixelShader, ShaderData, void)                               \
+    OP(NAME, Query, ID3D11Query, D3D11_QUERY_DESC, void)                                     \
     OP(NAME, RasterizerState, ID3D11RasterizerState, D3D11_RASTERIZER_DESC, void)            \
     OP(NAME, RenderTargetView, ID3D11RenderTargetView, D3D11_RENDER_TARGET_VIEW_DESC,        \
        ID3D11Resource)                                                                       \

@@ -404,8 +404,6 @@ Renderer11::Renderer11(egl::Display *display)
 
     mTrim = nullptr;
 
-    mSyncQuery = nullptr;
-
     mRenderer11DeviceCaps.supportsClearView             = false;
     mRenderer11DeviceCaps.supportsConstantBufferOffsets = false;
     mRenderer11DeviceCaps.supportsDXGI1_2               = false;
@@ -1160,25 +1158,18 @@ gl::Error Renderer11::flush()
 
 gl::Error Renderer11::finish()
 {
-    HRESULT result;
-
-    if (!mSyncQuery)
+    if (!mSyncQuery.valid())
     {
         D3D11_QUERY_DESC queryDesc;
         queryDesc.Query     = D3D11_QUERY_EVENT;
         queryDesc.MiscFlags = 0;
 
-        result = mDevice->CreateQuery(&queryDesc, &mSyncQuery);
-        ASSERT(SUCCEEDED(result));
-        if (FAILED(result))
-        {
-            return gl::Error(GL_OUT_OF_MEMORY, "Failed to create event query, result: 0x%X.",
-                             result);
-        }
+        ANGLE_TRY(allocateResource(queryDesc, &mSyncQuery));
     }
 
-    mDeviceContext->End(mSyncQuery);
+    mDeviceContext->End(mSyncQuery.get());
 
+    HRESULT result       = S_OK;
     unsigned int attempt = 0;
     do
     {
@@ -1186,7 +1177,7 @@ gl::Error Renderer11::finish()
         UINT flags = (attempt % flushFrequency == 0) ? 0 : D3D11_ASYNC_GETDATA_DONOTFLUSH;
         attempt++;
 
-        result = mDeviceContext->GetData(mSyncQuery, nullptr, 0, flags);
+        result = mDeviceContext->GetData(mSyncQuery.get(), nullptr, 0, flags);
         if (FAILED(result))
         {
             return gl::Error(GL_OUT_OF_MEMORY, "Failed to get event query data, result: 0x%X.",
@@ -2877,7 +2868,7 @@ void Renderer11::releaseDeviceResources()
     mDriverConstantBufferVS.reset();
     mDriverConstantBufferPS.reset();
     mDriverConstantBufferCS.reset();
-    SafeRelease(mSyncQuery);
+    mSyncQuery.reset();
 }
 
 // set notify to true to broadcast a message to all contexts of the device loss

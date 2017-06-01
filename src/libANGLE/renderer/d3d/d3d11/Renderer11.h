@@ -658,7 +658,7 @@ class Renderer11 : public RendererD3D
     Trim11 *mTrim;
 
     // Sync query
-    ID3D11Query *mSyncQuery;
+    d3d11::Query mSyncQuery;
 
     // Created objects state tracking
     std::set<const Buffer11 *> mAliveBuffers;
