@@ -21,7 +21,8 @@ class ShaderGL : public ShaderImpl
   public:
     ShaderGL(const gl::ShaderState &data,
              const FunctionsGL *functions,
-             const WorkaroundsGL &workarounds);
+             const WorkaroundsGL &workarounds,
+             bool isWebGL);
     ~ShaderGL() override;
 
     // ShaderImpl implementation
@@ -37,6 +38,7 @@ class ShaderGL : public ShaderImpl
     const WorkaroundsGL &mWorkarounds;
 
     GLuint mShaderID;
+    bool mIsWebGL;
 };
 
 }

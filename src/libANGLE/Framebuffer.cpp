@@ -176,7 +176,7 @@ bool CheckAttachmentSampleCompleteness(const Context *context,
 FramebufferState::FramebufferState()
     : mLabel(),
       mColorAttachments(1),
-      mDrawBufferStates(IMPLEMENTATION_MAX_DRAW_BUFFERS, GL_NONE),
+      mDrawBufferStates(1, GL_BACK),
       mReadBufferState(GL_BACK),
       mDefaultWidth(0),
       mDefaultHeight(0),
@@ -185,7 +185,6 @@ FramebufferState::FramebufferState()
       mWebGLDepthStencilConsistent(true)
 {
     ASSERT(mDrawBufferStates.size() > 0);
-    mDrawBufferStates[0] = GL_BACK;
     mEnabledDrawBuffers.set(0);
 }
 
@@ -202,6 +201,7 @@ FramebufferState::FramebufferState(const Caps &caps)
 {
     ASSERT(mDrawBufferStates.size() > 0);
     mDrawBufferStates[0] = GL_COLOR_ATTACHMENT0_EXT;
+    mEnabledDrawBuffers.set(0);
 }
 
 FramebufferState::~FramebufferState()
@@ -1243,6 +1243,8 @@ void Framebuffer::setAttachmentImpl(GLenum type,
                              &mDirtyColorAttachmentBindings[colorIndex], type, binding,
                              textureIndex, resource);
 
+            // TODO(jmadill): ASSERT instead of checking the attachment exists in
+            // formsRenderingFeedbackLoopWith
             bool enabled = (type != GL_NONE && getDrawBufferState(colorIndex) != GL_NONE);
             mState.mEnabledDrawBuffers.set(colorIndex, enabled);
         }

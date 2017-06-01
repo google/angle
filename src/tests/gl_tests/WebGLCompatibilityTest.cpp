@@ -2561,6 +2561,223 @@ TEST_P(WebGL2CompatibilityTest, VertexShaderAttributeTypeMissmatch)
     EXPECT_GL_NO_ERROR();
 }
 
+// Tests the WebGL removal of undefined behavior when attachments aren't written to.
+TEST_P(WebGLCompatibilityTest, DrawBuffers)
+{
+    if (IsD3D9() || IsD3D11())
+    {
+        std::cout << "Test skipped on " << GetParam() << std::endl;
+        return;
+    }
+
+    // Make sure we can use at least 4 attachments for the tests.
+    bool useEXT = false;
+    if (getClientMajorVersion() < 3)
+    {
+        if (!extensionRequestable("GL_EXT_draw_buffers"))
+        {
+            std::cout << "Test skipped because draw buffers are not available" << std::endl;
+            return;
+        }
+
+        glRequestExtensionANGLE("GL_EXT_draw_buffers");
+        useEXT = true;
+        EXPECT_GL_NO_ERROR();
+    }
+
+    GLint maxDrawBuffers = 0;
+    glGetIntegerv(GL_MAX_DRAW_BUFFERS, &maxDrawBuffers);
+    if (maxDrawBuffers < 4)
+    {
+        std::cout << "Test skipped because MAX_DRAW_BUFFERS is too small." << std::endl;
+        return;
+    }
+
+    // Clears all the renderbuffers to red.
+    auto ClearEverythingToRed = [](GLRenderbuffer *renderbuffers) {
+        GLFramebuffer clearFBO;
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, clearFBO);
+
+        glClearColor(1, 0, 0, 1);
+        for (int i = 0; i < 4; ++i)
+        {
+            glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER,
+                                      renderbuffers[i]);
+            glClear(GL_COLOR_BUFFER_BIT);
+        }
+        ASSERT_GL_NO_ERROR();
+    };
+
+    // Checks that the renderbuffers specified by mask have the correct color
+    auto CheckColors = [](GLRenderbuffer *renderbuffers, int mask, GLColor color) {
+        GLFramebuffer readFBO;
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, readFBO);
+
+        for (int i = 0; i < 4; ++i)
+        {
+            if (mask & (1 << i))
+            {
+                glFramebufferRenderbuffer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                          GL_RENDERBUFFER, renderbuffers[i]);
+                EXPECT_PIXEL_COLOR_EQ(0, 0, color);
+            }
+        }
+        ASSERT_GL_NO_ERROR();
+    };
+
+    // Depending on whether we are using the extension or ES3, a different entrypoint must be called
+    auto DrawBuffers = [](bool useEXT, int numBuffers, GLenum *buffers) {
+        if (useEXT)
+        {
+            glDrawBuffersEXT(numBuffers, buffers);
+        }
+        else
+        {
+            glDrawBuffers(numBuffers, buffers);
+        }
+    };
+
+    // Initialized the test framebuffer
+    GLFramebuffer drawFBO;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
+
+    GLRenderbuffer renderbuffers[4];
+    for (int i = 0; i < 4; ++i)
+    {
+        glBindRenderbuffer(GL_RENDERBUFFER, renderbuffers[i]);
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, 1, 1);
+        glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_RENDERBUFFER,
+                                  renderbuffers[i]);
+    }
+
+    ASSERT_GL_NO_ERROR();
+
+    const char *vertESSL1 =
+        "attribute vec4 a_pos;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = a_pos;\n"
+        "}\n";
+    const char *vertESSL3 =
+        "#version 300 es\n"
+        "in vec4 a_pos;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = a_pos;\n"
+        "}\n";
+
+    GLenum allDrawBuffers[] = {
+        GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3,
+    };
+
+    GLenum halfDrawBuffers[] = {
+        GL_NONE, GL_NONE, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3,
+    };
+
+    // Test that when using gl_FragColor, only the first attachment is written to.
+    const char *fragESSL1 =
+        "precision highp float;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);\n"
+        "}\n";
+    ANGLE_GL_PROGRAM(programESSL1, vertESSL1, fragESSL1);
+
+    {
+        ClearEverythingToRed(renderbuffers);
+
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
+        DrawBuffers(useEXT, 4, allDrawBuffers);
+        drawQuad(programESSL1, "a_pos", 0.5, 1.0, true);
+        ASSERT_GL_NO_ERROR();
+
+        CheckColors(renderbuffers, 0b0001, GLColor::green);
+        CheckColors(renderbuffers, 0b1110, GLColor::red);
+    }
+
+    // Test that when using gl_FragColor, but the first draw buffer is 0, then no attachment is
+    // written to.
+    {
+        ClearEverythingToRed(renderbuffers);
+
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
+        DrawBuffers(useEXT, 4, halfDrawBuffers);
+        drawQuad(programESSL1, "a_pos", 0.5, 1.0, true);
+        ASSERT_GL_NO_ERROR();
+
+        CheckColors(renderbuffers, 0b1111, GLColor::red);
+    }
+
+    // Test what happens when rendering to a subset of the outputs. There is a behavior difference
+    // between the extension and ES3. In the extension gl_FragData is implicitly declared as an
+    // array of size MAX_DRAW_BUFFERS, so the WebGL spec stipulates that elements not written to
+    // should default to 0. On the contrary, in ES3 outputs are specified one by one, so
+    // attachments not declared in the shader should not be written to.
+    const char *writeOddOutputsVert;
+    const char *writeOddOutputsFrag;
+    GLColor unwrittenColor;
+    if (useEXT)
+    {
+        // In the extension, when an attachment isn't written to, it should get 0's
+        unwrittenColor      = GLColor(0, 0, 0, 0);
+        writeOddOutputsVert = vertESSL1;
+        writeOddOutputsFrag =
+            "#extension GL_EXT_draw_buffers : require\n"
+            "precision highp float;\n"
+            "void main()\n"
+            "{\n"
+            "    gl_FragData[1] = vec4(0.0, 1.0, 0.0, 1.0);\n"
+            "    gl_FragData[3] = vec4(0.0, 1.0, 0.0, 1.0);\n"
+            "}\n";
+    }
+    else
+    {
+        // In ES3 if an attachment isn't declared, it shouldn't get written and should be red
+        // because of the preceding clears.
+        unwrittenColor      = GLColor::red;
+        writeOddOutputsVert = vertESSL3;
+        writeOddOutputsFrag =
+            "#version 300 es\n"
+            "precision highp float;\n"
+            "layout(location = 1) out vec4 output1;"
+            "layout(location = 3) out vec4 output2;"
+            "void main()\n"
+            "{\n"
+            "    output1 = vec4(0.0, 1.0, 0.0, 1.0);\n"
+            "    output2 = vec4(0.0, 1.0, 0.0, 1.0);\n"
+            "}\n";
+    }
+    ANGLE_GL_PROGRAM(writeOddOutputsProgram, writeOddOutputsVert, writeOddOutputsFrag);
+
+    // Test that attachments not written to get the "unwritten" color
+    {
+        ClearEverythingToRed(renderbuffers);
+
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
+        DrawBuffers(useEXT, 4, allDrawBuffers);
+        drawQuad(writeOddOutputsProgram, "a_pos", 0.5, 1.0, true);
+        ASSERT_GL_NO_ERROR();
+
+        CheckColors(renderbuffers, 0b1010, GLColor::green);
+        CheckColors(renderbuffers, 0b0101, unwrittenColor);
+    }
+
+    // Test that attachments not written to get the "unwritten" color but that even when the
+    // extension is used, disabled attachments are not written at all and stay red.
+    {
+        ClearEverythingToRed(renderbuffers);
+
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, drawFBO);
+        DrawBuffers(useEXT, 4, halfDrawBuffers);
+        drawQuad(writeOddOutputsProgram, "a_pos", 0.5, 1.0, true);
+        ASSERT_GL_NO_ERROR();
+
+        CheckColors(renderbuffers, 0b1000, GLColor::green);
+        CheckColors(renderbuffers, 0b0100, unwrittenColor);
+        CheckColors(renderbuffers, 0b0011, GLColor::red);
+    }
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(WebGLCompatibilityTest,

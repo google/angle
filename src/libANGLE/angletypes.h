@@ -275,8 +275,11 @@ struct PixelPackState : PixelStoreStateBase
 // Used in Program and VertexArray.
 using AttributesMask = angle::BitSet<MAX_VERTEX_ATTRIBS>;
 
-// Use in Program
+// Used in Program
 using UniformBlockBindingMask = angle::BitSet<IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS>;
+
+// Used in Framebuffer
+using DrawBufferMask = angle::BitSet<IMPLEMENTATION_MAX_DRAW_BUFFERS>;
 
 // A map of GL objects indexed by object ID. The specific map implementation may change.
 // Client code should treat it as a std::map.

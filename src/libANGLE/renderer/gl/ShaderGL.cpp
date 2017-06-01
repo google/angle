@@ -21,8 +21,13 @@ namespace rx
 
 ShaderGL::ShaderGL(const gl::ShaderState &data,
                    const FunctionsGL *functions,
-                   const WorkaroundsGL &workarounds)
-    : ShaderImpl(data), mFunctions(functions), mWorkarounds(workarounds), mShaderID(0)
+                   const WorkaroundsGL &workarounds,
+                   bool isWebGL)
+    : ShaderImpl(data),
+      mFunctions(functions),
+      mWorkarounds(workarounds),
+      mShaderID(0),
+      mIsWebGL(isWebGL)
 {
     ASSERT(mFunctions);
 }
@@ -49,6 +54,11 @@ ShCompileOptions ShaderGL::prepareSourceAndReturnOptions(std::stringstream *sour
     *sourceStream << mData.getSource();
 
     ShCompileOptions options = SH_INIT_GL_POSITION;
+
+    if (mIsWebGL)
+    {
+        options |= SH_INIT_OUTPUT_VARIABLES;
+    }
 
     if (mWorkarounds.doWhileGLSLCausesGPUHang)
     {

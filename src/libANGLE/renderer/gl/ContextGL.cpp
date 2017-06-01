@@ -51,7 +51,8 @@ CompilerImpl *ContextGL::createCompiler()
 
 ShaderImpl *ContextGL::createShader(const gl::ShaderState &data)
 {
-    return new ShaderGL(data, getFunctions(), getWorkaroundsGL());
+    return new ShaderGL(data, getFunctions(), getWorkaroundsGL(),
+                        getExtensions().webglCompatibility);
 }
 
 ProgramImpl *ContextGL::createProgram(const gl::ProgramState &data)

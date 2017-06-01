@@ -856,8 +856,8 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::ContextState &data)
 
     const gl::State &state = data.getState();
 
-    const gl::Framebuffer *framebuffer = state.getDrawFramebuffer();
-    const FramebufferGL *framebufferGL = GetImplAs<FramebufferGL>(framebuffer);
+    gl::Framebuffer *framebuffer = state.getDrawFramebuffer();
+    FramebufferGL *framebufferGL = GetImplAs<FramebufferGL>(framebuffer);
     bindFramebuffer(GL_DRAW_FRAMEBUFFER, framebufferGL->getFramebufferID());
 
     // Set the current transform feedback state
@@ -876,6 +876,12 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::ContextState &data)
     {
         bindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
         mPrevDrawTransformFeedback = nullptr;
+    }
+
+    if (data.getExtensions().webglCompatibility)
+    {
+        auto activeOutputs = state.getProgram()->getState().getActiveOutputVariables();
+        framebufferGL->maskOutInactiveOutputDrawBuffers(activeOutputs);
     }
 
     return gl::NoError();
