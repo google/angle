@@ -151,6 +151,11 @@ bool operator==(const GLColor &a, const GLColor &b)
     return a.R == b.R && a.G == b.G && a.B == b.B && a.A == b.A;
 }
 
+bool operator!=(const GLColor &a, const GLColor &b)
+{
+    return !(a == b);
+}
+
 std::ostream &operator<<(std::ostream &ostream, const GLColor &color)
 {
     ostream << "(" << static_cast<unsigned int>(color.R) << ", "

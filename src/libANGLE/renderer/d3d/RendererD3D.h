@@ -282,6 +282,8 @@ class RendererD3D : public BufferFactoryD3D
     virtual gl::Error applyComputeUniforms(const ProgramD3D &programD3D,
                                            const std::vector<D3DUniform *> &uniformArray) = 0;
 
+    bool isRobustResourceInitEnabled() const;
+
   protected:
     virtual bool getLUID(LUID *adapterLuid) const = 0;
     virtual void generateCaps(gl::Caps *outCaps,

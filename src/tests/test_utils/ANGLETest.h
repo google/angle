@@ -110,6 +110,7 @@ GLColor MakeGLColor(TR r, TG g, TB b, TA a)
 }
 
 bool operator==(const GLColor &a, const GLColor &b);
+bool operator!=(const GLColor &a, const GLColor &b);
 std::ostream &operator<<(std::ostream &ostream, const GLColor &color);
 GLColor ReadColor(GLint x, GLint y);
 

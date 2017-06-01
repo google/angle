@@ -380,4 +380,9 @@ angle::WorkerThreadPool *RendererD3D::getWorkerThreadPool()
     return &mWorkerThreadPool;
 }
 
+bool RendererD3D::isRobustResourceInitEnabled() const
+{
+    return mDisplay->isRobustResourceInitEnabled();
+}
+
 }  // namespace rx

@@ -12,6 +12,7 @@
 #include <array>
 #include <memory>
 
+#include "common/MemoryBuffer.h"
 #include "common/angleutils.h"
 #include "common/debug.h"
 #include "libANGLE/Error.h"
@@ -283,8 +284,14 @@ class ResourceManager11 final : angle::NonCopyable
     void incrResource(ResourceType resourceType, size_t memorySize);
     void decrResource(ResourceType resourceType, size_t memorySize);
 
+    template <typename T>
+    GetInitDataFromD3D11<T> *createInitDataIfNeeded(const GetDescFromD3D11<T> *desc);
+
     std::array<size_t, NumResourceTypes> mAllocatedResourceCounts;
     std::array<size_t, NumResourceTypes> mAllocatedResourceDeviceMemory;
+    angle::MemoryBuffer mZeroMemory;
+
+    std::vector<D3D11_SUBRESOURCE_DATA> mShadowInitData;
 };
 
 template <typename ResourceT>
