@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "344d8df9_50735105",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-06-02T22:31:12Z",
+      "side": 1,
+      "message": "Thanks! Keeping this as is, then.",
+      "parentUuid": "f46dafc2_455c2c32",
+      "revId": "742b7ea8a1eb1b1d8176218197f8228d6a2c0d0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fbc2c461_78fe1522",
         "filename": "src/libANGLE/Error.h",
         "patchSetId": 2
@@ -75,6 +93,30 @@
       "revId": "742b7ea8a1eb1b1d8176218197f8228d6a2c0d0a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b115fa23_4d8432a0",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-06-02T22:31:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fbc2c461_78fe1522",
+      "range": {
+        "startLine": 170,
+        "startChar": 0,
+        "endLine": 193,
+        "endChar": 2
+      },
+      "revId": "742b7ea8a1eb1b1d8176218197f8228d6a2c0d0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -101,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "e7aa7729_5ebf1b53",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-06-02T22:31:12Z",
+      "side": 1,
+      "message": "That\u0027s what I originally wanted, unfortunately, this conflicts with defines in X11/X.h\nOther possible names: egl::Bad_Device, egl::_BadDevice, egl::BadDevice_t",
+      "parentUuid": "1b0650e5_0d2015aa",
+      "range": {
+        "startLine": 204,
+        "startChar": 0,
+        "endLine": 220,
+        "endChar": 67
+      },
+      "revId": "742b7ea8a1eb1b1d8176218197f8228d6a2c0d0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6a044d48_298c83a6",
         "filename": "src/libANGLE/Error.h",
         "patchSetId": 2
@@ -112,6 +178,30 @@
       "writtenOn": "2017-05-18T14:55:00Z",
       "side": 1,
       "message": "call this NoError for consistency.",
+      "range": {
+        "startLine": 222,
+        "startChar": 13,
+        "endLine": 222,
+        "endChar": 23
+      },
+      "revId": "742b7ea8a1eb1b1d8176218197f8228d6a2c0d0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35147ed6_fbdc5200",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-06-02T22:31:12Z",
+      "side": 1,
+      "message": "Can I get a third opinion on this?\nI think EglSuccess \u003c\u003d\u003e EGL_SUCCESS consistency is much more useful than having NoError in gl::, egl:: and vk::.\nIn fact, I would prefer if you\u0027ve renamed vk::NoError to vk::Success.\nMy rationale:\n1. When I search for \"NoError\" what I want to find is the occurrences of GL_NO_ERROR, and not egl and vk stuff.\n2. When I want to return EGL_SUCCESS it\u0027s much easier to remember that I need EglSuccess and not NoError.",
+      "parentUuid": "6a044d48_298c83a6",
       "range": {
         "startLine": 222,
         "startChar": 13,
