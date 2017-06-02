@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b62a554a_2cec8993",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-02T16:49:55Z",
+      "side": 1,
+      "message": "This was prefixed with gl:: in the header.",
+      "range": {
+        "startLine": 491,
+        "startChar": 53,
+        "endLine": 491,
+        "endChar": 67
+      },
+      "revId": "b9331a382bb9509f6e3d436211db4423de728c2c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f975e39c_b80faaf2",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-02T16:49:55Z",
+      "side": 1,
+      "message": "Maybe use the draw buffer state from mState instead just to lessen the assumption that the ith draw buffer is the ith attachment?",
+      "range": {
+        "startLine": 511,
+        "startChar": 63,
+        "endLine": 511,
+        "endChar": 87
+      },
+      "revId": "b9331a382bb9509f6e3d436211db4423de728c2c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
