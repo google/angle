@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c5569452_aebb7fae",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/ResourceManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 455,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-02T17:02:45Z",
+      "side": 1,
+      "message": "side effect: this annoying formatting is partially cleaned up.",
+      "range": {
+        "startLine": 455,
+        "startChar": 4,
+        "endLine": 455,
+        "endChar": 21
+      },
+      "revId": "b297d12521f366a33736146e9edc52a5fd880949",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
