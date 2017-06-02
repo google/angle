@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "c3ace28f_bab31844",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-06-02T17:12:41Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "e407243e_f392c24e",
+      "range": {
+        "startLine": 75,
+        "startChar": 4,
+        "endLine": 75,
+        "endChar": 50
+      },
+      "revId": "b7eb158fc7b28e1f81b4e241406d06940b3289f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b557c821_68d59553",
         "filename": "src/libANGLE/Framebuffer.h",
         "patchSetId": 1
@@ -179,6 +203,30 @@
       "side": 1,
       "message": "You can call mState.mActiveOutputVariables.size() as you did before -- this method is specced to be constexpr!\n\nhttp://en.cppreference.com/w/cpp/utility/bitset/size",
       "parentUuid": "2137129b_26f18ad4",
+      "range": {
+        "startLine": 949,
+        "startChar": 50,
+        "endLine": 949,
+        "endChar": 70
+      },
+      "revId": "b7eb158fc7b28e1f81b4e241406d06940b3289f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "32cce635_3c6c1c14",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 949,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-06-02T17:12:41Z",
+      "side": 1,
+      "message": "It is but using it gives me this compile error :/ :\n\n../../third_party/angle/src/libANGLE/Program.cpp:947:19: error: static_assert expression is not an integral constant expression\n    static_assert(mState.mActiveOutputVariables.size() \u003c 8 * sizeof(uint32_t),\n                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n../../third_party/angle/src/libANGLE/Program.cpp:947:19: note: implicit use of \u0027this\u0027 pointer is only allowed within the evaluation of a call to a \u0027constexpr\u0027 member function\n\nAnd I tried with decltype + declval too but declval isn\u0027t constexpr. Also checked if the size() member function should be static so we could refer to it through the type, but it isn\u0027t in the standard nor the Chromium libc++.",
+      "parentUuid": "2f2e87b1_ae215d1f",
       "range": {
         "startLine": 949,
         "startChar": 50,

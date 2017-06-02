@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c740961a_d1ea676d",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-06-02T17:12:41Z",
+      "side": 1,
+      "message": "PTAL at the changes to this constructor!",
+      "revId": "5645725e1c7582476a1ceec8f714e53f87632f31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
