@@ -597,11 +597,9 @@ Blit11::Blit11(Renderer11 *renderer)
 
 Blit11::~Blit11()
 {
-    mQuad2DIL.release();
     mQuad2DVS.release();
     mDepthPS.release();
 
-    mQuad3DIL.release();
     mQuad3DVS.release();
     mQuad3DGS.release();
 
@@ -955,28 +953,29 @@ Blit11::SwizzleShaderType Blit11::GetSwizzleShaderType(GLenum type,
     }
 }
 
-Blit11::ShaderSupport Blit11::getShaderSupport(const Shader &shader)
+gl::Error Blit11::getShaderSupport(const Shader &shader, Blit11::ShaderSupport *supportOut)
 {
     ID3D11Device *device = mRenderer->getDevice();
-    ShaderSupport support;
 
     if (shader.dimension == SHADER_2D)
     {
-        support.inputLayout         = mQuad2DIL.resolve(device);
-        support.vertexShader        = mQuad2DVS.resolve(device);
-        support.geometryShader      = nullptr;
-        support.vertexWriteFunction = Write2DVertices;
+        ANGLE_TRY(mQuad2DIL.resolve(mRenderer));
+        supportOut->inputLayout         = mQuad2DIL.get();
+        supportOut->vertexShader        = mQuad2DVS.resolve(device);
+        supportOut->geometryShader      = nullptr;
+        supportOut->vertexWriteFunction = Write2DVertices;
     }
     else
     {
         ASSERT(shader.dimension == SHADER_3D);
-        support.inputLayout         = mQuad3DIL.resolve(device);
-        support.vertexShader        = mQuad3DVS.resolve(device);
-        support.geometryShader      = mQuad3DGS.resolve(device);
-        support.vertexWriteFunction = Write3DVertices;
+        ANGLE_TRY(mQuad3DIL.resolve(mRenderer));
+        supportOut->inputLayout         = mQuad2DIL.get();
+        supportOut->vertexShader        = mQuad3DVS.resolve(device);
+        supportOut->geometryShader      = mQuad3DGS.resolve(device);
+        supportOut->vertexWriteFunction = Write3DVertices;
     }
 
-    return support;
+    return gl::NoError();
 }
 
 gl::Error Blit11::swizzleTexture(const d3d11::SharedSRV &source,
@@ -1041,7 +1040,8 @@ gl::Error Blit11::swizzleTexture(const d3d11::SharedSRV &source,
         return gl::OutOfMemory() << "Failed to map internal vertex buffer for swizzle, " << result;
     }
 
-    const ShaderSupport &support = getShaderSupport(*shader);
+    ShaderSupport support;
+    ANGLE_TRY(getShaderSupport(*shader, &support));
 
     UINT stride    = 0;
     UINT startIdx  = 0;
@@ -1167,7 +1167,8 @@ gl::Error Blit11::copyTexture(const d3d11::SharedSRV &source,
     ANGLE_TRY(getBlitShader(destFormat, sourceFormat, isSigned, unpackPremultiplyAlpha,
                             unpackUnmultiplyAlpha, dimension, &shader));
 
-    const ShaderSupport &support = getShaderSupport(*shader);
+    ShaderSupport support;
+    ANGLE_TRY(getShaderSupport(*shader, &support));
 
     // Set vertices
     D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -1361,7 +1362,8 @@ gl::Error Blit11::copyDepth(const d3d11::SharedSRV &source,
     }
 
     // Apply shaders
-    deviceContext->IASetInputLayout(mQuad2DIL.resolve(device));
+    ANGLE_TRY(mQuad2DIL.resolve(mRenderer));
+    deviceContext->IASetInputLayout(mQuad2DIL.get());
     deviceContext->IASetPrimitiveTopology(topology);
     deviceContext->VSSetShader(quad2DVS, nullptr, 0);
 

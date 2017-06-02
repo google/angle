@@ -82,7 +82,7 @@ bool UpdateDataCache(RtvDsvClearInfo<T> *dataCache,
 }  // anonymous namespace
 
 Clear11::ShaderManager::ShaderManager()
-    : mIl9(nullptr),
+    : mIl9(),
       mVs9(g_VS_Clear_FL9, ArraySize(g_VS_Clear_FL9), "Clear11 VS FL9"),
       mPsFloat9(g_PS_ClearFloat_FL9, ArraySize(g_PS_ClearFloat_FL9), "Clear11 PS FloatFL9"),
       mVs(g_VS_Clear, ArraySize(g_VS_Clear), "Clear11 VS"),
@@ -102,31 +102,35 @@ Clear11::ShaderManager::~ShaderManager()
     mPsSInt.release();
 }
 
-void Clear11::ShaderManager::getShadersAndLayout(ID3D11Device *device,
-                                                 D3D_FEATURE_LEVEL featureLevel,
-                                                 const INT clearType,
-                                                 ID3D11InputLayout **il,
-                                                 ID3D11VertexShader **vs,
-                                                 ID3D11PixelShader **ps)
+gl::Error Clear11::ShaderManager::getShadersAndLayout(Renderer11 *renderer,
+                                                      const INT clearType,
+                                                      ID3D11InputLayout **il,
+                                                      ID3D11VertexShader **vs,
+                                                      ID3D11PixelShader **ps)
 {
+    auto featureLevel = renderer->getRenderer11DeviceCaps().featureLevel;
+    auto device       = renderer->getDevice();
+
     if (featureLevel <= D3D_FEATURE_LEVEL_9_3)
     {
         ASSERT(clearType == GL_FLOAT);
 
         *vs = mVs9.resolve(device);
 
-        if (mIl9.Get() == nullptr)
+        if (!mIl9.valid())
         {
-            const D3D11_INPUT_ELEMENT_DESC ilDesc = {
-                "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0};
+            const D3D11_INPUT_ELEMENT_DESC ilDesc[] = {
+                {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0}};
 
-            device->CreateInputLayout(&ilDesc, 1, g_VS_Clear_FL9, ArraySize(g_PS_ClearFloat_FL9),
-                                      mIl9.GetAddressOf());
+            InputElementArray ilDescArray(ilDesc);
+            ShaderData vertexShader(g_VS_Clear_FL9);
+
+            ANGLE_TRY(renderer->allocateResource(ilDescArray, &vertexShader, &mIl9));
         }
 
-        *il = mIl9.Get();
+        *il = mIl9.get();
         *ps = mPsFloat9.resolve(device);
-        return;
+        return gl::NoError();
     }
 
     *vs = mVs.resolve(device);
@@ -147,6 +151,8 @@ void Clear11::ShaderManager::getShadersAndLayout(ID3D11Device *device,
             UNREACHABLE();
             break;
     }
+
+    return gl::NoError();
 }
 
 Clear11::Clear11(Renderer11 *renderer)
@@ -692,13 +698,11 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
     }
 
     // Get Shaders
-    const D3D_FEATURE_LEVEL fl = mRenderer->getRenderer11DeviceCaps().featureLevel;
-    ID3D11Device *device = mRenderer->getDevice();
-    ID3D11VertexShader *vs;
-    ID3D11InputLayout *il;
-    ID3D11PixelShader *ps;
+    ID3D11VertexShader *vs = nullptr;
+    ID3D11InputLayout *il  = nullptr;
+    ID3D11PixelShader *ps  = nullptr;
 
-    mShaderManager.getShadersAndLayout(device, fl, clearParams.colorType, &il, &vs, &ps);
+    ANGLE_TRY(mShaderManager.getShadersAndLayout(mRenderer, clearParams.colorType, &il, &vs, &ps));
 
     // Apply Shaders
     deviceContext->VSSetShader(vs, nullptr, 0);

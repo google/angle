@@ -47,15 +47,14 @@ class Clear11 : angle::NonCopyable
       public:
         ShaderManager();
         ~ShaderManager();
-        void getShadersAndLayout(ID3D11Device *device,
-                                 D3D_FEATURE_LEVEL featureLevel,
-                                 const INT clearType,
-                                 ID3D11InputLayout **il,
-                                 ID3D11VertexShader **vs,
-                                 ID3D11PixelShader **ps);
+        gl::Error getShadersAndLayout(Renderer11 *renderer,
+                                      const INT clearType,
+                                      ID3D11InputLayout **il,
+                                      ID3D11VertexShader **vs,
+                                      ID3D11PixelShader **ps);
 
       private:
-        angle::ComPtr<ID3D11InputLayout> mIl9;
+        d3d11::InputLayout mIl9;
         d3d11::LazyShader<ID3D11VertexShader> mVs9;
         d3d11::LazyShader<ID3D11PixelShader> mPsFloat9;
         d3d11::LazyShader<ID3D11VertexShader> mVs;

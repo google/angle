@@ -47,6 +47,27 @@ constexpr inline size_t ArraySize(T (&)[N])
     return N;
 }
 
+template <typename T>
+class WrappedArray final : angle::NonCopyable
+{
+  public:
+    template <size_t N>
+    constexpr WrappedArray(const T (&data)[N]) : mArray(&data[0]), mSize(N)
+    {
+    }
+
+    constexpr WrappedArray() : mArray(nullptr), mSize(0) {}
+    constexpr WrappedArray(const T *data, size_t size) : mArray(data), mSize(size) {}
+    ~WrappedArray() {}
+
+    constexpr const T *get() const { return mArray; }
+    constexpr size_t size() const { return mSize; }
+
+  private:
+    const T *mArray;
+    size_t mSize;
+};
+
 template <typename T, unsigned int N>
 void SafeRelease(T (&resourceBlock)[N])
 {

@@ -101,9 +101,9 @@ class InputLayoutCache : angle::NonCopyable
                                 GLenum mode,
                                 gl::Program *program,
                                 GLsizei numIndicesPerInstance,
-                                ID3D11InputLayout **inputLayoutOut);
+                                d3d11::InputLayout *inputLayoutOut);
 
-    std::map<PackedAttributeLayout, ID3D11InputLayout *> mLayoutMap;
+    std::map<PackedAttributeLayout, d3d11::InputLayout> mLayoutMap;
 
     uintptr_t mCurrentIL;
     std::array<ID3D11Buffer *, gl::MAX_VERTEX_ATTRIBS> mCurrentBuffers;

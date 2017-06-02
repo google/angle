@@ -82,7 +82,7 @@ SwapChain11::SwapChain11(Renderer11 *renderer,
       mDepthStencilSRView(),
       mQuadVB(),
       mPassThroughSampler(),
-      mPassThroughIL(nullptr),
+      mPassThroughIL(),
       mPassThroughVS(nullptr),
       mPassThroughPS(nullptr),
       mPassThroughRS(),
@@ -122,7 +122,7 @@ void SwapChain11::release()
     mDepthStencilSRView.reset();
     mQuadVB.reset();
     mPassThroughSampler.reset();
-    SafeRelease(mPassThroughIL);
+    mPassThroughIL.reset();
     SafeRelease(mPassThroughVS);
     SafeRelease(mPassThroughPS);
     mPassThroughRS.reset();
@@ -612,7 +612,7 @@ void SwapChain11::initPassThroughResources()
 
     // Make sure our resources are all not allocated, when we create
     ASSERT(!mQuadVB.valid() && !mPassThroughSampler.valid());
-    ASSERT(mPassThroughIL == nullptr && mPassThroughVS == nullptr && mPassThroughPS == nullptr);
+    ASSERT(!mPassThroughIL.valid() && mPassThroughVS == nullptr && mPassThroughPS == nullptr);
 
     D3D11_BUFFER_DESC vbDesc;
     vbDesc.ByteWidth = sizeof(d3d11::PositionTexCoordVertex) * 4;
@@ -651,13 +651,15 @@ void SwapChain11::initPassThroughResources()
         { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 8, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
 
-    HRESULT result = device->CreateInputLayout(quadLayout, 2, g_VS_Passthrough2D,
-                                               sizeof(g_VS_Passthrough2D), &mPassThroughIL);
-    ASSERT(SUCCEEDED(result));
-    d3d11::SetDebugName(mPassThroughIL, "Swap chain pass through layout");
+    InputElementArray quadElements(quadLayout);
+    ShaderData vertexShaderData(g_VS_Passthrough2D);
 
-    result = device->CreateVertexShader(g_VS_Passthrough2D, sizeof(g_VS_Passthrough2D), nullptr,
-                                        &mPassThroughVS);
+    err = mRenderer->allocateResource(quadElements, &vertexShaderData, &mPassThroughIL);
+    ASSERT(!err.isError());
+    mPassThroughIL.setDebugName("Swap chain pass through layout");
+
+    HRESULT result = device->CreateVertexShader(g_VS_Passthrough2D, sizeof(g_VS_Passthrough2D),
+                                                nullptr, &mPassThroughVS);
     ASSERT(SUCCEEDED(result));
     d3d11::SetDebugName(mPassThroughVS, "Swap chain pass through vertex shader");
 
@@ -782,7 +784,7 @@ EGLint SwapChain11::copyOffscreenToBackbuffer(EGLint x, EGLint y, EGLint width, 
     deviceContext->RSSetState(mPassThroughRS.get());
 
     // Apply shaders
-    deviceContext->IASetInputLayout(mPassThroughIL);
+    deviceContext->IASetInputLayout(mPassThroughIL.get());
     deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
     deviceContext->VSSetShader(mPassThroughVS, nullptr, 0);
     deviceContext->PSSetShader(mPassThroughPS, nullptr, 0);

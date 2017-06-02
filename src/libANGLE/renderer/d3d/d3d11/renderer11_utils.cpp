@@ -1940,36 +1940,9 @@ HRESULT SetDebugName(ID3D11DeviceChild *resource, const char *name)
 #endif
 }
 
-LazyInputLayout::LazyInputLayout(const D3D11_INPUT_ELEMENT_DESC *inputDesc,
-                                 size_t inputDescLen,
-                                 const BYTE *byteCode,
-                                 size_t byteCodeLen,
-                                 const char *debugName)
-    : mInputDesc(inputDescLen),
-      mByteCodeLen(byteCodeLen),
-      mByteCode(byteCode),
-      mDebugName(debugName)
+gl::Error LazyInputLayout::resolve(Renderer11 *renderer)
 {
-    if (inputDesc)
-    {
-        memcpy(&mInputDesc[0], inputDesc, sizeof(D3D11_INPUT_ELEMENT_DESC) * inputDescLen);
-    }
-}
-
-ID3D11InputLayout *LazyInputLayout::resolve(ID3D11Device *device)
-{
-    checkAssociatedDevice(device);
-
-    if (mResource == nullptr && mByteCode != nullptr)
-    {
-        HRESULT result =
-            device->CreateInputLayout(&mInputDesc[0], static_cast<UINT>(mInputDesc.size()),
-                                      mByteCode, mByteCodeLen, &mResource);
-        ASSERT(SUCCEEDED(result));
-        d3d11::SetDebugName(mResource, mDebugName);
-    }
-
-    return mResource;
+    return resolveImpl(renderer, mInputDesc, &mByteCode, mDebugName);
 }
 
 LazyBlendState::LazyBlendState(const D3D11_BLEND_DESC &desc, const char *debugName)
@@ -1979,7 +1952,7 @@ LazyBlendState::LazyBlendState(const D3D11_BLEND_DESC &desc, const char *debugNa
 
 gl::Error LazyBlendState::resolve(Renderer11 *renderer)
 {
-    return resolveImpl(renderer, mDesc, mDebugName);
+    return resolveImpl(renderer, mDesc, nullptr, mDebugName);
 }
 
 angle::WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps,

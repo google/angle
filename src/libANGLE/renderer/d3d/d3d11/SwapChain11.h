@@ -100,7 +100,7 @@ class SwapChain11 final : public SwapChainD3D
 
     d3d11::Buffer mQuadVB;
     d3d11::SamplerState mPassThroughSampler;
-    ID3D11InputLayout *mPassThroughIL;
+    d3d11::InputLayout mPassThroughIL;
     ID3D11VertexShader *mPassThroughVS;
     ID3D11PixelShader *mPassThroughPS;
     d3d11::RasterizerState mPassThroughRS;

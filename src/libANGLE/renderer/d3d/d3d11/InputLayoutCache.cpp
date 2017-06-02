@@ -195,10 +195,6 @@ void InputLayoutCache::initialize()
 
 void InputLayoutCache::clear()
 {
-    for (auto &layout : mLayoutMap)
-    {
-        SafeRelease(layout.second);
-    }
     mLayoutMap.clear();
     mPointSpriteVertexBuffer.reset();
     mPointSpriteIndexBuffer.reset();
@@ -504,12 +500,13 @@ gl::Error InputLayoutCache::updateInputLayout(Renderer11 *renderer,
         auto layoutMapIt = mLayoutMap.find(layout);
         if (layoutMapIt != mLayoutMap.end())
         {
-            inputLayout = layoutMapIt->second;
+            inputLayout = layoutMapIt->second.get();
         }
         else
         {
+            d3d11::InputLayout newInputLayout;
             ANGLE_TRY(createInputLayout(renderer, sortedSemanticIndices, mode, program,
-                                        numIndicesPerInstance, &inputLayout));
+                                        numIndicesPerInstance, &newInputLayout));
             if (mLayoutMap.size() >= mCacheSize)
             {
                 WARN() << "Overflowed the limit of " << mCacheSize
@@ -523,13 +520,13 @@ gl::Error InputLayoutCache::updateInputLayout(Renderer11 *renderer,
                     if (it != mLayoutMap.end())
                     {
                         // c++11 erase allows us to easily delete the current iterator.
-                        SafeRelease(it->second);
                         it = mLayoutMap.erase(it);
                     }
                 }
             }
 
-            mLayoutMap[layout] = inputLayout;
+            inputLayout        = newInputLayout.get();
+            mLayoutMap[layout] = std::move(newInputLayout);
         }
     }
 
@@ -548,7 +545,7 @@ gl::Error InputLayoutCache::createInputLayout(Renderer11 *renderer,
                                               GLenum mode,
                                               gl::Program *program,
                                               GLsizei numIndicesPerInstance,
-                                              ID3D11InputLayout **inputLayoutOut)
+                                              d3d11::InputLayout *inputLayoutOut)
 {
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
     auto featureLevel      = renderer->getRenderer11DeviceCaps().featureLevel;
@@ -638,15 +635,10 @@ gl::Error InputLayoutCache::createInputLayout(Renderer11 *renderer,
 
     ShaderExecutableD3D *shader11 = GetAs<ShaderExecutable11>(shader);
 
-    ID3D11Device *device = renderer->getDevice();
-    HRESULT result =
-        device->CreateInputLayout(inputElements.data(), inputElementCount, shader11->getFunction(),
-                                  shader11->getLength(), inputLayoutOut);
-    if (FAILED(result))
-    {
-        return gl::Error(GL_OUT_OF_MEMORY,
-                         "Failed to create internal input layout, HRESULT: 0x%08x", result);
-    }
+    InputElementArray inputElementArray(inputElements.data(), inputElementCount);
+    ShaderData vertexShaderData(shader11->getFunction(), shader11->getLength());
+
+    ANGLE_TRY(renderer->allocateResource(inputElementArray, &vertexShaderData, inputLayoutOut));
     return gl::NoError();
 }
 

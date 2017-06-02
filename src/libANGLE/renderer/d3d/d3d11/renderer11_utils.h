@@ -262,7 +262,7 @@ template <ResourceType ResourceT>
 class LazyResource2 : angle::NonCopyable
 {
   public:
-    LazyResource2() : mResource() {}
+    constexpr LazyResource2() : mResource() {}
     virtual ~LazyResource2() {}
 
     virtual gl::Error resolve(Renderer11 *renderer) = 0;
@@ -276,11 +276,12 @@ class LazyResource2 : angle::NonCopyable
   protected:
     gl::Error resolveImpl(Renderer11 *renderer,
                           const GetDescType<ResourceT> &desc,
+                          GetInitDataType<ResourceT> *initData,
                           const char *name)
     {
         if (!mResource.valid())
         {
-            ANGLE_TRY(renderer->allocateResource(desc, &mResource));
+            ANGLE_TRY(renderer->allocateResource(desc, initData, &mResource));
             mResource.setDebugName(name);
         }
         return gl::NoError();
@@ -351,21 +352,25 @@ inline ID3D11PixelShader *LazyShader<ID3D11PixelShader>::resolve(ID3D11Device *d
     return mResource;
 }
 
-class LazyInputLayout final : public LazyResource<ID3D11InputLayout>
+class LazyInputLayout final : public LazyResource2<ResourceType::InputLayout>
 {
   public:
-    LazyInputLayout(const D3D11_INPUT_ELEMENT_DESC *inputDesc,
-                    size_t inputDescLen,
-                    const BYTE *byteCode,
-                    size_t byteCodeLen,
-                    const char *debugName);
+    constexpr LazyInputLayout(const D3D11_INPUT_ELEMENT_DESC *inputDesc,
+                              size_t inputDescLen,
+                              const BYTE *byteCode,
+                              size_t byteCodeLen,
+                              const char *debugName)
+        : mInputDesc(inputDesc, inputDescLen),
+          mByteCode(byteCode, byteCodeLen),
+          mDebugName(debugName)
+    {
+    }
 
-    ID3D11InputLayout *resolve(ID3D11Device *device) override;
+    gl::Error resolve(Renderer11 *renderer) override;
 
   private:
-    std::vector<D3D11_INPUT_ELEMENT_DESC> mInputDesc;
-    size_t mByteCodeLen;
-    const BYTE *mByteCode;
+    InputElementArray mInputDesc;
+    ShaderData mByteCode;
     const char *mDebugName;
 };
 
@@ -420,7 +425,7 @@ struct GenericData
             // We can have a nullptr factory when holding passed-in resources.
             if (manager)
             {
-                manager->onReleaseResource(resourceType, object);
+                manager->onReleaseGeneric(resourceType, object);
                 manager = nullptr;
             }
             object->Release();

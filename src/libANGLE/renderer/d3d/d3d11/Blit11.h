@@ -195,7 +195,7 @@ class Blit11 : angle::NonCopyable
 
     gl::Error initResources();
 
-    ShaderSupport getShaderSupport(const Shader &shader);
+    gl::Error getShaderSupport(const Shader &shader, ShaderSupport *supportOut);
 
     static BlitShaderType GetBlitShaderType(GLenum destinationFormat,
                                             GLenum sourceFormat,

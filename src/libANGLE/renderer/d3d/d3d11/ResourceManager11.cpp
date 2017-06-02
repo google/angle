@@ -121,6 +121,15 @@ HRESULT CreateResource(ID3D11Device *device,
 }
 
 HRESULT CreateResource(ID3D11Device *device,
+                       const InputElementArray *desc,
+                       const ShaderData *initData,
+                       ID3D11InputLayout **resourceOut)
+{
+    return device->CreateInputLayout(desc->get(), static_cast<UINT>(desc->size()), initData->get(),
+                                     initData->size(), resourceOut);
+}
+
+HRESULT CreateResource(ID3D11Device *device,
                        const D3D11_RASTERIZER_DESC *desc,
                        void * /*initData*/,
                        ID3D11RasterizerState **rasterizerState)
@@ -337,27 +346,10 @@ void ResourceManager11::decrResource(ResourceType resourceType, size_t memorySiz
     mAllocatedResourceDeviceMemory[ResourceTypeIndex(resourceType)] -= memorySize;
 }
 
-void ResourceManager11::onReleaseResource(ResourceType resourceType, ID3D11Resource *resource)
+void ResourceManager11::onReleaseGeneric(ResourceType resourceType, ID3D11DeviceChild *resource)
 {
     ASSERT(resource);
     decrResource(resourceType, ComputeGenericMemoryUsage(resourceType, resource));
-}
-
-template <>
-void ResourceManager11::onRelease(ID3D11Resource *resource)
-{
-    // For untyped ID3D11Resource, they must call onReleaseResource.
-    UNREACHABLE();
-}
-
-template <typename T>
-void ResourceManager11::onRelease(T *resource)
-{
-    ASSERT(resource);
-
-    GetDescFromD3D11<T> desc;
-    resource->GetDesc(&desc);
-    decrResource(GetResourceTypeFromD3D11<T>(), ComputeMemoryUsage(&desc));
 }
 
 template <>
@@ -456,21 +448,12 @@ GetInitDataFromD3D11<T> *ResourceManager11::createInitDataIfNeeded(const GetDesc
     return nullptr;
 }
 
-#define ANGLE_INSTANTIATE_OP(NAME, RESTYPE, D3D11TYPE, DESCTYPE, INITDATATYPE) \
+#define ANGLE_INSTANTIATE_OP(NAME, RESTYPE, D3D11TYPE, DESCTYPE, INITDATATYPE)  \
     \
-template gl::Error                                                             \
-    ResourceManager11::allocate(\
-Renderer11 *,                                                                  \
-                                \
-const DESCTYPE *,                                                              \
-                                \
-INITDATATYPE *,                                                                \
-                                \
-Resource11<D3D11TYPE> *);                                                      \
-    \
-\
-template void                                                                  \
-    ResourceManager11::onRelease(D3D11TYPE *);
+template \
+gl::Error                                                                       \
+    ResourceManager11::allocate(Renderer11 *, const DESCTYPE *, INITDATATYPE *, \
+                                Resource11<D3D11TYPE> *);
 
 ANGLE_RESOURCE_TYPE_OP(Instantitate, ANGLE_INSTANTIATE_OP)
 }  // namespace rx
