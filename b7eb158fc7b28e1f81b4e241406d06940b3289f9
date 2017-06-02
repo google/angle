@@ -239,6 +239,30 @@
     },
     {
       "key": {
+        "uuid": "76dd98e1_53345098",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 949,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-02T17:24:40Z",
+      "side": 1,
+      "message": "Right, I guess you need the variable itself to be constexpr for \u0027this\u0027 to be constexpr. Sorry for the bad suggestion.",
+      "parentUuid": "32cce635_3c6c1c14",
+      "range": {
+        "startLine": 949,
+        "startChar": 50,
+        "endLine": 949,
+        "endChar": 70
+      },
+      "revId": "b7eb158fc7b28e1f81b4e241406d06940b3289f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fdca047e_af929256",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 1
