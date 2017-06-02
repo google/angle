@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "e407243e_f392c24e",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-02T14:43:20Z",
+      "side": 1,
+      "message": "No, I think you\u0027re right, it\u0027s probably fine to copy these.",
+      "parentUuid": "11ed9ad9_07c23faf",
+      "range": {
+        "startLine": 75,
+        "startChar": 4,
+        "endLine": 75,
+        "endChar": 50
+      },
+      "revId": "b7eb158fc7b28e1f81b4e241406d06940b3289f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b557c821_68d59553",
         "filename": "src/libANGLE/Framebuffer.h",
         "patchSetId": 1
@@ -131,6 +155,30 @@
       "side": 1,
       "message": "Done",
       "parentUuid": "d197af14_2429f21e",
+      "range": {
+        "startLine": 949,
+        "startChar": 50,
+        "endLine": 949,
+        "endChar": 70
+      },
+      "revId": "b7eb158fc7b28e1f81b4e241406d06940b3289f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2f2e87b1_ae215d1f",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 949,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-02T14:43:20Z",
+      "side": 1,
+      "message": "You can call mState.mActiveOutputVariables.size() as you did before -- this method is specced to be constexpr!\n\nhttp://en.cppreference.com/w/cpp/utility/bitset/size",
+      "parentUuid": "2137129b_26f18ad4",
       "range": {
         "startLine": 949,
         "startChar": 50,
@@ -289,6 +337,30 @@
       "side": 1,
       "message": "It is slightly smaller but I think I find it more confusing:\n\n    auto targetAppliedDrawBuffers \u003d mState.getEnabledDrawBuffers() \u0026 maxSet;\n    if (mAppliedEnabledDrawBuffers !\u003d targetAppliedDrawBuffers)\n    {\n        const auto\u0026 stateDrawBuffers \u003d mState.getDrawBufferStates();\n        size_t drawBufferCount \u003d stateDrawBuffers.size();\n\n        GLenum drawBuffers[IMPLEMENTATION_MAX_DRAW_BUFFERS];\n        ASSERT(drawBufferCount \u003c IMPLEMENTATION_MAX_DRAW_BUFFERS);\n        memcpy(drawBuffers, stateDrawBuffers.data(), sizeof(GLenum) * drawBufferCount);\n\n        auto drawBuffersToRemove \u003d mState.getEnabledDrawBuffers() \u0026 ~maxSet;\n        for (auto i : drawBuffersToRemove)\n        {\n            drawBuffers[i] \u003d GL_NONE;\n        }\n        mFunctions-\u003edrawBuffers(static_cast\u003cGLsizei\u003e(drawBufferCount), drawBuffers);\n\n        mAppliedEnabledDrawBuffers \u003d targetAppliedDrawBuffers;\n    }",
       "parentUuid": "98d78694_8a5e9a7c",
+      "range": {
+        "startLine": 499,
+        "startChar": 8,
+        "endLine": 518,
+        "endChar": 62
+      },
+      "revId": "b7eb158fc7b28e1f81b4e241406d06940b3289f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6963a8cc_62e30262",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-02T14:43:20Z",
+      "side": 1,
+      "message": "I think it would be like\n\nif ()\n{\n   mAppliedEnabledDrawBufferStates \u003d mState.getDrawBufferStates();\n   auto toDisable \u003d mState.getEnabledDrawBuffers \u0026 ~maxSet;\n   for (auto i : toDisable)\n   {\n      mApplied \u003d GL_NONE;\n   }\n   mFunctions-\u003edrawBuffers(...);\n} \n\nWhich seems reasonable. LMK if you agree. Anyway a very minor cleanup.",
+      "parentUuid": "71b004e1_c90dca3b",
       "range": {
         "startLine": 499,
         "startChar": 8,
@@ -486,6 +558,30 @@
       "revId": "b7eb158fc7b28e1f81b4e241406d06940b3289f9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f4de7086_3b68edec",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2428,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-02T14:43:20Z",
+      "side": 1,
+      "message": "It\u0027s fine. Thanks for thinking about it.",
+      "parentUuid": "5b23009c_7ba3c059",
+      "range": {
+        "startLine": 2428,
+        "startChar": 31,
+        "endLine": 2428,
+        "endChar": 42
+      },
+      "revId": "b7eb158fc7b28e1f81b4e241406d06940b3289f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     },
     {
       "key": {

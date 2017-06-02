@@ -46,6 +46,30 @@
       "revId": "cd930cf0fac89a09e07cc18e0643b33848a85d30",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5398160e_1fbfbd55",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1247,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-02T14:43:20Z",
+      "side": 0,
+      "message": "Ah yes. Can you actually leave this in, then leave a TODO for me to ASSERT instead of check the attachment in formsRenderingFeedbackLoopWith? I can then use your method that exposes this bitset to replace other loops in ANGLE with the bit set iteration, if I\u0027m correct.",
+      "parentUuid": "62497e14_fc964d36",
+      "range": {
+        "startLine": 1246,
+        "startChar": 0,
+        "endLine": 1247,
+        "endChar": 64
+      },
+      "revId": "cd930cf0fac89a09e07cc18e0643b33848a85d30",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
