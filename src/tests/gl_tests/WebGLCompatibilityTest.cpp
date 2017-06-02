@@ -2031,6 +2031,52 @@ TEST_P(WebGLCompatibilityTest, RGBA16FTextures)
     }
 }
 
+// Test that when GL_CHROMIUM_color_buffer_float_rgb[a] is enabled, sized GL_RGB[A]_32F formats are
+// accepted by glTexImage2D
+TEST_P(WebGLCompatibilityTest, SizedRGBA32FFormats)
+{
+    if (getClientMajorVersion() != 2)
+    {
+        std::cout << "Test skipped because it is only valid for WebGL1 contexts." << std::endl;
+        return;
+    }
+
+    if (!extensionRequestable("GL_OES_texture_float"))
+    {
+        std::cout << "Test skipped because GL_OES_texture_float is not requestable." << std::endl;
+        return;
+    }
+    glRequestExtensionANGLE("GL_OES_texture_float");
+    ASSERT_GL_NO_ERROR();
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, 1, 1, 0, GL_RGBA, GL_FLOAT, nullptr);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, 1, 1, 0, GL_RGB, GL_FLOAT, nullptr);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    if (extensionRequestable("GL_CHROMIUM_color_buffer_float_rgba"))
+    {
+        glRequestExtensionANGLE("GL_CHROMIUM_color_buffer_float_rgba");
+        ASSERT_GL_NO_ERROR();
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, 1, 1, 0, GL_RGBA, GL_FLOAT, nullptr);
+        EXPECT_GL_NO_ERROR();
+    }
+
+    if (extensionRequestable("GL_CHROMIUM_color_buffer_float_rgb"))
+    {
+        glRequestExtensionANGLE("GL_CHROMIUM_color_buffer_float_rgb");
+        ASSERT_GL_NO_ERROR();
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, 1, 1, 0, GL_RGB, GL_FLOAT, nullptr);
+        EXPECT_GL_NO_ERROR();
+    }
+}
+
 // This tests that rendering feedback loops works as expected with WebGL 2.
 // Based on WebGL test conformance2/rendering/rendering-sampling-feedback-loop.html
 TEST_P(WebGL2CompatibilityTest, RenderingFeedbackLoopWithDrawBuffers)

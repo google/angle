@@ -843,7 +843,16 @@ bool ValidateES2TexImageParameters(Context *context,
         return false;
     }
 
-    if (!isSubImage && !isCompressed && internalformat != format)
+    // From GL_CHROMIUM_color_buffer_float_rgb[a]:
+    // GL_RGB[A] / GL_RGB[A]32F becomes an allowable format / internalformat parameter pair for
+    // TexImage2D. The restriction in section 3.7.1 of the OpenGL ES 2.0 spec that the
+    // internalformat parameter and format parameter of TexImage2D must match is lifted for this
+    // case.
+    bool nonEqualFormatsAllowed =
+        (internalformat == GL_RGB32F && context->getExtensions().colorBufferFloatRGB) ||
+        (internalformat == GL_RGBA32F && context->getExtensions().colorBufferFloatRGBA);
+
+    if (!isSubImage && !isCompressed && internalformat != format && !nonEqualFormatsAllowed)
     {
         context->handleError(Error(GL_INVALID_OPERATION));
         return false;
@@ -1258,6 +1267,59 @@ bool ValidateES2TexImageParameters(Context *context,
                 break;
             default:
                 break;
+        }
+
+        if (!isSubImage)
+        {
+            switch (internalformat)
+            {
+                case GL_RGBA32F:
+                    if (!context->getExtensions().colorBufferFloatRGBA)
+                    {
+                        context->handleError(Error(GL_INVALID_VALUE,
+                                                   "Sized GL_RGBA32F internal format requires "
+                                                   "GL_CHROMIUM_color_buffer_float_rgba"));
+                        return false;
+                    }
+                    if (type != GL_FLOAT)
+                    {
+                        context->handleError(Error(GL_INVALID_OPERATION,
+                                                   "Invalid internal format/type combination"));
+                        return false;
+                    }
+                    if (format != GL_RGBA)
+                    {
+                        context->handleError(Error(GL_INVALID_OPERATION,
+                                                   "Invalid internal format/format combination"));
+                        return false;
+                    }
+                    break;
+
+                case GL_RGB32F:
+                    if (!context->getExtensions().colorBufferFloatRGB)
+                    {
+                        context->handleError(Error(GL_INVALID_VALUE,
+                                                   "Sized GL_RGB32F internal format requires "
+                                                   "GL_CHROMIUM_color_buffer_float_rgb"));
+                        return false;
+                    }
+                    if (type != GL_FLOAT)
+                    {
+                        context->handleError(Error(GL_INVALID_OPERATION,
+                                                   "Invalid internal format/type combination"));
+                        return false;
+                    }
+                    if (format != GL_RGB)
+                    {
+                        context->handleError(Error(GL_INVALID_OPERATION,
+                                                   "Invalid internal format/format combination"));
+                        return false;
+                    }
+                    break;
+
+                default:
+                    break;
+            }
         }
 
         if (type == GL_FLOAT)
