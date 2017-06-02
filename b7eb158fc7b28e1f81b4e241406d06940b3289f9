@@ -373,6 +373,30 @@
     },
     {
       "key": {
+        "uuid": "479dda1c_f90ec80a",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-02T15:16:25Z",
+      "side": 1,
+      "message": "Actually, the mAppliedEnableDrawBuffers is only a cache of the mask not the states.... thinking about this more, you could cache the unset mask (drawBuffersToRemove), instead of the applied mask, since this is the exact state change you are applying to the GL.\n\nso the function would be like\n\nauto drawBuffersToDisable \u003d mState.getEnabledDrawBuffers() \u0026 ~maxSet;\nif (drawBuffersToDisable !\u003d mAppliedDrawBuffersToDisable)\n{\n   GLenum drawBuffers[MAX] \u003d mState.getDrawBufferStates(); // maybe you need to use std::array to get the copy constructor? not sure\n  for (auto index : drawBuffersToDisable)\n  {\n     drawBuffers[index] \u003d GL_NONE;\n   }\n   mFunctions-\u003edrawBuffers()    \n   mApplied \u003d drawBuffersToDisable;\n}\n\nAnyway LGTM with or without this cleanup, I think I like it better with.",
+      "parentUuid": "6963a8cc_62e30262",
+      "range": {
+        "startLine": 499,
+        "startChar": 8,
+        "endLine": 518,
+        "endChar": 62
+      },
+      "revId": "b7eb158fc7b28e1f81b4e241406d06940b3289f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d0d5d758_6566186e",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.h",
         "patchSetId": 1
