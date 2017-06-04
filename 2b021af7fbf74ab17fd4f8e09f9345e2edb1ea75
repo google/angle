@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7202af0b_685c9b12",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 461,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-04T08:27:41Z",
+      "side": 1,
+      "message": "I prefer you use \u0027program\u0027 not \u0027mProgram\u0027. The prefix \u0027m\u0027 is usually used as a class member variable not a local variable. Or you can directly use program.get() since not too many places use it.",
+      "revId": "2b021af7fbf74ab17fd4f8e09f9345e2edb1ea75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32e5801d_44f9aecc",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 478,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-04T08:27:41Z",
+      "side": 1,
+      "message": "GLBuffer quadBuffer;\nGLBuffer instanceBuffer;",
+      "range": {
+        "startLine": 475,
+        "startChar": 0,
+        "endLine": 478,
+        "endChar": 38
+      },
+      "revId": "2b021af7fbf74ab17fd4f8e09f9345e2edb1ea75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f01b45c5_37438b41",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 843,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-04T08:27:41Z",
+      "side": 1,
+      "message": "GLBuffer buffer. Same with below.",
+      "range": {
+        "startLine": 842,
+        "startChar": 0,
+        "endLine": 843,
+        "endChar": 43
+      },
+      "revId": "2b021af7fbf74ab17fd4f8e09f9345e2edb1ea75",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
