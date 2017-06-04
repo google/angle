@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "775c9667_5785f41e",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2087,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-04T07:24:34Z",
+      "side": 1,
+      "message": "Please use the spec sentence.",
+      "range": {
+        "startLine": 2085,
+        "startChar": 0,
+        "endLine": 2087,
+        "endChar": 24
+      },
+      "revId": "5a5982703b2a219bcad2f38b2ad015e4c49f3ab5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4d3b99f3_1eaa9db6",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 881,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-04T07:24:34Z",
+      "side": 1,
+      "message": "Do we need to check texture-\u003ehasAnyDirtyBit() and do \u0027texture-\u003esyncImplState()\u0027 like line 848 did?",
+      "revId": "5a5982703b2a219bcad2f38b2ad015e4c49f3ab5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
