@@ -199,6 +199,8 @@ class LazyResource : angle::NonCopyable
         return mResource.get();
     }
 
+    const Resource11<GetD3D11Type<ResourceT>> &getObj() const { return mResource; }
+
   protected:
     gl::Error resolveImpl(Renderer11 *renderer,
                           const GetDescType<ResourceT> &desc,

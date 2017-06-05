@@ -98,7 +98,7 @@ Clear11::ShaderManager::~ShaderManager()
 
 gl::Error Clear11::ShaderManager::getShadersAndLayout(Renderer11 *renderer,
                                                       const INT clearType,
-                                                      ID3D11InputLayout **il,
+                                                      const d3d11::InputLayout **il,
                                                       ID3D11VertexShader **vs,
                                                       ID3D11PixelShader **ps)
 {
@@ -121,7 +121,7 @@ gl::Error Clear11::ShaderManager::getShadersAndLayout(Renderer11 *renderer,
         }
 
         *vs = mVs9.get();
-        *il = mIl9.get();
+        *il = &mIl9;
         *ps = mPsFloat9.get();
         return gl::NoError();
     }
@@ -694,10 +694,12 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
         deviceContext->RSSetState(mScissorDisabledRasterizerState.get());
     }
 
+    auto *stateManager = mRenderer->getStateManager();
+
     // Get Shaders
-    ID3D11VertexShader *vs = nullptr;
-    ID3D11InputLayout *il  = nullptr;
-    ID3D11PixelShader *ps  = nullptr;
+    ID3D11VertexShader *vs       = nullptr;
+    const d3d11::InputLayout *il = nullptr;
+    ID3D11PixelShader *ps        = nullptr;
 
     ANGLE_TRY(mShaderManager.getShadersAndLayout(mRenderer, clearParams.colorType, &il, &vs, &ps));
 
@@ -710,7 +712,7 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
 
     // Bind IL & VB if needed
     deviceContext->IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);
-    deviceContext->IASetInputLayout(il);
+    stateManager->setInputLayout(il);
 
     if (useVertexBuffer())
     {
@@ -727,7 +729,7 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
     deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     // Apply render targets
-    mRenderer->getStateManager()->setOneTimeRenderTargets(&rtvs[0], numRtvs, dsv);
+    stateManager->setOneTimeRenderTargets(&rtvs[0], numRtvs, dsv);
 
     // Draw the fullscreen quad
     deviceContext->Draw(6, 0);

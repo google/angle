@@ -106,6 +106,8 @@ class StateManager11 final : angle::NonCopyable
 
     const std::vector<TranslatedAttribute> &getCurrentValueAttribs() const;
 
+    void setInputLayout(const d3d11::InputLayout *inputLayout);
+
   private:
     void setViewportBounds(const int width, const int height);
     void unsetConflictingSRVs(gl::SamplerType shaderType,
@@ -207,6 +209,9 @@ class StateManager11 final : angle::NonCopyable
     // Current translations of "Current-Value" data - owned by Context, not VertexArray.
     gl::AttributesMask mDirtyCurrentValueAttribs;
     std::vector<TranslatedAttribute> mCurrentValueAttribs;
+
+    // Current applied input layout.
+    ResourceSerial mCurrentInputLayout;
 };
 
 }  // namespace rx

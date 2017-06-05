@@ -951,7 +951,7 @@ gl::Error Blit11::getShaderSupport(const Shader &shader, Blit11::ShaderSupport *
     {
         ANGLE_TRY(mQuad2DIL.resolve(mRenderer));
         ANGLE_TRY(mQuad2DVS.resolve(mRenderer));
-        supportOut->inputLayout         = mQuad2DIL.get();
+        supportOut->inputLayout         = &mQuad2DIL.getObj();
         supportOut->vertexShader        = mQuad2DVS.get();
         supportOut->geometryShader      = nullptr;
         supportOut->vertexWriteFunction = Write2DVertices;
@@ -962,7 +962,7 @@ gl::Error Blit11::getShaderSupport(const Shader &shader, Blit11::ShaderSupport *
         ANGLE_TRY(mQuad3DIL.resolve(mRenderer));
         ANGLE_TRY(mQuad3DVS.resolve(mRenderer));
         ANGLE_TRY(mQuad3DGS.resolve(mRenderer));
-        supportOut->inputLayout         = mQuad2DIL.get();
+        supportOut->inputLayout         = &mQuad2DIL.getObj();
         supportOut->vertexShader        = mQuad3DVS.get();
         supportOut->geometryShader      = mQuad3DGS.get();
         supportOut->vertexWriteFunction = Write3DVertices;
@@ -1063,6 +1063,8 @@ gl::Error Blit11::swizzleTexture(const d3d11::SharedSRV &source,
 
     deviceContext->Unmap(mSwizzleCB.get(), 0);
 
+    auto stateManager = mRenderer->getStateManager();
+
     // Apply vertex buffer
     ID3D11Buffer *vertexBuffer = mVertexBuffer.get();
     deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &startIdx);
@@ -1077,7 +1079,7 @@ gl::Error Blit11::swizzleTexture(const d3d11::SharedSRV &source,
     deviceContext->RSSetState(mScissorDisabledRasterizerState.get());
 
     // Apply shaders
-    deviceContext->IASetInputLayout(support.inputLayout);
+    stateManager->setInputLayout(support.inputLayout);
     deviceContext->IASetPrimitiveTopology(topology);
     deviceContext->VSSetShader(support.vertexShader, nullptr, 0);
 
@@ -1085,7 +1087,6 @@ gl::Error Blit11::swizzleTexture(const d3d11::SharedSRV &source,
     deviceContext->GSSetShader(support.geometryShader, nullptr, 0);
 
     // Unset the currently bound shader resource to avoid conflicts
-    auto stateManager = mRenderer->getStateManager();
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
 
     // Apply render target
@@ -1183,6 +1184,8 @@ gl::Error Blit11::copyTexture(const d3d11::SharedSRV &source,
 
     deviceContext->Unmap(mVertexBuffer.get(), 0);
 
+    auto stateManager = mRenderer->getStateManager();
+
     // Apply vertex buffer
     ID3D11Buffer *vertexBuffer = mVertexBuffer.get();
     deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &startIdx);
@@ -1217,7 +1220,7 @@ gl::Error Blit11::copyTexture(const d3d11::SharedSRV &source,
     }
 
     // Apply shaders
-    deviceContext->IASetInputLayout(support.inputLayout);
+    stateManager->setInputLayout(support.inputLayout);
     deviceContext->IASetPrimitiveTopology(topology);
     deviceContext->VSSetShader(support.vertexShader, nullptr, 0);
 
@@ -1225,7 +1228,6 @@ gl::Error Blit11::copyTexture(const d3d11::SharedSRV &source,
     deviceContext->GSSetShader(support.geometryShader, nullptr, 0);
 
     // Unset the currently bound shader resource to avoid conflicts
-    auto stateManager = mRenderer->getStateManager();
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
 
     // Apply render target
@@ -1351,8 +1353,10 @@ gl::Error Blit11::copyDepth(const d3d11::SharedSRV &source,
     ANGLE_TRY(mQuad2DVS.resolve(mRenderer));
     ANGLE_TRY(mDepthPS.resolve(mRenderer));
 
+    auto stateManager = mRenderer->getStateManager();
+
     // Apply shaders
-    deviceContext->IASetInputLayout(mQuad2DIL.get());
+    stateManager->setInputLayout(&mQuad2DIL.getObj());
     deviceContext->IASetPrimitiveTopology(topology);
     deviceContext->VSSetShader(mQuad2DVS.get(), nullptr, 0);
 
@@ -1360,7 +1364,6 @@ gl::Error Blit11::copyDepth(const d3d11::SharedSRV &source,
     deviceContext->GSSetShader(nullptr, nullptr, 0);
 
     // Unset the currently bound shader resource to avoid conflicts
-    auto stateManager = mRenderer->getStateManager();
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
 
     // Apply render target
@@ -1984,6 +1987,7 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveDepth(RenderTarget11 *depth)
 
     const auto &extents          = depth->getExtents();
     ID3D11DeviceContext *context = mRenderer->getDeviceContext();
+    auto *stateManager           = mRenderer->getStateManager();
 
     ANGLE_TRY(initResolveDepthOnly(depth->getFormatSet(), extents));
 
@@ -1994,7 +1998,7 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveDepth(RenderTarget11 *depth)
     ANGLE_TRY(mResolveDepthPS.resolve(mRenderer));
 
     // Apply the necessary state changes to the D3D11 immediate device context.
-    context->IASetInputLayout(nullptr);
+    stateManager->setInputLayout(nullptr);
     context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     context->VSSetShader(mResolveDepthStencilVS.get(), nullptr, 0);
     context->GSSetShader(nullptr, nullptr, 0);
@@ -2116,7 +2120,7 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(RenderTarget11 *depthS
     ANGLE_TRY(initResolveDepthStencil(extents));
 
     ID3D11DeviceContext *context = mRenderer->getDeviceContext();
-
+    auto *stateManager              = mRenderer->getStateManager();
     ID3D11Resource *stencilResource = depthStencil->getTexture().get();
 
     // Check if we need to re-create the stencil SRV.
@@ -2151,7 +2155,7 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(RenderTarget11 *depthS
     ANGLE_TRY(mResolveDepthStencilVS.resolve(mRenderer));
 
     // Apply the necessary state changes to the D3D11 immediate device context.
-    context->IASetInputLayout(nullptr);
+    stateManager->setInputLayout(nullptr);
     context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     context->VSSetShader(mResolveDepthStencilVS.get(), nullptr, 0);
     context->GSSetShader(nullptr, nullptr, 0);

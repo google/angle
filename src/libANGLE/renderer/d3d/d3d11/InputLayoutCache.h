@@ -105,7 +105,6 @@ class InputLayoutCache : angle::NonCopyable
 
     std::map<PackedAttributeLayout, d3d11::InputLayout> mLayoutMap;
 
-    uintptr_t mCurrentIL;
     std::array<ID3D11Buffer *, gl::MAX_VERTEX_ATTRIBS> mCurrentBuffers;
     std::array<UINT, gl::MAX_VERTEX_ATTRIBS> mCurrentVertexStrides;
     std::array<UINT, gl::MAX_VERTEX_ATTRIBS> mCurrentVertexOffsets;

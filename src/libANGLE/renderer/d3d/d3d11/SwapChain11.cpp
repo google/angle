@@ -782,14 +782,14 @@ EGLint SwapChain11::copyOffscreenToBackbuffer(EGLint x, EGLint y, EGLint width, 
 
     deviceContext->RSSetState(mPassThroughRS.get());
 
+    auto stateManager = mRenderer->getStateManager();
+
     // Apply shaders
-    deviceContext->IASetInputLayout(mPassThroughIL.get());
+    stateManager->setInputLayout(&mPassThroughIL);
     deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
     deviceContext->VSSetShader(mPassThroughVS.get(), nullptr, 0);
     deviceContext->PSSetShader(mPassThroughPS.get(), nullptr, 0);
     deviceContext->GSSetShader(nullptr, nullptr, 0);
-
-    auto stateManager = mRenderer->getStateManager();
 
     // Apply render targets
     stateManager->setOneTimeRenderTarget(mBackBufferRTView.get(), nullptr);

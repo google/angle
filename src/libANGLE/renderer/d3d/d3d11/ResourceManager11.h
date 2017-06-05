@@ -16,6 +16,7 @@
 #include "common/angleutils.h"
 #include "common/debug.h"
 #include "libANGLE/Error.h"
+#include "libANGLE/renderer/renderer_utils.h"
 
 namespace rx
 {
@@ -174,6 +175,11 @@ class Resource11Base : angle::NonCopyable
     bool valid() const { return (mData->object != nullptr); }
 
     void reset() { mData.reset(new DataT()); }
+
+    ResourceSerial getSerial() const
+    {
+        return ResourceSerial(reinterpret_cast<uintptr_t>(mData->object));
+    }
 
   protected:
     friend class TextureHelper11;

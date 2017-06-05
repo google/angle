@@ -159,7 +159,8 @@ StateManager11::StateManager11(Renderer11 *renderer)
       mViewportBounds(),
       mRenderTargetIsDirty(false),
       mDirtyCurrentValueAttribs(),
-      mCurrentValueAttribs()
+      mCurrentValueAttribs(),
+      mCurrentInputLayout()
 {
     mCurBlendState.blend                 = false;
     mCurBlendState.sourceBlendRGB        = GL_ONE;
@@ -819,6 +820,9 @@ void StateManager11::invalidateEverything()
     // anymore. For example when a currently used SRV is used as an RTV, D3D silently
     // remove it from its state.
     invalidateBoundViews();
+
+    // All calls to IASetInputLayout go through the state manager, so it shouldn't be
+    // necessary to invalidate the state.
 }
 
 void StateManager11::setOneTimeRenderTarget(ID3D11RenderTargetView *rtv,
@@ -1135,6 +1139,24 @@ gl::Error StateManager11::updateCurrentValueAttribs(const gl::State &state,
 const std::vector<TranslatedAttribute> &StateManager11::getCurrentValueAttribs() const
 {
     return mCurrentValueAttribs;
+}
+
+void StateManager11::setInputLayout(const d3d11::InputLayout *inputLayout)
+{
+    ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
+    if (inputLayout == nullptr)
+    {
+        if (mCurrentInputLayout != 0)
+        {
+            deviceContext->IASetInputLayout(nullptr);
+            mCurrentInputLayout = 0;
+        }
+    }
+    else if (inputLayout->getSerial() != mCurrentInputLayout)
+    {
+        deviceContext->IASetInputLayout(inputLayout->get());
+        mCurrentInputLayout = inputLayout->getSerial();
+    }
 }
 
 }  // namespace rx

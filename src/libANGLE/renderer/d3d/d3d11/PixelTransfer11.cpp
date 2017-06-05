@@ -192,7 +192,7 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::PixelUnpackState &unpac
     deviceContext->GSSetShader(geometryShader, nullptr, 0);
     deviceContext->PSSetShader(pixelShader, nullptr, 0);
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, bufferSRV);
-    deviceContext->IASetInputLayout(nullptr);
+    stateManager->setInputLayout(nullptr);
     deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 
     deviceContext->IASetVertexBuffers(0, 1, &nullBuffer, &zero, &zero);

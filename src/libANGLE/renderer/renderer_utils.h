@@ -12,6 +12,7 @@
 
 #include <cstdint>
 
+#include <limits>
 #include <map>
 
 #include "libANGLE/angletypes.h"
@@ -29,6 +30,22 @@ struct InternalFormat;
 
 namespace rx
 {
+
+class ResourceSerial
+{
+  public:
+    constexpr ResourceSerial() : mValue(kDirty) {}
+    constexpr ResourceSerial(uintptr_t value) : mValue(value) {}
+    constexpr bool operator==(ResourceSerial other) const { return mValue == other.mValue; }
+    constexpr bool operator!=(ResourceSerial other) const { return mValue != other.mValue; }
+
+    void dirty() { mValue = kDirty; }
+
+  private:
+    constexpr static uintptr_t kDirty = std::numeric_limits<uintptr_t>::max();
+
+    uintptr_t mValue;
+};
 
 using MipGenerationFunction = void (*)(size_t sourceWidth,
                                        size_t sourceHeight,

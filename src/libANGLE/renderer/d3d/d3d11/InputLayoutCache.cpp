@@ -172,10 +172,7 @@ bool InputLayoutCache::PackedAttributeLayout::operator<(const PackedAttributeLay
 }
 
 InputLayoutCache::InputLayoutCache()
-    : mCurrentIL(angle::DirtyPointer),
-      mPointSpriteVertexBuffer(),
-      mPointSpriteIndexBuffer(),
-      mCacheSize(kDefaultCacheSize)
+    : mPointSpriteVertexBuffer(), mPointSpriteIndexBuffer(), mCacheSize(kDefaultCacheSize)
 {
     mCurrentBuffers.fill(nullptr);
     mCurrentVertexStrides.fill(std::numeric_limits<UINT>::max());
@@ -185,7 +182,6 @@ InputLayoutCache::InputLayoutCache()
 
 InputLayoutCache::~InputLayoutCache()
 {
-    clear();
 }
 
 void InputLayoutCache::initialize()
@@ -203,7 +199,6 @@ void InputLayoutCache::clear()
 
 void InputLayoutCache::markDirty()
 {
-    mCurrentIL = angle::DirtyPointer;
     for (unsigned int i = 0; i < gl::MAX_VERTEX_ATTRIBS; i++)
     {
         mCurrentBuffers[i]       = nullptr;
@@ -494,13 +489,13 @@ gl::Error InputLayoutCache::updateInputLayout(Renderer11 *renderer,
         layout.addAttributeData(glslElementType, d3dSemantic, vertexFormatType, binding.divisor);
     }
 
-    ID3D11InputLayout *inputLayout = nullptr;
+    const d3d11::InputLayout *inputLayout = nullptr;
     if (layout.numAttributes > 0 || layout.flags != 0)
     {
         auto layoutMapIt = mLayoutMap.find(layout);
         if (layoutMapIt != mLayoutMap.end())
         {
-            inputLayout = layoutMapIt->second.get();
+            inputLayout = &layoutMapIt->second;
         }
         else
         {
@@ -525,18 +520,12 @@ gl::Error InputLayoutCache::updateInputLayout(Renderer11 *renderer,
                 }
             }
 
-            inputLayout        = newInputLayout.get();
-            mLayoutMap[layout] = std::move(newInputLayout);
+            auto result = mLayoutMap.insert(std::make_pair(layout, std::move(newInputLayout)));
+            inputLayout = &result.first->second;
         }
     }
 
-    if (reinterpret_cast<uintptr_t>(inputLayout) != mCurrentIL)
-    {
-        ID3D11DeviceContext *deviceContext = renderer->getDeviceContext();
-        deviceContext->IASetInputLayout(inputLayout);
-        mCurrentIL = reinterpret_cast<uintptr_t>(inputLayout);
-    }
-
+    renderer->getStateManager()->setInputLayout(inputLayout);
     return gl::NoError();
 }
 
