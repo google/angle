@@ -15,46 +15,23 @@
 #include "common/debug.h"
 #include "common/platform.h"
 #include "common/utilities.h"
-#include "common/version.h"
 #include "compiler/translator/blocklayout.h"
 #include "libANGLE/Context.h"
+#include "libANGLE/MemoryProgramCache.h"
 #include "libANGLE/ResourceManager.h"
-#include "libANGLE/features.h"
-#include "libANGLE/renderer/GLImplFactory.h"
-#include "libANGLE/renderer/ProgramImpl.h"
-#include "libANGLE/VaryingPacking.h"
-#include "libANGLE/queryconversions.h"
 #include "libANGLE/Uniform.h"
 #include "libANGLE/UniformLinker.h"
+#include "libANGLE/VaryingPacking.h"
+#include "libANGLE/features.h"
+#include "libANGLE/queryconversions.h"
+#include "libANGLE/renderer/GLImplFactory.h"
+#include "libANGLE/renderer/ProgramImpl.h"
 
 namespace gl
 {
 
 namespace
 {
-
-void WriteShaderVar(BinaryOutputStream *stream, const sh::ShaderVariable &var)
-{
-    stream->writeInt(var.type);
-    stream->writeInt(var.precision);
-    stream->writeString(var.name);
-    stream->writeString(var.mappedName);
-    stream->writeInt(var.arraySize);
-    stream->writeInt(var.staticUse);
-    stream->writeString(var.structName);
-    ASSERT(var.fields.empty());
-}
-
-void LoadShaderVar(BinaryInputStream *stream, sh::ShaderVariable *var)
-{
-    var->type       = stream->readInt<GLenum>();
-    var->precision  = stream->readInt<GLenum>();
-    var->name       = stream->readString();
-    var->mappedName = stream->readString();
-    var->arraySize  = stream->readInt<unsigned int>();
-    var->staticUse  = stream->readBool();
-    var->structName = stream->readString();
-}
 
 // This simplified cast function doesn't need to worry about advanced concepts like
 // depth range values, or casting to bool.
@@ -801,170 +778,9 @@ Error Program::loadBinary(const Context *context,
         return NoError();
     }
 
-    BinaryInputStream stream(binary, length);
-
-    unsigned char commitString[ANGLE_COMMIT_HASH_SIZE];
-    stream.readBytes(commitString, ANGLE_COMMIT_HASH_SIZE);
-    if (memcmp(commitString, ANGLE_COMMIT_HASH, sizeof(unsigned char) * ANGLE_COMMIT_HASH_SIZE) !=
-        0)
-    {
-        mInfoLog << "Invalid program binary version.";
-        return NoError();
-    }
-
-    int majorVersion = stream.readInt<int>();
-    int minorVersion = stream.readInt<int>();
-    if (majorVersion != context->getClientMajorVersion() ||
-        minorVersion != context->getClientMinorVersion())
-    {
-        mInfoLog << "Cannot load program binaries across different ES context versions.";
-        return NoError();
-    }
-
-    mState.mComputeShaderLocalSize[0] = stream.readInt<int>();
-    mState.mComputeShaderLocalSize[1] = stream.readInt<int>();
-    mState.mComputeShaderLocalSize[2] = stream.readInt<int>();
-
-    static_assert(MAX_VERTEX_ATTRIBS <= sizeof(unsigned long) * 8,
-                  "Too many vertex attribs for mask");
-    mState.mActiveAttribLocationsMask = stream.readInt<unsigned long>();
-
-    unsigned int attribCount = stream.readInt<unsigned int>();
-    ASSERT(mState.mAttributes.empty());
-    for (unsigned int attribIndex = 0; attribIndex < attribCount; ++attribIndex)
-    {
-        sh::Attribute attrib;
-        LoadShaderVar(&stream, &attrib);
-        attrib.location = stream.readInt<int>();
-        mState.mAttributes.push_back(attrib);
-    }
-
-    unsigned int uniformCount = stream.readInt<unsigned int>();
-    ASSERT(mState.mUniforms.empty());
-    for (unsigned int uniformIndex = 0; uniformIndex < uniformCount; ++uniformIndex)
-    {
-        LinkedUniform uniform;
-        LoadShaderVar(&stream, &uniform);
-
-        uniform.blockIndex                 = stream.readInt<int>();
-        uniform.blockInfo.offset           = stream.readInt<int>();
-        uniform.blockInfo.arrayStride      = stream.readInt<int>();
-        uniform.blockInfo.matrixStride     = stream.readInt<int>();
-        uniform.blockInfo.isRowMajorMatrix = stream.readBool();
-
-        mState.mUniforms.push_back(uniform);
-    }
-
-    const unsigned int uniformIndexCount = stream.readInt<unsigned int>();
-    ASSERT(mState.mUniformLocations.empty());
-    for (unsigned int uniformIndexIndex = 0; uniformIndexIndex < uniformIndexCount;
-         uniformIndexIndex++)
-    {
-        VariableLocation variable;
-        stream.readString(&variable.name);
-        stream.readInt(&variable.element);
-        stream.readInt(&variable.index);
-        stream.readBool(&variable.used);
-        stream.readBool(&variable.ignored);
-
-        mState.mUniformLocations.push_back(variable);
-    }
-
-    unsigned int uniformBlockCount = stream.readInt<unsigned int>();
-    ASSERT(mState.mUniformBlocks.empty());
-    for (unsigned int uniformBlockIndex = 0; uniformBlockIndex < uniformBlockCount;
-         ++uniformBlockIndex)
-    {
-        UniformBlock uniformBlock;
-        stream.readString(&uniformBlock.name);
-        stream.readBool(&uniformBlock.isArray);
-        stream.readInt(&uniformBlock.arrayElement);
-        stream.readInt(&uniformBlock.binding);
-        stream.readInt(&uniformBlock.dataSize);
-        stream.readBool(&uniformBlock.vertexStaticUse);
-        stream.readBool(&uniformBlock.fragmentStaticUse);
-
-        unsigned int numMembers = stream.readInt<unsigned int>();
-        for (unsigned int blockMemberIndex = 0; blockMemberIndex < numMembers; blockMemberIndex++)
-        {
-            uniformBlock.memberUniformIndexes.push_back(stream.readInt<unsigned int>());
-        }
-
-        mState.mUniformBlocks.push_back(uniformBlock);
-    }
-
-    for (GLuint bindingIndex = 0; bindingIndex < mState.mUniformBlockBindings.size();
-         ++bindingIndex)
-    {
-        stream.readInt(&mState.mUniformBlockBindings[bindingIndex]);
-        mState.mActiveUniformBlockBindings.set(bindingIndex,
-                                               mState.mUniformBlockBindings[bindingIndex] != 0);
-    }
-
-    unsigned int transformFeedbackVaryingCount = stream.readInt<unsigned int>();
-    ASSERT(mState.mLinkedTransformFeedbackVaryings.empty());
-    for (unsigned int transformFeedbackVaryingIndex = 0;
-        transformFeedbackVaryingIndex < transformFeedbackVaryingCount;
-        ++transformFeedbackVaryingIndex)
-    {
-        sh::Varying varying;
-        stream.readInt(&varying.arraySize);
-        stream.readInt(&varying.type);
-        stream.readString(&varying.name);
-
-        GLuint arrayIndex = stream.readInt<GLuint>();
-
-        mState.mLinkedTransformFeedbackVaryings.emplace_back(varying, arrayIndex);
-    }
-
-    stream.readInt(&mState.mTransformFeedbackBufferMode);
-
-    unsigned int outputCount = stream.readInt<unsigned int>();
-    ASSERT(mState.mOutputVariables.empty());
-    for (unsigned int outputIndex = 0; outputIndex < outputCount; ++outputIndex)
-    {
-        sh::OutputVariable output;
-        LoadShaderVar(&stream, &output);
-        output.location = stream.readInt<int>();
-        mState.mOutputVariables.push_back(output);
-    }
-
-    unsigned int outputVarCount = stream.readInt<unsigned int>();
-    for (unsigned int outputIndex = 0; outputIndex < outputVarCount; ++outputIndex)
-    {
-        int locationIndex = stream.readInt<int>();
-        VariableLocation locationData;
-        stream.readInt(&locationData.element);
-        stream.readInt(&locationData.index);
-        stream.readString(&locationData.name);
-        mState.mOutputLocations[locationIndex] = locationData;
-    }
-
-    unsigned int outputTypeCount = stream.readInt<unsigned int>();
-    for (unsigned int outputIndex = 0; outputIndex < outputTypeCount; ++outputIndex)
-    {
-        mState.mOutputVariableTypes.push_back(stream.readInt<GLenum>());
-    }
-    static_assert(IMPLEMENTATION_MAX_DRAW_BUFFERS < 8 * sizeof(uint32_t),
-                  "All bits of DrawBufferMask can be contained in an uint32_t");
-    mState.mActiveOutputVariables = stream.readInt<uint32_t>();
-
-    unsigned int start = 0;
-    unsigned int end   = 0;
-    stream.readInt(&start);
-    stream.readInt(&end);
-    mState.mSamplerUniformRange = RangeUI(start, end);
-
-    unsigned int samplerCount = stream.readInt<unsigned int>();
-    for (unsigned int samplerIndex = 0; samplerIndex < samplerCount; ++samplerIndex)
-    {
-        GLenum textureType  = stream.readInt<GLenum>();
-        size_t bindingCount = stream.readInt<size_t>();
-        mState.mSamplerBindings.emplace_back(SamplerBinding(textureType, bindingCount));
-    }
-
-    ANGLE_TRY_RESULT(mProgram->load(context, mInfoLog, &stream), mLinked);
-
+    const uint8_t *bytes = reinterpret_cast<const uint8_t *>(binary);
+    ANGLE_TRY_RESULT(
+        MemoryProgramCache::Deserialize(context, this, &mState, bytes, length, mInfoLog), mLinked);
     return NoError();
 #endif  // #if ANGLE_PROGRAM_BINARY_LOAD == ANGLE_ENABLED
 }
@@ -980,134 +796,11 @@ Error Program::saveBinary(const Context *context,
         *binaryFormat = GL_PROGRAM_BINARY_ANGLE;
     }
 
-    BinaryOutputStream stream;
+    angle::MemoryBuffer memoryBuf;
+    MemoryProgramCache::Serialize(context, this, &memoryBuf);
 
-    stream.writeBytes(reinterpret_cast<const unsigned char*>(ANGLE_COMMIT_HASH), ANGLE_COMMIT_HASH_SIZE);
-
-    // nullptr context is supported when computing binary length.
-    if (context)
-    {
-        stream.writeInt(context->getClientVersion().major);
-        stream.writeInt(context->getClientVersion().minor);
-    }
-    else
-    {
-        stream.writeInt(2);
-        stream.writeInt(0);
-    }
-
-    stream.writeInt(mState.mComputeShaderLocalSize[0]);
-    stream.writeInt(mState.mComputeShaderLocalSize[1]);
-    stream.writeInt(mState.mComputeShaderLocalSize[2]);
-
-    stream.writeInt(mState.mActiveAttribLocationsMask.to_ulong());
-
-    stream.writeInt(mState.mAttributes.size());
-    for (const sh::Attribute &attrib : mState.mAttributes)
-    {
-        WriteShaderVar(&stream, attrib);
-        stream.writeInt(attrib.location);
-    }
-
-    stream.writeInt(mState.mUniforms.size());
-    for (const LinkedUniform &uniform : mState.mUniforms)
-    {
-        WriteShaderVar(&stream, uniform);
-
-        // FIXME: referenced
-
-        stream.writeInt(uniform.blockIndex);
-        stream.writeInt(uniform.blockInfo.offset);
-        stream.writeInt(uniform.blockInfo.arrayStride);
-        stream.writeInt(uniform.blockInfo.matrixStride);
-        stream.writeInt(uniform.blockInfo.isRowMajorMatrix);
-    }
-
-    stream.writeInt(mState.mUniformLocations.size());
-    for (const auto &variable : mState.mUniformLocations)
-    {
-        stream.writeString(variable.name);
-        stream.writeInt(variable.element);
-        stream.writeInt(variable.index);
-        stream.writeInt(variable.used);
-        stream.writeInt(variable.ignored);
-    }
-
-    stream.writeInt(mState.mUniformBlocks.size());
-    for (const UniformBlock &uniformBlock : mState.mUniformBlocks)
-    {
-        stream.writeString(uniformBlock.name);
-        stream.writeInt(uniformBlock.isArray);
-        stream.writeInt(uniformBlock.arrayElement);
-        stream.writeInt(uniformBlock.binding);
-        stream.writeInt(uniformBlock.dataSize);
-
-        stream.writeInt(uniformBlock.vertexStaticUse);
-        stream.writeInt(uniformBlock.fragmentStaticUse);
-
-        stream.writeInt(uniformBlock.memberUniformIndexes.size());
-        for (unsigned int memberUniformIndex : uniformBlock.memberUniformIndexes)
-        {
-            stream.writeInt(memberUniformIndex);
-        }
-    }
-
-    for (GLuint binding : mState.mUniformBlockBindings)
-    {
-        stream.writeInt(binding);
-    }
-
-    stream.writeInt(mState.mLinkedTransformFeedbackVaryings.size());
-    for (const auto &var : mState.mLinkedTransformFeedbackVaryings)
-    {
-        stream.writeInt(var.arraySize);
-        stream.writeInt(var.type);
-        stream.writeString(var.name);
-
-        stream.writeIntOrNegOne(var.arrayIndex);
-    }
-
-    stream.writeInt(mState.mTransformFeedbackBufferMode);
-
-    stream.writeInt(mState.mOutputVariables.size());
-    for (const sh::OutputVariable &output : mState.mOutputVariables)
-    {
-        WriteShaderVar(&stream, output);
-        stream.writeInt(output.location);
-    }
-
-    stream.writeInt(mState.mOutputLocations.size());
-    for (const auto &outputPair : mState.mOutputLocations)
-    {
-        stream.writeInt(outputPair.first);
-        stream.writeIntOrNegOne(outputPair.second.element);
-        stream.writeInt(outputPair.second.index);
-        stream.writeString(outputPair.second.name);
-    }
-
-    stream.writeInt(mState.mOutputVariableTypes.size());
-    for (const auto &outputVariableType : mState.mOutputVariableTypes)
-    {
-        stream.writeInt(outputVariableType);
-    }
-    static_assert(IMPLEMENTATION_MAX_DRAW_BUFFERS < 8 * sizeof(uint32_t),
-                  "All bits of DrawBufferMask can be contained in an uint32_t");
-    stream.writeInt(static_cast<uint32_t>(mState.mActiveOutputVariables.to_ulong()));
-
-    stream.writeInt(mState.mSamplerUniformRange.low());
-    stream.writeInt(mState.mSamplerUniformRange.high());
-
-    stream.writeInt(mState.mSamplerBindings.size());
-    for (const auto &samplerBinding : mState.mSamplerBindings)
-    {
-        stream.writeInt(samplerBinding.textureType);
-        stream.writeInt(samplerBinding.boundTextureUnits.size());
-    }
-
-    mProgram->save(&stream);
-
-    GLsizei streamLength   = static_cast<GLsizei>(stream.length());
-    const void *streamState = stream.data();
+    GLsizei streamLength       = static_cast<GLsizei>(memoryBuf.size());
+    const uint8_t *streamState = memoryBuf.data();
 
     if (streamLength > bufSize)
     {

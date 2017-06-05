@@ -229,11 +229,25 @@ class ProgramState final : angle::NonCopyable
         return mActiveAttribLocationsMask;
     }
     DrawBufferMask getActiveOutputVariables() const { return mActiveOutputVariables; }
+    const std::vector<sh::OutputVariable> &getOutputVariables() const { return mOutputVariables; }
     const std::map<int, VariableLocation> &getOutputLocations() const { return mOutputLocations; }
     const std::vector<LinkedUniform> &getUniforms() const { return mUniforms; }
     const std::vector<VariableLocation> &getUniformLocations() const { return mUniformLocations; }
     const std::vector<UniformBlock> &getUniformBlocks() const { return mUniformBlocks; }
     const std::vector<SamplerBinding> &getSamplerBindings() const { return mSamplerBindings; }
+    const sh::WorkGroupSize &getComputeShaderLocalSize() const { return mComputeShaderLocalSize; }
+    const RangeUI &getSamplerUniformRange() const { return mSamplerUniformRange; }
+
+    using UniformBlockBindingArray =
+        std::array<GLuint, IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS>;
+    const UniformBlockBindingArray &getUniformBlockBindings() const
+    {
+        return mUniformBlockBindings;
+    }
+    const std::vector<TransformFeedbackVarying> &getLinkedTransformFeedbackVaryings() const
+    {
+        return mLinkedTransformFeedbackVaryings;
+    }
 
     GLint getUniformLocation(const std::string &name) const;
     GLuint getUniformIndexFromName(const std::string &name) const;
@@ -243,6 +257,7 @@ class ProgramState final : angle::NonCopyable
     GLuint getSamplerIndexFromUniformIndex(GLuint uniformIndex) const;
 
   private:
+    friend class MemoryProgramCache;
     friend class Program;
 
     std::string mLabel;
@@ -257,7 +272,7 @@ class ProgramState final : angle::NonCopyable
     std::vector<TransformFeedbackVarying> mLinkedTransformFeedbackVaryings;
     GLenum mTransformFeedbackBufferMode;
 
-    std::array<GLuint, IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS> mUniformBlockBindings;
+    UniformBlockBindingArray mUniformBlockBindings;
     UniformBlockBindingMask mActiveUniformBlockBindings;
 
     std::vector<sh::Attribute> mAttributes;

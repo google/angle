@@ -230,6 +230,6 @@ class BinaryOutputStream : angle::NonCopyable
     }
 
 };
-}
+}  // namespace gl
 
 #endif  // LIBANGLE_BINARYSTREAM_H_
