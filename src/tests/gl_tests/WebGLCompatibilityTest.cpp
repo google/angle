@@ -2610,9 +2610,11 @@ TEST_P(WebGL2CompatibilityTest, VertexShaderAttributeTypeMissmatch)
 // Tests the WebGL removal of undefined behavior when attachments aren't written to.
 TEST_P(WebGLCompatibilityTest, DrawBuffers)
 {
-    if (IsD3D9() || IsD3D11())
+    // TODO(cwallez) AMD incorrectly write black to the first render target when the HLSL pixel
+    // shader doesn't write anything to the ouput.
+    if (IsD3D11() && IsAMD())
     {
-        std::cout << "Test skipped on " << GetParam() << std::endl;
+        std::cout << "Test skipped on AMD " << GetParam() << std::endl;
         return;
     }
 
