@@ -147,13 +147,11 @@ class DynamicHLSL : angle::NonCopyable
     void generateVaryingLinkHLSL(const gl::VaryingPacking &varyingPacking,
                                  const BuiltinInfo &builtins,
                                  bool programUsesPointSize,
-                                 std::stringstream &hlslStream) const;
+                                 std::ostringstream &hlslStream) const;
 
-    // Prepend an underscore
-    static std::string decorateVariable(const std::string &name);
-
-    std::string generateAttributeConversionHLSL(gl::VertexFormatType vertexFormatType,
-                                                const sh::ShaderVariable &shaderAttrib) const;
+    static void GenerateAttributeConversionHLSL(gl::VertexFormatType vertexFormatType,
+                                                const sh::ShaderVariable &shaderAttrib,
+                                                std::ostringstream &outStream);
 };
 
 }  // namespace rx

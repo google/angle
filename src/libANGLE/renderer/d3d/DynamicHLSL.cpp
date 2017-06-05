@@ -27,7 +27,28 @@ namespace rx
 namespace
 {
 
-std::string HLSLComponentTypeString(GLenum componentType)
+// This class needs to match OutputHLSL::decorate
+class DecorateVariable final : angle::NonCopyable
+{
+  public:
+    explicit DecorateVariable(const std::string &str) : mName(str) {}
+    const std::string &getName() const { return mName; }
+
+  private:
+    const std::string &mName;
+};
+
+std::ostream &operator<<(std::ostream &o, const DecorateVariable &dv)
+{
+    if (dv.getName().compare(0, 3, "gl_") != 0)
+    {
+        o << "_";
+    }
+    o << dv.getName();
+    return o;
+}
+
+const char *HLSLComponentTypeString(GLenum componentType)
 {
     switch (componentType)
     {
@@ -45,12 +66,16 @@ std::string HLSLComponentTypeString(GLenum componentType)
     }
 }
 
-std::string HLSLComponentTypeString(GLenum componentType, int componentCount)
+void HLSLComponentTypeString(std::ostringstream &ostream, GLenum componentType, int componentCount)
 {
-    return HLSLComponentTypeString(componentType) + (componentCount > 1 ? Str(componentCount) : "");
+    ostream << HLSLComponentTypeString(componentType);
+    if (componentCount > 1)
+    {
+        ostream << componentCount;
+    }
 }
 
-std::string HLSLMatrixTypeString(GLenum type)
+const char *HLSLMatrixTypeString(GLenum type)
 {
     switch (type)
     {
@@ -78,15 +103,16 @@ std::string HLSLMatrixTypeString(GLenum type)
     }
 }
 
-std::string HLSLTypeString(GLenum type)
+void HLSLTypeString(std::ostringstream &ostream, GLenum type)
 {
     if (gl::IsMatrixType(type))
     {
-        return HLSLMatrixTypeString(type);
+        ostream << HLSLMatrixTypeString(type);
+        return;
     }
 
-    return HLSLComponentTypeString(gl::VariableComponentType(type),
-                                   gl::VariableComponentCount(type));
+    HLSLComponentTypeString(ostream, gl::VariableComponentType(type),
+                            gl::VariableComponentCount(type));
 }
 
 const PixelShaderOutputVariable *FindOutputAtLocation(
@@ -104,7 +130,7 @@ const PixelShaderOutputVariable *FindOutputAtLocation(
     return nullptr;
 }
 
-void WriteArrayString(std::stringstream &strstr, unsigned int i)
+void WriteArrayString(std::ostringstream &strstr, unsigned int i)
 {
     static_assert(GL_INVALID_INDEX == UINT_MAX,
                   "GL_INVALID_INDEX must be equal to the max unsigned int.");
@@ -133,8 +159,8 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(
     const InputLayout &inputLayout,
     const std::vector<sh::Attribute> &shaderAttributes) const
 {
-    std::stringstream structStream;
-    std::stringstream initStream;
+    std::ostringstream structStream;
+    std::ostringstream initStream;
 
     structStream << "struct VS_INPUT\n"
                  << "{\n";
@@ -192,13 +218,13 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(
                 }
                 else
                 {
-                    structStream << "    " << HLSLComponentTypeString(
-                                                  componentType,
-                                                  VariableComponentCount(shaderAttribute.type));
+                    structStream << "    ";
+                    HLSLComponentTypeString(structStream, componentType,
+                                            VariableComponentCount(shaderAttribute.type));
                 }
             }
 
-            structStream << " " << decorateVariable(shaderAttribute.name) << " : ";
+            structStream << " " << DecorateVariable(shaderAttribute.name) << " : ";
 
             if (shaderAttribute.name == "gl_InstanceID")
             {
@@ -217,7 +243,7 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(
             structStream << ";\n";
 
             // HLSL code for initialization
-            initStream << "    " << decorateVariable(shaderAttribute.name) << " = ";
+            initStream << "    " << DecorateVariable(shaderAttribute.name) << " = ";
 
             // Mismatched vertex attribute to vertex input may result in an undefined
             // data reinterpretation (eg for pure integer->float, float->pure integer)
@@ -225,11 +251,11 @@ std::string DynamicHLSL::generateVertexShaderForInputLayout(
             if (IsMatrixType(shaderAttribute.type) ||
                 (mRenderer->getVertexConversionType(vertexFormatType) & VERTEX_CONVERT_GPU) != 0)
             {
-                initStream << generateAttributeConversionHLSL(vertexFormatType, shaderAttribute);
+                GenerateAttributeConversionHLSL(vertexFormatType, shaderAttribute, initStream);
             }
             else
             {
-                initStream << "input." << decorateVariable(shaderAttribute.name);
+                initStream << "input." << DecorateVariable(shaderAttribute.name);
             }
 
             initStream << ";\n";
@@ -262,8 +288,8 @@ std::string DynamicHLSL::generatePixelShaderForOutputSignature(
     std::string targetSemantic = (shaderModel >= 4) ? "SV_TARGET" : "COLOR";
     std::string depthSemantic  = (shaderModel >= 4) ? "SV_Depth" : "DEPTH";
 
-    std::stringstream declarationStream;
-    std::stringstream copyStream;
+    std::ostringstream declarationStream;
+    std::ostringstream copyStream;
 
     declarationStream << "struct PS_OUTPUT\n"
                          "{\n";
@@ -290,8 +316,9 @@ std::string DynamicHLSL::generatePixelShaderForOutputSignature(
             // corresponding to unwritten variables are similarly undefined.
             if (outputVariable)
             {
-                declarationStream << "    " + HLSLTypeString(outputVariable->type) << " "
-                                  << outputVariable->name << " : " << targetSemantic
+                declarationStream << "    ";
+                HLSLTypeString(declarationStream, outputVariable->type);
+                declarationStream << " " << outputVariable->name << " : " << targetSemantic
                                   << static_cast<int>(layoutIndex) << ";\n";
 
                 copyStream << "    output." << outputVariable->name << " = "
@@ -326,7 +353,7 @@ std::string DynamicHLSL::generatePixelShaderForOutputSignature(
 void DynamicHLSL::generateVaryingLinkHLSL(const VaryingPacking &varyingPacking,
                                           const BuiltinInfo &builtins,
                                           bool programUsesPointSize,
-                                          std::stringstream &hlslStream) const
+                                          std::ostringstream &hlslStream) const
 {
     ASSERT(builtins.dxPosition.enabled);
     hlslStream << "{\n"
@@ -385,7 +412,7 @@ void DynamicHLSL::generateVaryingLinkHLSL(const VaryingPacking &varyingPacking,
         GLenum transposedType = gl::TransposeMatrixType(varying.type);
         GLenum componentType  = gl::VariableComponentType(transposedType);
         int columnCount       = gl::VariableColumnCount(transposedType);
-        hlslStream << HLSLComponentTypeString(componentType, columnCount);
+        HLSLComponentTypeString(hlslStream, componentType, columnCount);
         unsigned int semanticIndex = registerInfo.semanticIndex;
         hlslStream << " v" << semanticIndex << " : " << varyingSemantic << semanticIndex << ";\n";
     }
@@ -419,7 +446,7 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
     // Validation done in the compiler
     ASSERT(!fragmentShader->usesFragColor() || !fragmentShader->usesFragData());
 
-    std::stringstream vertexStream;
+    std::ostringstream vertexStream;
     vertexStream << vertexShaderGL->getTranslatedSource(context);
 
     // Instanced PointSprite emulation requires additional entries originally generated in the
@@ -520,10 +547,10 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
 
         if (packedVarying.isStructField())
         {
-            vertexStream << decorateVariable(packedVarying.parentStructName) << ".";
+            vertexStream << DecorateVariable(packedVarying.parentStructName) << ".";
         }
 
-        vertexStream << decorateVariable(varying.name);
+        vertexStream << DecorateVariable(varying.name);
 
         if (varying.isArray())
         {
@@ -587,7 +614,7 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
 
     const auto &pixelBuiltins = builtinsD3D[SHADER_PIXEL];
 
-    std::stringstream pixelStream;
+    std::ostringstream pixelStream;
     pixelStream << fragmentShaderGL->getTranslatedSource(context);
     pixelStream << "struct PS_INPUT\n";
     generateVaryingLinkHLSL(varyingPacking, pixelBuiltins, builtinsD3D.usesPointSize(),
@@ -724,10 +751,10 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
 
         if (packedVarying.isStructField())
         {
-            pixelStream << decorateVariable(packedVarying.parentStructName) << ".";
+            pixelStream << DecorateVariable(packedVarying.parentStructName) << ".";
         }
 
-        pixelStream << decorateVariable(varying.name);
+        pixelStream << DecorateVariable(varying.name);
 
         if (varying.isArray())
         {
@@ -850,7 +877,7 @@ std::string DynamicHLSL::generateGeometryShaderPreamble(const VaryingPacking &va
 {
     ASSERT(mRenderer->getMajorShaderModel() >= 4);
 
-    std::stringstream preambleStream;
+    std::ostringstream preambleStream;
 
     const auto &vertexBuiltins = builtinsD3D[SHADER_VERTEX];
 
@@ -1059,46 +1086,34 @@ std::string DynamicHLSL::generateGeometryShaderHLSL(gl::PrimitiveType primitiveT
     return shaderStream.str();
 }
 
-// This method needs to match OutputHLSL::decorate
-std::string DynamicHLSL::decorateVariable(const std::string &name)
+// static
+void DynamicHLSL::GenerateAttributeConversionHLSL(gl::VertexFormatType vertexFormatType,
+                                                  const sh::ShaderVariable &shaderAttrib,
+                                                  std::ostringstream &outStream)
 {
-    if (name.compare(0, 3, "gl_") != 0)
-    {
-        return "_" + name;
-    }
-
-    return name;
-}
-
-std::string DynamicHLSL::generateAttributeConversionHLSL(
-    gl::VertexFormatType vertexFormatType,
-    const sh::ShaderVariable &shaderAttrib) const
-{
-    const gl::VertexFormat &vertexFormat = gl::GetVertexFormatFromType(vertexFormatType);
-    std::string attribString             = "input." + decorateVariable(shaderAttrib.name);
-
     // Matrix
     if (IsMatrixType(shaderAttrib.type))
     {
-        return "transpose(" + attribString + ")";
+        outStream << "transpose(input." << DecorateVariable(shaderAttrib.name) << ")";
+        return;
     }
 
     GLenum shaderComponentType = VariableComponentType(shaderAttrib.type);
     int shaderComponentCount   = VariableComponentCount(shaderAttrib.type);
+    const gl::VertexFormat &vertexFormat = gl::GetVertexFormatFromType(vertexFormatType);
 
     // Perform integer to float conversion (if necessary)
-    bool requiresTypeConversion =
-        (shaderComponentType == GL_FLOAT && vertexFormat.type != GL_FLOAT);
-
-    if (requiresTypeConversion)
+    if (shaderComponentType == GL_FLOAT && vertexFormat.type != GL_FLOAT)
     {
         // TODO: normalization for 32-bit integer formats
         ASSERT(!vertexFormat.normalized && !vertexFormat.pureInteger);
-        return "float" + Str(shaderComponentCount) + "(" + attribString + ")";
+        outStream << "float" << shaderComponentCount << "(input."
+                  << DecorateVariable(shaderAttrib.name) << ")";
+        return;
     }
 
     // No conversion necessary
-    return attribString;
+    outStream << "input." << DecorateVariable(shaderAttrib.name);
 }
 
 void DynamicHLSL::getPixelShaderOutputKey(const gl::ContextState &data,
