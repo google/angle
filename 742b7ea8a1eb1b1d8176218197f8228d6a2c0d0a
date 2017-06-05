@@ -167,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "b7795007_10b966ad",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-05T14:50:35Z",
+      "side": 1,
+      "message": "I like your names better.",
+      "parentUuid": "e7aa7729_5ebf1b53",
+      "range": {
+        "startLine": 204,
+        "startChar": 0,
+        "endLine": 220,
+        "endChar": 67
+      },
+      "revId": "742b7ea8a1eb1b1d8176218197f8228d6a2c0d0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6a044d48_298c83a6",
         "filename": "src/libANGLE/Error.h",
         "patchSetId": 2
@@ -202,6 +226,30 @@
       "side": 1,
       "message": "Can I get a third opinion on this?\nI think EglSuccess \u003c\u003d\u003e EGL_SUCCESS consistency is much more useful than having NoError in gl::, egl:: and vk::.\nIn fact, I would prefer if you\u0027ve renamed vk::NoError to vk::Success.\nMy rationale:\n1. When I search for \"NoError\" what I want to find is the occurrences of GL_NO_ERROR, and not egl and vk stuff.\n2. When I want to return EGL_SUCCESS it\u0027s much easier to remember that I need EglSuccess and not NoError.",
       "parentUuid": "6a044d48_298c83a6",
+      "range": {
+        "startLine": 222,
+        "startChar": 13,
+        "endLine": 222,
+        "endChar": 23
+      },
+      "revId": "742b7ea8a1eb1b1d8176218197f8228d6a2c0d0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "91377e6c_5c4c648b",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-05T14:50:35Z",
+      "side": 1,
+      "message": "The reason I named vk::NoError that way instead of vk::Success is because Success was causing compile errors, like your BadDevice stuff you mentioned above. So, a good way for us to be consistent is to call every success case NoError. \n\nBasically we can\u0027t have nice things because of system headers.",
+      "parentUuid": "35147ed6_fbdc5200",
       "range": {
         "startLine": 222,
         "startChar": 13,
