@@ -333,6 +333,37 @@ TEST_P(RobustResourceInitTest, ReadingUninitializedTexture)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test that calling glTexImage2D multiple times with the same size and no data resets all texture
+// data
+TEST_P(RobustResourceInitTest, ReuploadingClearsTexture)
+{
+    if (!setup())
+    {
+        return;
+    }
+
+    if (IsOpenGL() || IsD3D9())
+    {
+        std::cout << "Robust resource init is not yet fully implemented. (" << GetParam() << ")"
+                  << std::endl;
+        return;
+    }
+
+    // Put some data into the texture
+    std::array<GLColor, kWidth * kHeight> data;
+    data.fill(GLColor::white);
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 data.data());
+
+    // Reset the texture
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    checkNonZeroPixels(&tex, 0, 0, 0, 0, GLColor::transparentBlack);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Reading an uninitialized texture (texImage2D) should succeed with all bytes set to 0.
 TEST_P(RobustResourceInitTest, ReadingUninitialized3DTexture)
 {

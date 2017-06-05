@@ -873,7 +873,8 @@ gl::Error TextureD3D_2D::setImage(const gl::Context *context,
     bool fastUnpacked = false;
     GLint level       = static_cast<GLint>(imageLevel);
 
-    redefineImage(level, internalFormatInfo.sizedInternalFormat, size, false);
+    redefineImage(level, internalFormatInfo.sizedInternalFormat, size,
+                  mRenderer->isRobustResourceInitEnabled());
 
     gl::ImageIndex index = gl::ImageIndex::Make2D(level);
 
@@ -943,7 +944,7 @@ gl::Error TextureD3D_2D::setCompressedImage(const gl::Context *context,
     GLint level = static_cast<GLint>(imageLevel);
 
     // compressed formats don't have separate sized internal formats-- we can just use the compressed format directly
-    redefineImage(level, internalFormat, size, false);
+    redefineImage(level, internalFormat, size, mRenderer->isRobustResourceInitEnabled());
 
     return setCompressedImageImpl(gl::ImageIndex::Make2D(level), unpack, pixels, 0);
 }
@@ -978,7 +979,8 @@ gl::Error TextureD3D_2D::copyImage(const gl::Context *context,
     const gl::InternalFormat &internalFormatInfo =
         gl::GetInternalFormatInfo(internalFormat, GL_UNSIGNED_BYTE);
     redefineImage(level, internalFormatInfo.sizedInternalFormat,
-                  gl::Extents(sourceArea.width, sourceArea.height, 1), false);
+                  gl::Extents(sourceArea.width, sourceArea.height, 1),
+                  mRenderer->isRobustResourceInitEnabled());
 
     gl::ImageIndex index = gl::ImageIndex::Make2D(level);
     gl::Offset destOffset(0, 0, 0);
@@ -1481,10 +1483,9 @@ void TextureD3D_2D::redefineImage(size_t level,
             mImageArray[0]->copyFromTexStorage(gl::ImageIndex::Make2D(0), mTexStorage);
         }
 
-        if ((level >= storageLevels && storageLevels != 0) ||
-            size.width != storageWidth ||
-            size.height != storageHeight ||
-            internalformat != storageFormat)   // Discard mismatched storage
+        if (forceRelease || (level >= storageLevels && storageLevels != 0) ||
+            size.width != storageWidth || size.height != storageHeight ||
+            internalformat != storageFormat)  // Discard mismatched storage
         {
             SafeDelete(mTexStorage);
             markAllImagesDirty();
@@ -2152,16 +2153,17 @@ void TextureD3D_Cube::redefineImage(int faceIndex, GLint level, GLenum internalf
     const int storageHeight    = std::max(1, getLevelZeroHeight() >> level);
     const GLenum storageFormat = getBaseLevelInternalFormat();
 
-    mImageArray[faceIndex][level]->redefine(GL_TEXTURE_CUBE_MAP, internalformat, size, false);
+    bool forceRelease = mRenderer->isRobustResourceInitEnabled();
+    mImageArray[faceIndex][level]->redefine(GL_TEXTURE_CUBE_MAP, internalformat, size,
+                                            forceRelease);
 
     if (mTexStorage)
     {
         const int storageLevels = mTexStorage->getLevelCount();
 
-        if ((level >= storageLevels && storageLevels != 0) ||
-            size.width != storageWidth ||
-            size.height != storageHeight ||
-            internalformat != storageFormat)   // Discard mismatched storage
+        if (forceRelease || (level >= storageLevels && storageLevels != 0) ||
+            size.width != storageWidth || size.height != storageHeight ||
+            internalformat != storageFormat)  // Discard mismatched storage
         {
             markAllImagesDirty();
             SafeDelete(mTexStorage);
@@ -2686,17 +2688,17 @@ void TextureD3D_3D::redefineImage(GLint level, GLenum internalformat, const gl::
     const int storageDepth  = std::max(1, getLevelZeroDepth() >> level);
     const GLenum storageFormat = getBaseLevelInternalFormat();
 
-    mImageArray[level]->redefine(GL_TEXTURE_3D, internalformat, size, false);
+    bool forceRelease = mRenderer->isRobustResourceInitEnabled();
+    mImageArray[level]->redefine(GL_TEXTURE_3D, internalformat, size, forceRelease);
 
     if (mTexStorage)
     {
         const int storageLevels = mTexStorage->getLevelCount();
 
-        if ((level >= storageLevels && storageLevels != 0) ||
-            size.width != storageWidth ||
-            size.height != storageHeight ||
+        if (forceRelease || (level >= storageLevels && storageLevels != 0) ||
+            size.width != storageWidth || size.height != storageHeight ||
             size.depth != storageDepth ||
-            internalformat != storageFormat)   // Discard mismatched storage
+            internalformat != storageFormat)  // Discard mismatched storage
         {
             markAllImagesDirty();
             SafeDelete(mTexStorage);
@@ -3278,12 +3280,15 @@ void TextureD3D_2DArray::redefineImage(GLint level, GLenum internalformat, const
         }
     }
 
+    bool forceRelease = mRenderer->isRobustResourceInitEnabled();
+
     if (size.depth > 0)
     {
         for (int layer = 0; layer < mLayerCounts[level]; layer++)
         {
             mImageArray[level][layer]->redefine(GL_TEXTURE_2D_ARRAY, internalformat,
-                                                gl::Extents(size.width, size.height, 1), false);
+                                                gl::Extents(size.width, size.height, 1),
+                                                forceRelease);
         }
     }
 
@@ -3292,11 +3297,10 @@ void TextureD3D_2DArray::redefineImage(GLint level, GLenum internalformat, const
         const GLenum storageFormat = getBaseLevelInternalFormat();
         const int storageLevels = mTexStorage->getLevelCount();
 
-        if ((level >= storageLevels && storageLevels != 0) ||
-            size.width != storageWidth ||
-            size.height != storageHeight ||
+        if (forceRelease || (level >= storageLevels && storageLevels != 0) ||
+            size.width != storageWidth || size.height != storageHeight ||
             size.depth != storageDepth ||
-            internalformat != storageFormat)   // Discard mismatched storage
+            internalformat != storageFormat)  // Discard mismatched storage
         {
             markAllImagesDirty();
             SafeDelete(mTexStorage);
