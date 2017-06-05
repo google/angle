@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2ebabc53_75def270",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4505,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-05T14:04:04Z",
+      "side": 1,
+      "message": "This will set the compiler to null on calls to glReleaseShaderCompiler and probably cause crashes when compiling shaders afterwards.  The compiler will have to be re-created before it\u0027s used again, probably in getCompiler.",
+      "range": {
+        "startLine": 4505,
+        "startChar": 4,
+        "endLine": 4505,
+        "endChar": 27
+      },
+      "revId": "551b7a763d9d63ce1debd05421d5f51fe5d4ac46",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
