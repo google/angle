@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9ba6a0da_d3ab4a49",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-05T19:47:30Z",
+      "side": 1,
+      "message": "nit: you can actually call fill directly on data...\n\nhttp://en.cppreference.com/w/cpp/container/array/fill\n\nYou can also use GLColor as the type of data and GLColor::white as the fill.",
+      "range": {
+        "startLine": 356,
+        "startChar": 4,
+        "endLine": 356,
+        "endChar": 45
+      },
+      "revId": "1e338ec4de4fd73730fc8d9fcaa666455b03d12f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
