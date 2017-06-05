@@ -18,12 +18,12 @@
 ANGLEPerfTest::ANGLEPerfTest(const std::string &name, const std::string &suffix)
     : mName(name),
       mSuffix(suffix),
-      mTimer(nullptr),
+      mTimer(CreateTimer()),
       mRunTimeSeconds(5.0),
+      mSkipTest(false),
       mNumStepsPerformed(0),
       mRunning(true)
 {
-    mTimer = CreateTimer();
 }
 
 ANGLEPerfTest::~ANGLEPerfTest()
@@ -33,6 +33,11 @@ ANGLEPerfTest::~ANGLEPerfTest()
 
 void ANGLEPerfTest::run()
 {
+    if (mSkipTest)
+    {
+        return;
+    }
+
     mTimer->start();
     while (mRunning)
     {
@@ -66,6 +71,10 @@ void ANGLEPerfTest::SetUp()
 
 void ANGLEPerfTest::TearDown()
 {
+    if (mSkipTest)
+    {
+        return;
+    }
     double relativeScore = static_cast<double>(mNumStepsPerformed) / mTimer->getElapsedTime();
     printResult("score", static_cast<size_t>(std::round(relativeScore)), "score", true);
 }
@@ -105,6 +114,17 @@ ANGLERenderTest::ANGLERenderTest(const std::string &name, const RenderTestParams
 {
 }
 
+ANGLERenderTest::ANGLERenderTest(const std::string &name,
+                                 const RenderTestParams &testParams,
+                                 const std::vector<std::string> &extensionPrerequisites)
+    : ANGLEPerfTest(name, testParams.suffix()),
+      mTestParams(testParams),
+      mEGLWindow(nullptr),
+      mOSWindow(nullptr),
+      mExtensionPrerequisites(extensionPrerequisites)
+{
+}
+
 ANGLERenderTest::~ANGLERenderTest()
 {
     SafeDelete(mOSWindow);
@@ -113,6 +133,8 @@ ANGLERenderTest::~ANGLERenderTest()
 
 void ANGLERenderTest::SetUp()
 {
+    ANGLEPerfTest::SetUp();
+
     mOSWindow = CreateOSWindow();
     mEGLWindow = new EGLWindow(mTestParams.majorVersion, mTestParams.minorVersion,
                                mTestParams.eglParameters);
@@ -130,19 +152,28 @@ void ANGLERenderTest::SetUp()
         return;
     }
 
-    initializeBenchmark();
+    if (!areExtensionPrerequisitesFulfilled())
+    {
+        mSkipTest = true;
+    }
 
-    ANGLEPerfTest::SetUp();
+    if (mSkipTest)
+    {
+        std::cout << "Test skipped due to missing extension." << std::endl;
+        return;
+    }
+
+    initializeBenchmark();
 }
 
 void ANGLERenderTest::TearDown()
 {
-    ANGLEPerfTest::TearDown();
-
     destroyBenchmark();
 
     mEGLWindow->destroyGL();
     mOSWindow->destroy();
+
+    ANGLEPerfTest::TearDown();
 }
 
 void ANGLERenderTest::step()
@@ -193,4 +224,17 @@ bool ANGLERenderTest::popEvent(Event *event)
 OSWindow *ANGLERenderTest::getWindow()
 {
     return mOSWindow;
+}
+
+bool ANGLERenderTest::areExtensionPrerequisitesFulfilled() const
+{
+    for (const auto &extension : mExtensionPrerequisites)
+    {
+        if (!CheckExtensionExists(reinterpret_cast<const char *>(glGetString(GL_EXTENSIONS)),
+                                  extension))
+        {
+            return false;
+        }
+    }
+    return true;
 }

@@ -66,6 +66,7 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     std::string mSuffix;
     Timer *mTimer;
     double mRunTimeSeconds;
+    bool mSkipTest;
 
   private:
     unsigned int mNumStepsPerformed;
@@ -84,6 +85,9 @@ class ANGLERenderTest : public ANGLEPerfTest
 {
   public:
     ANGLERenderTest(const std::string &name, const RenderTestParams &testParams);
+    ANGLERenderTest(const std::string &name,
+                    const RenderTestParams &testParams,
+                    const std::vector<std::string> &extensionPrerequisites);
     ~ANGLERenderTest();
 
     virtual void initializeBenchmark() { }
@@ -105,8 +109,11 @@ class ANGLERenderTest : public ANGLEPerfTest
     void step() override;
     void finishTest() override;
 
+    bool areExtensionPrerequisitesFulfilled() const;
+
     EGLWindow *mEGLWindow;
     OSWindow *mOSWindow;
+    std::vector<std::string> mExtensionPrerequisites;
 };
 
 #endif // PERF_TESTS_ANGLE_PERF_TEST_H_
