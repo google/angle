@@ -22,6 +22,30 @@
       "revId": "551b7a763d9d63ce1debd05421d5f51fe5d4ac46",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "894eea96_d3433706",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4505,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-05T15:25:12Z",
+      "side": 1,
+      "message": "Derp, good catch. Fixed.",
+      "parentUuid": "2ebabc53_75def270",
+      "range": {
+        "startLine": 4505,
+        "startChar": 4,
+        "endLine": 4505,
+        "endChar": 27
+      },
+      "revId": "551b7a763d9d63ce1debd05421d5f51fe5d4ac46",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
