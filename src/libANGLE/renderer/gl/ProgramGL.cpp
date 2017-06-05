@@ -49,9 +49,9 @@ ProgramGL::~ProgramGL()
     mProgramID = 0;
 }
 
-LinkResult ProgramGL::load(const gl::Context *context,
-                           gl::InfoLog &infoLog,
-                           gl::BinaryInputStream *stream)
+gl::LinkResult ProgramGL::load(const gl::Context *context,
+                               gl::InfoLog &infoLog,
+                               gl::BinaryInputStream *stream)
 {
     preLink();
 
@@ -116,9 +116,9 @@ void ProgramGL::setSeparable(bool separable)
     mFunctions->programParameteri(mProgramID, GL_PROGRAM_SEPARABLE, separable ? GL_TRUE : GL_FALSE);
 }
 
-LinkResult ProgramGL::link(const gl::Context *context,
-                           const gl::VaryingPacking &packing,
-                           gl::InfoLog &infoLog)
+gl::LinkResult ProgramGL::link(const gl::Context *context,
+                               const gl::VaryingPacking &packing,
+                               gl::InfoLog &infoLog)
 {
     preLink();
 

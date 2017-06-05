@@ -131,6 +131,8 @@ inline Error NoError()
     return Error(GL_NO_ERROR);
 }
 
+using LinkResult = ErrorOrResult<bool>;
+
 }  // namespace gl
 
 namespace egl

@@ -35,9 +35,9 @@ void ProgramVk::destroy(const gl::Context *contextImpl)
     mPipelineLayout.destroy(device);
 }
 
-LinkResult ProgramVk::load(const gl::Context *contextImpl,
-                           gl::InfoLog &infoLog,
-                           gl::BinaryInputStream *stream)
+gl::LinkResult ProgramVk::load(const gl::Context *contextImpl,
+                               gl::InfoLog &infoLog,
+                               gl::BinaryInputStream *stream)
 {
     UNIMPLEMENTED();
     return gl::InternalError();
@@ -58,9 +58,9 @@ void ProgramVk::setSeparable(bool separable)
     UNIMPLEMENTED();
 }
 
-LinkResult ProgramVk::link(const gl::Context *glContext,
-                           const gl::VaryingPacking &packing,
-                           gl::InfoLog &infoLog)
+gl::LinkResult ProgramVk::link(const gl::Context *glContext,
+                               const gl::VaryingPacking &packing,
+                               gl::InfoLog &infoLog)
 {
     ContextVk *context             = GetImplAs<ContextVk>(glContext);
     RendererVk *renderer           = context->getRenderer();

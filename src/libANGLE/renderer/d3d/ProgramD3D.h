@@ -158,9 +158,9 @@ class ProgramD3D : public ProgramImpl
     bool usesGeometryShader(GLenum drawMode) const;
     bool usesInstancedPointSpriteEmulation() const;
 
-    LinkResult load(const gl::Context *context,
-                    gl::InfoLog &infoLog,
-                    gl::BinaryInputStream *stream) override;
+    gl::LinkResult load(const gl::Context *context,
+                        gl::InfoLog &infoLog,
+                        gl::BinaryInputStream *stream) override;
     void save(gl::BinaryOutputStream *stream) override;
     void setBinaryRetrievableHint(bool retrievable) override;
     void setSeparable(bool separable) override;
@@ -178,9 +178,9 @@ class ProgramD3D : public ProgramImpl
                                                     ShaderExecutableD3D **outExecutable,
                                                     gl::InfoLog *infoLog);
     gl::Error getComputeExecutable(ShaderExecutableD3D **outExecutable);
-    LinkResult link(const gl::Context *context,
-                    const gl::VaryingPacking &packing,
-                    gl::InfoLog &infoLog) override;
+    gl::LinkResult link(const gl::Context *context,
+                        const gl::VaryingPacking &packing,
+                        gl::InfoLog &infoLog) override;
     GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;
 
     bool getUniformBlockSize(const std::string &blockName, size_t *sizeOut) const override;
@@ -364,8 +364,8 @@ class ProgramD3D : public ProgramImpl
                             const GLfloat *value,
                             GLenum targetUniformType);
 
-    LinkResult compileProgramExecutables(const gl::Context *context, gl::InfoLog &infoLog);
-    LinkResult compileComputeExecutable(const gl::Context *context, gl::InfoLog &infoLog);
+    gl::LinkResult compileProgramExecutables(const gl::Context *context, gl::InfoLog &infoLog);
+    gl::LinkResult compileComputeExecutable(const gl::Context *context, gl::InfoLog &infoLog);
 
     void gatherTransformFeedbackVaryings(const gl::VaryingPacking &varyings,
                                          const BuiltinInfo &builtins);

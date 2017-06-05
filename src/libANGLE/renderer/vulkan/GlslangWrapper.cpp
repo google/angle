@@ -63,10 +63,10 @@ GlslangWrapper::~GlslangWrapper()
     ASSERT(result != 0);
 }
 
-LinkResult GlslangWrapper::linkProgram(const std::string &vertexSource,
-                                       const std::string &fragmentSource,
-                                       std::vector<uint32_t> *vertexCodeOut,
-                                       std::vector<uint32_t> *fragmentCodeOut)
+gl::LinkResult GlslangWrapper::linkProgram(const std::string &vertexSource,
+                                           const std::string &fragmentSource,
+                                           std::vector<uint32_t> *vertexCodeOut,
+                                           std::vector<uint32_t> *fragmentCodeOut)
 {
     std::array<const char *, 2> strings = {{vertexSource.c_str(), fragmentSource.c_str()}};
 

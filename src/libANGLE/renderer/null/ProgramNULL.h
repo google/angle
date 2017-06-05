@@ -21,16 +21,16 @@ class ProgramNULL : public ProgramImpl
     ProgramNULL(const gl::ProgramState &state);
     ~ProgramNULL() override;
 
-    LinkResult load(const gl::Context *context,
-                    gl::InfoLog &infoLog,
-                    gl::BinaryInputStream *stream) override;
+    gl::LinkResult load(const gl::Context *context,
+                        gl::InfoLog &infoLog,
+                        gl::BinaryInputStream *stream) override;
     void save(gl::BinaryOutputStream *stream) override;
     void setBinaryRetrievableHint(bool retrievable) override;
     void setSeparable(bool separable) override;
 
-    LinkResult link(const gl::Context *context,
-                    const gl::VaryingPacking &packing,
-                    gl::InfoLog &infoLog) override;
+    gl::LinkResult link(const gl::Context *context,
+                        const gl::VaryingPacking &packing,
+                        gl::InfoLog &infoLog) override;
     GLboolean validate(const gl::Caps &caps, gl::InfoLog *infoLog) override;
 
     void setUniform1fv(GLint location, GLsizei count, const GLfloat *v) override;

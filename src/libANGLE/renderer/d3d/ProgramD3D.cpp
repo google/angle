@@ -694,9 +694,9 @@ void ProgramD3D::updateSamplerMapping()
     }
 }
 
-LinkResult ProgramD3D::load(const gl::Context *context,
-                            gl::InfoLog &infoLog,
-                            gl::BinaryInputStream *stream)
+gl::LinkResult ProgramD3D::load(const gl::Context *context,
+                                gl::InfoLog &infoLog,
+                                gl::BinaryInputStream *stream)
 {
     // TODO(jmadill): Use Renderer from contextImpl.
 
@@ -1401,7 +1401,8 @@ gl::Error ProgramD3D::getComputeExecutable(ShaderExecutableD3D **outExecutable)
     return gl::NoError();
 }
 
-LinkResult ProgramD3D::compileProgramExecutables(const gl::Context *context, gl::InfoLog &infoLog)
+gl::LinkResult ProgramD3D::compileProgramExecutables(const gl::Context *context,
+                                                     gl::InfoLog &infoLog)
 {
     // Ensure the compiler is initialized to avoid race conditions.
     ANGLE_TRY(mRenderer->ensureHLSLCompilerInitialized());
@@ -1458,7 +1459,8 @@ LinkResult ProgramD3D::compileProgramExecutables(const gl::Context *context, gl:
             (!usesGeometryShader(GL_POINTS) || pointGS));
 }
 
-LinkResult ProgramD3D::compileComputeExecutable(const gl::Context *context, gl::InfoLog &infoLog)
+gl::LinkResult ProgramD3D::compileComputeExecutable(const gl::Context *context,
+                                                    gl::InfoLog &infoLog)
 {
     // Ensure the compiler is initialized to avoid race conditions.
     ANGLE_TRY(mRenderer->ensureHLSLCompilerInitialized());
@@ -1485,9 +1487,9 @@ LinkResult ProgramD3D::compileComputeExecutable(const gl::Context *context, gl::
     return mComputeExecutable.get() != nullptr;
 }
 
-LinkResult ProgramD3D::link(const gl::Context *context,
-                            const gl::VaryingPacking &packing,
-                            gl::InfoLog &infoLog)
+gl::LinkResult ProgramD3D::link(const gl::Context *context,
+                                const gl::VaryingPacking &packing,
+                                gl::InfoLog &infoLog)
 {
     const auto &data = context->getContextState();
 
@@ -1500,7 +1502,7 @@ LinkResult ProgramD3D::link(const gl::Context *context,
 
         defineUniformsAndAssignRegisters(context);
 
-        LinkResult result = compileComputeExecutable(context, infoLog);
+        gl::LinkResult result = compileComputeExecutable(context, infoLog);
         if (result.isError())
         {
             infoLog << result.getError().getMessage();
@@ -1574,7 +1576,7 @@ LinkResult ProgramD3D::link(const gl::Context *context,
 
         gatherTransformFeedbackVaryings(packing, builtins[SHADER_VERTEX]);
 
-        LinkResult result = compileProgramExecutables(context, infoLog);
+        gl::LinkResult result = compileProgramExecutables(context, infoLog);
         if (result.isError())
         {
             infoLog << result.getError().getMessage();

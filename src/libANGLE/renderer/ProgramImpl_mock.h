@@ -23,12 +23,13 @@ class MockProgramImpl : public rx::ProgramImpl
     MockProgramImpl() : ProgramImpl(gl::ProgramState()) {}
     virtual ~MockProgramImpl() { destructor(); }
 
-    MOCK_METHOD3(load, LinkResult(const gl::Context *, gl::InfoLog &, gl::BinaryInputStream *));
+    MOCK_METHOD3(load, gl::LinkResult(const gl::Context *, gl::InfoLog &, gl::BinaryInputStream *));
     MOCK_METHOD1(save, void(gl::BinaryOutputStream *));
     MOCK_METHOD1(setBinaryRetrievableHint, void(bool));
     MOCK_METHOD1(setSeparable, void(bool));
 
-    MOCK_METHOD3(link, LinkResult(const gl::Context *, const gl::VaryingPacking &, gl::InfoLog &));
+    MOCK_METHOD3(link,
+                 gl::LinkResult(const gl::Context *, const gl::VaryingPacking &, gl::InfoLog &));
     MOCK_METHOD2(validate, GLboolean(const gl::Caps &, gl::InfoLog *));
 
     MOCK_METHOD3(setUniform1fv, void(GLint, GLsizei, const GLfloat *));
