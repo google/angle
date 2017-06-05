@@ -2429,17 +2429,15 @@ gl::Error Renderer11::applyShaders(const gl::ContextState &data, GLenum drawMode
     ID3D11VertexShader *vertexShader =
         (vertexExe ? GetAs<ShaderExecutable11>(vertexExe)->getVertexShader() : nullptr);
 
-    ID3D11PixelShader *pixelShader = nullptr;
     // Skip pixel shader if we're doing rasterizer discard.
-    bool rasterizerDiscard = glState.getRasterizerState().rasterizerDiscard;
-    if (!rasterizerDiscard)
+    ID3D11PixelShader *pixelShader = nullptr;
+    if (!glState.getRasterizerState().rasterizerDiscard)
     {
         pixelShader = (pixelExe ? GetAs<ShaderExecutable11>(pixelExe)->getPixelShader() : nullptr);
     }
 
     ID3D11GeometryShader *geometryShader = nullptr;
-    bool transformFeedbackActive         = glState.isTransformFeedbackActiveUnpaused();
-    if (transformFeedbackActive)
+    if (glState.isTransformFeedbackActiveUnpaused())
     {
         geometryShader =
             (vertexExe ? GetAs<ShaderExecutable11>(vertexExe)->getStreamOutShader() : nullptr);
@@ -2471,11 +2469,6 @@ gl::Error Renderer11::applyShaders(const gl::ContextState &data, GLenum drawMode
         mDeviceContext->PSSetShader(pixelShader, nullptr, 0);
         mAppliedPixelShader = reinterpret_cast<uintptr_t>(pixelShader);
         dirtyUniforms       = true;
-    }
-
-    if (dirtyUniforms)
-    {
-        programD3D->dirtyAllUniforms();
     }
 
     return programD3D->applyUniforms(drawMode);
