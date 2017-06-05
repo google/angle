@@ -95,7 +95,7 @@ Shader::Shader(ShaderProgramManager *manager,
       mType(type),
       mRefCount(0),
       mDeleteStatus(false),
-      mCompiled(false),
+      mStatus(CompileStatus::NOT_COMPILED),
       mResourceManager(manager)
 {
     ASSERT(mImplementation);
@@ -103,7 +103,7 @@ Shader::Shader(ShaderProgramManager *manager,
 
 Shader::~Shader()
 {
-    SafeDelete(mImplementation);
+    mBoundCompiler.set(nullptr);
 }
 
 void Shader::setLabel(const std::string &label)
@@ -140,8 +140,9 @@ void Shader::setSource(GLsizei count, const char *const *string, const GLint *le
     mState.mSource = stream.str();
 }
 
-int Shader::getInfoLogLength() const
+int Shader::getInfoLogLength(const Context *context)
 {
+    resolveCompile(context);
     if (mInfoLog.empty())
     {
         return 0;
@@ -150,8 +151,10 @@ int Shader::getInfoLogLength() const
     return (static_cast<int>(mInfoLog.length()) + 1);
 }
 
-void Shader::getInfoLog(GLsizei bufSize, GLsizei *length, char *infoLog) const
+void Shader::getInfoLog(const Context *context, GLsizei bufSize, GLsizei *length, char *infoLog)
 {
+    resolveCompile(context);
+
     int index = 0;
 
     if (bufSize > 0)
@@ -173,8 +176,10 @@ int Shader::getSourceLength() const
     return mState.mSource.empty() ? 0 : (static_cast<int>(mState.mSource.length()) + 1);
 }
 
-int Shader::getTranslatedSourceLength() const
+int Shader::getTranslatedSourceLength(const Context *context)
 {
+    resolveCompile(context);
+
     if (mState.mTranslatedSource.empty())
     {
         return 0;
@@ -183,8 +188,10 @@ int Shader::getTranslatedSourceLength() const
     return (static_cast<int>(mState.mTranslatedSource.length()) + 1);
 }
 
-int Shader::getTranslatedSourceWithDebugInfoLength() const
+int Shader::getTranslatedSourceWithDebugInfoLength(const Context *context)
 {
+    resolveCompile(context);
+
     const std::string &debugInfo = mImplementation->getDebugInfo();
     if (debugInfo.empty())
     {
@@ -194,7 +201,11 @@ int Shader::getTranslatedSourceWithDebugInfoLength() const
     return (static_cast<int>(debugInfo.length()) + 1);
 }
 
-void Shader::getSourceImpl(const std::string &source, GLsizei bufSize, GLsizei *length, char *buffer)
+// static
+void Shader::GetSourceImpl(const std::string &source,
+                           GLsizei bufSize,
+                           GLsizei *length,
+                           char *buffer)
 {
     int index = 0;
 
@@ -214,18 +225,31 @@ void Shader::getSourceImpl(const std::string &source, GLsizei bufSize, GLsizei *
 
 void Shader::getSource(GLsizei bufSize, GLsizei *length, char *buffer) const
 {
-    getSourceImpl(mState.mSource, bufSize, length, buffer);
+    GetSourceImpl(mState.mSource, bufSize, length, buffer);
 }
 
-void Shader::getTranslatedSource(GLsizei bufSize, GLsizei *length, char *buffer) const
+void Shader::getTranslatedSource(const Context *context,
+                                 GLsizei bufSize,
+                                 GLsizei *length,
+                                 char *buffer)
 {
-    getSourceImpl(mState.mTranslatedSource, bufSize, length, buffer);
+    GetSourceImpl(getTranslatedSource(context), bufSize, length, buffer);
 }
 
-void Shader::getTranslatedSourceWithDebugInfo(GLsizei bufSize, GLsizei *length, char *buffer) const
+const std::string &Shader::getTranslatedSource(const Context *context)
 {
+    resolveCompile(context);
+    return mState.mTranslatedSource;
+}
+
+void Shader::getTranslatedSourceWithDebugInfo(const Context *context,
+                                              GLsizei bufSize,
+                                              GLsizei *length,
+                                              char *buffer)
+{
+    resolveCompile(context);
     const std::string &debugInfo = mImplementation->getDebugInfo();
-    getSourceImpl(debugInfo, bufSize, length, buffer);
+    GetSourceImpl(debugInfo, bufSize, length, buffer);
 }
 
 void Shader::compile(const Context *context)
@@ -239,23 +263,26 @@ void Shader::compile(const Context *context)
     mState.mActiveAttributes.clear();
     mState.mActiveOutputVariables.clear();
 
-    Compiler *compiler = context->getCompiler();
-    ShHandle compilerHandle = compiler->getCompilerHandle(mState.mShaderType);
+    mStatus = CompileStatus::COMPILE_REQUESTED;
+    mBoundCompiler.set(context->getCompiler());
+
+    // Cache the compile source and options for compilation. Must be done now, since the source
+    // can change before the link call or another call that resolves the compile.
 
     std::stringstream sourceStream;
 
-    std::string sourcePath;
-    ShCompileOptions additionalOptions =
-        mImplementation->prepareSourceAndReturnOptions(&sourceStream, &sourcePath);
-    ShCompileOptions compileOptions = (SH_OBJECT_CODE | SH_VARIABLES | additionalOptions);
+    mLastCompileOptions =
+        mImplementation->prepareSourceAndReturnOptions(&sourceStream, &mLastCompiledSourcePath);
+    mLastCompileOptions |= (SH_OBJECT_CODE | SH_VARIABLES);
+    mLastCompiledSource = sourceStream.str();
 
     // Add default options to WebGL shaders to prevent unexpected behavior during compilation.
     if (context->getExtensions().webglCompatibility)
     {
-        compileOptions |= SH_INIT_GL_POSITION;
-        compileOptions |= SH_LIMIT_CALL_STACK_DEPTH;
-        compileOptions |= SH_LIMIT_EXPRESSION_COMPLEXITY;
-        compileOptions |= SH_ENFORCE_PACKING_RESTRICTIONS;
+        mLastCompileOptions |= SH_INIT_GL_POSITION;
+        mLastCompileOptions |= SH_LIMIT_CALL_STACK_DEPTH;
+        mLastCompileOptions |= SH_LIMIT_EXPRESSION_COMPLEXITY;
+        mLastCompileOptions |= SH_ENFORCE_PACKING_RESTRICTIONS;
     }
 
     // Some targets (eg D3D11 Feature Level 9_3 and below) do not support non-constant loop indexes
@@ -263,33 +290,40 @@ void Shader::compile(const Context *context)
     // instruct the compiler to pre-validate.
     if (mRendererLimitations.shadersRequireIndexedLoopValidation)
     {
-        compileOptions |= SH_VALIDATE_LOOP_INDEXING;
+        mLastCompileOptions |= SH_VALIDATE_LOOP_INDEXING;
     }
+}
 
-    std::string sourceString  = sourceStream.str();
-    std::vector<const char *> sourceCStrings;
-
-    if (!sourcePath.empty())
+void Shader::resolveCompile(const Context *context)
+{
+    if (mStatus != CompileStatus::COMPILE_REQUESTED)
     {
-        sourceCStrings.push_back(sourcePath.c_str());
+        return;
     }
 
-    sourceCStrings.push_back(sourceString.c_str());
+    ASSERT(mBoundCompiler.get());
+    ShHandle compilerHandle = mBoundCompiler->getCompilerHandle(mState.mShaderType);
 
-    bool result =
-        sh::Compile(compilerHandle, &sourceCStrings[0], sourceCStrings.size(), compileOptions);
+    std::vector<const char *> srcStrings;
 
-    if (!result)
+    if (!mLastCompiledSourcePath.empty())
+    {
+        srcStrings.push_back(mLastCompiledSourcePath.c_str());
+    }
+
+    srcStrings.push_back(mLastCompiledSource.c_str());
+
+    if (!sh::Compile(compilerHandle, &srcStrings[0], srcStrings.size(), mLastCompileOptions))
     {
         mInfoLog = sh::GetInfoLog(compilerHandle);
         WARN() << std::endl << mInfoLog;
-        mCompiled = false;
+        mStatus = CompileStatus::NOT_COMPILED;
         return;
     }
 
     mState.mTranslatedSource = sh::GetObjectCode(compilerHandle);
 
-#ifndef NDEBUG
+#if !defined(NDEBUG)
     // Prefix translated shader with commented out un-translated shader.
     // Useful in diagnostics tools which capture the shader source.
     std::ostringstream shaderStream;
@@ -308,7 +342,7 @@ void Shader::compile(const Context *context)
     shaderStream << "\n\n";
     shaderStream << mState.mTranslatedSource;
     mState.mTranslatedSource = shaderStream.str();
-#endif
+#endif  // !defined(NDEBUG)
 
     // Gather the shader information
     mState.mShaderVersion = sh::GetShaderVersion(compilerHandle);
@@ -343,7 +377,8 @@ void Shader::compile(const Context *context)
 
     ASSERT(!mState.mTranslatedSource.empty());
 
-    mCompiled = mImplementation->postTranslateCompile(compiler, &mInfoLog);
+    bool success = mImplementation->postTranslateCompile(mBoundCompiler.get(), &mInfoLog);
+    mStatus      = success ? CompileStatus::COMPILED : CompileStatus::NOT_COMPILED;
 }
 
 void Shader::addRef()
@@ -376,38 +411,51 @@ void Shader::flagForDeletion()
     mDeleteStatus = true;
 }
 
-int Shader::getShaderVersion() const
+bool Shader::isCompiled(const Context *context)
 {
+    resolveCompile(context);
+    return mStatus == CompileStatus::COMPILED;
+}
+
+int Shader::getShaderVersion(const Context *context)
+{
+    resolveCompile(context);
     return mState.mShaderVersion;
 }
 
-const std::vector<sh::Varying> &Shader::getVaryings() const
+const std::vector<sh::Varying> &Shader::getVaryings(const Context *context)
 {
+    resolveCompile(context);
     return mState.getVaryings();
 }
 
-const std::vector<sh::Uniform> &Shader::getUniforms() const
+const std::vector<sh::Uniform> &Shader::getUniforms(const Context *context)
 {
+    resolveCompile(context);
     return mState.getUniforms();
 }
 
-const std::vector<sh::InterfaceBlock> &Shader::getInterfaceBlocks() const
+const std::vector<sh::InterfaceBlock> &Shader::getInterfaceBlocks(const Context *context)
 {
+    resolveCompile(context);
     return mState.getInterfaceBlocks();
 }
 
-const std::vector<sh::Attribute> &Shader::getActiveAttributes() const
+const std::vector<sh::Attribute> &Shader::getActiveAttributes(const Context *context)
 {
+    resolveCompile(context);
     return mState.getActiveAttributes();
 }
 
-const std::vector<sh::OutputVariable> &Shader::getActiveOutputVariables() const
+const std::vector<sh::OutputVariable> &Shader::getActiveOutputVariables(const Context *context)
 {
+    resolveCompile(context);
     return mState.getActiveOutputVariables();
 }
 
-int Shader::getSemanticIndex(const std::string &attributeName) const
+int Shader::getSemanticIndex(const Context *context, const std::string &attributeName)
 {
+    resolveCompile(context);
     if (!attributeName.empty())
     {
         const auto &activeAttributes = mState.getActiveAttributes();
@@ -429,4 +477,10 @@ int Shader::getSemanticIndex(const std::string &attributeName) const
     return -1;
 }
 
+const sh::WorkGroupSize &Shader::getWorkGroupSize(const Context *context)
+{
+    resolveCompile(context);
+    return mState.mLocalSize;
 }
+
+}  // namespace gl

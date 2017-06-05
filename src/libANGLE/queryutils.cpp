@@ -678,7 +678,7 @@ void QueryRenderbufferiv(const Context *context,
     }
 }
 
-void QueryShaderiv(const Shader *shader, GLenum pname, GLint *params)
+void QueryShaderiv(const Context *context, Shader *shader, GLenum pname, GLint *params)
 {
     ASSERT(shader != nullptr);
 
@@ -691,16 +691,16 @@ void QueryShaderiv(const Shader *shader, GLenum pname, GLint *params)
             *params = shader->isFlaggedForDeletion();
             return;
         case GL_COMPILE_STATUS:
-            *params = shader->isCompiled() ? GL_TRUE : GL_FALSE;
+            *params = shader->isCompiled(context) ? GL_TRUE : GL_FALSE;
             return;
         case GL_INFO_LOG_LENGTH:
-            *params = shader->getInfoLogLength();
+            *params = shader->getInfoLogLength(context);
             return;
         case GL_SHADER_SOURCE_LENGTH:
             *params = shader->getSourceLength();
             return;
         case GL_TRANSLATED_SHADER_SOURCE_LENGTH_ANGLE:
-            *params = shader->getTranslatedSourceWithDebugInfoLength();
+            *params = shader->getTranslatedSourceWithDebugInfoLength(context);
             return;
         default:
             UNREACHABLE();

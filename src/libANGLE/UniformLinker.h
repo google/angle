@@ -22,7 +22,9 @@ class UniformLinker
   public:
     UniformLinker(const ProgramState &state);
 
-    bool link(InfoLog &infoLog, const Caps &caps, const Program::Bindings &uniformLocationBindings);
+    bool link(const Context *context,
+              InfoLog &infoLog,
+              const Program::Bindings &uniformLocationBindings);
 
     void getResults(std::vector<LinkedUniform> *uniforms,
                     std::vector<VariableLocation> *uniformLocations);
@@ -45,21 +47,22 @@ class UniformLinker
         unsigned int samplerCount;
     };
 
-    bool validateVertexAndFragmentUniforms(InfoLog &infoLog) const;
+    bool validateVertexAndFragmentUniforms(const Context *context, InfoLog &infoLog) const;
 
     static bool linkValidateUniforms(InfoLog &infoLog,
                                      const std::string &uniformName,
                                      const sh::Uniform &vertexUniform,
                                      const sh::Uniform &fragmentUniform);
 
-    bool flattenUniformsAndCheckCapsForShader(const Shader &shader,
+    bool flattenUniformsAndCheckCapsForShader(const Context *context,
+                                              Shader *shader,
                                               GLuint maxUniformComponents,
                                               GLuint maxTextureImageUnits,
                                               const std::string &componentsErrorMessage,
                                               const std::string &samplerErrorMessage,
                                               std::vector<LinkedUniform> &samplerUniforms,
                                               InfoLog &infoLog);
-    bool flattenUniformsAndCheckCaps(const Caps &caps, InfoLog &infoLog);
+    bool flattenUniformsAndCheckCaps(const Context *context, InfoLog &infoLog);
 
     VectorAndSamplerCount flattenUniform(const sh::Uniform &uniform,
                                          std::vector<LinkedUniform> *samplerUniforms);

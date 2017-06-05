@@ -206,9 +206,9 @@ class ProgramState final : angle::NonCopyable
 
     const std::string &getLabel();
 
-    const Shader *getAttachedVertexShader() const { return mAttachedVertexShader; }
-    const Shader *getAttachedFragmentShader() const { return mAttachedFragmentShader; }
-    const Shader *getAttachedComputeShader() const { return mAttachedComputeShader; }
+    Shader *getAttachedVertexShader() const { return mAttachedVertexShader; }
+    Shader *getAttachedFragmentShader() const { return mAttachedFragmentShader; }
+    Shader *getAttachedComputeShader() const { return mAttachedComputeShader; }
     const std::vector<std::string> &getTransformFeedbackVaryingNames() const
     {
         return mTransformFeedbackVaryingNames;
@@ -314,9 +314,10 @@ class Program final : angle::NonCopyable, public LabeledObject
     void bindUniformLocation(GLuint index, const char *name);
 
     // CHROMIUM_path_rendering
-    BindingInfo getFragmentInputBindingInfo(GLint index) const;
+    BindingInfo getFragmentInputBindingInfo(const Context *context, GLint index) const;
     void bindFragmentInputLocation(GLint index, const char *name);
-    void pathFragmentInputGen(GLint index,
+    void pathFragmentInputGen(const Context *context,
+                              GLint index,
                               GLenum genMode,
                               GLint components,
                               const GLfloat *coeffs);
@@ -491,7 +492,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     void unlink();
     void resetUniformBlockBindings();
 
-    bool linkAttributes(const ContextState &data, InfoLog &infoLog);
+    bool linkAttributes(const Context *context, InfoLog &infoLog);
     bool validateUniformBlocksCount(GLuint maxUniformBlocks,
                                     const std::vector<sh::InterfaceBlock> &block,
                                     const std::string &errorMessage,
@@ -501,10 +502,12 @@ class Program final : angle::NonCopyable, public LabeledObject
         const std::vector<sh::InterfaceBlock> &fragmentInterfaceBlocks,
         InfoLog &infoLog,
         bool webglCompatibility) const;
-    bool linkUniformBlocks(InfoLog &infoLog, const Caps &caps, bool webglCompatibility);
-    bool linkVaryings(InfoLog &infoLog) const;
+    bool linkUniformBlocks(const Context *context, InfoLog &infoLog);
+    bool linkVaryings(const Context *context, InfoLog &infoLog) const;
 
-    bool linkUniforms(InfoLog &infoLog, const Caps &caps, const Bindings &uniformLocationBindings);
+    bool linkUniforms(const Context *context,
+                      InfoLog &infoLog,
+                      const Bindings &uniformLocationBindings);
     void linkSamplerBindings();
 
     bool areMatchingInterfaceBlocks(InfoLog &infoLog,
@@ -517,7 +520,7 @@ class Program final : angle::NonCopyable, public LabeledObject
                                      const sh::Varying &vertexVarying,
                                      const sh::Varying &fragmentVarying,
                                      int shaderVersion);
-    bool linkValidateBuiltInVaryings(InfoLog &infoLog) const;
+    bool linkValidateBuiltInVaryings(const Context *context, InfoLog &infoLog) const;
     bool linkValidateTransformFeedback(const gl::Context *context,
                                        InfoLog &infoLog,
                                        const MergedVaryings &linkedVaryings,
@@ -525,13 +528,13 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     void gatherTransformFeedbackVaryings(const MergedVaryings &varyings);
 
-    MergedVaryings getMergedVaryings() const;
+    MergedVaryings getMergedVaryings(const Context *context) const;
     std::vector<PackedVarying> getPackedVaryings(const MergedVaryings &mergedVaryings) const;
-    void linkOutputVariables();
+    void linkOutputVariables(const Context *context);
 
     void setUniformValuesFromBindingQualifiers();
 
-    void gatherInterfaceBlockInfo();
+    void gatherInterfaceBlockInfo(const Context *context);
     template <typename VarT>
     void defineUniformBlockMembers(const std::vector<VarT> &fields,
                                    const std::string &prefix,

@@ -542,17 +542,17 @@ void Program::bindFragmentInputLocation(GLint index, const char *name)
     mFragmentInputBindings.bindLocation(index, name);
 }
 
-BindingInfo Program::getFragmentInputBindingInfo(GLint index) const
+BindingInfo Program::getFragmentInputBindingInfo(const Context *context, GLint index) const
 {
     BindingInfo ret;
     ret.type  = GL_NONE;
     ret.valid = false;
 
-    const Shader *fragmentShader = mState.getAttachedFragmentShader();
+    Shader *fragmentShader = mState.getAttachedFragmentShader();
     ASSERT(fragmentShader);
 
     // Find the actual fragment shader varying we're interested in
-    const std::vector<sh::Varying> &inputs = fragmentShader->getVaryings();
+    const std::vector<sh::Varying> &inputs = fragmentShader->getVaryings(context);
 
     for (const auto &binding : mFragmentInputBindings)
     {
@@ -593,7 +593,8 @@ BindingInfo Program::getFragmentInputBindingInfo(GLint index) const
     return ret;
 }
 
-void Program::pathFragmentInputGen(GLint index,
+void Program::pathFragmentInputGen(const Context *context,
+                                   GLint index,
                                    GLenum genMode,
                                    GLint components,
                                    const GLfloat *coeffs)
@@ -602,7 +603,7 @@ void Program::pathFragmentInputGen(GLint index,
     if (index == -1)
         return;
 
-    const auto &binding = getFragmentInputBindingInfo(index);
+    const auto &binding = getFragmentInputBindingInfo(context, index);
 
     // If the input doesn't exist then then the command is silently ignored
     // This could happen through optimization for example, the shader translator
@@ -644,14 +645,14 @@ Error Program::link(const gl::Context *context)
 
     if (computeShader)
     {
-        if (!computeShader->isCompiled())
+        if (!computeShader->isCompiled(context))
         {
             mInfoLog << "Attached compute shader is not compiled.";
             return NoError();
         }
         ASSERT(computeShader->getType() == GL_COMPUTE_SHADER);
 
-        mState.mComputeShaderLocalSize = computeShader->getWorkGroupSize();
+        mState.mComputeShaderLocalSize = computeShader->getWorkGroupSize(context);
 
         // GLSL ES 3.10, 4.4.1.1 Compute Shader Inputs
         // If the work group size is not specified, a link time error should occur.
@@ -661,12 +662,12 @@ Error Program::link(const gl::Context *context)
             return NoError();
         }
 
-        if (!linkUniforms(mInfoLog, caps, mUniformLocationBindings))
+        if (!linkUniforms(context, mInfoLog, mUniformLocationBindings))
         {
             return NoError();
         }
 
-        if (!linkUniformBlocks(mInfoLog, caps, context->getExtensions().webglCompatibility))
+        if (!linkUniformBlocks(context, mInfoLog))
         {
             return NoError();
         }
@@ -680,52 +681,52 @@ Error Program::link(const gl::Context *context)
     }
     else
     {
-        if (!fragmentShader || !fragmentShader->isCompiled())
+        if (!fragmentShader || !fragmentShader->isCompiled(context))
         {
             return NoError();
         }
         ASSERT(fragmentShader->getType() == GL_FRAGMENT_SHADER);
 
-        if (!vertexShader || !vertexShader->isCompiled())
+        if (!vertexShader || !vertexShader->isCompiled(context))
         {
             return NoError();
         }
         ASSERT(vertexShader->getType() == GL_VERTEX_SHADER);
 
-        if (fragmentShader->getShaderVersion() != vertexShader->getShaderVersion())
+        if (fragmentShader->getShaderVersion(context) != vertexShader->getShaderVersion(context))
         {
             mInfoLog << "Fragment shader version does not match vertex shader version.";
             return NoError();
         }
 
-        if (!linkAttributes(data, mInfoLog))
+        if (!linkAttributes(context, mInfoLog))
         {
             return NoError();
         }
 
-        if (!linkVaryings(mInfoLog))
+        if (!linkVaryings(context, mInfoLog))
         {
             return NoError();
         }
 
-        if (!linkUniforms(mInfoLog, caps, mUniformLocationBindings))
+        if (!linkUniforms(context, mInfoLog, mUniformLocationBindings))
         {
             return NoError();
         }
 
-        if (!linkUniformBlocks(mInfoLog, caps, context->getExtensions().webglCompatibility))
+        if (!linkUniformBlocks(context, mInfoLog))
         {
             return NoError();
         }
 
-        const auto &mergedVaryings = getMergedVaryings();
+        const auto &mergedVaryings = getMergedVaryings(context);
 
         if (!linkValidateTransformFeedback(context, mInfoLog, mergedVaryings, caps))
         {
             return NoError();
         }
 
-        linkOutputVariables();
+        linkOutputVariables(context);
 
         // Validate we can pack the varyings.
         std::vector<PackedVarying> packedVaryings = getPackedVaryings(mergedVaryings);
@@ -752,7 +753,7 @@ Error Program::link(const gl::Context *context)
 
     setUniformValuesFromBindingQualifiers();
 
-    gatherInterfaceBlockInfo();
+    gatherInterfaceBlockInfo(context);
 
     return NoError();
 }
@@ -1949,15 +1950,15 @@ GLenum Program::getTransformFeedbackBufferMode() const
     return mState.mTransformFeedbackBufferMode;
 }
 
-bool Program::linkVaryings(InfoLog &infoLog) const
+bool Program::linkVaryings(const Context *context, InfoLog &infoLog) const
 {
-    const Shader *vertexShader   = mState.mAttachedVertexShader;
-    const Shader *fragmentShader = mState.mAttachedFragmentShader;
+    Shader *vertexShader   = mState.mAttachedVertexShader;
+    Shader *fragmentShader = mState.mAttachedFragmentShader;
 
-    ASSERT(vertexShader->getShaderVersion() == fragmentShader->getShaderVersion());
+    ASSERT(vertexShader->getShaderVersion(context) == fragmentShader->getShaderVersion(context));
 
-    const std::vector<sh::Varying> &vertexVaryings   = vertexShader->getVaryings();
-    const std::vector<sh::Varying> &fragmentVaryings = fragmentShader->getVaryings();
+    const std::vector<sh::Varying> &vertexVaryings   = vertexShader->getVaryings(context);
+    const std::vector<sh::Varying> &fragmentVaryings = fragmentShader->getVaryings(context);
 
     std::map<GLuint, std::string> staticFragmentInputLocations;
 
@@ -1977,7 +1978,7 @@ bool Program::linkVaryings(InfoLog &infoLog) const
             {
                 ASSERT(!input.isBuiltIn());
                 if (!linkValidateVaryings(infoLog, output.name, input, output,
-                                          vertexShader->getShaderVersion()))
+                                          vertexShader->getShaderVersion(context)))
                 {
                     return false;
                 }
@@ -2018,7 +2019,7 @@ bool Program::linkVaryings(InfoLog &infoLog) const
         }
     }
 
-    if (!linkValidateBuiltInVaryings(infoLog))
+    if (!linkValidateBuiltInVaryings(context, infoLog))
     {
         return false;
     }
@@ -2028,12 +2029,12 @@ bool Program::linkVaryings(InfoLog &infoLog) const
     return true;
 }
 
-bool Program::linkUniforms(InfoLog &infoLog,
-                           const Caps &caps,
+bool Program::linkUniforms(const Context *context,
+                           InfoLog &infoLog,
                            const Bindings &uniformLocationBindings)
 {
     UniformLinker linker(mState);
-    if (!linker.link(infoLog, caps, uniformLocationBindings))
+    if (!linker.link(context, infoLog, uniformLocationBindings))
     {
         return false;
     }
@@ -2089,12 +2090,13 @@ bool Program::linkValidateInterfaceBlockFields(InfoLog &infoLog,
 }
 
 // Assigns locations to all attributes from the bindings and program locations.
-bool Program::linkAttributes(const ContextState &data, InfoLog &infoLog)
+bool Program::linkAttributes(const Context *context, InfoLog &infoLog)
 {
-    const auto *vertexShader = mState.getAttachedVertexShader();
+    const ContextState &data = context->getContextState();
+    auto *vertexShader       = mState.getAttachedVertexShader();
 
     unsigned int usedLocations = 0;
-    mState.mAttributes         = vertexShader->getActiveAttributes();
+    mState.mAttributes         = vertexShader->getActiveAttributes(context);
     GLuint maxAttribs          = data.getCaps().maxVertexAttributes;
 
     // TODO(jmadill): handle aliasing robustly
@@ -2239,12 +2241,14 @@ bool Program::validateVertexAndFragmentInterfaceBlocks(
     return true;
 }
 
-bool Program::linkUniformBlocks(InfoLog &infoLog, const Caps &caps, bool webglCompatibility)
+bool Program::linkUniformBlocks(const Context *context, InfoLog &infoLog)
 {
+    const auto &caps = context->getCaps();
+
     if (mState.mAttachedComputeShader)
     {
-        const Shader &computeShader        = *mState.mAttachedComputeShader;
-        const auto &computeInterfaceBlocks = computeShader.getInterfaceBlocks();
+        Shader &computeShader              = *mState.mAttachedComputeShader;
+        const auto &computeInterfaceBlocks = computeShader.getInterfaceBlocks(context);
 
         if (!validateUniformBlocksCount(
                 caps.maxComputeUniformBlocks, computeInterfaceBlocks,
@@ -2256,11 +2260,11 @@ bool Program::linkUniformBlocks(InfoLog &infoLog, const Caps &caps, bool webglCo
         return true;
     }
 
-    const Shader &vertexShader   = *mState.mAttachedVertexShader;
-    const Shader &fragmentShader = *mState.mAttachedFragmentShader;
+    Shader &vertexShader   = *mState.mAttachedVertexShader;
+    Shader &fragmentShader = *mState.mAttachedFragmentShader;
 
-    const auto &vertexInterfaceBlocks   = vertexShader.getInterfaceBlocks();
-    const auto &fragmentInterfaceBlocks = fragmentShader.getInterfaceBlocks();
+    const auto &vertexInterfaceBlocks   = vertexShader.getInterfaceBlocks(context);
+    const auto &fragmentInterfaceBlocks = fragmentShader.getInterfaceBlocks(context);
 
     if (!validateUniformBlocksCount(
             caps.maxVertexUniformBlocks, vertexInterfaceBlocks,
@@ -2276,6 +2280,8 @@ bool Program::linkUniformBlocks(InfoLog &infoLog, const Caps &caps, bool webglCo
 
         return false;
     }
+
+    bool webglCompatibility = context->getExtensions().webglCompatibility;
     if (!validateVertexAndFragmentInterfaceBlocks(vertexInterfaceBlocks, fragmentInterfaceBlocks,
                                                   infoLog, webglCompatibility))
     {
@@ -2415,13 +2421,13 @@ bool Program::linkValidateVaryings(InfoLog &infoLog,
     return true;
 }
 
-bool Program::linkValidateBuiltInVaryings(InfoLog &infoLog) const
+bool Program::linkValidateBuiltInVaryings(const Context *context, InfoLog &infoLog) const
 {
-    const Shader *vertexShader                       = mState.mAttachedVertexShader;
-    const Shader *fragmentShader                     = mState.mAttachedFragmentShader;
-    const std::vector<sh::Varying> &vertexVaryings   = vertexShader->getVaryings();
-    const std::vector<sh::Varying> &fragmentVaryings = fragmentShader->getVaryings();
-    int shaderVersion                                = vertexShader->getShaderVersion();
+    Shader *vertexShader         = mState.mAttachedVertexShader;
+    Shader *fragmentShader       = mState.mAttachedFragmentShader;
+    const auto &vertexVaryings   = vertexShader->getVaryings(context);
+    const auto &fragmentVaryings = fragmentShader->getVaryings(context);
+    int shaderVersion            = vertexShader->getShaderVersion(context);
 
     if (shaderVersion != 100)
     {
@@ -2593,16 +2599,16 @@ void Program::gatherTransformFeedbackVaryings(const Program::MergedVaryings &var
     }
 }
 
-Program::MergedVaryings Program::getMergedVaryings() const
+Program::MergedVaryings Program::getMergedVaryings(const Context *context) const
 {
     MergedVaryings merged;
 
-    for (const sh::Varying &varying : mState.mAttachedVertexShader->getVaryings())
+    for (const sh::Varying &varying : mState.mAttachedVertexShader->getVaryings(context))
     {
         merged[varying.name].vertex = &varying;
     }
 
-    for (const sh::Varying &varying : mState.mAttachedFragmentShader->getVaryings())
+    for (const sh::Varying &varying : mState.mAttachedFragmentShader->getVaryings(context))
     {
         merged[varying.name].fragment = &varying;
     }
@@ -2684,16 +2690,16 @@ std::vector<PackedVarying> Program::getPackedVaryings(
     return packedVaryings;
 }
 
-void Program::linkOutputVariables()
+void Program::linkOutputVariables(const Context *context)
 {
-    const Shader *fragmentShader = mState.mAttachedFragmentShader;
+    Shader *fragmentShader = mState.mAttachedFragmentShader;
     ASSERT(fragmentShader != nullptr);
 
     ASSERT(mState.mOutputVariableTypes.empty());
     ASSERT(mState.mActiveOutputVariables.none());
 
     // Gather output variable types
-    for (const auto &outputVariable : fragmentShader->getActiveOutputVariables())
+    for (const auto &outputVariable : fragmentShader->getActiveOutputVariables(context))
     {
         if (outputVariable.isBuiltIn() && outputVariable.name != "gl_FragColor" &&
             outputVariable.name != "gl_FragData")
@@ -2719,10 +2725,10 @@ void Program::linkOutputVariables()
     }
 
     // Skip this step for GLES2 shaders.
-    if (fragmentShader->getShaderVersion() == 100)
+    if (fragmentShader->getShaderVersion(context) == 100)
         return;
 
-    mState.mOutputVariables = fragmentShader->getActiveOutputVariables();
+    mState.mOutputVariables = fragmentShader->getActiveOutputVariables(context);
     // TODO(jmadill): any caps validation here?
 
     for (unsigned int outputVariableIndex = 0; outputVariableIndex < mState.mOutputVariables.size();
@@ -2771,15 +2777,15 @@ void Program::setUniformValuesFromBindingQualifiers()
     }
 }
 
-void Program::gatherInterfaceBlockInfo()
+void Program::gatherInterfaceBlockInfo(const Context *context)
 {
     ASSERT(mState.mUniformBlocks.empty());
 
     if (mState.mAttachedComputeShader)
     {
-        const Shader *computeShader = mState.getAttachedComputeShader();
+        Shader *computeShader = mState.getAttachedComputeShader();
 
-        for (const sh::InterfaceBlock &computeBlock : computeShader->getInterfaceBlocks())
+        for (const sh::InterfaceBlock &computeBlock : computeShader->getInterfaceBlocks(context))
         {
 
             // Only 'packed' blocks are allowed to be considered inactive.
@@ -2801,9 +2807,9 @@ void Program::gatherInterfaceBlockInfo()
 
     std::set<std::string> visitedList;
 
-    const Shader *vertexShader = mState.getAttachedVertexShader();
+    Shader *vertexShader = mState.getAttachedVertexShader();
 
-    for (const sh::InterfaceBlock &vertexBlock : vertexShader->getInterfaceBlocks())
+    for (const sh::InterfaceBlock &vertexBlock : vertexShader->getInterfaceBlocks(context))
     {
         // Only 'packed' blocks are allowed to be considered inactive.
         if (!vertexBlock.staticUse && vertexBlock.layout == sh::BLOCKLAYOUT_PACKED)
@@ -2816,9 +2822,9 @@ void Program::gatherInterfaceBlockInfo()
         visitedList.insert(vertexBlock.name);
     }
 
-    const Shader *fragmentShader = mState.getAttachedFragmentShader();
+    Shader *fragmentShader = mState.getAttachedFragmentShader();
 
-    for (const sh::InterfaceBlock &fragmentBlock : fragmentShader->getInterfaceBlocks())
+    for (const sh::InterfaceBlock &fragmentBlock : fragmentShader->getInterfaceBlocks(context))
     {
         // Only 'packed' blocks are allowed to be considered inactive.
         if (!fragmentBlock.staticUse && fragmentBlock.layout == sh::BLOCKLAYOUT_PACKED)

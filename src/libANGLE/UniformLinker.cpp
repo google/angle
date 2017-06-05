@@ -12,6 +12,7 @@
 
 #include "common/utilities.h"
 #include "libANGLE/Caps.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/Shader.h"
 #include "libANGLE/features.h"
 
@@ -45,14 +46,14 @@ void UniformLinker::getResults(std::vector<LinkedUniform> *uniforms,
     uniformLocations->swap(mUniformLocations);
 }
 
-bool UniformLinker::link(InfoLog &infoLog,
-                         const Caps &caps,
+bool UniformLinker::link(const Context *context,
+                         InfoLog &infoLog,
                          const Program::Bindings &uniformLocationBindings)
 {
     if (mState.getAttachedVertexShader() && mState.getAttachedFragmentShader())
     {
         ASSERT(mState.getAttachedComputeShader() == nullptr);
-        if (!validateVertexAndFragmentUniforms(infoLog))
+        if (!validateVertexAndFragmentUniforms(context, infoLog))
         {
             return false;
         }
@@ -60,7 +61,7 @@ bool UniformLinker::link(InfoLog &infoLog,
 
     // Flatten the uniforms list (nested fields) into a simple list (no nesting).
     // Also check the maximum uniform vector and sampler counts.
-    if (!flattenUniformsAndCheckCaps(caps, infoLog))
+    if (!flattenUniformsAndCheckCaps(context, infoLog))
     {
         return false;
     }
@@ -73,14 +74,15 @@ bool UniformLinker::link(InfoLog &infoLog,
     return true;
 }
 
-bool UniformLinker::validateVertexAndFragmentUniforms(InfoLog &infoLog) const
+bool UniformLinker::validateVertexAndFragmentUniforms(const Context *context,
+                                                      InfoLog &infoLog) const
 {
     // Check that uniforms defined in the vertex and fragment shaders are identical
     std::map<std::string, LinkedUniform> linkedUniforms;
     const std::vector<sh::Uniform> &vertexUniforms =
-        mState.getAttachedVertexShader()->getUniforms();
+        mState.getAttachedVertexShader()->getUniforms(context);
     const std::vector<sh::Uniform> &fragmentUniforms =
-        mState.getAttachedFragmentShader()->getUniforms();
+        mState.getAttachedFragmentShader()->getUniforms(context);
 
     for (const sh::Uniform &vertexUniform : vertexUniforms)
     {
@@ -319,7 +321,8 @@ void UniformLinker::pruneUnusedUniforms()
 }
 
 bool UniformLinker::flattenUniformsAndCheckCapsForShader(
-    const Shader &shader,
+    const Context *context,
+    Shader *shader,
     GLuint maxUniformComponents,
     GLuint maxTextureImageUnits,
     const std::string &componentsErrorMessage,
@@ -328,7 +331,7 @@ bool UniformLinker::flattenUniformsAndCheckCapsForShader(
     InfoLog &infoLog)
 {
     VectorAndSamplerCount vasCount;
-    for (const sh::Uniform &uniform : shader.getUniforms())
+    for (const sh::Uniform &uniform : shader->getUniforms(context))
     {
         vasCount += flattenUniform(uniform, &samplerUniforms);
     }
@@ -348,17 +351,19 @@ bool UniformLinker::flattenUniformsAndCheckCapsForShader(
     return true;
 }
 
-bool UniformLinker::flattenUniformsAndCheckCaps(const Caps &caps, InfoLog &infoLog)
+bool UniformLinker::flattenUniformsAndCheckCaps(const Context *context, InfoLog &infoLog)
 {
     std::vector<LinkedUniform> samplerUniforms;
 
+    const Caps &caps = context->getCaps();
+
     if (mState.getAttachedComputeShader())
     {
-        const Shader *computeShader = mState.getAttachedComputeShader();
+        Shader *computeShader = mState.getAttachedComputeShader();
 
         // TODO (mradev): check whether we need finer-grained component counting
         if (!flattenUniformsAndCheckCapsForShader(
-                *computeShader, caps.maxComputeUniformComponents / 4,
+                context, computeShader, caps.maxComputeUniformComponents / 4,
                 caps.maxComputeTextureImageUnits,
                 "Compute shader active uniforms exceed MAX_COMPUTE_UNIFORM_COMPONENTS (",
                 "Compute shader sampler count exceeds MAX_COMPUTE_TEXTURE_IMAGE_UNITS (",
@@ -369,20 +374,22 @@ bool UniformLinker::flattenUniformsAndCheckCaps(const Caps &caps, InfoLog &infoL
     }
     else
     {
-        const Shader *vertexShader = mState.getAttachedVertexShader();
+        Shader *vertexShader = mState.getAttachedVertexShader();
 
         if (!flattenUniformsAndCheckCapsForShader(
-                *vertexShader, caps.maxVertexUniformVectors, caps.maxVertexTextureImageUnits,
+                context, vertexShader, caps.maxVertexUniformVectors,
+                caps.maxVertexTextureImageUnits,
                 "Vertex shader active uniforms exceed MAX_VERTEX_UNIFORM_VECTORS (",
                 "Vertex shader sampler count exceeds MAX_VERTEX_TEXTURE_IMAGE_UNITS (",
                 samplerUniforms, infoLog))
         {
             return false;
         }
-        const Shader *fragmentShader = mState.getAttachedFragmentShader();
+
+        Shader *fragmentShader = mState.getAttachedFragmentShader();
 
         if (!flattenUniformsAndCheckCapsForShader(
-                *fragmentShader, caps.maxFragmentUniformVectors, caps.maxTextureImageUnits,
+                context, fragmentShader, caps.maxFragmentUniformVectors, caps.maxTextureImageUnits,
                 "Fragment shader active uniforms exceed MAX_FRAGMENT_UNIFORM_VECTORS (",
                 "Fragment shader sampler count exceeds MAX_TEXTURE_IMAGE_UNITS (", samplerUniforms,
                 infoLog))

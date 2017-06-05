@@ -59,6 +59,8 @@ GLuint CompileShader(GLenum type, const std::string &source)
             std::cerr << "shader compilation failed. <Empty log message>";
         }
 
+        std::cerr << std::endl;
+
         glDeleteShader(shader);
         shader = 0;
     }

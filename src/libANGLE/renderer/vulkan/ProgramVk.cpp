@@ -67,8 +67,10 @@ LinkResult ProgramVk::link(const gl::Context *glContext,
     RendererVk *renderer           = context->getRenderer();
     GlslangWrapper *glslangWrapper = renderer->getGlslangWrapper();
 
-    const std::string &vertexSource   = mState.getAttachedVertexShader()->getTranslatedSource();
-    const std::string &fragmentSource = mState.getAttachedFragmentShader()->getTranslatedSource();
+    const std::string &vertexSource =
+        mState.getAttachedVertexShader()->getTranslatedSource(glContext);
+    const std::string &fragmentSource =
+        mState.getAttachedFragmentShader()->getTranslatedSource(glContext);
 
     std::vector<uint32_t> vertexCode;
     std::vector<uint32_t> fragmentCode;

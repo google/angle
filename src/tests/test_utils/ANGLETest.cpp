@@ -506,7 +506,7 @@ GLuint ANGLETest::compileShader(GLenum type, const std::string &source)
             std::vector<GLchar> infoLog(infoLogLength);
             glGetShaderInfoLog(shader, static_cast<GLsizei>(infoLog.size()), nullptr, &infoLog[0]);
 
-            std::cerr << "shader compilation failed: " << &infoLog[0];
+            std::cerr << "shader compilation failed: " << &infoLog[0] << std::endl;
         }
 
         glDeleteShader(shader);

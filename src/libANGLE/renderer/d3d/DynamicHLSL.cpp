@@ -10,13 +10,14 @@
 
 #include "common/utilities.h"
 #include "compiler/translator/blocklayoutHLSL.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/Shader.h"
+#include "libANGLE/VaryingPacking.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/d3d/ProgramD3D.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/ShaderD3D.h"
-#include "libANGLE/VaryingPacking.h"
 
 using namespace gl;
 
@@ -392,7 +393,7 @@ void DynamicHLSL::generateVaryingLinkHLSL(const VaryingPacking &varyingPacking,
     hlslStream << "};\n";
 }
 
-void DynamicHLSL::generateShaderLinkHLSL(const gl::ContextState &data,
+void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
                                          const gl::ProgramState &programData,
                                          const ProgramD3DMetadata &programMetadata,
                                          const VaryingPacking &varyingPacking,
@@ -402,8 +403,9 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::ContextState &data,
 {
     ASSERT(pixelHLSL->empty() && vertexHLSL->empty());
 
-    const gl::Shader *vertexShaderGL   = programData.getAttachedVertexShader();
-    const gl::Shader *fragmentShaderGL = programData.getAttachedFragmentShader();
+    const auto &data                   = context->getContextState();
+    gl::Shader *vertexShaderGL         = programData.getAttachedVertexShader();
+    gl::Shader *fragmentShaderGL       = programData.getAttachedFragmentShader();
     const ShaderD3D *fragmentShader    = GetImplAs<ShaderD3D>(fragmentShaderGL);
     const int shaderModel              = mRenderer->getMajorShaderModel();
 
@@ -418,7 +420,7 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::ContextState &data,
     ASSERT(!fragmentShader->usesFragColor() || !fragmentShader->usesFragData());
 
     std::stringstream vertexStream;
-    vertexStream << vertexShaderGL->getTranslatedSource();
+    vertexStream << vertexShaderGL->getTranslatedSource(context);
 
     // Instanced PointSprite emulation requires additional entries originally generated in the
     // GeometryShader HLSL. These include pointsize clamp values.
@@ -586,7 +588,7 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::ContextState &data,
     const auto &pixelBuiltins = builtinsD3D[SHADER_PIXEL];
 
     std::stringstream pixelStream;
-    pixelStream << fragmentShaderGL->getTranslatedSource();
+    pixelStream << fragmentShaderGL->getTranslatedSource(context);
     pixelStream << "struct PS_INPUT\n";
     generateVaryingLinkHLSL(varyingPacking, pixelBuiltins, builtinsD3D.usesPointSize(),
                             pixelStream);
@@ -769,11 +771,12 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::ContextState &data,
     *pixelHLSL  = pixelStream.str();
 }
 
-std::string DynamicHLSL::generateComputeShaderLinkHLSL(const gl::ProgramState &programData) const
+std::string DynamicHLSL::generateComputeShaderLinkHLSL(const gl::Context *context,
+                                                       const gl::ProgramState &programData) const
 {
-    const gl::Shader *computeShaderGL = programData.getAttachedComputeShader();
+    gl::Shader *computeShaderGL = programData.getAttachedComputeShader();
     std::stringstream computeStream;
-    std::string translatedSource = computeShaderGL->getTranslatedSource();
+    std::string translatedSource = computeShaderGL->getTranslatedSource(context);
     computeStream << translatedSource;
 
     bool usesWorkGroupID = translatedSource.find("GL_USES_WORK_GROUP_ID") != std::string::npos;
@@ -811,7 +814,7 @@ std::string DynamicHLSL::generateComputeShaderLinkHLSL(const gl::ProgramState &p
 
     computeStream << "};\n\n";
 
-    const sh::WorkGroupSize &localSize = computeShaderGL->getWorkGroupSize();
+    const sh::WorkGroupSize &localSize = computeShaderGL->getWorkGroupSize(context);
     computeStream << "[numthreads(" << localSize[0] << ", " << localSize[1] << ", " << localSize[2]
                   << ")]\n";
 

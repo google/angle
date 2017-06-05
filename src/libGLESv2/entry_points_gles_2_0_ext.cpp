@@ -452,7 +452,7 @@ void GL_APIENTRY GetTranslatedShaderSourceANGLE(GLuint shader,
             return;
         }
 
-        shaderObject->getTranslatedSourceWithDebugInfo(bufsize, length, source);
+        shaderObject->getTranslatedSourceWithDebugInfo(context, bufsize, length, source);
     }
 }
 
@@ -2230,7 +2230,7 @@ GetShaderivRobustANGLE(GLuint shader, GLenum pname, GLsizei bufSize, GLsizei *le
         }
 
         Shader *shaderObject = context->getShader(shader);
-        QueryShaderiv(shaderObject, pname, params);
+        QueryShaderiv(context, shaderObject, pname, params);
         SetRobustLengthParam(length, numParams);
     }
 }

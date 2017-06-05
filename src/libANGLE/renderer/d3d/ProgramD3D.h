@@ -336,7 +336,7 @@ class ProgramD3D : public ProgramImpl
 
     typedef std::map<std::string, D3DUniform *> D3DUniformMap;
 
-    void defineUniformsAndAssignRegisters();
+    void defineUniformsAndAssignRegisters(const gl::Context *context);
     void defineUniformBase(const gl::Shader *shader,
                            const sh::Uniform &uniform,
                            D3DUniformMap *uniformMap);
@@ -364,20 +364,20 @@ class ProgramD3D : public ProgramImpl
                             const GLfloat *value,
                             GLenum targetUniformType);
 
-    LinkResult compileProgramExecutables(const gl::ContextState &data, gl::InfoLog &infoLog);
-    LinkResult compileComputeExecutable(gl::InfoLog &infoLog);
+    LinkResult compileProgramExecutables(const gl::Context *context, gl::InfoLog &infoLog);
+    LinkResult compileComputeExecutable(const gl::Context *context, gl::InfoLog &infoLog);
 
     void gatherTransformFeedbackVaryings(const gl::VaryingPacking &varyings,
                                          const BuiltinInfo &builtins);
     D3DUniform *getD3DUniformByName(const std::string &name);
     D3DUniform *getD3DUniformFromLocation(GLint location);
 
-    void initAttribLocationsToD3DSemantic();
+    void initAttribLocationsToD3DSemantic(const gl::Context *context);
 
     void reset();
     void ensureUniformBlocksInitialized();
 
-    void initUniformBlockInfo(const gl::Shader *shader);
+    void initUniformBlockInfo(const gl::Context *context, gl::Shader *shader);
     size_t getUniformBlockInfo(const sh::InterfaceBlock &interfaceBlock);
 
     RendererD3D *mRenderer;
