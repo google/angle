@@ -1104,7 +1104,7 @@ Error Program::saveBinary(const Context *context,
         stream.writeInt(samplerBinding.boundTextureUnits.size());
     }
 
-    ANGLE_TRY(mProgram->save(&stream));
+    mProgram->save(&stream);
 
     GLsizei streamLength   = static_cast<GLsizei>(stream.length());
     const void *streamState = stream.data();

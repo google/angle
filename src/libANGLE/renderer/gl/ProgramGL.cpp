@@ -86,7 +86,7 @@ LinkResult ProgramGL::load(const gl::Context *context,
     return true;
 }
 
-gl::Error ProgramGL::save(gl::BinaryOutputStream *stream)
+void ProgramGL::save(gl::BinaryOutputStream *stream)
 {
     GLint binaryLength = 0;
     mFunctions->getProgramiv(mProgramID, GL_PROGRAM_BINARY_LENGTH, &binaryLength);
@@ -99,8 +99,6 @@ gl::Error ProgramGL::save(gl::BinaryOutputStream *stream)
     stream->writeInt(binaryFormat);
     stream->writeInt(binaryLength);
     stream->writeBytes(&binary[0], binaryLength);
-
-    return gl::NoError();
 }
 
 void ProgramGL::setBinaryRetrievableHint(bool retrievable)

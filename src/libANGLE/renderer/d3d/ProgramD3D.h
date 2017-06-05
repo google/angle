@@ -161,7 +161,7 @@ class ProgramD3D : public ProgramImpl
     LinkResult load(const gl::Context *context,
                     gl::InfoLog &infoLog,
                     gl::BinaryInputStream *stream) override;
-    gl::Error save(gl::BinaryOutputStream *stream) override;
+    void save(gl::BinaryOutputStream *stream) override;
     void setBinaryRetrievableHint(bool retrievable) override;
     void setSeparable(bool separable) override;
 

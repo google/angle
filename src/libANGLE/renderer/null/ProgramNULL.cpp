@@ -29,9 +29,8 @@ LinkResult ProgramNULL::load(const gl::Context *contextImpl,
     return true;
 }
 
-gl::Error ProgramNULL::save(gl::BinaryOutputStream *stream)
+void ProgramNULL::save(gl::BinaryOutputStream *stream)
 {
-    return gl::NoError();
 }
 
 void ProgramNULL::setBinaryRetrievableHint(bool retrievable)
