@@ -31,6 +31,20 @@ TransformFeedback11::~TransformFeedback11()
 
 void TransformFeedback11::begin(GLenum primitiveMode)
 {
+    // Reset all the cached offsets to the binding offsets
+    mIsDirty = true;
+    for (size_t bindingIdx = 0; bindingIdx < mBuffers.size(); bindingIdx++)
+    {
+        const auto &binding = mState.getIndexedBuffer(bindingIdx);
+        if (binding.get() != nullptr)
+        {
+            mBufferOffsets[bindingIdx] = static_cast<UINT>(binding.getOffset());
+        }
+        else
+        {
+            mBufferOffsets[bindingIdx] = 0;
+        }
+    }
 }
 
 void TransformFeedback11::end()
