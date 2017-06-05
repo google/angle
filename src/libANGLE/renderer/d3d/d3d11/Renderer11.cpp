@@ -2448,27 +2448,22 @@ gl::Error Renderer11::applyShaders(const gl::ContextState &data, GLenum drawMode
             (geometryExe ? GetAs<ShaderExecutable11>(geometryExe)->getGeometryShader() : nullptr);
     }
 
-    bool dirtyUniforms = false;
-
     if (reinterpret_cast<uintptr_t>(vertexShader) != mAppliedVertexShader)
     {
         mDeviceContext->VSSetShader(vertexShader, nullptr, 0);
         mAppliedVertexShader = reinterpret_cast<uintptr_t>(vertexShader);
-        dirtyUniforms        = true;
     }
 
     if (reinterpret_cast<uintptr_t>(geometryShader) != mAppliedGeometryShader)
     {
         mDeviceContext->GSSetShader(geometryShader, nullptr, 0);
         mAppliedGeometryShader = reinterpret_cast<uintptr_t>(geometryShader);
-        dirtyUniforms          = true;
     }
 
     if (reinterpret_cast<uintptr_t>(pixelShader) != mAppliedPixelShader)
     {
         mDeviceContext->PSSetShader(pixelShader, nullptr, 0);
         mAppliedPixelShader = reinterpret_cast<uintptr_t>(pixelShader);
-        dirtyUniforms       = true;
     }
 
     return programD3D->applyUniforms(drawMode);
@@ -4774,18 +4769,10 @@ gl::Error Renderer11::applyComputeShader(const gl::ContextState &data)
     ASSERT(computeExe != nullptr);
     ID3D11ComputeShader *computeShader = GetAs<ShaderExecutable11>(computeExe)->getComputeShader();
 
-    bool dirtyUniforms = false;
-
     if (reinterpret_cast<uintptr_t>(computeShader) != mAppliedComputeShader)
     {
         mDeviceContext->CSSetShader(computeShader, nullptr, 0);
         mAppliedComputeShader = reinterpret_cast<uintptr_t>(computeShader);
-        dirtyUniforms         = true;
-    }
-
-    if (dirtyUniforms)
-    {
-        programD3D->dirtyAllUniforms();
     }
 
     return programD3D->applyComputeUniforms();
