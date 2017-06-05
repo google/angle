@@ -2950,6 +2950,54 @@ TEST_P(GLSLTest, InitUninitializedStructContainingArrays)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Verify that two shaders with the same uniform name and members but different structure names will
+// not link.
+TEST_P(GLSLTest, StructureNameMatchingTest)
+{
+    const char *vsSource =
+        "// Structures must have the same name, sequence of type names, and\n"
+        "// type definitions, and field names to be considered the same type.\n"
+        "// GLSL 1.017 4.2.4\n"
+        "precision mediump float;\n"
+        "struct info {\n"
+        "  vec4 pos;\n"
+        "  vec4 color;\n"
+        "};\n"
+        "\n"
+        "uniform info uni;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = uni.pos;\n"
+        "}\n";
+
+    GLuint vs = CompileShader(GL_VERTEX_SHADER, vsSource);
+    ASSERT_NE(0u, vs);
+    glDeleteShader(vs);
+
+    const char *fsSource =
+        "// Structures must have the same name, sequence of type names, and\n"
+        "// type definitions, and field names to be considered the same type.\n"
+        "// GLSL 1.017 4.2.4\n"
+        "precision mediump float;\n"
+        "struct info1 {\n"
+        "  vec4 pos;\n"
+        "  vec4 color;\n"
+        "};\n"
+        "\n"
+        "uniform info1 uni;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = uni.color;\n"
+        "}\n";
+
+    GLuint fs = CompileShader(GL_FRAGMENT_SHADER, fsSource);
+    ASSERT_NE(0u, fs);
+    glDeleteShader(fs);
+
+    GLuint program = CompileProgram(vsSource, fsSource);
+    EXPECT_EQ(0u, program);
+}
+
 // Test that an uninitialized nameless struct inside a for loop init statement works.
 TEST_P(GLSLTest_ES3, UninitializedNamelessStructInForInitStatement)
 {

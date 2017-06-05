@@ -2360,6 +2360,12 @@ bool Program::linkValidateVariablesBase(InfoLog &infoLog, const std::string &var
         infoLog << "Precisions for " << variableName << " differ between vertex and fragment shaders";
         return false;
     }
+    if (vertexVariable.structName != fragmentVariable.structName)
+    {
+        infoLog << "Structure names for " << variableName
+                << " differ between vertex and fragment shaders";
+        return false;
+    }
 
     if (vertexVariable.fields.size() != fragmentVariable.fields.size())
     {
