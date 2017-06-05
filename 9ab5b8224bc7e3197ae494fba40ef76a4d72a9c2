@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "778ad99c_d7dedda4",
+        "filename": "src/libANGLE/renderer/TextureImpl.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-05T14:53:59Z",
+      "side": 0,
+      "message": "I\u0027m not actually a fan of doing this refactor - we like to keep our Impl methods the same (mirror copies) of OpenGL functionality, and using the same parameters as the OpenGL calls. I think I would prefer to keep the two distinct impl methods, although your entry point refactor is helpful.",
+      "range": {
+        "startLine": 120,
+        "startChar": 0,
+        "endLine": 131,
+        "endChar": 80
+      },
+      "revId": "9ab5b8224bc7e3197ae494fba40ef76a4d72a9c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "afe20402_cd395a3b",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 680,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-05T14:53:59Z",
+      "side": 0,
+      "message": "same comment as below.",
+      "range": {
+        "startLine": 674,
+        "startChar": 10,
+        "endLine": 680,
+        "endChar": 9
+      },
+      "revId": "9ab5b8224bc7e3197ae494fba40ef76a4d72a9c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef99e941_d3af9c4e",
+        "filename": "src/libGLESv2/entry_points_gles_3_0.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2497,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-05T14:53:59Z",
+      "side": 0,
+      "message": "make this a split patch please. for entry point refactoring, always make a split patch.",
+      "range": {
+        "startLine": 2488,
+        "startChar": 0,
+        "endLine": 2497,
+        "endChar": 5
+      },
+      "revId": "9ab5b8224bc7e3197ae494fba40ef76a4d72a9c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
