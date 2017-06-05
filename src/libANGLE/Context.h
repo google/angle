@@ -818,8 +818,8 @@ class Context final : public ValidationContext
     Extensions mExtensions;
     Limitations mLimitations;
 
-    // Shader compiler
-    Compiler *mCompiler;
+    // Shader compiler. Lazily initialized hence the mutable value.
+    mutable BindingPointer<Compiler> mCompiler;
 
     State mGLState;
 

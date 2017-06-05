@@ -122,12 +122,6 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const ContextState &state)
 
 Compiler::~Compiler()
 {
-    release();
-    SafeDelete(mImplementation);
-}
-
-Error Compiler::release()
-{
     if (mFragmentCompiler)
     {
         sh::Destruct(mFragmentCompiler);
@@ -161,8 +155,6 @@ Error Compiler::release()
     }
 
     mImplementation->release();
-
-    return gl::NoError();
 }
 
 ShHandle Compiler::getCompilerHandle(GLenum type)

@@ -257,7 +257,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
                         mLimitations,
                         GetNoError(attribs)),
       mImplementation(implFactory->createContext(mState)),
-      mCompiler(nullptr),
+      mCompiler(),
       mConfig(config),
       mClientType(EGL_OPENGL_ES_API),
       mHasBeenCurrent(false),
@@ -361,8 +361,6 @@ Context::Context(rx::EGLImplFactory *implFactory,
         bindTransformFeedback(0);
     }
 
-    mCompiler = new Compiler(mImplementation.get(), mState);
-
     // Initialize dirty bit masks
     // TODO(jmadill): additional ES3 state
     mTexImageDirtyBits.set(State::DIRTY_BIT_UNPACK_ALIGNMENT);
@@ -444,8 +442,7 @@ void Context::destroy(egl::Display *display)
     SafeDelete(mSurfacelessFramebuffer);
 
     releaseSurface(display);
-
-    SafeDelete(mCompiler);
+    releaseShaderCompiler();
 
     mState.mBuffers->release(this);
     mState.mShaderPrograms->release(this);
@@ -1248,7 +1245,7 @@ Framebuffer *Context::getFramebuffer(GLuint handle) const
     return mState.mFramebuffers->getFramebuffer(handle);
 }
 
-FenceNV *Context::getFenceNV(unsigned int handle)
+FenceNV *Context::getFenceNV(GLuint handle)
 {
     auto fence = mFenceNVMap.find(handle);
 
@@ -1262,7 +1259,7 @@ FenceNV *Context::getFenceNV(unsigned int handle)
     }
 }
 
-Query *Context::getQuery(unsigned int handle, bool create, GLenum type)
+Query *Context::getQuery(GLuint handle, bool create, GLenum type)
 {
     auto query = mQueryMap.find(handle);
 
@@ -1300,7 +1297,11 @@ Texture *Context::getSamplerTexture(unsigned int sampler, GLenum type) const
 
 Compiler *Context::getCompiler() const
 {
-    return mCompiler;
+    if (mCompiler.get() == nullptr)
+    {
+        mCompiler.set(new Compiler(mImplementation.get(), mState));
+    }
+    return mCompiler.get();
 }
 
 void Context::getBooleanvImpl(GLenum pname, GLboolean *params)
@@ -2579,9 +2580,8 @@ void Context::requestExtension(const char *name)
     updateCaps();
     initExtensionStrings();
 
-    // Re-create the compiler with the requested extensions enabled.
-    SafeDelete(mCompiler);
-    mCompiler = new Compiler(mImplementation.get(), mState);
+    // Release the shader compiler so it will be re-created with the requested extensions enabled.
+    releaseShaderCompiler();
 
     // Invalidate all cached completenesses for textures and framebuffer. Some extensions make new
     // formats renderable or sampleable.
@@ -4504,7 +4504,7 @@ void Context::linkProgram(GLuint program)
 
 void Context::releaseShaderCompiler()
 {
-    handleError(mCompiler->release());
+    mCompiler.set(nullptr);
 }
 
 void Context::shaderBinary(GLsizei n,

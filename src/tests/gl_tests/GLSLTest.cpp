@@ -711,6 +711,33 @@ TEST_P(GLSLTest, FrontFacingAndVarying)
     EXPECT_NE(0u, program);
 }
 
+// Test that we can release the shader compiler and still compile things properly.
+TEST_P(GLSLTest, ReleaseCompilerThenCompile)
+{
+    const std::string &simpleVS =
+        "attribute vec4 position; void main() { gl_Position = position; }";
+    const std::string &simpleFS = "void main() { gl_FragColor = vec4(1, 0, 0, 1); }";
+
+    // Draw with the first program.
+    ANGLE_GL_PROGRAM(program1, simpleVS, simpleFS);
+    drawQuad(program1, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Clear and release shader compiler.
+    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    glReleaseShaderCompiler();
+    ASSERT_GL_NO_ERROR();
+
+    // Draw with a second program.
+    ANGLE_GL_PROGRAM(program2, simpleVS, simpleFS);
+    drawQuad(program2, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
 // Verify that linking shaders declaring different shading language versions fails.
 TEST_P(GLSLTest_ES3, VersionMismatch)
 {
