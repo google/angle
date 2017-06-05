@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "38077899_dcc26674",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2087,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-05T10:23:14Z",
+      "side": 1,
+      "message": "There are not a original sentence to express this meaning. It is my deduction from spec. Please refer es_3.1_spec(P102) and GLSL3.1(P57).",
+      "parentUuid": "775c9667_5785f41e",
+      "range": {
+        "startLine": 2085,
+        "startChar": 0,
+        "endLine": 2087,
+        "endChar": 24
+      },
+      "revId": "5a5982703b2a219bcad2f38b2ad015e4c49f3ab5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4d3b99f3_1eaa9db6",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
         "patchSetId": 9
@@ -36,6 +60,24 @@
       "writtenOn": "2017-06-04T07:24:34Z",
       "side": 1,
       "message": "Do we need to check texture-\u003ehasAnyDirtyBit() and do \u0027texture-\u003esyncImplState()\u0027 like line 848 did?",
+      "revId": "5a5982703b2a219bcad2f38b2ad015e4c49f3ab5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19beccf8_11f02835",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 881,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-05T10:23:14Z",
+      "side": 1,
+      "message": "I think here does not need to sync texture here, these states are all related with sampler. I think we could only take the texture as a buffer here for images?",
+      "parentUuid": "4d3b99f3_1eaa9db6",
       "revId": "5a5982703b2a219bcad2f38b2ad015e4c49f3ab5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
