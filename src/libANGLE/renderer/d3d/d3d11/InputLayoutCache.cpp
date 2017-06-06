@@ -72,8 +72,6 @@ GLenum GetGLSLAttributeType(const std::vector<sh::Attribute> &shaderAttributes, 
     return GL_NONE;
 }
 
-const unsigned int kDefaultCacheSize = 1024;
-
 struct PackedAttribute
 {
     uint8_t attribType;
@@ -132,11 +130,14 @@ void SortAttributesByLayout(const gl::Program *program,
 
 } // anonymous namespace
 
-void InputLayoutCache::PackedAttributeLayout::addAttributeData(
-    GLenum glType,
-    UINT semanticIndex,
-    gl::VertexFormatType vertexFormatType,
-    unsigned int divisor)
+PackedAttributeLayout::PackedAttributeLayout() : numAttributes(0), flags(0), attributeData({})
+{
+}
+
+void PackedAttributeLayout::addAttributeData(GLenum glType,
+                                             UINT semanticIndex,
+                                             gl::VertexFormatType vertexFormatType,
+                                             unsigned int divisor)
 {
     gl::AttributeType attribType = gl::GetAttributeType(glType);
 
@@ -156,23 +157,14 @@ void InputLayoutCache::PackedAttributeLayout::addAttributeData(
     attributeData[numAttributes++] = gl::bitCast<uint32_t>(packedAttrib);
 }
 
-bool InputLayoutCache::PackedAttributeLayout::operator<(const PackedAttributeLayout &other) const
+bool PackedAttributeLayout::operator==(const PackedAttributeLayout &other) const
 {
-    if (numAttributes != other.numAttributes)
-    {
-        return numAttributes < other.numAttributes;
-    }
-
-    if (flags != other.flags)
-    {
-        return flags < other.flags;
-    }
-
-    return memcmp(attributeData, other.attributeData, sizeof(uint32_t) * numAttributes) < 0;
+    return (numAttributes == other.numAttributes) && (flags == other.flags) &&
+           (attributeData == other.attributeData);
 }
 
 InputLayoutCache::InputLayoutCache()
-    : mPointSpriteVertexBuffer(), mPointSpriteIndexBuffer(), mCacheSize(kDefaultCacheSize)
+    : mLayoutCache(kDefaultCacheSize * 2), mPointSpriteVertexBuffer(), mPointSpriteIndexBuffer()
 {
     mCurrentAttributes.reserve(gl::MAX_VERTEX_ATTRIBS);
 }
@@ -183,7 +175,7 @@ InputLayoutCache::~InputLayoutCache()
 
 void InputLayoutCache::clear()
 {
-    mLayoutMap.clear();
+    mLayoutCache.Clear();
     mPointSpriteVertexBuffer.reset();
     mPointSpriteIndexBuffer.reset();
 }
@@ -445,36 +437,21 @@ gl::Error InputLayoutCache::updateInputLayout(Renderer11 *renderer,
     const d3d11::InputLayout *inputLayout = nullptr;
     if (layout.numAttributes > 0 || layout.flags != 0)
     {
-        auto layoutMapIt = mLayoutMap.find(layout);
-        if (layoutMapIt != mLayoutMap.end())
+        auto it = mLayoutCache.Get(layout);
+        if (it != mLayoutCache.end())
         {
-            inputLayout = &layoutMapIt->second;
+            inputLayout = &it->second;
         }
         else
         {
+            angle::TrimCache(mLayoutCache.max_size() / 2, kGCLimit, "input layout", &mLayoutCache);
+
             d3d11::InputLayout newInputLayout;
             ANGLE_TRY(createInputLayout(renderer, sortedSemanticIndices, mode, program,
                                         numIndicesPerInstance, &newInputLayout));
-            if (mLayoutMap.size() >= mCacheSize)
-            {
-                WARN() << "Overflowed the limit of " << mCacheSize
-                       << " input layouts, purging half the cache.";
 
-                // Randomly release every second element
-                auto it = mLayoutMap.begin();
-                while (it != mLayoutMap.end())
-                {
-                    it++;
-                    if (it != mLayoutMap.end())
-                    {
-                        // c++11 erase allows us to easily delete the current iterator.
-                        it = mLayoutMap.erase(it);
-                    }
-                }
-            }
-
-            auto result = mLayoutMap.insert(std::make_pair(layout, std::move(newInputLayout)));
-            inputLayout = &result.first->second;
+            auto insertIt = mLayoutCache.Put(layout, std::move(newInputLayout));
+            inputLayout   = &insertIt->second;
         }
     }
 
@@ -582,6 +559,13 @@ gl::Error InputLayoutCache::createInputLayout(Renderer11 *renderer,
 
     ANGLE_TRY(renderer->allocateResource(inputElementArray, &vertexShaderData, inputLayoutOut));
     return gl::NoError();
+}
+
+void InputLayoutCache::setCacheSize(size_t newCacheSize)
+{
+    // Forces a reset of the cache.
+    LayoutCache newCache(newCacheSize);
+    mLayoutCache.Swap(newCache);
 }
 
 }  // namespace rx

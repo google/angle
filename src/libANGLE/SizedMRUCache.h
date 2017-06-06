@@ -9,6 +9,7 @@
 #define LIBANGLE_SIZED_MRU_CACHE_H_
 
 #include <anglebase/containers/mru_cache.h>
+#include "common/third_party/murmurhash/MurmurHash3.h"
 
 namespace angle
 {
@@ -101,6 +102,30 @@ class SizedMRUCache final : angle::NonCopyable
     size_t mCurrentSize;
     SizedMRUCacheStore mStore;
 };
+
+// Helper function used in a few places.
+template <typename T>
+void TrimCache(size_t maxStates, size_t gcLimit, const char *name, T *cache)
+{
+    const size_t kGarbageCollectionLimit = maxStates / 2 + gcLimit;
+
+    if (cache->size() >= kGarbageCollectionLimit)
+    {
+        WARN() << "Overflowed the " << name << " cache limit of " << (maxStates / 2)
+               << " elements, removing the least recently used to make room.";
+        cache->ShrinkToSize(maxStates / 2);
+    }
+}
+
+template <typename T>
+std::size_t ComputeGenericHash(const T &key)
+{
+    static const unsigned int seed = 0xABCDEF98;
+
+    std::size_t hash = 0;
+    MurmurHash3_x86_32(&key, sizeof(key), seed, &hash);
+    return hash;
+}
 
 }  // namespace angle
 #endif  // LIBANGLE_SIZED_MRU_CACHE_H_
