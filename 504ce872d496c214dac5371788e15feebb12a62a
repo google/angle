@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c1f237cd_7b54cc1c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2451,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-06T14:56:43Z",
+      "side": 1,
+      "message": "This is now unused.",
+      "range": {
+        "startLine": 2451,
+        "startChar": 4,
+        "endLine": 2451,
+        "endChar": 31
+      },
+      "revId": "504ce872d496c214dac5371788e15feebb12a62a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
