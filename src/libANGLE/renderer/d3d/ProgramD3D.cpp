@@ -343,6 +343,8 @@ ProgramD3DMetadata::ProgramD3DMetadata(RendererD3D *renderer,
       mUsesInstancedPointSpriteEmulation(
           renderer->getWorkarounds().useInstancedPointSpriteEmulation),
       mUsesViewScale(renderer->presentPathFastEnabled()),
+      mHasANGLEMultiviewEnabled(vertexShader->hasANGLEMultiviewEnabled()),
+      mUsesViewID(fragmentShader->usesViewID()),
       mVertexShader(vertexShader),
       mFragmentShader(fragmentShader)
 {
@@ -388,6 +390,16 @@ bool ProgramD3DMetadata::usesInsertedPointCoordValue() const
 bool ProgramD3DMetadata::usesViewScale() const
 {
     return mUsesViewScale;
+}
+
+bool ProgramD3DMetadata::hasANGLEMultiviewEnabled() const
+{
+    return mHasANGLEMultiviewEnabled;
+}
+
+bool ProgramD3DMetadata::usesViewID() const
+{
+    return mUsesViewID;
 }
 
 bool ProgramD3DMetadata::addsPointCoordToVertexShader() const
@@ -549,14 +561,22 @@ bool ProgramD3D::usesPointSpriteEmulation() const
     return mUsesPointSize && mRenderer->getMajorShaderModel() >= 4;
 }
 
+bool ProgramD3D::usesGeometryShaderForPointSpriteEmulation() const
+{
+    return usesPointSpriteEmulation() && !usesInstancedPointSpriteEmulation();
+}
+
 bool ProgramD3D::usesGeometryShader(GLenum drawMode) const
 {
+    if (mHasANGLEMultiviewEnabled)
+    {
+        return true;
+    }
     if (drawMode != GL_POINTS)
     {
         return mUsesFlatInterpolation;
     }
-
-    return usesPointSpriteEmulation() && !usesInstancedPointSpriteEmulation();
+    return usesGeometryShaderForPointSpriteEmulation();
 }
 
 bool ProgramD3D::usesInstancedPointSpriteEmulation() const
@@ -843,6 +863,8 @@ gl::LinkResult ProgramD3D::load(const gl::Context *context,
     stream->readBytes(reinterpret_cast<unsigned char *>(&mPixelWorkarounds),
                       sizeof(angle::CompilerWorkaroundsD3D));
     stream->readBool(&mUsesFragDepth);
+    stream->readBool(&mHasANGLEMultiviewEnabled);
+    stream->readBool(&mUsesViewID);
     stream->readBool(&mUsesPointSize);
     stream->readBool(&mUsesFlatInterpolation);
 
@@ -1066,6 +1088,8 @@ void ProgramD3D::save(const gl::Context *context, gl::BinaryOutputStream *stream
     stream->writeBytes(reinterpret_cast<unsigned char *>(&mPixelWorkarounds),
                        sizeof(angle::CompilerWorkaroundsD3D));
     stream->writeInt(mUsesFragDepth);
+    stream->writeInt(mHasANGLEMultiviewEnabled);
+    stream->writeInt(mUsesViewID);
     stream->writeInt(mUsesPointSize);
     stream->writeInt(mUsesFlatInterpolation);
 
@@ -1269,6 +1293,7 @@ gl::Error ProgramD3D::getGeometryExecutableForPrimitiveType(const gl::ContextSta
 
     std::string geometryHLSL = mDynamicHLSL->generateGeometryShaderHLSL(
         geometryShaderType, data, mState, mRenderer->presentPathFastEnabled(),
+        mHasANGLEMultiviewEnabled, usesGeometryShaderForPointSpriteEmulation(),
         mGeometryShaderPreamble);
 
     gl::InfoLog tempInfoLog;
@@ -1558,6 +1583,8 @@ gl::LinkResult ProgramD3D::link(const gl::Context *context,
         mUsesPointSize = vertexShaderD3D->usesPointSize();
         mDynamicHLSL->getPixelShaderOutputKey(data, mState, metadata, &mPixelShaderKey);
         mUsesFragDepth = metadata.usesFragDepth();
+        mUsesViewID               = metadata.usesViewID();
+        mHasANGLEMultiviewEnabled = metadata.hasANGLEMultiviewEnabled();
 
         // Cache if we use flat shading
         mUsesFlatInterpolation =
@@ -1566,8 +1593,8 @@ gl::LinkResult ProgramD3D::link(const gl::Context *context,
 
         if (mRenderer->getMajorShaderModel() >= 4)
         {
-            mGeometryShaderPreamble =
-                mDynamicHLSL->generateGeometryShaderPreamble(packing, builtins);
+            mGeometryShaderPreamble = mDynamicHLSL->generateGeometryShaderPreamble(
+                packing, builtins, mHasANGLEMultiviewEnabled);
         }
 
         initAttribLocationsToD3DSemantic(context);
@@ -2330,6 +2357,8 @@ void ProgramD3D::reset()
     mPixelHLSL.clear();
     mPixelWorkarounds = angle::CompilerWorkaroundsD3D();
     mUsesFragDepth = false;
+    mHasANGLEMultiviewEnabled = false;
+    mUsesViewID               = false;
     mPixelShaderKey.clear();
     mUsesPointSize = false;
     mUsesFlatInterpolation = false;

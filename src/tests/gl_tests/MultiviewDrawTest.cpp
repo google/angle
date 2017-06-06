@@ -238,6 +238,12 @@ class MultiviewSideBySideOcclusionQueryTest : public MultiviewSideBySideRenderTe
     }
 };
 
+class MultiviewProgramGenerationTest : public MultiviewSideBySideRenderTest
+{
+  protected:
+    MultiviewProgramGenerationTest() {}
+};
+
 // The test verifies that glDraw*Indirect:
 // 1) generates an INVALID_OPERATION error if the number of views in the draw framebuffer is greater
 // than 1.
@@ -993,7 +999,112 @@ TEST_P(MultiviewSideBySideOcclusionQueryTest, OcclusionQueryOnlyRightVisible)
     EXPECT_GL_TRUE(result);
 }
 
+// Test that a simple multi-view program which doesn't use gl_ViewID_OVR in neither VS nor FS
+// compiles and links without an error.
+TEST_P(MultiviewProgramGenerationTest, SimpleProgram)
+{
+    if (!requestMultiviewExtension())
+    {
+        return;
+    }
+
+    const std::string vsSource =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview : require\n"
+        "layout(num_views = 2) in;\n"
+        "void main()\n"
+        "{\n"
+        "}\n";
+
+    const std::string fsSource =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview : require\n"
+        "precision mediump float;\n"
+        "void main()\n"
+        "{\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, vsSource, fsSource);
+    glUseProgram(program);
+
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that a simple multi-view program which uses gl_ViewID_OVR only in VS compiles and links
+// without an error.
+TEST_P(MultiviewProgramGenerationTest, UseViewIDInVertexShader)
+{
+    if (!requestMultiviewExtension())
+    {
+        return;
+    }
+
+    const std::string vsSource =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview2 : require\n"
+        "layout(num_views = 2) in;\n"
+        "void main()\n"
+        "{\n"
+        "   if (gl_ViewID_OVR == 0u) {\n"
+        "       gl_Position = vec4(1,0,0,1);\n"
+        "   } else {\n"
+        "       gl_Position = vec4(-1,0,0,1);\n"
+        "   }\n"
+        "}\n";
+
+    const std::string fsSource =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview2 : require\n"
+        "precision mediump float;\n"
+        "void main()\n"
+        "{\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, vsSource, fsSource);
+    glUseProgram(program);
+
+    EXPECT_GL_NO_ERROR();
+}
+
+// Test that a simple multi-view program which uses gl_ViewID_OVR only in FS compiles and links
+// without an error.
+TEST_P(MultiviewProgramGenerationTest, UseViewIDInFragmentShader)
+{
+    if (!requestMultiviewExtension())
+    {
+        return;
+    }
+
+    const std::string vsSource =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview2 : require\n"
+        "layout(num_views = 2) in;\n"
+        "void main()\n"
+        "{\n"
+        "}\n";
+
+    const std::string fsSource =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview2 : require\n"
+        "precision mediump float;\n"
+        "out vec4 col;\n"
+        "void main()\n"
+        "{\n"
+        "   if (gl_ViewID_OVR == 0u) {\n"
+        "       col = vec4(1,0,0,1);\n"
+        "   } else {\n"
+        "       col = vec4(-1,0,0,1);\n"
+        "   }\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, vsSource, fsSource);
+    glUseProgram(program);
+
+    EXPECT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST(MultiviewDrawValidationTest, ES31_OPENGL());
 ANGLE_INSTANTIATE_TEST(MultiviewSideBySideRenderDualViewTest, ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(MultiviewSideBySideRenderTest, ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(MultiviewSideBySideOcclusionQueryTest, ES3_OPENGL());
+ANGLE_INSTANTIATE_TEST(MultiviewProgramGenerationTest, ES3_OPENGL(), ES3_D3D11());

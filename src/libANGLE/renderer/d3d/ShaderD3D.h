@@ -19,6 +19,11 @@ struct CompilerWorkaroundsD3D;
 struct WorkaroundsD3D;
 }
 
+namespace gl
+{
+struct Extensions;
+}
+
 namespace rx
 {
 class DynamicHLSL;
@@ -28,7 +33,9 @@ struct D3DUniform;
 class ShaderD3D : public ShaderImpl
 {
   public:
-    ShaderD3D(const gl::ShaderState &data, const angle::WorkaroundsD3D &workarounds);
+    ShaderD3D(const gl::ShaderState &data,
+              const angle::WorkaroundsD3D &workarounds,
+              const gl::Extensions &extensions);
     virtual ~ShaderD3D();
 
     // ShaderImpl implementation
@@ -60,6 +67,8 @@ class ShaderD3D : public ShaderImpl
     bool usesPointCoord() const { return mUsesPointCoord; }
     bool usesDepthRange() const { return mUsesDepthRange; }
     bool usesFragDepth() const { return mUsesFragDepth; }
+    bool usesViewID() const { return mUsesViewID; }
+    bool hasANGLEMultiviewEnabled() const { return mHasANGLEMultiviewEnabled; }
 
     ShShaderOutput getCompilerOutputType() const;
 
@@ -73,6 +82,8 @@ class ShaderD3D : public ShaderImpl
     bool mUsesPointCoord;
     bool mUsesDepthRange;
     bool mUsesFragDepth;
+    bool mHasANGLEMultiviewEnabled;
+    bool mUsesViewID;
     bool mUsesDiscardRewriting;
     bool mUsesNestedBreak;
     bool mRequiresIEEEStrictCompiling;

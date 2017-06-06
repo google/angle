@@ -76,6 +76,8 @@ struct BuiltinInfo
     BuiltinVarying glFragCoord;
     BuiltinVarying glPointCoord;
     BuiltinVarying glPointSize;
+    BuiltinVarying glViewIDOVR;
+    BuiltinVarying glViewportIndex;
 };
 
 inline std::string GetVaryingSemantic(int majorShaderModel, bool programUsesPointSize)
@@ -128,12 +130,15 @@ class DynamicHLSL : angle::NonCopyable
                                               const gl::ProgramState &programData) const;
 
     std::string generateGeometryShaderPreamble(const gl::VaryingPacking &varyingPacking,
-                                               const BuiltinVaryingsD3D &builtinsD3D) const;
+                                               const BuiltinVaryingsD3D &builtinsD3D,
+                                               const bool hasANGLEMultiviewEnabled) const;
 
     std::string generateGeometryShaderHLSL(gl::PrimitiveType primitiveType,
                                            const gl::ContextState &data,
                                            const gl::ProgramState &programData,
                                            const bool useViewScale,
+                                           const bool hasANGLEMultiviewEnabled,
+                                           const bool pointSpriteEmulation,
                                            const std::string &preambleString) const;
 
     void getPixelShaderOutputKey(const gl::ContextState &data,

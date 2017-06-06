@@ -57,7 +57,7 @@ CompilerImpl *Context11::createCompiler()
 
 ShaderImpl *Context11::createShader(const gl::ShaderState &data)
 {
-    return new ShaderD3D(data, mRenderer->getWorkarounds());
+    return new ShaderD3D(data, mRenderer->getWorkarounds(), mRenderer->getNativeExtensions());
 }
 
 ProgramImpl *Context11::createProgram(const gl::ProgramState &data)
