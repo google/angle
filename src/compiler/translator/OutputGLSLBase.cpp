@@ -987,7 +987,7 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
         case EOpDistance:
         case EOpDot:
         case EOpCross:
-        case EOpFaceForward:
+        case EOpFaceforward:
         case EOpReflect:
         case EOpRefract:
         case EOpMulMatrixComponentWise:

@@ -234,7 +234,7 @@ const char *GetOperatorString(TOperator op)
             return "cross";
         case EOpNormalize:
             return "normalize";
-        case EOpFaceForward:
+        case EOpFaceforward:
             return "faceforward";
         case EOpReflect:
             return "reflect";

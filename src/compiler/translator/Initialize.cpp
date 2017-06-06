@@ -145,7 +145,7 @@ void InsertBuiltInFunctions(sh::GLenum type,
     symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpDot, float1, genType, genType);
     symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpCross, float3, float3, float3);
     symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpNormalize, genType, genType);
-    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpFaceForward, genType, genType, genType,
+    symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpFaceforward, genType, genType, genType,
                                 genType);
     symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpReflect, genType, genType, genType);
     symbolTable.insertBuiltInOp(COMMON_BUILTINS, EOpRefract, genType, genType, genType, float1);

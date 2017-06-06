@@ -188,7 +188,7 @@ void InitBuiltInFunctionEmulatorForHLSL(BuiltInFunctionEmulator *emu)
                              "}\n"
                              "\n");
 
-    emu->addEmulatedFunction(EOpFaceForward, float1, float1, float1,
+    emu->addEmulatedFunction(EOpFaceforward, float1, float1, float1,
                              "float webgl_faceforward_emu(float N, float I, float Nref)\n"
                              "{\n"
                              "    if(dot(Nref, I) >= 0)\n"
@@ -201,7 +201,7 @@ void InitBuiltInFunctionEmulatorForHLSL(BuiltInFunctionEmulator *emu)
                              "    }\n"
                              "}\n"
                              "\n");
-    emu->addEmulatedFunction(EOpFaceForward, float2, float2, float2,
+    emu->addEmulatedFunction(EOpFaceforward, float2, float2, float2,
                              "float2 webgl_faceforward_emu(float2 N, float2 I, float2 Nref)\n"
                              "{\n"
                              "    if(dot(Nref, I) >= 0)\n"
@@ -214,7 +214,7 @@ void InitBuiltInFunctionEmulatorForHLSL(BuiltInFunctionEmulator *emu)
                              "    }\n"
                              "}\n"
                              "\n");
-    emu->addEmulatedFunction(EOpFaceForward, float3, float3, float3,
+    emu->addEmulatedFunction(EOpFaceforward, float3, float3, float3,
                              "float3 webgl_faceforward_emu(float3 N, float3 I, float3 Nref)\n"
                              "{\n"
                              "    if(dot(Nref, I) >= 0)\n"
@@ -227,7 +227,7 @@ void InitBuiltInFunctionEmulatorForHLSL(BuiltInFunctionEmulator *emu)
                              "    }\n"
                              "}\n"
                              "\n");
-    emu->addEmulatedFunction(EOpFaceForward, float4, float4, float4,
+    emu->addEmulatedFunction(EOpFaceforward, float4, float4, float4,
                              "float4 webgl_faceforward_emu(float4 N, float4 I, float4 Nref)\n"
                              "{\n"
                              "    if(dot(Nref, I) >= 0)\n"

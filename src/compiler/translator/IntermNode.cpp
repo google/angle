@@ -3150,7 +3150,7 @@ TConstantUnion *TIntermConstantUnion::FoldAggregateBuiltIn(TIntermAggregate *agg
             break;
         }
 
-        case EOpFaceForward:
+        case EOpFaceforward:
         {
             ASSERT(basicType == EbtFloat);
             // genType faceforward(genType N, genType I, genType Nref) :

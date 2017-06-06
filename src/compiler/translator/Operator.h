@@ -163,7 +163,7 @@ enum TOperator
     EOpDot,
     EOpCross,
     EOpNormalize,
-    EOpFaceForward,
+    EOpFaceforward,
     EOpReflect,
     EOpRefract,
 
