@@ -16,6 +16,80 @@
       "revId": "1efa9a5bc535a5da90dd904d9b352deab2d0708d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eead6a03_3a2d028e",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulator.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-06T14:16:04Z",
+      "side": 1,
+      "message": "I feel like these tables would fit better to the same place where ParamType is defined. Maybe you could even make ParamType a class that only has the enum value as a member, with member functions to query basic type, primary size and secondary size from it.",
+      "revId": "1efa9a5bc535a5da90dd904d9b352deab2d0708d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c864abf9_e72417a2",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulator.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-06T14:16:04Z",
+      "side": 1,
+      "message": "getBasicType()",
+      "range": {
+        "startLine": 82,
+        "startChar": 45,
+        "endLine": 82,
+        "endChar": 49
+      },
+      "revId": "1efa9a5bc535a5da90dd904d9b352deab2d0708d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7d3d30b_d3c945fe",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 517,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-06T14:16:04Z",
+      "side": 1,
+      "message": "I don\u0027t see why this needs to be a friend function?",
+      "revId": "1efa9a5bc535a5da90dd904d9b352deab2d0708d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ab801325_c3cac2dd",
+        "filename": "src/compiler/translator/emulated_builtin_function_data_hlsl.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-06T14:16:04Z",
+      "side": 1,
+      "message": "I think the JSON format should be more readable, I feel like it\u0027s a bit too hacky now. How about having keys \"name\", \"returnType\", \"arguments\", \"body\" for each function? Then the function signature could also be generated based on these, with the \"webgl_\" prefix and \"_emu\" postfix also added in the Python script. The comments could be included with a \"comment\" key.",
+      "revId": "1efa9a5bc535a5da90dd904d9b352deab2d0708d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
