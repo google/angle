@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d4f6c5fd_7b45a920",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-06T19:15:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f3f12dc_4d79bac0",
+      "revId": "1efa9a5bc535a5da90dd904d9b352deab2d0708d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eead6a03_3a2d028e",
         "filename": "src/compiler/translator/BuiltInFunctionEmulator.h",
         "patchSetId": 2
@@ -59,6 +77,30 @@
     },
     {
       "key": {
+        "uuid": "0f5a3ae2_6f75abb7",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulator.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-06T19:15:30Z",
+      "side": 1,
+      "message": "I can\u0027t do that sadly.",
+      "parentUuid": "c864abf9_e72417a2",
+      "range": {
+        "startLine": 82,
+        "startChar": 45,
+        "endLine": 82,
+        "endChar": 49
+      },
+      "revId": "1efa9a5bc535a5da90dd904d9b352deab2d0708d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d7d3d30b_d3c945fe",
         "filename": "src/compiler/translator/Types.h",
         "patchSetId": 2
@@ -76,6 +118,24 @@
     },
     {
       "key": {
+        "uuid": "2eb9777e_849f1f5b",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 517,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-06T19:15:30Z",
+      "side": 1,
+      "message": "Might have been a compiler bug, but was necessary to compile. I reworked this a bit, split the type off to its own file, and removed the friend here.",
+      "parentUuid": "d7d3d30b_d3c945fe",
+      "revId": "1efa9a5bc535a5da90dd904d9b352deab2d0708d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ab801325_c3cac2dd",
         "filename": "src/compiler/translator/emulated_builtin_function_data_hlsl.json",
         "patchSetId": 2
@@ -87,6 +147,24 @@
       "writtenOn": "2017-06-06T14:16:04Z",
       "side": 1,
       "message": "I think the JSON format should be more readable, I feel like it\u0027s a bit too hacky now. How about having keys \"name\", \"returnType\", \"arguments\", \"body\" for each function? Then the function signature could also be generated based on these, with the \"webgl_\" prefix and \"_emu\" postfix also added in the Python script. The comments could be included with a \"comment\" key.",
+      "revId": "1efa9a5bc535a5da90dd904d9b352deab2d0708d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "40a14695_6aaf878e",
+        "filename": "src/compiler/translator/emulated_builtin_function_data_hlsl.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-06T19:15:30Z",
+      "side": 1,
+      "message": "Done, this was a deceptively huge amount of work.",
+      "parentUuid": "ab801325_c3cac2dd",
       "revId": "1efa9a5bc535a5da90dd904d9b352deab2d0708d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
