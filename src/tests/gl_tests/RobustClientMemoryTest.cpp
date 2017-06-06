@@ -304,7 +304,7 @@ TEST_P(RobustClientMemoryTest, GetInteger)
     EXPECT_GL_NO_ERROR();
 }
 
-// Test basic usage and validation of glTexImage2DRobustANGLE
+// Test basic usage and validation of glTexImage2DRobustANGLE and glTexSubImage2DRobustANGLE
 TEST_P(RobustClientMemoryTest, TexImage2D)
 {
     if (!extensionsPresent())
@@ -323,10 +323,20 @@ TEST_P(RobustClientMemoryTest, TexImage2D)
                             rgbaData.data());
     EXPECT_GL_NO_ERROR();
 
+    glTexSubImage2DRobustANGLE(GL_TEXTURE_2D, 0, 0, 0, dataDimension, dataDimension, GL_RGBA,
+                               GL_UNSIGNED_BYTE, static_cast<GLsizei>(rgbaData.size()),
+                               rgbaData.data());
+    EXPECT_GL_NO_ERROR();
+
     // Test with a data size that is too small
     glTexImage2DRobustANGLE(GL_TEXTURE_2D, 0, GL_RGBA, dataDimension, dataDimension, 0, GL_RGBA,
                             GL_UNSIGNED_BYTE, static_cast<GLsizei>(rgbaData.size()) / 2,
                             rgbaData.data());
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glTexSubImage2DRobustANGLE(GL_TEXTURE_2D, 0, 0, 0, dataDimension, dataDimension, GL_RGBA,
+                               GL_UNSIGNED_BYTE, static_cast<GLsizei>(rgbaData.size()) / 2,
+                               rgbaData.data());
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 
     if (getClientMajorVersion() >= 3)

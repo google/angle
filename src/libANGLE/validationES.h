@@ -65,7 +65,7 @@ bool ValidImageDataSize(ValidationContext *context,
                         GLsizei width,
                         GLsizei height,
                         GLsizei depth,
-                        GLenum internalFormat,
+                        GLenum format,
                         GLenum type,
                         const void *pixels,
                         GLsizei imageSize);
