@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "52ea6331_a80922f2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1147,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-06T15:06:04Z",
+      "side": 1,
+      "message": "I just realized that this logic might not be enough for all cases.  This function is also called for BlitFramebuffer which can have inverted rectangles (negative width/height) and source/dest rectangles with different sizes.  Maybe we should move this logic to TextureD3D_*::copyImage where we know that the source and dest rectangles are the same size and not inverted.",
+      "range": {
+        "startLine": 1147,
+        "startChar": 4,
+        "endLine": 1147,
+        "endChar": 40
+      },
+      "revId": "01cee106f8d4ad8ab422f09d749e9b1478e75d2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
