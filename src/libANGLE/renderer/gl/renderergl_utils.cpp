@@ -109,9 +109,34 @@ static gl::TextureCaps GenerateTextureFormatCaps(const FunctionsGL *functions, G
             std::vector<GLint> samples(numSamples);
             functions->getInternalformativ(GL_RENDERBUFFER, internalFormat, GL_SAMPLES,
                                            static_cast<GLsizei>(samples.size()), &samples[0]);
+
+            GLenum queryInternalFormat = internalFormat;
+            if (internalFormat == GL_STENCIL_INDEX8)
+            {
+                // The query below does generates an error with STENCIL_INDEX8 on NVIDIA driver
+                // 382.33. So for now we assume that the same sampling modes are conformant for
+                // STENCIL_INDEX8 as for DEPTH24_STENCIL8. Clean this up once the driver is fixed.
+                // http://anglebug.com/2059
+                queryInternalFormat = GL_DEPTH24_STENCIL8;
+            }
             for (size_t sampleIndex = 0; sampleIndex < samples.size(); sampleIndex++)
             {
-                textureCaps.sampleCounts.insert(samples[sampleIndex]);
+                // Some NVIDIA drivers expose multisampling modes implemented as a combination of
+                // multisampling and supersampling. These are non-conformant and should not be
+                // exposed through ANGLE. Query which formats are conformant from the driver if
+                // supported.
+                GLint conformant = GL_TRUE;
+                if (functions->getInternalformatSampleivNV)
+                {
+                    functions->getInternalformatSampleivNV(GL_RENDERBUFFER, queryInternalFormat,
+                                                           samples[sampleIndex], GL_CONFORMANT_NV,
+                                                           1, &conformant);
+                    ASSERT(functions->getError() == GL_NO_ERROR);
+                }
+                if (conformant == GL_TRUE)
+                {
+                    textureCaps.sampleCounts.insert(samples[sampleIndex]);
+                }
             }
         }
     }

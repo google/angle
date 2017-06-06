@@ -85,6 +85,12 @@ struct InternalFormat
     GLenum getReadPixelsFormat() const;
     GLenum getReadPixelsType() const;
 
+    // Return true if the format is a required renderbuffer format in the given version of the core
+    // spec. Note that it isn't always clear whether all the rules that apply to core required
+    // renderbuffer formats also apply to additional formats added by extensions. Because of this
+    // extension formats are conservatively not included.
+    bool isRequiredRenderbufferFormat(const Version &version) const;
+
     bool operator==(const InternalFormat &other) const;
     bool operator!=(const InternalFormat &other) const;
 
