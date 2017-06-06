@@ -168,6 +168,24 @@
       "revId": "1efa9a5bc535a5da90dd904d9b352deab2d0708d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4186da9e_50f4394e",
+        "filename": "src/compiler/translator/emulated_builtin_function_data_hlsl.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-06T19:39:23Z",
+      "side": 1,
+      "message": "Thanks, is much more readable now.",
+      "parentUuid": "40a14695_6aaf878e",
+      "revId": "1efa9a5bc535a5da90dd904d9b352deab2d0708d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
