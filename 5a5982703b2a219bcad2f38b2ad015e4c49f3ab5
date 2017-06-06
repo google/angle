@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "14a16c75_018787dd",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2087,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-06T15:08:30Z",
+      "side": 1,
+      "message": "Had added the spec position in comment.\nI think there is no common place to add this comment for sampler, image and atomic counter. Although current stage is linking-program stage, could not change binding value later, so we could confirm the last binding value of images now. But for samplers, because could use glUniform*i{v} command to change the binding value, we could only confirm the last binding value at drawing stage, we would not check sampler binding value here.\nFor atomic counter, if needed, I think it is better to modify the comment when implementing it.\nIs that OK?",
+      "parentUuid": "e21c4f6c_1b49a073",
+      "range": {
+        "startLine": 2085,
+        "startChar": 0,
+        "endLine": 2087,
+        "endChar": 24
+      },
+      "revId": "5a5982703b2a219bcad2f38b2ad015e4c49f3ab5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4d3b99f3_1eaa9db6",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
         "patchSetId": 9
