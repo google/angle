@@ -1483,8 +1483,8 @@ void TextureD3D_2D::redefineImage(size_t level,
             mImageArray[0]->copyFromTexStorage(gl::ImageIndex::Make2D(0), mTexStorage);
         }
 
-        if (forceRelease || (level >= storageLevels && storageLevels != 0) ||
-            size.width != storageWidth || size.height != storageHeight ||
+        if ((level >= storageLevels && storageLevels != 0) || size.width != storageWidth ||
+            size.height != storageHeight ||
             internalformat != storageFormat)  // Discard mismatched storage
         {
             SafeDelete(mTexStorage);
@@ -2161,8 +2161,8 @@ void TextureD3D_Cube::redefineImage(int faceIndex, GLint level, GLenum internalf
     {
         const int storageLevels = mTexStorage->getLevelCount();
 
-        if (forceRelease || (level >= storageLevels && storageLevels != 0) ||
-            size.width != storageWidth || size.height != storageHeight ||
+        if ((level >= storageLevels && storageLevels != 0) || size.width != storageWidth ||
+            size.height != storageHeight ||
             internalformat != storageFormat)  // Discard mismatched storage
         {
             markAllImagesDirty();
@@ -2695,9 +2695,8 @@ void TextureD3D_3D::redefineImage(GLint level, GLenum internalformat, const gl::
     {
         const int storageLevels = mTexStorage->getLevelCount();
 
-        if (forceRelease || (level >= storageLevels && storageLevels != 0) ||
-            size.width != storageWidth || size.height != storageHeight ||
-            size.depth != storageDepth ||
+        if ((level >= storageLevels && storageLevels != 0) || size.width != storageWidth ||
+            size.height != storageHeight || size.depth != storageDepth ||
             internalformat != storageFormat)  // Discard mismatched storage
         {
             markAllImagesDirty();
@@ -3297,9 +3296,8 @@ void TextureD3D_2DArray::redefineImage(GLint level, GLenum internalformat, const
         const GLenum storageFormat = getBaseLevelInternalFormat();
         const int storageLevels = mTexStorage->getLevelCount();
 
-        if (forceRelease || (level >= storageLevels && storageLevels != 0) ||
-            size.width != storageWidth || size.height != storageHeight ||
-            size.depth != storageDepth ||
+        if ((level >= storageLevels && storageLevels != 0) || size.width != storageWidth ||
+            size.height != storageHeight || size.depth != storageDepth ||
             internalformat != storageFormat)  // Discard mismatched storage
         {
             markAllImagesDirty();
