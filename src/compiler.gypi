@@ -78,6 +78,7 @@
             'compiler/translator/NodeSearch.h',
             'compiler/translator/Operator.cpp',
             'compiler/translator/Operator.h',
+            'compiler/translator/ParamType.h',
             'compiler/translator/ParseContext.cpp',
             'compiler/translator/ParseContext.h',
             'compiler/translator/PoolAlloc.cpp',
@@ -215,6 +216,7 @@
             'compiler/translator/UniformHLSL.h',
             'compiler/translator/UtilsHLSL.cpp',
             'compiler/translator/UtilsHLSL.h',
+            'compiler/translator/emulated_builtin_functions_hlsl_autogen.cpp',
         ],
         'angle_translator_lib_vulkan_sources':
         [
