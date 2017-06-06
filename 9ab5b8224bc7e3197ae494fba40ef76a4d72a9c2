@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "f3b4887c_40c20a14",
+        "filename": "src/libANGLE/renderer/TextureImpl.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-06T14:54:40Z",
+      "side": 0,
+      "message": "Hi Yizhou, I think in general the design and methods for the TextureImpl (and all Impl classes) should be forced to match what OpenGL ES specifies in terms of entry points and parameters. However, the back-ends can implement them however they like. In this case you can do your refactor in  the TextureD3D class - you can make setStorage call setStorageMultisample, or you can make a common helper function that they both call internally.",
+      "parentUuid": "174cf0d6_80f4cbcb",
+      "range": {
+        "startLine": 120,
+        "startChar": 0,
+        "endLine": 131,
+        "endChar": 80
+      },
+      "revId": "9ab5b8224bc7e3197ae494fba40ef76a4d72a9c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "afe20402_cd395a3b",
         "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
         "patchSetId": 8
