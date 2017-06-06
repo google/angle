@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "e21c4f6c_1b49a073",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2087,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-06T08:02:41Z",
+      "side": 1,
+      "message": "GLSL ES 3.1 Spec 4.4.5(P59) says that \u0027Any uniform sampler, image or atomic counter\nvariable declared without a binding qualifier is initially bound to unit zero.\u0027 So I think this should be done in a common place. It should not be unique for image. Besides that, even the comment is your own summary. You should also add the spec position in the last. And also I think there is no relationship that you set binding to zero is because Uniform* cannot load values to image.",
+      "parentUuid": "38077899_dcc26674",
+      "range": {
+        "startLine": 2085,
+        "startChar": 0,
+        "endLine": 2087,
+        "endChar": 24
+      },
+      "revId": "5a5982703b2a219bcad2f38b2ad015e4c49f3ab5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4d3b99f3_1eaa9db6",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
         "patchSetId": 9
@@ -78,6 +102,24 @@
       "side": 1,
       "message": "I think here does not need to sync texture here, these states are all related with sampler. I think we could only take the texture as a buffer here for images?",
       "parentUuid": "4d3b99f3_1eaa9db6",
+      "revId": "5a5982703b2a219bcad2f38b2ad015e4c49f3ab5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "543fc3ef_7336f752",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 881,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-06T08:02:41Z",
+      "side": 1,
+      "message": "OK. Thanks for pointing it out.",
+      "parentUuid": "19beccf8_11f02835",
       "revId": "5a5982703b2a219bcad2f38b2ad015e4c49f3ab5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
