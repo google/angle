@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c0736889_585e9340",
+        "filename": "src/libANGLE/renderer/renderer_utils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-06T14:54:01Z",
+      "side": 1,
+      "message": "If you like, you could even add this as a sub-class of Resource11 or ResourceBase so that it\u0027s typed based on the resource.",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 48,
+        "endChar": 2
+      },
+      "revId": "e7939931a27ee04c95ddcddb31c01c3ce37bb9ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
