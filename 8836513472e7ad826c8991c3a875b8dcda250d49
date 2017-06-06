@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6ac2991c_ffab5aa6",
+        "filename": "src/tests/gl_tests/BindGeneratesResourceTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-06T07:31:08Z",
+      "side": 1,
+      "message": "EXPECT_EQ(GL_FALSE, intValue)?",
+      "range": {
+        "startLine": 33,
+        "startChar": 4,
+        "endLine": 33,
+        "endChar": 34
+      },
+      "revId": "8836513472e7ad826c8991c3a875b8dcda250d49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dcf84e16_10c68887",
+        "filename": "src/tests/gl_tests/ClearTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 383,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-06T07:31:08Z",
+      "side": 1,
+      "message": "I prefer you define a new variable to save program.get(). If you use mProgram, it will results in the original value lost before you call glDeleteProgram(mProgram) in TearDown()",
+      "revId": "8836513472e7ad826c8991c3a875b8dcda250d49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ab17644_c499082b",
+        "filename": "src/tests/gl_tests/DrawBuffersTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-06T07:31:08Z",
+      "side": 1,
+      "message": "constexpr bool?",
+      "range": {
+        "startLine": 406,
+        "startChar": 4,
+        "endLine": 406,
+        "endChar": 8
+      },
+      "revId": "8836513472e7ad826c8991c3a875b8dcda250d49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "168b6d97_e874a0ce",
+        "filename": "src/tests/gl_tests/DrawBuffersTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 412,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-06T07:31:08Z",
+      "side": 1,
+      "message": "Is the last comma needed? Please remove it in all possible places.",
+      "range": {
+        "startLine": 412,
+        "startChar": 68,
+        "endLine": 412,
+        "endChar": 69
+      },
+      "revId": "8836513472e7ad826c8991c3a875b8dcda250d49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0519a986_e4f3d147",
+        "filename": "src/tests/gl_tests/PointSpritesTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-06T07:31:08Z",
+      "side": 1,
+      "message": "program.get()?",
+      "range": {
+        "startLine": 73,
+        "startChar": 17,
+        "endLine": 73,
+        "endChar": 24
+      },
+      "revId": "8836513472e7ad826c8991c3a875b8dcda250d49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95681698_260c35e0",
+        "filename": "src/tests/gl_tests/UniformTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-06T07:31:08Z",
+      "side": 1,
+      "message": "It\u0027s a little mess that in some places, you use program.get(), some places, you use program directly.",
+      "range": {
+        "startLine": 418,
+        "startChar": 3,
+        "endLine": 418,
+        "endChar": 26
+      },
+      "revId": "8836513472e7ad826c8991c3a875b8dcda250d49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
