@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "174cf0d6_80f4cbcb",
+        "filename": "src/libANGLE/renderer/TextureImpl.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-06-06T02:07:59Z",
+      "side": 0,
+      "message": "Thanks for your quick review, Jamie. Actually I\u0027m implementing multisampled Texture d3d part when I found many redundant codes in TextureD3D.cpp since all kinds of textures like TextureD3D_2D and TextureD3D_2DMultisample has to implement both function setStorage and setStorageMultisample. Some upper level methods such as RendererD3D::getIncompleteTexture calls setStorage but new parameters of setStorageMultisample, sample and fixedSampleLocations might lost. Maybe we can add if statements to justify if the target is Texture2DMS. \nSo I decided to merge the above two functions. How do you think about that?",
+      "parentUuid": "778ad99c_d7dedda4",
+      "range": {
+        "startLine": 120,
+        "startChar": 0,
+        "endLine": 131,
+        "endChar": 80
+      },
+      "revId": "9ab5b8224bc7e3197ae494fba40ef76a4d72a9c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "afe20402_cd395a3b",
         "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
         "patchSetId": 8
