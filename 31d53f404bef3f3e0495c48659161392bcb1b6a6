@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "27568616_5fbbe014",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulator.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-06-06T20:01:11Z",
+      "side": 1,
+      "message": "What\u0027s the purpose of having the StaticBuiltinFunctionMap wrapper instead of using QueryFunc directly?",
+      "revId": "31d53f404bef3f3e0495c48659161392bcb1b6a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d6bc2335_760fa891",
+        "filename": "src/compiler/translator/ParamType.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-06-06T20:01:11Z",
+      "side": 1,
+      "message": "I would feel a bit safer if this was an array of structures instead of multiple arrays. The structure could contain the paramtype directly, so that the Get* function can double check that things are in the correct order.",
+      "revId": "31d53f404bef3f3e0495c48659161392bcb1b6a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
