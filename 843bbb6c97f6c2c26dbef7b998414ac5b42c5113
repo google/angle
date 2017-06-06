@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ad011b3c_5b0ff7f2",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-06T15:15:28Z",
+      "side": 1,
+      "message": "can you use RangeUI/RangeI from mathutil.h?",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 2
+      },
+      "revId": "843bbb6c97f6c2c26dbef7b998414ac5b42c5113",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8f286e46_0627b8a0",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-06T15:15:28Z",
+      "side": 1,
+      "message": "no trailing ;",
+      "range": {
+        "startLine": 82,
+        "startChar": 52,
+        "endLine": 82,
+        "endChar": 53
+      },
+      "revId": "843bbb6c97f6c2c26dbef7b998414ac5b42c5113",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2883847b_3896aae2",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-06T15:15:28Z",
+      "side": 1,
+      "message": "there\u0027s a method intersects on Range you can use here. you could even redesign this class to be a general Range collection instead of something specific to atomic counters, by returning the maximum value in the range collection instead of a default offset.",
+      "range": {
+        "startLine": 93,
+        "startChar": 12,
+        "endLine": 93,
+        "endChar": 69
+      },
+      "revId": "843bbb6c97f6c2c26dbef7b998414ac5b42c5113",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61f20331_b6486d3a",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-06T15:15:28Z",
+      "side": 1,
+      "message": "these can be constexpr static size_t. Not sure exactly on the controversy.",
+      "range": {
+        "startLine": 368,
+        "startChar": 4,
+        "endLine": 368,
+        "endChar": 10
+      },
+      "revId": "843bbb6c97f6c2c26dbef7b998414ac5b42c5113",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bd590a03_bb5b57c2",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 515,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-06T15:15:28Z",
+      "side": 1,
+      "message": "there\u0027s no reason  to use TMap here, use std::map.",
+      "range": {
+        "startLine": 515,
+        "startChar": 4,
+        "endLine": 515,
+        "endChar": 8
+      },
+      "revId": "843bbb6c97f6c2c26dbef7b998414ac5b42c5113",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5eb86ec8_2dcb460e",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-06T15:15:28Z",
+      "side": 1,
+      "message": "I think you should add the corresponding validation to Program::linkValidateUniforms. If you\u0027re planning to do the libANGLE changes totally separately, don\u0027t forget that.",
+      "range": {
+        "startLine": 221,
+        "startChar": 0,
+        "endLine": 224,
+        "endChar": 5
+      },
+      "revId": "843bbb6c97f6c2c26dbef7b998414ac5b42c5113",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
