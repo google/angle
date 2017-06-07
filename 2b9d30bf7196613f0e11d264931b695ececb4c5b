@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8352ed03_8629129e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-07T14:03:55Z",
+      "side": 1,
+      "message": "nit: BUG\u003d697758",
+      "revId": "2b9d30bf7196613f0e11d264931b695ececb4c5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38895e8d_b63d81a5",
+        "filename": "src/compiler/translator/Common.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-07T14:03:55Z",
+      "side": 1,
+      "message": "The standard way to add new hash types is to add them to the std namespace:\n\n    namespace std\n    {\n        template \u003c\u003e\n        struct hash\u003cTString\u003e\n        {\n            size_t operator()(const TString \u0026s) const\n            {\n                // Something\n            }\n        };\n    }\n\nUnfortunately it doesn\u0027t look like there is an easy built-in way to hash a TString without converting it to a std::string.  ANGLE does include murmurhash in third_party/murmurhash/MurmurHash3.h which should work.",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 6
+      },
+      "revId": "2b9d30bf7196613f0e11d264931b695ececb4c5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
