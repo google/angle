@@ -2481,6 +2481,11 @@ gl::Error Renderer11::applyUniforms(const ProgramD3D &programD3D,
 
     for (const D3DUniform *uniform : uniformArray)
     {
+        if (totalRegisterCountVS && totalRegisterCountPS &&
+            vertexUniformsDirty && pixelUniformsDirty) {
+          break;
+        }
+
         if (uniform->isReferencedByVertexShader() && !uniform->isSampler())
         {
             totalRegisterCountVS += uniform->registerCount;
