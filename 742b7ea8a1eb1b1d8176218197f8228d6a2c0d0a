@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "80bb8c55_fc64e685",
+        "filename": "src/libANGLE/Buffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-06-07T20:48:21Z",
+      "side": 1,
+      "message": "Done\n\nBut:\n1. Review should be a learning process, so the author can gain the reviewer\u0027s knowledge, and avoid making the same mistake a second time, which will save time both for the author and the reviewer in future CLs. And I didn\u0027t get an explanation why a valid and useful code is wrong.\n2. Iteration time, in my opinion, is a shared responsibility by the author and the reviewers.",
+      "parentUuid": "8a900370_df871da2",
+      "range": {
+        "startLine": 88,
+        "startChar": 11,
+        "endLine": 88,
+        "endChar": 15
+      },
+      "revId": "742b7ea8a1eb1b1d8176218197f8228d6a2c0d0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0f72fade_1949da84",
         "filename": "src/libANGLE/Error.h",
         "patchSetId": 2
@@ -404,6 +428,30 @@
     },
     {
       "key": {
+        "uuid": "df0bd05d_dd7ce106",
+        "filename": "src/libANGLE/Fence.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-06-07T20:48:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8164ffed_4857a353",
+      "range": {
+        "startLine": 46,
+        "startChar": 11,
+        "endLine": 46,
+        "endChar": 15
+      },
+      "revId": "742b7ea8a1eb1b1d8176218197f8228d6a2c0d0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5cc1d81d_b8aa891a",
         "filename": "src/libANGLE/Stream.cpp",
         "patchSetId": 2
@@ -451,6 +499,30 @@
     },
     {
       "key": {
+        "uuid": "88942f84_9176b9a0",
+        "filename": "src/libANGLE/Stream.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-06-07T20:48:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "75733672_2657c628",
+      "range": {
+        "startLine": 160,
+        "startChar": 11,
+        "endLine": 160,
+        "endChar": 16
+      },
+      "revId": "742b7ea8a1eb1b1d8176218197f8228d6a2c0d0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "28880ae1_74367be0",
         "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
         "patchSetId": 2
@@ -471,6 +543,30 @@
       "revId": "742b7ea8a1eb1b1d8176218197f8228d6a2c0d0a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d1067ba9_815f196b",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-06-07T20:48:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "28880ae1_74367be0",
+      "range": {
+        "startLine": 44,
+        "startChar": 25,
+        "endLine": 44,
+        "endChar": 30
+      },
+      "revId": "742b7ea8a1eb1b1d8176218197f8228d6a2c0d0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
