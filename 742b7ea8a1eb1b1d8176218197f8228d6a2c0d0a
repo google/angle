@@ -476,6 +476,30 @@
     },
     {
       "key": {
+        "uuid": "40acfc41_3c334646",
+        "filename": "src/libANGLE/Fence.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-07T21:05:21Z",
+      "side": 1,
+      "message": "Sorry I didn\u0027t get back to this question originally, I must have missed the email.  My reasoning here was just that we\u0027ve had a lot of redundant namespace prefixes for a while and they just proliferate with copy-pasted code.  I think point 3 is fair but many tools are now smart enough to make the distinction.",
+      "parentUuid": "df0bd05d_dd7ce106",
+      "range": {
+        "startLine": 46,
+        "startChar": 11,
+        "endLine": 46,
+        "endChar": 15
+      },
+      "revId": "742b7ea8a1eb1b1d8176218197f8228d6a2c0d0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5cc1d81d_b8aa891a",
         "filename": "src/libANGLE/Stream.cpp",
         "patchSetId": 2
