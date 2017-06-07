@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1deaf13e_5aa78dda",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-07T04:46:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad011b3c_5b0ff7f2",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 2
+      },
+      "revId": "843bbb6c97f6c2c26dbef7b998414ac5b42c5113",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8f286e46_0627b8a0",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 13
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "d10a82d6_4416c223",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-07T04:46:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8f286e46_0627b8a0",
+      "range": {
+        "startLine": 82,
+        "startChar": 52,
+        "endLine": 82,
+        "endChar": 53
+      },
+      "revId": "843bbb6c97f6c2c26dbef7b998414ac5b42c5113",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2883847b_3896aae2",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 13
@@ -59,6 +107,30 @@
       "writtenOn": "2017-06-06T15:15:28Z",
       "side": 1,
       "message": "there\u0027s a method intersects on Range you can use here. you could even redesign this class to be a general Range collection instead of something specific to atomic counters, by returning the maximum value in the range collection instead of a default offset.",
+      "range": {
+        "startLine": 93,
+        "startChar": 12,
+        "endLine": 93,
+        "endChar": 69
+      },
+      "revId": "843bbb6c97f6c2c26dbef7b998414ac5b42c5113",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27739976_9f018ce7",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-07T04:46:56Z",
+      "side": 1,
+      "message": "Good to know Range.intersects() can be used to simplify my work. I would rather use such a Range collection to simplify my work further. I can only expect the collection help me with overlapping check. The maximum value is not valuable for me as the atomic counter default offset may not change incrementally. So I still need to track it by myself. As an infrastructure, the collection should be deliberately designed with more performance consideration. For example, we may need to use binary search to accelerate the intersection comparison for ranges, or use list instead of vector to avoid memory reallocation. I\u0027d better do this in a separate CL if really needed.",
+      "parentUuid": "2883847b_3896aae2",
       "range": {
         "startLine": 93,
         "startChar": 12,
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "6715c88b_c621ca14",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-07T04:46:56Z",
+      "side": 1,
+      "message": "Fixed!\nI filed a bug to Khronos describing the controversy weeks ago. https://github.com/KhronosGroup/OpenGL-API/issues/5.",
+      "parentUuid": "61f20331_b6486d3a",
+      "range": {
+        "startLine": 368,
+        "startChar": 4,
+        "endLine": 368,
+        "endChar": 10
+      },
+      "revId": "843bbb6c97f6c2c26dbef7b998414ac5b42c5113",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bd590a03_bb5b57c2",
         "filename": "src/compiler/translator/ParseContext.h",
         "patchSetId": 13
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "9580dac5_1c018d36",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 515,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-07T04:46:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bd590a03_bb5b57c2",
+      "range": {
+        "startLine": 515,
+        "startChar": 4,
+        "endLine": 515,
+        "endChar": 8
+      },
+      "revId": "843bbb6c97f6c2c26dbef7b998414ac5b42c5113",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5eb86ec8_2dcb460e",
         "filename": "src/compiler/translator/ShaderVars.cpp",
         "patchSetId": 13
@@ -128,6 +248,30 @@
       "writtenOn": "2017-06-06T15:15:28Z",
       "side": 1,
       "message": "I think you should add the corresponding validation to Program::linkValidateUniforms. If you\u0027re planning to do the libANGLE changes totally separately, don\u0027t forget that.",
+      "range": {
+        "startLine": 221,
+        "startChar": 0,
+        "endLine": 224,
+        "endChar": 5
+      },
+      "revId": "843bbb6c97f6c2c26dbef7b998414ac5b42c5113",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c4525778_748d38e9",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-07T04:46:56Z",
+      "side": 1,
+      "message": "Okay, I will do that in follow-up CL. Add TODO here for now.",
+      "parentUuid": "5eb86ec8_2dcb460e",
       "range": {
         "startLine": 221,
         "startChar": 0,
