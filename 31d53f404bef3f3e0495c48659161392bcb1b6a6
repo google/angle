@@ -33,6 +33,87 @@
       "revId": "31d53f404bef3f3e0495c48659161392bcb1b6a6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f6a96b09_96d259f1",
+        "filename": "src/compiler/translator/ParamType.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-07T08:49:38Z",
+      "side": 1,
+      "message": "Second this.",
+      "parentUuid": "d6bc2335_760fa891",
+      "revId": "31d53f404bef3f3e0495c48659161392bcb1b6a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7185431b_77999f2a",
+        "filename": "src/compiler/translator/emulated_builtin_function_data_hlsl.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 894,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-07T08:49:38Z",
+      "side": 1,
+      "message": "Nit: oddly placed newlines here.",
+      "revId": "31d53f404bef3f3e0495c48659161392bcb1b6a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "267b0641_3a4551a4",
+        "filename": "src/compiler/translator/gen_emulated_builtin_function_tables.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-07T08:49:38Z",
+      "side": 1,
+      "message": "This is unnecessary once the comment handling below is fixed.",
+      "range": {
+        "startLine": 90,
+        "startChar": 0,
+        "endLine": 90,
+        "endChar": 12
+      },
+      "revId": "31d53f404bef3f3e0495c48659161392bcb1b6a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b6e5ca9_62c040c6",
+        "filename": "src/compiler/translator/gen_emulated_builtin_function_tables.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-07T08:49:38Z",
+      "side": 1,
+      "message": "This is not right. Should be:\n\nif \"comment\" in data:\n   func +\u003d \"\".join([\"// \" + line + \"\\n\" for line in data[\u0027comment\u0027] ])",
+      "range": {
+        "startLine": 95,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 65
+      },
+      "revId": "31d53f404bef3f3e0495c48659161392bcb1b6a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
