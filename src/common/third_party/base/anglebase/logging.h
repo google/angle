@@ -10,6 +10,10 @@
 
 #include "common/debug.h"
 
+#ifndef DCHECK
+#define DCHECK(X) ASSERT(X)
+#endif
+
 #ifndef CHECK
 #define CHECK(X) ASSERT(X)
 #endif

@@ -16,7 +16,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include <base/numerics/safe_math.h>
+#include <anglebase/numerics/safe_math.h>
 
 #include "common/debug.h"
 #include "common/platform.h"

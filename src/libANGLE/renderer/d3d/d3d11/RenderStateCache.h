@@ -14,8 +14,8 @@
 #include "libANGLE/Error.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
-#include "third_party/mrucache/base/containers/mru_cache.h"
 
+#include <anglebase/containers/mru_cache.h>
 #include <unordered_map>
 
 namespace gl

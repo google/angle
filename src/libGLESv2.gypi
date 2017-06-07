@@ -25,11 +25,13 @@
             'common/platform.h',
             'common/string_utils.cpp',
             'common/string_utils.h',
-            'common/third_party/numerics/base/logging.h',
-            'common/third_party/numerics/base/numerics/safe_conversions.h',
-            'common/third_party/numerics/base/numerics/safe_conversions_impl.h',
-            'common/third_party/numerics/base/numerics/safe_math.h',
-            'common/third_party/numerics/base/numerics/safe_math_impl.h',
+            'common/third_party/base/anglebase/containers/mru_cache.h',
+            'common/third_party/base/anglebase/logging.h',
+            'common/third_party/base/anglebase/macros.h',
+            'common/third_party/base/anglebase/numerics/safe_conversions.h',
+            'common/third_party/base/anglebase/numerics/safe_conversions_impl.h',
+            'common/third_party/base/anglebase/numerics/safe_math.h',
+            'common/third_party/base/anglebase/numerics/safe_math_impl.h',
             'common/tls.cpp',
             'common/tls.h',
             'common/utilities.cpp',
@@ -265,9 +267,6 @@
             'third_party/murmurhash/MurmurHash3.cpp',
             'third_party/murmurhash/MurmurHash3.h',
             'third_party/trace_event/trace_event.h',
-            'third_party/mrucache/base/containers/mru_cache.h',
-            'third_party/mrucache/base/logging.h',
-            'third_party/mrucache/base/macros.h',
         ],
         'libangle_d3d_shared_sources':
         [
@@ -894,7 +893,6 @@
                 '.',
                 '../include',
                 'third_party/khronos',
-                'third_party/mrucache',
             ],
             'sources':
             [
@@ -917,7 +915,6 @@
                 [
                     '<(angle_path)/src',
                     '<(angle_path)/include',
-                    '<(angle_path)/src/third_party/mrucache',
                 ],
                 'defines':
                 [

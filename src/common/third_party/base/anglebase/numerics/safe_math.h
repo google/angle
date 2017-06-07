@@ -10,8 +10,8 @@
 #include <limits>
 #include <type_traits>
 
-#include "base/logging.h"
-#include "base/numerics/safe_math_impl.h"
+#include "anglebase/logging.h"
+#include "anglebase/numerics/safe_math_impl.h"
 
 namespace angle
 {

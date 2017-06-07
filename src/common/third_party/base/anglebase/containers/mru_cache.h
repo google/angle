@@ -25,8 +25,8 @@
 #include <unordered_map>
 #include <utility>
 
-#include "base/logging.h"
-#include "base/macros.h"
+#include "anglebase/logging.h"
+#include "anglebase/macros.h"
 
 namespace angle
 {

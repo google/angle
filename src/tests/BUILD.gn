@@ -189,6 +189,7 @@ if (is_win || is_linux) {
       "//testing/gmock",
       "//testing/gtest",
       "//third_party/angle:angle_util_static",
+      "//third_party/angle:libANGLE",
       "//third_party/angle:libEGL_static",
       "//third_party/angle:libGLESv2_static",
     ]

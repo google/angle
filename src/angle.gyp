@@ -70,7 +70,7 @@
             [
                 '.',
                 '../include',
-                'common/third_party/numerics',
+                'common/third_party/base',
             ],
             'dependencies':
             [
@@ -82,7 +82,7 @@
                 [
                     '<(angle_path)/include',
                     '<(angle_path)/src',
-                    '<(angle_path)/src/common/third_party/numerics',
+                    '<(angle_path)/src/common/third_party/base',
                 ],
                 'conditions':
                 [
