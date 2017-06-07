@@ -139,14 +139,16 @@ ImageIndexIterator ImageIndexIterator::Make2DMultisample()
                               nullptr);
 }
 
-ImageIndexIterator::ImageIndexIterator(GLenum type, const Range<GLint> &mipRange,
-                                       const Range<GLint> &layerRange, const GLsizei *layerCounts)
+ImageIndexIterator::ImageIndexIterator(GLenum type,
+                                       const Range<GLint> &mipRange,
+                                       const Range<GLint> &layerRange,
+                                       const GLsizei *layerCounts)
     : mType(type),
       mMipRange(mipRange),
       mLayerRange(layerRange),
       mLayerCounts(layerCounts),
-      mCurrentMip(mipRange.start),
-      mCurrentLayer(layerRange.start)
+      mCurrentMip(mipRange.low()),
+      mCurrentLayer(layerRange.low())
 {}
 
 GLint ImageIndexIterator::maxLayer() const
@@ -154,9 +156,9 @@ GLint ImageIndexIterator::maxLayer() const
     if (mLayerCounts)
     {
         ASSERT(mCurrentMip >= 0);
-        return (mCurrentMip < mMipRange.end) ? mLayerCounts[mCurrentMip] : 0;
+        return (mCurrentMip < mMipRange.high()) ? mLayerCounts[mCurrentMip] : 0;
     }
-    return mLayerRange.end;
+    return mLayerRange.high();
 }
 
 ImageIndex ImageIndexIterator::next()
@@ -174,20 +176,20 @@ ImageIndex ImageIndexIterator::next()
         {
             mCurrentLayer++;
         }
-        else if (mCurrentMip < mMipRange.end - 1)
+        else if (mCurrentMip < mMipRange.high() - 1)
         {
             mCurrentMip++;
-            mCurrentLayer = mLayerRange.start;
+            mCurrentLayer = mLayerRange.low();
         }
         else
         {
             done();
         }
     }
-    else if (mCurrentMip < mMipRange.end - 1)
+    else if (mCurrentMip < mMipRange.high() - 1)
     {
         mCurrentMip++;
-        mCurrentLayer = mLayerRange.start;
+        mCurrentLayer = mLayerRange.low();
     }
     else
     {
@@ -211,12 +213,12 @@ ImageIndex ImageIndexIterator::current() const
 
 bool ImageIndexIterator::hasNext() const
 {
-    return (mCurrentMip < mMipRange.end || mCurrentLayer < maxLayer());
+    return (mCurrentMip < mMipRange.high() || mCurrentLayer < maxLayer());
 }
 
 void ImageIndexIterator::done()
 {
-    mCurrentMip   = mMipRange.end;
+    mCurrentMip   = mMipRange.high();
     mCurrentLayer = maxLayer();
 }
 

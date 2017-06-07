@@ -910,9 +910,7 @@ gl::Error StateManager11::clearTextures(gl::SamplerType samplerType,
 
     auto &currentSRVs = (samplerType == gl::SAMPLER_VERTEX ? mCurVertexSRVs : mCurPixelSRVs);
 
-    gl::Range<size_t> clearRange(rangeStart, rangeStart);
-    clearRange.extend(std::min(rangeEnd, currentSRVs.highestUsed()));
-
+    gl::Range<size_t> clearRange(rangeStart, std::min(rangeEnd, currentSRVs.highestUsed()));
     if (clearRange.empty())
     {
         return gl::NoError();
@@ -921,18 +919,18 @@ gl::Error StateManager11::clearTextures(gl::SamplerType samplerType,
     auto deviceContext = mRenderer->getDeviceContext();
     if (samplerType == gl::SAMPLER_VERTEX)
     {
-        deviceContext->VSSetShaderResources(static_cast<unsigned int>(rangeStart),
-                                            static_cast<unsigned int>(rangeEnd - rangeStart),
+        deviceContext->VSSetShaderResources(static_cast<unsigned int>(clearRange.low()),
+                                            static_cast<unsigned int>(clearRange.length()),
                                             &mNullSRVs[0]);
     }
     else
     {
-        deviceContext->PSSetShaderResources(static_cast<unsigned int>(rangeStart),
-                                            static_cast<unsigned int>(rangeEnd - rangeStart),
+        deviceContext->PSSetShaderResources(static_cast<unsigned int>(clearRange.low()),
+                                            static_cast<unsigned int>(clearRange.length()),
                                             &mNullSRVs[0]);
     }
 
-    for (size_t samplerIndex = rangeStart; samplerIndex < rangeEnd; ++samplerIndex)
+    for (size_t samplerIndex : clearRange)
     {
         currentSRVs.update(samplerIndex, nullptr);
     }

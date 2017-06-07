@@ -557,38 +557,65 @@ inline unsigned int averageFloat10(unsigned int a, unsigned int b)
 }
 
 template <typename T>
-struct Range
+class Range
 {
+  public:
     Range() {}
-    Range(T lo, T hi) : start(lo), end(hi) { ASSERT(lo <= hi); }
+    Range(T lo, T hi) : mLow(lo), mHigh(hi) {}
 
-    T start;
-    T end;
-
-    T length() const { return end - start; }
+    T length() const { return (empty() ? 0 : (mHigh - mLow)); }
 
     bool intersects(Range<T> other)
     {
-        if (start <= other.start)
+        if (mLow <= other.mLow)
         {
-            return other.start < end;
+            return other.mLow < mHigh;
         }
         else
         {
-            return start < other.end;
+            return mLow < other.mHigh;
         }
     }
 
+    // Assumes that end is non-inclusive.. for example, extending to 5 will make "end" 6.
     void extend(T value)
     {
-        start = value > start ? value : start;
-        end = value < end ? value : end;
+        mLow  = value < mLow ? value : mLow;
+        mHigh = value >= mHigh ? (value + 1) : mHigh;
     }
 
-    bool empty() const
+    bool empty() const { return mHigh <= mLow; }
+
+    bool contains(T value) const { return value >= mLow && value < mHigh; }
+
+    class Iterator final
     {
-        return end <= start;
-    }
+      public:
+        Iterator(T value) : mCurrent(value) {}
+
+        Iterator &operator++()
+        {
+            mCurrent++;
+            return *this;
+        }
+        bool operator==(const Iterator &other) const { return mCurrent == other.mCurrent; }
+        bool operator!=(const Iterator &other) const { return mCurrent != other.mCurrent; }
+        T operator*() const { return mCurrent; }
+
+      private:
+        T mCurrent;
+    };
+
+    Iterator begin() const { return Iterator(mLow); }
+
+    Iterator end() const { return Iterator(mHigh); }
+
+    T low() const { return mLow; }
+    T high() const { return mHigh; }
+
+  private:
+    T mLow;
+    T mHigh;
 };
 
 typedef Range<int> RangeI;

@@ -331,4 +331,38 @@ TEST(MathUtilTest, Ldexp)
     EXPECT_EQ(0.0f, Ldexp(1.0f, -129));
 }
 
+// Test that Range::extend works as expected.
+TEST(MathUtilTest, RangeExtend)
+{
+    RangeI range(0, 0);
+
+    range.extend(5);
+    EXPECT_EQ(0, range.low());
+    EXPECT_EQ(6, range.high());
+    EXPECT_EQ(6, range.length());
+
+    range.extend(-1);
+    EXPECT_EQ(-1, range.low());
+    EXPECT_EQ(6, range.high());
+    EXPECT_EQ(7, range.length());
+
+    range.extend(10);
+    EXPECT_EQ(-1, range.low());
+    EXPECT_EQ(11, range.high());
+    EXPECT_EQ(12, range.length());
+}
+
+// Test that Range iteration works as expected.
+TEST(MathUtilTest, RangeIteration)
+{
+    RangeI range(0, 10);
+    int expected = 0;
+    for (int value : range)
+    {
+        EXPECT_EQ(expected, value);
+        expected++;
+    }
+    EXPECT_EQ(range.length(), expected);
+}
+
 }  // anonymous namespace

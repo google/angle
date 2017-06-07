@@ -396,13 +396,13 @@ Optional<GLuint> ProgramState::getSamplerIndex(GLint location) const
 
 bool ProgramState::isSamplerUniformIndex(GLuint index) const
 {
-    return index >= mSamplerUniformRange.start && index < mSamplerUniformRange.end;
+    return mSamplerUniformRange.contains(index);
 }
 
 GLuint ProgramState::getSamplerIndexFromUniformIndex(GLuint uniformIndex) const
 {
     ASSERT(isSamplerUniformIndex(uniformIndex));
-    return uniformIndex - mSamplerUniformRange.start;
+    return uniformIndex - mSamplerUniformRange.low();
 }
 
 Program::Program(rx::GLImplFactory *factory, ShaderProgramManager *manager, GLuint handle)
@@ -949,8 +949,11 @@ Error Program::loadBinary(const Context *context,
                   "All bits of DrawBufferMask can be contained in an uint32_t");
     mState.mActiveOutputVariables = stream.readInt<uint32_t>();
 
-    stream.readInt(&mState.mSamplerUniformRange.start);
-    stream.readInt(&mState.mSamplerUniformRange.end);
+    unsigned int start = 0;
+    unsigned int end   = 0;
+    stream.readInt(&start);
+    stream.readInt(&end);
+    mState.mSamplerUniformRange = RangeUI(start, end);
 
     unsigned int samplerCount = stream.readInt<unsigned int>();
     for (unsigned int samplerIndex = 0; samplerIndex < samplerCount; ++samplerIndex)
@@ -1091,8 +1094,8 @@ Error Program::saveBinary(const Context *context,
                   "All bits of DrawBufferMask can be contained in an uint32_t");
     stream.writeInt(static_cast<uint32_t>(mState.mActiveOutputVariables.to_ulong()));
 
-    stream.writeInt(mState.mSamplerUniformRange.start);
-    stream.writeInt(mState.mSamplerUniformRange.end);
+    stream.writeInt(mState.mSamplerUniformRange.low());
+    stream.writeInt(mState.mSamplerUniformRange.high());
 
     stream.writeInt(mState.mSamplerBindings.size());
     for (const auto &samplerBinding : mState.mSamplerBindings)
@@ -2048,17 +2051,19 @@ bool Program::linkUniforms(const Context *context,
 
 void Program::linkSamplerBindings()
 {
-    mState.mSamplerUniformRange.end   = static_cast<unsigned int>(mState.mUniforms.size());
-    mState.mSamplerUniformRange.start = mState.mSamplerUniformRange.end;
-    auto samplerIter                  = mState.mUniforms.rbegin();
-    while (samplerIter != mState.mUniforms.rend() && samplerIter->isSampler())
+    unsigned int high = static_cast<unsigned int>(mState.mUniforms.size());
+    unsigned int low  = high;
+
+    for (auto samplerIter = mState.mUniforms.rbegin();
+         samplerIter != mState.mUniforms.rend() && samplerIter->isSampler(); ++samplerIter)
     {
-        --mState.mSamplerUniformRange.start;
-        ++samplerIter;
+        --low;
     }
+
+    mState.mSamplerUniformRange = RangeUI(low, high);
+
     // If uniform is a sampler type, insert it into the mSamplerBindings array.
-    for (unsigned int samplerIndex = mState.mSamplerUniformRange.start;
-         samplerIndex < mState.mUniforms.size(); ++samplerIndex)
+    for (unsigned int samplerIndex : mState.mSamplerUniformRange)
     {
         const auto &samplerUniform = mState.mUniforms[samplerIndex];
         GLenum textureType         = SamplerTypeToTextureType(samplerUniform.type);
@@ -2763,8 +2768,7 @@ void Program::linkOutputVariables(const Context *context)
 
 void Program::setUniformValuesFromBindingQualifiers()
 {
-    for (unsigned int samplerIndex = mState.mSamplerUniformRange.start;
-         samplerIndex < mState.mSamplerUniformRange.end; ++samplerIndex)
+    for (unsigned int samplerIndex : mState.mSamplerUniformRange)
     {
         const auto &samplerUniform = mState.mUniforms[samplerIndex];
         if (samplerUniform.binding != -1)
