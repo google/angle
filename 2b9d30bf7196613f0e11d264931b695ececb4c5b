@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "b946f4a4_b4432d0e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-06-07T19:23:00Z",
+      "side": 1,
+      "message": "CJ: I went ahead and added this for you.",
+      "parentUuid": "811d344b_c037c06c",
+      "revId": "2b9d30bf7196613f0e11d264931b695ececb4c5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "38895e8d_b63d81a5",
         "filename": "src/compiler/translator/Common.h",
         "patchSetId": 5
@@ -96,6 +114,30 @@
       "side": 1,
       "message": "That\u0027s extremely convenient, we didn\u0027t know if there was a hash implementation we could use. We tried calling the internals just to get a working version.",
       "parentUuid": "0340372a_23d7ef6f",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 6
+      },
+      "revId": "2b9d30bf7196613f0e11d264931b695ececb4c5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a8ed4e1d_677c5a42",
+        "filename": "src/compiler/translator/Common.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-06-07T19:23:00Z",
+      "side": 1,
+      "message": "Build failures now with MurmurHash3_x86_32 unable to link. (It worked locally on my ANGLE build on Linux, but not on my Chromium build which was in progress when I uploaded the new patchset.) Any insights?\n\nBTW, thanks Geoff for the tip. We tried that once but I realize now that I accidentally put it in sh::std instead of std (oops!)",
+      "parentUuid": "1d71e1ef_9d9cd466",
       "range": {
         "startLine": 58,
         "startChar": 0,
