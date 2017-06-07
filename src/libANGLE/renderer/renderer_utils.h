@@ -15,6 +15,7 @@
 #include <limits>
 #include <map>
 
+#include "common/angleutils.h"
 #include "libANGLE/angletypes.h"
 
 namespace angle
@@ -45,6 +46,43 @@ class ResourceSerial
     constexpr static uintptr_t kDirty = std::numeric_limits<uintptr_t>::max();
 
     uintptr_t mValue;
+};
+
+class SerialFactory;
+
+class Serial final
+{
+  public:
+    constexpr Serial() : mValue(0) {}
+    constexpr Serial(const Serial &other) = default;
+    Serial &operator=(const Serial &other) = default;
+
+    constexpr bool operator==(const Serial &other) const { return mValue == other.mValue; }
+    constexpr bool operator!=(const Serial &other) const { return mValue != other.mValue; }
+    constexpr bool operator>(const Serial &other) const { return mValue > other.mValue; }
+    constexpr bool operator>=(const Serial &other) const { return mValue >= other.mValue; }
+    constexpr bool operator<(const Serial &other) const { return mValue < other.mValue; }
+    constexpr bool operator<=(const Serial &other) const { return mValue <= other.mValue; }
+
+  private:
+    friend class SerialFactory;
+    constexpr explicit Serial(uint64_t value) : mValue(value) {}
+    uint64_t mValue;
+};
+
+class SerialFactory final : angle::NonCopyable
+{
+  public:
+    SerialFactory() : mSerial(1) {}
+
+    Serial generate()
+    {
+        ASSERT(mSerial != std::numeric_limits<uint64_t>::max());
+        return Serial(mSerial++);
+    }
+
+  private:
+    uint64_t mSerial;
 };
 
 using MipGenerationFunction = void (*)(size_t sourceWidth,

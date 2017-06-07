@@ -95,11 +95,10 @@ RendererVk::RendererVk()
       mDevice(VK_NULL_HANDLE),
       mHostVisibleMemoryIndex(std::numeric_limits<uint32_t>::max()),
       mGlslangWrapper(nullptr),
-      mCurrentQueueSerial(),
-      mLastCompletedQueueSerial(),
+      mLastCompletedQueueSerial(mQueueSerialFactory.generate()),
+      mCurrentQueueSerial(mQueueSerialFactory.generate()),
       mInFlightCommands()
 {
-    ++mCurrentQueueSerial;
 }
 
 RendererVk::~RendererVk()
@@ -732,7 +731,8 @@ vk::Error RendererVk::submit(const VkSubmitInfo &submitInfo)
     ASSERT(mInFlightCommands.size() < 1000u);
 
     // Increment the queue serial. If this fails, we should restart ANGLE.
-    ANGLE_VK_CHECK(++mCurrentQueueSerial, VK_ERROR_OUT_OF_HOST_MEMORY);
+    // TODO(jmadill): Overflow check.
+    mCurrentQueueSerial = mQueueSerialFactory.generate();
 
     return vk::NoError();
 }
@@ -757,7 +757,8 @@ vk::Error RendererVk::submitFrame(const VkSubmitInfo &submitInfo)
     ASSERT(mInFlightCommands.size() < 1000u);
 
     // Increment the queue serial. If this fails, we should restart ANGLE.
-    ANGLE_VK_CHECK(++mCurrentQueueSerial, VK_ERROR_OUT_OF_HOST_MEMORY);
+    // TODO(jmadill): Overflow check.
+    mCurrentQueueSerial = mQueueSerialFactory.generate();
 
     ANGLE_TRY(checkInFlightCommands());
 

@@ -11,15 +11,15 @@
 
 #include <array>
 
-#include "common/debug.h"
 #include "common/MemoryBuffer.h"
+#include "common/debug.h"
 #include "libANGLE/ContextState.h"
 #include "libANGLE/Device.h"
+#include "libANGLE/Version.h"
+#include "libANGLE/WorkerThread.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/d3d/VertexDataManager.h"
 #include "libANGLE/renderer/d3d/formatutilsD3D.h"
-#include "libANGLE/Version.h"
-#include "libANGLE/WorkerThread.h"
 #include "platform/WorkaroundsD3D.h"
 
 namespace egl

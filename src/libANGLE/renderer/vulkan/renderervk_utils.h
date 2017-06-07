@@ -14,9 +14,10 @@
 
 #include <vulkan/vulkan.h>
 
-#include "common/debug.h"
 #include "common/Optional.h"
+#include "common/debug.h"
 #include "libANGLE/Error.h"
+#include "libANGLE/renderer/renderer_utils.h"
 
 namespace gl
 {
@@ -45,35 +46,6 @@ enum DeleteSchedule
 {
     NOW,
     LATER,
-};
-
-// A serial supports a few operations - comparison, increment, and assignment.
-// TODO(jmadill): Verify it's not easy to overflow the queue serial.
-class Serial final
-{
-  public:
-    Serial() : mValue(0) {}
-    Serial(const Serial &other) : mValue(other.mValue) {}
-    Serial(Serial &&other) : mValue(other.mValue) { other.mValue = 0; }
-    Serial &operator=(const Serial &other)
-    {
-        mValue = other.mValue;
-        return *this;
-    }
-    bool operator>=(Serial other) const { return mValue >= other.mValue; }
-    bool operator>(Serial other) const { return mValue > other.mValue; }
-
-    // This function fails if we're at the limits of our counting.
-    bool operator++()
-    {
-        if (mValue == std::numeric_limits<uint32_t>::max())
-            return false;
-        mValue++;
-        return true;
-    }
-
-  private:
-    uint32_t mValue;
 };
 
 // This is a small helper mixin for any GL object used in Vk command buffers. It records a serial

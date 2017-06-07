@@ -11,6 +11,7 @@
 
 #include "common/bitset_utils.h"
 #include "libANGLE/renderer/d3d/d3d11/Buffer11.h"
+#include "libANGLE/renderer/d3d/d3d11/Context11.h"
 
 using namespace angle;
 

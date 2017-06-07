@@ -124,8 +124,9 @@ class RendererVk : angle::NonCopyable
     vk::CommandBuffer mCommandBuffer;
     uint32_t mHostVisibleMemoryIndex;
     GlslangWrapper *mGlslangWrapper;
-    Serial mCurrentQueueSerial;
+    SerialFactory mQueueSerialFactory;
     Serial mLastCompletedQueueSerial;
+    Serial mCurrentQueueSerial;
     std::vector<vk::CommandBufferAndSerial> mInFlightCommands;
     std::vector<vk::FenceAndSerial> mInFlightFences;
     std::vector<std::unique_ptr<vk::IGarbageObject>> mGarbage;
