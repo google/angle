@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "a405636a_88747ae0",
+        "filename": "src/libANGLE/Buffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-07T20:51:06Z",
+      "side": 1,
+      "message": "In this case there\u0027s not a clear reason, other than a mild preference. In these kind of cases it\u0027s often easier to just go with the flow. But I take your point.",
+      "parentUuid": "80bb8c55_fc64e685",
+      "range": {
+        "startLine": 88,
+        "startChar": 11,
+        "endLine": 88,
+        "endChar": 15
+      },
+      "revId": "742b7ea8a1eb1b1d8176218197f8228d6a2c0d0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0f72fade_1949da84",
         "filename": "src/libANGLE/Error.h",
         "patchSetId": 2
