@@ -10,11 +10,12 @@
 
 #include "common/bitset_utils.h"
 #include "common/utilities.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/Query.h"
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/renderer/d3d/d3d11/Framebuffer11.h"
-#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
+#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 
 namespace rx
 {
@@ -235,8 +236,8 @@ void StateManager11::setViewportBounds(const int width, const int height)
     }
 }
 
-void StateManager11::updatePresentPath(bool presentPathFastActive,
-                                       const gl::FramebufferAttachment *framebufferAttachment)
+void StateManager11::syncPresentPath(bool presentPathFastActive,
+                                     const gl::FramebufferAttachment *framebufferAttachment)
 {
     const int colorBufferHeight =
         framebufferAttachment ? framebufferAttachment->getSize().height : 0;
@@ -500,10 +501,10 @@ void StateManager11::syncState(const gl::State &state, const gl::State::DirtyBit
     // TODO(jmadill): Input layout and vertex buffer state.
 }
 
-gl::Error StateManager11::setBlendState(const gl::Framebuffer *framebuffer,
-                                        const gl::BlendState &blendState,
-                                        const gl::ColorF &blendColor,
-                                        unsigned int sampleMask)
+gl::Error StateManager11::syncBlendState(const gl::Framebuffer *framebuffer,
+                                         const gl::BlendState &blendState,
+                                         const gl::ColorF &blendColor,
+                                         unsigned int sampleMask)
 {
     if (!mBlendStateIsDirty && sampleMask == mCurSampleMask)
     {
@@ -547,7 +548,7 @@ gl::Error StateManager11::setBlendState(const gl::Framebuffer *framebuffer,
     return gl::NoError();
 }
 
-gl::Error StateManager11::setDepthStencilState(const gl::State &glState)
+gl::Error StateManager11::syncDepthStencilState(const gl::State &glState)
 {
     const auto &fbo = *glState.getDrawFramebuffer();
 
@@ -622,7 +623,7 @@ gl::Error StateManager11::setDepthStencilState(const gl::State &glState)
     return gl::NoError();
 }
 
-gl::Error StateManager11::setRasterizerState(const gl::RasterizerState &rasterState)
+gl::Error StateManager11::syncRasterizerState(const gl::RasterizerState &rasterState)
 {
     // TODO: Remove pointDrawMode and multiSample from gl::RasterizerState.
     if (!mRasterizerStateIsDirty && rasterState.pointDrawMode == mCurRasterState.pointDrawMode &&
@@ -666,7 +667,7 @@ gl::Error StateManager11::setRasterizerState(const gl::RasterizerState &rasterSt
     return gl::NoError();
 }
 
-void StateManager11::setScissorRectangle(const gl::Rectangle &scissor, bool enabled)
+void StateManager11::syncScissorRectangle(const gl::Rectangle &scissor, bool enabled)
 {
     if (!mScissorStateIsDirty)
         return;
@@ -693,10 +694,10 @@ void StateManager11::setScissorRectangle(const gl::Rectangle &scissor, bool enab
     mScissorStateIsDirty = false;
 }
 
-void StateManager11::setViewport(const gl::Caps *caps,
-                                 const gl::Rectangle &viewport,
-                                 float zNear,
-                                 float zFar)
+void StateManager11::syncViewport(const gl::Caps *caps,
+                                  const gl::Rectangle &viewport,
+                                  float zNear,
+                                  float zFar)
 {
     if (!mViewportStateIsDirty)
         return;
@@ -1231,6 +1232,57 @@ void StateManager11::setSingleVertexBuffer(const d3d11::Buffer *buffer, UINT str
     {
         applyVertexBufferChanges();
     }
+}
+
+gl::Error StateManager11::updateState(const gl::Context *context, GLenum drawMode)
+{
+    const auto &data    = context->getContextState();
+    const auto &glState = data.getState();
+
+    // Applies the render target surface, depth stencil surface, viewport rectangle and
+    // scissor rectangle to the renderer
+    gl::Framebuffer *framebuffer = glState.getDrawFramebuffer();
+    ASSERT(framebuffer && !framebuffer->hasAnyDirtyBit() && framebuffer->cachedComplete());
+    ANGLE_TRY(syncFramebuffer(context, framebuffer));
+
+    // Set the present path state
+    auto firstColorAttachment        = framebuffer->getFirstColorbuffer();
+    const bool presentPathFastActive = UsePresentPathFast(mRenderer, firstColorAttachment);
+    syncPresentPath(presentPathFastActive, firstColorAttachment);
+
+    // Setting viewport state
+    syncViewport(&data.getCaps(), glState.getViewport(), glState.getNearPlane(),
+                 glState.getFarPlane());
+
+    // Setting scissor state
+    syncScissorRectangle(glState.getScissor(), glState.isScissorTestEnabled());
+
+    // Applying rasterizer state to D3D11 device
+    // Since framebuffer->getSamples will return the original samples which may be different with
+    // the sample counts that we set in render target view, here we use renderTarget->getSamples to
+    // get the actual samples.
+    GLsizei samples = 0;
+    if (firstColorAttachment)
+    {
+        ASSERT(firstColorAttachment->isAttached());
+        RenderTarget11 *renderTarget = nullptr;
+        ANGLE_TRY(firstColorAttachment->getRenderTarget(&renderTarget));
+        samples = renderTarget->getSamples();
+    }
+    gl::RasterizerState rasterizer = glState.getRasterizerState();
+    rasterizer.pointDrawMode       = (drawMode == GL_POINTS);
+    rasterizer.multiSample         = (samples != 0);
+
+    ANGLE_TRY(syncRasterizerState(rasterizer));
+
+    // Setting blend state
+    unsigned int mask = GetBlendSampleMask(data, samples);
+    ANGLE_TRY(syncBlendState(framebuffer, glState.getBlendState(), glState.getBlendColor(), mask));
+
+    // Setting depth stencil state
+    ANGLE_TRY(syncDepthStencilState(glState));
+
+    return gl::NoError();
 }
 
 }  // namespace rx

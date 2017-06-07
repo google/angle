@@ -57,22 +57,6 @@ class StateManager11 final : angle::NonCopyable
     void deinitialize();
     void syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits);
 
-    gl::Error setBlendState(const gl::Framebuffer *framebuffer,
-                            const gl::BlendState &blendState,
-                            const gl::ColorF &blendColor,
-                            unsigned int sampleMask);
-
-    gl::Error setDepthStencilState(const gl::State &glState);
-
-    gl::Error setRasterizerState(const gl::RasterizerState &rasterState);
-
-    void setScissorRectangle(const gl::Rectangle &scissor, bool enabled);
-
-    void setViewport(const gl::Caps *caps, const gl::Rectangle &viewport, float zNear, float zFar);
-
-    void updatePresentPath(bool presentPathFastActive,
-                           const gl::FramebufferAttachment *framebufferAttachment);
-
     const dx_VertexConstants11 &getVertexConstants() const { return mVertexConstants; }
     const dx_PixelConstants11 &getPixelConstants() const { return mPixelConstants; }
     const dx_ComputeConstants11 &getComputeConstants() const { return mComputeConstants; }
@@ -85,8 +69,6 @@ class StateManager11 final : angle::NonCopyable
                            UINT resourceSlot,
                            ID3D11ShaderResourceView *srv);
     gl::Error clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd);
-
-    gl::Error syncFramebuffer(const gl::Context *context, gl::Framebuffer *framebuffer);
 
     void invalidateRenderTarget();
     void invalidateBoundViews();
@@ -119,6 +101,8 @@ class StateManager11 final : angle::NonCopyable
 
     void setSingleVertexBuffer(const d3d11::Buffer *buffer, UINT stride, UINT offset);
 
+    gl::Error updateState(const gl::Context *context, GLenum drawMode);
+
   private:
     void setViewportBounds(const int width, const int height);
     void unsetConflictingSRVs(gl::SamplerType shaderType,
@@ -126,6 +110,24 @@ class StateManager11 final : angle::NonCopyable
                               const gl::ImageIndex &index);
     void unsetConflictingAttachmentResources(const gl::FramebufferAttachment *attachment,
                                              ID3D11Resource *resource);
+
+    gl::Error syncBlendState(const gl::Framebuffer *framebuffer,
+                             const gl::BlendState &blendState,
+                             const gl::ColorF &blendColor,
+                             unsigned int sampleMask);
+
+    gl::Error syncDepthStencilState(const gl::State &glState);
+
+    gl::Error syncRasterizerState(const gl::RasterizerState &rasterState);
+
+    void syncScissorRectangle(const gl::Rectangle &scissor, bool enabled);
+
+    void syncViewport(const gl::Caps *caps, const gl::Rectangle &viewport, float zNear, float zFar);
+
+    void syncPresentPath(bool presentPathFastActive,
+                         const gl::FramebufferAttachment *framebufferAttachment);
+
+    gl::Error syncFramebuffer(const gl::Context *context, gl::Framebuffer *framebuffer);
 
     Renderer11 *mRenderer;
 

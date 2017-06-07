@@ -204,8 +204,8 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
                   "All bits of DrawBufferMask can be contained in an uint32_t");
     state->mActiveOutputVariables = stream.readInt<uint32_t>();
 
-    unsigned int low = stream.readInt<unsigned int>();
-    unsigned int high = stream.readInt<unsigned int>();
+    unsigned int low            = stream.readInt<unsigned int>();
+    unsigned int high           = stream.readInt<unsigned int>();
     state->mSamplerUniformRange = RangeUI(low, high);
 
     unsigned int samplerCount = stream.readInt<unsigned int>();

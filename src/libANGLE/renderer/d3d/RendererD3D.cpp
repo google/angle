@@ -54,43 +54,6 @@ void RendererD3D::cleanup()
     mIncompleteTextures.clear();
 }
 
-unsigned int RendererD3D::GetBlendSampleMask(const gl::ContextState &data, int samples)
-{
-    const auto &glState = data.getState();
-    unsigned int mask   = 0;
-    if (glState.isSampleCoverageEnabled())
-    {
-        GLfloat coverageValue = glState.getSampleCoverageValue();
-        if (coverageValue != 0)
-        {
-            float threshold = 0.5f;
-
-            for (int i = 0; i < samples; ++i)
-            {
-                mask <<= 1;
-
-                if ((i + 1) * coverageValue >= threshold)
-                {
-                    threshold += 1.0f;
-                    mask |= 1;
-                }
-            }
-        }
-
-        bool coverageInvert = glState.getSampleCoverageInvert();
-        if (coverageInvert)
-        {
-            mask = ~mask;
-        }
-    }
-    else
-    {
-        mask = 0xFFFFFFFF;
-    }
-
-    return mask;
-}
-
 // For each Direct3D sampler of either the pixel or vertex stage,
 // looks up the corresponding OpenGL texture image unit and texture type,
 // and sets the texture and its addressing/filtering state (or NULL when inactive).
@@ -383,6 +346,43 @@ angle::WorkerThreadPool *RendererD3D::getWorkerThreadPool()
 bool RendererD3D::isRobustResourceInitEnabled() const
 {
     return mDisplay->isRobustResourceInitEnabled();
+}
+
+unsigned int GetBlendSampleMask(const gl::ContextState &data, int samples)
+{
+    const auto &glState = data.getState();
+    unsigned int mask   = 0;
+    if (glState.isSampleCoverageEnabled())
+    {
+        GLfloat coverageValue = glState.getSampleCoverageValue();
+        if (coverageValue != 0)
+        {
+            float threshold = 0.5f;
+
+            for (int i = 0; i < samples; ++i)
+            {
+                mask <<= 1;
+
+                if ((i + 1) * coverageValue >= threshold)
+                {
+                    threshold += 1.0f;
+                    mask |= 1;
+                }
+            }
+        }
+
+        bool coverageInvert = glState.getSampleCoverageInvert();
+        if (coverageInvert)
+        {
+            mask = ~mask;
+        }
+    }
+    else
+    {
+        mask = 0xFFFFFFFF;
+    }
+
+    return mask;
 }
 
 }  // namespace rx

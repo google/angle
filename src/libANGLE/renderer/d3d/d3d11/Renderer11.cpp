@@ -1653,58 +1653,6 @@ gl::Error Renderer11::setUniformBuffers(const gl::ContextState &data,
     return gl::NoError();
 }
 
-gl::Error Renderer11::updateState(const gl::Context *context, GLenum drawMode)
-{
-    const auto &data    = context->getContextState();
-    const auto &glState = data.getState();
-
-    // Applies the render target surface, depth stencil surface, viewport rectangle and
-    // scissor rectangle to the renderer
-    gl::Framebuffer *framebuffer = glState.getDrawFramebuffer();
-    ASSERT(framebuffer && !framebuffer->hasAnyDirtyBit() && framebuffer->cachedComplete());
-    ANGLE_TRY(mStateManager.syncFramebuffer(context, framebuffer));
-
-    // Set the present path state
-    auto firstColorAttachment        = framebuffer->getFirstColorbuffer();
-    const bool presentPathFastActive = UsePresentPathFast(this, firstColorAttachment);
-    mStateManager.updatePresentPath(presentPathFastActive, firstColorAttachment);
-
-    // Setting viewport state
-    mStateManager.setViewport(&data.getCaps(), glState.getViewport(), glState.getNearPlane(),
-                              glState.getFarPlane());
-
-    // Setting scissor state
-    mStateManager.setScissorRectangle(glState.getScissor(), glState.isScissorTestEnabled());
-
-    // Applying rasterizer state to D3D11 device
-    // Since framebuffer->getSamples will return the original samples which may be different with
-    // the sample counts that we set in render target view, here we use renderTarget->getSamples to
-    // get the actual samples.
-    GLsizei samples = 0;
-    if (firstColorAttachment)
-    {
-        ASSERT(firstColorAttachment->isAttached());
-        RenderTarget11 *renderTarget = nullptr;
-        ANGLE_TRY(firstColorAttachment->getRenderTarget(&renderTarget));
-        samples = renderTarget->getSamples();
-    }
-    gl::RasterizerState rasterizer = glState.getRasterizerState();
-    rasterizer.pointDrawMode       = (drawMode == GL_POINTS);
-    rasterizer.multiSample         = (samples != 0);
-
-    ANGLE_TRY(mStateManager.setRasterizerState(rasterizer));
-
-    // Setting blend state
-    unsigned int mask = GetBlendSampleMask(data, samples);
-    ANGLE_TRY(mStateManager.setBlendState(framebuffer, glState.getBlendState(),
-                                          glState.getBlendColor(), mask));
-
-    // Setting depth stencil state
-    ANGLE_TRY(mStateManager.setDepthStencilState(glState));
-
-    return gl::NoError();
-}
-
 bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSize)
 {
     D3D11_PRIMITIVE_TOPOLOGY primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
@@ -4622,7 +4570,7 @@ gl::Error Renderer11::genericDrawElements(const gl::Context *context,
         return gl::NoError();
     }
 
-    ANGLE_TRY(updateState(context, mode));
+    ANGLE_TRY(mStateManager.updateState(context, mode));
 
     TranslatedIndexData indexInfo;
     indexInfo.indexRange = indexRange;
@@ -4670,7 +4618,7 @@ gl::Error Renderer11::genericDrawArrays(const gl::Context *context,
         return gl::NoError();
     }
 
-    ANGLE_TRY(updateState(context, mode));
+    ANGLE_TRY(mStateManager.updateState(context, mode));
     ANGLE_TRY(applyTransformFeedbackBuffers(data));
     ANGLE_TRY(applyVertexBuffer(glState, mode, first, count, instances, nullptr));
     ANGLE_TRY(applyTextures(context->getImplementation(), data));
@@ -4705,7 +4653,7 @@ gl::Error Renderer11::genericDrawIndirect(const gl::Context *context,
 
     ANGLE_TRY(generateSwizzles(data));
     applyPrimitiveType(mode, 0, usesPointSize);
-    ANGLE_TRY(updateState(context, mode));
+    ANGLE_TRY(mStateManager.updateState(context, mode));
     ANGLE_TRY(applyTransformFeedbackBuffers(data));
     ASSERT(!glState.isTransformFeedbackActiveUnpaused());
     ANGLE_TRY(applyTextures(context->getImplementation(), data));

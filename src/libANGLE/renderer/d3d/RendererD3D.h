@@ -293,7 +293,6 @@ class RendererD3D : public BufferFactoryD3D
 
     void cleanup();
 
-    static unsigned int GetBlendSampleMask(const gl::ContextState &data, int samples);
     // dirtyPointer is a special value that will make the comparison with any valid pointer fail and force the renderer to re-apply the state.
 
     gl::Error applyTextures(GLImplFactory *implFactory, const gl::ContextState &data);
@@ -337,6 +336,8 @@ class RendererD3D : public BufferFactoryD3D
 
     angle::WorkerThreadPool mWorkerThreadPool;
 };
+
+unsigned int GetBlendSampleMask(const gl::ContextState &data, int samples);
 
 }  // namespace rx
 
