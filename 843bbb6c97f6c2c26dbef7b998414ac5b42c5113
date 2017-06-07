@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "4aa5b429_b448dc8f",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-07T15:16:44Z",
+      "side": 1,
+      "message": "I don\u0027t really know, sorry. Why isn\u0027t the maximum value equivalent to the default offset?",
+      "parentUuid": "27739976_9f018ce7",
+      "range": {
+        "startLine": 93,
+        "startChar": 12,
+        "endLine": 93,
+        "endChar": 69
+      },
+      "revId": "843bbb6c97f6c2c26dbef7b998414ac5b42c5113",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "61f20331_b6486d3a",
         "filename": "src/compiler/translator/ParseContext.h",
         "patchSetId": 13
