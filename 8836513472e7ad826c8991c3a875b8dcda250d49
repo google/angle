@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "d447be1b_57735de4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-06-07T02:44:23Z",
+      "side": 1,
+      "message": "What do you mean \"legacy code\"? maybe you can just say \"This patch intends to clean up the coding style issues as below:\"",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 28
+      },
+      "revId": "8836513472e7ad826c8991c3a875b8dcda250d49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6ac2991c_ffab5aa6",
         "filename": "src/tests/gl_tests/BindGeneratesResourceTest.cpp",
         "patchSetId": 7
