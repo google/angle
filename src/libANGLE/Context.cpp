@@ -4114,6 +4114,29 @@ void Context::dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGr
     mImplementation->dispatchCompute(numGroupsX, numGroupsY, numGroupsZ);
 }
 
+void Context::texStorage2D(GLenum target,
+                           GLsizei levels,
+                           GLenum internalFormat,
+                           GLsizei width,
+                           GLsizei height)
+{
+    Extents size(width, height, 1);
+    Texture *texture = getTargetTexture(target);
+    handleError(texture->setStorage(this, target, levels, internalFormat, size));
+}
+
+void Context::texStorage3D(GLenum target,
+                           GLsizei levels,
+                           GLenum internalFormat,
+                           GLsizei width,
+                           GLsizei height,
+                           GLsizei depth)
+{
+    Extents size(width, height, depth);
+    Texture *texture = getTargetTexture(target);
+    handleError(texture->setStorage(this, target, levels, internalFormat, size));
+}
+
 GLenum Context::checkFramebufferStatus(GLenum target)
 {
     Framebuffer *framebuffer = mGLState.getTargetFramebuffer(target);

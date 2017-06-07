@@ -670,14 +670,7 @@ TexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalformat, GLsizei wi
             return;
         }
 
-        Extents size(width, height, 1);
-        Texture *texture = context->getTargetTexture(target);
-        Error error      = texture->setStorage(context, target, levels, internalformat, size);
-        if (error.isError())
-        {
-            context->handleError(error);
-            return;
-        }
+        context->texStorage2D(target, levels, internalformat, width, height);
     }
 }
 
