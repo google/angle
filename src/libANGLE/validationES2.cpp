@@ -361,11 +361,6 @@ bool IsValidCopyTextureDestinationLevel(Context *context,
         return false;
     }
 
-    if (level > 0 && context->getClientVersion() < ES_3_0)
-    {
-        return false;
-    }
-
     const Caps &caps = context->getCaps();
     if (target == GL_TEXTURE_2D)
     {

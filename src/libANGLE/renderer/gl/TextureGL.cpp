@@ -633,12 +633,12 @@ gl::Error TextureGL::copyTexture(const gl::Context *context,
                                  const gl::Texture *source)
 {
     const TextureGL *sourceGL            = GetImplAs<TextureGL>(source);
-    const gl::ImageDesc &sourceImageDesc = sourceGL->mState.getImageDesc(source->getTarget(), 0);
+    const gl::ImageDesc &sourceImageDesc =
+        sourceGL->mState.getImageDesc(source->getTarget(), sourceLevel);
     gl::Rectangle sourceArea(0, 0, sourceImageDesc.size.width, sourceImageDesc.size.height);
 
-    const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat, type);
-    reserveTexImageToBeFilled(getTarget(), 0, internalFormatInfo.sizedInternalFormat,
-                              sourceImageDesc.size, internalFormatInfo.format, type);
+    reserveTexImageToBeFilled(target, level, internalFormat, sourceImageDesc.size,
+                              gl::GetUnsizedFormat(internalFormat), type);
 
     return copySubTextureHelper(target, level, gl::Offset(0, 0, 0), sourceLevel, sourceArea,
                                 internalFormat, unpackFlipY, unpackPremultiplyAlpha,
@@ -656,7 +656,7 @@ gl::Error TextureGL::copySubTexture(const gl::Context *context,
                                     bool unpackUnmultiplyAlpha,
                                     const gl::Texture *source)
 {
-    GLenum destFormat = mState.getImageDesc(mState.mTarget, 0).format.info->format;
+    GLenum destFormat = mState.getImageDesc(target, level).format.info->format;
     return copySubTextureHelper(target, level, destOffset, sourceLevel, sourceArea, destFormat,
                                 unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha, source);
 }
@@ -673,10 +673,11 @@ gl::Error TextureGL::copySubTextureHelper(GLenum target,
                                           const gl::Texture *source)
 {
     TextureGL *sourceGL                  = GetImplAs<TextureGL>(source);
-    const gl::ImageDesc &sourceImageDesc = sourceGL->mState.getImageDesc(source->getTarget(), 0);
+    const gl::ImageDesc &sourceImageDesc =
+        sourceGL->mState.getImageDesc(source->getTarget(), sourceLevel);
 
     // Check is this is a simple copySubTexture that can be done with a copyTexSubImage
-    bool needsLumaWorkaround = sourceGL->mLevelInfo[0].lumaWorkaround.enabled;
+    bool needsLumaWorkaround = sourceGL->mLevelInfo[sourceLevel].lumaWorkaround.enabled;
 
     GLenum sourceFormat = sourceImageDesc.format.info->format;
     bool sourceFormatContainSupersetOfDestFormat =

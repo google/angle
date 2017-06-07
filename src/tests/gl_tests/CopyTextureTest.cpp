@@ -651,10 +651,17 @@ TEST_P(CopyTextureTest, CubeMapTarget)
 }
 
 // Test that copying to non-zero mipmaps works
-TEST_P(CopyTextureTestES3, CopyToMipmap)
+TEST_P(CopyTextureTest, CopyToMipmap)
 {
     if (!checkExtensions())
     {
+        return;
+    }
+
+    if (getClientMajorVersion() < 3 && !extensionEnabled("GL_OES_fbo_render_mipmap"))
+    {
+        std::cout << "Test skipped because ES3 or GL_OES_fbo_render_mipmap is missing."
+                  << std::endl;
         return;
     }
 
@@ -664,38 +671,50 @@ TEST_P(CopyTextureTestES3, CopyToMipmap)
         return;
     }
 
-    GLColor pixels = GLColor::red;
+    GLColor pixels[] = {GLColor::red, GLColor::red, GLColor::red, GLColor::red};
 
     GLTexture textures[2];
 
-    const GLint sourceLevel = 1;
-    const GLint destLevel   = 2;
-
     glBindTexture(GL_TEXTURE_2D, textures[0]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, &pixels);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
 
     glBindTexture(GL_TEXTURE_2D, textures[1]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 4, 4, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     glTexImage2D(GL_TEXTURE_2D, 2, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
-    glCopySubTextureCHROMIUM(textures[0], sourceLevel, GL_TEXTURE_2D, textures[1], destLevel, 0, 0,
-                             0, 0, 1, 1, false, false, false);
+    std::vector<std::pair<GLint, GLint>> soureDestPairs;
+    soureDestPairs.push_back(std::make_pair(0, 1));
 
-    EXPECT_GL_NO_ERROR();
+    // ES3 allows copying from non-zero mips
+    if (getClientMajorVersion() >= 3)
+    {
+        soureDestPairs.push_back(std::make_pair(1, 2));
+    }
 
-    GLFramebuffer fbo;
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[1],
-                           destLevel);
+    for (const auto &sourceDestPair : soureDestPairs)
+    {
+        const GLint sourceLevel = sourceDestPair.first;
+        const GLint destLevel   = sourceDestPair.second;
 
-    // Check that FB is complete.
-    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+        glCopyTextureCHROMIUM(textures[0], sourceLevel, GL_TEXTURE_2D, textures[1], destLevel,
+                              GL_RGBA, GL_UNSIGNED_BYTE, false, false, false);
 
-    EXPECT_PIXEL_COLOR_EQ(0, 0, pixels);
+        EXPECT_GL_NO_ERROR();
 
-    EXPECT_GL_NO_ERROR();
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textures[1],
+                               destLevel);
+
+        // Check that FB is complete.
+        EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+        EXPECT_PIXEL_COLOR_EQ(0, 0, pixels[0]);
+
+        EXPECT_GL_NO_ERROR();
+    }
 }
 
 // Test the newly added ES3 unorm formats
