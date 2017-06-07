@@ -1,0 +1,140 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1086dc60_cdcf4283",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1327,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-07T04:57:07Z",
+      "side": 1,
+      "message": "I think it better to call this function \u0027setVertexAttribPointer\u0027 to align with the actual GL call.",
+      "revId": "67244d226f97100d84aa81652d5c61f8d3abc2fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "99c063e0_239cbee0",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-07T04:57:07Z",
+      "side": 1,
+      "message": "The *Impl functions are used to update the data structure without setting the dirty bit.\nNow the dirty bits means the corresponding GL functions are called.\ne.g. setVertexAttribPointer only sets the bit for VertexAttribPointer without setting the bits for VertexAttribFormat, VertexAttribBinding or BindVertexBuffer.",
+      "revId": "67244d226f97100d84aa81652d5c61f8d3abc2fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4e9b848c_fed1642c",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-07T04:57:07Z",
+      "side": 1,
+      "message": "In ES 3.1 SPEC the type of relativeOffset in VertexAttribFormat is GLuint. So I change the type here to align with SPEC.",
+      "revId": "67244d226f97100d84aa81652d5c61f8d3abc2fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82cfe1d7_e133f819",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 679,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-07T04:57:07Z",
+      "side": 1,
+      "message": "We don\u0027t need to update format again after updateAttribPointer is called.",
+      "revId": "67244d226f97100d84aa81652d5c61f8d3abc2fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "71e03355_e97b5b83",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 688,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-07T04:57:07Z",
+      "side": 1,
+      "message": "We don\u0027t need to update attribBinding again after either updateAttribPointer or updateAttribDivisor is called.",
+      "revId": "67244d226f97100d84aa81652d5c61f8d3abc2fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "63e37afd_c53c9666",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 696,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-07T04:57:07Z",
+      "side": 1,
+      "message": "We don\u0027t need to update binding again after updateAttribPointer is called.",
+      "revId": "67244d226f97100d84aa81652d5c61f8d3abc2fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "90818d72_fbe34af5",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 704,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-07T04:57:07Z",
+      "side": 1,
+      "message": "We don\u0027t need to update binding divisor again after updateAttribDivisor is called.",
+      "revId": "67244d226f97100d84aa81652d5c61f8d3abc2fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e013f090_a1ceb38a",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-07T04:57:07Z",
+      "side": 1,
+      "message": "I only want to add InstancingTestES31 and other changes are made by \u0027git cl format\u0027.\nI will write another patch to fix all these format issues.",
+      "revId": "67244d226f97100d84aa81652d5c61f8d3abc2fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
