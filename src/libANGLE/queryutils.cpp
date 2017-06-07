@@ -383,10 +383,10 @@ void QueryVertexAttribBase(const VertexAttribute &attrib,
             *params = ConvertFromGLboolean<ParamType>(attrib.normalized);
             break;
         case GL_VERTEX_ATTRIB_ARRAY_BUFFER_BINDING:
-            *params = ConvertFromGLuint<ParamType>(binding.buffer.id());
+            *params = ConvertFromGLuint<ParamType>(binding.getBuffer().id());
             break;
         case GL_VERTEX_ATTRIB_ARRAY_DIVISOR:
-            *params = ConvertFromGLuint<ParamType>(binding.divisor);
+            *params = ConvertFromGLuint<ParamType>(binding.getDivisor());
             break;
         case GL_VERTEX_ATTRIB_ARRAY_INTEGER:
             *params = ConvertFromGLboolean<ParamType>(attrib.pureInteger);

@@ -108,8 +108,8 @@ gl::Error ContextVk::initPipeline()
             VkVertexInputBindingDescription bindingDesc;
             bindingDesc.binding = static_cast<uint32_t>(vertexBindings.size());
             bindingDesc.stride  = static_cast<uint32_t>(gl::ComputeVertexAttributeTypeSize(attrib));
-            bindingDesc.inputRate =
-                (binding.divisor > 0 ? VK_VERTEX_INPUT_RATE_INSTANCE : VK_VERTEX_INPUT_RATE_VERTEX);
+            bindingDesc.inputRate = (binding.getDivisor() > 0 ? VK_VERTEX_INPUT_RATE_INSTANCE
+                                                              : VK_VERTEX_INPUT_RATE_VERTEX);
 
             gl::VertexFormatType vertexFormatType = gl::GetVertexFormatType(attrib);
 
@@ -300,7 +300,7 @@ gl::Error ContextVk::drawArrays(const gl::Context *context, GLenum mode, GLint f
         if (attrib.enabled)
         {
             // TODO(jmadill): Offset handling.
-            gl::Buffer *bufferGL = binding.buffer.get();
+            gl::Buffer *bufferGL = binding.getBuffer().get();
             ASSERT(bufferGL);
             BufferVk *bufferVk = GetImplAs<BufferVk>(bufferGL);
             vertexHandles.push_back(bufferVk->getVkBuffer().getHandle());

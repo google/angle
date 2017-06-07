@@ -1976,19 +1976,19 @@ void State::getIntegeri_v(GLenum target, GLuint index, GLint *data)
           break;
       case GL_VERTEX_BINDING_BUFFER:
           ASSERT(static_cast<size_t>(index) < mVertexArray->getMaxBindings());
-          *data = mVertexArray->getVertexBinding(index).buffer.id();
+          *data = mVertexArray->getVertexBinding(index).getBuffer().id();
           break;
       case GL_VERTEX_BINDING_DIVISOR:
           ASSERT(static_cast<size_t>(index) < mVertexArray->getMaxBindings());
-          *data = mVertexArray->getVertexBinding(index).divisor;
+          *data = mVertexArray->getVertexBinding(index).getDivisor();
           break;
       case GL_VERTEX_BINDING_OFFSET:
           ASSERT(static_cast<size_t>(index) < mVertexArray->getMaxBindings());
-          *data = static_cast<GLuint>(mVertexArray->getVertexBinding(index).offset);
+          *data = static_cast<GLuint>(mVertexArray->getVertexBinding(index).getOffset());
           break;
       case GL_VERTEX_BINDING_STRIDE:
           ASSERT(static_cast<size_t>(index) < mVertexArray->getMaxBindings());
-          *data = mVertexArray->getVertexBinding(index).stride;
+          *data = mVertexArray->getVertexBinding(index).getStride();
           break;
       default:
           UNREACHABLE();
@@ -2054,7 +2054,7 @@ bool State::hasMappedBuffer(GLenum target) const
         for (size_t attribIndex = 0; attribIndex < maxEnabledAttrib; attribIndex++)
         {
             const gl::VertexAttribute &vertexAttrib = vertexAttribs[attribIndex];
-            auto *boundBuffer = vertexBindings[vertexAttrib.bindingIndex].buffer.get();
+            auto *boundBuffer = vertexBindings[vertexAttrib.bindingIndex].getBuffer().get();
             if (vertexAttrib.enabled && boundBuffer && boundBuffer->isMapped())
             {
                 return true;

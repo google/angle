@@ -29,7 +29,7 @@ class Texture;
 struct TextureCaps;
 struct UniformBlock;
 struct VertexAttribute;
-struct VertexBinding;
+class VertexBinding;
 struct VertexAttribCurrentValueData;
 
 void QueryFramebufferAttachmentParameteriv(const Framebuffer *framebuffer,

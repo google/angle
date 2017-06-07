@@ -105,7 +105,7 @@ void VertexArray11::updateVertexAttribStorage(size_t attribIndex)
     }
 
     gl::Buffer *oldBufferGL = mCurrentBuffers[attribIndex].get();
-    gl::Buffer *newBufferGL = binding.buffer.get();
+    gl::Buffer *newBufferGL = binding.getBuffer().get();
     Buffer11 *oldBuffer11   = oldBufferGL ? GetImplAs<Buffer11>(oldBufferGL) : nullptr;
     Buffer11 *newBuffer11   = newBufferGL ? GetImplAs<Buffer11>(newBufferGL) : nullptr;
 
@@ -130,7 +130,7 @@ void VertexArray11::updateVertexAttribStorage(size_t attribIndex)
             }
         }
         mOnBufferDataDirty[attribIndex].bind(newChannel);
-        mCurrentBuffers[attribIndex] = binding.buffer;
+        mCurrentBuffers[attribIndex] = binding.getBuffer();
     }
 }
 
@@ -169,7 +169,7 @@ gl::Error VertexArray11::updateDirtyAndDynamicAttribs(VertexDataManager *vertexD
             translatedAttrib->attribute = &attribs[dirtyAttribIndex];
             translatedAttrib->binding   = &bindings[translatedAttrib->attribute->bindingIndex];
             translatedAttrib->currentValueType = currentValue.Type;
-            translatedAttrib->divisor          = translatedAttrib->binding->divisor;
+            translatedAttrib->divisor          = translatedAttrib->binding->getDivisor();
 
             switch (mAttributeStorageTypes[dirtyAttribIndex])
             {
@@ -204,7 +204,7 @@ gl::Error VertexArray11::updateDirtyAndDynamicAttribs(VertexDataManager *vertexD
             dynamicAttrib->attribute        = &attribs[dynamicAttribIndex];
             dynamicAttrib->binding          = &bindings[dynamicAttrib->attribute->bindingIndex];
             dynamicAttrib->currentValueType = currentValue.Type;
-            dynamicAttrib->divisor          = dynamicAttrib->binding->divisor;
+            dynamicAttrib->divisor          = dynamicAttrib->binding->getDivisor();
         }
 
         return vertexDataManager->storeDynamicAttribs(&mTranslatedAttribs, activeDynamicAttribs,

@@ -19,7 +19,7 @@ namespace gl
 {
 class State;
 struct VertexAttribute;
-struct VertexBinding;
+class VertexBinding;
 struct VertexAttribCurrentValueData;
 }
 

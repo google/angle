@@ -63,7 +63,7 @@ bool DirectStoragePossible(const gl::VertexAttribute &attrib, const gl::VertexBi
         return false;
     }
 
-    gl::Buffer *buffer = binding.buffer.get();
+    gl::Buffer *buffer = binding.getBuffer().get();
     if (!buffer)
     {
         return false;
@@ -149,7 +149,7 @@ VertexStorageType ClassifyAttributeStorage(const gl::VertexAttribute &attrib,
     }
 
     // If specified with immediate data, we must use dynamic storage.
-    auto *buffer = binding.buffer.get();
+    auto *buffer = binding.getBuffer().get();
     if (!buffer)
     {
         return VertexStorageType::DYNAMIC;
@@ -248,7 +248,7 @@ gl::Error VertexDataManager::prepareVertexData(const gl::State &state,
         translated->attribute        = &attrib;
         translated->binding          = &binding;
         translated->currentValueType = currentValueData.Type;
-        translated->divisor          = binding.divisor;
+        translated->divisor          = binding.getDivisor();
 
         switch (ClassifyAttributeStorage(attrib, binding))
         {
@@ -297,7 +297,7 @@ void VertexDataManager::StoreDirectAttrib(TranslatedAttribute *directAttrib)
     const auto &attrib  = *directAttrib->attribute;
     const auto &binding = *directAttrib->binding;
 
-    gl::Buffer *buffer   = binding.buffer.get();
+    gl::Buffer *buffer   = binding.getBuffer().get();
     BufferD3D *bufferD3D = buffer ? GetImplAs<BufferD3D>(buffer) : nullptr;
 
     ASSERT(DirectStoragePossible(attrib, binding));
@@ -309,7 +309,7 @@ void VertexDataManager::StoreDirectAttrib(TranslatedAttribute *directAttrib)
         static_cast<unsigned int>(ComputeVertexAttributeOffset(attrib, binding));
 
     // Instanced vertices do not apply the 'start' offset
-    directAttrib->usesFirstVertexOffset = (binding.divisor == 0);
+    directAttrib->usesFirstVertexOffset = (binding.getDivisor() == 0);
 }
 
 // static
@@ -319,7 +319,7 @@ gl::Error VertexDataManager::StoreStaticAttrib(TranslatedAttribute *translated)
     const auto &attrib  = *translated->attribute;
     const auto &binding = *translated->binding;
 
-    gl::Buffer *buffer = binding.buffer.get();
+    gl::Buffer *buffer = binding.getBuffer().get();
     ASSERT(buffer && attrib.enabled && !DirectStoragePossible(attrib, binding));
     BufferD3D *bufferD3D = GetImplAs<BufferD3D>(buffer);
 
@@ -370,7 +370,7 @@ gl::Error VertexDataManager::StoreStaticAttrib(TranslatedAttribute *translated)
     translated->baseOffset = streamOffset + firstElementOffset;
 
     // Instanced vertices do not apply the 'start' offset
-    translated->usesFirstVertexOffset = (binding.divisor == 0);
+    translated->usesFirstVertexOffset = (binding.getDivisor() == 0);
 
     return gl::NoError();
 }
@@ -428,7 +428,7 @@ void VertexDataManager::PromoteDynamicAttribs(
         ASSERT(dynamicAttrib.attribute && dynamicAttrib.binding);
         const auto &binding       = *dynamicAttrib.binding;
 
-        gl::Buffer *buffer        = binding.buffer.get();
+        gl::Buffer *buffer = binding.getBuffer().get();
         if (buffer)
         {
             BufferD3D *bufferD3D = GetImplAs<BufferD3D>(buffer);
@@ -448,7 +448,7 @@ gl::Error VertexDataManager::reserveSpaceForAttrib(const TranslatedAttribute &tr
 
     ASSERT(!DirectStoragePossible(attrib, binding));
 
-    gl::Buffer *buffer   = binding.buffer.get();
+    gl::Buffer *buffer   = binding.getBuffer().get();
     BufferD3D *bufferD3D = buffer ? GetImplAs<BufferD3D>(buffer) : nullptr;
     ASSERT(!bufferD3D || bufferD3D->getStaticVertexBuffer(attrib, binding) == nullptr);
 
@@ -470,14 +470,14 @@ gl::Error VertexDataManager::storeDynamicAttrib(TranslatedAttribute *translated,
     const auto &attrib  = *translated->attribute;
     const auto &binding = *translated->binding;
 
-    gl::Buffer *buffer = binding.buffer.get();
+    gl::Buffer *buffer = binding.getBuffer().get();
     ASSERT(buffer || attrib.pointer);
     ASSERT(attrib.enabled);
 
     BufferD3D *storage = buffer ? GetImplAs<BufferD3D>(buffer) : nullptr;
 
     // Instanced vertices do not apply the 'start' offset
-    GLint firstVertexIndex = (binding.divisor > 0 ? 0 : start);
+    GLint firstVertexIndex = (binding.getDivisor() > 0 ? 0 : start);
 
     // Compute source data pointer
     const uint8_t *sourceData = nullptr;

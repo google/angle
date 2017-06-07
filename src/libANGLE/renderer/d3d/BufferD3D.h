@@ -18,7 +18,7 @@
 namespace gl
 {
 struct VertexAttribute;
-struct VertexBinding;
+class VertexBinding;
 }
 
 namespace rx

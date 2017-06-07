@@ -59,7 +59,7 @@ bool ValidateDrawAttribs(ValidationContext *context,
         const VertexBinding &binding = vertexBindings[attrib.bindingIndex];
         // If we have no buffer, then we either get an error, or there are no more checks to be
         // done.
-        gl::Buffer *buffer = binding.buffer.get();
+        gl::Buffer *buffer = binding.getBuffer().get();
         if (!buffer)
         {
             if (webglCompatibility || !state.areClientArraysEnabled())
@@ -91,13 +91,14 @@ bool ValidateDrawAttribs(ValidationContext *context,
         }
 
         GLint maxVertexElement = 0;
-        if (binding.divisor == 0)
+        GLuint divisor         = binding.getDivisor();
+        if (divisor == 0)
         {
             maxVertexElement = maxVertex;
         }
         else
         {
-            maxVertexElement = (primcount - 1) / binding.divisor;
+            maxVertexElement = (primcount - 1) / divisor;
         }
 
         // We do manual overflow checks here instead of using safe_math.h because it was
@@ -893,7 +894,7 @@ bool ValidateDrawInstancedANGLEAndWebGL(ValidationContext *context)
     {
         const VertexAttribute &attrib = attribs[attributeIndex];
         const VertexBinding &binding  = bindings[attrib.bindingIndex];
-        if (program->isAttribLocationActive(attributeIndex) && binding.divisor == 0)
+        if (program->isAttribLocationActive(attributeIndex) && binding.getDivisor() == 0)
         {
             return true;
         }

@@ -22,7 +22,7 @@
 namespace gl
 {
 struct VertexAttribute;
-struct VertexBinding;
+class VertexBinding;
 struct VertexAttribCurrentValueData;
 }
 

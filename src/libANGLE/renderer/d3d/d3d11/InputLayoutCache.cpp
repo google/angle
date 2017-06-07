@@ -438,7 +438,8 @@ gl::Error InputLayoutCache::updateInputLayout(Renderer11 *renderer,
             state.getVertexAttribCurrentValue(static_cast<unsigned int>(attribIndex));
         gl::VertexFormatType vertexFormatType = gl::GetVertexFormatType(attrib, currentValue.Type);
 
-        layout.addAttributeData(glslElementType, d3dSemantic, vertexFormatType, binding.divisor);
+        layout.addAttributeData(glslElementType, d3dSemantic, vertexFormatType,
+                                binding.getDivisor());
     }
 
     const d3d11::InputLayout *inputLayout = nullptr;
