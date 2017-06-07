@@ -500,6 +500,30 @@
     },
     {
       "key": {
+        "uuid": "e7dcf0ea_34c741eb",
+        "filename": "src/libANGLE/Fence.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-06-07T21:41:15Z",
+      "side": 1,
+      "message": "Well, the only way to solve proliferation through copy-paste would be to add \"redundant namespace removal\" to \"git cl format\", if that\u0027s possible.\nUnfortunately, the smart tools are not smart enough to handle different platforms (Win / Linux / Mac / Android / CrOS) and the associated ifdefs. I wish there was a smart tool which would understand GYP / GN and have knowledge of all system types on all platforms we compile for.",
+      "parentUuid": "40acfc41_3c334646",
+      "range": {
+        "startLine": 46,
+        "startChar": 11,
+        "endLine": 46,
+        "endChar": 15
+      },
+      "revId": "742b7ea8a1eb1b1d8176218197f8228d6a2c0d0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5cc1d81d_b8aa891a",
         "filename": "src/libANGLE/Stream.cpp",
         "patchSetId": 2
