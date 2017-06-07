@@ -10,6 +10,7 @@
 #include "libANGLE/renderer/d3d/d3d11/InputLayoutCache.h"
 
 #include "common/bitset_utils.h"
+#include "common/third_party/murmurhash/MurmurHash3.h"
 #include "common/utilities.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/VertexArray.h"
@@ -22,7 +23,6 @@
 #include "libANGLE/renderer/d3d/d3d11/ShaderExecutable11.h"
 #include "libANGLE/renderer/d3d/d3d11/VertexBuffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
-#include "third_party/murmurhash/MurmurHash3.h"
 
 namespace rx
 {

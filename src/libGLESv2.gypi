@@ -32,6 +32,8 @@
             'common/third_party/base/anglebase/numerics/safe_conversions_impl.h',
             'common/third_party/base/anglebase/numerics/safe_math.h',
             'common/third_party/base/anglebase/numerics/safe_math_impl.h',
+            'common/third_party/murmurhash/MurmurHash3.cpp',
+            'common/third_party/murmurhash/MurmurHash3.h',
             'common/tls.cpp',
             'common/tls.h',
             'common/utilities.cpp',
@@ -264,8 +266,6 @@
             'libANGLE/validationES3.h',
             'libANGLE/validationES31.cpp',
             'libANGLE/validationES31.h',
-            'third_party/murmurhash/MurmurHash3.cpp',
-            'third_party/murmurhash/MurmurHash3.h',
             'third_party/trace_event/trace_event.h',
         ],
         'libangle_d3d_shared_sources':

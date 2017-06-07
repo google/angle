@@ -12,12 +12,12 @@
 #include <float.h>
 
 #include "common/debug.h"
+#include "common/third_party/murmurhash/MurmurHash3.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/renderer/d3d/FramebufferD3D.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
-#include "third_party/murmurhash/MurmurHash3.h"
 
 namespace rx
 {
