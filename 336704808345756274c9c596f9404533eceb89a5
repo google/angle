@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7f618200_f507929c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-07T15:13:00Z",
+      "side": 1,
+      "message": "Refactor texStorage entry points.\n\nBUG\u003dangleproject:747",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 39
+      },
+      "revId": "336704808345756274c9c596f9404533eceb89a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "26a1ea84_74f51d36",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 785,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-07T15:13:00Z",
+      "side": 1,
+      "message": "why are you passing const Context *context to the context itself? Remove this parameter.",
+      "range": {
+        "startLine": 784,
+        "startChar": 22,
+        "endLine": 785,
+        "endChar": 22
+      },
+      "revId": "336704808345756274c9c596f9404533eceb89a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
