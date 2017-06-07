@@ -524,6 +524,30 @@
     },
     {
       "key": {
+        "uuid": "a4a68adf_f8aa1c52",
+        "filename": "src/libANGLE/Fence.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-07T22:00:24Z",
+      "side": 1,
+      "message": "Yea, there is no great solution that\u0027s available now so I simply try to remove them as I\u0027m modifying code or in reviews to at least slowly reduce the number of them.",
+      "parentUuid": "e7dcf0ea_34c741eb",
+      "range": {
+        "startLine": 46,
+        "startChar": 11,
+        "endLine": 46,
+        "endChar": 15
+      },
+      "revId": "742b7ea8a1eb1b1d8176218197f8228d6a2c0d0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5cc1d81d_b8aa891a",
         "filename": "src/libANGLE/Stream.cpp",
         "patchSetId": 2
