@@ -81,6 +81,30 @@
       "revId": "2b9d30bf7196613f0e11d264931b695ececb4c5b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1d71e1ef_9d9cd466",
+        "filename": "src/compiler/translator/Common.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-06-07T17:23:05Z",
+      "side": 1,
+      "message": "That\u0027s extremely convenient, we didn\u0027t know if there was a hash implementation we could use. We tried calling the internals just to get a working version.",
+      "parentUuid": "0340372a_23d7ef6f",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 6
+      },
+      "revId": "2b9d30bf7196613f0e11d264931b695ececb4c5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
