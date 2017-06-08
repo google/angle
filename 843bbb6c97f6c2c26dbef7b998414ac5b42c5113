@@ -191,6 +191,30 @@
     },
     {
       "key": {
+        "uuid": "fefc2849_60920c7b",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-08T17:17:38Z",
+      "side": 1,
+      "message": "I see, thanks. The rules for these bindings were more complex than I was thinking. I think for now instead of using a range collection you can keep the specialized structure that you have here. However, I would like you to make this a class with private data.",
+      "parentUuid": "75cfd0cc_dfd4f131",
+      "range": {
+        "startLine": 93,
+        "startChar": 12,
+        "endLine": 93,
+        "endChar": 69
+      },
+      "revId": "843bbb6c97f6c2c26dbef7b998414ac5b42c5113",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "61f20331_b6486d3a",
         "filename": "src/compiler/translator/ParseContext.h",
         "patchSetId": 13
