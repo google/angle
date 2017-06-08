@@ -364,6 +364,43 @@ TEST_P(RobustResourceInitTest, ReuploadingClearsTexture)
     EXPECT_GL_NO_ERROR();
 }
 
+// Cover the case where null pixel data is uploaded to a texture and then sub image is used to
+// upload partial data
+TEST_P(RobustResourceInitTest, TexImageThenSubImage)
+{
+    if (!setup())
+    {
+        return;
+    }
+
+    if (IsOpenGL() || IsD3D9())
+    {
+        std::cout << "Robust resource init is not yet fully implemented. (" << GetParam() << ")"
+                  << std::endl;
+        return;
+    }
+
+    // Put some data into the texture
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    // Force the D3D texture to create a storage
+    checkNonZeroPixels(&tex, 0, 0, 0, 0, GLColor::transparentBlack);
+
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    std::array<GLColor, kWidth * kHeight> data;
+    data.fill(GLColor::white);
+
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth / 2, kHeight / 2, GL_RGBA, GL_UNSIGNED_BYTE,
+                    data.data());
+    checkNonZeroPixels(&tex, 0, 0, kWidth / 2, kHeight / 2, GLColor::white);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Reading an uninitialized texture (texImage2D) should succeed with all bytes set to 0.
 TEST_P(RobustResourceInitTest, ReadingUninitialized3DTexture)
 {

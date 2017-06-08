@@ -216,8 +216,10 @@ bool Image11::isDirty() const
 {
     // If mDirty is true AND mStagingTexture doesn't exist AND mStagingTexture doesn't need to be
     // recovered from TextureStorage AND the texture doesn't require init data (i.e. a blank new
-    // texture will suffice) then isDirty should still return false.
-    if (mDirty && !mStagingTexture.valid() && !mRecoverFromStorage)
+    // texture will suffice) AND robust resource initialization is not enabled then isDirty should
+    // still return false.
+    if (mDirty && !mStagingTexture.valid() && !mRecoverFromStorage &&
+        !mRenderer->isRobustResourceInitEnabled())
     {
         const Renderer11DeviceCaps &deviceCaps = mRenderer->getRenderer11DeviceCaps();
         const auto &formatInfo                 = d3d11::Format::Get(mInternalFormat, deviceCaps);

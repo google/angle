@@ -121,6 +121,8 @@ class TextureD3D : public TextureImpl
 
     GLint getBaseLevelDepth() const;
 
+    bool shouldForceReleaseImagesOnSetImage(const uint8_t *pixels) const;
+
     RendererD3D *mRenderer;
 
     bool mDirtyImages;
@@ -394,7 +396,11 @@ class TextureD3D_Cube : public TextureD3D
     virtual bool isImageComplete(const gl::ImageIndex &index) const;
     gl::Error updateStorageFaceLevel(int faceIndex, int level);
 
-    void redefineImage(int faceIndex, GLint level, GLenum internalformat, const gl::Extents &size);
+    void redefineImage(int faceIndex,
+                       GLint level,
+                       GLenum internalformat,
+                       const gl::Extents &size,
+                       bool forceRelease);
 
     ImageD3D *mImageArray[6][gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
@@ -497,7 +503,10 @@ class TextureD3D_3D : public TextureD3D
     virtual bool isImageComplete(const gl::ImageIndex &index) const;
     gl::Error updateStorageLevel(int level);
 
-    void redefineImage(GLint level, GLenum internalformat, const gl::Extents &size);
+    void redefineImage(GLint level,
+                       GLenum internalformat,
+                       const gl::Extents &size,
+                       bool forceRelease);
 
     ImageD3D *mImageArray[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 };
@@ -599,7 +608,10 @@ class TextureD3D_2DArray : public TextureD3D
     gl::Error updateStorageLevel(int level);
 
     void deleteImages();
-    void redefineImage(GLint level, GLenum internalformat, const gl::Extents &size);
+    void redefineImage(GLint level,
+                       GLenum internalformat,
+                       const gl::Extents &size,
+                       bool forceRelease);
 
     // Storing images as an array of single depth textures since D3D11 treats each array level of a
     // Texture2D object as a separate subresource.  Each layer would have to be looped over

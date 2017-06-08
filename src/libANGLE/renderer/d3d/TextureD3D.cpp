@@ -147,6 +147,11 @@ GLint TextureD3D::getBaseLevelDepth() const
     return (baseImage ? baseImage->getDepth() : 0);
 }
 
+bool TextureD3D::shouldForceReleaseImagesOnSetImage(const uint8_t *pixels) const
+{
+    return mRenderer->isRobustResourceInitEnabled() && pixels == nullptr;
+}
+
 // Note: "base level image" is loosely defined to be any image from the base level,
 // where in the base of 2D array textures and cube maps there are several. Don't use
 // the base level image for anything except querying texture format and size.
@@ -170,6 +175,11 @@ gl::Error TextureD3D::setStorageMultisample(const gl::Context *context,
 bool TextureD3D::shouldUseSetData(const ImageD3D *image) const
 {
     if (!mRenderer->getWorkarounds().setDataFasterThanImageUpload)
+    {
+        return false;
+    }
+
+    if (image->isDirty())
     {
         return false;
     }
@@ -873,7 +883,7 @@ gl::Error TextureD3D_2D::setImage(const gl::Context *context,
     GLint level       = static_cast<GLint>(imageLevel);
 
     redefineImage(level, internalFormatInfo.sizedInternalFormat, size,
-                  mRenderer->isRobustResourceInitEnabled());
+                  shouldForceReleaseImagesOnSetImage(pixels));
 
     gl::ImageIndex index = gl::ImageIndex::Make2D(level);
 
@@ -943,7 +953,7 @@ gl::Error TextureD3D_2D::setCompressedImage(const gl::Context *context,
     GLint level = static_cast<GLint>(imageLevel);
 
     // compressed formats don't have separate sized internal formats-- we can just use the compressed format directly
-    redefineImage(level, internalFormat, size, mRenderer->isRobustResourceInitEnabled());
+    redefineImage(level, internalFormat, size, shouldForceReleaseImagesOnSetImage(pixels));
 
     return setCompressedImageImpl(gl::ImageIndex::Make2D(level), unpack, pixels, 0);
 }
@@ -1469,6 +1479,7 @@ void TextureD3D_2D::redefineImage(size_t level,
     const GLenum storageFormat = getBaseLevelInternalFormat();
 
     mImageArray[level]->redefine(GL_TEXTURE_2D, internalformat, size, forceRelease);
+    mDirtyImages = mDirtyImages || mImageArray[level]->isDirty();
 
     if (mTexStorage)
     {
@@ -1615,7 +1626,8 @@ gl::Error TextureD3D_Cube::setImage(const gl::Context *context,
     gl::ImageIndex index       = gl::ImageIndex::MakeCube(target, static_cast<GLint>(level));
 
     redefineImage(index.layerIndex, static_cast<GLint>(level),
-                  internalFormatInfo.sizedInternalFormat, size);
+                  internalFormatInfo.sizedInternalFormat, size,
+                  shouldForceReleaseImagesOnSetImage(pixels));
 
     return setImageImpl(index, type, unpack, pixels, 0);
 }
@@ -1649,7 +1661,8 @@ gl::Error TextureD3D_Cube::setCompressedImage(const gl::Context *context,
     // compressed formats don't have separate sized internal formats-- we can just use the compressed format directly
     size_t faceIndex = gl::CubeMapTextureTargetToLayerIndex(target);
 
-    redefineImage(static_cast<int>(faceIndex), static_cast<GLint>(level), internalFormat, size);
+    redefineImage(static_cast<int>(faceIndex), static_cast<GLint>(level), internalFormat, size,
+                  shouldForceReleaseImagesOnSetImage(pixels));
 
     gl::ImageIndex index = gl::ImageIndex::MakeCube(target, static_cast<GLint>(level));
     return setCompressedImageImpl(index, unpack, pixels, 0);
@@ -1686,7 +1699,8 @@ gl::Error TextureD3D_Cube::copyImage(const gl::Context *context,
     GLint level = static_cast<GLint>(imageLevel);
 
     gl::Extents size(sourceArea.width, sourceArea.height, 1);
-    redefineImage(static_cast<int>(faceIndex), level, internalFormatInfo.sizedInternalFormat, size);
+    redefineImage(static_cast<int>(faceIndex), level, internalFormatInfo.sizedInternalFormat, size,
+                  mRenderer->isRobustResourceInitEnabled());
 
     gl::ImageIndex index = gl::ImageIndex::MakeCube(target, level);
     gl::Offset destOffset(0, 0, 0);
@@ -1777,7 +1791,7 @@ gl::Error TextureD3D_Cube::copyTexture(const gl::Context *context,
     const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat, type);
     gl::Extents size(static_cast<int>(source->getWidth(sourceTarget, sourceLevel)),
                      static_cast<int>(source->getHeight(sourceTarget, sourceLevel)), 1);
-    redefineImage(faceIndex, destLevel, internalFormatInfo.sizedInternalFormat, size);
+    redefineImage(faceIndex, destLevel, internalFormatInfo.sizedInternalFormat, size, false);
 
     gl::Rectangle sourceRect(0, 0, size.width, size.height);
     gl::Offset destOffset(0, 0, 0);
@@ -1954,7 +1968,7 @@ void TextureD3D_Cube::initMipmapImages()
             int faceLevelSize =
                 (std::max(mImageArray[faceIndex][baseLevel]->getWidth() >> (level - baseLevel), 1));
             redefineImage(faceIndex, level, mImageArray[faceIndex][baseLevel]->getInternalFormat(),
-                          gl::Extents(faceLevelSize, faceLevelSize, 1));
+                          gl::Extents(faceLevelSize, faceLevelSize, 1), false);
         }
     }
 }
@@ -2145,16 +2159,20 @@ gl::Error TextureD3D_Cube::updateStorageFaceLevel(int faceIndex, int level)
     return gl::NoError();
 }
 
-void TextureD3D_Cube::redefineImage(int faceIndex, GLint level, GLenum internalformat, const gl::Extents &size)
+void TextureD3D_Cube::redefineImage(int faceIndex,
+                                    GLint level,
+                                    GLenum internalformat,
+                                    const gl::Extents &size,
+                                    bool forceRelease)
 {
     // If there currently is a corresponding storage texture image, it has these parameters
     const int storageWidth     = std::max(1, getLevelZeroWidth() >> level);
     const int storageHeight    = std::max(1, getLevelZeroHeight() >> level);
     const GLenum storageFormat = getBaseLevelInternalFormat();
 
-    bool forceRelease = mRenderer->isRobustResourceInitEnabled();
     mImageArray[faceIndex][level]->redefine(GL_TEXTURE_CUBE_MAP, internalformat, size,
                                             forceRelease);
+    mDirtyImages = mDirtyImages || mImageArray[faceIndex][level]->isDirty();
 
     if (mTexStorage)
     {
@@ -2299,7 +2317,8 @@ gl::Error TextureD3D_3D::setImage(const gl::Context *context,
     const gl::InternalFormat &internalFormatInfo = gl::GetInternalFormatInfo(internalFormat, type);
 
     GLint level = static_cast<GLint>(imageLevel);
-    redefineImage(level, internalFormatInfo.sizedInternalFormat, size);
+    redefineImage(level, internalFormatInfo.sizedInternalFormat, size,
+                  shouldForceReleaseImagesOnSetImage(pixels));
 
     bool fastUnpacked = false;
 
@@ -2374,7 +2393,7 @@ gl::Error TextureD3D_3D::setCompressedImage(const gl::Context *context,
 
     GLint level = static_cast<GLint>(imageLevel);
     // compressed formats don't have separate sized internal formats-- we can just use the compressed format directly
-    redefineImage(level, internalFormat, size);
+    redefineImage(level, internalFormat, size, shouldForceReleaseImagesOnSetImage(pixels));
 
     gl::ImageIndex index = gl::ImageIndex::Make3D(level);
     return setCompressedImageImpl(index, unpack, pixels, 0);
@@ -2506,7 +2525,7 @@ void TextureD3D_3D::initMipmapImages()
         gl::Extents levelSize(std::max(getLevelZeroWidth() >> level, 1),
                               std::max(getLevelZeroHeight() >> level, 1),
                               std::max(getLevelZeroDepth() >> level, 1));
-        redefineImage(level, getBaseLevelInternalFormat(), levelSize);
+        redefineImage(level, getBaseLevelInternalFormat(), levelSize, false);
     }
 }
 
@@ -2679,7 +2698,10 @@ gl::Error TextureD3D_3D::updateStorageLevel(int level)
     return gl::NoError();
 }
 
-void TextureD3D_3D::redefineImage(GLint level, GLenum internalformat, const gl::Extents &size)
+void TextureD3D_3D::redefineImage(GLint level,
+                                  GLenum internalformat,
+                                  const gl::Extents &size,
+                                  bool forceRelease)
 {
     // If there currently is a corresponding storage texture image, it has these parameters
     const int storageWidth  = std::max(1, getLevelZeroWidth() >> level);
@@ -2687,8 +2709,8 @@ void TextureD3D_3D::redefineImage(GLint level, GLenum internalformat, const gl::
     const int storageDepth  = std::max(1, getLevelZeroDepth() >> level);
     const GLenum storageFormat = getBaseLevelInternalFormat();
 
-    bool forceRelease = mRenderer->isRobustResourceInitEnabled();
     mImageArray[level]->redefine(GL_TEXTURE_3D, internalformat, size, forceRelease);
+    mDirtyImages = mDirtyImages || mImageArray[level]->isDirty();
 
     if (mTexStorage)
     {
@@ -2820,7 +2842,8 @@ gl::Error TextureD3D_2DArray::setImage(const gl::Context *context,
     const gl::InternalFormat &formatInfo = gl::GetInternalFormatInfo(internalFormat, type);
 
     GLint level = static_cast<GLint>(imageLevel);
-    redefineImage(level, formatInfo.sizedInternalFormat, size);
+    redefineImage(level, formatInfo.sizedInternalFormat, size,
+                  shouldForceReleaseImagesOnSetImage(pixels));
 
     GLsizei inputDepthPitch              = 0;
     ANGLE_TRY_RESULT(formatInfo.computeDepthPitch(type, size.width, size.height, unpack.alignment,
@@ -2883,7 +2906,7 @@ gl::Error TextureD3D_2DArray::setCompressedImage(const gl::Context *context,
 
     GLint level = static_cast<GLint>(imageLevel);
     // compressed formats don't have separate sized internal formats-- we can just use the compressed format directly
-    redefineImage(level, internalFormat, size);
+    redefineImage(level, internalFormat, size, shouldForceReleaseImagesOnSetImage(pixels));
 
     const gl::InternalFormat &formatInfo = gl::GetSizedInternalFormatInfo(internalFormat);
     GLsizei inputDepthPitch              = 0;
@@ -3058,7 +3081,7 @@ void TextureD3D_2DArray::initMipmapImages()
         gl::Extents levelLayerSize(std::max(baseWidth >> level, 1),
                                    std::max(baseHeight >> level, 1),
                                    baseDepth);
-        redefineImage(level, baseFormat, levelLayerSize);
+        redefineImage(level, baseFormat, levelLayerSize, false);
     }
 }
 
@@ -3246,7 +3269,10 @@ void TextureD3D_2DArray::deleteImages()
     }
 }
 
-void TextureD3D_2DArray::redefineImage(GLint level, GLenum internalformat, const gl::Extents &size)
+void TextureD3D_2DArray::redefineImage(GLint level,
+                                       GLenum internalformat,
+                                       const gl::Extents &size,
+                                       bool forceRelease)
 {
     // If there currently is a corresponding storage texture image, it has these parameters
     const int storageWidth  = std::max(1, getLevelZeroWidth() >> level);
@@ -3278,8 +3304,6 @@ void TextureD3D_2DArray::redefineImage(GLint level, GLenum internalformat, const
         }
     }
 
-    bool forceRelease = mRenderer->isRobustResourceInitEnabled();
-
     if (size.depth > 0)
     {
         for (int layer = 0; layer < mLayerCounts[level]; layer++)
@@ -3287,6 +3311,7 @@ void TextureD3D_2DArray::redefineImage(GLint level, GLenum internalformat, const
             mImageArray[level][layer]->redefine(GL_TEXTURE_2D_ARRAY, internalformat,
                                                 gl::Extents(size.width, size.height, 1),
                                                 forceRelease);
+            mDirtyImages = mDirtyImages || mImageArray[level][layer]->isDirty();
         }
     }
 
