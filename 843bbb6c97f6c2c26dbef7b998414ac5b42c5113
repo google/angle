@@ -167,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "75cfd0cc_dfd4f131",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-08T01:04:22Z",
+      "side": 1,
+      "message": "This could happen in some cases as below:\n// Initially the default offset and maximum value both are 0.\n// def \u003d 0, max \u003d 0;\nlayout(binding \u003d 2, offset \u003d 4) uniform atomic_uint a;   // def \u003d 8, max \u003d 8;\nlayout(binding \u003d 2, offset \u003d 64) uniform atomic_uint;    // def \u003d 64, max \u003d 8;\nlayout(binding \u003d 2) uniform atomic_uint b;               // def \u003d 68, max \u003d 68;\nlayout(binding \u003d 2, offset \u003d 32) uniform atomic_uint c;  // def \u003d 36, max \u003d 68;\n\nESSL 3.10 section 4.4.6 defines these offset inheritance rules which are also covered by some test cases in this CL.",
+      "parentUuid": "4aa5b429_b448dc8f",
+      "range": {
+        "startLine": 93,
+        "startChar": 12,
+        "endLine": 93,
+        "endChar": 69
+      },
+      "revId": "843bbb6c97f6c2c26dbef7b998414ac5b42c5113",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "61f20331_b6486d3a",
         "filename": "src/compiler/translator/ParseContext.h",
         "patchSetId": 13
