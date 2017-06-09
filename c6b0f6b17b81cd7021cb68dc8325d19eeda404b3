@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "253857ea_a9ea6d95",
+        "filename": "src/compiler/translator/Common.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2017-06-09T21:57:29Z",
+      "side": 1,
+      "message": "Very subtle! Nice work CJ and Kai!",
+      "revId": "c6b0f6b17b81cd7021cb68dc8325d19eeda404b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
