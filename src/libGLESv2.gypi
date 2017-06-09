@@ -176,6 +176,7 @@
             'libANGLE/Sampler.h',
             'libANGLE/Shader.cpp',
             'libANGLE/Shader.h',
+            'libANGLE/SizedMRUCache.h',
             'libANGLE/State.cpp',
             'libANGLE/State.h',
             'libANGLE/Stream.cpp',

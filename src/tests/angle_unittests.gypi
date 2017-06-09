@@ -31,6 +31,7 @@
             '<(angle_path)/src/libANGLE/ImageIndexIterator_unittest.cpp',
             '<(angle_path)/src/libANGLE/Program_unittest.cpp',
             '<(angle_path)/src/libANGLE/ResourceManager_unittest.cpp',
+            '<(angle_path)/src/libANGLE/SizedMRUCache_unittest.cpp',
             '<(angle_path)/src/libANGLE/Surface_unittest.cpp',
             '<(angle_path)/src/libANGLE/TransformFeedback_unittest.cpp',
             '<(angle_path)/src/libANGLE/VaryingPacking_unittest.cpp',
