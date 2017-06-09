@@ -39,6 +39,30 @@
       "revId": "c6b0f6b17b81cd7021cb68dc8325d19eeda404b3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f829824_5c317f04",
+        "filename": "src/compiler/translator/Common.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2017-06-09T23:49:52Z",
+      "side": 1,
+      "message": "Ah, thanks for finding that.\n\nCJ, could you please handle this when you get a chance? I\u0027m heading out.\n\nBy the way, there are also x64 implementations which will produce 64-bit hashes. It would probably be advantageous to switch between the MurmurHash3 implementations based on some #if. It should improve the hash quality, and also avoid having to insert safe int truncation code here, which would probably cause a performance hit as well.",
+      "parentUuid": "16ae572a_203746dc",
+      "range": {
+        "startLine": 134,
+        "startChar": 12,
+        "endLine": 134,
+        "endChar": 65
+      },
+      "revId": "c6b0f6b17b81cd7021cb68dc8325d19eeda404b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
