@@ -56,6 +56,24 @@
       "revId": "32dd3a4cfcd2cd7863219d7e65e6cc04302a3f68",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6f885373_69ec8c98",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-09T16:51:53Z",
+      "side": 1,
+      "message": "To be consistent with the other code I think const std::string \u0026 is fine. Can you point me to a source which supports std::string(const char *) would not allocate? In any case wouldn\u0027t the const \u0026 not affect the behaviour of that constructor?",
+      "parentUuid": "18ec4b6d_e4981843",
+      "revId": "32dd3a4cfcd2cd7863219d7e65e6cc04302a3f68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
