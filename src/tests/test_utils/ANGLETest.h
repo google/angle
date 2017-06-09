@@ -201,19 +201,19 @@ GLColor32F ReadColor32F(GLint x, GLint y);
 
 class EGLWindow;
 class OSWindow;
-class ANGLETest;
+class ANGLETestBase;
 
 struct TestPlatformContext final : private angle::NonCopyable
 {
     bool ignoreMessages    = false;
-    ANGLETest *currentTest = nullptr;
+    ANGLETestBase *currentTest = nullptr;
 };
 
-class ANGLETest : public ::testing::TestWithParam<angle::PlatformParameters>
+class ANGLETestBase
 {
   protected:
-    ANGLETest();
-    ~ANGLETest();
+    ANGLETestBase(const angle::PlatformParameters &params);
+    virtual ~ANGLETestBase();
 
   public:
     static bool InitTestWindow();
@@ -224,8 +224,8 @@ class ANGLETest : public ::testing::TestWithParam<angle::PlatformParameters>
     virtual void overrideWorkaroundsD3D(angle::WorkaroundsD3D *workaroundsD3D) {}
 
   protected:
-    virtual void SetUp();
-    virtual void TearDown();
+    void ANGLETestSetUp();
+    void ANGLETestTearDown();
 
     virtual void swapBuffers();
 
@@ -326,6 +326,16 @@ class ANGLETest : public ::testing::TestWithParam<angle::PlatformParameters>
 
     // For loading and freeing platform
     static std::unique_ptr<angle::Library> mGLESLibrary;
+};
+
+class ANGLETest : public ANGLETestBase, public ::testing::TestWithParam<angle::PlatformParameters>
+{
+  protected:
+    ANGLETest();
+
+  public:
+    void SetUp() override;
+    void TearDown() override;
 };
 
 class ANGLETestEnvironment : public testing::Environment
