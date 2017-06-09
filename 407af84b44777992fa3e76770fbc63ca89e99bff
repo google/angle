@@ -46,6 +46,30 @@
       "revId": "407af84b44777992fa3e76770fbc63ca89e99bff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d167f3eb_9aa87ded",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-09T18:44:19Z",
+      "side": 1,
+      "message": "OK, thanks. Possibly related to Shahmeer\u0027s change. In some weird world this would be a fix for crbug.com/730126",
+      "parentUuid": "15c00051_0c11d665",
+      "range": {
+        "startLine": 361,
+        "startChar": 1,
+        "endLine": 363,
+        "endChar": 60
+      },
+      "revId": "407af84b44777992fa3e76770fbc63ca89e99bff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
