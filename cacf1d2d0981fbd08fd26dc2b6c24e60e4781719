@@ -16,6 +16,24 @@
       "revId": "cacf1d2d0981fbd08fd26dc2b6c24e60e4781719",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "587f4d1c_17bbf907",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Blit11.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1261,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-09T00:16:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29f913a5_40bcc7c1",
+      "revId": "cacf1d2d0981fbd08fd26dc2b6c24e60e4781719",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
