@@ -769,10 +769,10 @@ EGLint SwapChain11::copyOffscreenToBackbuffer(EGLint x, EGLint y, EGLint width, 
 
     deviceContext->Unmap(mQuadVB.get(), 0);
 
-    static UINT stride = sizeof(d3d11::PositionTexCoordVertex);
-    static UINT startIdx = 0;
-    ID3D11Buffer *vertexBuffer = mQuadVB.get();
-    deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &startIdx);
+    auto stateManager = mRenderer->getStateManager();
+
+    constexpr UINT stride = sizeof(d3d11::PositionTexCoordVertex);
+    stateManager->setSingleVertexBuffer(&mQuadVB, stride, 0);
 
     // Apply state
     deviceContext->OMSetDepthStencilState(nullptr, 0xFFFFFFFF);
@@ -781,8 +781,6 @@ EGLint SwapChain11::copyOffscreenToBackbuffer(EGLint x, EGLint y, EGLint width, 
     deviceContext->OMSetBlendState(nullptr, blendFactor, 0xFFFFFFF);
 
     deviceContext->RSSetState(mPassThroughRS.get());
-
-    auto stateManager = mRenderer->getStateManager();
 
     // Apply shaders
     stateManager->setInputLayout(&mPassThroughIL);

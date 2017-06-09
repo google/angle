@@ -1038,7 +1038,6 @@ gl::Error Blit11::swizzleTexture(const d3d11::SharedSRV &source,
     ANGLE_TRY(getShaderSupport(*shader, &support));
 
     UINT stride    = 0;
-    UINT startIdx  = 0;
     UINT drawCount = 0;
     D3D11_PRIMITIVE_TOPOLOGY topology;
 
@@ -1067,8 +1066,7 @@ gl::Error Blit11::swizzleTexture(const d3d11::SharedSRV &source,
     auto stateManager = mRenderer->getStateManager();
 
     // Apply vertex buffer
-    ID3D11Buffer *vertexBuffer = mVertexBuffer.get();
-    deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &startIdx);
+    stateManager->setSingleVertexBuffer(&mVertexBuffer, stride, 0);
 
     // Apply constant buffer
     ID3D11Buffer *constantBuffer = mSwizzleCB.get();
@@ -1113,13 +1111,8 @@ gl::Error Blit11::swizzleTexture(const d3d11::SharedSRV &source,
     // Draw the quad
     deviceContext->Draw(drawCount, 0);
 
-    // Unbind textures and render targets and vertex buffer
+    // Unbind shader resources and dirty state.
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
-
-    UINT zero                      = 0;
-    ID3D11Buffer *const nullBuffer = nullptr;
-    deviceContext->IASetVertexBuffers(0, 1, &nullBuffer, &zero, &zero);
-
     mRenderer->markAllStateDirty();
 
     return gl::NoError();
@@ -1176,7 +1169,6 @@ gl::Error Blit11::copyTexture(const d3d11::SharedSRV &source,
     }
 
     UINT stride    = 0;
-    UINT startIdx  = 0;
     UINT drawCount = 0;
     D3D11_PRIMITIVE_TOPOLOGY topology;
 
@@ -1188,8 +1180,7 @@ gl::Error Blit11::copyTexture(const d3d11::SharedSRV &source,
     auto stateManager = mRenderer->getStateManager();
 
     // Apply vertex buffer
-    ID3D11Buffer *vertexBuffer = mVertexBuffer.get();
-    deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &startIdx);
+    stateManager->setSingleVertexBuffer(&mVertexBuffer, stride, 0);
 
     // Apply state
     if (maskOffAlpha)
@@ -1267,12 +1258,8 @@ gl::Error Blit11::copyTexture(const d3d11::SharedSRV &source,
     // Draw the quad
     deviceContext->Draw(drawCount, 0);
 
-    // Unbind textures and render targets and vertex buffer
+    // Unbind shader resource and invalidate state.
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
-
-    UINT zero                      = 0;
-    ID3D11Buffer *const nullBuffer = nullptr;
-    deviceContext->IASetVertexBuffers(0, 1, &nullBuffer, &zero, &zero);
 
     mRenderer->markAllStateDirty();
 
@@ -1317,7 +1304,6 @@ gl::Error Blit11::copyDepth(const d3d11::SharedSRV &source,
     }
 
     UINT stride    = 0;
-    UINT startIdx  = 0;
     UINT drawCount = 0;
     D3D11_PRIMITIVE_TOPOLOGY topology;
 
@@ -1326,9 +1312,10 @@ gl::Error Blit11::copyDepth(const d3d11::SharedSRV &source,
 
     deviceContext->Unmap(mVertexBuffer.get(), 0);
 
+    auto stateManager = mRenderer->getStateManager();
+
     // Apply vertex buffer
-    ID3D11Buffer *vertexBuffer = mVertexBuffer.get();
-    deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &startIdx);
+    stateManager->setSingleVertexBuffer(&mVertexBuffer, stride, 0);
 
     // Apply state
     deviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);
@@ -1353,8 +1340,6 @@ gl::Error Blit11::copyDepth(const d3d11::SharedSRV &source,
     ANGLE_TRY(mQuad2DIL.resolve(mRenderer));
     ANGLE_TRY(mQuad2DVS.resolve(mRenderer));
     ANGLE_TRY(mDepthPS.resolve(mRenderer));
-
-    auto stateManager = mRenderer->getStateManager();
 
     // Apply shaders
     stateManager->setInputLayout(&mQuad2DIL.getObj());
@@ -1390,12 +1375,8 @@ gl::Error Blit11::copyDepth(const d3d11::SharedSRV &source,
     // Draw the quad
     deviceContext->Draw(drawCount, 0);
 
-    // Unbind textures and render targets and vertex buffer
+    // Unbind shader resources and invalidate all state.
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
-
-    UINT zero                      = 0;
-    ID3D11Buffer *const nullBuffer = nullptr;
-    deviceContext->IASetVertexBuffers(0, 1, &nullBuffer, &zero, &zero);
 
     mRenderer->markAllStateDirty();
 

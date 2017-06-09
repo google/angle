@@ -90,6 +90,7 @@ class StateManager11 final : angle::NonCopyable
 
     void invalidateRenderTarget();
     void invalidateBoundViews();
+    void invalidateVertexBuffer();
     void invalidateEverything();
 
     void setOneTimeRenderTarget(ID3D11RenderTargetView *rtv, ID3D11DepthStencilView *dsv);
@@ -107,6 +108,16 @@ class StateManager11 final : angle::NonCopyable
     const std::vector<TranslatedAttribute> &getCurrentValueAttribs() const;
 
     void setInputLayout(const d3d11::InputLayout *inputLayout);
+
+    // TODO(jmadill): Migrate to d3d11::Buffer.
+    bool queueVertexBufferChange(size_t bufferIndex,
+                                 ID3D11Buffer *buffer,
+                                 UINT stride,
+                                 UINT offset);
+    bool queueVertexOffsetChange(size_t bufferIndex, UINT offsetOnly);
+    void applyVertexBufferChanges();
+
+    void setSingleVertexBuffer(const d3d11::Buffer *buffer, UINT stride, UINT offset);
 
   private:
     void setViewportBounds(const int width, const int height);
@@ -212,6 +223,13 @@ class StateManager11 final : angle::NonCopyable
 
     // Current applied input layout.
     ResourceSerial mCurrentInputLayout;
+
+    // Current applied vertex states.
+    // TODO(jmadill): Figure out how to use ResourceSerial here.
+    std::array<ID3D11Buffer *, gl::MAX_VERTEX_ATTRIBS> mCurrentVertexBuffers;
+    std::array<UINT, gl::MAX_VERTEX_ATTRIBS> mCurrentVertexStrides;
+    std::array<UINT, gl::MAX_VERTEX_ATTRIBS> mCurrentVertexOffsets;
+    gl::RangeUI mDirtyVertexBufferRange;
 };
 
 }  // namespace rx

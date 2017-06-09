@@ -180,9 +180,6 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::PixelUnpackState &unpac
 
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
 
-    ID3D11Buffer *nullBuffer = nullptr;
-    UINT zero = 0;
-
     // Are we doing a 2D or 3D copy?
     ID3D11GeometryShader *geometryShader =
         ((destSize.depth > 1) ? mBufferToTextureGS.get() : nullptr);
@@ -195,7 +192,7 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::PixelUnpackState &unpac
     stateManager->setInputLayout(nullptr);
     deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 
-    deviceContext->IASetVertexBuffers(0, 1, &nullBuffer, &zero, &zero);
+    stateManager->setSingleVertexBuffer(nullptr, 0, 0);
     deviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);
     deviceContext->OMSetDepthStencilState(mCopyDepthStencilState.get(), 0xFFFFFFFF);
     deviceContext->RSSetState(mCopyRasterizerState.get());
@@ -224,8 +221,10 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::PixelUnpackState &unpac
     UINT numPixels = (destArea.width * destArea.height * destArea.depth);
     deviceContext->Draw(numPixels, 0);
 
-    // Unbind textures and render targets and vertex buffer
+    // Unbind shader resources and invalidate state.
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
+
+    ID3D11Buffer *nullBuffer = nullptr;
     deviceContext->VSSetConstantBuffers(0, 1, &nullBuffer);
 
     mRenderer->markAllStateDirty();

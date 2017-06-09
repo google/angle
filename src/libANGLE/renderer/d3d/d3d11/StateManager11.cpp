@@ -160,7 +160,8 @@ StateManager11::StateManager11(Renderer11 *renderer)
       mRenderTargetIsDirty(false),
       mDirtyCurrentValueAttribs(),
       mCurrentValueAttribs(),
-      mCurrentInputLayout()
+      mCurrentInputLayout(),
+      mDirtyVertexBufferRange(gl::MAX_VERTEX_ATTRIBS, 0)
 {
     mCurBlendState.blend                 = false;
     mCurBlendState.sourceBlendRGB        = GL_ONE;
@@ -204,6 +205,10 @@ StateManager11::StateManager11(Renderer11 *renderer)
 
     // Initially all current value attributes must be updated on first use.
     mDirtyCurrentValueAttribs.flip();
+
+    mCurrentVertexBuffers.fill(nullptr);
+    mCurrentVertexStrides.fill(std::numeric_limits<UINT>::max());
+    mCurrentVertexOffsets.fill(std::numeric_limits<UINT>::max());
 }
 
 StateManager11::~StateManager11()
@@ -491,6 +496,8 @@ void StateManager11::syncState(const gl::State &state, const gl::State::DirtyBit
                 break;
         }
     }
+
+    // TODO(jmadill): Input layout and vertex buffer state.
 }
 
 gl::Error StateManager11::setBlendState(const gl::Framebuffer *framebuffer,
@@ -823,6 +830,16 @@ void StateManager11::invalidateEverything()
 
     // All calls to IASetInputLayout go through the state manager, so it shouldn't be
     // necessary to invalidate the state.
+
+    // Invalidate the vertex buffer state.
+    invalidateVertexBuffer();
+}
+
+void StateManager11::invalidateVertexBuffer()
+{
+    unsigned int limit = std::min<unsigned int>(mRenderer->getNativeCaps().maxVertexAttributes,
+                                                gl::MAX_VERTEX_ATTRIBS);
+    mDirtyVertexBufferRange = gl::RangeUI(0, limit);
 }
 
 void StateManager11::setOneTimeRenderTarget(ID3D11RenderTargetView *rtv,
@@ -1154,6 +1171,65 @@ void StateManager11::setInputLayout(const d3d11::InputLayout *inputLayout)
     {
         deviceContext->IASetInputLayout(inputLayout->get());
         mCurrentInputLayout = inputLayout->getSerial();
+    }
+}
+
+bool StateManager11::queueVertexBufferChange(size_t bufferIndex,
+                                             ID3D11Buffer *buffer,
+                                             UINT stride,
+                                             UINT offset)
+{
+    if (buffer != mCurrentVertexBuffers[bufferIndex] ||
+        stride != mCurrentVertexStrides[bufferIndex] ||
+        offset != mCurrentVertexOffsets[bufferIndex])
+    {
+        mDirtyVertexBufferRange.extend(static_cast<unsigned int>(bufferIndex));
+
+        mCurrentVertexBuffers[bufferIndex] = buffer;
+        mCurrentVertexStrides[bufferIndex] = stride;
+        mCurrentVertexOffsets[bufferIndex] = offset;
+        return true;
+    }
+
+    return false;
+}
+
+bool StateManager11::queueVertexOffsetChange(size_t bufferIndex, UINT offsetOnly)
+{
+    if (offsetOnly != mCurrentVertexOffsets[bufferIndex])
+    {
+        mDirtyVertexBufferRange.extend(static_cast<unsigned int>(bufferIndex));
+        mCurrentVertexOffsets[bufferIndex] = offsetOnly;
+        return true;
+    }
+    return false;
+}
+
+void StateManager11::applyVertexBufferChanges()
+{
+    if (mDirtyVertexBufferRange.empty())
+    {
+        return;
+    }
+
+    ASSERT(mDirtyVertexBufferRange.high() <= gl::MAX_VERTEX_ATTRIBS);
+
+    UINT start = static_cast<UINT>(mDirtyVertexBufferRange.low());
+
+    ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
+    deviceContext->IASetVertexBuffers(start, static_cast<UINT>(mDirtyVertexBufferRange.length()),
+                                      &mCurrentVertexBuffers[start], &mCurrentVertexStrides[start],
+                                      &mCurrentVertexOffsets[start]);
+
+    mDirtyVertexBufferRange = gl::RangeUI(gl::MAX_VERTEX_ATTRIBS, 0);
+}
+
+void StateManager11::setSingleVertexBuffer(const d3d11::Buffer *buffer, UINT stride, UINT offset)
+{
+    ID3D11Buffer *native = buffer ? buffer->get() : nullptr;
+    if (queueVertexBufferChange(0, native, stride, offset))
+    {
+        applyVertexBufferChanges();
     }
 }
 

@@ -41,11 +41,9 @@ class InputLayoutCache : angle::NonCopyable
 {
   public:
     InputLayoutCache();
-    virtual ~InputLayoutCache();
+    ~InputLayoutCache();
 
-    void initialize();
     void clear();
-    void markDirty();
 
     gl::Error applyVertexBuffers(Renderer11 *renderer,
                                  const gl::State &state,
@@ -105,9 +103,6 @@ class InputLayoutCache : angle::NonCopyable
 
     std::map<PackedAttributeLayout, d3d11::InputLayout> mLayoutMap;
 
-    std::array<ID3D11Buffer *, gl::MAX_VERTEX_ATTRIBS> mCurrentBuffers;
-    std::array<UINT, gl::MAX_VERTEX_ATTRIBS> mCurrentVertexStrides;
-    std::array<UINT, gl::MAX_VERTEX_ATTRIBS> mCurrentVertexOffsets;
     std::vector<const TranslatedAttribute *> mCurrentAttributes;
 
     d3d11::Buffer mPointSpriteVertexBuffer;

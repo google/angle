@@ -717,13 +717,11 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
     if (useVertexBuffer())
     {
         ANGLE_TRY(ensureVertexBufferCreated());
-        const UINT offset = 0;
-        ID3D11Buffer *vertexBuffer = mVertexBuffer.get();
-        deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &g_VertexSize, &offset);
+        stateManager->setSingleVertexBuffer(&mVertexBuffer, g_VertexSize, 0);
     }
     else
     {
-        deviceContext->IASetVertexBuffers(0, 0, nullptr, nullptr, nullptr);
+        stateManager->setSingleVertexBuffer(nullptr, 0, 0);
     }
 
     deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
