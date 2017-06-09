@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b5f86ca2_9c8d6de1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-06-09T05:11:12Z",
+      "side": 1,
+      "message": "Yizhou, Jamie proposed to use this commit message. But you didn\u0027t use it. In addition, this comment was unresolved in the final patch set.\n\nI strongly recommend you to resolve ALL comments from reviewers before the next round reviewing.",
+      "parentUuid": "7f618200_f507929c",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 39
+      },
+      "revId": "336704808345756274c9c596f9404533eceb89a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "26a1ea84_74f51d36",
         "filename": "src/libANGLE/Context.h",
         "patchSetId": 1
