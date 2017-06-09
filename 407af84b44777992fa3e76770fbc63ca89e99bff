@@ -22,6 +22,30 @@
       "revId": "407af84b44777992fa3e76770fbc63ca89e99bff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "15c00051_0c11d665",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-06-09T18:20:12Z",
+      "side": 1,
+      "message": "The way it was before, depthStencilRenderTarget was null so framebufferSize didn\u0027t get set here, and with no color attachment it hit UNREACHABLE() just below.",
+      "parentUuid": "3b2b7745_3fc6aa50",
+      "range": {
+        "startLine": 361,
+        "startChar": 1,
+        "endLine": 363,
+        "endChar": 60
+      },
+      "revId": "407af84b44777992fa3e76770fbc63ca89e99bff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
