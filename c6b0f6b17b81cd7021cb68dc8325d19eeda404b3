@@ -16,6 +16,29 @@
       "revId": "c6b0f6b17b81cd7021cb68dc8325d19eeda404b3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "16ae572a_203746dc",
+        "filename": "src/compiler/translator/Common.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-09T22:26:57Z",
+      "side": 1,
+      "message": "think this might be triggering a cast warning:\n\ne:\\b\\c\\b\\win\\src\\third_party\\angle\\src\\compiler\\translator\\common.h(134): warning C4267: \u0027argument\u0027: conversion from \u0027size_t\u0027 to \u0027int\u0027, possible loss of data",
+      "range": {
+        "startLine": 134,
+        "startChar": 12,
+        "endLine": 134,
+        "endChar": 65
+      },
+      "revId": "c6b0f6b17b81cd7021cb68dc8325d19eeda404b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
