@@ -74,6 +74,24 @@
       "revId": "32dd3a4cfcd2cd7863219d7e65e6cc04302a3f68",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec0f1c71_91833243",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-06-09T19:09:26Z",
+      "side": 1,
+      "message": "The point is that having this as a std::string\u0026 is equivalent to having it as a std::string. So the \u0026 is misleading because it makes it look like no allocation / copy happens, when in does.",
+      "parentUuid": "6f885373_69ec8c98",
+      "revId": "32dd3a4cfcd2cd7863219d7e65e6cc04302a3f68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
