@@ -2312,20 +2312,13 @@ void GL_APIENTRY GetProgramBinary(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateGetProgramBinary(context, program, bufSize, length, binaryFormat, binary))
+        if (!context->skipValidation() &&
+            !ValidateGetProgramBinary(context, program, bufSize, length, binaryFormat, binary))
         {
             return;
         }
 
-        Program *programObject = context->getProgram(program);
-        ASSERT(programObject != nullptr);
-
-        Error error = programObject->saveBinary(context, binaryFormat, binary, bufSize, length);
-        if (error.isError())
-        {
-            context->handleError(error);
-            return;
-        }
+        context->getProgramBinary(program, bufSize, length, binaryFormat, binary);
     }
 }
 
@@ -2342,20 +2335,13 @@ void GL_APIENTRY ProgramBinary(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateProgramBinary(context, program, binaryFormat, binary, length))
+        if (!context->skipValidation() &&
+            !ValidateProgramBinary(context, program, binaryFormat, binary, length))
         {
             return;
         }
 
-        Program *programObject = context->getProgram(program);
-        ASSERT(programObject != nullptr);
-
-        Error error = programObject->loadBinary(context, binaryFormat, binary, length);
-        if (error.isError())
-        {
-            context->handleError(error);
-            return;
-        }
+        context->programBinary(program, binaryFormat, binary, length);
     }
 }
 

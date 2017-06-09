@@ -4701,4 +4701,24 @@ void Context::validateProgram(GLuint program)
     programObject->validate(mCaps);
 }
 
+void Context::getProgramBinary(GLuint program,
+                               GLsizei bufSize,
+                               GLsizei *length,
+                               GLenum *binaryFormat,
+                               void *binary)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject != nullptr);
+
+    handleError(programObject->saveBinary(this, binaryFormat, binary, bufSize, length));
+}
+
+void Context::programBinary(GLuint program, GLenum binaryFormat, const void *binary, GLsizei length)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject != nullptr);
+
+    handleError(programObject->loadBinary(this, binaryFormat, binary, length));
+}
+
 }  // namespace gl

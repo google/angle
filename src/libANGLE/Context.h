@@ -748,6 +748,13 @@ class Context final : public ValidationContext
     void uniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
     void validateProgram(GLuint program);
 
+    void getProgramBinary(GLuint program,
+                          GLsizei bufSize,
+                          GLsizei *length,
+                          GLenum *binaryFormat,
+                          void *binary);
+    void programBinary(GLuint program, GLenum binaryFormat, const void *binary, GLsizei length);
+
     void handleError(const Error &error) override;
 
     GLenum getError();
