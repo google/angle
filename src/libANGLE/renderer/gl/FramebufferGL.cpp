@@ -17,6 +17,7 @@
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/ContextImpl.h"
 #include "libANGLE/renderer/gl/BlitGL.h"
+#include "libANGLE/renderer/gl/ContextGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/RenderbufferGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
@@ -265,15 +266,23 @@ GLenum FramebufferGL::getImplementationColorReadType(const gl::Context *context)
 }
 
 Error FramebufferGL::readPixels(const gl::Context *context,
-                                const gl::Rectangle &area,
+                                const gl::Rectangle &origArea,
                                 GLenum format,
                                 GLenum type,
-                                void *pixels) const
+                                void *ptrOrOffset) const
 {
-    // TODO: don't sync the pixel pack state here once the dirty bits contain the pixel pack buffer
-    // binding
-    const PixelPackState &packState = context->getGLState().getPackState();
-    mStateManager->setPixelPackState(packState);
+    // Clip read area to framebuffer.
+    const gl::Extents fbSize = getState().getReadAttachment()->getSize();
+    const gl::Rectangle fbRect(0, 0, fbSize.width, fbSize.height);
+    gl::Rectangle area;
+    if (!ClipRectangle(origArea, fbRect, &area))
+    {
+        // nothing to read
+        return gl::NoError();
+    }
+
+    PixelPackState packState;
+    packState.copyFrom(context, context->getGLState().getPackState());
 
     nativegl::ReadPixelsFormat readPixelsFormat =
         nativegl::GetReadPixelsFormat(mFunctions, mWorkarounds, format, type);
@@ -282,31 +291,64 @@ Error FramebufferGL::readPixels(const gl::Context *context,
 
     mStateManager->bindFramebuffer(GL_READ_FRAMEBUFFER, mFramebufferID);
 
-    if (mWorkarounds.packOverlappingRowsSeparatelyPackBuffer && packState.pixelBuffer.get() &&
-        packState.rowLength != 0 && packState.rowLength < area.width)
+    bool useOverlappingRowsWorkaround = mWorkarounds.packOverlappingRowsSeparatelyPackBuffer &&
+                                        packState.pixelBuffer.get() && packState.rowLength != 0 &&
+                                        packState.rowLength < area.width;
+
+    GLubyte *pixels = reinterpret_cast<GLubyte *>(ptrOrOffset);
+    int leftClip    = area.x - origArea.x;
+    int topClip     = area.y - origArea.y;
+    if (leftClip || topClip)
     {
-        return readPixelsRowByRowWorkaround(context, area, readFormat, readType, packState, pixels);
+        // Adjust destination to match portion clipped off left and/or top.
+        const gl::InternalFormat &glFormat = gl::GetInternalFormatInfo(readFormat, readType);
+
+        GLuint rowBytes = 0;
+        ANGLE_TRY_RESULT(glFormat.computeRowPitch(readType, origArea.width, packState.alignment,
+                                                  packState.rowLength),
+                         rowBytes);
+        pixels += leftClip * glFormat.pixelBytes + topClip * rowBytes;
     }
 
-    if (mWorkarounds.packLastRowSeparatelyForPaddingInclusion)
+    if (packState.rowLength == 0 && area.width != origArea.width)
     {
-        gl::Extents size(area.width, area.height, 1);
+        // No rowLength was specified so it will derive from read width, but clipping changed the
+        // read width.  Use the original width so we fill the user's buffer as they intended.
+        packState.rowLength = origArea.width;
+    }
 
-        bool apply;
-        ANGLE_TRY_RESULT(ShouldApplyLastRowPaddingWorkaround(size, packState, readFormat, readType,
-                                                             false, pixels),
-                         apply);
+    // We want to use rowLength, but that might not be supported.
+    bool cannotSetDesiredRowLength =
+        packState.rowLength && !GetImplAs<ContextGL>(context)->getNativeExtensions().packSubimage;
 
-        if (apply)
+    gl::Error retVal = gl::NoError();
+    if (cannotSetDesiredRowLength || useOverlappingRowsWorkaround)
+    {
+        retVal = readPixelsRowByRow(context, area, readFormat, readType, packState, pixels);
+    }
+    else
+    {
+        gl::ErrorOrResult<bool> useLastRowPaddingWorkaround = false;
+        if (mWorkarounds.packLastRowSeparatelyForPaddingInclusion)
         {
-            return readPixelsPaddingWorkaround(context, area, readFormat, readType, packState,
-                                               pixels);
+            useLastRowPaddingWorkaround =
+                ShouldApplyLastRowPaddingWorkaround(gl::Extents(area.width, area.height, 1),
+                                                    packState, readFormat, readType, false, pixels);
+        }
+
+        if (useLastRowPaddingWorkaround.isError())
+        {
+            retVal = useLastRowPaddingWorkaround.getError();
+        }
+        else
+        {
+            retVal = readPixelsAllAtOnce(context, area, readFormat, readType, packState, pixels,
+                                         useLastRowPaddingWorkaround.getResult());
         }
     }
 
-    mFunctions->readPixels(area.x, area.y, area.width, area.height, readFormat, readType, pixels);
-
-    return gl::NoError();
+    packState.pixelBuffer.set(context, nullptr);
+    return retVal;
 }
 
 Error FramebufferGL::blit(const gl::Context *context,
@@ -611,17 +653,17 @@ bool FramebufferGL::modifyInvalidateAttachmentsForEmulatedDefaultFBO(
     return true;
 }
 
-gl::Error FramebufferGL::readPixelsRowByRowWorkaround(const gl::Context *context,
-                                                      const gl::Rectangle &area,
-                                                      GLenum format,
-                                                      GLenum type,
-                                                      const gl::PixelPackState &pack,
-                                                      void *pixels) const
+gl::Error FramebufferGL::readPixelsRowByRow(const gl::Context *context,
+                                            const gl::Rectangle &area,
+                                            GLenum format,
+                                            GLenum type,
+                                            const gl::PixelPackState &pack,
+                                            GLubyte *pixels) const
 {
-    intptr_t offset = reinterpret_cast<intptr_t>(pixels);
 
     const gl::InternalFormat &glFormat = gl::GetInternalFormatInfo(format, type);
-    GLuint rowBytes                    = 0;
+
+    GLuint rowBytes = 0;
     ANGLE_TRY_RESULT(glFormat.computeRowPitch(type, area.width, pack.alignment, pack.rowLength),
                      rowBytes);
     GLuint skipBytes = 0;
@@ -633,48 +675,51 @@ gl::Error FramebufferGL::readPixelsRowByRowWorkaround(const gl::Context *context
     mStateManager->setPixelPackState(directPack);
     directPack.pixelBuffer.set(context, nullptr);
 
-    offset += skipBytes;
-    for (GLint row = 0; row < area.height; ++row)
+    pixels += skipBytes;
+    for (GLint y = area.y; y < area.y + area.height; ++y)
     {
-        mFunctions->readPixels(area.x, row + area.y, area.width, 1, format, type,
-                               reinterpret_cast<void *>(offset));
-        offset += row * rowBytes;
+        mFunctions->readPixels(area.x, y, area.width, 1, format, type, pixels);
+        pixels += rowBytes;
     }
 
     return gl::NoError();
 }
 
-gl::Error FramebufferGL::readPixelsPaddingWorkaround(const gl::Context *context,
-                                                     const gl::Rectangle &area,
-                                                     GLenum format,
-                                                     GLenum type,
-                                                     const gl::PixelPackState &pack,
-                                                     void *pixels) const
+gl::Error FramebufferGL::readPixelsAllAtOnce(const gl::Context *context,
+                                             const gl::Rectangle &area,
+                                             GLenum format,
+                                             GLenum type,
+                                             const gl::PixelPackState &pack,
+                                             GLubyte *pixels,
+                                             bool readLastRowSeparately) const
 {
-    const gl::InternalFormat &glFormat = gl::GetInternalFormatInfo(format, type);
-    GLuint rowBytes                    = 0;
-    ANGLE_TRY_RESULT(glFormat.computeRowPitch(type, area.width, pack.alignment, pack.rowLength),
-                     rowBytes);
-    GLuint skipBytes = 0;
-    ANGLE_TRY_RESULT(glFormat.computeSkipBytes(rowBytes, 0, pack, false), skipBytes);
-
-    // Get all by the last row
-    if (area.height > 1)
+    GLint height = area.height - readLastRowSeparately;
+    if (height > 0)
     {
-        mFunctions->readPixels(area.x, area.y, area.width, area.height - 1, format, type, pixels);
+        mStateManager->setPixelPackState(pack);
+        mFunctions->readPixels(area.x, area.y, area.width, height, format, type, pixels);
     }
 
-    // Get the last row manually
-    gl::PixelPackState directPack;
-    directPack.pixelBuffer.set(context, pack.pixelBuffer.get());
-    directPack.alignment   = 1;
-    mStateManager->setPixelPackState(directPack);
-    directPack.pixelBuffer.set(context, nullptr);
+    if (readLastRowSeparately)
+    {
+        const gl::InternalFormat &glFormat = gl::GetInternalFormatInfo(format, type);
 
-    intptr_t lastRowOffset =
-        reinterpret_cast<intptr_t>(pixels) + skipBytes + (area.height - 1) * rowBytes;
-    mFunctions->readPixels(area.x, area.y + area.height - 1, area.width, 1, format, type,
-                           reinterpret_cast<void *>(lastRowOffset));
+        GLuint rowBytes = 0;
+        ANGLE_TRY_RESULT(glFormat.computeRowPitch(type, area.width, pack.alignment, pack.rowLength),
+                         rowBytes);
+        GLuint skipBytes = 0;
+        ANGLE_TRY_RESULT(glFormat.computeSkipBytes(rowBytes, 0, pack, false), skipBytes);
+
+        gl::PixelPackState directPack;
+        directPack.pixelBuffer.set(context, pack.pixelBuffer.get());
+        directPack.alignment = 1;
+        mStateManager->setPixelPackState(directPack);
+        directPack.pixelBuffer.set(context, nullptr);
+
+        pixels += skipBytes + (area.height - 1) * rowBytes;
+        mFunctions->readPixels(area.x, area.y + area.height - 1, area.width, 1, format, type,
+                               pixels);
+    }
 
     return gl::NoError();
 }

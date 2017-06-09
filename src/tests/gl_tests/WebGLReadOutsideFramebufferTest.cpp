@@ -256,10 +256,7 @@ class WebGLReadOutsideFramebufferTest : public ANGLETest
 // the corresponding source pixel is outside the framebuffer.
 TEST_P(WebGLReadOutsideFramebufferTest, ReadPixels)
 {
-    if (IsD3DSM3() || IsD3D11())
-    {
-        Main(&WebGLReadOutsideFramebufferTest::TestReadPixels, false);
-    }
+    Main(&WebGLReadOutsideFramebufferTest::TestReadPixels, false);
 }
 
 // Check that copyTexSubImage2D does not set a destination pixel when
