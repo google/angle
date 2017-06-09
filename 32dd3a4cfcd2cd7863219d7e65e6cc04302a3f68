@@ -22,6 +22,40 @@
       "revId": "32dd3a4cfcd2cd7863219d7e65e6cc04302a3f68",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5ca31fda_530e1396",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-06-09T16:36:46Z",
+      "side": 1,
+      "message": "nit: I think these could be constexpr too",
+      "revId": "32dd3a4cfcd2cd7863219d7e65e6cc04302a3f68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "18ec4b6d_e4981843",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-06-09T16:36:46Z",
+      "side": 1,
+      "message": "nit here and in other places: const char* or const std::string\n\nconst std::string\u0026 is still going to do an allocation here.",
+      "revId": "32dd3a4cfcd2cd7863219d7e65e6cc04302a3f68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
