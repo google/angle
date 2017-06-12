@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4df4c805_b1707ebc",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-12T08:47:53Z",
+      "side": 1,
+      "message": "Maybe rename it to initBufferFromRawPointer ?",
+      "range": {
+        "startLine": 42,
+        "startChar": 9,
+        "endLine": 42,
+        "endChar": 28
+      },
+      "revId": "66d2d5a525731e4fbfeba46ea2c3a53cc0d2cab2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
