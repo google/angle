@@ -16,6 +16,24 @@
       "revId": "4c96b3e93bf7ff2c1feebd5cea3078bd47c7fa55",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98898636_0e17c5d2",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-12T19:41:45Z",
+      "side": 1,
+      "message": "Yeah, it is a bit redundant. I added the friend after I realized that accessors just weren\u0027t enough for loading in the new state, and the design of the State classes prohibit adding setters.\n\nI left in the accessors because they could be used by any other piece of code, and were missing before. I didn\u0027t actually change the state that was stored in the class.\n\nAnyway LMK if this doesn\u0027t make sense to you.",
+      "parentUuid": "3b5d66a1_75081767",
+      "revId": "4c96b3e93bf7ff2c1feebd5cea3078bd47c7fa55",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
