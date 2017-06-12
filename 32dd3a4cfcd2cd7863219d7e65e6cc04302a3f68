@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "45923ff8_03fda70b",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-12T03:05:53Z",
+      "side": 1,
+      "message": "I think we should use ANGLE_GL_PROGRAM in runDrawElementsTest() because the tests calling this function all need to build a temporary shader program.",
+      "parentUuid": "3b5a9fc4_1a0303ad",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 31
+      },
+      "revId": "32dd3a4cfcd2cd7863219d7e65e6cc04302a3f68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5ca31fda_530e1396",
         "filename": "src/tests/gl_tests/InstancingTest.cpp",
         "patchSetId": 7
@@ -39,6 +63,24 @@
       "revId": "32dd3a4cfcd2cd7863219d7e65e6cc04302a3f68",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "022aad37_356fd369",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-12T03:05:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5ca31fda_530e1396",
+      "revId": "32dd3a4cfcd2cd7863219d7e65e6cc04302a3f68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -107,6 +149,24 @@
       "side": 1,
       "message": "I was concerned about double-allocation (first from an implicit const char * constructor, then a copy to the local std::string) but it looks like std::string defines a custom operator\u003d for const char *, so it will only do one allocation.\n\nSo it seems const std::string is pretty equivalent to const std::string \u0026 (one will call the constructor, one will default-construct and call the assignment operator).\n\nI\u0027m fine with const std::string.",
       "parentUuid": "ec0f1c71_91833243",
+      "revId": "32dd3a4cfcd2cd7863219d7e65e6cc04302a3f68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9816dc43_56f3d9f7",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-12T03:05:53Z",
+      "side": 1,
+      "message": "I am using const std::string in my new patch.",
+      "parentUuid": "3c94e855_0042ebe5",
       "revId": "32dd3a4cfcd2cd7863219d7e65e6cc04302a3f68",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
