@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3b5d66a1_75081767",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-06-12T19:18:32Z",
+      "side": 1,
+      "message": "nit: either MemoryProgramCache is a friend and can access the private variables, either we need the extra accessors. Having both seems redundant.",
+      "revId": "4c96b3e93bf7ff2c1feebd5cea3078bd47c7fa55",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
