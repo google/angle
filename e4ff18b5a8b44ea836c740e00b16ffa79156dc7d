@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8d4abca7_eccbf98c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-12T13:57:29Z",
+      "side": 1,
+      "message": "Contrary to before, I think the commit message has a bit too much detail now... I\u0027d leave at least this part out to streamline the commit message, leave only the parts that really are relevant to understanding the patch.",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 1
+      },
+      "revId": "e4ff18b5a8b44ea836c740e00b16ffa79156dc7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f7411aab_0e34e8f3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-12T13:57:29Z",
+      "side": 1,
+      "message": "The example is a bit odd, since MyTest seems to set D3D workaround state, but this code is toggling the flag for the GL backend. Instead you could just have D3D params here.",
+      "revId": "e4ff18b5a8b44ea836c740e00b16ffa79156dc7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
