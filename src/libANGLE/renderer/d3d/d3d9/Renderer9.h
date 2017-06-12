@@ -408,7 +408,7 @@ class Renderer9 : public RendererD3D
                                const void *indices,
                                GLsizei instances);
 
-    gl::Error applyShaders(const gl::ContextState &data, GLenum drawMode);
+    gl::Error applyShaders(const gl::Context *context, GLenum drawMode);
 
     void generateCaps(gl::Caps *outCaps,
                       gl::TextureCapsMap *outTextureCaps,

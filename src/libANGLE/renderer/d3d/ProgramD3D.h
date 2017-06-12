@@ -165,7 +165,8 @@ class ProgramD3D : public ProgramImpl
     void setBinaryRetrievableHint(bool retrievable) override;
     void setSeparable(bool separable) override;
 
-    gl::Error getPixelExecutableForFramebuffer(const gl::Framebuffer *fbo,
+    gl::Error getPixelExecutableForFramebuffer(const gl::Context *context,
+                                               const gl::Framebuffer *fbo,
                                                ShaderExecutableD3D **outExectuable);
     gl::Error getPixelExecutableForOutputLayout(const std::vector<GLenum> &outputLayout,
                                                 ShaderExecutableD3D **outExectuable,

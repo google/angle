@@ -97,7 +97,7 @@ class FramebufferD3D : public FramebufferImpl
     void syncState(const gl::Context *context,
                    const gl::Framebuffer::DirtyBits &dirtyBits) override;
 
-    const gl::AttachmentList &getColorAttachmentsForRender() const;
+    const gl::AttachmentList &getColorAttachmentsForRender(const gl::Context *context);
 
     gl::Error getSamplePosition(size_t index, GLfloat *xy) const override;
 
@@ -126,6 +126,7 @@ class FramebufferD3D : public FramebufferImpl
 
     RendererD3D *mRenderer;
     Optional<gl::AttachmentList> mColorAttachmentsForRender;
+    gl::DrawBufferMask mCurrentActiveProgramOutputs;
 };
 }
 

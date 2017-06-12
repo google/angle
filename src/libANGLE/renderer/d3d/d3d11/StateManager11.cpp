@@ -503,7 +503,8 @@ void StateManager11::syncState(const gl::Context *context, const gl::State::Dirt
     // TODO(jmadill): Input layout and vertex buffer state.
 }
 
-gl::Error StateManager11::syncBlendState(const gl::Framebuffer *framebuffer,
+gl::Error StateManager11::syncBlendState(const gl::Context *context,
+                                         const gl::Framebuffer *framebuffer,
                                          const gl::BlendState &blendState,
                                          const gl::ColorF &blendColor,
                                          unsigned int sampleMask)
@@ -514,7 +515,8 @@ gl::Error StateManager11::syncBlendState(const gl::Framebuffer *framebuffer,
     }
 
     ID3D11BlendState *dxBlendState = nullptr;
-    const d3d11::BlendStateKey &key = RenderStateCache::GetBlendStateKey(framebuffer, blendState);
+    const d3d11::BlendStateKey &key =
+        RenderStateCache::GetBlendStateKey(context, framebuffer, blendState);
 
     ANGLE_TRY(mRenderer->getBlendState(key, &dxBlendState));
 
@@ -1053,6 +1055,8 @@ gl::Error StateManager11::syncFramebuffer(const gl::Context *context, gl::Frameb
     size_t appliedRTIndex  = 0;
     bool skipInactiveRTs   = mRenderer->getWorkarounds().mrtPerfWorkaround;
     const auto &drawStates = framebuffer->getDrawBufferStates();
+    gl::DrawBufferMask activeProgramOutputs =
+        context->getContextState().getState().getProgram()->getActiveOutputVariables();
     UINT maxExistingRT     = 0;
 
     for (size_t rtIndex = 0; rtIndex < colorRTs.size(); ++rtIndex)
@@ -1060,7 +1064,8 @@ gl::Error StateManager11::syncFramebuffer(const gl::Context *context, gl::Frameb
         const RenderTarget11 *renderTarget = colorRTs[rtIndex];
 
         // Skip inactive rendertargets if the workaround is enabled.
-        if (skipInactiveRTs && (!renderTarget || drawStates[rtIndex] == GL_NONE))
+        if (skipInactiveRTs &&
+            (!renderTarget || drawStates[rtIndex] == GL_NONE || !activeProgramOutputs[rtIndex]))
         {
             continue;
         }
@@ -1279,7 +1284,8 @@ gl::Error StateManager11::updateState(const gl::Context *context, GLenum drawMod
 
     // Setting blend state
     unsigned int mask = GetBlendSampleMask(data, samples);
-    ANGLE_TRY(syncBlendState(framebuffer, glState.getBlendState(), glState.getBlendColor(), mask));
+    ANGLE_TRY(syncBlendState(context, framebuffer, glState.getBlendState(), glState.getBlendColor(),
+                             mask));
 
     // Setting depth stencil state
     ANGLE_TRY(syncDepthStencilState(glState));

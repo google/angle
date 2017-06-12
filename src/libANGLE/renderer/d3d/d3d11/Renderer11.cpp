@@ -1845,12 +1845,13 @@ gl::Error Renderer11::applyTransformFeedbackBuffers(const gl::ContextState &data
     return gl::NoError();
 }
 
-gl::Error Renderer11::drawArraysImpl(const gl::ContextState &data,
+gl::Error Renderer11::drawArraysImpl(const gl::Context *context,
                                      GLenum mode,
                                      GLint startVertex,
                                      GLsizei count,
                                      GLsizei instances)
 {
+    const auto &data       = context->getContextState();
     const auto &glState    = data.getState();
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(glState.getProgram());
 
@@ -1872,8 +1873,8 @@ gl::Error Renderer11::drawArraysImpl(const gl::ContextState &data,
         }
 
         rx::ShaderExecutableD3D *pixelExe = nullptr;
-        ANGLE_TRY(
-            programD3D->getPixelExecutableForFramebuffer(glState.getDrawFramebuffer(), &pixelExe));
+        ANGLE_TRY(programD3D->getPixelExecutableForFramebuffer(
+            context, glState.getDrawFramebuffer(), &pixelExe));
 
         // Skip the draw call if rasterizer discard is enabled (or no fragment shader).
         if (!pixelExe || glState.getRasterizerState().rasterizerDiscard)
@@ -2358,11 +2359,12 @@ gl::Error Renderer11::drawTriangleFan(const gl::ContextState &data,
     return gl::NoError();
 }
 
-gl::Error Renderer11::applyShaders(const gl::ContextState &data, GLenum drawMode)
+gl::Error Renderer11::applyShaders(const gl::Context *context, GLenum drawMode)
 {
     // This method is called single-threaded.
     ANGLE_TRY(ensureHLSLCompilerInitialized());
 
+    const auto &data       = context->getContextState();
     const auto &glState    = data.getState();
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(glState.getProgram());
     programD3D->updateCachedInputLayout(glState);
@@ -2374,7 +2376,7 @@ gl::Error Renderer11::applyShaders(const gl::ContextState &data, GLenum drawMode
 
     const gl::Framebuffer *drawFramebuffer = glState.getDrawFramebuffer();
     ShaderExecutableD3D *pixelExe          = nullptr;
-    ANGLE_TRY(programD3D->getPixelExecutableForFramebuffer(drawFramebuffer, &pixelExe));
+    ANGLE_TRY(programD3D->getPixelExecutableForFramebuffer(context, drawFramebuffer, &pixelExe));
 
     ShaderExecutableD3D *geometryExe = nullptr;
     ANGLE_TRY(
@@ -4621,7 +4623,7 @@ gl::Error Renderer11::genericDrawElements(const gl::Context *context,
     ANGLE_TRY(applyVertexBuffer(context, mode, static_cast<GLsizei>(indexInfo.indexRange.start),
                                 static_cast<GLsizei>(vertexCount), instances, &indexInfo));
     ANGLE_TRY(applyTextures(context));
-    ANGLE_TRY(applyShaders(data, mode));
+    ANGLE_TRY(applyShaders(context, mode));
     ANGLE_TRY(programD3D->applyUniformBuffers(data));
 
     if (!skipDraw(data, mode))
@@ -4657,12 +4659,12 @@ gl::Error Renderer11::genericDrawArrays(const gl::Context *context,
     ANGLE_TRY(applyTransformFeedbackBuffers(data));
     ANGLE_TRY(applyVertexBuffer(context, mode, first, count, instances, nullptr));
     ANGLE_TRY(applyTextures(context));
-    ANGLE_TRY(applyShaders(data, mode));
+    ANGLE_TRY(applyShaders(context, mode));
     ANGLE_TRY(programD3D->applyUniformBuffers(data));
 
     if (!skipDraw(data, mode))
     {
-        ANGLE_TRY(drawArraysImpl(data, mode, first, count, instances));
+        ANGLE_TRY(drawArraysImpl(context, mode, first, count, instances));
 
         if (glState.isTransformFeedbackActiveUnpaused())
         {
@@ -4692,7 +4694,7 @@ gl::Error Renderer11::genericDrawIndirect(const gl::Context *context,
     ANGLE_TRY(applyTransformFeedbackBuffers(contextState));
     ASSERT(!glState.isTransformFeedbackActiveUnpaused());
     ANGLE_TRY(applyTextures(context));
-    ANGLE_TRY(applyShaders(contextState, mode));
+    ANGLE_TRY(applyShaders(context, mode));
     ANGLE_TRY(programD3D->applyUniformBuffers(contextState));
 
     if (type == GL_NONE)

@@ -301,11 +301,9 @@ bool FramebufferD3D::checkStatus() const
 void FramebufferD3D::syncState(const gl::Context *context,
                                const gl::Framebuffer::DirtyBits &dirtyBits)
 {
-    bool invalidateColorAttachmentCache = false;
-
     if (!mColorAttachmentsForRender.valid())
     {
-        invalidateColorAttachmentCache = true;
+        return;
     }
 
     for (auto dirtyBit : dirtyBits)
@@ -314,13 +312,19 @@ void FramebufferD3D::syncState(const gl::Context *context,
              dirtyBit < gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_MAX) ||
             dirtyBit == gl::Framebuffer::DIRTY_BIT_DRAW_BUFFERS)
         {
-            invalidateColorAttachmentCache = true;
+            mColorAttachmentsForRender.reset();
         }
     }
+}
 
-    if (!invalidateColorAttachmentCache)
+const gl::AttachmentList &FramebufferD3D::getColorAttachmentsForRender(const gl::Context *context)
+{
+    gl::DrawBufferMask activeProgramOutputs =
+        context->getContextState().getState().getProgram()->getActiveOutputVariables();
+
+    if (mColorAttachmentsForRender.valid() && mCurrentActiveProgramOutputs == activeProgramOutputs)
     {
-        return;
+        return mColorAttachmentsForRender.value();
     }
 
     // Does not actually free memory
@@ -335,7 +339,8 @@ void FramebufferD3D::syncState(const gl::Context *context,
         GLenum drawBufferState                           = drawBufferStates[attachmentIndex];
         const gl::FramebufferAttachment &colorAttachment = colorAttachments[attachmentIndex];
 
-        if (colorAttachment.isAttached() && drawBufferState != GL_NONE)
+        if (colorAttachment.isAttached() && drawBufferState != GL_NONE &&
+            activeProgramOutputs[attachmentIndex])
         {
             ASSERT(drawBufferState == GL_BACK ||
                    drawBufferState == (GL_COLOR_ATTACHMENT0_EXT + attachmentIndex));
@@ -348,11 +353,8 @@ void FramebufferD3D::syncState(const gl::Context *context,
     }
 
     mColorAttachmentsForRender = std::move(colorAttachmentsForRender);
-}
+    mCurrentActiveProgramOutputs = activeProgramOutputs;
 
-const gl::AttachmentList &FramebufferD3D::getColorAttachmentsForRender() const
-{
-    ASSERT(mColorAttachmentsForRender.valid());
     return mColorAttachmentsForRender.value();
 }
 

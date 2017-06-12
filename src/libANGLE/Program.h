@@ -379,6 +379,7 @@ class Program final : angle::NonCopyable, public LabeledObject
     {
         return mState.mOutputVariableTypes;
     }
+    DrawBufferMask getActiveOutputVariables() const { return mState.mActiveOutputVariables; }
 
     void getActiveUniform(GLuint index,
                           GLsizei bufsize,

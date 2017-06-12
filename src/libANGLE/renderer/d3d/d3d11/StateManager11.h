@@ -55,6 +55,7 @@ class StateManager11 final : angle::NonCopyable
 
     void initialize(const gl::Caps &caps);
     void deinitialize();
+
     void syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits);
 
     const dx_VertexConstants11 &getVertexConstants() const { return mVertexConstants; }
@@ -111,7 +112,8 @@ class StateManager11 final : angle::NonCopyable
     void unsetConflictingAttachmentResources(const gl::FramebufferAttachment *attachment,
                                              ID3D11Resource *resource);
 
-    gl::Error syncBlendState(const gl::Framebuffer *framebuffer,
+    gl::Error syncBlendState(const gl::Context *context,
+                             const gl::Framebuffer *framebuffer,
                              const gl::BlendState &blendState,
                              const gl::ColorF &blendColor,
                              unsigned int sampleMask);

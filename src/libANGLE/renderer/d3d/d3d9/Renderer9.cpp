@@ -1778,22 +1778,23 @@ gl::Error Renderer9::getCountingIB(size_t count, StaticIndexBufferInterface **ou
     return gl::NoError();
 }
 
-gl::Error Renderer9::applyShaders(const gl::ContextState &data, GLenum drawMode)
+gl::Error Renderer9::applyShaders(const gl::Context *context, GLenum drawMode)
 {
+    const gl::State &state = context->getContextState().getState();
     // This method is called single-threaded.
     ANGLE_TRY(ensureHLSLCompilerInitialized());
 
-    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(data.getState().getProgram());
-    programD3D->updateCachedInputLayout(data.getState());
+    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(state.getProgram());
+    programD3D->updateCachedInputLayout(state);
 
     const auto &inputLayout = programD3D->getCachedInputLayout();
 
     ShaderExecutableD3D *vertexExe = nullptr;
     ANGLE_TRY(programD3D->getVertexExecutableForInputLayout(inputLayout, &vertexExe, nullptr));
 
-    const gl::Framebuffer *drawFramebuffer = data.getState().getDrawFramebuffer();
+    const gl::Framebuffer *drawFramebuffer = state.getDrawFramebuffer();
     ShaderExecutableD3D *pixelExe          = nullptr;
-    ANGLE_TRY(programD3D->getPixelExecutableForFramebuffer(drawFramebuffer, &pixelExe));
+    ANGLE_TRY(programD3D->getPixelExecutableForFramebuffer(context, drawFramebuffer, &pixelExe));
 
     IDirect3DVertexShader9 *vertexShader =
         (vertexExe ? GetAs<ShaderExecutable9>(vertexExe)->getVertexShader() : nullptr);
@@ -3146,7 +3147,7 @@ gl::Error Renderer9::genericDrawElements(const gl::Context *context,
                                 static_cast<GLsizei>(indexInfo.indexRange.start),
                                 static_cast<GLsizei>(vertexCount), instances, &indexInfo));
     ANGLE_TRY(applyTextures(context));
-    ANGLE_TRY(applyShaders(data, mode));
+    ANGLE_TRY(applyShaders(context, mode));
     ANGLE_TRY(programD3D->applyUniformBuffers(data));
 
     if (!skipDraw(data, mode))
@@ -3180,7 +3181,7 @@ gl::Error Renderer9::genericDrawArrays(const gl::Context *context,
     ANGLE_TRY(applyTransformFeedbackBuffers(data.getState()));
     ANGLE_TRY(applyVertexBuffer(data.getState(), mode, first, count, instances, nullptr));
     ANGLE_TRY(applyTextures(context));
-    ANGLE_TRY(applyShaders(data, mode));
+    ANGLE_TRY(applyShaders(context, mode));
     ANGLE_TRY(programD3D->applyUniformBuffers(data));
 
     if (!skipDraw(data, mode))

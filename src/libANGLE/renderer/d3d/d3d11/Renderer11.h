@@ -479,7 +479,7 @@ class Renderer11 : public RendererD3D
                             size_t rangeEnd) override;
 
   private:
-    gl::Error drawArraysImpl(const gl::ContextState &data,
+    gl::Error drawArraysImpl(const gl::Context *context,
                              GLenum mode,
                              GLint startVertex,
                              GLsizei count,
@@ -520,7 +520,7 @@ class Renderer11 : public RendererD3D
                               int baseVertex,
                               int instances);
 
-    gl::Error applyShaders(const gl::ContextState &data, GLenum drawMode);
+    gl::Error applyShaders(const gl::Context *context, GLenum drawMode);
     gl::Error generateSwizzle(const gl::Context *context, gl::Texture *texture);
     gl::Error generateSwizzles(const gl::Context *context, gl::SamplerType type);
     gl::Error generateSwizzles(const gl::Context *context);
