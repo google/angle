@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "d84d362b_0e8bc1e3",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-12T16:19:25Z",
+      "side": 1,
+      "message": "Almost of the methods only need a raw pointer to buffer, but maybe we can keep this method as it is.",
+      "range": {
+        "startLine": 38,
+        "startChar": 34,
+        "endLine": 38,
+        "endChar": 45
+      },
+      "revId": "28e09ed9997f730d04ce9e4751e27df512e3385e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "64d9437e_493c9746",
         "filename": "src/libANGLE/VertexAttribute.h",
         "patchSetId": 4
@@ -25,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "988420b0_dbc6a2fd",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-12T16:19:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "64d9437e_493c9746",
+      "range": {
+        "startLine": 40,
+        "startChar": 19,
+        "endLine": 40,
+        "endChar": 57
+      },
+      "revId": "28e09ed9997f730d04ce9e4751e27df512e3385e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f1f5037b_d214995f",
         "filename": "src/libANGLE/VertexAttribute.h",
         "patchSetId": 4
@@ -45,6 +92,30 @@
       "revId": "28e09ed9997f730d04ce9e4751e27df512e3385e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ebd674d9_3255c54c",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-12T16:19:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f1f5037b_d214995f",
+      "range": {
+        "startLine": 43,
+        "startChar": 4,
+        "endLine": 47,
+        "endChar": 34
+      },
+      "revId": "28e09ed9997f730d04ce9e4751e27df512e3385e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
