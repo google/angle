@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0ad6620c_9fbeda56",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-12T10:54:40Z",
+      "side": 1,
+      "message": "Can you make the commit message a bit more specific, like include an example for what kind of parameters this capability is intended to be used for.",
+      "revId": "5dc881a102a69f42654f84ab399cc3f610845196",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "37a6aa0c_61bcdb64",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-12T10:54:40Z",
+      "side": 1,
+      "message": "Long lines in the commit parameters.",
+      "revId": "5dc881a102a69f42654f84ab399cc3f610845196",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a89c4fab_a68dc1f7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-12T10:54:40Z",
+      "side": 1,
+      "message": "BUG\u003d?\nTEST\u003dangle_end2end_tests",
+      "revId": "5dc881a102a69f42654f84ab399cc3f610845196",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f469c66d_53c41262",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-12T10:54:40Z",
+      "side": 1,
+      "message": "SetUp and TearDown are defined both in testing::Test and here in ANGLETestBase, and ANGLETest inherits from both. I\u0027m not sure what the spec for multiple inheritance is in this case, but even just for clarity\u0027s sake I think these functions here in ANGLETestBase should be renamed and made non-virtual. My suggestion for names is \"ANGLETestSetUp\" and \"ANGLETestTearDown\".",
+      "revId": "5dc881a102a69f42654f84ab399cc3f610845196",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
