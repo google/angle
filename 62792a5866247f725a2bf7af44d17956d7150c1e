@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "31b05fca_4e96c804",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-12T17:06:18Z",
+      "side": 1,
+      "message": "you can omit private from this",
+      "range": {
+        "startLine": 22,
+        "startChar": 28,
+        "endLine": 22,
+        "endChar": 35
+      },
+      "revId": "62792a5866247f725a2bf7af44d17956d7150c1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "661e5649_0704f3b7",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-12T17:06:18Z",
+      "side": 1,
+      "message": "do you need the extra info from the BindingPointer? Seems like this accessor should mirror the setter.",
+      "range": {
+        "startLine": 38,
+        "startChar": 10,
+        "endLine": 38,
+        "endChar": 32
+      },
+      "revId": "62792a5866247f725a2bf7af44d17956d7150c1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
