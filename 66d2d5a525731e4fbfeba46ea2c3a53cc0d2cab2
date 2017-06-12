@@ -2,6 +2,74 @@
   "comments": [
     {
       "key": {
+        "uuid": "8fa1a3b2_41a3dbc5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-12T09:44:37Z",
+      "side": 1,
+      "message": "Change to \"Make VertexBinding\u0027s member variables private\", commit message headers less than ~60 chars are preferred, though this has not been enforced strictly.",
+      "revId": "66d2d5a525731e4fbfeba46ea2c3a53cc0d2cab2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3c850e0_dfdcdab0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-12T09:44:37Z",
+      "side": 1,
+      "message": "Limit commit message line length to ~70 chars.",
+      "revId": "66d2d5a525731e4fbfeba46ea2c3a53cc0d2cab2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b4e65109_76beba21",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-12T09:44:37Z",
+      "side": 1,
+      "message": "Should have BUG\u003d and TEST\u003d. Probably existing angle_end2end_tests should cover this.",
+      "revId": "66d2d5a525731e4fbfeba46ea2c3a53cc0d2cab2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "30db24b1_5a1a0d54",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1093,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-12T09:44:37Z",
+      "side": 1,
+      "message": "What if value + divisor - 1u overflows the unsigned integer range? The previous implementation seems more robust.",
+      "revId": "66d2d5a525731e4fbfeba46ea2c3a53cc0d2cab2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4df4c805_b1707ebc",
         "filename": "src/libANGLE/VertexAttribute.h",
         "patchSetId": 2
@@ -13,6 +81,30 @@
       "writtenOn": "2017-06-12T08:47:53Z",
       "side": 1,
       "message": "Maybe rename it to initBufferFromRawPointer ?",
+      "range": {
+        "startLine": 42,
+        "startChar": 9,
+        "endLine": 42,
+        "endChar": 28
+      },
+      "revId": "66d2d5a525731e4fbfeba46ea2c3a53cc0d2cab2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f547b6ce_b2de4438",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-12T09:44:37Z",
+      "side": 1,
+      "message": "Maybe you could just have an entry point getBuffer() that returns a mutable reference to the buffer member, and use that instead of having a bunch of these different accessors that are a bit hard to name.\n\nI do think that setBufferRawPointer is better than initBufferFromRawPointer, since the function sets the buffer to nullptr sometimes.",
+      "parentUuid": "4df4c805_b1707ebc",
       "range": {
         "startLine": 42,
         "startChar": 9,
