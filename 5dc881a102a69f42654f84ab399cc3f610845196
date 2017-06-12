@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "6551bc45_4280fe34",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-12T13:48:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0ad6620c_9fbeda56",
+      "revId": "5dc881a102a69f42654f84ab399cc3f610845196",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37a6aa0c_61bcdb64",
         "filename": "/COMMIT_MSG",
         "patchSetId": 2
@@ -33,6 +51,24 @@
       "revId": "5dc881a102a69f42654f84ab399cc3f610845196",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "97cbb9cd_e8762a81",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-12T13:48:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37a6aa0c_61bcdb64",
+      "revId": "5dc881a102a69f42654f84ab399cc3f610845196",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "a6e4dc8b_f01e5760",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-12T13:48:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a89c4fab_a68dc1f7",
+      "revId": "5dc881a102a69f42654f84ab399cc3f610845196",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f469c66d_53c41262",
         "filename": "src/tests/test_utils/ANGLETest.h",
         "patchSetId": 2
@@ -64,6 +118,24 @@
       "writtenOn": "2017-06-12T10:54:40Z",
       "side": 1,
       "message": "SetUp and TearDown are defined both in testing::Test and here in ANGLETestBase, and ANGLETest inherits from both. I\u0027m not sure what the spec for multiple inheritance is in this case, but even just for clarity\u0027s sake I think these functions here in ANGLETestBase should be renamed and made non-virtual. My suggestion for names is \"ANGLETestSetUp\" and \"ANGLETestTearDown\".",
+      "revId": "5dc881a102a69f42654f84ab399cc3f610845196",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e545c97a_27d9f8c1",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-12T13:48:06Z",
+      "side": 1,
+      "message": "Yes, thanks for pointing out.",
+      "parentUuid": "f469c66d_53c41262",
       "revId": "5dc881a102a69f42654f84ab399cc3f610845196",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
