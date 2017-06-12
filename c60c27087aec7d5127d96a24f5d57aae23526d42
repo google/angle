@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "79009fb9_1c82d54b",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-12T20:55:43Z",
+      "side": 1,
+      "message": "might as well invert this if to flatten the scope --\n\nif (valid() \u0026\u0026 outputs match)\n{\n   return ...;\n}\n\n...",
+      "range": {
+        "startLine": 322,
+        "startChar": 3,
+        "endLine": 325,
+        "endChar": 5
+      },
+      "revId": "c60c27087aec7d5127d96a24f5d57aae23526d42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c6cf970a_af3429a4",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-12T20:55:43Z",
+      "side": 1,
+      "message": "nit: mCurrentActiveProgramOutputs",
+      "range": {
+        "startLine": 127,
+        "startChar": 23,
+        "endLine": 127,
+        "endChar": 48
+      },
+      "revId": "c60c27087aec7d5127d96a24f5d57aae23526d42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
