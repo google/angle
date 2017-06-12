@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9bfd6a98_3ca1a5d0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-12T12:13:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8fa1a3b2_41a3dbc5",
+      "revId": "66d2d5a525731e4fbfeba46ea2c3a53cc0d2cab2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e3c850e0_dfdcdab0",
         "filename": "/COMMIT_MSG",
         "patchSetId": 2
@@ -33,6 +51,24 @@
       "revId": "66d2d5a525731e4fbfeba46ea2c3a53cc0d2cab2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49e2870b_7ccdce89",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-12T12:13:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e3c850e0_dfdcdab0",
+      "revId": "66d2d5a525731e4fbfeba46ea2c3a53cc0d2cab2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "4b7a719c_cff16592",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-12T12:13:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b4e65109_76beba21",
+      "revId": "66d2d5a525731e4fbfeba46ea2c3a53cc0d2cab2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "30db24b1_5a1a0d54",
         "filename": "src/common/mathutil.h",
         "patchSetId": 2
@@ -64,6 +118,47 @@
       "writtenOn": "2017-06-12T09:44:37Z",
       "side": 1,
       "message": "What if value + divisor - 1u overflows the unsigned integer range? The previous implementation seems more robust.",
+      "revId": "66d2d5a525731e4fbfeba46ea2c3a53cc0d2cab2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e2fc01c_7e58a9c8",
+        "filename": "src/common/mathutil.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1093,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-12T12:13:39Z",
+      "side": 1,
+      "message": "Done. Switched to the earlier version as it is more robust.",
+      "parentUuid": "30db24b1_5a1a0d54",
+      "revId": "66d2d5a525731e4fbfeba46ea2c3a53cc0d2cab2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "07d96c74_26c5d224",
+        "filename": "src/libANGLE/VertexAttribute.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-12T12:13:39Z",
+      "side": 1,
+      "message": "This will also be switched to the earlier version because truncating size_t to unsigned int could create issues. I think probably there is no reason to have drawCount and instanceCount of type size_t. In GL they are of type GLsizei which seems to be always 32 bit.",
+      "range": {
+        "startLine": 130,
+        "startChar": 15,
+        "endLine": 130,
+        "endChar": 89
+      },
       "revId": "66d2d5a525731e4fbfeba46ea2c3a53cc0d2cab2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -105,6 +200,30 @@
       "side": 1,
       "message": "Maybe you could just have an entry point getBuffer() that returns a mutable reference to the buffer member, and use that instead of having a bunch of these different accessors that are a bit hard to name.\n\nI do think that setBufferRawPointer is better than initBufferFromRawPointer, since the function sets the buffer to nullptr sometimes.",
       "parentUuid": "4df4c805_b1707ebc",
+      "range": {
+        "startLine": 42,
+        "startChar": 9,
+        "endLine": 42,
+        "endChar": 28
+      },
+      "revId": "66d2d5a525731e4fbfeba46ea2c3a53cc0d2cab2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3094b298_5626d226",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-12T12:13:39Z",
+      "side": 1,
+      "message": "Done.\nAdded only get-, get- const and setBuffer.",
+      "parentUuid": "f547b6ce_b2de4438",
       "range": {
         "startLine": 42,
         "startChar": 9,
