@@ -53,6 +53,52 @@
     },
     {
       "key": {
+        "uuid": "65194ccf_cb142dcb",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 576,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-12T15:50:38Z",
+      "side": 1,
+      "message": "nit: just static cast at the vertexAttrib function call instead of adding new locals.",
+      "range": {
+        "startLine": 576,
+        "startChar": 4,
+        "endLine": 576,
+        "endChar": 67
+      },
+      "revId": "67244d226f97100d84aa81652d5c61f8d3abc2fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c4ed1ded_e93d7e23",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 660,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-12T15:50:38Z",
+      "side": 1,
+      "message": "Index is for the attribute, not the binding.  If this happens to be the correct binding then it is lucky but should be fixed.",
+      "range": {
+        "startLine": 660,
+        "startChar": 15,
+        "endLine": 660,
+        "endChar": 21
+      },
+      "revId": "67244d226f97100d84aa81652d5c61f8d3abc2fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "82cfe1d7_e133f819",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 16
