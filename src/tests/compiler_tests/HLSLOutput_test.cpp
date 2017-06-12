@@ -20,6 +20,12 @@ class HLSLOutputTest : public MatchOutputCodeTest
     HLSLOutputTest() : MatchOutputCodeTest(GL_FRAGMENT_SHADER, 0, SH_HLSL_4_1_OUTPUT) {}
 };
 
+class HLSL30VertexOutputTest : public MatchOutputCodeTest
+{
+  public:
+    HLSL30VertexOutputTest() : MatchOutputCodeTest(GL_VERTEX_SHADER, 0, SH_HLSL_3_0_OUTPUT) {}
+};
+
 // Test that having dynamic indexing of a vector inside the right hand side of logical or doesn't
 // trigger asserts in HLSL output.
 TEST_F(HLSLOutputTest, DynamicIndexingOfVectorOnRightSideOfLogicalOr)
@@ -34,4 +40,35 @@ TEST_F(HLSLOutputTest, DynamicIndexingOfVectorOnRightSideOfLogicalOr)
         "   my_FragColor = vec4(v[u1 + 1] || v[u1]);\n"
         "}\n";
     compile(shaderString);
+}
+
+// Test that rewriting else blocks in a function that returns a struct doesn't use the struct name
+// without a prefix.
+TEST_F(HLSL30VertexOutputTest, RewriteElseBlockReturningStruct)
+{
+    const std::string &shaderString =
+        "struct foo\n"
+        "{\n"
+        "    float member;\n"
+        "};\n"
+        "uniform bool b;\n"
+        "foo getFoo()\n"
+        "{\n"
+        "    if (b)\n"
+        "    {\n"
+        "        return foo(0.0);\n"
+        "    }\n"
+        "    else\n"
+        "    {\n"
+        "        return foo(1.0);\n"
+        "    }\n"
+        "}\n"
+        "void main()\n"
+        "{\n"
+        "   gl_Position = vec4(getFoo().member);\n"
+        "}\n";
+    compile(shaderString);
+    EXPECT_TRUE(foundInCode("_foo"));
+    EXPECT_FALSE(foundInCode("(foo)"));
+    EXPECT_FALSE(foundInCode(" foo"));
 }
