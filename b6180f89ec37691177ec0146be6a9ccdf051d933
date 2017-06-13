@@ -22,6 +22,30 @@
       "revId": "b6180f89ec37691177ec0146be6a9ccdf051d933",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f28f2d5f_6fb5ca34",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 801,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-13T07:06:24Z",
+      "side": 1,
+      "message": "I suggested doing this earlier since otherwise ANGLETest would be inheriting from two different classes that both define a virtual function \"SetUp\". I\u0027m not sure what kind of guarantees does the C++ spec give in this case. Even if the spec would guarantee that it works, I\u0027d prefer the solution that requires less knowledge of the intricacies of multiple inheritance.",
+      "parentUuid": "a13835f6_998ebb4e",
+      "range": {
+        "startLine": 801,
+        "startChar": 19,
+        "endLine": 801,
+        "endChar": 33
+      },
+      "revId": "b6180f89ec37691177ec0146be6a9ccdf051d933",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
