@@ -2374,14 +2374,16 @@ void ProgramD3D::initAttribLocationsToD3DSemantic(const gl::Context *context)
     ASSERT(vertexShader != nullptr);
 
     // Init semantic index
-    for (const sh::Attribute &attribute : mState.getAttributes())
+    int semanticIndex = 0;
+    for (const sh::Attribute &attribute : vertexShader->getActiveAttributes(context))
     {
-        int d3dSemantic = vertexShader->getSemanticIndex(context, attribute.name);
         int regCount    = gl::VariableRegisterCount(attribute.type);
+        GLuint location = mState.getAttributeLocation(attribute.name);
+        ASSERT(location != std::numeric_limits<GLuint>::max());
 
         for (int reg = 0; reg < regCount; ++reg)
         {
-            mAttribLocationToD3DSemantic[attribute.location + reg] = d3dSemantic + reg;
+            mAttribLocationToD3DSemantic[location + reg] = semanticIndex++;
         }
     }
 }

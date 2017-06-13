@@ -74,7 +74,11 @@ bool CompareShaderVar(const sh::ShaderVariable &x, const sh::ShaderVariable &y)
     return gl::VariableSortOrder(x.type) < gl::VariableSortOrder(y.type);
 }
 
-ShaderState::ShaderState(GLenum shaderType) : mLabel(), mShaderType(shaderType), mShaderVersion(100)
+ShaderState::ShaderState(GLenum shaderType)
+    : mLabel(),
+      mShaderType(shaderType),
+      mShaderVersion(100),
+      mCompileStatus(CompileStatus::NOT_COMPILED)
 {
     mLocalSize.fill(-1);
 }
@@ -95,7 +99,6 @@ Shader::Shader(ShaderProgramManager *manager,
       mType(type),
       mRefCount(0),
       mDeleteStatus(false),
-      mStatus(CompileStatus::NOT_COMPILED),
       mResourceManager(manager)
 {
     ASSERT(mImplementation);
@@ -263,7 +266,7 @@ void Shader::compile(const Context *context)
     mState.mActiveAttributes.clear();
     mState.mActiveOutputVariables.clear();
 
-    mStatus = CompileStatus::COMPILE_REQUESTED;
+    mState.mCompileStatus = CompileStatus::COMPILE_REQUESTED;
     mBoundCompiler.set(context->getCompiler());
 
     // Cache the compile source and options for compilation. Must be done now, since the source
@@ -296,7 +299,7 @@ void Shader::compile(const Context *context)
 
 void Shader::resolveCompile(const Context *context)
 {
-    if (mStatus != CompileStatus::COMPILE_REQUESTED)
+    if (!mState.compilePending())
     {
         return;
     }
@@ -317,7 +320,7 @@ void Shader::resolveCompile(const Context *context)
     {
         mInfoLog = sh::GetInfoLog(compilerHandle);
         WARN() << std::endl << mInfoLog;
-        mStatus = CompileStatus::NOT_COMPILED;
+        mState.mCompileStatus = CompileStatus::NOT_COMPILED;
         return;
     }
 
@@ -378,7 +381,7 @@ void Shader::resolveCompile(const Context *context)
     ASSERT(!mState.mTranslatedSource.empty());
 
     bool success = mImplementation->postTranslateCompile(mBoundCompiler.get(), &mInfoLog);
-    mStatus      = success ? CompileStatus::COMPILED : CompileStatus::NOT_COMPILED;
+    mState.mCompileStatus = success ? CompileStatus::COMPILED : CompileStatus::NOT_COMPILED;
 }
 
 void Shader::addRef()
@@ -414,7 +417,7 @@ void Shader::flagForDeletion()
 bool Shader::isCompiled(const Context *context)
 {
     resolveCompile(context);
-    return mStatus == CompileStatus::COMPILED;
+    return mState.mCompileStatus == CompileStatus::COMPILED;
 }
 
 int Shader::getShaderVersion(const Context *context)
@@ -451,30 +454,6 @@ const std::vector<sh::OutputVariable> &Shader::getActiveOutputVariables(const Co
 {
     resolveCompile(context);
     return mState.getActiveOutputVariables();
-}
-
-int Shader::getSemanticIndex(const Context *context, const std::string &attributeName)
-{
-    resolveCompile(context);
-    if (!attributeName.empty())
-    {
-        const auto &activeAttributes = mState.getActiveAttributes();
-
-        int semanticIndex = 0;
-        for (size_t attributeIndex = 0; attributeIndex < activeAttributes.size(); attributeIndex++)
-        {
-            const sh::ShaderVariable &attribute = activeAttributes[attributeIndex];
-
-            if (attribute.name == attributeName)
-            {
-                return semanticIndex;
-            }
-
-            semanticIndex += gl::VariableRegisterCount(attribute.type);
-        }
-    }
-
-    return -1;
 }
 
 const sh::WorkGroupSize &Shader::getWorkGroupSize(const Context *context)

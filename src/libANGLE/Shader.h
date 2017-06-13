@@ -40,6 +40,14 @@ struct Limitations;
 class ShaderProgramManager;
 class Context;
 
+// We defer the compile until link time, or until properties are queried.
+enum class CompileStatus
+{
+    NOT_COMPILED,
+    COMPILE_REQUESTED,
+    COMPILED,
+};
+
 class ShaderState final : angle::NonCopyable
 {
   public:
@@ -63,6 +71,8 @@ class ShaderState final : angle::NonCopyable
         return mActiveOutputVariables;
     }
 
+    bool compilePending() const { return mCompileStatus == CompileStatus::COMPILE_REQUESTED; }
+
   private:
     friend class Shader;
 
@@ -80,6 +90,9 @@ class ShaderState final : angle::NonCopyable
     std::vector<sh::InterfaceBlock> mInterfaceBlocks;
     std::vector<sh::Attribute> mActiveAttributes;
     std::vector<sh::OutputVariable> mActiveOutputVariables;
+
+    // Indicates if this shader has been successfully compiled
+    CompileStatus mCompileStatus;
 };
 
 class Shader final : angle::NonCopyable, public LabeledObject
@@ -136,8 +149,6 @@ class Shader final : angle::NonCopyable, public LabeledObject
     const std::vector<sh::Attribute> &getActiveAttributes(const Context *context);
     const std::vector<sh::OutputVariable> &getActiveOutputVariables(const Context *context);
 
-    int getSemanticIndex(const Context *context, const std::string &attributeName);
-
     const sh::WorkGroupSize &getWorkGroupSize(const Context *context);
 
   private:
@@ -147,14 +158,6 @@ class Shader final : angle::NonCopyable, public LabeledObject
                               char *buffer);
 
     void resolveCompile(const Context *context);
-
-    // We defer the compile until link time, or until properties are queried.
-    enum class CompileStatus
-    {
-        NOT_COMPILED,
-        COMPILE_REQUESTED,
-        COMPILED,
-    };
 
     ShaderState mState;
     std::string mLastCompiledSource;
@@ -166,7 +169,6 @@ class Shader final : angle::NonCopyable, public LabeledObject
     const GLenum mType;
     unsigned int mRefCount;     // Number of program objects this shader is attached to
     bool mDeleteStatus;         // Flag to indicate that the shader can be deleted when no longer in use
-    CompileStatus mStatus;      // Indicates if this shader has been successfully compiled
     std::string mInfoLog;
 
     // We keep a reference to the translator in order to defer compiles while preserving settings.

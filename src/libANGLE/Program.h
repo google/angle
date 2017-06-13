@@ -255,6 +255,7 @@ class ProgramState final : angle::NonCopyable
     Optional<GLuint> getSamplerIndex(GLint location) const;
     bool isSamplerUniformIndex(GLuint index) const;
     GLuint getSamplerIndexFromUniformIndex(GLuint uniformIndex) const;
+    GLuint getAttributeLocation(const std::string &name) const;
 
   private:
     friend class MemoryProgramCache;
