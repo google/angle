@@ -816,14 +816,14 @@ void QueryActiveUniformBlockiv(const Program *program,
             *params = ConvertToGLint(uniformBlock.nameWithArrayIndex().size() + 1);
             break;
         case GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS:
-            *params = ConvertToGLint(uniformBlock.memberUniformIndexes.size());
+            *params = ConvertToGLint(uniformBlock.memberIndexes.size());
             break;
         case GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES:
-            for (size_t blockMemberIndex = 0;
-                 blockMemberIndex < uniformBlock.memberUniformIndexes.size(); blockMemberIndex++)
+            for (size_t blockMemberIndex = 0; blockMemberIndex < uniformBlock.memberIndexes.size();
+                 blockMemberIndex++)
             {
                 params[blockMemberIndex] =
-                    ConvertToGLint(uniformBlock.memberUniformIndexes[blockMemberIndex]);
+                    ConvertToGLint(uniformBlock.memberIndexes[blockMemberIndex]);
             }
             break;
         case GL_UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER:

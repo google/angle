@@ -210,7 +210,9 @@ bool Uniform::operator==(const Uniform &other) const
 
 bool Uniform::isSameUniformAtLinkTime(const Uniform &other) const
 {
-    if (binding != other.binding)
+    // Enforce a consistent match.
+    // https://cvs.khronos.org/bugzilla/show_bug.cgi?id=16261
+    if (binding != -1 && other.binding != -1 && binding != other.binding)
     {
         return false;
     }
@@ -218,7 +220,6 @@ bool Uniform::isSameUniformAtLinkTime(const Uniform &other) const
     {
         return false;
     }
-    // TODO(jie.a.chen@intel.com): Add a test case to cover this.
     if (offset != other.offset)
     {
         return false;

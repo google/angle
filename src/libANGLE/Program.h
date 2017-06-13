@@ -246,10 +246,15 @@ class ProgramState final : angle::NonCopyable
     const sh::WorkGroupSize &getComputeShaderLocalSize() const { return mComputeShaderLocalSize; }
     const RangeUI &getSamplerUniformRange() const { return mSamplerUniformRange; }
     const RangeUI &getImageUniformRange() const { return mImageUniformRange; }
+    const RangeUI &getAtomicCounterUniformRange() const { return mAtomicCounterUniformRange; }
 
     const std::vector<TransformFeedbackVarying> &getLinkedTransformFeedbackVaryings() const
     {
         return mLinkedTransformFeedbackVaryings;
+    }
+    const std::vector<AtomicCounterBuffer> &getAtomicCounterBuffers() const
+    {
+        return mAtomicCounterBuffers;
     }
 
     GLint getUniformLocation(const std::string &name) const;
@@ -283,15 +288,19 @@ class ProgramState final : angle::NonCopyable
     angle::BitSet<MAX_VERTEX_ATTRIBS> mActiveAttribLocationsMask;
 
     // Uniforms are sorted in order:
-    //  1. Non-sampler uniforms
+    //  1. Non-opaque uniforms
     //  2. Sampler uniforms
-    //  3. Uniform block uniforms
-    // This makes sampler validation easier, since we don't need a separate list.
+    //  3. Image uniforms
+    //  4. Atomic counter uniforms
+    //  5. Uniform block uniforms
+    // This makes opaque uniform validation easier, since we don't need a separate list.
     std::vector<LinkedUniform> mUniforms;
     std::vector<VariableLocation> mUniformLocations;
     std::vector<UniformBlock> mUniformBlocks;
+    std::vector<AtomicCounterBuffer> mAtomicCounterBuffers;
     RangeUI mSamplerUniformRange;
     RangeUI mImageUniformRange;
+    RangeUI mAtomicCounterUniformRange;
 
     // An array of the samplers that are used by the program
     std::vector<gl::SamplerBinding> mSamplerBindings;
@@ -540,6 +549,7 @@ class Program final : angle::NonCopyable, public LabeledObject
                       InfoLog &infoLog,
                       const Bindings &uniformLocationBindings);
     void linkSamplerAndImageBindings();
+    bool linkAtomicCounterBuffers();
 
     bool areMatchingInterfaceBlocks(InfoLog &infoLog,
                                     const sh::InterfaceBlock &vertexInterfaceBlock,
@@ -565,6 +575,7 @@ class Program final : angle::NonCopyable, public LabeledObject
 
     void setUniformValuesFromBindingQualifiers();
 
+    void gatherAtomicCounterBuffers();
     void gatherInterfaceBlockInfo(const Context *context);
     template <typename VarT>
     void defineUniformBlockMembers(const std::vector<VarT> &fields,

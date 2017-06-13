@@ -518,7 +518,7 @@ bool ValidateGetActiveUniformBlockivBase(Context *context,
         {
             const UniformBlock &uniformBlock =
                 programObject->getUniformBlockByIndex(uniformBlockIndex);
-            *length = static_cast<GLsizei>(uniformBlock.memberUniformIndexes.size());
+            *length = static_cast<GLsizei>(uniformBlock.memberIndexes.size());
         }
         else
         {
