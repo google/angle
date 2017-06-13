@@ -146,14 +146,8 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
         }
 
         state->mUniformBlocks.push_back(uniformBlock);
-    }
 
-    for (GLuint bindingIndex = 0; bindingIndex < state->mUniformBlockBindings.size();
-         ++bindingIndex)
-    {
-        stream.readInt(&state->mUniformBlockBindings[bindingIndex]);
-        state->mActiveUniformBlockBindings.set(bindingIndex,
-                                               state->mUniformBlockBindings[bindingIndex] != 0);
+        state->mActiveUniformBlockBindings.set(uniformBlockIndex, uniformBlock.binding != 0);
     }
 
     unsigned int transformFeedbackVaryingCount = stream.readInt<unsigned int>();
@@ -299,11 +293,6 @@ void MemoryProgramCache::Serialize(const Context *context,
         {
             stream.writeInt(memberUniformIndex);
         }
-    }
-
-    for (GLuint binding : state.getUniformBlockBindings())
-    {
-        stream.writeInt(binding);
     }
 
     stream.writeInt(state.getLinkedTransformFeedbackVaryings().size());
