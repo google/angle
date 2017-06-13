@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b40ed140_42c966e0",
+        "filename": "src/tests/gl_tests/InstancingTest.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-13T08:36:07Z",
+      "side": 1,
+      "message": "I plan to handle these coding style issues in https://chromium-review.googlesource.com/c/528649/\nOnce the clean-up patch is landed, I will rebase this patch to eliminate all these unexpected diffs.",
+      "range": {
+        "startLine": 39,
+        "startChar": 1,
+        "endLine": 49,
+        "endChar": 0
+      },
+      "revId": "9f503f263db10b5f9f4cdc69eea25067cb0c5273",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
