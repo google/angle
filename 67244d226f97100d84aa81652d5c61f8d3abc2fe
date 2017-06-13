@@ -76,6 +76,30 @@
     },
     {
       "key": {
+        "uuid": "b6e2ae93_aa848479",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 576,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-13T05:16:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "65194ccf_cb142dcb",
+      "range": {
+        "startLine": 576,
+        "startChar": 4,
+        "endLine": 576,
+        "endChar": 67
+      },
+      "revId": "67244d226f97100d84aa81652d5c61f8d3abc2fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c4ed1ded_e93d7e23",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 16
@@ -87,6 +111,30 @@
       "writtenOn": "2017-06-12T15:50:38Z",
       "side": 1,
       "message": "Index is for the attribute, not the binding.  If this happens to be the correct binding then it is lucky but should be fixed.",
+      "range": {
+        "startLine": 660,
+        "startChar": 15,
+        "endLine": 660,
+        "endChar": 21
+      },
+      "revId": "67244d226f97100d84aa81652d5c61f8d3abc2fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "706574d5_0ccb719b",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 660,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-13T05:16:22Z",
+      "side": 1,
+      "message": "VertexArray::GetAttribIndex is a static function to transform dirtyBit into indexes (\u003c16), which can be used to transform  both attribute and binding dirtyBits by (dirtyBits - 1) % 16:\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/VertexArray.cpp?l\u003d96\n\nI think the name of this function is really misleading and I have changed it into \"GetIndexFromDirtyBit\".",
+      "parentUuid": "c4ed1ded_e93d7e23",
       "range": {
         "startLine": 660,
         "startChar": 15,
