@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "31321154_ec1f70a8",
+        "filename": "src/libANGLE/SizedMRUCache.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-13T14:07:20Z",
+      "side": 1,
+      "message": "nit: I think this should be kGarbageCollectionLimit.",
+      "range": {
+        "startLine": 114,
+        "startChar": 69,
+        "endLine": 114,
+        "endChar": 84
+      },
+      "revId": "2fd873249fb057d16cdf1765987e042a5c299cb0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e7d51793_3c8ee87a",
+        "filename": "src/libANGLE/SizedMRUCache.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-13T14:07:20Z",
+      "side": 1,
+      "message": "nit: \"reducing size to \" \u003c\u003c (maxStates / 2) \u003c\u003c \" to make room.\"",
+      "range": {
+        "startLine": 115,
+        "startChar": 30,
+        "endLine": 115,
+        "endChar": 76
+      },
+      "revId": "2fd873249fb057d16cdf1765987e042a5c299cb0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
