@@ -118,7 +118,7 @@ d3d11::BlendStateKey RenderStateCache::GetBlendStateKey(const gl::Framebuffer *f
             }
 
             key.rtvMasks[i] =
-                (gl_d3d11::GetColorMask(attachment->getFormat().info)) & blendStateMask;
+                (gl_d3d11::GetColorMask(*attachment->getFormat().info)) & blendStateMask;
         }
         else
         {

@@ -55,7 +55,7 @@ UINT ConvertMaxAnisotropy(float maxAnisotropy, D3D_FEATURE_LEVEL featureLevel);
 
 D3D11_QUERY ConvertQueryType(GLenum queryType);
 
-UINT8 GetColorMask(const gl::InternalFormat *formatInfo);
+UINT8 GetColorMask(const gl::InternalFormat &formatInfo);
 
 }  // namespace gl_d3d11
 

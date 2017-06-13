@@ -1700,26 +1700,10 @@ D3D11_QUERY ConvertQueryType(GLenum queryType)
 }
 
 // Get the D3D11 write mask covering all color channels of a given format
-UINT8 GetColorMask(const gl::InternalFormat *formatInfo)
+UINT8 GetColorMask(const gl::InternalFormat &format)
 {
-    UINT8 mask = 0;
-    if (formatInfo->redBits > 0)
-    {
-        mask |= D3D11_COLOR_WRITE_ENABLE_RED;
-    }
-    if (formatInfo->greenBits > 0)
-    {
-        mask |= D3D11_COLOR_WRITE_ENABLE_GREEN;
-    }
-    if (formatInfo->blueBits > 0)
-    {
-        mask |= D3D11_COLOR_WRITE_ENABLE_BLUE;
-    }
-    if (formatInfo->alphaBits > 0)
-    {
-        mask |= D3D11_COLOR_WRITE_ENABLE_ALPHA;
-    }
-    return mask;
+    return ConvertColorMask(format.redBits > 0, format.greenBits > 0, format.blueBits > 0,
+                            format.alphaBits > 0);
 }
 
 }  // namespace gl_d3d11
