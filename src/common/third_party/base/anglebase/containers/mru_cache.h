@@ -13,8 +13,8 @@
 // legibility rather than optimality. If future profiling identifies this as
 // a bottleneck, there is room for smaller values of 1 in the O(1). :]
 
-#ifndef BASE_CONTAINERS_MRU_CACHE_H_
-#define BASE_CONTAINERS_MRU_CACHE_H_
+#ifndef ANGLEBASE_CONTAINERS_MRU_CACHE_H_
+#define ANGLEBASE_CONTAINERS_MRU_CACHE_H_
 
 #include <stddef.h>
 
@@ -272,4 +272,4 @@ class HashingMRUCache : public MRUCacheBase<KeyType, PayloadType, HashType, MRUC
 
 }  // namespace angle
 
-#endif  // BASE_CONTAINERS_MRU_CACHE_H_
+#endif  // ANGLEBASE_CONTAINERS_MRU_CACHE_H_

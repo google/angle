@@ -5,8 +5,8 @@
 //
 // macros.h: Compatiblity hacks for importing Chromium's MRUCache.
 
-#ifndef BASE_MACROS_H_
-#define BASE_MACROS_H_
+#ifndef ANGLEBASE_MACROS_H_
+#define ANGLEBASE_MACROS_H_
 
 // A macro to disallow the copy constructor and operator= functions.
 // This should be used in the private: declarations for a class.
@@ -14,4 +14,4 @@
     TypeName(const TypeName &) = delete;   \
     void operator=(const TypeName &) = delete
 
-#endif  // BASE_MACROS_H_
+#endif  // ANGLEBASE_MACROS_H_

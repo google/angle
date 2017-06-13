@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef BASE_NUMERICS_SAFE_CONVERSIONS_IMPL_H_
-#define BASE_NUMERICS_SAFE_CONVERSIONS_IMPL_H_
+#ifndef ANGLEBASE_NUMERICS_SAFE_CONVERSIONS_IMPL_H_
+#define ANGLEBASE_NUMERICS_SAFE_CONVERSIONS_IMPL_H_
 
 #include <limits.h>
 #include <stdint.h>
@@ -271,4 +271,4 @@ constexpr RangeConstraint DstRangeRelationToSrcRange(Src value)
 
 }  // namespace angle
 
-#endif  // BASE_NUMERICS_SAFE_CONVERSIONS_IMPL_H_
+#endif  // ANGLEBASE_NUMERICS_SAFE_CONVERSIONS_IMPL_H_

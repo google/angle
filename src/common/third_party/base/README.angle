@@ -15,7 +15,7 @@ base::MRUCache is a few collections of most-recently-used caching structures.
 
 To update the checkout, simply overwrite the folder with Chromium's latest, apply
 the appropriate namespace, and make sure the paths are correct (anglebase/ instead of
-base/).
+base/), and update the header guards and macros.
 
 Modifications:
 
@@ -23,3 +23,4 @@ Modifications:
 - anglebase/logging.h defines (D)CHECK to be ASSERT to be compatible with ANGLE.
 - the headers use namespace angle::base instead of base:: to avoid ODR
   violations when ANGLE code is mixed with Chromium code.
+- header guards and macros are changed from BASE to ANGLEBASE to prevent conflicts.

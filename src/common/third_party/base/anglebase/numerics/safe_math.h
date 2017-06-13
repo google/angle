@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef BASE_NUMERICS_SAFE_MATH_H_
-#define BASE_NUMERICS_SAFE_MATH_H_
+#ifndef ANGLEBASE_NUMERICS_SAFE_MATH_H_
+#define ANGLEBASE_NUMERICS_SAFE_MATH_H_
 
 #include <stddef.h>
 
@@ -247,7 +247,7 @@ class CheckedNumeric
 //  * We skip range checks for floating points.
 //  * We skip range checks for destination integers with sufficient range.
 // TODO(jschuh): extract these out into templates.
-#define BASE_NUMERIC_ARITHMETIC_OPERATORS(NAME, OP, COMPOUND_OP)                                   \
+#define ANGLEBASE_NUMERIC_ARITHMETIC_OPERATORS(NAME, OP, COMPOUND_OP)                                   \
     /* Binary arithmetic operator for CheckedNumerics of the same type. */                         \
     template <typename T>                                                                          \
     CheckedNumeric<typename ArithmeticPromotion<T>::type> operator OP(                             \
@@ -310,13 +310,13 @@ class CheckedNumeric
         return CheckedNumeric<Promotion>::cast(lhs) OP CheckedNumeric<Promotion>::cast(rhs);       \
     }
 
-BASE_NUMERIC_ARITHMETIC_OPERATORS(Add, +, +=)
-BASE_NUMERIC_ARITHMETIC_OPERATORS(Sub, -, -=)
-BASE_NUMERIC_ARITHMETIC_OPERATORS(Mul, *, *=)
-BASE_NUMERIC_ARITHMETIC_OPERATORS(Div, /, /=)
-BASE_NUMERIC_ARITHMETIC_OPERATORS(Mod, %, %=)
+ANGLEBASE_NUMERIC_ARITHMETIC_OPERATORS(Add, +, +=)
+ANGLEBASE_NUMERIC_ARITHMETIC_OPERATORS(Sub, -, -=)
+ANGLEBASE_NUMERIC_ARITHMETIC_OPERATORS(Mul, *, *=)
+ANGLEBASE_NUMERIC_ARITHMETIC_OPERATORS(Div, /, /=)
+ANGLEBASE_NUMERIC_ARITHMETIC_OPERATORS(Mod, %, %=)
 
-#undef BASE_NUMERIC_ARITHMETIC_OPERATORS
+#undef ANGLEBASE_NUMERIC_ARITHMETIC_OPERATORS
 
 }  // namespace internal
 
@@ -326,4 +326,4 @@ using internal::CheckedNumeric;
 
 }  // namespace angle
 
-#endif  // BASE_NUMERICS_SAFE_MATH_H_
+#endif  // ANGLEBASE_NUMERICS_SAFE_MATH_H_

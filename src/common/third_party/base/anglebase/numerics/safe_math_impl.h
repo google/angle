@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef BASE_NUMERICS_SAFE_MATH_IMPL_H_
-#define BASE_NUMERICS_SAFE_MATH_IMPL_H_
+#ifndef ANGLEBASE_NUMERICS_SAFE_MATH_IMPL_H_
+#define ANGLEBASE_NUMERICS_SAFE_MATH_IMPL_H_
 
 #include <stddef.h>
 #include <stdint.h>
@@ -364,7 +364,7 @@ CheckedUnsignedAbs(T value)
 
 // These are the floating point stubs that the compiler needs to see. Only the
 // negation operation is ever called.
-#define BASE_FLOAT_ARITHMETIC_STUBS(NAME)                                              \
+#define ANGLEBASE_FLOAT_ARITHMETIC_STUBS(NAME)                                              \
     template <typename T>                                                              \
     typename std::enable_if<std::numeric_limits<T>::is_iec559, T>::type Checked##NAME( \
         T, T, RangeConstraint *)                                                       \
@@ -373,13 +373,13 @@ CheckedUnsignedAbs(T value)
         return static_cast<T>(0);                                                      \
     }
 
-BASE_FLOAT_ARITHMETIC_STUBS(Add)
-BASE_FLOAT_ARITHMETIC_STUBS(Sub)
-BASE_FLOAT_ARITHMETIC_STUBS(Mul)
-BASE_FLOAT_ARITHMETIC_STUBS(Div)
-BASE_FLOAT_ARITHMETIC_STUBS(Mod)
+ANGLEBASE_FLOAT_ARITHMETIC_STUBS(Add)
+ANGLEBASE_FLOAT_ARITHMETIC_STUBS(Sub)
+ANGLEBASE_FLOAT_ARITHMETIC_STUBS(Mul)
+ANGLEBASE_FLOAT_ARITHMETIC_STUBS(Div)
+ANGLEBASE_FLOAT_ARITHMETIC_STUBS(Mod)
 
-#undef BASE_FLOAT_ARITHMETIC_STUBS
+#undef ANGLEBASE_FLOAT_ARITHMETIC_STUBS
 
 template <typename T>
 typename std::enable_if<std::numeric_limits<T>::is_iec559, T>::type CheckedNeg(T value,
@@ -572,4 +572,4 @@ struct IsIntegerArithmeticSafe
 
 }  // namespace angle
 
-#endif  // BASE_NUMERICS_SAFE_MATH_IMPL_H_
+#endif  // ANGLEBASE_NUMERICS_SAFE_MATH_IMPL_H_

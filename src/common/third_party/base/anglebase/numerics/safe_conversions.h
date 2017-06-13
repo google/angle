@@ -2,8 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-#ifndef BASE_NUMERICS_SAFE_CONVERSIONS_H_
-#define BASE_NUMERICS_SAFE_CONVERSIONS_H_
+#ifndef ANGLEBASE_NUMERICS_SAFE_CONVERSIONS_H_
+#define ANGLEBASE_NUMERICS_SAFE_CONVERSIONS_H_
 
 #include <stddef.h>
 
@@ -176,4 +176,4 @@ typedef StrictNumeric<size_t> SizeT;
 
 }  // namespace angle
 
-#endif  // BASE_NUMERICS_SAFE_CONVERSIONS_H_
+#endif  // ANGLEBASE_NUMERICS_SAFE_CONVERSIONS_H_
