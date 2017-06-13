@@ -4732,6 +4732,7 @@ bool ValidateVertexFormatBase(ValidationContext *context,
     if (size < 1 || size > 4)
     {
         context->handleError(InvalidValue() << "size must be between one and four.");
+        return false;
     }
 
     switch (type)
