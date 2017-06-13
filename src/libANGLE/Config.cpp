@@ -218,6 +218,11 @@ std::vector<const Config*> ConfigSet::filter(const AttributeMap &attributeMap) c
             EGLAttrib attributeKey   = attribIter->first;
             EGLAttrib attributeValue = attribIter->second;
 
+            if (attributeValue == EGL_DONT_CARE)
+            {
+                continue;
+            }
+
             switch (attributeKey)
             {
               case EGL_BUFFER_SIZE:               match = config.bufferSize >= attributeValue;                        break;

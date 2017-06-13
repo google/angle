@@ -776,11 +776,20 @@ void DisplayGLX::generateExtensions(egl::DisplayExtensions *outExtensions) const
 
     // Contexts are virtualized so textures can be shared globally
     outExtensions->displayTextureShareGroup = true;
+
+    outExtensions->surfacelessContext = true;
 }
 
 void DisplayGLX::generateCaps(egl::Caps *outCaps) const
 {
     outCaps->textureNPOT = true;
+}
+
+egl::Error DisplayGLX::makeCurrentSurfaceless(gl::Context *context)
+{
+    // Nothing to do because GLX always uses the same context and the previous surface can be left
+    // current.
+    return egl::NoError();
 }
 
 int DisplayGLX::getGLXFBConfigAttrib(glx::FBConfig config, int attrib) const

@@ -1145,6 +1145,9 @@ void Renderer11::generateDisplayExtensions(egl::DisplayExtensions *outExtensions
 
     // getSyncValues requires direct composition.
     outExtensions->getSyncValues = outExtensions->directComposition;
+
+    // D3D11 can be used without a swap chain
+    outExtensions->surfacelessContext = true;
 }
 
 gl::Error Renderer11::flush()

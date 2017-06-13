@@ -617,11 +617,20 @@ void DisplayWGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
 
     // Contexts are virtualized so textures can be shared globally
     outExtensions->displayTextureShareGroup = true;
+
+    outExtensions->surfacelessContext = true;
 }
 
 void DisplayWGL::generateCaps(egl::Caps *outCaps) const
 {
     outCaps->textureNPOT = true;
+}
+
+egl::Error DisplayWGL::makeCurrentSurfaceless(gl::Context *context)
+{
+    // Nothing to do because WGL always uses the same context and the previous surface can be left
+    // current.
+    return egl::NoError();
 }
 
 egl::Error DisplayWGL::waitClient() const

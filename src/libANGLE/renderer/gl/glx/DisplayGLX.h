@@ -97,6 +97,8 @@ class DisplayGLX : public DisplayGL
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
     void generateCaps(egl::Caps *outCaps) const override;
 
+    egl::Error makeCurrentSurfaceless(gl::Context *context) override;
+
     int getGLXFBConfigAttrib(glx::FBConfig config, int attrib) const;
     egl::Error createContextAttribs(glx::FBConfig,
                                     const Optional<gl::Version> &version,

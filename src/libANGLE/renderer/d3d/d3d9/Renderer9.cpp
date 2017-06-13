@@ -566,6 +566,9 @@ void Renderer9::generateDisplayExtensions(egl::DisplayExtensions *outExtensions)
 
     // Contexts are virtualized so textures can be shared globally
     outExtensions->displayTextureShareGroup = true;
+
+    // D3D9 can be used without an output surface
+    outExtensions->surfacelessContext = true;
 }
 
 void Renderer9::startScene()
