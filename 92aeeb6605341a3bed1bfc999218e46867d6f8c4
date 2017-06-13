@@ -22,6 +22,30 @@
       "revId": "92aeeb6605341a3bed1bfc999218e46867d6f8c4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "24f97f83_c33abb09",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-13T08:11:32Z",
+      "side": 1,
+      "message": "cl format did this.",
+      "parentUuid": "f6943768_94e8f209",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 0
+      },
+      "revId": "92aeeb6605341a3bed1bfc999218e46867d6f8c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
