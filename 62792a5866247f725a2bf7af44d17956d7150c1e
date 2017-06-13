@@ -45,6 +45,30 @@
       "revId": "62792a5866247f725a2bf7af44d17956d7150c1e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b08bca4a_fcc3ccc7",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-13T07:09:31Z",
+      "side": 1,
+      "message": "BindingPointer\u0027s member method id() gets used at a couple of places which handles the case in which the raw pointer points to nullptr. I think it is better if we keep it as it is.",
+      "parentUuid": "661e5649_0704f3b7",
+      "range": {
+        "startLine": 38,
+        "startChar": 10,
+        "endLine": 38,
+        "endChar": 32
+      },
+      "revId": "62792a5866247f725a2bf7af44d17956d7150c1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
