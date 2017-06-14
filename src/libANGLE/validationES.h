@@ -40,7 +40,7 @@ bool ValidFramebufferTarget(GLenum target);
 bool ValidBufferTarget(const ValidationContext *context, GLenum target);
 bool ValidBufferParameter(const ValidationContext *context, GLenum pname, GLsizei *numParams);
 bool ValidMipLevel(const ValidationContext *context, GLenum target, GLint level);
-bool ValidImageSizeParameters(const ValidationContext *context,
+bool ValidImageSizeParameters(ValidationContext *context,
                               GLenum target,
                               GLint level,
                               GLsizei width,
@@ -602,8 +602,6 @@ bool ValidateRobustCompressedTexImageBase(ValidationContext *context,
                                           GLsizei imageSize,
                                           GLsizei dataSize);
 
-// Error messages shared here for use in testing.
-extern const char *g_ExceedsMaxElementErrorMessage;
 }  // namespace gl
 
 #endif  // LIBANGLE_VALIDATION_ES_H_
