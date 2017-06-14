@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "64554faa_bc12c83d",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-14T01:40:19Z",
+      "side": 0,
+      "message": "mActiveUniformBlockBindings is essentially same as mUniformBlockBindings. They are just different expressions on same information, respectively bitset and array. It took me pretty much time to figure this out. Probably I will have to re-do this if I forget it in future. Truly bitset generally has better performance than array on iterating elements. Throughout the entire source tree, the significant usage of mActiveUniformBlockBindings is only here. Considering that people hardly write a shader using hundreds of uniform blocks, and ProgramGL::load is not likely to be called very frequently, I feel it can be removed to make life easier.",
+      "range": {
+        "startLine": 82,
+        "startChar": 46,
+        "endLine": 82,
+        "endChar": 75
+      },
+      "revId": "4f86d053b3f6bd60aa28bea9398139c3151e662c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
