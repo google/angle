@@ -16,6 +16,29 @@
       "revId": "a259a7fa1d98bba3583c7006627d1ba17f125dd0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "65b0de00_4e6d5a53",
+        "filename": "src/compiler/translator/Common.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-15T18:39:44Z",
+      "side": 1,
+      "message": "nit: git cl format would clean the tabs to spaces",
+      "range": {
+        "startLine": 135,
+        "startChar": 0,
+        "endLine": 135,
+        "endChar": 3
+      },
+      "revId": "a259a7fa1d98bba3583c7006627d1ba17f125dd0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
