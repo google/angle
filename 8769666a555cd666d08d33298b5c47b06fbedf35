@@ -1,0 +1,222 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dba8535b_2e9ae6d7",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-15T08:11:11Z",
+      "side": 1,
+      "message": "Equivalent to !IsImage2D(type)?",
+      "range": {
+        "startLine": 505,
+        "startChar": 1,
+        "endLine": 528,
+        "endChar": 1
+      },
+      "revId": "8769666a555cd666d08d33298b5c47b06fbedf35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "506e0aa3_b8993f4e",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 578,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-15T08:11:11Z",
+      "side": 1,
+      "message": "Same above.",
+      "range": {
+        "startLine": 555,
+        "startChar": 0,
+        "endLine": 578,
+        "endChar": 1
+      },
+      "revId": "8769666a555cd666d08d33298b5c47b06fbedf35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4835bccc_ff91c7b9",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-15T08:11:11Z",
+      "side": 1,
+      "message": "\"gl_image_\"?",
+      "revId": "8769666a555cd666d08d33298b5c47b06fbedf35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dfd68137_8b16f2ea",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-15T08:11:11Z",
+      "side": 1,
+      "message": "IMPLICIT looks needless.",
+      "range": {
+        "startLine": 316,
+        "startChar": 0,
+        "endLine": 316,
+        "endChar": 64
+      },
+      "revId": "8769666a555cd666d08d33298b5c47b06fbedf35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f4711e3f_997987f9",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-15T08:11:11Z",
+      "side": 1,
+      "message": "Prefer c++11 enum.",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 10
+      },
+      "revId": "8769666a555cd666d08d33298b5c47b06fbedf35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a17432f2_5e565f4c",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-15T08:11:11Z",
+      "side": 1,
+      "message": "caller?",
+      "range": {
+        "startLine": 52,
+        "startChar": 64,
+        "endLine": 52,
+        "endChar": 68
+      },
+      "revId": "8769666a555cd666d08d33298b5c47b06fbedf35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a50f637d_bcfb470b",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-15T08:11:11Z",
+      "side": 1,
+      "message": "Prefer c++11 \u0027using\u0027.",
+      "range": {
+        "startLine": 62,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 53
+      },
+      "revId": "8769666a555cd666d08d33298b5c47b06fbedf35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b896952a_128956b8",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-15T08:11:11Z",
+      "side": 1,
+      "message": "Prefer \u0027switch\u0027 for easier read.",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 39
+      },
+      "revId": "8769666a555cd666d08d33298b5c47b06fbedf35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2dd6e124_e64b2359",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 417,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-15T08:11:11Z",
+      "side": 1,
+      "message": "No Read-and-Write?",
+      "range": {
+        "startLine": 403,
+        "startChar": 0,
+        "endLine": 417,
+        "endChar": 9
+      },
+      "revId": "8769666a555cd666d08d33298b5c47b06fbedf35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49231149_d7badf84",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-15T08:11:11Z",
+      "side": 1,
+      "message": "Prefer some compiler test cases to show HLSL code can be correctly generated.",
+      "revId": "8769666a555cd666d08d33298b5c47b06fbedf35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
