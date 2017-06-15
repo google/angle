@@ -1,0 +1,919 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "588c45f1_ec4b209e",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 417,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC Chapter 7.2 Page 131]\nGeometry Shader built-in constants",
+      "range": {
+        "startLine": 386,
+        "startChar": 0,
+        "endLine": 417,
+        "endChar": 31
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "14ab8df1_5a620639",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 691,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "Geometry Shader Layout Qualifiers:\n- \u0027in\u0027:  input primitive declaration \u0026 invocations (optional) [GLSL ES 3.2 SPEC 4.4.1.2 Page 71]\n- \u0027out\u0027: output primitive declaration \u0026 max_vertices          [GLSL ES 3.2 SPEC 4.4.2.2 Page 75]",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc6e6151_4574514e",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC chapter 4.4.2.2 Page 76] \nThe geometry shader object in a program must declare a maximum output vertex count.",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e0404b5_7bf79607",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC chapter 4.4.1.2 Page 71] \nIf no invocation count is declared in the geometry shader, it will be run once for each input primitive.\nSo the default value of mGeometryInvocations should be 1.",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "83838078_c6f1c915",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "From [OpenGL ES 3.2 SPEC Chapter 7.6 Page 102], you can see SPEC only defines MAX_VERTEX_UNIFORM_VECTORS and MAX_FRAGMENT_UNIFORM_VECTORS, without MAX_GEOMETRY_UNIFORM_VECTORS.\nSo I emulate this value for geometry shaders by MAX_GEOMETRY_UNIFORM_COMPONENTS divided by 4.",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cdb559b6_eed8df2c",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC Chapter 4.7.4 Page 89]\n\nAll languages except for the fragment language have the following predeclared globally scoped default precision statements:\n\n- precision highp float;\n- precision highp int;\n- precision lowp sampler2D;\n- precision lowp samplerCube;\n- precision highp atomic_uint;",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d160f99_dae66fce",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "The inputs and outputs of a geometry shader are all varyings, so I need two vectors to store input and output varyings.",
+      "range": {
+        "startLine": 114,
+        "startChar": 0,
+        "endLine": 115,
+        "endChar": 85
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32cdef03_fcc191ea",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 684,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC chapter 8.13 Page 168]\nEmitVertex() and EndPrimitive() are built-in GLSL functions supported in geometry shader.",
+      "range": {
+        "startLine": 681,
+        "startChar": 0,
+        "endLine": 684,
+        "endChar": 70
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "53381e95_50bb94f2",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 954,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "\"gl_in\" should be treated as an interface block because EXT_shader_io_block is required in EXT_geometry_shader where extends the functionality of interface blocks to support input and output interfaces in the OpenGL ES Shading Language.\nhttps://www.khronos.org/registry/OpenGL/extensions/EXT/EXT_geometry_shader.txt\nhttps://www.khronos.org/registry/OpenGL/extensions/EXT/EXT_shader_io_blocks.txt",
+      "range": {
+        "startLine": 941,
+        "startChar": 0,
+        "endLine": 954,
+        "endChar": 88
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "522e1c0b_e89c27ae",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 966,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC Chapter 7.1.4 Page 125]\nGeometry Shader built-in variables",
+      "range": {
+        "startLine": 955,
+        "startChar": 0,
+        "endLine": 966,
+        "endChar": 89
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "03f3aabe_692ea94b",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 994,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC Chapter 7.2 Page 131]\nGeometry Shader built-in constants",
+      "range": {
+        "startLine": 968,
+        "startChar": 0,
+        "endLine": 994,
+        "endChar": 85
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a9e1dcf4_e2acdf0e",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 477,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "I decide to omit the declaration of input array size in Geometry Shader.\nIt is also OK to add the size.",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d4232b26_4e51c239",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 629,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "Because EXT_shader_io_blocks hasn\u0027t been supported yet, only \"gl_in\" is allowed as the input interface block.",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f57313d_f3d4545b",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC chapter 4.4.1.2 Page 71]\nMappings from input primitive types to input array sizes in Geometry Shader.",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c5df718a_174017f2",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1174,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC Chapter 4.4.1 Page 67 - 68]\nAll shaders except compute shaders allow input layout qualifiers on input variable declarations. The layout qualifier identifier for shader inputs is:\nlayout-qualifier-id:\n    location \u003d integer-constant\n\n[GLSL ES 3.2 SPEC Chapter 4.4.2 Page 73]\nAs with input layout qualifiers, all shaders except compute shaders allow location layout qualifiers on output variable declarations, output block declarations, and output block member declarations. The layout qualifier identifier for shader outputs is:\nlayout-qualifier-id:\n    location \u003d integer-constant\n\nSo the layout qualifier \"location\" should be supported on both Geometry Shader inputs and outputs.",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2ae6f39a_0c349399",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2104,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC Chapter 4.3.4 Page 53]\nSince geometry shaders operate on a set of vertices, each input variable or input block needs to be declared as an array.",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19134c08_0efabde1",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2182,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "The SPEC says: each array can optionally have a size declared. [GLSL ES 3.2 SPEC Chapter 4.3.4 Page 53]\nHowever I haven\u0027t seen the rule to support input unsized array declarations in glslang.y, which means ANGLE doesn\u0027t support such declaration in vertex and fragment shaders.\nSo here I only allow geometry shader input variables be declared as unsized arrays.",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "386a1c21_ea82fda2",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2188,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC Chapter 4.4.1.2 Page 71]\nAll geometry shader input unsized array declarations will be sized by an earlier input primitive layout qualifier, when present.",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5a0c1a9b_7f148a6c",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2196,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC Chapter 4.4.1.2 Page 72]\nAn input can be declared without an array size if there is a previous layout which specifies the size.",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d14a834f_9c0fcae0",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2215,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC Chapter 4.4.1.2 Page 72]\nIt is a compile-time error if a layout declaration\u0027s array size (from the table above) does not match all the explicit array sizes specified in declarations of an input variables in the same shader. The following includes examples of compile-time errors: \n\n// code sequence within one shader...\nin vec4 Color2[2]; // legal, size is 2\nin vec4 Color3[3]; // illegal, input sizes are inconsistent\nlayout(lines) in; // legal for Color2, input size is 2, matching Color2\nin vec4 Color4[3]; // illegal, contradicts layout of lines\nlayout(lines) in; // legal, matches other layout() declaration.\nlayout(triangles) in; // illegal, does not match earlier layout() declaration",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35822758_836bac38",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2574,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC Chapter 4.4.2 Page 72]\nThe intrinsically declared input array gl_in[] will also be sized by any input primitive-layout declaration.\nHence, the expression\n    gl_in.length()\nwill return the value from the table above.",
+      "range": {
+        "startLine": 2569,
+        "startChar": 0,
+        "endLine": 2574,
+        "endChar": 86
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "43ad6c82_da033cdb",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2580,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC Chapter 4.4.1.2 Page 72]\nIt is a compile-time error if a layout declaration\u0027s array size (from the table above) does not match all the explicit array sizes specified in declarations of an input variables in the same shader. The following includes examples of compile-time errors: \n\n// code sequence within one shader...\nlayout(lines) in; // legal for Color2, input size is 2, matching Color2\nlayout(lines) in; // legal, matches other layout() declaration.\nlayout(triangles) in; // illegal, does not match earlier layout() declaration",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4dc48e5c_cfebddd0",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2593,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC Chapter 4.4.1.2 Page 72]\nIt is a compile-time error if a layout declaration\u0027s array size (from the table above) does not match all the explicit array sizes specified in declarations of an input variables in the same shader. The following includes examples of compile-time errors: \n\n// code sequence within one shader...\nin vec4 Color2[2]; // legal, size is 2\nin vec4 Color3[3]; // illegal, input sizes are inconsistent\nlayout(lines) in; // legal for Color2, input size is 2, matching Color2\nin vec4 Color4[3]; // illegal, contradicts layout of lines\nlayout(lines) in; // legal, matches other layout() declaration.\nlayout(triangles) in; // illegal, does not match earlier layout() declaration",
+      "range": {
+        "startLine": 2588,
+        "startChar": 0,
+        "endLine": 2593,
+        "endChar": 28
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8d07348_6dff9eda",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2609,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC Chapter 4.4.1.2 Page 71]\nIf an invocation count is declared, all such declarations must specify the same count.",
+      "range": {
+        "startLine": 2605,
+        "startChar": 0,
+        "endLine": 2609,
+        "endChar": 25
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2a4d60c7_e6728c99",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2634,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC Chapter 4.4.2.2 Page 75]\nAll geometry shader output primitive type declarations in a program must declare the same primitive type.",
+      "range": {
+        "startLine": 2629,
+        "startChar": 0,
+        "endLine": 2634,
+        "endChar": 25
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "37240058_34335ffd",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2649,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC Chapter 4.4.2.2 Page 76]\nAll geometry shader output vertex count declarations in a program must declare the same count.",
+      "range": {
+        "startLine": 2645,
+        "startChar": 0,
+        "endLine": 2649,
+        "endChar": 25
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "73786e73_9693eca2",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2671,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC Chapter 4.4.1.2 Chapter 71]",
+      "range": {
+        "startLine": 2667,
+        "startChar": 0,
+        "endLine": 2671,
+        "endChar": 21
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f8ad96a8_d0433e21",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2679,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC Chapter 4.4.2.2 Chapter 75]",
+      "range": {
+        "startLine": 2676,
+        "startChar": 0,
+        "endLine": 2679,
+        "endChar": 5
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c5018e32_8942e538",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3443,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC Chapter 7.1.4 Page 125]\ngl_in (the name is gl_PerVertex) is now only available in Geometry Shader.",
+      "range": {
+        "startLine": 3440,
+        "startChar": 0,
+        "endLine": 3443,
+        "endChar": 97
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "abcadd49_7c2fdfa7",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3448,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC Chapter 4.4.1.2 Page 72]\nFor built-in inputs (e.g. gl_in[]), a layout must be declared before any use.",
+      "range": {
+        "startLine": 3445,
+        "startChar": 0,
+        "endLine": 3448,
+        "endChar": 21
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32fbec13_3ca2989a",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3891,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC Chapter 4.4.1.2 Page 71]\nIf a shader specifies an invocation count greater than the implementation-dependent maximum, it will fail to compile.",
+      "range": {
+        "startLine": 3889,
+        "startChar": 0,
+        "endLine": 3891,
+        "endChar": 38
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d50ec1b1_e6a08944",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3913,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC Chapter 4.4.2.2 Page 76]\nIt is an error for the maximum number of vertices to be greater than gl_MaxGeometryOutputVertices.",
+      "range": {
+        "startLine": 3909,
+        "startChar": 0,
+        "endLine": 3913,
+        "endChar": 38
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed04d2f7_20a20336",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC Chapter 4.3.6 Page 56]\nGeometry output variables output per-vertex data. and are declared using the out storage qualifier.",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ce26fc9_a173f7ef",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 318,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC Chapter 4.3.4 Page 53]\nGeometry shader input variables get the per-vertex values written out by output variables of the same names in the previous active shader stage. For these inputs, centroid and interpolation qualifiers are allowed, but have no effect.",
+      "range": {
+        "startLine": 317,
+        "startChar": 0,
+        "endLine": 318,
+        "endChar": 53
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df877c19_58554226",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 628,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC Chapter 4.4.2.2 Page 75]\nAll geometry shader output primitive type declarations in a program must declare the same primitive type.\n\n[GLSL ES 3.2 SPEC Chapter 4.4.1.2 Page 72]\nIt is a compile-time error if a layout declaration\u0027s array size (from the table above) does not match all the explicit array sizes specified in declarations of an input variables in the same shader.:",
+      "range": {
+        "startLine": 626,
+        "startChar": 0,
+        "endLine": 628,
+        "endChar": 99
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79538b14_4941ce83",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 639,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC Chapter 4.4.1.2 Page 71]\nIf an invocation count is declared, all such declarations must specify the same count.",
+      "range": {
+        "startLine": 635,
+        "startChar": 0,
+        "endLine": 639,
+        "endChar": 46
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da87f74b_7e473678",
+        "filename": "src/compiler/translator/QualifierTypes.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 650,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC Chapter 4.4.2.2 Page 76]\nAll geometry shader output vertex count declarations in a program must declare the same count.",
+      "range": {
+        "startLine": 644,
+        "startChar": 0,
+        "endLine": 650,
+        "endChar": 94
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c20955a_58e17931",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC Chapter 7.2 Page 131]\nGeometry Shader Built-in constants",
+      "range": {
+        "startLine": 224,
+        "startChar": 0,
+        "endLine": 233,
+        "endChar": 53
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fefd9082_03c6177a",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "I temporarily reserve this function to avoid more changes.\nI think an individual patch is needed to replace getVaryings() by getInVaryings and getOutVaryings everywhere in ANGLE if necessary.",
+      "range": {
+        "startLine": 397,
+        "startChar": 0,
+        "endLine": 410,
+        "endChar": 50
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ab156c3c_74b58b11",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 454,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "GL_POINTS \u003d\u003d GL_NONE \u003d\u003d 0, so I decide to use GL_INVALID_VALUE as the wrong flag here.",
+      "range": {
+        "startLine": 443,
+        "startChar": 0,
+        "endLine": 454,
+        "endChar": 36
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5ae0964f_db12d692",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[OpenGL ES 3.2 SPEC Chapter 11.3.1 Page 327]\nA program will fail to link if the input primitive type is not specified by the geometry shader object attached to the program.\n\n[OpenGL ES 3.2 SPEC Chapter 11.3.2 Page 329]\nA program will fail to link if either the output primitive type or maximum output vertex count are not specified by the geometry shader object attached to the program.\n\nFor my understanding, it should be a LINK error instead of a COMPILE error if a geometry shader lacks input/output primitive and max_vertices declarations.\n\nI have verified there is no compilation error on both Nvidia and Intel OpenGL drivers in the compilation of a geometry shader that lacks input/output primitive or max_vertices declarations.",
+      "range": {
+        "startLine": 103,
+        "startChar": 0,
+        "endLine": 170,
+        "endChar": 31
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "47a0870e_d5a0da07",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "It is used to set array sizes to gl_in when input primitive is declared.\nI should set this size because out-of-bound-access is an compile error in the ANGLE GLSL compiler.",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2c613a4b_62c59ec6",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 16
+      },
+      "lineNbr": 812,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "[GLSL ES 3.2 SPEC chapter 4.4.1.2 Page 72]\nAn input can be declared without an array size if there is a previous layout which specifies the size.",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "36a4161f_1b2537cb",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 16
+      },
+      "lineNbr": 932,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "Geometry Shader supports \u0027in\u0027 layout qualifier.",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "841c1cfb_665b3fe4",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 16
+      },
+      "lineNbr": 954,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-15T07:29:04Z",
+      "side": 1,
+      "message": "Geometry Shader supports \u0027out\u0027 qualifier.",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
