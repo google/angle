@@ -1,0 +1,297 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0b256492_86ee859a",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-15T19:09:25Z",
+      "side": 1,
+      "message": "nit rename these samplerRange[Low/High] and imageRange[Low/High]",
+      "range": {
+        "startLine": 207,
+        "startChar": 4,
+        "endLine": 210,
+        "endChar": 65
+      },
+      "revId": "725230a9a13981b7e158207bf8c74541a3e25f4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c206bfe_a47e58b2",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 798,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-15T19:09:25Z",
+      "side": 1,
+      "message": "Once using BindingPointer, just use\n\n   binding.id() \u003d\u003d texture",
+      "range": {
+        "startLine": 798,
+        "startChar": 12,
+        "endLine": 798,
+        "endChar": 92
+      },
+      "revId": "725230a9a13981b7e158207bf8c74541a3e25f4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a566d980_5614d8ab",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2183,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-15T19:09:25Z",
+      "side": 1,
+      "message": "What\u0027s the purpose of this? Why can\u0027t it just be assigned?",
+      "range": {
+        "startLine": 2180,
+        "startChar": 4,
+        "endLine": 2183,
+        "endChar": 5
+      },
+      "revId": "725230a9a13981b7e158207bf8c74541a3e25f4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "91bd0759_05ad2337",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-15T19:09:25Z",
+      "side": 1,
+      "message": "I don\u0027t think this is neccessary. If it is, you can use\n\n  ImageUnit \u0026operator\u003d(const ImageUnit \u0026other) \u003d default;",
+      "range": {
+        "startLine": 267,
+        "startChar": 4,
+        "endLine": 267,
+        "endChar": 48
+      },
+      "revId": "725230a9a13981b7e158207bf8c74541a3e25f4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "63920efd_79daab13",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-15T19:09:25Z",
+      "side": 1,
+      "message": "This can be BindingPointer\u003cTexture\u003e",
+      "range": {
+        "startLine": 271,
+        "startChar": 4,
+        "endLine": 271,
+        "endChar": 20
+      },
+      "revId": "725230a9a13981b7e158207bf8c74541a3e25f4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ee07d4d_53fa320c",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-15T19:09:25Z",
+      "side": 1,
+      "message": "This needs to update its tracking of the image units, we\u0027ve had bugs in the past where new objects with the same ID are generated and the state tracking becomes incorrect.",
+      "range": {
+        "startLine": 192,
+        "startChar": 21,
+        "endLine": 192,
+        "endChar": 34
+      },
+      "revId": "725230a9a13981b7e158207bf8c74541a3e25f4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d8a771b2_e4527f5b",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 872,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-15T19:09:25Z",
+      "side": 1,
+      "message": "Add a TODO about tracking this with dirty bits, this will be expensive to update every draw call.",
+      "revId": "725230a9a13981b7e158207bf8c74541a3e25f4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc666a43_f6ad9ca8",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-15T19:09:25Z",
+      "side": 1,
+      "message": "We should try avoid holding references to gl::Texture objects here. Can you make another small struct like the IndexedBufferBinding above to track the bindings?",
+      "range": {
+        "startLine": 199,
+        "startChar": 16,
+        "endLine": 199,
+        "endChar": 29
+      },
+      "revId": "725230a9a13981b7e158207bf8c74541a3e25f4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d31237b1_891af690",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 812,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-15T19:09:25Z",
+      "side": 1,
+      "message": "reference.",
+      "range": {
+        "startLine": 810,
+        "startChar": 8,
+        "endLine": 812,
+        "endChar": 64
+      },
+      "revId": "725230a9a13981b7e158207bf8c74541a3e25f4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf19fb10_15795255",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 830,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-15T19:09:25Z",
+      "side": 1,
+      "message": "nit: only usage of caps, merge the getter in here.",
+      "range": {
+        "startLine": 830,
+        "startChar": 16,
+        "endLine": 830,
+        "endChar": 20
+      },
+      "revId": "725230a9a13981b7e158207bf8c74541a3e25f4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a49be9a_c29bbbcc",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 833,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-15T19:09:25Z",
+      "side": 1,
+      "message": "nit: we\u0027re in the process of updating our error message generation style, please update to the error streams (reference above).",
+      "range": {
+        "startLine": 832,
+        "startChar": 29,
+        "endLine": 833,
+        "endChar": 95
+      },
+      "revId": "725230a9a13981b7e158207bf8c74541a3e25f4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01214dba_62a39e11",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 877,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-15T19:09:25Z",
+      "side": 1,
+      "message": "nit, use \"!\u003d 0\" for better readability.",
+      "range": {
+        "startLine": 877,
+        "startChar": 8,
+        "endLine": 877,
+        "endChar": 15
+      },
+      "revId": "725230a9a13981b7e158207bf8c74541a3e25f4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b2782bb_2e0784da",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-15T19:09:25Z",
+      "side": 1,
+      "message": "Feel free to merge it now and add an if-statement at the beginning:\n\n   if (IsD3D11())\n   {\n       std::cout \u003c\u003c \"Test skipped on D3D11 because it is not implemented yet.\" \u003c\u003c std::endl;\n       return;\n   }",
+      "range": {
+        "startLine": 270,
+        "startChar": 0,
+        "endLine": 272,
+        "endChar": 68
+      },
+      "revId": "725230a9a13981b7e158207bf8c74541a3e25f4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
