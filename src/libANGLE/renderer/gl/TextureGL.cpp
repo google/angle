@@ -548,45 +548,90 @@ gl::Error TextureGL::setCompressedSubImage(const gl::Context *context,
 gl::Error TextureGL::copyImage(const gl::Context *context,
                                GLenum target,
                                size_t level,
-                               const gl::Rectangle &sourceArea,
+                               const gl::Rectangle &origSourceArea,
                                GLenum internalFormat,
                                const gl::Framebuffer *source)
 {
-    nativegl::CopyTexImageImageFormat copyTexImageFormat = nativegl::GetCopyTexImageImageFormat(
-        mFunctions, mWorkarounds, internalFormat, source->getImplementationColorReadType(context));
+    GLenum type = source->getImplementationColorReadType(context);
+    nativegl::CopyTexImageImageFormat copyTexImageFormat =
+        nativegl::GetCopyTexImageImageFormat(mFunctions, mWorkarounds, internalFormat, type);
 
-    LevelInfoGL levelInfo = GetLevelInfo(internalFormat, copyTexImageFormat.internalFormat);
-    if (levelInfo.lumaWorkaround.enabled)
+    mStateManager->bindTexture(getTarget(), mTextureID);
+
+    const FramebufferGL *sourceFramebufferGL = GetImplAs<FramebufferGL>(source);
+    gl::Extents fbSize = sourceFramebufferGL->getState().getReadAttachment()->getSize();
+
+    // Did the read area go outside the framebuffer?
+    bool outside = origSourceArea.x < 0 || origSourceArea.y < 0 ||
+                   origSourceArea.x + origSourceArea.width > fbSize.width ||
+                   origSourceArea.y + origSourceArea.height > fbSize.height;
+
+    // In WebGL mode the area outside the framebuffer must be zeroed.
+    // We just zero the whole thing before copying into the area that overlaps the framebuffer.
+    if (outside && context->getExtensions().webglCompatibility)
     {
-        gl::Error error = mBlitter->copyImageToLUMAWorkaroundTexture(
-            context, mTextureID, getTarget(), target, levelInfo.sourceFormat, level, sourceArea,
-            copyTexImageFormat.internalFormat, source);
-        if (error.isError())
-        {
-            return error;
-        }
+        // TODO(fjhenigman): When robust resource initialization is implemented, avoid redundant
+        // clearing of the texture.
+        GLuint pixelBytes =
+            gl::GetInternalFormatInfo(copyTexImageFormat.internalFormat, type).pixelBytes;
+        angle::MemoryBuffer *zero;
+        ANGLE_TRY(context->getScratchBuffer(
+            origSourceArea.width * origSourceArea.height * pixelBytes, &zero));
+        zero->fill(0);
+        mStateManager->setPixelUnpackState(gl::PixelUnpackState(1, 0));
+        mFunctions->texImage2D(target, static_cast<GLint>(level), copyTexImageFormat.internalFormat,
+                               origSourceArea.width, origSourceArea.height, 0,
+                               gl::GetUnsizedFormat(copyTexImageFormat.internalFormat), type,
+                               zero->data());
     }
-    else
+
+    // Clip source area to framebuffer and copy if remaining area is not empty.
+    gl::Rectangle sourceArea;
+    if (ClipRectangle(origSourceArea, gl::Rectangle(0, 0, fbSize.width, fbSize.height),
+                      &sourceArea))
     {
-        const FramebufferGL *sourceFramebufferGL = GetImplAs<FramebufferGL>(source);
+        LevelInfoGL levelInfo = GetLevelInfo(internalFormat, copyTexImageFormat.internalFormat);
+        gl::Offset destOffset(sourceArea.x - origSourceArea.x, sourceArea.y - origSourceArea.y, 0);
 
-        mStateManager->bindTexture(getTarget(), mTextureID);
-        mStateManager->bindFramebuffer(GL_READ_FRAMEBUFFER,
-                                       sourceFramebufferGL->getFramebufferID());
-
-        if (UseTexImage2D(getTarget()))
+        if (levelInfo.lumaWorkaround.enabled)
         {
-            mFunctions->copyTexImage2D(target, static_cast<GLint>(level),
-                                       copyTexImageFormat.internalFormat, sourceArea.x,
-                                       sourceArea.y, sourceArea.width, sourceArea.height, 0);
+            if (outside)
+            {
+                ANGLE_TRY(mBlitter->copySubImageToLUMAWorkaroundTexture(
+                    context, mTextureID, getTarget(), target, levelInfo.sourceFormat, level,
+                    destOffset, sourceArea, source));
+            }
+            else
+            {
+                ANGLE_TRY(mBlitter->copyImageToLUMAWorkaroundTexture(
+                    context, mTextureID, getTarget(), target, levelInfo.sourceFormat, level,
+                    sourceArea, copyTexImageFormat.internalFormat, source));
+            }
+        }
+        else if (UseTexImage2D(getTarget()))
+        {
+            mStateManager->bindFramebuffer(GL_READ_FRAMEBUFFER,
+                                           sourceFramebufferGL->getFramebufferID());
+            if (outside)
+            {
+                mFunctions->copyTexSubImage2D(target, static_cast<GLint>(level), destOffset.x,
+                                              destOffset.y, sourceArea.x, sourceArea.y,
+                                              sourceArea.width, sourceArea.height);
+            }
+            else
+            {
+                mFunctions->copyTexImage2D(target, static_cast<GLint>(level),
+                                           copyTexImageFormat.internalFormat, sourceArea.x,
+                                           sourceArea.y, sourceArea.width, sourceArea.height, 0);
+            }
         }
         else
         {
             UNREACHABLE();
         }
-    }
 
-    setLevelInfo(target, level, 1, levelInfo);
+        setLevelInfo(target, level, 1, levelInfo);
+    }
 
     return gl::NoError();
 }
