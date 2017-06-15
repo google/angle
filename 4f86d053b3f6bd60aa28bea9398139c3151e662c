@@ -22,6 +22,30 @@
       "revId": "4f86d053b3f6bd60aa28bea9398139c3151e662c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "47a45398_a2b909c0",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-15T18:43:47Z",
+      "side": 0,
+      "message": "Thank you for your explanation.\n\nThe array and the bitset are not the same information - the bitset does not contain all the necessary information of the array. The bitset is a purely an acceleration structure, for faster iteration. I understand currently it doesn\u0027t seem very useful; I think if we ever add an iteration of the uniform blocks in the code other than in Load/Save binaries, then we would need to re-add the bitset if you remove it here. Hence I would feel better if we left it alone for now.\n\nIf you\u0027re concerned that it\u0027s hard to understand, we could add a comment; I guess I don\u0027t feel it\u0027s particularly hard to understand. Sorry for the trouble!",
+      "parentUuid": "64554faa_bc12c83d",
+      "range": {
+        "startLine": 82,
+        "startChar": 46,
+        "endLine": 82,
+        "endChar": 75
+      },
+      "revId": "4f86d053b3f6bd60aa28bea9398139c3151e662c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
