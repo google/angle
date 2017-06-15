@@ -11,6 +11,7 @@
 #include "common/bitset_utils.h"
 #include "common/debug.h"
 #include "common/utilities.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/State.h"
 #include "libANGLE/angletypes.h"
 #include "libANGLE/formatutils.h"
@@ -593,11 +594,23 @@ gl::Error TextureGL::copyImage(const gl::Context *context,
 gl::Error TextureGL::copySubImage(const gl::Context *context,
                                   GLenum target,
                                   size_t level,
-                                  const gl::Offset &destOffset,
-                                  const gl::Rectangle &sourceArea,
+                                  const gl::Offset &origDestOffset,
+                                  const gl::Rectangle &origSourceArea,
                                   const gl::Framebuffer *source)
 {
     const FramebufferGL *sourceFramebufferGL = GetImplAs<FramebufferGL>(source);
+
+    // Clip source area to framebuffer.
+    const gl::Extents fbSize = sourceFramebufferGL->getState().getReadAttachment()->getSize();
+    gl::Rectangle sourceArea;
+    if (!ClipRectangle(origSourceArea, gl::Rectangle(0, 0, fbSize.width, fbSize.height),
+                       &sourceArea))
+    {
+        // nothing to do
+        return gl::NoError();
+    }
+    gl::Offset destOffset(origDestOffset.x + sourceArea.x - origSourceArea.x,
+                          origDestOffset.y + sourceArea.y - origSourceArea.y, origDestOffset.z);
 
     mStateManager->bindTexture(getTarget(), mTextureID);
     mStateManager->bindFramebuffer(GL_READ_FRAMEBUFFER, sourceFramebufferGL->getFramebufferID());
