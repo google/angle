@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "94e480e3_09fbf6de",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 127,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-15T15:54:06Z",
+      "side": 1,
+      "message": "If at all possible, I\u0027d like to not add a member like this, expecially since the GL_MAX_SAMPLES cap is also exposed in ES2 via the GL_ANGLE_framebuffer_multisample extension.  Is it possible to calculate it from other things such as renderSupport and non-integer format?",
+      "range": {
+        "startLine": 127,
+        "startChar": 9,
+        "endLine": 127,
+        "endChar": 38
+      },
+      "revId": "5c7d9891119d4535b952fbcd68db91ae37ac37a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "63a8198b_7205e65f",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-15T15:54:06Z",
+      "side": 1,
+      "message": "I think it would make more sense to do this in Context::updateCaps instead, that way we make sure the maxSamples caps are in line with which formats are exposed to the client.  The renderer\u0027s maxSamples caps wouldn\u0027t matter at that point.",
+      "range": {
+        "startLine": 577,
+        "startChar": 8,
+        "endLine": 595,
+        "endChar": 9
+      },
+      "revId": "5c7d9891119d4535b952fbcd68db91ae37ac37a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f950d70_24af7b87",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 708,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-15T15:54:06Z",
+      "side": 1,
+      "message": "This can be moved into Context::updateCaps too.",
+      "range": {
+        "startLine": 673,
+        "startChar": 8,
+        "endLine": 708,
+        "endChar": 9
+      },
+      "revId": "5c7d9891119d4535b952fbcd68db91ae37ac37a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
