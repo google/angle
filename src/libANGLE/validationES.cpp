@@ -51,15 +51,17 @@ bool ValidateDrawAttribs(ValidationContext *context,
     for (size_t attributeIndex = 0; attributeIndex < maxEnabledAttrib; ++attributeIndex)
     {
         const VertexAttribute &attrib = vertexAttribs[attributeIndex];
-        if (!program->isAttribLocationActive(attributeIndex) || !attrib.enabled)
+
+        // No need to range check for disabled attribs.
+        if (!attrib.enabled)
         {
             continue;
         }
 
-        const VertexBinding &binding = vertexBindings[attrib.bindingIndex];
         // If we have no buffer, then we either get an error, or there are no more checks to be
         // done.
-        gl::Buffer *buffer = binding.getBuffer().get();
+        const VertexBinding &binding  = vertexBindings[attrib.bindingIndex];
+        gl::Buffer *buffer            = binding.getBuffer().get();
         if (!buffer)
         {
             if (webglCompatibility || !state.areClientArraysEnabled())
@@ -81,6 +83,13 @@ bool ValidateDrawAttribs(ValidationContext *context,
                                      << "An enabled vertex array has no buffer and no pointer.");
                 return false;
             }
+            continue;
+        }
+
+        // This needs to come after the check for client arrays as even unused attributes cannot use
+        // client-side arrays
+        if (!program->isAttribLocationActive(attributeIndex))
+        {
             continue;
         }
 

@@ -573,6 +573,35 @@ TEST_P(WebGLCompatibilityTest, ForbidsClientSideElementBuffer)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Test that client-side array buffers are forbidden even if the program doesn't use the attribute
+TEST_P(WebGLCompatibilityTest, ForbidsClientSideArrayBufferEvenNotUsedOnes)
+{
+    const std::string &vert =
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(1.0);\n"
+        "}\n";
+
+    const std::string &frag =
+        "precision highp float;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vec4(1.0);\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, vert, frag);
+
+    glUseProgram(program.get());
+
+    const auto &vertices = GetQuadVertices();
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 4, vertices.data());
+    glEnableVertexAttribArray(0);
+
+    ASSERT_GL_NO_ERROR();
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
 // Tests the WebGL requirement of having the same stencil mask, writemask and ref for fron and back
 TEST_P(WebGLCompatibilityTest, RequiresSameStencilMaskAndRef)
 {
