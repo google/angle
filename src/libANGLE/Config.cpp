@@ -165,27 +165,22 @@ class ConfigSorter
     }
 
   private:
-    void scanForWantedComponents(const AttributeMap &attributeMap)
+    static bool wantsComponent(const AttributeMap &attributeMap, EGLAttrib component)
     {
         // [EGL 1.5] section 3.4.1.2 page 30
         // Sorting rule #3: by larger total number of color bits, not considering
         // components that are 0 or don't-care.
-        for (auto attribIter = attributeMap.begin(); attribIter != attributeMap.end(); attribIter++)
-        {
-            EGLAttrib attributeKey   = attribIter->first;
-            EGLAttrib attributeValue = attribIter->second;
-            if (attributeKey != 0 && attributeValue != EGL_DONT_CARE)
-            {
-                switch (attributeKey)
-                {
-                case EGL_RED_SIZE:       mWantRed = true; break;
-                case EGL_GREEN_SIZE:     mWantGreen = true; break;
-                case EGL_BLUE_SIZE:      mWantBlue = true; break;
-                case EGL_ALPHA_SIZE:     mWantAlpha = true; break;
-                case EGL_LUMINANCE_SIZE: mWantLuminance = true; break;
-                }
-            }
-        }
+        EGLAttrib value = attributeMap.get(component, 0);
+        return value != 0 && value != EGL_DONT_CARE;
+    }
+
+    void scanForWantedComponents(const AttributeMap &attributeMap)
+    {
+        mWantRed       = wantsComponent(attributeMap, EGL_RED_SIZE);
+        mWantGreen     = wantsComponent(attributeMap, EGL_GREEN_SIZE);
+        mWantBlue      = wantsComponent(attributeMap, EGL_BLUE_SIZE);
+        mWantAlpha     = wantsComponent(attributeMap, EGL_ALPHA_SIZE);
+        mWantLuminance = wantsComponent(attributeMap, EGL_LUMINANCE_SIZE);
     }
 
     EGLint wantedComponentsSize(const Config &config) const
