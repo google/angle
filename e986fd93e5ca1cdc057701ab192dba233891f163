@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "515c415d_c2df1c9f",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-15T19:34:37Z",
+      "side": 1,
+      "message": "This looks wrong to me. Why do we need special dirty bits for an operation that is implemented internally as\n\nAttribBinding\nAttribDivisor\n\nThe dirty bits for the other operations should handle the necessary state change. Please clarify why you thought you needed to add these new dirty bits.",
+      "range": {
+        "startLine": 150,
+        "startChar": 0,
+        "endLine": 153,
+        "endChar": 0
+      },
+      "revId": "e986fd93e5ca1cdc057701ab192dba233891f163",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ffcf5d76_95dba861",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-15T19:34:37Z",
+      "side": 1,
+      "message": "how about GetAttribIndexFromDirtyBit",
+      "range": {
+        "startLine": 177,
+        "startChar": 18,
+        "endLine": 177,
+        "endChar": 38
+      },
+      "revId": "e986fd93e5ca1cdc057701ab192dba233891f163",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8375e497_297021ef",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-15T19:34:37Z",
+      "side": 1,
+      "message": "I think you can replace this variable with a helper function.",
+      "range": {
+        "startLine": 80,
+        "startChar": 4,
+        "endLine": 80,
+        "endChar": 32
+      },
+      "revId": "e986fd93e5ca1cdc057701ab192dba233891f163",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b39c5c49_2f843652",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 679,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-15T19:34:37Z",
+      "side": 1,
+      "message": "can you explain why you are checking the dirty bits here inside the loop that checks the dirty bits? This looks wrong to me, I think you probably are having ordering problems, and these problems could be fixed by simply re-ordering the dirty bits. I find it hard to understand why so I would like if you could clarify for me why this check is here.",
+      "range": {
+        "startLine": 679,
+        "startChar": 13,
+        "endLine": 679,
+        "endChar": 76
+      },
+      "revId": "e986fd93e5ca1cdc057701ab192dba233891f163",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
