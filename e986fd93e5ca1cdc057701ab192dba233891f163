@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "daf71702_d3ede785",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-16T02:28:29Z",
+      "side": 1,
+      "message": "I just wanted to make these dirty bits matches the use of each corresponding GL calls in the upper level.\nFor example, now if the dirty bit DIRTY_BIT_ATTRIB_0_DIVISOR is set, it means that VertexAttribDivisor(0, divisor) has been called, and:\n- On OpenGL back-ends, we can simply create updateXXX functions to handle each GL calls about Vertex Attribute.\n- On D3D back-ends, since there are fewer dirty bits to set (one just for VertexAttribDivisor or two for VertexBindingDivisor and VertexAttribBinding)\n\nAnother design is as what you said we just use two dirty bits to express VertexAttribDivisor, and we can make the choice to use either VertexAttribDivisor directly or VertexBindingDivisor and VertexAttribBinidng in updateAttribBinding or elsewhere according to the current state of VertexArray.\n\nI once thought maybe the first design is easier to understand and clearer to the reviewers. I am also OK to use the design you suggest here.",
+      "parentUuid": "515c415d_c2df1c9f",
+      "range": {
+        "startLine": 150,
+        "startChar": 0,
+        "endLine": 153,
+        "endChar": 0
+      },
+      "revId": "e986fd93e5ca1cdc057701ab192dba233891f163",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ffcf5d76_95dba861",
         "filename": "src/libANGLE/VertexArray.h",
         "patchSetId": 19
@@ -36,6 +60,30 @@
       "writtenOn": "2017-06-15T19:34:37Z",
       "side": 1,
       "message": "how about GetAttribIndexFromDirtyBit",
+      "range": {
+        "startLine": 177,
+        "startChar": 18,
+        "endLine": 177,
+        "endChar": 38
+      },
+      "revId": "e986fd93e5ca1cdc057701ab192dba233891f163",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d265f473_31926280",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-16T02:28:29Z",
+      "side": 1,
+      "message": "This function is not only for attribIndex but also for bindingIndex, so I wonder if the original name is a bit misleading.",
+      "parentUuid": "ffcf5d76_95dba861",
       "range": {
         "startLine": 177,
         "startChar": 18,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "41a7f9ac_f60b60ae",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-16T02:28:29Z",
+      "side": 1,
+      "message": "This variable is used to check if we can use Vertex Attrib Binding APIs. We can only use these APIs to do per format or per binding updates on platforms that supports Vertex Attrib Binding (OpenGL 4.3 and above, OpenGL ES 3.1 and above).\n\nDo you mean I use a function: (return mFunctions-\u003evertexAttribBinding !\u003d nullptr) instead of this variable? It\u0027s also OK to me.",
+      "parentUuid": "8375e497_297021ef",
+      "range": {
+        "startLine": 80,
+        "startChar": 4,
+        "endLine": 80,
+        "endChar": 32
+      },
+      "revId": "e986fd93e5ca1cdc057701ab192dba233891f163",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b39c5c49_2f843652",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 19
@@ -82,6 +154,30 @@
       "writtenOn": "2017-06-15T19:34:37Z",
       "side": 1,
       "message": "can you explain why you are checking the dirty bits here inside the loop that checks the dirty bits? This looks wrong to me, I think you probably are having ordering problems, and these problems could be fixed by simply re-ordering the dirty bits. I find it hard to understand why so I would like if you could clarify for me why this check is here.",
+      "range": {
+        "startLine": 679,
+        "startChar": 13,
+        "endLine": 679,
+        "endChar": 76
+      },
+      "revId": "e986fd93e5ca1cdc057701ab192dba233891f163",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9bed4141_340e05d3",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 679,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-16T02:28:29Z",
+      "side": 1,
+      "message": "According to ES3.1 SPEC, VertexAttribPointer will update format, binding and attribBinding together. I think if you call VertexAttribPointer before, there is no need to update format again by call VertexAttribFormat afterwards. This check and the following ones are all for this logic.",
+      "parentUuid": "b39c5c49_2f843652",
       "range": {
         "startLine": 679,
         "startChar": 13,
