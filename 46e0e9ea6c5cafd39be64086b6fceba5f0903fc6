@@ -1,0 +1,227 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0787144a_c814809c",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-16T13:48:26Z",
+      "side": 1,
+      "message": "Since this function is not only used for attribIndex, but also for bindingIndex, I think the former name \"GetAttribIndex\" is a bit misleading. So I choose this new name instead of the names that contain \"AttribIndex\".",
+      "revId": "46e0e9ea6c5cafd39be64086b6fceba5f0903fc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01c1f493_52f5cf55",
+        "filename": "src/libANGLE/VertexAttribute.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-16T13:48:26Z",
+      "side": 1,
+      "message": "The parameter \"relativeOffset\" in VertexAttribFormat is GLuint according to the SPEC.\n[OpenGL ES 3.2 SPEC Chapter 10.3.1 Page 241]",
+      "revId": "46e0e9ea6c5cafd39be64086b6fceba5f0903fc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "20f9b600_ae3c0b2c",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-16T13:48:26Z",
+      "side": 1,
+      "message": "I rely on this variable to decide if we can use Vertex Attrib Binding APIs. Since the variable is used frequently in this patch, I think it is better to reserve it.",
+      "revId": "46e0e9ea6c5cafd39be64086b6fceba5f0903fc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "362f5608_e397f98a",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-16T13:48:26Z",
+      "side": 1,
+      "message": "We process attribute streaming by copying the data in client memory pointer into the buffer mStreamingArrayBuffer. So it is enough just to update the buffer by bindVertexBuffer instead of VertexAttribPointer. \n\nThe format has been updated in updateAttribFormat and we won\u0027t call VertexAttribFormat when the format part isn\u0027t changed.",
+      "revId": "46e0e9ea6c5cafd39be64086b6fceba5f0903fc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c31cad2_d813d4d0",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 468,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-16T13:48:26Z",
+      "side": 1,
+      "message": "The needsStreaming may be changed only when attrib.enabled or the binding buffer changed. So it is enough just to update needsStreaming by comparing the buffer.",
+      "range": {
+        "startLine": 464,
+        "startChar": 0,
+        "endLine": 468,
+        "endChar": 5
+      },
+      "revId": "46e0e9ea6c5cafd39be64086b6fceba5f0903fc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d03621e_8915d5e3",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-16T13:48:26Z",
+      "side": 1,
+      "message": "We won\u0027t call VertexAttribPointer as long as the buffer is nullptr, so it is unnecessary to do other comparisons when the buffer is nullptr.",
+      "range": {
+        "startLine": 472,
+        "startChar": 0,
+        "endLine": 480,
+        "endChar": 5
+      },
+      "revId": "46e0e9ea6c5cafd39be64086b6fceba5f0903fc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92ff66eb_eddf0660",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-16T13:48:26Z",
+      "side": 1,
+      "message": "In this patch when the binding buffer isn\u0027t nullptr, we always replace VertexAttribPointer by three Vertex Attrib Binding APIs:\n- VertexAttribFormat\n- VertexAttribBinding\n- BindVertexBuffer\n\nNote that when the upper context is ES3.0, the attribBindings won\u0027t be changed, so the GL calls to update AttribPointer change from:\n- BindBuffer(GL_ARRAY_BUFFER, buffer)\n- VertexAttribPointer\n\nInto:\n- VertexAttribFormat\n- BindVertexBuffer\n\nAnd if only one of the format or the binding is dirty, only one GL call is made instead of two.\n\nWe call VertexAttribPointer here on platforms that don\u0027t support Vertex Attrib Binding since we can only do that to update vertex attributes.",
+      "range": {
+        "startLine": 482,
+        "startChar": 0,
+        "endLine": 487,
+        "endChar": 5
+      },
+      "revId": "46e0e9ea6c5cafd39be64086b6fceba5f0903fc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "772b6cf2_dc3896d5",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-16T13:48:26Z",
+      "side": 1,
+      "message": "The dirty bit for format is set when VertexAttribPointer is called in the upper context. On platforms that don\u0027t support Vertex Attrib Binding, the format part has been updated together with VertexAttribPointer in updateAttribPointer, so we should early return here.",
+      "revId": "46e0e9ea6c5cafd39be64086b6fceba5f0903fc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ebe592ac_0915c51e",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 639,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-16T13:48:26Z",
+      "side": 1,
+      "message": "VertexAttribDivisor in upper context corresponds to two dirty bits:\n- DIRTY_BIT_ATTRIB_XX_BINDING\n- DIRTY_BIT_BINDING_XX_DIVISOR\n\nAs attribBinding won\u0027t be changed in ES3.0, we actually replace VertexAttribDivisor by VertexBindingDivisor on platforms that support Vertex Attrib Binding.",
+      "range": {
+        "startLine": 637,
+        "startChar": 0,
+        "endLine": 639,
+        "endChar": 88
+      },
+      "revId": "46e0e9ea6c5cafd39be64086b6fceba5f0903fc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9eeaf309_5e0db044",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 645,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-16T13:48:26Z",
+      "side": 1,
+      "message": "When VertexBindingDivisor isn\u0027t available, we can only update divisor by VertexAttribDivisor.",
+      "range": {
+        "startLine": 643,
+        "startChar": 0,
+        "endLine": 645,
+        "endChar": 87
+      },
+      "revId": "46e0e9ea6c5cafd39be64086b6fceba5f0903fc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8cdcdabd_3c458302",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 692,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-16T13:48:26Z",
+      "side": 1,
+      "message": "Now we don\u0027t need the inner if-statements as the former patch does.",
+      "range": {
+        "startLine": 674,
+        "startChar": 0,
+        "endLine": 692,
+        "endChar": 40
+      },
+      "revId": "46e0e9ea6c5cafd39be64086b6fceba5f0903fc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
