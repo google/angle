@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa7b28ea_b717a993",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2742,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-16T19:31:47Z",
+      "side": 1,
+      "message": "Think it would be possible to simplify this to \"formatMaxSamples \u003e\u003d 4\" ?",
+      "range": {
+        "startLine": 2742,
+        "startChar": 16,
+        "endLine": 2742,
+        "endChar": 75
+      },
+      "revId": "e3ca852fc9a0358c6b48144f14a50f1389c70b56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e27221f0_846b5049",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2748,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-16T19:31:47Z",
+      "side": 1,
+      "message": "nit: Just use std::min/max",
+      "range": {
+        "startLine": 2744,
+        "startChar": 16,
+        "endLine": 2748,
+        "endChar": 17
+      },
+      "revId": "e3ca852fc9a0358c6b48144f14a50f1389c70b56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cdaf6549_1339b410",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2765,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-16T19:31:47Z",
+      "side": 1,
+      "message": "same nit",
+      "range": {
+        "startLine": 2762,
+        "startChar": 20,
+        "endLine": 2765,
+        "endChar": 21
+      },
+      "revId": "e3ca852fc9a0358c6b48144f14a50f1389c70b56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f8c57fc_c80fa157",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2776,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-16T19:31:47Z",
+      "side": 1,
+      "message": "same nit",
+      "range": {
+        "startLine": 2773,
+        "startChar": 24,
+        "endLine": 2776,
+        "endChar": 25
+      },
+      "revId": "e3ca852fc9a0358c6b48144f14a50f1389c70b56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9709f00e_33098172",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2783,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-16T19:31:47Z",
+      "side": 1,
+      "message": "same nit.",
+      "range": {
+        "startLine": 2780,
+        "startChar": 24,
+        "endLine": 2783,
+        "endChar": 25
+      },
+      "revId": "e3ca852fc9a0358c6b48144f14a50f1389c70b56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
