@@ -5006,8 +5006,9 @@ bool ValidateHint(ValidationContext *context, GLenum target, GLenum mode)
         case GL_GENERATE_MIPMAP_HINT:
             break;
 
-        case GL_FRAGMENT_SHADER_DERIVATIVE_HINT_OES:
-            if (!context->getExtensions().standardDerivatives)
+        case GL_FRAGMENT_SHADER_DERIVATIVE_HINT:
+            if (context->getClientVersion() < ES_3_0 &&
+                !context->getExtensions().standardDerivatives)
             {
                 context->handleError(InvalidOperation()
                                      << "hint requires OES_standard_derivatives.");
