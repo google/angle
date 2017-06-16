@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ae63e3d3_907db47b",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-16T08:28:41Z",
+      "side": 1,
+      "message": "Ignore the previous comment.\n\n\nCan we remove the false cases for simplicity?\n\n    switch (type)\n    {\n        case EbtImage3D:\n        case EbtIImage3D:\n        case EbtUImage3D:\n            return true;\n        default:\n            assert(!IsImage(type));\n    }\n\n    return false;",
+      "parentUuid": "dba8535b_2e9ae6d7",
+      "range": {
+        "startLine": 505,
+        "startChar": 1,
+        "endLine": 528,
+        "endChar": 1
+      },
+      "revId": "8769666a555cd666d08d33298b5c47b06fbedf35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "506e0aa3_b8993f4e",
         "filename": "src/compiler/translator/BaseTypes.h",
         "patchSetId": 5
@@ -42,6 +66,46 @@
         "endLine": 578,
         "endChar": 1
       },
+      "revId": "8769666a555cd666d08d33298b5c47b06fbedf35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27b01ac9_3a1637b9",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-16T08:28:41Z",
+      "side": 1,
+      "message": "Be careful with copy/paste! :)",
+      "range": {
+        "startLine": 6,
+        "startChar": 3,
+        "endLine": 6,
+        "endChar": 10
+      },
+      "revId": "8769666a555cd666d08d33298b5c47b06fbedf35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d879e3c_04708f13",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-16T08:28:41Z",
+      "side": 1,
+      "message": "TString PositionArgument(TBasicType image)\n{\n    ...\n}\nTString DataArgument(TBasicType image)\n{\n    ...\n}\n\nout \u003c\u003c \"const uint imageIndex\";\nif (imageFunction.method \u003d\u003d ImageFunctionHLSL::ImageFunction::LOAD)\n{\n    out \u003c\u003c \", \" \u003c\u003c PositionArgument(image);\n}\nelse if (imageFunction.method \u003d\u003d ImageFunctionHLSL::ImageFunction::STORE)\n{\n    out \u003c\u003c \", \" \u003c\u003c PositionArgument(image) \u003c\u003c \", \" \u003c\u003c DataArgument(image);\n}\n\nMaybe this can improve code reuse a little bit.",
       "revId": "8769666a555cd666d08d33298b5c47b06fbedf35",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -173,6 +237,29 @@
         "startChar": 0,
         "endLine": 110,
         "endChar": 39
+      },
+      "revId": "8769666a555cd666d08d33298b5c47b06fbedf35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25825189_816d0ebf",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-16T08:28:41Z",
+      "side": 1,
+      "message": "Why only TEXTURE_2D sampler? what about other samplers like Sampler3D?",
+      "range": {
+        "startLine": 272,
+        "startChar": 27,
+        "endLine": 272,
+        "endChar": 53
       },
       "revId": "8769666a555cd666d08d33298b5c47b06fbedf35",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
