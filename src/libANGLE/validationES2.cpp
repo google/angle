@@ -3742,8 +3742,9 @@ bool ValidateCopySubTextureCHROMIUM(Context *context,
 
     if (dest->getWidth(destTarget, destLevel) == 0 || dest->getHeight(destTarget, destLevel) == 0)
     {
-        context->handleError(
-            InvalidValue() << "The destination level of the destination texture must be defined.");
+        context
+            ->handleError(InvalidOperation()
+                          << "The destination level of the destination texture must be defined.");
         return false;
     }
 
