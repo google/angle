@@ -727,6 +727,11 @@ Error Program::link(const gl::Context *context)
             return NoError();
         }
 
+        if (!linkValidateGlobalNames(context, mInfoLog))
+        {
+            return NoError();
+        }
+
         const auto &mergedVaryings = getMergedVaryings(context);
 
         if (!linkValidateTransformFeedback(context, mInfoLog, mergedVaryings, caps))
@@ -2383,6 +2388,36 @@ bool Program::linkValidateTransformFeedback(const gl::Context *context,
         return false;
     }
 
+    return true;
+}
+
+bool Program::linkValidateGlobalNames(const Context *context, InfoLog &infoLog) const
+{
+    const std::vector<sh::Uniform> &vertexUniforms =
+        mState.mAttachedVertexShader->getUniforms(context);
+    const std::vector<sh::Uniform> &fragmentUniforms =
+        mState.mAttachedFragmentShader->getUniforms(context);
+    const std::vector<sh::Attribute> &attributes =
+        mState.mAttachedVertexShader->getActiveAttributes(context);
+    for (const auto &attrib : attributes)
+    {
+        for (const auto &uniform : vertexUniforms)
+        {
+            if (uniform.name == attrib.name)
+            {
+                infoLog << "Name conflicts between a uniform and an attribute: " << attrib.name;
+                return false;
+            }
+        }
+        for (const auto &uniform : fragmentUniforms)
+        {
+            if (uniform.name == attrib.name)
+            {
+                infoLog << "Name conflicts between a uniform and an attribute: " << attrib.name;
+                return false;
+            }
+        }
+    }
     return true;
 }
 

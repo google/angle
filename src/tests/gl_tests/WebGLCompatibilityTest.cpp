@@ -1511,6 +1511,28 @@ TEST_P(WebGLCompatibilityTest, BuiltInInvariant)
     EXPECT_EQ(0u, program);
 }
 
+// Tests global namespace conflicts between uniforms and attributes.
+// Based on WebGL test conformance/glsl/misc/shaders-with-name-conflicts.html.
+TEST_P(WebGLCompatibilityTest, GlobalNamesConflict)
+{
+    const std::string vertexShader =
+        "attribute vec4 foo;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = foo;\n"
+        "}";
+    const std::string fragmentShader =
+        "precision mediump float;\n"
+        "uniform vec4 foo;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = foo;\n"
+        "}";
+
+    GLuint program = CompileProgram(vertexShader, fragmentShader);
+    EXPECT_EQ(0u, program);
+}
+
 // Test dimension and image size validation of compressed textures
 TEST_P(WebGLCompatibilityTest, CompressedTextureS3TC)
 {
