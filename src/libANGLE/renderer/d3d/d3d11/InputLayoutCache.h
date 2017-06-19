@@ -33,7 +33,7 @@ struct PackedAttributeLayout;
 namespace std
 {
 template <>
-struct std::hash<rx::PackedAttributeLayout>
+struct hash<rx::PackedAttributeLayout>
 {
     size_t operator()(const rx::PackedAttributeLayout &value) const
     {

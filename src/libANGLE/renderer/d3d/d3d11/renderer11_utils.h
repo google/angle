@@ -145,14 +145,6 @@ struct RasterizerStateKey final
 bool operator==(const RasterizerStateKey &a, const RasterizerStateKey &b);
 bool operator!=(const RasterizerStateKey &a, const RasterizerStateKey &b);
 
-HRESULT SetDebugName(ID3D11DeviceChild *resource, const char *name);
-
-template <typename T>
-HRESULT SetDebugName(angle::ComPtr<T> &resource, const char *name)
-{
-    return SetDebugName(resource.Get(), name);
-}
-
 template <typename outType>
 outType* DynamicCastComObject(IUnknown* object)
 {

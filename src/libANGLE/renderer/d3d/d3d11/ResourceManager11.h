@@ -20,6 +20,18 @@
 
 namespace rx
 {
+// These two methods are declared here to prevent circular includes.
+namespace d3d11
+{
+HRESULT SetDebugName(ID3D11DeviceChild *resource, const char *name);
+
+template <typename T>
+HRESULT SetDebugName(angle::ComPtr<T> &resource, const char *name)
+{
+    return SetDebugName(resource.Get(), name);
+}
+}  // namespace d3d11
+
 class Renderer11;
 class ResourceManager11;
 template <typename T>
