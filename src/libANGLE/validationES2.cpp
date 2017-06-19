@@ -777,11 +777,11 @@ bool ValidCap(const Context *context, GLenum cap, bool queryOnly)
 
 // Return true if a character belongs to the ASCII subset as defined in GLSL ES 1.0 spec section
 // 3.1.
-bool IsValidESSLCharacter(unsigned char c)
+bool IsValidESSLCharacter(unsigned char c, bool allowBackslash)
 {
     // Printing characters are valid except " $ ` @ \ ' DEL.
-    if (c >= 32 && c <= 126 && c != '"' && c != '$' && c != '`' && c != '@' && c != '\\' &&
-        c != '\'')
+    if (c >= 32 && c <= 126 && c != '"' && c != '$' && c != '`' && c != '@' &&
+        (allowBackslash || c != '\\') && c != '\'')
     {
         return true;
     }
@@ -795,9 +795,17 @@ bool IsValidESSLCharacter(unsigned char c)
     return false;
 }
 
-bool IsValidESSLString(const char *str, size_t len)
+bool IsValidESSLString(const char *str, size_t len, bool allowBackslash)
 {
-    return len == 0 || std::find_if_not(str, str + len, IsValidESSLCharacter) == str + len;
+    for (size_t i = 0; i < len; i++)
+    {
+        if (!IsValidESSLCharacter(str[i], allowBackslash))
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 }  // anonymous namespace
@@ -2734,7 +2742,8 @@ bool ValidateBindUniformLocationCHROMIUM(Context *context,
 
     // The WebGL spec (section 6.20) disallows strings containing invalid ESSL characters for
     // shader-related entry points
-    if (context->getExtensions().webglCompatibility && !IsValidESSLString(name, strlen(name)))
+    if (context->getExtensions().webglCompatibility &&
+        !IsValidESSLString(name, strlen(name), false))
     {
         context->handleError(InvalidValue() << "Uniform name contains invalid characters");
         return false;
@@ -4061,7 +4070,8 @@ bool ValidateBindAttribLocation(ValidationContext *context,
 
     // The WebGL spec (section 6.20) disallows strings containing invalid ESSL characters for
     // shader-related entry points
-    if (context->getExtensions().webglCompatibility && !IsValidESSLString(name, strlen(name)))
+    if (context->getExtensions().webglCompatibility &&
+        !IsValidESSLString(name, strlen(name), false))
     {
         context->handleError(InvalidValue() << "Attribute name contains invalid characters");
         return false;
@@ -4795,7 +4805,8 @@ bool ValidateGetAttribLocation(ValidationContext *context, GLuint program, const
 {
     // The WebGL spec (section 6.20) disallows strings containing invalid ESSL characters for
     // shader-related entry points
-    if (context->getExtensions().webglCompatibility && !IsValidESSLString(name, strlen(name)))
+    if (context->getExtensions().webglCompatibility &&
+        !IsValidESSLString(name, strlen(name), false))
     {
         context->handleError(InvalidValue() << "Attribute name contains invalid characters");
         return false;
@@ -4953,7 +4964,8 @@ bool ValidateGetUniformLocation(ValidationContext *context, GLuint program, cons
 
     // The WebGL spec (section 6.20) disallows strings containing invalid ESSL characters for
     // shader-related entry points
-    if (context->getExtensions().webglCompatibility && !IsValidESSLString(name, strlen(name)))
+    if (context->getExtensions().webglCompatibility &&
+        !IsValidESSLString(name, strlen(name), false))
     {
         context->handleError(InvalidValue() << "Uniform name contains invalid characters");
         return false;
@@ -5180,7 +5192,9 @@ bool ValidateShaderSource(ValidationContext *context,
         for (GLsizei i = 0; i < count; i++)
         {
             size_t len = length ? static_cast<size_t>(length[i]) : strlen(string[i]);
-            if (!IsValidESSLString(string[i], len))
+
+            // Backslash as line-continuation is allowed in WebGL 2.0.
+            if (!IsValidESSLString(string[i], len, context->getClientVersion() >= ES_3_0))
             {
                 context->handleError(InvalidValue() << "Shader source contains invalid characters");
                 return false;

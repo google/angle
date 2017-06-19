@@ -873,7 +873,11 @@ TEST_P(WebGLCompatibilityTest, InvalidAttributeAndUniformNames)
         "abcdefghijklmnopqrstuvwxyz_ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
     const std::string validUniformName =
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_1234567890";
-    const char invalidSet[] = {'"', '$', '`', '@', '\\', '\''};
+    std::vector<char> invalidSet = {'"', '$', '`', '@', '\''};
+    if (getClientMajorVersion() < 3)
+    {
+        invalidSet.push_back('\\');
+    }
 
     std::string vert = "attribute float ";
     vert += validAttribName;
