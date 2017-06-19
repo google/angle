@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "380086da_5f696650",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2742,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-19T07:24:40Z",
+      "side": 1,
+      "message": "That might lower MAX_SAMPLES beyond what is needed.",
+      "parentUuid": "fa7b28ea_b717a993",
+      "range": {
+        "startLine": 2742,
+        "startChar": 16,
+        "endLine": 2742,
+        "endChar": 75
+      },
+      "revId": "e3ca852fc9a0358c6b48144f14a50f1389c70b56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e27221f0_846b5049",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 10
@@ -45,6 +69,30 @@
       "revId": "e3ca852fc9a0358c6b48144f14a50f1389c70b56",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a154f1d_d0d1f179",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2748,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-19T07:24:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e27221f0_846b5049",
+      "range": {
+        "startLine": 2744,
+        "startChar": 16,
+        "endLine": 2748,
+        "endChar": 17
+      },
+      "revId": "e3ca852fc9a0358c6b48144f14a50f1389c70b56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "f26609b3_ca6d3880",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2765,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-19T07:24:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cdaf6549_1339b410",
+      "range": {
+        "startLine": 2762,
+        "startChar": 20,
+        "endLine": 2765,
+        "endChar": 21
+      },
+      "revId": "e3ca852fc9a0358c6b48144f14a50f1389c70b56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3f8c57fc_c80fa157",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 10
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "6a7cf727_dc44ef32",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2776,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-19T07:24:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f8c57fc_c80fa157",
+      "range": {
+        "startLine": 2773,
+        "startChar": 24,
+        "endLine": 2776,
+        "endChar": 25
+      },
+      "revId": "e3ca852fc9a0358c6b48144f14a50f1389c70b56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9709f00e_33098172",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 10
@@ -114,6 +210,30 @@
       "revId": "e3ca852fc9a0358c6b48144f14a50f1389c70b56",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6249e92c_231bee10",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2783,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-19T07:24:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9709f00e_33098172",
+      "range": {
+        "startLine": 2780,
+        "startChar": 24,
+        "endLine": 2783,
+        "endChar": 25
+      },
+      "revId": "e3ca852fc9a0358c6b48144f14a50f1389c70b56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
