@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8926a2b3_8359cd94",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 3684,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-19T02:42:28Z",
+      "side": 1,
+      "message": "return isLevelComplete(index.mipIndex); ?",
+      "range": {
+        "startLine": 3683,
+        "startChar": 0,
+        "endLine": 3684,
+        "endChar": 17
+      },
+      "revId": "bd209b17076cb756832daf93e5f634587c77c9c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf46e473_22074c8d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 719,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-19T02:42:28Z",
+      "side": 1,
+      "message": "Do you know why lodOffset is initialized to 1 not 0? If lodOffset is zero, I think you can follow the style mStagingSubresource \u003d D3D11CalcSubresource(lodOffset, 0, lodOffset + 1);",
+      "revId": "bd209b17076cb756832daf93e5f634587c77c9c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
