@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6bc7d088_b1b83f40",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1027,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-19T15:03:40Z",
+      "side": 1,
+      "message": "nit: this can now be like the other functions:\n\n   Context *context \u003d GetValidGlobalContext();",
+      "range": {
+        "startLine": 1026,
+        "startChar": 4,
+        "endLine": 1027,
+        "endChar": 52
+      },
+      "revId": "2075dda505b9b1b147603b85a394630d6f5ac758",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a3630bee_530cd331",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1052,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-19T15:03:40Z",
+      "side": 1,
+      "message": "same nit",
+      "range": {
+        "startLine": 1051,
+        "startChar": 4,
+        "endLine": 1052,
+        "endChar": 52
+      },
+      "revId": "2075dda505b9b1b147603b85a394630d6f5ac758",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
