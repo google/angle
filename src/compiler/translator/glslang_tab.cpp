@@ -752,36 +752,36 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   255,   255,   256,   259,   269,   272,   277,   282,   287,
-     292,   300,   306,   309,   312,   315,   318,   321,   327,   334,
-     340,   344,   352,   355,   361,   365,   372,   377,   384,   392,
-     398,   404,   413,   416,   419,   422,   432,   433,   434,   435,
-     443,   444,   447,   450,   457,   458,   461,   467,   468,   472,
-     479,   480,   483,   486,   489,   495,   496,   499,   505,   506,
-     513,   514,   521,   522,   529,   530,   536,   537,   543,   544,
-     550,   551,   557,   558,   565,   566,   567,   568,   572,   573,
-     574,   578,   582,   586,   590,   597,   600,   606,   613,   620,
-     623,   626,   635,   639,   643,   647,   651,   658,   665,   668,
-     675,   683,   703,   713,   721,   746,   750,   754,   758,   765,
-     772,   775,   779,   783,   788,   793,   800,   804,   808,   812,
-     817,   822,   829,   833,   839,   842,   848,   852,   859,   865,
-     869,   873,   876,   879,   888,   894,   902,   905,   925,   944,
-     951,   955,   959,   962,   965,   968,   971,   974,   982,   989,
-     992,   995,  1001,  1008,  1011,  1017,  1020,  1023,  1026,  1032,
-    1035,  1040,  1051,  1054,  1057,  1060,  1063,  1066,  1070,  1074,
-    1078,  1082,  1086,  1090,  1094,  1098,  1102,  1106,  1110,  1114,
-    1118,  1122,  1126,  1130,  1134,  1138,  1142,  1146,  1150,  1156,
-    1159,  1162,  1165,  1168,  1171,  1174,  1177,  1180,  1183,  1186,
-    1189,  1192,  1195,  1198,  1201,  1204,  1207,  1210,  1217,  1223,
-    1229,  1232,  1235,  1238,  1241,  1244,  1247,  1250,  1253,  1256,
-    1259,  1262,  1265,  1268,  1271,  1283,  1283,  1286,  1286,  1292,
-    1295,  1301,  1304,  1311,  1315,  1321,  1327,  1339,  1343,  1347,
-    1348,  1354,  1355,  1356,  1357,  1358,  1359,  1360,  1364,  1365,
-    1365,  1365,  1374,  1375,  1379,  1379,  1380,  1380,  1385,  1388,
-    1397,  1402,  1409,  1410,  1414,  1421,  1425,  1432,  1432,  1439,
-    1442,  1449,  1453,  1466,  1466,  1471,  1471,  1477,  1477,  1485,
-    1488,  1494,  1497,  1503,  1507,  1514,  1517,  1520,  1523,  1526,
-    1535,  1541,  1547,  1550,  1556,  1556
+       0,   256,   256,   257,   260,   270,   273,   278,   283,   288,
+     293,   301,   307,   310,   313,   316,   319,   322,   328,   335,
+     341,   345,   353,   356,   362,   366,   373,   378,   385,   393,
+     399,   405,   414,   417,   420,   423,   433,   434,   435,   436,
+     444,   445,   448,   451,   458,   459,   462,   468,   469,   473,
+     480,   481,   484,   487,   490,   496,   497,   500,   506,   507,
+     514,   515,   522,   523,   530,   531,   537,   538,   544,   545,
+     551,   552,   558,   559,   566,   567,   568,   569,   573,   574,
+     575,   579,   583,   587,   591,   598,   601,   607,   614,   621,
+     624,   627,   636,   640,   644,   648,   652,   659,   666,   669,
+     676,   684,   704,   714,   722,   747,   751,   755,   759,   766,
+     773,   776,   780,   784,   789,   794,   801,   805,   809,   813,
+     818,   823,   830,   834,   840,   843,   849,   853,   860,   866,
+     870,   874,   877,   880,   889,   895,   903,   906,   926,   945,
+     952,   956,   960,   963,   966,   969,   972,   975,   983,   990,
+     993,   996,  1002,  1009,  1012,  1018,  1021,  1024,  1027,  1033,
+    1036,  1041,  1052,  1055,  1058,  1061,  1064,  1067,  1071,  1075,
+    1079,  1083,  1087,  1091,  1095,  1099,  1103,  1107,  1111,  1115,
+    1119,  1123,  1127,  1131,  1135,  1139,  1143,  1147,  1151,  1157,
+    1160,  1163,  1166,  1169,  1172,  1175,  1178,  1181,  1184,  1187,
+    1190,  1193,  1196,  1199,  1202,  1205,  1208,  1211,  1218,  1224,
+    1230,  1233,  1236,  1239,  1242,  1245,  1248,  1251,  1254,  1257,
+    1260,  1263,  1266,  1269,  1272,  1284,  1284,  1287,  1287,  1293,
+    1296,  1302,  1305,  1312,  1316,  1322,  1328,  1340,  1344,  1348,
+    1349,  1355,  1356,  1357,  1358,  1359,  1360,  1361,  1365,  1366,
+    1366,  1366,  1375,  1376,  1380,  1380,  1381,  1381,  1386,  1389,
+    1398,  1403,  1410,  1411,  1415,  1422,  1426,  1433,  1433,  1440,
+    1443,  1450,  1454,  1460,  1460,  1465,  1465,  1471,  1471,  1479,
+    1482,  1488,  1491,  1497,  1501,  1508,  1511,  1514,  1517,  1520,
+    1529,  1535,  1541,  1544,  1550,  1550
 };
 #endif
 
@@ -4828,7 +4828,7 @@ yyreduce:
   case 271:
 
     {
-        (yyval.interm.intermTypedNode) = (yyvsp[0].interm.intermTypedNode);
+        (yyval.interm.intermNode) = (yyvsp[0].interm.intermTypedNode);
         context->checkIsScalarBool((yyvsp[0].interm.intermTypedNode)->getLine(), (yyvsp[0].interm.intermTypedNode));
     }
 
@@ -4837,14 +4837,7 @@ yyreduce:
   case 272:
 
     {
-        TIntermBinary *initNode = nullptr;
-        context->checkIsScalarBool((yylsp[-2]), (yyvsp[-3].interm.type));
-
-        if (!context->executeInitializer((yylsp[-2]), *(yyvsp[-2].lex).string, (yyvsp[-3].interm.type), (yyvsp[0].interm.intermTypedNode), &initNode))
-            (yyval.interm.intermTypedNode) = (yyvsp[0].interm.intermTypedNode);
-        else {
-            (yyval.interm.intermTypedNode) = 0;
-        }
+        (yyval.interm.intermNode) = context->addConditionInitializer((yyvsp[-3].interm.type), *(yyvsp[-2].lex).string, (yyvsp[0].interm.intermTypedNode), (yylsp[-2]));
     }
 
     break;
@@ -4859,7 +4852,7 @@ yyreduce:
 
     {
         context->symbolTable.pop();
-        (yyval.interm.intermNode) = context->intermediate.addLoop(ELoopWhile, 0, (yyvsp[-2].interm.intermTypedNode), 0, (yyvsp[0].interm.intermNode), (yylsp[-5]));
+        (yyval.interm.intermNode) = context->addLoop(ELoopWhile, 0, (yyvsp[-2].interm.intermNode), 0, (yyvsp[0].interm.intermNode), (yylsp[-5]));
         context->decrLoopNestingLevel();
     }
 
@@ -4876,7 +4869,7 @@ yyreduce:
     {
         context->checkIsScalarBool((yylsp[0]), (yyvsp[-2].interm.intermTypedNode));
 
-        (yyval.interm.intermNode) = context->intermediate.addLoop(ELoopDoWhile, 0, (yyvsp[-2].interm.intermTypedNode), 0, (yyvsp[-5].interm.intermNode), (yylsp[-4]));
+        (yyval.interm.intermNode) = context->addLoop(ELoopDoWhile, 0, (yyvsp[-2].interm.intermTypedNode), 0, (yyvsp[-5].interm.intermNode), (yylsp[-4]));
         context->decrLoopNestingLevel();
     }
 
@@ -4892,7 +4885,7 @@ yyreduce:
 
     {
         context->symbolTable.pop();
-        (yyval.interm.intermNode) = context->intermediate.addLoop(ELoopFor, (yyvsp[-3].interm.intermNode), reinterpret_cast<TIntermTyped*>((yyvsp[-2].interm.nodePair).node1), reinterpret_cast<TIntermTyped*>((yyvsp[-2].interm.nodePair).node2), (yyvsp[0].interm.intermNode), (yylsp[-6]));
+        (yyval.interm.intermNode) = context->addLoop(ELoopFor, (yyvsp[-3].interm.intermNode), reinterpret_cast<TIntermTyped*>((yyvsp[-2].interm.nodePair).node1), reinterpret_cast<TIntermTyped*>((yyvsp[-2].interm.nodePair).node2), (yyvsp[0].interm.intermNode), (yylsp[-6]));
         context->decrLoopNestingLevel();
     }
 
@@ -4917,7 +4910,7 @@ yyreduce:
   case 281:
 
     {
-        (yyval.interm.intermTypedNode) = (yyvsp[0].interm.intermTypedNode);
+        (yyval.interm.intermNode) = (yyvsp[0].interm.intermNode);
     }
 
     break;
@@ -4925,7 +4918,7 @@ yyreduce:
   case 282:
 
     {
-        (yyval.interm.intermTypedNode) = 0;
+        (yyval.interm.intermNode) = nullptr;
     }
 
     break;
@@ -4933,7 +4926,7 @@ yyreduce:
   case 283:
 
     {
-        (yyval.interm.nodePair).node1 = (yyvsp[-1].interm.intermTypedNode);
+        (yyval.interm.nodePair).node1 = (yyvsp[-1].interm.intermNode);
         (yyval.interm.nodePair).node2 = 0;
     }
 
@@ -4942,7 +4935,7 @@ yyreduce:
   case 284:
 
     {
-        (yyval.interm.nodePair).node1 = (yyvsp[-2].interm.intermTypedNode);
+        (yyval.interm.nodePair).node1 = (yyvsp[-2].interm.intermNode);
         (yyval.interm.nodePair).node2 = (yyvsp[0].interm.intermTypedNode);
     }
 

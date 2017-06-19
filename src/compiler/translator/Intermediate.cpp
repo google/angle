@@ -226,22 +226,6 @@ TIntermTyped *TIntermediate::AddSwizzle(TIntermTyped *baseExpression,
 }
 
 //
-// Create loop nodes.
-//
-TIntermNode *TIntermediate::addLoop(TLoopType type,
-                                    TIntermNode *init,
-                                    TIntermTyped *cond,
-                                    TIntermTyped *expr,
-                                    TIntermNode *body,
-                                    const TSourceLoc &line)
-{
-    TIntermNode *node = new TIntermLoop(type, init, cond, expr, EnsureBlock(body));
-    node->setLine(line);
-
-    return node;
-}
-
-//
 // Add branches.
 //
 TIntermBranch *TIntermediate::addBranch(TOperator branchOp, const TSourceLoc &line)

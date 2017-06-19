@@ -175,11 +175,23 @@ class TParseContext : angle::NonCopyable
                                const char *value,
                                bool stdgl);
 
+    // Returns true on success. *initNode may still be nullptr on success in case the initialization
+    // is not needed in the AST.
     bool executeInitializer(const TSourceLoc &line,
                             const TString &identifier,
                             const TPublicType &pType,
                             TIntermTyped *initializer,
                             TIntermBinary **initNode);
+    TIntermNode *addConditionInitializer(const TPublicType &pType,
+                                         const TString &identifier,
+                                         TIntermTyped *initializer,
+                                         const TSourceLoc &loc);
+    TIntermNode *addLoop(TLoopType type,
+                         TIntermNode *init,
+                         TIntermNode *cond,
+                         TIntermTyped *expr,
+                         TIntermNode *body,
+                         const TSourceLoc &loc);
 
     void addFullySpecifiedType(TPublicType *typeSpecifier);
     TPublicType addFullySpecifiedType(const TTypeQualifierBuilder &typeQualifierBuilder,

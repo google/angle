@@ -1673,12 +1673,10 @@ TIntermTyped *TParseContext::parseVariableIdentifier(const TSourceLoc &location,
     }
 }
 
-//
 // Initializers show up in several places in the grammar.  Have one set of
 // code to handle them here.
 //
-// Returns true on error, false if no error
-//
+// Returns true on success.
 bool TParseContext::executeInitializer(const TSourceLoc &line,
                                        const TString &identifier,
                                        const TPublicType &pType,
@@ -1706,7 +1704,7 @@ bool TParseContext::executeInitializer(const TSourceLoc &line,
     }
     if (!declareVariable(line, identifier, type, &variable))
     {
-        return true;
+        return false;
     }
 
     bool globalInitWarning = false;
@@ -1716,7 +1714,7 @@ bool TParseContext::executeInitializer(const TSourceLoc &line,
         // Error message does not completely match behavior with ESSL 1.00, but
         // we want to steer developers towards only using constant expressions.
         error(line, "global variable initializers must be constant expressions", "=");
-        return true;
+        return false;
     }
     if (globalInitWarning)
     {
@@ -1735,7 +1733,7 @@ bool TParseContext::executeInitializer(const TSourceLoc &line,
     {
         error(line, " cannot initialize this type of qualifier ",
               variable->getType().getQualifierString());
-        return true;
+        return false;
     }
     //
     // test for and propagate constant
@@ -1751,14 +1749,14 @@ bool TParseContext::executeInitializer(const TSourceLoc &line,
             std::string reason = reasonStream.str();
             error(line, reason.c_str(), "=");
             variable->getType().setQualifier(EvqTemporary);
-            return true;
+            return false;
         }
         if (type != initializer->getType())
         {
             error(line, " non-matching types for const initializer ",
                   variable->getType().getQualifierString());
             variable->getType().setQualifier(EvqTemporary);
-            return true;
+            return false;
         }
 
         // Save the constant folded value to the variable if possible. For example array
@@ -1769,8 +1767,8 @@ bool TParseContext::executeInitializer(const TSourceLoc &line,
         if (initializer->getAsConstantUnion())
         {
             variable->shareConstPointer(initializer->getAsConstantUnion()->getUnionArrayPointer());
-            *initNode = nullptr;
-            return false;
+            ASSERT(*initNode == nullptr);
+            return true;
         }
         else if (initializer->getAsSymbolNode())
         {
@@ -1782,8 +1780,8 @@ bool TParseContext::executeInitializer(const TSourceLoc &line,
             if (constArray)
             {
                 variable->shareConstPointer(constArray);
-                *initNode = nullptr;
-                return false;
+                ASSERT(*initNode == nullptr);
+                return true;
             }
         }
     }
@@ -1794,10 +1792,80 @@ bool TParseContext::executeInitializer(const TSourceLoc &line,
     if (*initNode == nullptr)
     {
         assignError(line, "=", intermSymbol->getCompleteString(), initializer->getCompleteString());
-        return true;
+        return false;
     }
 
-    return false;
+    return true;
+}
+
+TIntermNode *TParseContext::addConditionInitializer(const TPublicType &pType,
+                                                    const TString &identifier,
+                                                    TIntermTyped *initializer,
+                                                    const TSourceLoc &loc)
+{
+    checkIsScalarBool(loc, pType);
+    TIntermBinary *initNode = nullptr;
+    if (executeInitializer(loc, identifier, pType, initializer, &initNode))
+    {
+        // The initializer is valid. The init condition needs to have a node - either the
+        // initializer node, or a constant node in case the initialized variable is const and won't
+        // be recorded in the AST.
+        if (initNode == nullptr)
+        {
+            return initializer;
+        }
+        else
+        {
+            TIntermDeclaration *declaration = new TIntermDeclaration();
+            declaration->appendDeclarator(initNode);
+            return declaration;
+        }
+    }
+    return nullptr;
+}
+
+TIntermNode *TParseContext::addLoop(TLoopType type,
+                                    TIntermNode *init,
+                                    TIntermNode *cond,
+                                    TIntermTyped *expr,
+                                    TIntermNode *body,
+                                    const TSourceLoc &line)
+{
+    TIntermNode *node       = nullptr;
+    TIntermTyped *typedCond = nullptr;
+    if (cond)
+    {
+        typedCond = cond->getAsTyped();
+    }
+    if (cond == nullptr || typedCond)
+    {
+        node = new TIntermLoop(type, init, typedCond, expr, TIntermediate::EnsureBlock(body));
+        node->setLine(line);
+        return node;
+    }
+
+    TIntermDeclaration *declaration = cond->getAsDeclarationNode();
+    ASSERT(declaration);
+    TIntermBinary *declarator = declaration->getSequence()->front()->getAsBinaryNode();
+    ASSERT(declarator->getLeft()->getAsSymbolNode());
+
+    // The condition is a declaration. In the AST representation we don't support declarations as
+    // loop conditions. Wrap the loop to a block that declares the condition variable and contains
+    // the loop.
+    TIntermBlock *block = new TIntermBlock();
+
+    TIntermDeclaration *declareCondition = new TIntermDeclaration();
+    declareCondition->appendDeclarator(declarator->getLeft()->deepCopy());
+    block->appendStatement(declareCondition);
+
+    TIntermBinary *conditionInit = new TIntermBinary(EOpAssign, declarator->getLeft()->deepCopy(),
+                                                     declarator->getRight()->deepCopy());
+    TIntermLoop *loop =
+        new TIntermLoop(type, init, conditionInit, expr, TIntermediate::EnsureBlock(body));
+    block->appendStatement(loop);
+    loop->setLine(line);
+    block->setLine(line);
+    return block;
 }
 
 void TParseContext::addFullySpecifiedType(TPublicType *typeSpecifier)
@@ -2171,7 +2239,7 @@ TIntermDeclaration *TParseContext::parseSingleInitDeclaration(const TPublicType 
     declaration->setLine(identifierLocation);
 
     TIntermBinary *initNode = nullptr;
-    if (!executeInitializer(identifierLocation, identifier, publicType, initializer, &initNode))
+    if (executeInitializer(identifierLocation, identifier, publicType, initializer, &initNode))
     {
         if (initNode)
         {
@@ -2217,7 +2285,7 @@ TIntermDeclaration *TParseContext::parseSingleArrayInitDeclaration(
 
     // initNode will correspond to the whole of "type b[n] = initializer".
     TIntermBinary *initNode = nullptr;
-    if (!executeInitializer(identifierLocation, identifier, arrayType, initializer, &initNode))
+    if (executeInitializer(identifierLocation, identifier, arrayType, initializer, &initNode))
     {
         if (initNode)
         {
@@ -2376,7 +2444,7 @@ void TParseContext::parseInitDeclarator(const TPublicType &publicType,
     checkDeclaratorLocationIsNotSpecified(identifierLocation, publicType);
 
     TIntermBinary *initNode = nullptr;
-    if (!executeInitializer(identifierLocation, identifier, publicType, initializer, &initNode))
+    if (executeInitializer(identifierLocation, identifier, publicType, initializer, &initNode))
     {
         //
         // build the intermediate representation
@@ -2424,7 +2492,7 @@ void TParseContext::parseArrayInitDeclarator(const TPublicType &publicType,
 
     // initNode will correspond to the whole of "b[n] = initializer".
     TIntermBinary *initNode = nullptr;
-    if (!executeInitializer(identifierLocation, identifier, arrayType, initializer, &initNode))
+    if (executeInitializer(identifierLocation, identifier, arrayType, initializer, &initNode))
     {
         if (initNode)
         {

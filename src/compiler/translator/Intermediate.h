@@ -50,12 +50,7 @@ class TIntermediate
     TIntermConstantUnion *addConstantUnion(const TConstantUnion *constantUnion,
                                            const TType &type,
                                            const TSourceLoc &line);
-    TIntermNode *addLoop(TLoopType,
-                         TIntermNode *,
-                         TIntermTyped *,
-                         TIntermTyped *,
-                         TIntermNode *,
-                         const TSourceLoc &);
+
     TIntermBranch *addBranch(TOperator, const TSourceLoc &);
     TIntermBranch *addBranch(TOperator, TIntermTyped *, const TSourceLoc &);
     static TIntermTyped *AddSwizzle(TIntermTyped *baseExpression,

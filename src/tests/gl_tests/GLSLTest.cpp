@@ -3080,6 +3080,36 @@ TEST_P(WebGLGLSLTest, UninitializedNamelessStructInGlobalScope)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that a loop condition that has an initializer declares a variable.
+TEST_P(GLSLTest_ES3, ConditionInitializerDeclaresVariable)
+{
+    const std::string &fragmentShader =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    float i = 0.0;\n"
+        "    while (bool foo = (i < 1.5))\n"
+        "    {\n"
+        "        if (!foo)\n"
+        "        {\n"
+        "            ++i;\n"
+        "        }\n"
+        "        if (i > 3.5)\n"
+        "        {\n"
+        "            break;\n"
+        "        }\n"
+        "        ++i;\n"
+        "    }\n"
+        "    my_FragColor = vec4(i * 0.5 - 1.0, i * 0.5, 0.0, 1.0);\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest,
                        ES2_D3D9(),

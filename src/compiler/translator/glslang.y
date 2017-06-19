@@ -212,8 +212,9 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, void *scanner, cons
 %type <interm.intermTypedNode> conditional_expression constant_expression
 %type <interm.intermTypedNode> logical_or_expression logical_xor_expression logical_and_expression
 %type <interm.intermTypedNode> shift_expression and_expression exclusive_or_expression inclusive_or_expression
-%type <interm.intermTypedNode> function_call initializer condition conditionopt
+%type <interm.intermTypedNode> function_call initializer
 
+%type <interm.intermNode> condition conditionopt
 %type <interm.intermBlock> translation_unit
 %type <interm.intermNode> function_definition statement simple_statement
 %type <interm.intermBlock> statement_list compound_statement compound_statement_no_new_scope
@@ -1451,32 +1452,25 @@ condition
         context->checkIsScalarBool($1->getLine(), $1);
     }
     | fully_specified_type identifier EQUAL initializer {
-        TIntermBinary *initNode = nullptr;
-        context->checkIsScalarBool(@2, $1);
-
-        if (!context->executeInitializer(@2, *$2.string, $1, $4, &initNode))
-            $$ = $4;
-        else {
-            $$ = 0;
-        }
+        $$ = context->addConditionInitializer($1, *$2.string, $4, @2);
     }
     ;
 
 iteration_statement
     : WHILE LEFT_PAREN { context->symbolTable.push(); context->incrLoopNestingLevel(); } condition RIGHT_PAREN statement_no_new_scope {
         context->symbolTable.pop();
-        $$ = context->intermediate.addLoop(ELoopWhile, 0, $4, 0, $6, @1);
+        $$ = context->addLoop(ELoopWhile, 0, $4, 0, $6, @1);
         context->decrLoopNestingLevel();
     }
     | DO { context->incrLoopNestingLevel(); } statement_with_scope WHILE LEFT_PAREN expression RIGHT_PAREN SEMICOLON {
         context->checkIsScalarBool(@8, $6);
 
-        $$ = context->intermediate.addLoop(ELoopDoWhile, 0, $6, 0, $3, @4);
+        $$ = context->addLoop(ELoopDoWhile, 0, $6, 0, $3, @4);
         context->decrLoopNestingLevel();
     }
     | FOR LEFT_PAREN { context->symbolTable.push(); context->incrLoopNestingLevel(); } for_init_statement for_rest_statement RIGHT_PAREN statement_no_new_scope {
         context->symbolTable.pop();
-        $$ = context->intermediate.addLoop(ELoopFor, $4, reinterpret_cast<TIntermTyped*>($5.node1), reinterpret_cast<TIntermTyped*>($5.node2), $7, @1);
+        $$ = context->addLoop(ELoopFor, $4, reinterpret_cast<TIntermTyped*>($5.node1), reinterpret_cast<TIntermTyped*>($5.node2), $7, @1);
         context->decrLoopNestingLevel();
     }
     ;
@@ -1495,7 +1489,7 @@ conditionopt
         $$ = $1;
     }
     | /* May be null */ {
-        $$ = 0;
+        $$ = nullptr;
     }
     ;
 
