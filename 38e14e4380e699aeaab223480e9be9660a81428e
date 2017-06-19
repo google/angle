@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "678d11bd_0d380bf3",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2017-06-19T20:52:10Z",
+      "side": 1,
+      "message": "Nit: Would be good to move the definition of binding and buffer closer to where they are used.",
+      "range": {
+        "startLine": 54,
+        "startChar": 0,
+        "endLine": 55,
+        "endChar": 66
+      },
+      "revId": "38e14e4380e699aeaab223480e9be9660a81428e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
