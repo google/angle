@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8eb4dd6a_b5b27c4f",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-19T17:41:45Z",
+      "side": 1,
+      "message": "I talked with Geoff, I think it would be reasonable to keep a BindingPointer and reset it here instead of making the \"mirror\" structure with a GLuint instead of a BindingPointer. But let\u0027s leave that for a future cleanup for now.",
+      "range": {
+        "startLine": 210,
+        "startChar": 0,
+        "endLine": 217,
+        "endChar": 9
+      },
+      "revId": "03c1a6a63797ab9aecddbf41de3ac25f87ae4452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "475b1756_b543d3a6",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 885,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-19T17:41:45Z",
+      "side": 1,
+      "message": "can you ASSERT this array is size zero on ES3 and below?",
+      "range": {
+        "startLine": 884,
+        "startChar": 4,
+        "endLine": 885,
+        "endChar": 36
+      },
+      "revId": "03c1a6a63797ab9aecddbf41de3ac25f87ae4452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7f49b431_b35cbe73",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-19T17:41:45Z",
+      "side": 1,
+      "message": "use the raii types from gl_raii.h.",
+      "range": {
+        "startLine": 255,
+        "startChar": 0,
+        "endLine": 256,
+        "endChar": 28
+      },
+      "revId": "03c1a6a63797ab9aecddbf41de3ac25f87ae4452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
