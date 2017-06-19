@@ -367,12 +367,16 @@ egl::Error D3DTextureSurfaceWGL::unMakeCurrent()
     return egl::NoError();
 }
 
-egl::Error D3DTextureSurfaceWGL::swap(const egl::Display *display)
+egl::Error D3DTextureSurfaceWGL::swap(const gl::Context *context)
 {
     return egl::NoError();
 }
 
-egl::Error D3DTextureSurfaceWGL::postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height)
+egl::Error D3DTextureSurfaceWGL::postSubBuffer(const gl::Context *context,
+                                               EGLint x,
+                                               EGLint y,
+                                               EGLint width,
+                                               EGLint height)
 {
     UNIMPLEMENTED();
     return egl::NoError();

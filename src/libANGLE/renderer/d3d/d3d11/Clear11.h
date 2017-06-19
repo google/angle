@@ -38,7 +38,8 @@ class Clear11 : angle::NonCopyable
     ~Clear11();
 
     // Clears the framebuffer with the supplied clear parameters, assumes that the framebuffer is currently applied.
-    gl::Error clearFramebuffer(const ClearParameters &clearParams,
+    gl::Error clearFramebuffer(const gl::Context *context,
+                               const ClearParameters &clearParams,
                                const gl::FramebufferState &fboData);
 
   private:

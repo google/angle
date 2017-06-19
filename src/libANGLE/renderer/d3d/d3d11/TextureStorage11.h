@@ -46,7 +46,7 @@ class TextureStorage11 : public TextureStorage
     UINT getMiscFlags() const;
     const d3d11::Format &getFormatSet() const;
     gl::Error getSRVLevels(GLint baseLevel, GLint maxLevel, const d3d11::SharedSRV **outSRV);
-    gl::Error generateSwizzles(const gl::SwizzleState &swizzleTarget);
+    gl::Error generateSwizzles(const gl::Context *context, const gl::SwizzleState &swizzleTarget);
     void markLevelDirty(int mipLevel);
     void markDirty();
 
@@ -66,7 +66,8 @@ class TextureStorage11 : public TextureStorage
     bool isManaged() const override;
     bool supportsNativeMipmapFunction() const override;
     int getLevelCount() const override;
-    gl::Error generateMipmap(const gl::ImageIndex &sourceIndex,
+    gl::Error generateMipmap(const gl::Context *context,
+                             const gl::ImageIndex &sourceIndex,
                              const gl::ImageIndex &destIndex) override;
     gl::Error copyToStorage(TextureStorage *destStorage) override;
     gl::Error setData(const gl::ImageIndex &index,

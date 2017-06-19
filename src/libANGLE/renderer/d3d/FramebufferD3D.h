@@ -111,7 +111,8 @@ class FramebufferD3D : public FramebufferImpl
                                      const gl::PixelPackState &pack,
                                      uint8_t *pixels) const = 0;
 
-    virtual gl::Error blitImpl(const gl::Rectangle &sourceArea,
+    virtual gl::Error blitImpl(const gl::Context *context,
+                               const gl::Rectangle &sourceArea,
                                const gl::Rectangle &destArea,
                                const gl::Rectangle *scissor,
                                bool blitRenderTarget,

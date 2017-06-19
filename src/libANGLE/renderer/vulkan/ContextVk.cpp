@@ -438,7 +438,7 @@ void ContextVk::popGroupMarker()
     UNIMPLEMENTED();
 }
 
-void ContextVk::syncState(const gl::State::DirtyBits &dirtyBits)
+void ContextVk::syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits)
 {
     // TODO(jmadill): Vulkan dirty bits.
     if (dirtyBits.any())
@@ -559,7 +559,10 @@ void ContextVk::invalidateCurrentPipeline()
     mRenderer->enqueueGarbageOrDeleteNow(*this, mCurrentPipeline);
 }
 
-gl::Error ContextVk::dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ)
+gl::Error ContextVk::dispatchCompute(const gl::Context *context,
+                                     GLuint numGroupsX,
+                                     GLuint numGroupsY,
+                                     GLuint numGroupsZ)
 {
     UNIMPLEMENTED();
     return gl::InternalError();

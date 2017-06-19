@@ -45,8 +45,13 @@ class PixelTransfer11
     // destRenderTarget: individual slice/layer of a target texture
     // destinationFormat/sourcePixelsType: determines shaders + shader parameters
     // destArea: the sub-section of destRenderTarget to copy to
-    gl::Error copyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTargetD3D *destRenderTarget,
-                                  GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea);
+    gl::Error copyBufferToTexture(const gl::Context *context,
+                                  const gl::PixelUnpackState &unpack,
+                                  unsigned int offset,
+                                  RenderTargetD3D *destRenderTarget,
+                                  GLenum destinationFormat,
+                                  GLenum sourcePixelsType,
+                                  const gl::Box &destArea);
 
   private:
 

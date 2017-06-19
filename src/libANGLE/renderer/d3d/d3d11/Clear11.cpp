@@ -311,7 +311,8 @@ gl::Error Clear11::ensureVertexBufferCreated()
     return gl::NoError();
 }
 
-gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
+gl::Error Clear11::clearFramebuffer(const gl::Context *context,
+                                    const ClearParameters &clearParams,
                                     const gl::FramebufferState &fboData)
 {
     ANGLE_TRY(ensureResourcesInitialized());
@@ -719,4 +720,4 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
 
     return gl::NoError();
 }
-}
+}  // namespace rx

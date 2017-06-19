@@ -475,6 +475,11 @@ EGLBoolean EGLWindow::FindEGLConfig(EGLDisplay dpy, const EGLint *attrib_list, E
     return EGL_FALSE;
 }
 
+void EGLWindow::makeCurrent()
+{
+    eglMakeCurrent(mDisplay, mSurface, mSurface, mContext);
+}
+
 // static
 bool EGLWindow::ClientExtensionEnabled(const std::string &extName)
 {

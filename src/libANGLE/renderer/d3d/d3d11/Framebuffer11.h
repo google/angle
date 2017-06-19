@@ -59,7 +59,8 @@ class Framebuffer11 : public FramebufferD3D, public OnRenderTargetDirtyReceiver
                              const gl::PixelPackState &pack,
                              uint8_t *pixels) const override;
 
-    gl::Error blitImpl(const gl::Rectangle &sourceArea,
+    gl::Error blitImpl(const gl::Context *context,
+                       const gl::Rectangle &sourceArea,
                        const gl::Rectangle &destArea,
                        const gl::Rectangle *scissor,
                        bool blitRenderTarget,

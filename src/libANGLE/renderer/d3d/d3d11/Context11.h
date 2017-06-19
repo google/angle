@@ -116,7 +116,7 @@ class Context11 : public ContextImpl
     void popGroupMarker() override;
 
     // State sync with dirty bits.
-    void syncState(const gl::State::DirtyBits &dirtyBits) override;
+    void syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits) override;
 
     // Disjoint timer queries
     GLint getGPUDisjoint() override;
@@ -133,7 +133,10 @@ class Context11 : public ContextImpl
 
     Renderer11 *getRenderer() const { return mRenderer; }
 
-    gl::Error dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ) override;
+    gl::Error dispatchCompute(const gl::Context *context,
+                              GLuint numGroupsX,
+                              GLuint numGroupsY,
+                              GLuint numGroupsZ) override;
 
   private:
     Renderer11 *mRenderer;

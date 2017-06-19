@@ -82,12 +82,16 @@ egl::Error PbufferSurfaceGLX::makeCurrent()
     return egl::NoError();
 }
 
-egl::Error PbufferSurfaceGLX::swap(const egl::Display *display)
+egl::Error PbufferSurfaceGLX::swap(const gl::Context *context)
 {
     return egl::NoError();
 }
 
-egl::Error PbufferSurfaceGLX::postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height)
+egl::Error PbufferSurfaceGLX::postSubBuffer(const gl::Context *context,
+                                            EGLint x,
+                                            EGLint y,
+                                            EGLint width,
+                                            EGLint height)
 {
     return egl::NoError();
 }

@@ -31,9 +31,18 @@ class SwapChain11 final : public SwapChainD3D
                 EGLint samples);
     virtual ~SwapChain11();
 
-    EGLint resize(EGLint backbufferWidth, EGLint backbufferHeight);
-    EGLint reset(EGLint backbufferWidth, EGLint backbufferHeight, EGLint swapInterval) override;
-    EGLint swapRect(EGLint x, EGLint y, EGLint width, EGLint height) override;
+    EGLint resize(const egl::Display *display,
+                  EGLint backbufferWidth,
+                  EGLint backbufferHeight) override;
+    EGLint reset(const egl::Display *display,
+                 EGLint backbufferWidth,
+                 EGLint backbufferHeight,
+                 EGLint swapInterval) override;
+    EGLint swapRect(const egl::Display *display,
+                    EGLint x,
+                    EGLint y,
+                    EGLint width,
+                    EGLint height) override;
     void recreate() override;
 
     RenderTargetD3D *getColorRenderTarget() override { return &mColorRenderTarget; }
@@ -60,14 +69,22 @@ class SwapChain11 final : public SwapChainD3D
 
     void releaseOffscreenColorBuffer();
     void releaseOffscreenDepthBuffer();
-    EGLint resetOffscreenBuffers(int backbufferWidth, int backbufferHeight);
-    EGLint resetOffscreenColorBuffer(int backbufferWidth, int backbufferHeight);
+    EGLint resetOffscreenBuffers(const egl::Display *display,
+                                 int backbufferWidth,
+                                 int backbufferHeight);
+    EGLint resetOffscreenColorBuffer(const egl::Display *display,
+                                     int backbufferWidth,
+                                     int backbufferHeight);
     EGLint resetOffscreenDepthBuffer(int backbufferWidth, int backbufferHeight);
 
     DXGI_FORMAT getSwapChainNativeFormat() const;
 
-    EGLint copyOffscreenToBackbuffer(EGLint x, EGLint y, EGLint width, EGLint height);
-    EGLint present(EGLint x, EGLint y, EGLint width, EGLint height);
+    EGLint copyOffscreenToBackbuffer(const egl::Display *display,
+                                     EGLint x,
+                                     EGLint y,
+                                     EGLint width,
+                                     EGLint height);
+    EGLint present(const egl::Display *display, EGLint x, EGLint y, EGLint width, EGLint height);
     UINT getD3DSamples() const;
 
     Renderer11 *mRenderer;

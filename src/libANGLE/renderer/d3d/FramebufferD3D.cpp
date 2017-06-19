@@ -266,7 +266,7 @@ gl::Error FramebufferD3D::blit(const gl::Context *context,
     const auto &glState                      = context->getGLState();
     const gl::Framebuffer *sourceFramebuffer = glState.getReadFramebuffer();
     const gl::Rectangle *scissor = glState.isScissorTestEnabled() ? &glState.getScissor() : nullptr;
-    ANGLE_TRY(blitImpl(sourceArea, destArea, scissor, (mask & GL_COLOR_BUFFER_BIT) != 0,
+    ANGLE_TRY(blitImpl(context, sourceArea, destArea, scissor, (mask & GL_COLOR_BUFFER_BIT) != 0,
                        (mask & GL_DEPTH_BUFFER_BIT) != 0, (mask & GL_STENCIL_BUFFER_BIT) != 0,
                        filter, sourceFramebuffer));
 

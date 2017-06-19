@@ -120,7 +120,8 @@ EGLBoolean EGLAPIENTRY PostSubBufferNV(EGLDisplay dpy, EGLSurface surface, EGLin
         return EGL_TRUE;
     }
 
-    error = eglSurface->postSubBuffer(x, y, width, height);
+    // TODO(jmadill): Validate Surface is bound to the thread.
+    error = eglSurface->postSubBuffer(thread->getContext(), x, y, width, height);
     if (error.isError())
     {
         thread->setError(error);
@@ -302,7 +303,7 @@ ANGLE_EXPORT EGLImageKHR EGLAPIENTRY CreateImageKHR(EGLDisplay dpy,
     }
 
     Image *image = nullptr;
-    error = display->createImage(context, target, buffer, attributes, &image);
+    error        = display->createImage(context, target, buffer, attributes, &image);
     if (error.isError())
     {
         thread->setError(error);
@@ -775,7 +776,7 @@ ANGLE_EXPORT EGLBoolean SwapBuffersWithDamageEXT(EGLDisplay dpy,
         return EGL_FALSE;
     }
 
-    error = eglSurface->swapWithDamage(rects, n_rects);
+    error = eglSurface->swapWithDamage(thread->getContext(), rects, n_rects);
     if (error.isError())
     {
         thread->setError(error);

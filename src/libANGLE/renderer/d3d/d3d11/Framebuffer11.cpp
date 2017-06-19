@@ -120,11 +120,11 @@ gl::Error Framebuffer11::clearImpl(const gl::Context *context, const ClearParame
         presentPathFastClearParams.scissor.y       = framebufferSize.height -
                                                presentPathFastClearParams.scissor.y -
                                                presentPathFastClearParams.scissor.height;
-        ANGLE_TRY(clearer->clearFramebuffer(presentPathFastClearParams, mState));
+        ANGLE_TRY(clearer->clearFramebuffer(context, presentPathFastClearParams, mState));
     }
     else
     {
-        ANGLE_TRY(clearer->clearFramebuffer(clearParams, mState));
+        ANGLE_TRY(clearer->clearFramebuffer(context, clearParams, mState));
     }
 
     ANGLE_TRY(markAttachmentsDirty());
@@ -275,7 +275,8 @@ gl::Error Framebuffer11::readPixelsImpl(const gl::Rectangle &area,
                                          static_cast<GLuint>(outputPitch), pack, pixels);
 }
 
-gl::Error Framebuffer11::blitImpl(const gl::Rectangle &sourceArea,
+gl::Error Framebuffer11::blitImpl(const gl::Context *context,
+                                  const gl::Rectangle &sourceArea,
                                   const gl::Rectangle &destArea,
                                   const gl::Rectangle *scissor,
                                   bool blitRenderTarget,
@@ -326,8 +327,8 @@ gl::Error Framebuffer11::blitImpl(const gl::Rectangle &sourceArea,
                 }
 
                 ANGLE_TRY(mRenderer->blitRenderbufferRect(
-                    actualSourceArea, actualDestArea, readRenderTarget, drawRenderTarget, filter,
-                    scissor, blitRenderTarget, false, false));
+                    context, actualSourceArea, actualDestArea, readRenderTarget, drawRenderTarget,
+                    filter, scissor, blitRenderTarget, false, false));
             }
         }
     }
@@ -348,7 +349,7 @@ gl::Error Framebuffer11::blitImpl(const gl::Rectangle &sourceArea,
         ANGLE_TRY(drawBuffer->getRenderTarget(&drawRenderTarget));
         ASSERT(drawRenderTarget);
 
-        ANGLE_TRY(mRenderer->blitRenderbufferRect(sourceArea, destArea, readRenderTarget,
+        ANGLE_TRY(mRenderer->blitRenderbufferRect(context, sourceArea, destArea, readRenderTarget,
                                                   drawRenderTarget, filter, scissor, false,
                                                   blitDepth, blitStencil));
     }

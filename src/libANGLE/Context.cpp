@@ -2752,7 +2752,7 @@ void Context::initWorkarounds()
 void Context::syncRendererState()
 {
     const State::DirtyBits &dirtyBits = mGLState.getDirtyBits();
-    mImplementation->syncState(dirtyBits);
+    mImplementation->syncState(this, dirtyBits);
     mGLState.clearDirtyBits();
     mGLState.syncDirtyObjects(this);
 }
@@ -2761,7 +2761,7 @@ void Context::syncRendererState(const State::DirtyBits &bitMask,
                                 const State::DirtyObjects &objectMask)
 {
     const State::DirtyBits &dirtyBits = (mGLState.getDirtyBits() & bitMask);
-    mImplementation->syncState(dirtyBits);
+    mImplementation->syncState(this, dirtyBits);
     mGLState.clearDirtyBits(dirtyBits);
     mGLState.syncDirtyObjects(this, objectMask);
 }
@@ -4114,7 +4114,7 @@ void Context::dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGr
         return;
     }
 
-    mImplementation->dispatchCompute(numGroupsX, numGroupsY, numGroupsZ);
+    mImplementation->dispatchCompute(this, numGroupsX, numGroupsY, numGroupsZ);
 }
 
 void Context::texStorage2D(GLenum target,

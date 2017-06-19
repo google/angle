@@ -84,7 +84,7 @@ class ContextVk : public ContextImpl, public ResourceVk
     void popGroupMarker() override;
 
     // State sync with dirty bits.
-    void syncState(const gl::State::DirtyBits &dirtyBits) override;
+    void syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits) override;
 
     // Disjoint timer queries
     GLint getGPUDisjoint() override;
@@ -143,7 +143,10 @@ class ContextVk : public ContextImpl, public ResourceVk
     // TODO(jmadill): Use pipeline cache.
     void invalidateCurrentPipeline();
 
-    gl::Error dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ) override;
+    gl::Error dispatchCompute(const gl::Context *context,
+                              GLuint numGroupsX,
+                              GLuint numGroupsY,
+                              GLuint numGroupsZ) override;
 
   private:
     gl::Error initPipeline();

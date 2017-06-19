@@ -706,7 +706,7 @@ EGLBoolean EGLAPIENTRY WaitGL(void)
 
     // eglWaitGL like calling eglWaitClient with the OpenGL ES API bound. Since we only implement
     // OpenGL ES we can do the call directly.
-    error = display->waitClient();
+    error = display->waitClient(thread->getContext());
     if (error.isError())
     {
         thread->setError(error);
@@ -736,8 +736,7 @@ EGLBoolean EGLAPIENTRY WaitNative(EGLint engine)
         thread->setError(EglBadParameter() << "the 'engine' parameter has an unrecognized value");
     }
 
-    error = display->waitNative(engine, thread->getCurrentDrawSurface(),
-                                thread->getCurrentReadSurface());
+    error = display->waitNative(thread->getContext(), engine);
     if (error.isError())
     {
         thread->setError(error);
@@ -775,7 +774,13 @@ EGLBoolean EGLAPIENTRY SwapBuffers(EGLDisplay dpy, EGLSurface surface)
         return EGL_FALSE;
     }
 
-    error = eglSurface->swap(*display);
+    if (!thread->getContext() || thread->getCurrentDrawSurface() != eglSurface)
+    {
+        thread->setError(EglBadSurface());
+        return EGL_FALSE;
+    }
+
+    error = eglSurface->swap(thread->getContext());
     if (error.isError())
     {
         thread->setError(error);
@@ -1087,7 +1092,7 @@ EGLBoolean EGLAPIENTRY WaitClient(void)
         return EGL_FALSE;
     }
 
-    error = display->waitClient();
+    error = display->waitClient(thread->getContext());
     if (error.isError())
     {
         thread->setError(error);

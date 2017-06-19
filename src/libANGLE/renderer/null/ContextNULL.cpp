@@ -262,7 +262,7 @@ void ContextNULL::popGroupMarker()
 {
 }
 
-void ContextNULL::syncState(const gl::State::DirtyBits &dirtyBits)
+void ContextNULL::syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits)
 {
 }
 
@@ -375,7 +375,10 @@ std::vector<PathImpl *> ContextNULL::createPaths(GLsizei range)
     return result;
 }
 
-gl::Error ContextNULL::dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ)
+gl::Error ContextNULL::dispatchCompute(const gl::Context *context,
+                                       GLuint numGroupsX,
+                                       GLuint numGroupsY,
+                                       GLuint numGroupsZ)
 {
     return gl::NoError();
 }

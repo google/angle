@@ -250,9 +250,9 @@ void Context11::popGroupMarker()
     mRenderer->getAnnotator()->endEvent();
 }
 
-void Context11::syncState(const gl::State::DirtyBits &dirtyBits)
+void Context11::syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits)
 {
-    mRenderer->getStateManager()->syncState(mState.getState(), dirtyBits);
+    mRenderer->getStateManager()->syncState(context, dirtyBits);
 }
 
 GLint Context11::getGPUDisjoint()
@@ -290,9 +290,12 @@ const gl::Limitations &Context11::getNativeLimitations() const
     return mRenderer->getNativeLimitations();
 }
 
-gl::Error Context11::dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ)
+gl::Error Context11::dispatchCompute(const gl::Context *context,
+                                     GLuint numGroupsX,
+                                     GLuint numGroupsY,
+                                     GLuint numGroupsZ)
 {
-    return mRenderer->dispatchCompute(this, numGroupsX, numGroupsY, numGroupsZ);
+    return mRenderer->dispatchCompute(context, numGroupsX, numGroupsY, numGroupsZ);
 }
 
 }  // namespace rx

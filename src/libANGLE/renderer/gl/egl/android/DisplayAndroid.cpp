@@ -366,7 +366,7 @@ bool DisplayAndroid::testDeviceLost()
     return false;
 }
 
-egl::Error DisplayAndroid::restoreLostDevice()
+egl::Error DisplayAndroid::restoreLostDevice(const egl::Display *display)
 {
     UNIMPLEMENTED();
     return egl::NoError();
@@ -383,15 +383,13 @@ egl::Error DisplayAndroid::getDevice(DeviceImpl **device)
     return egl::NoError();
 }
 
-egl::Error DisplayAndroid::waitClient() const
+egl::Error DisplayAndroid::waitClient(const gl::Context *context) const
 {
     UNIMPLEMENTED();
     return egl::NoError();
 }
 
-egl::Error DisplayAndroid::waitNative(EGLint engine,
-                                      egl::Surface *drawSurface,
-                                      egl::Surface *readSurface) const
+egl::Error DisplayAndroid::waitNative(const gl::Context *context, EGLint engine) const
 {
     UNIMPLEMENTED();
     return egl::NoError();

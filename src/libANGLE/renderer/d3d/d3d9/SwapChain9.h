@@ -30,9 +30,16 @@ class SwapChain9 : public SwapChainD3D
                EGLint orientation);
     virtual ~SwapChain9();
 
-    EGLint resize(EGLint backbufferWidth, EGLint backbufferHeight);
-    virtual EGLint reset(EGLint backbufferWidth, EGLint backbufferHeight, EGLint swapInterval);
-    virtual EGLint swapRect(EGLint x, EGLint y, EGLint width, EGLint height);
+    EGLint resize(const egl::Display *display, EGLint backbufferWidth, EGLint backbufferHeight);
+    virtual EGLint reset(const egl::Display *display,
+                         EGLint backbufferWidth,
+                         EGLint backbufferHeight,
+                         EGLint swapInterval);
+    virtual EGLint swapRect(const egl::Display *display,
+                            EGLint x,
+                            EGLint y,
+                            EGLint width,
+                            EGLint height);
     virtual void recreate();
 
     RenderTargetD3D *getColorRenderTarget() override { return &mColorRenderTarget; }

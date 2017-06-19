@@ -211,7 +211,8 @@ gl::Error Framebuffer9::readPixelsImpl(const gl::Rectangle &area,
     return gl::NoError();
 }
 
-gl::Error Framebuffer9::blitImpl(const gl::Rectangle &sourceArea,
+gl::Error Framebuffer9::blitImpl(const gl::Context *context,
+                                 const gl::Rectangle &sourceArea,
                                  const gl::Rectangle &destArea,
                                  const gl::Rectangle *scissor,
                                  bool blitRenderTarget,

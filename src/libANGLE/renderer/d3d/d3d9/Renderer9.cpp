@@ -13,6 +13,7 @@
 
 #include "common/utilities.h"
 #include "libANGLE/Buffer.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
@@ -911,7 +912,8 @@ bool Renderer9::supportsFastCopyBufferToTexture(GLenum internalFormat) const
     return false;
 }
 
-gl::Error Renderer9::fastCopyBufferToTexture(const gl::PixelUnpackState &unpack,
+gl::Error Renderer9::fastCopyBufferToTexture(const gl::Context *context,
+                                             const gl::PixelUnpackState &unpack,
                                              unsigned int offset,
                                              RenderTargetD3D *destRenderTarget,
                                              GLenum destinationFormat,
@@ -2507,7 +2509,8 @@ D3DPOOL Renderer9::getBufferPool(DWORD usage) const
     return D3DPOOL_DEFAULT;
 }
 
-gl::Error Renderer9::copyImage2D(const gl::Framebuffer *framebuffer,
+gl::Error Renderer9::copyImage2D(const gl::Context *context,
+                                 const gl::Framebuffer *framebuffer,
                                  const gl::Rectangle &sourceRect,
                                  GLenum destFormat,
                                  const gl::Offset &destOffset,
@@ -2523,7 +2526,8 @@ gl::Error Renderer9::copyImage2D(const gl::Framebuffer *framebuffer,
     return mBlit->copy2D(framebuffer, rect, destFormat, destOffset, storage, level);
 }
 
-gl::Error Renderer9::copyImageCube(const gl::Framebuffer *framebuffer,
+gl::Error Renderer9::copyImageCube(const gl::Context *context,
+                                   const gl::Framebuffer *framebuffer,
                                    const gl::Rectangle &sourceRect,
                                    GLenum destFormat,
                                    const gl::Offset &destOffset,
@@ -2540,7 +2544,8 @@ gl::Error Renderer9::copyImageCube(const gl::Framebuffer *framebuffer,
     return mBlit->copyCube(framebuffer, rect, destFormat, destOffset, storage, target, level);
 }
 
-gl::Error Renderer9::copyImage3D(const gl::Framebuffer *framebuffer,
+gl::Error Renderer9::copyImage3D(const gl::Context *context,
+                                 const gl::Framebuffer *framebuffer,
                                  const gl::Rectangle &sourceRect,
                                  GLenum destFormat,
                                  const gl::Offset &destOffset,
@@ -2552,7 +2557,8 @@ gl::Error Renderer9::copyImage3D(const gl::Framebuffer *framebuffer,
     return gl::InternalError();
 }
 
-gl::Error Renderer9::copyImage2DArray(const gl::Framebuffer *framebuffer,
+gl::Error Renderer9::copyImage2DArray(const gl::Context *context,
+                                      const gl::Framebuffer *framebuffer,
                                       const gl::Rectangle &sourceRect,
                                       GLenum destFormat,
                                       const gl::Offset &destOffset,
@@ -2564,7 +2570,8 @@ gl::Error Renderer9::copyImage2DArray(const gl::Framebuffer *framebuffer,
     return gl::InternalError();
 }
 
-gl::Error Renderer9::copyTexture(const gl::Texture *source,
+gl::Error Renderer9::copyTexture(const gl::Context *context,
+                                 const gl::Texture *source,
                                  GLint sourceLevel,
                                  const gl::Rectangle &sourceRect,
                                  GLenum destFormat,
@@ -3111,7 +3118,7 @@ Renderer9::CurSamplerState::CurSamplerState()
 {
 }
 
-gl::Error Renderer9::genericDrawElements(Context9 *context,
+gl::Error Renderer9::genericDrawElements(const gl::Context *context,
                                          GLenum mode,
                                          GLsizei count,
                                          GLenum type,
@@ -3132,7 +3139,7 @@ gl::Error Renderer9::genericDrawElements(Context9 *context,
         return gl::NoError();
     }
 
-    ANGLE_TRY(updateState(context, mode));
+    ANGLE_TRY(updateState(GetImplAs<Context9>(context), mode));
 
     TranslatedIndexData indexInfo;
     indexInfo.indexRange = indexRange;
@@ -3149,7 +3156,7 @@ gl::Error Renderer9::genericDrawElements(Context9 *context,
     ANGLE_TRY(applyVertexBuffer(data.getState(), mode,
                                 static_cast<GLsizei>(indexInfo.indexRange.start),
                                 static_cast<GLsizei>(vertexCount), instances, &indexInfo));
-    ANGLE_TRY(applyTextures(context, data));
+    ANGLE_TRY(applyTextures(context));
     ANGLE_TRY(applyShaders(data, mode));
     ANGLE_TRY(programD3D->applyUniformBuffers(data));
 
@@ -3161,7 +3168,7 @@ gl::Error Renderer9::genericDrawElements(Context9 *context,
     return gl::NoError();
 }
 
-gl::Error Renderer9::genericDrawArrays(Context9 *context,
+gl::Error Renderer9::genericDrawArrays(const gl::Context *context,
                                        GLenum mode,
                                        GLint first,
                                        GLsizei count,
@@ -3180,10 +3187,10 @@ gl::Error Renderer9::genericDrawArrays(Context9 *context,
         return gl::NoError();
     }
 
-    ANGLE_TRY(updateState(context, mode));
+    ANGLE_TRY(updateState(GetImplAs<Context9>(context), mode));
     ANGLE_TRY(applyTransformFeedbackBuffers(data.getState()));
     ANGLE_TRY(applyVertexBuffer(data.getState(), mode, first, count, instances, nullptr));
-    ANGLE_TRY(applyTextures(context, data));
+    ANGLE_TRY(applyTextures(context));
     ANGLE_TRY(applyShaders(data, mode));
     ANGLE_TRY(programD3D->applyUniformBuffers(data));
 

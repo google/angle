@@ -15,6 +15,7 @@
 
 #include "common/debug.h"
 #include "libANGLE/Config.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/gl/glx/PbufferSurfaceGLX.h"
@@ -635,7 +636,7 @@ bool DisplayGLX::testDeviceLost()
     return false;
 }
 
-egl::Error DisplayGLX::restoreLostDevice()
+egl::Error DisplayGLX::restoreLostDevice(const egl::Display *display)
 {
     return egl::EglBadDisplay();
 }
@@ -668,15 +669,13 @@ std::string DisplayGLX::getVendorString() const
     return "";
 }
 
-egl::Error DisplayGLX::waitClient() const
+egl::Error DisplayGLX::waitClient(const gl::Context *context) const
 {
     mGLX.waitGL();
     return egl::NoError();
 }
 
-egl::Error DisplayGLX::waitNative(EGLint engine,
-                                  egl::Surface *drawSurface,
-                                  egl::Surface *readSurface) const
+egl::Error DisplayGLX::waitNative(const gl::Context *context, EGLint engine) const
 {
     // eglWaitNative is used to notice the driver of changes in X11 for the current surface, such as
     // changes of the window size. We use this event to update the child window of WindowSurfaceGLX
@@ -684,24 +683,18 @@ egl::Error DisplayGLX::waitNative(EGLint engine,
     // Handling eglWaitNative this way helps the application control when resize happens. This is
     // important because drivers have a tendency to clobber the back buffer when the windows are
     // resized. See http://crbug.com/326995
+    egl::Surface *drawSurface = context->getCurrentDrawSurface();
+    egl::Surface *readSurface = context->getCurrentReadSurface();
     if (drawSurface != nullptr)
     {
         SurfaceGLX *glxDrawSurface = GetImplAs<SurfaceGLX>(drawSurface);
-        egl::Error error = glxDrawSurface->checkForResize();
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(glxDrawSurface->checkForResize());
     }
 
     if (readSurface != drawSurface && readSurface != nullptr)
     {
         SurfaceGLX *glxReadSurface = GetImplAs<SurfaceGLX>(readSurface);
-        egl::Error error = glxReadSurface->checkForResize();
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(glxReadSurface->checkForResize());
     }
 
     // We still need to forward the resizing of the child window to the driver.

@@ -336,7 +336,8 @@ const d3d11::Format &TextureStorage11::getFormatSet() const
     return mFormatInfo;
 }
 
-gl::Error TextureStorage11::generateSwizzles(const gl::SwizzleState &swizzleTarget)
+gl::Error TextureStorage11::generateSwizzles(const gl::Context *context,
+                                             const gl::SwizzleState &swizzleTarget)
 {
     for (int level = 0; level < getLevelCount(); level++)
     {
@@ -354,7 +355,7 @@ gl::Error TextureStorage11::generateSwizzles(const gl::SwizzleState &swizzleTarg
 
             Blit11 *blitter = mRenderer->getBlitter();
 
-            ANGLE_TRY(blitter->swizzleTexture(*sourceSRV, *destRTV, size, swizzleTarget));
+            ANGLE_TRY(blitter->swizzleTexture(context, *sourceSRV, *destRTV, size, swizzleTarget));
 
             mSwizzleCache[level] = swizzleTarget;
         }
@@ -496,7 +497,8 @@ gl::Error TextureStorage11::copySubresourceLevel(const TextureHelper11 &dstTextu
     return gl::NoError();
 }
 
-gl::Error TextureStorage11::generateMipmap(const gl::ImageIndex &sourceIndex,
+gl::Error TextureStorage11::generateMipmap(const gl::Context *context,
+                                           const gl::ImageIndex &sourceIndex,
                                            const gl::ImageIndex &destIndex)
 {
     ASSERT(sourceIndex.layerIndex == destIndex.layerIndex);
@@ -521,8 +523,9 @@ gl::Error TextureStorage11::generateMipmap(const gl::ImageIndex &sourceIndex,
 
     Blit11 *blitter = mRenderer->getBlitter();
     GLenum format   = gl::GetUnsizedFormat(source->getInternalFormat());
-    return blitter->copyTexture(sourceSRV, sourceArea, sourceSize, format, destRTV, destArea,
-                                destSize, nullptr, format, GL_LINEAR, false, false, false);
+    return blitter->copyTexture(context, sourceSRV, sourceArea, sourceSize, format, destRTV,
+                                destArea, destSize, nullptr, format, GL_LINEAR, false, false,
+                                false);
 }
 
 void TextureStorage11::verifySwizzleExists(const gl::SwizzleState &swizzleState)

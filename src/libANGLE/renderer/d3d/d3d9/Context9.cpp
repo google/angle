@@ -137,7 +137,7 @@ gl::Error Context9::finish()
 
 gl::Error Context9::drawArrays(const gl::Context *context, GLenum mode, GLint first, GLsizei count)
 {
-    return mRenderer->genericDrawArrays(this, mode, first, count, 0);
+    return mRenderer->genericDrawArrays(context, mode, first, count, 0);
 }
 
 gl::Error Context9::drawArraysInstanced(const gl::Context *context,
@@ -146,7 +146,7 @@ gl::Error Context9::drawArraysInstanced(const gl::Context *context,
                                         GLsizei count,
                                         GLsizei instanceCount)
 {
-    return mRenderer->genericDrawArrays(this, mode, first, count, instanceCount);
+    return mRenderer->genericDrawArrays(context, mode, first, count, instanceCount);
 }
 
 gl::Error Context9::drawElements(const gl::Context *context,
@@ -156,7 +156,7 @@ gl::Error Context9::drawElements(const gl::Context *context,
                                  const void *indices,
                                  const gl::IndexRange &indexRange)
 {
-    return mRenderer->genericDrawElements(this, mode, count, type, indices, 0, indexRange);
+    return mRenderer->genericDrawElements(context, mode, count, type, indices, 0, indexRange);
 }
 
 gl::Error Context9::drawElementsInstanced(const gl::Context *context,
@@ -167,7 +167,8 @@ gl::Error Context9::drawElementsInstanced(const gl::Context *context,
                                           GLsizei instances,
                                           const gl::IndexRange &indexRange)
 {
-    return mRenderer->genericDrawElements(this, mode, count, type, indices, instances, indexRange);
+    return mRenderer->genericDrawElements(context, mode, count, type, indices, instances,
+                                          indexRange);
 }
 
 gl::Error Context9::drawRangeElements(const gl::Context *context,
@@ -179,7 +180,7 @@ gl::Error Context9::drawRangeElements(const gl::Context *context,
                                       const void *indices,
                                       const gl::IndexRange &indexRange)
 {
-    return mRenderer->genericDrawElements(this, mode, count, type, indices, 0, indexRange);
+    return mRenderer->genericDrawElements(context, mode, count, type, indices, 0, indexRange);
 }
 
 gl::Error Context9::drawArraysIndirect(const gl::Context *context,
@@ -237,7 +238,7 @@ void Context9::popGroupMarker()
     mRenderer->getAnnotator()->endEvent();
 }
 
-void Context9::syncState(const gl::State::DirtyBits &dirtyBits)
+void Context9::syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits)
 {
     mRenderer->getStateManager()->syncState(mState.getState(), dirtyBits);
 }
@@ -276,7 +277,10 @@ const gl::Limitations &Context9::getNativeLimitations() const
     return mRenderer->getNativeLimitations();
 }
 
-gl::Error Context9::dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ)
+gl::Error Context9::dispatchCompute(const gl::Context *context,
+                                    GLuint numGroupsX,
+                                    GLuint numGroupsY,
+                                    GLuint numGroupsZ)
 {
     UNREACHABLE();
     return gl::InternalError() << "D3D9 doesn't support ES 3.1 DispatchCompute API";

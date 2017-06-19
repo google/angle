@@ -135,7 +135,7 @@ class ContextImpl : public GLImplFactory
     virtual void popGroupMarker() = 0;
 
     // State sync with dirty bits.
-    virtual void syncState(const gl::State::DirtyBits &dirtyBits) = 0;
+    virtual void syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits) = 0;
 
     // Disjoint timer queries
     virtual GLint getGPUDisjoint() = 0;
@@ -150,7 +150,10 @@ class ContextImpl : public GLImplFactory
     virtual const gl::Extensions &getNativeExtensions() const      = 0;
     virtual const gl::Limitations &getNativeLimitations() const    = 0;
 
-    virtual gl::Error dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ) = 0;
+    virtual gl::Error dispatchCompute(const gl::Context *context,
+                                      GLuint numGroupsX,
+                                      GLuint numGroupsY,
+                                      GLuint numGroupsZ) = 0;
 
     const gl::ContextState &getContextState() { return mState; }
     int getClientMajorVersion() const { return mState.getClientMajorVersion(); }

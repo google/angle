@@ -971,7 +971,8 @@ gl::Error Blit11::getShaderSupport(const Shader &shader, Blit11::ShaderSupport *
     return gl::NoError();
 }
 
-gl::Error Blit11::swizzleTexture(const d3d11::SharedSRV &source,
+gl::Error Blit11::swizzleTexture(const gl::Context *context,
+                                 const d3d11::SharedSRV &source,
                                  const d3d11::RenderTargetView &dest,
                                  const gl::Extents &size,
                                  const gl::SwizzleState &swizzleTarget)
@@ -1118,7 +1119,8 @@ gl::Error Blit11::swizzleTexture(const d3d11::SharedSRV &source,
     return gl::NoError();
 }
 
-gl::Error Blit11::copyTexture(const d3d11::SharedSRV &source,
+gl::Error Blit11::copyTexture(const gl::Context *context,
+                              const d3d11::SharedSRV &source,
                               const gl::Box &sourceArea,
                               const gl::Extents &sourceSize,
                               GLenum sourceFormat,
@@ -1266,7 +1268,8 @@ gl::Error Blit11::copyTexture(const d3d11::SharedSRV &source,
     return gl::NoError();
 }
 
-gl::Error Blit11::copyStencil(const TextureHelper11 &source,
+gl::Error Blit11::copyStencil(const gl::Context *context,
+                              const TextureHelper11 &source,
                               unsigned int sourceSubresource,
                               const gl::Box &sourceArea,
                               const gl::Extents &sourceSize,
@@ -1280,7 +1283,8 @@ gl::Error Blit11::copyStencil(const TextureHelper11 &source,
                                 destSubresource, destArea, destSize, scissor, true);
 }
 
-gl::Error Blit11::copyDepth(const d3d11::SharedSRV &source,
+gl::Error Blit11::copyDepth(const gl::Context *context,
+                            const d3d11::SharedSRV &source,
                             const gl::Box &sourceArea,
                             const gl::Extents &sourceSize,
                             const d3d11::DepthStencilView &dest,
@@ -1962,13 +1966,14 @@ gl::Error Blit11::getSwizzleShader(GLenum type,
     return gl::NoError();
 }
 
-gl::ErrorOrResult<TextureHelper11> Blit11::resolveDepth(RenderTarget11 *depth)
+gl::ErrorOrResult<TextureHelper11> Blit11::resolveDepth(const gl::Context *context,
+                                                        RenderTarget11 *depth)
 {
     // Multisampled depth stencil SRVs are not available in feature level 10.0
     ASSERT(mRenderer->getRenderer11DeviceCaps().featureLevel > D3D_FEATURE_LEVEL_10_0);
 
     const auto &extents          = depth->getExtents();
-    ID3D11DeviceContext *context = mRenderer->getDeviceContext();
+    auto *deviceContext          = mRenderer->getDeviceContext();
     auto *stateManager           = mRenderer->getStateManager();
 
     ANGLE_TRY(initResolveDepthOnly(depth->getFormatSet(), extents));
@@ -1981,13 +1986,13 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveDepth(RenderTarget11 *depth)
 
     // Apply the necessary state changes to the D3D11 immediate device context.
     stateManager->setInputLayout(nullptr);
-    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    context->VSSetShader(mResolveDepthStencilVS.get(), nullptr, 0);
-    context->GSSetShader(nullptr, nullptr, 0);
-    context->RSSetState(nullptr);
-    context->OMSetDepthStencilState(mDepthStencilState.get(), 0xFFFFFFFF);
-    context->OMSetRenderTargets(0, nullptr, mResolvedDepthDSView.get());
-    context->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);
+    deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    deviceContext->VSSetShader(mResolveDepthStencilVS.get(), nullptr, 0);
+    deviceContext->GSSetShader(nullptr, nullptr, 0);
+    deviceContext->RSSetState(nullptr);
+    deviceContext->OMSetDepthStencilState(mDepthStencilState.get(), 0xFFFFFFFF);
+    deviceContext->OMSetRenderTargets(0, nullptr, mResolvedDepthDSView.get());
+    deviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);
 
     // Set the viewport
     D3D11_VIEWPORT viewport;
@@ -1997,16 +2002,16 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveDepth(RenderTarget11 *depth)
     viewport.Height   = static_cast<FLOAT>(extents.height);
     viewport.MinDepth = 0.0f;
     viewport.MaxDepth = 1.0f;
-    context->RSSetViewports(1, &viewport);
+    deviceContext->RSSetViewports(1, &viewport);
 
     ID3D11ShaderResourceView *pixelViews[] = {depth->getShaderResourceView().get()};
 
-    context->PSSetShaderResources(0, 1, pixelViews);
+    deviceContext->PSSetShaderResources(0, 1, pixelViews);
 
-    context->PSSetShader(mResolveDepthPS.get(), nullptr, 0);
+    deviceContext->PSSetShader(mResolveDepthPS.get(), nullptr, 0);
 
     // Trigger the blit on the GPU.
-    context->Draw(6, 0);
+    deviceContext->Draw(6, 0);
 
     return mResolvedDepth;
 }
@@ -2091,7 +2096,8 @@ gl::Error Blit11::initResolveDepthStencil(const gl::Extents &extents)
     return gl::NoError();
 }
 
-gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(RenderTarget11 *depthStencil,
+gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(const gl::Context *context,
+                                                          RenderTarget11 *depthStencil,
                                                           bool alsoDepth)
 {
     // Multisampled depth stencil SRVs are not available in feature level 10.0
@@ -2101,7 +2107,7 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(RenderTarget11 *depthS
 
     ANGLE_TRY(initResolveDepthStencil(extents));
 
-    ID3D11DeviceContext *context = mRenderer->getDeviceContext();
+    ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
     auto *stateManager              = mRenderer->getStateManager();
     ID3D11Resource *stencilResource = depthStencil->getTexture().get();
 
@@ -2138,13 +2144,13 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(RenderTarget11 *depthS
 
     // Apply the necessary state changes to the D3D11 immediate device context.
     stateManager->setInputLayout(nullptr);
-    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    context->VSSetShader(mResolveDepthStencilVS.get(), nullptr, 0);
-    context->GSSetShader(nullptr, nullptr, 0);
-    context->RSSetState(nullptr);
-    context->OMSetDepthStencilState(nullptr, 0xFFFFFFFF);
-    context->OMSetRenderTargets(1, rtvs, nullptr);
-    context->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);
+    deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    deviceContext->VSSetShader(mResolveDepthStencilVS.get(), nullptr, 0);
+    deviceContext->GSSetShader(nullptr, nullptr, 0);
+    deviceContext->RSSetState(nullptr);
+    deviceContext->OMSetDepthStencilState(nullptr, 0xFFFFFFFF);
+    deviceContext->OMSetRenderTargets(1, rtvs, nullptr);
+    deviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);
 
     // Set the viewport
     D3D11_VIEWPORT viewport;
@@ -2154,13 +2160,13 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(RenderTarget11 *depthS
     viewport.Height   = static_cast<FLOAT>(extents.height);
     viewport.MinDepth = 0.0f;
     viewport.MaxDepth = 1.0f;
-    context->RSSetViewports(1, &viewport);
+    deviceContext->RSSetViewports(1, &viewport);
 
     ID3D11ShaderResourceView *pixelViews[] = {
         depthStencil->getShaderResourceView().get(), mStencilSRV.get(),
     };
 
-    context->PSSetShaderResources(0, 2, pixelViews);
+    deviceContext->PSSetShaderResources(0, 2, pixelViews);
 
     // Resolving the depth buffer works by sampling the depth in the shader using a SRV, then
     // writing to the resolved depth buffer using SV_Depth. We can't use this method for stencil
@@ -2168,16 +2174,16 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(RenderTarget11 *depthS
     if (alsoDepth)
     {
         ANGLE_TRY(mResolveDepthStencilPS.resolve(mRenderer));
-        context->PSSetShader(mResolveDepthStencilPS.get(), nullptr, 0);
+        deviceContext->PSSetShader(mResolveDepthStencilPS.get(), nullptr, 0);
     }
     else
     {
         ANGLE_TRY(mResolveStencilPS.resolve(mRenderer));
-        context->PSSetShader(mResolveStencilPS.get(), nullptr, 0);
+        deviceContext->PSSetShader(mResolveStencilPS.get(), nullptr, 0);
     }
 
     // Trigger the blit on the GPU.
-    context->Draw(6, 0);
+    deviceContext->Draw(6, 0);
 
     gl::Box copyBox(0, 0, 0, extents.width, extents.height, 1);
 

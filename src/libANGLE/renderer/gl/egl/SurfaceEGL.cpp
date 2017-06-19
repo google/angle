@@ -47,7 +47,7 @@ egl::Error SurfaceEGL::makeCurrent()
     return egl::NoError();
 }
 
-egl::Error SurfaceEGL::swap(const egl::Display *display)
+egl::Error SurfaceEGL::swap(const gl::Context *context)
 {
     EGLBoolean success = mEGL->swapBuffers(mSurface);
     if (success == EGL_FALSE)
@@ -57,7 +57,11 @@ egl::Error SurfaceEGL::swap(const egl::Display *display)
     return egl::NoError();
 }
 
-egl::Error SurfaceEGL::postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height)
+egl::Error SurfaceEGL::postSubBuffer(const gl::Context *context,
+                                     EGLint x,
+                                     EGLint y,
+                                     EGLint width,
+                                     EGLint height)
 {
     UNIMPLEMENTED();
     return egl::EglBadSurface();

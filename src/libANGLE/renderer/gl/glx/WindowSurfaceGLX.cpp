@@ -140,7 +140,7 @@ egl::Error WindowSurfaceGLX::makeCurrent()
     return egl::NoError();
 }
 
-egl::Error WindowSurfaceGLX::swap(const egl::Display *display)
+egl::Error WindowSurfaceGLX::swap(const gl::Context *context)
 {
     // We need to swap before resizing as some drivers clobber the back buffer
     // when the window is resized.
@@ -156,7 +156,11 @@ egl::Error WindowSurfaceGLX::swap(const egl::Display *display)
     return egl::NoError();
 }
 
-egl::Error WindowSurfaceGLX::postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height)
+egl::Error WindowSurfaceGLX::postSubBuffer(const gl::Context *context,
+                                           EGLint x,
+                                           EGLint y,
+                                           EGLint width,
+                                           EGLint height)
 {
     UNIMPLEMENTED();
     return egl::NoError();

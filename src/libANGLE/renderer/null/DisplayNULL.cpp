@@ -98,7 +98,7 @@ bool DisplayNULL::testDeviceLost()
     return false;
 }
 
-egl::Error DisplayNULL::restoreLostDevice()
+egl::Error DisplayNULL::restoreLostDevice(const egl::Display *display)
 {
     return egl::NoError();
 }
@@ -119,14 +119,12 @@ egl::Error DisplayNULL::getDevice(DeviceImpl **device)
     return egl::NoError();
 }
 
-egl::Error DisplayNULL::waitClient() const
+egl::Error DisplayNULL::waitClient(const gl::Context *context) const
 {
     return egl::NoError();
 }
 
-egl::Error DisplayNULL::waitNative(EGLint engine,
-                                   egl::Surface *drawSurface,
-                                   egl::Surface *readSurface) const
+egl::Error DisplayNULL::waitNative(const gl::Context *context, EGLint engine) const
 {
     return egl::NoError();
 }

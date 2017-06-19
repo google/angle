@@ -36,6 +36,7 @@ namespace egl
 class AttributeMap;
 class Display;
 struct Config;
+class Thread;
 
 struct SurfaceState final : private angle::NonCopyable
 {
@@ -48,16 +49,18 @@ struct SurfaceState final : private angle::NonCopyable
 class Surface : public gl::FramebufferAttachmentObject
 {
   public:
-    virtual ~Surface();
-
     rx::SurfaceImpl *getImplementation() const { return mImplementation; }
 
     EGLint getType() const;
 
-    Error initialize(const Display &display);
-    Error swap(const Display &display);
-    Error swapWithDamage(EGLint *rects, EGLint n_rects);
-    Error postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height);
+    Error initialize(const Display *display);
+    Error swap(const gl::Context *context);
+    Error swapWithDamage(const gl::Context *context, EGLint *rects, EGLint n_rects);
+    Error postSubBuffer(const gl::Context *context,
+                        EGLint x,
+                        EGLint y,
+                        EGLint width,
+                        EGLint height);
     Error querySurfacePointerANGLE(EGLint attribute, void **value);
     Error bindTexImage(gl::Texture *texture, EGLint buffer);
     Error releaseTexImage(EGLint buffer);
@@ -68,7 +71,7 @@ class Surface : public gl::FramebufferAttachmentObject
 
     void setSwapInterval(EGLint interval);
     void setIsCurrent(Display *display, bool isCurrent);
-    void onDestroy(Display *display);
+    void onDestroy(const Display *display);
 
     const Config *getConfig() const;
 
@@ -106,6 +109,7 @@ class Surface : public gl::FramebufferAttachmentObject
 
   protected:
     Surface(EGLint surfaceType, const egl::Config *config, const AttributeMap &attributes);
+    virtual ~Surface();
     rx::FramebufferAttachmentObjectImpl *getAttachmentImpl() const override { return mImplementation; }
 
     gl::Framebuffer *createDefaultFramebuffer();
@@ -169,6 +173,8 @@ class PbufferSurface final : public Surface
                    EGLenum buftype,
                    EGLClientBuffer clientBuffer,
                    const AttributeMap &attribs);
+
+  protected:
     ~PbufferSurface() override;
 };
 
@@ -179,8 +185,12 @@ class PixmapSurface final : public Surface
                   const Config *config,
                   NativePixmapType nativePixmap,
                   const AttributeMap &attribs);
+
+  protected:
     ~PixmapSurface() override;
 };
+
+using SurfacePointer = angle::UniqueObjectPointer<Surface, Display>;
 
 }  // namespace egl
 

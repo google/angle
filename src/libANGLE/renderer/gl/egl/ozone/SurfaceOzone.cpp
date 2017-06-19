@@ -41,13 +41,17 @@ egl::Error SurfaceOzone::makeCurrent()
     return egl::NoError();
 }
 
-egl::Error SurfaceOzone::swap(const egl::Display *display)
+egl::Error SurfaceOzone::swap(const gl::Context *context)
 {
     mBuffer->present();
     return egl::NoError();
 }
 
-egl::Error SurfaceOzone::postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height)
+egl::Error SurfaceOzone::postSubBuffer(const gl::Context *context,
+                                       EGLint x,
+                                       EGLint y,
+                                       EGLint width,
+                                       EGLint height)
 {
     UNIMPLEMENTED();
     return egl::NoError();

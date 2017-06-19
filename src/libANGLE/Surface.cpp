@@ -102,9 +102,9 @@ void Surface::destroy(const Display *display)
     delete this;
 }
 
-Error Surface::initialize(const Display &display)
+Error Surface::initialize(const Display *display)
 {
-    ANGLE_TRY(mImplementation->initialize(&display));
+    ANGLE_TRY(mImplementation->initialize(display));
 
     // Initialized here since impl is nullptr in the constructor.
     // Must happen after implementation initialize for Android.
@@ -133,7 +133,7 @@ void Surface::setIsCurrent(Display *display, bool isCurrent)
     }
 }
 
-void Surface::onDestroy(Display *display)
+void Surface::onDestroy(const Display *display)
 {
     mDestroyed = true;
     if (mCurrentCount == 0)
@@ -147,19 +147,23 @@ EGLint Surface::getType() const
     return mType;
 }
 
-Error Surface::swap(const Display &display)
+Error Surface::swap(const gl::Context *context)
 {
-    return mImplementation->swap(&display);
+    return mImplementation->swap(context);
 }
 
-Error Surface::swapWithDamage(EGLint *rects, EGLint n_rects)
+Error Surface::swapWithDamage(const gl::Context *context, EGLint *rects, EGLint n_rects)
 {
-    return mImplementation->swapWithDamage(rects, n_rects);
+    return mImplementation->swapWithDamage(context, rects, n_rects);
 }
 
-Error Surface::postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height)
+Error Surface::postSubBuffer(const gl::Context *context,
+                             EGLint x,
+                             EGLint y,
+                             EGLint width,
+                             EGLint height)
 {
-    return mImplementation->postSubBuffer(x, y, width, height);
+    return mImplementation->postSubBuffer(context, x, y, width, height);
 }
 
 Error Surface::querySurfacePointerANGLE(EGLint attribute, void **value)

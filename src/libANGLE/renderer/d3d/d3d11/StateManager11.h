@@ -55,7 +55,7 @@ class StateManager11 final : angle::NonCopyable
 
     void initialize(const gl::Caps &caps);
     void deinitialize();
-    void syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits);
+    void syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits);
 
     const dx_VertexConstants11 &getVertexConstants() const { return mVertexConstants; }
     const dx_PixelConstants11 &getPixelConstants() const { return mPixelConstants; }

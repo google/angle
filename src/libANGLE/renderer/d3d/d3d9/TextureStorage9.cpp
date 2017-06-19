@@ -216,7 +216,9 @@ gl::Error TextureStorage9_2D::getRenderTarget(const gl::ImageIndex &index, Rende
     return gl::NoError();
 }
 
-gl::Error TextureStorage9_2D::generateMipmap(const gl::ImageIndex &sourceIndex, const gl::ImageIndex &destIndex)
+gl::Error TextureStorage9_2D::generateMipmap(const gl::Context *context,
+                                             const gl::ImageIndex &sourceIndex,
+                                             const gl::ImageIndex &destIndex)
 {
     IDirect3DSurface9 *upper = nullptr;
     gl::Error error = getSurfaceLevel(GL_TEXTURE_2D, sourceIndex.mipIndex, false, &upper);
@@ -369,7 +371,9 @@ gl::Error TextureStorage9_EGLImage::getBaseTexture(IDirect3DBaseTexture9 **outTe
     return gl::NoError();
 }
 
-gl::Error TextureStorage9_EGLImage::generateMipmap(const gl::ImageIndex &, const gl::ImageIndex &)
+gl::Error TextureStorage9_EGLImage::generateMipmap(const gl::Context *context,
+                                                   const gl::ImageIndex &,
+                                                   const gl::ImageIndex &)
 {
     UNREACHABLE();
     return gl::InternalError();
@@ -524,7 +528,9 @@ gl::Error TextureStorage9_Cube::getRenderTarget(const gl::ImageIndex &index, Ren
     return gl::NoError();
 }
 
-gl::Error TextureStorage9_Cube::generateMipmap(const gl::ImageIndex &sourceIndex, const gl::ImageIndex &destIndex)
+gl::Error TextureStorage9_Cube::generateMipmap(const gl::Context *context,
+                                               const gl::ImageIndex &sourceIndex,
+                                               const gl::ImageIndex &destIndex)
 {
     IDirect3DSurface9 *upper = nullptr;
     gl::Error error = getSurfaceLevel(sourceIndex.type, sourceIndex.mipIndex, false, &upper);

@@ -34,12 +34,16 @@ FramebufferImpl *SurfaceNULL::createDefaultFramebuffer(const gl::FramebufferStat
     return new FramebufferNULL(state);
 }
 
-egl::Error SurfaceNULL::swap(const egl::Display *display)
+egl::Error SurfaceNULL::swap(const gl::Context *context)
 {
     return egl::NoError();
 }
 
-egl::Error SurfaceNULL::postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height)
+egl::Error SurfaceNULL::postSubBuffer(const gl::Context *context,
+                                      EGLint x,
+                                      EGLint y,
+                                      EGLint width,
+                                      EGLint height)
 {
     return egl::NoError();
 }

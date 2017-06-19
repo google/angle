@@ -544,7 +544,9 @@ std::vector<const Config*> Display::getConfigs(const egl::AttributeMap &attribs)
     return mConfigSet.filter(attribs);
 }
 
-Error Display::createWindowSurface(const Config *configuration, EGLNativeWindowType window, const AttributeMap &attribs,
+Error Display::createWindowSurface(const Config *configuration,
+                                   EGLNativeWindowType window,
+                                   const AttributeMap &attribs,
                                    Surface **outSurface)
 {
     if (mImplementation->testDeviceLost())
@@ -552,9 +554,9 @@ Error Display::createWindowSurface(const Config *configuration, EGLNativeWindowT
         ANGLE_TRY(restoreLostDevice());
     }
 
-    std::unique_ptr<Surface> surface(
-        new WindowSurface(mImplementation, configuration, window, attribs));
-    ANGLE_TRY(surface->initialize(*this));
+    SurfacePointer surface(new WindowSurface(mImplementation, configuration, window, attribs),
+                           this);
+    ANGLE_TRY(surface->initialize(this));
 
     ASSERT(outSurface != nullptr);
     *outSurface = surface.release();
@@ -567,7 +569,9 @@ Error Display::createWindowSurface(const Config *configuration, EGLNativeWindowT
     return NoError();
 }
 
-Error Display::createPbufferSurface(const Config *configuration, const AttributeMap &attribs, Surface **outSurface)
+Error Display::createPbufferSurface(const Config *configuration,
+                                    const AttributeMap &attribs,
+                                    Surface **outSurface)
 {
     ASSERT(isInitialized());
 
@@ -576,8 +580,8 @@ Error Display::createPbufferSurface(const Config *configuration, const Attribute
         ANGLE_TRY(restoreLostDevice());
     }
 
-    std::unique_ptr<Surface> surface(new PbufferSurface(mImplementation, configuration, attribs));
-    ANGLE_TRY(surface->initialize(*this));
+    SurfacePointer surface(new PbufferSurface(mImplementation, configuration, attribs), this);
+    ANGLE_TRY(surface->initialize(this));
 
     ASSERT(outSurface != nullptr);
     *outSurface = surface.release();
@@ -599,9 +603,9 @@ Error Display::createPbufferFromClientBuffer(const Config *configuration,
         ANGLE_TRY(restoreLostDevice());
     }
 
-    std::unique_ptr<Surface> surface(
-        new PbufferSurface(mImplementation, configuration, buftype, clientBuffer, attribs));
-    ANGLE_TRY(surface->initialize(*this));
+    SurfacePointer surface(
+        new PbufferSurface(mImplementation, configuration, buftype, clientBuffer, attribs), this);
+    ANGLE_TRY(surface->initialize(this));
 
     ASSERT(outSurface != nullptr);
     *outSurface = surface.release();
@@ -610,7 +614,9 @@ Error Display::createPbufferFromClientBuffer(const Config *configuration,
     return NoError();
 }
 
-Error Display::createPixmapSurface(const Config *configuration, NativePixmapType nativePixmap, const AttributeMap &attribs,
+Error Display::createPixmapSurface(const Config *configuration,
+                                   NativePixmapType nativePixmap,
+                                   const AttributeMap &attribs,
                                    Surface **outSurface)
 {
     ASSERT(isInitialized());
@@ -620,9 +626,9 @@ Error Display::createPixmapSurface(const Config *configuration, NativePixmapType
         ANGLE_TRY(restoreLostDevice());
     }
 
-    std::unique_ptr<Surface> surface(
-        new PixmapSurface(mImplementation, configuration, nativePixmap, attribs));
-    ANGLE_TRY(surface->initialize(*this));
+    SurfacePointer surface(new PixmapSurface(mImplementation, configuration, nativePixmap, attribs),
+                           this);
+    ANGLE_TRY(surface->initialize(this));
 
     ASSERT(outSurface != nullptr);
     *outSurface = surface.release();
@@ -631,7 +637,7 @@ Error Display::createPixmapSurface(const Config *configuration, NativePixmapType
     return NoError();
 }
 
-Error Display::createImage(gl::Context *context,
+Error Display::createImage(const gl::Context *context,
                            EGLenum target,
                            EGLClientBuffer buffer,
                            const AttributeMap &attribs,
@@ -689,7 +695,9 @@ Error Display::createStream(const AttributeMap &attribs, Stream **outStream)
     return NoError();
 }
 
-Error Display::createContext(const Config *configuration, gl::Context *shareContext, const AttributeMap &attribs,
+Error Display::createContext(const Config *configuration,
+                             gl::Context *shareContext,
+                             const AttributeMap &attribs,
                              gl::Context **outContext)
 {
     ASSERT(isInitialized());
@@ -752,7 +760,7 @@ Error Display::restoreLostDevice()
         }
     }
 
-    return mImplementation->restoreLostDevice();
+    return mImplementation->restoreLostDevice(this);
 }
 
 void Display::destroySurface(Surface *surface)
@@ -847,14 +855,14 @@ void Display::notifyDeviceLost()
     mDeviceLost = true;
 }
 
-Error Display::waitClient() const
+Error Display::waitClient(const gl::Context *context) const
 {
-    return mImplementation->waitClient();
+    return mImplementation->waitClient(context);
 }
 
-Error Display::waitNative(EGLint engine, egl::Surface *drawSurface, egl::Surface *readSurface) const
+Error Display::waitNative(const gl::Context *context, EGLint engine) const
 {
-    return mImplementation->waitNative(engine, drawSurface, readSurface);
+    return mImplementation->waitNative(context, engine);
 }
 
 const Caps &Display::getCaps() const

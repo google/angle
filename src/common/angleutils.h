@@ -39,6 +39,35 @@ class NonCopyable
 };
 
 extern const uintptr_t DirtyPointer;
+
+// Helper class for wrapping an onDestroy function.
+template <typename ObjT, typename ContextT>
+class UniqueObjectPointer : angle::NonCopyable
+{
+  public:
+    UniqueObjectPointer(ObjT *obj, const ContextT *context) : mObject(obj), mContext(context) {}
+    ~UniqueObjectPointer()
+    {
+        if (mObject)
+        {
+            mObject->onDestroy(mContext);
+        }
+    }
+
+    ObjT *operator->() const { return mObject; }
+
+    ObjT *release()
+    {
+        auto obj = mObject;
+        mObject  = nullptr;
+        return obj;
+    }
+
+  private:
+    ObjT *mObject;
+    const ContextT *mContext;
+};
+
 }  // namespace angle
 
 template <typename T, size_t N>

@@ -10,6 +10,7 @@
 #include "libANGLE/renderer/vulkan/SurfaceVk.h"
 
 #include "common/debug.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/vulkan/DisplayVk.h"
@@ -77,12 +78,13 @@ FramebufferImpl *OffscreenSurfaceVk::createDefaultFramebuffer(const gl::Framebuf
     return FramebufferVk::CreateUserFBO(state);
 }
 
-egl::Error OffscreenSurfaceVk::swap(const egl::Display *display)
+egl::Error OffscreenSurfaceVk::swap(const gl::Context *context)
 {
     return egl::NoError();
 }
 
-egl::Error OffscreenSurfaceVk::postSubBuffer(EGLint /*x*/,
+egl::Error OffscreenSurfaceVk::postSubBuffer(const gl::Context * /*context*/,
+                                             EGLint /*x*/,
                                              EGLint /*y*/,
                                              EGLint /*width*/,
                                              EGLint /*height*/)
@@ -414,9 +416,9 @@ FramebufferImpl *WindowSurfaceVk::createDefaultFramebuffer(const gl::Framebuffer
     return FramebufferVk::CreateDefaultFBO(state, this);
 }
 
-egl::Error WindowSurfaceVk::swap(const egl::Display *display)
+egl::Error WindowSurfaceVk::swap(const gl::Context *context)
 {
-    const DisplayVk *displayVk = GetImplAs<DisplayVk>(display);
+    const DisplayVk *displayVk = GetImplAs<DisplayVk>(context->getCurrentDisplay());
     return swapImpl(displayVk->getRenderer()).toEGL(EGL_BAD_ALLOC);
 }
 
@@ -467,7 +469,11 @@ vk::Error WindowSurfaceVk::nextSwapchainImage(RendererVk *renderer)
     return vk::NoError();
 }
 
-egl::Error WindowSurfaceVk::postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height)
+egl::Error WindowSurfaceVk::postSubBuffer(const gl::Context *context,
+                                          EGLint x,
+                                          EGLint y,
+                                          EGLint width,
+                                          EGLint height)
 {
     // TODO(jmadill)
     return egl::NoError();

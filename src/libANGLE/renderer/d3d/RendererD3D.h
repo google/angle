@@ -165,16 +165,38 @@ class RendererD3D : public BufferFactoryD3D
     const angle::WorkaroundsD3D &getWorkarounds() const;
 
     // Pixel operations
-    virtual gl::Error copyImage2D(const gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                                 const gl::Offset &destOffset, TextureStorage *storage, GLint level) = 0;
-    virtual gl::Error copyImageCube(const gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                                    const gl::Offset &destOffset, TextureStorage *storage, GLenum target, GLint level) = 0;
-    virtual gl::Error copyImage3D(const gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                                  const gl::Offset &destOffset, TextureStorage *storage, GLint level) = 0;
-    virtual gl::Error copyImage2DArray(const gl::Framebuffer *framebuffer, const gl::Rectangle &sourceRect, GLenum destFormat,
-                                       const gl::Offset &destOffset, TextureStorage *storage, GLint level) = 0;
+    virtual gl::Error copyImage2D(const gl::Context *context,
+                                  const gl::Framebuffer *framebuffer,
+                                  const gl::Rectangle &sourceRect,
+                                  GLenum destFormat,
+                                  const gl::Offset &destOffset,
+                                  TextureStorage *storage,
+                                  GLint level) = 0;
+    virtual gl::Error copyImageCube(const gl::Context *context,
+                                    const gl::Framebuffer *framebuffer,
+                                    const gl::Rectangle &sourceRect,
+                                    GLenum destFormat,
+                                    const gl::Offset &destOffset,
+                                    TextureStorage *storage,
+                                    GLenum target,
+                                    GLint level) = 0;
+    virtual gl::Error copyImage3D(const gl::Context *context,
+                                  const gl::Framebuffer *framebuffer,
+                                  const gl::Rectangle &sourceRect,
+                                  GLenum destFormat,
+                                  const gl::Offset &destOffset,
+                                  TextureStorage *storage,
+                                  GLint level) = 0;
+    virtual gl::Error copyImage2DArray(const gl::Context *context,
+                                       const gl::Framebuffer *framebuffer,
+                                       const gl::Rectangle &sourceRect,
+                                       GLenum destFormat,
+                                       const gl::Offset &destOffset,
+                                       TextureStorage *storage,
+                                       GLint level) = 0;
 
-    virtual gl::Error copyTexture(const gl::Texture *source,
+    virtual gl::Error copyTexture(const gl::Context *context,
+                                  const gl::Texture *source,
                                   GLint sourceLevel,
                                   const gl::Rectangle &sourceRect,
                                   GLenum destFormat,
@@ -237,8 +259,13 @@ class RendererD3D : public BufferFactoryD3D
 
     // Buffer-to-texture and Texture-to-buffer copies
     virtual bool supportsFastCopyBufferToTexture(GLenum internalFormat) const = 0;
-    virtual gl::Error fastCopyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTargetD3D *destRenderTarget,
-                                              GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea) = 0;
+    virtual gl::Error fastCopyBufferToTexture(const gl::Context *context,
+                                              const gl::PixelUnpackState &unpack,
+                                              unsigned int offset,
+                                              RenderTargetD3D *destRenderTarget,
+                                              GLenum destinationFormat,
+                                              GLenum sourcePixelsType,
+                                              const gl::Box &destArea) = 0;
 
     // Device lost
     GLenum getResetStatus();
@@ -295,7 +322,7 @@ class RendererD3D : public BufferFactoryD3D
 
     // dirtyPointer is a special value that will make the comparison with any valid pointer fail and force the renderer to re-apply the state.
 
-    gl::Error applyTextures(GLImplFactory *implFactory, const gl::ContextState &data);
+    gl::Error applyTextures(const gl::Context *context);
     bool skipDraw(const gl::ContextState &data, GLenum drawMode);
     gl::Error markTransformFeedbackUsage(const gl::ContextState &data);
 
@@ -308,8 +335,7 @@ class RendererD3D : public BufferFactoryD3D
 
     typedef std::array<gl::Texture*, gl::IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS> FramebufferTextureArray;
 
-    gl::Error applyTextures(GLImplFactory *implFactory,
-                            const gl::ContextState &data,
+    gl::Error applyTextures(const gl::Context *context,
                             gl::SamplerType shaderType,
                             const FramebufferTextureArray &framebufferTextures,
                             size_t framebufferTextureCount);

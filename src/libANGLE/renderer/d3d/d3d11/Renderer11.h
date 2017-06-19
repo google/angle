@@ -187,33 +187,38 @@ class Renderer11 : public RendererD3D
     std::string getShaderModelSuffix() const override;
 
     // Pixel operations
-    gl::Error copyImage2D(const gl::Framebuffer *framebuffer,
+    gl::Error copyImage2D(const gl::Context *context,
+                          const gl::Framebuffer *framebuffer,
                           const gl::Rectangle &sourceRect,
                           GLenum destFormat,
                           const gl::Offset &destOffset,
                           TextureStorage *storage,
                           GLint level) override;
-    gl::Error copyImageCube(const gl::Framebuffer *framebuffer,
+    gl::Error copyImageCube(const gl::Context *context,
+                            const gl::Framebuffer *framebuffer,
                             const gl::Rectangle &sourceRect,
                             GLenum destFormat,
                             const gl::Offset &destOffset,
                             TextureStorage *storage,
                             GLenum target,
                             GLint level) override;
-    gl::Error copyImage3D(const gl::Framebuffer *framebuffer,
+    gl::Error copyImage3D(const gl::Context *context,
+                          const gl::Framebuffer *framebuffer,
                           const gl::Rectangle &sourceRect,
                           GLenum destFormat,
                           const gl::Offset &destOffset,
                           TextureStorage *storage,
                           GLint level) override;
-    gl::Error copyImage2DArray(const gl::Framebuffer *framebuffer,
+    gl::Error copyImage2DArray(const gl::Context *context,
+                               const gl::Framebuffer *framebuffer,
                                const gl::Rectangle &sourceRect,
                                GLenum destFormat,
                                const gl::Offset &destOffset,
                                TextureStorage *storage,
                                GLint level) override;
 
-    gl::Error copyTexture(const gl::Texture *source,
+    gl::Error copyTexture(const gl::Context *context,
+                          const gl::Texture *source,
                           GLint sourceLevel,
                           const gl::Rectangle &sourceRect,
                           GLenum destFormat,
@@ -327,7 +332,8 @@ class Renderer11 : public RendererD3D
 
     // Buffer-to-texture and Texture-to-buffer copies
     bool supportsFastCopyBufferToTexture(GLenum internalFormat) const override;
-    gl::Error fastCopyBufferToTexture(const gl::PixelUnpackState &unpack,
+    gl::Error fastCopyBufferToTexture(const gl::Context *context,
+                                      const gl::PixelUnpackState &unpack,
                                       unsigned int offset,
                                       RenderTargetD3D *destRenderTarget,
                                       GLenum destinationFormat,
@@ -359,7 +365,8 @@ class Renderer11 : public RendererD3D
                                  const gl::PixelPackState &pack,
                                  uint8_t *pixels);
 
-    gl::Error blitRenderbufferRect(const gl::Rectangle &readRect,
+    gl::Error blitRenderbufferRect(const gl::Context *context,
+                                   const gl::Rectangle &readRect,
                                    const gl::Rectangle &drawRect,
                                    RenderTargetD3D *readRenderTarget,
                                    RenderTargetD3D *drawRenderTarget,
@@ -408,7 +415,7 @@ class Renderer11 : public RendererD3D
 
     gl::Version getMaxSupportedESVersion() const override;
 
-    gl::Error dispatchCompute(Context11 *context,
+    gl::Error dispatchCompute(const gl::Context *context,
                               GLuint numGroupsX,
                               GLuint numGroupsY,
                               GLuint numGroupsZ);
@@ -507,11 +514,12 @@ class Renderer11 : public RendererD3D
                               int instances);
 
     gl::Error applyShaders(const gl::ContextState &data, GLenum drawMode);
-    gl::Error generateSwizzle(gl::Texture *texture);
-    gl::Error generateSwizzles(const gl::ContextState &data, gl::SamplerType type);
-    gl::Error generateSwizzles(const gl::ContextState &data);
+    gl::Error generateSwizzle(const gl::Context *context, gl::Texture *texture);
+    gl::Error generateSwizzles(const gl::Context *context, gl::SamplerType type);
+    gl::Error generateSwizzles(const gl::Context *context);
 
-    gl::ErrorOrResult<TextureHelper11> resolveMultisampledTexture(RenderTarget11 *renderTarget,
+    gl::ErrorOrResult<TextureHelper11> resolveMultisampledTexture(const gl::Context *context,
+                                                                  RenderTarget11 *renderTarget,
                                                                   bool depth,
                                                                   bool stencil);
 
@@ -555,7 +563,8 @@ class Renderer11 : public RendererD3D
                                       size_t samplerMetadataReferencedBytes,
                                       const d3d11::Buffer &driverConstantBuffer);
 
-    gl::Error copyImageInternal(const gl::Framebuffer *framebuffer,
+    gl::Error copyImageInternal(const gl::Context *context,
+                                const gl::Framebuffer *framebuffer,
                                 const gl::Rectangle &sourceRect,
                                 GLenum destFormat,
                                 const gl::Offset &destOffset,

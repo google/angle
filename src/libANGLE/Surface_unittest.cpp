@@ -31,9 +31,9 @@ class MockSurfaceImpl : public rx::SurfaceImpl
     MOCK_METHOD1(destroy, void(const egl::Display *));
     MOCK_METHOD1(initialize, egl::Error(const egl::Display *));
     MOCK_METHOD1(createDefaultFramebuffer, rx::FramebufferImpl *(const gl::FramebufferState &data));
-    MOCK_METHOD1(swap, egl::Error(const egl::Display *));
-    MOCK_METHOD2(swapWithDamage, egl::Error(EGLint *, EGLint));
-    MOCK_METHOD4(postSubBuffer, egl::Error(EGLint, EGLint, EGLint, EGLint));
+    MOCK_METHOD1(swap, egl::Error(const gl::Context *));
+    MOCK_METHOD3(swapWithDamage, egl::Error(const gl::Context *, EGLint *, EGLint));
+    MOCK_METHOD5(postSubBuffer, egl::Error(const gl::Context *, EGLint, EGLint, EGLint, EGLint));
     MOCK_METHOD2(querySurfacePointerANGLE, egl::Error(EGLint, void**));
     MOCK_METHOD2(bindTexImage, egl::Error(gl::Texture*, EGLint));
     MOCK_METHOD1(releaseTexImage, egl::Error(EGLint));

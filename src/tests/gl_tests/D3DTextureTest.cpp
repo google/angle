@@ -279,8 +279,8 @@ TEST_P(D3DTextureTest, Clear)
     EXPECT_PIXEL_EQ(static_cast<GLint>(bufferSize) / 2, static_cast<GLint>(bufferSize) / 2, 255, 0,
                     255, 255);
 
-    // Make current with null to ensure the Surface can be released immediately.
-    eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    // Make current with fixture EGL to ensure the Surface can be released immediately.
+    getEGLWindow()->makeCurrent();
     eglDestroySurface(display, pbuffer);
 }
 
@@ -331,8 +331,8 @@ TEST_P(D3DTextureTest, DepthStencil)
     EXPECT_PIXEL_COLOR_EQ(static_cast<GLint>(bufferSize) / 2, static_cast<GLint>(bufferSize) / 2,
                           GLColor::green);
 
-    // Make current with null to ensure the Surface can be released immediately.
-    eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    // Make current with fixture EGL to ensure the Surface can be released immediately.
+    getEGLWindow()->makeCurrent();
     eglDestroySurface(display, pbuffer);
 }
 
@@ -399,8 +399,8 @@ TEST_P(D3DTextureTest, BindTexImage)
 
     glDeleteTextures(1, &texture);
 
-    // Make current with null to ensure the Surface can be released immediately.
-    eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    // Make current with fixture EGL to ensure the Surface can be released immediately.
+    getEGLWindow()->makeCurrent();
     eglDestroySurface(display, pbuffer);
 }
 
@@ -461,8 +461,8 @@ TEST_P(D3DTextureTestMS, Clear)
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(testpoint, testpoint, GLColor::magenta);
 
-    // Make current with null to ensure the Surface can be released immediately.
-    eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    // Make current with fixture EGL to ensure the Surface can be released immediately.
+    getEGLWindow()->makeCurrent();
     eglDestroySurface(display, pbuffer);
 }
 
@@ -508,8 +508,8 @@ TEST_P(D3DTextureTestMS, DrawProgram)
     // Verify that magenta was drawn
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::magenta);
 
-    // Make current with null to ensure the Surface can be released immediately.
-    eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    // Make current with fixture EGL to ensure the Surface can be released immediately.
+    getEGLWindow()->makeCurrent();
     eglDestroySurface(display, pbuffer);
 }
 

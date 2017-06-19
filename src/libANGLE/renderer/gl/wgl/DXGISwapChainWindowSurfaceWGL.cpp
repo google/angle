@@ -127,7 +127,7 @@ egl::Error DXGISwapChainWindowSurfaceWGL::makeCurrent()
     return egl::NoError();
 }
 
-egl::Error DXGISwapChainWindowSurfaceWGL::swap(const egl::Display *display)
+egl::Error DXGISwapChainWindowSurfaceWGL::swap(const gl::Context *context)
 {
     mFunctionsGL->flush();
 
@@ -146,7 +146,8 @@ egl::Error DXGISwapChainWindowSurfaceWGL::swap(const egl::Display *display)
     return checkForResize();
 }
 
-egl::Error DXGISwapChainWindowSurfaceWGL::postSubBuffer(EGLint x,
+egl::Error DXGISwapChainWindowSurfaceWGL::postSubBuffer(const gl::Context *context,
+                                                        EGLint x,
                                                         EGLint y,
                                                         EGLint width,
                                                         EGLint height)

@@ -124,7 +124,7 @@ TEST_P(PbufferTest, Clearing)
     EGLWindow *window = getEGLWindow();
 
     // Clear the window surface to blue and verify
-    eglMakeCurrent(window->getDisplay(), window->getSurface(), window->getSurface(), window->getContext());
+    window->makeCurrent();
     ASSERT_EGL_SUCCESS();
 
     glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
@@ -144,7 +144,7 @@ TEST_P(PbufferTest, Clearing)
                     0, 255, 255);
 
     // Rebind the window surface and verify that it is still blue
-    eglMakeCurrent(window->getDisplay(), window->getSurface(), window->getSurface(), window->getContext());
+    window->makeCurrent();
     ASSERT_EGL_SUCCESS();
     EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 0, 0, 255, 255);
 }
@@ -179,7 +179,7 @@ TEST_P(PbufferTest, BindTexImage)
                     0, 255, 255);
 
     // Apply the window surface
-    eglMakeCurrent(window->getDisplay(), window->getSurface(), window->getSurface(), window->getContext());
+    window->makeCurrent();
 
     // Create a texture and bind the Pbuffer to it
     GLuint texture = 0;
@@ -299,7 +299,7 @@ TEST_P(PbufferTest, BindTexImageAndRedefineTexture)
                     0, 255, 255);
 
     // Apply the window surface
-    eglMakeCurrent(window->getDisplay(), window->getSurface(), window->getSurface(), window->getContext());
+    window->makeCurrent();
 
     // Create a texture and bind the Pbuffer to it
     GLuint texture = 0;

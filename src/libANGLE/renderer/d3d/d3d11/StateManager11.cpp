@@ -260,12 +260,14 @@ void StateManager11::setComputeConstants(GLuint numGroupsX, GLuint numGroupsY, G
     mComputeConstants.numWorkGroups[2] = numGroupsZ;
 }
 
-void StateManager11::syncState(const gl::State &state, const gl::State::DirtyBits &dirtyBits)
+void StateManager11::syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits)
 {
     if (!dirtyBits.any())
     {
         return;
     }
+
+    const auto &state = context->getGLState();
 
     for (auto dirtyBit : dirtyBits)
     {

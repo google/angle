@@ -10,16 +10,17 @@
 
 #include <EGL/eglext.h>
 
-#include "libANGLE/Context.h"
 #include "libANGLE/Config.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/Surface.h"
+#include "libANGLE/Thread.h"
 #include "libANGLE/histogram_macros.h"
+#include "libANGLE/renderer/d3d/DeviceD3D.h"
 #include "libANGLE/renderer/d3d/EGLImageD3D.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/SurfaceD3D.h"
 #include "libANGLE/renderer/d3d/SwapChainD3D.h"
-#include "libANGLE/renderer/d3d/DeviceD3D.h"
 
 #if defined (ANGLE_ENABLE_D3D9)
 #   include "libANGLE/renderer/d3d/d3d9/Renderer9.h"
@@ -243,7 +244,7 @@ bool DisplayD3D::testDeviceLost()
     return mRenderer->testDeviceLost();
 }
 
-egl::Error DisplayD3D::restoreLostDevice()
+egl::Error DisplayD3D::restoreLostDevice(const egl::Display *display)
 {
     // Release surface resources to make the Reset() succeed
     for (auto &surface : mState.surfaceSet)
@@ -266,11 +267,7 @@ egl::Error DisplayD3D::restoreLostDevice()
     {
         SurfaceD3D *surfaceD3D = GetImplAs<SurfaceD3D>(surface);
 
-        egl::Error error = surfaceD3D->resetSwapChain();
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(surfaceD3D->resetSwapChain(display));
     }
 
     return egl::NoError();
@@ -325,31 +322,32 @@ void DisplayD3D::generateCaps(egl::Caps *outCaps) const
     outCaps->textureNPOT = mRenderer->getNativeExtensions().textureNPOT;
 }
 
-egl::Error DisplayD3D::waitClient() const
+egl::Error DisplayD3D::waitClient(const gl::Context *context) const
 {
     for (auto &surface : mState.surfaceSet)
     {
         SurfaceD3D *surfaceD3D = GetImplAs<SurfaceD3D>(surface);
-        surfaceD3D->checkForOutOfDateSwapChain();
+        surfaceD3D->checkForOutOfDateSwapChain(context->getCurrentDisplay());
     }
 
     return egl::NoError();
 }
 
-egl::Error DisplayD3D::waitNative(EGLint engine,
-                                  egl::Surface *drawSurface,
-                                  egl::Surface *readSurface) const
+egl::Error DisplayD3D::waitNative(const gl::Context *context, EGLint engine) const
 {
+    egl::Surface *drawSurface = context->getCurrentDrawSurface();
+    egl::Surface *readSurface = context->getCurrentReadSurface();
+
     if (drawSurface != nullptr)
     {
         SurfaceD3D *drawSurfaceD3D = GetImplAs<SurfaceD3D>(drawSurface);
-        drawSurfaceD3D->checkForOutOfDateSwapChain();
+        drawSurfaceD3D->checkForOutOfDateSwapChain(context->getCurrentDisplay());
     }
 
     if (readSurface != nullptr)
     {
         SurfaceD3D *readurfaceD3D = GetImplAs<SurfaceD3D>(readSurface);
-        readurfaceD3D->checkForOutOfDateSwapChain();
+        readurfaceD3D->checkForOutOfDateSwapChain(context->getCurrentDisplay());
     }
 
     return egl::NoError();

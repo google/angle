@@ -137,8 +137,13 @@ void PixelTransfer11::setBufferToTextureCopyParams(const gl::Box &destArea, cons
     parametersOut->FirstSlice           = destArea.z;
 }
 
-gl::Error PixelTransfer11::copyBufferToTexture(const gl::PixelUnpackState &unpack, unsigned int offset, RenderTargetD3D *destRenderTarget,
-                                               GLenum destinationFormat, GLenum sourcePixelsType, const gl::Box &destArea)
+gl::Error PixelTransfer11::copyBufferToTexture(const gl::Context *context,
+                                               const gl::PixelUnpackState &unpack,
+                                               unsigned int offset,
+                                               RenderTargetD3D *destRenderTarget,
+                                               GLenum destinationFormat,
+                                               GLenum sourcePixelsType,
+                                               const gl::Box &destArea)
 {
     ANGLE_TRY(loadResources());
 

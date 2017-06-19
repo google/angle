@@ -127,6 +127,8 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     void destroyGL();
     bool isGLInitialized() const;
 
+    void makeCurrent();
+
     static bool ClientExtensionEnabled(const std::string &extName);
 
   private:

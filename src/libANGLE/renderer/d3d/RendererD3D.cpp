@@ -11,6 +11,7 @@
 #include "common/MemoryBuffer.h"
 #include "common/debug.h"
 #include "common/utilities.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
@@ -18,6 +19,7 @@
 #include "libANGLE/State.h"
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/ContextImpl.h"
 #include "libANGLE/renderer/TextureImpl.h"
 #include "libANGLE/renderer/d3d/BufferD3D.h"
 #include "libANGLE/renderer/d3d/DeviceD3D.h"
@@ -58,14 +60,13 @@ void RendererD3D::cleanup()
 // looks up the corresponding OpenGL texture image unit and texture type,
 // and sets the texture and its addressing/filtering state (or NULL when inactive).
 // Sampler mapping needs to be up-to-date on the program object before this is called.
-gl::Error RendererD3D::applyTextures(GLImplFactory *implFactory,
-                                     const gl::ContextState &data,
+gl::Error RendererD3D::applyTextures(const gl::Context *context,
                                      gl::SamplerType shaderType,
                                      const FramebufferTextureArray &framebufferTextures,
                                      size_t framebufferTextureCount)
 {
-    const auto &glState    = data.getState();
-    const auto &caps       = data.getCaps();
+    const auto &glState    = context->getGLState();
+    const auto &caps       = context->getCaps();
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(glState.getProgram());
 
     ASSERT(!programD3D->isSamplerMappingDirty());
@@ -88,7 +89,8 @@ gl::Error RendererD3D::applyTextures(GLImplFactory *implFactory,
                 samplerObject ? samplerObject->getSamplerState() : texture->getSamplerState();
 
             // TODO: std::binary_search may become unavailable using older versions of GCC
-            if (texture->getTextureState().isSamplerComplete(samplerState, data) &&
+            if (texture->getTextureState().isSamplerComplete(samplerState,
+                                                             context->getContextState()) &&
                 !std::binary_search(framebufferTextures.begin(),
                                     framebufferTextures.begin() + framebufferTextureCount, texture))
             {
@@ -99,7 +101,8 @@ gl::Error RendererD3D::applyTextures(GLImplFactory *implFactory,
             {
                 // Texture is not sampler complete or it is in use by the framebuffer.  Bind the
                 // incomplete texture.
-                gl::Texture *incompleteTexture = getIncompleteTexture(implFactory, textureType);
+                gl::Texture *incompleteTexture =
+                    getIncompleteTexture(context->getImplementation(), textureType);
 
                 ANGLE_TRY(setSamplerState(shaderType, samplerIndex, incompleteTexture,
                                           incompleteTexture->getSamplerState()));
@@ -122,15 +125,16 @@ gl::Error RendererD3D::applyTextures(GLImplFactory *implFactory,
     return gl::NoError();
 }
 
-gl::Error RendererD3D::applyTextures(GLImplFactory *implFactory, const gl::ContextState &data)
+gl::Error RendererD3D::applyTextures(const gl::Context *context)
 {
     FramebufferTextureArray framebufferTextures;
-    size_t framebufferSerialCount = getBoundFramebufferTextures(data, &framebufferTextures);
+    size_t framebufferSerialCount =
+        getBoundFramebufferTextures(context->getContextState(), &framebufferTextures);
 
-    ANGLE_TRY(applyTextures(implFactory, data, gl::SAMPLER_VERTEX, framebufferTextures,
-                            framebufferSerialCount));
-    ANGLE_TRY(applyTextures(implFactory, data, gl::SAMPLER_PIXEL, framebufferTextures,
-                            framebufferSerialCount));
+    ANGLE_TRY(
+        applyTextures(context, gl::SAMPLER_VERTEX, framebufferTextures, framebufferSerialCount));
+    ANGLE_TRY(
+        applyTextures(context, gl::SAMPLER_PIXEL, framebufferTextures, framebufferSerialCount));
     return gl::NoError();
 }
 

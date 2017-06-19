@@ -141,7 +141,7 @@ class ContextNULL : public ContextImpl
     void popGroupMarker() override;
 
     // State sync with dirty bits.
-    void syncState(const gl::State::DirtyBits &dirtyBits) override;
+    void syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits) override;
 
     // Disjoint timer queries
     GLint getGPUDisjoint() override;
@@ -190,7 +190,10 @@ class ContextNULL : public ContextImpl
 
     std::vector<PathImpl *> createPaths(GLsizei range) override;
 
-    gl::Error dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ) override;
+    gl::Error dispatchCompute(const gl::Context *context,
+                              GLuint numGroupsX,
+                              GLuint numGroupsY,
+                              GLuint numGroupsZ) override;
 
   private:
     gl::Caps mCaps;

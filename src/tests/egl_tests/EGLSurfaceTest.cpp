@@ -325,7 +325,9 @@ TEST_F(EGLSurfaceTest, ResizeD3DWindow)
 
     initializeDisplay(EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE);
     initializeSurfaceWithDefaultConfig();
+    initializeContext();
 
+    eglMakeCurrent(mDisplay, mWindowSurface, mWindowSurface, mContext);
     eglSwapBuffers(mDisplay, mWindowSurface);
     ASSERT_EGL_SUCCESS();
 

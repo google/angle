@@ -193,33 +193,38 @@ class Renderer9 : public RendererD3D
     DWORD getCapsDeclTypes() const;
 
     // Pixel operations
-    gl::Error copyImage2D(const gl::Framebuffer *framebuffer,
+    gl::Error copyImage2D(const gl::Context *context,
+                          const gl::Framebuffer *framebuffer,
                           const gl::Rectangle &sourceRect,
                           GLenum destFormat,
                           const gl::Offset &destOffset,
                           TextureStorage *storage,
                           GLint level) override;
-    gl::Error copyImageCube(const gl::Framebuffer *framebuffer,
+    gl::Error copyImageCube(const gl::Context *context,
+                            const gl::Framebuffer *framebuffer,
                             const gl::Rectangle &sourceRect,
                             GLenum destFormat,
                             const gl::Offset &destOffset,
                             TextureStorage *storage,
                             GLenum target,
                             GLint level) override;
-    gl::Error copyImage3D(const gl::Framebuffer *framebuffer,
+    gl::Error copyImage3D(const gl::Context *context,
+                          const gl::Framebuffer *framebuffer,
                           const gl::Rectangle &sourceRect,
                           GLenum destFormat,
                           const gl::Offset &destOffset,
                           TextureStorage *storage,
                           GLint level) override;
-    gl::Error copyImage2DArray(const gl::Framebuffer *framebuffer,
+    gl::Error copyImage2DArray(const gl::Context *context,
+                               const gl::Framebuffer *framebuffer,
                                const gl::Rectangle &sourceRect,
                                GLenum destFormat,
                                const gl::Offset &destOffset,
                                TextureStorage *storage,
                                GLint level) override;
 
-    gl::Error copyTexture(const gl::Texture *source,
+    gl::Error copyTexture(const gl::Context *context,
+                          const gl::Texture *source,
                           GLint sourceLevel,
                           const gl::Rectangle &sourceRect,
                           GLenum destFormat,
@@ -314,7 +319,8 @@ class Renderer9 : public RendererD3D
 
     // Buffer-to-texture and Texture-to-buffer copies
     bool supportsFastCopyBufferToTexture(GLenum internalFormat) const override;
-    gl::Error fastCopyBufferToTexture(const gl::PixelUnpackState &unpack,
+    gl::Error fastCopyBufferToTexture(const gl::Context *context,
+                                      const gl::PixelUnpackState &unpack,
                                       unsigned int offset,
                                       RenderTargetD3D *destRenderTarget,
                                       GLenum destinationFormat,
@@ -350,13 +356,13 @@ class Renderer9 : public RendererD3D
 
     StateManager9 *getStateManager() { return &mStateManager; }
 
-    gl::Error genericDrawArrays(Context9 *context,
+    gl::Error genericDrawArrays(const gl::Context *context,
                                 GLenum mode,
                                 GLint first,
                                 GLsizei count,
                                 GLsizei instances);
 
-    gl::Error genericDrawElements(Context9 *context,
+    gl::Error genericDrawElements(const gl::Context *context,
                                   GLenum mode,
                                   GLsizei count,
                                   GLenum type,

@@ -27,6 +27,7 @@ namespace egl
 class Display;
 struct Config;
 struct SurfaceState;
+class Thread;
 }
 
 namespace rx
@@ -42,9 +43,13 @@ class SurfaceImpl : public FramebufferAttachmentObjectImpl
 
     virtual egl::Error initialize(const egl::Display *display)                           = 0;
     virtual FramebufferImpl *createDefaultFramebuffer(const gl::FramebufferState &state) = 0;
-    virtual egl::Error swap(const egl::Display *display)                                 = 0;
-    virtual egl::Error swapWithDamage(EGLint *rects, EGLint n_rects);
-    virtual egl::Error postSubBuffer(EGLint x, EGLint y, EGLint width, EGLint height) = 0;
+    virtual egl::Error swap(const gl::Context *context)                                  = 0;
+    virtual egl::Error swapWithDamage(const gl::Context *context, EGLint *rects, EGLint n_rects);
+    virtual egl::Error postSubBuffer(const gl::Context *context,
+                                     EGLint x,
+                                     EGLint y,
+                                     EGLint width,
+                                     EGLint height) = 0;
     virtual egl::Error querySurfacePointerANGLE(EGLint attribute, void **value) = 0;
     virtual egl::Error bindTexImage(gl::Texture *texture, EGLint buffer) = 0;
     virtual egl::Error releaseTexImage(EGLint buffer) = 0;

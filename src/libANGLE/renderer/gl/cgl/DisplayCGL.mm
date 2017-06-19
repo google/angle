@@ -220,7 +220,7 @@ bool DisplayCGL::testDeviceLost()
     return false;
 }
 
-egl::Error DisplayCGL::restoreLostDevice()
+egl::Error DisplayCGL::restoreLostDevice(const egl::Display *display)
 {
     UNIMPLEMENTED();
     return egl::EglBadDisplay();
@@ -256,15 +256,13 @@ void DisplayCGL::generateCaps(egl::Caps *outCaps) const
     outCaps->textureNPOT = true;
 }
 
-egl::Error DisplayCGL::waitClient() const
+egl::Error DisplayCGL::waitClient(const gl::Context *context) const
 {
     // TODO(cwallez) UNIMPLEMENTED()
     return egl::NoError();
 }
 
-egl::Error DisplayCGL::waitNative(EGLint engine,
-                                  egl::Surface *drawSurface,
-                                  egl::Surface *readSurface) const
+egl::Error DisplayCGL::waitNative(const gl::Context *context, EGLint engine) const
 {
     // TODO(cwallez) UNIMPLEMENTED()
     return egl::NoError();

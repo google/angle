@@ -19,6 +19,7 @@
 
 namespace gl
 {
+class Context;
 struct ImageIndex;
 struct Box;
 struct PixelUnpackState;
@@ -43,7 +44,9 @@ class TextureStorage : angle::NonCopyable
     virtual int getLevelCount() const = 0;
 
     virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT) = 0;
-    virtual gl::Error generateMipmap(const gl::ImageIndex &sourceIndex, const gl::ImageIndex &destIndex) = 0;
+    virtual gl::Error generateMipmap(const gl::Context *context,
+                                     const gl::ImageIndex &sourceIndex,
+                                     const gl::ImageIndex &destIndex) = 0;
 
     virtual gl::Error copyToStorage(TextureStorage *destStorage) = 0;
     virtual gl::Error setData(const gl::ImageIndex &index, ImageD3D *image, const gl::Box *destBox, GLenum type,

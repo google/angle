@@ -96,8 +96,13 @@ class TextureD3D : public TextureImpl
     gl::Error subImageCompressed(const gl::ImageIndex &index, const gl::Box &area, GLenum format,
                                  const gl::PixelUnpackState &unpack, const uint8_t *pixels, ptrdiff_t layerOffset);
     bool isFastUnpackable(const gl::PixelUnpackState &unpack, GLenum sizedInternalFormat);
-    gl::Error fastUnpackPixels(const gl::PixelUnpackState &unpack, const uint8_t *pixels, const gl::Box &destArea,
-                               GLenum sizedInternalFormat, GLenum type, RenderTargetD3D *destRenderTarget);
+    gl::Error fastUnpackPixels(const gl::Context *context,
+                               const gl::PixelUnpackState &unpack,
+                               const uint8_t *pixels,
+                               const gl::Box &destArea,
+                               GLenum sizedInternalFormat,
+                               GLenum type,
+                               RenderTargetD3D *destRenderTarget);
 
     GLint getLevelZeroWidth() const;
     GLint getLevelZeroHeight() const;
@@ -137,7 +142,7 @@ class TextureD3D : public TextureImpl
 
     bool shouldUseSetData(const ImageD3D *image) const;
 
-    gl::Error generateMipmapUsingImages(const GLuint maxLevel);
+    gl::Error generateMipmapUsingImages(const gl::Context *context, const GLuint maxLevel);
 
     GLuint mBaseLevel;
 };

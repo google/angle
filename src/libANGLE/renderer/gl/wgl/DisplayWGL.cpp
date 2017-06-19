@@ -518,7 +518,7 @@ bool DisplayWGL::testDeviceLost()
     return false;
 }
 
-egl::Error DisplayWGL::restoreLostDevice()
+egl::Error DisplayWGL::restoreLostDevice(const egl::Display *display)
 {
     return egl::EglBadDisplay();
 }
@@ -633,15 +633,13 @@ egl::Error DisplayWGL::makeCurrentSurfaceless(gl::Context *context)
     return egl::NoError();
 }
 
-egl::Error DisplayWGL::waitClient() const
+egl::Error DisplayWGL::waitClient(const gl::Context *context) const
 {
     // Unimplemented as this is not needed for WGL
     return egl::NoError();
 }
 
-egl::Error DisplayWGL::waitNative(EGLint engine,
-                                  egl::Surface *drawSurface,
-                                  egl::Surface *readSurface) const
+egl::Error DisplayWGL::waitNative(const gl::Context *context, EGLint engine) const
 {
     // Unimplemented as this is not needed for WGL
     return egl::NoError();

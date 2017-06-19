@@ -2102,6 +2102,8 @@ Error ValidateSwapBuffersWithDamageEXT(const Display *display,
         return EglBadParameter() << "n_rects cannot be greater than zero when rects is NULL.";
     }
 
+    // TODO(jmadill): Validate Surface is bound to the thread.
+
     return NoError();
 }
 
