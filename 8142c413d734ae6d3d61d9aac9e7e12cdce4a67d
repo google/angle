@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "00b3228d_575d295e",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2607,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2017-06-19T20:14:42Z",
+      "side": 1,
+      "message": "This is unnecessary because attrib name / uniform name conflict in vertex shader should already be caught by shader compiler.",
+      "range": {
+        "startLine": 2607,
+        "startChar": 35,
+        "endLine": 2607,
+        "endChar": 49
+      },
+      "revId": "8142c413d734ae6d3d61d9aac9e7e12cdce4a67d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
