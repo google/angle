@@ -800,6 +800,10 @@ class Context final : public ValidationContext
                       GLsizei height,
                       GLsizei depth);
 
+    egl::Display *getCurrentDisplay() const { return mCurrentDisplay; }
+    egl::Surface *getCurrentDrawSurface() const { return mCurrentSurface; }
+    egl::Surface *getCurrentReadSurface() const { return mCurrentSurface; }
+
   private:
     void syncRendererState();
     void syncRendererState(const State::DirtyBits &bitMask, const State::DirtyObjects &objectMask);
@@ -879,6 +883,7 @@ class Context final : public ValidationContext
     GLenum mResetStrategy;
     bool mRobustAccess;
     egl::Surface *mCurrentSurface;
+    egl::Display *mCurrentDisplay;
     Framebuffer *mSurfacelessFramebuffer;
     bool mWebGLContext;
 

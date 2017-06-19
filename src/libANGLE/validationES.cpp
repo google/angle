@@ -3361,7 +3361,6 @@ bool ValidatePushGroupMarkerEXT(Context *context, GLsizei length, const char *ma
 }
 
 bool ValidateEGLImageTargetTexture2DOES(Context *context,
-                                        egl::Display *display,
                                         GLenum target,
                                         egl::Image *image)
 {
@@ -3394,7 +3393,8 @@ bool ValidateEGLImageTargetTexture2DOES(Context *context,
             return false;
     }
 
-    if (!display->isValidImage(image))
+    ASSERT(context->getCurrentDisplay());
+    if (!context->getCurrentDisplay()->isValidImage(image))
     {
         context->handleError(InvalidValue() << "EGL image is not valid.");
         return false;
@@ -3420,7 +3420,6 @@ bool ValidateEGLImageTargetTexture2DOES(Context *context,
 }
 
 bool ValidateEGLImageTargetRenderbufferStorageOES(Context *context,
-                                                  egl::Display *display,
                                                   GLenum target,
                                                   egl::Image *image)
 {
@@ -3440,7 +3439,8 @@ bool ValidateEGLImageTargetRenderbufferStorageOES(Context *context,
             return false;
     }
 
-    if (!display->isValidImage(image))
+    ASSERT(context->getCurrentDisplay());
+    if (!context->getCurrentDisplay()->isValidImage(image))
     {
         context->handleError(InvalidValue() << "EGL image is not valid.");
         return false;

@@ -115,7 +115,7 @@ EGLBoolean EGLAPIENTRY Terminate(EGLDisplay dpy)
 
     if (display->isValidContext(thread->getContext()))
     {
-        thread->setCurrent(nullptr, nullptr, nullptr, nullptr);
+        thread->setCurrent(nullptr);
     }
 
     display->terminate();
@@ -564,7 +564,7 @@ EGLBoolean EGLAPIENTRY DestroyContext(EGLDisplay dpy, EGLContext ctx)
 
     if (context == thread->getContext())
     {
-        thread->setCurrent(nullptr, thread->getDrawSurface(), thread->getReadSurface(), nullptr);
+        thread->setCurrent(nullptr);
     }
 
     display->destroyContext(context);
@@ -601,7 +601,7 @@ EGLBoolean EGLAPIENTRY MakeCurrent(EGLDisplay dpy, EGLSurface draw, EGLSurface r
     }
 
     gl::Context *previousContext = thread->getContext();
-    thread->setCurrent(display, drawSurface, readSurface, context);
+    thread->setCurrent(context);
 
     // Release the surface from the previously-current context, to allow
     // destroyed surfaces to delete themselves.
@@ -622,12 +622,12 @@ EGLSurface EGLAPIENTRY GetCurrentSurface(EGLint readdraw)
     if (readdraw == EGL_READ)
     {
         thread->setError(NoError());
-        return thread->getReadSurface();
+        return thread->getCurrentReadSurface();
     }
     else if (readdraw == EGL_DRAW)
     {
         thread->setError(NoError());
-        return thread->getDrawSurface();
+        return thread->getCurrentDrawSurface();
     }
     else
     {
@@ -641,10 +641,12 @@ EGLDisplay EGLAPIENTRY GetCurrentDisplay(void)
     EVENT("()");
     Thread *thread = GetCurrentThread();
 
-    EGLDisplay dpy = thread->getDisplay();
-
     thread->setError(NoError());
-    return dpy;
+    if (thread->getContext() != nullptr)
+    {
+        return thread->getContext()->getCurrentDisplay();
+    }
+    return EGL_NO_DISPLAY;
 }
 
 EGLBoolean EGLAPIENTRY QueryContext(EGLDisplay dpy, EGLContext ctx, EGLint attribute, EGLint *value)
@@ -693,7 +695,7 @@ EGLBoolean EGLAPIENTRY WaitGL(void)
     EVENT("()");
     Thread *thread = GetCurrentThread();
 
-    Display *display = thread->getDisplay();
+    Display *display = thread->getCurrentDisplay();
 
     Error error = ValidateDisplay(display);
     if (error.isError())
@@ -720,7 +722,7 @@ EGLBoolean EGLAPIENTRY WaitNative(EGLint engine)
     EVENT("(EGLint engine = %d)", engine);
     Thread *thread = GetCurrentThread();
 
-    Display *display = thread->getDisplay();
+    Display *display = thread->getCurrentDisplay();
 
     Error error = ValidateDisplay(display);
     if (error.isError())
@@ -734,7 +736,8 @@ EGLBoolean EGLAPIENTRY WaitNative(EGLint engine)
         thread->setError(EglBadParameter() << "the 'engine' parameter has an unrecognized value");
     }
 
-    error = display->waitNative(engine, thread->getDrawSurface(), thread->getReadSurface());
+    error = display->waitNative(engine, thread->getCurrentDrawSurface(),
+                                thread->getCurrentReadSurface());
     if (error.isError())
     {
         thread->setError(error);
@@ -969,7 +972,7 @@ EGLBoolean EGLAPIENTRY SwapInterval(EGLDisplay dpy, EGLint interval)
         return EGL_FALSE;
     }
 
-    Surface *draw_surface = static_cast<Surface *>(thread->getDrawSurface());
+    Surface *draw_surface = static_cast<Surface *>(thread->getCurrentDrawSurface());
 
     if (draw_surface == nullptr)
     {
@@ -1075,7 +1078,7 @@ EGLBoolean EGLAPIENTRY WaitClient(void)
     EVENT("()");
     Thread *thread = GetCurrentThread();
 
-    Display *display = thread->getDisplay();
+    Display *display = thread->getCurrentDisplay();
 
     Error error = ValidateDisplay(display);
     if (error.isError())

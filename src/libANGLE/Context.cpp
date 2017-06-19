@@ -266,7 +266,8 @@ Context::Context(rx::EGLImplFactory *implFactory,
       mContextLostForced(false),
       mResetStrategy(GetResetStrategy(attribs)),
       mRobustAccess(GetRobustAccess(attribs)),
-      mCurrentSurface(nullptr),
+      mCurrentSurface(static_cast<egl::Surface *>(EGL_NO_SURFACE)),
+      mCurrentDisplay(static_cast<egl::Display *>(EGL_NO_DISPLAY)),
       mSurfacelessFramebuffer(nullptr),
       mWebGLContext(GetWebGLContext(attribs)),
       mScratchBuffer(1000u)
@@ -460,6 +461,8 @@ Context::~Context()
 
 void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
 {
+    mCurrentDisplay = display;
+
     if (!mHasBeenCurrent)
     {
         initRendererString();

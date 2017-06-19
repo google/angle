@@ -784,4 +784,4 @@ ANGLE_EXPORT EGLBoolean SwapBuffersWithDamageEXT(EGLDisplay dpy,
 
     return EGL_TRUE;
 }
-}
+}  // namespace egl

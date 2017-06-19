@@ -16,9 +16,6 @@ namespace egl
 Thread::Thread()
     : mError(EGL_SUCCESS),
       mAPI(EGL_OPENGL_ES_API),
-      mDisplay(static_cast<egl::Display *>(EGL_NO_DISPLAY)),
-      mDrawSurface(static_cast<egl::Surface *>(EGL_NO_SURFACE)),
-      mReadSurface(static_cast<egl::Surface *>(EGL_NO_SURFACE)),
       mContext(static_cast<gl::Context *>(EGL_NO_CONTEXT))
 {
 }
@@ -43,30 +40,27 @@ EGLenum Thread::getAPI() const
     return mAPI;
 }
 
-void Thread::setCurrent(Display *display,
-                        Surface *drawSurface,
-                        Surface *readSurface,
-                        gl::Context *context)
+void Thread::setCurrent(gl::Context *context)
 {
-    mDisplay     = display;
-    mDrawSurface = drawSurface;
-    mReadSurface = readSurface;
-    mContext     = context;
+    mContext = context;
 }
 
-Display *Thread::getDisplay() const
+Surface *Thread::getCurrentDrawSurface() const
 {
-    return mDisplay;
+    if (mContext)
+    {
+        return mContext->getCurrentDrawSurface();
+    }
+    return nullptr;
 }
 
-Surface *Thread::getDrawSurface() const
+Surface *Thread::getCurrentReadSurface() const
 {
-    return mDrawSurface;
-}
-
-Surface *Thread::getReadSurface() const
-{
-    return mReadSurface;
+    if (mContext)
+    {
+        return mContext->getCurrentReadSurface();
+    }
+    return nullptr;
 }
 
 gl::Context *Thread::getContext() const
@@ -83,6 +77,15 @@ gl::Context *Thread::getValidContext() const
     }
 
     return mContext;
+}
+
+Display *Thread::getCurrentDisplay() const
+{
+    if (mContext)
+    {
+        return mContext->getCurrentDisplay();
+    }
+    return nullptr;
 }
 
 }  // namespace egl

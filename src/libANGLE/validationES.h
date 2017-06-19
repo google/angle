@@ -342,11 +342,9 @@ bool ValidateInsertEventMarkerEXT(Context *context, GLsizei length, const char *
 bool ValidatePushGroupMarkerEXT(Context *context, GLsizei length, const char *marker);
 
 bool ValidateEGLImageTargetTexture2DOES(Context *context,
-                                        egl::Display *display,
                                         GLenum target,
                                         egl::Image *image);
 bool ValidateEGLImageTargetRenderbufferStorageOES(Context *context,
-                                                  egl::Display *display,
                                                   GLenum target,
                                                   egl::Image *image);
 
