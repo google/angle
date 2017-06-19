@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "876c5c27_68898191",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-19T08:46:55Z",
+      "side": 1,
+      "message": "Since this function is used by both format and binding. it is a bit misleading to call it \"GetAttribIndex\". So I remove \"Attrib\" in the name of this function.",
+      "revId": "c5aa75a2e5bfc7d1a474c2d32c34b6855cd22d49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d30bb03_482b49b4",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-19T08:46:55Z",
+      "side": 1,
+      "message": "In this patch mSupportVertexAttribBinding is used in many places, so I keep this variable.",
+      "revId": "c5aa75a2e5bfc7d1a474c2d32c34b6855cd22d49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8afcbf2b_ae8b3bd5",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 656,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-19T08:46:55Z",
+      "side": 1,
+      "message": "Now I treat all dirty bits as the dirty states of vertex attributes.\n\nThe process to update vertex attributes is as follows:\n\n1. On platforms that don\u0027t support Vertex Attrib Binding: \n- Attrib Pointer affects the information about if an attribute needs streaming, which should be updated in updateAttribPointer\n- Format and binding should be updated by VertexAttribPointer in updateAttribPointer rather than be updated separately \n- AttribBinding should never be changed\n- Binding divisor should be updated by VertexAttribDivisor in updateBindingDivisor\n\n2. On platforms that support Vertex Attrib Binding:\n- Attrib Pointer updates needsStreaming in updateAttribPointer\n- Format is updated by VertexAttribFormat in updateAttribFormat\n- Binding is updated by BindVertexBuffer in updateBindingBuffer\n- AttribBinding is updated by VertexAttribBinding in updateAttribBinding\n- Binding divisor is updated by VertexBindingDivisor in updateBindingDivisor\n\nNote that:\n1. In streamAttributes, we only need to update the binding buffer by bindVertexBuffer instead of VertexAttribPointer on platforms that support Vertex Attrib Binding because the format part has been updated in updateAttribFormat, which won\u0027t be changed if the new format matches the cached one.\n\n2. When the upper context is ES3.0, attribBinding is never changed, so on platforms that support Vertex Attrib Binding, the two vertex attribute functions in ES3.0 will be implemented by Vertex Attrib Binding APIs:\n\nFor VertexAttribPointer:\n- From: BindBuffer + VertexAttribPointer\n- Into: VertexAttribFormat + BindVertexBuffer\n\nWhen the format isn\u0027t needed to update, we can just use BindVertexBuffer to implement (BindBuffer + VertexAttribPointer).\n\nFor VertexAttribDivisor:\n- From: VertexAttribDivisor\n- Into: VertexBindingDivisor\n\n3. The potential combinations of several Vertex Attrib Binding calls aren\u0027t included in this patch:\n- Update format, attribBinding and binding together by VertexAttribPointer when IsVertexAttribPointerSupported is true and all three parts are dirty\n- Update attribBinding and bindingDivisor together by VertexAttribDivisor when attribIndex \u003d\u003d attrib.bindingIndex and both parts are dirty\n\nThese combinations may save the times to make GL calls, but many extra checks and structure updates may also be introduced, and maybe these situations aren\u0027t met so often. I plan to do some experiments before deciding if these changes should be made.",
+      "revId": "c5aa75a2e5bfc7d1a474c2d32c34b6855cd22d49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
