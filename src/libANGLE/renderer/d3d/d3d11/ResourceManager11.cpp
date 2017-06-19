@@ -317,10 +317,13 @@ gl::Error ClearResource(Renderer11 *renderer,
     return gl::NoError();
 }
 
-#define ANGLE_RESOURCE_STRINGIFY_OP(NAME, RESTYPE, D3D11TYPE, DESCTYPE, INITDATATYPE) #RESTYPE
+#define ANGLE_RESOURCE_STRINGIFY_OP(NAME, RESTYPE, D3D11TYPE, DESCTYPE, INITDATATYPE) #RESTYPE,
 
 constexpr std::array<const char *, NumResourceTypes> kResourceTypeNames = {
     {ANGLE_RESOURCE_TYPE_OP(Stringify, ANGLE_RESOURCE_STRINGIFY_OP)}};
+static_assert(kResourceTypeNames[NumResourceTypes - 1] != nullptr,
+              "All members must be initialized.");
+
 }  // anonymous namespace
 
 // ResourceManager11 Implementation.
