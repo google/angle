@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "235fe4c5_f19b57b3",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 896,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-19T17:52:18Z",
+      "side": 1,
+      "message": "nit: don\u0027t use this comma style init syntax, it\u0027s a bit too dense to read.",
+      "range": {
+        "startLine": 896,
+        "startChar": 48,
+        "endLine": 896,
+        "endChar": 49
+      },
+      "revId": "4a6cf2e0234b58d3450b4221aa1139a5c2a12fe9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "62b2b35b_74f665c3",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 898,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-19T17:52:18Z",
+      "side": 1,
+      "message": "you should use a scratch buffer for this, so you don\u0027t need to allocate fresh. Context even has a const method \u0027getScratchBuffer\u0027.\n\nAt some point we could even make a dedicated zero memory buffer, since ResourceManager11 has the same need, but the scratch buffer is probably good enough for now.",
+      "range": {
+        "startLine": 898,
+        "startChar": 4,
+        "endLine": 898,
+        "endChar": 67
+      },
+      "revId": "4a6cf2e0234b58d3450b4221aa1139a5c2a12fe9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "39afb43e_29e8460d",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 901,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-19T17:52:18Z",
+      "side": 1,
+      "message": "nit: you can just return directly here or use ANGLE_TRY and return NoError.",
+      "range": {
+        "startLine": 899,
+        "startChar": 4,
+        "endLine": 901,
+        "endChar": 15
+      },
+      "revId": "4a6cf2e0234b58d3450b4221aa1139a5c2a12fe9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
