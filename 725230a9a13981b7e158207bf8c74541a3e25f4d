@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8c5a39f5_ec36abc2",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-19T08:37:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b256492_86ee859a",
+      "range": {
+        "startLine": 207,
+        "startChar": 4,
+        "endLine": 210,
+        "endChar": 65
+      },
+      "revId": "725230a9a13981b7e158207bf8c74541a3e25f4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c206bfe_a47e58b2",
         "filename": "src/libANGLE/State.cpp",
         "patchSetId": 12
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "9d30ecdf_5b681ae6",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 798,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-19T08:37:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9c206bfe_a47e58b2",
+      "range": {
+        "startLine": 798,
+        "startChar": 12,
+        "endLine": 798,
+        "endChar": 92
+      },
+      "revId": "725230a9a13981b7e158207bf8c74541a3e25f4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a566d980_5614d8ab",
         "filename": "src/libANGLE/State.cpp",
         "patchSetId": 12
@@ -59,6 +107,30 @@
       "writtenOn": "2017-06-15T19:09:25Z",
       "side": 1,
       "message": "What\u0027s the purpose of this? Why can\u0027t it just be assigned?",
+      "range": {
+        "startLine": 2180,
+        "startChar": 4,
+        "endLine": 2183,
+        "endChar": 5
+      },
+      "revId": "725230a9a13981b7e158207bf8c74541a3e25f4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "56743f44_2e6be9f1",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2183,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-19T08:37:02Z",
+      "side": 1,
+      "message": "I had change to be assigned directly. My original thought is whether there is performance reduce  when being assigned directly.",
+      "parentUuid": "a566d980_5614d8ab",
       "range": {
         "startLine": 2180,
         "startChar": 4,
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "f0e799de_9f1c756e",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-19T08:37:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "91bd0759_05ad2337",
+      "range": {
+        "startLine": 267,
+        "startChar": 4,
+        "endLine": 267,
+        "endChar": 48
+      },
+      "revId": "725230a9a13981b7e158207bf8c74541a3e25f4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63920efd_79daab13",
         "filename": "src/libANGLE/angletypes.h",
         "patchSetId": 12
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "a0408fb5_205db9eb",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-19T08:37:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63920efd_79daab13",
+      "range": {
+        "startLine": 271,
+        "startChar": 4,
+        "endLine": 271,
+        "endChar": 20
+      },
+      "revId": "725230a9a13981b7e158207bf8c74541a3e25f4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4ee07d4d_53fa320c",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
         "patchSetId": 12
@@ -128,6 +248,30 @@
       "writtenOn": "2017-06-15T19:09:25Z",
       "side": 1,
       "message": "This needs to update its tracking of the image units, we\u0027ve had bugs in the past where new objects with the same ID are generated and the state tracking becomes incorrect.",
+      "range": {
+        "startLine": 192,
+        "startChar": 21,
+        "endLine": 192,
+        "endChar": 34
+      },
+      "revId": "725230a9a13981b7e158207bf8c74541a3e25f4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "254aac01_089058e6",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-19T08:37:02Z",
+      "side": 1,
+      "message": "Yes, It is not enough to update the image units state in State.cpp. We need update the image units state here. Thank you.",
+      "parentUuid": "4ee07d4d_53fa320c",
       "range": {
         "startLine": 192,
         "startChar": 21,
@@ -157,6 +301,24 @@
     },
     {
       "key": {
+        "uuid": "55332cbf_a30122a6",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 872,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-19T08:37:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d8a771b2_e4527f5b",
+      "revId": "725230a9a13981b7e158207bf8c74541a3e25f4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fc666a43_f6ad9ca8",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.h",
         "patchSetId": 12
@@ -177,6 +339,30 @@
       "revId": "725230a9a13981b7e158207bf8c74541a3e25f4d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a96d2f3_93db9e57",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-19T08:37:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fc666a43_f6ad9ca8",
+      "range": {
+        "startLine": 199,
+        "startChar": 16,
+        "endLine": 199,
+        "endChar": 29
+      },
+      "revId": "725230a9a13981b7e158207bf8c74541a3e25f4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -226,6 +412,30 @@
     },
     {
       "key": {
+        "uuid": "dfc582f4_082c7642",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 830,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-19T08:37:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cf19fb10_15795255",
+      "range": {
+        "startLine": 830,
+        "startChar": 16,
+        "endLine": 830,
+        "endChar": 20
+      },
+      "revId": "725230a9a13981b7e158207bf8c74541a3e25f4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4a49be9a_c29bbbcc",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 12
@@ -246,6 +456,30 @@
       "revId": "725230a9a13981b7e158207bf8c74541a3e25f4d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3818597_110510c9",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 833,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-19T08:37:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4a49be9a_c29bbbcc",
+      "range": {
+        "startLine": 832,
+        "startChar": 29,
+        "endLine": 833,
+        "endChar": 95
+      },
+      "revId": "725230a9a13981b7e158207bf8c74541a3e25f4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -272,6 +506,30 @@
     },
     {
       "key": {
+        "uuid": "e03c855a_69b0029b",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 877,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-19T08:37:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "01214dba_62a39e11",
+      "range": {
+        "startLine": 877,
+        "startChar": 8,
+        "endLine": 877,
+        "endChar": 15
+      },
+      "revId": "725230a9a13981b7e158207bf8c74541a3e25f4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1b2782bb_2e0784da",
         "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
         "patchSetId": 12
@@ -292,6 +550,30 @@
       "revId": "725230a9a13981b7e158207bf8c74541a3e25f4d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b0a5926_a68e5862",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 272,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-19T08:37:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1b2782bb_2e0784da",
+      "range": {
+        "startLine": 270,
+        "startChar": 0,
+        "endLine": 272,
+        "endChar": 68
+      },
+      "revId": "725230a9a13981b7e158207bf8c74541a3e25f4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
