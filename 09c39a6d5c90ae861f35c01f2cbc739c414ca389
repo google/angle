@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a50154bc_5baa1449",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-06-19T15:11:58Z",
+      "side": 1,
+      "message": "This extra qualification causes the compile error on Linux and OSX.",
+      "range": {
+        "startLine": 185,
+        "startChar": 17,
+        "endLine": 185,
+        "endChar": 32
+      },
+      "revId": "09c39a6d5c90ae861f35c01f2cbc739c414ca389",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4beed427_94e4e442",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3084,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-06-19T15:11:58Z",
+      "side": 1,
+      "message": "nit: the test name suggests that \"foo\" should be declared and usable in the loop body. Can we add a reference to it somewhere? Like if (i \u003e 3.5 \u0026\u0026 foo)",
+      "revId": "09c39a6d5c90ae861f35c01f2cbc739c414ca389",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
