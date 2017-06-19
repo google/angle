@@ -242,9 +242,9 @@ class TType
     {
     }
     explicit TType(const TPublicType &p);
-    explicit TType(TStructure *userDef, TPrecision p = EbpUndefined)
+    explicit TType(TStructure *userDef)
         : type(EbtStruct),
-          precision(p),
+          precision(EbpUndefined),
           qualifier(EvqTemporary),
           invariant(false),
           memoryQualifier(TMemoryQualifier::create()),
@@ -525,14 +525,25 @@ struct TTypeSpecifierNonArray
     // true if the type was defined by a struct specifier rather than a reference to a type name.
     bool isStructSpecifier;
 
-    void initialize(TBasicType bt, const TSourceLoc &ln)
+    void initialize(TBasicType aType, const TSourceLoc &aLine)
     {
-        type              = bt;
+        ASSERT(aType != EbtStruct);
+        type              = aType;
         primarySize       = 1;
         secondarySize     = 1;
         userDef           = nullptr;
-        line              = ln;
+        line              = aLine;
         isStructSpecifier = false;
+    }
+
+    void initializeStruct(TType *aUserDef, bool aIsStructSpecifier, const TSourceLoc &aLine)
+    {
+        type              = EbtStruct;
+        primarySize       = 1;
+        secondarySize     = 1;
+        userDef           = aUserDef;
+        line              = aLine;
+        isStructSpecifier = aIsStructSpecifier;
     }
 
     void setAggregate(unsigned char size) { primarySize = size; }

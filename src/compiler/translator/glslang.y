@@ -123,49 +123,37 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, void *scanner, cons
 
 #define VERTEX_ONLY(S, L) {  \
     if (context->getShaderType() != GL_VERTEX_SHADER) {  \
-        context->error(L, " supported in vertex shaders only ", S);  \
-    }  \
-}
-
-#define FRAG_ONLY(S, L) {  \
-    if (context->getShaderType() != GL_FRAGMENT_SHADER) {  \
-        context->error(L, " supported in fragment shaders only ", S);  \
+        context->error(L, " supported in vertex shaders only", S);  \
     }  \
 }
 
 #define COMPUTE_ONLY(S, L) {  \
     if (context->getShaderType() != GL_COMPUTE_SHADER) {  \
-        context->error(L, " supported in compute shaders only ", S);  \
-    }  \
-}
-
-#define NON_COMPUTE_ONLY(S, L) {  \
-    if (context->getShaderType() != GL_VERTEX_SHADER && context->getShaderType() != GL_FRAGMENT_SHADER) {  \
-        context->error(L, " supported in vertex and fragment shaders only ", S);  \
+        context->error(L, " supported in compute shaders only", S);  \
     }  \
 }
 
 #define ES2_ONLY(S, L) {  \
     if (context->getShaderVersion() != 100) {  \
-        context->error(L, " supported in GLSL ES 1.00 only ", S);  \
+        context->error(L, " supported in GLSL ES 1.00 only", S);  \
     }  \
 }
 
 #define ES3_OR_NEWER(TOKEN, LINE, REASON) {  \
     if (context->getShaderVersion() < 300) {  \
-        context->error(LINE, REASON " supported in GLSL ES 3.00 and above only ", TOKEN);  \
+        context->error(LINE, REASON " supported in GLSL ES 3.00 and above only", TOKEN);  \
     }  \
 }
 
 #define ES3_OR_NEWER_OR_MULTIVIEW(TOKEN, LINE, REASON) {  \
     if (context->getShaderVersion() < 300 && !context->isMultiviewExtensionEnabled()) {  \
-        context->error(LINE, REASON " supported in GLSL ES 3.00 and above only ", TOKEN);  \
+        context->error(LINE, REASON " supported in GLSL ES 3.00 and above only", TOKEN);  \
     }  \
 }
 
 #define ES3_1_ONLY(TOKEN, LINE, REASON) {  \
     if (context->getShaderVersion() != 310) {  \
-        context->error(LINE, REASON " supported in GLSL ES 3.10 only ", TOKEN);  \
+        context->error(LINE, REASON " supported in GLSL ES 3.10 only", TOKEN);  \
     }  \
 }
 %}
@@ -204,7 +192,7 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, void *scanner, cons
 %token <lex> LEFT_ANGLE RIGHT_ANGLE VERTICAL_BAR CARET AMPERSAND QUESTION
 
 %type <lex> identifier
-%type <interm> assignment_operator unary_operator
+%type <interm.op> assignment_operator unary_operator
 %type <interm.intermTypedNode> variable_identifier primary_expression postfix_expression
 %type <interm.intermTypedNode> expression integer_expression assignment_expression
 %type <interm.intermTypedNode> unary_expression multiplicative_expression additive_expression
@@ -227,7 +215,7 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, void *scanner, cons
 %type <interm.intermNode> iteration_statement jump_statement statement_no_new_scope statement_with_scope
 %type <interm> single_declaration init_declarator_list
 
-%type <interm> parameter_declaration parameter_declarator parameter_type_specifier
+%type <interm.param> parameter_declaration parameter_declarator parameter_type_specifier
 %type <interm.layoutQualifier> layout_qualifier_id_list layout_qualifier_id
 
 %type <interm.type> fully_specified_type type_specifier
@@ -391,22 +379,13 @@ function_call_header
 
 function_identifier
     : type_specifier_no_prec {
-        if ($1.array) {
-            ES3_OR_NEWER("[]", @1, "array constructor");
-        }
         $$ = context->addConstructorFunc($1);
     }
     | IDENTIFIER {
-        context->checkIsNotReserved(@1, *$1.string);
-        const TType *type = TCache::getType(EbtVoid, EbpUndefined);
-        TFunction *function = new TFunction($1.string, type);
-        $$ = function;
+        $$ = context->addNonConstructorFunc($1.string, @1);
     }
     | FIELD_SELECTION {
-        context->checkIsNotReserved(@1, *$1.string);
-        const TType *type = TCache::getType(EbtVoid, EbpUndefined);
-        TFunction *function = new TFunction($1.string, type);
-        $$ = function;
+        $$ = context->addNonConstructorFunc($1.string, @1);
     }
     ;
 
@@ -421,21 +400,18 @@ unary_expression
         $$ = context->addUnaryMathLValue(EOpPreDecrement, $2, @1);
     }
     | unary_operator unary_expression {
-        if ($1.op != EOpNull) {
-            $$ = context->addUnaryMath($1.op, $2, @1);
-        } else
-            $$ = $2;
+        $$ = context->addUnaryMath($1, $2, @1);
     }
     ;
 // Grammar Note:  No traditional style type casts.
 
 unary_operator
-    : PLUS  { $$.op = EOpPositive; }
-    | DASH  { $$.op = EOpNegative; }
-    | BANG  { $$.op = EOpLogicalNot; }
+    : PLUS  { $$ = EOpPositive; }
+    | DASH  { $$ = EOpNegative; }
+    | BANG  { $$ = EOpLogicalNot; }
     | TILDE {
         ES3_OR_NEWER("~", @$, "bit-wise operator");
-        $$.op = EOpBitwiseNot;
+        $$ = EOpBitwiseNot;
     }
     ;
 // Grammar Note:  No '*' or '&' unary ops.  Pointers are not supported.
@@ -557,40 +533,39 @@ conditional_expression
 assignment_expression
     : conditional_expression { $$ = $1; }
     | unary_expression assignment_operator assignment_expression {
-        context->checkCanBeLValue(@2, "assign", $1);
-        $$ = context->addAssign($2.op, $1, $3, @2);
+        $$ = context->addAssign($2, $1, $3, @2);
     }
     ;
 
 assignment_operator
-    : EQUAL        { $$.op = EOpAssign; }
-    | MUL_ASSIGN   { $$.op = EOpMulAssign; }
-    | DIV_ASSIGN   { $$.op = EOpDivAssign; }
+    : EQUAL        { $$ = EOpAssign; }
+    | MUL_ASSIGN   { $$ = EOpMulAssign; }
+    | DIV_ASSIGN   { $$ = EOpDivAssign; }
     | MOD_ASSIGN   {
         ES3_OR_NEWER("%=", @$, "integer modulus operator");
-        $$.op = EOpIModAssign;
+        $$ = EOpIModAssign;
     }
-    | ADD_ASSIGN   { $$.op = EOpAddAssign; }
-    | SUB_ASSIGN   { $$.op = EOpSubAssign; }
+    | ADD_ASSIGN   { $$ = EOpAddAssign; }
+    | SUB_ASSIGN   { $$ = EOpSubAssign; }
     | LEFT_ASSIGN {
         ES3_OR_NEWER("<<=", @$, "bit-wise operator");
-        $$.op = EOpBitShiftLeftAssign;
+        $$ = EOpBitShiftLeftAssign;
     }
     | RIGHT_ASSIGN {
         ES3_OR_NEWER(">>=", @$, "bit-wise operator");
-        $$.op = EOpBitShiftRightAssign;
+        $$ = EOpBitShiftRightAssign;
     }
     | AND_ASSIGN {
         ES3_OR_NEWER("&=", @$, "bit-wise operator");
-        $$.op = EOpBitwiseAndAssign;
+        $$ = EOpBitwiseAndAssign;
     }
     | XOR_ASSIGN {
         ES3_OR_NEWER("^=", @$, "bit-wise operator");
-        $$.op = EOpBitwiseXorAssign;
+        $$ = EOpBitwiseXorAssign;
     }
     | OR_ASSIGN {
         ES3_OR_NEWER("|=", @$, "bit-wise operator");
-        $$.op = EOpBitwiseOrAssign;
+        $$ = EOpBitwiseOrAssign;
     }
     ;
 
@@ -625,13 +600,8 @@ declaration
         $$ = $1.intermDeclaration;
     }
     | PRECISION precision_qualifier type_specifier_no_prec SEMICOLON {
-        if (($2 == EbpHigh) && (context->getShaderType() == GL_FRAGMENT_SHADER) && !context->getFragmentPrecisionHigh()) {
-            context->error(@1, "precision is not supported in fragment shader", "highp");
-        }
-        if (!context->symbolTable.setDefaultPrecision( $3, $2 )) {
-            context->error(@1, "illegal type argument for default precision qualifier", getBasicString($3.getBasicType()));
-        }
-        $$ = 0;
+        context->parseDefaultPrecisionQualifier($2, $3, @1);
+        $$ = nullptr;
     }
     | type_qualifier enter_struct struct_declaration_list RIGHT_BRACE SEMICOLON {
         ES3_OR_NEWER($2.string->c_str(), @1, "interface blocks");
@@ -647,7 +617,7 @@ declaration
     }
     | type_qualifier SEMICOLON {
         context->parseGlobalLayoutQualifier(*$1);
-        $$ = 0;
+        $$ = nullptr;
     }
     | type_qualifier IDENTIFIER SEMICOLON // e.g. to qualify an existing variable as invariant
     {
@@ -676,26 +646,23 @@ function_header_with_parameters
     : function_header parameter_declaration {
         // Add the parameter
         $$ = $1;
-        if ($2.param.type->getBasicType() != EbtVoid)
-            $1->addParameter($2.param.turnToConst());
-        else
-            delete $2.param.type;
+        if ($2.type->getBasicType() != EbtVoid)
+        {
+            $1->addParameter($2.turnToConst());
+        }
     }
     | function_header_with_parameters COMMA parameter_declaration {
-        //
+        $$ = $1;
         // Only first parameter of one-parameter functions can be void
         // The check for named parameters not being void is done in parameter_declarator
-        //
-        if ($3.param.type->getBasicType() == EbtVoid) {
-            //
+        if ($3.type->getBasicType() == EbtVoid)
+        {
             // This parameter > first is void
-            //
-            context->error(@2, "cannot be an argument type except for '(void)'", "void");
-            delete $3.param.type;
-        } else {
-            // Add the parameter
-            $$ = $1;
-            $1->addParameter($3.param.turnToConst());
+            context->error(@2, "cannot be a parameter type except for '(void)'", "void");
+        }
+        else
+        {
+            $1->addParameter($3.turnToConst());
         }
     }
     ;
@@ -712,60 +679,36 @@ function_header
 parameter_declarator
     // Type + name
     : type_specifier identifier {
-        if ($1.getBasicType() == EbtVoid) {
-            context->error(@2, "illegal use of type 'void'", $2.string->c_str());
-        }
-        context->checkIsNotReserved(@2, *$2.string);
-        TParameter param = {$2.string, new TType($1)};
-        $$.param = param;
+        $$ = context->parseParameterDeclarator($1, $2.string, @2);
     }
     | type_specifier identifier LEFT_BRACKET constant_expression RIGHT_BRACKET {
-        // Check that we can make an array out of this type
-        context->checkIsValidTypeForArray(@3, $1);
-
-        context->checkIsNotReserved(@2, *$2.string);
-
-        unsigned int size = context->checkIsValidArraySize(@3, $4);
-
-        $1.setArraySize(size);
-
-        TType* type = new TType($1);
-        TParameter param = { $2.string, type };
-        $$.param = param;
+        $$ = context->parseParameterArrayDeclarator($2.string, @2, $4, @3, &$1);
     }
     ;
 
 parameter_declaration
-    //
-    // The only parameter qualifier a parameter can have are
-    // IN_QUAL, OUT_QUAL, INOUT_QUAL, or CONST.
-    //
-
-    //
-    // Type + name
-    //
     : type_qualifier parameter_declarator {
         $$ = $2;
-        context->checkIsParameterQualifierValid(@2, *$1, $2.param.type);
+        context->checkIsParameterQualifierValid(@2, *$1, $2.type);
     }
     | parameter_declarator {
         $$ = $1;
-        $$.param.type->setQualifier(EvqIn);
+        $$.type->setQualifier(EvqIn);
     }
     | type_qualifier parameter_type_specifier {
         $$ = $2;
-        context->checkIsParameterQualifierValid(@2, *$1, $2.param.type);
+        context->checkIsParameterQualifierValid(@2, *$1, $2.type);
     }
     | parameter_type_specifier {
         $$ = $1;
-        $$.param.type->setQualifier(EvqIn);
+        $$.type->setQualifier(EvqIn);
     }
     ;
 
 parameter_type_specifier
     : type_specifier {
         TParameter param = { 0, new TType($1) };
-        $$.param = param;
+        $$ = param;
     }
     ;
 
@@ -889,73 +832,30 @@ storage_qualifier
     ATTRIBUTE {
         VERTEX_ONLY("attribute", @1);
         ES2_ONLY("attribute", @1);
-        context->checkIsAtGlobalLevel(@1, "attribute");
-        $$ = new TStorageQualifierWrapper(EvqAttribute, @1);
+        $$ = context->parseGlobalStorageQualifier(EvqAttribute, @1);
     }
     | VARYING {
         ES2_ONLY("varying", @1);
-        context->checkIsAtGlobalLevel(@1, "varying");
-        if (context->getShaderType() == GL_VERTEX_SHADER)
-            $$ = new TStorageQualifierWrapper(EvqVaryingOut, @1);
-        else
-            $$ = new TStorageQualifierWrapper(EvqVaryingIn, @1);
+        $$ = context->parseVaryingQualifier(@1);
     }
     | CONST_QUAL {
         $$ = new TStorageQualifierWrapper(EvqConst, @1);
     }
     | IN_QUAL {
-        if (context->declaringFunction())
-        {
-            $$ = new TStorageQualifierWrapper(EvqIn, @1);
-        }
-        else if (context->getShaderType() == GL_FRAGMENT_SHADER)
-        {
-            ES3_OR_NEWER("in", @1, "storage qualifier");
-            $$ = new TStorageQualifierWrapper(EvqFragmentIn, @1);
-        }
-        else if (context->getShaderType() == GL_VERTEX_SHADER)
-        {
-            ES3_OR_NEWER_OR_MULTIVIEW("in", @1, "storage qualifier");
-            $$ = new TStorageQualifierWrapper(EvqVertexIn, @1);
-        }
-        else
-        {
-            $$ = new TStorageQualifierWrapper(EvqComputeIn, @1);
-        }
+        $$ = context->parseInQualifier(@1);
     }
     | OUT_QUAL {
-        if (context->declaringFunction())
-        {
-            $$ = new TStorageQualifierWrapper(EvqOut, @1);
-        }
-        else
-        {
-            ES3_OR_NEWER("out", @1, "storage qualifier");
-            NON_COMPUTE_ONLY("out", @1);
-            if (context->getShaderType() == GL_FRAGMENT_SHADER)
-            {
-                $$ = new TStorageQualifierWrapper(EvqFragmentOut, @1);
-            }
-            else
-            {
-                $$ = new TStorageQualifierWrapper(EvqVertexOut, @1);
-            }
-        }
+        $$ = context->parseOutQualifier(@1);
     }
     | INOUT_QUAL {
-        if (!context->declaringFunction())
-        {
-            context->error(@1, "invalid qualifier: can be only used with function parameters", "inout");
-        }
-        $$ = new TStorageQualifierWrapper(EvqInOut, @1);
+        $$ = context->parseInOutQualifier(@1);
     }
     | CENTROID {
         ES3_OR_NEWER("centroid", @1, "storage qualifier");
         $$ = new TStorageQualifierWrapper(EvqCentroid, @1);
     }
     | UNIFORM {
-        context->checkIsAtGlobalLevel(@1, "uniform");
-        $$ = new TStorageQualifierWrapper(EvqUniform, @1);
+        $$ = context->parseGlobalStorageQualifier(EvqUniform, @1);
     }
     | READONLY {
         $$ = new TMemoryQualifierWrapper(EvqReadOnly, @1);
@@ -973,9 +873,8 @@ storage_qualifier
         $$ = new TMemoryQualifierWrapper(EvqVolatile, @1);
     }
     | SHARED {
-        context->checkIsAtGlobalLevel(@1, "shared");
         COMPUTE_ONLY("shared", @1);
-        $$ = new TStorageQualifierWrapper(EvqShared, @1);
+        $$ = context->parseGlobalStorageQualifier(EvqShared, @1);
     }
     ;
 
@@ -1270,13 +1169,9 @@ type_specifier_nonarray
         $$.initialize(EbtAtomicCounter, @1);
     }
     | TYPE_NAME {
-        //
-        // This is for user defined type names.  The lexical phase looked up the
-        // type.
-        //
+        // This is for user defined type names. The lexical phase looked up the type.
         TType& structure = static_cast<TVariable*>($1.symbol)->getType();
-        $$.initialize(EbtStruct, @1);
-        $$.userDef = &structure;
+        $$.initializeStruct(&structure, false, @1);
     }
     ;
 
@@ -1320,19 +1215,10 @@ struct_declarator_list
 
 struct_declarator
     : identifier {
-        context->checkIsNotReserved(@1, *$1.string);
-
-        TType* type = new TType(EbtVoid, EbpUndefined);
-        $$ = new TField(type, $1.string, @1);
+        $$ = context->parseStructDeclarator($1.string, @1);
     }
     | identifier LEFT_BRACKET constant_expression RIGHT_BRACKET {
-        context->checkIsNotReserved(@1, *$1.string);
-
-        TType* type = new TType(EbtVoid, EbpUndefined);
-        unsigned int size = context->checkIsValidArraySize(@3, $3);
-        type->setArraySize(size);
-
-        $$ = new TField(type, $1.string, @1);
+        $$ = context->parseStructArrayDeclarator($1.string, @1, $3, @3);
     }
     ;
 
@@ -1364,9 +1250,7 @@ simple_statement
 compound_statement
     : LEFT_BRACE RIGHT_BRACE { $$ = 0; }
     | LEFT_BRACE { context->symbolTable.push(); } statement_list { context->symbolTable.pop(); } RIGHT_BRACE {
-        if ($3 != 0) {
-            $3->setLine(@$);
-        }
+        $3->setLine(@$);
         $$ = $3;
     }
     ;
@@ -1384,12 +1268,10 @@ statement_with_scope
 compound_statement_no_new_scope
     // Statement that doesn't create a new scope, for selection_statement, iteration_statement
     : LEFT_BRACE RIGHT_BRACE {
-        $$ = 0;
+        $$ = nullptr;
     }
     | LEFT_BRACE statement_list RIGHT_BRACE {
-        if ($2) {
-            $2->setLine(@$);
-        }
+        $2->setLine(@$);
         $$ = $2;
     }
     ;
@@ -1397,7 +1279,6 @@ compound_statement_no_new_scope
 statement_list
     : statement {
         $$ = new TIntermBlock();
-        $$->setLine(@$);
         $$->appendStatement($1);
     }
     | statement_list statement {
@@ -1408,13 +1289,12 @@ statement_list
 
 expression_statement
     : SEMICOLON  { $$ = 0; }
-    | expression SEMICOLON  { $$ = static_cast<TIntermNode*>($1); }
+    | expression SEMICOLON  { $$ = $1; }
     ;
 
 selection_statement
     : IF LEFT_PAREN expression RIGHT_PAREN selection_rest_statement {
-        context->checkIsScalarBool(@1, $3);
-        $$ = context->intermediate.addIfElse($3, $5, @1);
+        $$ = context->addIfElse($3, $5, @1);
     }
     ;
 
@@ -1425,7 +1305,7 @@ selection_rest_statement
     }
     | statement_with_scope {
         $$.node1 = $1;
-        $$.node2 = 0;
+        $$.node2 = nullptr;
     }
     ;
 
@@ -1446,7 +1326,6 @@ case_label
     ;
 
 condition
-    // In 1996 c++ draft, conditions can include single declarations
     : expression {
         $$ = $1;
         context->checkIsScalarBool($1->getLine(), $1);
@@ -1463,8 +1342,6 @@ iteration_statement
         context->decrLoopNestingLevel();
     }
     | DO { context->incrLoopNestingLevel(); } statement_with_scope WHILE LEFT_PAREN expression RIGHT_PAREN SEMICOLON {
-        context->checkIsScalarBool(@8, $6);
-
         $$ = context->addLoop(ELoopDoWhile, 0, $6, 0, $3, @4);
         context->decrLoopNestingLevel();
     }
@@ -1518,7 +1395,6 @@ jump_statement
         $$ = context->addBranch(EOpReturn, $2, @1);
     }
     | DISCARD SEMICOLON {
-        FRAG_ONLY("discard", @1);
         $$ = context->addBranch(EOpKill, @1);
     }
     ;

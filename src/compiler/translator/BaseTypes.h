@@ -738,7 +738,7 @@ inline const char *getWorkGroupSizeString(size_t dimension)
 }
 
 //
-// This is just for debug print out, carried along with the definitions above.
+// This is just for debug and error message print out, carried along with the definitions above.
 //
 inline const char *getQualifierString(TQualifier q)
 {

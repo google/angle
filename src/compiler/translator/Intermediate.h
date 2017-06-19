@@ -34,7 +34,6 @@ class TIntermediate
                            const TSourceLoc &line,
                            TDiagnostics *diagnostics);
     static TIntermBlock *EnsureBlock(TIntermNode *node);
-    TIntermNode *addIfElse(TIntermTyped *cond, TIntermNodePair code, const TSourceLoc &line);
     static TIntermTyped *AddTernarySelection(TIntermTyped *cond,
                                              TIntermTyped *trueExpression,
                                              TIntermTyped *falseExpression,
@@ -51,8 +50,6 @@ class TIntermediate
                                            const TType &type,
                                            const TSourceLoc &line);
 
-    TIntermBranch *addBranch(TOperator, const TSourceLoc &);
-    TIntermBranch *addBranch(TOperator, TIntermTyped *, const TSourceLoc &);
     static TIntermTyped *AddSwizzle(TIntermTyped *baseExpression,
                                     const TVectorFields &fields,
                                     const TSourceLoc &dotLocation);

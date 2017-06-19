@@ -84,36 +84,6 @@ TIntermBlock *TIntermediate::EnsureBlock(TIntermNode *node)
     return blockNode;
 }
 
-// For "if" test nodes.  There are three children; a condition,
-// a true path, and a false path.  The two paths are in the
-// nodePair.
-//
-// Returns the node created.
-TIntermNode *TIntermediate::addIfElse(TIntermTyped *cond,
-                                      TIntermNodePair nodePair,
-                                      const TSourceLoc &line)
-{
-    // For compile time constant conditions, prune the code now.
-
-    if (cond->getAsConstantUnion())
-    {
-        if (cond->getAsConstantUnion()->getBConst(0) == true)
-        {
-            return EnsureBlock(nodePair.node1);
-        }
-        else
-        {
-            return EnsureBlock(nodePair.node2);
-        }
-    }
-
-    TIntermIfElse *node =
-        new TIntermIfElse(cond, EnsureBlock(nodePair.node1), EnsureBlock(nodePair.node2));
-    node->setLine(line);
-
-    return node;
-}
-
 TIntermTyped *TIntermediate::AddComma(TIntermTyped *left,
                                       TIntermTyped *right,
                                       const TSourceLoc &line,
@@ -221,24 +191,6 @@ TIntermTyped *TIntermediate::AddSwizzle(TIntermTyped *baseExpression,
     {
         return folded;
     }
-
-    return node;
-}
-
-//
-// Add branches.
-//
-TIntermBranch *TIntermediate::addBranch(TOperator branchOp, const TSourceLoc &line)
-{
-    return addBranch(branchOp, 0, line);
-}
-
-TIntermBranch *TIntermediate::addBranch(TOperator branchOp,
-                                        TIntermTyped *expression,
-                                        const TSourceLoc &line)
-{
-    TIntermBranch *node = new TIntermBranch(branchOp, expression);
-    node->setLine(line);
 
     return node;
 }

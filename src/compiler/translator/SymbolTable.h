@@ -130,8 +130,8 @@ struct TConstParameter
     TConstParameter(const TString *n, TType *t) = delete;
     TConstParameter(TString *n, const TType *t) = delete;
 
-    const TString *name;
-    const TType *type;
+    const TString *const name;
+    const TType *const type;
 };
 
 // The function sub-class of symbols and the parser will need to
@@ -150,7 +150,7 @@ struct TParameter
         return TConstParameter(constName, constType);
     }
 
-    TString *name;
+    const TString *name;
     TType *type;
 };
 
@@ -446,18 +446,11 @@ class TSymbolTable : angle::NonCopyable
 
     void dump(TInfoSink &infoSink) const;
 
-    bool setDefaultPrecision(const TPublicType &type, TPrecision prec)
+    void setDefaultPrecision(TBasicType type, TPrecision prec)
     {
-        if (!SupportsPrecision(type.getBasicType()))
-            return false;
-        if (type.getBasicType() == EbtUInt)
-            return false;  // ESSL 3.00.4 section 4.5.4
-        if (type.isAggregate())
-            return false;  // Not allowed to set for aggregate types
         int indexOfLastElement = static_cast<int>(precisionStack.size()) - 1;
         // Uses map operator [], overwrites the current value
-        (*precisionStack[indexOfLastElement])[type.getBasicType()] = prec;
-        return true;
+        (*precisionStack[indexOfLastElement])[type] = prec;
     }
 
     // Searches down the precisionStack for a precision qualifier

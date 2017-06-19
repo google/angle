@@ -569,24 +569,18 @@ bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources &resources)
     symbolTable.push();  // ESSL3_BUILTINS
     symbolTable.push();  // ESSL3_1_BUILTINS
 
-    TPublicType integer;
-    integer.initializeBasicType(EbtInt);
-
-    TPublicType floatingPoint;
-    floatingPoint.initializeBasicType(EbtFloat);
-
     switch (shaderType)
     {
         case GL_FRAGMENT_SHADER:
-            symbolTable.setDefaultPrecision(integer, EbpMedium);
+            symbolTable.setDefaultPrecision(EbtInt, EbpMedium);
             break;
         case GL_VERTEX_SHADER:
-            symbolTable.setDefaultPrecision(integer, EbpHigh);
-            symbolTable.setDefaultPrecision(floatingPoint, EbpHigh);
+            symbolTable.setDefaultPrecision(EbtInt, EbpHigh);
+            symbolTable.setDefaultPrecision(EbtFloat, EbpHigh);
             break;
         case GL_COMPUTE_SHADER:
-            symbolTable.setDefaultPrecision(integer, EbpHigh);
-            symbolTable.setDefaultPrecision(floatingPoint, EbpHigh);
+            symbolTable.setDefaultPrecision(EbtInt, EbpHigh);
+            symbolTable.setDefaultPrecision(EbtFloat, EbpHigh);
             break;
         default:
             assert(false && "Language not supported");
@@ -603,9 +597,7 @@ bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources &resources)
     // It isn't specified whether Sampler2DRect has default precision.
     initSamplerDefaultPrecision(EbtSampler2DRect);
 
-    TPublicType atomicCounter;
-    atomicCounter.initializeBasicType(EbtAtomicCounter);
-    symbolTable.setDefaultPrecision(atomicCounter, EbpHigh);
+    symbolTable.setDefaultPrecision(EbtAtomicCounter, EbpHigh);
 
     InsertBuiltInFunctions(shaderType, shaderSpec, resources, symbolTable);
 
@@ -617,9 +609,7 @@ bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources &resources)
 void TCompiler::initSamplerDefaultPrecision(TBasicType samplerType)
 {
     ASSERT(samplerType > EbtGuardSamplerBegin && samplerType < EbtGuardSamplerEnd);
-    TPublicType sampler;
-    sampler.initializeBasicType(samplerType);
-    symbolTable.setDefaultPrecision(sampler, EbpLow);
+    symbolTable.setDefaultPrecision(samplerType, EbpLow);
 }
 
 void TCompiler::setResourceString()
