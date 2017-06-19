@@ -211,7 +211,9 @@ class TextureGL : public TextureImpl
                                  GLenum value,
                                  GLenum *outValue);
 
-    void setLevelInfo(size_t level, size_t levelCount, const LevelInfoGL &levelInfo);
+    void setLevelInfo(GLenum target, size_t level, size_t levelCount, const LevelInfoGL &levelInfo);
+    const LevelInfoGL &getLevelInfo(GLenum target, size_t level) const;
+    const LevelInfoGL &getBaseLevelInfo() const;
 
     const FunctionsGL *mFunctions;
     const WorkaroundsGL &mWorkarounds;

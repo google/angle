@@ -31,6 +31,13 @@ namespace rx
 namespace
 {
 
+size_t GetLevelInfoIndex(GLenum target, size_t level)
+{
+    return gl::IsCubeMapTextureTarget(target)
+               ? ((level * 6) + gl::CubeMapTextureTargetToLayerIndex(target))
+               : level;
+}
+
 bool UseTexImage2D(GLenum textureType)
 {
     return textureType == GL_TEXTURE_2D || textureType == GL_TEXTURE_CUBE_MAP;
@@ -127,7 +134,7 @@ TextureGL::TextureGL(const gl::TextureState &state,
       mWorkarounds(workarounds),
       mStateManager(stateManager),
       mBlitter(blitter),
-      mLevelInfo(gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS + 1),
+      mLevelInfo(),
       mAppliedSwizzle(state.getSwizzleState()),
       mAppliedSampler(state.getSamplerState()),
       mAppliedBaseLevel(state.getEffectiveBaseLevel()),
@@ -140,6 +147,8 @@ TextureGL::TextureGL(const gl::TextureState &state,
 
     mFunctions->genTextures(1, &mTextureID);
     mStateManager->bindTexture(getTarget(), mTextureID);
+    mLevelInfo.resize((gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS + 1) *
+                      (getTarget() == GL_TEXTURE_CUBE_MAP ? 6 : 1));
 }
 
 TextureGL::~TextureGL()
@@ -235,7 +244,7 @@ void TextureGL::setImageHelper(GLenum target,
         UNREACHABLE();
     }
 
-    setLevelInfo(level, 1, GetLevelInfo(internalFormat, texImageFormat.internalFormat));
+    setLevelInfo(target, level, 1, GetLevelInfo(internalFormat, texImageFormat.internalFormat));
 }
 
 void TextureGL::reserveTexImageToBeFilled(GLenum target,
@@ -264,7 +273,7 @@ gl::Error TextureGL::setSubImage(const gl::Context *context,
     nativegl::TexSubImageFormat texSubImageFormat =
         nativegl::GetTexSubImageFormat(mFunctions, mWorkarounds, format, type);
 
-    ASSERT(mLevelInfo[level].lumaWorkaround.enabled ==
+    ASSERT(getLevelInfo(target, level).lumaWorkaround.enabled ==
            GetLevelInfo(format, texSubImageFormat.format).lumaWorkaround.enabled);
 
     mStateManager->bindTexture(getTarget(), mTextureID);
@@ -482,8 +491,9 @@ gl::Error TextureGL::setCompressedImage(const gl::Context *context,
         UNREACHABLE();
     }
 
-    setLevelInfo(level, 1, GetLevelInfo(internalFormat, compressedTexImageFormat.internalFormat));
-    ASSERT(!mLevelInfo[level].lumaWorkaround.enabled);
+    LevelInfoGL levelInfo = GetLevelInfo(internalFormat, compressedTexImageFormat.internalFormat);
+    ASSERT(!levelInfo.lumaWorkaround.enabled);
+    setLevelInfo(target, level, 1, levelInfo);
 
     return gl::NoError();
 }
@@ -522,7 +532,7 @@ gl::Error TextureGL::setCompressedSubImage(const gl::Context *context,
         UNREACHABLE();
     }
 
-    ASSERT(!mLevelInfo[level].lumaWorkaround.enabled &&
+    ASSERT(!getLevelInfo(target, level).lumaWorkaround.enabled &&
            !GetLevelInfo(format, compressedTexSubImageFormat.format).lumaWorkaround.enabled);
 
     return gl::NoError();
@@ -569,7 +579,7 @@ gl::Error TextureGL::copyImage(const gl::Context *context,
         }
     }
 
-    setLevelInfo(level, 1, levelInfo);
+    setLevelInfo(target, level, 1, levelInfo);
 
     return gl::NoError();
 }
@@ -586,7 +596,7 @@ gl::Error TextureGL::copySubImage(const gl::Context *context,
     mStateManager->bindTexture(getTarget(), mTextureID);
     mStateManager->bindFramebuffer(GL_READ_FRAMEBUFFER, sourceFramebufferGL->getFramebufferID());
 
-    const LevelInfoGL &levelInfo = mLevelInfo[level];
+    const LevelInfoGL &levelInfo = getLevelInfo(target, level);
     if (levelInfo.lumaWorkaround.enabled)
     {
         gl::Error error = mBlitter->copySubImageToLUMAWorkaroundTexture(
@@ -677,7 +687,9 @@ gl::Error TextureGL::copySubTextureHelper(GLenum target,
         sourceGL->mState.getImageDesc(source->getTarget(), sourceLevel);
 
     // Check is this is a simple copySubTexture that can be done with a copyTexSubImage
-    bool needsLumaWorkaround = sourceGL->mLevelInfo[sourceLevel].lumaWorkaround.enabled;
+    ASSERT(sourceGL->getTarget() == GL_TEXTURE_2D);
+    const LevelInfoGL &sourceLevelInfo = sourceGL->getLevelInfo(source->getTarget(), sourceLevel);
+    bool needsLumaWorkaround           = sourceLevelInfo.lumaWorkaround.enabled;
 
     GLenum sourceFormat = sourceImageDesc.format.info->format;
     bool sourceFormatContainSupersetOfDestFormat =
@@ -693,10 +705,10 @@ gl::Error TextureGL::copySubTextureHelper(GLenum target,
     }
 
     // We can't use copyTexSubImage, do a manual copy
-    return mBlitter->copySubTexture(
-        sourceGL, sourceLevel, this, target, level, sourceImageDesc.size, sourceArea, destOffset,
-        needsLumaWorkaround, sourceGL->mLevelInfo[sourceLevel].sourceFormat, unpackFlipY,
-        unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
+    return mBlitter->copySubTexture(sourceGL, sourceLevel, this, target, level,
+                                    sourceImageDesc.size, sourceArea, destOffset,
+                                    needsLumaWorkaround, sourceLevelInfo.sourceFormat, unpackFlipY,
+                                    unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
 }
 
 gl::Error TextureGL::setStorage(const gl::Context *context,
@@ -860,7 +872,7 @@ gl::Error TextureGL::setStorage(const gl::Context *context,
         UNREACHABLE();
     }
 
-    setLevelInfo(0, levels, GetLevelInfo(internalFormat, texStorageFormat.internalFormat));
+    setLevelInfo(target, 0, levels, GetLevelInfo(internalFormat, texStorageFormat.internalFormat));
 
     return gl::NoError();
 }
@@ -882,7 +894,7 @@ gl::Error TextureGL::setStorageMultisample(const gl::Context *context,
     mFunctions->texStorage2DMultisample(target, samples, texStorageFormat.internalFormat,
                                         size.width, size.height, fixedSampleLocations);
 
-    setLevelInfo(0, 1, GetLevelInfo(internalFormat, texStorageFormat.internalFormat));
+    setLevelInfo(target, 0, 1, GetLevelInfo(internalFormat, texStorageFormat.internalFormat));
 
     return gl::NoError();
 }
@@ -903,9 +915,8 @@ gl::Error TextureGL::generateMipmap(const gl::Context *context)
     const GLuint effectiveBaseLevel = mState.getEffectiveBaseLevel();
     const GLuint maxLevel           = mState.getMipmapMaxLevel();
 
-    ASSERT(maxLevel < mLevelInfo.size());
-
-    setLevelInfo(effectiveBaseLevel, maxLevel - effectiveBaseLevel, mLevelInfo[effectiveBaseLevel]);
+    setLevelInfo(getTarget(), effectiveBaseLevel, maxLevel - effectiveBaseLevel,
+                 getBaseLevelInfo());
 
     return gl::NoError();
 }
@@ -917,7 +928,7 @@ void TextureGL::bindTexImage(egl::Surface *surface)
     // Make sure this texture is bound
     mStateManager->bindTexture(getTarget(), mTextureID);
 
-    setLevelInfo(0, 1, LevelInfoGL());
+    setLevelInfo(getTarget(), 0, 1, LevelInfoGL());
 }
 
 void TextureGL::releaseTexImage()
@@ -1117,7 +1128,7 @@ void TextureGL::syncTextureStateSwizzle(const FunctionsGL *functions,
                                         GLenum value,
                                         GLenum *outValue)
 {
-    const LevelInfoGL &levelInfo = mLevelInfo[mState.getEffectiveBaseLevel()];
+    const LevelInfoGL &levelInfo = getBaseLevelInfo();
     GLenum resultSwizzle         = value;
     if (levelInfo.lumaWorkaround.enabled || levelInfo.depthStencilWorkaround)
     {
@@ -1227,9 +1238,12 @@ void TextureGL::syncTextureStateSwizzle(const FunctionsGL *functions,
     functions->texParameteri(getTarget(), name, resultSwizzle);
 }
 
-void TextureGL::setLevelInfo(size_t level, size_t levelCount, const LevelInfoGL &levelInfo)
+void TextureGL::setLevelInfo(GLenum target,
+                             size_t level,
+                             size_t levelCount,
+                             const LevelInfoGL &levelInfo)
 {
-    ASSERT(levelCount > 0 && level + levelCount < mLevelInfo.size());
+    ASSERT(levelCount > 0);
 
     GLuint baseLevel              = mState.getEffectiveBaseLevel();
     bool needsResync              = level <= baseLevel && level + levelCount >= baseLevel &&
@@ -1241,8 +1255,37 @@ void TextureGL::setLevelInfo(size_t level, size_t levelCount, const LevelInfoGL 
 
     for (size_t i = level; i < level + levelCount; i++)
     {
-        mLevelInfo[i] = levelInfo;
+        if (target == GL_TEXTURE_CUBE_MAP)
+        {
+            for (GLenum face = gl::FirstCubeMapTextureTarget; face <= gl::LastCubeMapTextureTarget;
+                 face++)
+            {
+                size_t index = GetLevelInfoIndex(face, level);
+                ASSERT(index < mLevelInfo.size());
+                mLevelInfo[index] = levelInfo;
+            }
+        }
+        else
+        {
+            size_t index = GetLevelInfoIndex(target, level);
+            ASSERT(index < mLevelInfo.size());
+            mLevelInfo[index] = levelInfo;
+        }
     }
+}
+
+const LevelInfoGL &TextureGL::getLevelInfo(GLenum target, size_t level) const
+{
+    ASSERT(target != GL_TEXTURE_CUBE_MAP);
+    return mLevelInfo[GetLevelInfoIndex(target, level)];
+}
+
+const LevelInfoGL &TextureGL::getBaseLevelInfo() const
+{
+    GLint effectiveBaseLevel = mState.getEffectiveBaseLevel();
+    GLenum target =
+        getTarget() == GL_TEXTURE_CUBE_MAP ? gl::FirstCubeMapTextureTarget : getTarget();
+    return getLevelInfo(target, effectiveBaseLevel);
 }
 
 GLuint TextureGL::getTextureID() const
