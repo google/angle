@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "1db6dad8_099ddf7b",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-20T12:41:44Z",
+      "side": 1,
+      "message": "I think it does not need to simple it. IsImage function will be called when type is not a image type.If simple and type is not 3D image type, would need call IsImage function.",
+      "parentUuid": "ae63e3d3_907db47b",
+      "range": {
+        "startLine": 505,
+        "startChar": 1,
+        "endLine": 528,
+        "endChar": 1
+      },
+      "revId": "8769666a555cd666d08d33298b5c47b06fbedf35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "506e0aa3_b8993f4e",
         "filename": "src/compiler/translator/BaseTypes.h",
         "patchSetId": 5
@@ -95,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "d8502dbc_3a774e17",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-20T12:41:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "27b01ac9_3a1637b9",
+      "range": {
+        "startLine": 6,
+        "startChar": 3,
+        "endLine": 6,
+        "endChar": 10
+      },
+      "revId": "8769666a555cd666d08d33298b5c47b06fbedf35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d879e3c_04708f13",
         "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
         "patchSetId": 5
@@ -129,6 +177,24 @@
     },
     {
       "key": {
+        "uuid": "b09ff402_9febaa4a",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-20T12:41:44Z",
+      "side": 1,
+      "message": "The full name will be like \"gl_image2D_float4_Size\"? Do you think it is OK?",
+      "parentUuid": "4835bccc_ff91c7b9",
+      "revId": "8769666a555cd666d08d33298b5c47b06fbedf35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dfd68137_8b16f2ea",
         "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
         "patchSetId": 5
@@ -149,6 +215,30 @@
       "revId": "8769666a555cd666d08d33298b5c47b06fbedf35",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3b8421d_e2699d1e",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-20T12:41:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dfd68137_8b16f2ea",
+      "range": {
+        "startLine": 316,
+        "startChar": 0,
+        "endLine": 316,
+        "endChar": 64
+      },
+      "revId": "8769666a555cd666d08d33298b5c47b06fbedf35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -175,6 +265,30 @@
     },
     {
       "key": {
+        "uuid": "71541c41_58aa1a1f",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-20T12:41:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f4711e3f_997987f9",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 10
+      },
+      "revId": "8769666a555cd666d08d33298b5c47b06fbedf35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a17432f2_5e565f4c",
         "filename": "src/compiler/translator/ImageFunctionHLSL.h",
         "patchSetId": 5
@@ -198,6 +312,30 @@
     },
     {
       "key": {
+        "uuid": "c0ec1881_caa0d0da",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-20T12:41:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a17432f2_5e565f4c",
+      "range": {
+        "startLine": 52,
+        "startChar": 64,
+        "endLine": 52,
+        "endChar": 68
+      },
+      "revId": "8769666a555cd666d08d33298b5c47b06fbedf35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a50f637d_bcfb470b",
         "filename": "src/compiler/translator/ImageFunctionHLSL.h",
         "patchSetId": 5
@@ -218,6 +356,30 @@
       "revId": "8769666a555cd666d08d33298b5c47b06fbedf35",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3358194f_b89a46f1",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-20T12:41:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a50f637d_bcfb470b",
+      "range": {
+        "startLine": 62,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 53
+      },
+      "revId": "8769666a555cd666d08d33298b5c47b06fbedf35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -301,6 +463,24 @@
       "writtenOn": "2017-06-15T08:11:11Z",
       "side": 1,
       "message": "Prefer some compiler test cases to show HLSL code can be correctly generated.",
+      "revId": "8769666a555cd666d08d33298b5c47b06fbedf35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "236ae3ec_38cca246",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-20T12:41:44Z",
+      "side": 1,
+      "message": "As we talked offline, I think the cases are enough.",
+      "parentUuid": "49231149_d7badf84",
       "revId": "8769666a555cd666d08d33298b5c47b06fbedf35",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
