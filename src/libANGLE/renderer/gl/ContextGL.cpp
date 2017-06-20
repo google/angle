@@ -170,10 +170,9 @@ gl::Error ContextGL::drawElements(const gl::Context *context,
                                   GLenum mode,
                                   GLsizei count,
                                   GLenum type,
-                                  const void *indices,
-                                  const gl::IndexRange &indexRange)
+                                  const void *indices)
 {
-    return mRenderer->drawElements(context, mode, count, type, indices, indexRange);
+    return mRenderer->drawElements(context, mode, count, type, indices);
 }
 
 gl::Error ContextGL::drawElementsInstanced(const gl::Context *context,
@@ -181,11 +180,9 @@ gl::Error ContextGL::drawElementsInstanced(const gl::Context *context,
                                            GLsizei count,
                                            GLenum type,
                                            const void *indices,
-                                           GLsizei instances,
-                                           const gl::IndexRange &indexRange)
+                                           GLsizei instances)
 {
-    return mRenderer->drawElementsInstanced(context, mode, count, type, indices, instances,
-                                            indexRange);
+    return mRenderer->drawElementsInstanced(context, mode, count, type, indices, instances);
 }
 
 gl::Error ContextGL::drawRangeElements(const gl::Context *context,
@@ -194,11 +191,9 @@ gl::Error ContextGL::drawRangeElements(const gl::Context *context,
                                        GLuint end,
                                        GLsizei count,
                                        GLenum type,
-                                       const void *indices,
-                                       const gl::IndexRange &indexRange)
+                                       const void *indices)
 {
-    return mRenderer->drawRangeElements(context, mode, start, end, count, type, indices,
-                                        indexRange);
+    return mRenderer->drawRangeElements(context, mode, start, end, count, type, indices);
 }
 
 gl::Error ContextGL::drawArraysIndirect(const gl::Context *context,

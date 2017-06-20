@@ -153,10 +153,9 @@ gl::Error Context9::drawElements(const gl::Context *context,
                                  GLenum mode,
                                  GLsizei count,
                                  GLenum type,
-                                 const void *indices,
-                                 const gl::IndexRange &indexRange)
+                                 const void *indices)
 {
-    return mRenderer->genericDrawElements(context, mode, count, type, indices, 0, indexRange);
+    return mRenderer->genericDrawElements(context, mode, count, type, indices, 0);
 }
 
 gl::Error Context9::drawElementsInstanced(const gl::Context *context,
@@ -164,11 +163,9 @@ gl::Error Context9::drawElementsInstanced(const gl::Context *context,
                                           GLsizei count,
                                           GLenum type,
                                           const void *indices,
-                                          GLsizei instances,
-                                          const gl::IndexRange &indexRange)
+                                          GLsizei instances)
 {
-    return mRenderer->genericDrawElements(context, mode, count, type, indices, instances,
-                                          indexRange);
+    return mRenderer->genericDrawElements(context, mode, count, type, indices, instances);
 }
 
 gl::Error Context9::drawRangeElements(const gl::Context *context,
@@ -177,10 +174,9 @@ gl::Error Context9::drawRangeElements(const gl::Context *context,
                                       GLuint end,
                                       GLsizei count,
                                       GLenum type,
-                                      const void *indices,
-                                      const gl::IndexRange &indexRange)
+                                      const void *indices)
 {
-    return mRenderer->genericDrawElements(context, mode, count, type, indices, 0, indexRange);
+    return mRenderer->genericDrawElements(context, mode, count, type, indices, 0);
 }
 
 gl::Error Context9::drawArraysIndirect(const gl::Context *context,

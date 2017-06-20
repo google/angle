@@ -404,8 +404,7 @@ class Renderer11 : public RendererD3D
                                   GLsizei count,
                                   GLenum type,
                                   const void *indices,
-                                  GLsizei instances,
-                                  const gl::IndexRange &indexRange);
+                                  GLsizei instances);
 
     gl::Error genericDrawIndirect(const gl::Context *context,
                                   GLenum mode,
@@ -471,14 +470,17 @@ class Renderer11 : public RendererD3D
     gl::Error clearRenderTarget(RenderTargetD3D *renderTarget,
                                 const gl::ColorF &clearValues) override;
 
+  protected:
+    // Support direct drawing with the drawing parameters.
+    bool supportsDirectDrawing(const gl::Context *context, GLenum mode, GLenum type) const override;
+
   private:
     gl::Error drawArraysImpl(const gl::Context *context,
                              GLenum mode,
                              GLint startVertex,
                              GLsizei count,
                              GLsizei instances);
-    gl::Error drawElementsImpl(const gl::ContextState &data,
-                               const TranslatedIndexData &indexInfo,
+    gl::Error drawElementsImpl(const gl::Context *context,
                                GLenum mode,
                                GLsizei count,
                                GLenum type,
@@ -489,9 +491,6 @@ class Renderer11 : public RendererD3D
                                        GLenum mode,
                                        GLenum type,
                                        const void *indirect);
-
-    // Support directly using indirect draw buffer.
-    bool supportsFastIndirectDraw(const gl::Context *context, GLenum mode, GLenum type);
 
     void generateCaps(gl::Caps *outCaps,
                       gl::TextureCapsMap *outTextureCaps,

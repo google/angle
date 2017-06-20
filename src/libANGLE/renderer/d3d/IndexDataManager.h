@@ -69,9 +69,7 @@ class IndexDataManager : angle::NonCopyable
     virtual ~IndexDataManager();
 
     bool usePrimitiveRestartWorkaround(bool primitiveRestartFixedIndexEnabled, GLenum type);
-    bool isStreamingIndexData(bool primitiveRestartWorkaround,
-                              GLenum srcType,
-                              gl::Buffer *glBuffer);
+    bool isStreamingIndexData(const gl::Context *context, GLenum srcType);
     gl::Error prepareIndexData(GLenum srcType,
                                GLsizei count,
                                gl::Buffer *glBuffer,

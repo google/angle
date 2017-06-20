@@ -293,6 +293,12 @@ Serial RendererD3D::generateSerial()
     return mSerialFactory.generate();
 }
 
+bool RendererD3D::instancedPointSpritesActive(ProgramD3D *programD3D, GLenum mode) const
+{
+    return programD3D->usesPointSize() && programD3D->usesInstancedPointSpriteEmulation() &&
+           mode == GL_POINTS;
+}
+
 unsigned int GetBlendSampleMask(const gl::State &glState, int samples)
 {
     unsigned int mask   = 0;

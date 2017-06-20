@@ -51,23 +51,20 @@ class ContextImpl : public GLImplFactory
                                    GLenum mode,
                                    GLsizei count,
                                    GLenum type,
-                                   const void *indices,
-                                   const gl::IndexRange &indexRange) = 0;
+                                   const void *indices) = 0;
     virtual gl::Error drawElementsInstanced(const gl::Context *context,
                                             GLenum mode,
                                             GLsizei count,
                                             GLenum type,
                                             const void *indices,
-                                            GLsizei instances,
-                                            const gl::IndexRange &indexRange) = 0;
+                                            GLsizei instances) = 0;
     virtual gl::Error drawRangeElements(const gl::Context *context,
                                         GLenum mode,
                                         GLuint start,
                                         GLuint end,
                                         GLsizei count,
                                         GLenum type,
-                                        const void *indices,
-                                        const gl::IndexRange &indexRange) = 0;
+                                        const void *indices) = 0;
 
     virtual gl::Error drawArraysIndirect(const gl::Context *context,
                                          GLenum mode,

@@ -62,23 +62,20 @@ class RendererGL : angle::NonCopyable
                            GLenum mode,
                            GLsizei count,
                            GLenum type,
-                           const void *indices,
-                           const gl::IndexRange &indexRange);
+                           const void *indices);
     gl::Error drawElementsInstanced(const gl::Context *context,
                                     GLenum mode,
                                     GLsizei count,
                                     GLenum type,
                                     const void *indices,
-                                    GLsizei instances,
-                                    const gl::IndexRange &indexRange);
+                                    GLsizei instances);
     gl::Error drawRangeElements(const gl::Context *context,
                                 GLenum mode,
                                 GLuint start,
                                 GLuint end,
                                 GLsizei count,
                                 GLenum type,
-                                const void *indices,
-                                const gl::IndexRange &indexRange);
+                                const void *indices);
     gl::Error drawArraysIndirect(const gl::Context *context, GLenum mode, const void *indirect);
     gl::Error drawElementsIndirect(const gl::Context *context,
                                    GLenum mode,

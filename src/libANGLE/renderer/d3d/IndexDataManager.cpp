@@ -11,6 +11,8 @@
 
 #include "common/utilities.h"
 #include "libANGLE/Buffer.h"
+#include "libANGLE/Context.h"
+#include "libANGLE/VertexArray.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/d3d/BufferD3D.h"
 #include "libANGLE/renderer/d3d/IndexBuffer.h"
@@ -146,11 +148,12 @@ bool IndexDataManager::usePrimitiveRestartWorkaround(bool primitiveRestartFixedI
             mRendererClass == RENDERER_D3D11);
 }
 
-bool IndexDataManager::isStreamingIndexData(bool primitiveRestartWorkaround,
-                                            GLenum srcType,
-                                            gl::Buffer *glBuffer)
+bool IndexDataManager::isStreamingIndexData(const gl::Context *context, GLenum srcType)
 {
-    BufferD3D *buffer = glBuffer ? GetImplAs<BufferD3D>(glBuffer) : nullptr;
+    const auto &glState = context->getGLState();
+    bool primitiveRestartWorkaround =
+        usePrimitiveRestartWorkaround(glState.isPrimitiveRestartEnabled(), srcType);
+    gl::Buffer *glBuffer = glState.getVertexArray()->getElementArrayBuffer().get();
 
     // Case 1: the indices are passed by pointer, which forces the streaming of index data
     if (glBuffer == nullptr)
@@ -158,6 +161,7 @@ bool IndexDataManager::isStreamingIndexData(bool primitiveRestartWorkaround,
         return true;
     }
 
+    BufferD3D *buffer    = GetImplAs<BufferD3D>(glBuffer);
     const GLenum dstType = (srcType == GL_UNSIGNED_INT || primitiveRestartWorkaround)
                                ? GL_UNSIGNED_INT
                                : GL_UNSIGNED_SHORT;
@@ -175,7 +179,7 @@ bool IndexDataManager::isStreamingIndexData(bool primitiveRestartWorkaround,
         return true;
     }
 
-    if ((staticBuffer->getBufferSize() != 0) && (staticBuffer->getIndexType() != dstType))
+    if ((staticBuffer->getBufferSize() == 0) || (staticBuffer->getIndexType() != dstType))
     {
         return true;
     }

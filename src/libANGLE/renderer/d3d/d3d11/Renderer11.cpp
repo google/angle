@@ -1792,14 +1792,43 @@ gl::Error Renderer11::drawArraysImpl(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::Error Renderer11::drawElementsImpl(const gl::ContextState &data,
-                                       const TranslatedIndexData &indexInfo,
+gl::Error Renderer11::drawElementsImpl(const gl::Context *context,
                                        GLenum mode,
                                        GLsizei count,
                                        GLenum type,
                                        const void *indices,
                                        GLsizei instances)
 {
+    const auto &data = context->getContextState();
+    TranslatedIndexData indexInfo;
+
+    if (supportsDirectDrawing(context, mode, type))
+    {
+        ANGLE_TRY(applyIndexBuffer(data, nullptr, 0, mode, type, &indexInfo));
+        ANGLE_TRY(applyVertexBuffer(context, mode, 0, 0, 0, &indexInfo));
+        const gl::Type &typeInfo = gl::GetTypeInfo(type);
+        unsigned int startIndexLocation =
+            static_cast<unsigned int>(reinterpret_cast<const uintptr_t>(indices)) / typeInfo.bytes;
+        if (instances > 0)
+        {
+            mDeviceContext->DrawIndexedInstanced(count, instances, startIndexLocation, 0, 0);
+        }
+        else
+        {
+            mDeviceContext->DrawIndexed(count, startIndexLocation, 0);
+        }
+        return gl::NoError();
+    }
+
+    const gl::IndexRange &indexRange =
+        context->getParams<gl::HasIndexRange>().getIndexRange().value();
+    indexInfo.indexRange = indexRange;
+
+    ANGLE_TRY(applyIndexBuffer(data, indices, count, mode, type, &indexInfo));
+    size_t vertexCount = indexInfo.indexRange.vertexCount();
+    ANGLE_TRY(applyVertexBuffer(context, mode, static_cast<GLsizei>(indexInfo.indexRange.start),
+                                static_cast<GLsizei>(vertexCount), instances, &indexInfo));
+
     int startVertex = static_cast<int>(indexInfo.indexRange.start);
     int baseVertex  = -startVertex;
 
@@ -1863,12 +1892,12 @@ gl::Error Renderer11::drawElementsImpl(const gl::ContextState &data,
     return gl::NoError();
 }
 
-bool Renderer11::supportsFastIndirectDraw(const gl::Context *context, GLenum mode, GLenum type)
+bool Renderer11::supportsDirectDrawing(const gl::Context *context, GLenum mode, GLenum type) const
 {
     const auto &glState     = context->getGLState();
     const auto &vertexArray = glState.getVertexArray();
     auto *vertexArray11     = GetImplAs<VertexArray11>(vertexArray);
-    // Indirect drawing doesn't support dynamic attribute storage since it needs the first and count
+    // Direct drawing doesn't support dynamic attribute storage since it needs the first and count
     // to translate when applyVertexBuffer. GL_LINE_LOOP and GL_TRIANGLE_FAN are not supported
     // either since we need to simulate them in D3D.
     if (vertexArray11->hasDynamicAttrib(context) || mode == GL_LINE_LOOP || mode == GL_TRIANGLE_FAN)
@@ -1876,18 +1905,17 @@ bool Renderer11::supportsFastIndirectDraw(const gl::Context *context, GLenum mod
         return false;
     }
 
+    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(glState.getProgram());
+    if (instancedPointSpritesActive(programD3D, mode))
+    {
+        return false;
+    }
+
     if (type != GL_NONE)
     {
-        gl::Buffer *elementArrayBuffer = vertexArray->getElementArrayBuffer().get();
-        ASSERT(elementArrayBuffer);
-        // Only non-streaming index data can be directly used to do indirect draw since they don't
-        // need the indices and count informations. Here we don't check whether it really has
-        // primitive restart index in it since it also needs to know the index range and count.
-        // So, for all other situations, we fall back to normal draw instead of indirect draw.
-        bool primitiveRestartWorkaround = mIndexDataManager->usePrimitiveRestartWorkaround(
-            glState.isPrimitiveRestartEnabled(), type);
-        return !mIndexDataManager->isStreamingIndexData(primitiveRestartWorkaround, type,
-                                                        elementArrayBuffer);
+        // Only non-streaming index data can be directly used to draw since they don't
+        // need the indices and count informations.
+        return !mIndexDataManager->isStreamingIndexData(context, type);
     }
     return true;
 }
@@ -1908,7 +1936,7 @@ gl::Error Renderer11::drawArraysIndirectImpl(const gl::Context *context,
     Buffer11 *storage = GetImplAs<Buffer11>(drawIndirectBuffer);
     uintptr_t offset  = reinterpret_cast<uintptr_t>(indirect);
 
-    if (supportsFastIndirectDraw(context, mode, GL_NONE))
+    if (supportsDirectDrawing(context, mode, GL_NONE))
     {
         applyVertexBuffer(context, mode, 0, 0, 0, nullptr);
         ID3D11Buffer *buffer = nullptr;
@@ -1959,7 +1987,7 @@ gl::Error Renderer11::drawElementsIndirectImpl(const gl::Context *context,
     uintptr_t offset  = reinterpret_cast<uintptr_t>(indirect);
 
     TranslatedIndexData indexInfo;
-    if (supportsFastIndirectDraw(context, mode, type))
+    if (supportsDirectDrawing(context, mode, type))
     {
         ANGLE_TRY(applyIndexBuffer(contextState, nullptr, 0, mode, type, &indexInfo));
         ANGLE_TRY(applyVertexBuffer(context, mode, 0, 0, 0, &indexInfo));
@@ -4229,8 +4257,7 @@ gl::Error Renderer11::genericDrawElements(const gl::Context *context,
                                           GLsizei count,
                                           GLenum type,
                                           const void *indices,
-                                          GLsizei instances,
-                                          const gl::IndexRange &indexRange)
+                                          GLsizei instances)
 {
     const auto &data     = context->getContextState();
     const auto &glState  = data.getState();
@@ -4250,24 +4277,16 @@ gl::Error Renderer11::genericDrawElements(const gl::Context *context,
 
     ANGLE_TRY(mStateManager.updateState(context, mode));
 
-    TranslatedIndexData indexInfo;
-    indexInfo.indexRange = indexRange;
-
-    ANGLE_TRY(applyIndexBuffer(data, indices, count, mode, type, &indexInfo));
-
     applyTransformFeedbackBuffers(data);
     // Transform feedback is not allowed for DrawElements, this error should have been caught at the
     // API validation layer.
     ASSERT(!glState.isTransformFeedbackActiveUnpaused());
 
-    size_t vertexCount = indexInfo.indexRange.vertexCount();
-    ANGLE_TRY(applyVertexBuffer(context, mode, static_cast<GLsizei>(indexInfo.indexRange.start),
-                                static_cast<GLsizei>(vertexCount), instances, &indexInfo));
     ANGLE_TRY(programD3D->applyUniformBuffers(data));
 
     if (!skipDraw(data, mode))
     {
-        ANGLE_TRY(drawElementsImpl(data, indexInfo, mode, count, type, indices, instances));
+        ANGLE_TRY(drawElementsImpl(context, mode, count, type, indices, instances));
     }
 
     return gl::NoError();

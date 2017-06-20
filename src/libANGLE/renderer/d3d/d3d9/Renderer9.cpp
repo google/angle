@@ -1412,14 +1412,24 @@ gl::Error Renderer9::drawArraysImpl(const gl::ContextState &data,
     }
 }
 
-gl::Error Renderer9::drawElementsImpl(const gl::ContextState &data,
-                                      const TranslatedIndexData &indexInfo,
+gl::Error Renderer9::drawElementsImpl(const gl::Context *context,
                                       GLenum mode,
                                       GLsizei count,
                                       GLenum type,
                                       const void *indices,
-                                      GLsizei /*instances*/)
+                                      GLsizei instances)
 {
+    const auto &data = context->getContextState();
+    TranslatedIndexData indexInfo;
+    const gl::IndexRange &indexRange =
+        context->getParams<gl::HasIndexRange>().getIndexRange().value();
+    indexInfo.indexRange = indexRange;
+    ANGLE_TRY(applyIndexBuffer(data, indices, count, mode, type, &indexInfo));
+    size_t vertexCount = indexInfo.indexRange.vertexCount();
+    ANGLE_TRY(applyVertexBuffer(data.getState(), mode,
+                                static_cast<GLsizei>(indexInfo.indexRange.start),
+                                static_cast<GLsizei>(vertexCount), instances, &indexInfo));
+
     startScene();
 
     int minIndex = static_cast<int>(indexInfo.indexRange.start);
@@ -1437,7 +1447,6 @@ gl::Error Renderer9::drawElementsImpl(const gl::ContextState &data,
     }
     else
     {
-        size_t vertexCount = indexInfo.indexRange.vertexCount();
         for (int i = 0; i < mRepeatDraw; i++)
         {
             mDevice->DrawIndexedPrimitive(mPrimitiveType, -minIndex, minIndex,
@@ -3112,8 +3121,7 @@ gl::Error Renderer9::genericDrawElements(const gl::Context *context,
                                          GLsizei count,
                                          GLenum type,
                                          const void *indices,
-                                         GLsizei instances,
-                                         const gl::IndexRange &indexRange)
+                                         GLsizei instances)
 {
     const auto &data     = context->getContextState();
     gl::Program *program = context->getGLState().getProgram();
@@ -3130,10 +3138,7 @@ gl::Error Renderer9::genericDrawElements(const gl::Context *context,
 
     ANGLE_TRY(updateState(context, mode));
 
-    TranslatedIndexData indexInfo;
-    indexInfo.indexRange = indexRange;
 
-    ANGLE_TRY(applyIndexBuffer(data, indices, count, mode, type, &indexInfo));
 
     applyTransformFeedbackBuffers(data.getState());
     // Transform feedback is not allowed for DrawElements, this error should have been caught at the
@@ -3141,17 +3146,13 @@ gl::Error Renderer9::genericDrawElements(const gl::Context *context,
     // layer.
     ASSERT(!data.getState().isTransformFeedbackActiveUnpaused());
 
-    size_t vertexCount = indexInfo.indexRange.vertexCount();
-    ANGLE_TRY(applyVertexBuffer(data.getState(), mode,
-                                static_cast<GLsizei>(indexInfo.indexRange.start),
-                                static_cast<GLsizei>(vertexCount), instances, &indexInfo));
     ANGLE_TRY(applyTextures(context));
     ANGLE_TRY(applyShaders(context, mode));
     ANGLE_TRY(programD3D->applyUniformBuffers(data));
 
     if (!skipDraw(data, mode))
     {
-        ANGLE_TRY(drawElementsImpl(data, indexInfo, mode, count, type, indices, instances));
+        ANGLE_TRY(drawElementsImpl(context, mode, count, type, indices, instances));
     }
 
     return gl::NoError();
@@ -3194,6 +3195,13 @@ gl::Error Renderer9::genericDrawArrays(const gl::Context *context,
     }
 
     return gl::NoError();
+}
+
+bool Renderer9::supportsDirectDrawing(const gl::Context *context, GLenum mode, GLenum type) const
+{
+    // TODO(jiajia.qin@intel.com): Add direct drawing for d3d9
+    UNIMPLEMENTED();
+    return false;
 }
 
 FramebufferImpl *Renderer9::createDefaultFramebuffer(const gl::FramebufferState &state)
