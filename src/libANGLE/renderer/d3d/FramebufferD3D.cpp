@@ -236,22 +236,34 @@ GLenum FramebufferD3D::getImplementationColorReadType(const gl::Context *context
 }
 
 gl::Error FramebufferD3D::readPixels(const gl::Context *context,
-                                     const gl::Rectangle &area,
+                                     const gl::Rectangle &origArea,
                                      GLenum format,
                                      GLenum type,
                                      void *pixels) const
 {
+    // Clip read area to framebuffer.
+    const gl::Extents fbSize = getState().getReadAttachment()->getSize();
+    const gl::Rectangle fbRect(0, 0, fbSize.width, fbSize.height);
+    gl::Rectangle area;
+    if (!ClipRectangle(origArea, fbRect, &area))
+    {
+        // nothing to read
+        return gl::NoError();
+    }
+
     const gl::PixelPackState &packState = context->getGLState().getPackState();
 
     const gl::InternalFormat &sizedFormatInfo = gl::GetInternalFormatInfo(format, type);
 
     GLuint outputPitch = 0;
-    ANGLE_TRY_RESULT(
-        sizedFormatInfo.computeRowPitch(type, area.width, packState.alignment, packState.rowLength),
-        outputPitch);
+    ANGLE_TRY_RESULT(sizedFormatInfo.computeRowPitch(type, origArea.width, packState.alignment,
+                                                     packState.rowLength),
+                     outputPitch);
     GLuint outputSkipBytes = 0;
     ANGLE_TRY_RESULT(sizedFormatInfo.computeSkipBytes(outputPitch, 0, packState, false),
                      outputSkipBytes);
+    outputSkipBytes +=
+        (area.x - origArea.x) * sizedFormatInfo.pixelBytes + (area.y - origArea.y) * outputPitch;
 
     return readPixelsImpl(context, area, format, type, outputPitch, packState,
                           reinterpret_cast<uint8_t *>(pixels) + outputSkipBytes);
