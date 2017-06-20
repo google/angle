@@ -14,7 +14,7 @@
 
 #include "ANGLEPerfTest.h"
 
-struct DrawCallPerfParams final : public RenderTestParams
+struct DrawCallPerfParams : public RenderTestParams
 {
     // Common default options
     DrawCallPerfParams()
@@ -24,6 +24,7 @@ struct DrawCallPerfParams final : public RenderTestParams
         windowWidth  = 256;
         windowHeight = 256;
     }
+    virtual ~DrawCallPerfParams() {}
 
     std::string suffix() const override;
 

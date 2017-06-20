@@ -24,6 +24,7 @@
             '<(angle_path)/src/tests/perf_tests/DrawCallPerf.cpp',
             '<(angle_path)/src/tests/perf_tests/DrawCallPerfParams.cpp',
             '<(angle_path)/src/tests/perf_tests/DrawCallPerfParams.h',
+            '<(angle_path)/src/tests/perf_tests/DrawElementsPerf.cpp',
             '<(angle_path)/src/tests/perf_tests/DynamicPromotionPerfTest.cpp',
             '<(angle_path)/src/tests/perf_tests/EGLInitializePerf.cpp',
             '<(angle_path)/src/tests/perf_tests/IndexConversionPerf.cpp',
