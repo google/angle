@@ -1,0 +1,153 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "463bef69_6756ec3d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-20T13:03:44Z",
+      "side": 1,
+      "message": "will make",
+      "range": {
+        "startLine": 9,
+        "startChar": 39,
+        "endLine": 9,
+        "endChar": 44
+      },
+      "revId": "a6dc270819f53cc39d4ab607d39619f0bcbab99f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "76050566_b8557d50",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 475,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-20T13:03:44Z",
+      "side": 1,
+      "message": "nit: I\u0027d find the code easier to read if it was reversed, \"isGLBuiltin\".",
+      "range": {
+        "startLine": 475,
+        "startChar": 15,
+        "endLine": 475,
+        "endChar": 29
+      },
+      "revId": "a6dc270819f53cc39d4ab607d39619f0bcbab99f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "59805ff6_4fcc9b93",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 476,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-20T13:03:44Z",
+      "side": 1,
+      "message": "Is this necessary or does IsVaryingOut() already imply vertex shader?",
+      "range": {
+        "startLine": 476,
+        "startChar": 44,
+        "endLine": 476,
+        "endChar": 75
+      },
+      "revId": "a6dc270819f53cc39d4ab607d39619f0bcbab99f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45680568_b1bcfbd5",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-20T13:03:44Z",
+      "side": 1,
+      "message": "angle_ isn\u0027t a reserved prefix in WebGL. So there could technically be a name conflict between this and a user-defined variable. It would be better to use webgl_angle_vert_output prefix for now. This can be cleaned up later once user-defined variables will get prefixes in ANGLE.",
+      "revId": "a6dc270819f53cc39d4ab607d39619f0bcbab99f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6703eaab_e95b4cad",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 481,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-20T13:03:44Z",
+      "side": 1,
+      "message": "!isGLBuiltin",
+      "range": {
+        "startLine": 481,
+        "startChar": 31,
+        "endLine": 481,
+        "endChar": 63
+      },
+      "revId": "a6dc270819f53cc39d4ab607d39619f0bcbab99f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "be597622_0bd9278a",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-20T13:03:44Z",
+      "side": 1,
+      "message": "Same as above with vertex shader.",
+      "range": {
+        "startLine": 482,
+        "startChar": 13,
+        "endLine": 482,
+        "endChar": 46
+      },
+      "revId": "a6dc270819f53cc39d4ab607d39619f0bcbab99f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92ee9c34_c2f507f4",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-20T13:03:44Z",
+      "side": 1,
+      "message": "Input/output variable names should still be hashed (the name should be prefix + hashed name) and array brackets should be applied when an input/output array is declared.",
+      "revId": "a6dc270819f53cc39d4ab607d39619f0bcbab99f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
