@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "52615aa3_43985612",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 887,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-20T17:35:50Z",
+      "side": 1,
+      "message": "nit: remove this clause... just:\n\nASSERT(data.getClientVersion() \u003e\u003d gl::ES_3_1 || program-\u003egetImageBindings().size() \u003d\u003d 0);",
+      "range": {
+        "startLine": 887,
+        "startChar": 11,
+        "endLine": 887,
+        "endChar": 59
+      },
+      "revId": "55414502f117d76aee2ae22c0b641b43544a2e11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
