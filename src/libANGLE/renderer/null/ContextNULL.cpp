@@ -276,7 +276,7 @@ GLint64 ContextNULL::getTimestamp()
     return 0;
 }
 
-void ContextNULL::onMakeCurrent(const gl::ContextState &data)
+void ContextNULL::onMakeCurrent(const gl::Context *context)
 {
 }
 

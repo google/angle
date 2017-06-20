@@ -60,7 +60,7 @@ TEST(ImageTest, RefCounting)
     EXPECT_CALL(*renderbufferImpl, setStorageEGLImageTarget(_))
         .WillOnce(Return(gl::NoError()))
         .RetiresOnSaturation();
-    renderbuffer->setStorageEGLImageTarget(image);
+    renderbuffer->setStorageEGLImageTarget(nullptr, image);
 
     // Verify that the renderbuffer added a ref to the image and the image did not add a ref to
     // the renderbuffer
@@ -70,14 +70,14 @@ TEST(ImageTest, RefCounting)
 
     // Simulate deletion of the texture and verify that it still exists because the image holds a
     // ref
-    texture->release();
+    texture->release(nullptr);
     EXPECT_EQ(1u, texture->getRefCount());
     EXPECT_EQ(2u, image->getRefCount());
     EXPECT_EQ(1u, renderbuffer->getRefCount());
 
     // Simulate deletion of the image and verify that it still exists because the renderbuffer holds
     // a ref
-    image->release();
+    image->release(nullptr);
     EXPECT_EQ(1u, texture->getRefCount());
     EXPECT_EQ(1u, image->getRefCount());
     EXPECT_EQ(1u, renderbuffer->getRefCount());
@@ -85,12 +85,12 @@ TEST(ImageTest, RefCounting)
     // Simulate deletion of the renderbuffer and verify that the deletion cascades to all objects
     rx::MockImageImpl *imageImpl = static_cast<rx::MockImageImpl *>(image->getImplementation());
     EXPECT_CALL(*imageImpl, destructor()).Times(1).RetiresOnSaturation();
-    EXPECT_CALL(*imageImpl, orphan(_)).WillOnce(Return(gl::NoError())).RetiresOnSaturation();
+    EXPECT_CALL(*imageImpl, orphan(_, _)).WillOnce(Return(gl::NoError())).RetiresOnSaturation();
 
     EXPECT_CALL(*textureImpl, destructor()).Times(1).RetiresOnSaturation();
     EXPECT_CALL(*renderbufferImpl, destructor()).Times(1).RetiresOnSaturation();
 
-    renderbuffer->release();
+    renderbuffer->release(nullptr);
 }
 
 // Verify that respecifiying textures releases references to the Image.
@@ -128,7 +128,7 @@ TEST(ImageTest, RespecificationReleasesReferences)
 
     // Respecify the texture and verify that the image releases its reference
     rx::MockImageImpl *imageImpl = static_cast<rx::MockImageImpl *>(image->getImplementation());
-    EXPECT_CALL(*imageImpl, orphan(_)).WillOnce(Return(gl::NoError())).RetiresOnSaturation();
+    EXPECT_CALL(*imageImpl, orphan(_, _)).WillOnce(Return(gl::NoError())).RetiresOnSaturation();
     EXPECT_CALL(*textureImpl, setImage(_, _, _, _, _, _, _, _, _))
         .WillOnce(Return(gl::NoError()))
         .RetiresOnSaturation();
@@ -141,12 +141,12 @@ TEST(ImageTest, RespecificationReleasesReferences)
 
     // Delete the texture and verify that the image still exists
     EXPECT_CALL(*textureImpl, destructor()).Times(1).RetiresOnSaturation();
-    texture->release();
+    texture->release(nullptr);
 
     EXPECT_EQ(1u, image->getRefCount());
 
     // Delete the image
     EXPECT_CALL(*imageImpl, destructor()).Times(1).RetiresOnSaturation();
-    image->release();
+    image->release(nullptr);
 }
 }  // namespace angle

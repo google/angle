@@ -176,7 +176,7 @@ Error Stream::createProducerD3D11TextureNV12(const AttributeMap &attributes)
 }
 
 // Called when the consumer of this stream starts using the stream
-Error Stream::consumerAcquire()
+Error Stream::consumerAcquire(const gl::Context *context)
 {
     ASSERT(mState == EGL_STREAM_STATE_NEW_FRAME_AVAILABLE_KHR ||
            mState == EGL_STREAM_STATE_OLD_FRAME_AVAILABLE_KHR);
@@ -193,14 +193,14 @@ Error Stream::consumerAcquire()
         if (mPlanes[i].texture != nullptr)
         {
             mPlanes[i].texture->acquireImageFromStream(
-                mProducerImplementation->getGLFrameDescription(i));
+                context, mProducerImplementation->getGLFrameDescription(i));
         }
     }
 
     return NoError();
 }
 
-Error Stream::consumerRelease()
+Error Stream::consumerRelease(const gl::Context *context)
 {
     ASSERT(mState == EGL_STREAM_STATE_NEW_FRAME_AVAILABLE_KHR ||
            mState == EGL_STREAM_STATE_OLD_FRAME_AVAILABLE_KHR);
@@ -213,7 +213,7 @@ Error Stream::consumerRelease()
     {
         if (mPlanes[i].texture != nullptr)
         {
-            mPlanes[i].texture->releaseImageFromStream();
+            mPlanes[i].texture->releaseImageFromStream(context);
         }
     }
 

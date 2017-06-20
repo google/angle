@@ -15,7 +15,7 @@
 namespace rx
 {
 
-class GlslangWrapper : public RefCountObjectNoID
+class GlslangWrapper : public gl::RefCountObjectNoID
 {
   public:
     // Increases the reference count.

@@ -528,11 +528,13 @@ Texture::Texture(rx::GLImplFactory *factory, GLuint id, GLenum target)
 {
 }
 
-Texture::~Texture()
+void Texture::onDestroy(const Context *context)
 {
     if (mBoundSurface)
     {
-        mBoundSurface->releaseTexImage(EGL_BACK_BUFFER);
+        auto eglErr = mBoundSurface->releaseTexImage(context, EGL_BACK_BUFFER);
+        // TODO(jmadill): handle error.
+        ASSERT(!eglErr.isError());
         mBoundSurface = nullptr;
     }
     if (mBoundStream)
@@ -540,7 +542,22 @@ Texture::~Texture()
         mBoundStream->releaseTextures();
         mBoundStream = nullptr;
     }
-    SafeDelete(mTexture);
+
+    auto err = orphanImages(context);
+    // TODO(jmadill): handle error.
+    ASSERT(!err.isError());
+
+    if (mTexture)
+    {
+        err = mTexture->onDestroy(context);
+        // TODO(jmadill): handle error.
+        ASSERT(!err.isError());
+        SafeDelete(mTexture);
+    }
+}
+
+Texture::~Texture()
+{
 }
 
 void Texture::setLabel(const std::string &label)
@@ -729,13 +746,15 @@ const SamplerState &Texture::getSamplerState() const
     return mState.mSamplerState;
 }
 
-void Texture::setBaseLevel(GLuint baseLevel)
+Error Texture::setBaseLevel(const Context *context, GLuint baseLevel)
 {
     if (mState.setBaseLevel(baseLevel))
     {
-        mTexture->setBaseLevel(mState.getEffectiveBaseLevel());
+        ANGLE_TRY(mTexture->setBaseLevel(context, mState.getEffectiveBaseLevel()));
         mDirtyBits.set(DIRTY_BIT_BASE_LEVEL);
     }
+
+    return NoError();
 }
 
 GLuint Texture::getBaseLevel() const
@@ -879,8 +898,8 @@ Error Texture::setImage(const Context *context,
            (mState.mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
 
     // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
-    releaseTexImageInternal();
-    orphanImages();
+    ANGLE_TRY(releaseTexImageInternal(context));
+    ANGLE_TRY(orphanImages(context));
 
     ANGLE_TRY(mTexture->setImage(context, target, level, internalFormat, size, format, type,
                                  unpackState, pixels));
@@ -918,8 +937,8 @@ Error Texture::setCompressedImage(const Context *context,
            (mState.mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
 
     // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
-    releaseTexImageInternal();
-    orphanImages();
+    ANGLE_TRY(releaseTexImageInternal(context));
+    ANGLE_TRY(orphanImages(context));
 
     ANGLE_TRY(mTexture->setCompressedImage(context, target, level, internalFormat, size,
                                            unpackState, imageSize, pixels));
@@ -957,8 +976,8 @@ Error Texture::copyImage(const Context *context,
            (mState.mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
 
     // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
-    releaseTexImageInternal();
-    orphanImages();
+    ANGLE_TRY(releaseTexImageInternal(context));
+    ANGLE_TRY(orphanImages(context));
 
     ANGLE_TRY(mTexture->copyImage(context, target, level, sourceArea, internalFormat, source));
 
@@ -999,8 +1018,8 @@ Error Texture::copyTexture(const Context *context,
            (mState.mTarget == GL_TEXTURE_CUBE_MAP && IsCubeMapTextureTarget(target)));
 
     // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
-    releaseTexImageInternal();
-    orphanImages();
+    ANGLE_TRY(releaseTexImageInternal(context));
+    ANGLE_TRY(orphanImages(context));
 
     ANGLE_TRY(mTexture->copyTexture(context, target, level, internalFormat, type, sourceLevel,
                                     unpackFlipY, unpackPremultiplyAlpha, unpackUnmultiplyAlpha,
@@ -1036,8 +1055,8 @@ Error Texture::copySubTexture(const Context *context,
 Error Texture::copyCompressedTexture(const Context *context, const Texture *source)
 {
     // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
-    releaseTexImageInternal();
-    orphanImages();
+    ANGLE_TRY(releaseTexImageInternal(context));
+    ANGLE_TRY(orphanImages(context));
 
     ANGLE_TRY(mTexture->copyCompressedTexture(context, source));
 
@@ -1057,8 +1076,8 @@ Error Texture::setStorage(const Context *context,
     ASSERT(target == mState.mTarget);
 
     // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
-    releaseTexImageInternal();
-    orphanImages();
+    ANGLE_TRY(releaseTexImageInternal(context));
+    ANGLE_TRY(orphanImages(context));
 
     ANGLE_TRY(mTexture->setStorage(context, target, levels, internalFormat, size));
 
@@ -1089,8 +1108,8 @@ Error Texture::setStorageMultisample(const Context *context,
     ASSERT(target == mState.mTarget);
 
     // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
-    releaseTexImageInternal();
-    orphanImages();
+    ANGLE_TRY(releaseTexImageInternal(context));
+    ANGLE_TRY(orphanImages(context));
 
     ANGLE_TRY(mTexture->setStorageMultisample(context, target, samples, internalFormat, size,
                                               fixedSampleLocations));
@@ -1109,13 +1128,13 @@ Error Texture::setStorageMultisample(const Context *context,
 Error Texture::generateMipmap(const Context *context)
 {
     // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
-    releaseTexImageInternal();
+    ANGLE_TRY(releaseTexImageInternal(context));
 
     // EGL_KHR_gl_image states that images are only orphaned when generating mipmaps if the texture
     // is not mip complete.
     if (!isMipmapComplete())
     {
-        orphanImages();
+        ANGLE_TRY(orphanImages(context));
     }
 
     const GLuint baseLevel = mState.getEffectiveBaseLevel();
@@ -1136,16 +1155,16 @@ Error Texture::generateMipmap(const Context *context)
     return NoError();
 }
 
-void Texture::bindTexImageFromSurface(egl::Surface *surface)
+Error Texture::bindTexImageFromSurface(const Context *context, egl::Surface *surface)
 {
     ASSERT(surface);
 
     if (mBoundSurface)
     {
-        releaseTexImageFromSurface();
+        ANGLE_TRY(releaseTexImageFromSurface(context));
     }
 
-    mTexture->bindTexImage(surface);
+    ANGLE_TRY(mTexture->bindTexImage(context, surface));
     mBoundSurface = surface;
 
     // Set the image info to the size and format of the surface
@@ -1154,18 +1173,20 @@ void Texture::bindTexImageFromSurface(egl::Surface *surface)
     ImageDesc desc(size, Format(surface->getConfig()->renderTargetFormat));
     mState.setImageDesc(mState.mTarget, 0, desc);
     mDirtyChannel.signal();
+    return NoError();
 }
 
-void Texture::releaseTexImageFromSurface()
+Error Texture::releaseTexImageFromSurface(const Context *context)
 {
     ASSERT(mBoundSurface);
     mBoundSurface = nullptr;
-    mTexture->releaseTexImage();
+    ANGLE_TRY(mTexture->releaseTexImage(context));
 
     // Erase the image info for level 0
     ASSERT(mState.mTarget == GL_TEXTURE_2D);
     mState.clearImageDesc(mState.mTarget, 0);
     mDirtyChannel.signal();
+    return NoError();
 }
 
 void Texture::bindStream(egl::Stream *stream)
@@ -1186,50 +1207,55 @@ void Texture::releaseStream()
     mBoundStream = nullptr;
 }
 
-void Texture::acquireImageFromStream(const egl::Stream::GLTextureDescription &desc)
+Error Texture::acquireImageFromStream(const Context *context,
+                                      const egl::Stream::GLTextureDescription &desc)
 {
     ASSERT(mBoundStream != nullptr);
-    mTexture->setImageExternal(mState.mTarget, mBoundStream, desc);
+    ANGLE_TRY(mTexture->setImageExternal(context, mState.mTarget, mBoundStream, desc));
 
     Extents size(desc.width, desc.height, 1);
     mState.setImageDesc(mState.mTarget, 0, ImageDesc(size, Format(desc.internalFormat)));
     mDirtyChannel.signal();
+    return NoError();
 }
 
-void Texture::releaseImageFromStream()
+Error Texture::releaseImageFromStream(const Context *context)
 {
     ASSERT(mBoundStream != nullptr);
-    mTexture->setImageExternal(mState.mTarget, nullptr, egl::Stream::GLTextureDescription());
+    ANGLE_TRY(mTexture->setImageExternal(context, mState.mTarget, nullptr,
+                                         egl::Stream::GLTextureDescription()));
 
     // Set to incomplete
     mState.clearImageDesc(mState.mTarget, 0);
     mDirtyChannel.signal();
+    return NoError();
 }
 
-void Texture::releaseTexImageInternal()
+Error Texture::releaseTexImageInternal(const Context *context)
 {
     if (mBoundSurface)
     {
         // Notify the surface
-        mBoundSurface->releaseTexImageFromTexture();
+        mBoundSurface->releaseTexImageFromTexture(context);
 
         // Then, call the same method as from the surface
-        releaseTexImageFromSurface();
+        ANGLE_TRY(releaseTexImageFromSurface(context));
     }
+    return NoError();
 }
 
-Error Texture::setEGLImageTarget(GLenum target, egl::Image *imageTarget)
+Error Texture::setEGLImageTarget(const Context *context, GLenum target, egl::Image *imageTarget)
 {
     ASSERT(target == mState.mTarget);
     ASSERT(target == GL_TEXTURE_2D || target == GL_TEXTURE_EXTERNAL_OES);
 
     // Release from previous calls to eglBindTexImage, to avoid calling the Impl after
-    releaseTexImageInternal();
-    orphanImages();
+    ANGLE_TRY(releaseTexImageInternal(context));
+    ANGLE_TRY(orphanImages(context));
 
-    ANGLE_TRY(mTexture->setEGLImageTarget(target, imageTarget));
+    ANGLE_TRY(mTexture->setEGLImageTarget(context, target, imageTarget));
 
-    setTargetImage(imageTarget);
+    setTargetImage(context, imageTarget);
 
     Extents size(static_cast<int>(imageTarget->getWidth()),
                  static_cast<int>(imageTarget->getHeight()), 1);
@@ -1256,14 +1282,14 @@ GLsizei Texture::getAttachmentSamples(const ImageIndex &imageIndex) const
     return getSamples(imageIndex.type, 0);
 }
 
-void Texture::onAttach()
+void Texture::onAttach(const Context *context)
 {
     addRef();
 }
 
-void Texture::onDetach()
+void Texture::onDetach(const Context *context)
 {
-    release();
+    release(context);
 }
 
 GLuint Texture::getId() const

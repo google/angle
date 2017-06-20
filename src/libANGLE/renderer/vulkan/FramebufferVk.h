@@ -34,9 +34,12 @@ class FramebufferVk : public FramebufferImpl, public ResourceVk
     void destroy(const gl::Context *context) override;
     void destroyDefault(const egl::Display *display) override;
 
-    gl::Error discard(size_t count, const GLenum *attachments) override;
-    gl::Error invalidate(size_t count, const GLenum *attachments) override;
-    gl::Error invalidateSub(size_t count,
+    gl::Error discard(const gl::Context *context, size_t count, const GLenum *attachments) override;
+    gl::Error invalidate(const gl::Context *context,
+                         size_t count,
+                         const GLenum *attachments) override;
+    gl::Error invalidateSub(const gl::Context *context,
+                            size_t count,
                             const GLenum *attachments,
                             const gl::Rectangle &area) override;
 
@@ -59,8 +62,8 @@ class FramebufferVk : public FramebufferImpl, public ResourceVk
                             GLfloat depth,
                             GLint stencil) override;
 
-    GLenum getImplementationColorReadFormat() const override;
-    GLenum getImplementationColorReadType() const override;
+    GLenum getImplementationColorReadFormat(const gl::Context *context) const override;
+    GLenum getImplementationColorReadType(const gl::Context *context) const override;
     gl::Error readPixels(const gl::Context *context,
                          const gl::Rectangle &area,
                          GLenum format,
@@ -80,18 +83,20 @@ class FramebufferVk : public FramebufferImpl, public ResourceVk
 
     gl::Error getSamplePosition(size_t index, GLfloat *xy) const override;
 
-    gl::Error beginRenderPass(VkDevice device,
+    gl::Error beginRenderPass(const gl::Context *context,
+                              VkDevice device,
                               vk::CommandBuffer *commandBuffer,
                               Serial queueSerial,
                               const gl::State &glState);
 
-    gl::ErrorOrResult<vk::RenderPass *> getRenderPass(VkDevice device);
+    gl::ErrorOrResult<vk::RenderPass *> getRenderPass(const gl::Context *context, VkDevice device);
 
   private:
     FramebufferVk(const gl::FramebufferState &state);
     FramebufferVk(const gl::FramebufferState &state, WindowSurfaceVk *backbuffer);
 
-    gl::ErrorOrResult<vk::Framebuffer *> getFramebuffer(VkDevice device);
+    gl::ErrorOrResult<vk::Framebuffer *> getFramebuffer(const gl::Context *context,
+                                                        VkDevice device);
 
     WindowSurfaceVk *mBackbuffer;
 

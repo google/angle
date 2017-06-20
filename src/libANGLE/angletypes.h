@@ -237,7 +237,7 @@ struct DrawElementsIndirectCommand
 static_assert(sizeof(DrawElementsIndirectCommand) == 20,
               "Unexpected size of DrawElementsIndirectCommand");
 
-struct PixelStoreStateBase
+struct PixelStoreStateBase : private angle::NonCopyable
 {
     BindingPointer<Buffer> pixelBuffer;
     GLint alignment   = 4;
@@ -246,6 +246,18 @@ struct PixelStoreStateBase
     GLint skipPixels  = 0;
     GLint imageHeight = 0;
     GLint skipImages  = 0;
+
+  protected:
+    void copyFrom(const Context *context, const PixelStoreStateBase &other)
+    {
+        pixelBuffer.set(context, other.pixelBuffer.get());
+        alignment   = other.alignment;
+        rowLength   = other.rowLength;
+        skipRows    = other.skipRows;
+        skipPixels  = other.skipPixels;
+        imageHeight = other.imageHeight;
+        skipImages  = other.skipImages;
+    }
 };
 
 struct PixelUnpackState : PixelStoreStateBase
@@ -257,6 +269,11 @@ struct PixelUnpackState : PixelStoreStateBase
         alignment = alignmentIn;
         rowLength = rowLengthIn;
     }
+
+    void copyFrom(const Context *context, const PixelUnpackState &other)
+    {
+        PixelStoreStateBase::copyFrom(context, other);
+    }
 };
 
 struct PixelPackState : PixelStoreStateBase
@@ -267,6 +284,12 @@ struct PixelPackState : PixelStoreStateBase
         : reverseRowOrder(reverseRowOrderIn)
     {
         alignment = alignmentIn;
+    }
+
+    void copyFrom(const Context *context, const PixelPackState &other)
+    {
+        PixelStoreStateBase::copyFrom(context, other);
+        reverseRowOrder = other.reverseRowOrder;
     }
 
     bool reverseRowOrder = false;

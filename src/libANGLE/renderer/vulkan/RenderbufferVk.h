@@ -28,7 +28,8 @@ class RenderbufferVk : public RenderbufferImpl
                                     size_t height) override;
     gl::Error setStorageEGLImageTarget(egl::Image *image) override;
 
-    gl::Error getAttachmentRenderTarget(GLenum binding,
+    gl::Error getAttachmentRenderTarget(const gl::Context *context,
+                                        GLenum binding,
                                         const gl::ImageIndex &imageIndex,
                                         FramebufferAttachmentRenderTarget **rtOut) override;
 };

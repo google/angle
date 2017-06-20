@@ -104,9 +104,16 @@ Shader::Shader(ShaderProgramManager *manager,
     ASSERT(mImplementation);
 }
 
+void Shader::onDestroy(const gl::Context *context)
+{
+    mBoundCompiler.set(context, nullptr);
+    mImplementation.reset(nullptr);
+    delete this;
+}
+
 Shader::~Shader()
 {
-    mBoundCompiler.set(nullptr);
+    ASSERT(!mImplementation);
 }
 
 void Shader::setLabel(const std::string &label)
@@ -267,7 +274,7 @@ void Shader::compile(const Context *context)
     mState.mActiveOutputVariables.clear();
 
     mState.mCompileStatus = CompileStatus::COMPILE_REQUESTED;
-    mBoundCompiler.set(context->getCompiler());
+    mBoundCompiler.set(context, context->getCompiler());
 
     // Cache the compile source and options for compilation. Must be done now, since the source
     // can change before the link call or another call that resolves the compile.

@@ -28,7 +28,7 @@ egl::Error ImageNULL::initialize()
     return egl::EglBadAccess();
 }
 
-gl::Error ImageNULL::orphan(egl::ImageSibling *sibling)
+gl::Error ImageNULL::orphan(const gl::Context *context, egl::ImageSibling *sibling)
 {
     UNIMPLEMENTED();
     return gl::InternalError();

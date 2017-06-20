@@ -1969,6 +1969,8 @@ gl::Error Blit11::getSwizzleShader(GLenum type,
 gl::ErrorOrResult<TextureHelper11> Blit11::resolveDepth(const gl::Context *context,
                                                         RenderTarget11 *depth)
 {
+    ANGLE_TRY(initResources());
+
     // Multisampled depth stencil SRVs are not available in feature level 10.0
     ASSERT(mRenderer->getRenderer11DeviceCaps().featureLevel > D3D_FEATURE_LEVEL_10_0);
 
@@ -2100,6 +2102,8 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(const gl::Context *con
                                                           RenderTarget11 *depthStencil,
                                                           bool alsoDepth)
 {
+    ANGLE_TRY(initResources());
+
     // Multisampled depth stencil SRVs are not available in feature level 10.0
     ASSERT(mRenderer->getRenderer11DeviceCaps().featureLevel > D3D_FEATURE_LEVEL_10_0);
 

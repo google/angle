@@ -189,7 +189,7 @@ gl::Error FramebufferD3D::clearBufferfi(const gl::Context *context,
     return clearImpl(context, clearParams);
 }
 
-GLenum FramebufferD3D::getImplementationColorReadFormat() const
+GLenum FramebufferD3D::getImplementationColorReadFormat(const gl::Context *context) const
 {
     const gl::FramebufferAttachment *readAttachment = mState.getReadAttachment();
 
@@ -199,7 +199,7 @@ GLenum FramebufferD3D::getImplementationColorReadFormat() const
     }
 
     RenderTargetD3D *attachmentRenderTarget = nullptr;
-    gl::Error error = readAttachment->getRenderTarget(&attachmentRenderTarget);
+    gl::Error error = readAttachment->getRenderTarget(context, &attachmentRenderTarget);
     if (error.isError())
     {
         return GL_NONE;
@@ -212,7 +212,7 @@ GLenum FramebufferD3D::getImplementationColorReadFormat() const
     return implementationFormatInfo.getReadPixelsFormat();
 }
 
-GLenum FramebufferD3D::getImplementationColorReadType() const
+GLenum FramebufferD3D::getImplementationColorReadType(const gl::Context *context) const
 {
     const gl::FramebufferAttachment *readAttachment = mState.getReadAttachment();
 
@@ -222,7 +222,7 @@ GLenum FramebufferD3D::getImplementationColorReadType() const
     }
 
     RenderTargetD3D *attachmentRenderTarget = nullptr;
-    gl::Error error = readAttachment->getRenderTarget(&attachmentRenderTarget);
+    gl::Error error = readAttachment->getRenderTarget(context, &attachmentRenderTarget);
     if (error.isError())
     {
         return GL_NONE;
@@ -253,7 +253,7 @@ gl::Error FramebufferD3D::readPixels(const gl::Context *context,
     ANGLE_TRY_RESULT(sizedFormatInfo.computeSkipBytes(outputPitch, 0, packState, false),
                      outputSkipBytes);
 
-    return readPixelsImpl(area, format, type, outputPitch, packState,
+    return readPixelsImpl(context, area, format, type, outputPitch, packState,
                           reinterpret_cast<uint8_t *>(pixels) + outputSkipBytes);
 }
 

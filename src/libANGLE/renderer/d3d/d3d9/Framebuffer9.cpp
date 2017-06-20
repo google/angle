@@ -35,21 +35,24 @@ Framebuffer9::~Framebuffer9()
 {
 }
 
-gl::Error Framebuffer9::discard(size_t, const GLenum *)
+gl::Error Framebuffer9::discard(const gl::Context *context, size_t, const GLenum *)
 {
     // Extension not implemented in D3D9 renderer
     UNREACHABLE();
     return gl::NoError();
 }
 
-gl::Error Framebuffer9::invalidate(size_t, const GLenum *)
+gl::Error Framebuffer9::invalidate(const gl::Context *context, size_t, const GLenum *)
 {
     // Shouldn't ever reach here in D3D9
     UNREACHABLE();
     return gl::NoError();
 }
 
-gl::Error Framebuffer9::invalidateSub(size_t, const GLenum *, const gl::Rectangle &)
+gl::Error Framebuffer9::invalidateSub(const gl::Context *context,
+                                      size_t,
+                                      const GLenum *,
+                                      const gl::Rectangle &)
 {
     // Shouldn't ever reach here in D3D9
     UNREACHABLE();
@@ -61,8 +64,7 @@ gl::Error Framebuffer9::clearImpl(const gl::Context *context, const ClearParamet
     const gl::FramebufferAttachment *colorAttachment        = mState.getColorAttachment(0);
     const gl::FramebufferAttachment *depthStencilAttachment = mState.getDepthOrStencilAttachment();
 
-    ANGLE_TRY(mRenderer->applyRenderTarget(context->getImplementation(), colorAttachment,
-                                           depthStencilAttachment));
+    ANGLE_TRY(mRenderer->applyRenderTarget(context, colorAttachment, depthStencilAttachment));
 
     const gl::State &glState = context->getGLState();
     float nearZ              = glState.getNearPlane();
@@ -72,10 +74,11 @@ gl::Error Framebuffer9::clearImpl(const gl::Context *context, const ClearParamet
 
     mRenderer->setScissorRectangle(glState.getScissor(), glState.isScissorTestEnabled());
 
-    return mRenderer->clear(clearParams, colorAttachment, depthStencilAttachment);
+    return mRenderer->clear(context, clearParams, colorAttachment, depthStencilAttachment);
 }
 
-gl::Error Framebuffer9::readPixelsImpl(const gl::Rectangle &area,
+gl::Error Framebuffer9::readPixelsImpl(const gl::Context *context,
+                                       const gl::Rectangle &area,
                                        GLenum format,
                                        GLenum type,
                                        size_t outputPitch,
@@ -88,11 +91,7 @@ gl::Error Framebuffer9::readPixelsImpl(const gl::Rectangle &area,
     ASSERT(colorbuffer);
 
     RenderTarget9 *renderTarget = nullptr;
-    gl::Error error = colorbuffer->getRenderTarget(&renderTarget);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(colorbuffer->getRenderTarget(context, &renderTarget));
     ASSERT(renderTarget);
 
     IDirect3DSurface9 *surface = renderTarget->getSurface();
@@ -201,7 +200,7 @@ gl::Error Framebuffer9::readPixelsImpl(const gl::Rectangle &area,
     packParams.format      = format;
     packParams.type        = type;
     packParams.outputPitch = static_cast<GLuint>(outputPitch);
-    packParams.pack        = pack;
+    packParams.pack.copyFrom(context, pack);
 
     PackPixels(packParams, d3dFormatInfo.info(), inputPitch, source, pixels);
 
@@ -234,7 +233,7 @@ gl::Error Framebuffer9::blitImpl(const gl::Context *context,
         ASSERT(readBuffer);
 
         RenderTarget9 *readRenderTarget = nullptr;
-        gl::Error error = readBuffer->getRenderTarget(&readRenderTarget);
+        gl::Error error                 = readBuffer->getRenderTarget(context, &readRenderTarget);
         if (error.isError())
         {
             return error;
@@ -245,7 +244,7 @@ gl::Error Framebuffer9::blitImpl(const gl::Context *context,
         ASSERT(drawBuffer);
 
         RenderTarget9 *drawRenderTarget = nullptr;
-        error = drawBuffer->getRenderTarget(&drawRenderTarget);
+        error                           = drawBuffer->getRenderTarget(context, &drawRenderTarget);
         if (error.isError())
         {
             return error;
@@ -360,7 +359,7 @@ gl::Error Framebuffer9::blitImpl(const gl::Context *context,
         ASSERT(readBuffer);
 
         RenderTarget9 *readDepthStencil = nullptr;
-        gl::Error error = readBuffer->getRenderTarget(&readDepthStencil);
+        gl::Error error                 = readBuffer->getRenderTarget(context, &readDepthStencil);
         if (error.isError())
         {
             return error;
@@ -371,7 +370,7 @@ gl::Error Framebuffer9::blitImpl(const gl::Context *context,
         ASSERT(drawBuffer);
 
         RenderTarget9 *drawDepthStencil = nullptr;
-        error = drawBuffer->getRenderTarget(&drawDepthStencil);
+        error                           = drawBuffer->getRenderTarget(context, &drawDepthStencil);
         if (error.isError())
         {
             return error;

@@ -372,13 +372,15 @@ Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDe
       mDevice(eglDevice),
       mPlatform(platform),
       mTextureManager(nullptr),
-      mGlobalTextureShareGroupUsers(0)
+      mGlobalTextureShareGroupUsers(0),
+      mProxyContext(this)
 {
 }
 
 Display::~Display()
 {
-    terminate();
+    // TODO(jmadill): When is this called?
+    // terminate();
 
     if (mPlatform == EGL_PLATFORM_ANGLE_ANGLE)
     {
@@ -402,6 +404,8 @@ Display::~Display()
     {
         UNREACHABLE();
     }
+
+    mProxyContext.reset(nullptr);
 
     SafeDelete(mDevice);
     SafeDelete(mImplementation);
@@ -486,18 +490,25 @@ Error Display::initialize()
         ASSERT(mDevice != nullptr);
     }
 
+    mProxyContext.reset(nullptr);
+    gl::Context *proxyContext = new gl::Context(mImplementation, nullptr, nullptr, nullptr,
+                                                egl::AttributeMap(), mDisplayExtensions, false);
+    mProxyContext.reset(proxyContext);
+
     mInitialized = true;
 
     return NoError();
 }
 
-void Display::terminate()
+Error Display::terminate()
 {
-    makeCurrent(nullptr, nullptr, nullptr);
+    ANGLE_TRY(makeCurrent(nullptr, nullptr, nullptr));
+
+    mProxyContext.reset(nullptr);
 
     while (!mContextSet.empty())
     {
-        destroyContext(*mContextSet.begin());
+        ANGLE_TRY(destroyContext(*mContextSet.begin()));
     }
 
     // The global texture manager should be deleted with the last context that uses it.
@@ -515,7 +526,7 @@ void Display::terminate()
 
     while (!mState.surfaceSet.empty())
     {
-        destroySurface(*mState.surfaceSet.begin());
+        ANGLE_TRY(destroySurface(*mState.surfaceSet.begin()));
     }
 
     mConfigSet.clear();
@@ -537,6 +548,8 @@ void Display::terminate()
 
     // TODO(jmadill): Store Platform in Display and deinit here.
     ANGLEResetDisplayPlatform(this);
+
+    return NoError();
 }
 
 std::vector<const Config*> Display::getConfigs(const egl::AttributeMap &attribs) const
@@ -665,7 +678,8 @@ Error Display::createImage(const gl::Context *context,
     }
     ASSERT(sibling != nullptr);
 
-    std::unique_ptr<Image> imagePtr(new Image(mImplementation, target, sibling, attribs));
+    angle::UniqueObjectPointer<Image, gl::Context> imagePtr(
+        new Image(mImplementation, target, sibling, attribs), context);
     ANGLE_TRY(imagePtr->initialize());
 
     Image *image = imagePtr.release();
@@ -736,14 +750,16 @@ Error Display::createContext(const Config *configuration,
     return NoError();
 }
 
-Error Display::makeCurrent(egl::Surface *drawSurface, egl::Surface *readSurface, gl::Context *context)
+Error Display::makeCurrent(egl::Surface *drawSurface,
+                           egl::Surface *readSurface,
+                           gl::Context *context)
 {
     ANGLE_TRY(mImplementation->makeCurrent(drawSurface, readSurface, context));
 
     if (context != nullptr)
     {
         ASSERT(readSurface == drawSurface);
-        context->makeCurrent(this, drawSurface);
+        ANGLE_TRY(context->makeCurrent(this, drawSurface));
     }
 
     return NoError();
@@ -763,7 +779,7 @@ Error Display::restoreLostDevice()
     return mImplementation->restoreLostDevice(this);
 }
 
-void Display::destroySurface(Surface *surface)
+Error Display::destroySurface(Surface *surface)
 {
     if (surface->getType() == EGL_WINDOW_BIT)
     {
@@ -785,14 +801,15 @@ void Display::destroySurface(Surface *surface)
     }
 
     mState.surfaceSet.erase(surface);
-    surface->onDestroy(this);
+    ANGLE_TRY(surface->onDestroy(this));
+    return NoError();
 }
 
 void Display::destroyImage(egl::Image *image)
 {
     auto iter = mImageSet.find(image);
     ASSERT(iter != mImageSet.end());
-    (*iter)->release();
+    (*iter)->release(mProxyContext.get());
     mImageSet.erase(iter);
 }
 
@@ -802,7 +819,7 @@ void Display::destroyStream(egl::Stream *stream)
     SafeDelete(stream);
 }
 
-void Display::destroyContext(gl::Context *context)
+Error Display::destroyContext(gl::Context *context)
 {
     if (context->usingDisplayTextureShareGroup())
     {
@@ -817,9 +834,10 @@ void Display::destroyContext(gl::Context *context)
         mGlobalTextureShareGroupUsers--;
     }
 
-    context->destroy(this);
+    ANGLE_TRY(context->onDestroy(this));
     mContextSet.erase(context);
     SafeDelete(context);
+    return NoError();
 }
 
 bool Display::isDeviceLost() const

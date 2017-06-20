@@ -335,11 +335,13 @@ gl::Error Image9::getSurface(IDirect3DSurface9 **outSurface)
     return gl::NoError();
 }
 
-gl::Error Image9::setManagedSurface2D(TextureStorage *storage, int level)
+gl::Error Image9::setManagedSurface2D(const gl::Context *context,
+                                      TextureStorage *storage,
+                                      int level)
 {
     IDirect3DSurface9 *surface = nullptr;
     TextureStorage9 *storage9  = GetAs<TextureStorage9>(storage);
-    gl::Error error = storage9->getSurfaceLevel(GL_TEXTURE_2D, level, false, &surface);
+    gl::Error error = storage9->getSurfaceLevel(context, GL_TEXTURE_2D, level, false, &surface);
     if (error.isError())
     {
         return error;
@@ -347,12 +349,15 @@ gl::Error Image9::setManagedSurface2D(TextureStorage *storage, int level)
     return setManagedSurface(surface);
 }
 
-gl::Error Image9::setManagedSurfaceCube(TextureStorage *storage, int face, int level)
+gl::Error Image9::setManagedSurfaceCube(const gl::Context *context,
+                                        TextureStorage *storage,
+                                        int face,
+                                        int level)
 {
     IDirect3DSurface9 *surface = nullptr;
     TextureStorage9 *storage9 = GetAs<TextureStorage9>(storage);
-    gl::Error error =
-        storage9->getSurfaceLevel(GL_TEXTURE_CUBE_MAP_POSITIVE_X + face, level, false, &surface);
+    gl::Error error = storage9->getSurfaceLevel(context, GL_TEXTURE_CUBE_MAP_POSITIVE_X + face,
+                                                level, false, &surface);
     if (error.isError())
     {
         return error;
@@ -385,7 +390,10 @@ gl::Error Image9::setManagedSurface(IDirect3DSurface9 *surface)
     return gl::NoError();
 }
 
-gl::Error Image9::copyToStorage(TextureStorage *storage, const gl::ImageIndex &index, const gl::Box &region)
+gl::Error Image9::copyToStorage(const gl::Context *context,
+                                TextureStorage *storage,
+                                const gl::ImageIndex &index,
+                                const gl::Box &region)
 {
     gl::Error error = createSurface();
     if (error.isError())
@@ -399,7 +407,8 @@ gl::Error Image9::copyToStorage(TextureStorage *storage, const gl::ImageIndex &i
 
     if (index.type == GL_TEXTURE_2D)
     {
-        error = storage9->getSurfaceLevel(GL_TEXTURE_2D, index.mipIndex, true, &destSurface);
+        error =
+            storage9->getSurfaceLevel(context, GL_TEXTURE_2D, index.mipIndex, true, &destSurface);
         if (error.isError())
         {
             return error;
@@ -408,7 +417,7 @@ gl::Error Image9::copyToStorage(TextureStorage *storage, const gl::ImageIndex &i
     else
     {
         ASSERT(gl::IsCubeMapTextureTarget(index.type));
-        error = storage9->getSurfaceLevel(index.type, index.mipIndex, true, &destSurface);
+        error = storage9->getSurfaceLevel(context, index.type, index.mipIndex, true, &destSurface);
         if (error.isError())
         {
             return error;
@@ -483,7 +492,8 @@ gl::Error Image9::copyToSurface(IDirect3DSurface9 *destSurface, const gl::Box &a
 
 // Store the pixel rectangle designated by xoffset,yoffset,width,height with pixels stored as format/type at input
 // into the target pixel rectangle.
-gl::Error Image9::loadData(const gl::Box &area,
+gl::Error Image9::loadData(const gl::Context *context,
+                           const gl::Box &area,
                            const gl::PixelUnpackState &unpack,
                            GLenum type,
                            const void *input,
@@ -526,7 +536,9 @@ gl::Error Image9::loadData(const gl::Box &area,
     return gl::NoError();
 }
 
-gl::Error Image9::loadCompressedData(const gl::Box &area, const void *input)
+gl::Error Image9::loadCompressedData(const gl::Context *context,
+                                     const gl::Box &area,
+                                     const void *input)
 {
     // 3D textures are not supported by the D3D9 backend.
     ASSERT(area.z == 0 && area.depth == 1);
@@ -804,10 +816,12 @@ gl::Error Image9::copyFromRTInternal(const gl::Offset &destOffset,
     return gl::NoError();
 }
 
-gl::Error Image9::copyFromTexStorage(const gl::ImageIndex &imageIndex, TextureStorage *source)
+gl::Error Image9::copyFromTexStorage(const gl::Context *context,
+                                     const gl::ImageIndex &imageIndex,
+                                     TextureStorage *source)
 {
     RenderTargetD3D *renderTarget = nullptr;
-    gl::Error error = source->getRenderTarget(imageIndex, &renderTarget);
+    gl::Error error               = source->getRenderTarget(context, imageIndex, &renderTarget);
     if (error.isError())
     {
         return error;
@@ -817,7 +831,8 @@ gl::Error Image9::copyFromTexStorage(const gl::ImageIndex &imageIndex, TextureSt
     return copyFromRTInternal(gl::Offset(), sourceArea, renderTarget);
 }
 
-gl::Error Image9::copyFromFramebuffer(const gl::Offset &destOffset,
+gl::Error Image9::copyFromFramebuffer(const gl::Context *context,
+                                      const gl::Offset &destOffset,
                                       const gl::Rectangle &sourceArea,
                                       const gl::Framebuffer *source)
 {
@@ -825,7 +840,7 @@ gl::Error Image9::copyFromFramebuffer(const gl::Offset &destOffset,
     ASSERT(srcAttachment);
 
     RenderTargetD3D *renderTarget = nullptr;
-    gl::Error error = srcAttachment->getRenderTarget(&renderTarget);
+    gl::Error error               = srcAttachment->getRenderTarget(context, &renderTarget);
     if (error.isError())
     {
         return error;

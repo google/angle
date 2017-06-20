@@ -181,7 +181,7 @@ class Texture final : public egl::ImageSibling,
     Texture(rx::GLImplFactory *factory, GLuint id, GLenum target);
     ~Texture() override;
 
-    void destroy(const Context *context) override {}
+    void onDestroy(const Context *context) override;
 
     void setLabel(const std::string &label) override;
     const std::string &getLabel() const override;
@@ -235,7 +235,7 @@ class Texture final : public egl::ImageSibling,
 
     const SamplerState &getSamplerState() const;
 
-    void setBaseLevel(GLuint baseLevel);
+    gl::Error setBaseLevel(const Context *context, GLuint baseLevel);
     GLuint getBaseLevel() const;
 
     void setMaxLevel(GLuint maxLevel);
@@ -348,7 +348,7 @@ class Texture final : public egl::ImageSibling,
                                 const Extents &size,
                                 GLboolean fixedSampleLocations);
 
-    Error setEGLImageTarget(GLenum target, egl::Image *imageTarget);
+    Error setEGLImageTarget(const Context *context, GLenum target, egl::Image *imageTarget);
 
     Error generateMipmap(const Context *context);
 
@@ -364,8 +364,8 @@ class Texture final : public egl::ImageSibling,
     const Format &getAttachmentFormat(GLenum binding, const ImageIndex &imageIndex) const override;
     GLsizei getAttachmentSamples(const ImageIndex &imageIndex) const override;
 
-    void onAttach() override;
-    void onDetach() override;
+    void onAttach(const Context *context) override;
+    void onDetach(const Context *context) override;
     GLuint getId() const override;
 
     enum DirtyBitType
@@ -407,15 +407,16 @@ class Texture final : public egl::ImageSibling,
 
     // ANGLE-only method, used internally
     friend class egl::Surface;
-    void bindTexImageFromSurface(egl::Surface *surface);
-    void releaseTexImageFromSurface();
+    Error bindTexImageFromSurface(const Context *context, egl::Surface *surface);
+    Error releaseTexImageFromSurface(const Context *context);
 
     // ANGLE-only methods, used internally
     friend class egl::Stream;
     void bindStream(egl::Stream *stream);
     void releaseStream();
-    void acquireImageFromStream(const egl::Stream::GLTextureDescription &desc);
-    void releaseImageFromStream();
+    Error acquireImageFromStream(const Context *context,
+                                 const egl::Stream::GLTextureDescription &desc);
+    Error releaseImageFromStream(const Context *context);
 
     TextureState mState;
     DirtyBits mDirtyBits;
@@ -423,7 +424,7 @@ class Texture final : public egl::ImageSibling,
 
     std::string mLabel;
 
-    void releaseTexImageInternal();
+    Error releaseTexImageInternal(const Context *context);
 
     egl::Surface *mBoundSurface;
     egl::Stream *mBoundStream;

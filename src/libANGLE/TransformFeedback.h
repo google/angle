@@ -56,7 +56,7 @@ class TransformFeedback final : public RefCountObject, public LabeledObject
   public:
     TransformFeedback(rx::GLImplFactory *implFactory, GLuint id, const Caps &caps);
     virtual ~TransformFeedback();
-    void destroy(const Context *context) override;
+    void onDestroy(const Context *context) override;
 
     void setLabel(const std::string &label) override;
     const std::string &getLabel() const override;
@@ -72,14 +72,18 @@ class TransformFeedback final : public RefCountObject, public LabeledObject
 
     bool hasBoundProgram(GLuint program) const;
 
-    void bindGenericBuffer(Buffer *buffer);
+    void bindGenericBuffer(const Context *context, Buffer *buffer);
     const BindingPointer<Buffer> &getGenericBuffer() const;
 
-    void bindIndexedBuffer(size_t index, Buffer *buffer, size_t offset, size_t size);
+    void bindIndexedBuffer(const Context *context,
+                           size_t index,
+                           Buffer *buffer,
+                           size_t offset,
+                           size_t size);
     const OffsetBindingPointer<Buffer> &getIndexedBuffer(size_t index) const;
     size_t getIndexedBufferCount() const;
 
-    void detachBuffer(GLuint bufferName);
+    void detachBuffer(const Context *context, GLuint bufferName);
 
     rx::TransformFeedbackImpl *getImplementation();
     const rx::TransformFeedbackImpl *getImplementation() const;

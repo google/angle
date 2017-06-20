@@ -230,7 +230,8 @@ class Buffer11::PackStorage : public Buffer11::BufferStorage
                   uint8_t **mapPointerOut) override;
     void unmap() override;
 
-    gl::Error packPixels(const gl::FramebufferAttachment &readAttachment,
+    gl::Error packPixels(const gl::Context *context,
+                         const gl::FramebufferAttachment &readAttachment,
                          const PackPixelsParams &params);
 
   private:
@@ -662,7 +663,8 @@ gl::ErrorOrResult<ID3D11ShaderResourceView *> Buffer11::getSRV(DXGI_FORMAT srvFo
     return nativeStorage->getSRVForFormat(srvFormat);
 }
 
-gl::Error Buffer11::packPixels(const gl::FramebufferAttachment &readAttachment,
+gl::Error Buffer11::packPixels(const gl::Context *context,
+                               const gl::FramebufferAttachment &readAttachment,
                                const PackPixelsParams &params)
 {
     PackStorage *packStorage = nullptr;
@@ -672,7 +674,7 @@ gl::Error Buffer11::packPixels(const gl::FramebufferAttachment &readAttachment,
     ANGLE_TRY_RESULT(getLatestBufferStorage(), latestStorage);
 
     ASSERT(packStorage);
-    ANGLE_TRY(packStorage->packPixels(readAttachment, params));
+    ANGLE_TRY(packStorage->packPixels(context, readAttachment, params));
     packStorage->setDataRevision(latestStorage ? latestStorage->getDataRevision() + 1 : 1);
 
     return gl::NoError();
@@ -1421,19 +1423,20 @@ void Buffer11::PackStorage::unmap()
     // No-op
 }
 
-gl::Error Buffer11::PackStorage::packPixels(const gl::FramebufferAttachment &readAttachment,
+gl::Error Buffer11::PackStorage::packPixels(const gl::Context *context,
+                                            const gl::FramebufferAttachment &readAttachment,
                                             const PackPixelsParams &params)
 {
     ANGLE_TRY(flushQueuedPackCommand());
 
     RenderTarget11 *renderTarget = nullptr;
-    ANGLE_TRY(readAttachment.getRenderTarget(&renderTarget));
+    ANGLE_TRY(readAttachment.getRenderTarget(context, &renderTarget));
 
     const TextureHelper11 &srcTexture = renderTarget->getTexture();
     ASSERT(srcTexture.valid());
     unsigned int srcSubresource = renderTarget->getSubresourceIndex();
 
-    mQueuedPackCommand.reset(new PackPixelsParams(params));
+    mQueuedPackCommand.reset(new PackPixelsParams(context, params));
 
     gl::Extents srcTextureSize(params.area.width, params.area.height, 1);
     if (!mStagingTexture.get() || mStagingTexture.getFormat() != srcTexture.getFormat() ||

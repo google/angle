@@ -34,8 +34,9 @@ class RenderbufferD3D : public RenderbufferImpl
                                     size_t height) override;
     gl::Error setStorageEGLImageTarget(egl::Image *image) override;
 
-    gl::Error getRenderTarget(RenderTargetD3D **outRenderTarget);
-    gl::Error getAttachmentRenderTarget(GLenum binding,
+    gl::Error getRenderTarget(const gl::Context *context, RenderTargetD3D **outRenderTarget);
+    gl::Error getAttachmentRenderTarget(const gl::Context *context,
+                                        GLenum binding,
                                         const gl::ImageIndex &imageIndex,
                                         FramebufferAttachmentRenderTarget **rtOut) override;
 

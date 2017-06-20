@@ -53,7 +53,7 @@ class Display final : angle::NonCopyable
     ~Display();
 
     Error initialize();
-    void terminate();
+    Error terminate();
 
     static Display *GetDisplayFromDevice(Device *device, const AttributeMap &attribMap);
     static Display *GetDisplayFromNativeDisplay(EGLNativeDisplayType nativeDisplay,
@@ -96,10 +96,10 @@ class Display final : angle::NonCopyable
 
     Error makeCurrent(Surface *drawSurface, Surface *readSurface, gl::Context *context);
 
-    void destroySurface(Surface *surface);
+    Error destroySurface(Surface *surface);
     void destroyImage(Image *image);
     void destroyStream(Stream *stream);
-    void destroyContext(gl::Context *context);
+    Error destroyContext(gl::Context *context);
 
     bool isInitialized() const;
     bool isValidConfig(const Config *config) const;
@@ -144,6 +144,8 @@ class Display final : angle::NonCopyable
 
     bool isRobustResourceInitEnabled() const;
 
+    const gl::Context *getProxyContext() const { return mProxyContext.get(); }
+
   private:
     Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDevice);
 
@@ -187,6 +189,10 @@ class Display final : angle::NonCopyable
 
     gl::TextureManager *mTextureManager;
     size_t mGlobalTextureShareGroupUsers;
+
+    // This gl::Context is a simple proxy to the Display for the GL back-end entry points
+    // that need access to implementation-specific data, like a Renderer object.
+    angle::UniqueObjectPointer<gl::Context, Display> mProxyContext;
 };
 
 }  // namespace egl

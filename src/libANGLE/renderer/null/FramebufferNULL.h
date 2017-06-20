@@ -21,9 +21,12 @@ class FramebufferNULL : public FramebufferImpl
     FramebufferNULL(const gl::FramebufferState &state);
     ~FramebufferNULL() override;
 
-    gl::Error discard(size_t count, const GLenum *attachments) override;
-    gl::Error invalidate(size_t count, const GLenum *attachments) override;
-    gl::Error invalidateSub(size_t count,
+    gl::Error discard(const gl::Context *context, size_t count, const GLenum *attachments) override;
+    gl::Error invalidate(const gl::Context *context,
+                         size_t count,
+                         const GLenum *attachments) override;
+    gl::Error invalidateSub(const gl::Context *context,
+                            size_t count,
                             const GLenum *attachments,
                             const gl::Rectangle &area) override;
 
@@ -46,8 +49,8 @@ class FramebufferNULL : public FramebufferImpl
                             GLfloat depth,
                             GLint stencil) override;
 
-    GLenum getImplementationColorReadFormat() const override;
-    GLenum getImplementationColorReadType() const override;
+    GLenum getImplementationColorReadFormat(const gl::Context *context) const override;
+    GLenum getImplementationColorReadType(const gl::Context *context) const override;
     gl::Error readPixels(const gl::Context *context,
                          const gl::Rectangle &area,
                          GLenum format,

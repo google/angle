@@ -107,13 +107,14 @@ gl::Error TextureVk::setStorage(const gl::Context *context,
     return gl::InternalError();
 }
 
-gl::Error TextureVk::setEGLImageTarget(GLenum target, egl::Image *image)
+gl::Error TextureVk::setEGLImageTarget(const gl::Context *context, GLenum target, egl::Image *image)
 {
     UNIMPLEMENTED();
     return gl::InternalError();
 }
 
-gl::Error TextureVk::setImageExternal(GLenum target,
+gl::Error TextureVk::setImageExternal(const gl::Context *context,
+                                      GLenum target,
                                       egl::Stream *stream,
                                       const egl::Stream::GLTextureDescription &desc)
 {
@@ -127,22 +128,26 @@ gl::Error TextureVk::generateMipmap(const gl::Context *context)
     return gl::InternalError();
 }
 
-void TextureVk::setBaseLevel(GLuint baseLevel)
+gl::Error TextureVk::setBaseLevel(const gl::Context *context, GLuint baseLevel)
 {
     UNIMPLEMENTED();
+    return gl::InternalError();
 }
 
-void TextureVk::bindTexImage(egl::Surface *surface)
+gl::Error TextureVk::bindTexImage(const gl::Context *context, egl::Surface *surface)
 {
     UNIMPLEMENTED();
+    return gl::InternalError();
 }
 
-void TextureVk::releaseTexImage()
+gl::Error TextureVk::releaseTexImage(const gl::Context *context)
 {
     UNIMPLEMENTED();
+    return gl::InternalError();
 }
 
-gl::Error TextureVk::getAttachmentRenderTarget(GLenum binding,
+gl::Error TextureVk::getAttachmentRenderTarget(const gl::Context *context,
+                                               GLenum binding,
                                                const gl::ImageIndex &imageIndex,
                                                FramebufferAttachmentRenderTarget **rtOut)
 {

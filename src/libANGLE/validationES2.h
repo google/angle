@@ -658,7 +658,7 @@ bool ValidateGetVertexAttribiv(Context *context, GLuint index, GLenum pname, GLi
 bool ValidateGetVertexAttribPointerv(Context *context, GLuint index, GLenum pname, void **pointer);
 bool ValidateIsEnabled(Context *context, GLenum cap);
 bool ValidateLinkProgram(Context *context, GLuint program);
-bool ValidateReadPixels(ValidationContext *context,
+bool ValidateReadPixels(Context *context,
                         GLint x,
                         GLint y,
                         GLsizei width,

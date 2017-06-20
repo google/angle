@@ -31,7 +31,7 @@ class Image;
 // Only currently Renderbuffers and Textures can be bound with images. This makes the relationship
 // explicit, and also ensures that an image sibling can determine if it's been initialized or not,
 // which is important for the robust resource init extension with Textures and EGLImages.
-class ImageSibling : public RefCountObject, public gl::FramebufferAttachmentObject
+class ImageSibling : public gl::RefCountObject, public gl::FramebufferAttachmentObject
 {
   public:
     ImageSibling(GLuint id);
@@ -39,10 +39,10 @@ class ImageSibling : public RefCountObject, public gl::FramebufferAttachmentObje
 
   protected:
     // Set the image target of this sibling
-    void setTargetImage(egl::Image *imageTarget);
+    void setTargetImage(const gl::Context *context, egl::Image *imageTarget);
 
     // Orphan all EGL image sources and targets
-    gl::Error orphanImages();
+    gl::Error orphanImages(const gl::Context *context);
 
   private:
     friend class Image;
@@ -54,7 +54,7 @@ class ImageSibling : public RefCountObject, public gl::FramebufferAttachmentObje
     void removeImageSource(egl::Image *imageSource);
 
     std::set<Image *> mSourcesOf;
-    BindingPointer<Image> mTargetOf;
+    gl::BindingPointer<Image> mTargetOf;
 };
 
 struct ImageState : private angle::NonCopyable
@@ -62,17 +62,19 @@ struct ImageState : private angle::NonCopyable
     ImageState(EGLenum target, ImageSibling *buffer, const AttributeMap &attribs);
 
     gl::ImageIndex imageIndex;
-    BindingPointer<ImageSibling> source;
+    gl::BindingPointer<ImageSibling> source;
     std::set<ImageSibling *> targets;
 };
 
-class Image final : public RefCountObject
+class Image final : public gl::RefCountObject
 {
   public:
     Image(rx::EGLImplFactory *factory,
           EGLenum target,
           ImageSibling *buffer,
           const AttributeMap &attribs);
+
+    void onDestroy(const gl::Context *context) override;
     ~Image();
 
     const gl::Format &getFormat() const;
@@ -93,7 +95,7 @@ class Image final : public RefCountObject
 
     // Called from ImageSibling only to notify the image that a sibling (source or target) has
     // been respecified and state tracking should be updated.
-    gl::Error orphanSibling(ImageSibling *sibling);
+    gl::Error orphanSibling(const gl::Context *context, ImageSibling *sibling);
 
     ImageState mState;
     rx::ImageImpl *mImplementation;

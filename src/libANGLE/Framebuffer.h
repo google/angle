@@ -125,12 +125,12 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
     // Constructor to build application-defined framebuffers
     Framebuffer(const Caps &caps, rx::GLImplFactory *factory, GLuint id);
     // Constructor to build default framebuffers for a surface
-    Framebuffer(egl::Surface *surface);
+    Framebuffer(const egl::Display *display, egl::Surface *surface);
     // Constructor to build a fake default framebuffer when surfaceless
     Framebuffer(rx::GLImplFactory *factory);
 
     virtual ~Framebuffer();
-    void destroy(const Context *context);
+    void onDestroy(const Context *context);
     void destroyDefault(const egl::Display *display);
 
     void setLabel(const std::string &label) override;
@@ -207,9 +207,12 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
 
     bool hasValidDepthStencil() const;
 
-    Error discard(size_t count, const GLenum *attachments);
-    Error invalidate(size_t count, const GLenum *attachments);
-    Error invalidateSub(size_t count, const GLenum *attachments, const gl::Rectangle &area);
+    Error discard(const Context *context, size_t count, const GLenum *attachments);
+    Error invalidate(const Context *context, size_t count, const GLenum *attachments);
+    Error invalidateSub(const Context *context,
+                        size_t count,
+                        const GLenum *attachments,
+                        const gl::Rectangle &area);
 
     Error clear(const gl::Context *context, GLbitfield mask);
     Error clearBufferfv(const gl::Context *context,
@@ -230,8 +233,8 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
                         GLfloat depth,
                         GLint stencil);
 
-    GLenum getImplementationColorReadFormat() const;
-    GLenum getImplementationColorReadType() const;
+    GLenum getImplementationColorReadFormat(const Context *context) const;
+    GLenum getImplementationColorReadType(const Context *context) const;
     Error readPixels(const gl::Context *context,
                      const gl::Rectangle &area,
                      GLenum format,
@@ -276,18 +279,21 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
 
   private:
     void detachResourceById(const Context *context, GLenum resourceType, GLuint resourceId);
-    void detachMatchingAttachment(FramebufferAttachment *attachment,
+    void detachMatchingAttachment(const Context *context,
+                                  FramebufferAttachment *attachment,
                                   GLenum matchType,
                                   GLuint matchId,
                                   size_t dirtyBit);
     GLenum checkStatusImpl(const Context *context);
-    void commitWebGL1DepthStencilIfConsistent();
+    void commitWebGL1DepthStencilIfConsistent(const Context *context);
 
-    void setAttachmentImpl(GLenum type,
+    void setAttachmentImpl(const Context *context,
+                           GLenum type,
                            GLenum binding,
                            const ImageIndex &textureIndex,
                            FramebufferAttachmentObject *resource);
-    void updateAttachment(FramebufferAttachment *attachment,
+    void updateAttachment(const Context *context,
+                          FramebufferAttachment *attachment,
                           size_t dirtyBit,
                           OnAttachmentDirtyBinding *onDirtyBinding,
                           GLenum type,

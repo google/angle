@@ -46,6 +46,8 @@ class TextureImpl : public FramebufferAttachmentObjectImpl
     TextureImpl(const gl::TextureState &state);
     virtual ~TextureImpl();
 
+    virtual gl::Error onDestroy(const gl::Context *context) { return gl::NoError(); }
+
     virtual gl::Error setImage(const gl::Context *context,
                                GLenum target,
                                size_t level,
@@ -130,18 +132,21 @@ class TextureImpl : public FramebufferAttachmentObjectImpl
                                             const gl::Extents &size,
                                             GLboolean fixedSampleLocations) = 0;
 
-    virtual gl::Error setEGLImageTarget(GLenum target, egl::Image *image) = 0;
+    virtual gl::Error setEGLImageTarget(const gl::Context *context,
+                                        GLenum target,
+                                        egl::Image *image) = 0;
 
-    virtual gl::Error setImageExternal(GLenum target,
+    virtual gl::Error setImageExternal(const gl::Context *context,
+                                       GLenum target,
                                        egl::Stream *stream,
                                        const egl::Stream::GLTextureDescription &desc) = 0;
 
     virtual gl::Error generateMipmap(const gl::Context *context) = 0;
 
-    virtual void setBaseLevel(GLuint baseLevel) = 0;
+    virtual gl::Error setBaseLevel(const gl::Context *context, GLuint baseLevel) = 0;
 
-    virtual void bindTexImage(egl::Surface *surface) = 0;
-    virtual void releaseTexImage() = 0;
+    virtual gl::Error bindTexImage(const gl::Context *context, egl::Surface *surface) = 0;
+    virtual gl::Error releaseTexImage(const gl::Context *context) = 0;
 
     virtual void syncState(const gl::Texture::DirtyBits &dirtyBits) = 0;
 

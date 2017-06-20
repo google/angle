@@ -138,11 +138,15 @@ class Renderer11 : public RendererD3D
                                    HANDLE shareHandle,
                                    const egl::AttributeMap &attribs) const override;
 
-    gl::Error setSamplerState(gl::SamplerType type,
+    gl::Error setSamplerState(const gl::Context *context,
+                              gl::SamplerType type,
                               int index,
                               gl::Texture *texture,
                               const gl::SamplerState &sampler) override;
-    gl::Error setTexture(gl::SamplerType type, int index, gl::Texture *texture) override;
+    gl::Error setTexture(const gl::Context *context,
+                         gl::SamplerType type,
+                         int index,
+                         gl::Texture *texture) override;
 
     gl::Error setUniformBuffers(const gl::ContextState &data,
                                 const std::vector<GLint> &vertexUniformBuffers,
@@ -152,7 +156,7 @@ class Renderer11 : public RendererD3D
     gl::Error applyUniforms(const ProgramD3D &programD3D,
                             GLenum drawMode,
                             const std::vector<D3DUniform *> &uniformArray) override;
-    gl::Error applyVertexBuffer(const gl::State &state,
+    gl::Error applyVertexBuffer(const gl::Context *context,
                                 GLenum mode,
                                 GLint first,
                                 GLsizei count,
@@ -229,7 +233,8 @@ class Renderer11 : public RendererD3D
                           bool unpackFlipY,
                           bool unpackPremultiplyAlpha,
                           bool unpackUnmultiplyAlpha) override;
-    gl::Error copyCompressedTexture(const gl::Texture *source,
+    gl::Error copyCompressedTexture(const gl::Context *context,
+                                    const gl::Texture *source,
                                     GLint sourceLevel,
                                     TextureStorage *storage,
                                     GLint destLevel) override;
@@ -262,10 +267,12 @@ class Renderer11 : public RendererD3D
 
     // Image operations
     ImageD3D *createImage() override;
-    gl::Error generateMipmap(ImageD3D *dest, ImageD3D *source) override;
-    gl::Error generateMipmapUsingD3D(TextureStorage *storage,
+    gl::Error generateMipmap(const gl::Context *context, ImageD3D *dest, ImageD3D *source) override;
+    gl::Error generateMipmapUsingD3D(const gl::Context *context,
+                                     TextureStorage *storage,
                                      const gl::TextureState &textureState) override;
-    gl::Error copyImage(ImageD3D *dest,
+    gl::Error copyImage(const gl::Context *context,
+                        ImageD3D *dest,
                         ImageD3D *source,
                         const gl::Rectangle &sourceRect,
                         const gl::Offset &destOffset,
@@ -357,7 +364,8 @@ class Renderer11 : public RendererD3D
                                                            GLsizei count,
                                                            GLsizei instances) const override;
 
-    gl::Error readFromAttachment(const gl::FramebufferAttachment &srcAttachment,
+    gl::Error readFromAttachment(const gl::Context *context,
+                                 const gl::FramebufferAttachment &srcAttachment,
                                  const gl::Rectangle &sourceArea,
                                  GLenum format,
                                  GLenum type,
@@ -465,7 +473,8 @@ class Renderer11 : public RendererD3D
                               TextureHelper11 *textureOut);
 
   protected:
-    gl::Error clearTextures(gl::SamplerType samplerType,
+    gl::Error clearTextures(const gl::Context *context,
+                            gl::SamplerType samplerType,
                             size_t rangeStart,
                             size_t rangeEnd) override;
 
@@ -482,16 +491,14 @@ class Renderer11 : public RendererD3D
                                GLenum type,
                                const void *indices,
                                GLsizei instances);
-    gl::Error drawArraysIndirectImpl(const gl::ContextState &data,
-                                     GLenum mode,
-                                     const void *indirect);
-    gl::Error drawElementsIndirectImpl(const gl::ContextState &data,
+    gl::Error drawArraysIndirectImpl(const gl::Context *context, GLenum mode, const void *indirect);
+    gl::Error drawElementsIndirectImpl(const gl::Context *context,
                                        GLenum mode,
                                        GLenum type,
                                        const void *indirect);
 
     // Support directly using indirect draw buffer.
-    bool supportsFastIndirectDraw(const gl::State &state, GLenum mode, GLenum type);
+    bool supportsFastIndirectDraw(const gl::Context *context, GLenum mode, GLenum type);
 
     void generateCaps(gl::Caps *outCaps,
                       gl::TextureCapsMap *outTextureCaps,

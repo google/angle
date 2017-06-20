@@ -111,10 +111,7 @@ class FenceSyncTest : public testing::Test
         mFence->addRef();
     }
 
-    virtual void TearDown()
-    {
-        mFence->release();
-    }
+    virtual void TearDown() { mFence->release(nullptr); }
 
     MockFenceSyncImpl *mImpl;
     gl::FenceSync* mFence;
@@ -127,7 +124,7 @@ TEST_F(FenceSyncTest, DestructionDeletesImpl)
 
     gl::FenceSync* fence = new gl::FenceSync(impl, 1);
     fence->addRef();
-    fence->release();
+    fence->release(nullptr);
 
     // Only needed because the mock is leaked if bugs are present,
     // which logs an error, but does not cause the test to fail.

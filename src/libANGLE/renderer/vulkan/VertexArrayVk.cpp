@@ -21,7 +21,7 @@ VertexArrayVk::VertexArrayVk(const gl::VertexArrayState &data) : VertexArrayImpl
 {
 }
 
-VertexArrayVk::~VertexArrayVk()
+void VertexArrayVk::destroy(const gl::Context *context)
 {
 }
 

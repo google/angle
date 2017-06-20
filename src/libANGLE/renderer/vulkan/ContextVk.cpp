@@ -61,7 +61,7 @@ gl::Error ContextVk::finish()
     return gl::InternalError();
 }
 
-gl::Error ContextVk::initPipeline()
+gl::Error ContextVk::initPipeline(const gl::Context *context)
 {
     ASSERT(!mCurrentPipeline.valid());
 
@@ -228,7 +228,7 @@ gl::Error ContextVk::initPipeline()
 
     // TODO(jmadill): Dynamic state.
     vk::RenderPass *renderPass = nullptr;
-    ANGLE_TRY_RESULT(vkFBO->getRenderPass(device), renderPass);
+    ANGLE_TRY_RESULT(vkFBO->getRenderPass(context, device), renderPass);
     ASSERT(renderPass && renderPass->valid());
 
     vk::PipelineLayout *pipelineLayout = nullptr;
@@ -274,7 +274,7 @@ gl::Error ContextVk::drawArrays(const gl::Context *context, GLenum mode, GLint f
 
     if (!mCurrentPipeline.valid())
     {
-        ANGLE_TRY(initPipeline());
+        ANGLE_TRY(initPipeline(context));
         ASSERT(mCurrentPipeline.valid());
     }
 
@@ -316,7 +316,7 @@ gl::Error ContextVk::drawArrays(const gl::Context *context, GLenum mode, GLint f
 
     vk::CommandBuffer *commandBuffer = nullptr;
     ANGLE_TRY(mRenderer->getStartedCommandBuffer(&commandBuffer));
-    ANGLE_TRY(vkFBO->beginRenderPass(device, commandBuffer, queueSerial, state));
+    ANGLE_TRY(vkFBO->beginRenderPass(context, device, commandBuffer, queueSerial, state));
 
     commandBuffer->bindPipeline(VK_PIPELINE_BIND_POINT_GRAPHICS, mCurrentPipeline);
     commandBuffer->bindVertexBuffers(0, vertexHandles, vertexOffsets);
@@ -459,7 +459,7 @@ GLint64 ContextVk::getTimestamp()
     return GLint64();
 }
 
-void ContextVk::onMakeCurrent(const gl::ContextState & /*data*/)
+void ContextVk::onMakeCurrent(const gl::Context * /*context*/)
 {
 }
 

@@ -23,9 +23,10 @@ class MockFramebufferImpl : public rx::FramebufferImpl
     MockFramebufferImpl() : rx::FramebufferImpl(gl::FramebufferState()) {}
     virtual ~MockFramebufferImpl() { destructor(); }
 
-    MOCK_METHOD2(discard, gl::Error(size_t, const GLenum *));
-    MOCK_METHOD2(invalidate, gl::Error(size_t, const GLenum *));
-    MOCK_METHOD3(invalidateSub, gl::Error(size_t, const GLenum *, const gl::Rectangle &));
+    MOCK_METHOD3(discard, gl::Error(const gl::Context *, size_t, const GLenum *));
+    MOCK_METHOD3(invalidate, gl::Error(const gl::Context *, size_t, const GLenum *));
+    MOCK_METHOD4(invalidateSub,
+                 gl::Error(const gl::Context *, size_t, const GLenum *, const gl::Rectangle &));
 
     MOCK_METHOD2(clear, gl::Error(const gl::Context *, GLbitfield));
     MOCK_METHOD4(clearBufferfv, gl::Error(const gl::Context *, GLenum, GLint, const GLfloat *));
@@ -33,8 +34,8 @@ class MockFramebufferImpl : public rx::FramebufferImpl
     MOCK_METHOD4(clearBufferiv, gl::Error(const gl::Context *, GLenum, GLint, const GLint *));
     MOCK_METHOD5(clearBufferfi, gl::Error(const gl::Context *, GLenum, GLint, GLfloat, GLint));
 
-    MOCK_CONST_METHOD0(getImplementationColorReadFormat, GLenum());
-    MOCK_CONST_METHOD0(getImplementationColorReadType, GLenum());
+    MOCK_CONST_METHOD1(getImplementationColorReadFormat, GLenum(const gl::Context *));
+    MOCK_CONST_METHOD1(getImplementationColorReadType, GLenum(const gl::Context *));
     MOCK_CONST_METHOD5(
         readPixels,
         gl::Error(const gl::Context *, const gl::Rectangle &, GLenum, GLenum, void *));

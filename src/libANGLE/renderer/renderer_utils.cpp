@@ -170,6 +170,18 @@ PackPixelsParams::PackPixelsParams(const gl::Rectangle &areaIn,
 {
 }
 
+PackPixelsParams::PackPixelsParams(const gl::Context *context, const PackPixelsParams &other)
+    : area(other.area),
+      format(other.format),
+      type(other.type),
+      outputPitch(other.outputPitch),
+      packBuffer(other.packBuffer),
+      pack(),
+      offset(other.offset)
+{
+    pack.copyFrom(context, other.pack);
+}
+
 void PackPixels(const PackPixelsParams &params,
                 const angle::Format &sourceFormat,
                 int inputPitchIn,

@@ -22,7 +22,8 @@ class FramebufferAttachmentObjectImpl : angle::NonCopyable
     FramebufferAttachmentObjectImpl() {}
     virtual ~FramebufferAttachmentObjectImpl() {}
 
-    virtual gl::Error getAttachmentRenderTarget(GLenum binding,
+    virtual gl::Error getAttachmentRenderTarget(const gl::Context *context,
+                                                GLenum binding,
                                                 const gl::ImageIndex &imageIndex,
                                                 FramebufferAttachmentRenderTarget **rtOut)
     {

@@ -182,7 +182,7 @@ void QueryTexParameterBase(const Texture *texture, GLenum pname, ParamType *para
 }
 
 template <typename ParamType>
-void SetTexParameterBase(Texture *texture, GLenum pname, const ParamType *params)
+void SetTexParameterBase(Context *context, Texture *texture, GLenum pname, const ParamType *params)
 {
     ASSERT(texture != nullptr);
 
@@ -228,8 +228,10 @@ void SetTexParameterBase(Texture *texture, GLenum pname, const ParamType *params
             texture->setSwizzleAlpha(ConvertToGLenum(params[0]));
             break;
         case GL_TEXTURE_BASE_LEVEL:
-            texture->setBaseLevel(ConvertToGLuint(params[0]));
+        {
+            context->handleError(texture->setBaseLevel(context, ConvertToGLuint(params[0])));
             break;
+        }
         case GL_TEXTURE_MAX_LEVEL:
             texture->setMaxLevel(ConvertToGLuint(params[0]));
             break;
@@ -934,24 +936,24 @@ Error QuerySynciv(const FenceSync *sync,
     return NoError();
 }
 
-void SetTexParameterf(Texture *texture, GLenum pname, GLfloat param)
+void SetTexParameterf(Context *context, Texture *texture, GLenum pname, GLfloat param)
 {
-    SetTexParameterBase(texture, pname, &param);
+    SetTexParameterBase(context, texture, pname, &param);
 }
 
-void SetTexParameterfv(Texture *texture, GLenum pname, const GLfloat *params)
+void SetTexParameterfv(Context *context, Texture *texture, GLenum pname, const GLfloat *params)
 {
-    SetTexParameterBase(texture, pname, params);
+    SetTexParameterBase(context, texture, pname, params);
 }
 
-void SetTexParameteri(Texture *texture, GLenum pname, GLint param)
+void SetTexParameteri(Context *context, Texture *texture, GLenum pname, GLint param)
 {
-    SetTexParameterBase(texture, pname, &param);
+    SetTexParameterBase(context, texture, pname, &param);
 }
 
-void SetTexParameteriv(Texture *texture, GLenum pname, const GLint *params)
+void SetTexParameteriv(Context *context, Texture *texture, GLenum pname, const GLint *params)
 {
-    SetTexParameterBase(texture, pname, params);
+    SetTexParameterBase(context, texture, pname, params);
 }
 
 void SetSamplerParameterf(Sampler *sampler, GLenum pname, GLfloat param)

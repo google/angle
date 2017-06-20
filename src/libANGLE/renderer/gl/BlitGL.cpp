@@ -163,7 +163,8 @@ BlitGL::~BlitGL()
     }
 }
 
-gl::Error BlitGL::copyImageToLUMAWorkaroundTexture(GLuint texture,
+gl::Error BlitGL::copyImageToLUMAWorkaroundTexture(const gl::Context *context,
+                                                   GLuint texture,
                                                    GLenum textureType,
                                                    GLenum target,
                                                    GLenum lumaFormat,
@@ -180,14 +181,15 @@ gl::Error BlitGL::copyImageToLUMAWorkaroundTexture(GLuint texture,
     gl::PixelUnpackState unpack;
     mStateManager->setPixelUnpackState(unpack);
     mFunctions->texImage2D(target, static_cast<GLint>(level), internalFormat, sourceArea.width,
-                           sourceArea.height, 0, format, source->getImplementationColorReadType(),
-                           nullptr);
+                           sourceArea.height, 0, format,
+                           source->getImplementationColorReadType(context), nullptr);
 
-    return copySubImageToLUMAWorkaroundTexture(texture, textureType, target, lumaFormat, level,
-                                               gl::Offset(0, 0, 0), sourceArea, source);
+    return copySubImageToLUMAWorkaroundTexture(context, texture, textureType, target, lumaFormat,
+                                               level, gl::Offset(0, 0, 0), sourceArea, source);
 }
 
-gl::Error BlitGL::copySubImageToLUMAWorkaroundTexture(GLuint texture,
+gl::Error BlitGL::copySubImageToLUMAWorkaroundTexture(const gl::Context *context,
+                                                      GLuint texture,
                                                       GLenum textureType,
                                                       GLenum target,
                                                       GLenum lumaFormat,
@@ -203,8 +205,8 @@ gl::Error BlitGL::copySubImageToLUMAWorkaroundTexture(GLuint texture,
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, sourceFramebufferGL->getFramebufferID());
 
     nativegl::CopyTexImageImageFormat copyTexImageFormat = nativegl::GetCopyTexImageImageFormat(
-        mFunctions, mWorkarounds, source->getImplementationColorReadFormat(),
-        source->getImplementationColorReadType());
+        mFunctions, mWorkarounds, source->getImplementationColorReadFormat(context),
+        source->getImplementationColorReadType(context));
 
     mStateManager->bindTexture(GL_TEXTURE_2D, mScratchTextures[0]);
     mFunctions->copyTexImage2D(GL_TEXTURE_2D, 0, copyTexImageFormat.internalFormat, sourceArea.x,
@@ -224,7 +226,7 @@ gl::Error BlitGL::copySubImageToLUMAWorkaroundTexture(GLuint texture,
     mFunctions->texImage2D(GL_TEXTURE_2D, 0, copyTexImageFormat.internalFormat, sourceArea.width,
                            sourceArea.height, 0,
                            gl::GetUnsizedFormat(copyTexImageFormat.internalFormat),
-                           source->getImplementationColorReadType(), nullptr);
+                           source->getImplementationColorReadType(context), nullptr);
 
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mScratchFBO);
     mFunctions->framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
@@ -426,7 +428,8 @@ gl::Error BlitGL::blitColorBufferWithShader(const gl::Framebuffer *source,
     return gl::NoError();
 }
 
-gl::Error BlitGL::copySubTexture(TextureGL *source,
+gl::Error BlitGL::copySubTexture(const gl::Context *context,
+                                 TextureGL *source,
                                  size_t sourceLevel,
                                  TextureGL *dest,
                                  GLenum destTarget,
@@ -466,7 +469,7 @@ gl::Error BlitGL::copySubTexture(TextureGL *source,
     }
     source->setMinFilter(GL_NEAREST);
     source->setMagFilter(GL_NEAREST);
-    source->setBaseLevel(static_cast<GLuint>(sourceLevel));
+    source->setBaseLevel(context, static_cast<GLuint>(sourceLevel));
 
     // Render to the destination texture, sampling from the source texture
     ScopedGLState scopedState(

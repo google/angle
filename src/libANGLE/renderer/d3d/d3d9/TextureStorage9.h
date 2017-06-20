@@ -32,12 +32,16 @@ class TextureStorage9 : public TextureStorage
     D3DPOOL getPool() const;
     DWORD getUsage() const;
 
-    virtual gl::Error getSurfaceLevel(GLenum target,
+    virtual gl::Error getSurfaceLevel(const gl::Context *context,
+                                      GLenum target,
                                       int level,
                                       bool dirty,
                                       IDirect3DSurface9 **outSurface) = 0;
-    virtual gl::Error getBaseTexture(IDirect3DBaseTexture9 **outTexture) = 0;
-    virtual gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT) = 0;
+    virtual gl::Error getBaseTexture(const gl::Context *context,
+                                     IDirect3DBaseTexture9 **outTexture) = 0;
+    virtual gl::Error getRenderTarget(const gl::Context *context,
+                                      const gl::ImageIndex &index,
+                                      RenderTargetD3D **outRT) = 0;
 
     virtual int getTopLevel() const;
     virtual bool isRenderTarget() const;
@@ -45,8 +49,13 @@ class TextureStorage9 : public TextureStorage
     bool supportsNativeMipmapFunction() const override;
     virtual int getLevelCount() const;
 
-    virtual gl::Error setData(const gl::ImageIndex &index, ImageD3D *image, const gl::Box *destBox, GLenum type,
-                              const gl::PixelUnpackState &unpack, const uint8_t *pixelData);
+    gl::Error setData(const gl::Context *context,
+                      const gl::ImageIndex &index,
+                      ImageD3D *image,
+                      const gl::Box *destBox,
+                      GLenum type,
+                      const gl::PixelUnpackState &unpack,
+                      const uint8_t *pixelData) override;
 
   protected:
     int mTopLevel;
@@ -72,16 +81,20 @@ class TextureStorage9_2D : public TextureStorage9
     TextureStorage9_2D(Renderer9 *renderer, GLenum internalformat, bool renderTarget, GLsizei width, GLsizei height, int levels);
     ~TextureStorage9_2D() override;
 
-    gl::Error getSurfaceLevel(GLenum target,
+    gl::Error getSurfaceLevel(const gl::Context *context,
+                              GLenum target,
                               int level,
                               bool dirty,
                               IDirect3DSurface9 **outSurface) override;
-    gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT) override;
-    gl::Error getBaseTexture(IDirect3DBaseTexture9 **outTexture) override;
+    gl::Error getRenderTarget(const gl::Context *context,
+                              const gl::ImageIndex &index,
+                              RenderTargetD3D **outRT) override;
+    gl::Error getBaseTexture(const gl::Context *context,
+                             IDirect3DBaseTexture9 **outTexture) override;
     gl::Error generateMipmap(const gl::Context *context,
                              const gl::ImageIndex &sourceIndex,
                              const gl::ImageIndex &destIndex) override;
-    gl::Error copyToStorage(TextureStorage *destStorage) override;
+    gl::Error copyToStorage(const gl::Context *context, TextureStorage *destStorage) override;
 
   private:
     IDirect3DTexture9 *mTexture;
@@ -94,16 +107,20 @@ class TextureStorage9_EGLImage final : public TextureStorage9
     TextureStorage9_EGLImage(Renderer9 *renderer, EGLImageD3D *image, RenderTarget9 *renderTarget9);
     ~TextureStorage9_EGLImage() override;
 
-    gl::Error getSurfaceLevel(GLenum target,
+    gl::Error getSurfaceLevel(const gl::Context *context,
+                              GLenum target,
                               int level,
                               bool dirty,
                               IDirect3DSurface9 **outSurface) override;
-    gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT) override;
-    gl::Error getBaseTexture(IDirect3DBaseTexture9 **outTexture) override;
+    gl::Error getRenderTarget(const gl::Context *context,
+                              const gl::ImageIndex &index,
+                              RenderTargetD3D **outRT) override;
+    gl::Error getBaseTexture(const gl::Context *context,
+                             IDirect3DBaseTexture9 **outTexture) override;
     gl::Error generateMipmap(const gl::Context *context,
                              const gl::ImageIndex &sourceIndex,
                              const gl::ImageIndex &destIndex) override;
-    gl::Error copyToStorage(TextureStorage *destStorage) override;
+    gl::Error copyToStorage(const gl::Context *context, TextureStorage *destStorage) override;
 
   private:
     EGLImageD3D *mImage;
@@ -115,16 +132,20 @@ class TextureStorage9_Cube : public TextureStorage9
     TextureStorage9_Cube(Renderer9 *renderer, GLenum internalformat, bool renderTarget, int size, int levels, bool hintLevelZeroOnly);
     virtual ~TextureStorage9_Cube();
 
-    gl::Error getSurfaceLevel(GLenum target,
+    gl::Error getSurfaceLevel(const gl::Context *context,
+                              GLenum target,
                               int level,
                               bool dirty,
                               IDirect3DSurface9 **outSurface) override;
-    gl::Error getRenderTarget(const gl::ImageIndex &index, RenderTargetD3D **outRT) override;
-    gl::Error getBaseTexture(IDirect3DBaseTexture9 **outTexture) override;
+    gl::Error getRenderTarget(const gl::Context *context,
+                              const gl::ImageIndex &index,
+                              RenderTargetD3D **outRT) override;
+    gl::Error getBaseTexture(const gl::Context *context,
+                             IDirect3DBaseTexture9 **outTexture) override;
     gl::Error generateMipmap(const gl::Context *context,
                              const gl::ImageIndex &sourceIndex,
                              const gl::ImageIndex &destIndex) override;
-    gl::Error copyToStorage(TextureStorage *destStorage) override;
+    gl::Error copyToStorage(const gl::Context *context, TextureStorage *destStorage) override;
 
   private:
     static const size_t CUBE_FACE_COUNT = 6;

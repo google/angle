@@ -123,8 +123,8 @@ class StateManagerGL final : angle::NonCopyable
                            GLint skipPixels,
                            GLuint packBuffer);
 
-    void setFramebufferSRGBEnabled(const gl::ContextState &data, bool enabled);
-    void setFramebufferSRGBEnabledForFramebuffer(const gl::ContextState &data,
+    void setFramebufferSRGBEnabled(const gl::Context *context, bool enabled);
+    void setFramebufferSRGBEnabledForFramebuffer(const gl::Context *context,
                                                  bool enabled,
                                                  const FramebufferGL *framebuffer);
 
@@ -141,35 +141,35 @@ class StateManagerGL final : angle::NonCopyable
 
     void onDeleteQueryObject(QueryGL *query);
 
-    gl::Error setDrawArraysState(const gl::ContextState &data,
+    gl::Error setDrawArraysState(const gl::Context *context,
                                  GLint first,
                                  GLsizei count,
                                  GLsizei instanceCount);
-    gl::Error setDrawElementsState(const gl::ContextState &data,
+    gl::Error setDrawElementsState(const gl::Context *context,
                                    GLsizei count,
                                    GLenum type,
                                    const void *indices,
                                    GLsizei instanceCount,
                                    const void **outIndices);
-    gl::Error setDrawIndirectState(const gl::ContextState &data, GLenum type);
+    gl::Error setDrawIndirectState(const gl::Context *context, GLenum type);
 
-    gl::Error setDispatchComputeState(const gl::ContextState &data);
+    gl::Error setDispatchComputeState(const gl::Context *context);
 
     void pauseTransformFeedback();
     void pauseAllQueries();
     void pauseQuery(GLenum type);
     void resumeAllQueries();
     void resumeQuery(GLenum type);
-    gl::Error onMakeCurrent(const gl::ContextState &data);
+    gl::Error onMakeCurrent(const gl::Context *context);
 
-    void syncState(const gl::ContextState &data, const gl::State::DirtyBits &glDirtyBits);
+    void syncState(const gl::Context *context, const gl::State::DirtyBits &glDirtyBits);
 
   private:
     // Set state that's common among draw commands and compute invocations.
-    void setGenericShaderState(const gl::ContextState &data);
+    void setGenericShaderState(const gl::Context *context);
 
     // Set state that's common among draw commands.
-    gl::Error setGenericDrawState(const gl::ContextState &data);
+    gl::Error setGenericDrawState(const gl::Context *context);
 
     void setTextureCubemapSeamlessEnabled(bool enabled);
 

@@ -146,8 +146,15 @@ class RendererD3D : public BufferFactoryD3D
                                            HANDLE shareHandle,
                                            const egl::AttributeMap &attribs) const = 0;
 
-    virtual gl::Error setSamplerState(gl::SamplerType type, int index, gl::Texture *texture, const gl::SamplerState &sampler) = 0;
-    virtual gl::Error setTexture(gl::SamplerType type, int index, gl::Texture *texture) = 0;
+    virtual gl::Error setSamplerState(const gl::Context *context,
+                                      gl::SamplerType type,
+                                      int index,
+                                      gl::Texture *texture,
+                                      const gl::SamplerState &sampler) = 0;
+    virtual gl::Error setTexture(const gl::Context *context,
+                                 gl::SamplerType type,
+                                 int index,
+                                 gl::Texture *texture) = 0;
 
     virtual gl::Error setUniformBuffers(const gl::ContextState &data,
                                         const std::vector<GLint> &vertexUniformBuffers,
@@ -207,7 +214,8 @@ class RendererD3D : public BufferFactoryD3D
                                   bool unpackFlipY,
                                   bool unpackPremultiplyAlpha,
                                   bool unpackUnmultiplyAlpha) = 0;
-    virtual gl::Error copyCompressedTexture(const gl::Texture *source,
+    virtual gl::Error copyCompressedTexture(const gl::Context *context,
+                                            const gl::Texture *source,
                                             GLint sourceLevel,
                                             TextureStorage *storage,
                                             GLint destLevel) = 0;
@@ -236,10 +244,14 @@ class RendererD3D : public BufferFactoryD3D
 
     // Image operations
     virtual ImageD3D *createImage() = 0;
-    virtual gl::Error generateMipmap(ImageD3D *dest, ImageD3D *source) = 0;
-    virtual gl::Error generateMipmapUsingD3D(TextureStorage *storage,
+    virtual gl::Error generateMipmap(const gl::Context *context,
+                                     ImageD3D *dest,
+                                     ImageD3D *source) = 0;
+    virtual gl::Error generateMipmapUsingD3D(const gl::Context *context,
+                                             TextureStorage *storage,
                                              const gl::TextureState &textureState) = 0;
-    virtual gl::Error copyImage(ImageD3D *dest,
+    virtual gl::Error copyImage(const gl::Context *context,
+                                ImageD3D *dest,
                                 ImageD3D *source,
                                 const gl::Rectangle &sourceRect,
                                 const gl::Offset &destOffset,
@@ -283,7 +295,10 @@ class RendererD3D : public BufferFactoryD3D
     GLint64 getTimestamp();
 
     // In D3D11, faster than calling setTexture a jillion times
-    virtual gl::Error clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd) = 0;
+    virtual gl::Error clearTextures(const gl::Context *context,
+                                    gl::SamplerType samplerType,
+                                    size_t rangeStart,
+                                    size_t rangeEnd) = 0;
 
     virtual egl::Error getEGLDevice(DeviceImpl **device) = 0;
 
@@ -342,7 +357,7 @@ class RendererD3D : public BufferFactoryD3D
 
     size_t getBoundFramebufferTextures(const gl::ContextState &data,
                                        FramebufferTextureArray *outTextureArray);
-    gl::Texture *getIncompleteTexture(GLImplFactory *implFactory, GLenum type);
+    gl::Texture *getIncompleteTexture(const gl::Context *context, GLenum type);
 
     virtual angle::WorkaroundsD3D generateWorkarounds() const = 0;
 

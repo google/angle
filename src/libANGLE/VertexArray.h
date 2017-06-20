@@ -75,7 +75,8 @@ class VertexArray final : public LabeledObject
 {
   public:
     VertexArray(rx::GLImplFactory *factory, GLuint id, size_t maxAttribs, size_t maxAttribBindings);
-    ~VertexArray();
+
+    void onDestroy(const Context *context);
 
     GLuint id() const;
 
@@ -89,10 +90,11 @@ class VertexArray final : public LabeledObject
         return mState.getBindingFromAttribIndex(attribIndex);
     }
 
-    void detachBuffer(GLuint bufferName);
+    void detachBuffer(const Context *context, GLuint bufferName);
     void setVertexAttribDivisor(size_t index, GLuint divisor);
     void enableAttribute(size_t attribIndex, bool enabledState);
-    void setAttributeState(size_t attribIndex,
+    void setAttributeState(const Context *context,
+                           size_t attribIndex,
                            Buffer *boundBuffer,
                            GLint size,
                            GLenum type,
@@ -106,14 +108,15 @@ class VertexArray final : public LabeledObject
                                bool normalized,
                                bool pureInteger,
                                GLintptr relativeOffset);
-    void bindVertexBuffer(size_t bindingIndex,
+    void bindVertexBuffer(const Context *context,
+                          size_t bindingIndex,
                           Buffer *boundBuffer,
                           GLintptr offset,
                           GLsizei stride);
     void setVertexAttribBinding(size_t attribIndex, size_t bindingIndex);
     void setVertexBindingDivisor(size_t bindingIndex, GLuint divisor);
 
-    void setElementArrayBuffer(Buffer *buffer);
+    void setElementArrayBuffer(const Context *context, Buffer *buffer);
 
     const BindingPointer<Buffer> &getElementArrayBuffer() const
     {
@@ -176,6 +179,8 @@ class VertexArray final : public LabeledObject
     bool hasAnyDirtyBit() const { return mDirtyBits.any(); }
 
   private:
+    ~VertexArray();
+
     GLuint mId;
 
     VertexArrayState mState;

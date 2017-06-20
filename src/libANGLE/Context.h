@@ -37,6 +37,7 @@ namespace egl
 class AttributeMap;
 class Surface;
 struct Config;
+class Thread;
 }
 
 namespace gl
@@ -67,11 +68,11 @@ class Context final : public ValidationContext
             const egl::DisplayExtensions &displayExtensions,
             bool robustResourceInit);
 
-    void destroy(egl::Display *display);
+    egl::Error onDestroy(const egl::Display *display);
     ~Context() override;
 
-    void makeCurrent(egl::Display *display, egl::Surface *surface);
-    void releaseSurface(egl::Display *display);
+    egl::Error makeCurrent(egl::Display *display, egl::Surface *surface);
+    egl::Error releaseSurface(const egl::Display *display);
 
     // These create  and destroy methods are merely pass-throughs to
     // ResourceManager, which owns these object types

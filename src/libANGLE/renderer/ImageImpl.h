@@ -12,11 +12,16 @@
 #include "common/angleutils.h"
 #include "libANGLE/Error.h"
 
+namespace gl
+{
+class Context;
+}  // namespace gl
+
 namespace egl
 {
 class ImageSibling;
 struct ImageState;
-}
+}  // namespace egl
 
 namespace rx
 {
@@ -27,7 +32,7 @@ class ImageImpl : angle::NonCopyable
     virtual ~ImageImpl() {}
     virtual egl::Error initialize() = 0;
 
-    virtual gl::Error orphan(egl::ImageSibling *sibling) = 0;
+    virtual gl::Error orphan(const gl::Context *context, egl::ImageSibling *sibling) = 0;
 
   protected:
     const egl::ImageState &mState;

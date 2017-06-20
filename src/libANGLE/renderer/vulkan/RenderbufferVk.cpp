@@ -43,7 +43,8 @@ gl::Error RenderbufferVk::setStorageEGLImageTarget(egl::Image *image)
     return gl::InternalError();
 }
 
-gl::Error RenderbufferVk::getAttachmentRenderTarget(GLenum binding,
+gl::Error RenderbufferVk::getAttachmentRenderTarget(const gl::Context *context,
+                                                    GLenum binding,
                                                     const gl::ImageIndex &imageIndex,
                                                     FramebufferAttachmentRenderTarget **rtOut)
 {

@@ -24,17 +24,22 @@ FramebufferNULL::~FramebufferNULL()
 {
 }
 
-gl::Error FramebufferNULL::discard(size_t count, const GLenum *attachments)
+gl::Error FramebufferNULL::discard(const gl::Context *context,
+                                   size_t count,
+                                   const GLenum *attachments)
 {
     return gl::NoError();
 }
 
-gl::Error FramebufferNULL::invalidate(size_t count, const GLenum *attachments)
+gl::Error FramebufferNULL::invalidate(const gl::Context *context,
+                                      size_t count,
+                                      const GLenum *attachments)
 {
     return gl::NoError();
 }
 
-gl::Error FramebufferNULL::invalidateSub(size_t count,
+gl::Error FramebufferNULL::invalidateSub(const gl::Context *context,
+                                         size_t count,
                                          const GLenum *attachments,
                                          const gl::Rectangle &area)
 {
@@ -79,7 +84,7 @@ gl::Error FramebufferNULL::clearBufferfi(const gl::Context *context,
     return gl::NoError();
 }
 
-GLenum FramebufferNULL::getImplementationColorReadFormat() const
+GLenum FramebufferNULL::getImplementationColorReadFormat(const gl::Context *context) const
 {
     const gl::FramebufferAttachment *readAttachment = mState.getReadAttachment();
     if (readAttachment == nullptr)
@@ -92,7 +97,7 @@ GLenum FramebufferNULL::getImplementationColorReadFormat() const
     return format.info->getReadPixelsFormat();
 }
 
-GLenum FramebufferNULL::getImplementationColorReadType() const
+GLenum FramebufferNULL::getImplementationColorReadType(const gl::Context *context) const
 {
     const gl::FramebufferAttachment *readAttachment = mState.getReadAttachment();
     if (readAttachment == nullptr)

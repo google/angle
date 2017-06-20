@@ -870,9 +870,9 @@ void StateManager11::onDeleteQueryObject(Query11 *query)
     mCurrentQueries.erase(query);
 }
 
-gl::Error StateManager11::onMakeCurrent(const gl::ContextState &data)
+gl::Error StateManager11::onMakeCurrent(const gl::Context *context)
 {
-    const gl::State &state = data.getState();
+    const gl::State &state = context->getGLState();
 
     for (Query11 *query : mCurrentQueries)
     {
@@ -1011,7 +1011,7 @@ void StateManager11::deinitialize()
 gl::Error StateManager11::syncFramebuffer(const gl::Context *context, gl::Framebuffer *framebuffer)
 {
     Framebuffer11 *framebuffer11 = GetImplAs<Framebuffer11>(framebuffer);
-    ANGLE_TRY(framebuffer11->markAttachmentsDirty());
+    ANGLE_TRY(framebuffer11->markAttachmentsDirty(context));
 
     if (framebuffer11->hasAnyInternalDirtyBit())
     {
@@ -1268,7 +1268,7 @@ gl::Error StateManager11::updateState(const gl::Context *context, GLenum drawMod
     {
         ASSERT(firstColorAttachment->isAttached());
         RenderTarget11 *renderTarget = nullptr;
-        ANGLE_TRY(firstColorAttachment->getRenderTarget(&renderTarget));
+        ANGLE_TRY(firstColorAttachment->getRenderTarget(context, &renderTarget));
         samples = renderTarget->getSamples();
     }
     gl::RasterizerState rasterizer = glState.getRasterizerState();

@@ -97,21 +97,27 @@ class MockTextureImpl : public TextureImpl
     MOCK_METHOD2(copyCompressedTexture, gl::Error(const gl::Context *, const gl::Texture *source));
     MOCK_METHOD5(setStorage,
                  gl::Error(const gl::Context *, GLenum, size_t, GLenum, const gl::Extents &));
-    MOCK_METHOD3(setImageExternal,
-                 gl::Error(GLenum, egl::Stream *, const egl::Stream::GLTextureDescription &));
-    MOCK_METHOD2(setEGLImageTarget, gl::Error(GLenum, egl::Image *));
+    MOCK_METHOD4(setImageExternal,
+                 gl::Error(const gl::Context *,
+                           GLenum,
+                           egl::Stream *,
+                           const egl::Stream::GLTextureDescription &));
+    MOCK_METHOD3(setEGLImageTarget, gl::Error(const gl::Context *, GLenum, egl::Image *));
     MOCK_METHOD1(generateMipmap, gl::Error(const gl::Context *));
-    MOCK_METHOD1(bindTexImage, void(egl::Surface *));
-    MOCK_METHOD0(releaseTexImage, void(void));
+    MOCK_METHOD2(bindTexImage, gl::Error(const gl::Context *, egl::Surface *));
+    MOCK_METHOD1(releaseTexImage, gl::Error(const gl::Context *));
 
-    MOCK_METHOD3(getAttachmentRenderTarget,
-                 gl::Error(GLenum, const gl::ImageIndex &, FramebufferAttachmentRenderTarget **));
+    MOCK_METHOD4(getAttachmentRenderTarget,
+                 gl::Error(const gl::Context *,
+                           GLenum,
+                           const gl::ImageIndex &,
+                           FramebufferAttachmentRenderTarget **));
 
     MOCK_METHOD6(
         setStorageMultisample,
         gl::Error(const gl::Context *, GLenum, GLsizei, GLint, const gl::Extents &, GLboolean));
 
-    MOCK_METHOD1(setBaseLevel, void(GLuint));
+    MOCK_METHOD2(setBaseLevel, gl::Error(const gl::Context *, GLuint));
 
     MOCK_METHOD1(syncState, void(const gl::Texture::DirtyBits &));
 

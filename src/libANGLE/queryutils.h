@@ -103,10 +103,10 @@ Error QuerySynciv(const FenceSync *sync,
                   GLsizei *length,
                   GLint *values);
 
-void SetTexParameterf(Texture *texture, GLenum pname, GLfloat param);
-void SetTexParameterfv(Texture *texture, GLenum pname, const GLfloat *params);
-void SetTexParameteri(Texture *texture, GLenum pname, GLint param);
-void SetTexParameteriv(Texture *texture, GLenum pname, const GLint *params);
+void SetTexParameterf(Context *context, Texture *texture, GLenum pname, GLfloat param);
+void SetTexParameterfv(Context *context, Texture *texture, GLenum pname, const GLfloat *params);
+void SetTexParameteri(Context *context, Texture *texture, GLenum pname, GLint param);
+void SetTexParameteriv(Context *context, Texture *texture, GLenum pname, const GLint *params);
 
 void SetSamplerParameterf(Sampler *sampler, GLenum pname, GLfloat param);
 void SetSamplerParameterfv(Sampler *sampler, GLenum pname, const GLfloat *params);

@@ -28,7 +28,7 @@ egl::Error ImageVk::initialize()
     return egl::EglBadAccess();
 }
 
-gl::Error ImageVk::orphan(egl::ImageSibling *sibling)
+gl::Error ImageVk::orphan(const gl::Context *context, egl::ImageSibling *sibling)
 {
     UNIMPLEMENTED();
     return gl::InternalError();

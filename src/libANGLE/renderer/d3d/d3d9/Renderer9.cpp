@@ -925,7 +925,8 @@ gl::Error Renderer9::fastCopyBufferToTexture(const gl::Context *context,
     return gl::InternalError();
 }
 
-gl::Error Renderer9::setSamplerState(gl::SamplerType type,
+gl::Error Renderer9::setSamplerState(const gl::Context *context,
+                                     gl::SamplerType type,
                                      int index,
                                      gl::Texture *texture,
                                      const gl::SamplerState &samplerState)
@@ -937,11 +938,7 @@ gl::Error Renderer9::setSamplerState(gl::SamplerType type,
     TextureD3D *textureD3D = GetImplAs<TextureD3D>(texture);
 
     TextureStorage *storage = nullptr;
-    gl::Error error         = textureD3D->getNativeTexture(&storage);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(textureD3D->getNativeTexture(context, &storage));
 
     // Storage should exist, texture should be complete
     ASSERT(storage);
@@ -986,7 +983,10 @@ gl::Error Renderer9::setSamplerState(gl::SamplerType type,
     return gl::NoError();
 }
 
-gl::Error Renderer9::setTexture(gl::SamplerType type, int index, gl::Texture *texture)
+gl::Error Renderer9::setTexture(const gl::Context *context,
+                                gl::SamplerType type,
+                                int index,
+                                gl::Texture *texture)
 {
     int d3dSamplerOffset              = (type == gl::SAMPLER_PIXEL) ? 0 : D3DVERTEXTEXTURESAMPLER0;
     int d3dSampler                    = index + d3dSamplerOffset;
@@ -1001,21 +1001,13 @@ gl::Error Renderer9::setTexture(gl::SamplerType type, int index, gl::Texture *te
         TextureD3D *textureImpl = GetImplAs<TextureD3D>(texture);
 
         TextureStorage *texStorage = nullptr;
-        gl::Error error            = textureImpl->getNativeTexture(&texStorage);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(textureImpl->getNativeTexture(context, &texStorage));
 
         // Texture should be complete and have a storage
         ASSERT(texStorage);
 
         TextureStorage9 *storage9 = GetAs<TextureStorage9>(texStorage);
-        error                     = storage9->getBaseTexture(&d3dTexture);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(storage9->getBaseTexture(context, &d3dTexture));
 
         // If we get NULL back from getBaseTexture here, something went wrong
         // in the texture class and we're unexpectedly missing the d3d texture
@@ -1043,7 +1035,7 @@ gl::Error Renderer9::setUniformBuffers(const gl::ContextState & /*data*/,
     return gl::NoError();
 }
 
-gl::Error Renderer9::updateState(Context9 *context, GLenum drawMode)
+gl::Error Renderer9::updateState(const gl::Context *context, GLenum drawMode)
 {
     const auto &data    = context->getContextState();
     const auto &glState = data.getState();
@@ -1072,7 +1064,7 @@ gl::Error Renderer9::updateState(Context9 *context, GLenum drawMode)
     {
         ASSERT(firstColorAttachment->isAttached());
         RenderTarget9 *renderTarget = nullptr;
-        ANGLE_TRY(firstColorAttachment->getRenderTarget(&renderTarget));
+        ANGLE_TRY(firstColorAttachment->getRenderTarget(context, &renderTarget));
         samples = renderTarget->getSamples();
     }
     gl::RasterizerState rasterizer = glState.getRasterizerState();
@@ -1080,7 +1072,7 @@ gl::Error Renderer9::updateState(Context9 *context, GLenum drawMode)
     rasterizer.multiSample         = (samples != 0);
 
     unsigned int mask = GetBlendSampleMask(data, samples);
-    ANGLE_TRY(setBlendDepthRasterStates(data, mask));
+    ANGLE_TRY(setBlendDepthRasterStates(context, mask));
 
     mStateManager.resetDirtyBits();
 
@@ -1092,9 +1084,9 @@ void Renderer9::setScissorRectangle(const gl::Rectangle &scissor, bool enabled)
     mStateManager.setScissorState(scissor, enabled);
 }
 
-gl::Error Renderer9::setBlendDepthRasterStates(const gl::ContextState &glData, GLenum drawMode)
+gl::Error Renderer9::setBlendDepthRasterStates(const gl::Context *context, GLenum drawMode)
 {
-    const auto &glState  = glData.getState();
+    const auto &glState  = context->getGLState();
     auto drawFramebuffer = glState.getDrawFramebuffer();
     ASSERT(!drawFramebuffer->hasAnyDirtyBit());
     // Since framebuffer->getSamples will return the original samples which may be different with
@@ -1106,14 +1098,14 @@ gl::Error Renderer9::setBlendDepthRasterStates(const gl::ContextState &glData, G
     {
         ASSERT(firstColorAttachment->isAttached());
         RenderTarget9 *renderTarget = nullptr;
-        ANGLE_TRY(firstColorAttachment->getRenderTarget(&renderTarget));
+        ANGLE_TRY(firstColorAttachment->getRenderTarget(context, &renderTarget));
         samples = renderTarget->getSamples();
     }
     gl::RasterizerState rasterizer = glState.getRasterizerState();
     rasterizer.pointDrawMode       = (drawMode == GL_POINTS);
     rasterizer.multiSample         = (samples != 0);
 
-    unsigned int mask = GetBlendSampleMask(glData, samples);
+    unsigned int mask = GetBlendSampleMask(context->getContextState(), samples);
     return mStateManager.setBlendDepthRasterStates(glState, mask);
 }
 
@@ -1168,7 +1160,7 @@ bool Renderer9::applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSiz
     return mPrimitiveCount > 0;
 }
 
-gl::Error Renderer9::getNullColorbuffer(GLImplFactory *implFactory,
+gl::Error Renderer9::getNullColorbuffer(const gl::Context *context,
                                         const gl::FramebufferAttachment *depthbuffer,
                                         const gl::FramebufferAttachment **outColorBuffer)
 {
@@ -1189,8 +1181,10 @@ gl::Error Renderer9::getNullColorbuffer(GLImplFactory *implFactory,
         }
     }
 
+    auto *implFactory = context->getImplementation();
+
     gl::Renderbuffer *nullRenderbuffer = new gl::Renderbuffer(implFactory->createRenderbuffer(), 0);
-    gl::Error error = nullRenderbuffer->setStorage(GL_NONE, size.width, size.height);
+    gl::Error error = nullRenderbuffer->setStorage(context, GL_NONE, size.width, size.height);
     if (error.isError())
     {
         SafeDelete(nullRenderbuffer);
@@ -1198,7 +1192,7 @@ gl::Error Renderer9::getNullColorbuffer(GLImplFactory *implFactory,
     }
 
     gl::FramebufferAttachment *nullbuffer = new gl::FramebufferAttachment(
-        GL_RENDERBUFFER, GL_NONE, gl::ImageIndex::MakeInvalid(), nullRenderbuffer);
+        context, GL_RENDERBUFFER, GL_NONE, gl::ImageIndex::MakeInvalid(), nullRenderbuffer);
 
     // add nullbuffer to the cache
     NullColorbufferCacheEntry *oldest = &mNullColorbufferCache[0];
@@ -1220,22 +1214,17 @@ gl::Error Renderer9::getNullColorbuffer(GLImplFactory *implFactory,
     return gl::NoError();
 }
 
-gl::Error Renderer9::applyRenderTarget(GLImplFactory *implFactory,
+gl::Error Renderer9::applyRenderTarget(const gl::Context *context,
                                        const gl::FramebufferAttachment *colorAttachment,
                                        const gl::FramebufferAttachment *depthStencilAttachment)
 {
     const gl::FramebufferAttachment *renderAttachment = colorAttachment;
-    gl::Error error(gl::NoError());
 
     // if there is no color attachment we must synthesize a NULL colorattachment
     // to keep the D3D runtime happy.  This should only be possible if depth texturing.
     if (renderAttachment == nullptr)
     {
-        error = getNullColorbuffer(implFactory, depthStencilAttachment, &renderAttachment);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(getNullColorbuffer(context, depthStencilAttachment, &renderAttachment));
     }
     ASSERT(renderAttachment != nullptr);
 
@@ -1244,11 +1233,7 @@ gl::Error Renderer9::applyRenderTarget(GLImplFactory *implFactory,
     D3DFORMAT renderTargetFormat = D3DFMT_UNKNOWN;
 
     RenderTarget9 *renderTarget = nullptr;
-    error                       = renderAttachment->getRenderTarget(&renderTarget);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(renderAttachment->getRenderTarget(context, &renderTarget));
     ASSERT(renderTarget);
 
     bool renderTargetChanged        = false;
@@ -1275,11 +1260,7 @@ gl::Error Renderer9::applyRenderTarget(GLImplFactory *implFactory,
 
     if (depthStencilAttachment != nullptr)
     {
-        error = depthStencilAttachment->getRenderTarget(&depthStencilRenderTarget);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(depthStencilAttachment->getRenderTarget(context, &depthStencilRenderTarget));
         ASSERT(depthStencilRenderTarget);
 
         depthStencilSerial = depthStencilRenderTarget->getSerial();
@@ -1325,10 +1306,10 @@ gl::Error Renderer9::applyRenderTarget(GLImplFactory *implFactory,
     return gl::NoError();
 }
 
-gl::Error Renderer9::applyRenderTarget(GLImplFactory *implFactory,
+gl::Error Renderer9::applyRenderTarget(const gl::Context *context,
                                        const gl::Framebuffer *framebuffer)
 {
-    return applyRenderTarget(implFactory, framebuffer->getColorbuffer(0),
+    return applyRenderTarget(context, framebuffer->getColorbuffer(0),
                              framebuffer->getDepthOrStencilbuffer());
 }
 
@@ -1944,7 +1925,8 @@ void Renderer9::applyUniformnbv(const D3DUniform *targetUniform, const GLint *v)
     applyUniformnfv(targetUniform, (GLfloat *)vector);
 }
 
-gl::Error Renderer9::clear(const ClearParameters &clearParams,
+gl::Error Renderer9::clear(const gl::Context *context,
+                           const ClearParameters &clearParams,
                            const gl::FramebufferAttachment *colorBuffer,
                            const gl::FramebufferAttachment *depthStencilBuffer)
 {
@@ -1976,7 +1958,7 @@ gl::Error Renderer9::clear(const ClearParameters &clearParams,
         ASSERT(depthStencilBuffer != nullptr);
 
         RenderTargetD3D *stencilRenderTarget = nullptr;
-        gl::Error error = depthStencilBuffer->getRenderTarget(&stencilRenderTarget);
+        gl::Error error = depthStencilBuffer->getRenderTarget(context, &stencilRenderTarget);
         if (error.isError())
         {
             return error;
@@ -2001,7 +1983,7 @@ gl::Error Renderer9::clear(const ClearParameters &clearParams,
         ASSERT(colorBuffer != nullptr);
 
         RenderTargetD3D *colorRenderTarget = nullptr;
-        gl::Error error                    = colorBuffer->getRenderTarget(&colorRenderTarget);
+        gl::Error error = colorBuffer->getRenderTarget(context, &colorRenderTarget);
         if (error.isError())
         {
             return error;
@@ -2258,6 +2240,10 @@ void Renderer9::releaseDeviceResources()
 
     for (int i = 0; i < NUM_NULL_COLORBUFFER_CACHE_ENTRIES; i++)
     {
+        if (mNullColorbufferCache[i].buffer)
+        {
+            mNullColorbufferCache[i].buffer->detach(mDisplay->getProxyContext());
+        }
         SafeDelete(mNullColorbufferCache[i].buffer);
     }
 }
@@ -2523,7 +2509,7 @@ gl::Error Renderer9::copyImage2D(const gl::Context *context,
     rect.right  = sourceRect.x + sourceRect.width;
     rect.bottom = sourceRect.y + sourceRect.height;
 
-    return mBlit->copy2D(framebuffer, rect, destFormat, destOffset, storage, level);
+    return mBlit->copy2D(context, framebuffer, rect, destFormat, destOffset, storage, level);
 }
 
 gl::Error Renderer9::copyImageCube(const gl::Context *context,
@@ -2541,7 +2527,8 @@ gl::Error Renderer9::copyImageCube(const gl::Context *context,
     rect.right  = sourceRect.x + sourceRect.width;
     rect.bottom = sourceRect.y + sourceRect.height;
 
-    return mBlit->copyCube(framebuffer, rect, destFormat, destOffset, storage, target, level);
+    return mBlit->copyCube(context, framebuffer, rect, destFormat, destOffset, storage, target,
+                           level);
 }
 
 gl::Error Renderer9::copyImage3D(const gl::Context *context,
@@ -2589,12 +2576,13 @@ gl::Error Renderer9::copyTexture(const gl::Context *context,
     rect.right  = sourceRect.x + sourceRect.width;
     rect.bottom = sourceRect.y + sourceRect.height;
 
-    return mBlit->copyTexture(source, sourceLevel, rect, destFormat, destOffset, storage,
+    return mBlit->copyTexture(context, source, sourceLevel, rect, destFormat, destOffset, storage,
                               destTarget, destLevel, unpackFlipY, unpackPremultiplyAlpha,
                               unpackUnmultiplyAlpha);
 }
 
-gl::Error Renderer9::copyCompressedTexture(const gl::Texture *source,
+gl::Error Renderer9::copyCompressedTexture(const gl::Context *context,
+                                           const gl::Texture *source,
                                            GLint sourceLevel,
                                            TextureStorage *storage,
                                            GLint destLevel)
@@ -2914,21 +2902,23 @@ ImageD3D *Renderer9::createImage()
     return new Image9(this);
 }
 
-gl::Error Renderer9::generateMipmap(ImageD3D *dest, ImageD3D *src)
+gl::Error Renderer9::generateMipmap(const gl::Context *context, ImageD3D *dest, ImageD3D *src)
 {
     Image9 *src9 = GetAs<Image9>(src);
     Image9 *dst9 = GetAs<Image9>(dest);
     return Image9::generateMipmap(dst9, src9);
 }
 
-gl::Error Renderer9::generateMipmapUsingD3D(TextureStorage *storage,
+gl::Error Renderer9::generateMipmapUsingD3D(const gl::Context *context,
+                                            TextureStorage *storage,
                                             const gl::TextureState &textureState)
 {
     UNREACHABLE();
     return gl::NoError();
 }
 
-gl::Error Renderer9::copyImage(ImageD3D *dest,
+gl::Error Renderer9::copyImage(const gl::Context *context,
+                               ImageD3D *dest,
                                ImageD3D *source,
                                const gl::Rectangle &sourceRect,
                                const gl::Offset &destOffset,
@@ -3078,16 +3068,15 @@ angle::WorkaroundsD3D Renderer9::generateWorkarounds() const
     return d3d9::GenerateWorkarounds();
 }
 
-gl::Error Renderer9::clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd)
+gl::Error Renderer9::clearTextures(const gl::Context *context,
+                                   gl::SamplerType samplerType,
+                                   size_t rangeStart,
+                                   size_t rangeEnd)
 {
     // TODO(jmadill): faster way?
     for (size_t samplerIndex = rangeStart; samplerIndex < rangeEnd; samplerIndex++)
     {
-        gl::Error error = setTexture(samplerType, static_cast<int>(samplerIndex), nullptr);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(setTexture(context, samplerType, static_cast<int>(samplerIndex), nullptr));
     }
 
     return gl::NoError();
@@ -3139,7 +3128,7 @@ gl::Error Renderer9::genericDrawElements(const gl::Context *context,
         return gl::NoError();
     }
 
-    ANGLE_TRY(updateState(GetImplAs<Context9>(context), mode));
+    ANGLE_TRY(updateState(context, mode));
 
     TranslatedIndexData indexInfo;
     indexInfo.indexRange = indexRange;
@@ -3187,7 +3176,7 @@ gl::Error Renderer9::genericDrawArrays(const gl::Context *context,
         return gl::NoError();
     }
 
-    ANGLE_TRY(updateState(GetImplAs<Context9>(context), mode));
+    ANGLE_TRY(updateState(context, mode));
     ANGLE_TRY(applyTransformFeedbackBuffers(data.getState()));
     ANGLE_TRY(applyVertexBuffer(data.getState(), mode, first, count, instances, nullptr));
     ANGLE_TRY(applyTextures(context));

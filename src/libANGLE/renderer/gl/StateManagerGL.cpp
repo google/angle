@@ -14,7 +14,7 @@
 #include "common/bitset_utils.h"
 #include "common/mathutil.h"
 #include "common/matrix_utils.h"
-#include "libANGLE/ContextState.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/Query.h"
 #include "libANGLE/TransformFeedback.h"
@@ -612,47 +612,43 @@ void StateManagerGL::onDeleteQueryObject(QueryGL *query)
     mCurrentQueries.erase(query);
 }
 
-gl::Error StateManagerGL::setDrawArraysState(const gl::ContextState &data,
+gl::Error StateManagerGL::setDrawArraysState(const gl::Context *context,
                                              GLint first,
                                              GLsizei count,
                                              GLsizei instanceCount)
 {
-    const gl::State &state = data.getState();
+    const gl::State &glState = context->getGLState();
 
-    const gl::Program *program = state.getProgram();
+    const gl::Program *program = glState.getProgram();
 
-    const gl::VertexArray *vao = state.getVertexArray();
+    const gl::VertexArray *vao = glState.getVertexArray();
     const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
 
-    gl::Error error = vaoGL->syncDrawArraysState(program->getActiveAttribLocationsMask(), first,
-                                                 count, instanceCount);
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_TRY(vaoGL->syncDrawArraysState(context, program->getActiveAttribLocationsMask(), first,
+                                         count, instanceCount));
 
     bindVertexArray(vaoGL->getVertexArrayID(), vaoGL->getAppliedElementArrayBufferID());
 
-    return setGenericDrawState(data);
+    return setGenericDrawState(context);
 }
 
-gl::Error StateManagerGL::setDrawElementsState(const gl::ContextState &data,
+gl::Error StateManagerGL::setDrawElementsState(const gl::Context *context,
                                                GLsizei count,
                                                GLenum type,
                                                const void *indices,
                                                GLsizei instanceCount,
                                                const void **outIndices)
 {
-    const gl::State &state = data.getState();
+    const gl::State &glState = context->getGLState();
 
-    const gl::Program *program = state.getProgram();
+    const gl::Program *program = glState.getProgram();
 
-    const gl::VertexArray *vao = state.getVertexArray();
+    const gl::VertexArray *vao = glState.getVertexArray();
     const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
 
-    gl::Error error =
-        vaoGL->syncDrawElementsState(program->getActiveAttribLocationsMask(), count, type, indices,
-                                     instanceCount, state.isPrimitiveRestartEnabled(), outIndices);
+    gl::Error error = vaoGL->syncDrawElementsState(context, program->getActiveAttribLocationsMask(),
+                                                   count, type, indices, instanceCount,
+                                                   glState.isPrimitiveRestartEnabled(), outIndices);
     if (error.isError())
     {
         return error;
@@ -660,33 +656,33 @@ gl::Error StateManagerGL::setDrawElementsState(const gl::ContextState &data,
 
     bindVertexArray(vaoGL->getVertexArrayID(), vaoGL->getAppliedElementArrayBufferID());
 
-    return setGenericDrawState(data);
+    return setGenericDrawState(context);
 }
 
-gl::Error StateManagerGL::setDrawIndirectState(const gl::ContextState &data, GLenum type)
+gl::Error StateManagerGL::setDrawIndirectState(const gl::Context *context, GLenum type)
 {
-    const gl::State &state = data.getState();
+    const gl::State &glState = context->getGLState();
 
-    const gl::VertexArray *vao = state.getVertexArray();
+    const gl::VertexArray *vao = glState.getVertexArray();
     const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
 
     if (type != GL_NONE)
     {
-        ANGLE_TRY(vaoGL->syncElementArrayState());
+        ANGLE_TRY(vaoGL->syncElementArrayState(context));
     }
     bindVertexArray(vaoGL->getVertexArrayID(), vaoGL->getAppliedElementArrayBufferID());
 
-    gl::Buffer *drawIndirectBuffer = state.getDrawIndirectBuffer();
+    gl::Buffer *drawIndirectBuffer = glState.getDrawIndirectBuffer();
     ASSERT(drawIndirectBuffer);
     const BufferGL *bufferGL = GetImplAs<BufferGL>(drawIndirectBuffer);
     bindBuffer(GL_DRAW_INDIRECT_BUFFER, bufferGL->getBufferID());
 
-    return setGenericDrawState(data);
+    return setGenericDrawState(context);
 }
 
-gl::Error StateManagerGL::setDispatchComputeState(const gl::ContextState &data)
+gl::Error StateManagerGL::setDispatchComputeState(const gl::Context *context)
 {
-    setGenericShaderState(data);
+    setGenericShaderState(context);
     return gl::NoError();
 }
 
@@ -736,23 +732,24 @@ void StateManagerGL::resumeQuery(GLenum type)
     }
 }
 
-gl::Error StateManagerGL::onMakeCurrent(const gl::ContextState &data)
+gl::Error StateManagerGL::onMakeCurrent(const gl::Context *context)
 {
-    const gl::State &state = data.getState();
+    const gl::State &glState = context->getGLState();
 
     // If the context has changed, pause the previous context's queries
-    if (data.getContextID() != mPrevDrawContext)
+    auto contextID = context->getContextState().getContextID();
+    if (contextID != mPrevDrawContext)
     {
         pauseAllQueries();
     }
     mCurrentQueries.clear();
     mPrevDrawTransformFeedback = nullptr;
-    mPrevDrawContext           = data.getContextID();
+    mPrevDrawContext           = contextID;
 
     // Set the current query state
     for (GLenum queryType : QueryTypes)
     {
-        gl::Query *query = state.getActiveQuery(queryType);
+        gl::Query *query = glState.getActiveQuery(queryType);
         if (query != nullptr)
         {
             QueryGL *queryGL = GetImplAs<QueryGL>(query);
@@ -764,17 +761,17 @@ gl::Error StateManagerGL::onMakeCurrent(const gl::ContextState &data)
 
     // Seamless cubemaps are required for ES3 and higher contexts. It should be the cheapest to set
     // this state here since MakeCurrent is expected to be called less frequently than draw calls.
-    setTextureCubemapSeamlessEnabled(data.getClientMajorVersion() >= 3);
+    setTextureCubemapSeamlessEnabled(context->getClientMajorVersion() >= 3);
 
     return gl::NoError();
 }
 
-void StateManagerGL::setGenericShaderState(const gl::ContextState &data)
+void StateManagerGL::setGenericShaderState(const gl::Context *context)
 {
-    const gl::State &state = data.getState();
+    const gl::State &glState = context->getGLState();
 
     // Sync the current program state
-    const gl::Program *program = state.getProgram();
+    const gl::Program *program = glState.getProgram();
     const ProgramGL *programGL = GetImplAs<ProgramGL>(program);
     useProgram(programGL->getProgramID());
 
@@ -782,7 +779,7 @@ void StateManagerGL::setGenericShaderState(const gl::ContextState &data)
          uniformBlockIndex++)
     {
         GLuint binding = program->getUniformBlockBinding(static_cast<GLuint>(uniformBlockIndex));
-        const auto &uniformBuffer = state.getIndexedUniformBuffer(binding);
+        const auto &uniformBuffer = glState.getIndexedUniformBuffer(binding);
 
         if (uniformBuffer.get() != nullptr)
         {
@@ -805,14 +802,14 @@ void StateManagerGL::setGenericShaderState(const gl::ContextState &data)
         GLenum textureType = samplerUniform.textureType;
         for (GLuint textureUnitIndex : samplerUniform.boundTextureUnits)
         {
-            gl::Texture *texture       = state.getSamplerTexture(textureUnitIndex, textureType);
-            const gl::Sampler *sampler = state.getSampler(textureUnitIndex);
+            gl::Texture *texture       = glState.getSamplerTexture(textureUnitIndex, textureType);
+            const gl::Sampler *sampler = glState.getSampler(textureUnitIndex);
 
             const gl::SamplerState &samplerState =
                 sampler ? sampler->getSamplerState() : texture->getSamplerState();
 
-            if (texture != nullptr &&
-                texture->getTextureState().isSamplerComplete(samplerState, data))
+            if (texture != nullptr && texture->getTextureState().isSamplerComplete(
+                                          samplerState, context->getContextState()))
             {
                 const TextureGL *textureGL = GetImplAs<TextureGL>(texture);
 
@@ -850,18 +847,18 @@ void StateManagerGL::setGenericShaderState(const gl::ContextState &data)
     }
 }
 
-gl::Error StateManagerGL::setGenericDrawState(const gl::ContextState &data)
+gl::Error StateManagerGL::setGenericDrawState(const gl::Context *context)
 {
-    setGenericShaderState(data);
+    setGenericShaderState(context);
 
-    const gl::State &state = data.getState();
+    const gl::State &glState = context->getGLState();
 
-    gl::Framebuffer *framebuffer = state.getDrawFramebuffer();
+    gl::Framebuffer *framebuffer = glState.getDrawFramebuffer();
     FramebufferGL *framebufferGL = GetImplAs<FramebufferGL>(framebuffer);
     bindFramebuffer(GL_DRAW_FRAMEBUFFER, framebufferGL->getFramebufferID());
 
     // Set the current transform feedback state
-    gl::TransformFeedback *transformFeedback = state.getCurrentTransformFeedback();
+    gl::TransformFeedback *transformFeedback = glState.getCurrentTransformFeedback();
     if (transformFeedback)
     {
         TransformFeedbackGL *transformFeedbackGL =
@@ -878,9 +875,9 @@ gl::Error StateManagerGL::setGenericDrawState(const gl::ContextState &data)
         mPrevDrawTransformFeedback = nullptr;
     }
 
-    if (data.getExtensions().webglCompatibility)
+    if (context->getExtensions().webglCompatibility)
     {
-        auto activeOutputs = state.getProgram()->getState().getActiveOutputVariables();
+        auto activeOutputs = glState.getProgram()->getState().getActiveOutputVariables();
         framebufferGL->maskOutInactiveOutputDrawBuffers(activeOutputs);
     }
 
@@ -1407,10 +1404,9 @@ void StateManagerGL::setClearStencil(GLint clearStencil)
     }
 }
 
-void StateManagerGL::syncState(const gl::ContextState &data,
-                               const gl::State::DirtyBits &glDirtyBits)
+void StateManagerGL::syncState(const gl::Context *context, const gl::State::DirtyBits &glDirtyBits)
 {
-    const gl::State &state = data.getState();
+    const gl::State &state = context->getGLState();
 
     // The the current framebuffer binding sometimes requires resetting the srgb blending
     if (glDirtyBits[gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING] &&
@@ -1664,7 +1660,7 @@ void StateManagerGL::syncState(const gl::ContextState &data,
                 break;
             case gl::State::DIRTY_BIT_FRAMEBUFFER_SRGB:
                 setFramebufferSRGBEnabledForFramebuffer(
-                    data, state.getFramebufferSRGB(),
+                    context, state.getFramebufferSRGB(),
                     GetImplAs<FramebufferGL>(state.getDrawFramebuffer()));
                 break;
             default:
@@ -1683,9 +1679,9 @@ void StateManagerGL::syncState(const gl::ContextState &data,
     }
 }
 
-void StateManagerGL::setFramebufferSRGBEnabled(const gl::ContextState &data, bool enabled)
+void StateManagerGL::setFramebufferSRGBEnabled(const gl::Context *context, bool enabled)
 {
-    if (!data.getExtensions().sRGBWriteControl)
+    if (!context->getExtensions().sRGBWriteControl)
     {
         return;
     }
@@ -1705,7 +1701,7 @@ void StateManagerGL::setFramebufferSRGBEnabled(const gl::ContextState &data, boo
     }
 }
 
-void StateManagerGL::setFramebufferSRGBEnabledForFramebuffer(const gl::ContextState &data,
+void StateManagerGL::setFramebufferSRGBEnabledForFramebuffer(const gl::Context *context,
                                                              bool enabled,
                                                              const FramebufferGL *framebuffer)
 {
@@ -1716,11 +1712,11 @@ void StateManagerGL::setFramebufferSRGBEnabledForFramebuffer(const gl::ContextSt
         // When SRGB blending is enabled, only SRGB capable formats will use it but the default
         // framebuffer will always use it if it is enabled.
         // TODO(geofflang): Update this when the framebuffer binding dirty changes, when it exists.
-        setFramebufferSRGBEnabled(data, false);
+        setFramebufferSRGBEnabled(context, false);
     }
     else
     {
-        setFramebufferSRGBEnabled(data, enabled);
+        setFramebufferSRGBEnabled(context, enabled);
     }
 }
 

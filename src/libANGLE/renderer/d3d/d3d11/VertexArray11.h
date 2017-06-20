@@ -22,14 +22,14 @@ class VertexArray11 : public VertexArrayImpl, public OnBufferDataDirtyReceiver
 {
   public:
     VertexArray11(const gl::VertexArrayState &data);
-    ~VertexArray11() override;
+    void destroy(const gl::Context *context) override;
 
     void syncState(const gl::Context *context,
                    const gl::VertexArray::DirtyBits &dirtyBits) override;
     // This will flush any pending attrib updates and then check the dynamic attribs mask.
-    bool hasDynamicAttrib(const gl::State &state);
-    gl::Error updateDirtyAndDynamicAttribs(VertexDataManager *vertexDataManager,
-                                           const gl::State &state,
+    bool hasDynamicAttrib(const gl::Context *context);
+    gl::Error updateDirtyAndDynamicAttribs(const gl::Context *context,
+                                           VertexDataManager *vertexDataManager,
                                            GLint start,
                                            GLsizei count,
                                            GLsizei instances);
@@ -41,8 +41,8 @@ class VertexArray11 : public VertexArrayImpl, public OnBufferDataDirtyReceiver
     void signal(size_t channelID) override;
 
   private:
-    void updateVertexAttribStorage(size_t attribIndex);
-    void flushAttribUpdates(const gl::State &state);
+    void updateVertexAttribStorage(const gl::Context *context, size_t attribIndex);
+    void flushAttribUpdates(const gl::Context *context);
 
     std::vector<VertexStorageType> mAttributeStorageTypes;
     std::vector<TranslatedAttribute> mTranslatedAttribs;
@@ -57,7 +57,7 @@ class VertexArray11 : public VertexArrayImpl, public OnBufferDataDirtyReceiver
     gl::AttributesMask mAttribsToTranslate;
 
     // We need to keep a safe pointer to the Buffer so we can attach the correct dirty callbacks.
-    std::vector<BindingPointer<gl::Buffer>> mCurrentBuffers;
+    std::vector<gl::BindingPointer<gl::Buffer>> mCurrentBuffers;
 
     std::vector<OnBufferDataDirtyBinding> mOnBufferDataDirty;
 };

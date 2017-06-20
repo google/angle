@@ -30,6 +30,13 @@ Renderbuffer::Renderbuffer(rx::RenderbufferImpl *impl, GLuint id)
 {
 }
 
+void Renderbuffer::onDestroy(const Context *context)
+{
+    auto err = orphanImages(context);
+    // TODO(jmadill): Handle error.
+    ASSERT(!err.isError());
+}
+
 Renderbuffer::~Renderbuffer()
 {
     SafeDelete(mRenderbuffer);
@@ -45,9 +52,12 @@ const std::string &Renderbuffer::getLabel() const
     return mLabel;
 }
 
-Error Renderbuffer::setStorage(GLenum internalformat, size_t width, size_t height)
+Error Renderbuffer::setStorage(const Context *context,
+                               GLenum internalformat,
+                               size_t width,
+                               size_t height)
 {
-    orphanImages();
+    ANGLE_TRY(orphanImages(context));
 
     ANGLE_TRY(mRenderbuffer->setStorage(internalformat, width, height));
 
@@ -61,9 +71,13 @@ Error Renderbuffer::setStorage(GLenum internalformat, size_t width, size_t heigh
     return NoError();
 }
 
-Error Renderbuffer::setStorageMultisample(size_t samples, GLenum internalformat, size_t width, size_t height)
+Error Renderbuffer::setStorageMultisample(const Context *context,
+                                          size_t samples,
+                                          GLenum internalformat,
+                                          size_t width,
+                                          size_t height)
 {
-    orphanImages();
+    ANGLE_TRY(orphanImages(context));
 
     ANGLE_TRY(mRenderbuffer->setStorageMultisample(samples, internalformat, width, height));
 
@@ -77,13 +91,13 @@ Error Renderbuffer::setStorageMultisample(size_t samples, GLenum internalformat,
     return NoError();
 }
 
-Error Renderbuffer::setStorageEGLImageTarget(egl::Image *image)
+Error Renderbuffer::setStorageEGLImageTarget(const Context *context, egl::Image *image)
 {
-    orphanImages();
+    ANGLE_TRY(orphanImages(context));
 
     ANGLE_TRY(mRenderbuffer->setStorageEGLImageTarget(image));
 
-    setTargetImage(image);
+    setTargetImage(context, image);
 
     mWidth          = static_cast<GLsizei>(image->getWidth());
     mHeight         = static_cast<GLsizei>(image->getHeight());
@@ -151,14 +165,14 @@ GLuint Renderbuffer::getStencilSize() const
     return mFormat.info->stencilBits;
 }
 
-void Renderbuffer::onAttach()
+void Renderbuffer::onAttach(const Context *context)
 {
     addRef();
 }
 
-void Renderbuffer::onDetach()
+void Renderbuffer::onDetach(const Context *context)
 {
-    release();
+    release(context);
 }
 
 GLuint Renderbuffer::getId() const

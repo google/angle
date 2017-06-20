@@ -102,12 +102,15 @@ gl::Error TextureNULL::setStorage(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::Error TextureNULL::setEGLImageTarget(GLenum target, egl::Image *image)
+gl::Error TextureNULL::setEGLImageTarget(const gl::Context *context,
+                                         GLenum target,
+                                         egl::Image *image)
 {
     return gl::NoError();
 }
 
-gl::Error TextureNULL::setImageExternal(GLenum target,
+gl::Error TextureNULL::setImageExternal(const gl::Context *context,
+                                        GLenum target,
                                         egl::Stream *stream,
                                         const egl::Stream::GLTextureDescription &desc)
 {
@@ -119,16 +122,19 @@ gl::Error TextureNULL::generateMipmap(const gl::Context *context)
     return gl::NoError();
 }
 
-void TextureNULL::setBaseLevel(GLuint baseLevel)
+gl::Error TextureNULL::setBaseLevel(const gl::Context *context, GLuint baseLevel)
 {
+    return gl::NoError();
 }
 
-void TextureNULL::bindTexImage(egl::Surface *surface)
+gl::Error TextureNULL::bindTexImage(const gl::Context *context, egl::Surface *surface)
 {
+    return gl::NoError();
 }
 
-void TextureNULL::releaseTexImage()
+gl::Error TextureNULL::releaseTexImage(const gl::Context *context)
 {
+    return gl::NoError();
 }
 
 void TextureNULL::syncState(const gl::Texture::DirtyBits &dirtyBits)

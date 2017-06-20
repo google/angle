@@ -129,7 +129,7 @@ void MarkTransformFeedbackBufferUsage(gl::TransformFeedback *transformFeedback)
         for (size_t tfBufferIndex = 0; tfBufferIndex < transformFeedback->getIndexedBufferCount();
              tfBufferIndex++)
         {
-            const OffsetBindingPointer<gl::Buffer> &buffer =
+            const gl::OffsetBindingPointer<gl::Buffer> &buffer =
                 transformFeedback->getIndexedBuffer(tfBufferIndex);
             if (buffer.get() != nullptr)
             {
@@ -280,9 +280,8 @@ Context::Context(rx::EGLImplFactory *implFactory,
     initCaps(displayExtensions);
     initWorkarounds();
 
-    mGLState.initialize(mCaps, mExtensions, getClientVersion(), GetDebug(attribs),
-                        GetBindGeneratesResource(attribs), GetClientArraysEnabled(attribs),
-                        robustResourceInit);
+    mGLState.initialize(this, GetDebug(attribs), GetBindGeneratesResource(attribs),
+                        GetClientArraysEnabled(attribs), robustResourceInit);
 
     mFenceNVHandleAllocator.setBaseHandle(0);
 
@@ -293,25 +292,25 @@ Context::Context(rx::EGLImplFactory *implFactory,
     // objects all of whose names are 0.
 
     Texture *zeroTexture2D = new Texture(mImplementation.get(), 0, GL_TEXTURE_2D);
-    mZeroTextures[GL_TEXTURE_2D].set(zeroTexture2D);
+    mZeroTextures[GL_TEXTURE_2D].set(this, zeroTexture2D);
 
     Texture *zeroTextureCube = new Texture(mImplementation.get(), 0, GL_TEXTURE_CUBE_MAP);
-    mZeroTextures[GL_TEXTURE_CUBE_MAP].set(zeroTextureCube);
+    mZeroTextures[GL_TEXTURE_CUBE_MAP].set(this, zeroTextureCube);
 
     if (getClientVersion() >= Version(3, 0))
     {
         // TODO: These could also be enabled via extension
         Texture *zeroTexture3D = new Texture(mImplementation.get(), 0, GL_TEXTURE_3D);
-        mZeroTextures[GL_TEXTURE_3D].set(zeroTexture3D);
+        mZeroTextures[GL_TEXTURE_3D].set(this, zeroTexture3D);
 
         Texture *zeroTexture2DArray = new Texture(mImplementation.get(), 0, GL_TEXTURE_2D_ARRAY);
-        mZeroTextures[GL_TEXTURE_2D_ARRAY].set(zeroTexture2DArray);
+        mZeroTextures[GL_TEXTURE_2D_ARRAY].set(this, zeroTexture2DArray);
     }
     if (getClientVersion() >= Version(3, 1))
     {
         Texture *zeroTexture2DMultisample =
             new Texture(mImplementation.get(), 0, GL_TEXTURE_2D_MULTISAMPLE);
-        mZeroTextures[GL_TEXTURE_2D_MULTISAMPLE].set(zeroTexture2DMultisample);
+        mZeroTextures[GL_TEXTURE_2D_MULTISAMPLE].set(this, zeroTexture2DMultisample);
 
         bindGenericAtomicCounterBuffer(0);
         for (unsigned int i = 0; i < mCaps.maxAtomicCounterBufferBindings; i++)
@@ -330,10 +329,10 @@ Context::Context(rx::EGLImplFactory *implFactory,
     {
         Texture *zeroTextureExternal =
             new Texture(mImplementation.get(), 0, GL_TEXTURE_EXTERNAL_OES);
-        mZeroTextures[GL_TEXTURE_EXTERNAL_OES].set(zeroTextureExternal);
+        mZeroTextures[GL_TEXTURE_EXTERNAL_OES].set(this, zeroTextureExternal);
     }
 
-    mGLState.initializeZeroTextures(mZeroTextures);
+    mGLState.initializeZeroTextures(this, mZeroTextures);
 
     bindVertexArray(0);
     bindArrayBuffer(0);
@@ -404,10 +403,8 @@ Context::Context(rx::EGLImplFactory *implFactory,
     handleError(mImplementation->initialize());
 }
 
-void Context::destroy(egl::Display *display)
+egl::Error Context::onDestroy(const egl::Display *display)
 {
-    mGLState.reset(this);
-
     for (auto fence : mFenceNVMap)
     {
         SafeDelete(fence.second);
@@ -417,13 +414,16 @@ void Context::destroy(egl::Display *display)
     {
         if (query.second != nullptr)
         {
-            query.second->release();
+            query.second->release(this);
         }
     }
 
     for (auto vertexArray : mVertexArrayMap)
     {
-        SafeDelete(vertexArray.second);
+        if (vertexArray.second)
+        {
+            vertexArray.second->onDestroy(this);
+        }
     }
 
     for (auto transformFeedback : mTransformFeedbackMap)
@@ -436,14 +436,17 @@ void Context::destroy(egl::Display *display)
 
     for (auto &zeroTexture : mZeroTextures)
     {
-        zeroTexture.second.set(nullptr);
+        zeroTexture.second->onDestroy(this);
+        zeroTexture.second.set(this, nullptr);
     }
     mZeroTextures.clear();
 
     SafeDelete(mSurfacelessFramebuffer);
 
-    releaseSurface(display);
+    ANGLE_TRY(releaseSurface(display));
     releaseShaderCompiler();
+
+    mGLState.reset(this);
 
     mState.mBuffers->release(this);
     mState.mShaderPrograms->release(this);
@@ -453,13 +456,15 @@ void Context::destroy(egl::Display *display)
     mState.mFenceSyncs->release(this);
     mState.mPaths->release(this);
     mState.mFramebuffers->release(this);
+
+    return egl::NoError();
 }
 
 Context::~Context()
 {
 }
 
-void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
+egl::Error Context::makeCurrent(egl::Display *display, egl::Surface *surface)
 {
     mCurrentDisplay = display;
 
@@ -486,12 +491,12 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
     // TODO(jmadill): Rework this when we support ContextImpl
     mGLState.setAllDirtyBits();
 
-    releaseSurface(display);
+    ANGLE_TRY(releaseSurface(display));
 
     Framebuffer *newDefault = nullptr;
     if (surface != nullptr)
     {
-        surface->setIsCurrent(display, true);
+        ANGLE_TRY(surface->setIsCurrent(this, true));
         mCurrentSurface = surface;
         newDefault      = surface->getDefaultFramebuffer();
     }
@@ -520,10 +525,11 @@ void Context::makeCurrent(egl::Display *display, egl::Surface *surface)
     }
 
     // Notify the renderer of a context switch
-    mImplementation->onMakeCurrent(mState);
+    mImplementation->onMakeCurrent(this);
+    return egl::NoError();
 }
 
-void Context::releaseSurface(egl::Display *display)
+egl::Error Context::releaseSurface(const egl::Display *display)
 {
     // Remove the default framebuffer
     Framebuffer *currentDefault = nullptr;
@@ -548,9 +554,11 @@ void Context::releaseSurface(egl::Display *display)
 
     if (mCurrentSurface)
     {
-        mCurrentSurface->setIsCurrent(display, false);
+        ANGLE_TRY(mCurrentSurface->setIsCurrent(this, false));
         mCurrentSurface = nullptr;
     }
+
+    return egl::NoError();
 }
 
 GLuint Context::createBuffer()
@@ -789,7 +797,7 @@ void Context::deleteVertexArray(GLuint vertexArray)
         if (vertexArrayObject != nullptr)
         {
             detachVertexArray(vertexArray);
-            delete vertexArrayObject;
+            vertexArrayObject->onDestroy(this);
         }
 
         mVertexArrayMap.erase(iter);
@@ -859,7 +867,7 @@ void Context::deleteQuery(GLuint query)
         mQueryHandleAllocator.release(queryObject->first);
         if (queryObject->second)
         {
-            queryObject->second->release();
+            queryObject->second->release(this);
         }
         mQueryMap.erase(queryObject);
     }
@@ -989,19 +997,19 @@ bool Context::isSampler(GLuint samplerName) const
 void Context::bindArrayBuffer(GLuint bufferHandle)
 {
     Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
-    mGLState.setArrayBufferBinding(buffer);
+    mGLState.setArrayBufferBinding(this, buffer);
 }
 
 void Context::bindDrawIndirectBuffer(GLuint bufferHandle)
 {
     Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
-    mGLState.setDrawIndirectBufferBinding(buffer);
+    mGLState.setDrawIndirectBufferBinding(this, buffer);
 }
 
 void Context::bindElementArrayBuffer(GLuint bufferHandle)
 {
     Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
-    mGLState.setElementArrayBuffer(buffer);
+    mGLState.setElementArrayBuffer(this, buffer);
 }
 
 void Context::bindTexture(GLenum target, GLuint handle)
@@ -1018,7 +1026,7 @@ void Context::bindTexture(GLenum target, GLuint handle)
     }
 
     ASSERT(texture);
-    mGLState.setSamplerTexture(target, texture);
+    mGLState.setSamplerTexture(this, target, texture);
 }
 
 void Context::bindReadFramebuffer(GLuint framebufferHandle)
@@ -1047,7 +1055,7 @@ void Context::bindVertexBuffer(GLuint bindingIndex,
                                GLsizei stride)
 {
     Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
-    mGLState.bindVertexBuffer(bindingIndex, buffer, offset, stride);
+    mGLState.bindVertexBuffer(this, bindingIndex, buffer, offset, stride);
 }
 
 void Context::bindSampler(GLuint textureUnit, GLuint samplerHandle)
@@ -1055,13 +1063,13 @@ void Context::bindSampler(GLuint textureUnit, GLuint samplerHandle)
     ASSERT(textureUnit < mCaps.maxCombinedTextureImageUnits);
     Sampler *sampler =
         mState.mSamplers->checkSamplerAllocation(mImplementation.get(), samplerHandle);
-    mGLState.setSamplerBinding(textureUnit, sampler);
+    mGLState.setSamplerBinding(this, textureUnit, sampler);
 }
 
 void Context::bindGenericUniformBuffer(GLuint bufferHandle)
 {
     Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
-    mGLState.setGenericUniformBufferBinding(buffer);
+    mGLState.setGenericUniformBufferBinding(this, buffer);
 }
 
 void Context::bindIndexedUniformBuffer(GLuint bufferHandle,
@@ -1070,13 +1078,13 @@ void Context::bindIndexedUniformBuffer(GLuint bufferHandle,
                                        GLsizeiptr size)
 {
     Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
-    mGLState.setIndexedUniformBufferBinding(index, buffer, offset, size);
+    mGLState.setIndexedUniformBufferBinding(this, index, buffer, offset, size);
 }
 
 void Context::bindGenericTransformFeedbackBuffer(GLuint bufferHandle)
 {
     Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
-    mGLState.getCurrentTransformFeedback()->bindGenericBuffer(buffer);
+    mGLState.getCurrentTransformFeedback()->bindGenericBuffer(this, buffer);
 }
 
 void Context::bindIndexedTransformFeedbackBuffer(GLuint bufferHandle,
@@ -1085,13 +1093,13 @@ void Context::bindIndexedTransformFeedbackBuffer(GLuint bufferHandle,
                                                  GLsizeiptr size)
 {
     Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
-    mGLState.getCurrentTransformFeedback()->bindIndexedBuffer(index, buffer, offset, size);
+    mGLState.getCurrentTransformFeedback()->bindIndexedBuffer(this, index, buffer, offset, size);
 }
 
 void Context::bindGenericAtomicCounterBuffer(GLuint bufferHandle)
 {
     Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
-    mGLState.setGenericAtomicCounterBufferBinding(buffer);
+    mGLState.setGenericAtomicCounterBufferBinding(this, buffer);
 }
 
 void Context::bindIndexedAtomicCounterBuffer(GLuint bufferHandle,
@@ -1100,13 +1108,13 @@ void Context::bindIndexedAtomicCounterBuffer(GLuint bufferHandle,
                                              GLsizeiptr size)
 {
     Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
-    mGLState.setIndexedAtomicCounterBufferBinding(index, buffer, offset, size);
+    mGLState.setIndexedAtomicCounterBufferBinding(this, index, buffer, offset, size);
 }
 
 void Context::bindGenericShaderStorageBuffer(GLuint bufferHandle)
 {
     Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
-    mGLState.setGenericShaderStorageBufferBinding(buffer);
+    mGLState.setGenericShaderStorageBufferBinding(this, buffer);
 }
 
 void Context::bindIndexedShaderStorageBuffer(GLuint bufferHandle,
@@ -1115,31 +1123,31 @@ void Context::bindIndexedShaderStorageBuffer(GLuint bufferHandle,
                                              GLsizeiptr size)
 {
     Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
-    mGLState.setIndexedShaderStorageBufferBinding(index, buffer, offset, size);
+    mGLState.setIndexedShaderStorageBufferBinding(this, index, buffer, offset, size);
 }
 
 void Context::bindCopyReadBuffer(GLuint bufferHandle)
 {
     Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
-    mGLState.setCopyReadBufferBinding(buffer);
+    mGLState.setCopyReadBufferBinding(this, buffer);
 }
 
 void Context::bindCopyWriteBuffer(GLuint bufferHandle)
 {
     Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
-    mGLState.setCopyWriteBufferBinding(buffer);
+    mGLState.setCopyWriteBufferBinding(this, buffer);
 }
 
 void Context::bindPixelPackBuffer(GLuint bufferHandle)
 {
     Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
-    mGLState.setPixelPackBufferBinding(buffer);
+    mGLState.setPixelPackBufferBinding(this, buffer);
 }
 
 void Context::bindPixelUnpackBuffer(GLuint bufferHandle)
 {
     Buffer *buffer = mState.mBuffers->checkBufferAllocation(mImplementation.get(), bufferHandle);
-    mGLState.setPixelUnpackBufferBinding(buffer);
+    mGLState.setPixelUnpackBufferBinding(this, buffer);
 }
 
 void Context::useProgram(GLuint program)
@@ -1151,7 +1159,7 @@ void Context::bindTransformFeedback(GLuint transformFeedbackHandle)
 {
     TransformFeedback *transformFeedback =
         checkTransformFeedbackAllocation(transformFeedbackHandle);
-    mGLState.setTransformFeedbackBinding(transformFeedback);
+    mGLState.setTransformFeedbackBinding(this, transformFeedback);
 }
 
 Error Context::beginQuery(GLenum target, GLuint query)
@@ -1167,7 +1175,7 @@ Error Context::beginQuery(GLenum target, GLuint query)
     }
 
     // set query as active for specified target only if begin succeeded
-    mGLState.setActiveQuery(target, queryObject);
+    mGLState.setActiveQuery(this, target, queryObject);
 
     return NoError();
 }
@@ -1180,7 +1188,7 @@ Error Context::endQuery(GLenum target)
     gl::Error error = queryObject->end();
 
     // Always unbind the query, even if there was an error. This may delete the query object.
-    mGLState.setActiveQuery(target, nullptr);
+    mGLState.setActiveQuery(this, target, nullptr);
 
     return error;
 }
@@ -1302,7 +1310,7 @@ Compiler *Context::getCompiler() const
 {
     if (mCompiler.get() == nullptr)
     {
-        mCompiler.set(new Compiler(mImplementation.get(), mState));
+        mCompiler.set(this, new Compiler(mImplementation.get(), mState));
     }
     return mCompiler.get();
 }
@@ -1801,25 +1809,25 @@ void Context::getTexParameteriv(GLenum target, GLenum pname, GLint *params)
 void Context::texParameterf(GLenum target, GLenum pname, GLfloat param)
 {
     Texture *texture = getTargetTexture(target);
-    SetTexParameterf(texture, pname, param);
+    SetTexParameterf(this, texture, pname, param);
 }
 
 void Context::texParameterfv(GLenum target, GLenum pname, const GLfloat *params)
 {
     Texture *texture = getTargetTexture(target);
-    SetTexParameterfv(texture, pname, params);
+    SetTexParameterfv(this, texture, pname, params);
 }
 
 void Context::texParameteri(GLenum target, GLenum pname, GLint param)
 {
     Texture *texture = getTargetTexture(target);
-    SetTexParameteri(texture, pname, param);
+    SetTexParameteri(this, texture, pname, param);
 }
 
 void Context::texParameteriv(GLenum target, GLenum pname, const GLint *params)
 {
     Texture *texture = getTargetTexture(target);
-    SetTexParameteriv(texture, pname, params);
+    SetTexParameteriv(this, texture, pname, params);
 }
 
 void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
@@ -2341,7 +2349,7 @@ void Context::detachBuffer(GLuint buffer)
     // Attachments to unbound container objects, such as
     // deletion of a buffer attached to a vertex array object which is not bound to the context,
     // are not affected and continue to act as references on the deleted object
-    mGLState.detachBuffer(buffer);
+    mGLState.detachBuffer(this, buffer);
 }
 
 void Context::detachFramebuffer(GLuint framebuffer)
@@ -2395,7 +2403,7 @@ void Context::detachTransformFeedback(GLuint transformFeedback)
     // The OpenGL specification doesn't mention what should happen when the currently bound
     // transform feedback object is deleted. Since it is a container object, we treat it like
     // VAOs and FBOs and set the current bound transform feedback back to 0.
-    if (mGLState.removeTransformFeedbackBinding(transformFeedback))
+    if (mGLState.removeTransformFeedbackBinding(this, transformFeedback))
     {
         bindTransformFeedback(0);
     }
@@ -2403,7 +2411,7 @@ void Context::detachTransformFeedback(GLuint transformFeedback)
 
 void Context::detachSampler(GLuint sampler)
 {
-    mGLState.detachSampler(sampler);
+    mGLState.detachSampler(this, sampler);
 }
 
 void Context::setVertexAttribDivisor(GLuint index, GLuint divisor)
@@ -3091,7 +3099,7 @@ void Context::discardFramebuffer(GLenum target, GLsizei numAttachments, const GL
 
     // The specification isn't clear what should be done when the framebuffer isn't complete.
     // We leave it up to the framebuffer implementation to decide what to do.
-    handleError(framebuffer->discard(numAttachments, attachments));
+    handleError(framebuffer->discard(this, numAttachments, attachments));
 }
 
 void Context::invalidateFramebuffer(GLenum target,
@@ -3109,7 +3117,7 @@ void Context::invalidateFramebuffer(GLenum target,
         return;
     }
 
-    handleError(framebuffer->invalidate(numAttachments, attachments));
+    handleError(framebuffer->invalidate(this, numAttachments, attachments));
 }
 
 void Context::invalidateSubFramebuffer(GLenum target,
@@ -3132,7 +3140,7 @@ void Context::invalidateSubFramebuffer(GLenum target,
     }
 
     Rectangle area(x, y, width, height);
-    handleError(framebuffer->invalidateSub(numAttachments, attachments, area));
+    handleError(framebuffer->invalidateSub(this, numAttachments, attachments, area));
 }
 
 void Context::texImage2D(GLenum target,
@@ -3743,8 +3751,8 @@ void Context::vertexAttribPointer(GLuint index,
                                   GLsizei stride,
                                   const void *ptr)
 {
-    mGLState.setVertexAttribState(index, mGLState.getTargetBuffer(GL_ARRAY_BUFFER), size, type,
-                                  normalized == GL_TRUE, false, stride, ptr);
+    mGLState.setVertexAttribState(this, index, mGLState.getTargetBuffer(GL_ARRAY_BUFFER), size,
+                                  type, normalized == GL_TRUE, false, stride, ptr);
 }
 
 void Context::vertexAttribFormat(GLuint attribIndex,
@@ -3786,8 +3794,8 @@ void Context::vertexAttribIPointer(GLuint index,
                                    GLsizei stride,
                                    const void *pointer)
 {
-    mGLState.setVertexAttribState(index, mGLState.getTargetBuffer(GL_ARRAY_BUFFER), size, type,
-                                  false, true, stride, pointer);
+    mGLState.setVertexAttribState(this, index, mGLState.getTargetBuffer(GL_ARRAY_BUFFER), size,
+                                  type, false, true, stride, pointer);
 }
 
 void Context::vertexAttribI4i(GLuint index, GLint x, GLint y, GLint z, GLint w)
@@ -4069,7 +4077,7 @@ void Context::bindRenderbuffer(GLenum target, GLuint renderbuffer)
     ASSERT(target == GL_RENDERBUFFER);
     Renderbuffer *object =
         mState.mRenderbuffers->checkRenderbufferAllocation(mImplementation.get(), renderbuffer);
-    mGLState.setRenderbufferBinding(object);
+    mGLState.setRenderbufferBinding(this, object);
 }
 
 void Context::texStorage2DMultisample(GLenum target,
@@ -4109,7 +4117,7 @@ void Context::renderbufferStorage(GLenum target,
     GLenum convertedInternalFormat = getConvertedRenderbufferFormat(internalformat);
 
     Renderbuffer *renderbuffer = mGLState.getCurrentRenderbuffer();
-    handleError(renderbuffer->setStorage(convertedInternalFormat, width, height));
+    handleError(renderbuffer->setStorage(this, convertedInternalFormat, width, height));
 }
 
 void Context::renderbufferStorageMultisample(GLenum target,
@@ -4123,7 +4131,7 @@ void Context::renderbufferStorageMultisample(GLenum target,
 
     Renderbuffer *renderbuffer = mGLState.getCurrentRenderbuffer();
     handleError(
-        renderbuffer->setStorageMultisample(samples, convertedInternalFormat, width, height));
+        renderbuffer->setStorageMultisample(this, samples, convertedInternalFormat, width, height));
 }
 
 void Context::getSynciv(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *values)
@@ -4576,7 +4584,7 @@ void Context::linkProgram(GLuint program)
 
 void Context::releaseShaderCompiler()
 {
-    mCompiler.set(nullptr);
+    mCompiler.set(this, nullptr);
 }
 
 void Context::shaderBinary(GLsizei n,

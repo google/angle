@@ -45,6 +45,7 @@ template <typename ObjT, typename ContextT>
 class UniqueObjectPointer : angle::NonCopyable
 {
   public:
+    UniqueObjectPointer(const ContextT *context) : mObject(nullptr), mContext(context) {}
     UniqueObjectPointer(ObjT *obj, const ContextT *context) : mObject(obj), mContext(context) {}
     ~UniqueObjectPointer()
     {
@@ -61,6 +62,17 @@ class UniqueObjectPointer : angle::NonCopyable
         auto obj = mObject;
         mObject  = nullptr;
         return obj;
+    }
+
+    ObjT *get() const { return mObject; }
+
+    void reset(ObjT *obj)
+    {
+        if (mObject)
+        {
+            mObject->onDestroy(mContext);
+        }
+        mObject = obj;
     }
 
   private:

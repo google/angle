@@ -32,10 +32,11 @@ namespace
 {
 
 gl::ErrorOrResult<const gl::InternalFormat *> GetReadAttachmentInfo(
+    const gl::Context *context,
     const gl::FramebufferAttachment *readAttachment)
 {
     RenderTargetVk *renderTarget = nullptr;
-    ANGLE_TRY(readAttachment->getRenderTarget(&renderTarget));
+    ANGLE_TRY(readAttachment->getRenderTarget(context, &renderTarget));
 
     GLenum implFormat = renderTarget->format->format().fboImplementationInternalFormat;
     return &gl::GetSizedInternalFormatInfo(implFormat);
@@ -109,19 +110,24 @@ void FramebufferVk::destroyDefault(const egl::Display *display)
     mFramebuffer.destroy(device);
 }
 
-gl::Error FramebufferVk::discard(size_t count, const GLenum *attachments)
+gl::Error FramebufferVk::discard(const gl::Context *context,
+                                 size_t count,
+                                 const GLenum *attachments)
 {
     UNIMPLEMENTED();
     return gl::InternalError();
 }
 
-gl::Error FramebufferVk::invalidate(size_t count, const GLenum *attachments)
+gl::Error FramebufferVk::invalidate(const gl::Context *context,
+                                    size_t count,
+                                    const GLenum *attachments)
 {
     UNIMPLEMENTED();
     return gl::InternalError();
 }
 
-gl::Error FramebufferVk::invalidateSub(size_t count,
+gl::Error FramebufferVk::invalidateSub(const gl::Context *context,
+                                       size_t count,
                                        const GLenum *attachments,
                                        const gl::Rectangle &area)
 {
@@ -172,7 +178,7 @@ gl::Error FramebufferVk::clear(const gl::Context *context, GLbitfield mask)
         if (colorAttachment.isAttached())
         {
             RenderTargetVk *renderTarget = nullptr;
-            ANGLE_TRY(colorAttachment.getRenderTarget(&renderTarget));
+            ANGLE_TRY(colorAttachment.getRenderTarget(context, &renderTarget));
             renderTarget->image->changeLayoutTop(
                 VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, commandBuffer);
             commandBuffer->clearSingleColorImage(*renderTarget->image, clearColorValue);
@@ -219,9 +225,9 @@ gl::Error FramebufferVk::clearBufferfi(const gl::Context *context,
     return gl::InternalError();
 }
 
-GLenum FramebufferVk::getImplementationColorReadFormat() const
+GLenum FramebufferVk::getImplementationColorReadFormat(const gl::Context *context) const
 {
-    auto errOrResult = GetReadAttachmentInfo(mState.getReadAttachment());
+    auto errOrResult = GetReadAttachmentInfo(context, mState.getReadAttachment());
 
     // TODO(jmadill): Handle getRenderTarget error.
     if (errOrResult.isError())
@@ -233,9 +239,9 @@ GLenum FramebufferVk::getImplementationColorReadFormat() const
     return errOrResult.getResult()->format;
 }
 
-GLenum FramebufferVk::getImplementationColorReadType() const
+GLenum FramebufferVk::getImplementationColorReadType(const gl::Context *context) const
 {
-    auto errOrResult = GetReadAttachmentInfo(mState.getReadAttachment());
+    auto errOrResult = GetReadAttachmentInfo(context, mState.getReadAttachment());
 
     // TODO(jmadill): Handle getRenderTarget error.
     if (errOrResult.isError())
@@ -258,7 +264,7 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
     const auto *readAttachment  = readFramebuffer->getReadColorbuffer();
 
     RenderTargetVk *renderTarget = nullptr;
-    ANGLE_TRY(readAttachment->getRenderTarget(&renderTarget));
+    ANGLE_TRY(readAttachment->getRenderTarget(context, &renderTarget));
 
     ContextVk *contextVk = GetImplAs<ContextVk>(context);
     RendererVk *renderer = contextVk->getRenderer();
@@ -306,7 +312,7 @@ gl::Error FramebufferVk::readPixels(const gl::Context *context,
     params.format      = format;
     params.type        = type;
     params.outputPitch = inputPitch;
-    params.pack        = glState.getPackState();
+    params.pack.copyFrom(context, glState.getPackState());
 
     PackPixels(params, angleFormat, inputPitch, mapPointer, reinterpret_cast<uint8_t *>(pixels));
 
@@ -351,7 +357,8 @@ void FramebufferVk::syncState(const gl::Context *context,
     contextVk->invalidateCurrentPipeline();
 }
 
-gl::ErrorOrResult<vk::RenderPass *> FramebufferVk::getRenderPass(VkDevice device)
+gl::ErrorOrResult<vk::RenderPass *> FramebufferVk::getRenderPass(const gl::Context *context,
+                                                                 VkDevice device)
 {
     if (mRenderPass.valid())
     {
@@ -372,7 +379,7 @@ gl::ErrorOrResult<vk::RenderPass *> FramebufferVk::getRenderPass(VkDevice device
             VkAttachmentReference colorRef;
 
             RenderTargetVk *renderTarget = nullptr;
-            ANGLE_TRY(colorAttachment.getRenderTarget(&renderTarget));
+            ANGLE_TRY(colorAttachment.getRenderTarget(context, &renderTarget));
 
             // TODO(jmadill): We would only need this flag for duplicated attachments.
             colorDesc.flags   = VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT;
@@ -407,7 +414,7 @@ gl::ErrorOrResult<vk::RenderPass *> FramebufferVk::getRenderPass(VkDevice device
         VkAttachmentDescription depthStencilDesc;
 
         RenderTargetVk *renderTarget = nullptr;
-        ANGLE_TRY(depthStencilAttachment->getRenderTarget(&renderTarget));
+        ANGLE_TRY(depthStencilAttachment->getRenderTarget(context, &renderTarget));
 
         depthStencilDesc.flags          = 0;
         depthStencilDesc.format         = renderTarget->format->native;
@@ -460,7 +467,8 @@ gl::ErrorOrResult<vk::RenderPass *> FramebufferVk::getRenderPass(VkDevice device
     return &mRenderPass;
 }
 
-gl::ErrorOrResult<vk::Framebuffer *> FramebufferVk::getFramebuffer(VkDevice device)
+gl::ErrorOrResult<vk::Framebuffer *> FramebufferVk::getFramebuffer(const gl::Context *context,
+                                                                   VkDevice device)
 {
     // If we've already created our cached Framebuffer, return it.
     if (mFramebuffer.valid())
@@ -469,7 +477,7 @@ gl::ErrorOrResult<vk::Framebuffer *> FramebufferVk::getFramebuffer(VkDevice devi
     }
 
     vk::RenderPass *renderPass = nullptr;
-    ANGLE_TRY_RESULT(getRenderPass(device), renderPass);
+    ANGLE_TRY_RESULT(getRenderPass(context, device), renderPass);
 
     // If we've a Framebuffer provided by a Surface (default FBO/backbuffer), query it.
     if (mBackbuffer)
@@ -488,7 +496,7 @@ gl::ErrorOrResult<vk::Framebuffer *> FramebufferVk::getFramebuffer(VkDevice devi
         if (colorAttachment.isAttached())
         {
             RenderTargetVk *renderTarget = nullptr;
-            ANGLE_TRY(colorAttachment.getRenderTarget<RenderTargetVk>(&renderTarget));
+            ANGLE_TRY(colorAttachment.getRenderTarget<RenderTargetVk>(context, &renderTarget));
             attachments.push_back(renderTarget->imageView->getHandle());
 
             ASSERT(attachmentsSize.empty() || attachmentsSize == colorAttachment.getSize());
@@ -500,7 +508,7 @@ gl::ErrorOrResult<vk::Framebuffer *> FramebufferVk::getFramebuffer(VkDevice devi
     if (depthStencilAttachment && depthStencilAttachment->isAttached())
     {
         RenderTargetVk *renderTarget = nullptr;
-        ANGLE_TRY(depthStencilAttachment->getRenderTarget<RenderTargetVk>(&renderTarget));
+        ANGLE_TRY(depthStencilAttachment->getRenderTarget<RenderTargetVk>(context, &renderTarget));
         attachments.push_back(renderTarget->imageView->getHandle());
 
         ASSERT(attachmentsSize.empty() || attachmentsSize == depthStencilAttachment->getSize());
@@ -535,7 +543,8 @@ gl::Error FramebufferVk::getSamplePosition(size_t index, GLfloat *xy) const
     return gl::InternalError() << "getSamplePosition is unimplemented.";
 }
 
-gl::Error FramebufferVk::beginRenderPass(VkDevice device,
+gl::Error FramebufferVk::beginRenderPass(const gl::Context *context,
+                                         VkDevice device,
                                          vk::CommandBuffer *commandBuffer,
                                          Serial queueSerial,
                                          const gl::State &glState)
@@ -546,7 +555,7 @@ gl::Error FramebufferVk::beginRenderPass(VkDevice device,
         if (colorAttachment.isAttached())
         {
             RenderTargetVk *renderTarget = nullptr;
-            ANGLE_TRY(colorAttachment.getRenderTarget<RenderTargetVk>(&renderTarget));
+            ANGLE_TRY(colorAttachment.getRenderTarget<RenderTargetVk>(context, &renderTarget));
             renderTarget->resource->setQueueSerial(queueSerial);
         }
     }
@@ -555,16 +564,16 @@ gl::Error FramebufferVk::beginRenderPass(VkDevice device,
     if (depthStencilAttachment && depthStencilAttachment->isAttached())
     {
         RenderTargetVk *renderTarget = nullptr;
-        ANGLE_TRY(depthStencilAttachment->getRenderTarget<RenderTargetVk>(&renderTarget));
+        ANGLE_TRY(depthStencilAttachment->getRenderTarget<RenderTargetVk>(context, &renderTarget));
         renderTarget->resource->setQueueSerial(queueSerial);
     }
 
     vk::Framebuffer *framebuffer = nullptr;
-    ANGLE_TRY_RESULT(getFramebuffer(device), framebuffer);
+    ANGLE_TRY_RESULT(getFramebuffer(context, device), framebuffer);
     ASSERT(framebuffer && framebuffer->valid());
 
     vk::RenderPass *renderPass = nullptr;
-    ANGLE_TRY_RESULT(getRenderPass(device), renderPass);
+    ANGLE_TRY_RESULT(getRenderPass(context, device), renderPass);
     ASSERT(renderPass && renderPass->valid());
 
     // TODO(jmadill): Proper clear value implementation.
@@ -583,7 +592,7 @@ gl::Error FramebufferVk::beginRenderPass(VkDevice device,
     // TODO(jmadill): Iterate over all attachments.
     ASSERT(mBackbuffer);
     RenderTargetVk *renderTarget = nullptr;
-    ANGLE_TRY(mState.getFirstColorAttachment()->getRenderTarget(&renderTarget));
+    ANGLE_TRY(mState.getFirstColorAttachment()->getRenderTarget(context, &renderTarget));
     renderTarget->image->updateLayout(VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL);
 
     commandBuffer->beginRenderPass(*renderPass, *framebuffer, glState.getViewport(),

@@ -36,7 +36,8 @@ class BlitGL : angle::NonCopyable
            StateManagerGL *stateManager);
     ~BlitGL();
 
-    gl::Error copyImageToLUMAWorkaroundTexture(GLuint texture,
+    gl::Error copyImageToLUMAWorkaroundTexture(const gl::Context *context,
+                                               GLuint texture,
                                                GLenum textureType,
                                                GLenum target,
                                                GLenum lumaFormat,
@@ -45,7 +46,8 @@ class BlitGL : angle::NonCopyable
                                                GLenum internalFormat,
                                                const gl::Framebuffer *source);
 
-    gl::Error copySubImageToLUMAWorkaroundTexture(GLuint texture,
+    gl::Error copySubImageToLUMAWorkaroundTexture(const gl::Context *context,
+                                                  GLuint texture,
                                                   GLenum textureType,
                                                   GLenum target,
                                                   GLenum lumaFormat,
@@ -60,7 +62,8 @@ class BlitGL : angle::NonCopyable
                                         const gl::Rectangle &destArea,
                                         GLenum filter);
 
-    gl::Error copySubTexture(TextureGL *source,
+    gl::Error copySubTexture(const gl::Context *context,
+                             TextureGL *source,
                              size_t sourceLevel,
                              TextureGL *dest,
                              GLenum destTarget,

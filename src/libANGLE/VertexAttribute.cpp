@@ -29,9 +29,7 @@ VertexBinding &VertexBinding::operator=(VertexBinding &&binding)
         mStride  = binding.mStride;
         mDivisor = binding.mDivisor;
         mOffset  = binding.mOffset;
-        mBuffer  = binding.mBuffer;
-
-        binding.setBuffer(nullptr);
+        std::swap(binding.mBuffer, mBuffer);
     }
     return *this;
 }

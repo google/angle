@@ -141,6 +141,7 @@ EGLint OffscreenSurfaceVk::getSwapBehavior() const
 }
 
 gl::Error OffscreenSurfaceVk::getAttachmentRenderTarget(
+    const gl::Context * /*context*/,
     GLenum /*binding*/,
     const gl::ImageIndex & /*imageIndex*/,
     FramebufferAttachmentRenderTarget ** /*rtOut*/)
@@ -529,7 +530,8 @@ EGLint WindowSurfaceVk::getSwapBehavior() const
     return EGL_BUFFER_DESTROYED;
 }
 
-gl::Error WindowSurfaceVk::getAttachmentRenderTarget(GLenum /*binding*/,
+gl::Error WindowSurfaceVk::getAttachmentRenderTarget(const gl::Context * /*context*/,
+                                                     GLenum /*binding*/,
                                                      const gl::ImageIndex & /*target*/,
                                                      FramebufferAttachmentRenderTarget **rtOut)
 {

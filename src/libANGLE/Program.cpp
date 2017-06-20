@@ -412,12 +412,10 @@ Program::Program(rx::GLImplFactory *factory, ShaderProgramManager *manager, GLui
 
 Program::~Program()
 {
-    ASSERT(!mState.mAttachedVertexShader && !mState.mAttachedFragmentShader &&
-           !mState.mAttachedComputeShader);
-    SafeDelete(mProgram);
+    ASSERT(!mProgram);
 }
 
-void Program::destroy(const Context *context)
+void Program::onDestroy(const Context *context)
 {
     if (mState.mAttachedVertexShader != nullptr)
     {
@@ -438,6 +436,12 @@ void Program::destroy(const Context *context)
     }
 
     mProgram->destroy(context);
+
+    ASSERT(!mState.mAttachedVertexShader && !mState.mAttachedFragmentShader &&
+           !mState.mAttachedComputeShader);
+    SafeDelete(mProgram);
+
+    delete this;
 }
 
 void Program::setLabel(const std::string &label)

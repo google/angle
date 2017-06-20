@@ -104,8 +104,7 @@ class Shader final : angle::NonCopyable, public LabeledObject
            GLenum type,
            GLuint handle);
 
-    void destroy(const Context *context) {}
-    virtual ~Shader();
+    void onDestroy(const Context *context);
 
     void setLabel(const std::string &label) override;
     const std::string &getLabel() const override;
@@ -152,6 +151,7 @@ class Shader final : angle::NonCopyable, public LabeledObject
     const sh::WorkGroupSize &getWorkGroupSize(const Context *context);
 
   private:
+    virtual ~Shader();
     static void GetSourceImpl(const std::string &source,
                               GLsizei bufSize,
                               GLsizei *length,

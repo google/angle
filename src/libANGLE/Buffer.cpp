@@ -44,7 +44,7 @@ Buffer::~Buffer()
     SafeDelete(mImpl);
 }
 
-void Buffer::destroy(const Context *context)
+void Buffer::onDestroy(const Context *context)
 {
     // In tests, mImpl might be null.
     if (mImpl)

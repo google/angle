@@ -127,7 +127,8 @@ class TextureGL : public TextureImpl
                              bool unpackPremultiplyAlpha,
                              bool unpackUnmultiplyAlpha,
                              const gl::Texture *source) override;
-    gl::Error copySubTextureHelper(GLenum target,
+    gl::Error copySubTextureHelper(const gl::Context *context,
+                                   GLenum target,
                                    size_t level,
                                    const gl::Offset &destOffset,
                                    size_t sourceLevel,
@@ -151,16 +152,19 @@ class TextureGL : public TextureImpl
                                     const gl::Extents &size,
                                     GLboolean fixedSampleLocations) override;
 
-    gl::Error setImageExternal(GLenum target,
+    gl::Error setImageExternal(const gl::Context *context,
+                               GLenum target,
                                egl::Stream *stream,
                                const egl::Stream::GLTextureDescription &desc) override;
 
     gl::Error generateMipmap(const gl::Context *context) override;
 
-    void bindTexImage(egl::Surface *surface) override;
-    void releaseTexImage() override;
+    gl::Error bindTexImage(const gl::Context *context, egl::Surface *surface) override;
+    gl::Error releaseTexImage(const gl::Context *context) override;
 
-    gl::Error setEGLImageTarget(GLenum target, egl::Image *image) override;
+    gl::Error setEGLImageTarget(const gl::Context *context,
+                                GLenum target,
+                                egl::Image *image) override;
 
     GLuint getTextureID() const;
     GLenum getTarget() const;
@@ -168,7 +172,7 @@ class TextureGL : public TextureImpl
     void syncState(const gl::Texture::DirtyBits &dirtyBits) override;
     bool hasAnyDirtyBit() const;
 
-    void setBaseLevel(GLuint baseLevel) override;
+    gl::Error setBaseLevel(const gl::Context *context, GLuint baseLevel) override;
 
     void setMinFilter(GLenum filter);
     void setMagFilter(GLenum filter);
@@ -190,7 +194,8 @@ class TextureGL : public TextureImpl
                                    const gl::Extents &size,
                                    GLenum format,
                                    GLenum type);
-    gl::Error setSubImageRowByRowWorkaround(GLenum target,
+    gl::Error setSubImageRowByRowWorkaround(const gl::Context *context,
+                                            GLenum target,
                                             size_t level,
                                             const gl::Box &area,
                                             GLenum format,
@@ -198,7 +203,8 @@ class TextureGL : public TextureImpl
                                             const gl::PixelUnpackState &unpack,
                                             const uint8_t *pixels);
 
-    gl::Error setSubImagePaddingWorkaround(GLenum target,
+    gl::Error setSubImagePaddingWorkaround(const gl::Context *context,
+                                           GLenum target,
                                            size_t level,
                                            const gl::Box &area,
                                            GLenum format,

@@ -51,7 +51,8 @@ void RendererD3D::cleanup()
 {
     for (auto &incompleteTexture : mIncompleteTextures)
     {
-        incompleteTexture.second.set(nullptr);
+        incompleteTexture.second->onDestroy(mDisplay->getProxyContext());
+        incompleteTexture.second.set(mDisplay->getProxyContext(), nullptr);
     }
     mIncompleteTextures.clear();
 }
@@ -94,33 +95,33 @@ gl::Error RendererD3D::applyTextures(const gl::Context *context,
                 !std::binary_search(framebufferTextures.begin(),
                                     framebufferTextures.begin() + framebufferTextureCount, texture))
             {
-                ANGLE_TRY(setSamplerState(shaderType, samplerIndex, texture, samplerState));
-                ANGLE_TRY(setTexture(shaderType, samplerIndex, texture));
+                ANGLE_TRY(
+                    setSamplerState(context, shaderType, samplerIndex, texture, samplerState));
+                ANGLE_TRY(setTexture(context, shaderType, samplerIndex, texture));
             }
             else
             {
                 // Texture is not sampler complete or it is in use by the framebuffer.  Bind the
                 // incomplete texture.
-                gl::Texture *incompleteTexture =
-                    getIncompleteTexture(context->getImplementation(), textureType);
+                gl::Texture *incompleteTexture = getIncompleteTexture(context, textureType);
 
-                ANGLE_TRY(setSamplerState(shaderType, samplerIndex, incompleteTexture,
+                ANGLE_TRY(setSamplerState(context, shaderType, samplerIndex, incompleteTexture,
                                           incompleteTexture->getSamplerState()));
-                ANGLE_TRY(setTexture(shaderType, samplerIndex, incompleteTexture));
+                ANGLE_TRY(setTexture(context, shaderType, samplerIndex, incompleteTexture));
             }
         }
         else
         {
             // No texture bound to this slot even though it is used by the shader, bind a NULL
             // texture
-            ANGLE_TRY(setTexture(shaderType, samplerIndex, nullptr));
+            ANGLE_TRY(setTexture(context, shaderType, samplerIndex, nullptr));
         }
     }
 
     // Set all the remaining textures to NULL
     size_t samplerCount = (shaderType == gl::SAMPLER_PIXEL) ? caps.maxTextureImageUnits
                                                             : caps.maxVertexTextureImageUnits;
-    clearTextures(shaderType, samplerRange, samplerCount);
+    clearTextures(context, shaderType, samplerRange, samplerCount);
 
     return gl::NoError();
 }
@@ -173,7 +174,8 @@ gl::Error RendererD3D::markTransformFeedbackUsage(const gl::ContextState &data)
     const gl::TransformFeedback *transformFeedback = data.getState().getCurrentTransformFeedback();
     for (size_t i = 0; i < transformFeedback->getIndexedBufferCount(); i++)
     {
-        const OffsetBindingPointer<gl::Buffer> &binding = transformFeedback->getIndexedBuffer(i);
+        const gl::OffsetBindingPointer<gl::Buffer> &binding =
+            transformFeedback->getIndexedBuffer(i);
         if (binding.get() != nullptr)
         {
             BufferD3D *bufferD3D = GetImplAs<BufferD3D>(binding.get());
@@ -211,10 +213,11 @@ size_t RendererD3D::getBoundFramebufferTextures(const gl::ContextState &data,
     return textureCount;
 }
 
-gl::Texture *RendererD3D::getIncompleteTexture(GLImplFactory *implFactory, GLenum type)
+gl::Texture *RendererD3D::getIncompleteTexture(const gl::Context *context, GLenum type)
 {
     if (mIncompleteTextures.find(type) == mIncompleteTextures.end())
     {
+        GLImplFactory *implFactory = context->getImplementation();
         const GLubyte color[] = {0, 0, 0, 255};
         const gl::Extents colorSize(1, 1, 1);
         const gl::PixelUnpackState unpack(1, 0);
@@ -241,7 +244,7 @@ gl::Texture *RendererD3D::getIncompleteTexture(GLImplFactory *implFactory, GLenu
             t->getImplementation()->setSubImage(nullptr, createType, 0, area, GL_RGBA8,
                                                 GL_UNSIGNED_BYTE, unpack, color);
         }
-        mIncompleteTextures[type].set(t);
+        mIncompleteTextures[type].set(context, t);
     }
 
     return mIncompleteTextures[type].get();

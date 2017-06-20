@@ -123,7 +123,7 @@ class Context11 : public ContextImpl
     GLint64 getTimestamp() override;
 
     // Context switching
-    void onMakeCurrent(const gl::ContextState &data) override;
+    void onMakeCurrent(const gl::Context *context) override;
 
     // Caps queries
     const gl::Caps &getNativeCaps() const override;

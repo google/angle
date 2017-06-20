@@ -71,14 +71,16 @@ State::~State()
 {
 }
 
-void State::initialize(const Caps &caps,
-                       const Extensions &extensions,
-                       const Version &clientVersion,
+void State::initialize(const Context *context,
                        bool debug,
                        bool bindGeneratesResource,
                        bool clientArraysEnabled,
                        bool robustResourceInit)
 {
+    const Caps &caps             = context->getCaps();
+    const Extensions &extensions = context->getExtensions();
+    const Version &clientVersion = context->getClientVersion();
+
     mMaxDrawBuffers = caps.maxDrawBuffers;
     mMaxCombinedTextureImageUnits = caps.maxCombinedTextureImageUnits;
 
@@ -152,11 +154,11 @@ void State::initialize(const Caps &caps,
 
     mSamplers.resize(caps.maxCombinedTextureImageUnits);
 
-    mActiveQueries[GL_ANY_SAMPLES_PASSED].set(nullptr);
-    mActiveQueries[GL_ANY_SAMPLES_PASSED_CONSERVATIVE].set(nullptr);
-    mActiveQueries[GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN].set(nullptr);
-    mActiveQueries[GL_TIME_ELAPSED_EXT].set(nullptr);
-    mActiveQueries[GL_COMMANDS_COMPLETED_CHROMIUM].set(nullptr);
+    mActiveQueries[GL_ANY_SAMPLES_PASSED].set(context, nullptr);
+    mActiveQueries[GL_ANY_SAMPLES_PASSED_CONSERVATIVE].set(context, nullptr);
+    mActiveQueries[GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN].set(context, nullptr);
+    mActiveQueries[GL_TIME_ELAPSED_EXT].set(context, nullptr);
+    mActiveQueries[GL_COMMANDS_COMPLETED_CHROMIUM].set(context, nullptr);
 
     mProgram = nullptr;
 
@@ -192,17 +194,17 @@ void State::reset(const Context *context)
         TextureBindingVector &textureVector = bindingVec->second;
         for (size_t textureIdx = 0; textureIdx < textureVector.size(); textureIdx++)
         {
-            textureVector[textureIdx].set(nullptr);
+            textureVector[textureIdx].set(context, nullptr);
         }
     }
     for (size_t samplerIdx = 0; samplerIdx < mSamplers.size(); samplerIdx++)
     {
-        mSamplers[samplerIdx].set(nullptr);
+        mSamplers[samplerIdx].set(context, nullptr);
     }
 
-    mArrayBuffer.set(nullptr);
-    mDrawIndirectBuffer.set(nullptr);
-    mRenderbuffer.set(nullptr);
+    mArrayBuffer.set(context, nullptr);
+    mDrawIndirectBuffer.set(context, nullptr);
+    mRenderbuffer.set(context, nullptr);
 
     if (mProgram)
     {
@@ -210,35 +212,35 @@ void State::reset(const Context *context)
     }
     mProgram = nullptr;
 
-    mTransformFeedback.set(nullptr);
+    mTransformFeedback.set(context, nullptr);
 
     for (State::ActiveQueryMap::iterator i = mActiveQueries.begin(); i != mActiveQueries.end(); i++)
     {
-        i->second.set(nullptr);
+        i->second.set(context, nullptr);
     }
 
-    mGenericUniformBuffer.set(nullptr);
+    mGenericUniformBuffer.set(context, nullptr);
     for (BufferVector::iterator bufItr = mUniformBuffers.begin(); bufItr != mUniformBuffers.end(); ++bufItr)
     {
-        bufItr->set(nullptr);
+        bufItr->set(context, nullptr);
     }
 
-    mCopyReadBuffer.set(nullptr);
-    mCopyWriteBuffer.set(nullptr);
+    mCopyReadBuffer.set(context, nullptr);
+    mCopyWriteBuffer.set(context, nullptr);
 
-    mPack.pixelBuffer.set(nullptr);
-    mUnpack.pixelBuffer.set(nullptr);
+    mPack.pixelBuffer.set(context, nullptr);
+    mUnpack.pixelBuffer.set(context, nullptr);
 
-    mGenericAtomicCounterBuffer.set(nullptr);
+    mGenericAtomicCounterBuffer.set(context, nullptr);
     for (auto &buf : mAtomicCounterBuffers)
     {
-        buf.set(nullptr);
+        buf.set(context, nullptr);
     }
 
-    mGenericShaderStorageBuffer.set(nullptr);
+    mGenericShaderStorageBuffer.set(context, nullptr);
     for (auto &buf : mShaderStorageBuffers)
     {
-        buf.set(nullptr);
+        buf.set(context, nullptr);
     }
 
     mProgram = nullptr;
@@ -738,9 +740,9 @@ unsigned int State::getActiveSampler() const
     return static_cast<unsigned int>(mActiveSampler);
 }
 
-void State::setSamplerTexture(GLenum type, Texture *texture)
+void State::setSamplerTexture(const Context *context, GLenum type, Texture *texture)
 {
-    mSamplerTextures[type][mActiveSampler].set(texture);
+    mSamplerTextures[type][mActiveSampler].set(context, texture);
 }
 
 Texture *State::getTargetTexture(GLenum target) const
@@ -787,7 +789,7 @@ void State::detachTexture(const Context *context, const TextureMap &zeroTextures
                 auto it = zeroTextures.find(textureType);
                 ASSERT(it != zeroTextures.end());
                 // Zero textures are the "default" textures instead of NULL
-                binding.set(it->second.get());
+                binding.set(context, it->second.get());
             }
         }
     }
@@ -808,7 +810,7 @@ void State::detachTexture(const Context *context, const TextureMap &zeroTextures
     }
 }
 
-void State::initializeZeroTextures(const TextureMap &zeroTextures)
+void State::initializeZeroTextures(const Context *context, const TextureMap &zeroTextures)
 {
     for (const auto &zeroTexture : zeroTextures)
     {
@@ -816,14 +818,14 @@ void State::initializeZeroTextures(const TextureMap &zeroTextures)
 
         for (size_t textureUnit = 0; textureUnit < samplerTextureArray.size(); ++textureUnit)
         {
-            samplerTextureArray[textureUnit].set(zeroTexture.second.get());
+            samplerTextureArray[textureUnit].set(context, zeroTexture.second.get());
         }
     }
 }
 
-void State::setSamplerBinding(GLuint textureUnit, Sampler *sampler)
+void State::setSamplerBinding(const Context *context, GLuint textureUnit, Sampler *sampler)
 {
-    mSamplers[textureUnit].set(sampler);
+    mSamplers[textureUnit].set(context, sampler);
 }
 
 GLuint State::getSamplerId(GLuint textureUnit) const
@@ -837,7 +839,7 @@ Sampler *State::getSampler(GLuint textureUnit) const
     return mSamplers[textureUnit].get();
 }
 
-void State::detachSampler(GLuint sampler)
+void State::detachSampler(const Context *context, GLuint sampler)
 {
     // [OpenGL ES 3.0.2] section 3.8.2 pages 123-124:
     // If a sampler object that is currently bound to one or more texture units is
@@ -848,14 +850,14 @@ void State::detachSampler(GLuint sampler)
         BindingPointer<Sampler> &samplerBinding = mSamplers[textureUnit];
         if (samplerBinding.id() == sampler)
         {
-            samplerBinding.set(nullptr);
+            samplerBinding.set(context, nullptr);
         }
     }
 }
 
-void State::setRenderbufferBinding(Renderbuffer *renderbuffer)
+void State::setRenderbufferBinding(const Context *context, Renderbuffer *renderbuffer)
 {
-    mRenderbuffer.set(renderbuffer);
+    mRenderbuffer.set(context, renderbuffer);
 }
 
 GLuint State::getRenderbufferId() const
@@ -876,7 +878,7 @@ void State::detachRenderbuffer(const Context *context, GLuint renderbuffer)
 
     if (mRenderbuffer.id() == renderbuffer)
     {
-        mRenderbuffer.set(nullptr);
+        mRenderbuffer.set(context, nullptr);
     }
 
     // [OpenGL ES 2.0.24] section 4.4 page 111:
@@ -1012,18 +1014,19 @@ bool State::removeVertexArrayBinding(GLuint vertexArray)
     return false;
 }
 
-void State::setElementArrayBuffer(Buffer *buffer)
+void State::setElementArrayBuffer(const Context *context, Buffer *buffer)
 {
-    getVertexArray()->setElementArrayBuffer(buffer);
+    getVertexArray()->setElementArrayBuffer(context, buffer);
     mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
 }
 
-void State::bindVertexBuffer(GLuint bindingIndex,
+void State::bindVertexBuffer(const Context *context,
+                             GLuint bindingIndex,
                              Buffer *boundBuffer,
                              GLintptr offset,
                              GLsizei stride)
 {
-    getVertexArray()->bindVertexBuffer(bindingIndex, boundBuffer, offset, stride);
+    getVertexArray()->bindVertexBuffer(context, bindingIndex, boundBuffer, offset, stride);
     mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
 }
 
@@ -1074,9 +1077,10 @@ Program *State::getProgram() const
     return mProgram;
 }
 
-void State::setTransformFeedbackBinding(TransformFeedback *transformFeedback)
+void State::setTransformFeedbackBinding(const Context *context,
+                                        TransformFeedback *transformFeedback)
 {
-    mTransformFeedback.set(transformFeedback);
+    mTransformFeedback.set(context, transformFeedback);
 }
 
 TransformFeedback *State::getCurrentTransformFeedback() const
@@ -1090,11 +1094,11 @@ bool State::isTransformFeedbackActiveUnpaused() const
     return curTransformFeedback && curTransformFeedback->isActive() && !curTransformFeedback->isPaused();
 }
 
-bool State::removeTransformFeedbackBinding(GLuint transformFeedback)
+bool State::removeTransformFeedbackBinding(const Context *context, GLuint transformFeedback)
 {
     if (mTransformFeedback.id() == transformFeedback)
     {
-        mTransformFeedback.set(nullptr);
+        mTransformFeedback.set(context, nullptr);
         return true;
     }
 
@@ -1128,9 +1132,9 @@ bool State::isQueryActive(Query *query) const
     return false;
 }
 
-void State::setActiveQuery(GLenum target, Query *query)
+void State::setActiveQuery(const Context *context, GLenum target, Query *query)
 {
-    mActiveQueries[target].set(query);
+    mActiveQueries[target].set(context, query);
 }
 
 GLuint State::getActiveQueryId(GLenum target) const
@@ -1149,9 +1153,9 @@ Query *State::getActiveQuery(GLenum target) const
     return it->second.get();
 }
 
-void State::setArrayBufferBinding(Buffer *buffer)
+void State::setArrayBufferBinding(const Context *context, Buffer *buffer)
 {
-    mArrayBuffer.set(buffer);
+    mArrayBuffer.set(context, buffer);
 }
 
 GLuint State::getArrayBufferId() const
@@ -1159,20 +1163,24 @@ GLuint State::getArrayBufferId() const
     return mArrayBuffer.id();
 }
 
-void State::setDrawIndirectBufferBinding(Buffer *buffer)
+void State::setDrawIndirectBufferBinding(const Context *context, Buffer *buffer)
 {
-    mDrawIndirectBuffer.set(buffer);
+    mDrawIndirectBuffer.set(context, buffer);
     mDirtyBits.set(DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING);
 }
 
-void State::setGenericUniformBufferBinding(Buffer *buffer)
+void State::setGenericUniformBufferBinding(const Context *context, Buffer *buffer)
 {
-    mGenericUniformBuffer.set(buffer);
+    mGenericUniformBuffer.set(context, buffer);
 }
 
-void State::setIndexedUniformBufferBinding(GLuint index, Buffer *buffer, GLintptr offset, GLsizeiptr size)
+void State::setIndexedUniformBufferBinding(const Context *context,
+                                           GLuint index,
+                                           Buffer *buffer,
+                                           GLintptr offset,
+                                           GLsizeiptr size)
 {
-    mUniformBuffers[index].set(buffer, offset, size);
+    mUniformBuffers[index].set(context, buffer, offset, size);
 }
 
 const OffsetBindingPointer<Buffer> &State::getIndexedUniformBuffer(size_t index) const
@@ -1181,18 +1189,19 @@ const OffsetBindingPointer<Buffer> &State::getIndexedUniformBuffer(size_t index)
     return mUniformBuffers[index];
 }
 
-void State::setGenericAtomicCounterBufferBinding(Buffer *buffer)
+void State::setGenericAtomicCounterBufferBinding(const Context *context, Buffer *buffer)
 {
-    mGenericAtomicCounterBuffer.set(buffer);
+    mGenericAtomicCounterBuffer.set(context, buffer);
 }
 
-void State::setIndexedAtomicCounterBufferBinding(GLuint index,
+void State::setIndexedAtomicCounterBufferBinding(const Context *context,
+                                                 GLuint index,
                                                  Buffer *buffer,
                                                  GLintptr offset,
                                                  GLsizeiptr size)
 {
     ASSERT(static_cast<size_t>(index) < mAtomicCounterBuffers.size());
-    mAtomicCounterBuffers[index].set(buffer, offset, size);
+    mAtomicCounterBuffers[index].set(context, buffer, offset, size);
 }
 
 const OffsetBindingPointer<Buffer> &State::getIndexedAtomicCounterBuffer(size_t index) const
@@ -1201,18 +1210,19 @@ const OffsetBindingPointer<Buffer> &State::getIndexedAtomicCounterBuffer(size_t 
     return mAtomicCounterBuffers[index];
 }
 
-void State::setGenericShaderStorageBufferBinding(Buffer *buffer)
+void State::setGenericShaderStorageBufferBinding(const Context *context, Buffer *buffer)
 {
-    mGenericShaderStorageBuffer.set(buffer);
+    mGenericShaderStorageBuffer.set(context, buffer);
 }
 
-void State::setIndexedShaderStorageBufferBinding(GLuint index,
+void State::setIndexedShaderStorageBufferBinding(const Context *context,
+                                                 GLuint index,
                                                  Buffer *buffer,
                                                  GLintptr offset,
                                                  GLsizeiptr size)
 {
     ASSERT(static_cast<size_t>(index) < mShaderStorageBuffers.size());
-    mShaderStorageBuffers[index].set(buffer, offset, size);
+    mShaderStorageBuffers[index].set(context, buffer, offset, size);
 }
 
 const OffsetBindingPointer<Buffer> &State::getIndexedShaderStorageBuffer(size_t index) const
@@ -1221,25 +1231,25 @@ const OffsetBindingPointer<Buffer> &State::getIndexedShaderStorageBuffer(size_t 
     return mShaderStorageBuffers[index];
 }
 
-void State::setCopyReadBufferBinding(Buffer *buffer)
+void State::setCopyReadBufferBinding(const Context *context, Buffer *buffer)
 {
-    mCopyReadBuffer.set(buffer);
+    mCopyReadBuffer.set(context, buffer);
 }
 
-void State::setCopyWriteBufferBinding(Buffer *buffer)
+void State::setCopyWriteBufferBinding(const Context *context, Buffer *buffer)
 {
-    mCopyWriteBuffer.set(buffer);
+    mCopyWriteBuffer.set(context, buffer);
 }
 
-void State::setPixelPackBufferBinding(Buffer *buffer)
+void State::setPixelPackBufferBinding(const Context *context, Buffer *buffer)
 {
-    mPack.pixelBuffer.set(buffer);
+    mPack.pixelBuffer.set(context, buffer);
     mDirtyBits.set(DIRTY_BIT_PACK_BUFFER_BINDING);
 }
 
-void State::setPixelUnpackBufferBinding(Buffer *buffer)
+void State::setPixelUnpackBufferBinding(const Context *context, Buffer *buffer)
 {
-    mUnpack.pixelBuffer.set(buffer);
+    mUnpack.pixelBuffer.set(context, buffer);
     mDirtyBits.set(DIRTY_BIT_UNPACK_BUFFER_BINDING);
 }
 
@@ -1267,7 +1277,7 @@ Buffer *State::getTargetBuffer(GLenum target) const
     }
 }
 
-void State::detachBuffer(GLuint bufferName)
+void State::detachBuffer(const Context *context, GLuint bufferName)
 {
     BindingPointer<Buffer> *buffers[] = {
         &mArrayBuffer,        &mGenericAtomicCounterBuffer, &mCopyReadBuffer,
@@ -1277,17 +1287,17 @@ void State::detachBuffer(GLuint bufferName)
     {
         if (buffer->id() == bufferName)
         {
-            buffer->set(nullptr);
+            buffer->set(context, nullptr);
         }
     }
 
     TransformFeedback *curTransformFeedback = getCurrentTransformFeedback();
     if (curTransformFeedback)
     {
-        curTransformFeedback->detachBuffer(bufferName);
+        curTransformFeedback->detachBuffer(context, bufferName);
     }
 
-    getVertexArray()->detachBuffer(bufferName);
+    getVertexArray()->detachBuffer(context, bufferName);
 }
 
 void State::setEnableVertexAttribArray(unsigned int attribNum, bool enabled)
@@ -1317,7 +1327,8 @@ void State::setVertexAttribi(GLuint index, const GLint values[4])
     mDirtyBits.set(DIRTY_BIT_CURRENT_VALUE_0 + index);
 }
 
-void State::setVertexAttribState(unsigned int attribNum,
+void State::setVertexAttribState(const Context *context,
+                                 unsigned int attribNum,
                                  Buffer *boundBuffer,
                                  GLint size,
                                  GLenum type,
@@ -1326,7 +1337,8 @@ void State::setVertexAttribState(unsigned int attribNum,
                                  GLsizei stride,
                                  const void *pointer)
 {
-    getVertexArray()->setAttributeState(attribNum, boundBuffer, size, type, normalized, pureInteger, stride, pointer);
+    getVertexArray()->setAttributeState(context, attribNum, boundBuffer, size, type, normalized,
+                                        pureInteger, stride, pointer);
     mDirtyObjects.set(DIRTY_OBJECT_VERTEX_ARRAY);
 }
 
@@ -1759,8 +1771,12 @@ void State::getIntegerv(const Context *context, GLenum pname, GLint *params)
       case GL_STENCIL_WRITEMASK:                        *params = clampToInt(mDepthStencil.stencilWritemask);     break;
       case GL_STENCIL_BACK_WRITEMASK:                   *params = clampToInt(mDepthStencil.stencilBackWritemask); break;
       case GL_STENCIL_CLEAR_VALUE:                      *params = mStencilClearValue;                             break;
-      case GL_IMPLEMENTATION_COLOR_READ_TYPE:           *params = mReadFramebuffer->getImplementationColorReadType();   break;
-      case GL_IMPLEMENTATION_COLOR_READ_FORMAT:         *params = mReadFramebuffer->getImplementationColorReadFormat(); break;
+      case GL_IMPLEMENTATION_COLOR_READ_TYPE:
+          *params = mReadFramebuffer->getImplementationColorReadType(context);
+          break;
+      case GL_IMPLEMENTATION_COLOR_READ_FORMAT:
+          *params = mReadFramebuffer->getImplementationColorReadFormat(context);
+          break;
       case GL_SAMPLE_BUFFERS:
       case GL_SAMPLES:
         {

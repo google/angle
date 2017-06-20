@@ -42,23 +42,24 @@ egl::Error EGLImageD3D::initialize()
     return egl::NoError();
 }
 
-gl::Error EGLImageD3D::orphan(egl::ImageSibling *sibling)
+gl::Error EGLImageD3D::orphan(const gl::Context *context, egl::ImageSibling *sibling)
 {
     if (sibling == mState.source.get())
     {
-        ANGLE_TRY(copyToLocalRendertarget());
+        ANGLE_TRY(copyToLocalRendertarget(context));
     }
 
     return gl::NoError();
 }
 
-gl::Error EGLImageD3D::getRenderTarget(RenderTargetD3D **outRT) const
+gl::Error EGLImageD3D::getRenderTarget(const gl::Context *context, RenderTargetD3D **outRT) const
 {
     if (mState.source.get())
     {
         ASSERT(!mRenderTarget);
         FramebufferAttachmentRenderTarget *rt = nullptr;
-        ANGLE_TRY(mState.source->getAttachmentRenderTarget(GL_NONE, mState.imageIndex, &rt));
+        ANGLE_TRY(
+            mState.source->getAttachmentRenderTarget(context, GL_NONE, mState.imageIndex, &rt));
         *outRT = static_cast<RenderTargetD3D *>(rt);
         return gl::NoError();
     }
@@ -70,13 +71,13 @@ gl::Error EGLImageD3D::getRenderTarget(RenderTargetD3D **outRT) const
     }
 }
 
-gl::Error EGLImageD3D::copyToLocalRendertarget()
+gl::Error EGLImageD3D::copyToLocalRendertarget(const gl::Context *context)
 {
     ASSERT(mState.source.get() != nullptr);
     ASSERT(mRenderTarget == nullptr);
 
     RenderTargetD3D *curRenderTarget = nullptr;
-    ANGLE_TRY(getRenderTarget(&curRenderTarget));
+    ANGLE_TRY(getRenderTarget(context, &curRenderTarget));
 
     // This only currently applies do D3D11, where it invalidates FBOs with this Image attached.
     curRenderTarget->signalDirty();

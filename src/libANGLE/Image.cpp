@@ -53,32 +53,33 @@ ImageSibling::~ImageSibling()
 {
     // EGL images should hold a ref to their targets and siblings, a Texture should not be deletable
     // while it is attached to an EGL image.
+    // Child class should orphan images before destruction.
     ASSERT(mSourcesOf.empty());
-    orphanImages();
+    ASSERT(mTargetOf.get() == nullptr);
 }
 
-void ImageSibling::setTargetImage(egl::Image *imageTarget)
+void ImageSibling::setTargetImage(const gl::Context *context, egl::Image *imageTarget)
 {
     ASSERT(imageTarget != nullptr);
-    mTargetOf.set(imageTarget);
+    mTargetOf.set(context, imageTarget);
     imageTarget->addTargetSibling(this);
 }
 
-gl::Error ImageSibling::orphanImages()
+gl::Error ImageSibling::orphanImages(const gl::Context *context)
 {
     if (mTargetOf.get() != nullptr)
     {
         // Can't be a target and have sources.
         ASSERT(mSourcesOf.empty());
 
-        ANGLE_TRY(mTargetOf->orphanSibling(this));
-        mTargetOf.set(nullptr);
+        ANGLE_TRY(mTargetOf->orphanSibling(context, this));
+        mTargetOf.set(context, nullptr);
     }
     else
     {
         for (auto &sourceImage : mSourcesOf)
         {
-            ANGLE_TRY(sourceImage->orphanSibling(this));
+            ANGLE_TRY(sourceImage->orphanSibling(context, this));
         }
         mSourcesOf.clear();
     }
@@ -99,9 +100,8 @@ void ImageSibling::removeImageSource(egl::Image *imageSource)
 }
 
 ImageState::ImageState(EGLenum target, ImageSibling *buffer, const AttributeMap &attribs)
-    : imageIndex(GetImageIndex(target, attribs)), source(), targets()
+    : imageIndex(GetImageIndex(target, attribs)), source(buffer), targets()
 {
-    source.set(buffer);
 }
 
 Image::Image(rx::EGLImplFactory *factory,
@@ -118,7 +118,7 @@ Image::Image(rx::EGLImplFactory *factory,
     mState.source->addImageSource(this);
 }
 
-Image::~Image()
+void Image::onDestroy(const gl::Context *context)
 {
     SafeDelete(mImplementation);
 
@@ -130,8 +130,13 @@ Image::~Image()
     if (mState.source.get() != nullptr)
     {
         mState.source->removeImageSource(this);
-        mState.source.set(nullptr);
+        mState.source.set(context, nullptr);
     }
+}
+
+Image::~Image()
+{
+    ASSERT(!mImplementation);
 }
 
 void Image::addTargetSibling(ImageSibling *sibling)
@@ -139,16 +144,16 @@ void Image::addTargetSibling(ImageSibling *sibling)
     mState.targets.insert(sibling);
 }
 
-gl::Error Image::orphanSibling(ImageSibling *sibling)
+gl::Error Image::orphanSibling(const gl::Context *context, ImageSibling *sibling)
 {
     // notify impl
-    ANGLE_TRY(mImplementation->orphan(sibling));
+    ANGLE_TRY(mImplementation->orphan(context, sibling));
 
     if (mState.source.get() == sibling)
     {
         // If the sibling is the source, it cannot be a target.
         ASSERT(mState.targets.find(sibling) == mState.targets.end());
-        mState.source.set(nullptr);
+        mState.source.set(context, nullptr);
     }
     else
     {

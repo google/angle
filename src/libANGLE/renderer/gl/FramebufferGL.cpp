@@ -132,13 +132,13 @@ static void BindFramebufferAttachment(const FunctionsGL *functions,
     }
 }
 
-Error FramebufferGL::discard(size_t count, const GLenum *attachments)
+Error FramebufferGL::discard(const gl::Context *context, size_t count, const GLenum *attachments)
 {
     // glInvalidateFramebuffer accepts the same enums as glDiscardFramebufferEXT
-    return invalidate(count, attachments);
+    return invalidate(context, count, attachments);
 }
 
-Error FramebufferGL::invalidate(size_t count, const GLenum *attachments)
+Error FramebufferGL::invalidate(const gl::Context *context, size_t count, const GLenum *attachments)
 {
     const GLenum *finalAttachmentsPtr = attachments;
 
@@ -165,7 +165,8 @@ Error FramebufferGL::invalidate(size_t count, const GLenum *attachments)
     return gl::NoError();
 }
 
-Error FramebufferGL::invalidateSub(size_t count,
+Error FramebufferGL::invalidateSub(const gl::Context *context,
+                                   size_t count,
                                    const GLenum *attachments,
                                    const gl::Rectangle &area)
 {
@@ -249,14 +250,14 @@ Error FramebufferGL::clearBufferfi(const gl::Context *context,
     return gl::NoError();
 }
 
-GLenum FramebufferGL::getImplementationColorReadFormat() const
+GLenum FramebufferGL::getImplementationColorReadFormat(const gl::Context *context) const
 {
     const auto *readAttachment = mState.getReadAttachment();
     const Format &format       = readAttachment->getFormat();
     return format.info->getReadPixelsFormat();
 }
 
-GLenum FramebufferGL::getImplementationColorReadType() const
+GLenum FramebufferGL::getImplementationColorReadType(const gl::Context *context) const
 {
     const auto *readAttachment = mState.getReadAttachment();
     const Format &format       = readAttachment->getFormat();
@@ -284,7 +285,7 @@ Error FramebufferGL::readPixels(const gl::Context *context,
     if (mWorkarounds.packOverlappingRowsSeparatelyPackBuffer && packState.pixelBuffer.get() &&
         packState.rowLength != 0 && packState.rowLength < area.width)
     {
-        return readPixelsRowByRowWorkaround(area, readFormat, readType, packState, pixels);
+        return readPixelsRowByRowWorkaround(context, area, readFormat, readType, packState, pixels);
     }
 
     if (mWorkarounds.packLastRowSeparatelyForPaddingInclusion)
@@ -298,7 +299,8 @@ Error FramebufferGL::readPixels(const gl::Context *context,
 
         if (apply)
         {
-            return readPixelsPaddingWorkaround(area, readFormat, readType, packState, pixels);
+            return readPixelsPaddingWorkaround(context, area, readFormat, readType, packState,
+                                               pixels);
         }
     }
 
@@ -369,7 +371,7 @@ Error FramebufferGL::blit(const gl::Context *context,
     }
 
     // Enable FRAMEBUFFER_SRGB if needed
-    mStateManager->setFramebufferSRGBEnabledForFramebuffer(context->getContextState(), true, this);
+    mStateManager->setFramebufferSRGBEnabledForFramebuffer(context, true, this);
 
     GLenum blitMask = mask;
     if (needManualColorBlit && (mask & GL_COLOR_BUFFER_BIT) && readAttachmentSamples <= 1)
@@ -527,11 +529,11 @@ void FramebufferGL::syncClearState(const gl::Context *context, GLbitfield mask)
                 }
             }
 
-            mStateManager->setFramebufferSRGBEnabled(context->getContextState(), hasSRGBAttachment);
+            mStateManager->setFramebufferSRGBEnabled(context, hasSRGBAttachment);
         }
         else
         {
-            mStateManager->setFramebufferSRGBEnabled(context->getContextState(), !mIsDefault);
+            mStateManager->setFramebufferSRGBEnabled(context, !mIsDefault);
         }
     }
 }
@@ -561,13 +563,13 @@ void FramebufferGL::syncClearBufferState(const gl::Context *context,
 
             if (attachment != nullptr)
             {
-                mStateManager->setFramebufferSRGBEnabled(context->getContextState(),
+                mStateManager->setFramebufferSRGBEnabled(context,
                                                          attachment->getColorEncoding() == GL_SRGB);
             }
         }
         else
         {
-            mStateManager->setFramebufferSRGBEnabled(context->getContextState(), !mIsDefault);
+            mStateManager->setFramebufferSRGBEnabled(context, !mIsDefault);
         }
     }
 }
@@ -609,7 +611,8 @@ bool FramebufferGL::modifyInvalidateAttachmentsForEmulatedDefaultFBO(
     return true;
 }
 
-gl::Error FramebufferGL::readPixelsRowByRowWorkaround(const gl::Rectangle &area,
+gl::Error FramebufferGL::readPixelsRowByRowWorkaround(const gl::Context *context,
+                                                      const gl::Rectangle &area,
                                                       GLenum format,
                                                       GLenum type,
                                                       const gl::PixelPackState &pack,
@@ -625,10 +628,10 @@ gl::Error FramebufferGL::readPixelsRowByRowWorkaround(const gl::Rectangle &area,
     ANGLE_TRY_RESULT(glFormat.computeSkipBytes(rowBytes, 0, pack, false), skipBytes);
 
     gl::PixelPackState directPack;
-    directPack.pixelBuffer = pack.pixelBuffer;
+    directPack.pixelBuffer.set(context, pack.pixelBuffer.get());
     directPack.alignment   = 1;
     mStateManager->setPixelPackState(directPack);
-    directPack.pixelBuffer.set(nullptr);
+    directPack.pixelBuffer.set(context, nullptr);
 
     offset += skipBytes;
     for (GLint row = 0; row < area.height; ++row)
@@ -641,7 +644,8 @@ gl::Error FramebufferGL::readPixelsRowByRowWorkaround(const gl::Rectangle &area,
     return gl::NoError();
 }
 
-gl::Error FramebufferGL::readPixelsPaddingWorkaround(const gl::Rectangle &area,
+gl::Error FramebufferGL::readPixelsPaddingWorkaround(const gl::Context *context,
+                                                     const gl::Rectangle &area,
                                                      GLenum format,
                                                      GLenum type,
                                                      const gl::PixelPackState &pack,
@@ -662,10 +666,10 @@ gl::Error FramebufferGL::readPixelsPaddingWorkaround(const gl::Rectangle &area,
 
     // Get the last row manually
     gl::PixelPackState directPack;
-    directPack.pixelBuffer = pack.pixelBuffer;
+    directPack.pixelBuffer.set(context, pack.pixelBuffer.get());
     directPack.alignment   = 1;
     mStateManager->setPixelPackState(directPack);
-    directPack.pixelBuffer.set(nullptr);
+    directPack.pixelBuffer.set(context, nullptr);
 
     intptr_t lastRowOffset =
         reinterpret_cast<intptr_t>(pixels) + skipBytes + (area.height - 1) * rowBytes;

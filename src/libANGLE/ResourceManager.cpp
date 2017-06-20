@@ -92,8 +92,7 @@ void TypedResourceManager<ResourceType, HandleAllocatorType, ImplT>::deleteObjec
 
     if (objectIter->second != nullptr)
     {
-        objectIter->second->destroy(context);
-        ImplT::DeleteObject(objectIter->second);
+        ImplT::DeleteObject(context, objectIter->second);
     }
 
     // Requires an explicit this-> because of C++ template rules.
@@ -168,9 +167,9 @@ Buffer *BufferManager::AllocateNewObject(rx::GLImplFactory *factory, GLuint hand
 }
 
 // static
-void BufferManager::DeleteObject(Buffer *buffer)
+void BufferManager::DeleteObject(const Context *context, Buffer *buffer)
 {
-    buffer->release();
+    buffer->release(context);
 }
 
 GLuint BufferManager::createBuffer()
@@ -262,8 +261,7 @@ void ShaderProgramManager::deleteObject(const Context *context,
     if (object->getRefCount() == 0)
     {
         mHandleAllocator.release(id);
-        object->destroy(context);
-        SafeDelete(object);
+        object->onDestroy(context);
         objectMap->erase(iter);
     }
     else
@@ -283,9 +281,9 @@ Texture *TextureManager::AllocateNewObject(rx::GLImplFactory *factory, GLuint ha
 }
 
 // static
-void TextureManager::DeleteObject(Texture *texture)
+void TextureManager::DeleteObject(const Context *context, Texture *texture)
 {
-    texture->release();
+    texture->release(context);
 }
 
 GLuint TextureManager::createTexture()
@@ -326,9 +324,9 @@ Renderbuffer *RenderbufferManager::AllocateNewObject(rx::GLImplFactory *factory,
 }
 
 // static
-void RenderbufferManager::DeleteObject(Renderbuffer *renderbuffer)
+void RenderbufferManager::DeleteObject(const Context *context, Renderbuffer *renderbuffer)
 {
-    renderbuffer->release();
+    renderbuffer->release(context);
 }
 
 GLuint RenderbufferManager::createRenderbuffer()
@@ -357,9 +355,9 @@ Sampler *SamplerManager::AllocateNewObject(rx::GLImplFactory *factory, GLuint ha
 }
 
 // static
-void SamplerManager::DeleteObject(Sampler *sampler)
+void SamplerManager::DeleteObject(const Context *context, Sampler *sampler)
 {
-    sampler->release();
+    sampler->release(context);
 }
 
 GLuint SamplerManager::createSampler()
@@ -380,9 +378,9 @@ bool SamplerManager::isSampler(GLuint sampler)
 // FenceSyncManager Implementation.
 
 // static
-void FenceSyncManager::DeleteObject(FenceSync *fenceSync)
+void FenceSyncManager::DeleteObject(const Context *context, FenceSync *fenceSync)
 {
-    fenceSync->release();
+    fenceSync->release(context);
 }
 
 GLuint FenceSyncManager::createFenceSync(rx::GLImplFactory *factory)
@@ -477,11 +475,12 @@ Framebuffer *FramebufferManager::AllocateNewObject(rx::GLImplFactory *factory,
 }
 
 // static
-void FramebufferManager::DeleteObject(Framebuffer *framebuffer)
+void FramebufferManager::DeleteObject(const Context *context, Framebuffer *framebuffer)
 {
     // Default framebuffer are owned by their respective Surface
     if (framebuffer->id() != 0)
     {
+        framebuffer->onDestroy(context);
         delete framebuffer;
     }
 }

@@ -111,7 +111,7 @@ class BufferManager : public TypedResourceManager<Buffer, HandleAllocator, Buffe
 
     // TODO(jmadill): Investigate design which doesn't expose these methods publicly.
     static Buffer *AllocateNewObject(rx::GLImplFactory *factory, GLuint handle);
-    static void DeleteObject(Buffer *buffer);
+    static void DeleteObject(const Context *context, Buffer *buffer);
 
   protected:
     ~BufferManager() override {}
@@ -158,7 +158,7 @@ class TextureManager : public TypedResourceManager<Texture, HandleAllocator, Tex
     }
 
     static Texture *AllocateNewObject(rx::GLImplFactory *factory, GLuint handle, GLenum target);
-    static void DeleteObject(Texture *texture);
+    static void DeleteObject(const Context *context, Texture *texture);
 
   protected:
     ~TextureManager() override {}
@@ -178,7 +178,7 @@ class RenderbufferManager
     }
 
     static Renderbuffer *AllocateNewObject(rx::GLImplFactory *factory, GLuint handle);
-    static void DeleteObject(Renderbuffer *renderbuffer);
+    static void DeleteObject(const Context *context, Renderbuffer *renderbuffer);
 
   protected:
     ~RenderbufferManager() override {}
@@ -197,7 +197,7 @@ class SamplerManager : public TypedResourceManager<Sampler, HandleAllocator, Sam
     }
 
     static Sampler *AllocateNewObject(rx::GLImplFactory *factory, GLuint handle);
-    static void DeleteObject(Sampler *sampler);
+    static void DeleteObject(const Context *context, Sampler *sampler);
 
   protected:
     ~SamplerManager() override {}
@@ -209,7 +209,7 @@ class FenceSyncManager : public TypedResourceManager<FenceSync, HandleAllocator,
     GLuint createFenceSync(rx::GLImplFactory *factory);
     FenceSync *getFenceSync(GLuint handle);
 
-    static void DeleteObject(FenceSync *fenceSync);
+    static void DeleteObject(const Context *context, FenceSync *fenceSync);
 
   protected:
     ~FenceSyncManager() override {}
@@ -252,7 +252,7 @@ class FramebufferManager
     static Framebuffer *AllocateNewObject(rx::GLImplFactory *factory,
                                           GLuint handle,
                                           const Caps &caps);
-    static void DeleteObject(Framebuffer *framebuffer);
+    static void DeleteObject(const Context *context, Framebuffer *framebuffer);
 
   protected:
     ~FramebufferManager() override {}

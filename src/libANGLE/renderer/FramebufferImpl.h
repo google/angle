@@ -34,9 +34,14 @@ class FramebufferImpl : angle::NonCopyable
     virtual void destroy(const gl::Context *context) {}
     virtual void destroyDefault(const egl::Display *display) {}
 
-    virtual gl::Error discard(size_t count, const GLenum *attachments)    = 0;
-    virtual gl::Error invalidate(size_t count, const GLenum *attachments) = 0;
-    virtual gl::Error invalidateSub(size_t count,
+    virtual gl::Error discard(const gl::Context *context,
+                              size_t count,
+                              const GLenum *attachments) = 0;
+    virtual gl::Error invalidate(const gl::Context *context,
+                                 size_t count,
+                                 const GLenum *attachments) = 0;
+    virtual gl::Error invalidateSub(const gl::Context *context,
+                                    size_t count,
                                     const GLenum *attachments,
                                     const gl::Rectangle &area) = 0;
 
@@ -59,8 +64,8 @@ class FramebufferImpl : angle::NonCopyable
                                     GLfloat depth,
                                     GLint stencil) = 0;
 
-    virtual GLenum getImplementationColorReadFormat() const = 0;
-    virtual GLenum getImplementationColorReadType() const   = 0;
+    virtual GLenum getImplementationColorReadFormat(const gl::Context *context) const = 0;
+    virtual GLenum getImplementationColorReadType(const gl::Context *context) const   = 0;
     virtual gl::Error readPixels(const gl::Context *context,
                                  const gl::Rectangle &area,
                                  GLenum format,

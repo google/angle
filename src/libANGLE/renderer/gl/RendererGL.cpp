@@ -250,12 +250,12 @@ gl::Error RendererGL::finish()
     return gl::NoError();
 }
 
-gl::Error RendererGL::drawArrays(const gl::ContextState &data,
+gl::Error RendererGL::drawArrays(const gl::Context *context,
                                  GLenum mode,
                                  GLint first,
                                  GLsizei count)
 {
-    ANGLE_TRY(mStateManager->setDrawArraysState(data, first, count, 0));
+    ANGLE_TRY(mStateManager->setDrawArraysState(context, first, count, 0));
 
     if (!mSkipDrawCalls)
     {
@@ -265,13 +265,13 @@ gl::Error RendererGL::drawArrays(const gl::ContextState &data,
     return gl::NoError();
 }
 
-gl::Error RendererGL::drawArraysInstanced(const gl::ContextState &data,
+gl::Error RendererGL::drawArraysInstanced(const gl::Context *context,
                                           GLenum mode,
                                           GLint first,
                                           GLsizei count,
                                           GLsizei instanceCount)
 {
-    ANGLE_TRY(mStateManager->setDrawArraysState(data, first, count, instanceCount));
+    ANGLE_TRY(mStateManager->setDrawArraysState(context, first, count, instanceCount));
 
     if (!mSkipDrawCalls)
     {
@@ -281,7 +281,7 @@ gl::Error RendererGL::drawArraysInstanced(const gl::ContextState &data,
     return gl::NoError();
 }
 
-gl::Error RendererGL::drawElements(const gl::ContextState &data,
+gl::Error RendererGL::drawElements(const gl::Context *context,
                                    GLenum mode,
                                    GLsizei count,
                                    GLenum type,
@@ -289,7 +289,7 @@ gl::Error RendererGL::drawElements(const gl::ContextState &data,
                                    const gl::IndexRange &indexRange)
 {
     const void *drawIndexPtr = nullptr;
-    ANGLE_TRY(mStateManager->setDrawElementsState(data, count, type, indices, 0, &drawIndexPtr));
+    ANGLE_TRY(mStateManager->setDrawElementsState(context, count, type, indices, 0, &drawIndexPtr));
 
     if (!mSkipDrawCalls)
     {
@@ -299,7 +299,7 @@ gl::Error RendererGL::drawElements(const gl::ContextState &data,
     return gl::NoError();
 }
 
-gl::Error RendererGL::drawElementsInstanced(const gl::ContextState &data,
+gl::Error RendererGL::drawElementsInstanced(const gl::Context *context,
                                             GLenum mode,
                                             GLsizei count,
                                             GLenum type,
@@ -308,7 +308,7 @@ gl::Error RendererGL::drawElementsInstanced(const gl::ContextState &data,
                                             const gl::IndexRange &indexRange)
 {
     const void *drawIndexPointer = nullptr;
-    ANGLE_TRY(mStateManager->setDrawElementsState(data, count, type, indices, instances,
+    ANGLE_TRY(mStateManager->setDrawElementsState(context, count, type, indices, instances,
                                                   &drawIndexPointer));
 
     if (!mSkipDrawCalls)
@@ -319,7 +319,7 @@ gl::Error RendererGL::drawElementsInstanced(const gl::ContextState &data,
     return gl::NoError();
 }
 
-gl::Error RendererGL::drawRangeElements(const gl::ContextState &data,
+gl::Error RendererGL::drawRangeElements(const gl::Context *context,
                                         GLenum mode,
                                         GLuint start,
                                         GLuint end,
@@ -330,7 +330,7 @@ gl::Error RendererGL::drawRangeElements(const gl::ContextState &data,
 {
     const void *drawIndexPointer = nullptr;
     ANGLE_TRY(
-        mStateManager->setDrawElementsState(data, count, type, indices, 0, &drawIndexPointer));
+        mStateManager->setDrawElementsState(context, count, type, indices, 0, &drawIndexPointer));
 
     if (!mSkipDrawCalls)
     {
@@ -340,11 +340,11 @@ gl::Error RendererGL::drawRangeElements(const gl::ContextState &data,
     return gl::NoError();
 }
 
-gl::Error RendererGL::drawArraysIndirect(const gl::ContextState &data,
+gl::Error RendererGL::drawArraysIndirect(const gl::Context *context,
                                          GLenum mode,
                                          const void *indirect)
 {
-    ANGLE_TRY(mStateManager->setDrawIndirectState(data, GL_NONE));
+    ANGLE_TRY(mStateManager->setDrawIndirectState(context, GL_NONE));
 
     if (!mSkipDrawCalls)
     {
@@ -353,12 +353,12 @@ gl::Error RendererGL::drawArraysIndirect(const gl::ContextState &data,
     return gl::NoError();
 }
 
-gl::Error RendererGL::drawElementsIndirect(const gl::ContextState &data,
+gl::Error RendererGL::drawElementsIndirect(const gl::Context *context,
                                            GLenum mode,
                                            GLenum type,
                                            const void *indirect)
 {
-    ANGLE_TRY(mStateManager->setDrawIndirectState(data, type));
+    ANGLE_TRY(mStateManager->setDrawIndirectState(context, type));
 
     if (!mSkipDrawCalls)
     {
@@ -655,12 +655,12 @@ const gl::Limitations &RendererGL::getNativeLimitations() const
     return mNativeLimitations;
 }
 
-gl::Error RendererGL::dispatchCompute(const gl::ContextState &data,
+gl::Error RendererGL::dispatchCompute(const gl::Context *context,
                                       GLuint numGroupsX,
                                       GLuint numGroupsY,
                                       GLuint numGroupsZ)
 {
-    ANGLE_TRY(mStateManager->setDispatchComputeState(data));
+    ANGLE_TRY(mStateManager->setDispatchComputeState(context));
     mFunctions->dispatchCompute(numGroupsX, numGroupsY, numGroupsZ);
     return gl::NoError();
 }

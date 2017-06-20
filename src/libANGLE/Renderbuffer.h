@@ -34,14 +34,18 @@ class Renderbuffer final : public egl::ImageSibling,
     Renderbuffer(rx::RenderbufferImpl *impl, GLuint id);
     virtual ~Renderbuffer();
 
-    void destroy(const Context *context) override {}
+    void onDestroy(const Context *context) override;
 
     void setLabel(const std::string &label) override;
     const std::string &getLabel() const override;
 
-    Error setStorage(GLenum internalformat, size_t width, size_t height);
-    Error setStorageMultisample(size_t samples, GLenum internalformat, size_t width, size_t height);
-    Error setStorageEGLImageTarget(egl::Image *imageTarget);
+    Error setStorage(const Context *context, GLenum internalformat, size_t width, size_t height);
+    Error setStorageMultisample(const Context *context,
+                                size_t samples,
+                                GLenum internalformat,
+                                size_t width,
+                                size_t height);
+    Error setStorageEGLImageTarget(const Context *context, egl::Image *imageTarget);
 
     rx::RenderbufferImpl *getImplementation() const;
 
@@ -68,8 +72,8 @@ class Renderbuffer final : public egl::ImageSibling,
         return getSamples();
     }
 
-    void onAttach() override;
-    void onDetach() override;
+    void onAttach(const Context *context) override;
+    void onDetach(const Context *context) override;
     GLuint getId() const override;
 
   private:

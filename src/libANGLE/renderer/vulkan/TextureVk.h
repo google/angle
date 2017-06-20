@@ -75,20 +75,24 @@ class TextureVk : public TextureImpl
                          GLenum internalFormat,
                          const gl::Extents &size) override;
 
-    gl::Error setEGLImageTarget(GLenum target, egl::Image *image) override;
+    gl::Error setEGLImageTarget(const gl::Context *context,
+                                GLenum target,
+                                egl::Image *image) override;
 
-    gl::Error setImageExternal(GLenum target,
+    gl::Error setImageExternal(const gl::Context *context,
+                               GLenum target,
                                egl::Stream *stream,
                                const egl::Stream::GLTextureDescription &desc) override;
 
     gl::Error generateMipmap(const gl::Context *context) override;
 
-    void setBaseLevel(GLuint baseLevel) override;
+    gl::Error setBaseLevel(const gl::Context *context, GLuint baseLevel) override;
 
-    void bindTexImage(egl::Surface *surface) override;
-    void releaseTexImage() override;
+    gl::Error bindTexImage(const gl::Context *context, egl::Surface *surface) override;
+    gl::Error releaseTexImage(const gl::Context *context) override;
 
-    gl::Error getAttachmentRenderTarget(GLenum binding,
+    gl::Error getAttachmentRenderTarget(const gl::Context *context,
+                                        GLenum binding,
                                         const gl::ImageIndex &imageIndex,
                                         FramebufferAttachmentRenderTarget **rtOut) override;
 

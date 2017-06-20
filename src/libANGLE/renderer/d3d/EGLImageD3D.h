@@ -11,6 +11,11 @@
 
 #include "libANGLE/renderer/ImageImpl.h"
 
+namespace gl
+{
+class Context;
+}
+
 namespace egl
 {
 class AttributeMap;
@@ -35,12 +40,12 @@ class EGLImageD3D final : public ImageImpl
 
     egl::Error initialize() override;
 
-    gl::Error orphan(egl::ImageSibling *sibling) override;
+    gl::Error orphan(const gl::Context *context, egl::ImageSibling *sibling) override;
 
-    gl::Error getRenderTarget(RenderTargetD3D **outRT) const;
+    gl::Error getRenderTarget(const gl::Context *context, RenderTargetD3D **outRT) const;
 
   private:
-    gl::Error copyToLocalRendertarget();
+    gl::Error copyToLocalRendertarget(const gl::Context *context);
 
     RendererD3D *mRenderer;
     RenderTargetD3D *mRenderTarget;

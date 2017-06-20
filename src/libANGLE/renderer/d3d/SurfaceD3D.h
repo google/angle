@@ -57,7 +57,8 @@ class SurfaceD3D : public SurfaceImpl
     // Returns true if swapchain changed due to resize or interval update
     bool checkForOutOfDateSwapChain(const egl::Display *display);
 
-    gl::Error getAttachmentRenderTarget(GLenum binding,
+    gl::Error getAttachmentRenderTarget(const gl::Context *context,
+                                        GLenum binding,
                                         const gl::ImageIndex &imageIndex,
                                         FramebufferAttachmentRenderTarget **rtOut) override;
 

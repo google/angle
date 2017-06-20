@@ -253,7 +253,7 @@ GLint64 Context9::getTimestamp()
     return mRenderer->getTimestamp();
 }
 
-void Context9::onMakeCurrent(const gl::ContextState &data)
+void Context9::onMakeCurrent(const gl::Context *context)
 {
 }
 

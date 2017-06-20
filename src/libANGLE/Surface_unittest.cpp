@@ -43,8 +43,9 @@ class MockSurfaceImpl : public rx::SurfaceImpl
     MOCK_CONST_METHOD0(getHeight, EGLint());
     MOCK_CONST_METHOD0(isPostSubBufferSupported, EGLint(void));
     MOCK_CONST_METHOD0(getSwapBehavior, EGLint(void));
-    MOCK_METHOD3(getAttachmentRenderTarget,
-                 gl::Error(GLenum,
+    MOCK_METHOD4(getAttachmentRenderTarget,
+                 gl::Error(const gl::Context *,
+                           GLenum,
                            const gl::ImageIndex &,
                            rx::FramebufferAttachmentRenderTarget **));
 

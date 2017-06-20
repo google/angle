@@ -55,38 +55,41 @@ FramebufferAttachment::FramebufferAttachment()
 {
 }
 
-FramebufferAttachment::FramebufferAttachment(GLenum type,
+FramebufferAttachment::FramebufferAttachment(const Context *context,
+                                             GLenum type,
                                              GLenum binding,
                                              const ImageIndex &textureIndex,
                                              FramebufferAttachmentObject *resource)
     : mResource(nullptr)
 {
-    attach(type, binding, textureIndex, resource);
+    attach(context, type, binding, textureIndex, resource);
 }
 
-FramebufferAttachment::FramebufferAttachment(const FramebufferAttachment &other)
-    : mResource(nullptr)
+FramebufferAttachment::FramebufferAttachment(FramebufferAttachment &&other)
+    : FramebufferAttachment()
 {
-    attach(other.mType, other.mTarget.binding(), other.mTarget.textureIndex(), other.mResource);
+    *this = std::move(other);
 }
 
-FramebufferAttachment &FramebufferAttachment::operator=(const FramebufferAttachment &other)
+FramebufferAttachment &FramebufferAttachment::operator=(FramebufferAttachment &&other)
 {
-    attach(other.mType, other.mTarget.binding(), other.mTarget.textureIndex(), other.mResource);
+    std::swap(mType, other.mType);
+    std::swap(mTarget, other.mTarget);
+    std::swap(mResource, other.mResource);
     return *this;
 }
 
 FramebufferAttachment::~FramebufferAttachment()
 {
-    detach();
+    ASSERT(!isAttached());
 }
 
-void FramebufferAttachment::detach()
+void FramebufferAttachment::detach(const Context *context)
 {
     mType = GL_NONE;
     if (mResource != nullptr)
     {
-        mResource->onDetach();
+        mResource->onDetach(context);
         mResource = nullptr;
     }
 
@@ -94,24 +97,25 @@ void FramebufferAttachment::detach()
     mTarget = Target();
 }
 
-void FramebufferAttachment::attach(GLenum type,
+void FramebufferAttachment::attach(const Context *context,
+                                   GLenum type,
                                    GLenum binding,
                                    const ImageIndex &textureIndex,
                                    FramebufferAttachmentObject *resource)
 {
     if (resource == nullptr)
     {
-        detach();
+        detach(context);
         return;
     }
 
     mType = type;
     mTarget = Target(binding, textureIndex);
-    resource->onAttach();
+    resource->onAttach(context);
 
     if (mResource != nullptr)
     {
-        mResource->onDetach();
+        mResource->onDetach(context);
     }
 
     mResource = resource;
@@ -236,11 +240,12 @@ bool FramebufferAttachment::operator!=(const FramebufferAttachment &other) const
 }
 
 Error FramebufferAttachmentObject::getAttachmentRenderTarget(
+    const Context *context,
     GLenum binding,
     const ImageIndex &imageIndex,
     rx::FramebufferAttachmentRenderTarget **rtOut) const
 {
-    return getAttachmentImpl()->getAttachmentRenderTarget(binding, imageIndex, rtOut);
+    return getAttachmentImpl()->getAttachmentRenderTarget(context, binding, imageIndex, rtOut);
 }
 
 angle::BroadcastChannel<> *FramebufferAttachmentObject::getDirtyChannel()

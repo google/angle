@@ -91,7 +91,7 @@ class ContextVk : public ContextImpl, public ResourceVk
     GLint64 getTimestamp() override;
 
     // Context switching
-    void onMakeCurrent(const gl::ContextState &data) override;
+    void onMakeCurrent(const gl::Context *context) override;
 
     // Native capabilities, unmodified by gl::Context.
     const gl::Caps &getNativeCaps() const override;
@@ -149,7 +149,7 @@ class ContextVk : public ContextImpl, public ResourceVk
                               GLuint numGroupsZ) override;
 
   private:
-    gl::Error initPipeline();
+    gl::Error initPipeline(const gl::Context *context);
 
     RendererVk *mRenderer;
     vk::Pipeline mCurrentPipeline;

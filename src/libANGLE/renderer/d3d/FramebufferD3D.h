@@ -78,8 +78,8 @@ class FramebufferD3D : public FramebufferImpl
                             GLfloat depth,
                             GLint stencil) override;
 
-    GLenum getImplementationColorReadFormat() const override;
-    GLenum getImplementationColorReadType() const override;
+    GLenum getImplementationColorReadFormat(const gl::Context *context) const override;
+    GLenum getImplementationColorReadType(const gl::Context *context) const override;
     gl::Error readPixels(const gl::Context *context,
                          const gl::Rectangle &area,
                          GLenum format,
@@ -104,7 +104,8 @@ class FramebufferD3D : public FramebufferImpl
   private:
     virtual gl::Error clearImpl(const gl::Context *context, const ClearParameters &clearParams) = 0;
 
-    virtual gl::Error readPixelsImpl(const gl::Rectangle &area,
+    virtual gl::Error readPixelsImpl(const gl::Context *context,
+                                     const gl::Rectangle &area,
                                      GLenum format,
                                      GLenum type,
                                      size_t outputPitch,

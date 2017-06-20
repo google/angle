@@ -82,7 +82,7 @@ class StateManager11 final : angle::NonCopyable
 
     void onBeginQuery(Query11 *query);
     void onDeleteQueryObject(Query11 *query);
-    gl::Error onMakeCurrent(const gl::ContextState &data);
+    gl::Error onMakeCurrent(const gl::Context *context);
 
     gl::Error updateCurrentValueAttribs(const gl::State &state,
                                         VertexDataManager *vertexDataManager);

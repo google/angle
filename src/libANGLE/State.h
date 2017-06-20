@@ -41,9 +41,7 @@ class State : angle::NonCopyable
     State();
     ~State();
 
-    void initialize(const Caps &caps,
-                    const Extensions &extensions,
-                    const Version &clientVersion,
+    void initialize(const Context *context,
                     bool debug,
                     bool bindGeneratesResource,
                     bool clientArraysEnabled,
@@ -169,21 +167,21 @@ class State : angle::NonCopyable
     // Texture binding & active texture unit manipulation
     void setActiveSampler(unsigned int active);
     unsigned int getActiveSampler() const;
-    void setSamplerTexture(GLenum type, Texture *texture);
+    void setSamplerTexture(const Context *context, GLenum type, Texture *texture);
     Texture *getTargetTexture(GLenum target) const;
     Texture *getSamplerTexture(unsigned int sampler, GLenum type) const;
     GLuint getSamplerTextureId(unsigned int sampler, GLenum type) const;
     void detachTexture(const Context *context, const TextureMap &zeroTextures, GLuint texture);
-    void initializeZeroTextures(const TextureMap &zeroTextures);
+    void initializeZeroTextures(const Context *context, const TextureMap &zeroTextures);
 
     // Sampler object binding manipulation
-    void setSamplerBinding(GLuint textureUnit, Sampler *sampler);
+    void setSamplerBinding(const Context *context, GLuint textureUnit, Sampler *sampler);
     GLuint getSamplerId(GLuint textureUnit) const;
     Sampler *getSampler(GLuint textureUnit) const;
-    void detachSampler(GLuint sampler);
+    void detachSampler(const Context *context, GLuint sampler);
 
     // Renderbuffer binding manipulation
-    void setRenderbufferBinding(Renderbuffer *renderbuffer);
+    void setRenderbufferBinding(const Context *context, Renderbuffer *renderbuffer);
     GLuint getRenderbufferId() const;
     Renderbuffer *getCurrentRenderbuffer() const;
     void detachRenderbuffer(const Context *context, GLuint renderbuffer);
@@ -208,70 +206,74 @@ class State : angle::NonCopyable
     Program *getProgram() const;
 
     // Transform feedback object (not buffer) binding manipulation
-    void setTransformFeedbackBinding(TransformFeedback *transformFeedback);
+    void setTransformFeedbackBinding(const Context *context, TransformFeedback *transformFeedback);
     TransformFeedback *getCurrentTransformFeedback() const;
     bool isTransformFeedbackActiveUnpaused() const;
-    bool removeTransformFeedbackBinding(GLuint transformFeedback);
+    bool removeTransformFeedbackBinding(const Context *context, GLuint transformFeedback);
 
     // Query binding manipulation
     bool isQueryActive(const GLenum type) const;
     bool isQueryActive(Query *query) const;
-    void setActiveQuery(GLenum target, Query *query);
+    void setActiveQuery(const Context *context, GLenum target, Query *query);
     GLuint getActiveQueryId(GLenum target) const;
     Query *getActiveQuery(GLenum target) const;
 
     //// Typed buffer binding point manipulation ////
     // GL_ARRAY_BUFFER
-    void setArrayBufferBinding(Buffer *buffer);
+    void setArrayBufferBinding(const Context *context, Buffer *buffer);
     GLuint getArrayBufferId() const;
 
-    void setDrawIndirectBufferBinding(Buffer *buffer);
+    void setDrawIndirectBufferBinding(const Context *context, Buffer *buffer);
     Buffer *getDrawIndirectBuffer() const { return mDrawIndirectBuffer.get(); }
 
     // GL_UNIFORM_BUFFER - Both indexed and generic targets
-    void setGenericUniformBufferBinding(Buffer *buffer);
-    void setIndexedUniformBufferBinding(GLuint index,
+    void setGenericUniformBufferBinding(const Context *context, Buffer *buffer);
+    void setIndexedUniformBufferBinding(const Context *context,
+                                        GLuint index,
                                         Buffer *buffer,
                                         GLintptr offset,
                                         GLsizeiptr size);
     const OffsetBindingPointer<Buffer> &getIndexedUniformBuffer(size_t index) const;
 
     // GL_ATOMIC_COUNTER_BUFFER - Both indexed and generic targets
-    void setGenericAtomicCounterBufferBinding(Buffer *buffer);
-    void setIndexedAtomicCounterBufferBinding(GLuint index,
+    void setGenericAtomicCounterBufferBinding(const Context *context, Buffer *buffer);
+    void setIndexedAtomicCounterBufferBinding(const Context *context,
+                                              GLuint index,
                                               Buffer *buffer,
                                               GLintptr offset,
                                               GLsizeiptr size);
     const OffsetBindingPointer<Buffer> &getIndexedAtomicCounterBuffer(size_t index) const;
 
     // GL_SHADER_STORAGE_BUFFER - Both indexed and generic targets
-    void setGenericShaderStorageBufferBinding(Buffer *buffer);
-    void setIndexedShaderStorageBufferBinding(GLuint index,
+    void setGenericShaderStorageBufferBinding(const Context *context, Buffer *buffer);
+    void setIndexedShaderStorageBufferBinding(const Context *context,
+                                              GLuint index,
                                               Buffer *buffer,
                                               GLintptr offset,
                                               GLsizeiptr size);
     const OffsetBindingPointer<Buffer> &getIndexedShaderStorageBuffer(size_t index) const;
 
     // GL_COPY_[READ/WRITE]_BUFFER
-    void setCopyReadBufferBinding(Buffer *buffer);
-    void setCopyWriteBufferBinding(Buffer *buffer);
+    void setCopyReadBufferBinding(const Context *context, Buffer *buffer);
+    void setCopyWriteBufferBinding(const Context *context, Buffer *buffer);
 
     // GL_PIXEL[PACK/UNPACK]_BUFFER
-    void setPixelPackBufferBinding(Buffer *buffer);
-    void setPixelUnpackBufferBinding(Buffer *buffer);
+    void setPixelPackBufferBinding(const Context *context, Buffer *buffer);
+    void setPixelUnpackBufferBinding(const Context *context, Buffer *buffer);
 
     // Retrieve typed buffer by target (non-indexed)
     Buffer *getTargetBuffer(GLenum target) const;
     // Detach a buffer from all bindings
-    void detachBuffer(GLuint bufferName);
+    void detachBuffer(const Context *context, GLuint bufferName);
 
     // Vertex attrib manipulation
     void setEnableVertexAttribArray(unsigned int attribNum, bool enabled);
-    void setElementArrayBuffer(Buffer *buffer);
+    void setElementArrayBuffer(const Context *context, Buffer *buffer);
     void setVertexAttribf(GLuint index, const GLfloat values[4]);
     void setVertexAttribu(GLuint index, const GLuint values[4]);
     void setVertexAttribi(GLuint index, const GLint values[4]);
-    void setVertexAttribState(unsigned int attribNum,
+    void setVertexAttribState(const Context *context,
+                              unsigned int attribNum,
                               Buffer *boundBuffer,
                               GLint size,
                               GLenum type,
@@ -282,7 +284,8 @@ class State : angle::NonCopyable
     void setVertexAttribDivisor(GLuint index, GLuint divisor);
     const VertexAttribCurrentValueData &getVertexAttribCurrentValue(size_t attribNum) const;
     const void *getVertexAttribPointer(unsigned int attribNum) const;
-    void bindVertexBuffer(GLuint bindingIndex,
+    void bindVertexBuffer(const Context *context,
+                          GLuint bindingIndex,
                           Buffer *boundBuffer,
                           GLintptr offset,
                           GLsizei stride);

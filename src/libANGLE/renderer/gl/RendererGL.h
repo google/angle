@@ -49,27 +49,27 @@ class RendererGL : angle::NonCopyable
     gl::Error flush();
     gl::Error finish();
 
-    gl::Error drawArrays(const gl::ContextState &data, GLenum mode, GLint first, GLsizei count);
-    gl::Error drawArraysInstanced(const gl::ContextState &data,
+    gl::Error drawArrays(const gl::Context *context, GLenum mode, GLint first, GLsizei count);
+    gl::Error drawArraysInstanced(const gl::Context *context,
                                   GLenum mode,
                                   GLint first,
                                   GLsizei count,
                                   GLsizei instanceCount);
 
-    gl::Error drawElements(const gl::ContextState &data,
+    gl::Error drawElements(const gl::Context *context,
                            GLenum mode,
                            GLsizei count,
                            GLenum type,
                            const void *indices,
                            const gl::IndexRange &indexRange);
-    gl::Error drawElementsInstanced(const gl::ContextState &data,
+    gl::Error drawElementsInstanced(const gl::Context *context,
                                     GLenum mode,
                                     GLsizei count,
                                     GLenum type,
                                     const void *indices,
                                     GLsizei instances,
                                     const gl::IndexRange &indexRange);
-    gl::Error drawRangeElements(const gl::ContextState &data,
+    gl::Error drawRangeElements(const gl::Context *context,
                                 GLenum mode,
                                 GLuint start,
                                 GLuint end,
@@ -77,8 +77,8 @@ class RendererGL : angle::NonCopyable
                                 GLenum type,
                                 const void *indices,
                                 const gl::IndexRange &indexRange);
-    gl::Error drawArraysIndirect(const gl::ContextState &data, GLenum mode, const void *indirect);
-    gl::Error drawElementsIndirect(const gl::ContextState &data,
+    gl::Error drawArraysIndirect(const gl::Context *context, GLenum mode, const void *indirect);
+    gl::Error drawElementsIndirect(const gl::Context *context,
                                    GLenum mode,
                                    GLenum type,
                                    const void *indirect);
@@ -166,7 +166,7 @@ class RendererGL : angle::NonCopyable
     const gl::Extensions &getNativeExtensions() const;
     const gl::Limitations &getNativeLimitations() const;
 
-    gl::Error dispatchCompute(const gl::ContextState &data,
+    gl::Error dispatchCompute(const gl::Context *context,
                               GLuint numGroupsX,
                               GLuint numGroupsY,
                               GLuint numGroupsZ);

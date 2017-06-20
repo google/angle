@@ -76,7 +76,7 @@ VertexArrayGL::VertexArrayGL(const VertexArrayState &state,
     }
 }
 
-VertexArrayGL::~VertexArrayGL()
+void VertexArrayGL::destroy(const gl::Context *context)
 {
     mStateManager->deleteVertexArray(mVertexArrayID);
     mVertexArrayID = 0;
@@ -89,23 +89,25 @@ VertexArrayGL::~VertexArrayGL()
     mStreamingArrayBufferSize = 0;
     mStreamingArrayBuffer     = 0;
 
-    mAppliedElementArrayBuffer.set(nullptr);
+    mAppliedElementArrayBuffer.set(context, nullptr);
     for (auto &binding : mAppliedBindings)
     {
-        binding.setBuffer(nullptr);
+        binding.setBuffer(context, nullptr);
     }
 }
 
-gl::Error VertexArrayGL::syncDrawArraysState(const gl::AttributesMask &activeAttributesMask,
+gl::Error VertexArrayGL::syncDrawArraysState(const gl::Context *context,
+                                             const gl::AttributesMask &activeAttributesMask,
                                              GLint first,
                                              GLsizei count,
                                              GLsizei instanceCount) const
 {
-    return syncDrawState(activeAttributesMask, first, count, GL_NONE, nullptr, instanceCount, false,
-                         nullptr);
+    return syncDrawState(context, activeAttributesMask, first, count, GL_NONE, nullptr,
+                         instanceCount, false, nullptr);
 }
 
-gl::Error VertexArrayGL::syncDrawElementsState(const gl::AttributesMask &activeAttributesMask,
+gl::Error VertexArrayGL::syncDrawElementsState(const gl::Context *context,
+                                               const gl::AttributesMask &activeAttributesMask,
                                                GLsizei count,
                                                GLenum type,
                                                const void *indices,
@@ -113,11 +115,11 @@ gl::Error VertexArrayGL::syncDrawElementsState(const gl::AttributesMask &activeA
                                                bool primitiveRestartEnabled,
                                                const void **outIndices) const
 {
-    return syncDrawState(activeAttributesMask, 0, count, type, indices, instanceCount,
+    return syncDrawState(context, activeAttributesMask, 0, count, type, indices, instanceCount,
                          primitiveRestartEnabled, outIndices);
 }
 
-gl::Error VertexArrayGL::syncElementArrayState() const
+gl::Error VertexArrayGL::syncElementArrayState(const gl::Context *context) const
 {
     gl::Buffer *elementArrayBuffer = mData.getElementArrayBuffer().get();
     ASSERT(elementArrayBuffer);
@@ -125,13 +127,14 @@ gl::Error VertexArrayGL::syncElementArrayState() const
     {
         const BufferGL *bufferGL = GetImplAs<BufferGL>(elementArrayBuffer);
         mStateManager->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferGL->getBufferID());
-        mAppliedElementArrayBuffer.set(elementArrayBuffer);
+        mAppliedElementArrayBuffer.set(context, elementArrayBuffer);
     }
 
     return gl::NoError();
 }
 
-gl::Error VertexArrayGL::syncDrawState(const gl::AttributesMask &activeAttributesMask,
+gl::Error VertexArrayGL::syncDrawState(const gl::Context *context,
+                                       const gl::AttributesMask &activeAttributesMask,
                                        GLint first,
                                        GLsizei count,
                                        GLenum type,
@@ -151,12 +154,8 @@ gl::Error VertexArrayGL::syncDrawState(const gl::AttributesMask &activeAttribute
     IndexRange indexRange;
     if (type != GL_NONE)
     {
-        Error error = syncIndexData(count, type, indices, primitiveRestartEnabled,
-                                    attributesNeedStreaming, &indexRange, outIndices);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(syncIndexData(context, count, type, indices, primitiveRestartEnabled,
+                                attributesNeedStreaming, &indexRange, outIndices));
     }
     else
     {
@@ -167,17 +166,14 @@ gl::Error VertexArrayGL::syncDrawState(const gl::AttributesMask &activeAttribute
 
     if (attributesNeedStreaming)
     {
-        Error error = streamAttributes(activeAttributesMask, instanceCount, indexRange);
-        if (error.isError())
-        {
-            return error;
-        }
+        ANGLE_TRY(streamAttributes(activeAttributesMask, instanceCount, indexRange));
     }
 
     return gl::NoError();
 }
 
-gl::Error VertexArrayGL::syncIndexData(GLsizei count,
+gl::Error VertexArrayGL::syncIndexData(const gl::Context *context,
+                                       GLsizei count,
                                        GLenum type,
                                        const void *indices,
                                        bool primitiveRestartEnabled,
@@ -196,7 +192,7 @@ gl::Error VertexArrayGL::syncIndexData(GLsizei count,
         {
             const BufferGL *bufferGL = GetImplAs<BufferGL>(elementArrayBuffer);
             mStateManager->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufferGL->getBufferID());
-            mAppliedElementArrayBuffer.set(elementArrayBuffer);
+            mAppliedElementArrayBuffer.set(context, elementArrayBuffer);
         }
 
         // Only compute the index range if the attributes also need to be streamed
@@ -234,7 +230,7 @@ gl::Error VertexArrayGL::syncIndexData(GLsizei count,
         }
 
         mStateManager->bindBuffer(GL_ELEMENT_ARRAY_BUFFER, mStreamingElementArrayBuffer);
-        mAppliedElementArrayBuffer.set(nullptr);
+        mAppliedElementArrayBuffer.set(context, nullptr);
 
         // Make sure the element array buffer is large enough
         const Type &indexTypeInfo          = GetTypeInfo(type);
@@ -447,7 +443,7 @@ void VertexArrayGL::updateAttribEnabled(size_t attribIndex)
     mAppliedAttributes[attribIndex].enabled = enabled;
 }
 
-void VertexArrayGL::updateAttribPointer(size_t attribIndex)
+void VertexArrayGL::updateAttribPointer(const gl::Context *context, size_t attribIndex)
 {
     const VertexAttribute &attrib = mData.getVertexAttribute(attribIndex);
 
@@ -477,7 +473,7 @@ void VertexArrayGL::updateAttribPointer(size_t attribIndex)
         // Mark the applied binding is using a client memory pointer by setting its buffer to
         // nullptr so that if it doesn't use a client memory pointer later, there is no chance that
         // the caching will skip it.
-        mAppliedBindings[bindingIndex].setBuffer(nullptr);
+        mAppliedBindings[bindingIndex].setBuffer(context, nullptr);
         return;
     }
 
@@ -503,7 +499,7 @@ void VertexArrayGL::updateAttribPointer(size_t attribIndex)
 
     mAppliedBindings[bindingIndex].setStride(binding.getStride());
     mAppliedBindings[bindingIndex].setOffset(binding.getOffset());
-    mAppliedBindings[bindingIndex].setBuffer(binding.getBuffer().get());
+    mAppliedBindings[bindingIndex].setBuffer(context, binding.getBuffer().get());
 }
 
 void VertexArrayGL::callVertexAttribPointer(GLuint attribIndex,
@@ -563,7 +559,7 @@ void VertexArrayGL::syncState(const gl::Context *context, const VertexArray::Dir
         else if (dirtyBit >= VertexArray::DIRTY_BIT_ATTRIB_0_POINTER &&
                  dirtyBit < VertexArray::DIRTY_BIT_ATTRIB_MAX_POINTER)
         {
-            updateAttribPointer(index);
+            updateAttribPointer(context, index);
         }
         else if (dirtyBit >= VertexArray::DIRTY_BIT_ATTRIB_0_FORMAT &&
                  dirtyBit < VertexArray::DIRTY_BIT_BINDING_MAX_BUFFER)

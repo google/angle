@@ -357,7 +357,8 @@ egl::Error SurfaceD3D::querySurfacePointerANGLE(EGLint attribute, void **value)
     return egl::NoError();
 }
 
-gl::Error SurfaceD3D::getAttachmentRenderTarget(GLenum binding,
+gl::Error SurfaceD3D::getAttachmentRenderTarget(const gl::Context *context,
+                                                GLenum binding,
                                                 const gl::ImageIndex &imageIndex,
                                                 FramebufferAttachmentRenderTarget **rtOut)
 {
