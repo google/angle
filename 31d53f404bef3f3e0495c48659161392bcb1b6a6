@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3fcd71bc_e77a4bc5",
+        "filename": "src/compiler/translator/BuiltInFunctionEmulator.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-20T17:19:10Z",
+      "side": 1,
+      "message": "I think I wanted more generality, but I removed it and just used the pointer for now.",
+      "parentUuid": "27568616_5fbbe014",
+      "revId": "31d53f404bef3f3e0495c48659161392bcb1b6a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d6bc2335_760fa891",
         "filename": "src/compiler/translator/ParamType.h",
         "patchSetId": 4
@@ -54,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "5a90c390_f266b0c5",
+        "filename": "src/compiler/translator/ParamType.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-20T17:19:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f6a96b09_96d259f1",
+      "revId": "31d53f404bef3f3e0495c48659161392bcb1b6a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7185431b_77999f2a",
         "filename": "src/compiler/translator/emulated_builtin_function_data_hlsl.json",
         "patchSetId": 4
@@ -68,6 +104,24 @@
       "revId": "31d53f404bef3f3e0495c48659161392bcb1b6a6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5548c69a_89ad12e3",
+        "filename": "src/compiler/translator/emulated_builtin_function_data_hlsl.json",
+        "patchSetId": 4
+      },
+      "lineNbr": 894,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-20T17:19:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7185431b_77999f2a",
+      "revId": "31d53f404bef3f3e0495c48659161392bcb1b6a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -94,6 +148,30 @@
     },
     {
       "key": {
+        "uuid": "4037b918_0b9d2baf",
+        "filename": "src/compiler/translator/gen_emulated_builtin_function_tables.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-20T17:19:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "267b0641_3a4551a4",
+      "range": {
+        "startLine": 90,
+        "startChar": 0,
+        "endLine": 90,
+        "endChar": 12
+      },
+      "revId": "31d53f404bef3f3e0495c48659161392bcb1b6a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8b6e5ca9_62c040c6",
         "filename": "src/compiler/translator/gen_emulated_builtin_function_tables.py",
         "patchSetId": 4
@@ -114,6 +192,30 @@
       "revId": "31d53f404bef3f3e0495c48659161392bcb1b6a6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ca18b559_3f72708d",
+        "filename": "src/compiler/translator/gen_emulated_builtin_function_tables.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-20T17:19:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8b6e5ca9_62c040c6",
+      "range": {
+        "startLine": 95,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 65
+      },
+      "revId": "31d53f404bef3f3e0495c48659161392bcb1b6a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
