@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "f9431114_f14bca36",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 885,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-20T12:26:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "475b1756_b543d3a6",
+      "range": {
+        "startLine": 884,
+        "startChar": 4,
+        "endLine": 885,
+        "endChar": 36
+      },
+      "revId": "03c1a6a63797ab9aecddbf41de3ac25f87ae4452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f49b431_b35cbe73",
         "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
         "patchSetId": 17
@@ -68,6 +92,30 @@
       "revId": "03c1a6a63797ab9aecddbf41de3ac25f87ae4452",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "262e76e1_e2748e9c",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-20T12:26:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7f49b431_b35cbe73",
+      "range": {
+        "startLine": 255,
+        "startChar": 0,
+        "endLine": 256,
+        "endChar": 28
+      },
+      "revId": "03c1a6a63797ab9aecddbf41de3ac25f87ae4452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
