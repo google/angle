@@ -200,30 +200,20 @@ bool TextureState::isCubeComplete() const
 bool TextureState::isSamplerComplete(const SamplerState &samplerState,
                                      const ContextState &data) const
 {
-    bool newEntry  = false;
-    auto cacheIter = mCompletenessCache.find(data.getContextID());
-    if (cacheIter == mCompletenessCache.end())
+    if (data.getContextID() != mCompletenessCache.context ||
+        mCompletenessCache.samplerState != samplerState)
     {
-        // Add a new cache entry
-        cacheIter = mCompletenessCache
-                        .insert(std::make_pair(data.getContextID(), SamplerCompletenessCache()))
-                        .first;
-        newEntry = true;
+        mCompletenessCache.context         = data.getContextID();
+        mCompletenessCache.samplerState    = samplerState;
+        mCompletenessCache.samplerComplete = computeSamplerCompleteness(samplerState, data);
     }
 
-    SamplerCompletenessCache *cacheEntry = &cacheIter->second;
-    if (newEntry || cacheEntry->samplerState != samplerState)
-    {
-        cacheEntry->samplerState    = samplerState;
-        cacheEntry->samplerComplete = computeSamplerCompleteness(samplerState, data);
-    }
-
-    return cacheEntry->samplerComplete;
+    return mCompletenessCache.samplerComplete;
 }
 
 void TextureState::invalidateCompletenessCache()
 {
-    mCompletenessCache.clear();
+    mCompletenessCache.context = 0;
 }
 
 bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
@@ -514,7 +504,7 @@ void TextureState::clearImageDescs()
 }
 
 TextureState::SamplerCompletenessCache::SamplerCompletenessCache()
-    : samplerState(), samplerComplete(false)
+    : context(0), samplerState(), samplerComplete(false)
 {
 }
 

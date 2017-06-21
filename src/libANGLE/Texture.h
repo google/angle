@@ -160,6 +160,9 @@ struct TextureState final : private angle::NonCopyable
     {
         SamplerCompletenessCache();
 
+        // Context used to generate this cache entry
+        ContextID context;
+
         // All values that affect sampler completeness that are not stored within
         // the texture itself
         SamplerState samplerState;
@@ -168,7 +171,7 @@ struct TextureState final : private angle::NonCopyable
         bool samplerComplete;
     };
 
-    mutable std::unordered_map<ContextID, SamplerCompletenessCache> mCompletenessCache;
+    mutable SamplerCompletenessCache mCompletenessCache;
 };
 
 bool operator==(const TextureState &a, const TextureState &b);
