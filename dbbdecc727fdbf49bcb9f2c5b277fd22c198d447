@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "0071a610_8c18d307",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1328,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-06-21T22:35:53Z",
+      "side": 1,
+      "message": "In either case, the detail can be preserved and for consistency, relocated in ErrorStrings.h. I see that there was another case of loss detail below - so I would suspect it needs similar treatment.",
+      "parentUuid": "f9abc7c9_b66cf3ff",
+      "range": {
+        "startLine": 1321,
+        "startChar": 8,
+        "endLine": 1328,
+        "endChar": 9
+      },
+      "revId": "dbbdecc727fdbf49bcb9f2c5b277fd22c198d447",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "33ad98f4_7dbe9fb0",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 5
