@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "194dbaf6_1b7e61c0",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-21T13:17:19Z",
+      "side": 1,
+      "message": "This doesn\u0027t need to necessarily depend on multiview at all. We might want to compile a multiview rendering version of non-multiview shader programs as well for example, or might eventually run into another use case where geometry shaders are needed, so making it more generic would be good. Also should mention that this is done only in the GLSL output.",
+      "range": {
+        "startLine": 225,
+        "startChar": 82,
+        "endLine": 226,
+        "endChar": 13
+      },
+      "revId": "1a0ff8ea0985654c570db75bf7800e613bf485c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea2bcefc_db4e8a02",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-21T13:17:19Z",
+      "side": 1,
+      "message": "I think this should be VaryingPrefixTest and it could also be placed into a separate file.",
+      "range": {
+        "startLine": 46,
+        "startChar": 6,
+        "endLine": 46,
+        "endChar": 41
+      },
+      "revId": "1a0ff8ea0985654c570db75bf7800e613bf485c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
