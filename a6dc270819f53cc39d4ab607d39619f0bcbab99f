@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "48d527c4_9922e649",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 475,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-21T12:51:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "76050566_b8557d50",
+      "range": {
+        "startLine": 475,
+        "startChar": 15,
+        "endLine": 475,
+        "endChar": 29
+      },
+      "revId": "a6dc270819f53cc39d4ab607d39619f0bcbab99f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59805ff6_4fcc9b93",
         "filename": "src/compiler/translator/OutputGLSLBase.cpp",
         "patchSetId": 2
@@ -59,6 +83,30 @@
       "writtenOn": "2017-06-20T13:03:44Z",
       "side": 1,
       "message": "Is this necessary or does IsVaryingOut() already imply vertex shader?",
+      "range": {
+        "startLine": 476,
+        "startChar": 44,
+        "endLine": 476,
+        "endChar": 75
+      },
+      "revId": "a6dc270819f53cc39d4ab607d39619f0bcbab99f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bfa7881a_e68229b5",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 476,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-21T12:51:26Z",
+      "side": 1,
+      "message": "It does imply. Done.",
+      "parentUuid": "59805ff6_4fcc9b93",
       "range": {
         "startLine": 476,
         "startChar": 44,
@@ -88,6 +136,24 @@
     },
     {
       "key": {
+        "uuid": "c761d88d_408eb7fa",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-21T12:51:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "45680568_b1bcfbd5",
+      "revId": "a6dc270819f53cc39d4ab607d39619f0bcbab99f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6703eaab_e95b4cad",
         "filename": "src/compiler/translator/OutputGLSLBase.cpp",
         "patchSetId": 2
@@ -108,6 +174,30 @@
       "revId": "a6dc270819f53cc39d4ab607d39619f0bcbab99f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c7846134_43bce91e",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 481,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-21T12:51:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6703eaab_e95b4cad",
+      "range": {
+        "startLine": 481,
+        "startChar": 31,
+        "endLine": 481,
+        "endChar": 63
+      },
+      "revId": "a6dc270819f53cc39d4ab607d39619f0bcbab99f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -134,6 +224,30 @@
     },
     {
       "key": {
+        "uuid": "869bee80_0258313a",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-21T12:51:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "be597622_0bd9278a",
+      "range": {
+        "startLine": 482,
+        "startChar": 13,
+        "endLine": 482,
+        "endChar": 46
+      },
+      "revId": "a6dc270819f53cc39d4ab607d39619f0bcbab99f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "92ee9c34_c2f507f4",
         "filename": "src/compiler/translator/OutputGLSLBase.cpp",
         "patchSetId": 2
@@ -148,6 +262,24 @@
       "revId": "a6dc270819f53cc39d4ab607d39619f0bcbab99f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8a70e194_c4992d45",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-21T12:51:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "92ee9c34_c2f507f4",
+      "revId": "a6dc270819f53cc39d4ab607d39619f0bcbab99f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
