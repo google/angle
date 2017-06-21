@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "3b303729_59a765d3",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1328,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-06-21T16:23:41Z",
+      "side": 1,
+      "message": "I feel the extra detail is informative/helpful. What if we ran with your earlier suggestion but also add a \"detail\" param to disambiguate there.",
+      "parentUuid": "65625b37_c30cf775",
+      "range": {
+        "startLine": 1321,
+        "startChar": 8,
+        "endLine": 1328,
+        "endChar": 9
+      },
+      "revId": "dbbdecc727fdbf49bcb9f2c5b277fd22c198d447",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "33ad98f4_7dbe9fb0",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 5
