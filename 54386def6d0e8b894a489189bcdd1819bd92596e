@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dbb22397_07e214c2",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-21T20:20:33Z",
+      "side": 1,
+      "message": "nit: maybe we should at least use the same error across the back-ends?",
+      "range": {
+        "startLine": 346,
+        "startChar": 28,
+        "endLine": 346,
+        "endChar": 41
+      },
+      "revId": "54386def6d0e8b894a489189bcdd1819bd92596e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
