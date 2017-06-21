@@ -813,7 +813,7 @@ void StateManagerGL::setGenericShaderState(const gl::Context *context)
             {
                 const TextureGL *textureGL = GetImplAs<TextureGL>(texture);
 
-                if (mTextures[textureType][textureUnitIndex] != textureGL->getTextureID() ||
+                if (mTextures.at(textureType)[textureUnitIndex] != textureGL->getTextureID() ||
                     texture->hasAnyDirtyBit() || textureGL->hasAnyDirtyBit())
                 {
                     activeTexture(textureUnitIndex);
@@ -826,7 +826,7 @@ void StateManagerGL::setGenericShaderState(const gl::Context *context)
             }
             else
             {
-                if (mTextures[textureType][textureUnitIndex] != 0)
+                if (mTextures.at(textureType)[textureUnitIndex] != 0)
                 {
                     activeTexture(textureUnitIndex);
                     bindTexture(textureType, 0);
