@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "f9abc7c9_b66cf3ff",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1328,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-06-21T20:17:20Z",
+      "side": 1,
+      "message": "The existing message \"Expected a program name, but found a shader name\" has only one occurrence I\u0027ve found - so would we rather keep this as a literal, or make a error message string for this one-off message? \n\nBryan\u0027s suggestion of a \"detail\" param is interesting - but I\u0027m having a hard time coming up with a detail message that is as informative and less verbose than the existing literal - at that point, why not just keep the literal?\n\nMy preference would be to keep one-off messages as literals.",
+      "parentUuid": "3b303729_59a765d3",
+      "range": {
+        "startLine": 1321,
+        "startChar": 8,
+        "endLine": 1328,
+        "endChar": 9
+      },
+      "revId": "dbbdecc727fdbf49bcb9f2c5b277fd22c198d447",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "33ad98f4_7dbe9fb0",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 5
@@ -83,6 +107,30 @@
       "writtenOn": "2017-06-20T21:19:29Z",
       "side": 1,
       "message": "Not sure how I feel about loss of information like this.  Ones that are invalid due to missing extensions will be hard to make static.  Thoughts from others?",
+      "range": {
+        "startLine": 5593,
+        "startChar": 54,
+        "endLine": 5593,
+        "endChar": 78
+      },
+      "revId": "dbbdecc727fdbf49bcb9f2c5b277fd22c198d447",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "64b4cfee_23fc8294",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 5593,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-06-21T20:17:20Z",
+      "side": 1,
+      "message": "I was thinking in the context of the browser debug window, this error message would be accompanied by the line in the user\u0027s code that threw the message (how it currently works) - at that point it should be easy for the user to determine what function caused it, and which extension is not enabled.",
+      "parentUuid": "33ad98f4_7dbe9fb0",
       "range": {
         "startLine": 5593,
         "startChar": 54,
