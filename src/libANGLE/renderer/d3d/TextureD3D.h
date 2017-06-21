@@ -28,6 +28,9 @@ class RendererD3D;
 class RenderTargetD3D;
 class TextureStorage;
 
+template <typename T>
+using TexLevelsArray = std::array<T, gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS>;
+
 class TextureD3D : public TextureImpl
 {
   public:
@@ -181,6 +184,8 @@ class TextureD3D_2D : public TextureD3D
     TextureD3D_2D(const gl::TextureState &data, RendererD3D *renderer);
     virtual ~TextureD3D_2D();
 
+    gl::Error onDestroy(const gl::Context *context) override;
+
     ImageD3D *getImage(int level, int layer) const;
     ImageD3D *getImage(const gl::ImageIndex &index) const override;
     GLsizei getLayerCount(int level) const override;
@@ -314,7 +319,7 @@ class TextureD3D_2D : public TextureD3D
                             bool forceRelease);
 
     bool mEGLImageTarget;
-    ImageD3D *mImageArray[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
+    TexLevelsArray<std::unique_ptr<ImageD3D>> mImageArray;
 };
 
 class TextureD3D_Cube : public TextureD3D
@@ -322,6 +327,8 @@ class TextureD3D_Cube : public TextureD3D
   public:
     TextureD3D_Cube(const gl::TextureState &data, RendererD3D *renderer);
     virtual ~TextureD3D_Cube();
+
+    gl::Error onDestroy(const gl::Context *context) override;
 
     ImageD3D *getImage(int level, int layer) const;
     ImageD3D *getImage(const gl::ImageIndex &index) const override;
@@ -446,7 +453,7 @@ class TextureD3D_Cube : public TextureD3D
                             const gl::Extents &size,
                             bool forceRelease);
 
-    ImageD3D *mImageArray[6][gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
+    std::array<TexLevelsArray<std::unique_ptr<ImageD3D>>, 6> mImageArray;
 };
 
 class TextureD3D_3D : public TextureD3D
@@ -454,6 +461,8 @@ class TextureD3D_3D : public TextureD3D
   public:
     TextureD3D_3D(const gl::TextureState &data, RendererD3D *renderer);
     virtual ~TextureD3D_3D();
+
+    gl::Error onDestroy(const gl::Context *context) override;
 
     ImageD3D *getImage(int level, int layer) const;
     ImageD3D *getImage(const gl::ImageIndex &index) const override;
@@ -559,7 +568,7 @@ class TextureD3D_3D : public TextureD3D
                             const gl::Extents &size,
                             bool forceRelease);
 
-    ImageD3D *mImageArray[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
+    TexLevelsArray<std::unique_ptr<ImageD3D>> mImageArray;
 };
 
 class TextureD3D_2DArray : public TextureD3D
@@ -567,6 +576,8 @@ class TextureD3D_2DArray : public TextureD3D
   public:
     TextureD3D_2DArray(const gl::TextureState &data, RendererD3D *renderer);
     virtual ~TextureD3D_2DArray();
+
+    gl::Error onDestroy(const gl::Context *context) override;
 
     virtual ImageD3D *getImage(int level, int layer) const;
     virtual ImageD3D *getImage(const gl::ImageIndex &index) const;

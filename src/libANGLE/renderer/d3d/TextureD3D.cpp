@@ -642,9 +642,9 @@ TextureD3D_2D::TextureD3D_2D(const gl::TextureState &state, RendererD3D *rendere
     : TextureD3D(state, renderer)
 {
     mEGLImageTarget = false;
-    for (int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++i)
+    for (auto &image : mImageArray)
     {
-        mImageArray[i] = renderer->createImage();
+        image.reset(renderer->createImage());
     }
 }
 
@@ -853,22 +853,27 @@ bool TextureD3D_2DMultisample::isImageComplete(const gl::ImageIndex &index) cons
     return false;
 }
 
+gl::Error TextureD3D_2D::onDestroy(const gl::Context *context)
+{
+    // Delete the Images before the TextureStorage. Images might be relying on the TextureStorage
+    // for some of their data. If TextureStorage is deleted before the Images, then their data will
+    // be wastefully copied back from the GPU before we delete the Images.
+    for (auto &image : mImageArray)
+    {
+        image.reset();
+    }
+    return TextureD3D::onDestroy(context);
+}
+
 TextureD3D_2D::~TextureD3D_2D()
 {
-    // Delete the Images before the TextureStorage.
-    // Images might be relying on the TextureStorage for some of their data.
-    // If TextureStorage is deleted before the Images, then their data will be wastefully copied back from the GPU before we delete the Images.
-    for (int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++i)
-    {
-        SafeDelete(mImageArray[i]);
-    }
 }
 
 ImageD3D *TextureD3D_2D::getImage(int level, int layer) const
 {
     ASSERT(level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
     ASSERT(layer == 0);
-    return mImageArray[level];
+    return mImageArray[level].get();
 }
 
 ImageD3D *TextureD3D_2D::getImage(const gl::ImageIndex &index) const
@@ -876,7 +881,7 @@ ImageD3D *TextureD3D_2D::getImage(const gl::ImageIndex &index) const
     ASSERT(index.mipIndex < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
     ASSERT(!index.hasLayer());
     ASSERT(index.type == GL_TEXTURE_2D);
-    return mImageArray[index.mipIndex];
+    return mImageArray[index.mipIndex].get();
 }
 
 GLsizei TextureD3D_2D::getLayerCount(int level) const
@@ -1310,7 +1315,7 @@ gl::Error TextureD3D_2D::setEGLImageTarget(const gl::Context *context,
     ANGLE_TRY(redefineImage(context, 0, format.info->sizedInternalFormat, size, true));
 
     // Clear all other images.
-    for (size_t level = 1; level < ArraySize(mImageArray); level++)
+    for (size_t level = 1; level < mImageArray.size(); level++)
     {
         ANGLE_TRY(redefineImage(context, level, GL_NONE, gl::Extents(0, 0, 1), true));
     }
@@ -1383,8 +1388,9 @@ bool TextureD3D_2D::isLevelComplete(int level) const
         return true;
     }
 
-    ASSERT(level >= 0 && level <= (int)ArraySize(mImageArray) && mImageArray[level] != nullptr);
-    ImageD3D *image = mImageArray[level];
+    ASSERT(level >= 0 && level <= static_cast<int>(mImageArray.size()) &&
+           mImageArray[level] != nullptr);
+    ImageD3D *image = mImageArray[level].get();
 
     if (image->getInternalFormat() != getBaseLevelInternalFormat())
     {
@@ -1508,7 +1514,7 @@ gl::Error TextureD3D_2D::updateStorage(const gl::Context *context)
 
 gl::Error TextureD3D_2D::updateStorageLevel(const gl::Context *context, int level)
 {
-    ASSERT(level <= (int)ArraySize(mImageArray) && mImageArray[level] != nullptr);
+    ASSERT(level <= static_cast<int>(mImageArray.size()) && mImageArray[level] != nullptr);
     ASSERT(isLevelComplete(level));
 
     if (mImageArray[level]->isDirty())
@@ -1604,41 +1610,46 @@ gl::Error TextureD3D_2D::setStorageMultisample(const gl::Context *context,
 TextureD3D_Cube::TextureD3D_Cube(const gl::TextureState &state, RendererD3D *renderer)
     : TextureD3D(state, renderer)
 {
-    for (int i = 0; i < 6; i++)
+    for (auto &face : mImageArray)
     {
-        for (int j = 0; j < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++j)
+        for (auto &image : face)
         {
-            mImageArray[i][j] = renderer->createImage();
+            image.reset(renderer->createImage());
         }
     }
 }
 
-TextureD3D_Cube::~TextureD3D_Cube()
+gl::Error TextureD3D_Cube::onDestroy(const gl::Context *context)
 {
-    // Delete the Images before the TextureStorage.
-    // Images might be relying on the TextureStorage for some of their data.
-    // If TextureStorage is deleted before the Images, then their data will be wastefully copied back from the GPU before we delete the Images.
-    for (int i = 0; i < 6; i++)
+    // Delete the Images before the TextureStorage. Images might be relying on the TextureStorage
+    // for some of their data. If TextureStorage is deleted before the Images, then their data will
+    // be wastefully copied back from the GPU before we delete the Images.
+    for (auto &face : mImageArray)
     {
-        for (int j = 0; j < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++j)
+        for (auto &image : face)
         {
-            SafeDelete(mImageArray[i][j]);
+            image.reset();
         }
     }
+    return TextureD3D::onDestroy(context);
+}
+
+TextureD3D_Cube::~TextureD3D_Cube()
+{
 }
 
 ImageD3D *TextureD3D_Cube::getImage(int level, int layer) const
 {
     ASSERT(level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
     ASSERT(layer >= 0 && layer < 6);
-    return mImageArray[layer][level];
+    return mImageArray[layer][level].get();
 }
 
 ImageD3D *TextureD3D_Cube::getImage(const gl::ImageIndex &index) const
 {
     ASSERT(index.mipIndex < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
     ASSERT(index.layerIndex >= 0 && index.layerIndex < 6);
-    return mImageArray[index.layerIndex][index.mipIndex];
+    return mImageArray[index.layerIndex][index.mipIndex].get();
 }
 
 GLsizei TextureD3D_Cube::getLayerCount(int level) const
@@ -2160,7 +2171,7 @@ bool TextureD3D_Cube::isFaceLevelComplete(int faceIndex, int level) const
     {
         return false;
     }
-    ASSERT(level >= 0 && faceIndex < 6 && level < (int)ArraySize(mImageArray[faceIndex]) &&
+    ASSERT(level >= 0 && faceIndex < 6 && level < static_cast<int>(mImageArray[faceIndex].size()) &&
            mImageArray[faceIndex][level] != nullptr);
 
     if (isImmutable())
@@ -2184,7 +2195,7 @@ bool TextureD3D_Cube::isFaceLevelComplete(int faceIndex, int level) const
     }
 
     // Check that non-zero levels are consistent with the base level.
-    const ImageD3D *faceLevelImage = mImageArray[faceIndex][level];
+    const ImageD3D *faceLevelImage = mImageArray[faceIndex][level].get();
 
     if (faceLevelImage->getInternalFormat() != getBaseLevelInternalFormat())
     {
@@ -2208,9 +2219,9 @@ gl::Error TextureD3D_Cube::updateStorageFaceLevel(const gl::Context *context,
                                                   int faceIndex,
                                                   int level)
 {
-    ASSERT(level >= 0 && faceIndex < 6 && level < (int)ArraySize(mImageArray[faceIndex]) &&
+    ASSERT(level >= 0 && faceIndex < 6 && level < static_cast<int>(mImageArray[faceIndex].size()) &&
            mImageArray[faceIndex][level] != nullptr);
-    ImageD3D *image = mImageArray[faceIndex][level];
+    ImageD3D *image = mImageArray[faceIndex][level].get();
 
     if (image->isDirty())
     {
@@ -2289,26 +2300,31 @@ TextureD3D_3D::TextureD3D_3D(const gl::TextureState &state, RendererD3D *rendere
 {
     for (int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++i)
     {
-        mImageArray[i] = renderer->createImage();
+        mImageArray[i].reset(renderer->createImage());
     }
+}
+
+gl::Error TextureD3D_3D::onDestroy(const gl::Context *context)
+{
+    // Delete the Images before the TextureStorage. Images might be relying on the TextureStorage
+    // for some of their data. If TextureStorage is deleted before the Images, then their data will
+    // be wastefully copied back from the GPU before we delete the Images.
+    for (auto &image : mImageArray)
+    {
+        image.reset();
+    }
+    return TextureD3D::onDestroy(context);
 }
 
 TextureD3D_3D::~TextureD3D_3D()
 {
-    // Delete the Images before the TextureStorage.
-    // Images might be relying on the TextureStorage for some of their data.
-    // If TextureStorage is deleted before the Images, then their data will be wastefully copied back from the GPU before we delete the Images.
-    for (int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; ++i)
-    {
-        delete mImageArray[i];
-    }
 }
 
 ImageD3D *TextureD3D_3D::getImage(int level, int layer) const
 {
     ASSERT(level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
     ASSERT(layer == 0);
-    return mImageArray[level];
+    return mImageArray[level].get();
 }
 
 ImageD3D *TextureD3D_3D::getImage(const gl::ImageIndex &index) const
@@ -2316,7 +2332,7 @@ ImageD3D *TextureD3D_3D::getImage(const gl::ImageIndex &index) const
     ASSERT(index.mipIndex < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
     ASSERT(!index.hasLayer());
     ASSERT(index.type == GL_TEXTURE_3D);
-    return mImageArray[index.mipIndex];
+    return mImageArray[index.mipIndex].get();
 }
 
 GLsizei TextureD3D_3D::getLayerCount(int level) const
@@ -2703,7 +2719,8 @@ bool TextureD3D_3D::isValidLevel(int level) const
 
 bool TextureD3D_3D::isLevelComplete(int level) const
 {
-    ASSERT(level >= 0 && level < (int)ArraySize(mImageArray) && mImageArray[level] != nullptr);
+    ASSERT(level >= 0 && level < static_cast<int>(mImageArray.size()) &&
+           mImageArray[level] != nullptr);
 
     if (isImmutable())
     {
@@ -2724,7 +2741,7 @@ bool TextureD3D_3D::isLevelComplete(int level) const
         return true;
     }
 
-    ImageD3D *levelImage = mImageArray[level];
+    ImageD3D *levelImage = mImageArray[level].get();
 
     if (levelImage->getInternalFormat() != getBaseLevelInternalFormat())
     {
@@ -2756,7 +2773,8 @@ bool TextureD3D_3D::isImageComplete(const gl::ImageIndex &index) const
 
 gl::Error TextureD3D_3D::updateStorageLevel(const gl::Context *context, int level)
 {
-    ASSERT(level >= 0 && level < (int)ArraySize(mImageArray) && mImageArray[level] != nullptr);
+    ASSERT(level >= 0 && level < static_cast<int>(mImageArray.size()) &&
+           mImageArray[level] != nullptr);
     ASSERT(isLevelComplete(level));
 
     if (mImageArray[level]->isDirty())
@@ -2843,12 +2861,17 @@ TextureD3D_2DArray::TextureD3D_2DArray(const gl::TextureState &state, RendererD3
     }
 }
 
+gl::Error TextureD3D_2DArray::onDestroy(const gl::Context *context)
+{
+    // Delete the Images before the TextureStorage. Images might be relying on the TextureStorage
+    // for some of their data. If TextureStorage is deleted before the Images, then their data will
+    // be wastefully copied back from the GPU before we delete the Images.
+    deleteImages();
+    return TextureD3D::onDestroy(context);
+}
+
 TextureD3D_2DArray::~TextureD3D_2DArray()
 {
-    // Delete the Images before the TextureStorage.
-    // Images might be relying on the TextureStorage for some of their data.
-    // If TextureStorage is deleted before the Images, then their data will be wastefully copied back from the GPU before we delete the Images.
-    deleteImages();
 }
 
 ImageD3D *TextureD3D_2DArray::getImage(int level, int layer) const

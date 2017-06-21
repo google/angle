@@ -488,17 +488,25 @@ gl::Error TextureStorage11::copySubresourceLevel(const gl::Context *context,
     D3D11_BOX *pSrcBox = nullptr;
     if (mRenderer->getRenderer11DeviceCaps().featureLevel <= D3D_FEATURE_LEVEL_9_3)
     {
-        // However, D3D10Level9 doesn't always perform CopySubresourceRegion correctly unless the
-        // source box is specified. This is okay, since we don't perform CopySubresourceRegion on
-        // depth/stencil textures on 9_3.
-        ASSERT(mFormatInfo.dsvFormat == DXGI_FORMAT_UNKNOWN);
-        srcBox.left   = region.x;
-        srcBox.right  = region.x + region.width;
-        srcBox.top    = region.y;
-        srcBox.bottom = region.y + region.height;
-        srcBox.front  = region.z;
-        srcBox.back   = region.z + region.depth;
-        pSrcBox       = &srcBox;
+        GLsizei width  = region.width;
+        GLsizei height = region.height;
+        d3d11::MakeValidSize(false, mFormatInfo.texFormat, &width, &height, nullptr);
+
+        // Keep srcbox as nullptr if we're dealing with tiny mips of compressed textures.
+        if (width == region.width && height == region.height)
+        {
+            // However, D3D10Level9 doesn't always perform CopySubresourceRegion correctly unless
+            // the source box is specified. This is okay, since we don't perform
+            // CopySubresourceRegion on depth/stencil textures on 9_3.
+            ASSERT(mFormatInfo.dsvFormat == DXGI_FORMAT_UNKNOWN);
+            srcBox.left   = region.x;
+            srcBox.right  = region.x + region.width;
+            srcBox.top    = region.y;
+            srcBox.bottom = region.y + region.height;
+            srcBox.front  = region.z;
+            srcBox.back   = region.z + region.depth;
+            pSrcBox       = &srcBox;
+        }
     }
 
     deviceContext->CopySubresourceRegion(dstTexture.get(), dstSubresource, region.x, region.y,

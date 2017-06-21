@@ -1793,7 +1793,10 @@ void MakeValidSize(bool isImage, DXGI_FORMAT format, GLsizei *requestWidth, GLsi
             upsampleCount++;
         }
     }
-    *levelOffset = upsampleCount;
+    if (levelOffset)
+    {
+        *levelOffset = upsampleCount;
+    }
 }
 
 void GenerateInitialTextureData(GLint internalFormat,
