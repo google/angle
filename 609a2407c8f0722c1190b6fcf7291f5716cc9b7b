@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2df1cc91_4740ff84",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T06:42:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0afc4d29_4eda7b8d",
+      "range": {
+        "startLine": 45,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 2
+      },
+      "revId": "609a2407c8f0722c1190b6fcf7291f5716cc9b7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f56553fb_2e09a96c",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 7
@@ -45,6 +69,30 @@
       "revId": "609a2407c8f0722c1190b6fcf7291f5716cc9b7b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b6e779b4_30518fd6",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1444,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T06:42:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f56553fb_2e09a96c",
+      "range": {
+        "startLine": 1444,
+        "startChar": 0,
+        "endLine": 1444,
+        "endChar": 31
+      },
+      "revId": "609a2407c8f0722c1190b6fcf7291f5716cc9b7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "7b3d4e4e_f3ffefe7",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2006,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T06:42:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8731e784_79fe1cbe",
+      "range": {
+        "startLine": 2005,
+        "startChar": 0,
+        "endLine": 2006,
+        "endChar": 62
+      },
+      "revId": "609a2407c8f0722c1190b6fcf7291f5716cc9b7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8f4fb783_53262b6c",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 7
@@ -91,6 +163,30 @@
       "revId": "609a2407c8f0722c1190b6fcf7291f5716cc9b7b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a8c1c9ef_791eaaf1",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2605,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T06:42:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8f4fb783_53262b6c",
+      "range": {
+        "startLine": 2605,
+        "startChar": 0,
+        "endLine": 2605,
+        "endChar": 50
+      },
+      "revId": "609a2407c8f0722c1190b6fcf7291f5716cc9b7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "21d03b96_200d51ec",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3014,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T06:42:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a3b8d43a_78c112a3",
+      "range": {
+        "startLine": 3014,
+        "startChar": 8,
+        "endLine": 3014,
+        "endChar": 11
+      },
+      "revId": "609a2407c8f0722c1190b6fcf7291f5716cc9b7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "15f6e167_c241bebb",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 7
@@ -137,6 +257,30 @@
       "revId": "609a2407c8f0722c1190b6fcf7291f5716cc9b7b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "637b17c8_20c43687",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3026,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T06:42:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "15f6e167_c241bebb",
+      "range": {
+        "startLine": 3026,
+        "startChar": 8,
+        "endLine": 3026,
+        "endChar": 11
+      },
+      "revId": "609a2407c8f0722c1190b6fcf7291f5716cc9b7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "d9fb488d_f1622499",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1611,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T06:42:23Z",
+      "side": 1,
+      "message": "This patch is only to add the \u0027buffer\u0027 support in shader and keep the old logic not affected. Refactor will be the next step.",
+      "parentUuid": "5ad712a4_01110794",
+      "range": {
+        "startLine": 1608,
+        "startChar": 1,
+        "endLine": 1611,
+        "endChar": 9
+      },
+      "revId": "609a2407c8f0722c1190b6fcf7291f5716cc9b7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8774aed1_7113280e",
         "filename": "src/tests/compiler_tests/BufferVariables_test.cpp",
         "patchSetId": 7
@@ -174,6 +342,30 @@
       "writtenOn": "2017-06-20T01:33:33Z",
       "side": 1,
       "message": "what if buffer is writeonly and any member variable is readonly?",
+      "range": {
+        "startLine": 74,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 44
+      },
+      "revId": "609a2407c8f0722c1190b6fcf7291f5716cc9b7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b21c091_c8f23051",
+        "filename": "src/tests/compiler_tests/BufferVariables_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T06:42:23Z",
+      "side": 1,
+      "message": "I didn\u0027t find any related description about this in spec. One similar is \u0027It is a compiletime\nerror to assign to a buffer variable qualified with readonly or to read from a buffer variable qualified with writeonly.\u0027 and I have added the corresponding test case to verify it.",
+      "parentUuid": "8774aed1_7113280e",
       "range": {
         "startLine": 74,
         "startChar": 0,
