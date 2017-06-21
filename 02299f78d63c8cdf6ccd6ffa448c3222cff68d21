@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "18f3e9e9_bb04da03",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T12:26:09Z",
+      "side": 1,
+      "message": "What if the readonly image is greater than the max number of SRV count? Please also add the corresponding test case.",
+      "revId": "02299f78d63c8cdf6ccd6ffa448c3222cff68d21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ddb9371_ba3a71e5",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T12:26:09Z",
+      "side": 1,
+      "message": "What is it used for?",
+      "range": {
+        "startLine": 34,
+        "startChar": 12,
+        "endLine": 34,
+        "endChar": 20
+      },
+      "revId": "02299f78d63c8cdf6ccd6ffa448c3222cff68d21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
