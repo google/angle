@@ -6,6 +6,7 @@
 
 #include "random_utils.h"
 #include "test_utils/ANGLETest.h"
+#include "test_utils/gl_raii.h"
 
 using namespace angle;
 
@@ -966,6 +967,57 @@ TEST_P(TransformFeedbackTest, OffsetResetOnBeginTransformFeedback)
     glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
 
     ASSERT_GL_NO_ERROR();
+}
+
+// Test that the captured buffer can be copied to other buffers.
+TEST_P(TransformFeedbackTest, CaptureAndCopy)
+{
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Set the program's transform feedback varyings (just gl_Position)
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back("gl_Position");
+    compileDefaultProgram(tfVaryings, GL_INTERLEAVED_ATTRIBS);
+
+    glUseProgram(mProgram);
+
+    GLint positionLocation = glGetAttribLocation(mProgram, "position");
+
+    glEnable(GL_RASTERIZER_DISCARD);
+
+    const GLfloat vertices[] = {
+        -1.0f, 1.0f, 0.5f, -1.0f, -1.0f, 0.5f, 1.0f, -1.0f, 0.5f,
+
+        -1.0f, 1.0f, 0.5f, 1.0f,  -1.0f, 0.5f, 1.0f, 1.0f,  0.5f,
+    };
+
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, vertices);
+    glEnableVertexAttribArray(positionLocation);
+
+    // Bind the buffer for transform feedback output and start transform feedback
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
+    glBeginTransformFeedback(GL_POINTS);
+
+    glDrawArrays(GL_POINTS, 0, 6);
+
+    glDisableVertexAttribArray(positionLocation);
+    glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEndTransformFeedback();
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, 0);
+    glDisable(GL_RASTERIZER_DISCARD);
+
+    // Allocate a buffer with one byte
+    uint8_t singleByte[] = {0xaa};
+
+    // Create a new buffer and copy the first byte of captured data to it
+    GLBuffer copyBuffer;
+    glBindBuffer(GL_COPY_WRITE_BUFFER, copyBuffer);
+    glBufferData(GL_COPY_WRITE_BUFFER, 1, singleByte, GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, mTransformFeedbackBuffer);
+    glCopyBufferSubData(GL_TRANSFORM_FEEDBACK_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0, 1);
+
+    EXPECT_GL_NO_ERROR();
 }
 
 class TransformFeedbackLifetimeTest : public TransformFeedbackTest

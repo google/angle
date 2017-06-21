@@ -111,7 +111,9 @@ class Buffer11::BufferStorage : angle::NonCopyable
     size_t getSize() const { return mBufferSize; }
     void setDataRevision(DataRevision rev) { mRevision = rev; }
 
-    virtual bool isMappable(GLbitfield access) const = 0;
+    virtual bool isCPUAccessible(GLbitfield access) const = 0;
+
+    virtual bool isGPUAccessible() const = 0;
 
     virtual gl::ErrorOrResult<CopyResult> copyFromStorage(BufferStorage *source,
                                                           size_t sourceOffset,
@@ -146,7 +148,9 @@ class Buffer11::NativeStorage : public Buffer11::BufferStorage
                   const OnBufferDataDirtyChannel *onStorageChanged);
     ~NativeStorage() override;
 
-    bool isMappable(GLbitfield access) const override;
+    bool isCPUAccessible(GLbitfield access) const override;
+
+    bool isGPUAccessible() const override { return true; }
 
     const d3d11::Buffer &getBuffer() const { return mBuffer; }
     gl::ErrorOrResult<CopyResult> copyFromStorage(BufferStorage *source,
@@ -184,7 +188,9 @@ class Buffer11::EmulatedIndexedStorage : public Buffer11::BufferStorage
     EmulatedIndexedStorage(Renderer11 *renderer);
     ~EmulatedIndexedStorage() override;
 
-    bool isMappable(GLbitfield access) const override { return true; }
+    bool isCPUAccessible(GLbitfield access) const override { return true; }
+
+    bool isGPUAccessible() const override { return false; }
 
     gl::ErrorOrResult<const d3d11::Buffer *> getBuffer(SourceIndexData *indexInfo,
                                                        const TranslatedAttribute &attribute,
@@ -217,7 +223,10 @@ class Buffer11::PackStorage : public Buffer11::BufferStorage
     explicit PackStorage(Renderer11 *renderer);
     ~PackStorage() override;
 
-    bool isMappable(GLbitfield access) const override { return true; }
+    bool isCPUAccessible(GLbitfield access) const override { return true; }
+
+    bool isGPUAccessible() const override { return false; }
+
     gl::ErrorOrResult<CopyResult> copyFromStorage(BufferStorage *source,
                                                   size_t sourceOffset,
                                                   size_t size,
@@ -253,7 +262,10 @@ class Buffer11::SystemMemoryStorage : public Buffer11::BufferStorage
     explicit SystemMemoryStorage(Renderer11 *renderer);
     ~SystemMemoryStorage() override {}
 
-    bool isMappable(GLbitfield access) const override { return true; }
+    bool isCPUAccessible(GLbitfield access) const override { return true; }
+
+    bool isGPUAccessible() const override { return false; }
+
     gl::ErrorOrResult<CopyResult> copyFromStorage(BufferStorage *source,
                                                   size_t sourceOffset,
                                                   size_t size,
@@ -414,14 +426,12 @@ gl::Error Buffer11::copySubData(const gl::Context *context,
         return gl::OutOfMemory() << "Failed to allocate internal staging buffer.";
     }
 
-    // If copying to/from a pixel pack buffer, we must have a staging or
-    // pack buffer partner, because other native buffers can't be mapped
-    if (copyDest->getUsage() == BUFFER_USAGE_PIXEL_PACK && !copySource->isMappable(GL_MAP_READ_BIT))
+    // A staging buffer is needed if there is no cpu-cpu or gpu-gpu copy path avaiable.
+    if (!copyDest->isGPUAccessible() && !copySource->isCPUAccessible(GL_MAP_READ_BIT))
     {
         ANGLE_TRY_RESULT(sourceBuffer->getStagingStorage(), copySource);
     }
-    else if (copySource->getUsage() == BUFFER_USAGE_PIXEL_PACK &&
-             !copyDest->isMappable(GL_MAP_WRITE_BIT))
+    else if (!copySource->isGPUAccessible() && !copyDest->isCPUAccessible(GL_MAP_WRITE_BIT))
     {
         ANGLE_TRY_RESULT(getStagingStorage(), copyDest);
     }
@@ -813,7 +823,8 @@ gl::Error Buffer11::updateBufferStorage(BufferStorage *storage,
         // data directly. If we're already using a staging buffer we're fine.
         if (latestBuffer->getUsage() != BUFFER_USAGE_STAGING &&
             storage->getUsage() != BUFFER_USAGE_STAGING &&
-            (!latestBuffer->isMappable(GL_MAP_READ_BIT) || !storage->isMappable(GL_MAP_WRITE_BIT)))
+            (!latestBuffer->isCPUAccessible(GL_MAP_READ_BIT) ||
+             !storage->isCPUAccessible(GL_MAP_WRITE_BIT)))
         {
             NativeStorage *stagingBuffer = nullptr;
             ANGLE_TRY_RESULT(getStagingStorage(), stagingBuffer);
@@ -921,7 +932,7 @@ Buffer11::BufferStorage::BufferStorage(Renderer11 *renderer, BufferUsage usage)
 
 gl::Error Buffer11::BufferStorage::setData(const uint8_t *data, size_t offset, size_t size)
 {
-    ASSERT(isMappable(GL_MAP_WRITE_BIT));
+    ASSERT(isCPUAccessible(GL_MAP_WRITE_BIT));
 
     // Uniform storage can have a different internal size than the buffer size. Ensure we don't
     // overflow.
@@ -951,7 +962,7 @@ Buffer11::NativeStorage::~NativeStorage()
     clearSRVs();
 }
 
-bool Buffer11::NativeStorage::isMappable(GLbitfield access) const
+bool Buffer11::NativeStorage::isCPUAccessible(GLbitfield access) const
 {
     if ((access & GL_MAP_READ_BIT) != 0)
     {
@@ -989,7 +1000,7 @@ gl::ErrorOrResult<CopyResult> Buffer11::NativeStorage::copyFromStorage(BufferSto
     if (source->getUsage() == BUFFER_USAGE_PIXEL_PACK ||
         source->getUsage() == BUFFER_USAGE_SYSTEM_MEMORY)
     {
-        ASSERT(source->isMappable(GL_MAP_READ_BIT) && isMappable(GL_MAP_WRITE_BIT));
+        ASSERT(source->isCPUAccessible(GL_MAP_READ_BIT) && isCPUAccessible(GL_MAP_WRITE_BIT));
 
         // Uniform buffers must be mapped with write/discard.
         ASSERT(!(preserveData && mUsage == BUFFER_USAGE_UNIFORM));
@@ -1139,7 +1150,7 @@ gl::Error Buffer11::NativeStorage::map(size_t offset,
                                        GLbitfield access,
                                        uint8_t **mapPointerOut)
 {
-    ASSERT(isMappable(access));
+    ASSERT(isCPUAccessible(access));
 
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     ID3D11DeviceContext *context = mRenderer->getDeviceContext();
@@ -1159,7 +1170,7 @@ gl::Error Buffer11::NativeStorage::map(size_t offset,
 
 void Buffer11::NativeStorage::unmap()
 {
-    ASSERT(isMappable(GL_MAP_WRITE_BIT) || isMappable(GL_MAP_READ_BIT));
+    ASSERT(isCPUAccessible(GL_MAP_WRITE_BIT) || isCPUAccessible(GL_MAP_READ_BIT));
     ID3D11DeviceContext *context = mRenderer->getDeviceContext();
     context->Unmap(mBuffer.get(), 0);
 }
@@ -1319,7 +1330,7 @@ gl::ErrorOrResult<CopyResult> Buffer11::EmulatedIndexedStorage::copyFromStorage(
     size_t size,
     size_t destOffset)
 {
-    ASSERT(source->isMappable(GL_MAP_READ_BIT));
+    ASSERT(source->isCPUAccessible(GL_MAP_READ_BIT));
     uint8_t *sourceData = nullptr;
     ANGLE_TRY(source->map(sourceOffset, size, GL_MAP_READ_BIT, &sourceData));
     ASSERT(destOffset + size <= mMemoryBuffer.size());
@@ -1376,7 +1387,7 @@ gl::ErrorOrResult<CopyResult> Buffer11::PackStorage::copyFromStorage(BufferStora
     ANGLE_TRY(flushQueuedPackCommand());
 
     // For all use cases of pack buffers, we must copy through a readable buffer.
-    ASSERT(source->isMappable(GL_MAP_READ_BIT));
+    ASSERT(source->isCPUAccessible(GL_MAP_READ_BIT));
     uint8_t *sourceData = nullptr;
     ANGLE_TRY(source->map(sourceOffset, size, GL_MAP_READ_BIT, &sourceData));
     ASSERT(destOffset + size <= mMemoryBuffer.size());
@@ -1499,7 +1510,7 @@ gl::ErrorOrResult<CopyResult> Buffer11::SystemMemoryStorage::copyFromStorage(Buf
                                                                              size_t size,
                                                                              size_t destOffset)
 {
-    ASSERT(source->isMappable(GL_MAP_READ_BIT));
+    ASSERT(source->isCPUAccessible(GL_MAP_READ_BIT));
     uint8_t *sourceData = nullptr;
     ANGLE_TRY(source->map(sourceOffset, size, GL_MAP_READ_BIT, &sourceData));
     ASSERT(destOffset + size <= mSystemCopy.size());
