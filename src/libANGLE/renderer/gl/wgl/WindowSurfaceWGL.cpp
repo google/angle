@@ -20,12 +20,10 @@ WindowSurfaceWGL::WindowSurfaceWGL(const egl::SurfaceState &state,
                                    RendererGL *renderer,
                                    EGLNativeWindowType window,
                                    int pixelFormat,
-                                   HGLRC wglContext,
                                    const FunctionsWGL *functions,
                                    EGLint orientation)
-    : SurfaceGL(state, renderer),
+    : SurfaceWGL(state, renderer),
       mPixelFormat(pixelFormat),
-      mWGLContext(wglContext),
       mWindow(window),
       mDeviceContext(nullptr),
       mFunctionsWGL(functions),
@@ -95,12 +93,6 @@ egl::Error WindowSurfaceWGL::initialize(const egl::Display *display)
 
 egl::Error WindowSurfaceWGL::makeCurrent()
 {
-    if (!mFunctionsWGL->makeCurrent(mDeviceContext, mWGLContext))
-    {
-        // TODO: What error type here?
-        return egl::EglContextLost() << "Failed to make the WGL context current.";
-    }
-
     return egl::NoError();
 }
 
@@ -183,4 +175,8 @@ EGLint WindowSurfaceWGL::getSwapBehavior() const
     return mSwapBehavior;
 }
 
+HDC WindowSurfaceWGL::getDC() const
+{
+    return mDeviceContext;
+}
 }

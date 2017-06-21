@@ -59,6 +59,10 @@ class DisplayWGL : public DisplayGL
     egl::Error waitClient(const gl::Context *context) const override;
     egl::Error waitNative(const gl::Context *context, EGLint engine) const override;
 
+    egl::Error makeCurrent(egl::Surface *drawSurface,
+                           egl::Surface *readSurface,
+                           gl::Context *context) override;
+
     egl::Error registerD3DDevice(IUnknown *device, HANDLE *outHandle);
     void releaseD3DDevice(HANDLE handle);
 
@@ -74,6 +78,8 @@ class DisplayWGL : public DisplayGL
 
     HGLRC initializeContextAttribs(const egl::AttributeMap &eglAttributes) const;
     HGLRC createContextAttribs(const gl::Version &version, int profileMask) const;
+
+    HDC mCurrentDC;
 
     HMODULE mOpenGLModule;
 

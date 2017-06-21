@@ -60,6 +60,7 @@ class FunctionsGLWindows : public FunctionsGL
 
 DisplayWGL::DisplayWGL(const egl::DisplayState &state)
     : DisplayGL(state),
+      mCurrentDC(nullptr),
       mOpenGLModule(nullptr),
       mFunctionsWGL(nullptr),
       mFunctionsGL(nullptr),
@@ -270,6 +271,7 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
     {
         return egl::EglNotInitialized() << "Failed to make the intermediate WGL context current.";
     }
+    mCurrentDC = mDeviceContext;
 
     mFunctionsGL = new FunctionsGLWindows(mOpenGLModule, mFunctionsWGL->getProcAddress);
     mFunctionsGL->initialize();
@@ -331,6 +333,7 @@ void DisplayWGL::terminate()
     releaseD3DDevice(mD3D11DeviceHandle);
 
     mFunctionsWGL->makeCurrent(mDeviceContext, nullptr);
+    mCurrentDC = nullptr;
     mFunctionsWGL->deleteContext(mWGLContext);
     mWGLContext = nullptr;
 
@@ -380,13 +383,13 @@ SurfaceImpl *DisplayWGL::createWindowSurface(const egl::SurfaceState &state,
         }
 
         return new DXGISwapChainWindowSurfaceWGL(state, getRenderer(), window, mD3D11Device,
-                                                 mD3D11DeviceHandle, mWGLContext, mDeviceContext,
-                                                 mFunctionsGL, mFunctionsWGL, orientation);
+                                                 mD3D11DeviceHandle, mDeviceContext, mFunctionsGL,
+                                                 mFunctionsWGL, orientation);
     }
     else
     {
-        return new WindowSurfaceWGL(state, getRenderer(), window, mPixelFormat, mWGLContext,
-                                    mFunctionsWGL, orientation);
+        return new WindowSurfaceWGL(state, getRenderer(), window, mPixelFormat, mFunctionsWGL,
+                                    orientation);
     }
 }
 
@@ -400,7 +403,7 @@ SurfaceImpl *DisplayWGL::createPbufferSurface(const egl::SurfaceState &state,
     EGLenum textureTarget = static_cast<EGLenum>(attribs.get(EGL_TEXTURE_TARGET, EGL_NO_TEXTURE));
 
     return new PbufferSurfaceWGL(state, getRenderer(), width, height, textureFormat, textureTarget,
-                                 largest, mPixelFormat, mDeviceContext, mWGLContext, mFunctionsWGL);
+                                 largest, mPixelFormat, mDeviceContext, mFunctionsWGL);
 }
 
 SurfaceImpl *DisplayWGL::createPbufferFromClientBuffer(const egl::SurfaceState &state,
@@ -414,7 +417,7 @@ SurfaceImpl *DisplayWGL::createPbufferFromClientBuffer(const egl::SurfaceState &
         return nullptr;
     }
 
-    return new D3DTextureSurfaceWGL(state, getRenderer(), buftype, clientBuffer, this, mWGLContext,
+    return new D3DTextureSurfaceWGL(state, getRenderer(), buftype, clientBuffer, this,
                                     mDeviceContext, mD3D11Device, mFunctionsGL, mFunctionsWGL);
 }
 
@@ -643,6 +646,28 @@ egl::Error DisplayWGL::waitNative(const gl::Context *context, EGLint engine) con
 {
     // Unimplemented as this is not needed for WGL
     return egl::NoError();
+}
+
+egl::Error DisplayWGL::makeCurrent(egl::Surface *drawSurface,
+                                   egl::Surface *readSurface,
+                                   gl::Context *context)
+{
+    if (drawSurface)
+    {
+        SurfaceWGL *drawSurfaceWGL = GetImplAs<SurfaceWGL>(drawSurface);
+        HDC dc                     = drawSurfaceWGL->getDC();
+        if (dc != mCurrentDC)
+        {
+            if (!mFunctionsWGL->makeCurrent(dc, mWGLContext))
+            {
+                // TODO(geofflang): What error type here?
+                return egl::EglContextLost() << "Failed to make the WGL context current.";
+            }
+            mCurrentDC = dc;
+        }
+    }
+
+    return DisplayGL::makeCurrent(drawSurface, readSurface, context);
 }
 
 egl::Error DisplayWGL::registerD3DDevice(IUnknown *device, HANDLE *outHandle)

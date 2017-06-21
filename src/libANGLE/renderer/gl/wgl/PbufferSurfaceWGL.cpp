@@ -25,16 +25,14 @@ PbufferSurfaceWGL::PbufferSurfaceWGL(const egl::SurfaceState &state,
                                      bool largest,
                                      int pixelFormat,
                                      HDC deviceContext,
-                                     HGLRC wglContext,
                                      const FunctionsWGL *functions)
-    : SurfaceGL(state, renderer),
+    : SurfaceWGL(state, renderer),
       mWidth(width),
       mHeight(height),
       mLargest(largest),
       mTextureFormat(textureFormat),
       mTextureTarget(textureTarget),
       mPixelFormat(pixelFormat),
-      mShareWGLContext(wglContext),
       mParentDeviceContext(deviceContext),
       mPbuffer(nullptr),
       mPbufferDeviceContext(nullptr),
@@ -116,12 +114,6 @@ egl::Error PbufferSurfaceWGL::initialize(const egl::Display *display)
 
 egl::Error PbufferSurfaceWGL::makeCurrent()
 {
-    if (!mFunctionsWGL->makeCurrent(mPbufferDeviceContext, mShareWGLContext))
-    {
-        // TODO: What error type here?
-        return egl::EglContextLost() << "Failed to make the WGL context current.";
-    }
-
     return egl::NoError();
 }
 
@@ -202,4 +194,8 @@ EGLint PbufferSurfaceWGL::getSwapBehavior() const
     return EGL_BUFFER_PRESERVED;
 }
 
+HDC PbufferSurfaceWGL::getDC() const
+{
+    return mPbufferDeviceContext;
+}
 }

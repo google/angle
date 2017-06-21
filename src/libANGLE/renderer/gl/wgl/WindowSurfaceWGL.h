@@ -9,7 +9,7 @@
 #ifndef LIBANGLE_RENDERER_GL_WGL_WINDOWSURFACEWGL_H_
 #define LIBANGLE_RENDERER_GL_WGL_WINDOWSURFACEWGL_H_
 
-#include "libANGLE/renderer/gl/SurfaceGL.h"
+#include "libANGLE/renderer/gl/wgl/SurfaceWGL.h"
 
 #include <GL/wglext.h>
 
@@ -18,14 +18,13 @@ namespace rx
 
 class FunctionsWGL;
 
-class WindowSurfaceWGL : public SurfaceGL
+class WindowSurfaceWGL : public SurfaceWGL
 {
   public:
     WindowSurfaceWGL(const egl::SurfaceState &state,
                      RendererGL *renderer,
                      EGLNativeWindowType window,
                      int pixelFormat,
-                     HGLRC wglContext,
                      const FunctionsWGL *functions,
                      EGLint orientation);
     ~WindowSurfaceWGL() override;
@@ -50,10 +49,10 @@ class WindowSurfaceWGL : public SurfaceGL
     EGLint isPostSubBufferSupported() const override;
     EGLint getSwapBehavior() const override;
 
+    HDC getDC() const override;
+
   private:
     int mPixelFormat;
-
-    HGLRC mWGLContext;
 
     HWND mWindow;
     HDC mDeviceContext;

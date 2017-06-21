@@ -10,7 +10,7 @@
 #ifndef LIBANGLE_RENDERER_GL_WGL_DXGISWAPCHAINSURFACEWGL_H_
 #define LIBANGLE_RENDERER_GL_WGL_DXGISWAPCHAINSURFACEWGL_H_
 
-#include "libANGLE/renderer/gl/SurfaceGL.h"
+#include "libANGLE/renderer/gl/wgl/SurfaceWGL.h"
 
 #include <GL/wglext.h>
 
@@ -23,7 +23,7 @@ class DisplayWGL;
 class StateManagerGL;
 struct WorkaroundsGL;
 
-class DXGISwapChainWindowSurfaceWGL : public SurfaceGL
+class DXGISwapChainWindowSurfaceWGL : public SurfaceWGL
 {
   public:
     DXGISwapChainWindowSurfaceWGL(const egl::SurfaceState &state,
@@ -31,7 +31,6 @@ class DXGISwapChainWindowSurfaceWGL : public SurfaceGL
                                   EGLNativeWindowType window,
                                   ID3D11Device *device,
                                   HANDLE deviceHandle,
-                                  HGLRC wglContext,
                                   HDC deviceContext,
                                   const FunctionsGL *functionsGL,
                                   const FunctionsWGL *functionsWGL,
@@ -60,6 +59,8 @@ class DXGISwapChainWindowSurfaceWGL : public SurfaceGL
 
     FramebufferImpl *createDefaultFramebuffer(const gl::FramebufferState &data) override;
 
+    HDC getDC() const override;
+
   private:
     egl::Error setObjectsLocked(bool locked);
     egl::Error checkForResize();
@@ -78,7 +79,6 @@ class DXGISwapChainWindowSurfaceWGL : public SurfaceGL
     HANDLE mDeviceHandle;
 
     HDC mWGLDevice;
-    HGLRC mWGLContext;
 
     DXGI_FORMAT mSwapChainFormat;
     UINT mSwapChainFlags;

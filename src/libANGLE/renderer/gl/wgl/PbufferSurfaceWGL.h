@@ -9,7 +9,7 @@
 #ifndef LIBANGLE_RENDERER_GL_WGL_PBUFFERSURFACEWGL_H_
 #define LIBANGLE_RENDERER_GL_WGL_PBUFFERSURFACEWGL_H_
 
-#include "libANGLE/renderer/gl/SurfaceGL.h"
+#include "libANGLE/renderer/gl/wgl/SurfaceWGL.h"
 
 #include <GL/wglext.h>
 
@@ -18,7 +18,7 @@ namespace rx
 
 class FunctionsWGL;
 
-class PbufferSurfaceWGL : public SurfaceGL
+class PbufferSurfaceWGL : public SurfaceWGL
 {
   public:
     PbufferSurfaceWGL(const egl::SurfaceState &state,
@@ -30,7 +30,6 @@ class PbufferSurfaceWGL : public SurfaceGL
                       bool largest,
                       int pixelFormat,
                       HDC deviceContext,
-                      HGLRC wglContext,
                       const FunctionsWGL *functions);
     ~PbufferSurfaceWGL() override;
 
@@ -54,6 +53,8 @@ class PbufferSurfaceWGL : public SurfaceGL
     EGLint isPostSubBufferSupported() const override;
     EGLint getSwapBehavior() const override;
 
+    HDC getDC() const override;
+
   private:
     EGLint mWidth;
     EGLint mHeight;
@@ -62,8 +63,6 @@ class PbufferSurfaceWGL : public SurfaceGL
     EGLenum mTextureTarget;
 
     int mPixelFormat;
-
-    HGLRC mShareWGLContext;
 
     HDC mParentDeviceContext;
 

@@ -215,12 +215,11 @@ D3DTextureSurfaceWGL::D3DTextureSurfaceWGL(const egl::SurfaceState &state,
                                            EGLenum buftype,
                                            EGLClientBuffer clientBuffer,
                                            DisplayWGL *display,
-                                           HGLRC wglContext,
                                            HDC deviceContext,
                                            ID3D11Device *displayD3D11Device,
                                            const FunctionsGL *functionsGL,
                                            const FunctionsWGL *functionsWGL)
-    : SurfaceGL(state, renderer),
+    : SurfaceWGL(state, renderer),
       mBuftype(buftype),
       mClientBuffer(clientBuffer),
       mRenderer(renderer),
@@ -230,7 +229,6 @@ D3DTextureSurfaceWGL::D3DTextureSurfaceWGL(const egl::SurfaceState &state,
       mWorkarounds(renderer->getWorkarounds()),
       mFunctionsGL(functionsGL),
       mFunctionsWGL(functionsWGL),
-      mWGLContext(wglContext),
       mDeviceContext(deviceContext),
       mWidth(0),
       mHeight(0),
@@ -341,12 +339,6 @@ egl::Error D3DTextureSurfaceWGL::initialize(const egl::Display *display)
 
 egl::Error D3DTextureSurfaceWGL::makeCurrent()
 {
-    if (!mFunctionsWGL->makeCurrent(mDeviceContext, mWGLContext))
-    {
-        // TODO(geofflang): What error type here?
-        return egl::EglContextLost() << "Failed to make the WGL context current.";
-    }
-
     if (!mFunctionsWGL->dxLockObjectsNV(mDeviceHandle, 1, &mBoundObjectRenderbufferHandle))
     {
         DWORD error = GetLastError();
@@ -476,4 +468,10 @@ FramebufferImpl *D3DTextureSurfaceWGL::createDefaultFramebuffer(const gl::Frameb
     return new FramebufferGL(mFramebufferID, data, mFunctionsGL, mWorkarounds,
                              mRenderer->getBlitter(), mStateManager);
 }
+
+HDC D3DTextureSurfaceWGL::getDC() const
+{
+    return mDeviceContext;
+}
+
 }  // namespace rx

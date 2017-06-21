@@ -27,12 +27,11 @@ DXGISwapChainWindowSurfaceWGL::DXGISwapChainWindowSurfaceWGL(const egl::SurfaceS
                                                              EGLNativeWindowType window,
                                                              ID3D11Device *device,
                                                              HANDLE deviceHandle,
-                                                             HGLRC wglContext,
                                                              HDC deviceContext,
                                                              const FunctionsGL *functionsGL,
                                                              const FunctionsWGL *functionsWGL,
                                                              EGLint orientation)
-    : SurfaceGL(state, renderer),
+    : SurfaceWGL(state, renderer),
       mWindow(window),
       mStateManager(renderer->getStateManager()),
       mWorkarounds(renderer->getWorkarounds()),
@@ -42,7 +41,6 @@ DXGISwapChainWindowSurfaceWGL::DXGISwapChainWindowSurfaceWGL(const egl::SurfaceS
       mDevice(device),
       mDeviceHandle(deviceHandle),
       mWGLDevice(deviceContext),
-      mWGLContext(wglContext),
       mSwapChainFormat(DXGI_FORMAT_UNKNOWN),
       mSwapChainFlags(0),
       mDepthBufferFormat(GL_NONE),
@@ -118,12 +116,6 @@ egl::Error DXGISwapChainWindowSurfaceWGL::initialize(const egl::Display *display
 
 egl::Error DXGISwapChainWindowSurfaceWGL::makeCurrent()
 {
-    if (!mFunctionsWGL->makeCurrent(mWGLDevice, mWGLContext))
-    {
-        // TODO: What error type here?
-        return egl::EglContextLost() << "Failed to make the WGL context current.";
-    }
-
     return egl::NoError();
 }
 
@@ -279,6 +271,11 @@ FramebufferImpl *DXGISwapChainWindowSurfaceWGL::createDefaultFramebuffer(
 {
     return new FramebufferGL(mFramebufferID, data, mFunctionsGL, mWorkarounds,
                              mRenderer->getBlitter(), mStateManager);
+}
+
+HDC DXGISwapChainWindowSurfaceWGL::getDC() const
+{
+    return mWGLDevice;
 }
 
 egl::Error DXGISwapChainWindowSurfaceWGL::setObjectsLocked(bool locked)
