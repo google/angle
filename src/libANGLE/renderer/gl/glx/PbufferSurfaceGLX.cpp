@@ -21,14 +21,12 @@ PbufferSurfaceGLX::PbufferSurfaceGLX(const egl::SurfaceState &state,
                                      EGLint height,
                                      bool largest,
                                      const FunctionsGLX &glx,
-                                     glx::Context context,
                                      glx::FBConfig fbConfig)
     : SurfaceGLX(state, renderer),
       mWidth(width),
       mHeight(height),
       mLargest(largest),
       mGLX(glx),
-      mContext(context),
       mFBConfig(fbConfig),
       mPbuffer(0)
 {
@@ -75,10 +73,6 @@ egl::Error PbufferSurfaceGLX::initialize(const egl::Display *display)
 
 egl::Error PbufferSurfaceGLX::makeCurrent()
 {
-    if (mGLX.makeCurrent(mPbuffer, mContext) != True)
-    {
-        return egl::EglBadDisplay();
-    }
     return egl::NoError();
 }
 
@@ -144,4 +138,10 @@ egl::Error PbufferSurfaceGLX::checkForResize()
     // The size of pbuffers never change
     return egl::NoError();
 }
+
+glx::Drawable PbufferSurfaceGLX::getDrawable() const
+{
+    return mPbuffer;
+}
+
 }  // namespace rx

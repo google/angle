@@ -75,6 +75,7 @@ DisplayGLX::DisplayGLX(const egl::DisplayState &state)
       mMinSwapInterval(0),
       mMaxSwapInterval(0),
       mCurrentSwapInterval(-1),
+      mCurrentDrawable(0),
       mXDisplay(nullptr),
       mEGLDisplay(nullptr)
 {
@@ -331,6 +332,26 @@ void DisplayGLX::terminate()
     SafeDelete(mFunctionsGL);
 }
 
+egl::Error DisplayGLX::makeCurrent(egl::Surface *drawSurface,
+                                   egl::Surface *readSurface,
+                                   gl::Context *context)
+{
+    if (drawSurface)
+    {
+        glx::Drawable drawable = GetImplAs<SurfaceGLX>(drawSurface)->getDrawable();
+        if (drawable != mCurrentDrawable)
+        {
+            if (mGLX.makeCurrent(drawable, mContext) != True)
+            {
+                return egl::EglContextLost() << "Failed to make the GLX context current";
+            }
+            mCurrentDrawable = drawable;
+        }
+    }
+
+    return DisplayGL::makeCurrent(drawSurface, readSurface, context);
+}
+
 SurfaceImpl *DisplayGLX::createWindowSurface(const egl::SurfaceState &state,
                                              EGLNativeWindowType window,
                                              const egl::AttributeMap &attribs)
@@ -339,7 +360,7 @@ SurfaceImpl *DisplayGLX::createWindowSurface(const egl::SurfaceState &state,
     glx::FBConfig fbConfig = configIdToGLXConfig[state.config->configID];
 
     return new WindowSurfaceGLX(state, mGLX, this, getRenderer(), window, mGLX.getDisplay(),
-                                mContext, fbConfig);
+                                fbConfig);
 }
 
 SurfaceImpl *DisplayGLX::createPbufferSurface(const egl::SurfaceState &state,
@@ -352,8 +373,7 @@ SurfaceImpl *DisplayGLX::createPbufferSurface(const egl::SurfaceState &state,
     EGLint height = static_cast<EGLint>(attribs.get(EGL_HEIGHT, 0));
     bool largest = (attribs.get(EGL_LARGEST_PBUFFER, EGL_FALSE) == EGL_TRUE);
 
-    return new PbufferSurfaceGLX(state, getRenderer(), width, height, largest, mGLX, mContext,
-                                 fbConfig);
+    return new PbufferSurfaceGLX(state, getRenderer(), width, height, largest, mGLX, fbConfig);
 }
 
 SurfaceImpl *DisplayGLX::createPbufferFromClientBuffer(const egl::SurfaceState &state,

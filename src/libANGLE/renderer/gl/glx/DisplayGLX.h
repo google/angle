@@ -44,6 +44,10 @@ class DisplayGLX : public DisplayGL
     egl::Error initialize(egl::Display *display) override;
     void terminate() override;
 
+    egl::Error makeCurrent(egl::Surface *drawSurface,
+                           egl::Surface *readSurface,
+                           gl::Context *context) override;
+
     SurfaceImpl *createWindowSurface(const egl::SurfaceState &state,
                                      EGLNativeWindowType window,
                                      const egl::AttributeMap &attribs) override;
@@ -132,6 +136,8 @@ class DisplayGLX : public DisplayGL
     int mMinSwapInterval;
     int mMaxSwapInterval;
     int mCurrentSwapInterval;
+
+    glx::Drawable mCurrentDrawable;
 
     FunctionsGLX mGLX;
     Display *mXDisplay;

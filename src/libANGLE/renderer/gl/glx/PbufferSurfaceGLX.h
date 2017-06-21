@@ -26,7 +26,6 @@ class PbufferSurfaceGLX : public SurfaceGLX
                       EGLint height,
                       bool largest,
                       const FunctionsGLX &glx,
-                      glx::Context context,
                       glx::FBConfig fbConfig);
     ~PbufferSurfaceGLX() override;
 
@@ -51,6 +50,7 @@ class PbufferSurfaceGLX : public SurfaceGLX
     EGLint getSwapBehavior() const override;
 
     egl::Error checkForResize() override;
+    glx::Drawable getDrawable() const override;
 
   private:
     unsigned mWidth;
@@ -58,7 +58,6 @@ class PbufferSurfaceGLX : public SurfaceGLX
     bool mLargest;
 
     const FunctionsGLX &mGLX;
-    glx::Context mContext;
     glx::FBConfig mFBConfig;
     glx::Pbuffer mPbuffer;
 };

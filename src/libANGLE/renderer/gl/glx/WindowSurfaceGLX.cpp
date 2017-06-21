@@ -27,7 +27,6 @@ WindowSurfaceGLX::WindowSurfaceGLX(const egl::SurfaceState &state,
                                    RendererGL *renderer,
                                    Window window,
                                    Display *display,
-                                   glx::Context context,
                                    glx::FBConfig fbConfig)
     : SurfaceGLX(state, renderer),
       mParent(window),
@@ -35,7 +34,6 @@ WindowSurfaceGLX::WindowSurfaceGLX(const egl::SurfaceState &state,
       mDisplay(display),
       mGLX(glx),
       mGLXDisplay(glxDisplay),
-      mContext(context),
       mFBConfig(fbConfig),
       mGLXWindow(0)
 {
@@ -133,10 +131,6 @@ egl::Error WindowSurfaceGLX::initialize(const egl::Display *display)
 
 egl::Error WindowSurfaceGLX::makeCurrent()
 {
-    if (mGLX.makeCurrent(mGLXWindow, mContext) != True)
-    {
-        return egl::EglBadDisplay();
-    }
     return egl::NoError();
 }
 
@@ -233,6 +227,11 @@ egl::Error WindowSurfaceGLX::checkForResize()
     }
 
     return egl::NoError();
+}
+
+glx::Drawable WindowSurfaceGLX::getDrawable() const
+{
+    return mGLXWindow;
 }
 
 bool WindowSurfaceGLX::getWindowDimensions(Window window, unsigned int *width, unsigned int *height) const

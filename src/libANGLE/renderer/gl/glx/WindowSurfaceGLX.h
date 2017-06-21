@@ -28,7 +28,6 @@ class WindowSurfaceGLX : public SurfaceGLX
                      RendererGL *renderer,
                      Window window,
                      Display *display,
-                     glx::Context context,
                      glx::FBConfig fbConfig);
     ~WindowSurfaceGLX() override;
 
@@ -53,6 +52,7 @@ class WindowSurfaceGLX : public SurfaceGLX
     EGLint getSwapBehavior() const override;
 
     egl::Error checkForResize() override;
+    glx::Drawable getDrawable() const override;
 
   private:
     bool getWindowDimensions(Window window, unsigned int *width, unsigned int *height) const;
@@ -65,7 +65,6 @@ class WindowSurfaceGLX : public SurfaceGLX
     const FunctionsGLX &mGLX;
     DisplayGLX *mGLXDisplay;
 
-    glx::Context mContext;
     glx::FBConfig mFBConfig;
     glx::Window mGLXWindow;
 
