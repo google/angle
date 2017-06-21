@@ -25,6 +25,99 @@
     },
     {
       "key": {
+        "uuid": "f3b8db47_fb5c6eae",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 417,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T09:09:03Z",
+      "side": 1,
+      "message": "Maybe you can directly add above comments to line 387",
+      "parentUuid": "588c45f1_ec4b209e",
+      "range": {
+        "startLine": 386,
+        "startChar": 0,
+        "endLine": 417,
+        "endChar": 31
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "91381842_263ecd5e",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 577,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T09:09:03Z",
+      "side": 1,
+      "message": "EvqPervertexIn,",
+      "range": {
+        "startLine": 577,
+        "startChar": 4,
+        "endLine": 577,
+        "endChar": 19
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7ba7fc6_7a2a342d",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 633,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T09:09:03Z",
+      "side": 1,
+      "message": "Rename to TLayoutPrimitiveType ?",
+      "range": {
+        "startLine": 633,
+        "startChar": 5,
+        "endLine": 633,
+        "endChar": 29
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e8da28e_402e45ab",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 690,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T09:09:03Z",
+      "side": 1,
+      "message": "Why initialized to 1 not 0 or -1?",
+      "range": {
+        "startLine": 690,
+        "startChar": 40,
+        "endLine": 690,
+        "endChar": 41
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "14ab8df1_5a620639",
         "filename": "src/compiler/translator/BaseTypes.h",
         "patchSetId": 16
@@ -76,6 +169,24 @@
     },
     {
       "key": {
+        "uuid": "ad1d7d73_87e0c92e",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T09:09:03Z",
+      "side": 1,
+      "message": "If I didn\u0027t use geometry shader, the value of mGeometryInvocations is still 1?",
+      "parentUuid": "3e0404b5_7bf79607",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "83838078_c6f1c915",
         "filename": "src/compiler/translator/Compiler.cpp",
         "patchSetId": 16
@@ -93,6 +204,24 @@
     },
     {
       "key": {
+        "uuid": "c3745a9c_16195afc",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T09:09:03Z",
+      "side": 1,
+      "message": "I still don\u0027t understand why you divided MAX_GEOMETRY_UNIFORM_COMPONENTS by 4 not directly using it. See spec GlSL ES 3.2 session 13.21 Maximum Number of Varyings. It says \u0027Rename gl_MaxVertexUniformComponents to gl_MaxVertexUniformVectors\u0027. So I think maybe MaxGeometryUniformComponents is equal to MaxGeomeryUniformVectors.",
+      "parentUuid": "83838078_c6f1c915",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cdb559b6_eed8df2c",
         "filename": "src/compiler/translator/Compiler.cpp",
         "patchSetId": 16
@@ -104,6 +233,24 @@
       "writtenOn": "2017-06-15T07:29:04Z",
       "side": 1,
       "message": "[GLSL ES 3.2 SPEC Chapter 4.7.4 Page 89]\n\nAll languages except for the fragment language have the following predeclared globally scoped default precision statements:\n\n- precision highp float;\n- precision highp int;\n- precision lowp sampler2D;\n- precision lowp samplerCube;\n- precision highp atomic_uint;",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf1506b1_f55abbd7",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T09:09:03Z",
+      "side": 1,
+      "message": "Maybe you can refactor it like below:\ncase GL_VERTEX_SHADER:\ncase GL_COMPUTE_SHADER:\ncase GL_GEOMETRY_SHADER_EXT:\n    symbolTable.setDefaultPrecision(integer, EbpHigh);\n    symbolTable.setDefaultPrecision(floatingPoint, EbpHigh);\n    break;",
+      "parentUuid": "cdb559b6_eed8df2c",
       "revId": "1d51b7c2200df012da06e05856120d269b65f096",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -242,6 +389,24 @@
     },
     {
       "key": {
+        "uuid": "59c36608_a7e40e88",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 477,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T09:09:03Z",
+      "side": 1,
+      "message": "I prefer you use the actual size.",
+      "parentUuid": "a9e1dcf4_e2acdf0e",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d4232b26_4e51c239",
         "filename": "src/compiler/translator/OutputGLSLBase.cpp",
         "patchSetId": 16
@@ -259,6 +424,24 @@
     },
     {
       "key": {
+        "uuid": "b5f2c388_b1d8d7b2",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 629,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T09:09:03Z",
+      "side": 1,
+      "message": "Add this comment in code.",
+      "parentUuid": "d4232b26_4e51c239",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7f57313d_f3d4545b",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 16
@@ -270,6 +453,24 @@
       "writtenOn": "2017-06-15T07:29:04Z",
       "side": 1,
       "message": "[GLSL ES 3.2 SPEC chapter 4.4.1.2 Page 71]\nMappings from input primitive types to input array sizes in Geometry Shader.",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f7df0849_7347fec5",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T09:09:03Z",
+      "side": 1,
+      "message": "Add this comment in code.",
+      "parentUuid": "7f57313d_f3d4545b",
       "revId": "1d51b7c2200df012da06e05856120d269b65f096",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -378,6 +579,46 @@
     },
     {
       "key": {
+        "uuid": "58c765df_c45371a9",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2538,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T09:09:03Z",
+      "side": 1,
+      "message": "It seems that you missed points type.",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea8c8880_0ff44808",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2563,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T09:09:03Z",
+      "side": 1,
+      "message": "I think primitiveType is must be specified. If not, you should produce an error.",
+      "range": {
+        "startLine": 2563,
+        "startChar": 0,
+        "endLine": 2563,
+        "endChar": 54
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "35822758_836bac38",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 16
@@ -412,6 +653,29 @@
       "writtenOn": "2017-06-15T07:29:04Z",
       "side": 1,
       "message": "[GLSL ES 3.2 SPEC Chapter 4.4.1.2 Page 72]\nIt is a compile-time error if a layout declaration\u0027s array size (from the table above) does not match all the explicit array sizes specified in declarations of an input variables in the same shader. The following includes examples of compile-time errors: \n\n// code sequence within one shader...\nlayout(lines) in; // legal for Color2, input size is 2, matching Color2\nlayout(lines) in; // legal, matches other layout() declaration.\nlayout(triangles) in; // illegal, does not match earlier layout() declaration",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c13bc9f_f3c809d1",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2586,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T09:09:03Z",
+      "side": 1,
+      "message": "GetGeometryShaderInputArraySize(mGeometryPrimitiveIn) is called multiple times. You can use a variable to save it at the begin of this function.",
+      "range": {
+        "startLine": 2586,
+        "startChar": 38,
+        "endLine": 2586,
+        "endChar": 91
+      },
       "revId": "1d51b7c2200df012da06e05856120d269b65f096",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -803,6 +1067,70 @@
     },
     {
       "key": {
+        "uuid": "a0b5800e_7e1a424f",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T09:09:03Z",
+      "side": 1,
+      "message": "Add a TODO in code.",
+      "parentUuid": "fefd9082_03c6177a",
+      "range": {
+        "startLine": 397,
+        "startChar": 0,
+        "endLine": 410,
+        "endChar": 50
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "db7a1b6e_80850db5",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T09:09:03Z",
+      "side": 1,
+      "message": "Rename to GetGeometryShaderInputPrimitivesType ?",
+      "range": {
+        "startLine": 434,
+        "startChar": 7,
+        "endLine": 434,
+        "endChar": 39
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d539688_da9f514d",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 453,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T09:09:03Z",
+      "side": 1,
+      "message": "Add UNREACHABLE() here?",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ab156c3c_74b58b11",
         "filename": "src/compiler/translator/ShaderLang.cpp",
         "patchSetId": 16
@@ -819,6 +1147,29 @@
         "startChar": 0,
         "endLine": 454,
         "endChar": 36
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2370dd70_8921064f",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T09:09:03Z",
+      "side": 1,
+      "message": "Rename to GetGeometryShaderOutputPrimitivesType?",
+      "range": {
+        "startLine": 458,
+        "startChar": 7,
+        "endLine": 458,
+        "endChar": 40
       },
       "revId": "1d51b7c2200df012da06e05856120d269b65f096",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -866,6 +1217,70 @@
     },
     {
       "key": {
+        "uuid": "40ba1fac_f6ac26bb",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T09:09:03Z",
+      "side": 1,
+      "message": "Add this comment in code.",
+      "parentUuid": "47a0870e_d5a0da07",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "deeaac1f_488e3e66",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 495,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T09:09:03Z",
+      "side": 1,
+      "message": "Why not mInVaryings?",
+      "range": {
+        "startLine": 495,
+        "startChar": 20,
+        "endLine": 495,
+        "endChar": 28
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "78c6ed36_bd275b95",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T09:09:03Z",
+      "side": 1,
+      "message": "Why not mInVaryings?",
+      "range": {
+        "startLine": 511,
+        "startChar": 20,
+        "endLine": 511,
+        "endChar": 28
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2c613a4b_62c59ec6",
         "filename": "src/compiler/translator/glslang.y",
         "patchSetId": 16
@@ -877,6 +1292,24 @@
       "writtenOn": "2017-06-15T07:29:04Z",
       "side": 1,
       "message": "[GLSL ES 3.2 SPEC chapter 4.4.1.2 Page 72]\nAn input can be declared without an array size if there is a previous layout which specifies the size.",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e96e0881_15b86247",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 16
+      },
+      "lineNbr": 812,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-21T09:09:03Z",
+      "side": 1,
+      "message": "Add this comment to line 809 in code.",
+      "parentUuid": "2c613a4b_62c59ec6",
       "revId": "1d51b7c2200df012da06e05856120d269b65f096",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
