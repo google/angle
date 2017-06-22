@@ -890,7 +890,7 @@ bool ValidateDrawArraysInstancedBase(Context *context,
     return (primcount > 0);
 }
 
-bool ValidateDrawInstancedANGLEAndWebGL(ValidationContext *context)
+bool ValidateDrawInstancedANGLE(ValidationContext *context)
 {
     // Verify there is at least one active attribute with a divisor of zero
     const State &state = context->getGLState();
@@ -2849,13 +2849,7 @@ bool ValidateDrawArraysInstanced(Context *context,
                                  GLsizei count,
                                  GLsizei primcount)
 {
-    if (!ValidateDrawArraysInstancedBase(context, mode, first, count, primcount))
-    {
-        return false;
-    }
-
-    return !context->getExtensions().webglCompatibility ||
-           ValidateDrawInstancedANGLEAndWebGL(context);
+    return ValidateDrawArraysInstancedBase(context, mode, first, count, primcount);
 }
 
 bool ValidateDrawArraysInstancedANGLE(Context *context,
@@ -2869,7 +2863,7 @@ bool ValidateDrawArraysInstancedANGLE(Context *context,
         return false;
     }
 
-    return ValidateDrawInstancedANGLEAndWebGL(context);
+    return ValidateDrawInstancedANGLE(context);
 }
 
 bool ValidateDrawElementsBase(ValidationContext *context, GLenum type)
@@ -3054,13 +3048,7 @@ bool ValidateDrawElementsInstancedCommon(ValidationContext *context,
                                          const void *indices,
                                          GLsizei primcount)
 {
-    if (!ValidateDrawElementsInstancedBase(context, mode, count, type, indices, primcount))
-    {
-        return false;
-    }
-
-    return !context->getExtensions().webglCompatibility ||
-           ValidateDrawInstancedANGLEAndWebGL(context);
+    return ValidateDrawElementsInstancedBase(context, mode, count, type, indices, primcount);
 }
 
 bool ValidateDrawElementsInstancedANGLE(Context *context,
@@ -3075,7 +3063,7 @@ bool ValidateDrawElementsInstancedANGLE(Context *context,
         return false;
     }
 
-    return ValidateDrawInstancedANGLEAndWebGL(context);
+    return ValidateDrawInstancedANGLE(context);
 }
 
 bool ValidateFramebufferTextureBase(Context *context,

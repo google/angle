@@ -1009,7 +1009,7 @@ TEST_P(WebGL2CompatibilityTest, DrawArraysBufferOutOfBoundsInstanced)
     ASSERT_GL_NO_ERROR();
 }
 
-// Test that at least one attribute has a zero divisor for WebGL
+// Test that having no attributes with a zero divisor is valid in WebGL2
 TEST_P(WebGL2CompatibilityTest, InstancedDrawZeroDivisor)
 {
     const std::string &vert =
@@ -1040,12 +1040,8 @@ TEST_P(WebGL2CompatibilityTest, InstancedDrawZeroDivisor)
     glEnableVertexAttribArray(posLocation);
     glVertexAttribDivisor(posLocation, 1);
 
-    // Test touching the last element is valid.
     glVertexAttribPointer(0, 1, GL_UNSIGNED_BYTE, GL_FALSE, 0, nullptr);
     glDrawArraysInstanced(GL_POINTS, 0, 1, 4);
-    ASSERT_GL_ERROR(GL_INVALID_OPERATION);
-
-    glVertexAttribDivisor(posLocation, 0);
     ASSERT_GL_NO_ERROR();
 }
 
