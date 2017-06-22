@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "cceef6cf_e76736d9",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-22T08:20:04Z",
+      "side": 1,
+      "message": "ES31 define MAX_VERTEX_IMAGE_UNIFORMS, MAX_FRAGMENT_IMAGE_UNIFORMS and MAX_COMPUTE_IMAGE_UNIFORMS. We only need to distribute MAX_VERTEX_IMAGE_UNIFORMS SRVs for vertex shader, MAX_FRAGMENT_IMAGE_UNIFORMS SRVs for fragment shader and MAX_COMPUTE_IMAGE_UNIFORMS SRVs for compute shader on D3D backend.\nHere we only need to write test cases when image binding value is greater than or equal MAX_VERTEX_IMAGE_UNIFORMS, MAX_FRAGMENT_IMAGE_UNIFORMS and MAX_COMPUTE_IMAGE_UNIFORMS.\nBecause images, samplers and atomic_counters all need to use SRV. We will determine how many SRVs for images later.",
+      "parentUuid": "18f3e9e9_bb04da03",
+      "revId": "02299f78d63c8cdf6ccd6ffa448c3222cff68d21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0ddb9371_ba3a71e5",
         "filename": "src/compiler/translator/ImageFunctionHLSL.h",
         "patchSetId": 7
@@ -30,6 +48,30 @@
       "writtenOn": "2017-06-21T12:26:09Z",
       "side": 1,
       "message": "What is it used for?",
+      "range": {
+        "startLine": 34,
+        "startChar": 12,
+        "endLine": 34,
+        "endChar": 20
+      },
+      "revId": "02299f78d63c8cdf6ccd6ffa448c3222cff68d21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "73a4aa85_d8541ce1",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-22T08:20:04Z",
+      "side": 1,
+      "message": "It seems redundant, remove it.",
+      "parentUuid": "0ddb9371_ba3a71e5",
       "range": {
         "startLine": 34,
         "startChar": 12,
