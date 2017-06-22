@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "25ec5148_dc55ca5c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 372,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-22T01:41:48Z",
+      "side": 1,
+      "message": "The GL_UNIFORM_BUFFER target may use system memory.",
+      "range": {
+        "startLine": 372,
+        "startChar": 16,
+        "endLine": 372,
+        "endChar": 71
+      },
+      "revId": "4988bc8dfb8fa2eed8af10e7a27a4df2b60c7e7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ddb9488_628761f6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-22T01:41:48Z",
+      "side": 1,
+      "message": "As long as \u0027usage\u0027 is not GL_DYNAMIC_STATIC for glBufferData, all  other targets may use system memory too.",
+      "range": {
+        "startLine": 381,
+        "startChar": 12,
+        "endLine": 381,
+        "endChar": 68
+      },
+      "revId": "4988bc8dfb8fa2eed8af10e7a27a4df2b60c7e7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "53e03fe2_2ed043e3",
+        "filename": "src/tests/gl_tests/TransformFeedbackTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1012,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-06-22T01:41:48Z",
+      "side": 1,
+      "message": "Not only specified to GL_COPY_WRITE_BUFFER, other targets may be affected as well.",
+      "range": {
+        "startLine": 1012,
+        "startChar": 4,
+        "endLine": 1012,
+        "endChar": 51
+      },
+      "revId": "4988bc8dfb8fa2eed8af10e7a27a4df2b60c7e7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
