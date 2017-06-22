@@ -937,7 +937,7 @@ void TCompiler::initializeGLPosition(TIntermBlock *root)
     sh::ShaderVariable var(GL_FLOAT_VEC4, 0);
     var.name = "gl_Position";
     list.push_back(var);
-    InitializeVariables(root, list, symbolTable);
+    InitializeVariables(root, list, symbolTable, shaderVersion, shaderSpec, extensionBehavior);
 }
 
 void TCompiler::useAllMembersInUnusedStandardAndSharedBlocks(TIntermBlock *root)
@@ -974,7 +974,7 @@ void TCompiler::initializeOutputVariables(TIntermBlock *root)
             list.push_back(var);
         }
     }
-    InitializeVariables(root, list, symbolTable);
+    InitializeVariables(root, list, symbolTable, shaderVersion, shaderSpec, extensionBehavior);
 }
 
 const TExtensionBehavior &TCompiler::getExtensionBehavior() const

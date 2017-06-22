@@ -84,36 +84,50 @@ void AddArrayZeroInitSequence(const TIntermTyped *initializedNode, TIntermSequen
 
 void InsertInitCode(TIntermSequence *mainBody,
                     const InitVariableList &variables,
-                    const TSymbolTable &symbolTable)
+                    const TSymbolTable &symbolTable,
+                    int shaderVersion,
+                    ShShaderSpec shaderSpec,
+                    const TExtensionBehavior &extensionBehavior)
 {
     for (const auto &var : variables)
     {
         TString name = TString(var.name.c_str());
-
-        TIntermSymbol *initializedSymbol = nullptr;
-        if (var.isArray())
+        size_t pos   = name.find_last_of('[');
+        if (pos != TString::npos)
         {
-            size_t pos = name.find_last_of('[');
-            if (pos != TString::npos)
-            {
-                name = name.substr(0, pos);
-            }
-            TType arrayType = sh::GetShaderVariableBasicType(var);
-            arrayType.setArraySize(var.elementCount());
-            initializedSymbol = new TIntermSymbol(0, name, arrayType);
+            name = name.substr(0, pos);
         }
-        else if (var.isStruct())
-        {
-            TVariable *structInfo = reinterpret_cast<TVariable *>(symbolTable.findGlobal(name));
-            ASSERT(structInfo);
 
-            initializedSymbol = new TIntermSymbol(0, name, structInfo->getType());
+        const TVariable *symbolInfo = nullptr;
+        if (var.isBuiltIn())
+        {
+            symbolInfo =
+                reinterpret_cast<const TVariable *>(symbolTable.findBuiltIn(name, shaderVersion));
         }
         else
         {
-            TType type        = sh::GetShaderVariableBasicType(var);
-            initializedSymbol = new TIntermSymbol(0, name, type);
+            symbolInfo = reinterpret_cast<const TVariable *>(symbolTable.findGlobal(name));
         }
+        ASSERT(symbolInfo != nullptr);
+
+        TType type = symbolInfo->getType();
+        if (type.getQualifier() == EvqFragData &&
+            (shaderSpec == SH_WEBGL2_SPEC ||
+             !IsExtensionEnabled(extensionBehavior, "GL_EXT_draw_buffers")))
+        {
+            // Adjust the number of attachment indices which can be initialized according to the
+            // WebGL2 spec and extension behavior:
+            // - WebGL2 spec, Editor's draft May 31, 5.13 GLSL ES
+            //   1.00 Fragment Shader Output: "A fragment shader written in The OpenGL ES Shading
+            //   Language, Version 1.00, that statically assigns a value to gl_FragData[n] where n
+            //   does not equal constant value 0 must fail to compile in the WebGL 2.0 API.".
+            //   This excerpt limits the initialization of gl_FragData to only the 0th index.
+            // - If GL_EXT_draw_buffers is disabled, only the 0th index of gl_FragData can be
+            //   written to.
+            type.setArraySize(1u);
+        }
+
+        TIntermSymbol *initializedSymbol = new TIntermSymbol(0, name, type);
         TIntermSequence *initCode = CreateInitCode(initializedSymbol);
         mainBody->insert(mainBody->begin(), initCode->begin(), initCode->end());
     }
@@ -204,12 +218,17 @@ void InitializeUninitializedLocals(TIntermBlock *root, int shaderVersion)
 
 void InitializeVariables(TIntermBlock *root,
                          const InitVariableList &vars,
-                         const TSymbolTable &symbolTable)
+                         const TSymbolTable &symbolTable,
+                         int shaderVersion,
+                         ShShaderSpec shaderSpec,
+                         const TExtensionBehavior &extensionBehavior)
 {
+
     TIntermFunctionDefinition *main = FindMain(root);
     ASSERT(main != nullptr);
     TIntermBlock *body = main->getBody();
-    InsertInitCode(body->getSequence(), vars, symbolTable);
+    InsertInitCode(body->getSequence(), vars, symbolTable, shaderVersion, shaderSpec,
+                   extensionBehavior);
 }
 
 }  // namespace sh
