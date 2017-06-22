@@ -370,8 +370,8 @@ gl::Error Clear11::clearFramebuffer(const ClearParameters &clearParams,
     {
         const gl::FramebufferAttachment &attachment = colorAttachments[colorAttachmentIndex];
 
-        if (clearParams.clearColor[colorAttachmentIndex] && attachment.isAttached() &&
-            drawBufferStates[colorAttachmentIndex] != GL_NONE)
+        if (!clearParams.clearColor[colorAttachmentIndex] || !attachment.isAttached() ||
+            drawBufferStates[colorAttachmentIndex] == GL_NONE)
         {
             continue;
         }
