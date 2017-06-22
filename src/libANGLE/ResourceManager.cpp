@@ -182,11 +182,6 @@ Buffer *BufferManager::getBuffer(GLuint handle) const
     return GetObject(mObjectMap, handle);
 }
 
-bool BufferManager::isBufferGenerated(GLuint buffer) const
-{
-    return buffer == 0 || mObjectMap.find(buffer) != mObjectMap.end();
-}
-
 // ShaderProgramManager Implementation.
 
 ShaderProgramManager::~ShaderProgramManager()
@@ -297,11 +292,6 @@ Texture *TextureManager::getTexture(GLuint handle) const
     return GetObject(mObjectMap, handle);
 }
 
-bool TextureManager::isTextureGenerated(GLuint texture) const
-{
-    return texture == 0 || mObjectMap.find(texture) != mObjectMap.end();
-}
-
 void TextureManager::invalidateTextureComplenessCache()
 {
     for (auto &texture : mObjectMap)
@@ -337,11 +327,6 @@ GLuint RenderbufferManager::createRenderbuffer()
 Renderbuffer *RenderbufferManager::getRenderbuffer(GLuint handle)
 {
     return GetObject(mObjectMap, handle);
-}
-
-bool RenderbufferManager::isRenderbufferGenerated(GLuint renderbuffer) const
-{
-    return renderbuffer == 0 || mObjectMap.find(renderbuffer) != mObjectMap.end();
 }
 
 // SamplerManager Implementation.
@@ -499,12 +484,6 @@ void FramebufferManager::setDefaultFramebuffer(Framebuffer *framebuffer)
 {
     ASSERT(framebuffer == nullptr || framebuffer->id() == 0);
     mObjectMap[0] = framebuffer;
-}
-
-bool FramebufferManager::isFramebufferGenerated(GLuint framebuffer)
-{
-    ASSERT(mObjectMap.find(0) != mObjectMap.end());
-    return mObjectMap.find(framebuffer) != mObjectMap.end();
 }
 
 void FramebufferManager::invalidateFramebufferComplenessCache()

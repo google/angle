@@ -63,6 +63,11 @@ class TypedResourceManager : public ResourceManagerBase<HandleAllocatorType>
     TypedResourceManager() {}
 
     void deleteObject(const Context *context, GLuint handle);
+    bool isHandleGenerated(GLuint handle) const
+    {
+        // Zero is always assumed to have been generated implicitly.
+        return handle == 0 || mObjectMap.find(handle) != mObjectMap.end();
+    }
 
   protected:
     ~TypedResourceManager() override;
@@ -102,7 +107,6 @@ class BufferManager : public TypedResourceManager<Buffer, HandleAllocator, Buffe
   public:
     GLuint createBuffer();
     Buffer *getBuffer(GLuint handle) const;
-    bool isBufferGenerated(GLuint buffer) const;
 
     Buffer *checkBufferAllocation(rx::GLImplFactory *factory, GLuint handle)
     {
@@ -148,7 +152,6 @@ class TextureManager : public TypedResourceManager<Texture, HandleAllocator, Tex
   public:
     GLuint createTexture();
     Texture *getTexture(GLuint handle) const;
-    bool isTextureGenerated(GLuint texture) const;
 
     void invalidateTextureComplenessCache();
 
@@ -170,7 +173,6 @@ class RenderbufferManager
   public:
     GLuint createRenderbuffer();
     Renderbuffer *getRenderbuffer(GLuint handle);
-    bool isRenderbufferGenerated(GLuint renderbuffer) const;
 
     Renderbuffer *checkRenderbufferAllocation(rx::GLImplFactory *factory, GLuint handle)
     {
@@ -238,7 +240,6 @@ class FramebufferManager
     GLuint createFramebuffer();
     Framebuffer *getFramebuffer(GLuint handle) const;
     void setDefaultFramebuffer(Framebuffer *framebuffer);
-    bool isFramebufferGenerated(GLuint framebuffer);
 
     void invalidateFramebufferComplenessCache();
 

@@ -724,22 +724,22 @@ Shader *ValidationContext::getShader(GLuint handle) const
 
 bool ValidationContext::isTextureGenerated(GLuint texture) const
 {
-    return mState.mTextures->isTextureGenerated(texture);
+    return mState.mTextures->isHandleGenerated(texture);
 }
 
 bool ValidationContext::isBufferGenerated(GLuint buffer) const
 {
-    return mState.mBuffers->isBufferGenerated(buffer);
+    return mState.mBuffers->isHandleGenerated(buffer);
 }
 
 bool ValidationContext::isRenderbufferGenerated(GLuint renderbuffer) const
 {
-    return mState.mRenderbuffers->isRenderbufferGenerated(renderbuffer);
+    return mState.mRenderbuffers->isHandleGenerated(renderbuffer);
 }
 
 bool ValidationContext::isFramebufferGenerated(GLuint framebuffer) const
 {
-    return mState.mFramebuffers->isFramebufferGenerated(framebuffer);
+    return mState.mFramebuffers->isHandleGenerated(framebuffer);
 }
 
 bool ValidationContext::usingDisplayTextureShareGroup() const
