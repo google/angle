@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "8581b6f8_b1c21d43",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-22T18:22:05Z",
+      "side": 1,
+      "message": "nit: probably call this isCPUAccessible to make the naming consistent.",
+      "range": {
+        "startLine": 114,
+        "startChar": 17,
+        "endLine": 114,
+        "endChar": 27
+      },
+      "revId": "4988bc8dfb8fa2eed8af10e7a27a4df2b60c7e7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d5eac34b_4d3d7173",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-22T18:22:05Z",
+      "side": 1,
+      "message": "nit: isGPUAccessible to make the naming consistent.",
+      "range": {
+        "startLine": 116,
+        "startChar": 17,
+        "endLine": 116,
+        "endChar": 30
+      },
+      "revId": "4988bc8dfb8fa2eed8af10e7a27a4df2b60c7e7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "25ec5148_dc55ca5c",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 1
@@ -41,6 +87,29 @@
         "startChar": 12,
         "endLine": 381,
         "endChar": 68
+      },
+      "revId": "4988bc8dfb8fa2eed8af10e7a27a4df2b60c7e7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "09fae96c_6afc4dee",
+        "filename": "src/tests/gl_tests/TransformFeedbackTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1010,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-22T18:22:05Z",
+      "side": 1,
+      "message": "use GLBuffer",
+      "range": {
+        "startLine": 1010,
+        "startChar": 4,
+        "endLine": 1010,
+        "endChar": 22
       },
       "revId": "4988bc8dfb8fa2eed8af10e7a27a4df2b60c7e7d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
