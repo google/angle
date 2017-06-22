@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7a4266f2_d31a390c",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-22T12:26:32Z",
+      "side": 1,
+      "message": "rewrite here",
+      "range": {
+        "startLine": 149,
+        "startChar": 8,
+        "endLine": 149,
+        "endChar": 47
+      },
+      "revId": "a30465c4248e0f43c00a7202d70ad603ea674a37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c6ec509_c6cae521",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-22T12:26:32Z",
+      "side": 1,
+      "message": "rewrite here.",
+      "range": {
+        "startLine": 208,
+        "startChar": 8,
+        "endLine": 213,
+        "endChar": 37
+      },
+      "revId": "a30465c4248e0f43c00a7202d70ad603ea674a37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a4f14be0_c84255f3",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 817,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-22T12:26:32Z",
+      "side": 1,
+      "message": "rewrite here.",
+      "range": {
+        "startLine": 812,
+        "startChar": 12,
+        "endLine": 817,
+        "endChar": 48
+      },
+      "revId": "a30465c4248e0f43c00a7202d70ad603ea674a37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "829ca6f3_e54101a7",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 2216,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-22T12:26:32Z",
+      "side": 1,
+      "message": "rewrite here",
+      "range": {
+        "startLine": 2211,
+        "startChar": 4,
+        "endLine": 2216,
+        "endChar": 39
+      },
+      "revId": "a30465c4248e0f43c00a7202d70ad603ea674a37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e68d993_8eb34011",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 20
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-22T12:26:32Z",
+      "side": 1,
+      "message": "remove one constructor.",
+      "range": {
+        "startLine": 241,
+        "startChar": 0,
+        "endLine": 241,
+        "endChar": 16
+      },
+      "revId": "a30465c4248e0f43c00a7202d70ad603ea674a37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2694ffc1_34ddca0d",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 889,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-22T12:26:32Z",
+      "side": 1,
+      "message": "rewrite here. Add a reference.",
+      "range": {
+        "startLine": 889,
+        "startChar": 32,
+        "endLine": 889,
+        "endChar": 33
+      },
+      "revId": "a30465c4248e0f43c00a7202d70ad603ea674a37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
