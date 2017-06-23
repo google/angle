@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6e67e725_873ee2fe",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-06-23T19:20:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1ba519ee_379d63ab",
+      "range": {
+        "startLine": 70,
+        "startChar": 7,
+        "endLine": 70,
+        "endChar": 29
+      },
+      "revId": "13566b190ba9e64ef934a07280a9d23ac66bde02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "924807cc_218636e9",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 9
@@ -36,6 +60,30 @@
       "writtenOn": "2017-06-22T21:36:38Z",
       "side": 1,
       "message": "are you planning to add error messages to all the undecorated messages as well?",
+      "range": {
+        "startLine": 1430,
+        "startChar": 29,
+        "endLine": 1430,
+        "endChar": 40
+      },
+      "revId": "13566b190ba9e64ef934a07280a9d23ac66bde02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3eedf84c_256e7b49",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1430,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-06-23T19:20:55Z",
+      "side": 1,
+      "message": "We will be adding more messages to undecorated errors, but no, we do not plan on adding messages to every single one.",
+      "parentUuid": "924807cc_218636e9",
       "range": {
         "startLine": 1430,
         "startChar": 29,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "fb9e82f1_ec05c6da",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1477,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-06-23T19:20:55Z",
+      "side": 1,
+      "message": "I added a new message for this situation and populated relevant errors.",
+      "parentUuid": "f9965f32_25edd01d",
+      "range": {
+        "startLine": 1477,
+        "startChar": 69,
+        "endLine": 1477,
+        "endChar": 93
+      },
+      "revId": "13566b190ba9e64ef934a07280a9d23ac66bde02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "404d2b56_d071cc2f",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 9
@@ -82,6 +154,30 @@
       "writtenOn": "2017-06-22T21:36:38Z",
       "side": 1,
       "message": "how about we reduce these all to \n\nreturn ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidRenderbufferTarget);\n\netc",
+      "range": {
+        "startLine": 1494,
+        "startChar": 11,
+        "endLine": 1495,
+        "endChar": 82
+      },
+      "revId": "13566b190ba9e64ef934a07280a9d23ac66bde02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e1a84e1_18b718fe",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1495,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-06-23T19:20:55Z",
+      "side": 1,
+      "message": "There are 4 different messaging cases in the validation right now: No message, mapped g_kError strings, literal strings, and local string variables. I like the consistency/flexibility in the current implementation for now, rather than making macros for each case.",
+      "parentUuid": "404d2b56_d071cc2f",
       "range": {
         "startLine": 1494,
         "startChar": 11,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "f4af3b08_7727b1b9",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1781,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-06-23T19:20:55Z",
+      "side": 1,
+      "message": "I added a new message for this situation and populated relevant errors.",
+      "parentUuid": "ec2d7d00_c034d7a1",
+      "range": {
+        "startLine": 1781,
+        "startChar": 65,
+        "endLine": 1781,
+        "endChar": 87
+      },
+      "revId": "13566b190ba9e64ef934a07280a9d23ac66bde02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c0b7fd32_99c42a66",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 9
@@ -137,6 +257,30 @@
       "revId": "13566b190ba9e64ef934a07280a9d23ac66bde02",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c59b7c8b_5431aeb4",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2238,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-06-23T19:20:55Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "c0b7fd32_99c42a66",
+      "range": {
+        "startLine": 2238,
+        "startChar": 69,
+        "endLine": 2238,
+        "endChar": 88
+      },
+      "revId": "13566b190ba9e64ef934a07280a9d23ac66bde02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "1849e46a_6775228e",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2622,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-06-23T19:20:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1d8aa017_b5e2406f",
+      "range": {
+        "startLine": 2622,
+        "startChar": 69,
+        "endLine": 2622,
+        "endChar": 84
+      },
+      "revId": "13566b190ba9e64ef934a07280a9d23ac66bde02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "890fcd71_a060c198",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 9
@@ -174,6 +342,30 @@
       "writtenOn": "2017-06-22T21:36:38Z",
       "side": 1,
       "message": "this is more along the lines of a missing binding, than an invalid name.",
+      "range": {
+        "startLine": 2734,
+        "startChar": 69,
+        "endLine": 2734,
+        "endChar": 87
+      },
+      "revId": "13566b190ba9e64ef934a07280a9d23ac66bde02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6049efe3_4732d866",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2734,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-06-23T19:20:55Z",
+      "side": 1,
+      "message": "I added a new message for this situation and populated relevant errors.",
+      "parentUuid": "890fcd71_a060c198",
       "range": {
         "startLine": 2734,
         "startChar": 69,
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "a8a5a0ce_ad8c3d51",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 2829,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-06-23T19:20:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f07ab51a_414ef395",
+      "range": {
+        "startLine": 2829,
+        "startChar": 69,
+        "endLine": 2829,
+        "endChar": 84
+      },
+      "revId": "13566b190ba9e64ef934a07280a9d23ac66bde02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4c4b07c1_dc952fdd",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 9
@@ -232,6 +448,30 @@
     },
     {
       "key": {
+        "uuid": "f0f43b56_390d9898",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 3133,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-06-23T19:20:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4c4b07c1_dc952fdd",
+      "range": {
+        "startLine": 3133,
+        "startChar": 69,
+        "endLine": 3133,
+        "endChar": 93
+      },
+      "revId": "13566b190ba9e64ef934a07280a9d23ac66bde02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f0f7dcce_40df1e8f",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 9
@@ -252,6 +492,30 @@
       "revId": "13566b190ba9e64ef934a07280a9d23ac66bde02",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4c07f10_9cd0fd76",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 3414,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-06-23T19:20:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f0f7dcce_40df1e8f",
+      "range": {
+        "startLine": 3414,
+        "startChar": 68,
+        "endLine": 3414,
+        "endChar": 81
+      },
+      "revId": "13566b190ba9e64ef934a07280a9d23ac66bde02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
