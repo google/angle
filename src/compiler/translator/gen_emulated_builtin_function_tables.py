@@ -27,7 +27,18 @@ namespace sh
 
 namespace
 {{
-constexpr std::pair<MiniFunctionId, const char *> g_hlslFunctions[] = {{
+
+struct FunctionPair
+{{
+   constexpr FunctionPair(const MiniFunctionId &idIn, const char *bodyIn) : id(idIn), body(bodyIn)
+   {{
+   }}
+
+   MiniFunctionId id;
+   const char *body;
+}};
+
+constexpr FunctionPair g_hlslFunctions[] = {{
 {emulated_functions}}};
 }}  // anonymous namespace
 
@@ -36,9 +47,9 @@ const char *FindHLSLFunction(const FunctionId &functionID)
     for (size_t index = 0; index < ArraySize(g_hlslFunctions); ++index)
     {{
         const auto &function = g_hlslFunctions[index];
-        if (function.first == functionID)
+        if (function.id == functionID)
         {{
-            return function.second;
+            return function.body;
         }}
     }}
 
