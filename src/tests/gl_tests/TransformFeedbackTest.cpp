@@ -654,14 +654,17 @@ TEST_P(TransformFeedbackTest, MultiContext)
             GL_TRANSFORM_FEEDBACK_BUFFER, 0, bufferSize * sizeof(GLfloat), GL_MAP_READ_BIT));
 
         size_t curBufferIndex = 0;
+        unsigned int failures = 0;
         for (const auto &primCount : context.primitiveCounts)
         {
             for (size_t prim = 0; prim < primCount; prim++)
             {
-                EXPECT_EQ(bufferData[curBufferIndex], prim + 1);
+                failures += (bufferData[curBufferIndex] != (prim + 1)) ? 1 : 0;
                 curBufferIndex++;
             }
         }
+
+        EXPECT_EQ(0u, failures);
 
         while (curBufferIndex < bufferSize)
         {
