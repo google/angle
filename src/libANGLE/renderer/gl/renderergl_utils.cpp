@@ -14,6 +14,7 @@
 #include "common/mathutil.h"
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Caps.h"
+#include "libANGLE/Workarounds.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/QueryGL.h"
@@ -1028,6 +1029,11 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
     // TODO(jmadill): Narrow workaround range for specific devices.
     workarounds->reapplyUBOBindingsAfterLoadingBinaryProgram = true;
 #endif
+}
+
+void ApplyWorkarounds(const FunctionsGL *functions, gl::Workarounds *workarounds)
+{
+    // TODO(jmadill): Workarounds for GL.
 }
 
 }  // namespace nativegl_gl

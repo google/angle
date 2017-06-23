@@ -19,6 +19,7 @@
 namespace gl
 {
 class Path;
+struct Workarounds;
 }
 
 namespace rx
@@ -149,6 +150,8 @@ class ContextImpl : public GLImplFactory
     virtual const gl::TextureCapsMap &getNativeTextureCaps() const = 0;
     virtual const gl::Extensions &getNativeExtensions() const      = 0;
     virtual const gl::Limitations &getNativeLimitations() const    = 0;
+
+    virtual void applyNativeWorkarounds(gl::Workarounds *workarounds) const {}
 
     virtual gl::Error dispatchCompute(const gl::Context *context,
                                       GLuint numGroupsX,

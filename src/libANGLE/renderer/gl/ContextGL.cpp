@@ -380,6 +380,11 @@ const gl::Limitations &ContextGL::getNativeLimitations() const
     return mRenderer->getNativeLimitations();
 }
 
+void ContextGL::applyNativeWorkarounds(gl::Workarounds *workarounds) const
+{
+    return mRenderer->applyNativeWorkarounds(workarounds);
+}
+
 const FunctionsGL *ContextGL::getFunctions() const
 {
     return mRenderer->getFunctions();

@@ -19,6 +19,7 @@ namespace gl
 class ContextState;
 struct IndexRange;
 class Path;
+struct Workarounds;
 }
 
 namespace egl
@@ -165,6 +166,7 @@ class RendererGL : angle::NonCopyable
     const gl::TextureCapsMap &getNativeTextureCaps() const;
     const gl::Extensions &getNativeExtensions() const;
     const gl::Limitations &getNativeLimitations() const;
+    void applyNativeWorkarounds(gl::Workarounds *workarounds) const;
 
     gl::Error dispatchCompute(const gl::Context *context,
                               GLuint numGroupsX,

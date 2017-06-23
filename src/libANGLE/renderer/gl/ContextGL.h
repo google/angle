@@ -183,6 +183,8 @@ class ContextGL : public ContextImpl
     const gl::Extensions &getNativeExtensions() const override;
     const gl::Limitations &getNativeLimitations() const override;
 
+    void applyNativeWorkarounds(gl::Workarounds *workarounds) const override;
+
     // Handle helpers
     const FunctionsGL *getFunctions() const;
     StateManagerGL *getStateManager();

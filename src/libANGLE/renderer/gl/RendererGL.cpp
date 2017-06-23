@@ -655,6 +655,12 @@ const gl::Limitations &RendererGL::getNativeLimitations() const
     return mNativeLimitations;
 }
 
+void RendererGL::applyNativeWorkarounds(gl::Workarounds *workarounds) const
+{
+    ensureCapsInitialized();
+    nativegl_gl::ApplyWorkarounds(mFunctions, workarounds);
+}
+
 gl::Error RendererGL::dispatchCompute(const gl::Context *context,
                                       GLuint numGroupsX,
                                       GLuint numGroupsY,
