@@ -1876,6 +1876,12 @@ void StateManagerGL::setPathRenderingStencilState(GLenum func, GLint ref, GLuint
 
 void StateManagerGL::setTextureCubemapSeamlessEnabled(bool enabled)
 {
+    // TODO(jmadill): Also check for seamless extension.
+    if (!mFunctions->isAtLeastGL(gl::Version(3, 2)))
+    {
+        return;
+    }
+
     if (mTextureCubemapSeamlessEnabled != enabled)
     {
         mTextureCubemapSeamlessEnabled = enabled;
