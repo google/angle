@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aeb4d4b7_447dfeba",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1887,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-06-23T19:20:53Z",
+      "side": 1,
+      "message": "Since \"OpenGL ES 3.0 requires that all cube map filtering be seamless\", makes sense to me also to set this to true on GLES backends.",
+      "range": {
+        "startLine": 1887,
+        "startChar": 8,
+        "endLine": 1887,
+        "endChar": 48
+      },
+      "revId": "e56c9e3008581a93a6a4a91c7978eb877670cb49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
