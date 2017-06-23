@@ -135,6 +135,23 @@ size_t GetGlobalMaxTokenSize(ShShaderSpec spec)
     }
 }
 
+int GetMaxUniformVectorsForShaderType(GLenum shaderType, const ShBuiltInResources &resources)
+{
+    switch (shaderType)
+    {
+        case GL_VERTEX_SHADER:
+            return resources.MaxVertexUniformVectors;
+        case GL_FRAGMENT_SHADER:
+            return resources.MaxFragmentUniformVectors;
+        case GL_COMPUTE_SHADER:
+            // TODO (jiawei.shao@intel.com): check if we need finer-grained component counting
+            return resources.MaxComputeUniformComponents / 4;
+        default:
+            UNIMPLEMENTED();
+            return -1;
+    }
+}
+
 namespace
 {
 
@@ -242,9 +259,10 @@ bool TCompiler::shouldRunLoopAndIndexingValidation(ShCompileOptions compileOptio
 
 bool TCompiler::Init(const ShBuiltInResources &resources)
 {
-    shaderVersion     = 100;
-    maxUniformVectors = (shaderType == GL_VERTEX_SHADER) ? resources.MaxVertexUniformVectors
-                                                         : resources.MaxFragmentUniformVectors;
+    shaderVersion = 100;
+
+    maxUniformVectors = GetMaxUniformVectorsForShaderType(shaderType, resources);
+
     maxExpressionComplexity = resources.MaxExpressionComplexity;
     maxCallStackDepth       = resources.MaxCallStackDepth;
     maxFunctionParameters   = resources.MaxFunctionParameters;

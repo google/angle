@@ -62,9 +62,35 @@ class ComputeShaderValidationTest : public ShaderCompileTreeTest
   public:
     ComputeShaderValidationTest() {}
 
-  private:
+  protected:
     ::GLenum getShaderType() const override { return GL_COMPUTE_SHADER; }
     ShShaderSpec getShaderSpec() const override { return SH_GLES3_1_SPEC; }
+};
+
+class ComputeShaderEnforcePackingValidationTest : public ComputeShaderValidationTest
+{
+  public:
+    ComputeShaderEnforcePackingValidationTest() {}
+
+  protected:
+    void initResources(ShBuiltInResources *resources) override
+    {
+        resources->MaxComputeUniformComponents = kMaxComputeUniformComponents;
+
+        // We need both MaxFragmentUniformVectors and MaxFragmentUniformVectors smaller than
+        // MaxComputeUniformComponents / 4.
+        resources->MaxVertexUniformVectors   = 16;
+        resources->MaxFragmentUniformVectors = 16;
+    }
+
+    void SetUp() override
+    {
+        mExtraCompileOptions |= (SH_VARIABLES | SH_ENFORCE_PACKING_RESTRICTIONS);
+        ShaderCompileTreeTest::SetUp();
+    }
+
+    // It is unnecessary to use a very large MaxComputeUniformComponents in this test.
+    static constexpr GLint kMaxComputeUniformComponents = 128;
 };
 
 // This is a test for a bug that used to exist in ANGLE:
@@ -3877,5 +3903,36 @@ TEST_F(FragmentShaderValidationTest, StructAsBoolConstructorArgument)
     if (compile(shaderString))
     {
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test that a compute shader can be compiled with MAX_COMPUTE_UNIFORM_COMPONENTS uniform
+// components.
+TEST_F(ComputeShaderEnforcePackingValidationTest, MaxComputeUniformComponents)
+{
+    GLint uniformVectorCount = kMaxComputeUniformComponents / 4;
+
+    std::ostringstream ostream;
+    ostream << "#version 310 es\n"
+               "layout(local_size_x = 1) in;\n";
+
+    for (GLint i = 0; i < uniformVectorCount; ++i)
+    {
+        ostream << "uniform vec4 u_value" << i << ";\n";
+    }
+
+    ostream << "void main()\n"
+               "{\n";
+
+    for (GLint i = 0; i < uniformVectorCount; ++i)
+    {
+        ostream << "    vec4 v" << i << " = u_value" << i << ";\n";
+    }
+
+    ostream << "}\n";
+
+    if (!compile(ostream.str()))
+    {
+        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
     }
 }
