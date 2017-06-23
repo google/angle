@@ -294,7 +294,7 @@ TEST_P(WebGLCompatibilityTest, EnableExtensionUintIndices)
                      "void main() { gl_FragColor = vec4(0, 1, 0, 1); }")
     glUseProgram(program.get());
 
-    glDrawElements(GL_TRIANGLES, 2, GL_UNSIGNED_INT, nullptr);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
 
     if (extensionRequestable("GL_OES_element_index_uint"))
@@ -303,7 +303,7 @@ TEST_P(WebGLCompatibilityTest, EnableExtensionUintIndices)
         EXPECT_GL_NO_ERROR();
         EXPECT_TRUE(extensionEnabled("GL_OES_element_index_uint"));
 
-        glDrawElements(GL_TRIANGLES, 2, GL_UNSIGNED_INT, nullptr);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
         EXPECT_GL_NO_ERROR();
     }
 }
