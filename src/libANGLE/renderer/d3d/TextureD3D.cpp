@@ -1035,21 +1035,53 @@ gl::Error TextureD3D_2D::setCompressedSubImage(const gl::Context *context,
 gl::Error TextureD3D_2D::copyImage(const gl::Context *context,
                                    GLenum target,
                                    size_t imageLevel,
-                                   const gl::Rectangle &sourceArea,
+                                   const gl::Rectangle &origSourceArea,
                                    GLenum internalFormat,
                                    const gl::Framebuffer *source)
 {
     ASSERT(target == GL_TEXTURE_2D);
 
-    GLint level                = static_cast<GLint>(imageLevel);
+    GLint level = static_cast<GLint>(imageLevel);
     const gl::InternalFormat &internalFormatInfo =
         gl::GetInternalFormatInfo(internalFormat, GL_UNSIGNED_BYTE);
-    ANGLE_TRY(redefineImage(context, level, internalFormatInfo.sizedInternalFormat,
-                            gl::Extents(sourceArea.width, sourceArea.height, 1),
+    gl::Extents sourceExtents(origSourceArea.width, origSourceArea.height, 1);
+    ANGLE_TRY(redefineImage(context, level, internalFormatInfo.sizedInternalFormat, sourceExtents,
                             mRenderer->isRobustResourceInitEnabled()));
 
+    gl::Extents fbSize = source->getReadColorbuffer()->getSize();
+
+    // Does the read area extend beyond the framebuffer?
+    bool outside = origSourceArea.x < 0 || origSourceArea.y < 0 ||
+                   origSourceArea.x + origSourceArea.width > fbSize.width ||
+                   origSourceArea.y + origSourceArea.height > fbSize.height;
+
+    // In WebGL mode we need to zero the texture outside the framebuffer.
+    // If we have robust resource init, it was already zeroed by redefineImage() above, otherwise
+    // zero it explicitly.
+    // TODO(fjhenigman): When robust resource is fully implemented look into making it a
+    // prerequisite for WebGL and deleting this code.
+    if (outside && context->getExtensions().webglCompatibility &&
+        !mRenderer->isRobustResourceInitEnabled())
+    {
+        angle::MemoryBuffer *zero;
+        ANGLE_TRY(context->getScratchBuffer(
+            origSourceArea.width * origSourceArea.height * internalFormatInfo.pixelBytes, &zero));
+        zero->fill(0);
+        setImage(context, target, imageLevel, internalFormat, sourceExtents,
+                 internalFormatInfo.format, internalFormatInfo.type, gl::PixelUnpackState(1, 0),
+                 zero->data());
+    }
+
+    gl::Rectangle sourceArea;
+    if (!ClipRectangle(origSourceArea, gl::Rectangle(0, 0, fbSize.width, fbSize.height),
+                       &sourceArea))
+    {
+        // Empty source area, nothing to do.
+        return gl::NoError();
+    }
+
     gl::ImageIndex index = gl::ImageIndex::Make2D(level);
-    gl::Offset destOffset(0, 0, 0);
+    gl::Offset destOffset(sourceArea.x - origSourceArea.x, sourceArea.y - origSourceArea.y, 0);
 
     // If the zero max LOD workaround is active, then we can't sample from individual layers of the framebuffer in shaders,
     // so we should use the non-rendering copy path.
