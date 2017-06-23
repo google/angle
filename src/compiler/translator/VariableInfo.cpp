@@ -581,7 +581,13 @@ bool CollectVariablesTraverser::visitDeclaration(Visit, TIntermDeclaration *node
         const TIntermSymbol &variable = *variableNode->getAsSymbolNode();
         if (typedNode.getBasicType() == EbtInterfaceBlock)
         {
-            mInterfaceBlocks->push_back(recordInterfaceBlock(variable));
+            // TODO(jiajia.qin@intel.com): In order not to affect the old set of mInterfaceBlocks,
+            // only uniform blocks are added into mInterfaceBlocks. Refactor it to gather
+            // uniformBlocks and shaderStorageBlocks separately.
+            if (qualifier == EvqUniform)
+            {
+                mInterfaceBlocks->push_back(recordInterfaceBlock(variable));
+            }
         }
         else
         {
@@ -622,12 +628,15 @@ bool CollectVariablesTraverser::visitBinary(Visit, TIntermBinary *binaryNode)
 
         const TInterfaceBlock *interfaceBlock = blockNode->getType().getInterfaceBlock();
         InterfaceBlock *namedBlock = FindVariable(interfaceBlock->name(), mInterfaceBlocks);
-        ASSERT(namedBlock);
-        namedBlock->staticUse = true;
-
-        unsigned int fieldIndex = static_cast<unsigned int>(constantUnion->getIConst(0));
-        ASSERT(fieldIndex < namedBlock->fields.size());
-        namedBlock->fields[fieldIndex].staticUse = true;
+        // TODO(jiajia.qin@intel.com): Currently, only uniform blocks are added into
+        // mInterfaceBlocks.
+        if (namedBlock)
+        {
+            namedBlock->staticUse   = true;
+            unsigned int fieldIndex = static_cast<unsigned int>(constantUnion->getIConst(0));
+            ASSERT(fieldIndex < namedBlock->fields.size());
+            namedBlock->fields[fieldIndex].staticUse = true;
+        }
         return false;
     }
 

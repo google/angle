@@ -162,7 +162,7 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, void *scanner, cons
 %token <lex> ATTRIBUTE CONST_QUAL BOOL_TYPE FLOAT_TYPE INT_TYPE UINT_TYPE
 %token <lex> BREAK CONTINUE DO ELSE FOR IF DISCARD RETURN SWITCH CASE DEFAULT
 %token <lex> BVEC2 BVEC3 BVEC4 IVEC2 IVEC3 IVEC4 VEC2 VEC3 VEC4 UVEC2 UVEC3 UVEC4
-%token <lex> MATRIX2 MATRIX3 MATRIX4 IN_QUAL OUT_QUAL INOUT_QUAL UNIFORM VARYING
+%token <lex> MATRIX2 MATRIX3 MATRIX4 IN_QUAL OUT_QUAL INOUT_QUAL UNIFORM BUFFER VARYING
 %token <lex> MATRIX2x3 MATRIX3x2 MATRIX2x4 MATRIX4x2 MATRIX3x4 MATRIX4x3
 %token <lex> CENTROID FLAT SMOOTH
 %token <lex> READONLY WRITEONLY COHERENT RESTRICT VOLATILE SHARED
@@ -856,6 +856,10 @@ storage_qualifier
     }
     | UNIFORM {
         $$ = context->parseGlobalStorageQualifier(EvqUniform, @1);
+    }
+    | BUFFER {
+        ES3_1_ONLY("buffer", @1, "storage qualifier");
+        $$ = context->parseGlobalStorageQualifier(EvqBuffer, @1);
     }
     | READONLY {
         $$ = new TMemoryQualifierWrapper(EvqReadOnly, @1);

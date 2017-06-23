@@ -3885,6 +3885,23 @@ TEST_F(FragmentShaderValidationTest, InvalidInterfaceBlockTernaryExpression)
     }
 }
 
+// Test that "buffer" and "shared" are valid identifiers in version lower than GLSL ES 3.10.
+TEST_F(FragmentShaderValidationTest, BufferAndSharedAsIdentifierOnES3)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "void main()\n"
+        "{\n"
+        "    int buffer;\n"
+        "    int shared;\n"
+        "}\n";
+
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+    }
+}
+
 // Test that a struct can not be used as a constructor argument for a scalar.
 TEST_F(FragmentShaderValidationTest, StructAsBoolConstructorArgument)
 {

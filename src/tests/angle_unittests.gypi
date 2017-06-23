@@ -50,6 +50,7 @@
             '<(angle_path)/src/tests/compiler_tests/API_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/AppendixALimitations_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/AtomicCounter_test.cpp',
+            '<(angle_path)/src/tests/compiler_tests/BufferVariables_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/CollectVariables_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/ConstantFolding_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/ConstantFoldingNaN_test.cpp',
