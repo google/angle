@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "31a5abd5_f516048b",
+        "filename": "src/libANGLE/FastResourceMap.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-23T20:17:03Z",
+      "side": 1,
+      "message": "Found in testing that 16k is a reasonable limit for some hungry applications.",
+      "range": {
+        "startLine": 77,
+        "startChar": 56,
+        "endLine": 77,
+        "endChar": 61
+      },
+      "revId": "6105b37fc30dabd91e98c27f50ba779144414cf6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "00da816d_84ef0423",
+        "filename": "src/libANGLE/ResourceManager.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-23T20:17:03Z",
+      "side": 1,
+      "message": "Possible to use it everywhere and just name it ResourceMap?",
+      "range": {
+        "startLine": 103,
+        "startChar": 4,
+        "endLine": 103,
+        "endChar": 19
+      },
+      "revId": "6105b37fc30dabd91e98c27f50ba779144414cf6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
