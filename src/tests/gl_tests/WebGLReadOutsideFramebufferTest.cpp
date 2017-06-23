@@ -263,10 +263,7 @@ TEST_P(WebGLReadOutsideFramebufferTest, ReadPixels)
 // the corresponding source pixel is outside the framebuffer.
 TEST_P(WebGLReadOutsideFramebufferTest, CopyTexSubImage2D)
 {
-    if (IsOpenGL() || IsOpenGLES())
-    {
-        Main(&WebGLReadOutsideFramebufferTest::TestCopyTexSubImage2D, false);
-    }
+    Main(&WebGLReadOutsideFramebufferTest::TestCopyTexSubImage2D, false);
 }
 
 // Check that copyTexImage2D sets (0,0,0,0) for pixels outside the framebuffer.

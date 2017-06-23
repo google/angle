@@ -12,6 +12,7 @@
 #include "common/utilities.h"
 #include "libANGLE/Buffer.h"
 #include "libANGLE/Config.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/Image.h"
 #include "libANGLE/Surface.h"
@@ -21,8 +22,8 @@
 #include "libANGLE/renderer/d3d/BufferD3D.h"
 #include "libANGLE/renderer/d3d/EGLImageD3D.h"
 #include "libANGLE/renderer/d3d/ImageD3D.h"
-#include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/RenderTargetD3D.h"
+#include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/SurfaceD3D.h"
 #include "libANGLE/renderer/d3d/TextureStorage.h"
 
@@ -1075,11 +1076,21 @@ gl::Error TextureD3D_2D::copyImage(const gl::Context *context,
 gl::Error TextureD3D_2D::copySubImage(const gl::Context *context,
                                       GLenum target,
                                       size_t imageLevel,
-                                      const gl::Offset &destOffset,
-                                      const gl::Rectangle &sourceArea,
+                                      const gl::Offset &origDestOffset,
+                                      const gl::Rectangle &origSourceArea,
                                       const gl::Framebuffer *source)
 {
-    ASSERT(target == GL_TEXTURE_2D && destOffset.z == 0);
+    ASSERT(target == GL_TEXTURE_2D && origDestOffset.z == 0);
+
+    gl::Extents fbSize = source->getReadColorbuffer()->getSize();
+    gl::Rectangle sourceArea;
+    if (!ClipRectangle(origSourceArea, gl::Rectangle(0, 0, fbSize.width, fbSize.height),
+                       &sourceArea))
+    {
+        return gl::NoError();
+    }
+    const gl::Offset destOffset(origDestOffset.x + sourceArea.x - origSourceArea.x,
+                                origDestOffset.y + sourceArea.y - origSourceArea.y, 0);
 
     // can only make our texture storage to a render target if level 0 is defined (with a width & height) and
     // the current level we're copying to is defined (with appropriate format, width & height)
