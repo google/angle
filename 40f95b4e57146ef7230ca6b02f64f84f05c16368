@@ -1,0 +1,303 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df29da83_c15466ab",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-23T14:45:58Z",
+      "side": 1,
+      "message": "It\u0027s not legal to call TexSubImage on 2D multisample textures, we should call clear on them instead.",
+      "range": {
+        "startLine": 251,
+        "startChar": 12,
+        "endLine": 252,
+        "endChar": 81
+      },
+      "revId": "40f95b4e57146ef7230ca6b02f64f84f05c16368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "13a04ce6_a9fc382e",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-23T14:45:58Z",
+      "side": 1,
+      "message": "Change this to UNREACHABLE",
+      "range": {
+        "startLine": 172,
+        "startChar": 4,
+        "endLine": 172,
+        "endChar": 25
+      },
+      "revId": "40f95b4e57146ef7230ca6b02f64f84f05c16368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "947544b5_6a48df5f",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-23T14:45:58Z",
+      "side": 1,
+      "message": "UNREACHABLE too",
+      "range": {
+        "startLine": 182,
+        "startChar": 4,
+        "endLine": 182,
+        "endChar": 25
+      },
+      "revId": "40f95b4e57146ef7230ca6b02f64f84f05c16368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "972f83c2_22ba5620",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 3536,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-23T14:45:58Z",
+      "side": 1,
+      "message": "UNREACHABLE and the other set*Image calls that are not valid too",
+      "range": {
+        "startLine": 3536,
+        "startChar": 4,
+        "endLine": 3536,
+        "endChar": 17
+      },
+      "revId": "40f95b4e57146ef7230ca6b02f64f84f05c16368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ceacc5d2_51296080",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 904,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-23T14:45:58Z",
+      "side": 1,
+      "message": "Should not be needed.",
+      "range": {
+        "startLine": 894,
+        "startChar": 4,
+        "endLine": 904,
+        "endChar": 72
+      },
+      "revId": "40f95b4e57146ef7230ca6b02f64f84f05c16368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cab956e5_0982961e",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 906,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-23T14:45:58Z",
+      "side": 1,
+      "message": "No need to store an image object.",
+      "range": {
+        "startLine": 906,
+        "startChar": 4,
+        "endLine": 906,
+        "endChar": 37
+      },
+      "revId": "40f95b4e57146ef7230ca6b02f64f84f05c16368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf67a147_7b92c3af",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Image11.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-23T14:45:58Z",
+      "side": 1,
+      "message": "I think we do not need to make any changes to the Image classes.  Image9 and Image11 are used to create staging textures to help upload to the TextureStorage9 and TextureStorage11 later, when they are created.  Because mutlisample 2D textures can only have glTexStorage2DMultisample called on them, we are able to create a TextureStorage11 object right away and have no need for images.",
+      "range": {
+        "startLine": 58,
+        "startChar": 0,
+        "endLine": 63,
+        "endChar": 46
+      },
+      "revId": "40f95b4e57146ef7230ca6b02f64f84f05c16368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e5cb5217_e02824da",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 2921,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-23T14:45:58Z",
+      "side": 1,
+      "message": "these are out of order and can be left empty.",
+      "range": {
+        "startLine": 2909,
+        "startChar": 0,
+        "endLine": 2921,
+        "endChar": 1
+      },
+      "revId": "40f95b4e57146ef7230ca6b02f64f84f05c16368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "005b49d3_718e5d92",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 2925,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-23T14:45:58Z",
+      "side": 1,
+      "message": "No need for this, it should always be true.",
+      "range": {
+        "startLine": 2925,
+        "startChar": 63,
+        "endLine": 2925,
+        "endChar": 81
+      },
+      "revId": "40f95b4e57146ef7230ca6b02f64f84f05c16368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "73cc2ebb_4fa0784c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 3018,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-23T14:45:58Z",
+      "side": 1,
+      "message": "Use gl::TextureCaps::getNearestSamples (see https://chromium.googlesource.com/angle/angle/+/master/src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp#3448)",
+      "range": {
+        "startLine": 3007,
+        "startChar": 8,
+        "endLine": 3018,
+        "endChar": 52
+      },
+      "revId": "40f95b4e57146ef7230ca6b02f64f84f05c16368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e28f7a63_82e72de6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 3043,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-23T14:45:58Z",
+      "side": 1,
+      "message": "nit: un-needed",
+      "range": {
+        "startLine": 3031,
+        "startChar": 4,
+        "endLine": 3043,
+        "endChar": 5
+      },
+      "revId": "40f95b4e57146ef7230ca6b02f64f84f05c16368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "acda0496_b42eba52",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 3051,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-23T14:45:58Z",
+      "side": 1,
+      "message": "nit: un-needed",
+      "range": {
+        "startLine": 3050,
+        "startChar": 4,
+        "endLine": 3051,
+        "endChar": 29
+      },
+      "revId": "40f95b4e57146ef7230ca6b02f64f84f05c16368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5598b1c4_72eb1ab4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 559,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-23T14:45:58Z",
+      "side": 1,
+      "message": "Should be un-neccessary.",
+      "range": {
+        "startLine": 559,
+        "startChar": 4,
+        "endLine": 559,
+        "endChar": 30
+      },
+      "revId": "40f95b4e57146ef7230ca6b02f64f84f05c16368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
