@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "4cb47028_58f7a8af",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 417,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-23T08:18:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f3b8db47_fb5c6eae",
+      "range": {
+        "startLine": 386,
+        "startChar": 0,
+        "endLine": 417,
+        "endChar": 31
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "91381842_263ecd5e",
         "filename": "src/compiler/translator/BaseTypes.h",
         "patchSetId": 16
@@ -69,6 +93,30 @@
       "revId": "1d51b7c2200df012da06e05856120d269b65f096",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94b54f4d_3985eb34",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 577,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-23T08:18:39Z",
+      "side": 1,
+      "message": "I suggest we call this EvqPerVertex",
+      "parentUuid": "91381842_263ecd5e",
+      "range": {
+        "startLine": 577,
+        "startChar": 4,
+        "endLine": 577,
+        "endChar": 19
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -95,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "354fa00e_69ac4c72",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 633,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-23T08:18:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d7ba7fc6_7a2a342d",
+      "range": {
+        "startLine": 633,
+        "startChar": 5,
+        "endLine": 633,
+        "endChar": 29
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5e8da28e_402e45ab",
         "filename": "src/compiler/translator/BaseTypes.h",
         "patchSetId": 16
@@ -115,6 +187,30 @@
       "revId": "1d51b7c2200df012da06e05856120d269b65f096",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3dd8c48_ec4ba5df",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 690,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-23T08:18:39Z",
+      "side": 1,
+      "message": "Done\nI have verified 1 is also a legal value for \u0027invocations\u0027, but 0 isn\u0027t. So it\u0027s better to initialize it with 0.",
+      "parentUuid": "5e8da28e_402e45ab",
+      "range": {
+        "startLine": 690,
+        "startChar": 40,
+        "endLine": 690,
+        "endChar": 41
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -187,6 +283,24 @@
     },
     {
       "key": {
+        "uuid": "f6fabce1_fa590858",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-23T08:18:39Z",
+      "side": 1,
+      "message": "Done\nI think we should use 0 as the flag of not indicating \u0027invocations\u0027.",
+      "parentUuid": "ad1d7d73_87e0c92e",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "83838078_c6f1c915",
         "filename": "src/compiler/translator/Compiler.cpp",
         "patchSetId": 16
@@ -216,6 +330,24 @@
       "side": 1,
       "message": "I still don\u0027t understand why you divided MAX_GEOMETRY_UNIFORM_COMPONENTS by 4 not directly using it. See spec GlSL ES 3.2 session 13.21 Maximum Number of Varyings. It says \u0027Rename gl_MaxVertexUniformComponents to gl_MaxVertexUniformVectors\u0027. So I think maybe MaxGeometryUniformComponents is equal to MaxGeomeryUniformVectors.",
       "parentUuid": "83838078_c6f1c915",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8fd4c21c_62e1e3ac",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-23T08:18:39Z",
+      "side": 1,
+      "message": "Actually SPEC both defines both MaxVertexUniformVectors(256) and MaxVertexUniformComponents(1024),\n[OpenGL ES 3.1 SPEC Table 20.43 Page 402]\nThese values are all initialized in renderergl_utils.cpp by GL_MAX_VERTEX_UNIFORM_VECTORS and GL_MAX_VERTEX_UNIFORM_COMPONENTS:\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/renderer/gl/renderergl_utils.cpp?l\u003d406\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/renderer/gl/renderergl_utils.cpp?l\u003d418\n\nSo does fragment shader.\n\nAlso, there is no GL_COMPUTE_UNIFORM_VECTORS defined in SPEC. I found in current ANGLE code  \u0027maxComputeUniformComponents / 4\u0027 is used to emulate the maximum uniform vectors in compute, although I don\u0027t know if it is really suitable.\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/UniformLinker.cpp?l\u003d375",
+      "parentUuid": "c3745a9c_16195afc",
       "revId": "1d51b7c2200df012da06e05856120d269b65f096",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -254,6 +386,24 @@
       "revId": "1d51b7c2200df012da06e05856120d269b65f096",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "622c6683_ca441a21",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-23T08:18:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cf1506b1_f55abbd7",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -407,6 +557,24 @@
     },
     {
       "key": {
+        "uuid": "060b9567_58948ba8",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 477,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-23T08:18:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "59c36608_a7e40e88",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d4232b26_4e51c239",
         "filename": "src/compiler/translator/OutputGLSLBase.cpp",
         "patchSetId": 16
@@ -442,6 +610,24 @@
     },
     {
       "key": {
+        "uuid": "1363d93d_7aedd573",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 629,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-23T08:18:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b5f2c388_b1d8d7b2",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7f57313d_f3d4545b",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 16
@@ -474,6 +660,24 @@
       "revId": "1d51b7c2200df012da06e05856120d269b65f096",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2bb2c040_9c526458",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-23T08:18:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f7df0849_7347fec5",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -596,6 +800,24 @@
     },
     {
       "key": {
+        "uuid": "cec2be11_b1b91444",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2538,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-23T08:18:39Z",
+      "side": 1,
+      "message": "We don\u0027t need to check \u0027points\u0027 because it can be used as both input and output layouts.\nWe need to check other primitives because they can only be used in either input or output layouts.",
+      "parentUuid": "58c765df_c45371a9",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ea8c8880_0ff44808",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 16
@@ -607,6 +829,30 @@
       "writtenOn": "2017-06-21T09:09:03Z",
       "side": 1,
       "message": "I think primitiveType is must be specified. If not, you should produce an error.",
+      "range": {
+        "startLine": 2563,
+        "startChar": 0,
+        "endLine": 2563,
+        "endChar": 54
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a5bc74b9_5232a9fc",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2563,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-23T08:18:39Z",
+      "side": 1,
+      "message": "1. It is legal to declare \u0027invocations\u0027 and input primitives in separate input layouts:\ne.g.\nlayout (points) in;\nlayout (invocations \u003d 2) in;\nIn this case it is legal with primitiveType not specified in the second layout.\n\n2. According to SPEC, it should be a link error instead of compiler error not specifying input/out primitive or \u0027max_vertices\u0027.\n[OpenGL ES 3.2 SPEC Chapter 7.3 Page 74]",
+      "parentUuid": "ea8c8880_0ff44808",
       "range": {
         "startLine": 2563,
         "startChar": 0,
@@ -670,6 +916,30 @@
       "writtenOn": "2017-06-21T09:09:03Z",
       "side": 1,
       "message": "GetGeometryShaderInputArraySize(mGeometryPrimitiveIn) is called multiple times. You can use a variable to save it at the begin of this function.",
+      "range": {
+        "startLine": 2586,
+        "startChar": 38,
+        "endLine": 2586,
+        "endChar": 91
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0e676d4_c9f99c90",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2586,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-23T08:18:39Z",
+      "side": 1,
+      "message": "Sorry I missed it....... I shall add it in the next patch.",
+      "parentUuid": "3c13bc9f_f3c809d1",
       "range": {
         "startLine": 2586,
         "startChar": 38,
@@ -1091,6 +1361,30 @@
     },
     {
       "key": {
+        "uuid": "58cc8dad_617640c8",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 410,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-23T08:18:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a0b5800e_7e1a424f",
+      "range": {
+        "startLine": 397,
+        "startChar": 0,
+        "endLine": 410,
+        "endChar": 50
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "db7a1b6e_80850db5",
         "filename": "src/compiler/translator/ShaderLang.cpp",
         "patchSetId": 16
@@ -1114,6 +1408,30 @@
     },
     {
       "key": {
+        "uuid": "5cce47ce_20f2d546",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-23T08:18:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "db7a1b6e_80850db5",
+      "range": {
+        "startLine": 434,
+        "startChar": 7,
+        "endLine": 434,
+        "endChar": 39
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9d539688_da9f514d",
         "filename": "src/compiler/translator/ShaderLang.cpp",
         "patchSetId": 16
@@ -1125,6 +1443,24 @@
       "writtenOn": "2017-06-21T09:09:03Z",
       "side": 1,
       "message": "Add UNREACHABLE() here?",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c3a775f1_afc0473f",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 453,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-23T08:18:39Z",
+      "side": 1,
+      "message": "It isn\u0027t a compile error not declaring input primitive. It should be a link error instead.\nSo it is possible to reach here.",
+      "parentUuid": "9d539688_da9f514d",
       "revId": "1d51b7c2200df012da06e05856120d269b65f096",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -1174,6 +1510,30 @@
       "revId": "1d51b7c2200df012da06e05856120d269b65f096",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "712e745e_28d524fa",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-23T08:18:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2370dd70_8921064f",
+      "range": {
+        "startLine": 458,
+        "startChar": 7,
+        "endLine": 458,
+        "endChar": 40
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -1235,6 +1595,24 @@
     },
     {
       "key": {
+        "uuid": "d89acc2e_ad10b3ad",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-23T08:18:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "40ba1fac_f6ac26bb",
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "deeaac1f_488e3e66",
         "filename": "src/compiler/translator/VariableInfo.cpp",
         "patchSetId": 16
@@ -1246,6 +1624,30 @@
       "writtenOn": "2017-06-21T09:09:03Z",
       "side": 1,
       "message": "Why not mInVaryings?",
+      "range": {
+        "startLine": 495,
+        "startChar": 20,
+        "endLine": 495,
+        "endChar": 28
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25821ec0_3d585c50",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 495,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-23T08:18:39Z",
+      "side": 1,
+      "message": "Done\nI think mAttribs should only contain the input of the whole pipeline.\nAll variables that are passed among shader stages should be put in mInVaryings / mOutVaryings.",
+      "parentUuid": "deeaac1f_488e3e66",
       "range": {
         "startLine": 495,
         "startChar": 20,
@@ -1278,6 +1680,30 @@
       "revId": "1d51b7c2200df012da06e05856120d269b65f096",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2dafaee6_4cb4b4b9",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-23T08:18:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "78c6ed36_bd275b95",
+      "range": {
+        "startLine": 511,
+        "startChar": 20,
+        "endLine": 511,
+        "endChar": 28
+      },
+      "revId": "1d51b7c2200df012da06e05856120d269b65f096",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
