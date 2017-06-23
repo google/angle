@@ -22,6 +22,30 @@
       "revId": "e56c9e3008581a93a6a4a91c7978eb877670cb49",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0400b33e_63644f91",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1887,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-06-23T19:39:52Z",
+      "side": 1,
+      "message": "true on GLES3 and above, and false on GLES2, actually.\nWasn\u0027t able find something like ARB_seamless_cube_map for GLES.",
+      "parentUuid": "aeb4d4b7_447dfeba",
+      "range": {
+        "startLine": 1887,
+        "startChar": 8,
+        "endLine": 1887,
+        "endChar": 48
+      },
+      "revId": "e56c9e3008581a93a6a4a91c7978eb877670cb49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
