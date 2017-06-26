@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aaba4b59_6ed87998",
+        "filename": "src/libANGLE/FastResourceMap.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-06-26T14:20:06Z",
+      "side": 1,
+      "message": "Shouldn\u0027t we follow ANGLE\u0027s convention of having CamelCase member functions?",
+      "revId": "2001e4eda83ac84ee9fe0f21cf1f32698f23d76d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5f24fc0e_3631a049",
+        "filename": "src/libANGLE/FastResourceMap.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-06-26T14:20:06Z",
+      "side": 1,
+      "message": "nit: this is unnecessary",
+      "range": {
+        "startLine": 86,
+        "startChar": 65,
+        "endLine": 86,
+        "endChar": 85
+      },
+      "revId": "2001e4eda83ac84ee9fe0f21cf1f32698f23d76d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
