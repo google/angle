@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "260005e3_bd4488b8",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 1770,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-06-26T13:59:35Z",
+      "side": 1,
+      "message": "Hi, all, I view the spec carefully.There may be an issue. If image array is declared without a binding qualifier in shader, I think all elements of image array should be bound to unit zero. Is that right?\nI will check this issue and upload a patch to resolve it.",
+      "range": {
+        "startLine": 1764,
+        "startChar": 8,
+        "endLine": 1770,
+        "endChar": 77
+      },
+      "revId": "65ec0b2ec4e19ef7cbebeef58122089785cc8890",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
