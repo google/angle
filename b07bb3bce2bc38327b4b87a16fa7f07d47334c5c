@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2d331277_c130cc89",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2168,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-06-26T20:01:27Z",
+      "side": 1,
+      "message": "Rather than combine, we should probably create an equivalent WebGL2CompatibilityTest as the other tests are split.",
+      "revId": "b07bb3bce2bc38327b4b87a16fa7f07d47334c5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
