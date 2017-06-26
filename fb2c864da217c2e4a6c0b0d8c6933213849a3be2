@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5779b814_8b7be106",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 421,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-06-26T19:11:17Z",
+      "side": 1,
+      "message": "I still can\u0027t convince myself that having program collisions is safe: some things like uniform setters or getters could have implicit sizes and might overflow buffers if they buffer used doesn\u0027t have the same size.\n\nHere it looks easy to make two different programs that have the same hash but act different by adding a \":\" in a comment somewhere in the source.",
+      "revId": "fb2c864da217c2e4a6c0b0d8c6933213849a3be2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
