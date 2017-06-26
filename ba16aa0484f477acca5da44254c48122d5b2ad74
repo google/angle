@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2bbcc9d0_b195c0fe",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-26T08:11:27Z",
+      "side": 1,
+      "message": "This is not necessary I think.",
+      "range": {
+        "startLine": 113,
+        "startChar": 12,
+        "endLine": 114,
+        "endChar": 45
+      },
+      "revId": "ba16aa0484f477acca5da44254c48122d5b2ad74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
