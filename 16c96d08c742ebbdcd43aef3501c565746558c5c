@@ -45,6 +45,29 @@
       "revId": "16c96d08c742ebbdcd43aef3501c565746558c5c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61503f6c_be03d5e9",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-06-26T04:54:42Z",
+      "side": 1,
+      "message": "Does the spec require that MaxVertexUniformComponents/MaxFragmentUniformVectors must not be equal to MaxVertexUniformComponents / 4?",
+      "range": {
+        "startLine": 83,
+        "startChar": 0,
+        "endLine": 84,
+        "endChar": 100
+      },
+      "revId": "16c96d08c742ebbdcd43aef3501c565746558c5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
