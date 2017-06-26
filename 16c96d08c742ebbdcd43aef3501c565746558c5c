@@ -68,6 +68,30 @@
       "revId": "16c96d08c742ebbdcd43aef3501c565746558c5c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95604b50_2f6999c5",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-26T05:19:07Z",
+      "side": 1,
+      "message": "No. Actually the minimum required MAX_VERTEX_UNIFORM_COMPONENTS / MAX_FRAGMENT_UNIFORM_COMPONENTS / MAX_COMPUTE_UNIFORM_COMPONENTS are all equal to 1024 in ES3.1. \n[OpenGL ES 3.1 SPEC Table 20.43 - 20.45]\n\nIn the test, the default value of resources-\u003eMaxFragmentUniformVectors is 16, resources-\u003eMaxVertexUniformVectors is 128, and resources-\u003eMaxComputeUniformComponents is 512,\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/compiler/translator/ShaderLang.cpp?l\u003d148\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/compiler/translator/ShaderLang.cpp?l\u003d210\n\nI need MaxComputeUniformComponents not equal to MaxFragmentUniformVectors * 4 to reproduce this bug, and I also need MaxComputeUniformComponents not equal to MaxVertexUniformVectors * 4 to check if MaxUniformVectors in a compute shader is wrongly initialized by MaxVertexUniformVectors.",
+      "parentUuid": "61503f6c_be03d5e9",
+      "range": {
+        "startLine": 83,
+        "startChar": 0,
+        "endLine": 84,
+        "endChar": 100
+      },
+      "revId": "16c96d08c742ebbdcd43aef3501c565746558c5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
