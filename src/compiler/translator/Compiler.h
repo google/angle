@@ -138,9 +138,6 @@ class TCompiler : public TShHandleBase
                                              ShCompileOptions compileOptions){};
     // Translate to object code.
     virtual void translate(TIntermBlock *root, ShCompileOptions compileOptions) = 0;
-    // Returns true if, after applying the packing rules in the GLSL 1.017 spec
-    // Appendix A, section 7, the shader does not use too many uniforms.
-    bool enforcePackingRestrictions();
     // Insert statements to reference all members in unused uniform blocks with standard and shared
     // layout. This is to work around a Mac driver that treats unused standard/shared
     // uniform blocks as inactive.
@@ -176,7 +173,6 @@ class TCompiler : public TShHandleBase
     std::vector<sh::Attribute> attributes;
     std::vector<sh::OutputVariable> outputVariables;
     std::vector<sh::Uniform> uniforms;
-    std::vector<sh::ShaderVariable> expandedUniforms;
     std::vector<sh::Varying> varyings;
     std::vector<sh::InterfaceBlock> interfaceBlocks;
 
@@ -188,9 +184,6 @@ class TCompiler : public TShHandleBase
     void internalTagUsedFunction(size_t index);
 
     void initSamplerDefaultPrecision(TBasicType samplerType);
-
-    // Collect info for all attribs, uniforms, varyings.
-    void collectVariables(TIntermNode *root);
 
     bool variablesCollected;
 

@@ -433,14 +433,24 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
 
         if (success && shouldCollectVariables(compileOptions))
         {
-            collectVariables(root);
+            ASSERT(!variablesCollected);
+            CollectVariables(root, &attributes, &outputVariables, &uniforms, &varyings,
+                             &interfaceBlocks, hashFunction, symbolTable, shaderVersion,
+                             extensionBehavior);
+            variablesCollected = true;
             if (compileOptions & SH_USE_UNUSED_STANDARD_SHARED_BLOCKS)
             {
                 useAllMembersInUnusedStandardAndSharedBlocks(root);
             }
             if (compileOptions & SH_ENFORCE_PACKING_RESTRICTIONS)
             {
-                success = enforcePackingRestrictions();
+                std::vector<sh::ShaderVariable> expandedUniforms;
+                sh::ExpandUniforms(uniforms, &expandedUniforms);
+                VariablePacker packer;
+                // Returns true if, after applying the packing rules in the GLSL ES 1.00.17 spec
+                // Appendix A, section 7, the shader does not use too many uniforms.
+                success =
+                    packer.CheckVariablesWithinPackingLimits(maxUniformVectors, expandedUniforms);
                 if (!success)
                 {
                     mDiagnostics.globalError("too many uniforms");
@@ -689,7 +699,6 @@ void TCompiler::clearResults()
     attributes.clear();
     outputVariables.clear();
     uniforms.clear();
-    expandedUniforms.clear();
     varyings.clear();
     interfaceBlocks.clear();
     variablesCollected = false;
@@ -887,21 +896,6 @@ bool TCompiler::limitExpressionComplexity(TIntermBlock *root)
     return true;
 }
 
-void TCompiler::collectVariables(TIntermNode *root)
-{
-    if (!variablesCollected)
-    {
-        sh::CollectVariables collect(&attributes, &outputVariables, &uniforms, &varyings,
-                                     &interfaceBlocks, hashFunction, symbolTable,
-                                     extensionBehavior);
-        root->traverse(&collect);
-
-        // This is for enforcePackingRestriction().
-        sh::ExpandUniforms(uniforms, &expandedUniforms);
-        variablesCollected = true;
-    }
-}
-
 bool TCompiler::shouldCollectVariables(ShCompileOptions compileOptions)
 {
     return (compileOptions & SH_VARIABLES) != 0;
@@ -910,12 +904,6 @@ bool TCompiler::shouldCollectVariables(ShCompileOptions compileOptions)
 bool TCompiler::wereVariablesCollected() const
 {
     return variablesCollected;
-}
-
-bool TCompiler::enforcePackingRestrictions()
-{
-    VariablePacker packer;
-    return packer.CheckVariablesWithinPackingLimits(maxUniformVectors, expandedUniforms);
 }
 
 void TCompiler::initializeGLPosition(TIntermBlock *root)
