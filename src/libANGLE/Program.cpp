@@ -1808,17 +1808,20 @@ void Program::linkSamplerAndImageBindings()
     // If uniform is a image type, insert it into the mImageBindings array.
     for (unsigned int imageIndex : mState.mImageUniformRange)
     {
-        // ES3.1 (section 7.6.1) and GLSL ES3.1 (section 4.4.5), Uniform*i{v}
-        // commands cannot load values into a uniform defined as an image,
-        // if declare without a binding qualifier, the image variable is
-        // initially bound to unit zero.
+        // ES3.1 (section 7.6.1) and GLSL ES3.1 (section 4.4.5), Uniform*i{v} commands
+        // cannot load values into a uniform defined as an image. if declare without a
+        // binding qualifier, any uniform image variable (include all elements of
+        // unbound image array) shoud be bound to unit zero.
         auto &imageUniform = mState.mUniforms[imageIndex];
         if (imageUniform.binding == -1)
         {
-            imageUniform.binding = 0;
+            mState.mImageBindings.emplace_back(ImageBinding(imageUniform.elementCount()));
         }
-        mState.mImageBindings.emplace_back(
-            ImageBinding(imageUniform.binding, imageUniform.elementCount()));
+        else
+        {
+            mState.mImageBindings.emplace_back(
+                ImageBinding(imageUniform.binding, imageUniform.elementCount()));
+        }
     }
 
     high = low;

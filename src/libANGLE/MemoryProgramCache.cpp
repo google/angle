@@ -310,12 +310,16 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
     unsigned int imageRangeLow  = stream.readInt<unsigned int>();
     unsigned int imageRangeHigh = stream.readInt<unsigned int>();
     state->mImageUniformRange   = RangeUI(imageRangeLow, imageRangeHigh);
-    unsigned int imageCount     = stream.readInt<unsigned int>();
-    for (unsigned int imageIndex = 0; imageIndex < imageCount; ++imageIndex)
+    unsigned int imageBindingCount = stream.readInt<unsigned int>();
+    for (unsigned int imageIndex = 0; imageIndex < imageBindingCount; ++imageIndex)
     {
-        GLuint boundImageUnit = stream.readInt<unsigned int>();
-        size_t elementCount   = stream.readInt<size_t>();
-        state->mImageBindings.emplace_back(ImageBinding(boundImageUnit, elementCount));
+        unsigned int elementCount = stream.readInt<unsigned int>();
+        ImageBinding imageBinding(elementCount);
+        for (unsigned int i = 0; i < elementCount; ++i)
+        {
+            imageBinding.boundImageUnits[i] = stream.readInt<unsigned int>();
+        }
+        state->mImageBindings.emplace_back(imageBinding);
     }
 
     unsigned int atomicCounterRangeLow  = stream.readInt<unsigned int>();
@@ -466,8 +470,11 @@ void MemoryProgramCache::Serialize(const Context *context,
     stream.writeInt(state.getImageBindings().size());
     for (const auto &imageBinding : state.getImageBindings())
     {
-        stream.writeInt(imageBinding.boundImageUnit);
-        stream.writeInt(imageBinding.elementCount);
+        stream.writeInt(imageBinding.boundImageUnits.size());
+        for (size_t i = 0; i < imageBinding.boundImageUnits.size(); ++i)
+        {
+            stream.writeInt(imageBinding.boundImageUnits[i]);
+        }
     }
 
     stream.writeInt(state.getAtomicCounterUniformRange().low());

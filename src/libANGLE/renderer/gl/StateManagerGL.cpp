@@ -883,23 +883,20 @@ void StateManagerGL::setGenericShaderState(const gl::Context *context)
     ASSERT(context->getClientVersion() >= gl::ES_3_1 || program->getImageBindings().size() == 0);
     for (const gl::ImageBinding &imageUniform : program->getImageBindings())
     {
-        for (size_t imageUnitIndex = 0; imageUnitIndex < imageUniform.elementCount;
-             imageUnitIndex++)
+        for (GLuint imageUnitIndex : imageUniform.boundImageUnits)
         {
-            const gl::ImageUnit &imageUnit = glState.getImageUnit(
-                imageUniform.boundImageUnit + static_cast<GLuint>(imageUnitIndex));
+            const gl::ImageUnit &imageUnit = glState.getImageUnit(imageUnitIndex);
             const TextureGL *textureGL = SafeGetImplAs<TextureGL>(imageUnit.texture.get());
             if (textureGL)
             {
-                bindImageTexture(imageUniform.boundImageUnit + static_cast<GLuint>(imageUnitIndex),
-                                 textureGL->getTextureID(), imageUnit.level, imageUnit.layered,
-                                 imageUnit.layer, imageUnit.access, imageUnit.format);
+                bindImageTexture(imageUnitIndex, textureGL->getTextureID(), imageUnit.level,
+                                 imageUnit.layered, imageUnit.layer, imageUnit.access,
+                                 imageUnit.format);
             }
             else
             {
-                bindImageTexture(imageUniform.boundImageUnit + static_cast<GLuint>(imageUnitIndex),
-                                 0, imageUnit.level, imageUnit.layered, imageUnit.layer,
-                                 imageUnit.access, imageUnit.format);
+                bindImageTexture(imageUnitIndex, 0, imageUnit.level, imageUnit.layered,
+                                 imageUnit.layer, imageUnit.access, imageUnit.format);
             }
         }
     }

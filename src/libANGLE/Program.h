@@ -199,10 +199,16 @@ struct TransformFeedbackVarying : public sh::Varying
 
 struct ImageBinding
 {
-    ImageBinding(GLuint imageUnit, size_t count) : boundImageUnit(imageUnit), elementCount(count) {}
+    ImageBinding(size_t count) : boundImageUnits(count, 0) {}
+    ImageBinding(GLuint imageUnit, size_t count)
+    {
+        for (size_t index = 0; index < count; ++index)
+        {
+            boundImageUnits.push_back(imageUnit + static_cast<GLuint>(index));
+        }
+    }
 
-    GLuint boundImageUnit;
-    size_t elementCount;
+    std::vector<GLuint> boundImageUnits;
 };
 
 class ProgramState final : angle::NonCopyable
