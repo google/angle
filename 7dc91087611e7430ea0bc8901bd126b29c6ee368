@@ -1,0 +1,101 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8fe2d303_4e332682",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-26T14:26:04Z",
+      "side": 1,
+      "message": "Would it be safe to assert that symbolInfo is found instead of having this ternary op here? Maybe if you remove the array bracket \"[\" from the name prior to doing the symbol table lookup.",
+      "revId": "7dc91087611e7430ea0bc8901bd126b29c6ee368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c3e1a779_44994c11",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-26T14:26:04Z",
+      "side": 1,
+      "message": "Maybe you could just reuse TIntermSymbol instead of having a new type like this.",
+      "range": {
+        "startLine": 24,
+        "startChar": 7,
+        "endLine": 24,
+        "endChar": 28
+      },
+      "revId": "7dc91087611e7430ea0bc8901bd126b29c6ee368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b07ab217_c2c94cc2",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-26T14:26:04Z",
+      "side": 1,
+      "message": "I\u0027d check for indexing on the left side of assignment here instead of looking for indexing ops below. Then you can also change switch(node-\u003egetOp()) to an if statement.",
+      "revId": "7dc91087611e7430ea0bc8901bd126b29c6ee368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5a09d7f7_b887a946",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-26T14:26:04Z",
+      "side": 1,
+      "message": "Would suggest \"checkInitialized\" or similar. \"Correctness\" doesn\u0027t carry much meaning here.",
+      "range": {
+        "startLine": 137,
+        "startChar": 9,
+        "endLine": 137,
+        "endChar": 25
+      },
+      "revId": "7dc91087611e7430ea0bc8901bd126b29c6ee368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c3097fa_df3226d0",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-26T14:26:04Z",
+      "side": 1,
+      "message": "The point of the initializeOutputVariables pass is to add initializers. The tests would cover this better if the shader source did not contain initializers to begin with.",
+      "revId": "7dc91087611e7430ea0bc8901bd126b29c6ee368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
