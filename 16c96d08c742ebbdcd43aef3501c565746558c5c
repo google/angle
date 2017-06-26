@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cf095bc3_096fe322",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-26T02:57:36Z",
+      "side": 1,
+      "message": "Now maxUniformVectors is only useful in TCompiler::enforcePackingRestrictions() \nhttps://cs.chromium.org/chromium/src/third_party/angle/src/compiler/translator/Compiler.cpp?l\u003d915\n\nThis function is only called when SH_ENFORCE_PACKING_RESTRICTIONS is set:\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/compiler/translator/Compiler.cpp?l\u003d441\n\nAnd this flag is only set when ANGLE is in WebGLCompatibility mode:\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/Shader.cpp?l\u003d290\n\nSince compute shader isn\u0027t part of WebGL 2.0, I don\u0027t think maxUniformVectors is very useful for compute shader now, however it is still incorrect to initialize this value by MaxFragmentUniformVectors in a compute shader compiler.",
+      "range": {
+        "startLine": 248,
+        "startChar": 12,
+        "endLine": 248,
+        "endChar": 30
+      },
+      "revId": "16c96d08c742ebbdcd43aef3501c565746558c5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6bde366d_869004e7",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-26T02:57:36Z",
+      "side": 1,
+      "message": "My reference is as follows:\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/UniformLinker.cpp?l\u003d374",
+      "range": {
+        "startLine": 254,
+        "startChar": 0,
+        "endLine": 255,
+        "endChar": 74
+      },
+      "revId": "16c96d08c742ebbdcd43aef3501c565746558c5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
