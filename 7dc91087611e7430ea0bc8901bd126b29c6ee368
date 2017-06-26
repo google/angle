@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "2fa281b3_b49d4a75",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-26T15:13:23Z",
+      "side": 1,
+      "message": "It\u0027s nicer. Done.",
+      "parentUuid": "8fe2d303_4e332682",
+      "revId": "7dc91087611e7430ea0bc8901bd126b29c6ee368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c3e1a779_44994c11",
         "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
         "patchSetId": 3
@@ -30,6 +48,30 @@
       "writtenOn": "2017-06-26T14:26:04Z",
       "side": 1,
       "message": "Maybe you could just reuse TIntermSymbol instead of having a new type like this.",
+      "range": {
+        "startLine": 24,
+        "startChar": 7,
+        "endLine": 24,
+        "endChar": 28
+      },
+      "revId": "7dc91087611e7430ea0bc8901bd126b29c6ee368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cae189f1_9d70ad96",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-26T15:13:23Z",
+      "side": 1,
+      "message": "I prefer keeping it that way because TIntermSymbol contains a lot more information than necessary for the check. TIntermSymbol does not offer a nice constructor as this one. Using TIntermSymbol would require creating a predicate to use with std::find_if which is likely as much code.",
+      "parentUuid": "c3e1a779_44994c11",
       "range": {
         "startLine": 24,
         "startChar": 7,
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "7e389bc0_25549331",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-26T15:13:23Z",
+      "side": 1,
+      "message": "Done. It\u0027s more concrete this way.",
+      "parentUuid": "b07ab217_c2c94cc2",
+      "revId": "7dc91087611e7430ea0bc8901bd126b29c6ee368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5a09d7f7_b887a946",
         "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
         "patchSetId": 3
@@ -82,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "3241c721_58974bf8",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-26T15:13:23Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "5a09d7f7_b887a946",
+      "range": {
+        "startLine": 137,
+        "startChar": 9,
+        "endLine": 137,
+        "endChar": 25
+      },
+      "revId": "7dc91087611e7430ea0bc8901bd126b29c6ee368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8c3097fa_df3226d0",
         "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
         "patchSetId": 3
@@ -93,6 +177,47 @@
       "writtenOn": "2017-06-26T14:26:04Z",
       "side": 1,
       "message": "The point of the initializeOutputVariables pass is to add initializers. The tests would cover this better if the shader source did not contain initializers to begin with.",
+      "revId": "7dc91087611e7430ea0bc8901bd126b29c6ee368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cba8a0a8_7a219348",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-26T15:13:23Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "8c3097fa_df3226d0",
+      "revId": "7dc91087611e7430ea0bc8901bd126b29c6ee368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a05ab86f_fbdce448",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-26T15:13:23Z",
+      "side": 1,
+      "message": "This or gl_FragColor is necessary. Otherwise gl_FragData will not be declared in the global scope. I will replace it with gl_FragColor.",
+      "range": {
+        "startLine": 277,
+        "startChar": 10,
+        "endLine": 277,
+        "endChar": 36
+      },
       "revId": "7dc91087611e7430ea0bc8901bd126b29c6ee368",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
