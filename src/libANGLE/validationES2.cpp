@@ -268,6 +268,9 @@ bool IsValidCopyTextureDestinationInternalFormatEnum(GLint internalFormat)
         case GL_RGBA16F:
         case GL_RGBA32F:
         case GL_R11F_G11F_B10F:
+        case GL_LUMINANCE:
+        case GL_LUMINANCE_ALPHA:
+        case GL_ALPHA:
             return true;
 
         default:

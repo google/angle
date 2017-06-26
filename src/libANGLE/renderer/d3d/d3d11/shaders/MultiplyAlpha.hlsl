@@ -7,6 +7,43 @@ SamplerState Sampler        : register(s0);
 // PM: premultiply, UM: unmulitply, PT: passthrough
 // F: float, U: uint
 
+// Float to float LUMA
+float4 PS_FtoF_PM_LUMA(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
+{
+    float4 color = TextureF.Sample(Sampler, inTexCoord).rgba;
+    color.rgb = color.r * color.a;
+    color.a = 1.0f;
+    return color;
+}
+float4 PS_FtoF_UM_LUMA(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
+{
+    float4 color = TextureF.Sample(Sampler, inTexCoord).rgba;
+    if (color.a > 0.0f)
+    {
+        color.rgb = color.r / color.a;
+    }
+    color.a = 1.0f;
+    return color;
+}
+
+// Float to float LUMAALPHA
+float4 PS_FtoF_PM_LUMAALPHA(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
+{
+    float4 color = TextureF.Sample(Sampler, inTexCoord).rgba;
+    color.rgb = color.r * color.a;
+    return color;
+}
+
+float4 PS_FtoF_UM_LUMAALPHA(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
+{
+    float4 color = TextureF.Sample(Sampler, inTexCoord).rgba;
+    if (color.a > 0.0f)
+    {
+        color.rgb = color.r / color.a;
+    }
+    return color;
+}
+
 // Float to float RGBA
 float4 PS_FtoF_PM_RGBA(in float4 inPosition : SV_POSITION, in float2 inTexCoord : TEXCOORD0) : SV_TARGET0
 {

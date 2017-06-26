@@ -40,6 +40,10 @@ call:BuildShader MultiplyAlpha.hlsl PS_FtoU_UM_RGBA ps_4_0 compiled\multiplyalph
 call:BuildShader MultiplyAlpha.hlsl PS_FtoU_PT_RGB  ps_4_0 compiled\multiplyalpha_ftou_pt_rgb_ps.h  %debug%
 call:BuildShader MultiplyAlpha.hlsl PS_FtoU_PM_RGB  ps_4_0 compiled\multiplyalpha_ftou_pm_rgb_ps.h  %debug%
 call:BuildShader MultiplyAlpha.hlsl PS_FtoU_UM_RGB  ps_4_0 compiled\multiplyalpha_ftou_um_rgb_ps.h  %debug%
+call:BuildShader MultiplyAlpha.hlsl PS_FtoF_PM_LUMA ps_4_0 compiled\multiplyalpha_ftof_pm_luma_ps.h  %debug%
+call:BuildShader MultiplyAlpha.hlsl PS_FtoF_UM_LUMA ps_4_0 compiled\multiplyalpha_ftof_um_luma_ps.h  %debug%
+call:BuildShader MultiplyAlpha.hlsl PS_FtoF_PM_LUMAALPHA   ps_4_0 compiled\multiplyalpha_ftof_pm_lumaalpha_ps.h  %debug%
+call:BuildShader MultiplyAlpha.hlsl PS_FtoF_UM_LUMAALPHA   ps_4_0 compiled\multiplyalpha_ftof_um_lumaalpha_ps.h  %debug%
 
 call:BuildShader Clear11.hlsl           VS_Clear_FL9             vs_4_0_level_9_3  compiled\clear11_fl9vs.h             %debug%
 call:BuildShader Clear11.hlsl           PS_ClearFloat_FL9        ps_4_0_level_9_3  compiled\clearfloat11_fl9ps.h        %debug%
