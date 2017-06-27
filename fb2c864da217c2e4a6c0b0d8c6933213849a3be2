@@ -16,6 +16,23 @@
       "revId": "fb2c864da217c2e4a6c0b0d8c6933213849a3be2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a761d1c8_3faaf2ec",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-06-27T14:34:02Z",
+      "side": 1,
+      "message": "Chrome uses SHA-1 which is a crypto hash, we should do the same.",
+      "revId": "fb2c864da217c2e4a6c0b0d8c6933213849a3be2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
