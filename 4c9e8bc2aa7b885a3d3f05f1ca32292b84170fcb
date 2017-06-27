@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8d745bb4_ef15977c",
+        "filename": "src/tests/gl_tests/WebGLReadOutsideFramebufferTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-27T14:57:04Z",
+      "side": 1,
+      "message": "you can also consider using FillVectorWithRandomUBytes or similar in random_utils.h",
+      "range": {
+        "startLine": 29,
+        "startChar": 16,
+        "endLine": 29,
+        "endChar": 83
+      },
+      "revId": "4c9e8bc2aa7b885a3d3f05f1ca32292b84170fcb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0e9a78ec_6ca6b0e1",
+        "filename": "src/tests/gl_tests/WebGLReadOutsideFramebufferTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-27T14:57:04Z",
+      "side": 1,
+      "message": "nit: for static constexpr call them kFbWidth, etc.. (k then upper case then camel case)",
+      "range": {
+        "startLine": 129,
+        "startChar": 25,
+        "endLine": 129,
+        "endChar": 32
+      },
+      "revId": "4c9e8bc2aa7b885a3d3f05f1ca32292b84170fcb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f3dbb34a_435a54be",
+        "filename": "src/tests/gl_tests/WebGLReadOutsideFramebufferTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-27T14:57:04Z",
+      "side": 1,
+      "message": "the formatting here seems messed up... also you might want to make a type alias for the function you\u0027re passing.",
+      "range": {
+        "startLine": 191,
+        "startChar": 3,
+        "endLine": 191,
+        "endChar": 108
+      },
+      "revId": "4c9e8bc2aa7b885a3d3f05f1ca32292b84170fcb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
