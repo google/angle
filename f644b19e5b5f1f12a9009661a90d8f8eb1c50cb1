@@ -22,6 +22,30 @@
       "revId": "f644b19e5b5f1f12a9009661a90d8f8eb1c50cb1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "12be117a_768ad706",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T15:02:14Z",
+      "side": 1,
+      "message": "Yep, it\u0027s nice to get rid of looking up the gl constants!",
+      "parentUuid": "2bad1a6f_3dda2c61",
+      "range": {
+        "startLine": 185,
+        "startChar": 0,
+        "endLine": 185,
+        "endChar": 64
+      },
+      "revId": "f644b19e5b5f1f12a9009661a90d8f8eb1c50cb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
