@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2b667c41_81149414",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T08:19:44Z",
+      "side": 1,
+      "message": "How does the test fail if gl_FragColor is not assigned to here?\n\nI\u0027m also thinking that there might be another bug in the output - a shader is not supposed to statically assign both gl_FragColor and gl_FragData. But that\u0027s probably something to fix in another patch.",
+      "revId": "766bad313454c50fd258dd74fe76930e2369ead1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

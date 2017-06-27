@@ -84,6 +84,30 @@
     },
     {
       "key": {
+        "uuid": "a5d79177_9d5c8c7e",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T08:19:44Z",
+      "side": 1,
+      "message": "Instead of using find_if you could just have a for loop. You\u0027d also have to remove the isMatched flag, but there should be fairly easy alternative solutions for that too. It would be one less concept to understand to be able to read the code.\n\nYou should also be checking for the type of the symbol, not just the qualifier - besides that I don\u0027t see that much extra information in TIntermSymbol.\n\nIf you\u0027re set on not using TIntermSymbol, I\u0027d still rename this to ExpectedSymbol and rename other similar variables in the rest of the code.",
+      "parentUuid": "cae189f1_9d70ad96",
+      "range": {
+        "startLine": 24,
+        "startChar": 7,
+        "endLine": 24,
+        "endChar": 28
+      },
+      "revId": "7dc91087611e7430ea0bc8901bd126b29c6ee368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b07ab217_c2c94cc2",
         "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
         "patchSetId": 3
