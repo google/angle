@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b72baea1_a6e7c721",
+        "filename": "src/libANGLE/FastResourceMap.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-27T15:52:44Z",
+      "side": 1,
+      "message": "I\u0027m confused.. camelCase is for non-statics, CamelCase is for statics. Maybe you\u0027ve been looking at other code bases more often?",
+      "parentUuid": "aaba4b59_6ed87998",
+      "revId": "2001e4eda83ac84ee9fe0f21cf1f32698f23d76d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5f24fc0e_3631a049",
         "filename": "src/libANGLE/FastResourceMap.h",
         "patchSetId": 4
@@ -30,6 +48,30 @@
       "writtenOn": "2017-06-26T14:20:06Z",
       "side": 1,
       "message": "nit: this is unnecessary",
+      "range": {
+        "startLine": 86,
+        "startChar": 65,
+        "endLine": 86,
+        "endChar": 85
+      },
+      "revId": "2001e4eda83ac84ee9fe0f21cf1f32698f23d76d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "100cdcdb_cda19b0b",
+        "filename": "src/libANGLE/FastResourceMap.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-27T15:52:44Z",
+      "side": 1,
+      "message": "Yeah, it\u0027s intentional - it is something Geoff started doing and I ended up liking it because it makes it nice when you add parameters to the constructor - you don\u0027t have to inject new clases into the init list.",
+      "parentUuid": "5f24fc0e_3631a049",
       "range": {
         "startLine": 86,
         "startChar": 65,
