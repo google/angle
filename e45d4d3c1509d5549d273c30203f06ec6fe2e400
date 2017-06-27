@@ -1,0 +1,182 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f6c0813a_2b252271",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T14:59:02Z",
+      "side": 1,
+      "message": "I\u0027d change this to \"This flag modifies the shader in the following way:\"\n\nAnd in the end of the comment mention that this is useful for implementing multiview using instancing. Don\u0027t use the term \"AST\" in this header file, the AST is not something that ANGLE\u0027s compiler exposes to the outside.",
+      "range": {
+        "startLine": 225,
+        "startChar": 3,
+        "endLine": 226,
+        "endChar": 6
+      },
+      "revId": "e45d4d3c1509d5549d273c30203f06ec6fe2e400",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9689306c_2ba5603c",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T14:59:02Z",
+      "side": 1,
+      "message": "I\u0027d remove this and mention in the previous sentence that the built-ins are replaced by \"temporary variables InstanceID and ViewID_OVR\". The \"internal variable\" concept is not something that a user of ANGLE\u0027s compiler should concern themselves with.",
+      "range": {
+        "startLine": 228,
+        "startChar": 15,
+        "endLine": 228,
+        "endChar": 42
+      },
+      "revId": "e45d4d3c1509d5549d273c30203f06ec6fe2e400",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "26cf5103_4c976294",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T14:59:02Z",
+      "side": 1,
+      "message": "Could have detail about how InstanceID and ViewID_OVR are calculated, just include the formulas for example.",
+      "range": {
+        "startLine": 229,
+        "startChar": 45,
+        "endLine": 230,
+        "endChar": 26
+      },
+      "revId": "e45d4d3c1509d5549d273c30203f06ec6fe2e400",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3989d18_47aca5f1",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T14:59:02Z",
+      "side": 1,
+      "message": "Is this the only usage of hasMultiview()? If that\u0027s the case it would be simpler to replace it with parseContext.isMultiviewExtensionEnabled() and mUsesMultiview could be removed.",
+      "range": {
+        "startLine": 415,
+        "startChar": 12,
+        "endLine": 415,
+        "endChar": 26
+      },
+      "revId": "e45d4d3c1509d5549d273c30203f06ec6fe2e400",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a359fb1e_42daea44",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltInsForInstancedMultiview.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T14:59:02Z",
+      "side": 1,
+      "message": "If this function is called multiple times, the different return values now get different unique ids. The intent is that the same symbol always has the same unique id. Same for the function below.",
+      "revId": "e45d4d3c1509d5549d273c30203f06ec6fe2e400",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25ec5e00_30fa79d3",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltInsForInstancedMultiview.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T14:59:02Z",
+      "side": 1,
+      "message": "Could move this call where instanceIDSymbol is used to make the code less verbose.",
+      "range": {
+        "startLine": 78,
+        "startChar": 38,
+        "endLine": 78,
+        "endChar": 60
+      },
+      "revId": "e45d4d3c1509d5549d273c30203f06ec6fe2e400",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a77d2898_fcfee25e",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltInsForInstancedMultiview.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T14:59:02Z",
+      "side": 1,
+      "message": "You should not have two references to the same node in the same AST - this can cause bugs in subsequent AST transformations. You could make a helper function for creating a gl_InstanceID TIntermSymbol node and add a call to that on this line - this way the code doesn\u0027t get overly verbose.",
+      "range": {
+        "startLine": 86,
+        "startChar": 45,
+        "endLine": 86,
+        "endChar": 63
+      },
+      "revId": "e45d4d3c1509d5549d273c30203f06ec6fe2e400",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "db514553_f1d09f87",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltInsForInstancedMultiview.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T14:59:02Z",
+      "side": 1,
+      "message": "You should also create a separate unsigned TConstantUnion for this. Accessing a different member of an union from what\u0027s last been set is undefined behavior in C++, even if in practice it might work in current platforms ANGLE is running on.",
+      "range": {
+        "startLine": 92,
+        "startChar": 33,
+        "endLine": 92,
+        "endChar": 54
+      },
+      "revId": "e45d4d3c1509d5549d273c30203f06ec6fe2e400",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
