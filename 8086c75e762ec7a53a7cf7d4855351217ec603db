@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7b3c2da4_c12f2a6f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 19
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-27T16:49:22Z",
+      "side": 1,
+      "message": "oh, whoops, we forgot to tag with the issue #",
+      "revId": "8086c75e762ec7a53a7cf7d4855351217ec603db",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
