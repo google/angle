@@ -128,4 +128,13 @@ void HandleAllocator::reserve(GLuint handle)
     mUnallocatedList.insert(placementIt, HandleRange(begin, handle - 1));
 }
 
+void HandleAllocator::reset()
+{
+    mUnallocatedList.clear();
+    mUnallocatedList.push_back(HandleRange(1, std::numeric_limits<GLuint>::max()));
+    mReleasedList.clear();
+    mBaseValue = 1;
+    mNextValue = 1;
+}
+
 }  // namespace gl

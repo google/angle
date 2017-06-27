@@ -320,11 +320,6 @@ using UniformBlockBindingMask = angle::BitSet<IMPLEMENTATION_MAX_COMBINED_SHADER
 // Used in Framebuffer
 using DrawBufferMask = angle::BitSet<IMPLEMENTATION_MAX_DRAW_BUFFERS>;
 
-// A map of GL objects indexed by object ID. The specific map implementation may change.
-// Client code should treat it as a std::map.
-template <class ResourceT>
-using ResourceMap = std::unordered_map<GLuint, ResourceT *>;
-
 using ContextID = uintptr_t;
 }
 

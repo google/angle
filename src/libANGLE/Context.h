@@ -22,6 +22,7 @@
 #include "libANGLE/Error.h"
 #include "libANGLE/HandleAllocator.h"
 #include "libANGLE/RefCountObject.h"
+#include "libANGLE/ResourceMap.h"
 #include "libANGLE/VertexAttribute.h"
 #include "libANGLE/Workarounds.h"
 #include "libANGLE/angletypes.h"

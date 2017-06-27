@@ -409,6 +409,7 @@ egl::Error Context::onDestroy(const egl::Display *display)
     {
         SafeDelete(fence.second);
     }
+    mFenceNVMap.clear();
 
     for (auto query : mQueryMap)
     {
@@ -417,6 +418,7 @@ egl::Error Context::onDestroy(const egl::Display *display)
             query.second->release(this);
         }
     }
+    mQueryMap.clear();
 
     for (auto vertexArray : mVertexArrayMap)
     {
@@ -425,6 +427,7 @@ egl::Error Context::onDestroy(const egl::Display *display)
             vertexArray.second->onDestroy(this);
         }
     }
+    mVertexArrayMap.clear();
 
     for (auto transformFeedback : mTransformFeedbackMap)
     {
@@ -433,6 +436,7 @@ egl::Error Context::onDestroy(const egl::Display *display)
             transformFeedback.second->release(this);
         }
     }
+    mTransformFeedbackMap.clear();
 
     for (auto &zeroTexture : mZeroTextures)
     {
@@ -606,8 +610,8 @@ GLuint Context::createPaths(GLsizei range)
 
 GLuint Context::createVertexArray()
 {
-    GLuint vertexArray           = mVertexArrayHandleAllocator.allocate();
-    mVertexArrayMap[vertexArray] = nullptr;
+    GLuint vertexArray = mVertexArrayHandleAllocator.allocate();
+    mVertexArrayMap.assign(vertexArray, nullptr);
     return vertexArray;
 }
 
@@ -618,8 +622,8 @@ GLuint Context::createSampler()
 
 GLuint Context::createTransformFeedback()
 {
-    GLuint transformFeedback                 = mTransformFeedbackAllocator.allocate();
-    mTransformFeedbackMap[transformFeedback] = nullptr;
+    GLuint transformFeedback = mTransformFeedbackAllocator.allocate();
+    mTransformFeedbackMap.assign(transformFeedback, nullptr);
     return transformFeedback;
 }
 
@@ -632,9 +636,7 @@ GLuint Context::createFramebuffer()
 GLuint Context::createFenceNV()
 {
     GLuint handle = mFenceNVHandleAllocator.allocate();
-
-    mFenceNVMap[handle] = new FenceNV(mImplementation->createFenceNV());
-
+    mFenceNVMap.assign(handle, new FenceNV(mImplementation->createFenceNV()));
     return handle;
 }
 
@@ -642,9 +644,7 @@ GLuint Context::createFenceNV()
 GLuint Context::createQuery()
 {
     GLuint handle = mQueryHandleAllocator.allocate();
-
-    mQueryMap[handle] = nullptr;
-
+    mQueryMap.assign(handle, nullptr);
     return handle;
 }
 
@@ -790,17 +790,15 @@ void Context::setPathStencilFunc(GLenum func, GLint ref, GLuint mask)
 
 void Context::deleteVertexArray(GLuint vertexArray)
 {
-    auto iter = mVertexArrayMap.find(vertexArray);
-    if (iter != mVertexArrayMap.end())
+    VertexArray *vertexArrayObject = nullptr;
+    if (mVertexArrayMap.erase(vertexArray, &vertexArrayObject))
     {
-        VertexArray *vertexArrayObject = iter->second;
         if (vertexArrayObject != nullptr)
         {
             detachVertexArray(vertexArray);
             vertexArrayObject->onDestroy(this);
         }
 
-        mVertexArrayMap.erase(iter);
         mVertexArrayHandleAllocator.release(vertexArray);
     }
 }
@@ -822,17 +820,15 @@ void Context::deleteTransformFeedback(GLuint transformFeedback)
         return;
     }
 
-    auto iter = mTransformFeedbackMap.find(transformFeedback);
-    if (iter != mTransformFeedbackMap.end())
+    TransformFeedback *transformFeedbackObject = nullptr;
+    if (mTransformFeedbackMap.erase(transformFeedback, &transformFeedbackObject))
     {
-        TransformFeedback *transformFeedbackObject = iter->second;
         if (transformFeedbackObject != nullptr)
         {
             detachTransformFeedback(transformFeedback);
             transformFeedbackObject->release(this);
         }
 
-        mTransformFeedbackMap.erase(iter);
         mTransformFeedbackAllocator.release(transformFeedback);
     }
 }
@@ -849,27 +845,24 @@ void Context::deleteFramebuffer(GLuint framebuffer)
 
 void Context::deleteFenceNV(GLuint fence)
 {
-    auto fenceObject = mFenceNVMap.find(fence);
-
-    if (fenceObject != mFenceNVMap.end())
+    FenceNV *fenceObject = nullptr;
+    if (mFenceNVMap.erase(fence, &fenceObject))
     {
-        mFenceNVHandleAllocator.release(fenceObject->first);
-        delete fenceObject->second;
-        mFenceNVMap.erase(fenceObject);
+        mFenceNVHandleAllocator.release(fence);
+        delete fenceObject;
     }
 }
 
 void Context::deleteQuery(GLuint query)
 {
-    auto queryObject = mQueryMap.find(query);
-    if (queryObject != mQueryMap.end())
+    Query *queryObject = nullptr;
+    if (mQueryMap.erase(query, &queryObject))
     {
-        mQueryHandleAllocator.release(queryObject->first);
-        if (queryObject->second)
+        mQueryHandleAllocator.release(query);
+        if (queryObject)
         {
-            queryObject->second->release(this);
+            queryObject->release(this);
         }
-        mQueryMap.erase(queryObject);
     }
 }
 
@@ -896,8 +889,7 @@ FenceSync *Context::getFenceSync(GLsync handle) const
 
 VertexArray *Context::getVertexArray(GLuint handle) const
 {
-    auto vertexArray = mVertexArrayMap.find(handle);
-    return (vertexArray != mVertexArrayMap.end()) ? vertexArray->second : nullptr;
+    return mVertexArrayMap.query(handle);
 }
 
 Sampler *Context::getSampler(GLuint handle) const
@@ -907,8 +899,7 @@ Sampler *Context::getSampler(GLuint handle) const
 
 TransformFeedback *Context::getTransformFeedback(GLuint handle) const
 {
-    auto iter = mTransformFeedbackMap.find(handle);
-    return (iter != mTransformFeedbackMap.end()) ? iter->second : nullptr;
+    return mTransformFeedbackMap.query(handle);
 }
 
 LabeledObject *Context::getLabeledObject(GLenum identifier, GLuint name) const
@@ -1270,41 +1261,29 @@ Framebuffer *Context::getFramebuffer(GLuint handle) const
 
 FenceNV *Context::getFenceNV(GLuint handle)
 {
-    auto fence = mFenceNVMap.find(handle);
-
-    if (fence == mFenceNVMap.end())
-    {
-        return nullptr;
-    }
-    else
-    {
-        return fence->second;
-    }
+    return mFenceNVMap.query(handle);
 }
 
 Query *Context::getQuery(GLuint handle, bool create, GLenum type)
 {
-    auto query = mQueryMap.find(handle);
-
-    if (query == mQueryMap.end())
+    if (!mQueryMap.contains(handle))
     {
         return nullptr;
     }
-    else
+
+    Query *query = mQueryMap.query(handle);
+    if (!query && create)
     {
-        if (!query->second && create)
-        {
-            query->second = new Query(mImplementation->createQuery(type), handle);
-            query->second->addRef();
-        }
-        return query->second;
+        query = new Query(mImplementation->createQuery(type), handle);
+        query->addRef();
+        mQueryMap.assign(handle, query);
     }
+    return query;
 }
 
 Query *Context::getQuery(GLuint handle) const
 {
-    auto iter = mQueryMap.find(handle);
-    return (iter != mQueryMap.end()) ? iter->second : nullptr;
+    return mQueryMap.query(handle);
 }
 
 Texture *Context::getTargetTexture(GLenum target) const
@@ -2309,7 +2288,7 @@ VertexArray *Context::checkVertexArrayAllocation(GLuint vertexArrayHandle)
         vertexArray = new VertexArray(mImplementation.get(), vertexArrayHandle,
                                       mCaps.maxVertexAttributes, mCaps.maxVertexAttribBindings);
 
-        mVertexArrayMap[vertexArrayHandle] = vertexArray;
+        mVertexArrayMap.assign(vertexArrayHandle, vertexArray);
     }
 
     return vertexArray;
@@ -2324,7 +2303,7 @@ TransformFeedback *Context::checkTransformFeedbackAllocation(GLuint transformFee
         transformFeedback =
             new TransformFeedback(mImplementation.get(), transformFeedbackHandle, mCaps);
         transformFeedback->addRef();
-        mTransformFeedbackMap[transformFeedbackHandle] = transformFeedback;
+        mTransformFeedbackMap.assign(transformFeedbackHandle, transformFeedback);
     }
 
     return transformFeedback;
@@ -2332,14 +2311,14 @@ TransformFeedback *Context::checkTransformFeedbackAllocation(GLuint transformFee
 
 bool Context::isVertexArrayGenerated(GLuint vertexArray)
 {
-    ASSERT(mVertexArrayMap.find(0) != mVertexArrayMap.end());
-    return mVertexArrayMap.find(vertexArray) != mVertexArrayMap.end();
+    ASSERT(mVertexArrayMap.contains(0));
+    return mVertexArrayMap.contains(vertexArray);
 }
 
 bool Context::isTransformFeedbackGenerated(GLuint transformFeedback)
 {
-    ASSERT(mTransformFeedbackMap.find(0) != mTransformFeedbackMap.end());
-    return mTransformFeedbackMap.find(transformFeedback) != mTransformFeedbackMap.end();
+    ASSERT(mTransformFeedbackMap.contains(0));
+    return mTransformFeedbackMap.contains(transformFeedback);
 }
 
 void Context::detachTexture(GLuint texture)

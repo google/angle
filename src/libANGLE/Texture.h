@@ -100,7 +100,7 @@ struct TextureState final : private angle::NonCopyable
     bool isCubeComplete() const;
     bool isSamplerComplete(const SamplerState &samplerState, const ContextState &data) const;
 
-    void invalidateCompletenessCache();
+    void invalidateCompletenessCache() const;
 
     const ImageDesc &getImageDesc(GLenum target, size_t level) const;
     const ImageDesc &getImageDesc(const ImageIndex &imageIndex) const;
@@ -358,7 +358,7 @@ class Texture final : public egl::ImageSibling,
     egl::Surface *getBoundSurface() const;
     egl::Stream *getBoundStream() const;
 
-    void invalidateCompletenessCache();
+    void invalidateCompletenessCache() const;
 
     rx::TextureImpl *getImplementation() const { return mTexture; }
 

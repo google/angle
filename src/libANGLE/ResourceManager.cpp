@@ -28,16 +28,9 @@ namespace
 template <typename ResourceType>
 GLuint AllocateEmptyObject(HandleAllocator *handleAllocator, ResourceMap<ResourceType> *objectMap)
 {
-    GLuint handle        = handleAllocator->allocate();
-    (*objectMap)[handle] = nullptr;
+    GLuint handle = handleAllocator->allocate();
+    objectMap->assign(handle, nullptr);
     return handle;
-}
-
-template <typename ResourceType>
-ResourceType *GetObject(const ResourceMap<ResourceType> &objectMap, GLuint handle)
-{
-    auto iter = objectMap.find(handle);
-    return iter != objectMap.end() ? iter->second : nullptr;
 }
 
 }  // anonymous namespace
@@ -72,9 +65,13 @@ TypedResourceManager<ResourceType, HandleAllocatorType, ImplT>::~TypedResourceMa
 template <typename ResourceType, typename HandleAllocatorType, typename ImplT>
 void TypedResourceManager<ResourceType, HandleAllocatorType, ImplT>::reset(const Context *context)
 {
-    while (!mObjectMap.empty())
+    this->mHandleAllocator.reset();
+    for (const auto &resource : mObjectMap)
     {
-        deleteObject(context, mObjectMap.begin()->first);
+        if (resource.second)
+        {
+            ImplT::DeleteObject(context, resource.second);
+        }
     }
     mObjectMap.clear();
 }
@@ -84,77 +81,29 @@ void TypedResourceManager<ResourceType, HandleAllocatorType, ImplT>::deleteObjec
     const Context *context,
     GLuint handle)
 {
-    auto objectIter = mObjectMap.find(handle);
-    if (objectIter == mObjectMap.end())
+    ResourceType *resource = nullptr;
+    if (!mObjectMap.erase(handle, &resource))
     {
         return;
     }
 
-    if (objectIter->second != nullptr)
-    {
-        ImplT::DeleteObject(context, objectIter->second);
-    }
-
     // Requires an explicit this-> because of C++ template rules.
-    this->mHandleAllocator.release(objectIter->first);
-    mObjectMap.erase(objectIter);
-}
+    this->mHandleAllocator.release(handle);
 
-template <typename ResourceType, typename HandleAllocatorType, typename ImplT>
-template <typename... ArgTypes>
-ResourceType *TypedResourceManager<ResourceType, HandleAllocatorType, ImplT>::allocateObject(
-    typename ResourceMap<ResourceType>::iterator &objectMapIter,
-    rx::GLImplFactory *factory,
-    GLuint handle,
-    ArgTypes... args)
-{
-    ResourceType *object = ImplT::AllocateNewObject(factory, handle, args...);
-
-    if (objectMapIter != mObjectMap.end())
+    if (resource)
     {
-        objectMapIter->second = object;
+        ImplT::DeleteObject(context, resource);
     }
-    else
-    {
-        this->mHandleAllocator.reserve(handle);
-        mObjectMap[handle] = object;
-    }
-
-    return object;
 }
 
 template class ResourceManagerBase<HandleAllocator>;
 template class ResourceManagerBase<HandleRangeAllocator>;
 template class TypedResourceManager<Buffer, HandleAllocator, BufferManager>;
-template Buffer *TypedResourceManager<Buffer, HandleAllocator, BufferManager>::allocateObject(
-    ResourceMap<Buffer>::iterator &,
-    rx::GLImplFactory *,
-    GLuint);
 template class TypedResourceManager<Texture, HandleAllocator, TextureManager>;
-template Texture *TypedResourceManager<Texture, HandleAllocator, TextureManager>::allocateObject(
-    ResourceMap<Texture>::iterator &,
-    rx::GLImplFactory *,
-    GLuint,
-    GLenum);
 template class TypedResourceManager<Renderbuffer, HandleAllocator, RenderbufferManager>;
-template Renderbuffer *
-TypedResourceManager<Renderbuffer, HandleAllocator, RenderbufferManager>::allocateObject(
-    ResourceMap<Renderbuffer>::iterator &,
-    rx::GLImplFactory *,
-    GLuint);
 template class TypedResourceManager<Sampler, HandleAllocator, SamplerManager>;
-template Sampler *TypedResourceManager<Sampler, HandleAllocator, SamplerManager>::allocateObject(
-    ResourceMap<Sampler>::iterator &,
-    rx::GLImplFactory *,
-    GLuint);
 template class TypedResourceManager<FenceSync, HandleAllocator, FenceSyncManager>;
 template class TypedResourceManager<Framebuffer, HandleAllocator, FramebufferManager>;
-template Framebuffer *
-TypedResourceManager<Framebuffer, HandleAllocator, FramebufferManager>::allocateObject(
-    ResourceMap<Framebuffer>::iterator &,
-    rx::GLImplFactory *,
-    GLuint,
-    const Caps &);
 
 // BufferManager Implementation.
 
@@ -179,7 +128,7 @@ GLuint BufferManager::createBuffer()
 
 Buffer *BufferManager::getBuffer(GLuint handle) const
 {
-    return GetObject(mObjectMap, handle);
+    return mObjectMap.query(handle);
 }
 
 // ShaderProgramManager Implementation.
@@ -210,7 +159,7 @@ GLuint ShaderProgramManager::createShader(rx::GLImplFactory *factory,
 {
     ASSERT(type == GL_VERTEX_SHADER || type == GL_FRAGMENT_SHADER || type == GL_COMPUTE_SHADER);
     GLuint handle    = mHandleAllocator.allocate();
-    mShaders[handle] = new Shader(this, factory, rendererLimitations, type, handle);
+    mShaders.assign(handle, new Shader(this, factory, rendererLimitations, type, handle));
     return handle;
 }
 
@@ -221,13 +170,13 @@ void ShaderProgramManager::deleteShader(const Context *context, GLuint shader)
 
 Shader *ShaderProgramManager::getShader(GLuint handle) const
 {
-    return GetObject(mShaders, handle);
+    return mShaders.query(handle);
 }
 
 GLuint ShaderProgramManager::createProgram(rx::GLImplFactory *factory)
 {
-    GLuint handle     = mHandleAllocator.allocate();
-    mPrograms[handle] = new Program(factory, this, handle);
+    GLuint handle = mHandleAllocator.allocate();
+    mPrograms.assign(handle, new Program(factory, this, handle));
     return handle;
 }
 
@@ -238,7 +187,7 @@ void ShaderProgramManager::deleteProgram(const gl::Context *context, GLuint prog
 
 Program *ShaderProgramManager::getProgram(GLuint handle) const
 {
-    return GetObject(mPrograms, handle);
+    return mPrograms.query(handle);
 }
 
 template <typename ObjectType>
@@ -246,18 +195,17 @@ void ShaderProgramManager::deleteObject(const Context *context,
                                         ResourceMap<ObjectType> *objectMap,
                                         GLuint id)
 {
-    auto iter = objectMap->find(id);
-    if (iter == objectMap->end())
+    ObjectType *object = objectMap->query(id);
+    if (!object)
     {
         return;
     }
 
-    auto object = iter->second;
     if (object->getRefCount() == 0)
     {
         mHandleAllocator.release(id);
         object->onDestroy(context);
-        objectMap->erase(iter);
+        objectMap->erase(id, &object);
     }
     else
     {
@@ -288,13 +236,13 @@ GLuint TextureManager::createTexture()
 
 Texture *TextureManager::getTexture(GLuint handle) const
 {
-    ASSERT(GetObject(mObjectMap, 0) == nullptr);
-    return GetObject(mObjectMap, handle);
+    ASSERT(mObjectMap.query(0) == nullptr);
+    return mObjectMap.query(handle);
 }
 
-void TextureManager::invalidateTextureComplenessCache()
+void TextureManager::invalidateTextureComplenessCache() const
 {
-    for (auto &texture : mObjectMap)
+    for (const auto &texture : mObjectMap)
     {
         if (texture.second)
         {
@@ -326,7 +274,7 @@ GLuint RenderbufferManager::createRenderbuffer()
 
 Renderbuffer *RenderbufferManager::getRenderbuffer(GLuint handle)
 {
-    return GetObject(mObjectMap, handle);
+    return mObjectMap.query(handle);
 }
 
 // SamplerManager Implementation.
@@ -352,12 +300,12 @@ GLuint SamplerManager::createSampler()
 
 Sampler *SamplerManager::getSampler(GLuint handle)
 {
-    return GetObject(mObjectMap, handle);
+    return mObjectMap.query(handle);
 }
 
 bool SamplerManager::isSampler(GLuint sampler)
 {
-    return mObjectMap.find(sampler) != mObjectMap.end();
+    return mObjectMap.contains(sampler);
 }
 
 // FenceSyncManager Implementation.
@@ -373,13 +321,13 @@ GLuint FenceSyncManager::createFenceSync(rx::GLImplFactory *factory)
     GLuint handle        = mHandleAllocator.allocate();
     FenceSync *fenceSync = new FenceSync(factory->createFenceSync(), handle);
     fenceSync->addRef();
-    mObjectMap[handle] = fenceSync;
+    mObjectMap.assign(handle, fenceSync);
     return handle;
 }
 
 FenceSync *FenceSyncManager::getFenceSync(GLuint handle)
 {
-    return GetObject(mObjectMap, handle);
+    return mObjectMap.query(handle);
 }
 
 // PathManager Implementation.
@@ -398,13 +346,11 @@ ErrorOrResult<GLuint> PathManager::createPaths(rx::GLImplFactory *factory, GLsiz
         return OutOfMemory() << "Failed to allocate path objects.";
     }
 
-    auto hint = mPaths.begin();
-
     for (GLsizei i = 0; i < range; ++i)
     {
         const auto impl = paths[static_cast<unsigned>(i)];
         const auto id   = client + i;
-        hint            = mPaths.insert(hint, std::make_pair(id, new Path(impl)));
+        mPaths.assign(id, new Path(impl));
     }
     return client;
 }
@@ -414,20 +360,17 @@ void PathManager::deletePaths(GLuint first, GLsizei range)
     for (GLsizei i = 0; i < range; ++i)
     {
         const auto id = first + i;
-        const auto it = mPaths.find(id);
-        if (it == mPaths.end())
+        Path *p       = nullptr;
+        if (!mPaths.erase(id, &p))
             continue;
-        Path *p = it->second;
         delete p;
-        mPaths.erase(it);
     }
     mHandleAllocator.releaseRange(first, static_cast<GLuint>(range));
 }
 
 Path *PathManager::getPath(GLuint handle) const
 {
-    auto iter = mPaths.find(handle);
-    return iter != mPaths.end() ? iter->second : nullptr;
+    return mPaths.query(handle);
 }
 
 bool PathManager::hasPath(GLuint handle) const
@@ -477,18 +420,18 @@ GLuint FramebufferManager::createFramebuffer()
 
 Framebuffer *FramebufferManager::getFramebuffer(GLuint handle) const
 {
-    return GetObject(mObjectMap, handle);
+    return mObjectMap.query(handle);
 }
 
 void FramebufferManager::setDefaultFramebuffer(Framebuffer *framebuffer)
 {
     ASSERT(framebuffer == nullptr || framebuffer->id() == 0);
-    mObjectMap[0] = framebuffer;
+    mObjectMap.assign(0, framebuffer);
 }
 
-void FramebufferManager::invalidateFramebufferComplenessCache()
+void FramebufferManager::invalidateFramebufferComplenessCache() const
 {
-    for (auto &framebuffer : mObjectMap)
+    for (const auto &framebuffer : mObjectMap)
     {
         if (framebuffer.second)
         {

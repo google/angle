@@ -12,10 +12,10 @@
 
 #include "angle_gl.h"
 #include "common/angleutils.h"
-#include "libANGLE/angletypes.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/HandleAllocator.h"
 #include "libANGLE/HandleRangeAllocator.h"
+#include "libANGLE/ResourceMap.h"
 
 namespace rx
 {
@@ -66,7 +66,7 @@ class TypedResourceManager : public ResourceManagerBase<HandleAllocatorType>
     bool isHandleGenerated(GLuint handle) const
     {
         // Zero is always assumed to have been generated implicitly.
-        return handle == 0 || mObjectMap.find(handle) != mObjectMap.end();
+        return handle == 0 || mObjectMap.contains(handle);
     }
 
   protected:
@@ -76,11 +76,10 @@ class TypedResourceManager : public ResourceManagerBase<HandleAllocatorType>
     template <typename... ArgTypes>
     ResourceType *checkObjectAllocation(rx::GLImplFactory *factory, GLuint handle, ArgTypes... args)
     {
-        auto objectMapIter = mObjectMap.find(handle);
-
-        if (objectMapIter != mObjectMap.end() && objectMapIter->second != nullptr)
+        ResourceType *value = mObjectMap.query(handle);
+        if (value)
         {
-            return objectMapIter->second;
+            return value;
         }
 
         if (handle == 0)
@@ -88,14 +87,16 @@ class TypedResourceManager : public ResourceManagerBase<HandleAllocatorType>
             return nullptr;
         }
 
-        return allocateObject<ArgTypes...>(objectMapIter, factory, handle, args...);
-    }
+        ResourceType *object = ImplT::AllocateNewObject(factory, handle, args...);
 
-    template <typename... ArgTypes>
-    ResourceType *allocateObject(typename ResourceMap<ResourceType>::iterator &objectMapIter,
-                                 rx::GLImplFactory *factory,
-                                 GLuint handle,
-                                 ArgTypes... args);
+        if (!mObjectMap.contains(handle))
+        {
+            this->mHandleAllocator.reserve(handle);
+        }
+        mObjectMap.assign(handle, object);
+
+        return object;
+    }
 
     void reset(const Context *context) override;
 
@@ -153,7 +154,7 @@ class TextureManager : public TypedResourceManager<Texture, HandleAllocator, Tex
     GLuint createTexture();
     Texture *getTexture(GLuint handle) const;
 
-    void invalidateTextureComplenessCache();
+    void invalidateTextureComplenessCache() const;
 
     Texture *checkTextureAllocation(rx::GLImplFactory *factory, GLuint handle, GLenum target)
     {
@@ -241,7 +242,7 @@ class FramebufferManager
     Framebuffer *getFramebuffer(GLuint handle) const;
     void setDefaultFramebuffer(Framebuffer *framebuffer);
 
-    void invalidateFramebufferComplenessCache();
+    void invalidateFramebufferComplenessCache() const;
 
     Framebuffer *checkFramebufferAllocation(rx::GLImplFactory *factory,
                                             const Caps &caps,

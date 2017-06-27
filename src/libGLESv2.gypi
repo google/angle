@@ -174,6 +174,7 @@
             'libANGLE/Renderbuffer.h',
             'libANGLE/ResourceManager.cpp',
             'libANGLE/ResourceManager.h',
+            'libANGLE/ResourceMap.h',
             'libANGLE/Sampler.cpp',
             'libANGLE/Sampler.h',
             'libANGLE/Shader.cpp',
