@@ -151,6 +151,15 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
     }
 
     unsigned int transformFeedbackVaryingCount = stream.readInt<unsigned int>();
+
+    // Reject programs that use transform feedback varyings if the hardware cannot support them.
+    if (transformFeedbackVaryingCount > 0 &&
+        context->getWorkarounds().disableProgramCachingForTransformFeedback)
+    {
+        infoLog << "Current driver does not support transform feedback in binary programs.";
+        return false;
+    }
+
     ASSERT(state->mLinkedTransformFeedbackVaryings.empty());
     for (unsigned int transformFeedbackVaryingIndex = 0;
          transformFeedbackVaryingIndex < transformFeedbackVaryingCount;
@@ -303,6 +312,14 @@ void MemoryProgramCache::Serialize(const Context *context,
         {
             stream.writeInt(memberUniformIndex);
         }
+    }
+
+    // Warn the app layer if saving a binary with unsupported transform feedback.
+    if (!state.getLinkedTransformFeedbackVaryings().empty() &&
+        context->getWorkarounds().disableProgramCachingForTransformFeedback)
+    {
+        WARN() << "Saving program binary with transform feedback, which is not supported on this "
+                  "driver.";
     }
 
     stream.writeInt(state.getLinkedTransformFeedbackVaryings().size());

@@ -1033,7 +1033,14 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
 
 void ApplyWorkarounds(const FunctionsGL *functions, gl::Workarounds *workarounds)
 {
-    // TODO(jmadill): Workarounds for GL.
+#if defined(ANGLE_PLATFORM_ANDROID)
+    VendorID vendor = GetVendorID(functions);
+
+    if (IsQualcomm(vendor))
+    {
+        workarounds->disableProgramCachingForTransformFeedback = true;
+    }
+#endif  // defined(ANGLE_PLATFORM_ANDROID)
 }
 
 }  // namespace nativegl_gl

@@ -2155,7 +2155,7 @@ ANGLE_EXPORT void GL_APIENTRY GetProgramivRobustANGLE(GLuint program,
         }
 
         Program *programObject = context->getProgram(program);
-        QueryProgramiv(programObject, pname, params);
+        QueryProgramiv(context, programObject, pname, params);
         SetRobustLengthParam(length, numParams);
     }
 }

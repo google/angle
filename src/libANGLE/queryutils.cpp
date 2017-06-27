@@ -563,7 +563,7 @@ void QueryBufferPointerv(const Buffer *buffer, GLenum pname, void **params)
     }
 }
 
-void QueryProgramiv(const Program *program, GLenum pname, GLint *params)
+void QueryProgramiv(const Context *context, const Program *program, GLenum pname, GLint *params)
 {
     ASSERT(program != nullptr);
 
@@ -597,7 +597,7 @@ void QueryProgramiv(const Program *program, GLenum pname, GLint *params)
             *params = program->getActiveUniformMaxLength();
             return;
         case GL_PROGRAM_BINARY_LENGTH_OES:
-            *params = program->getBinaryLength();
+            *params = program->getBinaryLength(context);
             return;
         case GL_ACTIVE_UNIFORM_BLOCKS:
             *params = program->getActiveUniformBlockCount();

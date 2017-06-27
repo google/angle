@@ -849,10 +849,10 @@ Error Program::saveBinary(const Context *context,
     return NoError();
 }
 
-GLint Program::getBinaryLength() const
+GLint Program::getBinaryLength(const Context *context) const
 {
     GLint length;
-    Error error = saveBinary(nullptr, nullptr, nullptr, std::numeric_limits<GLint>::max(), &length);
+    Error error = saveBinary(context, nullptr, nullptr, std::numeric_limits<GLint>::max(), &length);
     if (error.isError())
     {
         return 0;

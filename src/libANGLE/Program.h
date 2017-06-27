@@ -356,7 +356,7 @@ class Program final : angle::NonCopyable, public LabeledObject
                      void *binary,
                      GLsizei bufSize,
                      GLsizei *length) const;
-    GLint getBinaryLength() const;
+    GLint getBinaryLength(const Context *context) const;
     void setBinaryRetrievableHint(bool retrievable);
     bool getBinaryRetrievableHint() const;
 

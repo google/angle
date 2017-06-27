@@ -39,7 +39,7 @@ void QueryFramebufferAttachmentParameteriv(const Framebuffer *framebuffer,
 void QueryBufferParameteriv(const Buffer *buffer, GLenum pname, GLint *params);
 void QueryBufferParameteri64v(const Buffer *buffer, GLenum pname, GLint64 *params);
 void QueryBufferPointerv(const Buffer *buffer, GLenum pname, void **params);
-void QueryProgramiv(const Program *program, GLenum pname, GLint *params);
+void QueryProgramiv(const Context *context, const Program *program, GLenum pname, GLint *params);
 void QueryRenderbufferiv(const Context *context,
                          const Renderbuffer *renderbuffer,
                          GLenum pname,
