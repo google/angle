@@ -1,0 +1,334 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ce817963_fdc2646d",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T09:12:58Z",
+      "side": 1,
+      "message": "I think a better name would be: \"SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW\"",
+      "range": {
+        "startLine": 230,
+        "startChar": 23,
+        "endLine": 230,
+        "endChar": 72
+      },
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc1579ce_6581fbc3",
+        "filename": "samples/shader_translator/shader_translator.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T09:12:58Z",
+      "side": 1,
+      "message": "I think you could just replace what the \"m\" switch does. Even if we\u0027ll keep the SH_TRANSLATE_VIEWID_OVR_TO_UNIFORM around for now, it\u0027s not of much interest at the moment.",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf22ae7f_c27ed6e8",
+        "filename": "src/compiler.gypi",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T09:12:58Z",
+      "side": 1,
+      "message": "I\u0027d suggest: \"DeclareAndInitBuiltInsForInstancedMultiview\" as a name for the file/AST transform.",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8a18ca57_eb15ca71",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T09:12:58Z",
+      "side": 1,
+      "message": "Why? The initialization of gl_Position and output variables shouldn\u0027t depend on initializing the built-ins for instanced multiview.\n\nJust run the traverser after DeferGlobalInitializers, and there should be no need for this extra complexity for the bookkeeping.",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e704410b_ede458b4",
+        "filename": "src/compiler/translator/DeclareAndInitMultiviewVars.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T09:12:58Z",
+      "side": 1,
+      "message": "I\u0027d rather use just \"InstanceID\" as the variable name. It will be clear that it\u0027s standing in for gl_InstanceID, since it will have the prefix for internal variables.\n\nYou should also reserve a symbol id for this symbol. It\u0027s a future goal that all user-defined variables in the AST would be guaranteed to have a valid symbol id.",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5120c171_f50dc40c",
+        "filename": "src/compiler/translator/DeclareAndInitMultiviewVars.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T09:12:58Z",
+      "side": 1,
+      "message": "These initializers are not \"deferred\" as such, I\u0027d just name this \"initializers\".\n\nShould also move this further down to where it\u0027s first needed.",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23a3d15d_34a628f9",
+        "filename": "src/compiler/translator/DeclareAndInitMultiviewVars.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T09:12:58Z",
+      "side": 1,
+      "message": "No need, symbols are non-internal by default.",
+      "range": {
+        "startLine": 50,
+        "startChar": 4,
+        "endLine": 50,
+        "endChar": 41
+      },
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bcf9ab02_9ec7420a",
+        "filename": "src/compiler/translator/DeclareAndInitMultiviewVars.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T09:12:58Z",
+      "side": 1,
+      "message": "Would prefer \"instanceIDAsUint\" so it\u0027s clearer why the cast is needed.",
+      "range": {
+        "startLine": 53,
+        "startChar": 22,
+        "endLine": 53,
+        "endChar": 42
+      },
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6e9c9081_fbd19f92",
+        "filename": "src/compiler/translator/DeclareAndInitMultiviewVars.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T09:12:58Z",
+      "side": 1,
+      "message": "What about turning references to gl_ViewID_OVR to the impostor? I think the AST transformation should be self-contained wrt gl_ViewID_OVR as well.",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fdea9258_92f4d98c",
+        "filename": "src/compiler/translator/DeferGlobalInitializers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T09:12:58Z",
+      "side": 1,
+      "message": "Instead check the internal flag of the symbol and skip initialization if it is internal.",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3821b9cb_7685cf12",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T09:12:58Z",
+      "side": 1,
+      "message": "Just use getTypePointer() instead, no need to add an entry point that\u0027s essentially a duplicate of that. Replacing all references getTypePointer() with getType() that returns a non-const reference might be cleaner, but that should be done separately.",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c5f6f54a_b5b99c55",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1172,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T09:12:58Z",
+      "side": 1,
+      "message": "Any changes to here should not be needed. The AST transformation should be self-contained.",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82e3048a_15c58f1f",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T09:12:58Z",
+      "side": 1,
+      "message": "I don\u0027t think that this is needed by anything.",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa7a5708_ed8c6dcd",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T09:12:58Z",
+      "side": 1,
+      "message": "Would suggest \"SymbolOccurrenceCounter\" as the name of the class.",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "17b46539_d06d7be3",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T09:12:58Z",
+      "side": 1,
+      "message": "\"shouldCountSymbol\" would be more concise.",
+      "range": {
+        "startLine": 30,
+        "startChar": 17,
+        "endLine": 30,
+        "endChar": 38
+      },
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90d9aaa4_d74729d9",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T09:12:58Z",
+      "side": 1,
+      "message": "It doesn\u0027t look like this is used anywhere.",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "164f3d5e_a46b6179",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 609,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T09:12:58Z",
+      "side": 1,
+      "message": "We should not be testing for a specific ordering of the children of main. That\u0027s fairly fragile. What we do want to guarantee is that gl_InstanceID is not used before it\u0027s initialized.\n\nThe only case I can imagine we could get this wrong would be when gl_InstanceID is being used in a global variable initializer. So you should add a test that initializes a global variable with gl_InstanceID, and then make sure that that initializer is in the output code after the gl_InstanceID impostor. (I should probably clarify the WebGL spec wrt. whether that is actually allowed).",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "06a18a49_1cdea142",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 675,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T09:12:58Z",
+      "side": 1,
+      "message": "This test is a lot of code that\u0027s fairly hard to read. It should be replaced with a test that just checks the output code for the existence of the initialization of the InstanceID impostor and ViewID_OVR impostor. - it makes the test a lot more readable and maintainable while only losing a little bit of coverage.",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
