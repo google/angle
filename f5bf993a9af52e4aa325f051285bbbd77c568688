@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d579ab32_ed34eaed",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-27T14:26:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ce817963_fdc2646d",
+      "range": {
+        "startLine": 230,
+        "startChar": 23,
+        "endLine": 230,
+        "endChar": 72
+      },
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cc1579ce_6581fbc3",
         "filename": "samples/shader_translator/shader_translator.cpp",
         "patchSetId": 3
@@ -39,6 +63,24 @@
       "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "80fad1de_791e318c",
+        "filename": "samples/shader_translator/shader_translator.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-27T14:26:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cc1579ce_6581fbc3",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "350b9ccb_356ad853",
+        "filename": "src/compiler.gypi",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-27T14:26:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf22ae7f_c27ed6e8",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8a18ca57_eb15ca71",
         "filename": "src/compiler/translator/Compiler.cpp",
         "patchSetId": 3
@@ -70,6 +130,24 @@
       "writtenOn": "2017-06-27T09:12:58Z",
       "side": 1,
       "message": "Why? The initialization of gl_Position and output variables shouldn\u0027t depend on initializing the built-ins for instanced multiview.\n\nJust run the traverser after DeferGlobalInitializers, and there should be no need for this extra complexity for the bookkeeping.",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b4bd54d7_6f413d9f",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-27T14:26:31Z",
+      "side": 1,
+      "message": "Yes, keeping track of these should be unnecessary. The only restriction is for this pass to happen before variables are collected. Done.",
+      "parentUuid": "8a18ca57_eb15ca71",
       "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -93,6 +171,24 @@
     },
     {
       "key": {
+        "uuid": "f64b21fe_aa74ef20",
+        "filename": "src/compiler/translator/DeclareAndInitMultiviewVars.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-27T14:26:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e704410b_ede458b4",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5120c171_f50dc40c",
         "filename": "src/compiler/translator/DeclareAndInitMultiviewVars.cpp",
         "patchSetId": 3
@@ -110,6 +206,24 @@
     },
     {
       "key": {
+        "uuid": "7d20aa40_51c463fe",
+        "filename": "src/compiler/translator/DeclareAndInitMultiviewVars.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-27T14:26:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5120c171_f50dc40c",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "23a3d15d_34a628f9",
         "filename": "src/compiler/translator/DeclareAndInitMultiviewVars.cpp",
         "patchSetId": 3
@@ -121,6 +235,30 @@
       "writtenOn": "2017-06-27T09:12:58Z",
       "side": 1,
       "message": "No need, symbols are non-internal by default.",
+      "range": {
+        "startLine": 50,
+        "startChar": 4,
+        "endLine": 50,
+        "endChar": 41
+      },
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8e0c7e0_18a8ee3c",
+        "filename": "src/compiler/translator/DeclareAndInitMultiviewVars.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-27T14:26:31Z",
+      "side": 1,
+      "message": "Yes. I added it so that it\u0027s explicit and easy to discern the difference with the other symbols being created. I will remove it.",
+      "parentUuid": "23a3d15d_34a628f9",
       "range": {
         "startLine": 50,
         "startChar": 4,
@@ -156,6 +294,30 @@
     },
     {
       "key": {
+        "uuid": "5830f947_65d3e2f0",
+        "filename": "src/compiler/translator/DeclareAndInitMultiviewVars.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-27T14:26:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bcf9ab02_9ec7420a",
+      "range": {
+        "startLine": 53,
+        "startChar": 22,
+        "endLine": 53,
+        "endChar": 42
+      },
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6e9c9081_fbd19f92",
         "filename": "src/compiler/translator/DeclareAndInitMultiviewVars.cpp",
         "patchSetId": 3
@@ -167,6 +329,24 @@
       "writtenOn": "2017-06-27T09:12:58Z",
       "side": 1,
       "message": "What about turning references to gl_ViewID_OVR to the impostor? I think the AST transformation should be self-contained wrt gl_ViewID_OVR as well.",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3cf5d5b3_714e0f4d",
+        "filename": "src/compiler/translator/DeclareAndInitMultiviewVars.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-27T14:26:31Z",
+      "side": 1,
+      "message": "Yes, I did that before reading this comment. It\u0027s better this way.",
+      "parentUuid": "6e9c9081_fbd19f92",
       "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -190,6 +370,24 @@
     },
     {
       "key": {
+        "uuid": "0acb5104_cc6b75e4",
+        "filename": "src/compiler/translator/DeferGlobalInitializers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-27T14:26:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fdea9258_92f4d98c",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3821b9cb_7685cf12",
         "filename": "src/compiler/translator/IntermNode.h",
         "patchSetId": 3
@@ -207,6 +405,24 @@
     },
     {
       "key": {
+        "uuid": "5fac1640_bbdca9f2",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-27T14:26:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3821b9cb_7685cf12",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5f6f54a_b5b99c55",
         "filename": "src/compiler/translator/OutputGLSLBase.cpp",
         "patchSetId": 3
@@ -218,6 +434,24 @@
       "writtenOn": "2017-06-27T09:12:58Z",
       "side": 1,
       "message": "Any changes to here should not be needed. The AST transformation should be self-contained.",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e409073_a2d28e37",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1172,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-27T14:26:31Z",
+      "side": 1,
+      "message": "It\u0027s not needed.",
+      "parentUuid": "c5f6f54a_b5b99c55",
       "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -241,6 +475,24 @@
     },
     {
       "key": {
+        "uuid": "758a0271_eee12ec5",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-27T14:26:31Z",
+      "side": 1,
+      "message": "Removed it.",
+      "parentUuid": "82e3048a_15c58f1f",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fa7a5708_ed8c6dcd",
         "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
         "patchSetId": 3
@@ -255,6 +507,24 @@
       "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c38464b5_87d90e35",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-27T14:26:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa7a5708_ed8c6dcd",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -281,6 +551,30 @@
     },
     {
       "key": {
+        "uuid": "262749cd_540a9ed6",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-27T14:26:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "17b46539_d06d7be3",
+      "range": {
+        "startLine": 30,
+        "startChar": 17,
+        "endLine": 30,
+        "endChar": 38
+      },
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "90d9aaa4_d74729d9",
         "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
         "patchSetId": 3
@@ -295,6 +589,24 @@
       "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95ed231f_484f5d53",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-27T14:26:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "90d9aaa4_d74729d9",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -315,6 +627,24 @@
     },
     {
       "key": {
+        "uuid": "6740380d_54f6c02f",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 609,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-27T14:26:31Z",
+      "side": 1,
+      "message": "Global variable initialization should be a constant expression. So, it should not be possible to assign gl_InstanceID to a global declaration.\nRemoved the test.",
+      "parentUuid": "164f3d5e_a46b6179",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "06a18a49_1cdea142",
         "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
         "patchSetId": 3
@@ -326,6 +656,24 @@
       "writtenOn": "2017-06-27T09:12:58Z",
       "side": 1,
       "message": "This test is a lot of code that\u0027s fairly hard to read. It should be replaced with a test that just checks the output code for the existence of the initialization of the InstanceID impostor and ViewID_OVR impostor. - it makes the test a lot more readable and maintainable while only losing a little bit of coverage.",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b2a4984c_a8204a0b",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 675,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-27T14:26:31Z",
+      "side": 1,
+      "message": "Changed to a test which checks the translator\u0027s output.",
+      "parentUuid": "06a18a49_1cdea142",
       "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
