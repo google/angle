@@ -11,7 +11,103 @@
 
 #include "compiler/translator/TranslatorESSL.h"
 
-using namespace sh;
+namespace sh
+{
+
+namespace
+{
+
+// Checks that the node traversed is a zero node. It can be made out of multiple constructors and
+// constant union nodes as long as there's no arithmetic involved and all constants are zero.
+class OnlyContainsZeroConstantsTraverser final : public TIntermTraverser
+{
+  public:
+    OnlyContainsZeroConstantsTraverser()
+        : TIntermTraverser(true, false, false), mOnlyContainsConstantZeros(true)
+    {
+    }
+
+    bool visitUnary(Visit, TIntermUnary *node) override
+    {
+        mOnlyContainsConstantZeros = false;
+        return false;
+    }
+
+    bool visitBinary(Visit, TIntermBinary *node) override
+    {
+        mOnlyContainsConstantZeros = false;
+        return false;
+    }
+
+    bool visitTernary(Visit, TIntermTernary *node) override
+    {
+        mOnlyContainsConstantZeros = false;
+        return false;
+    }
+
+    bool visitSwizzle(Visit, TIntermSwizzle *node) override
+    {
+        mOnlyContainsConstantZeros = false;
+        return false;
+    }
+
+    bool visitAggregate(Visit, TIntermAggregate *node) override
+    {
+        if (node->getOp() != EOpConstruct)
+        {
+            mOnlyContainsConstantZeros = false;
+            return false;
+        }
+        return true;
+    }
+
+    void visitSymbol(TIntermSymbol *node) override { mOnlyContainsConstantZeros = false; }
+
+    void visitConstantUnion(TIntermConstantUnion *node) override
+    {
+        if (!mOnlyContainsConstantZeros)
+        {
+            return;
+        }
+
+        const TType &type = node->getType();
+        size_t objectSize = type.getObjectSize();
+        for (size_t i = 0u; i < objectSize && mOnlyContainsConstantZeros; ++i)
+        {
+            bool isZero = false;
+            switch (type.getBasicType())
+            {
+                case EbtFloat:
+                    isZero = (node->getFConst(i) == 0.0f);
+                    break;
+                case EbtInt:
+                    isZero = (node->getIConst(i) == 0);
+                    break;
+                case EbtUInt:
+                    isZero = (node->getUConst(i) == 0u);
+                    break;
+                case EbtBool:
+                    isZero = (node->getBConst(i) == false);
+                    break;
+                default:
+                    // Cannot handle.
+                    break;
+            }
+            if (!isZero)
+            {
+                mOnlyContainsConstantZeros = false;
+                return;
+            }
+        }
+    }
+
+    bool onlyContainsConstantZeros() const { return mOnlyContainsConstantZeros; }
+
+  private:
+    bool mOnlyContainsConstantZeros;
+};
+
+}  // anonymous namespace
 
 void ShaderCompileTreeTest::SetUp()
 {
@@ -62,3 +158,16 @@ const std::vector<sh::Uniform> ShaderCompileTreeTest::getUniforms()
     ASSERT(mExtraCompileOptions & SH_VARIABLES);
     return mTranslator->getUniforms();
 }
+
+bool IsZero(TIntermNode *node)
+{
+    if (!node->getAsTyped())
+    {
+        return false;
+    }
+    OnlyContainsZeroConstantsTraverser traverser;
+    node->traverse(&traverser);
+    return traverser.onlyContainsConstantZeros();
+}
+
+}  // namespace sh

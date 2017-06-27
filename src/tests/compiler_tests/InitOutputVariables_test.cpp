@@ -82,65 +82,6 @@ ExpectedLValues CreateIndexedLValueNodeList(const TString &lValueName,
     return expected;
 }
 
-void ReleaseExpectedLValuesMemory(ExpectedLValues &expectedLValues)
-{
-    for (size_t i = 0u; i < expectedLValues.size(); ++i)
-    {
-        delete expectedLValues[i];
-    }
-    expectedLValues.clear();
-}
-
-class ConstantsAreZerosTraverser final : public TIntermTraverser
-{
-  public:
-    ConstantsAreZerosTraverser() : TIntermTraverser(true, false, false), mAllConstantsAreZeros(true)
-    {
-    }
-
-    void visitConstantUnion(TIntermConstantUnion *node)
-    {
-        if (!mAllConstantsAreZeros)
-        {
-            return;
-        }
-
-        const TType &type = node->getType();
-        size_t objectSize = type.getObjectSize();
-        for (size_t i = 0u; i < objectSize && mAllConstantsAreZeros; ++i)
-        {
-            switch (type.getBasicType())
-            {
-                case EbtFloat:
-                    mAllConstantsAreZeros = (node->getFConst(i) == 0.0f);
-                    break;
-                case EbtInt:
-                    mAllConstantsAreZeros = (node->getIConst(i) == 0);
-                    break;
-                case EbtUInt:
-                    mAllConstantsAreZeros = (node->getUConst(i) == 0u);
-                    break;
-                default:
-                    // Cannot handle.
-                    mAllConstantsAreZeros = false;
-            }
-        }
-    }
-
-    bool areAllConstantsZeros() const { return mAllConstantsAreZeros; }
-
-  private:
-    bool mAllConstantsAreZeros;
-};
-
-// Returns true if all visited constants in subtree are zeros.
-bool AreAllConstantsInSubtreeZeros(TIntermNode *subtree)
-{
-    ConstantsAreZerosTraverser traverser;
-    subtree->traverse(&traverser);
-    return traverser.areAllConstantsZeros();
-}
-
 // VerifyOutputVariableInitializers traverses the subtree covering main and collects the lvalues in
 // assignments for which the rvalue is an expression containing only zero constants.
 class VerifyOutputVariableInitializers final : public TIntermTraverser
@@ -159,7 +100,7 @@ class VerifyOutputVariableInitializers final : public TIntermTraverser
 
     bool visitBinary(Visit visit, TIntermBinary *node) override
     {
-        if (node->getOp() == EOpAssign && AreAllConstantsInSubtreeZeros(node->getRight()))
+        if (node->getOp() == EOpAssign && IsZero(node->getRight()))
         {
             mCandidateLValues.push_back(node->getLeft());
             return false;
@@ -234,10 +175,15 @@ class FindStructByName final : public TIntermTraverser
 class InitOutputVariablesWebGL2Test : public ShaderCompileTreeTest
 {
   public:
-    InitOutputVariablesWebGL2Test()
+    void SetUp() override
     {
         mExtraCompileOptions |= SH_VARIABLES;
         mExtraCompileOptions |= SH_INIT_OUTPUT_VARIABLES;
+        if (getShaderType() == GL_VERTEX_SHADER)
+        {
+            mExtraCompileOptions |= SH_INIT_GL_POSITION;
+        }
+        ShaderCompileTreeTest::SetUp();
     }
 
   protected:
@@ -302,7 +248,6 @@ TEST_F(InitOutputVariablesWebGL2VertexShaderTest, OutputAllQualifiers)
         CreateLValueNode("out3", TType(EbtFloat, EbpMedium, EvqCentroidOut)),
         CreateLValueNode("out4", TType(EbtFloat, EbpMedium, EvqSmoothOut))};
     EXPECT_TRUE(verifier.areAllExpectedLValuesFound(expectedLValues));
-    ReleaseExpectedLValuesMemory(expectedLValues);
 }
 
 // Test the initialization of an output array in a vertex shader.
@@ -320,7 +265,6 @@ TEST_F(InitOutputVariablesWebGL2VertexShaderTest, OutputArray)
     ExpectedLValues expectedLValues =
         CreateIndexedLValueNodeList("out1", TType(EbtFloat, EbpMedium, EvqVertexOut), 2);
     EXPECT_TRUE(verifier.areAllExpectedLValuesFound(expectedLValues));
-    ReleaseExpectedLValuesMemory(expectedLValues);
 }
 
 // Test the initialization of a struct output variable in a vertex shader.
@@ -402,7 +346,6 @@ TEST_F(InitOutputVariablesWebGL2FragmentShaderTest, FragData)
         CreateIndexedLValueNodeList("gl_FragData", TType(EbtFloat, EbpMedium, EvqFragData, 4), 1);
     EXPECT_TRUE(verifier.isExpectedLValueFound(expectedLValues[0]));
     EXPECT_EQ(1u, verifier.getCandidates().size());
-    ReleaseExpectedLValuesMemory(expectedLValues);
 }
 
 // Test the initialization of gl_FragData in a WebGL1 ESSL1 fragment shader. Only writes to
@@ -421,7 +364,6 @@ TEST_F(InitOutputVariablesWebGL1FragmentShaderTest, FragData)
         CreateIndexedLValueNodeList("gl_FragData", TType(EbtFloat, EbpMedium, EvqFragData, 4), 1);
     EXPECT_TRUE(verifier.isExpectedLValueFound(expectedLValues[0]));
     EXPECT_EQ(1u, verifier.getCandidates().size());
-    ReleaseExpectedLValuesMemory(expectedLValues);
 }
 
 // Test the initialization of gl_FragData in a WebGL1 ESSL1 fragment shader with GL_EXT_draw_buffers
@@ -442,7 +384,43 @@ TEST_F(InitOutputVariablesWebGL1FragmentShaderTest, FragDataWithDrawBuffersExtEn
     EXPECT_TRUE(verifier.isExpectedLValueFound(expectedLValues[0]));
     EXPECT_TRUE(verifier.isExpectedLValueFound(expectedLValues[1]));
     EXPECT_EQ(2u, verifier.getCandidates().size());
-    ReleaseExpectedLValuesMemory(expectedLValues);
+}
+
+// Test that gl_Position is initialized once in case it is not statically used and both
+// SH_INIT_OUTPUT_VARIABLES and SH_INIT_GL_POSITION flags are set.
+TEST_F(InitOutputVariablesWebGL2VertexShaderTest, InitGLPositionWhenNotStaticallyUsed)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "void main() {\n"
+        "}\n";
+    compileAssumeSuccess(shaderString);
+    VerifyOutputVariableInitializers verifier(mASTRoot);
+
+    TIntermTyped *glPosition =
+        CreateLValueNode("gl_Position", TType(EbtFloat, EbpHigh, EvqPosition, 4));
+    EXPECT_TRUE(verifier.isExpectedLValueFound(glPosition));
+    EXPECT_EQ(1u, verifier.getCandidates().size());
+}
+
+// Test that gl_Position is initialized once in case it is statically used and both
+// SH_INIT_OUTPUT_VARIABLES and SH_INIT_GL_POSITION flags are set.
+TEST_F(InitOutputVariablesWebGL2VertexShaderTest, InitGLPositionOnceWhenStaticallyUsed)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "void main() {\n"
+        "    gl_Position = vec4(1.0);\n"
+        "}\n";
+    compileAssumeSuccess(shaderString);
+    VerifyOutputVariableInitializers verifier(mASTRoot);
+
+    TIntermTyped *glPosition =
+        CreateLValueNode("gl_Position", TType(EbtFloat, EbpHigh, EvqPosition, 4));
+    EXPECT_TRUE(verifier.isExpectedLValueFound(glPosition));
+    EXPECT_EQ(1u, verifier.getCandidates().size());
 }
 
 }  // namespace sh

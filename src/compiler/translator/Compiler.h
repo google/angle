@@ -187,6 +187,8 @@ class TCompiler : public TShHandleBase
 
     bool variablesCollected;
 
+    bool mGLPositionInitialized;
+
     // Removes unused function declarations and prototypes from the AST
     class UnusedPredicate;
     bool pruneUnusedFunctions(TIntermBlock *root);

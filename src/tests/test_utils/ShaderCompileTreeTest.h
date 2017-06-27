@@ -19,6 +19,7 @@ namespace sh
 {
 
 class TIntermBlock;
+class TIntermNode;
 class TranslatorESSL;
 
 class ShaderCompileTreeTest : public testing::Test
@@ -53,6 +54,10 @@ class ShaderCompileTreeTest : public testing::Test
 
     TPoolAllocator mAllocator;
 };
+
+// Returns true if the node is some kind of a zero node - either constructor or a constant union
+// node.
+bool IsZero(TIntermNode *node);
 
 }  // namespace sh
 
