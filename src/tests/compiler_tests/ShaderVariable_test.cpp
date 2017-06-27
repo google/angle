@@ -286,6 +286,7 @@ TEST(ShaderVariableTest, IllegalInvariantVarying)
 
     EXPECT_TRUE(sh::Compile(compiler, program1, 1, SH_VARIABLES));
     EXPECT_FALSE(sh::Compile(compiler, program2, 1, SH_VARIABLES));
+    sh::Destruct(compiler);
 }
 
 TEST(ShaderVariableTest, InvariantLeakAcrossShaders)
@@ -327,6 +328,7 @@ TEST(ShaderVariableTest, InvariantLeakAcrossShaders)
         if (varying.name == "v_varying")
             EXPECT_FALSE(varying.isInvariant);
     }
+    sh::Destruct(compiler);
 }
 
 TEST(ShaderVariableTest, GlobalInvariantLeakAcrossShaders)
@@ -368,6 +370,7 @@ TEST(ShaderVariableTest, GlobalInvariantLeakAcrossShaders)
         if (varying.name == "v_varying")
             EXPECT_FALSE(varying.isInvariant);
     }
+    sh::Destruct(compiler);
 }
 
 TEST(ShaderVariableTest, BuiltinInvariantVarying)
@@ -416,6 +419,7 @@ TEST(ShaderVariableTest, BuiltinInvariantVarying)
             EXPECT_FALSE(varying.isInvariant);
     }
     EXPECT_FALSE(sh::Compile(compiler, program3, 1, SH_VARIABLES));
+    sh::Destruct(compiler);
 }
 
 }  // namespace sh
