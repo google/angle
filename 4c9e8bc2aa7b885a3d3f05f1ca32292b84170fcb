@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "25e00a7f_e97ef67a",
+        "filename": "src/tests/gl_tests/WebGLReadOutsideFramebufferTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-06-27T21:45:18Z",
+      "side": 1,
+      "message": "Encoding x,y position in the pixel has been invaluable in debugging these tests.  I\u0027ll put something to that effect in the comment.",
+      "parentUuid": "8d745bb4_ef15977c",
+      "range": {
+        "startLine": 29,
+        "startChar": 16,
+        "endLine": 29,
+        "endChar": 83
+      },
+      "revId": "4c9e8bc2aa7b885a3d3f05f1ca32292b84170fcb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0e9a78ec_6ca6b0e1",
         "filename": "src/tests/gl_tests/WebGLReadOutsideFramebufferTest.cpp",
         "patchSetId": 13
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "afaea731_b68ddcde",
+        "filename": "src/tests/gl_tests/WebGLReadOutsideFramebufferTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-06-27T21:45:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0e9a78ec_6ca6b0e1",
+      "range": {
+        "startLine": 129,
+        "startChar": 25,
+        "endLine": 129,
+        "endChar": 32
+      },
+      "revId": "4c9e8bc2aa7b885a3d3f05f1ca32292b84170fcb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f3dbb34a_435a54be",
         "filename": "src/tests/gl_tests/WebGLReadOutsideFramebufferTest.cpp",
         "patchSetId": 13
@@ -59,6 +107,30 @@
       "writtenOn": "2017-06-27T14:57:04Z",
       "side": 1,
       "message": "the formatting here seems messed up... also you might want to make a type alias for the function you\u0027re passing.",
+      "range": {
+        "startLine": 191,
+        "startChar": 3,
+        "endLine": 191,
+        "endChar": 108
+      },
+      "revId": "4c9e8bc2aa7b885a3d3f05f1ca32292b84170fcb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a33e4be7_43a206be",
+        "filename": "src/tests/gl_tests/WebGLReadOutsideFramebufferTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-06-27T21:45:18Z",
+      "side": 1,
+      "message": "Seems I didn\u0027t do a final \u0027git cl format.\u0027\nSince the type is used only here, I don\u0027t think a typedef adds anything.",
+      "parentUuid": "f3dbb34a_435a54be",
       "range": {
         "startLine": 191,
         "startChar": 3,
