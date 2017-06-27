@@ -108,6 +108,30 @@
     },
     {
       "key": {
+        "uuid": "f1f845c3_157ce983",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-27T11:32:56Z",
+      "side": 1,
+      "message": "Done. It is better now.",
+      "parentUuid": "a5d79177_9d5c8c7e",
+      "range": {
+        "startLine": 24,
+        "startChar": 7,
+        "endLine": 24,
+        "endChar": 28
+      },
+      "revId": "7dc91087611e7430ea0bc8901bd126b29c6ee368",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b07ab217_c2c94cc2",
         "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
         "patchSetId": 3

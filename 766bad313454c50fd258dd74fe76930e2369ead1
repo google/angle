@@ -16,6 +16,24 @@
       "revId": "766bad313454c50fd258dd74fe76930e2369ead1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4691850_cada56e2",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-27T11:32:56Z",
+      "side": 1,
+      "message": "The earlier test was not correct. It should be gl_FragColor which is being assigned to.\nWhenever the GL_EXT_draw_buffers extension is enabled, the gl_FragColor value should be replaced by a broadcast to all color attachments. Basically:\n\nReplace\n\ngl_FragColor \u003d something\n\nby\n\ngl_FragData[0] \u003d something\ngl_FragData[1] \u003d gl_FragData[0]\netc...\n\nI thought it would be good to have the test because the AST gets modified by adding new initializers for gl_FragData.",
+      "parentUuid": "2b667c41_81149414",
+      "revId": "766bad313454c50fd258dd74fe76930e2369ead1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
