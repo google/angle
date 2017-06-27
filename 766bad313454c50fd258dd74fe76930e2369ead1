@@ -34,6 +34,24 @@
       "revId": "766bad313454c50fd258dd74fe76930e2369ead1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "781ae108_a3cf7974",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T12:52:19Z",
+      "side": 1,
+      "message": "In that case I don\u0027t think that this test belongs here. These tests should be specifically testing that output variables get initialized when needed, not that gl_FragColor writes are broadcast. There\u0027s already EmulateGLFragColorBroadcast_test. It seems like if the shader didn\u0027t originally statically refer to gl_FragColor/FragData, no initialization is added by ANGLE either.",
+      "parentUuid": "e4691850_cada56e2",
+      "revId": "766bad313454c50fd258dd74fe76930e2369ead1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }

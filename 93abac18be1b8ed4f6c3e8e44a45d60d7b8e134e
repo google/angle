@@ -1,0 +1,95 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8cf45344_10bac9cc",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T12:52:19Z",
+      "side": 1,
+      "message": "Could just use typeA \u003d\u003d typeB \u0026\u0026 typeA.getPrecision() \u003d\u003d typeB.getPrecision() \u0026\u0026 typeA.getQualifier() \u003d\u003d typeB.getQualifier().",
+      "revId": "93abac18be1b8ed4f6c3e8e44a45d60d7b8e134e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c1ee0f5a_60a826d6",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T12:52:19Z",
+      "side": 1,
+      "message": "I don\u0027t think this is being used.",
+      "range": {
+        "startLine": 41,
+        "startChar": 42,
+        "endLine": 41,
+        "endChar": 70
+      },
+      "revId": "93abac18be1b8ed4f6c3e8e44a45d60d7b8e134e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ba1274a3_b9fc457d",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T12:52:19Z",
+      "side": 1,
+      "message": "I think this could still be structured better:\n\n1. Just add all left hand sides of assignment in a vector in visitBinary.\n2. In isValid(), go through mExpectedSymbols and check that each corresponds to exactly one value in the recorded assignments.\n\nThis way you won\u0027t need as many member variables for bookkeeping.",
+      "revId": "93abac18be1b8ed4f6c3e8e44a45d60d7b8e134e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "26779e84_a691f504",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T12:52:19Z",
+      "side": 1,
+      "message": "leftBinary-\u003egetRight() is guaranteed to be a constant union node in case the op is EOpIndexDirect, instead of checking for it you could assert it.",
+      "revId": "93abac18be1b8ed4f6c3e8e44a45d60d7b8e134e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "724a53d0_7caa2949",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-27T12:52:19Z",
+      "side": 1,
+      "message": "It\u0027s a bit odd to have the array indexing part of the name of a symbol node - you could rather just store regular AST fragments in mExpectedSymbols. Change mExpectedSymbols to std::vector\u003cTIntermTyped *\u003e mExpectedAssignmentTargets and just store either symbol nodes or TIntermBinary indexing nodes in there. To create the indexing nodes, you could add a new helper function, and you can probably also cut down the amount of CreateExpectedSymbol nodes.",
+      "revId": "93abac18be1b8ed4f6c3e8e44a45d60d7b8e134e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
