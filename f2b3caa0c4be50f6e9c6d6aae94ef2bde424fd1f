@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "24e78539_099cd1f3",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-06-28T18:41:29Z",
+      "side": 1,
+      "message": "Clearing the texture unconditionally is ok for now, but should be handled lazily by robust resource initialization instead. Can you add a TODO about this? Also can it be done only when we hit the special case?",
+      "revId": "f2b3caa0c4be50f6e9c6d6aae94ef2bde424fd1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c51b009e_31e9f880",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-06-28T18:41:29Z",
+      "side": 1,
+      "message": "I believe this will need to be reset at the end of the function.",
+      "revId": "f2b3caa0c4be50f6e9c6d6aae94ef2bde424fd1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bcda092e_c52bede1",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-06-28T18:41:29Z",
+      "side": 1,
+      "message": "In the regular case we should still use CopyTexImage, and only TexImage2D and CopySubImage when we would be reading outside of the source texture.",
+      "revId": "f2b3caa0c4be50f6e9c6d6aae94ef2bde424fd1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
