@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "51293218_346691d5",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-28T07:54:51Z",
+      "side": 1,
+      "message": "ANGLE coding standard: Constants: start with a k and use CamelCase. The existing constants that use ALL_CAPS are a remnant of older coding style.",
+      "range": {
+        "startLine": 96,
+        "startChar": 27,
+        "endLine": 96,
+        "endChar": 57
+      },
+      "revId": "177409f8a10a9c72c840843daf88243c2a19bc4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d94f7204_22e2e0f6",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3939,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-28T07:54:51Z",
+      "side": 1,
+      "message": "Use the same message as in existing tests, \"Shader compilation failed, expecting success\"",
+      "range": {
+        "startLine": 3939,
+        "startChar": 19,
+        "endLine": 3939,
+        "endChar": 66
+      },
+      "revId": "177409f8a10a9c72c840843daf88243c2a19bc4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
