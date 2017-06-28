@@ -1,5 +1,5 @@
 Name: Chromium base:: helper Classes
-Short Name: base::numerics and base::MRUCache
+Short Name: base::numerics, base::MRUCachem, base::SHA1
 Version:
 URL: https://chromium.googlesource.com/chromium/src/base/+/master
 SOURCE CODE: Copy the Chromium folder manually into this folder and run git cl format.
@@ -12,6 +12,7 @@ License File: LICENSE in Chromium/src
 Description:
 base::numerics is a library for doing some simple safe math and conversions.
 base::MRUCache is a few collections of most-recently-used caching structures.
+base::SHA1 is a secure hashing algorithm.
 
 To update the checkout, simply overwrite the folder with Chromium's latest, apply
 the appropriate namespace, and make sure the paths are correct (anglebase/ instead of
