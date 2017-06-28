@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "51126c97_2b949c96",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-28T14:42:27Z",
+      "side": 1,
+      "message": "Could be TIntermTyped",
+      "range": {
+        "startLine": 24,
+        "startChar": 20,
+        "endLine": 24,
+        "endChar": 31
+      },
+      "revId": "1d32e3c8ee8af84330222fb522bb1c181b7c5508",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "66bf7991_309fb8ce",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-28T14:42:27Z",
+      "side": 1,
+      "message": "ExpectedAssignmentTargets (meaning values being assigned to) or ExpectedLValues would make more sense as a name I think.",
+      "range": {
+        "startLine": 24,
+        "startChar": 35,
+        "endLine": 24,
+        "endChar": 56
+      },
+      "revId": "1d32e3c8ee8af84330222fb522bb1c181b7c5508",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dcf85c5e_5029f4f2",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-28T14:42:27Z",
+      "side": 1,
+      "message": "I don\u0027t think that you should assert what the candidate is. I feel like the cleanest way to structure this function is like this:\n\nif (expected-\u003egetAsBinaryNode()) {\n  Assume that expected is an indexing node and check if candidate matches.\n  if (!candidate-\u003egetAsBinaryNode())\n     return false;\n  etc...\n}\nelse {\n  Assume that expected is a symbol node and check if candidate matches.\n}\n\nThis could be a lot less code than the current approach, which is better than before but still a bit messy I think.",
+      "revId": "1d32e3c8ee8af84330222fb522bb1c181b7c5508",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e9b0d378_65dd9155",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-28T14:42:27Z",
+      "side": 1,
+      "message": "elementType would be clearer.",
+      "range": {
+        "startLine": 89,
+        "startChar": 56,
+        "endLine": 89,
+        "endChar": 60
+      },
+      "revId": "1d32e3c8ee8af84330222fb522bb1c181b7c5508",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
