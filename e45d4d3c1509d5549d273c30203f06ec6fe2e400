@@ -190,6 +190,30 @@
     },
     {
       "key": {
+        "uuid": "5640f80f_c605379e",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-28T14:27:18Z",
+      "side": 1,
+      "message": "Yep, patch-sets should be as self-contained as possible. It\u0027s always possible that the follow-up patch will end up slightly different in review.",
+      "parentUuid": "58e1ac0a_45f7fd86",
+      "range": {
+        "startLine": 415,
+        "startChar": 12,
+        "endLine": 415,
+        "endChar": 26
+      },
+      "revId": "e45d4d3c1509d5549d273c30203f06ec6fe2e400",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a359fb1e_42daea44",
         "filename": "src/compiler/translator/DeclareAndInitBuiltInsForInstancedMultiview.cpp",
         "patchSetId": 4

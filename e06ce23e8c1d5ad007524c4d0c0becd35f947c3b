@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6da42900_731f24c1",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltInsForInstancedMultiview.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-28T14:27:18Z",
+      "side": 1,
+      "message": "Pass instanceIDSymbol-\u003edeepCopy() and viewIDSymbol-\u003edeepCopy() here, again to avoid duplicate nodes in the AST.",
+      "range": {
+        "startLine": 153,
+        "startChar": 35,
+        "endLine": 153,
+        "endChar": 51
+      },
+      "revId": "e06ce23e8c1d5ad007524c4d0c0becd35f947c3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b794466b_9793af78",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-28T14:27:18Z",
+      "side": 1,
+      "message": "Not needed anymore.",
+      "revId": "e06ce23e8c1d5ad007524c4d0c0becd35f947c3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d045f5a_526fc32c",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-28T14:27:18Z",
+      "side": 1,
+      "message": "Maybe a better name would be WEBGLMultiviewVertexShaderOutputCodeTest",
+      "range": {
+        "startLine": 98,
+        "startChar": 6,
+        "endLine": 98,
+        "endChar": 46
+      },
+      "revId": "e06ce23e8c1d5ad007524c4d0c0becd35f947c3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "06574f77_13ef4265",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 605,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-28T14:27:18Z",
+      "side": 1,
+      "message": "Should be \"two plus\". Declaration and initialization of InstanceID are added.",
+      "range": {
+        "startLine": 605,
+        "startChar": 39,
+        "endLine": 605,
+        "endChar": 53
+      },
+      "revId": "e06ce23e8c1d5ad007524c4d0c0becd35f947c3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f0986fb3_a270b47c",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 619,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-28T14:27:18Z",
+      "side": 1,
+      "message": "Looks like inconsistent indentation. Make sure to indent with spaces.",
+      "range": {
+        "startLine": 619,
+        "startChar": 9,
+        "endLine": 619,
+        "endChar": 11
+      },
+      "revId": "e06ce23e8c1d5ad007524c4d0c0becd35f947c3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
