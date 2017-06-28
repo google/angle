@@ -789,8 +789,7 @@ FunctionsGL::FunctionsGL()
       primitiveBoundingBox(nullptr),
       eglImageTargetRenderbufferStorageOES(nullptr),
       eglImageTargetTexture2DOES(nullptr),
-      discardFramebuffer(nullptr),
-      getInternalformatSampleivNV(nullptr)
+      discardFramebuffer(nullptr)
 {
 }
 
@@ -848,9 +847,6 @@ void FunctionsGL::initializeProcsDesktopGL()
     // Load extensions
     // Even though extensions are written against specific versions of GL, many drivers expose the extensions
     // in even older versions.  Always try loading the extensions regardless of GL version.
-
-    // GL_NV_internalformat_sample_query
-    ASSIGN_WITH_EXT("GL_NV_internalformat_sample_query", "glGetInternalformatSampleivNV", getInternalformatSampleivNV);
 
     // GL_ARB_program_interface_query (loading only functions relevant to GL_NV_path_rendering here)
     ASSIGN_WITH_EXT("GL_ARB_program_interface_query", "glGetProgramInterfaceiv", getProgramInterfaceiv);
@@ -1802,9 +1798,6 @@ void FunctionsGL::initializeProcsGLES()
     profile = 0;
 
     // clang-format off
-
-    // GL_NV_internalformat_sample_query
-    ASSIGN_WITH_EXT("GL_NV_internalformat_sample_query", "glGetInternalformatSampleivNV", getInternalformatSampleivNV);
 
     // GL_NV_path_rendering
     ASSIGN_WITH_EXT("GL_NV_path_rendering", "glMatrixLoadfEXT", matrixLoadEXT);
