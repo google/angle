@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10376d48_b10b42aa",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1060,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-28T15:50:41Z",
+      "side": 1,
+      "message": "command buffer has a check here and only fills with zero in some cases:\n\n  if (src.x() !\u003d x || src.y() !\u003d y ||\n      src.width() !\u003d width || src.height() !\u003d height)\n\nSee https://cs.chromium.org/chromium/src/gpu/command_buffer/service/gles2_cmd_decoder.cc?type\u003dcs\u0026l\u003d14473\n\nIf we can skip the zero init we should.",
+      "range": {
+        "startLine": 1051,
+        "startChar": 0,
+        "endLine": 1060,
+        "endChar": 5
+      },
+      "revId": "8e2de38f31f9614c4ceeaa1281aa644028113b28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
