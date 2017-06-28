@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9eda868b_6d37da61",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-06-28T22:32:52Z",
+      "side": 1,
+      "message": "Only memory corresponding to the read area inside the framebuffer is touched.  No zeroing.",
+      "parentUuid": "22e8a0fb_1de48705",
+      "revId": "8ce2b525fae5330b76140f2139238a3bc0bdff42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "99068540_690b9fd9",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2017-06-28T18:51:49Z",
       "side": 1,
       "message": "The last row workarounds need to read all but the last row at once, then the last row otherwise the drivers produces a GL error and does nothing. I suggest handling the no-workaround case in readPixels, and leave the workaround function as it was. (right now it is broken because it reads all of height and not height - 1)",
+      "revId": "8ce2b525fae5330b76140f2139238a3bc0bdff42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "926652b0_f74fab8c",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 689,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-06-28T22:32:52Z",
+      "side": 1,
+      "message": "I don\u0027t see the mistake, looks like it does area.height-1 when readLastRowSeparately is true?\n\nI\u0027ve factored out one readPixels and reduced the number of paths through the main section above from 3 to 2.  The new function name and parameter name document what this function does.  These seems like improvements to me but if you want I can undo some or all of them.",
+      "parentUuid": "99068540_690b9fd9",
       "revId": "8ce2b525fae5330b76140f2139238a3bc0bdff42",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
