@@ -2,6 +2,299 @@
   "comments": [
     {
       "key": {
+        "uuid": "368b6bc2_dea70410",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-28T19:44:03Z",
+      "side": 1,
+      "message": "this should be ANGLE_GET_ERROR_MESSAGE (always prefix macro names with ANGLE_) although for the other I\u0027m fine with leaving it pretty tiny. You could even make it smaller! Although ERR is taken.",
+      "range": {
+        "startLine": 11,
+        "startChar": 8,
+        "endLine": 11,
+        "endChar": 25
+      },
+      "revId": "b07bb3bce2bc38327b4b87a16fa7f07d47334c5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a6ed999e_3a4603f4",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3971,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-28T19:44:03Z",
+      "side": 1,
+      "message": "can you express this as an error?",
+      "range": {
+        "startLine": 3971,
+        "startChar": 73,
+        "endLine": 3971,
+        "endChar": 97
+      },
+      "revId": "b07bb3bce2bc38327b4b87a16fa7f07d47334c5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5780ce69_d11ffbe0",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 3983,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-28T19:44:03Z",
+      "side": 1,
+      "message": "I think this is unreachable code.",
+      "range": {
+        "startLine": 3983,
+        "startChar": 37,
+        "endLine": 3983,
+        "endChar": 53
+      },
+      "revId": "b07bb3bce2bc38327b4b87a16fa7f07d47334c5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "933b2410_aec1054d",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 4012,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-28T19:44:03Z",
+      "side": 1,
+      "message": "is this even reachable code? maybe we can stick unreachable in here and return a special internal error.",
+      "range": {
+        "startLine": 4012,
+        "startChar": 62,
+        "endLine": 4012,
+        "endChar": 93
+      },
+      "revId": "b07bb3bce2bc38327b4b87a16fa7f07d47334c5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "580b963f_c3481a0d",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 4059,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-28T19:44:03Z",
+      "side": 1,
+      "message": "is this the correct error? I\u0027m thinking this is something like wrong attachment type, rather than incomplete attachment.",
+      "range": {
+        "startLine": 4059,
+        "startChar": 62,
+        "endLine": 4059,
+        "endChar": 93
+      },
+      "revId": "b07bb3bce2bc38327b4b87a16fa7f07d47334c5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ccf39c0d_9a0b4cce",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 4757,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-28T19:44:03Z",
+      "side": 1,
+      "message": "how about expressing this as InvalidVertexAttribSize",
+      "range": {
+        "startLine": 4757,
+        "startChar": 65,
+        "endLine": 4757,
+        "endChar": 79
+      },
+      "revId": "b07bb3bce2bc38327b4b87a16fa7f07d47334c5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19fa340d_1e1e219c",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 4825,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-28T19:44:03Z",
+      "side": 1,
+      "message": "I think although they are both invalid enum errors, the pureInteger ones are distinct, warranting a separate error.",
+      "range": {
+        "startLine": 4825,
+        "startChar": 68,
+        "endLine": 4825,
+        "endChar": 79
+      },
+      "revId": "b07bb3bce2bc38327b4b87a16fa7f07d47334c5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "176d153a_4998a7ea",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 4955,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-28T19:44:03Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 4955,
+        "startChar": 68,
+        "endLine": 4955,
+        "endChar": 84
+      },
+      "revId": "b07bb3bce2bc38327b4b87a16fa7f07d47334c5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6552163e_853f5c4e",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 5145,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-28T19:44:03Z",
+      "side": 1,
+      "message": "ref to following comment",
+      "revId": "b07bb3bce2bc38327b4b87a16fa7f07d47334c5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bbd97bba_4999b98e",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 5184,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-28T19:44:03Z",
+      "side": 1,
+      "message": "ref to following comment",
+      "range": {
+        "startLine": 5184,
+        "startChar": 68,
+        "endLine": 5184,
+        "endChar": 84
+      },
+      "revId": "b07bb3bce2bc38327b4b87a16fa7f07d47334c5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "829dd7ac_0928df33",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 5235,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-28T19:44:03Z",
+      "side": 1,
+      "message": "if you are making an explicit error for \u0027pname\u0027 parameters, you should replace the other pname invalid enums with this error. There\u0027s at least one location where you have it marked as a generic invalid enum - I\u0027m fine with either option, as long as we\u0027re consistent.",
+      "range": {
+        "startLine": 5235,
+        "startChar": 72,
+        "endLine": 5235,
+        "endChar": 84
+      },
+      "revId": "b07bb3bce2bc38327b4b87a16fa7f07d47334c5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af89db44_c5cca1a0",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 5604,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-28T19:44:03Z",
+      "side": 1,
+      "message": "maybe for version limitations we can make an additional error message (like EnumRequiresGLES31)",
+      "range": {
+        "startLine": 5604,
+        "startChar": 72,
+        "endLine": 5604,
+        "endChar": 88
+      },
+      "revId": "b07bb3bce2bc38327b4b87a16fa7f07d47334c5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d21d7d88_cb74ac48",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 5627,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-28T19:44:03Z",
+      "side": 1,
+      "message": "ref to previous comment",
+      "range": {
+        "startLine": 5627,
+        "startChar": 68,
+        "endLine": 5627,
+        "endChar": 84
+      },
+      "revId": "b07bb3bce2bc38327b4b87a16fa7f07d47334c5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2d331277_c130cc89",
         "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
         "patchSetId": 16
