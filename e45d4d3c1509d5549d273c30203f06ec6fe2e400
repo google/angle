@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2367df21_06210105",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-28T11:42:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f6c0813a_2b252271",
+      "range": {
+        "startLine": 225,
+        "startChar": 3,
+        "endLine": 226,
+        "endChar": 6
+      },
+      "revId": "e45d4d3c1509d5549d273c30203f06ec6fe2e400",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9689306c_2ba5603c",
         "filename": "include/GLSLANG/ShaderLang.h",
         "patchSetId": 4
@@ -45,6 +69,30 @@
       "revId": "e45d4d3c1509d5549d273c30203f06ec6fe2e400",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "535f1b71_8b83a8c1",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 228,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-28T11:42:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9689306c_2ba5603c",
+      "range": {
+        "startLine": 228,
+        "startChar": 15,
+        "endLine": 228,
+        "endChar": 42
+      },
+      "revId": "e45d4d3c1509d5549d273c30203f06ec6fe2e400",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "03b73c3c_8d2f28ab",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-28T11:42:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "26cf5103_4c976294",
+      "range": {
+        "startLine": 229,
+        "startChar": 45,
+        "endLine": 230,
+        "endChar": 26
+      },
+      "revId": "e45d4d3c1509d5549d273c30203f06ec6fe2e400",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e3989d18_47aca5f1",
         "filename": "src/compiler/translator/Compiler.cpp",
         "patchSetId": 4
@@ -82,6 +154,30 @@
       "writtenOn": "2017-06-27T14:59:02Z",
       "side": 1,
       "message": "Is this the only usage of hasMultiview()? If that\u0027s the case it would be simpler to replace it with parseContext.isMultiviewExtensionEnabled() and mUsesMultiview could be removed.",
+      "range": {
+        "startLine": 415,
+        "startChar": 12,
+        "endLine": 415,
+        "endChar": 26
+      },
+      "revId": "e45d4d3c1509d5549d273c30203f06ec6fe2e400",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "58e1ac0a_45f7fd86",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-28T11:42:22Z",
+      "side": 1,
+      "message": "I considered not removing it because it wasn\u0027t too big of a deal and it would have been used in a future patch. But yes, it\u0027s probably better to introduce it then.",
+      "parentUuid": "e3989d18_47aca5f1",
       "range": {
         "startLine": 415,
         "startChar": 12,
@@ -111,6 +207,24 @@
     },
     {
       "key": {
+        "uuid": "8c2284e1_a8b6977a",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltInsForInstancedMultiview.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-28T11:42:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a359fb1e_42daea44",
+      "revId": "e45d4d3c1509d5549d273c30203f06ec6fe2e400",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "25ec5e00_30fa79d3",
         "filename": "src/compiler/translator/DeclareAndInitBuiltInsForInstancedMultiview.cpp",
         "patchSetId": 4
@@ -131,6 +245,30 @@
       "revId": "e45d4d3c1509d5549d273c30203f06ec6fe2e400",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d155791_5d9310f4",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltInsForInstancedMultiview.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-28T11:42:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "25ec5e00_30fa79d3",
+      "range": {
+        "startLine": 78,
+        "startChar": 38,
+        "endLine": 78,
+        "endChar": 60
+      },
+      "revId": "e45d4d3c1509d5549d273c30203f06ec6fe2e400",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -157,6 +295,30 @@
     },
     {
       "key": {
+        "uuid": "0b848a2b_c1e06d80",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltInsForInstancedMultiview.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-28T11:42:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a77d2898_fcfee25e",
+      "range": {
+        "startLine": 86,
+        "startChar": 45,
+        "endLine": 86,
+        "endChar": 63
+      },
+      "revId": "e45d4d3c1509d5549d273c30203f06ec6fe2e400",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "db514553_f1d09f87",
         "filename": "src/compiler/translator/DeclareAndInitBuiltInsForInstancedMultiview.cpp",
         "patchSetId": 4
@@ -177,6 +339,30 @@
       "revId": "e45d4d3c1509d5549d273c30203f06ec6fe2e400",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "925e0bf2_f8f76bc5",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltInsForInstancedMultiview.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-28T11:42:22Z",
+      "side": 1,
+      "message": "Good catch.",
+      "parentUuid": "db514553_f1d09f87",
+      "range": {
+        "startLine": 92,
+        "startChar": 33,
+        "endLine": 92,
+        "endChar": 54
+      },
+      "revId": "e45d4d3c1509d5549d273c30203f06ec6fe2e400",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

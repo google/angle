@@ -663,6 +663,24 @@
     },
     {
       "key": {
+        "uuid": "949d4b82_0aa9e81b",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 609,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-28T11:42:22Z",
+      "side": 1,
+      "message": "I used the shader translator with the options \"-s\u003dw2\" to compile a shader (300 es) with having a global variable being initialized with gl_InstanceID in global scope. It resulted in a compilation error stating that \"global variable initializers must be constant expressions\".\n\nIt shouldn\u0027t be a concern for 100 es shaders, because gl_InstanceID is not available there.\n\nAlso\nGLSL ES 3.0 Revision 6, 4.3 Storage qualifiers:\n\"Initializers may only be used in declarations of globals with no storage qualifier or with a const qualifier. Such initializers must be a constant expression (uniforms and globals are allowed in global initializers for legacy compatibility)\".",
+      "parentUuid": "e2850bc6_eff32985",
+      "revId": "f5bf993a9af52e4aa325f051285bbbd77c568688",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "06a18a49_1cdea142",
         "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
         "patchSetId": 3
