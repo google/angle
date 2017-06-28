@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3a0c5ce3_8a311384",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-28T09:37:40Z",
+      "side": 1,
+      "message": "You\u0027re not checking the right hand side of assignment anyway, so it would be simpler to just store all the lvalues of assignments and pass them to here. The \"equalOperators\" check is not really necessary either.",
+      "revId": "cb436a6f8cac0cfa1e3f48918dad46482b26a9c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a8335751_e1ebdf07",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-28T09:37:40Z",
+      "side": 1,
+      "message": "This is not needed, there\u0027s already a TType constructor that works with these exact parameters.",
+      "revId": "cb436a6f8cac0cfa1e3f48918dad46482b26a9c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6e2d22f8_16dc6d26",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-28T09:37:40Z",
+      "side": 1,
+      "message": "Also can be replaced by just a TType constructor. The array case is the only one where a helper function seems useful. In the array case you could also have a bit different helper function that creates the whole vector of indexing nodes based on the size of the array.",
+      "revId": "cb436a6f8cac0cfa1e3f48918dad46482b26a9c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "52718bab_80bfb56e",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-28T09:37:40Z",
+      "side": 1,
+      "message": "You could just have mAssignmentTargets.push_back(node-\u003egetLeft()); inside this if statement. I don\u0027t think any other logic here is needed, it just confuses things.",
+      "revId": "cb436a6f8cac0cfa1e3f48918dad46482b26a9c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
