@@ -747,3 +747,18 @@ foreach(is_shared_library,
     }
   }
 }
+
+# Convenience targets for some of the samples so they can be built
+# with Chromium's toolchain.
+
+executable("angle_shader_translator") {
+  testonly = true
+
+  sources = [
+    "samples/shader_translator/shader_translator.cpp"
+  ]
+
+  deps = [
+    ":translator"
+  ]
+}

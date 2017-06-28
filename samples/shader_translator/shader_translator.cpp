@@ -125,9 +125,14 @@ int main(int argc, char *argv[])
                             {
                                 spec = SH_WEBGL2_SPEC;
                             }
+                            else if (argv[0][4] == 'n')
+                            {
+                                spec = SH_WEBGL_SPEC;
+                            }
                             else
                             {
                                 spec = SH_WEBGL_SPEC;
+                                resources.FragmentPrecisionHigh = 1;
                             }
                             break;
                         default:
@@ -332,10 +337,11 @@ void usage()
         "       -u       : print active attribs, uniforms, varyings and program outputs\n"
         "       -p       : use precision emulation\n"
         "       -s=e2    : use GLES2 spec (this is by default)\n"
-        "       -s=e3    : use GLES3 spec (in development)\n"
+        "       -s=e3    : use GLES3 spec\n"
         "       -s=e31   : use GLES31 spec (in development)\n"
-        "       -s=w     : use WebGL spec\n"
-        "       -s=w2    : use WebGL 2 spec (in development)\n"
+        "       -s=w     : use WebGL 1.0 spec\n"
+        "       -s=wn    : use WebGL 1.0 spec with no highp support in fragment shaders\n"
+        "       -s=w2    : use WebGL 2.0 spec\n"
         "       -b=e     : output GLSL ES code (this is by default)\n"
         "       -b=g     : output GLSL code (compatibility profile)\n"
         "       -b=g[NUM]: output GLSL code (NUM can be 130, 140, 150, 330, 400, 410, 420, 430, "
