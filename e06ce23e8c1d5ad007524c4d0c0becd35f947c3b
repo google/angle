@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "e0c5ae45_bee33456",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltInsForInstancedMultiview.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-28T15:05:34Z",
+      "side": 1,
+      "message": "you should include a top-level comment in all your source and headers. See examples in many of the other files. For the header you can probably just move the large block comment you had on the function, and summarize that for the source.",
+      "range": {
+        "startLine": 4,
+        "startChar": 0,
+        "endLine": 4,
+        "endChar": 11
+      },
+      "revId": "e06ce23e8c1d5ad007524c4d0c0becd35f947c3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6da42900_731f24c1",
         "filename": "src/compiler/translator/DeclareAndInitBuiltInsForInstancedMultiview.cpp",
         "patchSetId": 6
