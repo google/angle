@@ -16,6 +16,24 @@
       "revId": "a1ae2e05ec381561e8b40f31790b32e3bad71f29",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "acecbf6a_dbd1bfd5",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 432,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-28T19:02:36Z",
+      "side": 1,
+      "message": "sorry, can you unpack this? I have no idea under what circumstances returning a value would return a pointer to this value. in any case I think it\u0027s pretty non-controversial to keep it as an out parameter.",
+      "parentUuid": "80ee9189_5ed53760",
+      "revId": "a1ae2e05ec381561e8b40f31790b32e3bad71f29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }

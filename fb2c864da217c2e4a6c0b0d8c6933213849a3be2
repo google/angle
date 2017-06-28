@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "21c7c110_d4bcedbf",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 421,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-28T19:02:36Z",
+      "side": 1,
+      "message": "Missed that. For sure it is an interesting point, it looks easy but isn\u0027t totally trivial. I thought for a couple minutes and couldn\u0027t produce such a duplicate. I inserted the sizes of the shaders and intermingled the resources string - this should at least make it quite difficult (if not impossible). I like the colons for readability, LMK if you think it\u0027s insecure with the salted size and resources string.",
+      "parentUuid": "aa450f71_c31fcefb",
+      "revId": "fb2c864da217c2e4a6c0b0d8c6933213849a3be2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a761d1c8_3faaf2ec",
         "filename": "src/libANGLE/MemoryProgramCache.cpp",
         "patchSetId": 24
