@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "22e8a0fb_1de48705",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-06-28T18:51:49Z",
+      "side": 1,
+      "message": "I\u0027m actually not sure how this is supposed to work in WebGL: is only a smaller portion of the buffer written or is the rest also zeroed out?",
+      "revId": "8ce2b525fae5330b76140f2139238a3bc0bdff42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "99068540_690b9fd9",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 689,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-06-28T18:51:49Z",
+      "side": 1,
+      "message": "The last row workarounds need to read all but the last row at once, then the last row otherwise the drivers produces a GL error and does nothing. I suggest handling the no-workaround case in readPixels, and leave the workaround function as it was. (right now it is broken because it reads all of height and not height - 1)",
+      "revId": "8ce2b525fae5330b76140f2139238a3bc0bdff42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
