@@ -372,6 +372,7 @@ Display::Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDe
       mDevice(eglDevice),
       mPlatform(platform),
       mTextureManager(nullptr),
+      mMemoryProgramCache(gl::kDefaultMaxProgramCacheMemoryBytes),
       mGlobalTextureShareGroupUsers(0),
       mProxyContext(this)
 {
@@ -491,7 +492,7 @@ Error Display::initialize()
     }
 
     mProxyContext.reset(nullptr);
-    gl::Context *proxyContext = new gl::Context(mImplementation, nullptr, nullptr, nullptr,
+    gl::Context *proxyContext = new gl::Context(mImplementation, nullptr, nullptr, nullptr, nullptr,
                                                 egl::AttributeMap(), mDisplayExtensions, false);
     mProxyContext.reset(proxyContext);
 
@@ -503,6 +504,8 @@ Error Display::initialize()
 Error Display::terminate()
 {
     ANGLE_TRY(makeCurrent(nullptr, nullptr, nullptr));
+
+    mMemoryProgramCache.clear();
 
     mProxyContext.reset(nullptr);
 
@@ -738,9 +741,9 @@ Error Display::createContext(const Config *configuration,
         shareTextures = mTextureManager;
     }
 
-    gl::Context *context =
-        new gl::Context(mImplementation, configuration, shareContext, shareTextures, attribs,
-                        mDisplayExtensions, isRobustResourceInitEnabled());
+    gl::Context *context = new gl::Context(mImplementation, configuration, shareContext,
+                                           shareTextures, &mMemoryProgramCache, attribs,
+                                           mDisplayExtensions, isRobustResourceInitEnabled());
 
     ASSERT(context != nullptr);
     mContextSet.insert(context);

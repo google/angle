@@ -10,6 +10,7 @@
 #include "libANGLE/MemoryProgramCache.h"
 
 #include <GLSLANG/ShaderVars.h>
+#include <anglebase/sha1.h>
 
 #include "common/version.h"
 #include "libANGLE/BinaryStream.h"
@@ -22,6 +23,7 @@ namespace gl
 
 namespace
 {
+constexpr unsigned int kWarningLimit = 3;
 
 void WriteShaderVar(BinaryOutputStream *stream, const sh::ShaderVariable &var)
 {
@@ -46,7 +48,61 @@ void LoadShaderVar(BinaryInputStream *stream, sh::ShaderVariable *var)
     var->structName = stream->readString();
 }
 
+class HashStream final : angle::NonCopyable
+{
+  public:
+    std::string str() { return mStringStream.str(); }
+
+    template <typename T>
+    HashStream &operator<<(T value)
+    {
+        mStringStream << value << kSeparator;
+        return *this;
+    }
+
+  private:
+    static constexpr char kSeparator = ':';
+    std::ostringstream mStringStream;
+};
+
+HashStream &operator<<(HashStream &stream, const Shader *shader)
+{
+    if (shader)
+    {
+        stream << shader->getSourceString().c_str() << shader->getSourceString().length()
+               << shader->getCompilerResourcesString().c_str();
+    }
+    return stream;
+}
+
+HashStream &operator<<(HashStream &stream, const Program::Bindings &bindings)
+{
+    for (const auto &binding : bindings)
+    {
+        stream << binding.first << binding.second;
+    }
+    return stream;
+}
+
+HashStream &operator<<(HashStream &stream, const std::vector<std::string> &strings)
+{
+    for (const auto &str : strings)
+    {
+        stream << str;
+    }
+    return stream;
+}
+
 }  // anonymous namespace
+
+MemoryProgramCache::MemoryProgramCache(size_t maxCacheSizeBytes)
+    : mProgramBinaryCache(maxCacheSizeBytes), mIssuedWarnings(0)
+{
+}
+
+MemoryProgramCache::~MemoryProgramCache()
+{
+}
 
 // static
 LinkResult MemoryProgramCache::Deserialize(const Context *context,
@@ -385,6 +441,120 @@ void MemoryProgramCache::Serialize(const Context *context,
     ASSERT(binaryOut);
     binaryOut->resize(stream.length());
     memcpy(binaryOut->data(), stream.data(), stream.length());
+}
+
+// static
+void MemoryProgramCache::ComputeHash(const Context *context,
+                                     const Program *program,
+                                     ProgramHash *hashOut)
+{
+    auto vertexShader   = program->getAttachedVertexShader();
+    auto fragmentShader = program->getAttachedFragmentShader();
+    auto computeShader  = program->getAttachedComputeShader();
+
+    // Compute the program hash. Start with the shader hashes and resource strings.
+    HashStream hashStream;
+    hashStream << vertexShader << fragmentShader << computeShader;
+
+    // Add some ANGLE metadata and Context properties, such as version and back-end.
+    hashStream << ANGLE_COMMIT_HASH << context->getClientMajorVersion()
+               << context->getClientMinorVersion() << context->getString(GL_RENDERER);
+
+    // Hash pre-link program properties.
+    hashStream << program->getAttributeBindings() << program->getUniformLocationBindings()
+               << program->getFragmentInputBindings()
+               << program->getState().getTransformFeedbackVaryingNames()
+               << program->getState().getTransformFeedbackBufferMode();
+
+    // Call the secure SHA hashing function.
+    const std::string &programKey = hashStream.str();
+    angle::base::SHA1HashBytes(reinterpret_cast<const unsigned char *>(programKey.c_str()),
+                               programKey.length(), hashOut->data());
+}
+
+LinkResult MemoryProgramCache::getProgram(const Context *context,
+                                          const Program *program,
+                                          ProgramState *state,
+                                          ProgramHash *hashOut)
+{
+    ComputeHash(context, program, hashOut);
+    const angle::MemoryBuffer *binaryProgram = nullptr;
+    LinkResult result(false);
+    if (get(*hashOut, &binaryProgram))
+    {
+        InfoLog infoLog;
+        ANGLE_TRY_RESULT(Deserialize(context, program, state, binaryProgram->data(),
+                                     binaryProgram->size(), infoLog),
+                         result);
+        if (!result.getResult())
+        {
+            // Cache load failed, evict.
+            if (mIssuedWarnings++ < kWarningLimit)
+            {
+                WARN() << "Failed to load binary from cache: " << infoLog.str();
+
+                if (mIssuedWarnings == kWarningLimit)
+                {
+                    WARN() << "Reaching warning limit for cache load failures, silencing "
+                              "subsequent warnings.";
+                }
+            }
+            remove(*hashOut);
+        }
+    }
+    return result;
+}
+
+bool MemoryProgramCache::get(const ProgramHash &programHash, const angle::MemoryBuffer **programOut)
+{
+    return mProgramBinaryCache.get(programHash, programOut);
+}
+
+void MemoryProgramCache::remove(const ProgramHash &programHash)
+{
+    bool result = mProgramBinaryCache.eraseByKey(programHash);
+    ASSERT(result);
+}
+
+void MemoryProgramCache::put(const ProgramHash &program, angle::MemoryBuffer &&binaryProgram)
+{
+    if (!mProgramBinaryCache.put(program, std::move(binaryProgram), binaryProgram.size()))
+    {
+        ERR() << "Failed to store binary program in memory cache, program is too large.";
+    }
+}
+
+void MemoryProgramCache::putProgram(const ProgramHash &programHash,
+                                    const Context *context,
+                                    const Program *program)
+{
+    angle::MemoryBuffer binaryProgram;
+    Serialize(context, program, &binaryProgram);
+    put(programHash, std::move(binaryProgram));
+}
+
+void MemoryProgramCache::putBinary(const Context *context,
+                                   const Program *program,
+                                   const uint8_t *binary,
+                                   size_t length)
+{
+    // Copy the binary.
+    angle::MemoryBuffer binaryProgram;
+    binaryProgram.resize(length);
+    memcpy(binaryProgram.data(), binary, length);
+
+    // Compute the hash.
+    ProgramHash programHash;
+    ComputeHash(context, program, &programHash);
+
+    // Store the binary.
+    put(programHash, std::move(binaryProgram));
+}
+
+void MemoryProgramCache::clear()
+{
+    mProgramBinaryCache.clear();
+    mIssuedWarnings = 0;
 }
 
 }  // namespace gl

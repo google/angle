@@ -616,6 +616,20 @@ Error Program::link(const gl::Context *context)
 
     unlink();
 
+    ProgramHash programHash;
+    auto *cache = context->getMemoryProgramCache();
+    if (cache)
+    {
+        ANGLE_TRY_RESULT(cache->getProgram(context, this, &mState, &programHash), mLinked);
+    }
+
+    if (mLinked)
+    {
+        return NoError();
+    }
+
+    // Cache load failed, fall through to normal linking.
+    unlink();
     mInfoLog.reset();
 
     const Caps &caps = data.getCaps();
@@ -747,6 +761,13 @@ Error Program::link(const gl::Context *context)
 
     gatherInterfaceBlockInfo(context);
 
+    // Save to the program cache.
+    if (cache && (mState.mLinkedTransformFeedbackVaryings.empty() ||
+                  !context->getWorkarounds().disableProgramCachingForTransformFeedback))
+    {
+        cache->putProgram(programHash, context, this);
+    }
+
     return NoError();
 }
 
@@ -797,6 +818,10 @@ Error Program::loadBinary(const Context *context,
     const uint8_t *bytes = reinterpret_cast<const uint8_t *>(binary);
     ANGLE_TRY_RESULT(
         MemoryProgramCache::Deserialize(context, this, &mState, bytes, length, mInfoLog), mLinked);
+
+    // Currently we require the full shader text to compute the program hash.
+    // TODO(jmadill): Store the binary in the internal program cache.
+
     return NoError();
 #endif  // #if ANGLE_PROGRAM_BINARY_LOAD == ANGLE_ENABLED
 }

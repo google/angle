@@ -9,8 +9,18 @@
 #ifndef LIBANGLE_CONSTANTS_H_
 #define LIBANGLE_CONSTANTS_H_
 
+#include "common/platform.h"
+
 namespace gl
 {
+
+// The size to set for the program cache for default and low-end device cases.
+#if !defined(ANGLE_PLATFORM_ANDROID)
+const size_t kDefaultMaxProgramCacheMemoryBytes = 6 * 1024 * 1024;
+#else
+const size_t kDefaultMaxProgramCacheMemoryBytes = 2 * 1024 * 1024;
+const size_t kLowEndMaxProgramCacheMemoryBytes  = 512 * 1024;
+#endif
 
 enum
 {

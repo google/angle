@@ -469,4 +469,10 @@ const sh::WorkGroupSize &Shader::getWorkGroupSize(const Context *context)
     return mState.mLocalSize;
 }
 
+const std::string &Shader::getCompilerResourcesString() const
+{
+    ASSERT(mBoundCompiler.get());
+    return mBoundCompiler->getBuiltinResourcesString(mState.mShaderType);
+}
+
 }  // namespace gl

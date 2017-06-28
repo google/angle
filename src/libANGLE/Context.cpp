@@ -243,6 +243,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
                  const egl::Config *config,
                  const Context *shareContext,
                  TextureManager *shareTextures,
+                 MemoryProgramCache *memoryProgramCache,
                  const egl::AttributeMap &attribs,
                  const egl::DisplayExtensions &displayExtensions,
                  bool robustResourceInit)
@@ -270,6 +271,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
       mCurrentDisplay(static_cast<egl::Display *>(EGL_NO_DISPLAY)),
       mSurfacelessFramebuffer(nullptr),
       mWebGLContext(GetWebGLContext(attribs)),
+      mMemoryProgramCache(memoryProgramCache),
       mScratchBuffer(1000u)
 {
     if (mRobustAccess)
@@ -2738,6 +2740,12 @@ void Context::updateCaps()
         }
 
         mTextureCaps.insert(sizedInternalFormat, formatCaps);
+    }
+
+    // If program binary is disabled, blank out the memory cache pointer.
+    if (!mImplementation->getNativeExtensions().getProgramBinary)
+    {
+        mMemoryProgramCache = nullptr;
     }
 }
 

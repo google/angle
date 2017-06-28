@@ -504,6 +504,10 @@ class Program final : angle::NonCopyable, public LabeledObject
         std::unordered_map<std::string, GLuint> mBindings;
     };
 
+    const Bindings &getAttributeBindings() const { return mAttributeBindings; }
+    const Bindings &getUniformLocationBindings() const { return mUniformLocationBindings; }
+    const Bindings &getFragmentInputBindings() const { return mFragmentInputBindings; }
+
   private:
     ~Program();
 
@@ -518,7 +522,6 @@ class Program final : angle::NonCopyable, public LabeledObject
     using MergedVaryings = std::map<std::string, VaryingRef>;
 
     void unlink();
-    void resetUniformBlockBindings();
 
     bool linkAttributes(const Context *context, InfoLog &infoLog);
     bool validateUniformBlocksCount(GLuint maxUniformBlocks,

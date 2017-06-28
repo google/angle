@@ -84,6 +84,18 @@ void MemoryBuffer::fill(uint8_t datum)
     }
 }
 
+MemoryBuffer::MemoryBuffer(MemoryBuffer &&other) : MemoryBuffer()
+{
+    *this = std::move(other);
+}
+
+MemoryBuffer &MemoryBuffer::operator=(MemoryBuffer &&other)
+{
+    std::swap(mSize, other.mSize);
+    std::swap(mData, other.mData);
+    return *this;
+}
+
 // ScratchBuffer implementation.
 
 ScratchBuffer::ScratchBuffer(uint32_t lifetime) : mLifetime(lifetime), mResetCounter(lifetime)

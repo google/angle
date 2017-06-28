@@ -29,11 +29,11 @@ TEST(SizedMRUCacheTest, MaxSizedValue)
     constexpr size_t kSize = 32;
     SizedMRUCache<std::string, Blob> sizedCache(kSize);
 
-    sizedCache.put("test", MakeBlob(kSize), kSize);
+    EXPECT_TRUE(sizedCache.put("test", MakeBlob(kSize), kSize));
     EXPECT_EQ(32u, sizedCache.size());
     EXPECT_FALSE(sizedCache.empty());
 
-    sizedCache.put("test2", MakeBlob(kSize), kSize);
+    EXPECT_TRUE(sizedCache.put("test2", MakeBlob(kSize), kSize));
     EXPECT_EQ(32u, sizedCache.size());
     EXPECT_FALSE(sizedCache.empty());
 
@@ -52,7 +52,7 @@ TEST(SizedMRUCacheTest, ManySmallValues)
 
     for (size_t value = 0; value < kSize; ++value)
     {
-        sizedCache.put(value, std::move(value), 1);
+        EXPECT_TRUE(sizedCache.put(value, std::move(value), 1));
 
         const size_t *qvalue = nullptr;
         EXPECT_TRUE(sizedCache.get(value, &qvalue));
@@ -66,13 +66,13 @@ TEST(SizedMRUCacheTest, ManySmallValues)
     EXPECT_FALSE(sizedCache.empty());
 
     // Putting one element evicts the first element.
-    sizedCache.put(kSize, std::move(static_cast<int>(kSize)), 1);
+    EXPECT_TRUE(sizedCache.put(kSize, std::move(static_cast<int>(kSize)), 1));
 
     const size_t *qvalue = nullptr;
     EXPECT_FALSE(sizedCache.get(0, &qvalue));
 
     // Putting one large element cleans out the whole stack.
-    sizedCache.put(kSize + 1, kSize + 1, kSize);
+    EXPECT_TRUE(sizedCache.put(kSize + 1, kSize + 1, kSize));
     EXPECT_EQ(32u, sizedCache.size());
     EXPECT_FALSE(sizedCache.empty());
 
@@ -89,10 +89,19 @@ TEST(SizedMRUCacheTest, ManySmallValues)
     // Put a bunch of items in the cache sequentially.
     for (size_t value = 0; value < kSize * 10; ++value)
     {
-        sizedCache.put(value, std::move(value), 1);
+        EXPECT_TRUE(sizedCache.put(value, std::move(value), 1));
     }
 
     EXPECT_EQ(32u, sizedCache.size());
+}
+
+// Tests putting an oversize element.
+TEST(SizedMRUCacheTest, OversizeValue)
+{
+    constexpr size_t kSize = 32;
+    SizedMRUCache<size_t, size_t> sizedCache(kSize);
+
+    EXPECT_FALSE(sizedCache.put(5, 5, 100));
 }
 
 }  // namespace angle

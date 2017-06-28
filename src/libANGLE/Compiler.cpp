@@ -192,4 +192,9 @@ ShHandle Compiler::getCompilerHandle(GLenum type)
     return *compiler;
 }
 
+const std::string &Compiler::getBuiltinResourcesString(GLenum type)
+{
+    return sh::GetBuiltInResourcesString(getCompilerHandle(type));
+}
+
 }  // namespace gl
