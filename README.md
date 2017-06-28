@@ -35,7 +35,7 @@ Portions of the ANGLE shader compiler are used as a shader validator and transla
 implementations across multiple platforms. It is used on Mac OS X, Linux, and in mobile variants of
 the browsers. Having one shader validator helps to ensure that a consistent set of GLSL ES shaders
 are accepted across browsers and platforms. The shader translator can be used to translate shaders
-to other shading languages, and to optionally apply shader modifications to work around bugs or
+to other shading languages and to optionally apply shader modifications to work around bugs or
 quirks in the native graphics drivers. The translator targets Desktop GLSL, Direct3D HLSL, and even
 ESSL for native GLES2 platforms.
 
@@ -55,7 +55,7 @@ View the [Dev setup instructions](doc/DevSetup.md). For generating a Windows Sto
 
 * Join our [Google group](https://groups.google.com/group/angleproject) to keep up to date.
 * Join us on IRC in the #ANGLEproject channel on FreeNode.
-* File bugs in the [issue tracker](http://code.google.com/p/angleproject/issues/list) (preferably with an isolated test-case).
+* File bugs in the [issue tracker](http://code.google.com/p/angleproject/issues/list) (preferably with an isolated test case).
 * [Choose an ANGLE branch](doc/ChoosingANGLEBranch.md) to track in your own project.
 
 
