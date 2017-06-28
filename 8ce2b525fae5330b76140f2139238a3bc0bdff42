@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "de9107da_8cb485af",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-06-28T23:48:56Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "9eda868b_6d37da61",
+      "revId": "8ce2b525fae5330b76140f2139238a3bc0bdff42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "99068540_690b9fd9",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 4
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "I don\u0027t see the mistake, looks like it does area.height-1 when readLastRowSeparately is true?\n\nI\u0027ve factored out one readPixels and reduced the number of paths through the main section above from 3 to 2.  The new function name and parameter name document what this function does.  These seems like improvements to me but if you want I can undo some or all of them.",
       "parentUuid": "99068540_690b9fd9",
+      "revId": "8ce2b525fae5330b76140f2139238a3bc0bdff42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "256ecc55_fb74545e",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 689,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-06-28T23:48:56Z",
+      "side": 1,
+      "message": "The point of the workaround is that depending on the pack state, and pixel pack buffer size, a full call to readPixels won\u0027t work.\n\n    // When uploading textures from an unpack buffer, some drivers count an extra row padding when\n    // checking if the pixel unpack buffer is big enough. Tracking bug: http://anglebug.com/1512\n    // For example considering the pixel buffer below where in memory, each row data (D) of the\n    // texture is followed by some unused data (the dots):\n    //     +-------+--+\n    //     |DDDDDDD|..|\n    //     |DDDDDDD|..|\n    //     |DDDDDDD|..|\n    //     |DDDDDDD|..|\n    //     +-------A--B\n    // The last pixel read will be A, but the driver will think it is B, causing it to generate an\n    // error when the pixel buffer is just big enough.\n\nTo avoid the driver bug the first readPixels of the workaround needs to be with height - 1.",
+      "parentUuid": "926652b0_f74fab8c",
       "revId": "8ce2b525fae5330b76140f2139238a3bc0bdff42",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
