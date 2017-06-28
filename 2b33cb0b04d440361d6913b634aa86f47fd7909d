@@ -1,0 +1,169 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5e44bbf4_671567a8",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 638,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-28T10:04:09Z",
+      "side": 1,
+      "message": "What about buffer variables as built-in or user-defined function arguments? That should need a similar check.",
+      "revId": "2b33cb0b04d440361d6913b634aa86f47fd7909d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df7c67f1_87b0d11b",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 2749,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-28T10:04:09Z",
+      "side": 1,
+      "message": "Unclear error message. Would suggest \"invalid qualifier: global layout can only be set for blocks\".",
+      "range": {
+        "startLine": 2749,
+        "startChar": 39,
+        "endLine": 2749,
+        "endChar": 86
+      },
+      "revId": "2b33cb0b04d440361d6913b634aa86f47fd7909d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d6b09fb1_69aa2728",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3166,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-28T10:04:09Z",
+      "side": 1,
+      "message": "It would be better to have an error message that didn\u0027t refer to \"buffer\" if the shader version is \u003c 310.",
+      "revId": "2b33cb0b04d440361d6913b634aa86f47fd7909d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa741f68_9a7f9b4a",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3175,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-28T10:04:09Z",
+      "side": 1,
+      "message": "I think it would better to only have this temporary variable lower in the code where it\u0027s really needed.",
+      "revId": "2b33cb0b04d440361d6913b634aa86f47fd7909d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "59f83fa7_67b743d0",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3306,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-28T10:04:09Z",
+      "side": 1,
+      "message": "Would appreciate a reference to the spec section that says that block memory qualifiers override field memory qualifiers.\n\nAlso, what happens if block is specified as writeonly and field is specified as writeonly or vice versa?",
+      "revId": "2b33cb0b04d440361d6913b634aa86f47fd7909d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7660314d_7aac1a7b",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3308,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-28T10:04:09Z",
+      "side": 1,
+      "message": "I\u0027d leave these checks out, the code is simpler without them.",
+      "range": {
+        "startLine": 3308,
+        "startChar": 49,
+        "endLine": 3308,
+        "endChar": 79
+      },
+      "revId": "2b33cb0b04d440361d6913b634aa86f47fd7909d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd9023ec_f66bb759",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 4344,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-28T10:04:09Z",
+      "side": 1,
+      "message": "Should also check for writeonly left node in case the binary op is reading the left node. Arithmetic ops and compound assignments need to read the left node.",
+      "revId": "2b33cb0b04d440361d6913b634aa86f47fd7909d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4537034f_919c3313",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 13
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-28T10:04:09Z",
+      "side": 1,
+      "message": "This change should not be a part of this patch. These messages should all be changed simultaneously in a separate patch and only if there\u0027s a need to do so. Currently ANGLE doesn\u0027t support versions above ESSL 3.10.",
+      "revId": "2b33cb0b04d440361d6913b634aa86f47fd7909d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fde40bf6_cf567eac",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 13
+      },
+      "lineNbr": 862,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-28T10:04:09Z",
+      "side": 1,
+      "message": "Put the checkIsAtGlobalLevel() check inside ParseContext, consistently with other such checks.",
+      "revId": "2b33cb0b04d440361d6913b634aa86f47fd7909d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
