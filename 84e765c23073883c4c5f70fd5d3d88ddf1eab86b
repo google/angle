@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f2419cd1_fa69fedb",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltInsForInstancedMultiview.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-29T12:30:02Z",
+      "side": 1,
+      "message": "Actually, don\u0027t. I thought this was the convention but Jamie knows better.",
+      "parentUuid": "a03551c3_b7a94149",
+      "revId": "84e765c23073883c4c5f70fd5d3d88ddf1eab86b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bd61b99a_32719f12",
         "filename": "src/compiler/translator/DeclareAndInitBuiltInsForInstancedMultiview.cpp",
         "patchSetId": 7
