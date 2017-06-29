@@ -60,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "e725ff0c_9342f5ec",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltInsForInstancedMultiview.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-29T13:06:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bd61b99a_32719f12",
+      "range": {
+        "startLine": 62,
+        "startChar": 79,
+        "endLine": 62,
+        "endChar": 91
+      },
+      "revId": "84e765c23073883c4c5f70fd5d3d88ddf1eab86b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fbdb966c_ff392610",
         "filename": "src/compiler/translator/DeclareAndInitBuiltInsForInstancedMultiview.cpp",
         "patchSetId": 7
@@ -80,6 +104,30 @@
       "revId": "84e765c23073883c4c5f70fd5d3d88ddf1eab86b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25ea985d_1443e935",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltInsForInstancedMultiview.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-29T13:06:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fbdb966c_ff392610",
+      "range": {
+        "startLine": 82,
+        "startChar": 63,
+        "endLine": 82,
+        "endChar": 75
+      },
+      "revId": "84e765c23073883c4c5f70fd5d3d88ddf1eab86b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
