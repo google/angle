@@ -295,6 +295,23 @@
     },
     {
       "key": {
+        "uuid": "1646eb03_a4b00709",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 4073,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-06-29T17:07:28Z",
+      "side": 1,
+      "message": "nit: I don\u0027t think we need to pull this method out (as it\u0027s only used once). Also, the string message is incorrect. We are not validating the *gl* prefix here.",
+      "revId": "b07bb3bce2bc38327b4b87a16fa7f07d47334c5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "efe2ca30_207e8480",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 16
