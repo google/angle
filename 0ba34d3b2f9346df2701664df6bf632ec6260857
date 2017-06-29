@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b089ba5b_a7b52304",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-29T13:44:01Z",
+      "side": 1,
+      "message": "Could not follow the code guidelines for function parameters because there is not a const version of getAsBinaryNode().",
+      "range": {
+        "startLine": 38,
+        "startChar": 23,
+        "endLine": 38,
+        "endChar": 70
+      },
+      "revId": "0ba34d3b2f9346df2701664df6bf632ec6260857",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
