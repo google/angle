@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "146df110_54f151ed",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-29T14:33:07Z",
+      "side": 1,
+      "message": "OK, sure, how about GetVertexIndexFromDirtyBit, since they always deal with vertices?",
+      "parentUuid": "876c5c27_68898191",
+      "revId": "c5aa75a2e5bfc7d1a474c2d32c34b6855cd22d49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2d30bb03_482b49b4",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 26
@@ -30,6 +48,24 @@
       "writtenOn": "2017-06-19T08:46:55Z",
       "side": 1,
       "message": "In this patch mSupportVertexAttribBinding is used in many places, so I keep this variable.",
+      "revId": "c5aa75a2e5bfc7d1a474c2d32c34b6855cd22d49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b66f3e6b_d96ddf57",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-29T14:33:07Z",
+      "side": 1,
+      "message": "Can you make it a helper function instead? There\u0027s no need to store this in memory.",
+      "parentUuid": "2d30bb03_482b49b4",
       "revId": "c5aa75a2e5bfc7d1a474c2d32c34b6855cd22d49",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true

@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f6e9c132_a51371c7",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-29T14:33:07Z",
+      "side": 1,
+      "message": "Geoff had a good point - you can make this function constexpr and put it in the header file. The you can even make static_assert expressions to verify the correctness of the function.",
+      "range": {
+        "startLine": 176,
+        "startChar": 18,
+        "endLine": 176,
+        "endChar": 38
+      },
+      "revId": "a12ec8423b5aa0b5cbf7e8f2f67371876a78fe52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "36068cad_3ae204ab",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 475,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-29T14:33:07Z",
+      "side": 1,
+      "message": "This I think is wrong.\n\nThe attributes only need to stream if buffer is nullptr. But when buffer is nullptr, if anything changes in the attribute, then we need to re-stream. Here, we will only trigger the re-stream if the buffer binding changes. But the buffer could already be nullptr. You could add a test for this and produce a failure.",
+      "range": {
+        "startLine": 471,
+        "startChar": 0,
+        "endLine": 475,
+        "endChar": 0
+      },
+      "revId": "a12ec8423b5aa0b5cbf7e8f2f67371876a78fe52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b83c548c_e41dbd82",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 551,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-29T14:33:07Z",
+      "side": 1,
+      "message": "I think we might also have to re-stream here if the buffer binding is nullptr.",
+      "range": {
+        "startLine": 551,
+        "startChar": 20,
+        "endLine": 551,
+        "endChar": 38
+      },
+      "revId": "a12ec8423b5aa0b5cbf7e8f2f67371876a78fe52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e58e8cce_d6b5d1f2",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-29T14:33:07Z",
+      "side": 1,
+      "message": "not sure if this will potentially need to re-stream.",
+      "range": {
+        "startLine": 595,
+        "startChar": 20,
+        "endLine": 595,
+        "endChar": 39
+      },
+      "revId": "a12ec8423b5aa0b5cbf7e8f2f67371876a78fe52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "619e6d32_05051ae5",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 680,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-29T14:33:07Z",
+      "side": 1,
+      "message": "I have a question - how is it possible for us to have a dirty bit set for ATTRIB_FORMAT on platforms which don\u0027t support it? Would it make sense to change this \"if\" to \"ASSERT\"?\n\nI looked through the current implementation of VertexArray.cpp and didn\u0027t see any place where \"all\" of the dirty bits were set, so unless you added something in this patch, it might be OK to use assume we never don\u0027t support vertex binding if we have the dirty bit.",
+      "range": {
+        "startLine": 677,
+        "startChar": 0,
+        "endLine": 680,
+        "endChar": 13
+      },
+      "revId": "a12ec8423b5aa0b5cbf7e8f2f67371876a78fe52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
