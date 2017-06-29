@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "92579052_5831f617",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltInsForInstancedMultiview.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-29T11:27:51Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "e0c5ae45_bee33456",
+      "range": {
+        "startLine": 4,
+        "startChar": 0,
+        "endLine": 4,
+        "endChar": 11
+      },
+      "revId": "e06ce23e8c1d5ad007524c4d0c0becd35f947c3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6da42900_731f24c1",
         "filename": "src/compiler/translator/DeclareAndInitBuiltInsForInstancedMultiview.cpp",
         "patchSetId": 6
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "4f4e4ccc_a56644d3",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltInsForInstancedMultiview.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-29T11:27:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6da42900_731f24c1",
+      "range": {
+        "startLine": 153,
+        "startChar": 35,
+        "endLine": 153,
+        "endChar": 51
+      },
+      "revId": "e06ce23e8c1d5ad007524c4d0c0becd35f947c3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b794466b_9793af78",
         "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
         "patchSetId": 6
@@ -62,6 +110,24 @@
       "revId": "e06ce23e8c1d5ad007524c4d0c0becd35f947c3b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4d7cf154_f16fe355",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-29T11:27:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b794466b_9793af78",
+      "revId": "e06ce23e8c1d5ad007524c4d0c0becd35f947c3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -88,6 +154,30 @@
     },
     {
       "key": {
+        "uuid": "fd19612a_089f24a2",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-29T11:27:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0d045f5a_526fc32c",
+      "range": {
+        "startLine": 98,
+        "startChar": 6,
+        "endLine": 98,
+        "endChar": 46
+      },
+      "revId": "e06ce23e8c1d5ad007524c4d0c0becd35f947c3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "06574f77_13ef4265",
         "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
         "patchSetId": 6
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "ace0528f_c33fae49",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 605,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-29T11:27:51Z",
+      "side": 1,
+      "message": "Yes, the expected count changed after I switched from outputting the declaration in the translator to having it be part of the AST.",
+      "parentUuid": "06574f77_13ef4265",
+      "range": {
+        "startLine": 605,
+        "startChar": 39,
+        "endLine": 605,
+        "endChar": 53
+      },
+      "revId": "e06ce23e8c1d5ad007524c4d0c0becd35f947c3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f0986fb3_a270b47c",
         "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
         "patchSetId": 6
@@ -122,6 +236,30 @@
       "writtenOn": "2017-06-28T14:27:18Z",
       "side": 1,
       "message": "Looks like inconsistent indentation. Make sure to indent with spaces.",
+      "range": {
+        "startLine": 619,
+        "startChar": 9,
+        "endLine": 619,
+        "endChar": 11
+      },
+      "revId": "e06ce23e8c1d5ad007524c4d0c0becd35f947c3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "807deb67_24780cee",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 619,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-29T11:27:51Z",
+      "side": 1,
+      "message": "Yes, my msvs\u0027 editor settings should be correct now.",
+      "parentUuid": "f0986fb3_a270b47c",
       "range": {
         "startLine": 619,
         "startChar": 9,
