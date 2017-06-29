@@ -25,17 +25,18 @@ class SizedMRUCache final : angle::NonCopyable
     {
     }
 
-    bool put(const Key &key, Value &&value, size_t size)
+    // Returns nullptr on failure.
+    const Value *put(const Key &key, Value &&value, size_t size)
     {
         if (size > mMaximumTotalSize)
         {
-            return false;
+            return nullptr;
         }
 
         // Check for existing key.
         eraseByKey(key);
 
-        mStore.Put(key, ValueAndSize(std::move(value), size));
+        auto retVal = mStore.Put(key, ValueAndSize(std::move(value), size));
         mCurrentSize += size;
 
         while (mCurrentSize > mMaximumTotalSize)
@@ -46,7 +47,7 @@ class SizedMRUCache final : angle::NonCopyable
             mStore.Erase(iter);
         }
 
-        return true;
+        return &retVal->second.value;
     }
 
     bool get(const Key &key, const Value **valueOut)

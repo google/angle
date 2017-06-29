@@ -10,6 +10,7 @@
 #define ANGLE_PLATFORM_H
 
 #include <stdint.h>
+#include <array>
 
 #if defined(_WIN32)
 #   if !defined(LIBANGLE_IMPLEMENTATION)
@@ -230,6 +231,20 @@ inline void DefaultOverrideWorkaroundsD3D(PlatformMethods *platform,
 {
 }
 
+// Callback on a successful program link with the program binary. Can be used to store
+// shaders to disk. Keys are a 160-bit SHA-1 hash.
+using ProgramKeyType   = std::array<uint8_t, 20>;
+using CacheProgramFunc = void (*)(PlatformMethods *platform,
+                                  const ProgramKeyType &key,
+                                  size_t programSize,
+                                  const uint8_t *programBytes);
+inline void DefaultCacheProgram(PlatformMethods *platform,
+                                const ProgramKeyType &key,
+                                size_t programSize,
+                                const uint8_t *programBytes)
+{
+}
+
 // Platform methods are enumerated here once.
 #define ANGLE_PLATFORM_OP(OP)                                    \
     OP(currentTime, CurrentTime)                                 \
@@ -244,7 +259,8 @@ inline void DefaultOverrideWorkaroundsD3D(PlatformMethods *platform,
     OP(histogramEnumeration, HistogramEnumeration)               \
     OP(histogramSparse, HistogramSparse)                         \
     OP(histogramBoolean, HistogramBoolean)                       \
-    OP(overrideWorkaroundsD3D, OverrideWorkaroundsD3D)
+    OP(overrideWorkaroundsD3D, OverrideWorkaroundsD3D)           \
+    OP(cacheProgram, CacheProgram)
 
 #define ANGLE_PLATFORM_METHOD_DEF(Name, CapsName) CapsName##Func Name = Default##CapsName;
 
