@@ -83,7 +83,8 @@ typedef HWND    EGLNativeWindowType;
 typedef IInspectable* EGLNativeWindowType;
 #endif
 
-#elif defined(__APPLE__) || defined(__WINSCW__) || defined(__SYMBIAN32__)  /* Symbian */
+#elif defined(__APPLE__) || defined(__WINSCW__) || defined(__SYMBIAN32__) || \
+      defined(__Fuchsia__)
 
 typedef int   EGLNativeDisplayType;
 typedef void *EGLNativeWindowType;
