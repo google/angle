@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "4b704b20_ba37ac8b",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-29T14:00:51Z",
+      "side": 1,
+      "message": "I think the AreTypesEqual() check got accidentally dropped somewhere along the line. Should add it back here.",
+      "revId": "0ba34d3b2f9346df2701664df6bf632ec6260857",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b089ba5b_a7b52304",
         "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
         "patchSetId": 11
@@ -19,6 +36,70 @@
         "endLine": 38,
         "endChar": 70
       },
+      "revId": "0ba34d3b2f9346df2701664df6bf632ec6260857",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "12b05230_ae7103fd",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-29T14:00:51Z",
+      "side": 1,
+      "message": "Yep, can leave that as is for now.",
+      "parentUuid": "b089ba5b_a7b52304",
+      "range": {
+        "startLine": 38,
+        "startChar": 23,
+        "endLine": 38,
+        "endChar": 70
+      },
+      "revId": "0ba34d3b2f9346df2701664df6bf632ec6260857",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3466682d_5f8e380e",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-29T14:00:51Z",
+      "side": 1,
+      "message": "Remove this bit and check inside the if: if (!candidateBinary) { return false; }",
+      "range": {
+        "startLine": 42,
+        "startChar": 22,
+        "endLine": 42,
+        "endChar": 41
+      },
+      "revId": "0ba34d3b2f9346df2701664df6bf632ec6260857",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6946c255_6c19b0ee",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-29T14:00:51Z",
+      "side": 1,
+      "message": "I don\u0027t think you should assert what the candidate\u0027s op is. Treat the expected as known and the candidate like it could be anything.",
       "revId": "0ba34d3b2f9346df2701664df6bf632ec6260857",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
