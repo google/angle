@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "517ab9a9_92cca255",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-29T13:02:21Z",
+      "side": 1,
+      "message": "This would be more like what I was after. I was thinking the whole function would be like this:\n\n1. If the expected node is a TIntermBinary indexing node -\u003e check if the candidate node is a matching TIntermBinary indexing node, with a matching symbol node and a matching index.\n\n2. Otherwise check if the candidate node is a matching symbol node (can assume that the expected node is a symbol node). Don\u0027t go into this part of the code at all if the expected node is a TIntermBinary node.\n\nThe common functionality between the two paths could be put into a helper function AreSymbolsTheSame or similar if you feel like there\u0027s too much overlap otherwise.\n\nThis would be clearer than the current code since all the execution paths through the code would be very straightforward - there would be no falling out of the if statement with different values for expectedSymbol and candidateSymbol in particular. That\u0027s what I think makes the current code still a bit more complex than it needs to be.\n\nI think it\u0027s completely fine to make assumptions about the expected node based on what these tests are using. That makes this code less generic, but if you assert what type the expected nodes should be then there would not be any possibility of errors here going unnoticed.",
+      "parentUuid": "0d95ecd1_585fcfa3",
+      "range": {
+        "startLine": 41,
+        "startChar": 4,
+        "endLine": 42,
+        "endChar": 5
+      },
+      "revId": "53f261042c154db8a7fa222376443d78a19ecc14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3fce9e09_95dd0c4d",
         "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
         "patchSetId": 10
