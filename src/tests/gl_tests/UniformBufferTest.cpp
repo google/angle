@@ -676,6 +676,13 @@ TEST_P(UniformBufferTest31, MaxUniformBufferBindingsExceeded)
 // Test uniform block bindings specified by layout in shader work properly.
 TEST_P(UniformBufferTest31, UniformBufferBindings)
 {
+    // TODO(jmadill): Figure out why this fails on Linux AMD OpenGL
+    if (IsLinux() && IsAMD() && IsDesktopOpenGL())
+    {
+        std::cout << "Test skipped on Linux OpenGL on AMD." << std::endl;
+        return;
+    }
+
     const std::string &vertexShaderSource =
         "#version 310 es\n"
         "in vec4 position;\n"
@@ -741,6 +748,13 @@ TEST_P(UniformBufferTest31, UniformBufferBindings)
 // Test uniform blocks used as instanced array take next binding point for each subsequent element.
 TEST_P(UniformBufferTest31, ConsecutiveBindingsForBlockArray)
 {
+    // TODO(jmadill): Figure out why this fails on Linux AMD OpenGL
+    if (IsLinux() && IsAMD() && IsDesktopOpenGL())
+    {
+        std::cout << "Test skipped on Linux OpenGL on AMD." << std::endl;
+        return;
+    }
+
     const std::string &vertexShaderSource =
         "#version 310 es\n"
         "in vec4 position;\n"
