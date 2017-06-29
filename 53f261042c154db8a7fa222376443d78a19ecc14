@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0d95ecd1_585fcfa3",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-29T12:43:32Z",
+      "side": 1,
+      "message": "This whole piece of code could possibly be implemented just as two blocks without any dependencies:\n\n{\nTry to interpret as symbols and update symbols\n}\n\n{\nTry to interpret as binary nodes, extract symbols and subscripts\n}\n\nDo the symbol and subscript checks.\n\nOnly one of the blocks will succeed. Don\u0027t know whether it\u0027s prettier.",
+      "range": {
+        "startLine": 41,
+        "startChar": 4,
+        "endLine": 42,
+        "endChar": 5
+      },
+      "revId": "53f261042c154db8a7fa222376443d78a19ecc14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3fce9e09_95dd0c4d",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-29T12:43:32Z",
+      "side": 1,
+      "message": "Removed the operator assertion. This could lead into an error if one indexes a struct in the array and has an expected lvalue of a binary node which indexes an array. I guess this will not happen for these tests anyway.",
+      "range": {
+        "startLine": 47,
+        "startChar": 9,
+        "endLine": 47,
+        "endChar": 0
+      },
+      "revId": "53f261042c154db8a7fa222376443d78a19ecc14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
