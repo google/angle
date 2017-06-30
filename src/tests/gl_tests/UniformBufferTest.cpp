@@ -29,30 +29,16 @@ class UniformBufferTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        const std::string vertexShaderSource = SHADER_SOURCE
-        (   #version 300 es\n
-            in vec4 position;
-            void main()
-            {
-                gl_Position = position;
-            }
-        );
-        const std::string fragmentShaderSource = SHADER_SOURCE
-        (   #version 300 es\n
-            precision highp float;
-            uniform uni {
-                vec4 color;
-            };
+        mVertexShaderSource = SHADER_SOURCE(#version 300 es\n in vec4 position;
+                                            void main() { gl_Position = position; });
+        mFragmentShaderSource =
+            SHADER_SOURCE(#version 300 es\n precision highp float; uniform uni { vec4 color; };
 
-            out vec4 fragColor;
+                          out vec4 fragColor;
 
-            void main()
-            {
-                fragColor = color;
-            }
-        );
+                          void main() { fragColor = color; });
 
-        mProgram = CompileProgram(vertexShaderSource, fragmentShaderSource);
+        mProgram = CompileProgram(mVertexShaderSource, mFragmentShaderSource);
         ASSERT_NE(mProgram, 0u);
 
         mUniformBufferIndex = glGetUniformBlockIndex(mProgram, "uni");
@@ -70,6 +56,8 @@ class UniformBufferTest : public ANGLETest
         ANGLETest::TearDown();
     }
 
+    std::string mVertexShaderSource;
+    std::string mFragmentShaderSource;
     GLuint mProgram;
     GLint mUniformBufferIndex;
     GLuint mUniformBuffer;
@@ -118,16 +106,15 @@ TEST_P(UniformBufferTest, UniformBufferRange)
 
     // Let's create a buffer which contains two vec4.
     GLuint vec4Size = 4 * sizeof(float);
-    GLuint stride = 0;
+    GLuint stride   = 0;
     do
     {
         stride += alignment;
-    }
-    while (stride < vec4Size);
+    } while (stride < vec4Size);
 
     std::vector<char> v(2 * stride);
-    float *first = reinterpret_cast<float*>(v.data());
-    float *second = reinterpret_cast<float*>(v.data() + stride);
+    float *first  = reinterpret_cast<float *>(v.data());
+    float *second = reinterpret_cast<float *>(v.data() + stride);
 
     first[0] = 10.f / 255.f;
     first[1] = 20.f / 255.f;
@@ -156,10 +143,9 @@ TEST_P(UniformBufferTest, UniformBufferRange)
     EXPECT_PIXEL_EQ(px, py, 10, 20, 30, 40);
 
     // Bind the second part of the uniform buffer and draw
-    // Furthermore the D3D11.1 backend will internally round the vec4Size (16 bytes) to a stride (256 bytes)
-    // hence it will try to map the range [stride, 2 * stride] which is
-    // out-of-bound of the buffer bufferSize = stride + vec4Size < 2 * stride.
-    // Ensure that this behaviour works.
+    // Furthermore the D3D11.1 backend will internally round the vec4Size (16 bytes) to a stride
+    // (256 bytes) hence it will try to map the range [stride, 2 * stride] which is out-of-bound of
+    // the buffer bufferSize = stride + vec4Size < 2 * stride. Ensure that this behaviour works.
     glBindBufferRange(GL_UNIFORM_BUFFER, 0, mUniformBuffer, stride, vec4Size);
     drawQuad(mProgram, "position", 0.5f);
     EXPECT_GL_NO_ERROR();
@@ -177,7 +163,7 @@ TEST_P(UniformBufferTest, UniformBufferBindings)
     // Let's create a buffer which contains one vec4.
     GLuint vec4Size = 4 * sizeof(float);
     std::vector<char> v(vec4Size);
-    float *first = reinterpret_cast<float*>(v.data());
+    float *first = reinterpret_cast<float *>(v.data());
 
     first[0] = 10.f / 255.f;
     first[1] = 20.f / 255.f;
@@ -210,7 +196,8 @@ TEST_P(UniformBufferTest, UniformBufferBindings)
 }
 
 // Test that ANGLE handles used but unbound UBO.
-// TODO: A test case shouldn't depend on the error code of an undefined behaviour. Move this to unit tests of the validation layer.
+// TODO: A test case shouldn't depend on the error code of an undefined behaviour. Move this to unit
+// tests of the validation layer.
 TEST_P(UniformBufferTest, UnboundUniformBuffer)
 {
     glUniformBlockBinding(mProgram, mUniformBufferIndex, 0);
@@ -285,18 +272,17 @@ TEST_P(UniformBufferTest, ManyUniformBufferRange)
 
     // Let's create a buffer which contains eight vec4.
     GLuint vec4Size = 4 * sizeof(float);
-    GLuint stride = 0;
+    GLuint stride   = 0;
     do
     {
         stride += alignment;
-    }
-    while (stride < vec4Size);
+    } while (stride < vec4Size);
 
     std::vector<char> v(8 * stride);
 
     for (size_t i = 0; i < 8; ++i)
     {
-        float *data = reinterpret_cast<float*>(v.data() + i * stride);
+        float *data = reinterpret_cast<float *>(v.data() + i * stride);
 
         data[0] = (i + 10.f) / 255.f;
         data[1] = (i + 20.f) / 255.f;
@@ -821,6 +807,103 @@ TEST_P(UniformBufferTest31, BindingMustBeBothSpecified)
         "}";
     GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
     ASSERT_EQ(0u, program);
+}
+
+// Test with a block containing an array of structs.
+TEST_P(UniformBufferTest, BlockContainingArrayOfStructs)
+{
+    const std::string &fragmentShader =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "out vec4 my_FragColor;\n"
+        "struct light_t {\n"
+        "    vec4 intensity;\n"
+        "};\n"
+        "const int maxLights = 2;\n"
+        "layout(std140) uniform lightData { light_t lights[maxLights]; };\n"
+        "vec4 processLight(vec4 lighting, light_t light)\n"
+        "{\n"
+        "    return lighting + light.intensity;\n"
+        "}\n"
+        "void main()\n"
+        "{\n"
+        "    vec4 lighting = vec4(0, 0, 0, 1);\n"
+        "    for (int n = 0; n < maxLights; n++)\n"
+        "    {\n"
+        "        lighting = processLight(lighting, lights[n]);\n"
+        "    }\n"
+        "    my_FragColor = lighting;\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, mVertexShaderSource, fragmentShader);
+    GLint uniformBufferIndex = glGetUniformBlockIndex(program, "lightData");
+
+    glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
+    const GLsizei kStructCount        = 2;
+    const GLsizei kVectorElementCount = 4;
+    const GLsizei kBytesPerElement    = 4;
+    const GLsizei kDataSize           = kStructCount * kVectorElementCount * kBytesPerElement;
+    std::vector<GLubyte> v(kDataSize, 0);
+    float *vAsFloat = reinterpret_cast<float *>(v.data());
+
+    vAsFloat[1]                       = 0.5f;
+    vAsFloat[kVectorElementCount + 1] = 0.5f;
+
+    glBufferData(GL_UNIFORM_BUFFER, kDataSize, v.data(), GL_STATIC_DRAW);
+
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
+    glUniformBlockBinding(program, uniformBufferIndex, 0);
+    drawQuad(program.get(), "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
+// Test with a block containing an array of structs containing arrays.
+TEST_P(UniformBufferTest, BlockContainingArrayOfStructsContainingArrays)
+{
+    const std::string &fragmentShader =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "out vec4 my_FragColor;\n"
+        "struct light_t {\n"
+        "    vec4 intensity[3];\n"
+        "};\n"
+        "const int maxLights = 2;\n"
+        "layout(std140) uniform lightData { light_t lights[maxLights]; };\n"
+        "vec4 processLight(vec4 lighting, light_t light)\n"
+        "{\n"
+        "    return lighting + light.intensity[1];\n"
+        "}\n"
+        "void main()\n"
+        "{\n"
+        "    vec4 lighting = vec4(0, 0, 0, 1);\n"
+        "    for (int n = 0; n < maxLights; n++)\n"
+        "    {\n"
+        "        lighting = processLight(lighting, lights[n]);\n"
+        "    }\n"
+        "    my_FragColor = lighting;\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, mVertexShaderSource, fragmentShader);
+    GLint uniformBufferIndex = glGetUniformBlockIndex(program, "lightData");
+
+    glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
+    const GLsizei kStructCount       = 2;
+    const GLsizei kVectorsPerStruct  = 3;
+    const GLsizei kElementsPerVector = 4;
+    const GLsizei kBytesPerElement   = 4;
+    const GLsizei kDataSize =
+        kStructCount * kVectorsPerStruct * kElementsPerVector * kBytesPerElement;
+    std::vector<GLubyte> v(kDataSize, 0);
+    float *vAsFloat = reinterpret_cast<float *>(v.data());
+
+    vAsFloat[kElementsPerVector + 1]                                          = 0.5f;
+    vAsFloat[kVectorsPerStruct * kElementsPerVector + kElementsPerVector + 1] = 0.5f;
+
+    glBufferData(GL_UNIFORM_BUFFER, kDataSize, v.data(), GL_STATIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
+    glUniformBlockBinding(program, uniformBufferIndex, 0);
+    drawQuad(program.get(), "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.

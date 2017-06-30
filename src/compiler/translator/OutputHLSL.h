@@ -197,9 +197,7 @@ class OutputHLSL : public TIntermTraverser
 
     TIntermSymbol *mExcessiveLoopIndex;
 
-    TString structInitializerString(int indent,
-                                    const TStructure &structure,
-                                    const TString &rhsStructName);
+    TString structInitializerString(int indent, const TType &type, const TString &name);
 
     std::map<TIntermTyped *, TString> mFlaggedStructMappedNames;
     std::map<TIntermTyped *, TString> mFlaggedStructOriginalNames;
