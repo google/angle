@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fcec7fb7_d4992d47",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-06-30T03:26:37Z",
+      "side": 1,
+      "message": "@Geoff, I\u0027ve added function clearTexture in TextureD3D.cpp and clearRenderTargetView in Renderer11.cpp. I\u0027m not sure if it\u0027s a good design, please take a look.",
+      "revId": "2ca35d42ea79e3690ff008e9da05e2be16330eb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
