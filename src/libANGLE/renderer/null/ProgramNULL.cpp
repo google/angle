@@ -29,7 +29,7 @@ gl::LinkResult ProgramNULL::load(const gl::Context *contextImpl,
     return true;
 }
 
-void ProgramNULL::save(gl::BinaryOutputStream *stream)
+void ProgramNULL::save(const gl::Context *context, gl::BinaryOutputStream *stream)
 {
 }
 

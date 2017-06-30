@@ -34,7 +34,7 @@ class ProgramGL : public ProgramImpl
     gl::LinkResult load(const gl::Context *contextImpl,
                         gl::InfoLog &infoLog,
                         gl::BinaryInputStream *stream) override;
-    void save(gl::BinaryOutputStream *stream) override;
+    void save(const gl::Context *context, gl::BinaryOutputStream *stream) override;
     void setBinaryRetrievableHint(bool retrievable) override;
     void setSeparable(bool separable) override;
 
@@ -82,6 +82,7 @@ class ProgramGL : public ProgramImpl
     void preLink();
     bool checkLinkStatus(gl::InfoLog &infoLog);
     void postLink();
+    void reapplyUBOBindingsIfNeeded(const gl::Context *context);
 
     // Helper function, makes it simpler to type.
     GLint uniLoc(GLint glLocation) const { return mUniformRealLocationMap[glLocation]; }

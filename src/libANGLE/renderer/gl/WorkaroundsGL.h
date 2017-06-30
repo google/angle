@@ -114,11 +114,11 @@ struct WorkaroundsGL
     // Tracking bug: http://crbug.com/672380
     bool emulateAtan2Float = false;
 
-    // Some drivers seem to forget about UBO bindings when loading program binaries. Work around
-    // this by re-applying the bindings after the program binary is loaded.
+    // Some drivers seem to forget about UBO bindings when using program binaries. Work around
+    // this by re-applying the bindings after the program binary is loaded or saved.
     // This only seems to affect AMD OpenGL drivers, and some Android devices.
     // http://anglebug.com/1637
-    bool reapplyUBOBindingsAfterLoadingBinaryProgram = false;
+    bool reapplyUBOBindingsAfterUsingBinaryProgram = false;
 
     // Some OpenGL drivers return 0 when we query MAX_VERTEX_ATTRIB_STRIDE in an OpenGL 4.4 or
     // higher context.

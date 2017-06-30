@@ -24,7 +24,7 @@ class MockProgramImpl : public rx::ProgramImpl
     virtual ~MockProgramImpl() { destructor(); }
 
     MOCK_METHOD3(load, gl::LinkResult(const gl::Context *, gl::InfoLog &, gl::BinaryInputStream *));
-    MOCK_METHOD1(save, void(gl::BinaryOutputStream *));
+    MOCK_METHOD2(save, void(const gl::Context *, gl::BinaryOutputStream *));
     MOCK_METHOD1(setBinaryRetrievableHint, void(bool));
     MOCK_METHOD1(setSeparable, void(bool));
 

@@ -43,7 +43,7 @@ gl::LinkResult ProgramVk::load(const gl::Context *contextImpl,
     return gl::InternalError();
 }
 
-void ProgramVk::save(gl::BinaryOutputStream *stream)
+void ProgramVk::save(const gl::Context *context, gl::BinaryOutputStream *stream)
 {
     UNIMPLEMENTED();
 }

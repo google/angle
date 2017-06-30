@@ -437,7 +437,7 @@ void MemoryProgramCache::Serialize(const Context *context,
         stream.writeInt(imageBinding.elementCount);
     }
 
-    program->getImplementation()->save(&stream);
+    program->getImplementation()->save(context, &stream);
 
     ASSERT(binaryOut);
     binaryOut->resize(stream.length());

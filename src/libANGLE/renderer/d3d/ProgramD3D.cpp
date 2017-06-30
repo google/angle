@@ -959,7 +959,7 @@ gl::LinkResult ProgramD3D::load(const gl::Context *context,
     return true;
 }
 
-void ProgramD3D::save(gl::BinaryOutputStream *stream)
+void ProgramD3D::save(const gl::Context *context, gl::BinaryOutputStream *stream)
 {
     // Output the DeviceIdentifier before we output any shader code
     // When we load the binary again later, we can validate the device identifier before trying to

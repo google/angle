@@ -998,11 +998,11 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
     // 364 are known to be affected, at least up to 375.
     workarounds->emulateAtan2Float = IsNvidia(vendor);
 
-    workarounds->reapplyUBOBindingsAfterLoadingBinaryProgram = IsAMD(vendor);
+    workarounds->reapplyUBOBindingsAfterUsingBinaryProgram = IsAMD(vendor);
 
 #if defined(ANGLE_PLATFORM_ANDROID)
     // TODO(jmadill): Narrow workaround range for specific devices.
-    workarounds->reapplyUBOBindingsAfterLoadingBinaryProgram = true;
+    workarounds->reapplyUBOBindingsAfterUsingBinaryProgram = true;
 #endif
 }
 

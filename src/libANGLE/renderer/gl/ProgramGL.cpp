@@ -71,22 +71,12 @@ gl::LinkResult ProgramGL::load(const gl::Context *context,
     }
 
     postLink();
-
-    // Re-apply UBO bindings to work around driver bugs.
-    const WorkaroundsGL &workaroundsGL = GetImplAs<ContextGL>(context)->getWorkaroundsGL();
-    if (workaroundsGL.reapplyUBOBindingsAfterLoadingBinaryProgram)
-    {
-        const auto &blocks = mState.getUniformBlocks();
-        for (size_t blockIndex : mState.getActiveUniformBlockBindingsMask())
-        {
-            setUniformBlockBinding(static_cast<GLuint>(blockIndex), blocks[blockIndex].binding);
-        }
-    }
+    reapplyUBOBindingsIfNeeded(context);
 
     return true;
 }
 
-void ProgramGL::save(gl::BinaryOutputStream *stream)
+void ProgramGL::save(const gl::Context *context, gl::BinaryOutputStream *stream)
 {
     GLint binaryLength = 0;
     mFunctions->getProgramiv(mProgramID, GL_PROGRAM_BINARY_LENGTH, &binaryLength);
@@ -99,6 +89,22 @@ void ProgramGL::save(gl::BinaryOutputStream *stream)
     stream->writeInt(binaryFormat);
     stream->writeInt(binaryLength);
     stream->writeBytes(&binary[0], binaryLength);
+
+    reapplyUBOBindingsIfNeeded(context);
+}
+
+void ProgramGL::reapplyUBOBindingsIfNeeded(const gl::Context *context)
+{
+    // Re-apply UBO bindings to work around driver bugs.
+    const WorkaroundsGL &workaroundsGL = GetImplAs<ContextGL>(context)->getWorkaroundsGL();
+    if (workaroundsGL.reapplyUBOBindingsAfterUsingBinaryProgram)
+    {
+        const auto &blocks = mState.getUniformBlocks();
+        for (size_t blockIndex : mState.getActiveUniformBlockBindingsMask())
+        {
+            setUniformBlockBinding(static_cast<GLuint>(blockIndex), blocks[blockIndex].binding);
+        }
+    }
 }
 
 void ProgramGL::setBinaryRetrievableHint(bool retrievable)
