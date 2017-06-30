@@ -741,9 +741,11 @@ Error Display::createContext(const Config *configuration,
         shareTextures = mTextureManager;
     }
 
-    gl::Context *context = new gl::Context(mImplementation, configuration, shareContext,
-                                           shareTextures, &mMemoryProgramCache, attribs,
-                                           mDisplayExtensions, isRobustResourceInitEnabled());
+    // Memory cache temporarily disabled to prevent double memory use in Chrome.
+    // TODO(jmadill): Re-enable once we have memory cache control.
+    gl::Context *context =
+        new gl::Context(mImplementation, configuration, shareContext, shareTextures, nullptr,
+                        attribs, mDisplayExtensions, isRobustResourceInitEnabled());
 
     ASSERT(context != nullptr);
     mContextSet.insert(context);
