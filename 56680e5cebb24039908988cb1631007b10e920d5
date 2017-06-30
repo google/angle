@@ -1,0 +1,349 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "45daa8e8_04bddda5",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 3853,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-30T14:48:48Z",
+      "side": 1,
+      "message": "this isn\u0027t quite correct - a negative size is an invalid value, rather than a valid (but insufficient) size",
+      "range": {
+        "startLine": 3853,
+        "startChar": 54,
+        "endLine": 3853,
+        "endChar": 76
+      },
+      "revId": "56680e5cebb24039908988cb1631007b10e920d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "be5cb5e4_c74c9d58",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2296,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-30T14:48:48Z",
+      "side": 1,
+      "message": "nit: InvalidClearMask",
+      "range": {
+        "startLine": 2296,
+        "startChar": 54,
+        "endLine": 2296,
+        "endChar": 70
+      },
+      "revId": "56680e5cebb24039908988cb1631007b10e920d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ba051309_17485efa",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2659,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-30T14:48:48Z",
+      "side": 1,
+      "message": "seems like an incorrect name for this error. haven\u0027t checked the text.",
+      "range": {
+        "startLine": 2659,
+        "startChar": 58,
+        "endLine": 2659,
+        "endChar": 78
+      },
+      "revId": "56680e5cebb24039908988cb1631007b10e920d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dfa3d43c_a2f379f3",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2748,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-30T14:48:48Z",
+      "side": 1,
+      "message": "InvalidNameCharacters",
+      "range": {
+        "startLine": 2748,
+        "startChar": 54,
+        "endLine": 2748,
+        "endChar": 75
+      },
+      "revId": "56680e5cebb24039908988cb1631007b10e920d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e6061e3_f3904e88",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 3466,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-30T14:48:48Z",
+      "side": 1,
+      "message": "incorrect error. The entry point specifies the program, it doesn\u0027t have to be bound. It simply doesn\u0027t exist.",
+      "range": {
+        "startLine": 3466,
+        "startChar": 58,
+        "endLine": 3466,
+        "endChar": 73
+      },
+      "revId": "56680e5cebb24039908988cb1631007b10e920d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1035cd51_87b8feea",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 3718,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-30T14:48:48Z",
+      "side": 1,
+      "message": "Not sure what a subtexture is in GL - but maybe naming this something more close to the original error message would be clearer, like SourceTextureTooSmall",
+      "range": {
+        "startLine": 3718,
+        "startChar": 54,
+        "endLine": 3718,
+        "endChar": 74
+      },
+      "revId": "56680e5cebb24039908988cb1631007b10e920d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b851db16_e61887af",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 3858,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-30T14:48:48Z",
+      "side": 1,
+      "message": "shader type, not name. although not consistent, names in GL usually mean numeric IDs",
+      "range": {
+        "startLine": 3858,
+        "startChar": 57,
+        "endLine": 3858,
+        "endChar": 74
+      },
+      "revId": "56680e5cebb24039908988cb1631007b10e920d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4d3f944f_75493939",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 3912,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-30T14:48:48Z",
+      "side": 1,
+      "message": "doesn\u0027t this just mean not bound? rather than null - that isn\u0027t something in the GL spec.",
+      "range": {
+        "startLine": 3912,
+        "startChar": 58,
+        "endLine": 3912,
+        "endChar": 72
+      },
+      "revId": "56680e5cebb24039908988cb1631007b10e920d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94f79a51_3e8bf7a0",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 3947,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-30T14:48:48Z",
+      "side": 1,
+      "message": "same here. I haven\u0027t cross referenced with the error message but the name at least is perhaps not clear.",
+      "range": {
+        "startLine": 3947,
+        "startChar": 58,
+        "endLine": 3947,
+        "endChar": 75
+      },
+      "revId": "56680e5cebb24039908988cb1631007b10e920d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "47d12615_4a4d70c3",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 3968,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-30T14:48:48Z",
+      "side": 1,
+      "message": "this should make it clear it\u0027s a buffer size overflow",
+      "range": {
+        "startLine": 3968,
+        "startChar": 54,
+        "endLine": 3968,
+        "endChar": 67
+      },
+      "revId": "56680e5cebb24039908988cb1631007b10e920d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "05426bc9_d36589e8",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 4057,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-30T14:48:48Z",
+      "side": 1,
+      "message": "functionality changes should be in a split patch - we can probably land this quickly.",
+      "range": {
+        "startLine": 4057,
+        "startChar": 12,
+        "endLine": 4057,
+        "endChar": 35
+      },
+      "revId": "56680e5cebb24039908988cb1631007b10e920d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ca7cd189_2f3de788",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 4098,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-30T14:48:48Z",
+      "side": 1,
+      "message": "see above comment.",
+      "range": {
+        "startLine": 4098,
+        "startChar": 8,
+        "endLine": 4098,
+        "endChar": 15
+      },
+      "revId": "56680e5cebb24039908988cb1631007b10e920d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d2dd2aa_e65effbd",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 4448,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-30T14:48:48Z",
+      "side": 1,
+      "message": "nit: InvalidDepthRange",
+      "range": {
+        "startLine": 4448,
+        "startChar": 58,
+        "endLine": 4448,
+        "endChar": 68
+      },
+      "revId": "56680e5cebb24039908988cb1631007b10e920d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a80a5721_28457ac0",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 4607,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-30T14:48:48Z",
+      "side": 1,
+      "message": "nit: ExpectedShaderName",
+      "range": {
+        "startLine": 4607,
+        "startChar": 62,
+        "endLine": 4607,
+        "endChar": 79
+      },
+      "revId": "56680e5cebb24039908988cb1631007b10e920d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "786aad22_a0056649",
+        "filename": "src/libANGLE/validationES_unittest.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-30T14:48:48Z",
+      "side": 1,
+      "message": "can probably remove the g_ prefix if we\u0027re using k",
+      "range": {
+        "startLine": 111,
+        "startChar": 50,
+        "endLine": 111,
+        "endChar": 87
+      },
+      "revId": "56680e5cebb24039908988cb1631007b10e920d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
