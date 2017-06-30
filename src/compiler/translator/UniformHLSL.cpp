@@ -178,8 +178,8 @@ void UniformHLSL::outputHLSLSamplerUniformGroup(
 
         if (type.isArray())
         {
-            out << "static const uint " << DecorateIfNeeded(uniform->getName()) << ArrayString(type)
-                << " = {";
+            out << "static const uint " << DecorateVariableIfNeeded(uniform->getName())
+                << ArrayString(type) << " = {";
             for (unsigned int i = 0u; i < type.getArraySize(); ++i)
             {
                 if (i > 0u)
@@ -190,7 +190,7 @@ void UniformHLSL::outputHLSLSamplerUniformGroup(
         }
         else
         {
-            out << "static const uint " << DecorateIfNeeded(uniform->getName()) << " = "
+            out << "static const uint " << DecorateVariableIfNeeded(uniform->getName()) << " = "
                 << samplerArrayIndex << ";\n";
         }
     }
@@ -218,11 +218,11 @@ void UniformHLSL::outputHLSL4_0_FL9_3Sampler(TInfoSinkBase &out,
                                              const unsigned int registerIndex)
 {
     out << "uniform " << SamplerString(type.getBasicType()) << " sampler_"
-        << DecorateUniform(name, type) << ArrayString(type) << " : register(s" << str(registerIndex)
-        << ");\n";
+        << DecorateVariableIfNeeded(name) << ArrayString(type) << " : register(s"
+        << str(registerIndex) << ");\n";
     out << "uniform " << TextureString(type.getBasicType()) << " texture_"
-        << DecorateUniform(name, type) << ArrayString(type) << " : register(t" << str(registerIndex)
-        << ");\n";
+        << DecorateVariableIfNeeded(name) << ArrayString(type) << " : register(t"
+        << str(registerIndex) << ");\n";
 }
 
 void UniformHLSL::outputUniform(TInfoSinkBase &out,
@@ -245,7 +245,7 @@ void UniformHLSL::outputUniform(TInfoSinkBase &out,
 
     out << "uniform " << typeName << " ";
 
-    out << DecorateUniform(name, type);
+    out << DecorateVariableIfNeeded(name);
 
     out << ArrayString(type) << " : " << registerString << ";\n";
 }

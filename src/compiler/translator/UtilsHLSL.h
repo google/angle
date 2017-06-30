@@ -62,10 +62,10 @@ TString TextureGroupSuffix(const TBasicType type);
 TString TextureTypeSuffix(const TBasicType type);
 TString SamplerString(const TBasicType type);
 TString SamplerString(HLSLTextureSamplerGroup type);
-// Prepends an underscore to avoid naming clashes
+// Adds a prefix to user-defined names to avoid naming clashes.
 TString Decorate(const TString &string);
-TString DecorateIfNeeded(const TName &name);
-TString DecorateUniform(const TName &name, const TType &type);
+TString DecorateVariableIfNeeded(const TName &name);
+TString DecorateFunctionIfNeeded(const TName &name);
 TString DecorateField(const TString &string, const TStructure &structure);
 TString DecoratePrivate(const TString &privateText);
 TString TypeString(const TType &type);

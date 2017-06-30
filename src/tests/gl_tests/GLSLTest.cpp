@@ -3110,6 +3110,29 @@ TEST_P(GLSLTest_ES3, ConditionInitializerDeclaresVariable)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that a variable hides a user-defined function with the same name after its initializer.
+// GLSL ES 1.00.17 section 4.2.2: "A variable declaration is visible immediately following the
+// initializer if present, otherwise immediately following the identifier"
+TEST_P(GLSLTest, VariableHidesUserDefinedFunctionAfterInitializer)
+{
+    const std::string &fragmentShader =
+        "precision mediump float;\n"
+        "uniform vec4 u;\n"
+        "vec4 foo()\n"
+        "{\n"
+        "    return u;\n"
+        "}\n"
+        "void main()\n"
+        "{\n"
+        "    vec4 foo = foo();\n"
+        "    gl_FragColor = foo + vec4(0, 1, 0, 1);\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest,
                        ES2_D3D9(),
