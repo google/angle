@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d573a126_3f112749",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-06-30T14:29:52Z",
+      "side": 1,
+      "message": "can you make this into a helper function GetMaxUniformsForShaderType(shaderType, resources)?\n\nand then go\n\nmaxUniformVectors \u003d GetMaxUniformsForShaderType(shaderType, resources)",
+      "range": {
+        "startLine": 245,
+        "startChar": 0,
+        "endLine": 259,
+        "endChar": 5
+      },
+      "revId": "93b513be6cdd48f6eadf477c9593d446a3f1d39d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
