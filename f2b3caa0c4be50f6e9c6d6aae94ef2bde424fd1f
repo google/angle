@@ -19,6 +19,52 @@
     },
     {
       "key": {
+        "uuid": "855e5487_99b5ed59",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-30T17:54:02Z",
+      "side": 1,
+      "message": "This should check the robustResourceInitialization flag instead.",
+      "range": {
+        "startLine": 560,
+        "startChar": 33,
+        "endLine": 560,
+        "endChar": 51
+      },
+      "revId": "f2b3caa0c4be50f6e9c6d6aae94ef2bde424fd1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "10be085c_dc66f297",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 565,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-30T17:54:02Z",
+      "side": 1,
+      "message": "This returns an error, wrap it in an ANGLE_TRY",
+      "range": {
+        "startLine": 565,
+        "startChar": 17,
+        "endLine": 565,
+        "endChar": 33
+      },
+      "revId": "f2b3caa0c4be50f6e9c6d6aae94ef2bde424fd1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c51b009e_31e9f880",
         "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
         "patchSetId": 1
@@ -36,6 +82,29 @@
     },
     {
       "key": {
+        "uuid": "8a2426cd_43e5576e",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 593,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-30T17:54:02Z",
+      "side": 1,
+      "message": "nit: update to an ANGLE_TRY instead of the explicit error check.",
+      "range": {
+        "startLine": 593,
+        "startChar": 12,
+        "endLine": 593,
+        "endChar": 27
+      },
+      "revId": "f2b3caa0c4be50f6e9c6d6aae94ef2bde424fd1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bcda092e_c52bede1",
         "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
         "patchSetId": 1
@@ -47,6 +116,24 @@
       "writtenOn": "2017-06-28T18:41:29Z",
       "side": 1,
       "message": "In the regular case we should still use CopyTexImage, and only TexImage2D and CopySubImage when we would be reading outside of the source texture.",
+      "revId": "f2b3caa0c4be50f6e9c6d6aae94ef2bde424fd1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf5f3cc5_43c37d68",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-06-30T17:54:02Z",
+      "side": 1,
+      "message": "I think either way is fine here, I hope it\u0027s not significantly slower to texImage then copySubImage than just a copyImage.",
+      "parentUuid": "bcda092e_c52bede1",
       "revId": "f2b3caa0c4be50f6e9c6d6aae94ef2bde424fd1f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
