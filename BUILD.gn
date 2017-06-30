@@ -755,10 +755,11 @@ executable("angle_shader_translator") {
   testonly = true
 
   sources = [
-    "samples/shader_translator/shader_translator.cpp"
+    "samples/shader_translator/shader_translator.cpp",
   ]
 
   deps = [
-    ":translator"
+    ":translator",
+    "//build/config:exe_and_shlib_deps",
   ]
 }
