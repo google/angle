@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "741aa2cb_7e79fb45",
+        "filename": "src/compiler.gypi",
+        "patchSetId": 11
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-06-30T07:42:28Z",
+      "side": 1,
+      "message": "Capitalization should be the same here as well.",
+      "range": {
+        "startLine": 42,
+        "startChar": 52,
+        "endLine": 42,
+        "endChar": 55
+      },
+      "revId": "46049411041ef241b036c0b58152088a5228f54f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
