@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "cb051603_43ed4f5c",
+        "filename": "src/libANGLE/VertexArray.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-30T13:10:40Z",
+      "side": 1,
+      "message": "This function is used on an iterator, not on a constant, so I don\u0027t think it can be a constexpr function:\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/renderer/gl/VertexArrayGL.cpp?l\u003d553\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp?l\u003d53",
+      "parentUuid": "f6e9c132_a51371c7",
+      "range": {
+        "startLine": 176,
+        "startChar": 18,
+        "endLine": 176,
+        "endChar": 38
+      },
+      "revId": "a12ec8423b5aa0b5cbf7e8f2f67371876a78fe52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "36068cad_3ae204ab",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 28
@@ -36,6 +60,30 @@
       "writtenOn": "2017-06-29T14:33:07Z",
       "side": 1,
       "message": "This I think is wrong.\n\nThe attributes only need to stream if buffer is nullptr. But when buffer is nullptr, if anything changes in the attribute, then we need to re-stream. Here, we will only trigger the re-stream if the buffer binding changes. But the buffer could already be nullptr. You could add a test for this and produce a failure.",
+      "range": {
+        "startLine": 471,
+        "startChar": 0,
+        "endLine": 475,
+        "endChar": 0
+      },
+      "revId": "a12ec8423b5aa0b5cbf7e8f2f67371876a78fe52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b8ecb43_5c932300",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 475,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-30T13:10:40Z",
+      "side": 1,
+      "message": "When the buffer is already nullptr, and here the buffer is nullptr again, this means we don\u0027t need to update needsStreaming because this attribute is using the client memory pointer this time and last time; and if this attribute is still enabled, needsStreaming[attribIndex] will remains true, so it won\u0027t be missed being updated in streamAttributes().\n\nWhen Vertex Attrib Binding is enabled, the format part of an attribute is updated in updateAttribFormat, and the data that needs streaming is updated in streamAttributes() by bindVertexBuffer.\n\nI have added two tests to verify the correctness of this patch:\n- In DrawWithSameClientMemoryPointerInDifferentFormat, we draw twice by the same client memory pointer and different vertex format, where the buffer is kept nullptr in these two draws.\n- In MixedUsingBufferAndClientMemoryPointer, we draw three times by using client memory pointer-buffer-client memory pointer, where needsStreaming should all be updated in these three draws.",
+      "parentUuid": "36068cad_3ae204ab",
       "range": {
         "startLine": 471,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "de1ca72c_50d8229a",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 551,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-30T13:10:40Z",
+      "side": 1,
+      "message": "We can only set client memory pointer by VertexAttribPointer, at this time DIRTY_BIT_ATTRIB_XX_POINTER is set, so we can update needsStreaming only in updateAttribPointer.\n\nWhen an attribute is using a client memory pointer, its format part can be updated here, so when the format isn\u0027t changed, we just need bindVertexBuffer to update the binding that contains the data to stream instead of VertexAttribPointer where both format and binding are updated.",
+      "parentUuid": "b83c548c_e41dbd82",
+      "range": {
+        "startLine": 551,
+        "startChar": 20,
+        "endLine": 551,
+        "endChar": 38
+      },
+      "revId": "a12ec8423b5aa0b5cbf7e8f2f67371876a78fe52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e58e8cce_d6b5d1f2",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 28
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "528d2459_bdead693",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-30T13:10:40Z",
+      "side": 1,
+      "message": "According to ES3.1 SPEC, BindVertexBuffer cannot be used on default VAO, however only default VAO can use client memory pointer, so in upper context we can only set a client memory pointer by VertexAttribPointer, where dirty bits for attribPointer is set.\n\nIn this patch, when Vertex Attrib Binding is supported, client memory pointers have all been handled in updateAttribPointer, so it is no need to update needsStreaming again here.",
+      "parentUuid": "e58e8cce_d6b5d1f2",
+      "range": {
+        "startLine": 595,
+        "startChar": 20,
+        "endLine": 595,
+        "endChar": 39
+      },
+      "revId": "a12ec8423b5aa0b5cbf7e8f2f67371876a78fe52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "619e6d32_05051ae5",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 28
@@ -105,6 +201,30 @@
       "writtenOn": "2017-06-29T14:33:07Z",
       "side": 1,
       "message": "I have a question - how is it possible for us to have a dirty bit set for ATTRIB_FORMAT on platforms which don\u0027t support it? Would it make sense to change this \"if\" to \"ASSERT\"?\n\nI looked through the current implementation of VertexArray.cpp and didn\u0027t see any place where \"all\" of the dirty bits were set, so unless you added something in this patch, it might be OK to use assume we never don\u0027t support vertex binding if we have the dirty bit.",
+      "range": {
+        "startLine": 677,
+        "startChar": 0,
+        "endLine": 680,
+        "endChar": 13
+      },
+      "revId": "a12ec8423b5aa0b5cbf7e8f2f67371876a78fe52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c4d0f0fe_0522341c",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 680,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-06-30T13:10:40Z",
+      "side": 1,
+      "message": "In current implementation of VertexArray.cpp, each dirty bit represents a dirty state.\nFor Vertex Attrib Binding APIs, each API sets one dirty bit. \nFor VertexAttribPointer, as the definition of this function in SPEC, it sets the 4 parts of a vertex attribute, so when it was called, 4 dirty bits will be set:\n- DIRTY_BIT_ATTRIB_XX_POINTER\n- DIRTY_BIT_ATTRIB_XX_FORMAT\n- DIRTY_BIT_ATTRIB_XX_BINDING\n- DIRTY_BIT_BINDING_XX_BUFFER\n\nYou can see the implementation of setVertexAttribState (setVertexAttribPointer in this patch), it sets DIRTY_BIT_ATTRIB_XX_POINTER, and other 3 dirty bits through setVertexAttribFormat, setVertexAttribBinding and bindVertexBuffer:\nhttps://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/VertexArray.cpp?l\u003d202\n\nIn ES3.0, since attribBinding cannot be updated, so this implementation of:\n- BindBuffer(GL_ARRAY_BUFFER, buffer)\n- VertexAttribPointer\nis equivilant to\n- VertexAttribFormat\n- BindVertexBuffer\nSo when the format is same, we can simply replace two GL calls by one GL call (BindVertexBuffer).\n\nFor VertexAttribDivisor, 2 dirty bits will be set:\n- DIRTY_BIT_ATTRIB_XX_BINDING\n- DIRTY_BIT_BINING_XX_DIVISOR",
+      "parentUuid": "619e6d32_05051ae5",
       "range": {
         "startLine": 677,
         "startChar": 0,
