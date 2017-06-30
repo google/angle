@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f68f3ff2_349c0037",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-06-30T13:24:25Z",
+      "side": 1,
+      "message": "gl_FragData will not be initialized unless it is collected. It only gets collected if it is used. \nI wonder whether a read would have been better. Currently, the test can succeed even if the initOutputVariables pass does not produce any output.",
+      "range": {
+        "startLine": 341,
+        "startChar": 8,
+        "endLine": 341,
+        "endChar": 41
+      },
+      "revId": "d45652d918463169d2ba0b73d375bb6b631dd22a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
