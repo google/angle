@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ef3b5ab4_b46449b1",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 956,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-03T14:12:42Z",
+      "side": 1,
+      "message": "Sorry, this can\u0027t actually be done like this. But it could be improved by passing shaderSpec and extensionBehavior to InitializeVariables - that would still be cleaner since special logic related to gl_FragData would be in only one place, and you\u0027d never be passing a dummy accessibleFragDataAttachmentsCount variable.",
+      "parentUuid": "eeddb921_371d92b6",
+      "revId": "d45652d918463169d2ba0b73d375bb6b631dd22a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ea5a9134_193abbe0",
         "filename": "src/compiler/translator/Compiler.cpp",
         "patchSetId": 14
