@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c0401e63_b0fa4672",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-03T08:14:14Z",
+      "side": 1,
+      "message": "I don\u0027t think these getShaderType() and getShaderSpec() overrides are needed.",
+      "revId": "f9561c4a18364a26e11e29e3614ef07bfb0680cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
