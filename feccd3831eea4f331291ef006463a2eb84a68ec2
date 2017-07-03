@@ -1,0 +1,158 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a5429359_039d0364",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-03T14:52:48Z",
+      "side": 1,
+      "message": "Would like to include \"GLSL\" and \"NV\" in the option name to make it clear that this is NV-extension and GLSL specific. \"SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER\"",
+      "range": {
+        "startLine": 239,
+        "startChar": 23,
+        "endLine": 239,
+        "endChar": 54
+      },
+      "revId": "feccd3831eea4f331291ef006463a2eb84a68ec2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23bf318d_0a7bf28d",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-03T14:52:48Z",
+      "side": 1,
+      "message": "Would be nice to refactor this so that this kind of functions could be shared with CodeGen.cpp. There should be IsOutputHLSL(), IsOutputGLSL(), IsOutputESSL() and IsOutputVulkan(). Put that in a separate dependency patch.",
+      "revId": "feccd3831eea4f331291ef006463a2eb84a68ec2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9e584ff1_afaccc50",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-03T14:52:48Z",
+      "side": 1,
+      "message": "Instead of !IsOutputHLSL() it would be better to use (IsOutputGLSL || IsOutputESSL()). This takes Vulkan into account and is forward-compatible with more output types.\n\nCould also assert this instead of having it as a condition, it\u0027s better if users of this code know that they\u0027re using a wrong output type rather than have it silently fail.\n\nThe assert would need to be accompanied with disabling the SH_SELECT_VIEW_IN_VERTEX_SHADER and HLSL output combo in translator_fuzzer.cpp, otherwise automated fuzz testing of this code might hit the assert.",
+      "revId": "feccd3831eea4f331291ef006463a2eb84a68ec2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f302cb4b_30032f95",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-03T14:52:48Z",
+      "side": 1,
+      "message": "Should be in the beginning of main. main might return before the last statement.",
+      "revId": "feccd3831eea4f331291ef006463a2eb84a68ec2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e216df1_5776c82f",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-03T14:52:48Z",
+      "side": 1,
+      "message": "Maybe just selectViewport as the parameter name.",
+      "range": {
+        "startLine": 169,
+        "startChar": 54,
+        "endLine": 169,
+        "endChar": 82
+      },
+      "revId": "feccd3831eea4f331291ef006463a2eb84a68ec2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7fc9621c_49f5fb90",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-03T14:52:48Z",
+      "side": 1,
+      "message": "I think that this should be written out regardless of what\u0027s in the parsed extension behavior. Move this to outside the loop.",
+      "range": {
+        "startLine": 146,
+        "startChar": 0,
+        "endLine": 150,
+        "endChar": 13
+      },
+      "revId": "feccd3831eea4f331291ef006463a2eb84a68ec2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e610afe_a479d139",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-03T14:52:48Z",
+      "side": 1,
+      "message": "You should write a separate patch to fix #extension OVR_multiview directives being written in case SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW is set. They should not be written in that case.",
+      "revId": "feccd3831eea4f331291ef006463a2eb84a68ec2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "93424ba9_3e818ee3",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-03T14:52:48Z",
+      "side": 1,
+      "message": "Same as ESSL - just require GL_NV_viewport_array2 outside the loop, it doesn\u0027t need to be conditional on multiview being enabled.",
+      "revId": "feccd3831eea4f331291ef006463a2eb84a68ec2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
