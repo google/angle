@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "52469483_20b786c1",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 359,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-03T07:57:13Z",
+      "side": 1,
+      "message": "I have to reserve this function because it is being used in command buffer, so if it is removed the build will fail:\nhttps://cs.chromium.org/chromium/src/gpu/command_buffer/service/shader_translator.cc?l\u003d68",
+      "range": {
+        "startLine": 359,
+        "startChar": 0,
+        "endLine": 359,
+        "endChar": 66
+      },
+      "revId": "43a5e919cef9966ffb1d39d3c71ebecc0f1e2ddf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
