@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b4d81963_4a87ee2a",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 638,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-03T07:04:47Z",
+      "side": 1,
+      "message": "Thanks for your reminder. I think this place don\u0027t need a check. We should check buffer variables as built-in or user-defined function arguments like image did. I have modified checkImageMemoryAccessForBuiltinFunctions and checkImageMemoryAccessForUserDefinedFunctions to checkMemoryAccessForBuiltinFunctions and checkMemoryAccessForUserDefinedFunctions.",
+      "parentUuid": "5e44bbf4_671567a8",
+      "revId": "2b33cb0b04d440361d6913b634aa86f47fd7909d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df7c67f1_87b0d11b",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 13
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "d98dfa78_41ea6928",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 2749,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-03T07:04:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df7c67f1_87b0d11b",
+      "range": {
+        "startLine": 2749,
+        "startChar": 39,
+        "endLine": 2749,
+        "endChar": 86
+      },
+      "revId": "2b33cb0b04d440361d6913b634aa86f47fd7909d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d6b09fb1_69aa2728",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 13
@@ -56,6 +98,24 @@
       "revId": "2b33cb0b04d440361d6913b634aa86f47fd7909d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "028ae610_150fff93",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3166,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-03T07:04:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d6b09fb1_69aa2728",
+      "revId": "2b33cb0b04d440361d6913b634aa86f47fd7909d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -76,6 +136,24 @@
     },
     {
       "key": {
+        "uuid": "5e5de462_4985071f",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3175,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-03T07:04:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa741f68_9a7f9b4a",
+      "revId": "2b33cb0b04d440361d6913b634aa86f47fd7909d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59f83fa7_67b743d0",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 13
@@ -87,6 +165,24 @@
       "writtenOn": "2017-06-28T10:04:09Z",
       "side": 1,
       "message": "Would appreciate a reference to the spec section that says that block memory qualifiers override field memory qualifiers.\n\nAlso, what happens if block is specified as writeonly and field is specified as writeonly or vice versa?",
+      "revId": "2b33cb0b04d440361d6913b634aa86f47fd7909d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "08ba84a5_1c760d23",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3306,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-03T07:04:47Z",
+      "side": 1,
+      "message": "\u003e what happens if block is specified as writeonly and field is specified as writeonly or vice versa?\n\nYou mean block is specified as writeonly and field is specified as readyonly? If this, that field member will be writeonly and readonly. You can neither read or write. In 4.9 Memory Access Qualifiers, it has following description \u0027A variable could be qualified as both readonly and writeonly, disallowing both read and write, but still be passed to imageSize() to have the size queried\u0027. That is for image. For buffer variable, I think readonly and writeonly should also be legal. But I don\u0027t known if there is similar scenario to use such kind of variable. I tried native deqp, it seems that it doesn\u0027t support readonly, writeonly variable. Do you think is it necessary to limit it in angle?",
+      "parentUuid": "59f83fa7_67b743d0",
       "revId": "2b33cb0b04d440361d6913b634aa86f47fd7909d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -116,6 +212,30 @@
     },
     {
       "key": {
+        "uuid": "6c86d677_81031525",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3308,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-03T07:04:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7660314d_7aac1a7b",
+      "range": {
+        "startLine": 3308,
+        "startChar": 49,
+        "endLine": 3308,
+        "endChar": 79
+      },
+      "revId": "2b33cb0b04d440361d6913b634aa86f47fd7909d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cd9023ec_f66bb759",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 13
@@ -130,6 +250,24 @@
       "revId": "2b33cb0b04d440361d6913b634aa86f47fd7909d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8631e649_ab595bbf",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 4344,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-03T07:04:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd9023ec_f66bb759",
+      "revId": "2b33cb0b04d440361d6913b634aa86f47fd7909d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -150,6 +288,24 @@
     },
     {
       "key": {
+        "uuid": "7dc7eb90_67e73dfb",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 13
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-03T07:04:47Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "4537034f_919c3313",
+      "revId": "2b33cb0b04d440361d6913b634aa86f47fd7909d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fde40bf6_cf567eac",
         "filename": "src/compiler/translator/glslang.y",
         "patchSetId": 13
@@ -164,6 +320,24 @@
       "revId": "2b33cb0b04d440361d6913b634aa86f47fd7909d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1afa3738_89b0d542",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 13
+      },
+      "lineNbr": 862,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-03T07:04:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fde40bf6_cf567eac",
+      "revId": "2b33cb0b04d440361d6913b634aa86f47fd7909d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
