@@ -16,6 +16,24 @@
       "revId": "f9561c4a18364a26e11e29e3614ef07bfb0680cf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1531b39d_2827bbf9",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-03T08:28:18Z",
+      "side": 1,
+      "message": "Done\nThanks to point out this!",
+      "parentUuid": "c0401e63_b0fa4672",
+      "revId": "f9561c4a18364a26e11e29e3614ef07bfb0680cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
