@@ -2,6 +2,86 @@
   "comments": [
     {
       "key": {
+        "uuid": "eeddb921_371d92b6",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 956,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-03T09:15:25Z",
+      "side": 1,
+      "message": "I think gl_FragData should be changed in here to the required array size, instead of doing it inside InitializeVariables. The interface to InitializeVariables is cleaner without the accessibleFragDataAttachmentsCount parameter.",
+      "revId": "d45652d918463169d2ba0b73d375bb6b631dd22a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea5a9134_193abbe0",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 959,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-03T09:15:25Z",
+      "side": 1,
+      "message": "Clearer variable name: \"fragDataArraySize\".",
+      "range": {
+        "startLine": 959,
+        "startChar": 13,
+        "endLine": 959,
+        "endChar": 48
+      },
+      "revId": "d45652d918463169d2ba0b73d375bb6b631dd22a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8dd8e7c_96ca5e20",
+        "filename": "src/compiler/translator/InitializeVariables.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-03T09:15:25Z",
+      "side": 1,
+      "message": "Could document here that all the initialized variables must be globals found in the symbol table.",
+      "range": {
+        "startLine": 27,
+        "startChar": 89,
+        "endLine": 29,
+        "endChar": 45
+      },
+      "revId": "d45652d918463169d2ba0b73d375bb6b631dd22a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7734f860_c41ae582",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-03T09:15:25Z",
+      "side": 1,
+      "message": "Some of the tests cases currently call setArraySize on elementType before it\u0027s passed here - this doesn\u0027t make sense. The best way to fix that could actually be to just make this function take the type of the array \"arrayType\" instead of elementType, and remove the arraySize parameter. Another alternative would be to make sure that the elementType doesn\u0027t have arraySize applied. Fix in whichever way you feel is better.",
+      "revId": "d45652d918463169d2ba0b73d375bb6b631dd22a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f68f3ff2_349c0037",
         "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
         "patchSetId": 14
@@ -13,6 +93,30 @@
       "writtenOn": "2017-06-30T13:24:25Z",
       "side": 1,
       "message": "gl_FragData will not be initialized unless it is collected. It only gets collected if it is used. \nI wonder whether a read would have been better. Currently, the test can succeed even if the initOutputVariables pass does not produce any output.",
+      "range": {
+        "startLine": 341,
+        "startChar": 8,
+        "endLine": 341,
+        "endChar": 41
+      },
+      "revId": "d45652d918463169d2ba0b73d375bb6b631dd22a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6a5dbfed_38e3e9cf",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 341,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-03T09:15:25Z",
+      "side": 1,
+      "message": "Yep, this is tricky to test. Using a read would be incorrect as then the shader should not write anything according to the current WebGL spec (though ANGLE is actually bugged at the moment so that it does write to gl_FragData whenever it is read). To test this properly you should test that gl_FragData[0] has 0 written to it. You could do this by implementing a traverser that checks if node only contains zero constants and adding IsZero(node-\u003egetRight()) to VerifyOutputVariableInitializers::visitBinary().",
+      "parentUuid": "f68f3ff2_349c0037",
       "range": {
         "startLine": 341,
         "startChar": 8,
