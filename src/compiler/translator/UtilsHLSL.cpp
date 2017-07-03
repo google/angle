@@ -455,12 +455,21 @@ TString DisambiguateFunctionName(const TIntermSequence *parameters)
     for (auto parameter : *parameters)
     {
         const TType &paramType = parameter->getAsTyped()->getType();
-        // Disambiguation is needed for float2x2 and float4 parameters. These are the only parameter
-        // types that HLSL thinks are identical. float2x3 and float3x2 are different types, for
-        // example. Other parameter types are not added to function names to avoid making function
-        // names longer.
+        // Parameter types are only added to function names if they are ambiguous according to the
+        // native HLSL compiler. Other parameter types are not added to function names to avoid
+        // making function names longer.
         if (paramType.getObjectSize() == 4 && paramType.getBasicType() == EbtFloat)
         {
+            // Disambiguation is needed for float2x2 and float4 parameters. These are the only
+            // built-in types that HLSL thinks are identical. float2x3 and float3x2 are different
+            // types, for example.
+            disambiguatingString += "_" + TypeString(paramType);
+        }
+        else if (paramType.getBasicType() == EbtStruct)
+        {
+            // Disambiguation is needed for struct parameters, since HLSL thinks that structs with
+            // the same fields but a different name are identical.
+            ASSERT(paramType.getStruct()->name() != "");
             disambiguatingString += "_" + TypeString(paramType);
         }
     }

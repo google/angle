@@ -3133,6 +3133,30 @@ TEST_P(GLSLTest, VariableHidesUserDefinedFunctionAfterInitializer)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test that structs with identical members are not ambiguous as function arguments.
+TEST_P(GLSLTest, StructsWithSameMembersDisambiguatedByName)
+{
+    const std::string &fragmentShader =
+        "precision mediump float;\n"
+        "uniform float u_zero;\n"
+        "struct S { float foo; };\n"
+        "struct S2 { float foo; };\n"
+        "float get(S s) { return s.foo + u_zero; }\n"
+        "float get(S2 s2) { return 0.25 + s2.foo + u_zero; }\n"
+        "void main()\n"
+        "{\n"
+        "    S s;\n"
+        "    s.foo = 0.5;\n"
+        "    S2 s2;\n"
+        "    s2.foo = 0.25;\n"
+        "    gl_FragColor = vec4(0.0, get(s) + get(s2), 0.0, 1.0);\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest,
                        ES2_D3D9(),
