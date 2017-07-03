@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "06b1eb87_e19c0722",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 638,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-03T10:26:37Z",
+      "side": 1,
+      "message": "Why wouldn\u0027t the check be needed here?",
+      "parentUuid": "b4d81963_4a87ee2a",
+      "revId": "2b33cb0b04d440361d6913b634aa86f47fd7909d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df7c67f1_87b0d11b",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 13
@@ -183,6 +201,24 @@
       "side": 1,
       "message": "\u003e what happens if block is specified as writeonly and field is specified as writeonly or vice versa?\n\nYou mean block is specified as writeonly and field is specified as readyonly? If this, that field member will be writeonly and readonly. You can neither read or write. In 4.9 Memory Access Qualifiers, it has following description \u0027A variable could be qualified as both readonly and writeonly, disallowing both read and write, but still be passed to imageSize() to have the size queried\u0027. That is for image. For buffer variable, I think readonly and writeonly should also be legal. But I don\u0027t known if there is similar scenario to use such kind of variable. I tried native deqp, it seems that it doesn\u0027t support readonly, writeonly variable. Do you think is it necessary to limit it in angle?",
       "parentUuid": "59f83fa7_67b743d0",
+      "revId": "2b33cb0b04d440361d6913b634aa86f47fd7909d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "50b1b078_350671cf",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3306,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-03T10:26:37Z",
+      "side": 1,
+      "message": "Oh yes, sorry about the typo, I meant readonly/writeonly combo.\n\nSo does native dEQP treat a buffer that has both readonly and writeonly memory qualifiers as an error?\n\nI think a clarification to the spec would be in order either way, since the spec doesn\u0027t say anything about this one way or the other right now. Could you file a Khronos spec bug against GLES?",
+      "parentUuid": "08ba84a5_1c760d23",
       "revId": "2b33cb0b04d440361d6913b634aa86f47fd7909d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true

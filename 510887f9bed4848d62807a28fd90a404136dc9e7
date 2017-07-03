@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "edc2b175_04382c20",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 3162,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-03T10:26:37Z",
+      "side": 1,
+      "message": "More accurate: \"GLSL ES 3.10\"",
+      "range": {
+        "startLine": 3162,
+        "startChar": 89,
+        "endLine": 3162,
+        "endChar": 93
+      },
+      "revId": "510887f9bed4848d62807a28fd90a404136dc9e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc3cbed0_acb282a7",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 4922,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-03T10:26:37Z",
+      "side": 1,
+      "message": "I don\u0027t think this is right. Buffer fields may be qualified as EvqTemporary if they\u0027re accessed through a buffer instance name. I\u0027d leave the checkImageMemoryAccessFor*Functions and GetImageArgumentToken untouched in this patch and add a different TParseContext function making sure that writeonly variables aren\u0027t passed as in parameters and readonly variables aren\u0027t passed as out parameters.",
+      "revId": "510887f9bed4848d62807a28fd90a404136dc9e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea45b343_e31cad47",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 5157,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-03T10:26:37Z",
+      "side": 1,
+      "message": "What about falseExpression or condition memory qualifier?",
+      "revId": "510887f9bed4848d62807a28fd90a404136dc9e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "09308879_48e6b8d2",
+        "filename": "src/tests/compiler_tests/BufferVariables_test.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-03T10:26:37Z",
+      "side": 1,
+      "message": "I think quite a few more tests are still needed. Should cover:\n\n* writeonly buffer variable as user-defined function in argument (error)\n* writeonly buffer variable as user-defined function out argument (OK)\n* readonly buffer variable as user-defined function out argument (error)\n* writeonly buffer variable as built-in function argument (error)\n* writeonly buffer variable as constructor argument (error)\n* writeonly buffer variable as ternary op argument (error)\n* writeonly buffer variable on the left-hand side of compound assignment (error)\n* writeonly buffer variable as the argument of an unary op (error)\n* buffer with an instance name and accessing it (OK)\n* accessing a buffer variable through an instance name (EOpIndexDirectInterfaceBlock in AST) inherits the writeonly qualifier and generates errors accordingly. Just one test for this should be fine, it doesn\u0027t need to cover all the different cases listed above.\n* buffer qualifier on a function parameter (error?)",
+      "revId": "510887f9bed4848d62807a28fd90a404136dc9e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
