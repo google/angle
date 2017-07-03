@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6862c58b_cd19df06",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 32
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-03T05:01:37Z",
+      "side": 1,
+      "message": "I remove this because I find BindBuffer cannot be skipped here, and it isn\u0027t a good idea to implement one GL call (VertexAttribPointer) by two GL calls (VertexAttribFormat in syncState and BindVertexBuffer here).",
+      "revId": "1dadb0cd20c98298d03734d5d3c07dc1d8221672",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "faec94f6_3bd4911c",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 33
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-03T05:01:37Z",
+      "side": 1,
+      "message": "Now in this patch client memory pointers can only be updated through VertexAttribPointer.",
+      "revId": "fd531f24d3bbc5b90817c304c12c368bf8fcce96",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
