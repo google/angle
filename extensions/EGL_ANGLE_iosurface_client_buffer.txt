@@ -73,31 +73,30 @@ Additions to Chapter 3 of the EGL 1.4 Specification (EGL Functions and Errors)
     "When <buftype> is EGL_IOSURFACE_ANGLE, <attrib_list> must contain all the
     following attributes under the following constraints otherwise
     EGL_BAD_PARAMETER is generated:
-      - EGL_TEXTURE_FORMAT, EGL_TEXTURE_TYPE_ANGLE, and
-    EGL_TEXTURE_INTERNAL_FORMAT_ANGLE followed by OpenGL enums for texture
-    formats, texture types, and texture internal format respectively.
+      - EGL_TEXTURE_TYPE_ANGLE, and EGL_TEXTURE_INTERNAL_FORMAT_ANGLE followed
+    by OpenGL enums for texture types, and texture internal format
+    respectively.
+      - EGL_TEXTURE_FORMAT with a value of EGL_TEXTURE_RGBA
       - EGL_WIDTH with a value between 1 and the width of <buffer>.
       - EGL_HEIGHT with a value between 1 and the width of <buffer>.
       - EGL_TEXTURE_TARGET with a value of EGL_TEXTURE_RECTANGLE_ANGLE
       - EGL_IOSURFACE_PLANE_ANGLE with a value between 0 and the number of
     planes of <buffer> (exclusive).
 
-    In addition the EGL_TEXTURE_FORMAT, EGL_TEXTURE_TYPE_ANGLE and
+    In addition the EGL_TEXTURE_TYPE_ANGLE and
     EGL_TEXTURE_INTERNAL_FORMAT_ANGLE attributes must be one of the
     combinations listed in table egl.iosurface.formats or an
     EGL_BAD_PARAMETER is generated. The combination must also be a valid
     combinations for glTexImage2D or EGL_BAD_PARAMETER is generated."
 
     ---------------------------------------------------------------------------
-    Texture Format    Texture Type                    Texture Internal Format
+    Texture Type               Texture Internal Format
     ---------------------------------------------------------------------------
-    GL_RED            GL_UNSIGNED_BYTE                GL_RED
-    GL_RED            GL_UNSIGNED_SHORT               GL_R16UI
-    GL_RG             GL_UNSIGNED_BYTE                GL_RG
-    GL_BGRA           GL_UNSIGNED_INT_8_8_8_8_REV     GL_RGBA
-    GL_BGRA           GL_UNSIGNED_INT_8_8_8_8_REV     GL_RGBA
-    GL_BGRA           GL_UNSIGNED_INT_8_8_8_8_REV     GL_RGBA
-    GL_RGBA           GL_HALF_FLOAT                   GL_RGBA
+    GL_UNSIGNED_BYTE           GL_RED
+    GL_UNSIGNED_SHORT          GL_RED_INTEGER
+    GL_UNSIGNED_BYTE           GL_RG
+    GL_UNSIGNED_BYTE           GL_BGRA_EXT
+    GL_HALF_FLOAT              GL_RGBA
     ---------------------------------------------------------------------------
     Table egl.iosurface.formats - Valid combinations of format, type and
     internal format for IOSurface-backed pbuffers.

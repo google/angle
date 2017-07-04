@@ -1045,6 +1045,18 @@ Error ValidateCreatePbufferFromClientBuffer(Display *display, EGLenum buftype, E
           }
           break;
 
+      case EGL_IOSURFACE_ANGLE:
+          if (!displayExtensions.iosurfaceClientBuffer)
+          {
+              return EglBadParameter() << "<buftype> EGL_IOSURFACE_ANGLE requires the "
+                                          "EGL_ANGLE_iosurface_client_buffer extension.";
+          }
+          if (buffer == nullptr)
+          {
+              return EglBadParameter() << "<buffer> must be non null";
+          }
+          break;
+
       default:
           return EglBadParameter();
     }
@@ -1056,55 +1068,87 @@ Error ValidateCreatePbufferFromClientBuffer(Display *display, EGLenum buftype, E
 
         switch (attribute)
         {
-          case EGL_WIDTH:
-          case EGL_HEIGHT:
-            if (!displayExtensions.d3dShareHandleClientBuffer)
-            {
-                return EglBadParameter();
-            }
-            if (value < 0)
-            {
-                return EglBadParameter();
-            }
-            break;
-
-          case EGL_TEXTURE_FORMAT:
-            switch (value)
-            {
-              case EGL_NO_TEXTURE:
-              case EGL_TEXTURE_RGB:
-              case EGL_TEXTURE_RGBA:
+            case EGL_WIDTH:
+            case EGL_HEIGHT:
+                if (buftype != EGL_D3D_TEXTURE_2D_SHARE_HANDLE_ANGLE &&
+                    buftype != EGL_D3D_TEXTURE_ANGLE &&
+                    buftype != EGL_IOSURFACE_ANGLE)
+                {
+                    return EglBadParameter()
+                           << "Width and Height are not supported for thie <buftype>";
+                }
+                if (value < 0)
+                {
+                    return EglBadParameter() << "Width and Height must be positive";
+                }
                 break;
-              default:
-                  return EglBadAttribute();
-            }
-            break;
 
-          case EGL_TEXTURE_TARGET:
-            switch (value)
-            {
-              case EGL_NO_TEXTURE:
-              case EGL_TEXTURE_2D:
+            case EGL_TEXTURE_FORMAT:
+                switch (value)
+                {
+                    case EGL_NO_TEXTURE:
+                    case EGL_TEXTURE_RGB:
+                    case EGL_TEXTURE_RGBA:
+                        break;
+                    default:
+                        return EglBadAttribute() << "Invalid value for EGL_TEXTURE_FORMAT";
+                }
                 break;
-              default:
-                  return EglBadAttribute();
-            }
-            break;
 
-          case EGL_MIPMAP_TEXTURE:
-            break;
+            case EGL_TEXTURE_TARGET:
+                switch (value)
+                {
+                    case EGL_NO_TEXTURE:
+                    case EGL_TEXTURE_2D:
+                        break;
+                    case EGL_TEXTURE_RECTANGLE_ANGLE:
+                        if (buftype != EGL_IOSURFACE_ANGLE)
+                        {
+                            return EglBadParameter()
+                                   << "<buftype> doesn't support rectangle texture targets";
+                        }
+                        break;
 
-          case EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE:
-              if (!displayExtensions.flexibleSurfaceCompatibility)
-              {
-                  return EglBadAttribute()
-                         << "EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE cannot be used "
-                            "without EGL_ANGLE_flexible_surface_compatibility support.";
-              }
-              break;
+                    default:
+                        return EglBadAttribute() << "Invalid value for EGL_TEXTURE_TARGET";
+                }
+                break;
 
-          default:
-              return EglBadAttribute();
+            case EGL_MIPMAP_TEXTURE:
+                break;
+
+            case EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE:
+                if (!displayExtensions.flexibleSurfaceCompatibility)
+                {
+                    return EglBadAttribute()
+                           << "EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE cannot be used "
+                              "without EGL_ANGLE_flexible_surface_compatibility support.";
+                }
+                break;
+
+            case EGL_IOSURFACE_PLANE_ANGLE:
+                if (buftype != EGL_IOSURFACE_ANGLE)
+                {
+                    return EglBadAttribute() << "<buftype> doesn't support iosurface plane";
+                }
+                break;
+
+            case EGL_TEXTURE_TYPE_ANGLE:
+                if (buftype != EGL_IOSURFACE_ANGLE)
+                {
+                    return EglBadAttribute() << "<buftype> doesn't support texture type";
+                }
+                break;
+
+            case EGL_TEXTURE_INTERNAL_FORMAT_ANGLE:
+                if (buftype != EGL_IOSURFACE_ANGLE)
+                {
+                    return EglBadAttribute() << "<buftype> doesn't support texture internal format";
+                }
+                break;
+
+            default:
+                return EglBadAttribute();
         }
     }
 
@@ -1120,11 +1164,20 @@ Error ValidateCreatePbufferFromClientBuffer(Display *display, EGLenum buftype, E
     {
         return EglBadMatch();
     }
-
-    if ((textureFormat == EGL_TEXTURE_RGB  && config->bindToTextureRGB  != EGL_TRUE) ||
+    if ((textureFormat == EGL_TEXTURE_RGB && config->bindToTextureRGB != EGL_TRUE) ||
         (textureFormat == EGL_TEXTURE_RGBA && config->bindToTextureRGBA != EGL_TRUE))
     {
-        return EglBadAttribute();
+        // TODO(cwallez@chromium.org): For IOSurface pbuffers we require that EGL_TEXTURE_RGBA is
+        // set so that eglBinTexImage works. Normally this is only allowed if the config exposes the
+        // bindToTextureRGB/RGBA flag. This issue is that enabling this flags means that
+        // eglBindTexImage should also work for regular pbuffers which isn't implemented on macOS.
+        // Instead of adding the flag we special case the check here to be ignored for IOSurfaces.
+        // The TODO is to find a proper solution for this, maybe by implementing eglBindTexImage on
+        // OSX?
+        if (buftype != EGL_IOSURFACE_ANGLE)
+        {
+            return EglBadAttribute();
+        }
     }
 
     if (buftype == EGL_D3D_TEXTURE_2D_SHARE_HANDLE_ANGLE)
@@ -1141,6 +1194,28 @@ Error ValidateCreatePbufferFromClientBuffer(Display *display, EGLenum buftype, E
         if (textureFormat != EGL_NO_TEXTURE && !caps.textureNPOT && (!gl::isPow2(width) || !gl::isPow2(height)))
         {
             return EglBadMatch();
+        }
+    }
+
+    if (buftype == EGL_IOSURFACE_ANGLE)
+    {
+        if (textureTarget != EGL_TEXTURE_RECTANGLE_ANGLE)
+        {
+            return EglBadAttribute() << "EGL_IOSURFACE requires the EGL_TEXTURE_RECTANGLE target";
+        }
+
+        if (textureFormat != EGL_TEXTURE_RGBA)
+        {
+            return EglBadAttribute() << "EGL_IOSURFACE requires the EGL_TEXTURE_RGBA format";
+        }
+
+        if (!attributes.contains(EGL_WIDTH) || !attributes.contains(EGL_HEIGHT) ||
+            !attributes.contains(EGL_TEXTURE_FORMAT) ||
+            !attributes.contains(EGL_TEXTURE_TYPE_ANGLE) ||
+            !attributes.contains(EGL_TEXTURE_INTERNAL_FORMAT_ANGLE) ||
+            !attributes.contains(EGL_IOSURFACE_PLANE_ANGLE))
+        {
+            return EglBadParameter() << "Missing required attribute for EGL_IOSURFACE";
         }
     }
 

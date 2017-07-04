@@ -125,6 +125,8 @@ class Surface : public gl::FramebufferAttachmentObject
 
     bool isRobustResourceInitEnabled() const { return mRobustResourceInitialization; }
 
+    const gl::Format &getBindTexImageFormat() const { return mColorFormat; }
+
   protected:
     Surface(EGLint surfaceType, const egl::Config *config, const AttributeMap &attributes);
     ~Surface() override;
@@ -175,7 +177,7 @@ class Surface : public gl::FramebufferAttachmentObject
 
     gl::BindingPointer<gl::Texture> mTexture;
 
-    gl::Format mBackFormat;
+    gl::Format mColorFormat;
     gl::Format mDSFormat;
 
   private:
