@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "c9062e6d_07d7dfc9",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-04T08:39:34Z",
+      "side": 1,
+      "message": "Just put all the FragData related logic here.",
+      "revId": "b621dacb66fb490b8e8ee225f12f77390c64bd0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "99e464af_cc8ad2fa",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 214,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-04T08:39:34Z",
+      "side": 1,
+      "message": "I don\u0027t think you need to pass compileResources to here if you just get the array size from the symbol table when appropriate.",
+      "revId": "b621dacb66fb490b8e8ee225f12f77390c64bd0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8f0d92de_c923d8da",
         "filename": "src/compiler/translator/InitializeVariables.h",
         "patchSetId": 16
@@ -13,6 +47,30 @@
       "writtenOn": "2017-07-04T07:46:06Z",
       "side": 1,
       "message": "I wonder whether this is quite right.\nIt is used to initialize all collected output variables.",
+      "range": {
+        "startLine": 31,
+        "startChar": 5,
+        "endLine": 32,
+        "endChar": 57
+      },
+      "revId": "b621dacb66fb490b8e8ee225f12f77390c64bd0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b6bc6cce_487f501c",
+        "filename": "src/compiler/translator/InitializeVariables.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-04T08:39:34Z",
+      "side": 1,
+      "message": "Yep, it\u0027s wrong. Not sure if it was originally intended this way. You could fix the comment to say:\n\n1. Initializing gl_Position\n2. Initializing output variables referred to in the shader source",
+      "parentUuid": "8f0d92de_c923d8da",
       "range": {
         "startLine": 31,
         "startChar": 5,
