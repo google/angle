@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8f0d92de_c923d8da",
+        "filename": "src/compiler/translator/InitializeVariables.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-04T07:46:06Z",
+      "side": 1,
+      "message": "I wonder whether this is quite right.\nIt is used to initialize all collected output variables.",
+      "range": {
+        "startLine": 31,
+        "startChar": 5,
+        "endLine": 32,
+        "endChar": 57
+      },
+      "revId": "b621dacb66fb490b8e8ee225f12f77390c64bd0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
