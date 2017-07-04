@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f647fe61_9388a54c",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 2706,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-04T01:39:01Z",
+      "side": 1,
+      "message": "I think this code can be improved by splitting TTypeQualifier.qualifier into:\n- storageQualifier (centroid, flat, smooth, const, etc)\n- shaderQualifier (fragment/gemoetryIn, vertex/geometryOut)\n\nSince this needs quite large modifications, I plan to do this refactoring in a separate patch after reaching an agreement with all reviewers.",
+      "range": {
+        "startLine": 2701,
+        "startChar": 0,
+        "endLine": 2706,
+        "endChar": 1
+      },
+      "revId": "b4c4bd1cc88a9c2e5caef45e15f73540c80df71d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    }
+  ]
+}
