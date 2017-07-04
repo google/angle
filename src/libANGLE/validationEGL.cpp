@@ -35,6 +35,9 @@ size_t GetMaximumMipLevel(const gl::Context *context, GLenum target)
         case GL_TEXTURE_2D:
             maxDimension = caps.max2DTextureSize;
             break;
+        case GL_TEXTURE_RECTANGLE_ANGLE:
+            maxDimension = caps.maxRectangleTextureSize;
+            break;
         case GL_TEXTURE_CUBE_MAP:
             maxDimension = caps.maxCubeMapTextureSize;
             break;

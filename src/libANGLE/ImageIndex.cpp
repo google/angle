@@ -38,6 +38,11 @@ ImageIndex ImageIndex::Make2D(GLint mipIndex)
     return ImageIndex(GL_TEXTURE_2D, mipIndex, ENTIRE_LEVEL);
 }
 
+ImageIndex ImageIndex::MakeRectangle(GLint mipIndex)
+{
+    return ImageIndex(GL_TEXTURE_RECTANGLE_ANGLE, mipIndex, ENTIRE_LEVEL);
+}
+
 ImageIndex ImageIndex::MakeCube(GLenum target, GLint mipIndex)
 {
     ASSERT(gl::IsCubeMapTextureTarget(target));
@@ -108,6 +113,13 @@ ImageIndex::ImageIndex(GLenum typeIn, GLint mipIndexIn, GLint layerIndexIn)
 ImageIndexIterator ImageIndexIterator::Make2D(GLint minMip, GLint maxMip)
 {
     return ImageIndexIterator(GL_TEXTURE_2D, Range<GLint>(minMip, maxMip),
+                              Range<GLint>(ImageIndex::ENTIRE_LEVEL, ImageIndex::ENTIRE_LEVEL),
+                              nullptr);
+}
+
+ImageIndexIterator ImageIndexIterator::MakeRectangle(GLint minMip, GLint maxMip)
+{
+    return ImageIndexIterator(GL_TEXTURE_RECTANGLE_ANGLE, Range<GLint>(minMip, maxMip),
                               Range<GLint>(ImageIndex::ENTIRE_LEVEL, ImageIndex::ENTIRE_LEVEL),
                               nullptr);
 }

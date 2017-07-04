@@ -229,6 +229,17 @@ bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsign
             *numParams = 1;
             return true;
         }
+        case GL_MAX_RECTANGLE_TEXTURE_SIZE_ANGLE:
+        case GL_TEXTURE_BINDING_RECTANGLE_ANGLE:
+        {
+            if (!getExtensions().textureRectangle)
+            {
+                return false;
+            }
+            *type      = GL_INT;
+            *numParams = 1;
+            return true;
+        }
         case GL_MAX_DRAW_BUFFERS_EXT:
         case GL_MAX_COLOR_ATTACHMENTS_EXT:
         {

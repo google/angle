@@ -49,6 +49,7 @@
             '<(angle_path)/src/tests/angle_unittests_utils.h',
             '<(angle_path)/src/tests/compiler_tests/API_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/AppendixALimitations_test.cpp',
+            '<(angle_path)/src/tests/compiler_tests/ARB_texture_rectangle_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/AtomicCounter_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/BufferVariables_test.cpp',
             '<(angle_path)/src/tests/compiler_tests/CollectVariables_test.cpp',

@@ -124,6 +124,7 @@ GLenum VariableComponentType(GLenum type)
         return GL_FLOAT;
       case GL_INT:
       case GL_SAMPLER_2D:
+      case GL_SAMPLER_2D_RECT_ANGLE:
       case GL_SAMPLER_3D:
       case GL_SAMPLER_CUBE:
       case GL_SAMPLER_2D_ARRAY:
@@ -251,7 +252,7 @@ int VariableRowCount(GLenum type)
       case GL_SAMPLER_CUBE:
       case GL_SAMPLER_2D_ARRAY:
       case GL_SAMPLER_EXTERNAL_OES:
-      case GL_SAMPLER_2D_RECT_ARB:
+      case GL_SAMPLER_2D_RECT_ANGLE:
       case GL_SAMPLER_2D_MULTISAMPLE:
       case GL_INT_SAMPLER_2D:
       case GL_INT_SAMPLER_3D:
@@ -321,7 +322,7 @@ int VariableColumnCount(GLenum type)
       case GL_INT_SAMPLER_2D_ARRAY:
       case GL_INT_SAMPLER_2D_MULTISAMPLE:
       case GL_SAMPLER_EXTERNAL_OES:
-      case GL_SAMPLER_2D_RECT_ARB:
+      case GL_SAMPLER_2D_RECT_ANGLE:
       case GL_UNSIGNED_INT_SAMPLER_2D:
       case GL_UNSIGNED_INT_SAMPLER_3D:
       case GL_UNSIGNED_INT_SAMPLER_CUBE:
@@ -385,6 +386,7 @@ bool IsSamplerType(GLenum type)
       case GL_SAMPLER_2D_ARRAY:
       case GL_SAMPLER_EXTERNAL_OES:
       case GL_SAMPLER_2D_MULTISAMPLE:
+      case GL_SAMPLER_2D_RECT_ANGLE:
       case GL_INT_SAMPLER_2D:
       case GL_INT_SAMPLER_3D:
       case GL_INT_SAMPLER_CUBE:
@@ -470,6 +472,9 @@ GLenum SamplerTypeToTextureType(GLenum samplerType)
       case GL_INT_SAMPLER_2D_MULTISAMPLE:
       case GL_UNSIGNED_INT_SAMPLER_2D_MULTISAMPLE:
           return GL_TEXTURE_2D_MULTISAMPLE;
+
+      case GL_SAMPLER_2D_RECT_ANGLE:
+          return GL_TEXTURE_RECTANGLE_ANGLE;
 
       default:
         UNREACHABLE();
@@ -694,7 +699,7 @@ int VariableSortOrder(GLenum type)
       case GL_SAMPLER_2D:
       case GL_SAMPLER_CUBE:
       case GL_SAMPLER_EXTERNAL_OES:
-      case GL_SAMPLER_2D_RECT_ARB:
+      case GL_SAMPLER_2D_RECT_ANGLE:
       case GL_SAMPLER_2D_ARRAY:
       case GL_SAMPLER_2D_MULTISAMPLE:
       case GL_SAMPLER_3D:

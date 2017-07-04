@@ -48,7 +48,8 @@ void BindFramebufferAttachment(const FunctionsGL *functions,
             const TextureGL *textureGL = GetImplAs<TextureGL>(texture);
 
             if (texture->getTarget() == GL_TEXTURE_2D ||
-                texture->getTarget() == GL_TEXTURE_2D_MULTISAMPLE)
+                texture->getTarget() == GL_TEXTURE_2D_MULTISAMPLE ||
+                texture->getTarget() == GL_TEXTURE_RECTANGLE_ANGLE)
             {
                 functions->framebufferTexture2D(GL_FRAMEBUFFER, attachmentPoint,
                                                 texture->getTarget(), textureGL->getTextureID(),

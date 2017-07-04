@@ -1002,6 +1002,14 @@ void GenerateCaps(const FunctionsGL *functions,
                                      functions->hasGLESExtension("GL_ARB_invalidate_subdata");
 
     extensions->translatedShaderSource = true;
+
+    if (functions->isAtLeastGL(gl::Version(3, 1)) ||
+        functions->hasGLExtension("GL_ARB_texture_rectangle"))
+    {
+        extensions->textureRectangle = true;
+        caps->maxRectangleTextureSize =
+            QuerySingleGLInt(functions, GL_MAX_RECTANGLE_TEXTURE_SIZE_ANGLE);
+    }
 }
 
 void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workarounds)

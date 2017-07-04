@@ -537,6 +537,14 @@ GL_APICALL void GL_APIENTRY glFramebufferTextureMultiviewSideBySideANGLE(GLenum 
 #endif
 #endif /* GL_ANGLE_multiview */
 
+#ifndef GL_ANGLE_texture_rectangle
+#define GL_ANGLE_texture_rectangle 1
+#define GL_MAX_RECTANGLE_TEXTURE_SIZE_ANGLE 0x84F8
+#define GL_TEXTURE_RECTANGLE_ANGLE 0x84F5
+#define GL_TEXTURE_BINDING_RECTANGLE_ANGLE 0x84F6
+#define GL_SAMPLER_2D_RECT_ANGLE 0x8B63
+#endif /* GL_ANGLE_texture_rectangle */
+
 // clang-format on
 
 #endif  // INCLUDE_GLES2_GL2EXT_ANGLE_H_

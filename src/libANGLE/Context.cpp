@@ -334,6 +334,13 @@ Context::Context(rx::EGLImplFactory *implFactory,
         }
     }
 
+    if (mExtensions.textureRectangle)
+    {
+        Texture *zeroTextureRectangle =
+            new Texture(mImplementation.get(), 0, GL_TEXTURE_RECTANGLE_ANGLE);
+        mZeroTextures[GL_TEXTURE_RECTANGLE_ANGLE].set(this, zeroTextureRectangle);
+    }
+
     if (mExtensions.eglImageExternal || mExtensions.eglStreamConsumerExternal)
     {
         Texture *zeroTextureExternal =
@@ -1421,6 +1428,9 @@ void Context::getIntegervImpl(GLenum pname, GLint *params)
             break;
         case GL_MAX_TEXTURE_SIZE:
             *params = mCaps.max2DTextureSize;
+            break;
+        case GL_MAX_RECTANGLE_TEXTURE_SIZE_ANGLE:
+            *params = mCaps.maxRectangleTextureSize;
             break;
         case GL_MAX_CUBE_MAP_TEXTURE_SIZE:
             *params = mCaps.maxCubeMapTextureSize;
@@ -3027,6 +3037,10 @@ void Context::framebufferTexture2D(GLenum target,
         if (textarget == GL_TEXTURE_2D)
         {
             index = ImageIndex::Make2D(level);
+        }
+        else if (textarget == GL_TEXTURE_RECTANGLE_ANGLE)
+        {
+            index = ImageIndex::MakeRectangle(level);
         }
         else if (textarget == GL_TEXTURE_2D_MULTISAMPLE)
         {

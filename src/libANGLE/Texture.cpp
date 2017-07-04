@@ -1158,7 +1158,7 @@ Error Texture::bindTexImageFromSurface(const Context *context, egl::Surface *sur
     mBoundSurface = surface;
 
     // Set the image info to the size and format of the surface
-    ASSERT(mState.mTarget == GL_TEXTURE_2D);
+    ASSERT(mState.mTarget == GL_TEXTURE_2D || mState.mTarget == GL_TEXTURE_RECTANGLE_ANGLE);
     Extents size(surface->getWidth(), surface->getHeight(), 1);
     ImageDesc desc(size, Format(surface->getConfig()->renderTargetFormat));
     mState.setImageDesc(mState.mTarget, 0, desc);
@@ -1173,7 +1173,7 @@ Error Texture::releaseTexImageFromSurface(const Context *context)
     ANGLE_TRY(mTexture->releaseTexImage(context));
 
     // Erase the image info for level 0
-    ASSERT(mState.mTarget == GL_TEXTURE_2D);
+    ASSERT(mState.mTarget == GL_TEXTURE_2D || mState.mTarget == GL_TEXTURE_RECTANGLE_ANGLE);
     mState.clearImageDesc(mState.mTarget, 0);
     mDirtyChannel.signal();
     return NoError();

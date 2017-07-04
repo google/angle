@@ -31,6 +31,7 @@ struct ImageIndex
     bool is3D() const;
 
     static ImageIndex Make2D(GLint mipIndex);
+    static ImageIndex MakeRectangle(GLint mipIndex);
     static ImageIndex MakeCube(GLenum target, GLint mipIndex);
     static ImageIndex Make2DArray(GLint mipIndex, GLint layerIndex);
     static ImageIndex Make3D(GLint mipIndex, GLint layerIndex = ENTIRE_LEVEL);
@@ -55,6 +56,7 @@ class ImageIndexIterator
 {
   public:
     static ImageIndexIterator Make2D(GLint minMip, GLint maxMip);
+    static ImageIndexIterator MakeRectangle(GLint minMip, GLint maxMip);
     static ImageIndexIterator MakeCube(GLint minMip, GLint maxMip);
     static ImageIndexIterator Make3D(GLint minMip, GLint maxMip, GLint minLayer, GLint maxLayer);
     static ImageIndexIterator Make2DArray(GLint minMip, GLint maxMip, const GLsizei *layerCounts);

@@ -332,7 +332,7 @@ GLenum GLVariableType(const TType &type)
         case EbtSamplerExternal2DY2YEXT:
             return GL_SAMPLER_EXTERNAL_2D_Y2Y_EXT;
         case EbtSampler2DRect:
-            return GL_SAMPLER_2D_RECT_ARB;
+            return GL_SAMPLER_2D_RECT_ANGLE;
         case EbtSampler2DArray:
             return GL_SAMPLER_2D_ARRAY;
         case EbtSampler2DMS:

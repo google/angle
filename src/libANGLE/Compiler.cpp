@@ -72,6 +72,7 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const ContextState &state)
     mResources.OES_EGL_image_external          = extensions.eglImageExternal;
     mResources.OES_EGL_image_external_essl3    = extensions.eglImageExternalEssl3;
     mResources.NV_EGL_stream_consumer_external = extensions.eglStreamConsumerExternal;
+    mResources.ARB_texture_rectangle           = extensions.textureRectangle;
     // TODO: use shader precision caps to determine if high precision is supported?
     mResources.FragmentPrecisionHigh = 1;
     mResources.EXT_frag_depth        = extensions.fragDepth;

@@ -370,6 +370,9 @@ struct Extensions
 
     // GL_ANGLE_program_cache_control
     bool programCacheControl;
+
+    // GL_ANGLE_texture_rectangle
+    bool textureRectangle;
 };
 
 struct ExtensionInfo
@@ -432,6 +435,7 @@ struct Caps
     GLuint64 maxElementIndex;
     GLuint max3DTextureSize;
     GLuint max2DTextureSize;
+    GLuint maxRectangleTextureSize;
     GLuint maxArrayTextureLayers;
     GLfloat maxLODBias;
     GLuint maxCubeMapTextureSize;

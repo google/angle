@@ -257,7 +257,7 @@ bool ValidReadPixelsFormatType(ValidationContext *context,
 }
 
 template <typename ParamType>
-bool ValidateTextureWrapModeValue(Context *context, ParamType *params, bool isExternalTextureTarget)
+bool ValidateTextureWrapModeValue(Context *context, ParamType *params, bool restrictedWrapModes)
 {
     switch (ConvertToGLenum(params[0]))
     {
@@ -266,11 +266,11 @@ bool ValidateTextureWrapModeValue(Context *context, ParamType *params, bool isEx
 
         case GL_REPEAT:
         case GL_MIRRORED_REPEAT:
-            if (isExternalTextureTarget)
+            if (restrictedWrapModes)
             {
-                // OES_EGL_image_external specifies this error.
+                // OES_EGL_image_external and ANGLE_texture_rectangle specifies this error.
                 context->handleError(InvalidEnum()
-                                     << "external textures only support CLAMP_TO_EDGE wrap mode");
+                                     << "texture only support CLAMP_TO_EDGE wrap mode");
                 return false;
             }
             break;
@@ -284,9 +284,7 @@ bool ValidateTextureWrapModeValue(Context *context, ParamType *params, bool isEx
 }
 
 template <typename ParamType>
-bool ValidateTextureMinFilterValue(Context *context,
-                                   ParamType *params,
-                                   bool isExternalTextureTarget)
+bool ValidateTextureMinFilterValue(Context *context, ParamType *params, bool restrictedMinFilter)
 {
     switch (ConvertToGLenum(params[0]))
     {
@@ -298,11 +296,11 @@ bool ValidateTextureMinFilterValue(Context *context,
         case GL_LINEAR_MIPMAP_NEAREST:
         case GL_NEAREST_MIPMAP_LINEAR:
         case GL_LINEAR_MIPMAP_LINEAR:
-            if (isExternalTextureTarget)
+            if (restrictedMinFilter)
             {
                 // OES_EGL_image_external specifies this error.
-                context->handleError(
-                    InvalidEnum() << "external textures only support NEAREST and LINEAR filtering");
+                context->handleError(InvalidEnum()
+                                     << "texture only support NEAREST and LINEAR filtering");
                 return false;
             }
             break;
@@ -861,6 +859,9 @@ bool ValidTextureTarget(const ValidationContext *context, GLenum target)
         case GL_TEXTURE_CUBE_MAP:
             return true;
 
+        case GL_TEXTURE_RECTANGLE_ANGLE:
+            return context->getExtensions().textureRectangle;
+
         case GL_TEXTURE_3D:
         case GL_TEXTURE_2D_ARRAY:
             return (context->getClientMajorVersion() >= 3);
@@ -880,6 +881,9 @@ bool ValidTexture2DTarget(const ValidationContext *context, GLenum target)
         case GL_TEXTURE_2D:
         case GL_TEXTURE_CUBE_MAP:
             return true;
+
+        case GL_TEXTURE_RECTANGLE_ANGLE:
+            return context->getExtensions().textureRectangle;
 
         default:
             return false;
@@ -924,6 +928,8 @@ bool ValidTexture2DDestinationTarget(const ValidationContext *context, GLenum ta
         case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
         case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
             return true;
+        case GL_TEXTURE_RECTANGLE_ANGLE:
+            return context->getExtensions().textureRectangle;
         default:
             return false;
     }
@@ -1023,6 +1029,8 @@ bool ValidTexLevelDestinationTarget(const ValidationContext *context, GLenum tar
         case GL_TEXTURE_2D_ARRAY:
         case GL_TEXTURE_2D_MULTISAMPLE:
             return true;
+        case GL_TEXTURE_RECTANGLE_ANGLE:
+            return context->getExtensions().textureRectangle;
         default:
             return false;
     }
@@ -1095,6 +1103,8 @@ bool ValidMipLevel(const ValidationContext *context, GLenum target, GLint level)
         case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
             maxDimension = caps.maxCubeMapTextureSize;
             break;
+        case GL_TEXTURE_RECTANGLE_ANGLE:
+            return level == 0;
         case GL_TEXTURE_3D:
             maxDimension = caps.max3DTextureSize;
             break;
@@ -2494,6 +2504,14 @@ bool ValidateStateQuery(ValidationContext *context,
         case GL_TEXTURE_BINDING_2D_ARRAY:
         case GL_TEXTURE_BINDING_2D_MULTISAMPLE:
             break;
+        case GL_TEXTURE_BINDING_RECTANGLE_ANGLE:
+            if (!context->getExtensions().textureRectangle)
+            {
+                context->handleError(InvalidEnum()
+                                     << "ANGLE_texture_rectangle extension not present");
+                return false;
+            }
+            break;
         case GL_TEXTURE_BINDING_EXTERNAL_OES:
             if (!context->getExtensions().eglStreamConsumerExternal &&
                 !context->getExtensions().eglImageExternal)
@@ -2674,6 +2692,10 @@ bool ValidateCopyTexImageParametersBase(ValidationContext *context,
         case GL_TEXTURE_CUBE_MAP_POSITIVE_Z:
         case GL_TEXTURE_CUBE_MAP_NEGATIVE_Z:
             maxDimension = caps.maxCubeMapTextureSize;
+            break;
+
+        case GL_TEXTURE_RECTANGLE_ANGLE:
+            maxDimension = caps.maxRectangleTextureSize;
             break;
 
         case GL_TEXTURE_2D_ARRAY:
@@ -5688,16 +5710,24 @@ bool ValidateTexParameterBase(Context *context,
         case GL_TEXTURE_WRAP_S:
         case GL_TEXTURE_WRAP_T:
         case GL_TEXTURE_WRAP_R:
-            if (!ValidateTextureWrapModeValue(context, params, target == GL_TEXTURE_EXTERNAL_OES))
             {
-                return false;
+                bool restrictedWrapModes =
+                    target == GL_TEXTURE_EXTERNAL_OES || target == GL_TEXTURE_RECTANGLE_ANGLE;
+                if (!ValidateTextureWrapModeValue(context, params, restrictedWrapModes))
+                {
+                    return false;
+                }
             }
             break;
 
         case GL_TEXTURE_MIN_FILTER:
-            if (!ValidateTextureMinFilterValue(context, params, target == GL_TEXTURE_EXTERNAL_OES))
             {
-                return false;
+                bool restrictedMinFilter =
+                    target == GL_TEXTURE_EXTERNAL_OES || target == GL_TEXTURE_RECTANGLE_ANGLE;
+                if (!ValidateTextureMinFilterValue(context, params, restrictedMinFilter))
+                {
+                    return false;
+                }
             }
             break;
 
@@ -5791,6 +5821,12 @@ bool ValidateTexParameterBase(Context *context,
             {
                 context->handleError(InvalidOperation()
                                      << "Base level must be 0 for multisampled textures.");
+                return false;
+            }
+            if (target == GL_TEXTURE_RECTANGLE_ANGLE && static_cast<GLuint>(params[0]) != 0)
+            {
+                context->handleError(InvalidOperation()
+                                     << "Base level must be 0 for rectangle textures.");
                 return false;
             }
             break;

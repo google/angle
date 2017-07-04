@@ -199,6 +199,22 @@ bool ValidateES3TexImageParametersBase(Context *context,
             }
             break;
 
+        case GL_TEXTURE_RECTANGLE_ANGLE:
+            ASSERT(level == 0);
+            if (static_cast<GLuint>(width) > caps.maxRectangleTextureSize ||
+                static_cast<GLuint>(height) > caps.maxRectangleTextureSize)
+            {
+                context->handleError(InvalidValue());
+                return false;
+            }
+            if (isCompressed)
+            {
+                context->handleError(InvalidEnum()
+                                     << "Rectangle texture cannot have a compressed format.");
+                return false;
+            }
+            break;
+
         case GL_TEXTURE_CUBE_MAP_POSITIVE_X:
         case GL_TEXTURE_CUBE_MAP_NEGATIVE_X:
         case GL_TEXTURE_CUBE_MAP_POSITIVE_Y:
@@ -851,6 +867,17 @@ bool ValidateES3TexStorageParametersBase(Context *context,
         }
         break;
 
+        case GL_TEXTURE_RECTANGLE_ANGLE:
+        {
+            if (static_cast<GLuint>(width) > caps.maxRectangleTextureSize ||
+                static_cast<GLuint>(height) > caps.maxRectangleTextureSize || levels != 1)
+            {
+                context->handleError(InvalidValue());
+                return false;
+            }
+        }
+        break;
+
         case GL_TEXTURE_CUBE_MAP:
         {
             if (width != height)
@@ -919,6 +946,12 @@ bool ValidateES3TexStorageParametersBase(Context *context,
     if (!formatInfo.sized)
     {
         context->handleError(InvalidEnum());
+        return false;
+    }
+
+    if (formatInfo.compressed && target == GL_TEXTURE_RECTANGLE_ANGLE)
+    {
+        context->handleError(InvalidEnum() << "Rectangle texture cannot have a compressed format.");
         return false;
     }
 
