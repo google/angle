@@ -1,0 +1,377 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "16407700_198a2272",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-04T19:13:47Z",
+      "side": 1,
+      "message": "laid",
+      "range": {
+        "startLine": 10,
+        "startChar": 62,
+        "endLine": 10,
+        "endChar": 67
+      },
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f72a2648_8e5eeab4",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-04T19:13:47Z",
+      "side": 1,
+      "message": "Just put XX here for now.",
+      "range": {
+        "startLine": 28,
+        "startChar": 25,
+        "endLine": 28,
+        "endChar": 28
+      },
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf18994b_d768ad23",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-04T19:13:47Z",
+      "side": 1,
+      "message": "Not vertex shader specific",
+      "range": {
+        "startLine": 44,
+        "startChar": 51,
+        "endLine": 44,
+        "endChar": 57
+      },
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "afa06ff4_d9c18d2d",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-04T19:13:47Z",
+      "side": 1,
+      "message": "vertex or fragment",
+      "range": {
+        "startLine": 46,
+        "startChar": 12,
+        "endLine": 46,
+        "endChar": 18
+      },
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4d64da10_41dcbe92",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-04T19:13:47Z",
+      "side": 1,
+      "message": "We\u0027ll probably need to allocate new enums for this extension from Khronos at least when we\u0027re closer to finalizing it. But maybe we can have placeholders here at first.",
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7d57ee58_cdaf17fc",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-04T19:13:47Z",
+      "side": 1,
+      "message": "Cut these two words.",
+      "range": {
+        "startLine": 80,
+        "startChar": 74,
+        "endLine": 80,
+        "endChar": 82
+      },
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2e90b772_14e2b40a",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-04T19:13:47Z",
+      "side": 1,
+      "message": "I think the meaning of this should be made clearer. It should be clear that in side-by-side rendering mode this chooses the viewport and scissor, and in layered rendering mode this chooses the framebuffer texture layer to target (in addition or instead of choosing the viewport and scissor).",
+      "range": {
+        "startLine": 81,
+        "startChar": 4,
+        "endLine": 81,
+        "endChar": 23
+      },
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "86671eee_5b36bd87",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-04T19:13:47Z",
+      "side": 1,
+      "message": "I\u0027d consider including \"drawing command or a call to clear()\" here. I know that you\u0027ve addressed clears below in a different section, but formulating the spec in this way makes it much clearer what it is doing.",
+      "range": {
+        "startLine": 83,
+        "startChar": 8,
+        "endLine": 83,
+        "endChar": 23
+      },
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "009216fe_69a6d946",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-04T19:13:47Z",
+      "side": 1,
+      "message": "Add: \"where views is the number of views in the current draw framebuffer\".",
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "931c3cf4_17b5a526",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-04T19:13:47Z",
+      "side": 1,
+      "message": "Is this necessary to implement this spec on top of native GL or DX? Otherwise we probably don\u0027t want this restriction.\n\nIf this restriction is necessary, what happens if ViewportMultiviewANGLE is first called with count 4, and then with count 3 so that viewport 3 in the latter call overlaps viewport 4 in the earlier call? This kind of problematic cases could maybe be avoided if the multiple viewports were framebuffer-specific state and could only be specified all at once. The alternative API could be for example:\n\nframebufferTextureMultiviewANGLE(enum target, enum attachment, uint texture, int level, int baseViewIndex, sizei numViews)\n\nframebufferTextureMultiviewSideBySideANGLE(enum target, enum attachment, uint texture, int level, sizei numViews, const int *viewport_offsets)\n\nWhere viewport_offsets is an array of x and y values that are added to viewport and scissor rectangle to calculate viewports and scissors for different views. The problem with this would be only that different viewports or scissors couldn\u0027t be different size.",
+      "range": {
+        "startLine": 170,
+        "startChar": 4,
+        "endLine": 171,
+        "endChar": 46
+      },
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8ac915a_017f8a86",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-04T19:13:47Z",
+      "side": 1,
+      "message": "all of the views.",
+      "range": {
+        "startLine": 295,
+        "startChar": 73,
+        "endLine": 295,
+        "endChar": 85
+      },
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67d59559_72507a3c",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-04T19:13:47Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 301,
+        "startChar": 13,
+        "endLine": 301,
+        "endChar": 14
+      },
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0a2d2b22_1cc3b2a9",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-04T19:13:47Z",
+      "side": 1,
+      "message": "This leaves the baseViewIndex parameter out. I think regardless of the API shape there should probably be a two separate API functions for setting up layered and side-by-side framebuffers.",
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7b94fd6_c3e0af0c",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-04T19:13:47Z",
+      "side": 1,
+      "message": "What is a buffer texture? I think that including this error in the ES 3.0.5 spec might have been a mistake.",
+      "range": {
+        "startLine": 347,
+        "startChar": 76,
+        "endLine": 347,
+        "endChar": 90
+      },
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f6e96253_2fa3a162",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 463,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-04T19:13:47Z",
+      "side": 1,
+      "message": "vertex or fragment",
+      "range": {
+        "startLine": 463,
+        "startChar": 4,
+        "endLine": 463,
+        "endChar": 10
+      },
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88829c83_fa67f459",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-04T19:13:47Z",
+      "side": 1,
+      "message": "I think we can cut this part from the ANGLE spec. The implementation that we\u0027re planning at the moment doesn\u0027t really require these restrictions. They might be left in the WebGL spec, but that doesn\u0027t need to affect whether we have them at this level - they can be specific to WebGL shader validation.",
+      "range": {
+        "startLine": 463,
+        "startChar": 35,
+        "endLine": 480,
+        "endChar": 98
+      },
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0e7b69f3_b4f5ff53",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 540,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-04T19:13:47Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 540,
+        "startChar": 42,
+        "endLine": 540,
+        "endChar": 43
+      },
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
