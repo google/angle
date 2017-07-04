@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3e1a1723_0714d49f",
+        "filename": "src/libANGLE/renderer/d3d/ImageD3D.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-04T15:45:23Z",
+      "side": 1,
+      "message": "Don\u0027t just comment it out, remove these.",
+      "range": {
+        "startLine": 48,
+        "startChar": 4,
+        "endLine": 49,
+        "endChar": 82
+      },
+      "revId": "54fcafcfa2f91d54bb151b3d5a4d07847b9b029c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "63b01921_53eb52d0",
+        "filename": "src/libANGLE/renderer/d3d/ImageD3D.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-04T15:45:23Z",
+      "side": 1,
+      "message": "same.",
+      "range": {
+        "startLine": 114,
+        "startChar": 4,
+        "endLine": 115,
+        "endChar": 39
+      },
+      "revId": "54fcafcfa2f91d54bb151b3d5a4d07847b9b029c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "20f1433c_1c7064e9",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 642,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-04T15:45:23Z",
+      "side": 1,
+      "message": "pass storage here.",
+      "range": {
+        "startLine": 642,
+        "startChar": 44,
+        "endLine": 642,
+        "endChar": 55
+      },
+      "revId": "54fcafcfa2f91d54bb151b3d5a4d07847b9b029c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
