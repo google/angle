@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "85496e6f_14fef4fd",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 638,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-04T15:05:29Z",
+      "side": 1,
+      "message": "Sorry, my fault. It should be needed and only check \u0027argTyped-\u003egetMemoryQualifier().writeonly\u0027.",
+      "parentUuid": "06b1eb87_e19c0722",
+      "revId": "2b33cb0b04d440361d6913b634aa86f47fd7909d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df7c67f1_87b0d11b",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 13
@@ -219,6 +237,24 @@
       "side": 1,
       "message": "Oh yes, sorry about the typo, I meant readonly/writeonly combo.\n\nSo does native dEQP treat a buffer that has both readonly and writeonly memory qualifiers as an error?\n\nI think a clarification to the spec would be in order either way, since the spec doesn\u0027t say anything about this one way or the other right now. Could you file a Khronos spec bug against GLES?",
       "parentUuid": "08ba84a5_1c760d23",
+      "revId": "2b33cb0b04d440361d6913b634aa86f47fd7909d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "71fa3c02_ce0a4053",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3306,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-04T15:05:29Z",
+      "side": 1,
+      "message": "\u003eSo does native dEQP treat a buffer that has both readonly and writeonly memory qualifiers as an error?\n\nYes, I tested it on Linux both Intel and NVIDIA. Both of them are failed. Filed a spec bug on https://github.com/KhronosGroup/OpenGL-API/issues/7. And leave a TODO here and don\u0027t check readonly and writeonly. But even we declare with readonly and writeonly, we can\u0027t use them.",
+      "parentUuid": "50b1b078_350671cf",
       "revId": "2b33cb0b04d440361d6913b634aa86f47fd7909d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true

@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1cbd3871_5d450356",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 3162,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-04T15:05:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "edc2b175_04382c20",
+      "range": {
+        "startLine": 3162,
+        "startChar": 89,
+        "endLine": 3162,
+        "endChar": 93
+      },
+      "revId": "510887f9bed4848d62807a28fd90a404136dc9e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fc3cbed0_acb282a7",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 17
@@ -36,6 +60,24 @@
       "writtenOn": "2017-07-03T10:26:37Z",
       "side": 1,
       "message": "I don\u0027t think this is right. Buffer fields may be qualified as EvqTemporary if they\u0027re accessed through a buffer instance name. I\u0027d leave the checkImageMemoryAccessFor*Functions and GetImageArgumentToken untouched in this patch and add a different TParseContext function making sure that writeonly variables aren\u0027t passed as in parameters and readonly variables aren\u0027t passed as out parameters.",
+      "revId": "510887f9bed4848d62807a28fd90a404136dc9e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "782d29d2_0d3ac749",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 4922,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-04T15:05:29Z",
+      "side": 1,
+      "message": "Agree. In the newest patch, I have recovered checkImageMemoryAccessFor*Functions and GetImageArgumentToken. I refactor functionCallLValueErrorCheck -\u003e functionCallRLValueErrorCheck to make sure that writeonly variables aren\u0027t passed as in parameters and readonly variables aren\u0027t passed as out parameters.",
+      "parentUuid": "fc3cbed0_acb282a7",
       "revId": "510887f9bed4848d62807a28fd90a404136dc9e7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "926bc452_e5d20947",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 5157,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-04T15:05:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ea45b343_e31cad47",
+      "revId": "510887f9bed4848d62807a28fd90a404136dc9e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "09308879_48e6b8d2",
         "filename": "src/tests/compiler_tests/BufferVariables_test.cpp",
         "patchSetId": 17
@@ -73,6 +133,24 @@
       "revId": "510887f9bed4848d62807a28fd90a404136dc9e7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fb4a6530_12050dab",
+        "filename": "src/tests/compiler_tests/BufferVariables_test.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-04T15:05:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "09308879_48e6b8d2",
+      "revId": "510887f9bed4848d62807a28fd90a404136dc9e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
