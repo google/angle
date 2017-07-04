@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dc78411c_37610e36",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-04T20:15:24Z",
+      "side": 1,
+      "message": "can you resort this before landing?",
+      "range": {
+        "startLine": 104,
+        "startChar": 7,
+        "endLine": 104,
+        "endChar": 27
+      },
+      "revId": "b8dc5735108feaa8c188d13634a5c8f369af6cde",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
