@@ -710,6 +710,9 @@ struct DisplayExtensions
 
     // EGL_ANGLE_robust_resource_initialization
     bool robustResourceInitialization;
+
+    // EGL_ANGLE_iosurface_client_buffer
+    bool iosurfaceClientBuffer;
 };
 
 struct DeviceExtensions

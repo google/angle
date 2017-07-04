@@ -14,6 +14,7 @@
 
 #include "common/debug.h"
 #include "libANGLE/Display.h"
+#include "libANGLE/renderer/gl/cgl/IOSurfaceSurfaceCGL.h"
 #include "libANGLE/renderer/gl/cgl/PbufferSurfaceCGL.h"
 #include "libANGLE/renderer/gl/cgl/WindowSurfaceCGL.h"
 
@@ -131,8 +132,9 @@ SurfaceImpl *DisplayCGL::createPbufferFromClientBuffer(const egl::SurfaceState &
                                                        EGLClientBuffer clientBuffer,
                                                        const egl::AttributeMap &attribs)
 {
-    UNIMPLEMENTED();
-    return nullptr;
+    ASSERT(buftype == EGL_IOSURFACE_ANGLE);
+
+    return new IOSurfaceSurfaceCGL(state, this->getRenderer(), this, clientBuffer, attribs);
 }
 
 SurfaceImpl *DisplayCGL::createPixmapSurface(const egl::SurfaceState &state,
@@ -233,10 +235,30 @@ bool DisplayCGL::isValidNativeWindow(EGLNativeWindowType window) const
     return [layer isKindOfClass:[CALayer class]];
 }
 
+egl::Error DisplayCGL::validateClientBuffer(const egl::Config *configuration,
+                                            EGLenum buftype,
+                                            EGLClientBuffer clientBuffer,
+                                            const egl::AttributeMap &attribs) const
+{
+    ASSERT(buftype == EGL_IOSURFACE_ANGLE);
+
+    if (!IOSurfaceSurfaceCGL::validateAttributes(clientBuffer, attribs))
+    {
+        return egl::EglBadAttribute();
+    }
+
+    return egl::NoError();
+}
+
 std::string DisplayCGL::getVendorString() const
 {
     // TODO(cwallez) find a useful vendor string
     return "";
+}
+
+CGLContextObj DisplayCGL::getCGLContext() const
+{
+    return mContext;
 }
 
 const FunctionsGL *DisplayCGL::getFunctionsGL() const
@@ -246,6 +268,7 @@ const FunctionsGL *DisplayCGL::getFunctionsGL() const
 
 void DisplayCGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
 {
+    outExtensions->iosurfaceClientBuffer = true;
     outExtensions->surfacelessContext = true;
 
     // Contexts are virtualized so textures can be shared globally

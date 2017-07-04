@@ -153,6 +153,7 @@ namespace egl_gl
 {
 GLenum EGLCubeMapTargetToGLCubeMapTarget(EGLenum eglTarget);
 GLenum EGLImageTargetToGLTextureTarget(EGLenum eglTarget);
+GLenum EGLTextureTargetToGLTextureTarget(EGLenum eglTarget);
 GLuint EGLClientBufferToGLObjectHandle(EGLClientBuffer buffer);
 }
 

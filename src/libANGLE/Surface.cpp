@@ -12,8 +12,6 @@
 
 #include <EGL/eglext.h>
 
-#include <iostream>
-
 #include "libANGLE/Config.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
@@ -59,7 +57,7 @@ Surface::Surface(EGLint surfaceType, const egl::Config *config, const AttributeM
       mSwapBehavior(EGL_NONE),
       mOrientation(0),
       mTexture(),
-      mBackFormat(config->renderTargetFormat),
+      mColorFormat(config->renderTargetFormat),
       mDSFormat(config->depthStencilFormat)
 {
     mPostSubBufferRequested = (attributes.get(EGL_POST_SUB_BUFFER_SUPPORTED_NV, EGL_FALSE) == EGL_TRUE);
@@ -387,7 +385,7 @@ gl::Extents Surface::getAttachmentSize(const gl::ImageIndex & /*target*/) const
 
 const gl::Format &Surface::getAttachmentFormat(GLenum binding, const gl::ImageIndex &target) const
 {
-    return (binding == GL_BACK ? mBackFormat : mDSFormat);
+    return (binding == GL_BACK ? mColorFormat : mDSFormat);
 }
 
 GLsizei Surface::getAttachmentSamples(const gl::ImageIndex &target) const
@@ -447,6 +445,13 @@ PbufferSurface::PbufferSurface(rx::EGLImplFactory *implFactory,
 {
     mImplementation =
         implFactory->createPbufferFromClientBuffer(mState, buftype, clientBuffer, attribs);
+
+    if (buftype == EGL_IOSURFACE_ANGLE)
+    {
+        GLenum internalFormat = static_cast<GLenum>(attribs.get(EGL_TEXTURE_INTERNAL_FORMAT_ANGLE));
+        GLenum type           = static_cast<GLenum>(attribs.get(EGL_TEXTURE_TYPE_ANGLE));
+        mColorFormat          = gl::Format(internalFormat, type);
+    }
 }
 
 PbufferSurface::~PbufferSurface()
