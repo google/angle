@@ -1557,7 +1557,7 @@ bool ValidateClearBufferiv(ValidationContext *context,
             if (context->getExtensions().webglCompatibility)
             {
                 constexpr GLenum validComponentTypes[] = {GL_INT};
-                if (ValidateWebGLFramebufferAttachmentClearType(
+                if (!ValidateWebGLFramebufferAttachmentClearType(
                         context, drawbuffer, validComponentTypes, ArraySize(validComponentTypes)))
                 {
                     return false;
@@ -1598,7 +1598,7 @@ bool ValidateClearBufferuiv(ValidationContext *context,
             if (context->getExtensions().webglCompatibility)
             {
                 constexpr GLenum validComponentTypes[] = {GL_UNSIGNED_INT};
-                if (ValidateWebGLFramebufferAttachmentClearType(
+                if (!ValidateWebGLFramebufferAttachmentClearType(
                         context, drawbuffer, validComponentTypes, ArraySize(validComponentTypes)))
                 {
                     return false;
@@ -1632,7 +1632,7 @@ bool ValidateClearBufferfv(ValidationContext *context,
             {
                 constexpr GLenum validComponentTypes[] = {GL_FLOAT, GL_UNSIGNED_NORMALIZED,
                                                           GL_SIGNED_NORMALIZED};
-                if (ValidateWebGLFramebufferAttachmentClearType(
+                if (!ValidateWebGLFramebufferAttachmentClearType(
                         context, drawbuffer, validComponentTypes, ArraySize(validComponentTypes)))
                 {
                     return false;
