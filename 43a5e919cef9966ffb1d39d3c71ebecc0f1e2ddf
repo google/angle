@@ -2,6 +2,46 @@
   "comments": [
     {
       "key": {
+        "uuid": "eae99970_086d7851",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 838,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-04T08:26:18Z",
+      "side": 1,
+      "message": "It\u0027s weird that the keyword is EvqPerVertex, but the corresponding string is gl_in",
+      "revId": "43a5e919cef9966ffb1d39d3c71ebecc0f1e2ddf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c8dd3345_04bf21f4",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 957,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-04T08:26:18Z",
+      "side": 1,
+      "message": "Maybe it should be in case GL_EXT_shader_io_blocks. If you put it here, I think you should add a TODO to point it out.",
+      "range": {
+        "startLine": 948,
+        "startChar": 0,
+        "endLine": 957,
+        "endChar": 100
+      },
+      "revId": "43a5e919cef9966ffb1d39d3c71ebecc0f1e2ddf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "52469483_20b786c1",
         "filename": "src/compiler/translator/ShaderLang.cpp",
         "patchSetId": 23

@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "02ae4fcd_88d917f7",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-04T08:26:18Z",
+      "side": 1,
+      "message": "getGeometryInputPrimitiveType\n\nPlease always use PrimitiveType not Primitive in any possible places.",
+      "range": {
+        "startLine": 364,
+        "startChar": 49,
+        "endLine": 364,
+        "endChar": 74
+      },
+      "revId": "1aefe8e600cd3e0f8e2fac9e9e0a384719cb244e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
