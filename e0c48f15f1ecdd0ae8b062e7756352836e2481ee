@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "69f8d520_55d4baf8",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-04T19:59:33Z",
+      "side": 1,
+      "message": "OK, we can try this - but currently we don\u0027t have any running assumptions that getError is NO_ERROR. I have an open work item to enable the debug runtime on the bots, so that might help.",
+      "range": {
+        "startLine": 139,
+        "startChar": 23,
+        "endLine": 139,
+        "endChar": 61
+      },
+      "revId": "e0c48f15f1ecdd0ae8b062e7756352836e2481ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
