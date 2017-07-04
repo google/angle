@@ -19,6 +19,29 @@
     },
     {
       "key": {
+        "uuid": "2657f3d9_ff0175d0",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 956,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-07-04T10:05:23Z",
+      "side": 1,
+      "message": "If EXT_geometry_point_size is supported and enabled, gl_in has a field, name \"gl_PointSize\"?\nAnd also for out.\nNote: EXT_geometry_shader spec has this built-in variable.",
+      "range": {
+        "startLine": 956,
+        "startChar": 18,
+        "endLine": 956,
+        "endChar": 26
+      },
+      "revId": "43a5e919cef9966ffb1d39d3c71ebecc0f1e2ddf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c8dd3345_04bf21f4",
         "filename": "src/compiler/translator/Initialize.cpp",
         "patchSetId": 23
@@ -42,6 +65,420 @@
     },
     {
       "key": {
+        "uuid": "ebb0eced_1428dafa",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-07-04T10:05:23Z",
+      "side": 1,
+      "message": "Map or Mapping? Is \"from\" needed? Sorry, I am not sure.",
+      "range": {
+        "startLine": 89,
+        "startChar": 0,
+        "endLine": 89,
+        "endChar": 16
+      },
+      "revId": "43a5e919cef9966ffb1d39d3c71ebecc0f1e2ddf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "945ab591_765b57f2",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 1250,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-07-04T10:05:23Z",
+      "side": 1,
+      "message": "Is it need to add geometry in and out here? Could Geometry in and out be used to declare struct?",
+      "range": {
+        "startLine": 1245,
+        "startChar": 8,
+        "endLine": 1250,
+        "endChar": 26
+      },
+      "revId": "43a5e919cef9966ffb1d39d3c71ebecc0f1e2ddf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "89c936c6_11aaa5cd",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 2315,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-07-04T10:05:23Z",
+      "side": 1,
+      "message": "As comments in glang.y, array\u0027s declaration may be before layout which specifies the size.\nAnd I think it is reasonable to set array size after link successfully.",
+      "range": {
+        "startLine": 2311,
+        "startChar": 8,
+        "endLine": 2315,
+        "endChar": 9
+      },
+      "revId": "43a5e919cef9966ffb1d39d3c71ebecc0f1e2ddf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e66a96b_b03e3391",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 2322,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-07-04T10:05:23Z",
+      "side": 1,
+      "message": "Same as above",
+      "range": {
+        "startLine": 2318,
+        "startChar": 12,
+        "endLine": 2322,
+        "endChar": 39
+      },
+      "revId": "43a5e919cef9966ffb1d39d3c71ebecc0f1e2ddf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ebec8eaf_e57b55d6",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 2341,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-07-04T10:05:23Z",
+      "side": 1,
+      "message": "Same here?",
+      "range": {
+        "startLine": 2328,
+        "startChar": 7,
+        "endLine": 2341,
+        "endChar": 13
+      },
+      "revId": "43a5e919cef9966ffb1d39d3c71ebecc0f1e2ddf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "70284fd4_b9399388",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 2705,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-07-04T10:05:23Z",
+      "side": 1,
+      "message": "Put it first?",
+      "range": {
+        "startLine": 2705,
+        "startChar": 13,
+        "endLine": 2705,
+        "endChar": 50
+      },
+      "revId": "43a5e919cef9966ffb1d39d3c71ebecc0f1e2ddf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b5f34269_752725c0",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 2708,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-07-04T10:05:23Z",
+      "side": 1,
+      "message": "Does it miss to catch one compile-error here?\n\"It is a compile-time error if a layout declaration\u0027s array size does not match all the explicit array sizes specified in declarations of an input variables in the same shader\"",
+      "range": {
+        "startLine": 2708,
+        "startChar": 0,
+        "endLine": 2708,
+        "endChar": 88
+      },
+      "revId": "43a5e919cef9966ffb1d39d3c71ebecc0f1e2ddf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7bc53125_e536c382",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 2727,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-07-04T10:05:23Z",
+      "side": 1,
+      "message": "Why set the array size of gl_in, it is compile-time now, I think it should set after link successfully.",
+      "range": {
+        "startLine": 2723,
+        "startChar": 12,
+        "endLine": 2727,
+        "endChar": 86
+      },
+      "revId": "43a5e919cef9966ffb1d39d3c71ebecc0f1e2ddf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1047df1c_720f0916",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 2881,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-07-04T10:05:23Z",
+      "side": 1,
+      "message": "Is this message right? in type qualifier supported in fragment and vertex shader in GLSL ES 3.0?",
+      "range": {
+        "startLine": 2881,
+        "startChar": 43,
+        "endLine": 2881,
+        "endChar": 91
+      },
+      "revId": "43a5e919cef9966ffb1d39d3c71ebecc0f1e2ddf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "42fa0a6e_3900220c",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 2887,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-07-04T10:05:23Z",
+      "side": 1,
+      "message": "Same here?",
+      "range": {
+        "startLine": 2887,
+        "startChar": 43,
+        "endLine": 2887,
+        "endChar": 92
+      },
+      "revId": "43a5e919cef9966ffb1d39d3c71ebecc0f1e2ddf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c48f39e3_58917330",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 4077,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-07-04T10:05:23Z",
+      "side": 1,
+      "message": "Does it better merge these two branches into one? As \"out of range: invocations must be [1, MAX_GEOMETRY_SHADER_INVOCATIONS_EXT], ...\", I think MAX_GEOMETRY_SHADER_INVOCATIONS_EXT should be a digit, not a string here.",
+      "range": {
+        "startLine": 4072,
+        "startChar": 4,
+        "endLine": 4077,
+        "endChar": 48
+      },
+      "revId": "43a5e919cef9966ffb1d39d3c71ebecc0f1e2ddf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49dfd4bf_c686a802",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 4080,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-07-04T10:05:23Z",
+      "side": 1,
+      "message": "smaller than or equal to? Add a number,For example \"MAX_GEOMETRY_SHADER_INVOCATIONS_EXT(60)\"",
+      "range": {
+        "startLine": 4080,
+        "startChar": 49,
+        "endLine": 4080,
+        "endChar": 61
+      },
+      "revId": "43a5e919cef9966ffb1d39d3c71ebecc0f1e2ddf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "417822f7_89db563f",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 4102,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-07-04T10:05:23Z",
+      "side": 1,
+      "message": "smaller than or equal to?",
+      "range": {
+        "startLine": 4102,
+        "startChar": 50,
+        "endLine": 4102,
+        "endChar": 62
+      },
+      "revId": "43a5e919cef9966ffb1d39d3c71ebecc0f1e2ddf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "849db5f8_a4d7c9c3",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 4254,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-07-04T10:05:23Z",
+      "side": 1,
+      "message": "Could strict the shader version here? Is it necessary?",
+      "range": {
+        "startLine": 4247,
+        "startChar": 8,
+        "endLine": 4254,
+        "endChar": 9
+      },
+      "revId": "43a5e919cef9966ffb1d39d3c71ebecc0f1e2ddf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "05318366_2cc583f2",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 4257,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-07-04T10:05:23Z",
+      "side": 1,
+      "message": "Why use UNIMPLEMENTED()? It will assert when reaching here. I think it will disable assert when release official version. Why not continue use if-else?",
+      "range": {
+        "startLine": 4257,
+        "startChar": 12,
+        "endLine": 4257,
+        "endChar": 28
+      },
+      "revId": "43a5e919cef9966ffb1d39d3c71ebecc0f1e2ddf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ad35f9e_a0ed1ba7",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 4258,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-07-04T10:05:23Z",
+      "side": 1,
+      "message": "Could return a null pointer here?",
+      "range": {
+        "startLine": 4258,
+        "startChar": 23,
+        "endLine": 4258,
+        "endChar": 61
+      },
+      "revId": "43a5e919cef9966ffb1d39d3c71ebecc0f1e2ddf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2305c710_72ddbfbd",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 4296,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-07-04T10:05:23Z",
+      "side": 1,
+      "message": "same here?",
+      "range": {
+        "startLine": 4292,
+        "startChar": 8,
+        "endLine": 4296,
+        "endChar": 62
+      },
+      "revId": "43a5e919cef9966ffb1d39d3c71ebecc0f1e2ddf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa05218b_c111af86",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-07-04T10:05:23Z",
+      "side": 1,
+      "message": "Do you think it is better to define geometry primitives for in and out respectively. For example, mGeometryPrimitiveOut cannot be assigned with all TLayoutPrimitiveType\u0027s value.",
+      "range": {
+        "startLine": 581,
+        "startChar": 4,
+        "endLine": 582,
+        "endChar": 46
+      },
+      "revId": "43a5e919cef9966ffb1d39d3c71ebecc0f1e2ddf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "52469483_20b786c1",
         "filename": "src/compiler/translator/ShaderLang.cpp",
         "patchSetId": 23
@@ -58,6 +495,121 @@
         "startChar": 0,
         "endLine": 359,
         "endChar": 66
+      },
+      "revId": "43a5e919cef9966ffb1d39d3c71ebecc0f1e2ddf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1018e7ae_a19ca914",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-07-04T10:05:23Z",
+      "side": 1,
+      "message": "ASSERT(compiler-\u003egetShaderType() \u003d\u003d GL_VERTEX_SHADER || compiler-\u003egetShaderType() \u003d\u003d GL_FRAGMENT_SHADER);\nthen use if-else.\nIs it better?",
+      "range": {
+        "startLine": 366,
+        "startChar": 4,
+        "endLine": 375,
+        "endChar": 5
+      },
+      "revId": "43a5e919cef9966ffb1d39d3c71ebecc0f1e2ddf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "29beb135_c90a0915",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 23
+      },
+      "lineNbr": 752,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-07-04T10:05:23Z",
+      "side": 1,
+      "message": "I think it is also legal to put the layout after this array. It does not need to be previous.",
+      "range": {
+        "startLine": 752,
+        "startChar": 90,
+        "endLine": 752,
+        "endChar": 98
+      },
+      "revId": "43a5e919cef9966ffb1d39d3c71ebecc0f1e2ddf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af1fed95_4ace7436",
+        "filename": "src/tests/compiler_tests/GeometryShader_test.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-07-04T10:05:23Z",
+      "side": 1,
+      "message": "Does The Geometry Shader need so many test cases? I think some representative cases are enough.",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 47
+      },
+      "revId": "43a5e919cef9966ffb1d39d3c71ebecc0f1e2ddf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c938dc18_77d00e69",
+        "filename": "src/tests/compiler_tests/GeometryShader_test.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-07-04T10:05:23Z",
+      "side": 1,
+      "message": "signal \"\u003e\u003e\" here?",
+      "range": {
+        "startLine": 262,
+        "startChar": 2,
+        "endLine": 262,
+        "endChar": 25
+      },
+      "revId": "43a5e919cef9966ffb1d39d3c71ebecc0f1e2ddf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "942a16b0_35157527",
+        "filename": "src/tests/compiler_tests/GeometryShader_test.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-07-04T10:05:23Z",
+      "side": 1,
+      "message": "Is the number large enough? Is there an API to query the max value?",
+      "range": {
+        "startLine": 365,
+        "startChar": 39,
+        "endLine": 365,
+        "endChar": 46
       },
       "revId": "43a5e919cef9966ffb1d39d3c71ebecc0f1e2ddf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
