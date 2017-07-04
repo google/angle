@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "22ad4941_62de09dd",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-04T20:13:30Z",
+      "side": 1,
+      "message": "This check should look at the native version/extensions instead of the ones in context.  Context is what\u0027s being exposed to the user and may not reflect the hardware capabilities.\n\nYou can refactor the check for packSubimage in renderergl_utils.cpp into a function in that file.",
+      "range": {
+        "startLine": 320,
+        "startChar": 60,
+        "endLine": 320,
+        "endChar": 98
+      },
+      "revId": "6ef29624a3e3d190d75b732a935b01ab6addccab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f8832f68_5267c1fa",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 335,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-04T20:13:30Z",
+      "side": 1,
+      "message": "This should assign to retVal too probably and only call readPixelsAllAtOnce if !retVal.isError()",
+      "range": {
+        "startLine": 332,
+        "startChar": 12,
+        "endLine": 335,
+        "endChar": 45
+      },
+      "revId": "6ef29624a3e3d190d75b732a935b01ab6addccab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d758d8cf_12ac177f",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 689,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-04T20:13:30Z",
+      "side": 1,
+      "message": "nit: small preference for \"\u003e 1\" instead of implicit bool conversion",
+      "range": {
+        "startLine": 689,
+        "startChar": 8,
+        "endLine": 689,
+        "endChar": 14
+      },
+      "revId": "6ef29624a3e3d190d75b732a935b01ab6addccab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
