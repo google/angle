@@ -336,7 +336,25 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
                 recordBuiltInVaryingUsed("gl_PointCoord", &mPointCoordAdded);
                 return;
             case EvqInstanceID:
-                recordBuiltInAttributeUsed("gl_InstanceID", &mInstanceIDAdded);
+                // Whenever the SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW option is set,
+                // gl_InstanceID is added inside expressions to initialize ViewID_OVR and
+                // InstanceID. gl_InstanceID is not added to the symbol table for ESSL1 shaders
+                // which makes it necessary to populate the type information explicitly instead of
+                // extracting it from the symbol table.
+                if (!mInstanceIDAdded)
+                {
+                    Attribute info;
+                    const char kName[] = "gl_InstanceID";
+                    info.name          = kName;
+                    info.mappedName    = kName;
+                    info.type          = GL_INT;
+                    info.arraySize     = 0;
+                    info.precision     = GL_HIGH_INT;  // Defined by spec.
+                    info.staticUse     = true;
+                    info.location      = -1;
+                    mAttribs->push_back(info);
+                    mInstanceIDAdded = true;
+                }
                 return;
             case EvqVertexID:
                 recordBuiltInAttributeUsed("gl_VertexID", &mVertexIDAdded);

@@ -153,10 +153,16 @@ bool ShaderCompileTreeTest::hasWarning() const
     return mInfoLog.find("WARNING: ") != std::string::npos;
 }
 
-const std::vector<sh::Uniform> ShaderCompileTreeTest::getUniforms()
+const std::vector<sh::Uniform> &ShaderCompileTreeTest::getUniforms() const
 {
     ASSERT(mExtraCompileOptions & SH_VARIABLES);
     return mTranslator->getUniforms();
+}
+
+const std::vector<sh::Attribute> &ShaderCompileTreeTest::getAttributes() const
+{
+    ASSERT(mExtraCompileOptions & SH_VARIABLES);
+    return mTranslator->getAttributes();
 }
 
 bool IsZero(TIntermNode *node)

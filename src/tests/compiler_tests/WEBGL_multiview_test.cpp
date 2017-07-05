@@ -717,3 +717,28 @@ TEST_F(WEBGLMultiviewVertexShaderOutputCodeTest, StrippedOVRMultiviewDirective)
     compile(shaderString);
     EXPECT_TRUE(foundInESSLCode("GL_OVR_multiview"));
 }
+
+// Test that gl_InstanceID is collected in an ESSL1 shader if the
+// SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW option is set.
+TEST_F(WEBGLMultiviewVertexShaderTest, InstaceIDCollectedESSL1)
+{
+    const std::string &shaderString =
+        "#extension GL_OVR_multiview2 : require\n"
+        "layout(num_views = 2) in;\n"
+        "void main()\n"
+        "{\n"
+        "   gl_Position.x = gl_ViewID_OVR == 0 ? 0. : 1.;\n"
+        "   gl_Position.yzw = vec3(0., 0., 1.);\n"
+        "}\n";
+    mExtraCompileOptions |= SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW;
+    mExtraCompileOptions |= SH_VARIABLES;
+    compileAssumeSuccess(shaderString);
+
+    const std::vector<Attribute> &attributes = getAttributes();
+    bool isGLInstanceIDFound                 = false;
+    for (size_t i = 0u; i < attributes.size() && !isGLInstanceIDFound; ++i)
+    {
+        isGLInstanceIDFound = (attributes[i].name == "gl_InstanceID");
+    }
+    EXPECT_TRUE(isGLInstanceIDFound);
+}
