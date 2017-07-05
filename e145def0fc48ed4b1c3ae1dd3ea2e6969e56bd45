@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e37e9a5c_5459fd10",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-05T13:33:55Z",
+      "side": 1,
+      "message": "Just noticed that ShaderCompilerTreeTest.h contains IsZero which does exactly the same thing. I will write a patch later on which cleans this up.",
+      "range": {
+        "startLine": 94,
+        "startChar": 0,
+        "endLine": 94,
+        "endChar": 32
+      },
+      "revId": "e145def0fc48ed4b1c3ae1dd3ea2e6969e56bd45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
