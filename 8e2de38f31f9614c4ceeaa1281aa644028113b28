@@ -70,6 +70,30 @@
       "revId": "8e2de38f31f9614c4ceeaa1281aa644028113b28",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9686cede_0e382195",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1060,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-07-05T14:43:11Z",
+      "side": 1,
+      "message": "Jamie: I will add a check to avoid zeroing except when reading outside framebuffer.\n\nCorentin, Geoff: I tried it without the zeroing, in patch set 2, and the test failed.  It didn\u0027t see zeroes where expected.",
+      "parentUuid": "f1e3204f_bc31776b",
+      "range": {
+        "startLine": 1051,
+        "startChar": 0,
+        "endLine": 1060,
+        "endChar": 5
+      },
+      "revId": "8e2de38f31f9614c4ceeaa1281aa644028113b28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
