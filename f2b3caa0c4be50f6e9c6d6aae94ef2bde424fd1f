@@ -42,6 +42,48 @@
     },
     {
       "key": {
+        "uuid": "13b19149_415d22cb",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-07-05T14:09:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "855e5487_99b5ed59",
+      "range": {
+        "startLine": 560,
+        "startChar": 33,
+        "endLine": 560,
+        "endChar": 51
+      },
+      "revId": "f2b3caa0c4be50f6e9c6d6aae94ef2bde424fd1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cb154e5b_85d4ebf9",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-07-05T14:09:34Z",
+      "side": 1,
+      "message": "Good idea, will do only when there is read outside framebuffer.\nI don\u0027t understand the robust thing.  Even when it is on, I need to zero the texture or else the test fails.",
+      "parentUuid": "24e78539_099cd1f3",
+      "revId": "f2b3caa0c4be50f6e9c6d6aae94ef2bde424fd1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "10be085c_dc66f297",
         "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
         "patchSetId": 1
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "55422d46_74ef6096",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 565,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-07-05T14:09:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "10be085c_dc66f297",
+      "range": {
+        "startLine": 565,
+        "startChar": 17,
+        "endLine": 565,
+        "endChar": 33
+      },
+      "revId": "f2b3caa0c4be50f6e9c6d6aae94ef2bde424fd1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c51b009e_31e9f880",
         "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
         "patchSetId": 1
@@ -76,6 +142,24 @@
       "writtenOn": "2017-06-28T18:41:29Z",
       "side": 1,
       "message": "I believe this will need to be reset at the end of the function.",
+      "revId": "f2b3caa0c4be50f6e9c6d6aae94ef2bde424fd1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf6c4aff_93fb73ab",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-07-05T14:09:34Z",
+      "side": 1,
+      "message": "I was under the impression there is code all over that calls stateManager-\u003esetBlah() and doesn\u0027t worry about changing state.  I assumed state manager automagically fixed the gl state as needed.  Can you enlighten me?",
+      "parentUuid": "c51b009e_31e9f880",
       "revId": "f2b3caa0c4be50f6e9c6d6aae94ef2bde424fd1f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -102,6 +186,30 @@
       "revId": "f2b3caa0c4be50f6e9c6d6aae94ef2bde424fd1f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b5492f3_2dd1aa76",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 593,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-07-05T14:09:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8a2426cd_43e5576e",
+      "range": {
+        "startLine": 593,
+        "startChar": 12,
+        "endLine": 593,
+        "endChar": 27
+      },
+      "revId": "f2b3caa0c4be50f6e9c6d6aae94ef2bde424fd1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -137,6 +245,24 @@
       "revId": "f2b3caa0c4be50f6e9c6d6aae94ef2bde424fd1f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90e4efd9_6b89605c",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-07-05T14:09:34Z",
+      "side": 1,
+      "message": "I agree with Corentin, why make two calls if one will do.",
+      "parentUuid": "bf5f3cc5_43c37d68",
+      "revId": "f2b3caa0c4be50f6e9c6d6aae94ef2bde424fd1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
