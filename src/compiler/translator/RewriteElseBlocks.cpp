@@ -9,7 +9,7 @@
 
 #include "compiler/translator/RewriteElseBlocks.h"
 
-#include "compiler/translator/Intermediate.h"
+#include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/NodeSearch.h"
 #include "compiler/translator/SymbolTable.h"
 
@@ -84,8 +84,7 @@ TIntermNode *ElseBlockRewriter::rewriteIfElse(TIntermIfElse *ifElse)
         // returns (that are unreachable) we can silence this compile error.
         if (mFunctionType && mFunctionType->getBasicType() != EbtVoid)
         {
-            TIntermNode *returnNode =
-                new TIntermBranch(EOpReturn, TIntermTyped::CreateZero(*mFunctionType));
+            TIntermNode *returnNode = new TIntermBranch(EOpReturn, CreateZeroNode(*mFunctionType));
             negatedElse = new TIntermBlock();
             negatedElse->appendStatement(returnNode);
         }
@@ -94,7 +93,7 @@ TIntermNode *ElseBlockRewriter::rewriteIfElse(TIntermIfElse *ifElse)
         TIntermUnary *negatedCondition     = new TIntermUnary(EOpLogicalNot, conditionSymbolElse);
         TIntermIfElse *falseIfElse =
             new TIntermIfElse(negatedCondition, ifElse->getFalseBlock(), negatedElse);
-        falseBlock = TIntermediate::EnsureBlock(falseIfElse);
+        falseBlock = EnsureBlock(falseIfElse);
     }
 
     TIntermSymbol *conditionSymbolSel = createTempSymbol(boolType);

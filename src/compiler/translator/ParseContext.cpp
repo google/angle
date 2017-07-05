@@ -12,6 +12,7 @@
 #include "common/mathutil.h"
 #include "compiler/preprocessor/SourceLocation.h"
 #include "compiler/translator/Cache.h"
+#include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/ValidateGlobalInitializer.h"
 #include "compiler/translator/ValidateSwitch.h"
 #include "compiler/translator/glslang.h"
@@ -1875,7 +1876,7 @@ TIntermNode *TParseContext::addLoop(TLoopType type,
                (typedCond->getBasicType() == EbtBool && !typedCond->isArray() &&
                 !typedCond->isVector()));
 
-        node = new TIntermLoop(type, init, typedCond, expr, TIntermediate::EnsureBlock(body));
+        node = new TIntermLoop(type, init, typedCond, expr, EnsureBlock(body));
         node->setLine(line);
         return node;
     }
@@ -1898,8 +1899,7 @@ TIntermNode *TParseContext::addLoop(TLoopType type,
 
     TIntermBinary *conditionInit = new TIntermBinary(EOpAssign, declarator->getLeft()->deepCopy(),
                                                      declarator->getRight()->deepCopy());
-    TIntermLoop *loop =
-        new TIntermLoop(type, init, conditionInit, expr, TIntermediate::EnsureBlock(body));
+    TIntermLoop *loop = new TIntermLoop(type, init, conditionInit, expr, EnsureBlock(body));
     block->appendStatement(loop);
     loop->setLine(line);
     block->setLine(line);
@@ -1917,16 +1917,15 @@ TIntermNode *TParseContext::addIfElse(TIntermTyped *cond,
     {
         if (cond->getAsConstantUnion()->getBConst(0) == true)
         {
-            return TIntermediate::EnsureBlock(code.node1);
+            return EnsureBlock(code.node1);
         }
         else
         {
-            return TIntermediate::EnsureBlock(code.node2);
+            return EnsureBlock(code.node2);
         }
     }
 
-    TIntermIfElse *node = new TIntermIfElse(cond, TIntermediate::EnsureBlock(code.node1),
-                                            TIntermediate::EnsureBlock(code.node2));
+    TIntermIfElse *node = new TIntermIfElse(cond, EnsureBlock(code.node1), EnsureBlock(code.node2));
     node->setLine(loc);
 
     return node;
@@ -3084,14 +3083,14 @@ TIntermTyped *TParseContext::addConstructor(TIntermSequence *arguments,
         {
             error(line, "implicitly sized array constructor must have at least one argument", "[]");
             type.setArraySize(1u);
-            return TIntermTyped::CreateZero(type);
+            return CreateZeroNode(type);
         }
         type.setArraySize(static_cast<unsigned int>(arguments->size()));
     }
 
     if (!checkConstructorArguments(line, arguments, type))
     {
-        return TIntermTyped::CreateZero(type);
+        return CreateZeroNode(type);
     }
 
     TIntermAggregate *constructorNode = TIntermAggregate::CreateConstructor(type, arguments);
@@ -3350,7 +3349,7 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
             error(location, " left of '[' is not of type array, matrix, or vector ", "expression");
         }
 
-        return TIntermTyped::CreateZero(TType(EbtFloat, EbpHigh, EvqConst));
+        return CreateZeroNode(TType(EbtFloat, EbpHigh, EvqConst));
     }
 
     TIntermConstantUnion *indexConstantUnion = indexExpression->getAsConstantUnion();
@@ -3537,7 +3536,7 @@ TIntermTyped *TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
             }
             if (fieldFound)
             {
-                TIntermTyped *index = TIntermTyped::CreateIndexNode(i);
+                TIntermTyped *index = CreateIndexNode(i);
                 index->setLine(fieldLocation);
                 TIntermBinary *node =
                     new TIntermBinary(EOpIndexDirectStruct, baseExpression, index);
@@ -3573,7 +3572,7 @@ TIntermTyped *TParseContext::addFieldSelectionExpression(TIntermTyped *baseExpre
             }
             if (fieldFound)
             {
-                TIntermTyped *index = TIntermTyped::CreateIndexNode(i);
+                TIntermTyped *index = CreateIndexNode(i);
                 index->setLine(fieldLocation);
                 TIntermBinary *node =
                     new TIntermBinary(EOpIndexDirectInterfaceBlock, baseExpression, index);
@@ -4577,7 +4576,7 @@ TIntermTyped *TParseContext::addBinaryMathBooleanResult(TOperator op,
     {
         binaryOpError(loc, GetOperatorString(op), left->getCompleteString(),
                       right->getCompleteString());
-        node = TIntermTyped::CreateZero(TType(EbtBool, EbpUndefined, EvqConst));
+        node = CreateBoolNode(false);
         node->setLine(loc);
     }
     return node;
@@ -5011,7 +5010,7 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(TFunction *fnCall,
     }
 
     // Error message was already written. Put on a dummy node for error recovery.
-    return TIntermTyped::CreateZero(TType(EbtFloat, EbpMedium, EvqConst));
+    return CreateZeroNode(TType(EbtFloat, EbpMedium, EvqConst));
 }
 
 TIntermTyped *TParseContext::addTernarySelection(TIntermTyped *cond,

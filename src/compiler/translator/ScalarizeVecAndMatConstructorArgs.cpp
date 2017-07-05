@@ -15,6 +15,7 @@
 
 #include "angle_gl.h"
 #include "common/angleutils.h"
+#include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/IntermTraverse.h"
 
 namespace sh
@@ -47,15 +48,14 @@ bool ContainsVectorNode(const TIntermSequence &sequence)
 
 TIntermBinary *ConstructVectorIndexBinaryNode(TIntermSymbol *symbolNode, int index)
 {
-    return new TIntermBinary(EOpIndexDirect, symbolNode, TIntermTyped::CreateIndexNode(index));
+    return new TIntermBinary(EOpIndexDirect, symbolNode, CreateIndexNode(index));
 }
 
 TIntermBinary *ConstructMatrixIndexBinaryNode(TIntermSymbol *symbolNode, int colIndex, int rowIndex)
 {
     TIntermBinary *colVectorNode = ConstructVectorIndexBinaryNode(symbolNode, colIndex);
 
-    return new TIntermBinary(EOpIndexDirect, colVectorNode,
-                             TIntermTyped::CreateIndexNode(rowIndex));
+    return new TIntermBinary(EOpIndexDirect, colVectorNode, CreateIndexNode(rowIndex));
 }
 
 class ScalarizeArgsTraverser : public TIntermTraverser

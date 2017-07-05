@@ -14,6 +14,7 @@
 #include "compiler/translator/EmulateGLFragColorBroadcast.h"
 
 #include "compiler/translator/FindMain.h"
+#include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/IntermTraverse.h"
 
 namespace sh
@@ -53,7 +54,7 @@ TIntermBinary *GLFragColorBroadcastTraverser::constructGLFragDataNode(int index)
     gl_FragDataType.setArraySize(mMaxDrawBuffers);
 
     TIntermSymbol *symbol   = new TIntermSymbol(0, "gl_FragData", gl_FragDataType);
-    TIntermTyped *indexNode = TIntermTyped::CreateIndexNode(index);
+    TIntermTyped *indexNode = CreateIndexNode(index);
 
     TIntermBinary *binary = new TIntermBinary(EOpIndexDirect, symbol, indexNode);
     return binary;

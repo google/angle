@@ -10,6 +10,7 @@
 #include "common/angleutils.h"
 
 #include "compiler/translator/FindMain.h"
+#include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/IntermTraverse.h"
 #include "tests/test_utils/ShaderCompileTreeTest.h"
 
@@ -77,7 +78,7 @@ ExpectedLValues CreateIndexedLValueNodeList(const TString &lValueName,
     {
         expected[index] =
             new TIntermBinary(EOpIndexDirect, new TIntermSymbol(0, lValueName, elementType),
-                              TIntermTyped::CreateIndexNode(static_cast<int>(index)));
+                              CreateIndexNode(static_cast<int>(index)));
     }
     return expected;
 }

@@ -12,6 +12,7 @@
 
 #include "compiler/translator/FindMain.h"
 #include "compiler/translator/IntermNode.h"
+#include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/util.h"
 
@@ -55,8 +56,7 @@ void AddFieldUseStatements(const ShaderVariable &var,
     {
         for (unsigned int i = 0; i < var.arraySize; ++i)
         {
-            TIntermBinary *element =
-                new TIntermBinary(EOpIndexDirect, symbol, TIntermTyped::CreateIndexNode(i));
+            TIntermBinary *element = new TIntermBinary(EOpIndexDirect, symbol, CreateIndexNode(i));
             sequence->insert(sequence->begin(), element);
         }
     }
@@ -87,13 +87,12 @@ void InsertUseCode(TIntermSequence *sequence,
             TIntermSymbol *arraySymbol = new TIntermSymbol(0, name, ubInfo->getType());
             for (unsigned int i = 0; i < block.arraySize; ++i)
             {
-                TIntermBinary *instanceSymbol = new TIntermBinary(EOpIndexDirect, arraySymbol,
-                                                                  TIntermTyped::CreateIndexNode(i));
+                TIntermBinary *instanceSymbol =
+                    new TIntermBinary(EOpIndexDirect, arraySymbol, CreateIndexNode(i));
                 for (unsigned int j = 0; j < block.fields.size(); ++j)
                 {
-                    TIntermBinary *element =
-                        new TIntermBinary(EOpIndexDirectInterfaceBlock, instanceSymbol,
-                                          TIntermTyped::CreateIndexNode(j));
+                    TIntermBinary *element = new TIntermBinary(EOpIndexDirectInterfaceBlock,
+                                                               instanceSymbol, CreateIndexNode(j));
                     sequence->insert(sequence->begin(), element);
                 }
             }
@@ -106,8 +105,8 @@ void InsertUseCode(TIntermSequence *sequence,
             TIntermSymbol *blockSymbol = new TIntermSymbol(0, name, ubInfo->getType());
             for (unsigned int i = 0; i < block.fields.size(); ++i)
             {
-                TIntermBinary *element = new TIntermBinary(
-                    EOpIndexDirectInterfaceBlock, blockSymbol, TIntermTyped::CreateIndexNode(i));
+                TIntermBinary *element = new TIntermBinary(EOpIndexDirectInterfaceBlock,
+                                                           blockSymbol, CreateIndexNode(i));
 
                 sequence->insert(sequence->begin(), element);
             }

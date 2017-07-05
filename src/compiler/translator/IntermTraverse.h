@@ -102,20 +102,6 @@ class TIntermTraverser : angle::NonCopyable
     // Start creating temporary symbols from the given temporary symbol index + 1.
     void useTemporaryId(TSymbolUniqueId *temporaryId);
 
-    static TIntermFunctionPrototype *CreateInternalFunctionPrototypeNode(
-        const TType &returnType,
-        const char *name,
-        const TSymbolUniqueId &functionId);
-    static TIntermFunctionDefinition *CreateInternalFunctionDefinitionNode(
-        const TType &returnType,
-        const char *name,
-        TIntermBlock *functionBody,
-        const TSymbolUniqueId &functionId);
-    static TIntermAggregate *CreateInternalFunctionCallNode(const TType &returnType,
-                                                            const char *name,
-                                                            const TSymbolUniqueId &functionId,
-                                                            TIntermSequence *arguments);
-
   protected:
     // Should only be called from traverse*() functions
     void incrementDepth(TIntermNode *current)
@@ -261,8 +247,6 @@ class TIntermTraverser : angle::NonCopyable
     std::vector<NodeInsertMultipleEntry> mInsertions;
 
   private:
-    static TName GetInternalFunctionName(const char *name);
-
     static bool CompareInsertion(const NodeInsertMultipleEntry &a,
                                  const NodeInsertMultipleEntry &b);
 

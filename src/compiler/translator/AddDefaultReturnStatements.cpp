@@ -10,6 +10,7 @@
 #include "compiler/translator/AddDefaultReturnStatements.h"
 
 #include "compiler/translator/IntermNode.h"
+#include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/util.h"
 
 namespace sh
@@ -46,8 +47,7 @@ void AddDefaultReturnStatements(TIntermBlock *root)
         TIntermFunctionDefinition *definition = node->getAsFunctionDefinition();
         if (definition != nullptr && NeedsReturnStatement(definition, &returnType))
         {
-            TIntermBranch *branch =
-                new TIntermBranch(EOpReturn, TIntermTyped::CreateZero(returnType));
+            TIntermBranch *branch = new TIntermBranch(EOpReturn, CreateZeroNode(returnType));
 
             TIntermBlock *bodyNode = definition->getBody();
             bodyNode->getSequence()->push_back(branch);

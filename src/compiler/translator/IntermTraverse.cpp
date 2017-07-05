@@ -713,46 +713,6 @@ void TIntermTraverser::queueReplacementWithParent(TIntermNode *parent,
     mReplacements.push_back(NodeUpdateEntry(parent, original, replacement, originalBecomesChild));
 }
 
-TName TIntermTraverser::GetInternalFunctionName(const char *name)
-{
-    TString nameStr(name);
-    TName nameObj(nameStr);
-    nameObj.setInternal(true);
-    return nameObj;
-}
-
-TIntermFunctionPrototype *TIntermTraverser::CreateInternalFunctionPrototypeNode(
-    const TType &returnType,
-    const char *name,
-    const TSymbolUniqueId &functionId)
-{
-    TIntermFunctionPrototype *functionNode = new TIntermFunctionPrototype(returnType, functionId);
-    functionNode->getFunctionSymbolInfo()->setNameObj(GetInternalFunctionName(name));
-    return functionNode;
-}
-
-TIntermFunctionDefinition *TIntermTraverser::CreateInternalFunctionDefinitionNode(
-    const TType &returnType,
-    const char *name,
-    TIntermBlock *functionBody,
-    const TSymbolUniqueId &functionId)
-{
-    TIntermFunctionPrototype *prototypeNode =
-        CreateInternalFunctionPrototypeNode(returnType, name, functionId);
-    return new TIntermFunctionDefinition(prototypeNode, functionBody);
-}
-
-TIntermAggregate *TIntermTraverser::CreateInternalFunctionCallNode(
-    const TType &returnType,
-    const char *name,
-    const TSymbolUniqueId &functionId,
-    TIntermSequence *arguments)
-{
-    TIntermAggregate *functionNode = TIntermAggregate::CreateFunctionCall(
-        returnType, functionId, GetInternalFunctionName(name), arguments);
-    return functionNode;
-}
-
 TLValueTrackingTraverser::TLValueTrackingTraverser(bool preVisit,
                                                    bool inVisit,
                                                    bool postVisit,

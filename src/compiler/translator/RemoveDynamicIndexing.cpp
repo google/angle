@@ -11,6 +11,7 @@
 
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/IntermNodePatternMatcher.h"
+#include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/IntermTraverse.h"
 #include "compiler/translator/SymbolTable.h"
 
@@ -94,7 +95,7 @@ TIntermBinary *CreateIndexDirectBaseSymbolNode(const TType &indexedType,
 {
     TIntermSymbol *baseSymbol = CreateBaseSymbol(indexedType, baseQualifier);
     TIntermBinary *indexNode =
-        new TIntermBinary(EOpIndexDirect, baseSymbol, TIntermTyped::CreateIndexNode(index));
+        new TIntermBinary(EOpIndexDirect, baseSymbol, CreateIndexNode(index));
     return indexNode;
 }
 
@@ -199,8 +200,8 @@ TIntermFunctionDefinition *GetIndexFunctionDefinition(TType type,
     }
 
     std::string functionName                = GetIndexFunctionName(type, write);
-    TIntermFunctionPrototype *prototypeNode = TIntermTraverser::CreateInternalFunctionPrototypeNode(
-        returnType, functionName.c_str(), functionId);
+    TIntermFunctionPrototype *prototypeNode =
+        CreateInternalFunctionPrototypeNode(returnType, functionName.c_str(), functionId);
 
     TQualifier baseQualifier     = EvqInOut;
     if (!write)
@@ -352,8 +353,8 @@ TIntermAggregate *CreateIndexFunctionCall(TIntermBinary *node,
 
     TType fieldType                = GetFieldType(node->getLeft()->getType());
     std::string functionName       = GetIndexFunctionName(node->getLeft()->getType(), false);
-    TIntermAggregate *indexingCall = TIntermTraverser::CreateInternalFunctionCallNode(
-        fieldType, functionName.c_str(), functionId, arguments);
+    TIntermAggregate *indexingCall =
+        CreateInternalFunctionCallNode(fieldType, functionName.c_str(), functionId, arguments);
     indexingCall->setLine(node->getLine());
     indexingCall->getFunctionSymbolInfo()->setKnownToNotHaveSideEffects(true);
     return indexingCall;
@@ -372,8 +373,8 @@ TIntermAggregate *CreateIndexedWriteFunctionCall(TIntermBinary *node,
     arguments->push_back(writtenValue);
 
     std::string functionName           = GetIndexFunctionName(node->getLeft()->getType(), true);
-    TIntermAggregate *indexedWriteCall = TIntermTraverser::CreateInternalFunctionCallNode(
-        TType(EbtVoid), functionName.c_str(), functionId, arguments);
+    TIntermAggregate *indexedWriteCall =
+        CreateInternalFunctionCallNode(TType(EbtVoid), functionName.c_str(), functionId, arguments);
     indexedWriteCall->setLine(node->getLine());
     return indexedWriteCall;
 }

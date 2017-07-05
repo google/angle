@@ -11,6 +11,7 @@
 #include "compiler/translator/SimplifyLoopConditions.h"
 
 #include "compiler/translator/IntermNodePatternMatcher.h"
+#include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/IntermTraverse.h"
 
 namespace sh
@@ -18,15 +19,6 @@ namespace sh
 
 namespace
 {
-
-TIntermConstantUnion *CreateBoolConstantNode(bool value)
-{
-    TConstantUnion *u = new TConstantUnion;
-    u->setBConst(value);
-    TIntermConstantUnion *node =
-        new TIntermConstantUnion(u, TType(EbtBool, EbpUndefined, EvqConst, 1));
-    return node;
-}
 
 class SimplifyLoopConditionsTraverser : public TLValueTrackingTraverser
 {
@@ -188,7 +180,7 @@ void SimplifyLoopConditionsTraverser::traverseLoop(TIntermLoop *node)
             //     s0 = expr;
             //   } while (s0);
             TIntermSequence tempInitSeq;
-            tempInitSeq.push_back(createTempInitDeclaration(CreateBoolConstantNode(true)));
+            tempInitSeq.push_back(createTempInitDeclaration(CreateBoolNode(true)));
             insertStatementsInParentBlock(tempInitSeq);
 
             TIntermBlock *newBody = new TIntermBlock();
@@ -237,7 +229,7 @@ void SimplifyLoopConditionsTraverser::traverseLoop(TIntermLoop *node)
             }
             else
             {
-                conditionInitializer = TIntermTyped::CreateBool(true);
+                conditionInitializer = CreateBoolNode(true);
             }
             loopScopeSequence->push_back(createTempInitDeclaration(conditionInitializer));
 
