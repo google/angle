@@ -4,8 +4,7 @@
 // found in the LICENSE file.
 //
 // The ArrayReturnValueToOutParameter function changes return values of an array type to out
-// parameters in
-// function definitions, prototypes and call sites.
+// parameters in function definitions, prototypes and call sites.
 
 #ifndef COMPILER_TRANSLATOR_ARRAYRETURNVALUETOOUTPARAMETER_H_
 #define COMPILER_TRANSLATOR_ARRAYRETURNVALUETOOUTPARAMETER_H_
