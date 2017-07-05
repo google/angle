@@ -35,34 +35,29 @@ void AddFieldUseStatements(const ShaderVariable &var,
             name = name.substr(0, pos);
         }
     }
-    const TType *type;
-    TType basicType;
-    if (var.isStruct())
-    {
-        TVariable *structInfo = reinterpret_cast<TVariable *>(symbolTable.findGlobal(name));
-        ASSERT(structInfo);
-        const TType &structType = structInfo->getType();
-        type                    = &structType;
-    }
-    else
-    {
-        basicType = sh::GetShaderVariableBasicType(var);
-        type      = &basicType;
-    }
-    ASSERT(type);
-
-    TIntermSymbol *symbol = new TIntermSymbol(0, name, *type);
+    TIntermSymbol *symbol = ReferToGlobalSymbol(name, symbolTable);
     if (var.isArray())
     {
-        for (unsigned int i = 0; i < var.arraySize; ++i)
+        for (unsigned int i = 0u; i < var.arraySize; ++i)
         {
-            TIntermBinary *element = new TIntermBinary(EOpIndexDirect, symbol, CreateIndexNode(i));
+            TIntermBinary *element =
+                new TIntermBinary(EOpIndexDirect, symbol->deepCopy(), CreateIndexNode(i));
             sequence->insert(sequence->begin(), element);
         }
     }
     else
     {
         sequence->insert(sequence->begin(), symbol);
+    }
+}
+
+void InsertUseCode(const InterfaceBlock &block, TIntermTyped *blockNode, TIntermSequence *sequence)
+{
+    for (unsigned int i = 0; i < block.fields.size(); ++i)
+    {
+        TIntermBinary *element = new TIntermBinary(EOpIndexDirectInterfaceBlock,
+                                                   blockNode->deepCopy(), CreateIndexNode(i));
+        sequence->insert(sequence->begin(), element);
     }
 }
 
@@ -79,37 +74,22 @@ void InsertUseCode(TIntermSequence *sequence,
                 AddFieldUseStatements(var, sequence, symbolTable);
             }
         }
-        else if (block.arraySize > 0)
+        else if (block.arraySize > 0u)
         {
-            TString name      = TString(block.instanceName.c_str());
-            TVariable *ubInfo = reinterpret_cast<TVariable *>(symbolTable.findGlobal(name));
-            ASSERT(ubInfo);
-            TIntermSymbol *arraySymbol = new TIntermSymbol(0, name, ubInfo->getType());
-            for (unsigned int i = 0; i < block.arraySize; ++i)
+            TString name(block.instanceName.c_str());
+            TIntermSymbol *arraySymbol = ReferToGlobalSymbol(name, symbolTable);
+            for (unsigned int i = 0u; i < block.arraySize; ++i)
             {
-                TIntermBinary *instanceSymbol =
-                    new TIntermBinary(EOpIndexDirect, arraySymbol, CreateIndexNode(i));
-                for (unsigned int j = 0; j < block.fields.size(); ++j)
-                {
-                    TIntermBinary *element = new TIntermBinary(EOpIndexDirectInterfaceBlock,
-                                                               instanceSymbol, CreateIndexNode(j));
-                    sequence->insert(sequence->begin(), element);
-                }
+                TIntermBinary *elementSymbol =
+                    new TIntermBinary(EOpIndexDirect, arraySymbol->deepCopy(), CreateIndexNode(i));
+                InsertUseCode(block, elementSymbol, sequence);
             }
         }
         else
         {
-            TString name      = TString(block.instanceName.c_str());
-            TVariable *ubInfo = reinterpret_cast<TVariable *>(symbolTable.findGlobal(name));
-            ASSERT(ubInfo);
-            TIntermSymbol *blockSymbol = new TIntermSymbol(0, name, ubInfo->getType());
-            for (unsigned int i = 0; i < block.fields.size(); ++i)
-            {
-                TIntermBinary *element = new TIntermBinary(EOpIndexDirectInterfaceBlock,
-                                                           blockSymbol, CreateIndexNode(i));
-
-                sequence->insert(sequence->begin(), element);
-            }
+            TString name(block.instanceName.c_str());
+            TIntermSymbol *blockSymbol = ReferToGlobalSymbol(name, symbolTable);
+            InsertUseCode(block, blockSymbol, sequence);
         }
     }
 }

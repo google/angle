@@ -8,6 +8,8 @@
 
 #include "compiler/translator/IntermNode_util.h"
 
+#include "compiler/translator/SymbolTable.h"
+
 namespace sh
 {
 
@@ -162,6 +164,13 @@ TIntermBlock *EnsureBlock(TIntermNode *node)
     blockNode->setLine(node->getLine());
     blockNode->appendStatement(node);
     return blockNode;
+}
+
+TIntermSymbol *ReferToGlobalSymbol(const TString &name, const TSymbolTable &symbolTable)
+{
+    TVariable *var = reinterpret_cast<TVariable *>(symbolTable.findGlobal(name));
+    ASSERT(var);
+    return new TIntermSymbol(var->getUniqueId(), name, var->getType());
 }
 
 }  // namespace sh

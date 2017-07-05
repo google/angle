@@ -35,6 +35,8 @@ TIntermConstantUnion *CreateBoolNode(bool value);
 // If the input node is not a block node, put it inside a block node and return that.
 TIntermBlock *EnsureBlock(TIntermNode *node);
 
+TIntermSymbol *ReferToGlobalSymbol(const TString &name, const TSymbolTable &symbolTable);
+
 }  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_INTERMNODEUTIL_H_
