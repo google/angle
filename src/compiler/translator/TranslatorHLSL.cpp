@@ -46,7 +46,7 @@ void TranslatorHLSL::translate(TIntermBlock *root, ShCompileOptions compileOptio
                                IntermNodePatternMatcher::kUnfoldedShortCircuitExpression |
                                IntermNodePatternMatcher::kDynamicIndexingOfVectorOrMatrixInLValue |
                                IntermNodePatternMatcher::kMultiDeclaration,
-                           getTemporaryIndex(), getSymbolTable(), getShaderVersion());
+                           getTemporaryId(), getSymbolTable(), getShaderVersion());
 
     // Note that separate declarations need to be run before other AST transformations that
     // generate new statements from expressions.
@@ -56,31 +56,31 @@ void TranslatorHLSL::translate(TIntermBlock *root, ShCompileOptions compileOptio
                           IntermNodePatternMatcher::kExpressionReturningArray |
                               IntermNodePatternMatcher::kUnfoldedShortCircuitExpression |
                               IntermNodePatternMatcher::kDynamicIndexingOfVectorOrMatrixInLValue,
-                          getTemporaryIndex(), getSymbolTable(), getShaderVersion());
+                          getTemporaryId(), getSymbolTable(), getShaderVersion());
 
     // Note that SeparateDeclarations needs to be run before UnfoldShortCircuitToIf.
-    UnfoldShortCircuitToIf(root, getTemporaryIndex());
+    UnfoldShortCircuitToIf(root, getTemporaryId());
 
-    SeparateExpressionsReturningArrays(root, getTemporaryIndex());
+    SeparateExpressionsReturningArrays(root, getTemporaryId());
 
     // Note that SeparateDeclarations needs to be run before SeparateArrayInitialization.
     SeparateArrayInitialization(root);
 
     // HLSL doesn't support arrays as return values, we'll need to make functions that have an array
     // as a return value to use an out parameter to transfer the array data instead.
-    ArrayReturnValueToOutParameter(root, getTemporaryIndex());
+    ArrayReturnValueToOutParameter(root, getTemporaryId());
 
     if (!shouldRunLoopAndIndexingValidation(compileOptions))
     {
         // HLSL doesn't support dynamic indexing of vectors and matrices.
-        RemoveDynamicIndexing(root, getTemporaryIndex(), getSymbolTable(), getShaderVersion());
+        RemoveDynamicIndexing(root, getTemporaryId(), getSymbolTable(), getShaderVersion());
     }
 
     // Work around D3D9 bug that would manifest in vertex shaders with selection blocks which
     // use a vertex attribute as a condition, and some related computation in the else block.
     if (getOutputType() == SH_HLSL_3_0_OUTPUT && getShaderType() == GL_VERTEX_SHADER)
     {
-        sh::RewriteElseBlocks(root, getTemporaryIndex());
+        sh::RewriteElseBlocks(root, getTemporaryId());
     }
 
     // Work around an HLSL compiler frontend aliasing optimization bug.
@@ -103,7 +103,7 @@ void TranslatorHLSL::translate(TIntermBlock *root, ShCompileOptions compileOptio
 
     if ((compileOptions & SH_EXPAND_SELECT_HLSL_INTEGER_POW_EXPRESSIONS) != 0)
     {
-        sh::ExpandIntegerPowExpressions(root, getTemporaryIndex());
+        sh::ExpandIntegerPowExpressions(root, getTemporaryId());
     }
 
     if ((compileOptions & SH_REWRITE_TEXELFETCHOFFSET_TO_TEXELFETCH) != 0)

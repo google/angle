@@ -88,7 +88,9 @@ void TOutputTraverser::visitSymbol(TIntermSymbol *node)
     OutputTreeText(sink, node, mDepth);
 
     sink << "'" << node->getSymbol() << "' ";
-    sink << "(" << node->getCompleteString() << ")\n";
+    sink << "(symbol id " << node->getId() << ") ";
+    sink << "(" << node->getCompleteString() << ")";
+    sink << "\n";
 }
 
 bool TOutputTraverser::visitSwizzle(Visit visit, TIntermSwizzle *node)

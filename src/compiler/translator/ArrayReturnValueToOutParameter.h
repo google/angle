@@ -12,9 +12,12 @@
 
 namespace sh
 {
-class TIntermNode;
 
-void ArrayReturnValueToOutParameter(TIntermNode *root, unsigned int *temporaryIndex);
+class TIntermNode;
+class TSymbolUniqueId;
+
+void ArrayReturnValueToOutParameter(TIntermNode *root, TSymbolUniqueId *temporaryId);
+
 }  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_ARRAYRETURNVALUETOOUTPARAMETER_H_

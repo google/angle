@@ -478,15 +478,15 @@ bool RemoveDynamicIndexingTraverser::visitBinary(Visit visit, TIntermBinary *nod
                 initIndex->setLine(node->getLine());
                 insertionsBefore.push_back(initIndex);
 
-                // Create a node for referring to the index after the nextTemporaryIndex() call
+                // Create a node for referring to the index after the nextTemporaryId() call
                 // below.
                 TIntermSymbol *tempIndex = createTempSymbol(indexInitializer->getType());
 
                 TIntermAggregate *indexingCall =
                     CreateIndexFunctionCall(node, tempIndex, indexingFunctionId);
 
-                nextTemporaryIndex();  // From now on, creating temporary symbols that refer to the
-                                       // field value.
+                nextTemporaryId();  // From now on, creating temporary symbols that refer to the
+                                    // field value.
                 insertionsBefore.push_back(createTempInitDeclaration(indexingCall));
 
                 TIntermAggregate *indexedWriteCall = CreateIndexedWriteFunctionCall(
@@ -517,19 +517,19 @@ void RemoveDynamicIndexingTraverser::nextIteration()
 {
     mUsedTreeInsertion               = false;
     mRemoveIndexSideEffectsInSubtree = false;
-    nextTemporaryIndex();
+    nextTemporaryId();
 }
 
 }  // namespace
 
 void RemoveDynamicIndexing(TIntermNode *root,
-                           unsigned int *temporaryIndex,
+                           TSymbolUniqueId *temporaryId,
                            const TSymbolTable &symbolTable,
                            int shaderVersion)
 {
     RemoveDynamicIndexingTraverser traverser(symbolTable, shaderVersion);
-    ASSERT(temporaryIndex != nullptr);
-    traverser.useTemporaryIndex(temporaryIndex);
+    ASSERT(temporaryId != nullptr);
+    traverser.useTemporaryId(temporaryId);
     do
     {
         traverser.nextIteration();

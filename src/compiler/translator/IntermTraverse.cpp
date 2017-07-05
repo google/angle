@@ -108,7 +108,7 @@ TIntermTraverser::TIntermTraverser(bool preVisit, bool inVisit, bool postVisit)
       mDepth(-1),
       mMaxDepth(0),
       mInGlobalScope(true),
-      mTemporaryIndex(nullptr)
+      mTemporaryId(nullptr)
 {
 }
 
@@ -167,11 +167,11 @@ TIntermSymbol *TIntermTraverser::createTempSymbol(const TType &type, TQualifier 
     // Each traversal uses at most one temporary variable, so the index stays the same within a
     // single traversal.
     TInfoSinkBase symbolNameOut;
-    ASSERT(mTemporaryIndex != nullptr);
-    symbolNameOut << "s" << (*mTemporaryIndex);
+    ASSERT(mTemporaryId != nullptr);
+    symbolNameOut << "s" << (mTemporaryId->get());
     TString symbolName = symbolNameOut.c_str();
 
-    TIntermSymbol *node = new TIntermSymbol(0, symbolName, type);
+    TIntermSymbol *node = new TIntermSymbol(mTemporaryId->get(), symbolName, type);
     node->setInternal(true);
 
     ASSERT(qualifier == EvqTemporary || qualifier == EvqConst || qualifier == EvqGlobal);
@@ -217,15 +217,15 @@ TIntermBinary *TIntermTraverser::createTempAssignment(TIntermTyped *rightNode)
     return assignment;
 }
 
-void TIntermTraverser::useTemporaryIndex(unsigned int *temporaryIndex)
+void TIntermTraverser::useTemporaryId(TSymbolUniqueId *temporaryId)
 {
-    mTemporaryIndex = temporaryIndex;
+    mTemporaryId = temporaryId;
 }
 
-void TIntermTraverser::nextTemporaryIndex()
+void TIntermTraverser::nextTemporaryId()
 {
-    ASSERT(mTemporaryIndex != nullptr);
-    ++(*mTemporaryIndex);
+    ASSERT(mTemporaryId != nullptr);
+    *mTemporaryId = TSymbolUniqueId();
 }
 
 void TLValueTrackingTraverser::addToFunctionMap(const TSymbolUniqueId &id,

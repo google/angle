@@ -15,8 +15,9 @@
 namespace sh
 {
 class TIntermNode;
+class TSymbolUniqueId;
 
-void SeparateExpressionsReturningArrays(TIntermNode *root, unsigned int *temporaryIndex);
+void SeparateExpressionsReturningArrays(TIntermNode *root, TSymbolUniqueId *temporaryId);
 }  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_SEPARATEEXPRESSIONSRETURNINGARRAYS_H_

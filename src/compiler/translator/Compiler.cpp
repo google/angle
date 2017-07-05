@@ -240,7 +240,7 @@ TCompiler::TCompiler(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
       mDiagnostics(infoSink.info),
       mSourcePath(nullptr),
       mComputeShaderLocalSizeDeclared(false),
-      mTemporaryIndex(0)
+      mTemporaryId()
 {
     mComputeShaderLocalSize.fill(1);
 }
@@ -434,7 +434,7 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
 
         // This pass might emit short circuits so keep it before the short circuit unfolding
         if (success && (compileOptions & SH_REWRITE_DO_WHILE_LOOPS))
-            RewriteDoWhile(root, getTemporaryIndex());
+            RewriteDoWhile(root, getTemporaryId());
 
         if (success && (compileOptions & SH_ADD_AND_TRUE_TO_LOOP_CONDITION))
             sh::AddAndTrueToLoopCondition(root);
@@ -501,7 +501,7 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         if (success && (compileOptions & SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS))
         {
             ScalarizeVecAndMatConstructorArgs(root, shaderType, fragmentPrecisionHigh,
-                                              &mTemporaryIndex);
+                                              getTemporaryId());
         }
 
         if (success && (compileOptions & SH_REGENERATE_STRUCT_NAMES))
@@ -537,7 +537,7 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
                                        IntermNodePatternMatcher::kMultiDeclaration |
                                            IntermNodePatternMatcher::kArrayDeclaration |
                                            IntermNodePatternMatcher::kNamelessStructDeclaration,
-                                       getTemporaryIndex(), getSymbolTable(), getShaderVersion());
+                                       getTemporaryId(), getSymbolTable(), getShaderVersion());
             }
             // We only really need to separate array declarations and nameless struct declarations,
             // but it's simpler to just use the regular SeparateDeclarations.
@@ -742,7 +742,7 @@ void TCompiler::clearResults()
     nameMap.clear();
 
     mSourcePath     = nullptr;
-    mTemporaryIndex = 0;
+    mTemporaryId    = TSymbolUniqueId();
 }
 
 bool TCompiler::initCallDag(TIntermNode *root)

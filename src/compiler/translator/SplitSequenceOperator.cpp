@@ -57,7 +57,7 @@ void SplitSequenceOperatorTraverser::nextIteration()
 {
     mFoundExpressionToSplit = false;
     mInsideSequenceOperator = 0;
-    nextTemporaryIndex();
+    nextTemporaryId();
 }
 
 bool SplitSequenceOperatorTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
@@ -138,13 +138,13 @@ bool SplitSequenceOperatorTraverser::visitTernary(Visit visit, TIntermTernary *n
 
 void SplitSequenceOperator(TIntermNode *root,
                            int patternsToSplitMask,
-                           unsigned int *temporaryIndex,
+                           TSymbolUniqueId *temporaryId,
                            const TSymbolTable &symbolTable,
                            int shaderVersion)
 {
     SplitSequenceOperatorTraverser traverser(patternsToSplitMask, symbolTable, shaderVersion);
-    ASSERT(temporaryIndex != nullptr);
-    traverser.useTemporaryIndex(temporaryIndex);
+    ASSERT(temporaryId != nullptr);
+    traverser.useTemporaryId(temporaryId);
     // Separate one expression at a time, and reset the traverser between iterations.
     do
     {

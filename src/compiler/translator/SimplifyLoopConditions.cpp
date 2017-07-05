@@ -146,7 +146,7 @@ void SimplifyLoopConditionsTraverser::traverseLoop(TIntermLoop *node)
 
     if (mFoundLoopToChange)
     {
-        nextTemporaryIndex();
+        nextTemporaryId();
 
         // Replace the loop condition with a boolean variable that's updated on each iteration.
         TLoopType loopType = node->getType();
@@ -284,13 +284,13 @@ void SimplifyLoopConditionsTraverser::traverseLoop(TIntermLoop *node)
 
 void SimplifyLoopConditions(TIntermNode *root,
                             unsigned int conditionsToSimplifyMask,
-                            unsigned int *temporaryIndex,
+                            TSymbolUniqueId *temporaryId,
                             const TSymbolTable &symbolTable,
                             int shaderVersion)
 {
     SimplifyLoopConditionsTraverser traverser(conditionsToSimplifyMask, symbolTable, shaderVersion);
-    ASSERT(temporaryIndex != nullptr);
-    traverser.useTemporaryIndex(temporaryIndex);
+    ASSERT(temporaryId != nullptr);
+    traverser.useTemporaryId(temporaryId);
     root->traverse(&traverser);
     traverser.updateTree();
 }

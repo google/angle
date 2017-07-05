@@ -138,7 +138,7 @@ class DoWhileRewriter : public TIntermTraverser
 
             node->replaceChildNodeWithMultiple(loop, replacement);
 
-            nextTemporaryIndex();
+            nextTemporaryId();
         }
         return true;
     }
@@ -146,12 +146,12 @@ class DoWhileRewriter : public TIntermTraverser
 
 }  // anonymous namespace
 
-void RewriteDoWhile(TIntermNode *root, unsigned int *temporaryIndex)
+void RewriteDoWhile(TIntermNode *root, TSymbolUniqueId *temporaryId)
 {
-    ASSERT(temporaryIndex != 0);
+    ASSERT(temporaryId != 0);
 
     DoWhileRewriter rewriter;
-    rewriter.useTemporaryIndex(temporaryIndex);
+    rewriter.useTemporaryId(temporaryId);
 
     root->traverse(&rewriter);
 }

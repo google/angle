@@ -67,7 +67,7 @@ TIntermNode *ElseBlockRewriter::rewriteIfElse(TIntermIfElse *ifElse)
 {
     ASSERT(ifElse != nullptr);
 
-    nextTemporaryIndex();
+    nextTemporaryId();
 
     TIntermDeclaration *storeCondition = createTempInitDeclaration(ifElse->getCondition());
 
@@ -110,10 +110,10 @@ TIntermNode *ElseBlockRewriter::rewriteIfElse(TIntermIfElse *ifElse)
 
 }  // anonymous namespace
 
-void RewriteElseBlocks(TIntermNode *node, unsigned int *temporaryIndex)
+void RewriteElseBlocks(TIntermNode *node, TSymbolUniqueId *temporaryId)
 {
     ElseBlockRewriter rewriter;
-    rewriter.useTemporaryIndex(temporaryIndex);
+    rewriter.useTemporaryId(temporaryId);
     node->traverse(&rewriter);
 }
 

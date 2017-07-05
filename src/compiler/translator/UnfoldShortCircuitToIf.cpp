@@ -165,16 +165,16 @@ bool UnfoldShortCircuitTraverser::visitTernary(Visit visit, TIntermTernary *node
 void UnfoldShortCircuitTraverser::nextIteration()
 {
     mFoundShortCircuit = false;
-    nextTemporaryIndex();
+    nextTemporaryId();
 }
 
 }  // namespace
 
-void UnfoldShortCircuitToIf(TIntermNode *root, unsigned int *temporaryIndex)
+void UnfoldShortCircuitToIf(TIntermNode *root, TSymbolUniqueId *temporaryId)
 {
     UnfoldShortCircuitTraverser traverser;
-    ASSERT(temporaryIndex != nullptr);
-    traverser.useTemporaryIndex(temporaryIndex);
+    ASSERT(temporaryId != nullptr);
+    traverser.useTemporaryId(temporaryId);
     // Unfold one operator at a time, and reset the traverser between iterations.
     do
     {

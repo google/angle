@@ -22,7 +22,7 @@ namespace
 class Traverser : public TIntermTraverser
 {
   public:
-    static void Apply(TIntermNode *root, unsigned int *tempIndex);
+    static void Apply(TIntermNode *root, TSymbolUniqueId *temporaryId);
 
   private:
     Traverser();
@@ -33,10 +33,10 @@ class Traverser : public TIntermTraverser
 };
 
 // static
-void Traverser::Apply(TIntermNode *root, unsigned int *tempIndex)
+void Traverser::Apply(TIntermNode *root, TSymbolUniqueId *temporaryId)
 {
     Traverser traverser;
-    traverser.useTemporaryIndex(tempIndex);
+    traverser.useTemporaryId(temporaryId);
     do
     {
         traverser.nextIteration();
@@ -55,7 +55,7 @@ Traverser::Traverser() : TIntermTraverser(true, false, false)
 void Traverser::nextIteration()
 {
     mFound = false;
-    nextTemporaryIndex();
+    nextTemporaryId();
 }
 
 bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
@@ -111,7 +111,7 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
     }
 
     // Potential problem case detected, apply workaround.
-    nextTemporaryIndex();
+    nextTemporaryId();
 
     TIntermTyped *lhs = sequence->at(0)->getAsTyped();
     ASSERT(lhs);
@@ -146,9 +146,9 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
 
 }  // anonymous namespace
 
-void ExpandIntegerPowExpressions(TIntermNode *root, unsigned int *tempIndex)
+void ExpandIntegerPowExpressions(TIntermNode *root, TSymbolUniqueId *temporaryId)
 {
-    Traverser::Apply(root, tempIndex);
+    Traverser::Apply(root, temporaryId);
 }
 
 }  // namespace sh

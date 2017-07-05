@@ -60,7 +60,7 @@ TIntermAggregate *CreateReplacementCall(TIntermAggregate *originalCall,
 class ArrayReturnValueToOutParameterTraverser : private TIntermTraverser
 {
   public:
-    static void apply(TIntermNode *root, unsigned int *temporaryIndex);
+    static void apply(TIntermNode *root, TSymbolUniqueId *temporaryId);
 
   private:
     ArrayReturnValueToOutParameterTraverser();
@@ -74,10 +74,10 @@ class ArrayReturnValueToOutParameterTraverser : private TIntermTraverser
     bool mInFunctionWithArrayReturnValue;
 };
 
-void ArrayReturnValueToOutParameterTraverser::apply(TIntermNode *root, unsigned int *temporaryIndex)
+void ArrayReturnValueToOutParameterTraverser::apply(TIntermNode *root, TSymbolUniqueId *temporaryId)
 {
     ArrayReturnValueToOutParameterTraverser arrayReturnValueToOutParam;
-    arrayReturnValueToOutParam.useTemporaryIndex(temporaryIndex);
+    arrayReturnValueToOutParam.useTemporaryId(temporaryId);
     root->traverse(&arrayReturnValueToOutParam);
     arrayReturnValueToOutParam.updateTree();
 }
@@ -139,7 +139,7 @@ bool ArrayReturnValueToOutParameterTraverser::visitAggregate(Visit visit, TInter
         TIntermBlock *parentBlock = getParentNode()->getAsBlock();
         if (parentBlock)
         {
-            nextTemporaryIndex();
+            nextTemporaryId();
             TIntermSequence replacements;
             replacements.push_back(createTempDeclaration(node->getType()));
             TIntermSymbol *returnSymbol = createTempSymbol(node->getType());
@@ -194,9 +194,9 @@ bool ArrayReturnValueToOutParameterTraverser::visitBinary(Visit visit, TIntermBi
 
 }  // namespace
 
-void ArrayReturnValueToOutParameter(TIntermNode *root, unsigned int *temporaryIndex)
+void ArrayReturnValueToOutParameter(TIntermNode *root, TSymbolUniqueId *temporaryId)
 {
-    ArrayReturnValueToOutParameterTraverser::apply(root, temporaryIndex);
+    ArrayReturnValueToOutParameterTraverser::apply(root, temporaryId);
 }
 
 }  // namespace sh

@@ -17,10 +17,11 @@ namespace sh
 
 class TIntermNode;
 class TSymbolTable;
+class TSymbolUniqueId;
 
 void SplitSequenceOperator(TIntermNode *root,
                            int patternsToSplitMask,
-                           unsigned int *temporaryIndex,
+                           TSymbolUniqueId *temporaryId,
                            const TSymbolTable &symbolTable,
                            int shaderVersion);
 

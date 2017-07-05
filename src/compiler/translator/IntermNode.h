@@ -997,7 +997,7 @@ class TIntermTraverser : angle::NonCopyable
     void updateTree();
 
     // Start creating temporary symbols from the given temporary symbol index + 1.
-    void useTemporaryIndex(unsigned int *temporaryIndex);
+    void useTemporaryId(TSymbolUniqueId *temporaryId);
 
     static TIntermFunctionPrototype *CreateInternalFunctionPrototypeNode(
         const TType &returnType,
@@ -1123,7 +1123,7 @@ class TIntermTraverser : angle::NonCopyable
     // Create a node that assigns rightNode to the current temporary symbol.
     TIntermBinary *createTempAssignment(TIntermTyped *rightNode);
     // Increment temporary symbol index.
-    void nextTemporaryIndex();
+    void nextTemporaryId();
 
     enum class OriginalNode
     {
@@ -1200,7 +1200,7 @@ class TIntermTraverser : angle::NonCopyable
     // All the code blocks from the root to the current node's parent during traversal.
     std::vector<ParentBlock> mParentBlockStack;
 
-    unsigned int *mTemporaryIndex;
+    TSymbolUniqueId *mTemporaryId;
 };
 
 // Traverser parent class that tracks where a node is a destination of a write operation and so is

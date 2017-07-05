@@ -105,16 +105,16 @@ bool SeparateExpressionsTraverser::visitAggregate(Visit visit, TIntermAggregate 
 void SeparateExpressionsTraverser::nextIteration()
 {
     mFoundArrayExpression = false;
-    nextTemporaryIndex();
+    nextTemporaryId();
 }
 
 }  // namespace
 
-void SeparateExpressionsReturningArrays(TIntermNode *root, unsigned int *temporaryIndex)
+void SeparateExpressionsReturningArrays(TIntermNode *root, TSymbolUniqueId *temporaryId)
 {
     SeparateExpressionsTraverser traverser;
-    ASSERT(temporaryIndex != nullptr);
-    traverser.useTemporaryIndex(temporaryIndex);
+    ASSERT(temporaryId != nullptr);
+    traverser.useTemporaryId(temporaryId);
     // Separate one expression at a time, and reset the traverser between iterations.
     do
     {

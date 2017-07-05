@@ -145,17 +145,17 @@ void RecordConstantPrecisionTraverser::visitConstantUnion(TIntermConstantUnion *
 
 void RecordConstantPrecisionTraverser::nextIteration()
 {
-    nextTemporaryIndex();
+    nextTemporaryId();
     mFoundHigherPrecisionConstant = false;
 }
 
 }  // namespace
 
-void RecordConstantPrecision(TIntermNode *root, unsigned int *temporaryIndex)
+void RecordConstantPrecision(TIntermNode *root, TSymbolUniqueId *temporaryId)
 {
     RecordConstantPrecisionTraverser traverser;
-    ASSERT(temporaryIndex != nullptr);
-    traverser.useTemporaryIndex(temporaryIndex);
+    ASSERT(temporaryId != nullptr);
+    traverser.useTemporaryId(temporaryId);
     // Iterate as necessary, and reset the traverser between iterations.
     do
     {

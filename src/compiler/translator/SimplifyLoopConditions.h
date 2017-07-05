@@ -15,10 +15,11 @@ namespace sh
 {
 class TIntermNode;
 class TSymbolTable;
+class TSymbolUniqueId;
 
 void SimplifyLoopConditions(TIntermNode *root,
                             unsigned int conditionsToSimplify,
-                            unsigned int *temporaryIndex,
+                            TSymbolUniqueId *temporaryId,
                             const TSymbolTable &symbolTable,
                             int shaderVersion);
 }  // namespace sh

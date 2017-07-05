@@ -15,7 +15,7 @@
 namespace sh
 {
 
-void RewriteElseBlocks(TIntermNode *node, unsigned int *temporaryIndex);
+void RewriteElseBlocks(TIntermNode *node, TSymbolUniqueId *temporaryId);
 }
 
 #endif  // COMPILER_TRANSLATOR_REWRITEELSEBLOCKS_H_
