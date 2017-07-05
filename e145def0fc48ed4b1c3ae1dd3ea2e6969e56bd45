@@ -22,6 +22,30 @@
       "revId": "e145def0fc48ed4b1c3ae1dd3ea2e6969e56bd45",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "66ba1cde_070ff84e",
+        "filename": "src/tests/compiler_tests/InitOutputVariables_test.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-05T14:19:23Z",
+      "side": 1,
+      "message": "I refactored this into that yesterday, no need to.",
+      "parentUuid": "e37e9a5c_5459fd10",
+      "range": {
+        "startLine": 94,
+        "startChar": 0,
+        "endLine": 94,
+        "endChar": 32
+      },
+      "revId": "e145def0fc48ed4b1c3ae1dd3ea2e6969e56bd45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
