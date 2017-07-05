@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "977efdf8_6a050550",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-05T18:04:38Z",
+      "side": 1,
+      "message": "very tiny nit we can clean up later: this probably shouldn\u0027t have the ErrorMessage suffix since it\u0027s redundant, and none of the other errors have this.",
+      "range": {
+        "startLine": 25,
+        "startChar": 7,
+        "endLine": 25,
+        "endChar": 36
+      },
+      "revId": "d1169d90f5457511a9ecf0e5b2e5a4179c9a4c46",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
