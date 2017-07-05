@@ -2881,6 +2881,34 @@ TEST_P(WebGL2CompatibilityTest, UniformBlockPrecisionMismatch)
     glDeleteProgram(program);
 }
 
+// Test no attribute vertex shaders
+TEST_P(WebGL2CompatibilityTest, NoAttributeVertexShader)
+{
+    const std::string vertexShader =
+        "#version 300 es\n"
+        "void main()\n"
+        "{\n"
+        "\n"
+        "    ivec2 xy = ivec2(gl_VertexID % 2, (gl_VertexID / 2 + gl_VertexID / 3) % 2);\n"
+        "    gl_Position = vec4(vec2(xy) * 2. - 1., 0, 1);\n"
+        "}";
+    const std::string fragmentShader =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 result;\n"
+        "void main()\n"
+        "{\n"
+        "    result = vec4(0, 1, 0, 1);\n"
+        "}";
+
+    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+    glUseProgram(program);
+
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(WebGLCompatibilityTest,
