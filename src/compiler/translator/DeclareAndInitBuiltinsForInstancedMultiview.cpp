@@ -20,28 +20,26 @@ namespace sh
 namespace
 {
 
-class RenameVariableAndMarkAsInternalTraverser : public TIntermTraverser
+class ReplaceVariableTraverser : public TIntermTraverser
 {
   public:
-    RenameVariableAndMarkAsInternalTraverser(const TString &oldName, const TString &newName)
-        : TIntermTraverser(true, false, false), mOldName(oldName), mNewName(newName)
+    ReplaceVariableTraverser(const TString &symbolName, TIntermSymbol *newSymbol)
+        : TIntermTraverser(true, false, false), mSymbolName(symbolName), mNewSymbol(newSymbol)
     {
     }
 
     void visitSymbol(TIntermSymbol *node) override
     {
         TName &name = node->getName();
-        if (name.getString() == mOldName)
+        if (name.getString() == mSymbolName)
         {
-            node->getTypePointer()->setQualifier(EvqTemporary);
-            name.setInternal(true);
-            name.setString(mNewName);
+            queueReplacement(node, mNewSymbol->deepCopy(), OriginalNode::IS_DROPPED);
         }
     }
 
   private:
-    TString mOldName;
-    TString mNewName;
+    TString mSymbolName;
+    TIntermSymbol *mNewSymbol;
 };
 
 TIntermSymbol *CreateGLInstanceIDSymbol()
@@ -49,15 +47,14 @@ TIntermSymbol *CreateGLInstanceIDSymbol()
     return new TIntermSymbol(0, "gl_InstanceID", TType(EbtInt, EbpHigh, EvqInstanceID));
 }
 
-// Adds initializers for InstanceID and ViewID_OVR at the beginning of main().
-void InitializeBuiltinsInMain(TIntermBlock *root,
-                              TIntermSymbol *instanceIDSymbol,
-                              TIntermSymbol *viewIDSymbol,
-                              unsigned numberOfViews)
+void InitializeViewIDAndInstanceID(TIntermBlock *root,
+                                   TIntermTyped *viewIDSymbol,
+                                   TIntermTyped *instanceIDSymbol,
+                                   unsigned numberOfViews)
 {
     // Create a signed numberOfViews node.
     TConstantUnion *numberOfViewsConstant = new TConstantUnion();
-    numberOfViewsConstant->setIConst(numberOfViews);
+    numberOfViewsConstant->setIConst(static_cast<int>(numberOfViews));
     TIntermConstantUnion *numberOfViewsIntSymbol =
         new TIntermConstantUnion(numberOfViewsConstant, TType(EbtInt, EbpHigh, EvqConst));
 
@@ -67,15 +64,15 @@ void InitializeBuiltinsInMain(TIntermBlock *root,
 
     // Create a InstanceID = gl_InstanceID / numberOfViews node.
     TIntermBinary *instanceIDInitializer =
-        new TIntermBinary(EOpAssign, instanceIDSymbol, normalizedInstanceID);
+        new TIntermBinary(EOpAssign, instanceIDSymbol->deepCopy(), normalizedInstanceID);
 
     // Create a uint(gl_InstanceID) node.
-    TIntermSequence *instanceIDSymbolCastArguments = new TIntermSequence();
-    instanceIDSymbolCastArguments->push_back(CreateGLInstanceIDSymbol());
-    TIntermAggregate *instanceIDAsUint = TIntermAggregate::CreateConstructor(
-        TType(EbtUInt, EbpHigh, EvqTemporary), instanceIDSymbolCastArguments);
+    TIntermSequence *glInstanceIDSymbolCastArguments = new TIntermSequence();
+    glInstanceIDSymbolCastArguments->push_back(CreateGLInstanceIDSymbol());
+    TIntermAggregate *glInstanceIDAsUint = TIntermAggregate::CreateConstructor(
+        TType(EbtUInt, EbpHigh, EvqTemporary), glInstanceIDSymbolCastArguments);
 
-    // Create a unsigned numberOfViews node.
+    // Create an unsigned numberOfViews node.
     TConstantUnion *numberOfViewsUnsignedConstant = new TConstantUnion();
     numberOfViewsUnsignedConstant->setUConst(numberOfViews);
     TIntermConstantUnion *numberOfViewsUintSymbol =
@@ -83,79 +80,60 @@ void InitializeBuiltinsInMain(TIntermBlock *root,
 
     // Create a uint(gl_InstanceID) % numberOfViews node.
     TIntermBinary *normalizedViewID =
-        new TIntermBinary(EOpIMod, instanceIDAsUint, numberOfViewsUintSymbol);
+        new TIntermBinary(EOpIMod, glInstanceIDAsUint, numberOfViewsUintSymbol);
 
     // Create a ViewID_OVR = uint(gl_InstanceID) % numberOfViews node.
-    TIntermBinary *viewIDInitializer = new TIntermBinary(EOpAssign, viewIDSymbol, normalizedViewID);
+    TIntermBinary *viewIDInitializer =
+        new TIntermBinary(EOpAssign, viewIDSymbol->deepCopy(), normalizedViewID);
 
-    // Add nodes to sequence and insert into main.
-    TIntermSequence *initializers = new TIntermSequence();
-    initializers->push_back(viewIDInitializer);
-    initializers->push_back(instanceIDInitializer);
-
-    // Insert init code as a block at the beginning of the main() function.
-    TIntermBlock *initGlobalsBlock = new TIntermBlock();
-    initGlobalsBlock->getSequence()->swap(*initializers);
-
-    TIntermFunctionDefinition *main = FindMain(root);
-    ASSERT(main != nullptr);
-    TIntermBlock *mainBody = main->getBody();
-    ASSERT(mainBody != nullptr);
-    mainBody->getSequence()->insert(mainBody->getSequence()->begin(), initGlobalsBlock);
+    // Add initializers at the beginning of main().
+    TIntermBlock *mainBody = FindMainBody(root);
+    mainBody->getSequence()->insert(mainBody->getSequence()->begin(), instanceIDInitializer);
+    mainBody->getSequence()->insert(mainBody->getSequence()->begin(), viewIDInitializer);
 }
 
-// Adds declarations for ViewID_OVR and InstanceID in global scope at the beginning of
-// the shader.
-void DeclareBuiltinsInGlobalScope(TIntermBlock *root,
-                                  TIntermSymbol *instanceIDSymbol,
-                                  TIntermSymbol *viewIDSymbol)
+// Replaces every occurrence of a symbol with the name specified in symbolName with newSymbolNode.
+void ReplaceSymbol(TIntermBlock *root, const TString &symbolName, TIntermSymbol *newSymbolNode)
+{
+    ReplaceVariableTraverser traverser(symbolName, newSymbolNode);
+    root->traverse(&traverser);
+    traverser.updateTree();
+}
+
+void DeclareGlobalVariable(TIntermBlock *root, TIntermTyped *typedNode)
 {
     TIntermSequence *globalSequence = root->getSequence();
-
-    TIntermDeclaration *instanceIDDeclaration = new TIntermDeclaration();
-    instanceIDDeclaration->appendDeclarator(instanceIDSymbol);
-
-    TIntermDeclaration *viewIDOVRDeclaration = new TIntermDeclaration();
-    viewIDOVRDeclaration->appendDeclarator(viewIDSymbol);
-
-    globalSequence->insert(globalSequence->begin(), viewIDOVRDeclaration);
-    globalSequence->insert(globalSequence->begin(), instanceIDDeclaration);
-}
-
-// Replaces every occurrence of gl_InstanceID with InstanceID, sets the name to internal
-// and changes the qualifier from EvqInstanceID to EvqTemporary.
-void RenameGLInstanceIDAndMarkAsInternal(TIntermBlock *root)
-{
-    RenameVariableAndMarkAsInternalTraverser traverser("gl_InstanceID", "InstanceID");
-    root->traverse(&traverser);
-}
-
-// Replaces every occurrence of gl_ViewID_OVR with ViewID_OVR, sets the name to internal
-// and changes the qualifier from EvqViewIDOVR to EvqTemporary.
-void RenameGLViewIDAndMarkAsInternal(TIntermBlock *root)
-{
-    RenameVariableAndMarkAsInternalTraverser traverser("gl_ViewID_OVR", "ViewID_OVR");
-    root->traverse(&traverser);
+    TIntermDeclaration *declaration = new TIntermDeclaration();
+    declaration->appendDeclarator(typedNode->deepCopy());
+    globalSequence->insert(globalSequence->begin(), declaration);
 }
 
 }  // namespace
 
-void DeclareAndInitBuiltinsForInstancedMultiview(TIntermBlock *root, unsigned numberOfViews)
+void DeclareAndInitBuiltinsForInstancedMultiview(TIntermBlock *root,
+                                                 unsigned numberOfViews,
+                                                 GLenum shaderType)
 {
-    TIntermSymbol *instanceIDSymbol = new TIntermSymbol(TSymbolTable::nextUniqueId(), "InstanceID",
-                                                        TType(EbtInt, EbpHigh, EvqGlobal));
-    instanceIDSymbol->setInternal(true);
+    ASSERT(shaderType == GL_VERTEX_SHADER || shaderType == GL_FRAGMENT_SHADER);
 
+    TQualifier viewIDQualifier  = (shaderType == GL_VERTEX_SHADER) ? EvqFlatOut : EvqFlatIn;
     TIntermSymbol *viewIDSymbol = new TIntermSymbol(TSymbolTable::nextUniqueId(), "ViewID_OVR",
-                                                    TType(EbtUInt, EbpHigh, EvqGlobal));
+                                                    TType(EbtUInt, EbpHigh, viewIDQualifier));
     viewIDSymbol->setInternal(true);
 
-    // Renaming the variables should happen before adding the initializers.
-    RenameGLInstanceIDAndMarkAsInternal(root);
-    DeclareBuiltinsInGlobalScope(root, instanceIDSymbol, viewIDSymbol);
-    InitializeBuiltinsInMain(root, instanceIDSymbol->deepCopy()->getAsSymbolNode(),
-                             viewIDSymbol->deepCopy()->getAsSymbolNode(), numberOfViews);
-    RenameGLViewIDAndMarkAsInternal(root);
+    DeclareGlobalVariable(root, viewIDSymbol);
+    ReplaceSymbol(root, "gl_ViewID_OVR", viewIDSymbol);
+    if (shaderType == GL_VERTEX_SHADER)
+    {
+        // Replacing gl_InstanceID with InstanceID should happen before adding the initializers of
+        // InstanceID and ViewID.
+        TIntermSymbol *instanceIDSymbol = new TIntermSymbol(
+            TSymbolTable::nextUniqueId(), "InstanceID", TType(EbtInt, EbpHigh, EvqGlobal));
+        instanceIDSymbol->setInternal(true);
+        DeclareGlobalVariable(root, instanceIDSymbol);
+        ReplaceSymbol(root, "gl_InstanceID", instanceIDSymbol);
+        InitializeViewIDAndInstanceID(root, viewIDSymbol, instanceIDSymbol, numberOfViews);
+    }
 }
 
 }  // namespace sh

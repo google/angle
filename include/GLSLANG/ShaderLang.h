@@ -223,10 +223,12 @@ const ShCompileOptions SH_TRANSLATE_VIEWID_OVR_TO_UNIFORM = UINT64_C(1) << 31;
 const ShCompileOptions SH_INITIALIZE_UNINITIALIZED_LOCALS = UINT64_C(1) << 32;
 
 // The flag modifies the shader in the following way:
-// Every occurrence of gl_InstanceID and gl_ViewID_OVR is replaced correspondingly by the global
-// temporary variables InstanceID and ViewID_OVR. The following initializers are added at the
-// beginning of main(): ViewID_OVR = uint(gl_InstanceID) % num_views; InstanceID = gl_InstanceID /
-// num_views;
+// Every occurrence of gl_InstanceID is replaced by the global temporary variable InstanceID.
+// Every occurrence of gl_ViewID_OVR is replaced by the varying variable ViewID_OVR.
+// At the beginning of the body of main() in a vertex shader the following initializers are added:
+// ViewID_OVR = uint(gl_InstanceID) % num_views;
+// InstanceID = gl_InstanceID / num_views;
+// ViewID_OVR is added as a varying variable to both the vertex and fragment shaders.
 const ShCompileOptions SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW = UINT64_C(1) << 33;
 
 // Defines alternate strategies for implementing array index clamping.

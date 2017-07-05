@@ -429,9 +429,9 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
             arrayBoundsClamper.MarkIndirectArrayBoundsForClamping(root);
 
         if (success && (compileOptions & SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW) &&
-            parseContext.isMultiviewExtensionEnabled() && getShaderType() == GL_VERTEX_SHADER)
+            parseContext.isMultiviewExtensionEnabled() && getShaderType() != GL_COMPUTE_SHADER)
         {
-            DeclareAndInitBuiltinsForInstancedMultiview(root, getNumViews());
+            DeclareAndInitBuiltinsForInstancedMultiview(root, getNumViews(), getShaderType());
         }
 
         // This pass might emit short circuits so keep it before the short circuit unfolding

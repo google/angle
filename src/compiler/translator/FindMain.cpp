@@ -26,4 +26,13 @@ TIntermFunctionDefinition *FindMain(TIntermBlock *root)
     return nullptr;
 }
 
+TIntermBlock *FindMainBody(TIntermBlock *root)
+{
+    TIntermFunctionDefinition *main = FindMain(root);
+    ASSERT(main != nullptr);
+    TIntermBlock *mainBody = main->getBody();
+    ASSERT(mainBody != nullptr);
+    return mainBody;
+}
+
 }  // namespace sh

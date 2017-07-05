@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-// FindMain.h: Find the main() function definition in a given AST.
+// FindMain.h: Adds functions to get the main function definition and its body.
 
 #ifndef COMPILER_TRANSLATOR_FINDMAIN_H_
 #define COMPILER_TRANSLATOR_FINDMAIN_H_
@@ -16,6 +16,7 @@ class TIntermBlock;
 class TIntermFunctionDefinition;
 
 TIntermFunctionDefinition *FindMain(TIntermBlock *root);
+TIntermBlock *FindMainBody(TIntermBlock *root);
 
 }  // namespace sh
 
