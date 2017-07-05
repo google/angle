@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2b315e52_d1e46551",
+        "filename": "extensions/EGL_ANGLE_program_cache_control.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1148065
+      },
+      "writtenOn": "2017-07-05T18:17:16Z",
+      "side": 1,
+      "message": "nit: it\u0027s -\u003e its",
+      "revId": "213b5b6a35b215e318c6595148912341144e2fa8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "051956d3_90c1fbd1",
+        "filename": "extensions/EGL_ANGLE_program_cache_control.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1148065
+      },
+      "writtenOn": "2017-07-05T18:17:16Z",
+      "side": 1,
+      "message": "If for any reason the key size changes (e.g. change of hash function), old disk cache entries will be invalid (that\u0027s fine), but we need to make sure we won\u0027t cause out-of-bounds accesses when trying to populate. We can of course add a check on the size in user code, but I wonder if we should pass the key size to eglQueryProgramCacheANGLE / eglPopulateProgramCacheANGLE (and have them issue errors if the key size doesn\u0027t match), to make it explicit?",
+      "revId": "213b5b6a35b215e318c6595148912341144e2fa8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e6ed24eb_af3371d6",
+        "filename": "extensions/EGL_ANGLE_program_cache_control.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1148065
+      },
+      "writtenOn": "2017-07-05T18:17:16Z",
+      "side": 1,
+      "message": "Are there consequences that the user needs to deal with? Or is the query still guaranteed to return either a valid key/binary pair or an error?",
+      "revId": "213b5b6a35b215e318c6595148912341144e2fa8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
