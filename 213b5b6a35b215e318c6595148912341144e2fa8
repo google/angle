@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3dc3c832_bce41369",
+        "filename": "extensions/EGL_ANGLE_program_cache_control.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-05T19:21:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2b315e52_d1e46551",
+      "revId": "213b5b6a35b215e318c6595148912341144e2fa8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "051956d3_90c1fbd1",
         "filename": "extensions/EGL_ANGLE_program_cache_control.txt",
         "patchSetId": 3
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "3e6391fc_62dbf4dd",
+        "filename": "extensions/EGL_ANGLE_program_cache_control.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-05T19:21:43Z",
+      "side": 1,
+      "message": "I don\u0027t think there\u0027s a good reason not to. I had it without the size to keep it a bit simpler, but you\u0027re right, the key size could change and there could be a mismatch. So I\u0027ll add it as a parameter and update the error text.",
+      "parentUuid": "051956d3_90c1fbd1",
+      "revId": "213b5b6a35b215e318c6595148912341144e2fa8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e6ed24eb_af3371d6",
         "filename": "extensions/EGL_ANGLE_program_cache_control.txt",
         "patchSetId": 3
@@ -47,6 +83,24 @@
       "writtenOn": "2017-07-05T18:17:16Z",
       "side": 1,
       "message": "Are there consequences that the user needs to deal with? Or is the query still guaranteed to return either a valid key/binary pair or an error?",
+      "revId": "213b5b6a35b215e318c6595148912341144e2fa8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3085239a_05c463ac",
+        "filename": "extensions/EGL_ANGLE_program_cache_control.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-05T19:21:43Z",
+      "side": 1,
+      "message": "No, there\u0027s no real consequences, at least for Chrome.\n\nI left this as undefined behaviour. For Chrome this isn\u0027t an issue, both because we don\u0027t use multithreading and we likely won\u0027t be using this API (I included it for completeness, and because it would seem odd to have just a populate without a query API). ANGLE will be passing binaries back to Chrome via the callback in the ANGLE platform.\n\nLMK if this seems reasonable. We could also look at including an internal mutex if necessary, which would allow us to generate an error if the cache changes, or the index becomes invalid.",
+      "parentUuid": "e6ed24eb_af3371d6",
       "revId": "213b5b6a35b215e318c6595148912341144e2fa8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
