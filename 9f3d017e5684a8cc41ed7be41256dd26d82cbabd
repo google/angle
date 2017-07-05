@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a2e70b3_dff916db",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 573,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-07-05T18:06:03Z",
+      "side": 1,
+      "message": "I now think this is wrong.  It should say \"if outside \u0026\u0026 webgl\" then do the zeroing, and the comment should say \"TODO rely on robust for zeroing later, when we can\"\nFurthermore, Geoff said we can \"assert !robust\" here, so when it does get turned on this test will blow up, drawing attention to the TODO.",
+      "range": {
+        "startLine": 573,
+        "startChar": 44,
+        "endLine": 573,
+        "endChar": 72
+      },
+      "revId": "9f3d017e5684a8cc41ed7be41256dd26d82cbabd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
