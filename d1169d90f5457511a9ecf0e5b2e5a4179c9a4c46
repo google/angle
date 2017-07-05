@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "7d7e2784_c00f0cfb",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-05T18:05:18Z",
+      "side": 1,
+      "message": "also just noticed, this file is missing include guards. we should probably fix that before landing.",
+      "range": {
+        "startLine": 7,
+        "startChar": 3,
+        "endLine": 7,
+        "endChar": 15
+      },
+      "revId": "d1169d90f5457511a9ecf0e5b2e5a4179c9a4c46",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "977efdf8_6a050550",
         "filename": "src/libANGLE/ErrorStrings.h",
         "patchSetId": 21
