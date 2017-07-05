@@ -122,6 +122,24 @@
       "revId": "213b5b6a35b215e318c6595148912341144e2fa8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "76742a9a_e7b98379",
+        "filename": "extensions/EGL_ANGLE_program_cache_control.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-05T20:11:25Z",
+      "side": 1,
+      "message": "I agree, a mutex would be nice. The resistance we more due to us not having threading primitives currently on any platform other than Windows, but maybe we can use std::async. I\u0027ll talk to the team, maybe we can just change the extension and leave a TODO.",
+      "parentUuid": "28dcf09e_f7c90b54",
+      "revId": "213b5b6a35b215e318c6595148912341144e2fa8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
