@@ -26,10 +26,14 @@ namespace
 class GLFragColorBroadcastTraverser : public TIntermTraverser
 {
   public:
-    GLFragColorBroadcastTraverser(int maxDrawBuffers)
+    GLFragColorBroadcastTraverser(int maxDrawBuffers,
+                                  const TSymbolTable &symbolTable,
+                                  int shaderVersion)
         : TIntermTraverser(true, false, false),
           mGLFragColorUsed(false),
-          mMaxDrawBuffers(maxDrawBuffers)
+          mMaxDrawBuffers(maxDrawBuffers),
+          mSymbolTable(symbolTable),
+          mShaderVersion(shaderVersion)
     {
     }
 
@@ -46,14 +50,14 @@ class GLFragColorBroadcastTraverser : public TIntermTraverser
   private:
     bool mGLFragColorUsed;
     int mMaxDrawBuffers;
+    const TSymbolTable &mSymbolTable;
+    const int mShaderVersion;
 };
 
 TIntermBinary *GLFragColorBroadcastTraverser::constructGLFragDataNode(int index) const
 {
-    TType gl_FragDataType = TType(EbtFloat, EbpMedium, EvqFragData, 4);
-    gl_FragDataType.setArraySize(mMaxDrawBuffers);
-
-    TIntermSymbol *symbol   = new TIntermSymbol(0, "gl_FragData", gl_FragDataType);
+    TIntermSymbol *symbol =
+        ReferenceBuiltInVariable(TString("gl_FragData"), mSymbolTable, mShaderVersion);
     TIntermTyped *indexNode = CreateIndexNode(index);
 
     TIntermBinary *binary = new TIntermBinary(EOpIndexDirect, symbol, indexNode);
@@ -99,10 +103,12 @@ void GLFragColorBroadcastTraverser::broadcastGLFragColor(TIntermBlock *root)
 
 void EmulateGLFragColorBroadcast(TIntermBlock *root,
                                  int maxDrawBuffers,
-                                 std::vector<sh::OutputVariable> *outputVariables)
+                                 std::vector<sh::OutputVariable> *outputVariables,
+                                 const TSymbolTable &symbolTable,
+                                 int shaderVersion)
 {
     ASSERT(maxDrawBuffers > 1);
-    GLFragColorBroadcastTraverser traverser(maxDrawBuffers);
+    GLFragColorBroadcastTraverser traverser(maxDrawBuffers, symbolTable, shaderVersion);
     root->traverse(&traverser);
     if (traverser.isGLFragColorUsed())
     {

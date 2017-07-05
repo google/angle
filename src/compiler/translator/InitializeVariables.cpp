@@ -87,7 +87,6 @@ void InsertInitCode(TIntermSequence *mainBody,
                     const InitVariableList &variables,
                     const TSymbolTable &symbolTable,
                     int shaderVersion,
-                    ShShaderSpec shaderSpec,
                     const TExtensionBehavior &extensionBehavior)
 {
     for (const auto &var : variables)
@@ -99,36 +98,29 @@ void InsertInitCode(TIntermSequence *mainBody,
             name = name.substr(0, pos);
         }
 
-        const TVariable *symbolInfo = nullptr;
+        TIntermTyped *initializedSymbol = nullptr;
         if (var.isBuiltIn())
         {
-            symbolInfo =
-                reinterpret_cast<const TVariable *>(symbolTable.findBuiltIn(name, shaderVersion));
+            initializedSymbol = ReferenceBuiltInVariable(name, symbolTable, shaderVersion);
+            if (initializedSymbol->getQualifier() == EvqFragData &&
+                !IsExtensionEnabled(extensionBehavior, "GL_EXT_draw_buffers"))
+            {
+                // If GL_EXT_draw_buffers is disabled, only the 0th index of gl_FragData can be
+                // written to.
+                // TODO(oetuaho): This is a bit hacky and would be better to remove, if we came up
+                // with a good way to do it. Right now "gl_FragData" in symbol table is initialized
+                // to have the array size of MaxDrawBuffers, and the initialization happens before
+                // the shader sets the extensions it is using.
+                initializedSymbol =
+                    new TIntermBinary(EOpIndexDirect, initializedSymbol, CreateIndexNode(0));
+            }
         }
         else
         {
-            symbolInfo = reinterpret_cast<const TVariable *>(symbolTable.findGlobal(name));
+            initializedSymbol = ReferenceGlobalVariable(name, symbolTable);
         }
-        ASSERT(symbolInfo != nullptr);
+        ASSERT(initializedSymbol != nullptr);
 
-        TType type = symbolInfo->getType();
-        if (type.getQualifier() == EvqFragData &&
-            (shaderSpec == SH_WEBGL2_SPEC ||
-             !IsExtensionEnabled(extensionBehavior, "GL_EXT_draw_buffers")))
-        {
-            // Adjust the number of attachment indices which can be initialized according to the
-            // WebGL2 spec and extension behavior:
-            // - WebGL2 spec, Editor's draft May 31, 5.13 GLSL ES
-            //   1.00 Fragment Shader Output: "A fragment shader written in The OpenGL ES Shading
-            //   Language, Version 1.00, that statically assigns a value to gl_FragData[n] where n
-            //   does not equal constant value 0 must fail to compile in the WebGL 2.0 API.".
-            //   This excerpt limits the initialization of gl_FragData to only the 0th index.
-            // - If GL_EXT_draw_buffers is disabled, only the 0th index of gl_FragData can be
-            //   written to.
-            type.setArraySize(1u);
-        }
-
-        TIntermSymbol *initializedSymbol = new TIntermSymbol(0, name, type);
         TIntermSequence *initCode = CreateInitCode(initializedSymbol);
         mainBody->insert(mainBody->begin(), initCode->begin(), initCode->end());
     }
@@ -191,7 +183,7 @@ class InitializeLocalsTraverser : public TIntermTraverser
 
 }  // namespace anonymous
 
-TIntermSequence *CreateInitCode(const TIntermSymbol *initializedSymbol)
+TIntermSequence *CreateInitCode(const TIntermTyped *initializedSymbol)
 {
     TIntermSequence *initCode = new TIntermSequence();
     if (initializedSymbol->isArray())
@@ -221,12 +213,10 @@ void InitializeVariables(TIntermBlock *root,
                          const InitVariableList &vars,
                          const TSymbolTable &symbolTable,
                          int shaderVersion,
-                         ShShaderSpec shaderSpec,
                          const TExtensionBehavior &extensionBehavior)
 {
     TIntermBlock *body = FindMainBody(root);
-    InsertInitCode(body->getSequence(), vars, symbolTable, shaderVersion, shaderSpec,
-                   extensionBehavior);
+    InsertInitCode(body->getSequence(), vars, symbolTable, shaderVersion, extensionBehavior);
 }
 
 }  // namespace sh

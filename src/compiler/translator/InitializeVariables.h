@@ -20,7 +20,7 @@ typedef std::vector<sh::ShaderVariable> InitVariableList;
 
 // Return a sequence of assignment operations to initialize "initializedSymbol". initializedSymbol
 // may be an array, struct or any combination of these, as long as it contains only basic types.
-TIntermSequence *CreateInitCode(const TIntermSymbol *initializedSymbol);
+TIntermSequence *CreateInitCode(const TIntermTyped *initializedSymbol);
 
 // Initialize all uninitialized local variables, so that undefined behavior is avoided.
 void InitializeUninitializedLocals(TIntermBlock *root, int shaderVersion);
@@ -32,12 +32,11 @@ void InitializeUninitializedLocals(TIntermBlock *root, int shaderVersion);
 //   2. Initializing output variables referred to in the shader source.
 // Note: The type of each lvalue in an initializer is retrieved from the symbol table. gl_FragData
 // requires special handling because the number of indices which can be initialized is determined by
-// the API spec and extension support.
+// enabled extensions.
 void InitializeVariables(TIntermBlock *root,
                          const InitVariableList &vars,
                          const TSymbolTable &symbolTable,
                          int shaderVersion,
-                         ShShaderSpec shaderSpec,
                          const TExtensionBehavior &extensionBehavior);
 
 }  // namespace sh

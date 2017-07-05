@@ -432,7 +432,7 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
             parseContext.isMultiviewExtensionEnabled() && getShaderType() != GL_COMPUTE_SHADER)
         {
             DeclareAndInitBuiltinsForInstancedMultiview(root, mNumViews, shaderType, compileOptions,
-                                                        outputType);
+                                                        outputType, symbolTable);
         }
 
         // This pass might emit short circuits so keep it before the short circuit unfolding
@@ -517,7 +517,8 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
             compileResources.EXT_draw_buffers && compileResources.MaxDrawBuffers > 1 &&
             IsExtensionEnabled(extensionBehavior, "GL_EXT_draw_buffers"))
         {
-            EmulateGLFragColorBroadcast(root, compileResources.MaxDrawBuffers, &outputVariables);
+            EmulateGLFragColorBroadcast(root, compileResources.MaxDrawBuffers, &outputVariables,
+                                        symbolTable, shaderVersion);
         }
 
         if (success)
@@ -946,7 +947,7 @@ void TCompiler::initializeGLPosition(TIntermBlock *root)
     sh::ShaderVariable var(GL_FLOAT_VEC4, 0);
     var.name = "gl_Position";
     list.push_back(var);
-    InitializeVariables(root, list, symbolTable, shaderVersion, shaderSpec, extensionBehavior);
+    InitializeVariables(root, list, symbolTable, shaderVersion, extensionBehavior);
 }
 
 void TCompiler::useAllMembersInUnusedStandardAndSharedBlocks(TIntermBlock *root)
@@ -988,7 +989,7 @@ void TCompiler::initializeOutputVariables(TIntermBlock *root)
             list.push_back(var);
         }
     }
-    InitializeVariables(root, list, symbolTable, shaderVersion, shaderSpec, extensionBehavior);
+    InitializeVariables(root, list, symbolTable, shaderVersion, extensionBehavior);
 }
 
 const TExtensionBehavior &TCompiler::getExtensionBehavior() const

@@ -361,8 +361,10 @@ TEST_F(InitOutputVariablesWebGL1FragmentShaderTest, FragData)
     compileAssumeSuccess(shaderString);
     VerifyOutputVariableInitializers verifier(mASTRoot);
 
+    // In the symbol table, gl_FragData array has 2 elements. However, only the 1st one should be
+    // initialized.
     ExpectedLValues expectedLValues =
-        CreateIndexedLValueNodeList("gl_FragData", TType(EbtFloat, EbpMedium, EvqFragData, 4), 1);
+        CreateIndexedLValueNodeList("gl_FragData", TType(EbtFloat, EbpMedium, EvqFragData, 4), 2);
     EXPECT_TRUE(verifier.isExpectedLValueFound(expectedLValues[0]));
     EXPECT_EQ(1u, verifier.getCandidates().size());
 }

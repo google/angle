@@ -3521,16 +3521,7 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
         {
             if (baseExpression->getQualifier() == EvqFragData && index > 0)
             {
-                if (mShaderSpec == SH_WEBGL2_SPEC)
-                {
-                    // Error has been already generated if index is not const.
-                    if (indexExpression->getQualifier() == EvqConst)
-                    {
-                        error(location, "array index for gl_FragData must be constant zero", "[");
-                    }
-                    safeIndex = 0;
-                }
-                else if (!isExtensionEnabled("GL_EXT_draw_buffers"))
+                if (!isExtensionEnabled("GL_EXT_draw_buffers"))
                 {
                     outOfRangeError(outOfRangeIndexIsError, location,
                                     "array index for gl_FragData must be zero when "

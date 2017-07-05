@@ -166,9 +166,19 @@ TIntermBlock *EnsureBlock(TIntermNode *node)
     return blockNode;
 }
 
-TIntermSymbol *ReferToGlobalSymbol(const TString &name, const TSymbolTable &symbolTable)
+TIntermSymbol *ReferenceGlobalVariable(const TString &name, const TSymbolTable &symbolTable)
 {
     TVariable *var = reinterpret_cast<TVariable *>(symbolTable.findGlobal(name));
+    ASSERT(var);
+    return new TIntermSymbol(var->getUniqueId(), name, var->getType());
+}
+
+TIntermSymbol *ReferenceBuiltInVariable(const TString &name,
+                                        const TSymbolTable &symbolTable,
+                                        int shaderVersion)
+{
+    const TVariable *var =
+        reinterpret_cast<const TVariable *>(symbolTable.findBuiltIn(name, shaderVersion));
     ASSERT(var);
     return new TIntermSymbol(var->getUniqueId(), name, var->getType());
 }

@@ -24,16 +24,18 @@
 #include "GLSLANG/ShaderLang.h"
 #include "angle_gl.h"
 
-class TIntermBlock;
-
 namespace sh
 {
+
+class TIntermBlock;
+class TSymbolTable;
 
 void DeclareAndInitBuiltinsForInstancedMultiview(TIntermBlock *root,
                                                  unsigned numberOfViews,
                                                  GLenum shaderType,
                                                  ShCompileOptions compileOptions,
-                                                 ShShaderOutput shaderOutput);
+                                                 ShShaderOutput shaderOutput,
+                                                 const TSymbolTable &symbolTable);
 
 }  // namespace sh
 

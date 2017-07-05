@@ -824,8 +824,15 @@ void IdentifyBuiltIns(sh::GLenum type,
             symbolTable.insert(ESSL1_BUILTINS,
                                new TVariable(NewPoolTString("gl_FragColor"),
                                              TType(EbtFloat, EbpMedium, EvqFragColor, 4)));
-            TType fragData(EbtFloat, EbpMedium, EvqFragData, 4, 1, true);
-            fragData.setArraySize(resources.MaxDrawBuffers);
+            TType fragData(EbtFloat, EbpMedium, EvqFragData, 4);
+            if (spec != SH_WEBGL2_SPEC && spec != SH_WEBGL3_SPEC)
+            {
+                fragData.setArraySize(resources.MaxDrawBuffers);
+            }
+            else
+            {
+                fragData.setArraySize(1u);
+            }
             symbolTable.insert(ESSL1_BUILTINS,
                                new TVariable(NewPoolTString("gl_FragData"), fragData));
 
