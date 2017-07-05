@@ -120,6 +120,10 @@ void TranslatorESSL::writeExtensionBehavior(ShCompileOptions compileOptions)
 {
     TInfoSinkBase &sink                   = getInfoSink().obj;
     const TExtensionBehavior &extBehavior = getExtensionBehavior();
+    const bool isMultiviewExtEmulated =
+        (compileOptions & (SH_TRANSLATE_VIEWID_OVR_TO_UNIFORM |
+                           SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW)) != 0u;
+
     for (TExtensionBehavior::const_iterator iter = extBehavior.begin(); iter != extBehavior.end();
          ++iter)
     {
@@ -136,7 +140,7 @@ void TranslatorESSL::writeExtensionBehavior(ShCompileOptions compileOptions)
                 sink << "#extension GL_NV_draw_buffers : " << getBehaviorString(iter->second)
                      << "\n";
             }
-            else if (compileOptions & SH_TRANSLATE_VIEWID_OVR_TO_UNIFORM &&
+            else if (isMultiviewExtEmulated &&
                      (iter->first == "GL_OVR_multiview" || iter->first == "GL_OVR_multiview2"))
             {
                 // No output

@@ -691,3 +691,29 @@ TEST_F(WEBGLMultiviewVertexShaderOutputCodeTest, ViewIDAndInstanceIDHaveCorrectV
     EXPECT_TRUE(foundInHLSLCode("ViewID_OVR = (uvec1(gl_InstanceID) % 3)"));
     EXPECT_TRUE(foundInHLSLCode("InstanceID = (gl_InstanceID / 3)"));
 }
+
+// The test checks that the directive enabling GL_OVR_multiview is not outputted if the extension is
+// emulated.
+TEST_F(WEBGLMultiviewVertexShaderOutputCodeTest, StrippedOVRMultiviewDirective)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview : require\n"
+        "layout(num_views = 3) in;\n"
+        "void main()\n"
+        "{\n"
+        "}\n";
+    // The directive must not be present if any of the multiview emulation options are set.
+    compile(shaderString, SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW);
+    EXPECT_FALSE(foundInESSLCode("GL_OVR_multiview"));
+    EXPECT_FALSE(foundInGLSLCode("GL_OVR_multiview"));
+
+    compile(shaderString, SH_TRANSLATE_VIEWID_OVR_TO_UNIFORM);
+    EXPECT_FALSE(foundInESSLCode("GL_OVR_multiview"));
+    EXPECT_FALSE(foundInGLSLCode("GL_OVR_multiview"));
+
+    // The directive should be outputted from the ESSL translator with none of the options being
+    // set.
+    compile(shaderString);
+    EXPECT_TRUE(foundInESSLCode("GL_OVR_multiview"));
+}
