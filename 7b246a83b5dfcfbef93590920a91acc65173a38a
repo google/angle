@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d927b6d6_82ce2be9",
+        "filename": "src/tests/gl_tests/WebGLReadOutsideFramebufferTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-05T20:55:26Z",
+      "side": 1,
+      "message": "nit: all of these methods should be camelCase with a lower first character.",
+      "range": {
+        "startLine": 104,
+        "startChar": 9,
+        "endLine": 104,
+        "endChar": 23
+      },
+      "revId": "7b246a83b5dfcfbef93590920a91acc65173a38a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2eb0f7fd_de0dbc5a",
+        "filename": "src/tests/gl_tests/WebGLReadOutsideFramebufferTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-05T20:55:26Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 197,
+        "startChar": 9,
+        "endLine": 197,
+        "endChar": 13
+      },
+      "revId": "7b246a83b5dfcfbef93590920a91acc65173a38a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
