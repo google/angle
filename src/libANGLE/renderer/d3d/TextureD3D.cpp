@@ -920,6 +920,11 @@ bool TextureD3D_2D::isDepth(GLint level) const
     return gl::GetSizedInternalFormatInfo(getInternalFormat(level)).depthBits > 0;
 }
 
+bool TextureD3D_2D::isSRGB(GLint level) const
+{
+    return gl::GetSizedInternalFormatInfo(getInternalFormat(level)).colorEncoding == GL_SRGB;
+}
+
 gl::Error TextureD3D_2D::setImage(const gl::Context *context,
                                   GLenum target,
                                   size_t imageLevel,
@@ -1179,7 +1184,7 @@ gl::Error TextureD3D_2D::copyTexture(const gl::Context *context,
     gl::Rectangle sourceRect(0, 0, size.width, size.height);
     gl::Offset destOffset(0, 0, 0);
 
-    if (canCreateRenderTargetForImage(gl::ImageIndex::Make2D(destLevel)))
+    if (!isSRGB(destLevel) && canCreateRenderTargetForImage(gl::ImageIndex::Make2D(destLevel)))
     {
         ANGLE_TRY(ensureRenderTarget(context));
         ASSERT(isValidLevel(destLevel));
@@ -1223,7 +1228,7 @@ gl::Error TextureD3D_2D::copySubTexture(const gl::Context *context,
 
     GLint destLevel = static_cast<GLint>(level);
 
-    if (canCreateRenderTargetForImage(gl::ImageIndex::Make2D(destLevel)))
+    if (!isSRGB(destLevel) && canCreateRenderTargetForImage(gl::ImageIndex::Make2D(destLevel)))
     {
         ANGLE_TRY(ensureRenderTarget(context));
         ASSERT(isValidLevel(destLevel));
@@ -1714,6 +1719,11 @@ bool TextureD3D_Cube::isDepth(GLint level, GLint layer) const
     return gl::GetSizedInternalFormatInfo(getInternalFormat(level, layer)).depthBits > 0;
 }
 
+bool TextureD3D_Cube::isSRGB(GLint level, GLint layer) const
+{
+    return gl::GetSizedInternalFormatInfo(getInternalFormat(level, layer)).colorEncoding == GL_SRGB;
+}
+
 gl::Error TextureD3D_Cube::setEGLImageTarget(const gl::Context *context,
                                              GLenum target,
                                              egl::Image *image)
@@ -1910,7 +1920,8 @@ gl::Error TextureD3D_Cube::copyTexture(const gl::Context *context,
     gl::Rectangle sourceRect(0, 0, size.width, size.height);
     gl::Offset destOffset(0, 0, 0);
 
-    if (canCreateRenderTargetForImage(gl::ImageIndex::MakeCube(target, destLevel)))
+    if (!isSRGB(destLevel, faceIndex) &&
+        canCreateRenderTargetForImage(gl::ImageIndex::MakeCube(target, destLevel)))
     {
         ANGLE_TRY(ensureRenderTarget(context));
         ASSERT(isValidFaceLevel(faceIndex, destLevel));
@@ -1956,7 +1967,8 @@ gl::Error TextureD3D_Cube::copySubTexture(const gl::Context *context,
     GLint destLevel = static_cast<GLint>(level);
     int faceIndex   = static_cast<int>(gl::CubeMapTextureTargetToLayerIndex(target));
 
-    if (canCreateRenderTargetForImage(gl::ImageIndex::MakeCube(target, destLevel)))
+    if (!isSRGB(destLevel, faceIndex) &&
+        canCreateRenderTargetForImage(gl::ImageIndex::MakeCube(target, destLevel)))
     {
         ANGLE_TRY(ensureRenderTarget(context));
         ASSERT(isValidFaceLevel(faceIndex, destLevel));

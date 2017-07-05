@@ -811,7 +811,7 @@ TEST_P(CopyTextureTestES3, ES3UnormFormats)
                         GL_UNSIGNED_BYTE, false, true, false, GLColor(0, 0, 0, 128));
 
     // New sRGB dest formats
-    if (IsOpenGLES())
+    if (IsOpenGLES() || IsOpenGL())
     {
         std::cout << "Skipping GL_SRGB and GL_SRGB_ALPHA because it is not implemented yet."
                   << std::endl;
@@ -819,12 +819,12 @@ TEST_P(CopyTextureTestES3, ES3UnormFormats)
     else
     {
         testCopyCombination(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GLColor(128, 64, 32, 128), GL_SRGB,
-                            GL_UNSIGNED_BYTE, false, false, false, GLColor(128, 64, 32, 255));
+                            GL_UNSIGNED_BYTE, false, false, false, GLColor(55, 13, 4, 255));
         testCopyCombination(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GLColor(128, 64, 32, 128), GL_SRGB,
-                            GL_UNSIGNED_BYTE, false, true, false, GLColor(64, 32, 16, 255));
+                            GL_UNSIGNED_BYTE, false, true, false, GLColor(13, 4, 1, 255));
         testCopyCombination(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GLColor(128, 64, 32, 128),
                             GL_SRGB_ALPHA_EXT, GL_UNSIGNED_BYTE, false, false, false,
-                            GLColor(128, 64, 32, 128));
+                            GLColor(55, 13, 4, 128));
     }
 }
 

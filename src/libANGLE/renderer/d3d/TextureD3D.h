@@ -194,6 +194,7 @@ class TextureD3D_2D : public TextureD3D
     GLsizei getHeight(GLint level) const;
     GLenum getInternalFormat(GLint level) const;
     bool isDepth(GLint level) const;
+    bool isSRGB(GLint level) const;
 
     gl::Error setImage(const gl::Context *context,
                        GLenum target,
@@ -336,6 +337,7 @@ class TextureD3D_Cube : public TextureD3D
 
     GLenum getInternalFormat(GLint level, GLint layer) const;
     bool isDepth(GLint level, GLint layer) const;
+    bool isSRGB(GLint level, GLint layer) const;
 
     gl::Error setImage(const gl::Context *context,
                        GLenum target,
