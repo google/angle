@@ -84,6 +84,24 @@
     },
     {
       "key": {
+        "uuid": "ab738be6_a66c50a8",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-07-05T14:27:48Z",
+      "side": 1,
+      "message": "Geoff agreed that for now we need to zero here, but I\u0027ll add a comment.",
+      "parentUuid": "cb154e5b_85d4ebf9",
+      "revId": "f2b3caa0c4be50f6e9c6d6aae94ef2bde424fd1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "10be085c_dc66f297",
         "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
         "patchSetId": 1
@@ -160,6 +178,24 @@
       "side": 1,
       "message": "I was under the impression there is code all over that calls stateManager-\u003esetBlah() and doesn\u0027t worry about changing state.  I assumed state manager automagically fixed the gl state as needed.  Can you enlighten me?",
       "parentUuid": "c51b009e_31e9f880",
+      "revId": "f2b3caa0c4be50f6e9c6d6aae94ef2bde424fd1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7b7a419f_1745f56a",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-07-05T14:27:48Z",
+      "side": 1,
+      "message": "Looked at StateManagerGL with Geoff and Jamie and it appears to deal with the dirtiness.",
+      "parentUuid": "bf6c4aff_93fb73ab",
       "revId": "f2b3caa0c4be50f6e9c6d6aae94ef2bde424fd1f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
