@@ -104,6 +104,24 @@
       "revId": "213b5b6a35b215e318c6595148912341144e2fa8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "28dcf09e_f7c90b54",
+        "filename": "extensions/EGL_ANGLE_program_cache_control.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1148065
+      },
+      "writtenOn": "2017-07-05T19:57:29Z",
+      "side": 1,
+      "message": "I think I would define it as \"always either return a valid key/binary pair, null, or an error, however that valid entry is not guaranteed to be in the cache nor a null key guaranteed to indicate an empty cache entry\".\nBasically, you can\u0027t know atomically the state of the cache, but a non-null key/binary is something valid and useful to store on disk (because it was in the cache at some point, even if it got evicted concurrently).\n\nNote that the callback would effectively have similar semantics.\n\nThis should be implementable with a mutex that has a very small scope (i.e. just accesses to the internal hash map), and whose cost is trivial compared to the cost of linking a program, but I\u0027ll leave it to you whether to actually do that or not in ANGLE given that it\u0027s only used single-threaded anyway.",
+      "parentUuid": "3085239a_05c463ac",
+      "revId": "213b5b6a35b215e318c6595148912341144e2fa8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
