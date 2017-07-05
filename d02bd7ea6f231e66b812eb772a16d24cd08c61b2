@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b44104c2_7be49415",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 708,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-05T10:07:01Z",
+      "side": 1,
+      "message": "Should actually have separate EXPECT_FALSE for finding this in different GLSL output types. Now this just asserts that one of the output shaders doesn\u0027t contain \"GL_OVR_multiview\" - the check could pass if ESSL output contains it, as long as GLSL output doesn\u0027t for example.",
+      "revId": "d02bd7ea6f231e66b812eb772a16d24cd08c61b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "967117e7_871c1ac9",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 711,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-05T10:07:01Z",
+      "side": 1,
+      "message": "Same here.",
+      "revId": "d02bd7ea6f231e66b812eb772a16d24cd08c61b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
