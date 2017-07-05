@@ -6,6 +6,8 @@
 
 #include "compiler/translator/OutputGLSL.h"
 
+#include "compiler/translator/Compiler.h"
+
 namespace sh
 {
 

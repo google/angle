@@ -9,7 +9,7 @@
 #include "compiler/translator/RewriteTexelFetchOffset.h"
 
 #include "common/angleutils.h"
-#include "compiler/translator/IntermNode.h"
+#include "compiler/translator/IntermTraverse.h"
 #include "compiler/translator/SymbolTable.h"
 
 namespace sh

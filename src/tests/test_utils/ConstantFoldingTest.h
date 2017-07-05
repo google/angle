@@ -13,7 +13,7 @@
 #include <vector>
 
 #include "common/mathutil.h"
-#include "compiler/translator/IntermNode.h"
+#include "compiler/translator/IntermTraverse.h"
 #include "tests/test_utils/ShaderCompileTreeTest.h"
 
 namespace sh

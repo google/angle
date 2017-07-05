@@ -7,7 +7,7 @@
 #ifndef COMPILER_TRANSLATOR_REMOVESWITCHFALLTHROUGH_H_
 #define COMPILER_TRANSLATOR_REMOVESWITCHFALLTHROUGH_H_
 
-#include "compiler/translator/IntermNode.h"
+#include "compiler/translator/IntermTraverse.h"
 
 namespace sh
 {

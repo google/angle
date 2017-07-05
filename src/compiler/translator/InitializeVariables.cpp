@@ -9,7 +9,7 @@
 #include "angle_gl.h"
 #include "common/debug.h"
 #include "compiler/translator/FindMain.h"
-#include "compiler/translator/IntermNode.h"
+#include "compiler/translator/IntermTraverse.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/util.h"
 

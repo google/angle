@@ -9,6 +9,7 @@
 
 #include "tests/test_utils/ShaderCompileTreeTest.h"
 
+#include "compiler/translator/IntermTraverse.h"
 #include "compiler/translator/TranslatorESSL.h"
 
 namespace sh

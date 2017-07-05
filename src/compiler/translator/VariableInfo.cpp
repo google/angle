@@ -8,7 +8,8 @@
 
 #include "angle_gl.h"
 #include "common/utilities.h"
-#include "compiler/translator/IntermNode.h"
+#include "compiler/translator/HashNames.h"
+#include "compiler/translator/IntermTraverse.h"
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/util.h"
 
@@ -440,7 +441,7 @@ void CollectVariablesTraverser::setCommonVariableProperties(const TType &type,
         }
     }
     variableOut->name       = name.c_str();
-    variableOut->mappedName = TIntermTraverser::hash(name, mHashFunction).c_str();
+    variableOut->mappedName = HashName(name, mHashFunction).c_str();
     variableOut->arraySize  = type.getArraySize();
 }
 
@@ -504,8 +505,7 @@ InterfaceBlock CollectVariablesTraverser::recordInterfaceBlock(const TIntermSymb
 
     InterfaceBlock interfaceBlock;
     interfaceBlock.name = blockType->name().c_str();
-    interfaceBlock.mappedName =
-        TIntermTraverser::hash(blockType->name().c_str(), mHashFunction).c_str();
+    interfaceBlock.mappedName = HashName(blockType->name().c_str(), mHashFunction).c_str();
     interfaceBlock.instanceName =
         (blockType->hasInstanceName() ? blockType->instanceName().c_str() : "");
     interfaceBlock.arraySize        = variable.getArraySize();

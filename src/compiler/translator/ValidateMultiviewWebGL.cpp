@@ -15,7 +15,7 @@
 #include "angle_gl.h"
 #include "compiler/translator/Diagnostics.h"
 #include "compiler/translator/FindSymbolNode.h"
-#include "compiler/translator/IntermNode.h"
+#include "compiler/translator/IntermTraverse.h"
 #include "compiler/translator/SymbolTable.h"
 
 namespace sh

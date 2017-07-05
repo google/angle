@@ -4,7 +4,8 @@
 // found in the LICENSE file.
 //
 
-#include "compiler/translator/IntermNode.h"
+#include "compiler/translator/IntermTraverse.h"
+
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/SymbolTable.h"
 
@@ -619,6 +620,152 @@ void TIntermTraverser::traverseAggregate(TIntermAggregate *node)
 
     if (visit && postVisit)
         visitAggregate(PostVisit, node);
+}
+
+bool TIntermTraverser::CompareInsertion(const NodeInsertMultipleEntry &a,
+                                        const NodeInsertMultipleEntry &b)
+{
+    if (a.parent != b.parent)
+    {
+        return a.parent > b.parent;
+    }
+    return a.position > b.position;
+}
+
+void TIntermTraverser::updateTree()
+{
+    // Sort the insertions so that insertion position is decreasing. This way multiple insertions to
+    // the same parent node are handled correctly.
+    std::sort(mInsertions.begin(), mInsertions.end(), CompareInsertion);
+    for (size_t ii = 0; ii < mInsertions.size(); ++ii)
+    {
+        // We can't know here what the intended ordering of two insertions to the same position is,
+        // so it is not supported.
+        ASSERT(ii == 0 || mInsertions[ii].position != mInsertions[ii - 1].position ||
+               mInsertions[ii].parent != mInsertions[ii - 1].parent);
+        const NodeInsertMultipleEntry &insertion = mInsertions[ii];
+        ASSERT(insertion.parent);
+        if (!insertion.insertionsAfter.empty())
+        {
+            bool inserted = insertion.parent->insertChildNodes(insertion.position + 1,
+                                                               insertion.insertionsAfter);
+            ASSERT(inserted);
+        }
+        if (!insertion.insertionsBefore.empty())
+        {
+            bool inserted =
+                insertion.parent->insertChildNodes(insertion.position, insertion.insertionsBefore);
+            ASSERT(inserted);
+        }
+    }
+    for (size_t ii = 0; ii < mReplacements.size(); ++ii)
+    {
+        const NodeUpdateEntry &replacement = mReplacements[ii];
+        ASSERT(replacement.parent);
+        bool replaced =
+            replacement.parent->replaceChildNode(replacement.original, replacement.replacement);
+        ASSERT(replaced);
+
+        if (!replacement.originalBecomesChildOfReplacement)
+        {
+            // In AST traversing, a parent is visited before its children.
+            // After we replace a node, if its immediate child is to
+            // be replaced, we need to make sure we don't update the replaced
+            // node; instead, we update the replacement node.
+            for (size_t jj = ii + 1; jj < mReplacements.size(); ++jj)
+            {
+                NodeUpdateEntry &replacement2 = mReplacements[jj];
+                if (replacement2.parent == replacement.original)
+                    replacement2.parent = replacement.replacement;
+            }
+        }
+    }
+    for (size_t ii = 0; ii < mMultiReplacements.size(); ++ii)
+    {
+        const NodeReplaceWithMultipleEntry &replacement = mMultiReplacements[ii];
+        ASSERT(replacement.parent);
+        bool replaced = replacement.parent->replaceChildNodeWithMultiple(replacement.original,
+                                                                         replacement.replacements);
+        ASSERT(replaced);
+    }
+
+    clearReplacementQueue();
+}
+
+void TIntermTraverser::clearReplacementQueue()
+{
+    mReplacements.clear();
+    mMultiReplacements.clear();
+    mInsertions.clear();
+}
+
+void TIntermTraverser::queueReplacement(TIntermNode *original,
+                                        TIntermNode *replacement,
+                                        OriginalNode originalStatus)
+{
+    queueReplacementWithParent(getParentNode(), original, replacement, originalStatus);
+}
+
+void TIntermTraverser::queueReplacementWithParent(TIntermNode *parent,
+                                                  TIntermNode *original,
+                                                  TIntermNode *replacement,
+                                                  OriginalNode originalStatus)
+{
+    bool originalBecomesChild = (originalStatus == OriginalNode::BECOMES_CHILD);
+    mReplacements.push_back(NodeUpdateEntry(parent, original, replacement, originalBecomesChild));
+}
+
+TName TIntermTraverser::GetInternalFunctionName(const char *name)
+{
+    TString nameStr(name);
+    TName nameObj(nameStr);
+    nameObj.setInternal(true);
+    return nameObj;
+}
+
+TIntermFunctionPrototype *TIntermTraverser::CreateInternalFunctionPrototypeNode(
+    const TType &returnType,
+    const char *name,
+    const TSymbolUniqueId &functionId)
+{
+    TIntermFunctionPrototype *functionNode = new TIntermFunctionPrototype(returnType, functionId);
+    functionNode->getFunctionSymbolInfo()->setNameObj(GetInternalFunctionName(name));
+    return functionNode;
+}
+
+TIntermFunctionDefinition *TIntermTraverser::CreateInternalFunctionDefinitionNode(
+    const TType &returnType,
+    const char *name,
+    TIntermBlock *functionBody,
+    const TSymbolUniqueId &functionId)
+{
+    TIntermFunctionPrototype *prototypeNode =
+        CreateInternalFunctionPrototypeNode(returnType, name, functionId);
+    return new TIntermFunctionDefinition(prototypeNode, functionBody);
+}
+
+TIntermAggregate *TIntermTraverser::CreateInternalFunctionCallNode(
+    const TType &returnType,
+    const char *name,
+    const TSymbolUniqueId &functionId,
+    TIntermSequence *arguments)
+{
+    TIntermAggregate *functionNode = TIntermAggregate::CreateFunctionCall(
+        returnType, functionId, GetInternalFunctionName(name), arguments);
+    return functionNode;
+}
+
+TLValueTrackingTraverser::TLValueTrackingTraverser(bool preVisit,
+                                                   bool inVisit,
+                                                   bool postVisit,
+                                                   const TSymbolTable &symbolTable,
+                                                   int shaderVersion)
+    : TIntermTraverser(preVisit, inVisit, postVisit),
+      mOperatorRequiresLValue(false),
+      mInFunctionCallOutParameter(false),
+      mSymbolTable(symbolTable),
+      mShaderVersion(shaderVersion)
+{
 }
 
 void TLValueTrackingTraverser::traverseFunctionPrototype(TIntermFunctionPrototype *node)

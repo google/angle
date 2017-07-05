@@ -54,8 +54,6 @@ class TIntermediate
                                     const TVectorFields &fields,
                                     const TSourceLoc &dotLocation);
 
-    static void outputTree(TIntermNode *, TInfoSinkBase &);
-
     TIntermTyped *foldAggregateBuiltIn(TIntermAggregate *aggregate, TDiagnostics *diagnostics);
 
   private:

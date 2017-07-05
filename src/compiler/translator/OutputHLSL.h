@@ -13,8 +13,8 @@
 
 #include "angle_gl.h"
 #include "compiler/translator/ASTMetadataHLSL.h"
-#include "compiler/translator/IntermNode.h"
-#include "compiler/translator/ParseContext.h"
+#include "compiler/translator/Compiler.h"
+#include "compiler/translator/IntermTraverse.h"
 
 class BuiltInFunctionEmulator;
 

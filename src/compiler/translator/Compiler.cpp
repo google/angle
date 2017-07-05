@@ -20,6 +20,8 @@
 #include "compiler/translator/Initialize.h"
 #include "compiler/translator/InitializeVariables.h"
 #include "compiler/translator/IntermNodePatternMatcher.h"
+#include "compiler/translator/IsASTDepthBelowLimit.h"
+#include "compiler/translator/OutputTree.h"
 #include "compiler/translator/ParseContext.h"
 #include "compiler/translator/PruneEmptyDeclarations.h"
 #include "compiler/translator/RegenerateStructNames.h"
@@ -578,7 +580,7 @@ bool TCompiler::compile(const char *const shaderStrings[],
     if (root)
     {
         if (compileOptions & SH_INTERMEDIATE_TREE)
-            TIntermediate::outputTree(root, infoSink.info);
+            OutputTree(root, infoSink.info);
 
         if (compileOptions & SH_OBJECT_CODE)
             translate(root, compileOptions);
@@ -910,10 +912,7 @@ bool TCompiler::pruneUnusedFunctions(TIntermBlock *root)
 
 bool TCompiler::limitExpressionComplexity(TIntermBlock *root)
 {
-    TMaxDepthTraverser traverser(maxExpressionComplexity + 1);
-    root->traverse(&traverser);
-
-    if (traverser.getMaxDepth() > maxExpressionComplexity)
+    if (!IsASTDepthBelowLimit(root, maxExpressionComplexity))
     {
         mDiagnostics.globalError("Expression too complex.");
         return false;

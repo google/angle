@@ -6,8 +6,8 @@
 
 #include "compiler/translator/ValidateSwitch.h"
 
-#include "compiler/translator/IntermNode.h"
 #include "compiler/translator/Diagnostics.h"
+#include "compiler/translator/IntermTraverse.h"
 
 namespace sh
 {

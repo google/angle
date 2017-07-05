@@ -9,8 +9,9 @@
 
 #include <set>
 
-#include "compiler/translator/IntermNode.h"
-#include "compiler/translator/ParseContext.h"
+#include "compiler/translator/HashNames.h"
+#include "compiler/translator/InfoSink.h"
+#include "compiler/translator/IntermTraverse.h"
 
 namespace sh
 {

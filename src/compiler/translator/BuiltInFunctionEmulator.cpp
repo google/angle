@@ -4,10 +4,11 @@
 // found in the LICENSE file.
 //
 
-#include "angle_gl.h"
 #include "compiler/translator/BuiltInFunctionEmulator.h"
-#include "compiler/translator/SymbolTable.h"
+#include "angle_gl.h"
 #include "compiler/translator/Cache.h"
+#include "compiler/translator/IntermTraverse.h"
+#include "compiler/translator/SymbolTable.h"
 
 namespace sh
 {

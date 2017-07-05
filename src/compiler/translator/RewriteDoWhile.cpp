@@ -9,7 +9,7 @@
 
 #include "compiler/translator/RewriteDoWhile.h"
 
-#include "compiler/translator/IntermNode.h"
+#include "compiler/translator/IntermTraverse.h"
 
 namespace sh
 {

@@ -11,7 +11,7 @@
 
 #include "compiler/translator/FindMain.h"
 #include "compiler/translator/InitializeVariables.h"
-#include "compiler/translator/IntermNode.h"
+#include "compiler/translator/IntermTraverse.h"
 #include "compiler/translator/SymbolTable.h"
 
 namespace sh

@@ -10,6 +10,7 @@
 
 #include "angle_gl.h"
 #include "compiler/translator/Compiler.h"
+#include "compiler/translator/IntermTraverse.h"
 
 namespace sh
 {

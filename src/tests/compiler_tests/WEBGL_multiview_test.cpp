@@ -8,7 +8,7 @@
 //
 
 #include "GLSLANG/ShaderLang.h"
-#include "compiler/translator/IntermNode.h"
+#include "compiler/translator/IntermTraverse.h"
 #include "tests/test_utils/ShaderCompileTreeTest.h"
 #include "tests/test_utils/compiler_test.h"
 

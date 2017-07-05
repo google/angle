@@ -9,10 +9,20 @@
 
 #include <map>
 
-#include "compiler/translator/IntermNode.h"
+#include "GLSLANG/ShaderLang.h"
+#include "compiler/translator/Common.h"
 
 #define HASHED_NAME_PREFIX "webgl_"
 
+namespace sh
+{
+
 typedef std::map<TPersistString, TPersistString> NameMap;
+
+// Return the original name if hash function pointer is NULL;
+// otherwise return the hashed name.
+TString HashName(const TString &name, ShHashFunction64 hashFunction);
+
+}  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_HASHNAMES_H_

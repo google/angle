@@ -8,6 +8,7 @@
 
 #include "common/debug.h"
 #include "common/mathutil.h"
+#include "compiler/translator/Compiler.h"
 
 #include <cfloat>
 
@@ -1160,7 +1161,7 @@ TString TOutputGLSLBase::hashName(const TName &name)
     NameMap::const_iterator it = mNameMap.find(name.getString().c_str());
     if (it != mNameMap.end())
         return it->second.c_str();
-    TString hashedName                 = TIntermTraverser::hash(name.getString(), mHashFunction);
+    TString hashedName                 = HashName(name.getString(), mHashFunction);
     mNameMap[name.getString().c_str()] = hashedName.c_str();
     return hashedName;
 }

@@ -10,7 +10,7 @@
 #include "common/angleutils.h"
 
 #include "compiler/translator/FindMain.h"
-#include "compiler/translator/IntermNode.h"
+#include "compiler/translator/IntermTraverse.h"
 #include "tests/test_utils/ShaderCompileTreeTest.h"
 
 #include <algorithm>
