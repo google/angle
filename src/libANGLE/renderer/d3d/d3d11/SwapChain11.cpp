@@ -348,9 +348,21 @@ EGLint SwapChain11::resetOffscreenDepthBuffer(int backbufferWidth, int backbuffe
         depthStencilTextureDesc.MipLevels = 1;
         depthStencilTextureDesc.ArraySize = 1;
         depthStencilTextureDesc.SampleDesc.Count   = getD3DSamples();
-        depthStencilTextureDesc.SampleDesc.Quality = 0;
         depthStencilTextureDesc.Usage = D3D11_USAGE_DEFAULT;
         depthStencilTextureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+
+        // If there is a multisampled offscreen color texture, the offscreen depth-stencil texture
+        // must also have the same quality value.
+        if (mOffscreenTexture.valid() && getD3DSamples() > 1)
+        {
+            D3D11_TEXTURE2D_DESC offscreenTextureDesc = {0};
+            mOffscreenTexture.getDesc(&offscreenTextureDesc);
+            depthStencilTextureDesc.SampleDesc.Quality = offscreenTextureDesc.SampleDesc.Quality;
+        }
+        else
+        {
+            depthStencilTextureDesc.SampleDesc.Quality = 0;
+        }
 
         if (depthBufferFormatInfo.srvFormat != DXGI_FORMAT_UNKNOWN)
         {
