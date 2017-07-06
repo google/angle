@@ -1265,7 +1265,6 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.stencil_texturing.misc.base_level = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.texture.gather.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.boolean.sample_mask_* = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.integer.texture_binding_2d_multisample_* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.integer.dispatch_indirect_buffer_binding_* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.integer.program_pipeline_binding_* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.indexed.sample_mask_value_* = FAIL

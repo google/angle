@@ -659,6 +659,7 @@ bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsign
         case GL_MAX_COMBINED_SHADER_STORAGE_BLOCKS:
         case GL_SHADER_STORAGE_BUFFER_BINDING:
         case GL_SHADER_STORAGE_BUFFER_OFFSET_ALIGNMENT:
+        case GL_TEXTURE_BINDING_2D_MULTISAMPLE:
             *type      = GL_INT;
             *numParams = 1;
             return true;

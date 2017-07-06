@@ -2476,6 +2476,7 @@ bool ValidateStateQuery(ValidationContext *context,
         case GL_TEXTURE_BINDING_CUBE_MAP:
         case GL_TEXTURE_BINDING_3D:
         case GL_TEXTURE_BINDING_2D_ARRAY:
+        case GL_TEXTURE_BINDING_2D_MULTISAMPLE:
             break;
         case GL_TEXTURE_BINDING_EXTERNAL_OES:
             if (!context->getExtensions().eglStreamConsumerExternal &&
