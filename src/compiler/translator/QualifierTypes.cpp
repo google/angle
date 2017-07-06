@@ -606,6 +606,42 @@ TLayoutQualifier JoinLayoutQualifiers(TLayoutQualifier leftQualifier,
         joinedQualifier.imageInternalFormat = rightQualifier.imageInternalFormat;
     }
 
+    if (rightQualifier.primitiveType != EptUndefined)
+    {
+        if (joinedQualifier.primitiveType != EptUndefined &&
+            joinedQualifier.primitiveType != rightQualifier.primitiveType)
+        {
+            diagnostics->error(rightQualifierLocation,
+                               "Cannot have multiple different primitive specifiers",
+                               getGeometryShaderPrimitiveTypeString(rightQualifier.primitiveType));
+        }
+        joinedQualifier.primitiveType = rightQualifier.primitiveType;
+    }
+
+    if (rightQualifier.invocations != 0)
+    {
+        if (joinedQualifier.invocations != 0 &&
+            joinedQualifier.invocations != rightQualifier.invocations)
+        {
+            diagnostics->error(rightQualifierLocation,
+                               "Cannot have multiple different invocations specifiers",
+                               "invocations");
+        }
+        joinedQualifier.invocations = rightQualifier.invocations;
+    }
+
+    if (rightQualifier.maxVertices != -1)
+    {
+        if (joinedQualifier.maxVertices != -1 &&
+            joinedQualifier.maxVertices != rightQualifier.maxVertices)
+        {
+            diagnostics->error(rightQualifierLocation,
+                               "Cannot have multiple different max_vertices specifiers",
+                               "max_vertices");
+        }
+        joinedQualifier.maxVertices = rightQualifier.maxVertices;
+    }
+
     return joinedQualifier;
 }
 

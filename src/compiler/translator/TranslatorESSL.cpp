@@ -95,6 +95,13 @@ void TranslatorESSL::translate(TIntermBlock *root, ShCompileOptions compileOptio
              << ", local_size_z=" << localSize[2] << ") in;\n";
     }
 
+    if (getShaderType() == GL_GEOMETRY_SHADER_OES)
+    {
+        WriteGeometryShaderLayoutQualifiers(
+            sink, getGeometryShaderInputPrimitiveType(), getGeometryShaderInvocations(),
+            getGeometryShaderOutputPrimitiveType(), getGeometryShaderMaxVertices());
+    }
+
     // Write translated shader.
     TOutputESSL outputESSL(sink, getArrayIndexClampingStrategy(), getHashFunction(), getNameMap(),
                            &getSymbolTable(), getShaderType(), shaderVer, precisionEmulation,
@@ -152,6 +159,22 @@ void TranslatorESSL::writeExtensionBehavior(ShCompileOptions compileOptions)
                     // OVR_multiview(2) extension is requested.
                     sink << "#extension GL_NV_viewport_array2 : require\n";
                 }
+            }
+            else if (iter->first == "GL_OES_geometry_shader")
+            {
+                sink << "#ifdef GL_OES_geometry_shader\n"
+                     << "#extension GL_OES_geometry_shader : " << getBehaviorString(iter->second)
+                     << "\n"
+                     << "#elif defined GL_EXT_geometry_shader\n"
+                     << "#extension GL_EXT_geometry_shader : " << getBehaviorString(iter->second)
+                     << "\n";
+                if (iter->second == EBhRequire)
+                {
+                    sink << "#else\n"
+                         << "#error \"No geometry shader extensions available.\" // Only generate "
+                            "this if the extension is \"required\"\n";
+                }
+                sink << "#endif\n";
             }
             else
             {

@@ -109,6 +109,12 @@ class TOutputGLSLBase : public TIntermTraverser
     ShCompileOptions mCompileOptions;
 };
 
+void WriteGeometryShaderLayoutQualifiers(TInfoSinkBase &out,
+                                         sh::TLayoutPrimitiveType inputPrimitive,
+                                         int invocations,
+                                         sh::TLayoutPrimitiveType outputPrimitive,
+                                         int maxVertices);
+
 }  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_OUTPUTGLSLBASE_H_

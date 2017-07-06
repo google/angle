@@ -164,6 +164,7 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     resources->ARM_shader_framebuffer_fetch    = 0;
     resources->OVR_multiview                   = 0;
     resources->EXT_YUV_target                  = 0;
+    resources->OES_geometry_shader             = 0;
 
     resources->NV_draw_buffers = 0;
 
@@ -224,6 +225,11 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     resources->MaxAtomicCounterBufferSize      = 32;
 
     resources->MaxUniformBufferBindings = 32;
+
+    // TODO(jiawei.shao@intel.com): add complete geometry shader constants.
+    resources->MaxGeometryUniformComponents = 1024;
+    resources->MaxGeometryOutputVertices    = 256;
+    resources->MaxGeometryShaderInvocations = 32;
 }
 
 //

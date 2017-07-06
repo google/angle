@@ -6,6 +6,7 @@
 
 #include "compiler/translator/OutputGLSLBase.h"
 
+#include "angle_gl.h"
 #include "common/debug.h"
 #include "common/mathutil.h"
 #include "compiler/translator/Compiler.h"
@@ -1291,6 +1292,54 @@ void TOutputGLSLBase::declareInterfaceBlock(const TInterfaceBlock *interfaceBloc
         out << ";\n";
     }
     out << "}";
+}
+
+void WriteGeometryShaderLayoutQualifiers(TInfoSinkBase &out,
+                                         sh::TLayoutPrimitiveType inputPrimitive,
+                                         int invocations,
+                                         sh::TLayoutPrimitiveType outputPrimitive,
+                                         int maxVertices)
+{
+    // Omit 'invocations = 1'
+    if (inputPrimitive != EptUndefined || invocations > 1)
+    {
+        out << "layout (";
+
+        if (inputPrimitive != EptUndefined)
+        {
+            out << getGeometryShaderPrimitiveTypeString(inputPrimitive);
+        }
+
+        if (invocations > 1)
+        {
+            if (inputPrimitive != EptUndefined)
+            {
+                out << ", ";
+            }
+            out << "invocations = " << invocations;
+        }
+        out << ") in;\n";
+    }
+
+    if (outputPrimitive != EptUndefined || maxVertices != -1)
+    {
+        out << "layout (";
+
+        if (outputPrimitive != EptUndefined)
+        {
+            out << getGeometryShaderPrimitiveTypeString(outputPrimitive);
+        }
+
+        if (maxVertices != -1)
+        {
+            if (outputPrimitive != EptUndefined)
+            {
+                out << ", ";
+            }
+            out << "max_vertices = " << maxVertices;
+        }
+        out << ") out;\n";
+    }
 }
 
 }  // namespace sh

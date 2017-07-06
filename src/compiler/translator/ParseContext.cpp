@@ -178,7 +178,13 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mMaxUniformBufferBindings(resources.MaxUniformBufferBindings),
       mMaxAtomicCounterBindings(resources.MaxAtomicCounterBindings),
       mMaxShaderStorageBufferBindings(resources.MaxShaderStorageBufferBindings),
-      mDeclaringFunction(false)
+      mDeclaringFunction(false),
+      mGeometryShaderInputPrimitiveType(EptUndefined),
+      mGeometryShaderOutputPrimitiveType(EptUndefined),
+      mGeometryShaderInvocations(0),
+      mGeometryShaderMaxVertices(-1),
+      mMaxGeometryShaderInvocations(resources.MaxGeometryShaderInvocations),
+      mMaxGeometryShaderMaxVertices(resources.MaxGeometryOutputVertices)
 {
     mComputeShaderLocalSize.fill(-1);
 }
@@ -2654,6 +2660,133 @@ void TParseContext::parseDefaultPrecisionQualifier(const TPrecision precision,
     symbolTable.setDefaultPrecision(type.getBasicType(), precision);
 }
 
+bool TParseContext::checkPrimitiveTypeMatchesTypeQualifier(const TTypeQualifier &typeQualifier)
+{
+    switch (typeQualifier.layoutQualifier.primitiveType)
+    {
+        case EptLines:
+        case EptLinesAdjacency:
+        case EptTriangles:
+        case EptTrianglesAdjacency:
+            return typeQualifier.qualifier == EvqGeometryIn;
+
+        case EptLineStrip:
+        case EptTriangleStrip:
+            return typeQualifier.qualifier == EvqGeometryOut;
+
+        case EptPoints:
+            return true;
+
+        default:
+            UNREACHABLE();
+            return false;
+    }
+}
+
+bool TParseContext::parseGeometryShaderInputLayoutQualifier(const TTypeQualifier &typeQualifier)
+{
+    ASSERT(typeQualifier.qualifier == EvqGeometryIn);
+
+    const TLayoutQualifier &layoutQualifier = typeQualifier.layoutQualifier;
+
+    if (layoutQualifier.maxVertices != -1)
+    {
+        error(typeQualifier.line,
+              "max_vertices can only be declared in 'out' layout in a geometry shader", "layout");
+        return false;
+    }
+
+    // Set mGeometryInputPrimitiveType if exists
+    if (layoutQualifier.primitiveType != EptUndefined)
+    {
+        if (!checkPrimitiveTypeMatchesTypeQualifier(typeQualifier))
+        {
+            error(typeQualifier.line, "invalid primitive type for 'in' layout", "layout");
+            return false;
+        }
+
+        if (mGeometryShaderInputPrimitiveType == EptUndefined)
+        {
+            mGeometryShaderInputPrimitiveType = layoutQualifier.primitiveType;
+        }
+        else if (mGeometryShaderInputPrimitiveType != layoutQualifier.primitiveType)
+        {
+            error(typeQualifier.line, "primitive doesn't match earlier input primitive declaration",
+                  "layout");
+            return false;
+        }
+    }
+
+    // Set mGeometryInvocations if exists
+    if (layoutQualifier.invocations > 0)
+    {
+        if (mGeometryShaderInvocations == 0)
+        {
+            mGeometryShaderInvocations = layoutQualifier.invocations;
+        }
+        else if (mGeometryShaderInvocations != layoutQualifier.invocations)
+        {
+            error(typeQualifier.line, "invocations contradicts to the earlier declaration",
+                  "layout");
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool TParseContext::parseGeometryShaderOutputLayoutQualifier(const TTypeQualifier &typeQualifier)
+{
+    ASSERT(typeQualifier.qualifier == EvqGeometryOut);
+
+    const TLayoutQualifier &layoutQualifier = typeQualifier.layoutQualifier;
+
+    if (layoutQualifier.invocations > 0)
+    {
+        error(typeQualifier.line,
+              "invocations can only be declared in 'in' layout in a geometry shader", "layout");
+        return false;
+    }
+
+    // Set mGeometryOutputPrimitiveType if exists
+    if (layoutQualifier.primitiveType != EptUndefined)
+    {
+        if (!checkPrimitiveTypeMatchesTypeQualifier(typeQualifier))
+        {
+            error(typeQualifier.line, "invalid primitive type for 'out' layout", "layout");
+            return false;
+        }
+
+        if (mGeometryShaderOutputPrimitiveType == EptUndefined)
+        {
+            mGeometryShaderOutputPrimitiveType = layoutQualifier.primitiveType;
+        }
+        else if (mGeometryShaderOutputPrimitiveType != layoutQualifier.primitiveType)
+        {
+            error(typeQualifier.line,
+                  "primitive doesn't match earlier output primitive declaration", "layout");
+            return false;
+        }
+    }
+
+    // Set mGeometryMaxVertices if exists
+    if (layoutQualifier.maxVertices > -1)
+    {
+        if (mGeometryShaderMaxVertices == -1)
+        {
+            mGeometryShaderMaxVertices = layoutQualifier.maxVertices;
+        }
+        else if (mGeometryShaderMaxVertices != layoutQualifier.maxVertices)
+        {
+            error(typeQualifier.line, "max_vertices contradicts to the earlier declaration",
+                  "layout");
+            return false;
+        }
+    }
+
+    return true;
+}
+
 void TParseContext::parseGlobalLayoutQualifier(const TTypeQualifierBuilder &typeQualifierBuilder)
 {
     TTypeQualifier typeQualifier = typeQualifierBuilder.getVariableTypeQualifier(mDiagnostics);
@@ -2734,6 +2867,33 @@ void TParseContext::parseGlobalLayoutQualifier(const TTypeQualifierBuilder &type
         }
 
         mComputeShaderLocalSizeDeclared = true;
+    }
+    else if (typeQualifier.qualifier == EvqGeometryIn)
+    {
+        if (mShaderVersion < 310)
+        {
+            error(typeQualifier.line, "in type qualifier supported in GLSL ES 3.10 only", "layout");
+            return;
+        }
+
+        if (!parseGeometryShaderInputLayoutQualifier(typeQualifier))
+        {
+            return;
+        }
+    }
+    else if (typeQualifier.qualifier == EvqGeometryOut)
+    {
+        if (mShaderVersion < 310)
+        {
+            error(typeQualifier.line, "out type qualifier supported in GLSL ES 3.10 only",
+                  "layout");
+            return;
+        }
+
+        if (!parseGeometryShaderOutputLayoutQualifier(typeQualifier))
+        {
+            return;
+        }
     }
     else if (isMultiviewExtensionEnabled() && typeQualifier.qualifier == EvqVertexIn)
     {
@@ -3833,6 +3993,48 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierTyp
         checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
         qualifier.imageInternalFormat = EiifR32UI;
     }
+    else if (qualifierType == "points" && isExtensionEnabled("GL_OES_geometry_shader") &&
+             mShaderType == GL_GEOMETRY_SHADER_OES)
+    {
+        checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
+        qualifier.primitiveType = EptPoints;
+    }
+    else if (qualifierType == "lines" && isExtensionEnabled("GL_OES_geometry_shader") &&
+             mShaderType == GL_GEOMETRY_SHADER_OES)
+    {
+        checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
+        qualifier.primitiveType = EptLines;
+    }
+    else if (qualifierType == "lines_adjacency" && isExtensionEnabled("GL_OES_geometry_shader") &&
+             mShaderType == GL_GEOMETRY_SHADER_OES)
+    {
+        checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
+        qualifier.primitiveType = EptLinesAdjacency;
+    }
+    else if (qualifierType == "triangles" && isExtensionEnabled("GL_OES_geometry_shader") &&
+             mShaderType == GL_GEOMETRY_SHADER_OES)
+    {
+        checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
+        qualifier.primitiveType = EptTriangles;
+    }
+    else if (qualifierType == "triangles_adjacency" &&
+             isExtensionEnabled("GL_OES_geometry_shader") && mShaderType == GL_GEOMETRY_SHADER_OES)
+    {
+        checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
+        qualifier.primitiveType = EptTrianglesAdjacency;
+    }
+    else if (qualifierType == "line_strip" && isExtensionEnabled("GL_OES_geometry_shader") &&
+             mShaderType == GL_GEOMETRY_SHADER_OES)
+    {
+        checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
+        qualifier.primitiveType = EptLineStrip;
+    }
+    else if (qualifierType == "triangle_strip" && isExtensionEnabled("GL_OES_geometry_shader") &&
+             mShaderType == GL_GEOMETRY_SHADER_OES)
+    {
+        checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
+        qualifier.primitiveType = EptTriangleStrip;
+    }
 
     else
     {
@@ -3873,6 +4075,46 @@ void TParseContext::parseNumViews(int intValue,
         error(intValueLine, "out of range: num_views must be positive", intValueString.c_str());
     }
     *numViews = intValue;
+}
+
+void TParseContext::parseInvocations(int intValue,
+                                     const TSourceLoc &intValueLine,
+                                     const std::string &intValueString,
+                                     int *numInvocations)
+{
+    // Although SPEC isn't clear whether invocations can be less than 1, we add this limit because
+    // it doesn't make sense to accept invocations <= 0.
+    if (intValue < 1 || intValue > mMaxGeometryShaderInvocations)
+    {
+        error(intValueLine,
+              "out of range: invocations must be in the range of [1, "
+              "MAX_GEOMETRY_SHADER_INVOCATIONS_OES]",
+              intValueString.c_str());
+    }
+    else
+    {
+        *numInvocations = intValue;
+    }
+}
+
+void TParseContext::parseMaxVertices(int intValue,
+                                     const TSourceLoc &intValueLine,
+                                     const std::string &intValueString,
+                                     int *maxVertices)
+{
+    // Although SPEC isn't clear whether max_vertices can be less than 0, we add this limit because
+    // it doesn't make sense to accept max_vertices < 0.
+    if (intValue < 0 || intValue > mMaxGeometryShaderMaxVertices)
+    {
+        error(
+            intValueLine,
+            "out of range: max_vertices must be in the range of [0, gl_MaxGeometryOutputVertices]",
+            intValueString.c_str());
+    }
+    else
+    {
+        *maxVertices = intValue;
+    }
 }
 
 TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierType,
@@ -3944,6 +4186,17 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierTyp
     {
         parseNumViews(intValue, intValueLine, intValueString, &qualifier.numViews);
     }
+    else if (qualifierType == "invocations" && isExtensionEnabled("GL_OES_geometry_shader") &&
+             mShaderType == GL_GEOMETRY_SHADER_OES)
+    {
+        parseInvocations(intValue, intValueLine, intValueString, &qualifier.invocations);
+    }
+    else if (qualifierType == "max_vertices" && isExtensionEnabled("GL_OES_geometry_shader") &&
+             mShaderType == GL_GEOMETRY_SHADER_OES)
+    {
+        parseMaxVertices(intValue, intValueLine, intValueString, &qualifier.maxVertices);
+    }
+
     else
     {
         error(qualifierTypeLine, "invalid layout qualifier", qualifierType.c_str());
@@ -3981,23 +4234,39 @@ TStorageQualifierWrapper *TParseContext::parseInQualifier(const TSourceLoc &loc)
     {
         return new TStorageQualifierWrapper(EvqIn, loc);
     }
-    if (getShaderType() == GL_FRAGMENT_SHADER)
+
+    switch (getShaderType())
     {
-        if (mShaderVersion < 300)
+        case GL_VERTEX_SHADER:
         {
-            error(loc, "storage qualifier supported in GLSL ES 3.00 and above only", "in");
+            if (mShaderVersion < 300 && !isMultiviewExtensionEnabled())
+            {
+                error(loc, "storage qualifier supported in GLSL ES 3.00 and above only", "in");
+            }
+            return new TStorageQualifierWrapper(EvqVertexIn, loc);
         }
-        return new TStorageQualifierWrapper(EvqFragmentIn, loc);
-    }
-    if (getShaderType() == GL_VERTEX_SHADER)
-    {
-        if (mShaderVersion < 300 && !isMultiviewExtensionEnabled())
+        case GL_FRAGMENT_SHADER:
         {
-            error(loc, "storage qualifier supported in GLSL ES 3.00 and above only", "in");
+            if (mShaderVersion < 300)
+            {
+                error(loc, "storage qualifier supported in GLSL ES 3.00 and above only", "in");
+            }
+            return new TStorageQualifierWrapper(EvqFragmentIn, loc);
         }
-        return new TStorageQualifierWrapper(EvqVertexIn, loc);
+        case GL_COMPUTE_SHADER:
+        {
+            return new TStorageQualifierWrapper(EvqComputeIn, loc);
+        }
+        case GL_GEOMETRY_SHADER_OES:
+        {
+            return new TStorageQualifierWrapper(EvqGeometryIn, loc);
+        }
+        default:
+        {
+            UNREACHABLE();
+            return new TStorageQualifierWrapper(EvqLast, loc);
+        }
     }
-    return new TStorageQualifierWrapper(EvqComputeIn, loc);
 }
 
 TStorageQualifierWrapper *TParseContext::parseOutQualifier(const TSourceLoc &loc)
@@ -4006,19 +4275,39 @@ TStorageQualifierWrapper *TParseContext::parseOutQualifier(const TSourceLoc &loc
     {
         return new TStorageQualifierWrapper(EvqOut, loc);
     }
-    if (mShaderVersion < 300)
+    switch (getShaderType())
     {
-        error(loc, "storage qualifier supported in GLSL ES 3.00 and above only", "out");
+        case GL_VERTEX_SHADER:
+        {
+            if (mShaderVersion < 300)
+            {
+                error(loc, "storage qualifier supported in GLSL ES 3.00 and above only", "out");
+            }
+            return new TStorageQualifierWrapper(EvqVertexOut, loc);
+        }
+        case GL_FRAGMENT_SHADER:
+        {
+            if (mShaderVersion < 300)
+            {
+                error(loc, "storage qualifier supported in GLSL ES 3.00 and above only", "out");
+            }
+            return new TStorageQualifierWrapper(EvqFragmentOut, loc);
+        }
+        case GL_COMPUTE_SHADER:
+        {
+            error(loc, "storage qualifier isn't supported in compute shaders", "out");
+            return new TStorageQualifierWrapper(EvqLast, loc);
+        }
+        case GL_GEOMETRY_SHADER_OES:
+        {
+            return new TStorageQualifierWrapper(EvqGeometryOut, loc);
+        }
+        default:
+        {
+            UNREACHABLE();
+            return new TStorageQualifierWrapper(EvqLast, loc);
+        }
     }
-    if (getShaderType() != GL_VERTEX_SHADER && getShaderType() != GL_FRAGMENT_SHADER)
-    {
-        error(loc, "storage qualifier supported in vertex and fragment shaders only", "out");
-    }
-    if (getShaderType() == GL_VERTEX_SHADER)
-    {
-        return new TStorageQualifierWrapper(EvqVertexOut, loc);
-    }
-    return new TStorageQualifierWrapper(EvqFragmentOut, loc);
 }
 
 TStorageQualifierWrapper *TParseContext::parseInOutQualifier(const TSourceLoc &loc)

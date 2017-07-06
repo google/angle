@@ -200,6 +200,13 @@ void TranslatorGLSL::translate(TIntermBlock *root, ShCompileOptions compileOptio
              << ", local_size_z=" << localSize[2] << ") in;\n";
     }
 
+    if (getShaderType() == GL_GEOMETRY_SHADER_OES)
+    {
+        WriteGeometryShaderLayoutQualifiers(
+            sink, getGeometryShaderInputPrimitiveType(), getGeometryShaderInvocations(),
+            getGeometryShaderOutputPrimitiveType(), getGeometryShaderMaxVertices());
+    }
+
     // Write translated shader.
     TOutputGLSL outputGLSL(sink, getArrayIndexClampingStrategy(), getHashFunction(), getNameMap(),
                            &getSymbolTable(), getShaderType(), getShaderVersion(), getOutputType(),
@@ -266,6 +273,12 @@ void TranslatorGLSL::writeExtensionBehavior(TIntermNode *root, ShCompileOptions 
             if (iter.first == "GL_EXT_draw_buffers")
             {
                 sink << "#extension GL_ARB_draw_buffers : " << getBehaviorString(iter.second)
+                     << "\n";
+            }
+
+            if (iter.first == "GL_OES_geometry_shader")
+            {
+                sink << "#extension GL_ARB_geometry_shader4 : " << getBehaviorString(iter.second)
                      << "\n";
             }
         }

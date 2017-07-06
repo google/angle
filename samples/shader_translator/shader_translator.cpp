@@ -63,6 +63,7 @@ void GenerateResources(ShBuiltInResources *resources)
 
     resources->OES_standard_derivatives = 0;
     resources->OES_EGL_image_external = 0;
+    resources->OES_geometry_shader      = 1;
 }
 
 int main(int argc, char *argv[])
@@ -74,6 +75,7 @@ int main(int argc, char *argv[])
     ShHandle vertexCompiler = 0;
     ShHandle fragmentCompiler = 0;
     ShHandle computeCompiler  = 0;
+    ShHandle geometryCompiler       = 0;
     ShShaderSpec spec = SH_GLES2_SPEC;
     ShShaderOutput output = SH_ESSL_OUTPUT;
 
@@ -268,7 +270,14 @@ int main(int argc, char *argv[])
                   }
                   compiler = computeCompiler;
                   break;
-
+              case GL_GEOMETRY_SHADER_OES:
+                  if (geometryCompiler == 0)
+                  {
+                      geometryCompiler =
+                          sh::ConstructCompiler(GL_GEOMETRY_SHADER_OES, spec, output, &resources);
+                  }
+                  compiler = geometryCompiler;
+                  break;
               default: break;
             }
             if (compiler)
@@ -307,7 +316,8 @@ int main(int argc, char *argv[])
         }
     }
 
-    if ((vertexCompiler == 0) && (fragmentCompiler == 0) && (computeCompiler == 0))
+    if ((vertexCompiler == 0) && (fragmentCompiler == 0) && (computeCompiler == 0) &&
+        (geometryCompiler == 0))
         failCode = EFailUsage;
     if (failCode == EFailUsage)
         usage();
@@ -318,6 +328,8 @@ int main(int argc, char *argv[])
         sh::Destruct(fragmentCompiler);
     if (computeCompiler)
         sh::Destruct(computeCompiler);
+    if (geometryCompiler)
+        sh::Destruct(geometryCompiler);
 
     sh::Finalize();
 
@@ -389,6 +401,8 @@ sh::GLenum FindShaderType(const char *fileName)
             return GL_VERTEX_SHADER;
         if (strncmp(ext, ".comp", 5) == 0)
             return GL_COMPUTE_SHADER;
+        if (strncmp(ext, ".geom", 5) == 0)
+            return GL_GEOMETRY_SHADER_OES;
     }
 
     return GL_FRAGMENT_SHADER;

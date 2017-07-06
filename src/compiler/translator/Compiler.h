@@ -125,8 +125,20 @@ class TCompiler : public TShHandleBase
     // Get the resources set by InitBuiltInSymbolTable
     const ShBuiltInResources &getResources() const;
 
-  protected:
+    int getGeometryShaderMaxVertices() const { return mGeometryShaderMaxVertices; }
+    int getGeometryShaderInvocations() const { return mGeometryShaderInvocations; }
+    TLayoutPrimitiveType getGeometryShaderInputPrimitiveType() const
+    {
+        return mGeometryShaderInputPrimitiveType;
+    }
+    TLayoutPrimitiveType getGeometryShaderOutputPrimitiveType() const
+    {
+        return mGeometryShaderOutputPrimitiveType;
+    }
+
     sh::GLenum getShaderType() const { return shaderType; }
+
+  protected:
     // Initialize symbol-table with built-in symbols.
     bool InitBuiltInSymbolTable(const ShBuiltInResources &resources);
     // Compute the string representation of the built-in resources
@@ -240,6 +252,12 @@ class TCompiler : public TShHandleBase
 
     // GL_OVR_multiview num_views.
     int mNumViews;
+
+    // geometry shader parameters.
+    int mGeometryShaderMaxVertices;
+    int mGeometryShaderInvocations;
+    TLayoutPrimitiveType mGeometryShaderInputPrimitiveType;
+    TLayoutPrimitiveType mGeometryShaderOutputPrimitiveType;
 
     // name hashing.
     ShHashFunction64 hashFunction;
