@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "daf3e68a_bc796e18",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-06T19:50:53Z",
+      "side": 1,
+      "message": "I would rather you made this into a clearRenderTarget method. I have plans to make a clearRenderTarget method so making this method clear RenderTargetD3D instead of TextureStorage would help me (then it can also be used with RenderbufferD3D, and also SurfaceD3D).",
+      "range": {
+        "startLine": 309,
+        "startChar": 22,
+        "endLine": 309,
+        "endChar": 41
+      },
+      "revId": "b62724814970c12463de6cc7e96a301141c36e6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3541cd14_2250e534",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 636,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-06T19:50:53Z",
+      "side": 1,
+      "message": "I would call this clear or clearLevel.. for example, having a method Apple::eatApple is redundant, better to call it just eat or eatSlice :)",
+      "range": {
+        "startLine": 636,
+        "startChar": 22,
+        "endLine": 636,
+        "endChar": 34
+      },
+      "revId": "b62724814970c12463de6cc7e96a301141c36e6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
