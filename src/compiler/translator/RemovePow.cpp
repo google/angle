@@ -67,7 +67,7 @@ bool RemovePowTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
         TIntermUnary *exp = new TIntermUnary(EOpExp2, mul);
         exp->setLine(node->getLine());
 
-        queueReplacement(node, exp, OriginalNode::IS_DROPPED);
+        queueReplacement(exp, OriginalNode::IS_DROPPED);
 
         // If the x parameter also needs to be replaced, we need to do that in another traversal,
         // since it's parent node will change in a way that's not handled correctly by updateTree().

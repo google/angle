@@ -33,7 +33,7 @@ class ReplaceVariableTraverser : public TIntermTraverser
         TName &name = node->getName();
         if (name.getString() == mSymbolName)
         {
-            queueReplacement(node, mNewSymbol->deepCopy(), OriginalNode::IS_DROPPED);
+            queueReplacement(mNewSymbol->deepCopy(), OriginalNode::IS_DROPPED);
         }
     }
 

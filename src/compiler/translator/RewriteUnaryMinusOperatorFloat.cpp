@@ -77,7 +77,7 @@ bool Traverser::visitUnary(Visit visit, TIntermUnary *node)
     TIntermBinary *sub = new TIntermBinary(EOpSub, zero, fValue);
     sub->setLine(fValue->getLine());
 
-    queueReplacement(node, sub, OriginalNode::IS_DROPPED);
+    queueReplacement(sub, OriginalNode::IS_DROPPED);
 
     mFound = true;
     return false;

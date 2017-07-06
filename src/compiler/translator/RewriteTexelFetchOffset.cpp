@@ -139,7 +139,7 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
     texelFetchNode->setLine(node->getLine());
 
     // Replace the old node by this new node.
-    queueReplacement(node, texelFetchNode, OriginalNode::IS_DROPPED);
+    queueReplacement(texelFetchNode, OriginalNode::IS_DROPPED);
     mFound = true;
     return false;
 }

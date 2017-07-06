@@ -493,7 +493,7 @@ bool RemoveDynamicIndexingTraverser::visitBinary(Visit visit, TIntermBinary *nod
                     node, tempIndex, createTempSymbol(fieldType), indexedWriteFunctionId);
                 insertionsAfter.push_back(indexedWriteCall);
                 insertStatementsInParentBlock(insertionsBefore, insertionsAfter);
-                queueReplacement(node, createTempSymbol(fieldType), OriginalNode::IS_DROPPED);
+                queueReplacement(createTempSymbol(fieldType), OriginalNode::IS_DROPPED);
                 mUsedTreeInsertion = true;
             }
             else
@@ -506,7 +506,7 @@ bool RemoveDynamicIndexingTraverser::visitBinary(Visit visit, TIntermBinary *nod
                 ASSERT(!mRemoveIndexSideEffectsInSubtree);
                 TIntermAggregate *indexingCall = CreateIndexFunctionCall(
                     node, EnsureSignedInt(node->getRight()), indexingFunctionId);
-                queueReplacement(node, indexingCall, OriginalNode::IS_DROPPED);
+                queueReplacement(indexingCall, OriginalNode::IS_DROPPED);
             }
         }
     }

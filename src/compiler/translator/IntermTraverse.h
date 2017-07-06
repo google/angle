@@ -236,9 +236,10 @@ class TIntermTraverser : angle::NonCopyable
     };
 
     void clearReplacementQueue();
-    void queueReplacement(TIntermNode *original,
-                          TIntermNode *replacement,
-                          OriginalNode originalStatus);
+
+    // Replace the node currently being visited with replacement.
+    void queueReplacement(TIntermNode *replacement, OriginalNode originalStatus);
+    // Explicitly specify a node to replace with replacement.
     void queueReplacementWithParent(TIntermNode *parent,
                                     TIntermNode *original,
                                     TIntermNode *replacement,

@@ -117,7 +117,7 @@ bool ArrayReturnValueToOutParameterTraverser::visitFunctionPrototype(Visit visit
         *replacement->getFunctionSymbolInfo() = *node->getFunctionSymbolInfo();
         replacement->setLine(node->getLine());
 
-        queueReplacement(node, replacement, OriginalNode::IS_DROPPED);
+        queueReplacement(replacement, OriginalNode::IS_DROPPED);
     }
     return false;
 }
@@ -186,7 +186,7 @@ bool ArrayReturnValueToOutParameterTraverser::visitBinary(Visit visit, TIntermBi
         if (rightAgg != nullptr && rightAgg->getOp() == EOpCallFunctionInAST)
         {
             TIntermAggregate *replacementCall = CreateReplacementCall(rightAgg, node->getLeft());
-            queueReplacement(node, replacementCall, OriginalNode::IS_DROPPED);
+            queueReplacement(replacementCall, OriginalNode::IS_DROPPED);
         }
     }
     return false;

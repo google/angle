@@ -71,7 +71,7 @@ void GLFragColorBroadcastTraverser::visitSymbol(TIntermSymbol *node)
 {
     if (node->getSymbol() == "gl_FragColor")
     {
-        queueReplacement(node, constructGLFragDataNode(0), OriginalNode::IS_DROPPED);
+        queueReplacement(constructGLFragDataNode(0), OriginalNode::IS_DROPPED);
         mGLFragColorUsed = true;
     }
 }

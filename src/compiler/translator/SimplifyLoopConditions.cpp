@@ -264,7 +264,7 @@ void SimplifyLoopConditionsTraverser::traverseLoop(TIntermLoop *node)
                 ELoopWhile, nullptr, createTempSymbol(conditionInitializer->getType()), nullptr,
                 whileLoopBody);
             loopScope->getSequence()->push_back(whileLoop);
-            queueReplacement(node, loopScope, OriginalNode::IS_DROPPED);
+            queueReplacement(loopScope, OriginalNode::IS_DROPPED);
 
             // After this the old body node will be traversed and loops inside it may be
             // transformed. This is fine, since the old body node will still be in the AST after the

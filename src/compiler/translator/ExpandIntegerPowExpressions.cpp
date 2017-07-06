@@ -139,7 +139,7 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
         current                       = div;
     }
 
-    queueReplacement(node, current, OriginalNode::IS_DROPPED);
+    queueReplacement(current, OriginalNode::IS_DROPPED);
     mFound = true;
     return false;
 }

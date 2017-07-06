@@ -98,7 +98,7 @@ bool SplitSequenceOperatorTraverser::visitBinary(Visit visit, TIntermBinary *nod
                 insertions.push_back(node->getLeft());
                 insertStatementsInParentBlock(insertions);
                 // Replace the comma node with its right side operand.
-                queueReplacement(node, node->getRight(), OriginalNode::IS_DROPPED);
+                queueReplacement(node->getRight(), OriginalNode::IS_DROPPED);
             }
             mInsideSequenceOperator--;
         }

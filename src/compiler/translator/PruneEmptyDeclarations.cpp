@@ -76,7 +76,7 @@ bool PruneEmptyDeclarationsTraverser::visitDeclaration(Visit, TIntermDeclaration
                 }
                 else
                 {
-                    queueReplacement(node, nullptr, OriginalNode::IS_DROPPED);
+                    queueReplacement(nullptr, OriginalNode::IS_DROPPED);
                 }
             }
             else if (sym->getType().getQualifier() != EvqGlobal &&

@@ -90,7 +90,7 @@ bool UnfoldShortCircuitTraverser::visitBinary(Visit visit, TIntermBinary *node)
 
             insertStatementsInParentBlock(insertions);
 
-            queueReplacement(node, createTempSymbol(boolType), OriginalNode::IS_DROPPED);
+            queueReplacement(createTempSymbol(boolType), OriginalNode::IS_DROPPED);
             return false;
         }
         case EOpLogicalAnd:
@@ -114,7 +114,7 @@ bool UnfoldShortCircuitTraverser::visitBinary(Visit visit, TIntermBinary *node)
 
             insertStatementsInParentBlock(insertions);
 
-            queueReplacement(node, createTempSymbol(boolType), OriginalNode::IS_DROPPED);
+            queueReplacement(createTempSymbol(boolType), OriginalNode::IS_DROPPED);
             return false;
         }
         default:
@@ -157,7 +157,7 @@ bool UnfoldShortCircuitTraverser::visitTernary(Visit visit, TIntermTernary *node
     insertStatementsInParentBlock(insertions);
 
     TIntermSymbol *ternaryResult = createTempSymbol(node->getType());
-    queueReplacement(node, ternaryResult, OriginalNode::IS_DROPPED);
+    queueReplacement(ternaryResult, OriginalNode::IS_DROPPED);
 
     return false;
 }
