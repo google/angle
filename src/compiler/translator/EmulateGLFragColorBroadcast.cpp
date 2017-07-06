@@ -84,7 +84,7 @@ void GLFragColorBroadcastTraverser::broadcastGLFragColor(TIntermBlock *root)
     {
         return;
     }
-    TIntermSequence *mainSequence = FindMain(root)->getBody()->getSequence();
+    TIntermSequence *mainSequence = FindMainBody(root)->getSequence();
     // Now insert statements
     //   gl_FragData[1] = gl_FragData[0];
     //   ...

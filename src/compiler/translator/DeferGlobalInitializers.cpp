@@ -106,10 +106,7 @@ void InsertInitCodeToMain(TIntermBlock *root, TIntermSequence *deferredInitializ
     TIntermBlock *initGlobalsBlock = new TIntermBlock();
     initGlobalsBlock->getSequence()->swap(*deferredInitializers);
 
-    TIntermFunctionDefinition *main = FindMain(root);
-    ASSERT(main != nullptr);
-    TIntermBlock *mainBody = main->getBody();
-    ASSERT(mainBody != nullptr);
+    TIntermBlock *mainBody = FindMainBody(root);
     mainBody->getSequence()->insert(mainBody->getSequence()->begin(), initGlobalsBlock);
 }
 

@@ -224,10 +224,7 @@ void InitializeVariables(TIntermBlock *root,
                          ShShaderSpec shaderSpec,
                          const TExtensionBehavior &extensionBehavior)
 {
-
-    TIntermFunctionDefinition *main = FindMain(root);
-    ASSERT(main != nullptr);
-    TIntermBlock *body = main->getBody();
+    TIntermBlock *body = FindMainBody(root);
     InsertInitCode(body->getSequence(), vars, symbolTable, shaderVersion, shaderSpec,
                    extensionBehavior);
 }
