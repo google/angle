@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b1c650e6_2d43219f",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-06T15:47:09Z",
+      "side": 1,
+      "message": "nit: this could be moved next to the ViewID-related code at the beginning of the function.",
+      "revId": "f8d10a4a1fcfff0a4cc956d1a231bcc50b43b862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
