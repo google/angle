@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b31dc65b_d647cbb9",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-06T14:42:17Z",
+      "side": 1,
+      "message": "Just \"newSymbolNode\" would be clearer.",
+      "range": {
+        "startLine": 95,
+        "startChar": 84,
+        "endLine": 96,
+        "endChar": 30
+      },
+      "revId": "c5250398f9afeeb2d5f4aa58446508891d8d87a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf15e280_674823d3",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-06T14:42:17Z",
+      "side": 1,
+      "message": "Not needed here.",
+      "range": {
+        "startLine": 107,
+        "startChar": 28,
+        "endLine": 107,
+        "endChar": 50
+      },
+      "revId": "c5250398f9afeeb2d5f4aa58446508891d8d87a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f4581e7a_0ff76733",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-06T14:42:17Z",
+      "side": 1,
+      "message": "What I meant with my earlier comment was make a DeclareGlobalVariable() function that declares a single global and use it for both ViewID and InstanceID. That avoids duplicating this logic.",
+      "range": {
+        "startLine": 118,
+        "startChar": 0,
+        "endLine": 120,
+        "endChar": 79
+      },
+      "revId": "c5250398f9afeeb2d5f4aa58446508891d8d87a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eb035404_ff90e649",
+        "filename": "src/compiler/translator/FindMain.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-06T14:42:17Z",
+      "side": 1,
+      "message": "This part of the sentence doesn\u0027t add any information, should leave it out.",
+      "range": {
+        "startLine": 7,
+        "startChar": 15,
+        "endLine": 7,
+        "endChar": 28
+      },
+      "revId": "c5250398f9afeeb2d5f4aa58446508891d8d87a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
