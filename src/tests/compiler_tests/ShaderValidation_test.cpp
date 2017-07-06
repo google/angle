@@ -3936,3 +3936,41 @@ TEST_F(ComputeShaderEnforcePackingValidationTest, MaxComputeUniformComponents)
         FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
     }
 }
+
+// Test that a function can't be declared with a name starting with "gl_". Note that it's important
+// that the function is not being called.
+TEST_F(FragmentShaderValidationTest, FunctionDeclaredWithReservedName)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "void gl_();\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vec4(0.0);\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test that a function can't be defined with a name starting with "gl_". Note that it's important
+// that the function is not being called.
+TEST_F(FragmentShaderValidationTest, FunctionDefinedWithReservedName)
+{
+    const std::string &shaderString =
+        "precision mediump float;\n"
+        "void gl_()\n"
+        "{\n"
+        "}\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vec4(0.0);\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}

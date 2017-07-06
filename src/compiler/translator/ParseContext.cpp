@@ -563,44 +563,38 @@ bool TParseContext::checkIsAtGlobalLevel(const TSourceLoc &line, const char *tok
     return true;
 }
 
-// For now, keep it simple:  if it starts "gl_", it's reserved, independent
-// of scope.  Except, if the symbol table is at the built-in push-level,
-// which is when we are parsing built-ins.
-// Also checks for "webgl_" and "_webgl_" reserved identifiers if parsing a
-// webgl shader.
+// ESSL 3.00.5 sections 3.8 and 3.9.
+// If it starts "gl_" or contains two consecutive underscores, it's reserved.
+// Also checks for "webgl_" and "_webgl_" reserved identifiers if parsing a webgl shader.
 bool TParseContext::checkIsNotReserved(const TSourceLoc &line, const TString &identifier)
 {
     static const char *reservedErrMsg = "reserved built-in name";
-    if (!symbolTable.atBuiltInLevel())
+    if (identifier.compare(0, 3, "gl_") == 0)
     {
-        if (identifier.compare(0, 3, "gl_") == 0)
+        error(line, reservedErrMsg, "gl_");
+        return false;
+    }
+    if (sh::IsWebGLBasedSpec(mShaderSpec))
+    {
+        if (identifier.compare(0, 6, "webgl_") == 0)
         {
-            error(line, reservedErrMsg, "gl_");
+            error(line, reservedErrMsg, "webgl_");
             return false;
         }
-        if (sh::IsWebGLBasedSpec(mShaderSpec))
+        if (identifier.compare(0, 7, "_webgl_") == 0)
         {
-            if (identifier.compare(0, 6, "webgl_") == 0)
-            {
-                error(line, reservedErrMsg, "webgl_");
-                return false;
-            }
-            if (identifier.compare(0, 7, "_webgl_") == 0)
-            {
-                error(line, reservedErrMsg, "_webgl_");
-                return false;
-            }
-        }
-        if (identifier.find("__") != TString::npos)
-        {
-            error(line,
-                  "identifiers containing two consecutive underscores (__) are reserved as "
-                  "possible future keywords",
-                  identifier.c_str());
+            error(line, reservedErrMsg, "_webgl_");
             return false;
         }
     }
-
+    if (identifier.find("__") != TString::npos)
+    {
+        error(line,
+              "identifiers containing two consecutive underscores (__) are reserved as "
+              "possible future keywords",
+              identifier.c_str());
+        return false;
+    }
     return true;
 }
 
@@ -2737,6 +2731,8 @@ TIntermFunctionPrototype *TParseContext::createPrototypeNodeFromFunction(
     const TSourceLoc &location,
     bool insertParametersToSymbolTable)
 {
+    checkIsNotReserved(location, function.getName());
+
     TIntermFunctionPrototype *prototype =
         new TIntermFunctionPrototype(function.getReturnType(), TSymbolUniqueId(function));
     // TODO(oetuaho@nvidia.com): Instead of converting the function information here, the node could
@@ -2997,7 +2993,6 @@ TFunction *TParseContext::parseFunctionHeader(const TPublicType &type,
 
 TFunction *TParseContext::addNonConstructorFunc(const TString *name, const TSourceLoc &loc)
 {
-    checkIsNotReserved(loc, *name);
     const TType *returnType = TCache::getType(EbtVoid, EbpUndefined);
     return new TFunction(name, returnType);
 }
