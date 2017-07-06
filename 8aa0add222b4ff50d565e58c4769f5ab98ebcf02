@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "483f4af1_d0b607dc",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-06T19:38:18Z",
+      "side": 1,
+      "message": "this is wrong, I think. what happens if the type and format of the vertex attribute changes? We would need to re-stream. If this wasn\u0027t failing the bots, can you add a test that draws with a vertex attribute twice, with the same buffer, but with different type, and doesn\u0027t draw correctly?",
+      "range": {
+        "startLine": 456,
+        "startChar": 3,
+        "endLine": 456,
+        "endChar": 68
+      },
+      "revId": "8aa0add222b4ff50d565e58c4769f5ab98ebcf02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d21eb44a_58526b7a",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 542,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-06T19:38:18Z",
+      "side": 1,
+      "message": "could this also trigger a re-stream?",
+      "range": {
+        "startLine": 542,
+        "startChar": 20,
+        "endLine": 542,
+        "endChar": 38
+      },
+      "revId": "8aa0add222b4ff50d565e58c4769f5ab98ebcf02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2fae4cc3_3a28834b",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 602,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-06T19:38:18Z",
+      "side": 1,
+      "message": "would this possibly trigger a need for a re-stream?",
+      "range": {
+        "startLine": 601,
+        "startChar": 0,
+        "endLine": 602,
+        "endChar": 26
+      },
+      "revId": "8aa0add222b4ff50d565e58c4769f5ab98ebcf02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "206743ff_1d4a6a4a",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 677,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-06T19:38:18Z",
+      "side": 1,
+      "message": "I don\u0027t think we should have these ifs here. Either make them ASSERT, or we should fix it that dirty bits can\u0027t be set if we can\u0027t support them. In what case could we reach this code and supportsVertexAttribBinding be false?",
+      "range": {
+        "startLine": 677,
+        "startChar": 11,
+        "endLine": 677,
+        "endChar": 45
+      },
+      "revId": "8aa0add222b4ff50d565e58c4769f5ab98ebcf02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
