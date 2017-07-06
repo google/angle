@@ -520,7 +520,15 @@ void GenerateCaps(const FunctionsGL *functions,
         caps->maxUniformBufferBindings = QuerySingleGLInt(functions, GL_MAX_UNIFORM_BUFFER_BINDINGS);
         caps->maxUniformBlockSize = QuerySingleGLInt64(functions, GL_MAX_UNIFORM_BLOCK_SIZE);
         caps->uniformBufferOffsetAlignment = QuerySingleGLInt(functions, GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT);
-        caps->maxCombinedUniformBlocks = caps->maxVertexUniformBlocks + caps->maxFragmentInputComponents;
+
+        GLuint maxCombinedUniformBlocks =
+            QuerySingleGLInt(functions, GL_MAX_COMBINED_UNIFORM_BLOCKS);
+        // The real cap contains the limits for shader types that are not available to ES, so limit
+        // the cap to the sum of vertex+fragment shader caps.
+        caps->maxCombinedUniformBlocks =
+            std::min(maxCombinedUniformBlocks,
+                     caps->maxVertexUniformBlocks + caps->maxFragmentUniformBlocks);
+
         caps->maxCombinedVertexUniformComponents = QuerySingleGLInt64(functions, GL_MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS);
         caps->maxCombinedFragmentUniformComponents = QuerySingleGLInt64(functions, GL_MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS);
     }
