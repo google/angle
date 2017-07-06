@@ -1,0 +1,193 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f7933204_e16fede0",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-06T09:36:33Z",
+      "side": 1,
+      "message": "I realized that this doesn\u0027t actually set the right symbol id on the symbol. Instead of fiddling with the individual fields on the nodes, it would be simpler and more reliable to pass the replacement node as such to the traverser and do queueReplacement(node, replament-\u003edeepCopy(), originalNode::IS_DROPPED) here, and then updateTree() once the traverser has run.",
+      "revId": "9abd303a6d6539f773f9cf603e9bf6b437b6eea0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4662c30e_9bb740f6",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-06T09:36:33Z",
+      "side": 1,
+      "message": "Could put this function alongside FindMain. I\u0027d think other traversers could make use of it as well.",
+      "revId": "9abd303a6d6539f773f9cf603e9bf6b437b6eea0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88ca60c0_03f7cf9f",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-06T09:36:33Z",
+      "side": 1,
+      "message": "Maybe Replace would be better in the function/traverser name.",
+      "range": {
+        "startLine": 131,
+        "startChar": 5,
+        "endLine": 131,
+        "endChar": 10
+      },
+      "revId": "9abd303a6d6539f773f9cf603e9bf6b437b6eea0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f508a73_4424419f",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-06T09:36:33Z",
+      "side": 1,
+      "message": "This function isn\u0027t really too different for gl_InstanceID and gl_ViewID_OVR - it could take the name to be replaced and the replacement node as parameters, so the same function would be shared to handle both.",
+      "range": {
+        "startLine": 133,
+        "startChar": 0,
+        "endLine": 134,
+        "endChar": 31
+      },
+      "revId": "9abd303a6d6539f773f9cf603e9bf6b437b6eea0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e32180ef_45712e0a",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-06T09:36:33Z",
+      "side": 1,
+      "message": "I think it would be cleaner to split this up into functions like this:\n\nDeclareGlobalVariable(root, instanceIDSymbol);\nInitializeViewIDAndInstanceID(root, viewIDSymbol-\u003edeepCopy(), instanceIDSymbol-\u003edeepCopy(), numberOfViews);\n\nThe DeclareGlobalVariable function could handle both ViewID_OVR and InstanceID.",
+      "revId": "9abd303a6d6539f773f9cf603e9bf6b437b6eea0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "43426f90_ff4fe518",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-06T09:36:33Z",
+      "side": 1,
+      "message": "declare",
+      "range": {
+        "startLine": 9,
+        "startChar": 3,
+        "endLine": 9,
+        "endChar": 11
+      },
+      "revId": "9abd303a6d6539f773f9cf603e9bf6b437b6eea0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e522710b_01fa0804",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 761,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-06T09:36:33Z",
+      "side": 1,
+      "message": "I don\u0027t think that the term \"decorating\" is used like this with GLSL. To say this same thing in a simpler way, you could write in \"Test that ViewID_OVR is declared as a flat input variable in an ESSL 3.00 fragment shader\"",
+      "range": {
+        "startLine": 761,
+        "startChar": 72,
+        "endLine": 761,
+        "endChar": 81
+      },
+      "revId": "9abd303a6d6539f773f9cf603e9bf6b437b6eea0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f774a33b_519f5038",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 776,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-06T09:36:33Z",
+      "side": 1,
+      "message": "output",
+      "range": {
+        "startLine": 776,
+        "startChar": 90,
+        "endLine": 776,
+        "endChar": 97
+      },
+      "revId": "9abd303a6d6539f773f9cf603e9bf6b437b6eea0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "31f5109c_b7c08086",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 776,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-06T09:36:33Z",
+      "side": 1,
+      "message": "Same here.",
+      "range": {
+        "startLine": 776,
+        "startChar": 70,
+        "endLine": 776,
+        "endChar": 79
+      },
+      "revId": "9abd303a6d6539f773f9cf603e9bf6b437b6eea0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
