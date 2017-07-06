@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b6557e75_6ef8b548",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 524,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-06T17:53:02Z",
+      "side": 1,
+      "message": "it made me scratch my head as to why you were assigning to this twice. Can you just store this in a temporary variable to avoid future scratching of heads?",
+      "range": {
+        "startLine": 524,
+        "startChar": 8,
+        "endLine": 524,
+        "endChar": 38
+      },
+      "revId": "583a8f1ac3365584ceca37b255790dd11891d78d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
