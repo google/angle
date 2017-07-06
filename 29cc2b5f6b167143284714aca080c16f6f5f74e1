@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c99d82a3_fba3daac",
+        "filename": "src/tests/gl_tests/D3DTextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 553,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-06T19:40:50Z",
+      "side": 1,
+      "message": "nit: use expected, actual for clause order.",
+      "range": {
+        "startLine": 553,
+        "startChar": 3,
+        "endLine": 553,
+        "endChar": 39
+      },
+      "revId": "29cc2b5f6b167143284714aca080c16f6f5f74e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
