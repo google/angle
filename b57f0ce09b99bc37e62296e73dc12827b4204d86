@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cdc5bddc_e45b2630",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-06T06:46:28Z",
+      "side": 1,
+      "message": "split it to:\nif (IsD3D11())\n{\n    std::cout \u003c\u003c \"Test skipped on D3D11 because it is not implemented yet.\" \u003c\u003c std::endl;\n    return;\n}\n\n// TODO(xinghua.cao@intel.com): potential AMD driver bug, bind two image variables to unit 0,\n// only one variable is valid.\nif (IsAMD() \u0026\u0026 IsDesktopOpenGL() \u0026\u0026 IsWindows())\n{\n    std::cout \u003c\u003c \"Test skipped desktop OpenGL on AMD windows because AMD driver bug.\" \u003c\u003c std::endl;\n    return;\n}",
+      "range": {
+        "startLine": 324,
+        "startChar": 0,
+        "endLine": 328,
+        "endChar": 5
+      },
+      "revId": "b57f0ce09b99bc37e62296e73dc12827b4204d86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d02e1a92_9d5b3bd8",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 361,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-06T06:46:28Z",
+      "side": 1,
+      "message": "nit: move these two lines before glReadPixels.\nThere are so many EXPECT_GL_NO_ERROR(). Maybe we can remove some of them?",
+      "range": {
+        "startLine": 360,
+        "startChar": 0,
+        "endLine": 361,
+        "endChar": 31
+      },
+      "revId": "b57f0ce09b99bc37e62296e73dc12827b4204d86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
