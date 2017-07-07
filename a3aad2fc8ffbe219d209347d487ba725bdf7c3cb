@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "afabcb22_39ffa1c5",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 39
+      },
+      "lineNbr": 503,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-07T05:59:45Z",
+      "side": 1,
+      "message": "This test draws twice:\n1. use unnormalized short in both test and expected data\n2. use normalized short in both test and expected data\nThe check should pass.",
+      "range": {
+        "startLine": 480,
+        "startChar": 0,
+        "endLine": 503,
+        "endChar": 1
+      },
+      "revId": "a3aad2fc8ffbe219d209347d487ba725bdf7c3cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "02e1d6b6_08f8221d",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 39
+      },
+      "lineNbr": 531,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-07T05:59:45Z",
+      "side": 1,
+      "message": "This test draws twice:\n1. use unnormalized short in both test and expected data\n2. use normalized short as format of the test data, but expected data remains the same\nThe check should fail.",
+      "range": {
+        "startLine": 505,
+        "startChar": 0,
+        "endLine": 531,
+        "endChar": 1
+      },
+      "revId": "a3aad2fc8ffbe219d209347d487ba725bdf7c3cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
