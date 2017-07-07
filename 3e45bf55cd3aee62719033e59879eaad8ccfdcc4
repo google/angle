@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bb83adbb_c85c0c38",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 1236,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-07T10:58:56Z",
+      "side": 1,
+      "message": "would be cleaner to have a break; inside this case as well, instead of falling through to the default case.",
+      "revId": "3e45bf55cd3aee62719033e59879eaad8ccfdcc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2a2593b7_e117b947",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 4256,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-07T10:58:56Z",
+      "side": 1,
+      "message": "This could be moved below the switch statement, again so that there aren\u0027t redundant error messages for images being used incorrectly.",
+      "revId": "3e45bf55cd3aee62719033e59879eaad8ccfdcc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b8cba2d_2bc8b6ff",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 21
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-07T10:58:56Z",
+      "side": 1,
+      "message": "I think this still needs to be changed to ES2_and_ES3_ident_ES3_1_keyword(BUFFER). \"buffer\" is a valid identifier in ESSL 1.00 and ESSL 3.00.\n\nIt would be good to add a new unit test for making sure that new keywords of ESSL 3.10 are allowed as identifiers in ESSL 3.00 as well. You could put that in ShaderValidationTest and use both \"buffer\" and \"shared\" as identifiers in the test.",
+      "range": {
+        "startLine": 117,
+        "startChar": 24,
+        "endLine": 117,
+        "endChar": 30
+      },
+      "revId": "3e45bf55cd3aee62719033e59879eaad8ccfdcc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
