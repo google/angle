@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "57d0c62e_e13bc161",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 40
+      },
+      "lineNbr": 451,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-07T11:06:53Z",
+      "side": 1,
+      "message": "In this test, the test data is same in two draws, but the formats are set to different values;\nthe expected data and its formats are set to the correct values in two draws, so the check should both pass.",
+      "range": {
+        "startLine": 425,
+        "startChar": 0,
+        "endLine": 451,
+        "endChar": 1
+      },
+      "revId": "c66b4d7d94687016d37609c52b7f16727a659961",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cdfe940d_1f0bb5a5",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 40
+      },
+      "lineNbr": 475,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-07T11:06:53Z",
+      "side": 1,
+      "message": "In this test, the test data is same in two draws, but the formats are set to different values;\nThe expected data and its formats in two draws are same, so the check should pass in the first draw and fail in the next draw.",
+      "range": {
+        "startLine": 453,
+        "startChar": 0,
+        "endLine": 475,
+        "endChar": 1
+      },
+      "revId": "c66b4d7d94687016d37609c52b7f16727a659961",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
