@@ -12,12 +12,6 @@
 namespace sh
 {
 
-struct TVectorFields
-{
-    int offsets[4];
-    int num;
-};
-
 //
 // Set of helper functions to help build the tree.
 //
@@ -27,34 +21,10 @@ class TIntermediate
     POOL_ALLOCATOR_NEW_DELETE();
     TIntermediate() {}
 
-    TIntermSymbol *addSymbol(int id, const TString &, const TType &, const TSourceLoc &);
-    TIntermTyped *addIndex(TOperator op,
-                           TIntermTyped *base,
-                           TIntermTyped *index,
-                           const TSourceLoc &line,
-                           TDiagnostics *diagnostics);
     static TIntermBlock *EnsureBlock(TIntermNode *node);
-    static TIntermTyped *AddTernarySelection(TIntermTyped *cond,
-                                             TIntermTyped *trueExpression,
-                                             TIntermTyped *falseExpression,
-                                             const TSourceLoc &line);
-    TIntermSwitch *addSwitch(TIntermTyped *init,
-                             TIntermBlock *statementList,
-                             const TSourceLoc &line);
-    TIntermCase *addCase(TIntermTyped *condition, const TSourceLoc &line);
-    static TIntermTyped *AddComma(TIntermTyped *left,
-                                  TIntermTyped *right,
-                                  const TSourceLoc &line,
-                                  int shaderVersion);
     TIntermConstantUnion *addConstantUnion(const TConstantUnion *constantUnion,
                                            const TType &type,
                                            const TSourceLoc &line);
-
-    static TIntermTyped *AddSwizzle(TIntermTyped *baseExpression,
-                                    const TVectorFields &fields,
-                                    const TSourceLoc &dotLocation);
-
-    TIntermTyped *foldAggregateBuiltIn(TIntermAggregate *aggregate, TDiagnostics *diagnostics);
 
   private:
     void operator=(TIntermediate &);  // prevent assignments

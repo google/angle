@@ -98,7 +98,11 @@ class TParseContext : angle::NonCopyable
                                           const TString *name,
                                           const TSymbol *symbol);
 
-    bool parseVectorFields(const TString &, int vecSize, TVectorFields &, const TSourceLoc &line);
+    // Look at a '.' field selector string and change it into offsets for a vector.
+    bool parseVectorFields(const TSourceLoc &line,
+                           const TString &compString,
+                           int vecSize,
+                           TVector<int> *fieldOffsets);
 
     void assignError(const TSourceLoc &line, const char *op, TString left, TString right);
     void unaryOpError(const TSourceLoc &line, const char *op, TString operand);

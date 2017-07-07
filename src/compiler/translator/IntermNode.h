@@ -630,6 +630,7 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
 
     bool hasSideEffects() const override;
 
+    static bool CanFoldAggregateBuiltInOp(TOperator op);
     TIntermTyped *fold(TDiagnostics *diagnostics);
 
     TIntermSequence *getSequence() override { return &mArguments; }
@@ -831,12 +832,14 @@ class TIntermTernary : public TIntermTyped
                mFalseExpression->hasSideEffects();
     }
 
-    static TQualifier DetermineQualifier(TIntermTyped *cond,
-                                         TIntermTyped *trueExpression,
-                                         TIntermTyped *falseExpression);
+    TIntermTyped *fold();
 
   private:
     TIntermTernary(const TIntermTernary &node);  // Note: not deleted, just private!
+
+    static TQualifier DetermineQualifier(TIntermTyped *cond,
+                                         TIntermTyped *trueExpression,
+                                         TIntermTyped *falseExpression);
 
     TIntermTyped *mCondition;
     TIntermTyped *mTrueExpression;
