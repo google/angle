@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1565a35e_a46e133a",
+        "filename": "src/tests/compiler_tests/GeometryShader_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-07T06:11:31Z",
+      "side": 1,
+      "message": "nit: maybe version300 is enough to test \u0027Geometry Shaders are not supported in GLSL ES shaders version lower than 310.\u0027?",
+      "range": {
+        "startLine": 105,
+        "startChar": 27,
+        "endLine": 105,
+        "endChar": 37
+      },
+      "revId": "d558bc03970ca87bf49d3d4f1add64c4aec78dab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
