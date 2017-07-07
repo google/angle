@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e41265c5_b57bfb3d",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-07T06:32:00Z",
+      "side": 1,
+      "message": "This probably generates a redundant error for image variables. That images can\u0027t be assigned to is not really related to their readonly qualifier. You could probably make this an else if branch of the above if statement to avoid the extra error message.",
+      "revId": "b5a1f37625a2229d8af72f80873b9537b1f32868",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c81f0322_165099ee",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 641,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-07T06:32:00Z",
+      "side": 1,
+      "message": "This could also be an else if branch of the above check for opaque types.",
+      "revId": "b5a1f37625a2229d8af72f80873b9537b1f32868",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a6d64be4_ee299d8f",
+        "filename": "src/tests/compiler_tests/BufferVariables_test.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-07T06:32:00Z",
+      "side": 1,
+      "message": "Don\u0027t abbreviate readonly or writeonly like this. Longer but clear names are better.",
+      "range": {
+        "startLine": 191,
+        "startChar": 56,
+        "endLine": 191,
+        "endChar": 58
+      },
+      "revId": "b5a1f37625a2229d8af72f80873b9537b1f32868",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
