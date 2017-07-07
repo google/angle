@@ -537,7 +537,8 @@ enum TQualifier
     EvqSecondaryFragColorEXT,  // EXT_blend_func_extended
     EvqSecondaryFragDataEXT,   // EXT_blend_func_extended
 
-    EvqViewIDOVR,  // OVR_multiview
+    EvqViewIDOVR,      // OVR_multiview
+    EvqViewportIndex,  // gl_ViewportIndex
 
     // built-ins written by the shader_framebuffer_fetch extension(s)
     EvqLastFragColor,
@@ -774,6 +775,7 @@ inline const char *getQualifierString(TQualifier q)
     case EvqSecondaryFragColorEXT:  return "SecondaryFragColorEXT";
     case EvqSecondaryFragDataEXT:   return "SecondaryFragDataEXT";
     case EvqViewIDOVR:              return "ViewIDOVR";
+    case EvqViewportIndex:          return "ViewportIndex";
     case EvqLastFragColor:          return "LastFragColor";
     case EvqLastFragData:           return "LastFragData";
     case EvqSmoothOut:              return "smooth out";

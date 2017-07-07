@@ -27,7 +27,7 @@ class TranslatorGLSL : public TCompiler
 
   private:
     void writeVersion(TIntermNode *root);
-    void writeExtensionBehavior(TIntermNode *root);
+    void writeExtensionBehavior(TIntermNode *root, ShCompileOptions compileOptions);
     void conditionallyOutputInvariantDeclaration(const char *builtinVaryingName);
 };
 

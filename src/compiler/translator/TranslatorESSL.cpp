@@ -121,14 +121,16 @@ void TranslatorESSL::writeExtensionBehavior(ShCompileOptions compileOptions)
     TInfoSinkBase &sink                   = getInfoSink().obj;
     const TExtensionBehavior &extBehavior = getExtensionBehavior();
     const bool isMultiviewExtEmulated =
-        (compileOptions & (SH_TRANSLATE_VIEWID_OVR_TO_UNIFORM |
-                           SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW)) != 0u;
-
+        (compileOptions &
+         (SH_TRANSLATE_VIEWID_OVR_TO_UNIFORM | SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW |
+          SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER)) != 0u;
     for (TExtensionBehavior::const_iterator iter = extBehavior.begin(); iter != extBehavior.end();
          ++iter)
     {
         if (iter->second != EBhUndefined)
         {
+            const bool isMultiview =
+                iter->first == "GL_OVR_multiview" || iter->first == "GL_OVR_multiview2";
             if (getResources().NV_shader_framebuffer_fetch &&
                 iter->first == "GL_EXT_shader_framebuffer_fetch")
             {
@@ -140,11 +142,16 @@ void TranslatorESSL::writeExtensionBehavior(ShCompileOptions compileOptions)
                 sink << "#extension GL_NV_draw_buffers : " << getBehaviorString(iter->second)
                      << "\n";
             }
-            else if (isMultiviewExtEmulated &&
-                     (iter->first == "GL_OVR_multiview" || iter->first == "GL_OVR_multiview2"))
+            else if (isMultiview && isMultiviewExtEmulated)
             {
-                // No output
-                continue;
+                if (getShaderType() == GL_VERTEX_SHADER &&
+                    (compileOptions & SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER) != 0u)
+                {
+                    // Emit the NV_viewport_array2 extension in a vertex shader if the
+                    // SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER option is set and the
+                    // OVR_multiview(2) extension is requested.
+                    sink << "#extension GL_NV_viewport_array2 : require\n";
+                }
             }
             else
             {
