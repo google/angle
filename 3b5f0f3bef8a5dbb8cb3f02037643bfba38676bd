@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "c0452341_c6802962",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-07T14:19:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f72a2648_8e5eeab4",
+      "range": {
+        "startLine": 28,
+        "startChar": 25,
+        "endLine": 28,
+        "endChar": 28
+      },
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cf18994b_d768ad23",
         "filename": "extensions/ANGLE_multiview.txt",
         "patchSetId": 6
@@ -68,6 +92,30 @@
       "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3a9d527_1fd275bf",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-07T14:19:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cf18994b_d768ad23",
+      "range": {
+        "startLine": 44,
+        "startChar": 51,
+        "endLine": 44,
+        "endChar": 57
+      },
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -94,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "c8d1b5ff_1013d8a9",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-07T14:19:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "afa06ff4_d9c18d2d",
+      "range": {
+        "startLine": 46,
+        "startChar": 12,
+        "endLine": 46,
+        "endChar": 18
+      },
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4d64da10_41dcbe92",
         "filename": "extensions/ANGLE_multiview.txt",
         "patchSetId": 6
@@ -105,6 +177,24 @@
       "writtenOn": "2017-07-04T19:13:47Z",
       "side": 1,
       "message": "We\u0027ll probably need to allocate new enums for this extension from Khronos at least when we\u0027re closer to finalizing it. But maybe we can have placeholders here at first.",
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "17bb3712_b9ee8dff",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-07T14:19:39Z",
+      "side": 1,
+      "message": "Alright.",
+      "parentUuid": "4d64da10_41dcbe92",
       "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -131,6 +221,30 @@
       "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "474e1f81_7de0f240",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-07T14:19:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7d57ee58_cdaf17fc",
+      "range": {
+        "startLine": 80,
+        "startChar": 74,
+        "endLine": 80,
+        "endChar": 82
+      },
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -180,6 +294,30 @@
     },
     {
       "key": {
+        "uuid": "8e8a3b0b_3089622b",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-07T14:19:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "86671eee_5b36bd87",
+      "range": {
+        "startLine": 83,
+        "startChar": 8,
+        "endLine": 83,
+        "endChar": 23
+      },
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "009216fe_69a6d946",
         "filename": "extensions/ANGLE_multiview.txt",
         "patchSetId": 6
@@ -197,6 +335,24 @@
     },
     {
       "key": {
+        "uuid": "b64cbb91_1297a07c",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-07T14:19:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "009216fe_69a6d946",
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "931c3cf4_17b5a526",
         "filename": "extensions/ANGLE_multiview.txt",
         "patchSetId": 6
@@ -208,6 +364,30 @@
       "writtenOn": "2017-07-04T19:13:47Z",
       "side": 1,
       "message": "Is this necessary to implement this spec on top of native GL or DX? Otherwise we probably don\u0027t want this restriction.\n\nIf this restriction is necessary, what happens if ViewportMultiviewANGLE is first called with count 4, and then with count 3 so that viewport 3 in the latter call overlaps viewport 4 in the earlier call? This kind of problematic cases could maybe be avoided if the multiple viewports were framebuffer-specific state and could only be specified all at once. The alternative API could be for example:\n\nframebufferTextureMultiviewANGLE(enum target, enum attachment, uint texture, int level, int baseViewIndex, sizei numViews)\n\nframebufferTextureMultiviewSideBySideANGLE(enum target, enum attachment, uint texture, int level, sizei numViews, const int *viewport_offsets)\n\nWhere viewport_offsets is an array of x and y values that are added to viewport and scissor rectangle to calculate viewports and scissors for different views. The problem with this would be only that different viewports or scissors couldn\u0027t be different size.",
+      "range": {
+        "startLine": 170,
+        "startChar": 4,
+        "endLine": 171,
+        "endChar": 46
+      },
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "28b40f35_794d8c77",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-07T14:19:39Z",
+      "side": 1,
+      "message": "We discussed internally on that topic and restructured the API, but shortly for people not present in the discussion:\n* The restriction is not necessary. We will just leave it as undefined behavior, for now. \n* A better alternative was reached.",
+      "parentUuid": "931c3cf4_17b5a526",
       "range": {
         "startLine": 170,
         "startChar": 4,
@@ -243,6 +423,30 @@
     },
     {
       "key": {
+        "uuid": "630dee0b_5bb6b1c1",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-07T14:19:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e8ac915a_017f8a86",
+      "range": {
+        "startLine": 295,
+        "startChar": 73,
+        "endLine": 295,
+        "endChar": 85
+      },
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "67d59559_72507a3c",
         "filename": "extensions/ANGLE_multiview.txt",
         "patchSetId": 6
@@ -263,6 +467,30 @@
       "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bd002bcb_db248dd6",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-07T14:19:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "67d59559_72507a3c",
+      "range": {
+        "startLine": 301,
+        "startChar": 13,
+        "endLine": 301,
+        "endChar": 14
+      },
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -306,6 +534,30 @@
     },
     {
       "key": {
+        "uuid": "fced5c1c_fad577a5",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-07T14:19:39Z",
+      "side": 1,
+      "message": "It is a mistake. They get introduced in GLES 3.2 and have been around in Desktop GL for some time. Basically, they allow you to access a buffer through a sampler as if it is a texture - allows you to create \"big textures\" through buffers and allows you to have memory accesses go through the texture cache.",
+      "parentUuid": "d7b94fd6_c3e0af0c",
+      "range": {
+        "startLine": 347,
+        "startChar": 76,
+        "endLine": 347,
+        "endChar": 90
+      },
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f6e96253_2fa3a162",
         "filename": "extensions/ANGLE_multiview.txt",
         "patchSetId": 6
@@ -326,6 +578,30 @@
       "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ae7b0a94_067b4bf7",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 463,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-07T14:19:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f6e96253_2fa3a162",
+      "range": {
+        "startLine": 463,
+        "startChar": 4,
+        "endLine": 463,
+        "endChar": 10
+      },
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -352,6 +628,30 @@
     },
     {
       "key": {
+        "uuid": "aa325712_6aff6d71",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-07T14:19:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "88829c83_fa67f459",
+      "range": {
+        "startLine": 463,
+        "startChar": 35,
+        "endLine": 480,
+        "endChar": 98
+      },
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0e7b69f3_b4f5ff53",
         "filename": "extensions/ANGLE_multiview.txt",
         "patchSetId": 6
@@ -372,6 +672,30 @@
       "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da76ca72_bb11b991",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 6
+      },
+      "lineNbr": 540,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-07T14:19:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0e7b69f3_b4f5ff53",
+      "range": {
+        "startLine": 540,
+        "startChar": 42,
+        "endLine": 540,
+        "endChar": 43
+      },
+      "revId": "3b5f0f3bef8a5dbb8cb3f02037643bfba38676bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
