@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5bb112e2_4034e9d4",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3443,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-07T14:49:35Z",
+      "side": 1,
+      "message": "This removes an addIndex but this function wasn\u0027t removed from TIntermediate. Did you mean to do so? LGTM in both cases.",
+      "revId": "0927431d8ab179bd3383c9599cec8c5c8e3f00fb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
