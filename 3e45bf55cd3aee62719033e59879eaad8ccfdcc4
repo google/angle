@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9dbfe5a9_9787df54",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 1236,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-07T15:18:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb83adbb_c85c0c38",
+      "revId": "3e45bf55cd3aee62719033e59879eaad8ccfdcc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2a2593b7_e117b947",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 21
@@ -30,6 +48,24 @@
       "writtenOn": "2017-07-07T10:58:56Z",
       "side": 1,
       "message": "This could be moved below the switch statement, again so that there aren\u0027t redundant error messages for images being used incorrectly.",
+      "revId": "3e45bf55cd3aee62719033e59879eaad8ccfdcc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef20a7e8_1ff23a08",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 4256,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-07T15:18:10Z",
+      "side": 1,
+      "message": "Sorry, I should scan all such kind of usage and put it in proper position.",
+      "parentUuid": "2a2593b7_e117b947",
       "revId": "3e45bf55cd3aee62719033e59879eaad8ccfdcc4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -56,6 +92,30 @@
       "revId": "3e45bf55cd3aee62719033e59879eaad8ccfdcc4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a9a68c2_8c423b5d",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 21
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-07T15:18:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b8cba2d_2bc8b6ff",
+      "range": {
+        "startLine": 117,
+        "startChar": 24,
+        "endLine": 117,
+        "endChar": 30
+      },
+      "revId": "3e45bf55cd3aee62719033e59879eaad8ccfdcc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
