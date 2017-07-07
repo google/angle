@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f67121bf_9a38508d",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-07T16:26:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a5429359_039d0364",
+      "range": {
+        "startLine": 239,
+        "startChar": 23,
+        "endLine": 239,
+        "endChar": 54
+      },
+      "revId": "feccd3831eea4f331291ef006463a2eb84a68ec2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "23bf318d_0a7bf28d",
         "filename": "src/compiler/translator/Compiler.cpp",
         "patchSetId": 4
@@ -39,6 +63,24 @@
       "revId": "feccd3831eea4f331291ef006463a2eb84a68ec2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9fe7bf76_abf29885",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-07T16:26:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "23bf318d_0a7bf28d",
+      "revId": "feccd3831eea4f331291ef006463a2eb84a68ec2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "086eb9fd_908b058c",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-07T16:26:27Z",
+      "side": 1,
+      "message": "Done, I think. The fuzz testing gets run on the Chromium side?",
+      "parentUuid": "9e584ff1_afaccc50",
+      "revId": "feccd3831eea4f331291ef006463a2eb84a68ec2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f302cb4b_30032f95",
         "filename": "src/compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.cpp",
         "patchSetId": 4
@@ -70,6 +130,24 @@
       "writtenOn": "2017-07-03T14:52:48Z",
       "side": 1,
       "message": "Should be in the beginning of main. main might return before the last statement.",
+      "revId": "feccd3831eea4f331291ef006463a2eb84a68ec2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "554b9668_a000d227",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-07T16:26:27Z",
+      "side": 1,
+      "message": "True. Initially it was there, but I thought it would be simpler this way to guarantee that gl_ViewportIndex is set before ViewID_OVR is initialized.\nDone.",
+      "parentUuid": "f302cb4b_30032f95",
       "revId": "feccd3831eea4f331291ef006463a2eb84a68ec2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -99,6 +177,30 @@
     },
     {
       "key": {
+        "uuid": "ea1ec842_89a985c4",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-07T16:26:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7e216df1_5776c82f",
+      "range": {
+        "startLine": 169,
+        "startChar": 54,
+        "endLine": 169,
+        "endChar": 82
+      },
+      "revId": "feccd3831eea4f331291ef006463a2eb84a68ec2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7fc9621c_49f5fb90",
         "filename": "src/compiler/translator/TranslatorESSL.cpp",
         "patchSetId": 4
@@ -122,6 +224,30 @@
     },
     {
       "key": {
+        "uuid": "c2bad707_fc6e48af",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-07T16:26:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7fc9621c_49f5fb90",
+      "range": {
+        "startLine": 146,
+        "startChar": 0,
+        "endLine": 150,
+        "endChar": 13
+      },
+      "revId": "feccd3831eea4f331291ef006463a2eb84a68ec2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3e610afe_a479d139",
         "filename": "src/compiler/translator/TranslatorESSL.cpp",
         "patchSetId": 4
@@ -139,6 +265,24 @@
     },
     {
       "key": {
+        "uuid": "c4ce4545_6e02cecd",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-07T16:26:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3e610afe_a479d139",
+      "revId": "feccd3831eea4f331291ef006463a2eb84a68ec2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "93424ba9_3e818ee3",
         "filename": "src/compiler/translator/TranslatorGLSL.cpp",
         "patchSetId": 4
@@ -153,6 +297,24 @@
       "revId": "feccd3831eea4f331291ef006463a2eb84a68ec2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe3c301b_d1a3effc",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-07T16:26:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "93424ba9_3e818ee3",
+      "revId": "feccd3831eea4f331291ef006463a2eb84a68ec2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
