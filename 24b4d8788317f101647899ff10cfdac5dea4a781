@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cf7598c1_923a5fc3",
+        "filename": "src/tests/test_utils/compiler_test.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-09T08:48:34Z",
+      "side": 1,
+      "message": "Should add a comment explaining that this returns the location of the first instance in the shader source, and std::string::npos if not found.",
+      "revId": "24b4d8788317f101647899ff10cfdac5dea4a781",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
