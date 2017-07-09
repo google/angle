@@ -122,6 +122,24 @@
     },
     {
       "key": {
+        "uuid": "2c39f9ef_455b2c3c",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-09T18:25:46Z",
+      "side": 1,
+      "message": "On a closer look to the GLES 3.1 spec, it doesn\u0027t seem like it gives any synchronization guarantees with regards to stores and loads from shaders either way, unless MemoryBarrier is called. So maybe additional notes about the side effects ordering are not needed.",
+      "parentUuid": "04a03c40_2cd08711",
+      "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "72662eac_8cb214af",
         "filename": "extensions/ANGLE_multiview.txt",
         "patchSetId": 7
