@@ -16,6 +16,24 @@
       "revId": "0927431d8ab179bd3383c9599cec8c5c8e3f00fb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d9f4e0ef_2ccd8bcc",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3443,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-09T08:17:46Z",
+      "side": 1,
+      "message": "This patch removes the addIndex calls that were easy to remove, there\u0027s a few remaining ones that are more complex to get rid of.",
+      "parentUuid": "5bb112e2_4034e9d4",
+      "revId": "0927431d8ab179bd3383c9599cec8c5c8e3f00fb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
