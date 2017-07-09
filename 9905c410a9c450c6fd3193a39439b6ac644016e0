@@ -1,0 +1,210 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a9016c2f_8da261e5",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-09T18:03:37Z",
+      "side": 1,
+      "message": "You can add at least your name and my name here already.",
+      "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eb9cfd7e_e73babf0",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-09T18:03:37Z",
+      "side": 1,
+      "message": "Clean up trailing spaces.",
+      "range": {
+        "startLine": 44,
+        "startChar": 77,
+        "endLine": 44,
+        "endChar": 78
+      },
+      "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c5d19e50_139d7e41",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-09T18:03:37Z",
+      "side": 1,
+      "message": "I think this enum should be named the same way as in OVR_multiview. I don\u0027t know if we need this fine-grained framebuffer incomplete states either - maybe just have the INCOMPLETE_VIEW_TARGETS enum and no other new framebuffer incomplete stat enums.",
+      "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f658ac77_51632698",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-09T18:03:37Z",
+      "side": 1,
+      "message": "I think textarget should be left out, it\u0027s not in the framebufferTextureLayer API either.",
+      "range": {
+        "startLine": 80,
+        "startChar": 79,
+        "endLine": 80,
+        "endChar": 94
+      },
+      "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "082b9a74_b5b65a1b",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-09T18:03:37Z",
+      "side": 1,
+      "message": "Maybe leave textarget out from this entry point as well. It\u0027s inconsistent with some of the bits further down in the spec as well.",
+      "range": {
+        "startLine": 81,
+        "startChar": 82,
+        "endLine": 81,
+        "endChar": 96
+      },
+      "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "04a03c40_2cd08711",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-09T18:03:37Z",
+      "side": 1,
+      "message": "Very clearly specified, this is good. Though to tighten the spec, we could however mention that any side effects from the draw calls like image writes may not be executed in this order. Not sure what\u0027s the best way to write that down.\n\nOr do you think that restricting multiview shaders to not to be able to write images or SSBO\u0027s would be better?",
+      "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "72662eac_8cb214af",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-09T18:03:37Z",
+      "side": 1,
+      "message": "I think this should say \"or attachment is COLOR_ATTACHMENTm\".",
+      "range": {
+        "startLine": 256,
+        "startChar": 22,
+        "endLine": 256,
+        "endChar": 61
+      },
+      "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e833f70f_ba97482e",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-09T18:03:37Z",
+      "side": 1,
+      "message": "I suppose we\u0027d want to generate an INVALID_OPERATION also if the texture is zero.",
+      "range": {
+        "startLine": 261,
+        "startChar": 51,
+        "endLine": 261,
+        "endChar": 70
+      },
+      "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d338a23e_4b74a0d8",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-09T18:03:37Z",
+      "side": 1,
+      "message": "Should be specific that \"Having overlapping scissor rectangles after viewport offsets are applied causes undefined behavior.\" Don\u0027t need to mention that it\u0027s not an error. We could also maybe tighten it to \"undefined values\" - I think it would be reasonable to still disallow crashing here.",
+      "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "70ef703d_67cb9470",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-09T18:03:37Z",
+      "side": 1,
+      "message": "This enum name seems inconsistent with how it\u0027s specified elsewhere in this spec.",
+      "range": {
+        "startLine": 277,
+        "startChar": 23,
+        "endLine": 277,
+        "endChar": 76
+      },
+      "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
