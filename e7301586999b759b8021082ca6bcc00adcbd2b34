@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e1f64b27_06f094b1",
+        "filename": "src/tests/test_utils/compiler_test.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-10T09:25:13Z",
+      "side": 1,
+      "message": "I don\u0027t think that this is really necessary. There\u0027s already an automatic check that any output type that is queried has been added.",
+      "revId": "e7301586999b759b8021082ca6bcc00adcbd2b34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
