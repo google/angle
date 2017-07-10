@@ -949,7 +949,7 @@ egl::ConfigSet Renderer11::generateConfigs()
     }
 
     static const GLenum depthStencilBufferFormats[] = {
-        GL_NONE, GL_DEPTH24_STENCIL8_OES, GL_DEPTH_COMPONENT16,
+        GL_NONE, GL_DEPTH24_STENCIL8_OES, GL_DEPTH_COMPONENT16, GL_STENCIL_INDEX8,
     };
 
     const gl::Caps &rendererCaps                  = getNativeCaps();
