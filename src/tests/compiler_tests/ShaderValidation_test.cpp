@@ -3974,3 +3974,58 @@ TEST_F(FragmentShaderValidationTest, FunctionDefinedWithReservedName)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test that ops with mismatching operand types are disallowed and don't result in an assert.
+// This makes sure that constant folding doesn't fetch invalid union values in case operand types
+// mismatch.
+TEST_F(FragmentShaderValidationTest, InvalidOpsWithConstantOperandsDontAssert)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    float f1 = 0.5 / 2;\n"
+        "    float f2 = true + 0.5;\n"
+        "    float f3 = float[2](0.0, 1.0)[1.0];\n"
+        "    float f4 = float[2](0.0, 1.0)[true];\n"
+        "    float f5 = true ? 1.0 : 0;\n"
+        "    float f6 = 1.0 ? 1.0 : 2.0;\n"
+        "    my_FragColor = vec4(0.0);\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test that case labels with invalid types don't assert
+TEST_F(FragmentShaderValidationTest, CaseLabelsWithInvalidTypesDontAssert)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "uniform int i;\n"
+        "void main()\n"
+        "{\n"
+        "    float f = 0.0;\n"
+        "    switch (i)\n"
+        "    {\n"
+        "        case 0u:\n"
+        "            f = 0.0;\n"
+        "        case true:\n"
+        "            f = 1.0;\n"
+        "        case 2.0:\n"
+        "            f = 2.0;\n"
+        "    }\n"
+        "    my_FragColor = vec4(0.0);\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}

@@ -261,22 +261,22 @@ primary_expression
     | INTCONSTANT {
         TConstantUnion *unionArray = new TConstantUnion[1];
         unionArray->setIConst($1.i);
-        $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtInt, EbpUndefined, EvqConst), @1);
+        $$ = context->addScalarLiteral(unionArray, @1);
     }
     | UINTCONSTANT {
         TConstantUnion *unionArray = new TConstantUnion[1];
         unionArray->setUConst($1.u);
-        $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtUInt, EbpUndefined, EvqConst), @1);
+        $$ = context->addScalarLiteral(unionArray, @1);
     }
     | FLOATCONSTANT {
         TConstantUnion *unionArray = new TConstantUnion[1];
         unionArray->setFConst($1.f);
-        $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtFloat, EbpUndefined, EvqConst), @1);
+        $$ = context->addScalarLiteral(unionArray, @1);
     }
     | BOOLCONSTANT {
         TConstantUnion *unionArray = new TConstantUnion[1];
         unionArray->setBConst($1.b);
-        $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtBool, EbpUndefined, EvqConst), @1);
+        $$ = context->addScalarLiteral(unionArray, @1);
     }
     | YUVCSCSTANDARDEXTCONSTANT {
         if (!context->isExtensionEnabled("GL_EXT_YUV_target")) {
@@ -284,7 +284,7 @@ primary_expression
         }
         TConstantUnion *unionArray = new TConstantUnion[1];
         unionArray->setYuvCscStandardEXTConst(getYuvCscStandardEXT($1.string->c_str()));
-        $$ = context->intermediate.addConstantUnion(unionArray, TType(EbtYuvCscStandardEXT, EbpUndefined, EvqConst), @1);
+        $$ = context->addScalarLiteral(unionArray, @1);
     }
     | LEFT_PAREN expression RIGHT_PAREN {
         $$ = $2;

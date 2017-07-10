@@ -14,20 +14,15 @@ namespace sh
 
 //
 // Set of helper functions to help build the tree.
+// TODO(oetuaho@nvidia.com): Clean this up, it doesn't need to be a class.
 //
 class TIntermediate
 {
   public:
-    POOL_ALLOCATOR_NEW_DELETE();
-    TIntermediate() {}
-
     static TIntermBlock *EnsureBlock(TIntermNode *node);
-    TIntermConstantUnion *addConstantUnion(const TConstantUnion *constantUnion,
-                                           const TType &type,
-                                           const TSourceLoc &line);
 
   private:
-    void operator=(TIntermediate &);  // prevent assignments
+    TIntermediate(){};
 };
 
 }  // namespace sh

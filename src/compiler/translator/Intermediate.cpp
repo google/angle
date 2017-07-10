@@ -43,20 +43,4 @@ TIntermBlock *TIntermediate::EnsureBlock(TIntermNode *node)
     return blockNode;
 }
 
-//
-// Constant terminal nodes.  Has a union that contains bool, float or int constants
-//
-// Returns the constant union node created.
-//
-
-TIntermConstantUnion *TIntermediate::addConstantUnion(const TConstantUnion *constantUnion,
-                                                      const TType &type,
-                                                      const TSourceLoc &line)
-{
-    TIntermConstantUnion *node = new TIntermConstantUnion(constantUnion, type);
-    node->setLine(line);
-
-    return node;
-}
-
 }  // namespace sh

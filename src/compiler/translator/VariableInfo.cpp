@@ -607,7 +607,7 @@ bool CollectVariablesTraverser::visitBinary(Visit, TIntermBinary *binaryNode)
         ASSERT(namedBlock);
         namedBlock->staticUse = true;
 
-        unsigned int fieldIndex = constantUnion->getUConst(0);
+        unsigned int fieldIndex = static_cast<unsigned int>(constantUnion->getIConst(0));
         ASSERT(fieldIndex < namedBlock->fields.size());
         namedBlock->fields[fieldIndex].staticUse = true;
         return false;

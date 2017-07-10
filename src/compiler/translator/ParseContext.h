@@ -90,6 +90,9 @@ class TParseContext : angle::NonCopyable
 
     bool declaringFunction() const { return mDeclaringFunction; }
 
+    TIntermConstantUnion *addScalarLiteral(const TConstantUnion *constantUnion,
+                                           const TSourceLoc &line);
+
     // This method is guaranteed to succeed, even if no variable with 'name' exists.
     const TVariable *getNamedVariable(const TSourceLoc &location,
                                       const TString *name,
@@ -125,7 +128,7 @@ class TParseContext : angle::NonCopyable
     bool checkIsValidQualifierForArray(const TSourceLoc &line, const TPublicType &elementQualifier);
     bool checkIsValidTypeForArray(const TSourceLoc &line, const TPublicType &elementType);
     bool checkIsNonVoid(const TSourceLoc &line, const TString &identifier, const TBasicType &type);
-    void checkIsScalarBool(const TSourceLoc &line, const TIntermTyped *type);
+    bool checkIsScalarBool(const TSourceLoc &line, const TIntermTyped *type);
     void checkIsScalarBool(const TSourceLoc &line, const TPublicType &pType);
     bool checkIsNotOpaqueType(const TSourceLoc &line,
                               const TTypeSpecifierNonArray &pType,
@@ -405,8 +408,7 @@ class TParseContext : angle::NonCopyable
                                       TIntermTyped *falseExpression,
                                       const TSourceLoc &line);
 
-    // TODO(jmadill): make these private
-    TIntermediate intermediate;  // to build a parse tree
+    // TODO(jmadill): make this private
     TSymbolTable &symbolTable;   // symbol table that goes with the language currently being parsed
 
   private:
