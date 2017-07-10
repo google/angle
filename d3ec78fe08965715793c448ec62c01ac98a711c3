@@ -84,6 +84,24 @@
     },
     {
       "key": {
+        "uuid": "cc47b9a2_7c1fcd78",
+        "filename": "src/compiler/translator/Intermediate.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-10T20:59:13Z",
+      "side": 1,
+      "message": "I\u0027d be in favor of having utility function in a separate file so that either you create a nodes using their constructor, or you can look in that utility file\u0027s header.",
+      "parentUuid": "27e1a12b_9dbdd8e3",
+      "revId": "d3ec78fe08965715793c448ec62c01ac98a711c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d5bca1e7_bd5c2f09",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 1
