@@ -69,6 +69,30 @@
       "revId": "73a98a95d6f76ed64fdbcc6220d4567512feb241",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "709a3809_663fd654",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 869,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-10T10:43:52Z",
+      "side": 1,
+      "message": "Done. I purposely kept it for the ViewportArray2IsRequested test.",
+      "parentUuid": "5d97725d_1a671d98",
+      "range": {
+        "startLine": 869,
+        "startChar": 69,
+        "endLine": 869,
+        "endChar": 76
+      },
+      "revId": "73a98a95d6f76ed64fdbcc6220d4567512feb241",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
