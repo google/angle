@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "92d411bb_64ef6769",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1792,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-10T15:33:46Z",
+      "side": 1,
+      "message": "I think this needs a\n\n   high \u003d low;\n\nhere otherwise mAtomicCounterUniformRange and mImageUniformRange will overlap.",
+      "revId": "b4ac502ebaa38a1963b0708262d1dde707253d89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
