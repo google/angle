@@ -16,6 +16,24 @@
       "revId": "e7301586999b759b8021082ca6bcc00adcbd2b34",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "50cfd454_9c255198",
+        "filename": "src/tests/test_utils/compiler_test.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-10T10:36:34Z",
+      "side": 1,
+      "message": "It was used in an assertion in the patch which selects the viewport, but I think it is somewhat unnecessary. Removed it.",
+      "parentUuid": "e1f64b27_06f094b1",
+      "revId": "e7301586999b759b8021082ca6bcc00adcbd2b34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
