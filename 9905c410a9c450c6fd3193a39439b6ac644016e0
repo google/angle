@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "117607bc_ff7a7392",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-10T13:11:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a9016c2f_8da261e5",
+      "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eb9cfd7e_e73babf0",
         "filename": "extensions/ANGLE_multiview.txt",
         "patchSetId": 7
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "72028e09_a0b4c617",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-10T13:11:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eb9cfd7e_e73babf0",
+      "range": {
+        "startLine": 44,
+        "startChar": 77,
+        "endLine": 44,
+        "endChar": 78
+      },
+      "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c5d19e50_139d7e41",
         "filename": "extensions/ANGLE_multiview.txt",
         "patchSetId": 7
@@ -53,6 +95,24 @@
       "writtenOn": "2017-07-09T18:03:37Z",
       "side": 1,
       "message": "I think this enum should be named the same way as in OVR_multiview. I don\u0027t know if we need this fine-grained framebuffer incomplete states either - maybe just have the INCOMPLETE_VIEW_TARGETS enum and no other new framebuffer incomplete stat enums.",
+      "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88c579c6_5c0ff448",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-10T13:11:34Z",
+      "side": 1,
+      "message": "Done. Thought of having them separate so that it would be easy to verify what\u0027s wrong with the FBO.",
+      "parentUuid": "c5d19e50_139d7e41",
       "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -82,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "cebbfa9c_974030a4",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-10T13:11:34Z",
+      "side": 1,
+      "message": "Yes, I forgot to remove it from here.",
+      "parentUuid": "f658ac77_51632698",
+      "range": {
+        "startLine": 80,
+        "startChar": 79,
+        "endLine": 80,
+        "endChar": 94
+      },
+      "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "082b9a74_b5b65a1b",
         "filename": "extensions/ANGLE_multiview.txt",
         "patchSetId": 7
@@ -98,6 +182,53 @@
         "startChar": 82,
         "endLine": 81,
         "endChar": 96
+      },
+      "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d9239d31_c0f7e4f3",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-10T13:11:34Z",
+      "side": 1,
+      "message": "Yes, I forgot to remove it from here.",
+      "parentUuid": "082b9a74_b5b65a1b",
+      "range": {
+        "startLine": 81,
+        "startChar": 82,
+        "endLine": 81,
+        "endChar": 96
+      },
+      "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7123b7cc_83a21307",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-10T13:11:34Z",
+      "side": 1,
+      "message": "Same mistake here.",
+      "range": {
+        "startLine": 208,
+        "startChar": 8,
+        "endLine": 210,
+        "endChar": 54
       },
       "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -140,6 +271,24 @@
     },
     {
       "key": {
+        "uuid": "ff0b60e3_8e535a90",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-10T13:11:34Z",
+      "side": 1,
+      "message": "\"7.11.1 Shader Memory Access Ordering\" does not provide any guarantees on the order of memory accesses.\nI think there is no need to mention anything else except for the indirect draw calls. Anything else would just be undefined like in the GLES 3.1 spec.",
+      "parentUuid": "2c39f9ef_455b2c3c",
+      "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "72662eac_8cb214af",
         "filename": "extensions/ANGLE_multiview.txt",
         "patchSetId": 7
@@ -151,6 +300,30 @@
       "writtenOn": "2017-07-09T18:03:37Z",
       "side": 1,
       "message": "I think this should say \"or attachment is COLOR_ATTACHMENTm\".",
+      "range": {
+        "startLine": 256,
+        "startChar": 22,
+        "endLine": 256,
+        "endChar": 61
+      },
+      "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2518cebd_0924e4d9",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-10T13:11:34Z",
+      "side": 1,
+      "message": "Yes. I copied it directly from the ES 3.0 (November, 2016) spec. I didn\u0027t read it carefully and didn\u0027t expect a mistake.",
+      "parentUuid": "72662eac_8cb214af",
       "range": {
         "startLine": 256,
         "startChar": 22,
@@ -186,6 +359,30 @@
     },
     {
       "key": {
+        "uuid": "c91cd941_0b647885",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-10T13:11:34Z",
+      "side": 1,
+      "message": "I think we shouldn\u0027t.\nExcerpt from \"4.4.2.4 Attaching Texture Images to a Framebuffer, Effects of Attaching a Texture Image\":\n\"The remaining comments in this section apply to all forms of FramebufferTexture*.\nIf texture is zero, any image or array of images attached to the attachment point\nnamed by attachment is detached. Any additional parameters (level, textarget,\nand/or layer) are ignored when texture is zero. All state values of the attachment\npoint specified by attachment are set to their default values listed in table 6.14.\"",
+      "parentUuid": "e833f70f_ba97482e",
+      "range": {
+        "startLine": 261,
+        "startChar": 51,
+        "endLine": 261,
+        "endChar": 70
+      },
+      "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d338a23e_4b74a0d8",
         "filename": "extensions/ANGLE_multiview.txt",
         "patchSetId": 7
@@ -200,6 +397,24 @@
       "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "afd63ccb_ddda2951",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-10T13:11:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d338a23e_4b74a0d8",
+      "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -223,6 +438,30 @@
       "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ba5b6793_5e95b7c7",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 277,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-10T13:11:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70ef703d_67cb9470",
+      "range": {
+        "startLine": 277,
+        "startChar": 23,
+        "endLine": 277,
+        "endChar": 76
+      },
+      "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
