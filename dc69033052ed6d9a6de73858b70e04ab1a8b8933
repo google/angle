@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8ab95400_fec98f85",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-10T13:44:34Z",
+      "side": 1,
+      "message": "OpenGL ES 3.0",
+      "range": {
+        "startLine": 33,
+        "startChar": 4,
+        "endLine": 33,
+        "endChar": 31
+      },
+      "revId": "dc69033052ed6d9a6de73858b70e04ab1a8b8933",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "97587915_7933cdec",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-10T13:44:34Z",
+      "side": 1,
+      "message": "Can leave \"of each attachment\" out, since the framebuffer is incomplete if the number of views don\u0027t match between attachments, and in that case the INVALID_FRAMEBUFFER_OPERATION error will be generated.",
+      "range": {
+        "startLine": 91,
+        "startChar": 30,
+        "endLine": 91,
+        "endChar": 47
+      },
+      "revId": "dc69033052ed6d9a6de73858b70e04ab1a8b8933",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ecd7aaaa_8593e9df",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-10T13:44:34Z",
+      "side": 1,
+      "message": "Should be: if the number of views in the draw framebuffer is greater than 1.",
+      "range": {
+        "startLine": 102,
+        "startChar": 34,
+        "endLine": 103,
+        "endChar": 30
+      },
+      "revId": "dc69033052ed6d9a6de73858b70e04ab1a8b8933",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe9df356_45f58317",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-10T13:44:34Z",
+      "side": 1,
+      "message": "This should also be: \"if the number of views in the draw framebuffer is more than 1.\"",
+      "range": {
+        "startLine": 406,
+        "startChar": 28,
+        "endLine": 406,
+        "endChar": 79
+      },
+      "revId": "dc69033052ed6d9a6de73858b70e04ab1a8b8933",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57783599_04b39810",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 419,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-10T13:44:34Z",
+      "side": 1,
+      "message": "Here also.",
+      "range": {
+        "startLine": 419,
+        "startChar": 4,
+        "endLine": 419,
+        "endChar": 61
+      },
+      "revId": "dc69033052ed6d9a6de73858b70e04ab1a8b8933",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

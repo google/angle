@@ -336,6 +336,30 @@
     },
     {
       "key": {
+        "uuid": "6754fe85_c8bd7aaf",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-10T13:44:34Z",
+      "side": 1,
+      "message": "Oh, I think the original version is actually the right one. I now see that a different error is generated if m \u003e MAX_COLOR_ATTACHMENTS. Probably best to keep the spec similar to ES 3.0 spec.",
+      "parentUuid": "2518cebd_0924e4d9",
+      "range": {
+        "startLine": 256,
+        "startChar": 22,
+        "endLine": 256,
+        "endChar": 61
+      },
+      "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e833f70f_ba97482e",
         "filename": "extensions/ANGLE_multiview.txt",
         "patchSetId": 7
@@ -371,6 +395,30 @@
       "side": 1,
       "message": "I think we shouldn\u0027t.\nExcerpt from \"4.4.2.4 Attaching Texture Images to a Framebuffer, Effects of Attaching a Texture Image\":\n\"The remaining comments in this section apply to all forms of FramebufferTexture*.\nIf texture is zero, any image or array of images attached to the attachment point\nnamed by attachment is detached. Any additional parameters (level, textarget,\nand/or layer) are ignored when texture is zero. All state values of the attachment\npoint specified by attachment are set to their default values listed in table 6.14.\"",
       "parentUuid": "e833f70f_ba97482e",
+      "range": {
+        "startLine": 261,
+        "startChar": 51,
+        "endLine": 261,
+        "endChar": 70
+      },
+      "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4619b4e5_4700425d",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-10T13:44:34Z",
+      "side": 1,
+      "message": "You\u0027re right, I wasn\u0027t thinking straight when I wrote that comment.",
+      "parentUuid": "c91cd941_0b647885",
       "range": {
         "startLine": 261,
         "startChar": 51,
