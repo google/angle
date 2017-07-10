@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "667027bd_028b4f64",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-10T09:08:19Z",
+      "side": 1,
+      "message": "Added this because I think we only want to enable them in the vertex shader. The extension\u0027s spec doesn\u0027t say that it has to be enabled in the fragment shader and we definitely don\u0027t want the directive in a compute shader.",
+      "range": {
+        "startLine": 293,
+        "startChar": 8,
+        "endLine": 293,
+        "endChar": 43
+      },
+      "revId": "73a98a95d6f76ed64fdbcc6220d4567512feb241",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "862e0413_8cc8ff61",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 869,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-10T09:08:19Z",
+      "side": 1,
+      "message": "Do we want to include the behavior here. Is just having \"#extension GL_NV_viewport_array2\" better?",
+      "range": {
+        "startLine": 869,
+        "startChar": 69,
+        "endLine": 869,
+        "endChar": 76
+      },
+      "revId": "73a98a95d6f76ed64fdbcc6220d4567512feb241",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
