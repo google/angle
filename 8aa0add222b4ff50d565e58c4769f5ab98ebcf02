@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "4a3ee674_0b1c38a4",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 456,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-10T19:59:04Z",
+      "side": 1,
+      "message": "OK, I was wrong, the needs streaming bits stay set after a re-stream, they aren\u0027t dirty bits. sorry about that.",
+      "parentUuid": "e9b23db8_3ccbfcfd",
+      "range": {
+        "startLine": 456,
+        "startChar": 3,
+        "endLine": 456,
+        "endChar": 68
+      },
+      "revId": "8aa0add222b4ff50d565e58c4769f5ab98ebcf02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d21eb44a_58526b7a",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 34
@@ -143,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "09140be1_988d142b",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 602,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-10T19:59:04Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1681e515_9618dea3",
+      "range": {
+        "startLine": 601,
+        "startChar": 0,
+        "endLine": 602,
+        "endChar": 26
+      },
+      "revId": "8aa0add222b4ff50d565e58c4769f5ab98ebcf02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "206743ff_1d4a6a4a",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 34
@@ -178,6 +226,30 @@
       "side": 1,
       "message": "This is caused by the design of dirty bits in VertexArray.cpp: each dirty bit represents a dirty state not a GL call.\n\nAccording to SPEC, VertexAttribPointer can update 4 parts of a vertex attribute:\nformat, binding, attribBinding and attribPointer\nSo all these 4 dirty bits are set when VertexAttribPointer are called. That\u0027s why we reach here on the platforms that don\u0027t support Vertex Attrib Binding.\n\nOn platforms with Vertex Attrib Binding, I plan to use this API to replace VertexAttribPointer so that we can update format and binding separately, and even save the update to the format when only binding should be updated. \n\nVertexAttribDivisor is the same story: it can update 2 parts of a vertex attribute:\nattribBinding and bindingDivisor,\nSo both 2 dirty bits are set when VertexAttribDivisor are called.\nAs attribBinding cannot be updated in ES3.0, we are actually using VertexBindingDivisor to implement VertexAttribDivisor.\n\nIf you prefer a single bit to represent VertexAttribPointer, then we should add a dirty bit for VertexAttribDivisor too.",
       "parentUuid": "206743ff_1d4a6a4a",
+      "range": {
+        "startLine": 677,
+        "startChar": 11,
+        "endLine": 677,
+        "endChar": 45
+      },
+      "revId": "8aa0add222b4ff50d565e58c4769f5ab98ebcf02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a904f7cf_fc00c9de",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 677,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-10T19:59:04Z",
+      "side": 1,
+      "message": "I understand. The problem here is we are setting too many dirty bits. If we set the \"POINTER\" dirty bit, the \"BINDING\"/\"FORMAT\" bits are redundant.\n\nPlease make this change to VertexArray.cpp:\n\n* Make new internal methods for \"binding\"/\"format\"/\"buffer\" that are exactly the same as they are now, but don\u0027t set the dirty bits.\n* Then, make the existing binding/format/buffer methods call these internal methods, and also set the dirty bit.\n* Make pointer/etc call the internal methods so they behave the same, but don\u0027t set the dirty bit.\n\nPlease ask if you have any questions or need any explanation as to what I want.",
+      "parentUuid": "a8903e88_cb698226",
       "range": {
         "startLine": 677,
         "startChar": 11,
