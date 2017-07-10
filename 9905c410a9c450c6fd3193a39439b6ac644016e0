@@ -360,6 +360,30 @@
     },
     {
       "key": {
+        "uuid": "1e467cf2_679dd56a",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-10T15:08:11Z",
+      "side": 1,
+      "message": "Alright, yes.",
+      "parentUuid": "6754fe85_c8bd7aaf",
+      "range": {
+        "startLine": 256,
+        "startChar": 22,
+        "endLine": 256,
+        "endChar": 61
+      },
+      "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e833f70f_ba97482e",
         "filename": "extensions/ANGLE_multiview.txt",
         "patchSetId": 7
@@ -428,6 +452,30 @@
       "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "21970561_e81f72b5",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 7
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-10T15:08:11Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "4619b4e5_4700425d",
+      "range": {
+        "startLine": 261,
+        "startChar": 51,
+        "endLine": 261,
+        "endChar": 70
+      },
+      "revId": "9905c410a9c450c6fd3193a39439b6ac644016e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
