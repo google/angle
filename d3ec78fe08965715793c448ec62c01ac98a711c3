@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "92fdfcb8_37aedb4a",
+        "filename": "src/compiler/translator/ConstantUnion.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-10T16:16:21Z",
+      "side": 1,
+      "message": "probably should just put these in the cpp (assuming there is one)",
+      "range": {
+        "startLine": 55,
+        "startChar": 8,
+        "endLine": 55,
+        "endChar": 17
+      },
+      "revId": "d3ec78fe08965715793c448ec62c01ac98a711c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ec78b6fe_b9054381",
         "filename": "src/compiler/translator/Intermediate.h",
         "patchSetId": 1
