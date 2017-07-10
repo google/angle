@@ -22,6 +22,30 @@
       "revId": "d558bc03970ca87bf49d3d4f1add64c4aec78dab",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "64e6effa_a11cc17f",
+        "filename": "src/tests/compiler_tests/GeometryShader_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-10T00:24:42Z",
+      "side": 1,
+      "message": "Done\nI agree with you and I have removed this test.",
+      "parentUuid": "1565a35e_a46e133a",
+      "range": {
+        "startLine": 105,
+        "startChar": 27,
+        "endLine": 105,
+        "endChar": 37
+      },
+      "revId": "d558bc03970ca87bf49d3d4f1add64c4aec78dab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
