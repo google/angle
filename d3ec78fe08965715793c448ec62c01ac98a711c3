@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fbfeb613_11b6f0c7",
+        "filename": "src/compiler/translator/ConstantUnion.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-10T20:53:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "92fdfcb8_37aedb4a",
+      "range": {
+        "startLine": 55,
+        "startChar": 8,
+        "endLine": 55,
+        "endChar": 17
+      },
+      "revId": "d3ec78fe08965715793c448ec62c01ac98a711c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ec78b6fe_b9054381",
         "filename": "src/compiler/translator/Intermediate.h",
         "patchSetId": 1
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "27e1a12b_9dbdd8e3",
+        "filename": "src/compiler/translator/Intermediate.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-10T20:53:28Z",
+      "side": 1,
+      "message": "I\u0027m not actually 100% sure what to do with this one. There\u0027s also a bunch of other similar utilities that get used in AST transformations, like CreateZero, CreateIndexNode, CreateInternalFunctionCallNode. I could either make them members of the TIntermNode classes - maybe distribute them according to the type of node pointer they create - or just add them as a collection of utility functions in a separate file. Any thoughts which would be better?",
+      "parentUuid": "ec78b6fe_b9054381",
+      "revId": "d3ec78fe08965715793c448ec62c01ac98a711c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d5bca1e7_bd5c2f09",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 1
@@ -53,6 +95,24 @@
       "writtenOn": "2017-07-10T14:56:00Z",
       "side": 1,
       "message": "I was going to suggest adding an UNREACHABLE in an else clause, but it could get reached if we hit a compilation error before and we still need to handle getBasicType \u003d EbtFloat gracefully. Is that correct?",
+      "revId": "d3ec78fe08965715793c448ec62c01ac98a711c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0a9d23bf_7b195a2c",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3395,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-10T20:53:28Z",
+      "side": 1,
+      "message": "That\u0027s right.",
+      "parentUuid": "d5bca1e7_bd5c2f09",
       "revId": "d3ec78fe08965715793c448ec62c01ac98a711c3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
