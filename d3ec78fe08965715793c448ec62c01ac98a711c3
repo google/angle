@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ec78b6fe_b9054381",
+        "filename": "src/compiler/translator/Intermediate.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-10T14:56:00Z",
+      "side": 1,
+      "message": "Only one method left, FINISH HIM!",
+      "revId": "d3ec78fe08965715793c448ec62c01ac98a711c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d5bca1e7_bd5c2f09",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3395,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-10T14:56:00Z",
+      "side": 1,
+      "message": "I was going to suggest adding an UNREACHABLE in an else clause, but it could get reached if we hit a compilation error before and we still need to handle getBasicType \u003d EbtFloat gracefully. Is that correct?",
+      "revId": "d3ec78fe08965715793c448ec62c01ac98a711c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
