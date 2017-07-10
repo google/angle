@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a13ce15e_55946c87",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-10T15:08:00Z",
+      "side": 1,
+      "message": "Here and in TranslatorGLSL, the GL_NV_viewport array extension is added whether the shader uses the multiview extension or not. Shouldn\u0027t it only be enabled when the shader asks for multiview?",
+      "revId": "63ca07006aee79e6a786b6607dd7358457274fc2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
