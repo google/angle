@@ -45,6 +45,30 @@
       "revId": "73a98a95d6f76ed64fdbcc6220d4567512feb241",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d97725d_1a671d98",
+        "filename": "src/tests/compiler_tests/WEBGL_multiview_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 869,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-10T09:23:02Z",
+      "side": 1,
+      "message": "Probably better to drop the behavior.",
+      "parentUuid": "862e0413_8cc8ff61",
+      "range": {
+        "startLine": 869,
+        "startChar": 69,
+        "endLine": 869,
+        "endChar": 76
+      },
+      "revId": "73a98a95d6f76ed64fdbcc6220d4567512feb241",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
