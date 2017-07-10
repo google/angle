@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a2258ad_00c2b062",
+        "filename": "src/libANGLE/Uniform.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-10T20:11:30Z",
+      "side": 0,
+      "message": "is it necessary to remove these asserts?",
+      "range": {
+        "startLine": 48,
+        "startChar": 3,
+        "endLine": 49,
+        "endChar": 1
+      },
+      "revId": "1cbe920355a1a5fa03d30d5540f8e78d6c6c117f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

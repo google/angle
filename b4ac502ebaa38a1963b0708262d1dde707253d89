@@ -16,6 +16,47 @@
       "revId": "b4ac502ebaa38a1963b0708262d1dde707253d89",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ea8d8b9_5162e685",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1792,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-10T20:11:30Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "92d411bb_64ef6769",
+      "revId": "b4ac502ebaa38a1963b0708262d1dde707253d89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b0b1c52_98de74ae",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-10T20:11:30Z",
+      "side": 1,
+      "message": "The API says that interface blocks and shader storage blocks are application backed by buffers. But BackedBufferInfo doesn\u0027t sound quite right, because it sounds too much like \"BackBuffer\", which is a term for a Surface/Default Framebuffer. Also the inheritance relationship is \"is-a\" so calling this object an \"Info\" is not right, since the name implies a \"has-an-info\" relationship. Maybe call this \"BufferBackedShaderVar\" since they are closely related to sh::ShaderVariable.",
+      "range": {
+        "startLine": 62,
+        "startChar": 7,
+        "endLine": 62,
+        "endChar": 23
+      },
+      "revId": "b4ac502ebaa38a1963b0708262d1dde707253d89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
