@@ -222,7 +222,13 @@ bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
         return false;
     }
 
-    if (!baseImageDesc.format.info->filterSupport(data.getClientVersion(), data.getExtensions()) &&
+    // According to es 3.1 spec, texture is justified as incomplete if sized internalformat is
+    // unfilterable(table 20.11) and filter is not GL_NEAREST(8.16). The default value of minFilter
+    // is NEAREST_MIPMAP_LINEAR and magFilter is LINEAR(table 20.11,). For multismaple texture,
+    // filter state of multisample texture is ignored(11.1.3.3). So it shouldn't be judged as
+    // incomplete texture. So, we ignore filtering for multisample texture completeness here.
+    if (mTarget != GL_TEXTURE_2D_MULTISAMPLE &&
+        !baseImageDesc.format.info->filterSupport(data.getClientVersion(), data.getExtensions()) &&
         !IsPointSampled(samplerState))
     {
         return false;
@@ -237,7 +243,7 @@ bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
         }
     }
 
-    if (IsMipmapFiltered(samplerState))
+    if (mTarget != GL_TEXTURE_2D_MULTISAMPLE && IsMipmapFiltered(samplerState))
     {
         if (!npotSupport)
         {
@@ -286,7 +292,8 @@ bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
     // depth and stencil format (see table 3.13), the value of TEXTURE_COMPARE_-
     // MODE is NONE, and either the magnification filter is not NEAREST or the mini-
     // fication filter is neither NEAREST nor NEAREST_MIPMAP_NEAREST.
-    if (baseImageDesc.format.info->depthBits > 0 && data.getClientMajorVersion() >= 3)
+    if (mTarget != GL_TEXTURE_2D_MULTISAMPLE && baseImageDesc.format.info->depthBits > 0 &&
+        data.getClientMajorVersion() >= 3)
     {
         // Note: we restrict this validation to sized types. For the OES_depth_textures
         // extension, due to some underspecification problems, we must allow linear filtering

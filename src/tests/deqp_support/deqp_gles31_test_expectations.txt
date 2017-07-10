@@ -37,20 +37,7 @@
 1442 D3D11 : dEQP-GLES31.functional.stencil_texturing.* = SKIP
 1442 D3D11 : dEQP-GLES31.functional.texture.gather.* = SKIP
 
-// OpenGL Failing Tests
-1442 OPENGL : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_1_texture_2d_array = FAIL
-1442 OPENGL : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_4_texture_2d_array = FAIL
-1442 OPENGL : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_1_texture_int_2d = FAIL
-1442 OPENGL : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_4_texture_int_2d = FAIL
-1442 OPENGL : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_1_texture_int_2d_array = FAIL
-1442 OPENGL : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_4_texture_int_2d_array = FAIL
-1442 OPENGL : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_1_texture_uint_2d = FAIL
-1442 OPENGL : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_4_texture_uint_2d = FAIL
-1442 OPENGL : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_1_texture_uint_2d_array = FAIL
-1442 OPENGL : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_4_texture_uint_2d_array = FAIL
-
 // D3D11 Failing Tests
-1442 D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_color_texture_samples_* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_depth_texture_samples_* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_integer_samples_* = FAIL
@@ -1336,12 +1323,3 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.texture.multisample.samples_12.sample_mask_* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.texture.multisample.samples_13.sample_mask_* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.texture.multisample.samples_64.sample_mask_* = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.texture.multisample.samples_1.use_texture_* = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.texture.multisample.samples_2.use_texture_* = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.texture.multisample.samples_3.use_texture_* = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.texture.multisample.samples_4.use_texture_* = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.texture.multisample.samples_8.use_texture_* = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.texture.multisample.samples_10.use_texture_* = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.texture.multisample.samples_12.use_texture_* = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.texture.multisample.samples_13.use_texture_* = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.texture.multisample.samples_64.use_texture_* = FAIL
