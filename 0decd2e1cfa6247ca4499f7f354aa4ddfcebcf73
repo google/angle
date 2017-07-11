@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2fbe5f32_df86c4d9",
+        "filename": "src/compiler/fuzz/translator_fuzzer.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-11T15:37:22Z",
+      "side": 1,
+      "message": "output should be cast to ShShaderOutput.",
+      "range": {
+        "startLine": 88,
+        "startChar": 8,
+        "endLine": 88,
+        "endChar": 54
+      },
+      "revId": "0decd2e1cfa6247ca4499f7f354aa4ddfcebcf73",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
