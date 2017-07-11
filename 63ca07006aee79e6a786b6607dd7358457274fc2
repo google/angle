@@ -16,6 +16,24 @@
       "revId": "63ca07006aee79e6a786b6607dd7358457274fc2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "28827b38_950ab2fd",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-11T07:52:30Z",
+      "side": 1,
+      "message": "Yes, thanks for noticing that. I uploaded a new version which addresses the issue. The extension should be only emitted if ovr_multiview(2) is requested in a vertex shader amd the SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER option is set.",
+      "parentUuid": "a13ce15e_55946c87",
+      "revId": "63ca07006aee79e6a786b6607dd7358457274fc2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
