@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2190ba53_32bcda61",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 26
+      },
+      "lineNbr": 4973,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-11T15:47:56Z",
+      "side": 1,
+      "message": "nit: you can actually just pass the pointer to clearValues here, since they\u0027re a simple structure of 4 floats.",
+      "range": {
+        "startLine": 4973,
+        "startChar": 53,
+        "endLine": 4973,
+        "endChar": 58
+      },
+      "revId": "30b11948175b552b90383b31b24af5c440319609",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "18e1a4e1_ce25aad3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 26
+      },
+      "lineNbr": 481,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-11T15:47:56Z",
+      "side": 1,
+      "message": "make this a const gl::ColorF \u0026 instead of a ColorF pointer. Same for clearTexture and other APIs.",
+      "range": {
+        "startLine": 481,
+        "startChar": 63,
+        "endLine": 481,
+        "endChar": 86
+      },
+      "revId": "30b11948175b552b90383b31b24af5c440319609",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
