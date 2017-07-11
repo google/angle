@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "84b8bf73_c978335e",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-11T15:27:06Z",
+      "side": 1,
+      "message": "What about using \u0027Adjacent\u0027 instead?",
+      "range": {
+        "startLine": 69,
+        "startChar": 30,
+        "endLine": 69,
+        "endChar": 42
+      },
+      "revId": "048cf1b8a46263e3932cf2938d516c6534f37139",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38122d14_ad06c74f",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-11T15:27:06Z",
+      "side": 1,
+      "message": "Instead of this enum, what about returning GL_NONE when FRAMEBUFFER_ATTACHMENT_MULTIVIEW_LAYOUT_ANGLE is queried on a non-multiview attachment.",
+      "range": {
+        "startLine": 71,
+        "startChar": 8,
+        "endLine": 71,
+        "endChar": 39
+      },
+      "revId": "048cf1b8a46263e3932cf2938d516c6534f37139",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "552ea236_e107e54c",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-11T15:27:06Z",
+      "side": 1,
+      "message": "same as above",
+      "range": {
+        "startLine": 80,
+        "startChar": 36,
+        "endLine": 80,
+        "endChar": 46
+      },
+      "revId": "048cf1b8a46263e3932cf2938d516c6534f37139",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
