@@ -22,6 +22,30 @@
       "revId": "5ae9bce3050857037d192a5cb32b0cba19a43396",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9606bacc_803c8b1d",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-11T13:04:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f72e6855_4d88230d",
+      "range": {
+        "startLine": 145,
+        "startChar": 36,
+        "endLine": 151,
+        "endChar": 71
+      },
+      "revId": "5ae9bce3050857037d192a5cb32b0cba19a43396",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
