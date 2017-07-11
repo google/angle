@@ -424,6 +424,53 @@ TEST_P(RobustResourceInitTest, ReadingUninitialized3DTexture)
     EXPECT_GL_NO_ERROR();
 }
 
+// Copy of the copytexsubimage3d_texture_wrongly_initialized test that is part of the WebGL2
+// conformance suite: copy-texture-image-webgl-specific.html
+TEST_P(RobustResourceInitTest, CopyTexSubImage3DTextureWronglyInitialized)
+{
+    if (!setup() || getClientMajorVersion() < 3)
+    {
+        return;
+    }
+
+    if (IsOpenGL())
+    {
+        std::cout << "Robust resource init is not yet fully implemented. (" << GetParam() << ")"
+                  << std::endl;
+        return;
+    }
+
+    constexpr GLint kLayer     = 0;
+    constexpr GLint kWidth     = 2;
+    constexpr GLint kHeight    = 2;
+    constexpr GLint kDepth     = 2;
+    constexpr size_t kDataSize = kWidth * kHeight * 4;
+
+    GLTexture texture2D;
+    glBindTexture(GL_TEXTURE_2D, texture2D);
+    constexpr std::array<uint8_t, kDataSize> data = {{0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+                                                      0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E,
+                                                      0x0F, 0x10}};
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWidth, kHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 data.data());
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture2D, 0);
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    GLTexture texture3D;
+    glBindTexture(GL_TEXTURE_3D, texture3D);
+    glTexStorage3D(GL_TEXTURE_3D, 1, GL_RGBA8, kWidth, kHeight, kDepth);
+    glCopyTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, kLayer, 0, 0, kWidth, kHeight);
+
+    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture3D, 0, kLayer);
+    std::array<uint8_t, kDataSize> pixels;
+    glReadPixels(0, 0, kWidth, kHeight, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(data, pixels);
+}
+
 ANGLE_INSTANTIATE_TEST(RobustResourceInitTest,
                        ES2_D3D9(),
                        ES2_D3D11(),

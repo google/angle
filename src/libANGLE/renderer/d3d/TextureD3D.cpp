@@ -2396,29 +2396,23 @@ gl::Error TextureD3D_3D::copySubImage(const gl::Context *context,
                                        destOffset.y + clippedSourceArea.y - sourceArea.y,
                                        destOffset.z);
 
-    // Currently, 3D single-layer blits are broken because we don't know how to make an SRV
-    // for a single layer of a 3D texture.
-    // TODO(jmadill): Investigate 3D blits in D3D11.
-    // gl::ImageIndex index = gl::ImageIndex::Make3D(level);
+    // Currently, copying directly to the storage is not possible because it's not possible to
+    // create an SRV from a single layer of a 3D texture.  Instead, make sure the image is up to
+    // date before the copy and then copy back to the storage afterwards if needed.
+    // TODO: Investigate 3D blits in D3D11.
 
-    // if (!canCreateRenderTargetForImage(index))
+    bool syncTexStorage = mTexStorage && isLevelComplete(level);
+    if (syncTexStorage)
     {
-        ANGLE_TRY(mImageArray[level]->copyFromFramebuffer(context, clippedDestOffset,
-                                                          clippedSourceArea, source));
-        mDirtyImages = true;
+        gl::ImageIndex index = gl::ImageIndex::Make3D(level);
+        mImageArray[level]->copyFromTexStorage(context, index, mTexStorage);
     }
-    // else
-    //{
-    //    ANGLE_TRY(ensureRenderTarget());
-    //    if (isValidLevel(level))
-    //    {
-    //        ANGLE_TRY(updateStorageLevel(context, level));
-    //        ANGLE_TRY(mRenderer->copyImage3D(
-    //            source, sourceArea,
-    //            gl::GetInternalFormatInfo(getBaseLevelInternalFormat()).format,
-    //            destOffset, mTexStorage, level));
-    //    }
-    //}
+    ANGLE_TRY(mImageArray[level]->copyFromFramebuffer(context, clippedDestOffset, clippedSourceArea,
+                                                      source));
+    if (syncTexStorage)
+    {
+        updateStorageLevel(context, level);
+    }
 
     return gl::NoError();
 }
