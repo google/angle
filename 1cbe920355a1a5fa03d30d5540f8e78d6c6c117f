@@ -46,6 +46,30 @@
       "revId": "1cbe920355a1a5fa03d30d5540f8e78d6c6c117f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cb8af16d_6bdff311",
+        "filename": "src/libANGLE/Uniform.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-07-11T13:07:15Z",
+      "side": 0,
+      "message": "Revert this change as it\u0027s not appropriate to just remove the asserts. Semantically copying mLazyData is not allowed as a NonCopyable type.",
+      "parentUuid": "31176208_39e00922",
+      "range": {
+        "startLine": 48,
+        "startChar": 3,
+        "endLine": 49,
+        "endChar": 1
+      },
+      "revId": "1cbe920355a1a5fa03d30d5540f8e78d6c6c117f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }

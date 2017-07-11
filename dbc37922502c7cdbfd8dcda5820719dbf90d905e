@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e91b7670_91b42944",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 765,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-07-11T13:07:15Z",
+      "side": 1,
+      "message": "\"gatherInterfaceBlockInfo\" collects block member uniforms and adds them into the LinkedUniform vector mUniforms. As we know, std::vector may allocate a new bigger memory to accommodate newly the pushed element if there is no free room for it. Then the copy constructor of element may be may implicitly invoked to move the old elements to new space. As the copy constructor of LinkedUniform assumes its uniform value is empty, so we should call \"setUniformValuesFromBindingQualifiers\" later.",
+      "range": {
+        "startLine": 765,
+        "startChar": 0,
+        "endLine": 765,
+        "endChar": 44
+      },
+      "revId": "dbc37922502c7cdbfd8dcda5820719dbf90d905e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
