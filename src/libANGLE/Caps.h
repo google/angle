@@ -363,6 +363,9 @@ struct Extensions
 
     // GL_ANGLE_robust_resource_initialization
     bool robustResourceInitialization;
+
+    // GL_ANGLE_program_cache_control
+    bool programCacheControl;
 };
 
 struct ExtensionInfo
@@ -667,6 +670,9 @@ struct DisplayExtensions
 
     // EGL_ANGLE_create_context_client_arrays
     bool createContextClientArrays;
+
+    // EGL_ANGLE_program_cache_control
+    bool programCacheControl;
 };
 
 struct DeviceExtensions

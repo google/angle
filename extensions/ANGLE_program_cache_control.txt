@@ -52,7 +52,7 @@ New Tokens
     Accepted by the <cap> parameter to IsEnabled and the <pname> parameter to
     GetBooleanv, GetIntegerv, GetFloatv, and GetInteger64v:
 
-    PROGRAM_CACHE_ENABLED_ANGLE
+    PROGRAM_CACHE_ENABLED_ANGLE           0x93AC
 
 Additions to the OpenGL ES Specification:
 

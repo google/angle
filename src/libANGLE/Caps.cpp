@@ -226,7 +226,8 @@ Extensions::Extensions()
       pathRendering(false),
       surfacelessContext(false),
       clientArrays(false),
-      robustResourceInitialization(false)
+      robustResourceInitialization(false),
+      programCacheControl(false)
 {
 }
 
@@ -694,6 +695,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_surfaceless_context"] = esOnlyExtension(&Extensions::surfacelessContext);
         map["GL_ANGLE_client_arrays"] = esOnlyExtension(&Extensions::clientArrays);
         map["GL_ANGLE_robust_resource_initialization"] = esOnlyExtension(&Extensions::robustResourceInitialization);
+        map["GL_ANGLE_program_cache_control"] = esOnlyExtension(&Extensions::programCacheControl);
         // clang-format on
 
         return map;
@@ -1084,7 +1086,8 @@ DisplayExtensions::DisplayExtensions()
       pixelFormatFloat(false),
       surfacelessContext(false),
       displayTextureShareGroup(false),
-      createContextClientArrays(false)
+      createContextClientArrays(false),
+      programCacheControl(false)
 {
 }
 
@@ -1127,6 +1130,7 @@ std::vector<std::string> DisplayExtensions::getStrings() const
     InsertExtensionString("EGL_KHR_surfaceless_context",                         surfacelessContext,                 &extensionStrings);
     InsertExtensionString("EGL_ANGLE_display_texture_share_group",               displayTextureShareGroup,           &extensionStrings);
     InsertExtensionString("EGL_ANGLE_create_context_client_arrays",              createContextClientArrays,          &extensionStrings);
+    InsertExtensionString("EGL_ANGLE_program_cache_control",                     programCacheControl,                &extensionStrings);
     // TODO(jmadill): Enable this when complete.
     //InsertExtensionString("KHR_create_context_no_error",                       createContextNoError,               &extensionStrings);
     // clang-format on

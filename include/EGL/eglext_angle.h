@@ -10,6 +10,8 @@
 #ifndef INCLUDE_EGL_EGLEXT_ANGLE_
 #define INCLUDE_EGL_EGLEXT_ANGLE_
 
+// clang-format off
+
 #ifndef EGL_ANGLE_display_robust_resource_initialization
 #define EGL_ANGLE_display_robust_resource_initialization 1
 #define EGL_DISPLAY_ROBUST_RESOURCE_INITIALIZATION_ANGLE 0x3453
@@ -143,5 +145,26 @@ EGLAPI EGLDeviceEXT EGLAPIENTRY eglCreateDeviceANGLE(EGLint device_type, void *n
 EGLAPI EGLBoolean EGLAPIENTRY eglReleaseDeviceANGLE(EGLDeviceEXT device);
 #endif
 #endif /* EGL_ANGLE_device_creation */
+
+#ifndef EGL_ANGLE_program_cache_control
+#define EGL_ANGLE_program_cache_control 1
+#define EGL_PROGRAM_CACHE_SIZE_ANGLE 0x3455
+#define EGL_PROGRAM_CACHE_KEY_LENGTH_ANGLE 0x3456
+#define EGL_PROGRAM_CACHE_RESIZE_ANGLE 0x3457
+#define EGL_PROGRAM_CACHE_TRIM_ANGLE 0x3458
+#define EGL_CONTEXT_PROGRAM_BINARY_CACHE_ENABLED_ANGLE 0x3459
+typedef EGLint (EGLAPIENTRYP PFNEGLPROGRAMCACHEGETATTRIBANGLEPROC) (EGLDisplay dpy, EGLenum attrib);
+typedef void (EGLAPIENTRYP PFNEGLPROGRAMCACHEQUERYANGLEPROC) (EGLDisplay dpy, EGLint index, void *key, EGLint *keysize, void *binary, EGLint *binarysize);
+typedef void (EGLAPIENTRYP PFNEGPROGRAMCACHELPOPULATEANGLEPROC) (EGLDisplay dpy, const void *key, EGLint keysize, const void *binary, EGLint binarysize);
+typedef EGLint (EGLAPIENTRYP PFNEGLPROGRAMCACHERESIZEANGLEPROC) (EGLDisplay dpy, EGLint limit, EGLenum mode);
+#ifdef EGL_EGLEXT_PROTOTYPES
+EGLAPI EGLint EGLAPIENTRY eglProgramCacheGetAttribANGLE(EGLDisplay dpy, EGLenum attrib);
+EGLAPI void EGLAPIENTRY eglProgramCacheQueryANGLE(EGLDisplay dpy, EGLint index, void *key, EGLint *keysize, void *binary, EGLint *binarysize);
+EGLAPI void EGLAPIENTRY eglProgramCachePopulateANGLE(EGLDisplay dpy, const void *key, EGLint keysize, const void *binary, EGLint binarysize);
+EGLAPI EGLint EGLAPIENTRY eglProgramCacheResizeANGLE(EGLDisplay dpy, EGLint limit, EGLenum mode);
+#endif
+#endif /* EGL_ANGLE_program_cache_control */
+
+// clang-format on
 
 #endif  // INCLUDE_EGL_EGLEXT_ANGLE_

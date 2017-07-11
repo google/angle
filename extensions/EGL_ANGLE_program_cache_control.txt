@@ -47,61 +47,48 @@ New Types
 
 New Procedures and Functions
 
-    void eglGetProgramCacheAttribANGLE(
+    EGLint eglProgramCacheGetAttribANGLE(
         EGLDisplay dpy,
-        EGLenum attrib,
-        EGLint *value);
+        EGLenum attrib);
 
-    void eglQueryProgramCacheANGLE(
+    void eglProgramCacheQueryANGLE(
         EGLDisplay dpy,
         EGLint index,
         void *key,
         EGLint *keysize,
         void *binary,
-        EGLint *size);
+        EGLint *binarysize);
 
-    void eglPopulateProgramCacheANGLE(
+    void eglProgramCachePopulateANGLE(
         EGLDisplay dpy,
-        void *key,
+        const void *key,
         EGLint keysize,
-        void *binary,
+        const void *binary,
         EGLint binarysize);
 
-    EGLint eglTrimProgramCacheANGLE(
+    EGLint eglProgramCacheResizeANGLE(
         EGLDisplay dpy,
-        EGLint limit);
+        EGLint limit,
+        EGLenum mode);
 
 New Tokens
 
-    Accepted as a value for 'attrib' in eglGetProgramCacheAttribANGLE:
+    Accepted as a value for 'attrib' in eglProgramCacheGetAttribANGLE:
 
-        EGL_PROGRAM_CACHE_SIZE_ANGLE       0xXXXX
-        EGL_PROGRAM_CACHE_KEY_LENGTH_ANGLE 0xXXXX
+        EGL_PROGRAM_CACHE_SIZE_ANGLE                     0x3455
+        EGL_PROGRAM_CACHE_KEY_LENGTH_ANGLE               0x3456
 
-    Accepted as an attribute name in the <*attrib_list> argument to
-    eglGetPlatformDisplay:
+    Accepted as a value for 'mode' in eglProgramCacheResizeANGLE:
 
-        EGL_DISPLAY_PROGRAM_BINARY_CACHE_MAX_SIZE_ANGLE 0xXXXX
+        EGL_PROGRAM_CACHE_RESIZE_ANGLE                   0x3457
+        EGL_PROGRAM_CACHE_TRIM_ANGLE                     0x3458
 
     Accepted as an attribute name in the <*attrib_list> argument to
     eglCreateContext:
 
-        EGL_CONTEXT_PROGRAM_BINARY_CACHE_ENABLED_ANGLE 0xXXXX
+        EGL_CONTEXT_PROGRAM_BINARY_CACHE_ENABLED_ANGLE   0x3459
 
 Additions to the EGL 1.5 Specification
-
-    Add a new section entitled "OpenGL ES Program Cache Initialization"
-    to section 3.2:
-
-    If the attribute EGL_DISPLAY_PROGRAM_BINARY_CACHE_MAX_SIZE_ANGLE is set to a
-    positive number, a Display supporting a program binary cache will be
-    returned. OpenGL ES contexts created on this display must support the
-    ANGLE_program_cache_control extension, or equivalent core API functionality.
-    The maximum size, in bytes, of the cache will be set to the value of
-    EGL_DISPLAY_PROGRAM_BINARY_CACHE_MAX_SIZE_ANGLE. If
-    EGL_DISPLAY_PROGRAM_BINARY_CACHE_MAX_SIZE_ANGLE is zero, program caching is
-    disabled. The default value of
-    EGL_DISPLAY_PROGRAM_BINARY_CACHE_MAX_SIZE_ANGLE is implementation-dependent.
 
     Add the following to section 3.7.1 "Creating Rendering Contexts":
 
@@ -122,21 +109,20 @@ Additions to the EGL 1.5 Specification
 
     Program binary cache properties may be queried using
 
-        void eglGetProgramCacheAttribANGLE(EGLDisplay dpy, EGLenum attrib,
-            EGLint *value);
+        EGLint eglProgramCacheGetAttribANGLE(EGLDisplay dpy, EGLenum attrib);
 
     The only accepted values for 'attrib' are EGL_PROGRAM_CACHE_SIZE_ANGLE and
     EGL_PROGRAM_CACHE_KEY_LENGTH_ANGLE. A query for EGL_PROGRAM_CACHE_SIZE_ANGLE
-    will return the number of cache entries in the program cache in 'value'. A
+    will return the number of cache entries in the program cache. A
     query of EGL_PROGRAM_CACHE_KEY_LENGTH_ANGLE will return the required length
-    (in bytes) of the 'key' parameter to eglQueryProgramCacheANGLE and
+    (in bytes) of the 'key' parameter to eglProgramCacheQueryANGLE and
     eglPopulateProgramCacheANGLE. Any other value for 'attrib' will produce an
     error of EGL_BAD_ATTRIBUTE, and an invalid display for 'dpy' will produce an
-    error of EGL_BAD_DISPLAY.
+    error of EGL_BAD_DISPLAY. All error cases will return zero.
 
     Cache contents may be queried by using
 
-        void eglQueryProgramCacheANGLE(EGLDisplay dpy, EGLint index,
+        void eglProgramCacheQueryANGLE(EGLDisplay dpy, EGLint index,
             void *key, EGLint *keysize, void *binary, EGLint *binarysize);
 
     If 'dpy' is not a valid display an EGL_BAD_DISPLAY error is generated. If
@@ -144,8 +130,8 @@ Additions to the EGL 1.5 Specification
     EGL_PROGRAM_CACHE_SIZE_ANGLE, an EGL_BAD_PARAMETER error is generated. If
     'dpy' is not a valid display EGL_BAD_DISPLAY is generated. If 'binarysize'
     and 'keysize' are non-null, and 'binary' and 'key' are null, the size of the
-    binary at 'index' is written to 'size', and the key size to 'keysize'. If
-    'binary' is not null, 'binarysize' specifies the maximum size of the
+    binary at 'index' is written to 'binarysize', and the key size to 'keysize'.
+    If 'binary' is not null, 'binarysize' specifies the maximum size of the
     'binary' out parameter, and if 'keysize' is not null, the size of the 'key'
     out parameter. Any attempt to write more than 'binarysize' or 'keysize'
     bytes will produce an EGL_BAD_ACCESS error in this case. If 'keysize' or
@@ -159,26 +145,32 @@ Additions to the EGL 1.5 Specification
 
     The cache may be warmed up on startup with
 
-        void eglPopulateProgramCacheANGLE(EGLDisplay dpy, void *key,
-            EGLint keysize, void *binary, EGLint binarysize);
+        void eglProgramCachePopulateANGLE(EGLDisplay dpy, const void *key,
+            EGLint keysize, const void *binary, EGLint binarysize);
 
     If 'dpy' is not a valid display an EGL_BAD_DISPLAY error is generated. If
-    'binarysize' is negative or greater than an internally defined maximum size,
-    EGL_BAD_PARAMETER is generated. If 'keysize' does not match the cache key
-    size of the implementation, EGL_BAD_PARAMETER is generated. If the program
-    binary is invalid for any reason, behaviour is undefined. Otherwise the
-    program will be loaded into the internal binary cache with the key 'key'. If
-    'binary' or 'key' are null, an EGL_BAD_PARAMETER error is generated.
+    'binarysize' is not positive or is greater than an internally defined
+    maximum size, EGL_BAD_PARAMETER is generated. If 'keysize' does not equal
+    EGL_PROGRAM_CACHE_KEY_LENGTH_ANGLE, EGL_BAD_PARAMETER is generated. If the
+    program binary is invalid for any reason, behaviour is undefined. Otherwise
+    the program will be loaded into the internal binary cache with the key
+    'key'. If 'binary' or 'key' are null, an EGL_BAD_PARAMETER error is
+    generated.
 
-    The cache contents may be temporarily released by using
+    The cache contents size may be changed using
 
-        EGLint eglTrimProgramCacheANGLE(EGLDisplay dpy, EGLint limit);
+        EGLint eglProgramCacheResizeANGLE(EGLDisplay dpy, EGLint limit,
+            EGLenum mode);
 
     If 'dpy' is not a valid display an EGL_BAD_DISPLAY error is generated. If
-    limit is negative then EGL_BAD_PARAMETER is generated. In any error case,
-    zero is returned, otherwise, the command will free cache resources until the
-    total cache size, in bytes, is less than or equal to limit, and return the
-    number of bytes of memory released.
+    limit is negative then EGL_BAD_PARAMETER is generated. If 'mode' is
+    EGL_PROGRAM_CACHE_RESIZE, cache contents are discarded and a new maximum
+    cache size is set to 'limit'. If 'limit' is larget than an implementation-
+    defined internal constant, EGL_BAD_PARAMETER is generated. Otherwise the
+    initial cache size is returned. If 'mode' is EGL_PROGRAM_CACHE_TRIM, cache
+    resources are released until the total cache size, in bytes, is less than or
+    equal to 'limit', and the  number of bytes of memory released is returned.
+    In any error case, zero is returned.
 
  Errors
 
@@ -201,6 +193,8 @@ Issues
       implementation with other kinds of cache sharing, such as between share
       groups.
 
+      We can choose to prefer simplicity of design in this case.
+
       RESOLVED: the cache should be a property of the display.
 
     2. What should happen if the cache is modified as the user is querying its
@@ -210,6 +204,8 @@ Issues
       atomically. Hence the cache can change in some cases while it is being
       queried. This can be controlled in the application layer. It can also be
       locked using OS-level synchronization.
+
+      Introducing undefined behaviour can be very problematic.
 
       RESOLVED: we should use a mutex or similar lock to allow for multithreaded
       access, and not expose undefined behaviour.
@@ -225,6 +221,8 @@ Issues
 
       If caches are a property of the display, they could be set in
       eglGetPlatformDisplay as an attribute.
+
+      Cache controls can be a necessary feature for memory management.
 
       RESOLVED: yes, we should expose cache size controls.
 

@@ -10,6 +10,8 @@
 #ifndef INCLUDE_GLES2_GL2EXT_ANGLE_H_
 #define INCLUDE_GLES2_GL2EXT_ANGLE_H_
 
+// clang-format off
+
 #ifndef GL_ANGLE_client_arrays
 #define GL_ANGLE_client_arrays 1
 #define GL_CLIENT_ARRAYS_ANGLE 0x93AA
@@ -510,5 +512,12 @@ GL_APICALL void GL_APIENTRY glGetQueryObjecti64vRobustANGLE(GLuint id, GLenum pn
 GL_APICALL void GL_APIENTRY glGetQueryObjectui64vRobustANGLE(GLuint id, GLenum pname, GLsizei bufSize, GLsizei *length, GLuint64 *params);
 #endif
 #endif /* GL_ANGLE_robust_client_memory */
+
+#ifndef GL_ANGLE_program_cache_control
+#define GL_ANGLE_program_cache_control 1
+#define GL_PROGRAM_CACHE_ENABLED_ANGLE 0x93AC
+#endif  /* GL_ANGLE_program_cache_control */
+
+// clang-format on
 
 #endif  // INCLUDE_GLES2_GL2EXT_ANGLE_H_

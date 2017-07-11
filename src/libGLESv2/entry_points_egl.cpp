@@ -1909,6 +1909,12 @@ __eglMustCastToProperFunctionPointerType EGLAPIENTRY GetProcAddress(const char *
         // EGL_EXT_swap_buffers_with_damage
         INSERT_PROC_ADDRESS(egl, SwapBuffersWithDamageEXT);
 
+        // EGL_ANGLE_program_cache_control
+        INSERT_PROC_ADDRESS(egl, ProgramCacheGetAttribANGLE);
+        INSERT_PROC_ADDRESS(egl, ProgramCacheQueryANGLE);
+        INSERT_PROC_ADDRESS(egl, ProgramCachePopulateANGLE);
+        INSERT_PROC_ADDRESS(egl, ProgramCacheResizeANGLE);
+
         // angle::Platform related entry points
         INSERT_PROC_ADDRESS_NO_NS("ANGLEGetDisplayPlatform", ANGLEGetDisplayPlatform);
         INSERT_PROC_ADDRESS_NO_NS("ANGLEResetDisplayPlatform", ANGLEResetDisplayPlatform);

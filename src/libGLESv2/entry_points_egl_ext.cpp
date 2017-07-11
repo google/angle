@@ -785,4 +785,49 @@ ANGLE_EXPORT EGLBoolean SwapBuffersWithDamageEXT(EGLDisplay dpy,
 
     return EGL_TRUE;
 }
+
+EGLint EGLAPIENTRY ProgramCacheGetAttribANGLE(EGLDisplay dpy, EGLenum attrib)
+{
+    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLenum attrib = 0x%X)", dpy, attrib);
+
+    UNIMPLEMENTED();
+    return 0;
+}
+
+void EGLAPIENTRY ProgramCacheQueryANGLE(EGLDisplay dpy,
+                                        EGLint index,
+                                        void *key,
+                                        EGLint *keysize,
+                                        void *binary,
+                                        EGLint *binarysize)
+{
+    EVENT(
+        "(EGLDisplay dpy = 0x%0.8p, EGLint index = %d, void *key = 0x%0.8p, EGLint *keysize = "
+        "0x%0.8p, void *binary = 0x%0.8p, EGLint *size = 0x%0.8p)",
+        dpy, index, key, keysize, binary, binarysize);
+
+    UNIMPLEMENTED();
+}
+
+void EGLAPIENTRY ProgramCachePopulateANGLE(EGLDisplay dpy,
+                                           const void *key,
+                                           EGLint keysize,
+                                           const void *binary,
+                                           EGLint binarysize)
+{
+    EVENT(
+        "(EGLDisplay dpy = 0x%0.8p, void *key = 0x%0.8p, EGLint keysize = %d, void *binary = "
+        "0x%0.8p, EGLint *size = 0x%0.8p)",
+        dpy, key, keysize, binary, binarysize);
+
+    UNIMPLEMENTED();
+}
+
+EGLint EGLAPIENTRY ProgramCacheResizeANGLE(EGLDisplay dpy, EGLint limit, EGLenum mode)
+{
+    EVENT("(EGLDisplay dpy = 0x%0.8p, EGLint limit = %d, EGLenum mode = 0x%X)", dpy, limit, mode);
+    UNIMPLEMENTED();
+    return 0;
+}
+
 }  // namespace egl
