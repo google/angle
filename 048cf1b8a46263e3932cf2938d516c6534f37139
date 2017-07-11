@@ -68,6 +68,57 @@
       "revId": "048cf1b8a46263e3932cf2938d516c6534f37139",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "58fefd6d_803ee633",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-11T15:45:57Z",
+      "side": 1,
+      "message": "Note that you\u0027ll also need to make a RobustANGLE version of the entry point (no need to define it in this extension though)",
+      "revId": "048cf1b8a46263e3932cf2938d516c6534f37139",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5b73f0c7_3927255e",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-11T15:45:57Z",
+      "side": 1,
+      "message": "Just to be sure, you can FramebufferTextureMultiviewLayeredANGLE both a color attachment and a depth attachment on the same framebuffer?\n\nShould the pseudo-code below handle multiple attachements (it might make it too complicated)?",
+      "revId": "048cf1b8a46263e3932cf2938d516c6534f37139",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7cbd4594_7ccb9f0e",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-11T15:45:57Z",
+      "side": 1,
+      "message": "Shouldn\u0027t we also check that baseViewIndex+numViews is less than the texture array size?",
+      "revId": "048cf1b8a46263e3932cf2938d516c6534f37139",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
