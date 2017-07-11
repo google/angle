@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "f2c29207_c5fd7cf7",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1792,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-07-11T06:36:09Z",
+      "side": 1,
+      "message": "Good catch, Thanks!",
+      "parentUuid": "4ea8d8b9_5162e685",
+      "revId": "b4ac502ebaa38a1963b0708262d1dde707253d89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9b0b1c52_98de74ae",
         "filename": "src/libANGLE/Uniform.h",
         "patchSetId": 10
@@ -48,6 +66,30 @@
       "writtenOn": "2017-07-10T20:11:30Z",
       "side": 1,
       "message": "The API says that interface blocks and shader storage blocks are application backed by buffers. But BackedBufferInfo doesn\u0027t sound quite right, because it sounds too much like \"BackBuffer\", which is a term for a Surface/Default Framebuffer. Also the inheritance relationship is \"is-a\" so calling this object an \"Info\" is not right, since the name implies a \"has-an-info\" relationship. Maybe call this \"BufferBackedShaderVar\" since they are closely related to sh::ShaderVariable.",
+      "range": {
+        "startLine": 62,
+        "startChar": 7,
+        "endLine": 62,
+        "endChar": 23
+      },
+      "revId": "b4ac502ebaa38a1963b0708262d1dde707253d89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3888924_b1474c97",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-07-11T06:36:09Z",
+      "side": 1,
+      "message": "Thanks for educating me on this. Your suggestion is very beneficial for me. \"BufferBackedShaderVar\" is a good name though, the struct actually contains a group of shader variables. Essentially it\u0027s a \"ShaderVarGroup\" backed by GL buffer. So what about \"ShaderVarGroupBuffer\"?",
+      "parentUuid": "9b0b1c52_98de74ae",
       "range": {
         "startLine": 62,
         "startChar": 7,

@@ -22,6 +22,30 @@
       "revId": "1cbe920355a1a5fa03d30d5540f8e78d6c6c117f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "31176208_39e00922",
+        "filename": "src/libANGLE/Uniform.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-07-11T06:36:09Z",
+      "side": 0,
+      "message": "Per my understanding, mLazyData is used to store uniform values set by glUniform* APIs. These APIs can only be called after a program has been linked. So mLazyData is empty while linking a program. This was true for ES 3.0 and before. But for ES 3.1 uniform values can be directly set in shader. For example, a sampler uniform may take its initial value from the \u0027binding\u0027 qualifier. So the asserts is not safe now.",
+      "parentUuid": "0a2258ad_00c2b062",
+      "range": {
+        "startLine": 48,
+        "startChar": 3,
+        "endLine": 49,
+        "endChar": 1
+      },
+      "revId": "1cbe920355a1a5fa03d30d5540f8e78d6c6c117f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
