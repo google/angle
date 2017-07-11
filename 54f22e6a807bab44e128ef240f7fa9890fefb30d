@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7c7143f7_f662071f",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 42
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-11T05:28:53Z",
+      "side": 1,
+      "message": "As required in ES3.1 spec, VertexAttribDivisor should update attribBinding together with the binding divisor. So I should set this dirty bit when the context is ES3.1. \nI have added a case in InstancingTest.cpp to verify this.",
+      "range": {
+        "startLine": 200,
+        "startChar": 0,
+        "endLine": 204,
+        "endChar": 5
+      },
+      "revId": "54f22e6a807bab44e128ef240f7fa9890fefb30d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf7928e6_d04f214c",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 42
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-11T05:28:53Z",
+      "side": 1,
+      "message": "Here I have a suggestion - what about implementing VertexAttribPointer and VertexAttribDivisor with Vertex Attrib Binding APIs?\n\nThis can solve two issues:\n1. It gives a chance to replace VertexAttribPointer by a lighter API.\n   As the description of ARB_vertex_attrib_binding.txt goes:\n   This extension also separates the vertex binding update from the vertex attribute format update, which saves applications the effort of redundantly specifying the same format state over and over.\n   VertexAttribPointer must update both format and binding together. When the driver allows  updating format and binding separately and only one part really needs to be updated, we can just update the dirty part.\n   e.g. If the format is same and buffer should be updated, in the past we should call BindBuffer + VertexAttribPointer, now we can just call BindVertexBuffer in the back-end.\n\n2. It can eliminate the potentially redundant updates when VertexAttribPointer and other Vertex Attrib Binding APIs are called.\n   If both VertexAttribPointer and VertexAttribFormat are called, and the relativeOffset isn\u0027t 0, the format will be set into driver twice, which I think is really redundant.\n   If we completely give up using VertexAttribPointer, we can ensure the format and the binding will only be updated once.\n   e.g. we can replace:\n   BindBuffer + VertexAttribPointer + VertexAttribFormat\n   By:\n   VertexAttribFormat + BindVertexBuffer + VertexAttribBinding (if necessary)\n\n   There is a side effect for this idea that in ES3.1 contexts we may have to update format, binding and attribBinding separately by 3 GL calls to implement something 2 GL calls can do (BindBuffer and VertexAttribPointer) if all three parts are dirty.\n\nThis patch is an implementation of this suggestion by setting the format and binding (and attribBinding if in ES3.1 context) dirty together with the attribPointer.",
+      "range": {
+        "startLine": 257,
+        "startChar": 0,
+        "endLine": 271,
+        "endChar": 5
+      },
+      "revId": "54f22e6a807bab44e128ef240f7fa9890fefb30d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

@@ -259,6 +259,30 @@
       "revId": "8aa0add222b4ff50d565e58c4769f5ab98ebcf02",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc158566_8aeec1c7",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 34
+      },
+      "lineNbr": 677,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-11T05:28:53Z",
+      "side": 1,
+      "message": "Done\nNow we are using ASSERTs here.",
+      "parentUuid": "a904f7cf_fc00c9de",
+      "range": {
+        "startLine": 677,
+        "startChar": 11,
+        "endLine": 677,
+        "endChar": 45
+      },
+      "revId": "8aa0add222b4ff50d565e58c4769f5ab98ebcf02",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
