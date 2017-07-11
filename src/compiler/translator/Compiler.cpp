@@ -474,8 +474,9 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         {
             ASSERT(!variablesCollected);
             CollectVariables(root, &attributes, &outputVariables, &uniforms, &inputVaryings,
-                             &outputVaryings, &interfaceBlocks, hashFunction, &symbolTable,
-                             shaderVersion, extensionBehavior);
+                             &outputVaryings, &uniformBlocks, &shaderStorageBlocks, hashFunction,
+                             &symbolTable, shaderVersion, extensionBehavior);
+            collectInterfaceBlocks();
             variablesCollected = true;
             if (compileOptions & SH_USE_UNUSED_STANDARD_SHARED_BLOCKS)
             {
@@ -749,6 +750,15 @@ void TCompiler::setResourceString()
     builtInResourcesString = strstream.str();
 }
 
+void TCompiler::collectInterfaceBlocks()
+{
+    ASSERT(interfaceBlocks.empty());
+    interfaceBlocks.reserve(uniformBlocks.size() + shaderStorageBlocks.size());
+    interfaceBlocks.insert(interfaceBlocks.end(), uniformBlocks.begin(), uniformBlocks.end());
+    interfaceBlocks.insert(interfaceBlocks.end(), shaderStorageBlocks.begin(),
+                           shaderStorageBlocks.end());
+}
+
 void TCompiler::clearResults()
 {
     arrayBoundsClamper.Cleanup();
@@ -763,6 +773,8 @@ void TCompiler::clearResults()
     inputVaryings.clear();
     outputVaryings.clear();
     interfaceBlocks.clear();
+    uniformBlocks.clear();
+    shaderStorageBlocks.clear();
     variablesCollected = false;
     mGLPositionInitialized = false;
 
@@ -983,7 +995,7 @@ void TCompiler::useAllMembersInUnusedStandardAndSharedBlocks(TIntermBlock *root)
 {
     sh::InterfaceBlockList list;
 
-    for (auto block : interfaceBlocks)
+    for (auto block : uniformBlocks)
     {
         if (!block.staticUse &&
             (block.layout == sh::BLOCKLAYOUT_STANDARD || block.layout == sh::BLOCKLAYOUT_SHARED))

@@ -113,6 +113,11 @@ class TCompiler : public TShHandleBase
     const std::vector<sh::Varying> &getInputVaryings() const { return inputVaryings; }
     const std::vector<sh::Varying> &getOutputVaryings() const { return outputVaryings; }
     const std::vector<sh::InterfaceBlock> &getInterfaceBlocks() const { return interfaceBlocks; }
+    const std::vector<sh::InterfaceBlock> &getUniformBlocks() const { return uniformBlocks; }
+    const std::vector<sh::InterfaceBlock> &getShaderStorageBlocks() const
+    {
+        return shaderStorageBlocks;
+    }
 
     ShHashFunction64 getHashFunction() const { return hashFunction; }
     NameMap &getNameMap() { return nameMap; }
@@ -188,6 +193,8 @@ class TCompiler : public TShHandleBase
     std::vector<sh::Varying> inputVaryings;
     std::vector<sh::Varying> outputVaryings;
     std::vector<sh::InterfaceBlock> interfaceBlocks;
+    std::vector<sh::InterfaceBlock> uniformBlocks;
+    std::vector<sh::InterfaceBlock> shaderStorageBlocks;
 
   private:
     // Creates the function call DAG for further analysis, returning false if there is a recursion
@@ -197,6 +204,8 @@ class TCompiler : public TShHandleBase
     void internalTagUsedFunction(size_t index);
 
     void initSamplerDefaultPrecision(TBasicType samplerType);
+
+    void collectInterfaceBlocks();
 
     bool variablesCollected;
 

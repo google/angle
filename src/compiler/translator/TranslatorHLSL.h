@@ -18,8 +18,8 @@ class TranslatorHLSL : public TCompiler
     TranslatorHLSL(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output);
     TranslatorHLSL *getAsTranslatorHLSL() override { return this; }
 
-    bool hasInterfaceBlock(const std::string &interfaceBlockName) const;
-    unsigned int getInterfaceBlockRegister(const std::string &interfaceBlockName) const;
+    bool hasUniformBlock(const std::string &interfaceBlockName) const;
+    unsigned int getUniformBlockRegister(const std::string &interfaceBlockName) const;
 
     const std::map<std::string, unsigned int> *getUniformRegisterMap() const;
 
@@ -33,7 +33,7 @@ class TranslatorHLSL : public TCompiler
     // Globals are initialized in output so it is redundant to initialize them in the AST.
     bool needToInitializeGlobalsInAST() const override { return false; }
 
-    std::map<std::string, unsigned int> mInterfaceBlockRegisterMap;
+    std::map<std::string, unsigned int> mUniformBlockRegisterMap;
     std::map<std::string, unsigned int> mUniformRegisterMap;
 };
 

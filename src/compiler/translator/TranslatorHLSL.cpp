@@ -123,7 +123,7 @@ void TranslatorHLSL::translate(TIntermBlock *root, ShCompileOptions compileOptio
 
     outputHLSL.output(root, getInfoSink().obj);
 
-    mInterfaceBlockRegisterMap = outputHLSL.getInterfaceBlockRegisterMap();
+    mUniformBlockRegisterMap   = outputHLSL.getUniformBlockRegisterMap();
     mUniformRegisterMap        = outputHLSL.getUniformRegisterMap();
 }
 
@@ -133,15 +133,15 @@ bool TranslatorHLSL::shouldFlattenPragmaStdglInvariantAll()
     return false;
 }
 
-bool TranslatorHLSL::hasInterfaceBlock(const std::string &interfaceBlockName) const
+bool TranslatorHLSL::hasUniformBlock(const std::string &uniformBlockName) const
 {
-    return (mInterfaceBlockRegisterMap.count(interfaceBlockName) > 0);
+    return (mUniformBlockRegisterMap.count(uniformBlockName) > 0);
 }
 
-unsigned int TranslatorHLSL::getInterfaceBlockRegister(const std::string &interfaceBlockName) const
+unsigned int TranslatorHLSL::getUniformBlockRegister(const std::string &uniformBlockName) const
 {
-    ASSERT(hasInterfaceBlock(interfaceBlockName));
-    return mInterfaceBlockRegisterMap.find(interfaceBlockName)->second;
+    ASSERT(hasUniformBlock(uniformBlockName));
+    return mUniformBlockRegisterMap.find(uniformBlockName)->second;
 }
 
 const std::map<std::string, unsigned int> *TranslatorHLSL::getUniformRegisterMap() const

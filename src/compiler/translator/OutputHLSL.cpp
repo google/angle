@@ -147,7 +147,7 @@ OutputHLSL::OutputHLSL(sh::GLenum shaderType,
     }
 
     // Reserve registers for the default uniform block and driver constants
-    mUniformHLSL->reserveInterfaceBlockRegisters(2);
+    mUniformHLSL->reserveUniformBlockRegisters(2);
 }
 
 OutputHLSL::~OutputHLSL()
@@ -231,9 +231,9 @@ void OutputHLSL::makeFlaggedStructMaps(const std::vector<TIntermTyped *> &flagge
     }
 }
 
-const std::map<std::string, unsigned int> &OutputHLSL::getInterfaceBlockRegisterMap() const
+const std::map<std::string, unsigned int> &OutputHLSL::getUniformBlockRegisterMap() const
 {
-    return mUniformHLSL->getInterfaceBlockRegisterMap();
+    return mUniformHLSL->getUniformBlockRegisterMap();
 }
 
 const std::map<std::string, unsigned int> &OutputHLSL::getUniformRegisterMap() const
@@ -354,7 +354,7 @@ void OutputHLSL::header(TInfoSinkBase &out, const BuiltInFunctionEmulator *built
     out << mStructureHLSL->structsHeader();
 
     mUniformHLSL->uniformsHeader(out, mOutputType, mReferencedUniforms);
-    out << mUniformHLSL->interfaceBlocksHeader(mReferencedInterfaceBlocks);
+    out << mUniformHLSL->uniformBlocksHeader(mReferencedUniformBlocks);
 
     if (!mEqualityFunctions.empty())
     {
@@ -792,7 +792,7 @@ void OutputHLSL::visitSymbol(TIntermSymbol *node)
 
             if (interfaceBlock)
             {
-                mReferencedInterfaceBlocks[interfaceBlock->name()] = node;
+                mReferencedUniformBlocks[interfaceBlock->name()] = node;
             }
             else
             {
@@ -1138,9 +1138,9 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
                 {
                     TInterfaceBlock *interfaceBlock = leftType.getInterfaceBlock();
                     const int arrayIndex = node->getRight()->getAsConstantUnion()->getIConst(0);
-                    mReferencedInterfaceBlocks[interfaceBlock->instanceName()] =
+                    mReferencedUniformBlocks[interfaceBlock->instanceName()] =
                         node->getLeft()->getAsSymbolNode();
-                    out << mUniformHLSL->interfaceBlockInstanceString(*interfaceBlock, arrayIndex);
+                    out << mUniformHLSL->uniformBlockInstanceString(*interfaceBlock, arrayIndex);
                     return false;
                 }
             }

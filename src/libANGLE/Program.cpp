@@ -2094,7 +2094,7 @@ bool Program::linkUniformBlocks(const Context *context, InfoLog &infoLog)
     if (mState.mAttachedComputeShader)
     {
         Shader &computeShader              = *mState.mAttachedComputeShader;
-        const auto &computeInterfaceBlocks = computeShader.getInterfaceBlocks(context);
+        const auto &computeInterfaceBlocks = computeShader.getUniformBlocks(context);
 
         if (!validateUniformBlocksCount(
                 caps.maxComputeUniformBlocks, computeInterfaceBlocks,
@@ -2109,8 +2109,8 @@ bool Program::linkUniformBlocks(const Context *context, InfoLog &infoLog)
     Shader &vertexShader   = *mState.mAttachedVertexShader;
     Shader &fragmentShader = *mState.mAttachedFragmentShader;
 
-    const auto &vertexInterfaceBlocks   = vertexShader.getInterfaceBlocks(context);
-    const auto &fragmentInterfaceBlocks = fragmentShader.getInterfaceBlocks(context);
+    const auto &vertexInterfaceBlocks   = vertexShader.getUniformBlocks(context);
+    const auto &fragmentInterfaceBlocks = fragmentShader.getUniformBlocks(context);
 
     if (!validateUniformBlocksCount(
             caps.maxVertexUniformBlocks, vertexInterfaceBlocks,
@@ -2674,7 +2674,7 @@ void Program::gatherInterfaceBlockInfo(const Context *context)
     {
         Shader *computeShader = mState.getAttachedComputeShader();
 
-        for (const sh::InterfaceBlock &computeBlock : computeShader->getInterfaceBlocks(context))
+        for (const sh::InterfaceBlock &computeBlock : computeShader->getUniformBlocks(context))
         {
 
             // Only 'packed' blocks are allowed to be considered inactive.
@@ -2698,7 +2698,7 @@ void Program::gatherInterfaceBlockInfo(const Context *context)
 
     Shader *vertexShader = mState.getAttachedVertexShader();
 
-    for (const sh::InterfaceBlock &vertexBlock : vertexShader->getInterfaceBlocks(context))
+    for (const sh::InterfaceBlock &vertexBlock : vertexShader->getUniformBlocks(context))
     {
         // Only 'packed' blocks are allowed to be considered inactive.
         if (!vertexBlock.staticUse && vertexBlock.layout == sh::BLOCKLAYOUT_PACKED)
@@ -2713,7 +2713,7 @@ void Program::gatherInterfaceBlockInfo(const Context *context)
 
     Shader *fragmentShader = mState.getAttachedFragmentShader();
 
-    for (const sh::InterfaceBlock &fragmentBlock : fragmentShader->getInterfaceBlocks(context))
+    for (const sh::InterfaceBlock &fragmentBlock : fragmentShader->getUniformBlocks(context))
     {
         // Only 'packed' blocks are allowed to be considered inactive.
         if (!fragmentBlock.staticUse && fragmentBlock.layout == sh::BLOCKLAYOUT_PACKED)

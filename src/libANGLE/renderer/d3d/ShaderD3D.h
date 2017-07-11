@@ -46,7 +46,7 @@ class ShaderD3D : public ShaderImpl
     // using dot (.) operator.
     unsigned int getUniformRegister(const std::string &uniformName) const;
 
-    unsigned int getInterfaceBlockRegister(const std::string &blockName) const;
+    unsigned int getUniformBlockRegister(const std::string &blockName) const;
     void appendDebugInfo(const std::string &info) const { mDebugInfo += info; }
 
     void generateWorkarounds(angle::CompilerWorkaroundsD3D *workarounds) const;
@@ -80,7 +80,7 @@ class ShaderD3D : public ShaderImpl
     ShShaderOutput mCompilerOutputType;
     mutable std::string mDebugInfo;
     std::map<std::string, unsigned int> mUniformRegisterMap;
-    std::map<std::string, unsigned int> mInterfaceBlockRegisterMap;
+    std::map<std::string, unsigned int> mUniformBlockRegisterMap;
     ShCompileOptions mAdditionalOptions;
 };
 }  // namespace rx

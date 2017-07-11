@@ -41,6 +41,13 @@ enum BlockLayoutType
     BLOCKLAYOUT_SHARED
 };
 
+// Interface Blocks, see section 4.3.9 of the ESSL 3.10 spec
+enum class BlockType
+{
+    BLOCK_UNIFORM,
+    BLOCK_BUFFER
+};
+
 // Base class for all variables defined in shaders, including Varyings, Uniforms, etc
 // Note: we must override the copy constructor and assignment operator so we can
 // work around excessive GCC binary bloating:
@@ -219,6 +226,7 @@ struct InterfaceBlock
     bool isRowMajorLayout;
     int binding;
     bool staticUse;
+    BlockType blockType;
     std::vector<InterfaceBlockField> fields;
 };
 

@@ -541,6 +541,8 @@ const std::vector<sh::Varying> *GetOutputVaryings(const ShHandle handle);
 const std::vector<sh::Attribute> *GetAttributes(const ShHandle handle);
 const std::vector<sh::OutputVariable> *GetOutputVariables(const ShHandle handle);
 const std::vector<sh::InterfaceBlock> *GetInterfaceBlocks(const ShHandle handle);
+const std::vector<sh::InterfaceBlock> *GetUniformBlocks(const ShHandle handle);
+const std::vector<sh::InterfaceBlock> *GetShaderStorageBlocks(const ShHandle handle);
 sh::WorkGroupSize GetComputeShaderLocalGroupSize(const ShHandle handle);
 // Returns the number of views specified through the num_views layout qualifier. If num_views is
 // not set, the function returns -1.
@@ -556,18 +558,18 @@ int GetVertexShaderNumViews(const ShHandle handle);
 bool CheckVariablesWithinPackingLimits(int maxVectors,
                                        const std::vector<sh::ShaderVariable> &variables);
 
-// Gives the compiler-assigned register for an interface block.
+// Gives the compiler-assigned register for a uniform block.
 // The method writes the value to the output variable "indexOut".
-// Returns true if it found a valid interface block, false otherwise.
+// Returns true if it found a valid uniform block, false otherwise.
 // Parameters:
 // handle: Specifies the compiler
-// interfaceBlockName: Specifies the interface block
+// uniformBlockName: Specifies the uniform block
 // indexOut: output variable that stores the assigned register
-bool GetInterfaceBlockRegister(const ShHandle handle,
-                               const std::string &interfaceBlockName,
-                               unsigned int *indexOut);
+bool GetUniformBlockRegister(const ShHandle handle,
+                             const std::string &uniformBlockName,
+                             unsigned int *indexOut);
 
-// Gives a map from uniform names to compiler-assigned registers in the default interface block.
+// Gives a map from uniform names to compiler-assigned registers in the default uniform block.
 // Note that the map contains also registers of samplers that have been extracted from structs.
 const std::map<std::string, unsigned int> *GetUniformRegisterMap(const ShHandle handle);
 

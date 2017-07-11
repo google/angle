@@ -43,7 +43,7 @@ class OutputHLSL : public TIntermTraverser
 
     void output(TIntermNode *treeRoot, TInfoSinkBase &objSink);
 
-    const std::map<std::string, unsigned int> &getInterfaceBlockRegisterMap() const;
+    const std::map<std::string, unsigned int> &getUniformBlockRegisterMap() const;
     const std::map<std::string, unsigned int> &getUniformRegisterMap() const;
 
     static TString initializer(const TType &type);
@@ -154,7 +154,7 @@ class OutputHLSL : public TIntermTraverser
     std::stack<TInfoSinkBase *> mInfoSinkStack;
 
     ReferencedSymbols mReferencedUniforms;
-    ReferencedSymbols mReferencedInterfaceBlocks;
+    ReferencedSymbols mReferencedUniformBlocks;
     ReferencedSymbols mReferencedAttributes;
     ReferencedSymbols mReferencedVaryings;
     ReferencedSymbols mReferencedOutputVariables;

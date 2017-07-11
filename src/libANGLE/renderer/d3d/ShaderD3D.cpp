@@ -138,10 +138,10 @@ unsigned int ShaderD3D::getUniformRegister(const std::string &uniformName) const
     return mUniformRegisterMap.find(uniformName)->second;
 }
 
-unsigned int ShaderD3D::getInterfaceBlockRegister(const std::string &blockName) const
+unsigned int ShaderD3D::getUniformBlockRegister(const std::string &blockName) const
 {
-    ASSERT(mInterfaceBlockRegisterMap.count(blockName) > 0);
-    return mInterfaceBlockRegisterMap.find(blockName)->second;
+    ASSERT(mUniformBlockRegisterMap.count(blockName) > 0);
+    return mUniformBlockRegisterMap.find(blockName)->second;
 }
 
 ShShaderOutput ShaderD3D::getCompilerOutputType() const
@@ -211,16 +211,16 @@ bool ShaderD3D::postTranslateCompile(gl::Compiler *compiler, std::string *infoLo
 
     mUniformRegisterMap = GetUniformRegisterMap(sh::GetUniformRegisterMap(compilerHandle));
 
-    for (const sh::InterfaceBlock &interfaceBlock : mData.getInterfaceBlocks())
+    for (const sh::InterfaceBlock &interfaceBlock : mData.getUniformBlocks())
     {
         if (interfaceBlock.staticUse)
         {
             unsigned int index = static_cast<unsigned int>(-1);
             bool blockRegisterResult =
-                sh::GetInterfaceBlockRegister(compilerHandle, interfaceBlock.name, &index);
+                sh::GetUniformBlockRegister(compilerHandle, interfaceBlock.name, &index);
             ASSERT(blockRegisterResult);
 
-            mInterfaceBlockRegisterMap[interfaceBlock.name] = index;
+            mUniformBlockRegisterMap[interfaceBlock.name] = index;
         }
     }
 

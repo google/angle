@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 // UniformHLSL.cpp:
-//   Methods for GLSL to HLSL translation for uniforms and interface blocks.
+//   Methods for GLSL to HLSL translation for uniforms and uniform blocks.
 //
 
 #include "compiler/translator/UniformHLSL.h"
@@ -65,7 +65,7 @@ UniformHLSL::UniformHLSL(StructureHLSL *structureHLSL,
                          ShShaderOutput outputType,
                          const std::vector<Uniform> &uniforms)
     : mUniformRegister(0),
-      mInterfaceBlockRegister(0),
+      mUniformBlockRegister(0),
       mSamplerRegister(0),
       mStructureHLSL(structureHLSL),
       mOutputType(outputType),
@@ -78,9 +78,9 @@ void UniformHLSL::reserveUniformRegisters(unsigned int registerCount)
     mUniformRegister = registerCount;
 }
 
-void UniformHLSL::reserveInterfaceBlockRegisters(unsigned int registerCount)
+void UniformHLSL::reserveUniformBlockRegisters(unsigned int registerCount)
 {
-    mInterfaceBlockRegister = registerCount;
+    mUniformBlockRegister = registerCount;
 }
 
 const Uniform *UniformHLSL::findUniformByName(const TString &name) const
@@ -354,7 +354,7 @@ void UniformHLSL::samplerMetadataUniforms(TInfoSinkBase &out, const char *reg)
     }
 }
 
-TString UniformHLSL::interfaceBlocksHeader(const ReferencedSymbols &referencedInterfaceBlocks)
+TString UniformHLSL::uniformBlocksHeader(const ReferencedSymbols &referencedInterfaceBlocks)
 {
     TString interfaceBlocks;
 
@@ -365,16 +365,16 @@ TString UniformHLSL::interfaceBlocksHeader(const ReferencedSymbols &referencedIn
         const TInterfaceBlock &interfaceBlock = *nodeType.getInterfaceBlock();
 
         unsigned int arraySize      = static_cast<unsigned int>(interfaceBlock.arraySize());
-        unsigned int activeRegister = mInterfaceBlockRegister;
+        unsigned int activeRegister = mUniformBlockRegister;
 
-        mInterfaceBlockRegisterMap[interfaceBlock.name().c_str()] = activeRegister;
-        mInterfaceBlockRegister += std::max(1u, arraySize);
+        mUniformBlockRegisterMap[interfaceBlock.name().c_str()] = activeRegister;
+        mUniformBlockRegister += std::max(1u, arraySize);
 
         // FIXME: interface block field names
 
         if (interfaceBlock.hasInstanceName())
         {
-            interfaceBlocks += interfaceBlockStructString(interfaceBlock);
+            interfaceBlocks += uniformBlockStructString(interfaceBlock);
         }
 
         if (arraySize > 0)
@@ -382,22 +382,21 @@ TString UniformHLSL::interfaceBlocksHeader(const ReferencedSymbols &referencedIn
             for (unsigned int arrayIndex = 0; arrayIndex < arraySize; arrayIndex++)
             {
                 interfaceBlocks +=
-                    interfaceBlockString(interfaceBlock, activeRegister + arrayIndex, arrayIndex);
+                    uniformBlockString(interfaceBlock, activeRegister + arrayIndex, arrayIndex);
             }
         }
         else
         {
-            interfaceBlocks +=
-                interfaceBlockString(interfaceBlock, activeRegister, GL_INVALID_INDEX);
+            interfaceBlocks += uniformBlockString(interfaceBlock, activeRegister, GL_INVALID_INDEX);
         }
     }
 
-    return (interfaceBlocks.empty() ? "" : ("// Interface Blocks\n\n" + interfaceBlocks));
+    return (interfaceBlocks.empty() ? "" : ("// Uniform Blocks\n\n" + interfaceBlocks));
 }
 
-TString UniformHLSL::interfaceBlockString(const TInterfaceBlock &interfaceBlock,
-                                          unsigned int registerIndex,
-                                          unsigned int arrayIndex)
+TString UniformHLSL::uniformBlockString(const TInterfaceBlock &interfaceBlock,
+                                        unsigned int registerIndex,
+                                        unsigned int arrayIndex)
 {
     const TString &arrayIndexString =
         (arrayIndex != GL_INVALID_INDEX ? Decorate(str(arrayIndex)) : "");
@@ -411,12 +410,12 @@ TString UniformHLSL::interfaceBlockString(const TInterfaceBlock &interfaceBlock,
     if (interfaceBlock.hasInstanceName())
     {
         hlsl += "    " + InterfaceBlockStructName(interfaceBlock) + " " +
-                interfaceBlockInstanceString(interfaceBlock, arrayIndex) + ";\n";
+                uniformBlockInstanceString(interfaceBlock, arrayIndex) + ";\n";
     }
     else
     {
         const TLayoutBlockStorage blockStorage = interfaceBlock.blockStorage();
-        hlsl += interfaceBlockMembersString(interfaceBlock, blockStorage);
+        hlsl += uniformBlockMembersString(interfaceBlock, blockStorage);
     }
 
     hlsl += "};\n\n";
@@ -424,8 +423,8 @@ TString UniformHLSL::interfaceBlockString(const TInterfaceBlock &interfaceBlock,
     return hlsl;
 }
 
-TString UniformHLSL::interfaceBlockInstanceString(const TInterfaceBlock &interfaceBlock,
-                                                  unsigned int arrayIndex)
+TString UniformHLSL::uniformBlockInstanceString(const TInterfaceBlock &interfaceBlock,
+                                                unsigned int arrayIndex)
 {
     if (!interfaceBlock.hasInstanceName())
     {
@@ -441,8 +440,8 @@ TString UniformHLSL::interfaceBlockInstanceString(const TInterfaceBlock &interfa
     }
 }
 
-TString UniformHLSL::interfaceBlockMembersString(const TInterfaceBlock &interfaceBlock,
-                                                 TLayoutBlockStorage blockStorage)
+TString UniformHLSL::uniformBlockMembersString(const TInterfaceBlock &interfaceBlock,
+                                               TLayoutBlockStorage blockStorage)
 {
     TString hlsl;
 
@@ -475,13 +474,13 @@ TString UniformHLSL::interfaceBlockMembersString(const TInterfaceBlock &interfac
     return hlsl;
 }
 
-TString UniformHLSL::interfaceBlockStructString(const TInterfaceBlock &interfaceBlock)
+TString UniformHLSL::uniformBlockStructString(const TInterfaceBlock &interfaceBlock)
 {
     const TLayoutBlockStorage blockStorage = interfaceBlock.blockStorage();
 
     return "struct " + InterfaceBlockStructName(interfaceBlock) +
            "\n"
            "{\n" +
-           interfaceBlockMembersString(interfaceBlock, blockStorage) + "};\n\n";
+           uniformBlockMembersString(interfaceBlock, blockStorage) + "};\n\n";
 }
 }
