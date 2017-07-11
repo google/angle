@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f72e6855_4d88230d",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-11T09:13:27Z",
+      "side": 1,
+      "message": "I\u0027d put this bit inside \"else if (isMultiview \u0026\u0026 isMultiviewExtEmulated)\"",
+      "range": {
+        "startLine": 145,
+        "startChar": 36,
+        "endLine": 151,
+        "endChar": 71
+      },
+      "revId": "5ae9bce3050857037d192a5cb32b0cba19a43396",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
