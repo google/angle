@@ -4029,3 +4029,43 @@ TEST_F(FragmentShaderValidationTest, CaseLabelsWithInvalidTypesDontAssert)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test that using an array as an index is not allowed.
+TEST_F(FragmentShaderValidationTest, ArrayAsIndex)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    int i[2] = int[2](0, 1);\n"
+        "    float f[2] = float[2](2.0, 3.0);\n"
+        "    my_FragColor = vec4(f[i]);\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test that using an array as an array size is not allowed.
+TEST_F(FragmentShaderValidationTest, ArrayAsArraySize)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    const int i[2] = int[2](1, 2);\n"
+        "    float f[i];\n"
+        "    my_FragColor = vec4(f[0]);\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}

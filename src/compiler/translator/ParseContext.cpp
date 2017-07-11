@@ -765,7 +765,7 @@ bool TParseContext::checkIsNonVoid(const TSourceLoc &line,
 // or not.
 bool TParseContext::checkIsScalarBool(const TSourceLoc &line, const TIntermTyped *type)
 {
-    if (type->getBasicType() != EbtBool || type->isArray() || type->isMatrix() || type->isVector())
+    if (type->getBasicType() != EbtBool || !type->isScalar())
     {
         error(line, "boolean expression expected", "");
         return false;
