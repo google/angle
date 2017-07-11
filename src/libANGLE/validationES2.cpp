@@ -2302,7 +2302,7 @@ bool ValidateClear(ValidationContext *context, GLbitfield mask)
         constexpr GLenum validComponentTypes[] = {GL_FLOAT, GL_UNSIGNED_NORMALIZED,
                                                   GL_SIGNED_NORMALIZED};
 
-        for (GLuint drawBufferIdx = 0; drawBufferIdx < context->getCaps().maxDrawBuffers;
+        for (GLuint drawBufferIdx = 0; drawBufferIdx < fbo->getDrawbufferStateCount();
              drawBufferIdx++)
         {
             if (!ValidateWebGLFramebufferAttachmentClearType(
