@@ -88,6 +88,24 @@
     },
     {
       "key": {
+        "uuid": "e78f2711_3c8da8ce",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-11T15:51:48Z",
+      "side": 1,
+      "message": "numViews should indicate how many offsets are required.",
+      "parentUuid": "58fefd6d_803ee633",
+      "revId": "048cf1b8a46263e3932cf2938d516c6534f37139",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5b73f0c7_3927255e",
         "filename": "extensions/ANGLE_multiview.txt",
         "patchSetId": 12
