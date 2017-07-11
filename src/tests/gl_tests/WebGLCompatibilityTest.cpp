@@ -2317,8 +2317,8 @@ TEST_P(WebGL2CompatibilityTest, TextureCopyingFeedbackLoop3D)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
-// Verify that errors are generated when there isn not a defined conversion between the clear type
-// and the buffer type.
+// Verify that errors are generated when there isn't a defined conversion between the clear type and
+// the buffer type.
 TEST_P(WebGL2CompatibilityTest, ClearBufferTypeCompatibity)
 {
     if (IsD3D11())
@@ -2411,6 +2411,29 @@ TEST_P(WebGL2CompatibilityTest, ClearBufferTypeCompatibity)
 
     glClear(GL_COLOR_BUFFER_BIT);
     EXPECT_GL_NO_ERROR();
+}
+
+// Test the interaction of WebGL compatibility clears with default framebuffers
+TEST_P(WebGL2CompatibilityTest, ClearBufferDefaultFramebuffer)
+{
+    constexpr float clearFloat[]       = {0.0f, 0.0f, 0.0f, 0.0f};
+    constexpr int clearInt[]           = {0, 0, 0, 0};
+    constexpr unsigned int clearUint[] = {0, 0, 0, 0};
+
+    // glClear works as usual, this is also a regression test for a bug where we
+    // iterated on maxDrawBuffers for default framebuffers, triggering an assert
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_GL_NO_ERROR();
+
+    // Default framebuffers are normalized uints, so only glClearBufferfv works.
+    glClearBufferfv(GL_COLOR, 0, clearFloat);
+    EXPECT_GL_NO_ERROR();
+
+    glClearBufferiv(GL_COLOR, 0, clearInt);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glClearBufferuiv(GL_COLOR, 0, clearUint);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
 // Verify that errors are generate when trying to blit from an image to itself
