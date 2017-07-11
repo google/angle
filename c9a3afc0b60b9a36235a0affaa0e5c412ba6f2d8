@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d1c1c21e_a3e07f83",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-11T14:39:50Z",
+      "side": 1,
+      "message": "super-nit: I believe the ANGLE coding convention asks for braces in all cases.",
+      "revId": "c9a3afc0b60b9a36235a0affaa0e5c412ba6f2d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
