@@ -1644,9 +1644,9 @@ bool OutputHLSL::visitDeclaration(Visit visit, TIntermDeclaration *node)
         TIntermSequence *sequence = node->getSequence();
         TIntermTyped *variable    = (*sequence)[0]->getAsTyped();
         ASSERT(sequence->size() == 1);
+        ASSERT(variable);
 
-        if (variable &&
-            (variable->getQualifier() == EvqTemporary || variable->getQualifier() == EvqGlobal ||
+        if ((variable->getQualifier() == EvqTemporary || variable->getQualifier() == EvqGlobal ||
              variable->getQualifier() == EvqConst))
         {
             ensureStructDefined(variable->getType());
@@ -1682,23 +1682,14 @@ bool OutputHLSL::visitDeclaration(Visit visit, TIntermDeclaration *node)
             else
                 UNREACHABLE();
         }
-        else if (variable && IsVaryingOut(variable->getQualifier()))
+        else if (IsVaryingOut(variable->getQualifier()))
         {
-            for (TIntermSequence::iterator sit = sequence->begin(); sit != sequence->end(); sit++)
-            {
-                TIntermSymbol *symbol = (*sit)->getAsSymbolNode();
+            TIntermSymbol *symbol = variable->getAsSymbolNode();
+            ASSERT(symbol);  // Varying declarations can't have initializers.
 
-                if (symbol)
-                {
-                    // Vertex (output) varyings which are declared but not written to should
-                    // still be declared to allow successful linking
-                    mReferencedVaryings[symbol->getSymbol()] = symbol;
-                }
-                else
-                {
-                    (*sit)->traverse(this);
-                }
-            }
+            // Vertex outputs which are declared but not written to should still be declared to
+            // allow successful linking.
+            mReferencedVaryings[symbol->getSymbol()] = symbol;
         }
     }
     return false;
