@@ -707,7 +707,7 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
         stateManager->setSingleVertexBuffer(nullptr, 0, 0);
     }
 
-    deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    stateManager->setPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     // Apply render targets
     stateManager->setOneTimeRenderTargets(context, &rtvs[0], numRtvs, dsv);

@@ -159,7 +159,8 @@ StateManager11::StateManager11(Renderer11 *renderer)
       mDirtyCurrentValueAttribs(),
       mCurrentValueAttribs(),
       mCurrentInputLayout(),
-      mDirtyVertexBufferRange(gl::MAX_VERTEX_ATTRIBS, 0)
+      mDirtyVertexBufferRange(gl::MAX_VERTEX_ATTRIBS, 0),
+      mCurrentPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_UNDEFINED)
 {
     mCurBlendState.blend                 = false;
     mCurBlendState.sourceBlendRGB        = GL_ONE;
@@ -845,6 +846,8 @@ void StateManager11::invalidateEverything(const gl::Context *context)
 
     // Invalidate the vertex buffer state.
     invalidateVertexBuffer();
+
+    mCurrentPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
 }
 
 void StateManager11::invalidateVertexBuffer()
@@ -1280,6 +1283,15 @@ gl::Error StateManager11::updateState(const gl::Context *context, GLenum drawMod
     ASSERT(mInternalDirtyBits.none());
 
     return gl::NoError();
+}
+
+void StateManager11::setPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY primitiveTopology)
+{
+    if (primitiveTopology != mCurrentPrimitiveTopology)
+    {
+        mRenderer->getDeviceContext()->IASetPrimitiveTopology(primitiveTopology);
+        mCurrentPrimitiveTopology = primitiveTopology;
+    }
 }
 
 }  // namespace rx

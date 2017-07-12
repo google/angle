@@ -109,6 +109,8 @@ class StateManager11 final : angle::NonCopyable
 
     gl::Error updateState(const gl::Context *context, GLenum drawMode);
 
+    void setPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY primitiveTopology);
+
   private:
     void unsetConflictingSRVs(gl::SamplerType shaderType,
                               uintptr_t resource,
@@ -244,6 +246,9 @@ class StateManager11 final : angle::NonCopyable
     std::array<UINT, gl::MAX_VERTEX_ATTRIBS> mCurrentVertexStrides;
     std::array<UINT, gl::MAX_VERTEX_ATTRIBS> mCurrentVertexOffsets;
     gl::RangeUI mDirtyVertexBufferRange;
+
+    // Currently applied primitive topology
+    D3D11_PRIMITIVE_TOPOLOGY mCurrentPrimitiveTopology;
 };
 
 }  // namespace rx

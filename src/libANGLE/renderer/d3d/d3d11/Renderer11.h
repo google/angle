@@ -621,9 +621,6 @@ class Renderer11 : public RendererD3D
 
     StateManager11 mStateManager;
 
-    // Currently applied primitive topology
-    D3D11_PRIMITIVE_TOPOLOGY mCurrentPrimitiveTopology;
-
     // Currently applied index buffer
     ID3D11Buffer *mAppliedIB;
     DXGI_FORMAT mAppliedIBFormat;

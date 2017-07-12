@@ -195,7 +195,7 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::Context *context,
     deviceContext->PSSetShader(pixelShader, nullptr, 0);
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, bufferSRV);
     stateManager->setInputLayout(nullptr);
-    deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+    stateManager->setPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 
     stateManager->setSingleVertexBuffer(nullptr, 0, 0);
     deviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);
