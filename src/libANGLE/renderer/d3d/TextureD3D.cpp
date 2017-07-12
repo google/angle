@@ -2575,7 +2575,18 @@ gl::Error TextureD3D_3D::copySubImage(const gl::Context *context,
 {
     ASSERT(target == GL_TEXTURE_3D);
 
-    GLint level          = static_cast<GLint>(imageLevel);
+    GLint level = static_cast<GLint>(imageLevel);
+
+    gl::Extents fbSize = source->getReadColorbuffer()->getSize();
+    gl::Rectangle clippedSourceArea;
+    if (!ClipRectangle(sourceArea, gl::Rectangle(0, 0, fbSize.width, fbSize.height),
+                       &clippedSourceArea))
+    {
+        return gl::NoError();
+    }
+    const gl::Offset clippedDestOffset(destOffset.x + clippedSourceArea.x - sourceArea.x,
+                                       destOffset.y + clippedSourceArea.y - sourceArea.y,
+                                       destOffset.z);
 
     // Currently, 3D single-layer blits are broken because we don't know how to make an SRV
     // for a single layer of a 3D texture.
@@ -2584,7 +2595,8 @@ gl::Error TextureD3D_3D::copySubImage(const gl::Context *context,
 
     // if (!canCreateRenderTargetForImage(index))
     {
-        ANGLE_TRY(mImageArray[level]->copyFromFramebuffer(context, destOffset, sourceArea, source));
+        ANGLE_TRY(mImageArray[level]->copyFromFramebuffer(context, clippedDestOffset,
+                                                          clippedSourceArea, source));
         mDirtyImages = true;
     }
     // else
@@ -3135,11 +3147,22 @@ gl::Error TextureD3D_2DArray::copySubImage(const gl::Context *context,
     GLint level          = static_cast<GLint>(imageLevel);
     gl::ImageIndex index = gl::ImageIndex::Make2DArray(level, destOffset.z);
 
+    gl::Extents fbSize = source->getReadColorbuffer()->getSize();
+    gl::Rectangle clippedSourceArea;
+    if (!ClipRectangle(sourceArea, gl::Rectangle(0, 0, fbSize.width, fbSize.height),
+                       &clippedSourceArea))
+    {
+        return gl::NoError();
+    }
+    const gl::Offset clippedDestOffset(destOffset.x + clippedSourceArea.x - sourceArea.x,
+                                       destOffset.y + clippedSourceArea.y - sourceArea.y,
+                                       destOffset.z);
+
     if (!canCreateRenderTargetForImage(index))
     {
-        gl::Offset destLayerOffset(destOffset.x, destOffset.y, 0);
-        ANGLE_TRY(mImageArray[level][destOffset.z]->copyFromFramebuffer(context, destLayerOffset,
-                                                                        sourceArea, source));
+        gl::Offset destLayerOffset(clippedDestOffset.x, clippedDestOffset.y, 0);
+        ANGLE_TRY(mImageArray[level][clippedDestOffset.z]->copyFromFramebuffer(
+            context, destLayerOffset, clippedSourceArea, source));
         mDirtyImages = true;
     }
     else
@@ -3150,9 +3173,9 @@ gl::Error TextureD3D_2DArray::copySubImage(const gl::Context *context,
         {
             ANGLE_TRY(updateStorageLevel(context, level));
             ANGLE_TRY(
-                mRenderer->copyImage2DArray(context, source, sourceArea,
+                mRenderer->copyImage2DArray(context, source, clippedSourceArea,
                                             gl::GetUnsizedFormat(getInternalFormat(getBaseLevel())),
-                                            destOffset, mTexStorage, level));
+                                            clippedDestOffset, mTexStorage, level));
         }
     }
     return gl::NoError();
