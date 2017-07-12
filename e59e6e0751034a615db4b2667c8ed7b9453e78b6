@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fdf7b86e_3b6e5e2d",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 46
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-12T12:42:47Z",
+      "side": 1,
+      "message": "In ES3.1 VertexAttribDivisor should update both binding divisor and attribBinding.",
+      "range": {
+        "startLine": 199,
+        "startChar": 0,
+        "endLine": 204,
+        "endChar": 5
+      },
+      "revId": "e59e6e0751034a615db4b2667c8ed7b9453e78b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98070528_60067dbc",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 46
+      },
+      "lineNbr": 254,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-12T12:42:47Z",
+      "side": 1,
+      "message": "Now only DIRTY_BIT_ATTRIB_XX_POINTER is set when VertexAttribPointer is called.",
+      "range": {
+        "startLine": 239,
+        "startChar": 0,
+        "endLine": 254,
+        "endChar": 61
+      },
+      "revId": "e59e6e0751034a615db4b2667c8ed7b9453e78b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32a188d2_a0b61a50",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 46
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-12T12:42:47Z",
+      "side": 1,
+      "message": "VertexAttribPointer should update formats[attribIndex], bindings[attribIndex] and attribs[attribIndex].bindingIndex.\n\nIt should not update bindings[attrib.bindingIndex] if attrib.bindingIndex !\u003d attribIndex.",
+      "range": {
+        "startLine": 483,
+        "startChar": 0,
+        "endLine": 488,
+        "endChar": 5
+      },
+      "revId": "e59e6e0751034a615db4b2667c8ed7b9453e78b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45301589_c756fdc7",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 46
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-12T12:42:47Z",
+      "side": 1,
+      "message": "VertexAttribPointer should set relativeOffset to 0, and set attrib.bindingIndex to attribIndex.\nThe cache should be consistent to the current state in driver, so that all Vertex Attrib Binding APIs can be executed correctly.\ne.g.\nIf relativeOffset isn\u0027t 0, the real value of it will be set into driver in updateAttribFormat(). We won\u0027t miss setting it because when entering updateAttribFormat, the cache value of relativeOffset is 0 not attrib.relativeOffset.",
+      "range": {
+        "startLine": 510,
+        "startChar": 0,
+        "endLine": 511,
+        "endChar": 86
+      },
+      "revId": "e59e6e0751034a615db4b2667c8ed7b9453e78b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
