@@ -566,6 +566,7 @@ class Program final : angle::NonCopyable, public LabeledObject
                                        InfoLog &infoLog,
                                        const MergedVaryings &linkedVaryings,
                                        const Caps &caps) const;
+    bool linkValidateGlobalNames(const Context *context, InfoLog &infoLog) const;
 
     void gatherTransformFeedbackVaryings(const MergedVaryings &varyings);
 
