@@ -84,7 +84,7 @@ typedef IInspectable* EGLNativeWindowType;
 #endif
 
 #elif defined(__APPLE__) || defined(__WINSCW__) || defined(__SYMBIAN32__) || \
-      defined(__Fuchsia__)
+      defined(__Fuchsia__) || defined(__HAIKU__)
 
 typedef int   EGLNativeDisplayType;
 typedef void *EGLNativeWindowType;
