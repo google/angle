@@ -140,6 +140,30 @@
       "revId": "02902616aff44c8e980872110e095d9fbf27da82",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "78ce76d8_9da366bf",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2608,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-07-12T06:28:03Z",
+      "side": 1,
+      "message": "Yes, you are right.",
+      "parentUuid": "c2282b40_c00cff50",
+      "range": {
+        "startLine": 2607,
+        "startChar": 8,
+        "endLine": 2608,
+        "endChar": 24
+      },
+      "revId": "02902616aff44c8e980872110e095d9fbf27da82",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
