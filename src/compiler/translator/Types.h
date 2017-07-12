@@ -107,8 +107,6 @@ class TStructure : public TFieldListCollection
 
     bool equals(const TStructure &other) const;
 
-    void setUniqueId(int uniqueId) { mUniqueId = uniqueId; }
-
     int uniqueId() const
     {
         ASSERT(mUniqueId != 0);

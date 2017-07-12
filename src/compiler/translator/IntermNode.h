@@ -270,8 +270,6 @@ class TIntermSymbol : public TIntermTyped
     const TName &getName() const { return mSymbol; }
     TName &getName() { return mSymbol; }
 
-    void setId(int newId) { mId = newId; }
-
     void setInternal(bool internal) { mSymbol.setInternal(internal); }
 
     void traverse(TIntermTraverser *it) override;
@@ -279,7 +277,7 @@ class TIntermSymbol : public TIntermTyped
     bool replaceChildNode(TIntermNode *, TIntermNode *) override { return false; }
 
   protected:
-    int mId;
+    const int mId;
     TName mSymbol;
 
   private:

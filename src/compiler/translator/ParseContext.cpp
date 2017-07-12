@@ -2480,12 +2480,13 @@ void TParseContext::parseArrayDeclarator(TPublicType &publicType,
         TVariable *variable = nullptr;
         declareVariable(identifierLocation, identifier, arrayType, &variable);
 
-        TIntermSymbol *symbol = new TIntermSymbol(0, identifier, arrayType);
-        symbol->setLine(identifierLocation);
         if (variable)
-            symbol->setId(variable->getUniqueId());
-
-        declarationOut->appendDeclarator(symbol);
+        {
+            TIntermSymbol *symbol =
+                new TIntermSymbol(variable->getUniqueId(), identifier, arrayType);
+            symbol->setLine(identifierLocation);
+            declarationOut->appendDeclarator(symbol);
+        }
     }
 }
 
