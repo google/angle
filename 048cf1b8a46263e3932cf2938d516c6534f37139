@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "334b9d44_7bc9cd6e",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-12T11:48:16Z",
+      "side": 1,
+      "message": "There might be empty space between the used parts of the framebuffer, so I don\u0027t think \"adjacent\" is very good. Some alternatives I can think of:\n\nFRAMEBUFFER_MULTIVIEW_SUB_REGIONS_ANGLE\nFRAMEBUFFER_MULTIVIEW_VIEWPORT_OFFSET_ANGLE\nFRAMEBUFFER_MULTIVIEW_OFFSET_VIEWPORTS_ANGLE\nFRAMEBUFFER_MULTIVIEW_SPLIT_ANGLE\nFRAMEBUFFER_MULTIVIEW_PARTITIONED_ANGLE\n\nOf these, I\u0027d maybe prefer the first, though I don\u0027t know if it\u0027s better than SIDE_BY_SIDE.",
+      "parentUuid": "84b8bf73_c978335e",
+      "range": {
+        "startLine": 69,
+        "startChar": 30,
+        "endLine": 69,
+        "endChar": 42
+      },
+      "revId": "048cf1b8a46263e3932cf2938d516c6534f37139",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "38122d14_ad06c74f",
         "filename": "extensions/ANGLE_multiview.txt",
         "patchSetId": 12
@@ -123,6 +147,24 @@
     },
     {
       "key": {
+        "uuid": "4622fc82_641ff9e3",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-12T11:48:16Z",
+      "side": 1,
+      "message": "Yep, you can do both multiview color and depth. It would be good to update the pseudocode too I think.",
+      "parentUuid": "5b73f0c7_3927255e",
+      "revId": "048cf1b8a46263e3932cf2938d516c6534f37139",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7cbd4594_7ccb9f0e",
         "filename": "extensions/ANGLE_multiview.txt",
         "patchSetId": 12
@@ -134,6 +176,24 @@
       "writtenOn": "2017-07-11T15:45:57Z",
       "side": 1,
       "message": "Shouldn\u0027t we also check that baseViewIndex+numViews is less than the texture array size?",
+      "revId": "048cf1b8a46263e3932cf2938d516c6534f37139",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2791d80e_3d8e6438",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-12T11:48:16Z",
+      "side": 1,
+      "message": "This should not be an error but it should make the framebuffer incomplete. Should add it to the section about framebuffer completeness.",
+      "parentUuid": "7cbd4594_7ccb9f0e",
       "revId": "048cf1b8a46263e3932cf2938d516c6534f37139",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
