@@ -43,8 +43,12 @@ namespace
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/passthroughrgba2di11ps.h"
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/passthroughrgba2dui11ps.h"
 
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/multiplyalpha_ftof_pm_luma_ps.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/multiplyalpha_ftof_pm_lumaalpha_ps.h"
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/multiplyalpha_ftof_pm_rgb_ps.h"
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/multiplyalpha_ftof_pm_rgba_ps.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/multiplyalpha_ftof_um_luma_ps.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/multiplyalpha_ftof_um_lumaalpha_ps.h"
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/multiplyalpha_ftof_um_rgb_ps.h"
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/multiplyalpha_ftof_um_rgba_ps.h"
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/multiplyalpha_ftou_pm_rgb_ps.h"
@@ -839,7 +843,17 @@ Blit11::BlitShaderType Blit11::GetBlitShaderType(GLenum destinationFormat,
                         return unpackPremultiplyAlpha ? BLITSHADER_2D_RGBF_TOUI_PREMULTIPLY
                                                       : BLITSHADER_2D_RGBF_TOUI_UNMULTIPLY;
                     }
-
+                case GL_LUMINANCE:
+                    ASSERT(!floatToIntBlit);
+                    return unpackPremultiplyAlpha ? BLITSHADER_2D_LUMAF_PREMULTIPLY
+                                                  : BLITSHADER_2D_LUMAF_UNMULTIPLY;
+                case GL_LUMINANCE_ALPHA:
+                    ASSERT(!floatToIntBlit);
+                    return unpackPremultiplyAlpha ? BLITSHADER_2D_LUMAALPHAF_PREMULTIPLY
+                                                  : BLITSHADER_2D_LUMAALPHAF_UNMULTIPLY;
+                case GL_ALPHA:
+                    ASSERT(!floatToIntBlit);
+                    return BLITSHADER_2D_ALPHA;
                 default:
                     UNREACHABLE();
                     return BLITSHADER_INVALID;
@@ -1859,6 +1873,24 @@ gl::Error Blit11::getBlitShader(GLenum destFormat,
         case BLITSHADER_2D_RGBF_TOUI_UNMULTIPLY:
             ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D, ShaderData(g_PS_FtoU_UM_RGB),
                                          "Blit11 2D RGB to uint unmultiply pixel shader"));
+            break;
+        case BLITSHADER_2D_LUMAF_PREMULTIPLY:
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D, ShaderData(g_PS_FtoF_PM_LUMA),
+                                         "Blit11 2D LUMA premultiply pixel shader"));
+            break;
+        case BLITSHADER_2D_LUMAF_UNMULTIPLY:
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D, ShaderData(g_PS_FtoF_UM_LUMA),
+                                         "Blit11 2D LUMA unmultiply pixel shader"));
+            break;
+        case BLITSHADER_2D_LUMAALPHAF_PREMULTIPLY:
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D,
+                                         ShaderData(g_PS_FtoF_PM_LUMAALPHA),
+                                         "Blit11 2D LUMAALPHA premultiply pixel shader"));
+            break;
+        case BLITSHADER_2D_LUMAALPHAF_UNMULTIPLY:
+            ANGLE_TRY(addBlitShaderToMap(blitShaderType, SHADER_2D,
+                                         ShaderData(g_PS_FtoF_UM_LUMAALPHA),
+                                         "Blit11 2D LUMAALPHA unmultiply pixel shader"));
             break;
 
         default:
