@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c232bde4_7f6eabf2",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-12T15:48:39Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this be GL_ANGLE_multiview ?",
+      "revId": "3bb401bda89c3ac42e348ac2e5fc688428f91c06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b7a5e699_29c6ac01",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 877,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-12T15:48:39Z",
+      "side": 1,
+      "message": "I think this should be structured more like:\n\nif (functions-\u003ehasGLExtension(\"GL_NV_viewport_array2\"))\n{\n  extensions-\u003emultiview \u003d true;\n  ... query multiview related caps ...\n}\n\nThis is following the convention elsewhere in this file.",
+      "range": {
+        "startLine": 877,
+        "startChar": 28,
+        "endLine": 877,
+        "endChar": 80
+      },
+      "revId": "3bb401bda89c3ac42e348ac2e5fc688428f91c06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8d540c99_d6cb9fb9",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1064,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-12T15:48:39Z",
+      "side": 1,
+      "message": "It seems a bit hacky to store this in workarounds, maybe there\u0027s a better way? In a way it\u0027s working around platform limitations, but it\u0027s not working around a bug like all the other workarounds.",
+      "revId": "3bb401bda89c3ac42e348ac2e5fc688428f91c06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
