@@ -342,7 +342,7 @@ bool IsValidCopyTextureSourceTarget(Context *context, GLenum target)
 
 bool IsValidCopyTextureSourceLevel(Context *context, GLenum target, GLint level)
 {
-    if (level < 0)
+    if (!ValidMipLevel(context, target, level))
     {
         return false;
     }
@@ -361,7 +361,7 @@ bool IsValidCopyTextureDestinationLevel(Context *context,
                                         GLsizei width,
                                         GLsizei height)
 {
-    if (level < 0)
+    if (!ValidMipLevel(context, target, level))
     {
         return false;
     }
