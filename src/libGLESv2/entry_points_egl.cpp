@@ -1631,6 +1631,11 @@ __eglMustCastToProperFunctionPointerType EGLAPIENTRY GetProcAddress(const char *
         INSERT_PROC_ADDRESS(gl, GetQueryObjecti64vRobustANGLE);
         INSERT_PROC_ADDRESS(gl, GetQueryObjectui64vRobustANGLE);
 
+        // GL_ANGLE_multiview
+        INSERT_PROC_ADDRESS(gl, FramebufferTextureMultiviewLayeredANGLE);
+        INSERT_PROC_ADDRESS(gl, FramebufferTextureMultiviewSideBySideANGLE);
+        INSERT_PROC_ADDRESS(gl, FramebufferTextureMultiviewSideBySideRobustANGLE);
+
         // GLES3 core
         INSERT_PROC_ADDRESS(gl, ReadBuffer);
         INSERT_PROC_ADDRESS(gl, DrawRangeElements);

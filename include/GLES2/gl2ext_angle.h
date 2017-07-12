@@ -518,6 +518,27 @@ GL_APICALL void GL_APIENTRY glGetQueryObjectui64vRobustANGLE(GLuint id, GLenum p
 #define GL_PROGRAM_CACHE_ENABLED_ANGLE 0x93AC
 #endif  /* GL_ANGLE_program_cache_control */
 
+#ifndef GL_ANGLE_multiview
+#define GL_ANGLE_multiview 1
+#define GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_NUM_VIEWS_ANGLE 0x9630
+#define GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_BASE_VIEW_INDEX_ANGLE 0x9632
+#define GL_MAX_VIEWS_ANGLE 0x9631
+#define GL_FRAMEBUFFER_INCOMPLETE_VIEW_TARGETS_ANGLE 0x9633
+// TODO (mradev): change to the correct values once the tokens are allocated by Khronos.
+#define GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_VIEWPORT_OFFSETS_ANGLE 0x9634
+#define GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_MULTIVIEW_LAYOUT_ANGLE 0x9635
+#define GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE 0x9636
+#define GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE 0x9637
+typedef void(GL_APIENTRYP PFNGLFRAMEBUFFERTEXTUREMULTIVIEWLAYEREDANGLE)(GLenum target, GLenum attachment, GLuint texture, GLint level, GLint baseViewIndex, GLsizei numViews);
+typedef void(GL_APIENTRYP PFNGLFRAMEBUFFERTEXTUREMULTIVIEWSIDEBYSIDEANGLE)(GLenum target, GLenum attachment, GLuint texture, GLint level, GLsizei numViews, const GLint *viewportOffsets);
+typedef void(GL_APIENTRYP PFNGLFRAMEBUFFERTEXTUREMULTIVIEWSIDEBYSIDEROBUSTANGLE)(GLenum target, GLenum attachment, GLuint texture, GLint level, GLsizei numViews, GLsizei bufSize, const GLint *viewportOffsets);
+#ifdef GL_GLEXT_PROTOTYPES
+GL_APICALL void GL_APIENTRY glFramebufferTextureMultiviewLayeredANGLE(GLenum target, GLenum attachment, GLuint texture, GLint level, GLint baseViewIndex, GLsizei numViews);
+GL_APICALL void GL_APIENTRY glFramebufferTextureMultiviewSideBySideANGLE(GLenum target, GLenum attachment, GLuint texture, GLint level, GLsizei numViews, const GLint *viewportOffsets);
+GL_APICALL void GL_APIENTRY glFramebufferTextureMultiviewSideBySideRobustANGLE(GLenum target, GLenum attachment, GLuint texture, GLint level, GLsizei numViews, GLsizei bufSize, const GLint *viewportOffsets);
+#endif
+#endif /* GL_ANGLE_multiview */
+
 // clang-format on
 
 #endif  // INCLUDE_GLES2_GL2EXT_ANGLE_H_

@@ -2544,4 +2544,39 @@ void GL_APIENTRY glVertexBindingDivisor(GLuint bindingindex, GLuint divisor)
 {
     gl::VertexBindingDivisor(bindingindex, divisor);
 }
+
+void GL_APIENTRY glFramebufferTextureMultiviewLayeredANGLE(GLenum target,
+                                                           GLenum attachment,
+                                                           GLuint texture,
+                                                           GLint level,
+                                                           GLint baseViewIndex,
+                                                           GLsizei numViews)
+{
+    gl::FramebufferTextureMultiviewLayeredANGLE(target, attachment, texture, level, baseViewIndex,
+                                                numViews);
+}
+
+void GL_APIENTRY glFramebufferTextureMultiviewSideBySideANGLE(GLenum target,
+                                                              GLenum attachment,
+                                                              GLuint texture,
+                                                              GLint level,
+                                                              GLsizei numViews,
+                                                              const GLint *viewportOffsets)
+{
+    gl::FramebufferTextureMultiviewSideBySideANGLE(target, attachment, texture, level, numViews,
+                                                   viewportOffsets);
+}
+
+void GL_APIENTRY glFramebufferTextureMultiviewSideBySideRobustANGLE(GLenum target,
+                                                                    GLenum attachment,
+                                                                    GLuint texture,
+                                                                    GLint level,
+                                                                    GLsizei numViews,
+                                                                    GLsizei bufSize,
+                                                                    const GLint *viewportOffsets)
+{
+    gl::FramebufferTextureMultiviewSideBySideRobustANGLE(target, attachment, texture, level,
+                                                         numViews, bufSize, viewportOffsets);
+}
+
 }  // extern "C"

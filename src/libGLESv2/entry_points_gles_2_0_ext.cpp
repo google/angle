@@ -3514,4 +3514,48 @@ ANGLE_EXPORT void GL_APIENTRY GetQueryObjectui64vRobustANGLE(GLuint id,
     }
 }
 
+GL_APICALL void GL_APIENTRY FramebufferTextureMultiviewLayeredANGLE(GLenum target,
+                                                                    GLenum attachment,
+                                                                    GLuint texture,
+                                                                    GLint level,
+                                                                    GLint baseViewIndex,
+                                                                    GLsizei numViews)
+{
+    EVENT(
+        "(GLenum target = 0x%X, GLenum attachment = 0x%X, GLuint texture = %u, GLint level = %d, "
+        "GLint baseViewIndex = %d, GLsizei numViews = %d)",
+        target, attachment, texture, level, baseViewIndex, numViews);
+    UNIMPLEMENTED();
+}
+
+GL_APICALL void GL_APIENTRY FramebufferTextureMultiviewSideBySideANGLE(GLenum target,
+                                                                       GLenum attachment,
+                                                                       GLuint texture,
+                                                                       GLint level,
+                                                                       GLsizei numViews,
+                                                                       const GLint *viewportOffsets)
+{
+    EVENT(
+        "(GLenum target = 0x%X, GLenum attachment = 0x%X, GLuint texture = %u, GLint level = %d, "
+        "GLsizei numViews = %d, GLsizei* viewportOffsets = 0x%0.8p)",
+        target, attachment, texture, level, numViews, viewportOffsets);
+    UNIMPLEMENTED();
+}
+
+GL_APICALL void GL_APIENTRY
+FramebufferTextureMultiviewSideBySideRobustANGLE(GLenum target,
+                                                 GLenum attachment,
+                                                 GLuint texture,
+                                                 GLint level,
+                                                 GLsizei numViews,
+                                                 GLsizei bufSize,
+                                                 const GLint *viewportOffsets)
+{
+    EVENT(
+        "(GLenum target = 0x%X, GLenum attachment = 0x%X, GLuint texture = %u, GLint level = %d, "
+        "GLsizei numViews = %d, GLsizei bufSize = %d, GLsizei* viewportOffsets = 0x%0.8p)",
+        target, attachment, texture, level, numViews, viewportOffsets);
+    UNIMPLEMENTED();
+}
+
 }  // gl
