@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "98f46329_7cafd228",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 27
+      },
+      "lineNbr": 4974,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-12T15:48:52Z",
+      "side": 1,
+      "message": "nit: you can just use \u0026clearValues.red instead of using a reinterpret_cast.",
+      "range": {
+        "startLine": 4974,
+        "startChar": 53,
+        "endLine": 4974,
+        "endChar": 98
+      },
+      "revId": "29df9af7e96ff1b22bc114dfb4e04d85acd218a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
