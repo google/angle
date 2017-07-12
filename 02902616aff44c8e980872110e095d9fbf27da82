@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6f83ce7c_70ed05d9",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 641,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-07-12T05:16:10Z",
+      "side": 1,
+      "message": "GL_GEOMETRY_SHADER_EXT?",
+      "range": {
+        "startLine": 641,
+        "startChar": 13,
+        "endLine": 641,
+        "endChar": 31
+      },
+      "revId": "02902616aff44c8e980872110e095d9fbf27da82",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d090545_91a51017",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-07-12T05:16:10Z",
+      "side": 1,
+      "message": "parameters? Is \"layout qualifier identifiers for geometry shader inputs and outputs\" better?",
+      "range": {
+        "startLine": 257,
+        "startChar": 7,
+        "endLine": 257,
+        "endChar": 33
+      },
+      "revId": "02902616aff44c8e980872110e095d9fbf27da82",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec3670c8_ab8211b7",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2608,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-07-12T05:16:10Z",
+      "side": 1,
+      "message": "case EgsPoints:\n     return true;\ndefault:\n      UNREACHABLE();\n      return false；",
+      "range": {
+        "startLine": 2607,
+        "startChar": 8,
+        "endLine": 2608,
+        "endChar": 24
+      },
+      "revId": "02902616aff44c8e980872110e095d9fbf27da82",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
