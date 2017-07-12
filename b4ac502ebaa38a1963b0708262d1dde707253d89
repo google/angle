@@ -123,6 +123,30 @@
       "revId": "b4ac502ebaa38a1963b0708262d1dde707253d89",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46931a22_45008d38",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-07-12T02:09:11Z",
+      "side": 1,
+      "message": "Awesome!\nMuch better now. Thanks for helping me figure this out!",
+      "parentUuid": "80230899_4b1e40a9",
+      "range": {
+        "startLine": 62,
+        "startChar": 7,
+        "endLine": 62,
+        "endChar": 23
+      },
+      "revId": "b4ac502ebaa38a1963b0708262d1dde707253d89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
