@@ -70,6 +70,30 @@
       "revId": "1cbe920355a1a5fa03d30d5540f8e78d6c6c117f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "50ab256f_ce38d30c",
+        "filename": "src/libANGLE/Uniform.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-12T16:26:23Z",
+      "side": 0,
+      "message": "Ack",
+      "parentUuid": "cb8af16d_6bdff311",
+      "range": {
+        "startLine": 48,
+        "startChar": 3,
+        "endLine": 49,
+        "endChar": 1
+      },
+      "revId": "1cbe920355a1a5fa03d30d5540f8e78d6c6c117f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
