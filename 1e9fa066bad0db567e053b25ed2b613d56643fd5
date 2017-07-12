@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "141980e7_47207a7e",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 13
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-12T13:12:32Z",
+      "side": 1,
+      "message": "You can use the enum values from OVR_multiview for any enums that are essentially aliases of OVR_multiview enums. Others we can leave undefined until we get enums allocated for this extension.",
+      "parentUuid": "f12e77ef_40f09abb",
+      "range": {
+        "startLine": 58,
+        "startChar": 67,
+        "endLine": 58,
+        "endChar": 73
+      },
+      "revId": "1e9fa066bad0db567e053b25ed2b613d56643fd5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f6e330dc_f2c581bd",
         "filename": "extensions/ANGLE_multiview.txt",
         "patchSetId": 13
@@ -41,6 +65,53 @@
         "startChar": 33,
         "endLine": 248,
         "endChar": 44
+      },
+      "revId": "1e9fa066bad0db567e053b25ed2b613d56643fd5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f90fef88_d754fe32",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 13
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-12T13:12:32Z",
+      "side": 1,
+      "message": "I\u0027d leave \"target\" here. Even if DRAW_FRAMEBUFFER is equivalent to FRAMEBUFFER when it comes to this call, I think it\u0027s clearer to use \"target\" and it\u0027s more compatible with other possible extensions.",
+      "parentUuid": "f6e330dc_f2c581bd",
+      "range": {
+        "startLine": 248,
+        "startChar": 33,
+        "endLine": 248,
+        "endChar": 44
+      },
+      "revId": "1e9fa066bad0db567e053b25ed2b613d56643fd5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da1f2e3b_262fa8e9",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 13
+      },
+      "lineNbr": 296,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-12T13:12:32Z",
+      "side": 1,
+      "message": "Should be \"FRAMEBUFFER_ATTACHMENT_NUM_VIEWS_ANGLE\". Also, this should be a new bullet point, not replacing an existing one, and only apply to multiview framebuffer attachments.",
+      "range": {
+        "startLine": 296,
+        "startChar": 59,
+        "endLine": 296,
+        "endChar": 95
       },
       "revId": "1e9fa066bad0db567e053b25ed2b613d56643fd5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
