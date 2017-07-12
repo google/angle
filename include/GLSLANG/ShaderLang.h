@@ -231,6 +231,15 @@ const ShCompileOptions SH_INITIALIZE_UNINITIALIZED_LOCALS = UINT64_C(1) << 32;
 // ViewID_OVR is added as a varying variable to both the vertex and fragment shaders.
 const ShCompileOptions SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW = UINT64_C(1) << 33;
 
+// With the flag enabled the GLSL/ESSL vertex shader is modified to include code for viewport
+// selection in the following way:
+// - Code to enable the extension NV_viewport_array2 is included.
+// - Code to select the viewport index is included at the beginning of main after ViewID_OVR's
+// initialization: gl_ViewportIndex = int(ViewID_OVR)
+// Note: The SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW flag also has to be enabled to have the
+// temporary variable ViewID_OVR declared and initialized.
+const ShCompileOptions SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER = UINT64_C(1) << 34;
+
 // Defines alternate strategies for implementing array index clamping.
 enum ShArrayIndexClampingStrategy
 {

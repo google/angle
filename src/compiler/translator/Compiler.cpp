@@ -431,7 +431,8 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         if (success && (compileOptions & SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW) &&
             parseContext.isMultiviewExtensionEnabled() && getShaderType() != GL_COMPUTE_SHADER)
         {
-            DeclareAndInitBuiltinsForInstancedMultiview(root, getNumViews(), getShaderType());
+            DeclareAndInitBuiltinsForInstancedMultiview(root, mNumViews, shaderType, compileOptions,
+                                                        outputType);
         }
 
         // This pass might emit short circuits so keep it before the short circuit unfolding
