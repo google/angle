@@ -2388,7 +2388,8 @@ std::vector<PackedVarying> Program::getPackedVaryings(
             // Will get the vertex shader interpolation by default.
             auto interpolation = ref.second.get()->interpolation;
 
-            // Interpolation qualifiers must match.
+            // Note that we lose the vertex shader static use information here. The data for the
+            // variable is taken from the fragment shader.
             if (output->isStruct())
             {
                 ASSERT(!output->isArray());

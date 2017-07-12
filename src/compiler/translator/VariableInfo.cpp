@@ -66,6 +66,24 @@ VarT *FindVariable(const TString &name, std::vector<VarT> *infoList)
     return nullptr;
 }
 
+// Note that this shouldn't be called for interface blocks - static use information is collected for
+// individual fields in case of interface blocks.
+void MarkStaticallyUsed(ShaderVariable *variable)
+{
+    if (!variable->staticUse)
+    {
+        if (variable->isStruct())
+        {
+            // Conservatively assume all fields are statically used as well.
+            for (auto &field : variable->fields)
+            {
+                MarkStaticallyUsed(&field);
+            }
+        }
+        variable->staticUse = true;
+    }
+}
+
 // Traverses the intermediate tree to collect all attributes, uniforms, varyings, fragment outputs,
 // and interface blocks.
 class CollectVariablesTraverser : public TIntermTraverser
@@ -406,7 +424,7 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
     }
     if (var)
     {
-        var->staticUse = true;
+        MarkStaticallyUsed(var);
     }
 }
 
