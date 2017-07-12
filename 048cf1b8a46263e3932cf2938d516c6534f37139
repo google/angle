@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "51764fa4_e3330bc8",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-12T14:02:15Z",
+      "side": 1,
+      "message": "SIDE_BY_SIDE is fine with me if there is precedent.",
+      "parentUuid": "083222df_bf0ed9b0",
+      "range": {
+        "startLine": 69,
+        "startChar": 30,
+        "endLine": 69,
+        "endChar": 42
+      },
+      "revId": "048cf1b8a46263e3932cf2938d516c6534f37139",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "38122d14_ad06c74f",
         "filename": "extensions/ANGLE_multiview.txt",
         "patchSetId": 12
