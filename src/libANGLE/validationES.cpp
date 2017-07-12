@@ -153,6 +153,77 @@ bool ValidateDrawAttribs(ValidationContext *context,
     return true;
 }
 
+bool ValidReadPixelsTypeEnum(ValidationContext *context, GLenum type)
+{
+    switch (type)
+    {
+        // Types referenced in Table 3.4 of the ES 2.0.25 spec
+        case GL_UNSIGNED_BYTE:
+        case GL_UNSIGNED_SHORT_4_4_4_4:
+        case GL_UNSIGNED_SHORT_5_5_5_1:
+        case GL_UNSIGNED_SHORT_5_6_5:
+            return context->getClientVersion() >= ES_2_0;
+
+        // Types referenced in Table 3.2 of the ES 3.0.5 spec (Except depth stencil)
+        case GL_BYTE:
+        case GL_INT:
+        case GL_SHORT:
+        case GL_UNSIGNED_INT:
+        case GL_UNSIGNED_INT_10F_11F_11F_REV:
+        case GL_UNSIGNED_INT_24_8:
+        case GL_UNSIGNED_INT_2_10_10_10_REV:
+        case GL_UNSIGNED_INT_5_9_9_9_REV:
+        case GL_UNSIGNED_SHORT:
+        case GL_UNSIGNED_SHORT_1_5_5_5_REV_EXT:
+        case GL_UNSIGNED_SHORT_4_4_4_4_REV_EXT:
+            return context->getClientVersion() >= ES_3_0;
+
+        case GL_FLOAT:
+            return context->getClientVersion() >= ES_3_0 || context->getExtensions().textureFloat;
+
+        case GL_HALF_FLOAT:
+            return context->getClientVersion() >= ES_3_0 ||
+                   context->getExtensions().textureHalfFloat;
+
+        case GL_HALF_FLOAT_OES:
+            return context->getExtensions().colorBufferHalfFloat;
+
+        default:
+            return false;
+    }
+}
+
+bool ValidReadPixelsFormatEnum(ValidationContext *context, GLenum format)
+{
+    switch (format)
+    {
+        // Formats referenced in Table 3.4 of the ES 2.0.25 spec (Except luminance)
+        case GL_RGBA:
+        case GL_RGB:
+        case GL_ALPHA:
+            return context->getClientVersion() >= ES_2_0;
+
+        // Formats referenced in Table 3.2 of the ES 3.0.5 spec
+        case GL_RG:
+        case GL_RED:
+        case GL_RGBA_INTEGER:
+        case GL_RGB_INTEGER:
+        case GL_RG_INTEGER:
+        case GL_RED_INTEGER:
+            return context->getClientVersion() >= ES_3_0;
+
+        case GL_SRGB_ALPHA_EXT:
+        case GL_SRGB_EXT:
+            return context->getExtensions().sRGB;
+
+        case GL_BGRA_EXT:
+            return context->getExtensions().readFormatBGRA;
+
+        default:
+            return false;
+    }
+}
+
 bool ValidReadPixelsFormatType(ValidationContext *context,
                                GLenum framebufferComponentType,
                                GLenum format,
@@ -5308,6 +5379,28 @@ bool ValidateReadPixelsBase(Context *context,
     {
         ANGLE_VALIDATION_ERR(context, InvalidOperation(), MissingReadAttachment);
         return false;
+    }
+
+    if (context->getExtensions().webglCompatibility)
+    {
+        // The ES 2.0 spec states that the format must be "among those defined in table 3.4,
+        // excluding formats LUMINANCE and LUMINANCE_ALPHA.".  This requires validating the format
+        // and type before validating the combination of format and type.  However, the
+        // dEQP-GLES3.functional.negative_api.buffer.read_pixels passes GL_LUMINANCE as a format and
+        // verifies that GL_INVALID_OPERATION is generated.
+        // TODO(geofflang): Update this check to be done in all/no cases once this is resolved in
+        // dEQP/WebGL.
+        if (!ValidReadPixelsFormatEnum(context, format))
+        {
+            context->handleError(InvalidEnum() << "Invalid read format.");
+            return false;
+        }
+
+        if (!ValidReadPixelsTypeEnum(context, type))
+        {
+            context->handleError(InvalidEnum() << "Invalid read type.");
+            return false;
+        }
     }
 
     GLenum currentFormat        = framebuffer->getImplementationColorReadFormat(context);
