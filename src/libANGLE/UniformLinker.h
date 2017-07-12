@@ -32,7 +32,9 @@ class UniformLinker
   private:
     struct ShaderUniformCount
     {
-        ShaderUniformCount() : vectorCount(0), samplerCount(0), imageCount(0) {}
+        ShaderUniformCount() : vectorCount(0), samplerCount(0), imageCount(0), atomicCounterCount(0)
+        {
+        }
         ShaderUniformCount(const ShaderUniformCount &other) = default;
         ShaderUniformCount &operator=(const ShaderUniformCount &other) = default;
 
@@ -41,12 +43,14 @@ class UniformLinker
             vectorCount += other.vectorCount;
             samplerCount += other.samplerCount;
             imageCount += other.imageCount;
+            atomicCounterCount += other.atomicCounterCount;
             return *this;
         }
 
         unsigned int vectorCount;
         unsigned int samplerCount;
         unsigned int imageCount;
+        unsigned int atomicCounterCount;
     };
 
     bool validateVertexAndFragmentUniforms(const Context *context, InfoLog &infoLog) const;
@@ -61,18 +65,23 @@ class UniformLinker
                                               GLuint maxUniformComponents,
                                               GLuint maxTextureImageUnits,
                                               GLuint maxImageUnits,
+                                              GLuint maxAtomicCounters,
                                               const std::string &componentsErrorMessage,
                                               const std::string &samplerErrorMessage,
                                               const std::string &imageErrorMessage,
+                                              const std::string &atomicCounterErrorMessage,
                                               std::vector<LinkedUniform> &samplerUniforms,
                                               std::vector<LinkedUniform> &imageUniforms,
+                                              std::vector<LinkedUniform> &atomicCounterUniforms,
                                               InfoLog &infoLog);
 
     bool flattenUniformsAndCheckCaps(const Context *context, InfoLog &infoLog);
+    bool checkMaxCombinedAtomicCounters(const Caps &caps, InfoLog &infoLog);
 
     ShaderUniformCount flattenUniform(const sh::Uniform &uniform,
                                       std::vector<LinkedUniform> *samplerUniforms,
-                                      std::vector<LinkedUniform> *imageUniforms);
+                                      std::vector<LinkedUniform> *imageUniforms,
+                                      std::vector<LinkedUniform> *atomicCounterUniforms);
 
     // markStaticUse is given as a separate parameter because it is tracked here at struct
     // granularity.
@@ -80,8 +89,10 @@ class UniformLinker
                                           const std::string &fullName,
                                           std::vector<LinkedUniform> *samplerUniforms,
                                           std::vector<LinkedUniform> *imageUniforms,
+                                          std::vector<LinkedUniform> *atomicCounterUniforms,
                                           bool markStaticUse,
                                           int binding,
+                                          int offset,
                                           int *location);
 
     bool indexUniforms(InfoLog &infoLog, const Program::Bindings &uniformLocationBindings);

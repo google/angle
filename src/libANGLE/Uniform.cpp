@@ -14,7 +14,7 @@ namespace gl
 {
 
 LinkedUniform::LinkedUniform()
-    : blockIndex(-1), blockInfo(sh::BlockMemberInfo::getDefaultBlockInfo())
+    : bufferIndex(-1), blockInfo(sh::BlockMemberInfo::getDefaultBlockInfo())
 {
 }
 
@@ -23,26 +23,28 @@ LinkedUniform::LinkedUniform(GLenum typeIn,
                              const std::string &nameIn,
                              unsigned int arraySizeIn,
                              const int bindingIn,
+                             const int offsetIn,
                              const int locationIn,
-                             const int blockIndexIn,
+                             const int bufferIndexIn,
                              const sh::BlockMemberInfo &blockInfoIn)
-    : blockIndex(blockIndexIn), blockInfo(blockInfoIn)
+    : bufferIndex(bufferIndexIn), blockInfo(blockInfoIn)
 {
     type      = typeIn;
     precision = precisionIn;
     name      = nameIn;
     arraySize = arraySizeIn;
     binding   = bindingIn;
+    offset    = offsetIn;
     location  = locationIn;
 }
 
 LinkedUniform::LinkedUniform(const sh::Uniform &uniform)
-    : sh::Uniform(uniform), blockIndex(-1), blockInfo(sh::BlockMemberInfo::getDefaultBlockInfo())
+    : sh::Uniform(uniform), bufferIndex(-1), blockInfo(sh::BlockMemberInfo::getDefaultBlockInfo())
 {
 }
 
 LinkedUniform::LinkedUniform(const LinkedUniform &uniform)
-    : sh::Uniform(uniform), blockIndex(uniform.blockIndex), blockInfo(uniform.blockInfo)
+    : sh::Uniform(uniform), bufferIndex(uniform.bufferIndex), blockInfo(uniform.blockInfo)
 {
     // This function is not intended to be called during runtime.
     ASSERT(uniform.mLazyData.empty());
@@ -54,7 +56,7 @@ LinkedUniform &LinkedUniform::operator=(const LinkedUniform &uniform)
     ASSERT(uniform.mLazyData.empty());
 
     sh::Uniform::operator=(uniform);
-    blockIndex           = uniform.blockIndex;
+    bufferIndex          = uniform.bufferIndex;
     blockInfo            = uniform.blockInfo;
 
     return *this;
@@ -66,7 +68,7 @@ LinkedUniform::~LinkedUniform()
 
 bool LinkedUniform::isInDefaultBlock() const
 {
-    return blockIndex == -1;
+    return bufferIndex == -1;
 }
 
 size_t LinkedUniform::dataSize() const
@@ -108,6 +110,11 @@ bool LinkedUniform::isImage() const
     return IsImageType(type);
 }
 
+bool LinkedUniform::isAtomicCounter() const
+{
+    return IsAtomicCounterType(type);
+}
+
 bool LinkedUniform::isField() const
 {
     return name.find('.') != std::string::npos;
@@ -134,10 +141,8 @@ const uint8_t *LinkedUniform::getDataPtrToElement(size_t elementIndex) const
     return const_cast<LinkedUniform *>(this)->getDataPtrToElement(elementIndex);
 }
 
-UniformBlock::UniformBlock()
-    : isArray(false),
-      arrayElement(0),
-      binding(0),
+ShaderVariableBuffer::ShaderVariableBuffer()
+    : binding(0),
       dataSize(0),
       vertexStaticUse(false),
       fragmentStaticUse(false),
@@ -145,19 +150,21 @@ UniformBlock::UniformBlock()
 {
 }
 
+ShaderVariableBuffer::~ShaderVariableBuffer()
+{
+}
+
+UniformBlock::UniformBlock() : isArray(false), arrayElement(0)
+{
+}
+
 UniformBlock::UniformBlock(const std::string &nameIn,
                            bool isArrayIn,
                            unsigned int arrayElementIn,
                            int bindingIn)
-    : name(nameIn),
-      isArray(isArrayIn),
-      arrayElement(arrayElementIn),
-      binding(bindingIn),
-      dataSize(0),
-      vertexStaticUse(false),
-      fragmentStaticUse(false),
-      computeStaticUse(false)
+    : name(nameIn), isArray(isArrayIn), arrayElement(arrayElementIn)
 {
+    binding = bindingIn;
 }
 
 std::string UniformBlock::nameWithArrayIndex() const

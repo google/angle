@@ -28,8 +28,9 @@ struct LinkedUniform : public sh::Uniform
                   const std::string &name,
                   unsigned int arraySize,
                   const int binding,
+                  const int offset,
                   const int location,
-                  const int blockIndex,
+                  const int bufferIndex,
                   const sh::BlockMemberInfo &blockInfo);
     LinkedUniform(const sh::Uniform &uniform);
     LinkedUniform(const LinkedUniform &uniform);
@@ -41,6 +42,7 @@ struct LinkedUniform : public sh::Uniform
     const uint8_t *data() const;
     bool isSampler() const;
     bool isImage() const;
+    bool isAtomicCounter() const;
     bool isInDefaultBlock() const;
     bool isField() const;
     size_t getElementSize() const;
@@ -48,15 +50,37 @@ struct LinkedUniform : public sh::Uniform
     uint8_t *getDataPtrToElement(size_t elementIndex);
     const uint8_t *getDataPtrToElement(size_t elementIndex) const;
 
-    int blockIndex;
+    // Identifies the containing buffer backed resource -- interface block or atomic counter buffer.
+    int bufferIndex;
     sh::BlockMemberInfo blockInfo;
 
   private:
     mutable angle::MemoryBuffer mLazyData;
 };
 
+// Parent struct for atomic counter, uniform block, and shader storage block buffer, which all
+// contain a group of shader variables, and have a GL buffer backed.
+struct ShaderVariableBuffer
+{
+    ShaderVariableBuffer();
+    virtual ~ShaderVariableBuffer();
+    ShaderVariableBuffer(const ShaderVariableBuffer &other) = default;
+    ShaderVariableBuffer &operator=(const ShaderVariableBuffer &other) = default;
+    int numActiveVariables() const { return static_cast<int>(memberIndexes.size()); }
+
+    int binding;
+    unsigned int dataSize;
+    std::vector<unsigned int> memberIndexes;
+
+    bool vertexStaticUse;
+    bool fragmentStaticUse;
+    bool computeStaticUse;
+};
+
+using AtomicCounterBuffer = ShaderVariableBuffer;
+
 // Helper struct representing a single shader uniform block
-struct UniformBlock
+struct UniformBlock : public ShaderVariableBuffer
 {
     UniformBlock();
     UniformBlock(const std::string &nameIn,
@@ -71,14 +95,6 @@ struct UniformBlock
     std::string name;
     bool isArray;
     unsigned int arrayElement;
-    int binding;
-    unsigned int dataSize;
-
-    bool vertexStaticUse;
-    bool fragmentStaticUse;
-    bool computeStaticUse;
-
-    std::vector<unsigned int> memberUniformIndexes;
 };
 
 }
