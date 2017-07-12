@@ -423,11 +423,6 @@ Renderer11::Renderer11(egl::Display *display)
     mDxgiAdapter    = nullptr;
     mDxgiFactory    = nullptr;
 
-    mAppliedVertexShader   = angle::DirtyPointer;
-    mAppliedGeometryShader = angle::DirtyPointer;
-    mAppliedPixelShader    = angle::DirtyPointer;
-    mAppliedComputeShader  = angle::DirtyPointer;
-
     mAppliedTFObject = angle::DirtyPointer;
 
     ZeroMemory(&mAdapterDescription, sizeof(mAdapterDescription));
@@ -1858,7 +1853,7 @@ gl::Error Renderer11::drawArraysImpl(const gl::Context *context,
         // won't get the correct output. To work around this, draw with *only* the stream out
         // first (no pixel shader) to feed the stream out buffers and then draw again with the
         // geometry shader + pixel shader to rasterize the primitives.
-        mDeviceContext->PSSetShader(nullptr, nullptr, 0);
+        mStateManager.setPixelShader(nullptr);
 
         if (instances > 0)
         {
@@ -1879,20 +1874,15 @@ gl::Error Renderer11::drawArraysImpl(const gl::Context *context,
             return gl::NoError();
         }
 
-        ID3D11PixelShader *pixelShader = GetAs<ShaderExecutable11>(pixelExe)->getPixelShader();
-        ASSERT(reinterpret_cast<uintptr_t>(pixelShader) == mAppliedPixelShader);
-        mDeviceContext->PSSetShader(pixelShader, nullptr, 0);
+        mStateManager.setPixelShader(&GetAs<ShaderExecutable11>(pixelExe)->getPixelShader());
 
         // Retrieve the geometry shader.
         rx::ShaderExecutableD3D *geometryExe = nullptr;
         ANGLE_TRY(
             programD3D->getGeometryExecutableForPrimitiveType(data, mode, &geometryExe, nullptr));
 
-        ID3D11GeometryShader *geometryShader =
-            (geometryExe ? GetAs<ShaderExecutable11>(geometryExe)->getGeometryShader() : nullptr);
-        mAppliedGeometryShader = reinterpret_cast<uintptr_t>(geometryShader);
-        ASSERT(geometryShader);
-        mDeviceContext->GSSetShader(geometryShader, nullptr, 0);
+        mStateManager.setGeometryShader(
+            &GetAs<ShaderExecutable11>(geometryExe)->getGeometryShader());
 
         if (instances > 0)
         {
@@ -2379,45 +2369,29 @@ gl::Error Renderer11::applyShaders(const gl::Context *context, GLenum drawMode)
     ANGLE_TRY(
         programD3D->getGeometryExecutableForPrimitiveType(data, drawMode, &geometryExe, nullptr));
 
-    ID3D11VertexShader *vertexShader =
-        (vertexExe ? GetAs<ShaderExecutable11>(vertexExe)->getVertexShader() : nullptr);
+    const d3d11::VertexShader *vertexShader =
+        (vertexExe ? &GetAs<ShaderExecutable11>(vertexExe)->getVertexShader() : nullptr);
 
     // Skip pixel shader if we're doing rasterizer discard.
-    ID3D11PixelShader *pixelShader = nullptr;
+    const d3d11::PixelShader *pixelShader = nullptr;
     if (!glState.getRasterizerState().rasterizerDiscard)
     {
-        pixelShader = (pixelExe ? GetAs<ShaderExecutable11>(pixelExe)->getPixelShader() : nullptr);
+        pixelShader = (pixelExe ? &GetAs<ShaderExecutable11>(pixelExe)->getPixelShader() : nullptr);
     }
 
-    ID3D11GeometryShader *geometryShader = nullptr;
+    const d3d11::GeometryShader *geometryShader = nullptr;
     if (glState.isTransformFeedbackActiveUnpaused())
     {
         geometryShader =
-            (vertexExe ? GetAs<ShaderExecutable11>(vertexExe)->getStreamOutShader() : nullptr);
+            (vertexExe ? &GetAs<ShaderExecutable11>(vertexExe)->getStreamOutShader() : nullptr);
     }
     else
     {
         geometryShader =
-            (geometryExe ? GetAs<ShaderExecutable11>(geometryExe)->getGeometryShader() : nullptr);
+            (geometryExe ? &GetAs<ShaderExecutable11>(geometryExe)->getGeometryShader() : nullptr);
     }
 
-    if (reinterpret_cast<uintptr_t>(vertexShader) != mAppliedVertexShader)
-    {
-        mDeviceContext->VSSetShader(vertexShader, nullptr, 0);
-        mAppliedVertexShader = reinterpret_cast<uintptr_t>(vertexShader);
-    }
-
-    if (reinterpret_cast<uintptr_t>(geometryShader) != mAppliedGeometryShader)
-    {
-        mDeviceContext->GSSetShader(geometryShader, nullptr, 0);
-        mAppliedGeometryShader = reinterpret_cast<uintptr_t>(geometryShader);
-    }
-
-    if (reinterpret_cast<uintptr_t>(pixelShader) != mAppliedPixelShader)
-    {
-        mDeviceContext->PSSetShader(pixelShader, nullptr, 0);
-        mAppliedPixelShader = reinterpret_cast<uintptr_t>(pixelShader);
-    }
+    mStateManager.setDrawShaders(vertexShader, geometryShader, pixelShader);
 
     return programD3D->applyUniforms(drawMode);
 }
@@ -2760,11 +2734,6 @@ void Renderer11::markAllStateDirty(const gl::Context *context)
     mAppliedIB       = nullptr;
     mAppliedIBFormat = DXGI_FORMAT_UNKNOWN;
     mAppliedIBOffset = 0;
-
-    mAppliedVertexShader   = angle::DirtyPointer;
-    mAppliedGeometryShader = angle::DirtyPointer;
-    mAppliedPixelShader    = angle::DirtyPointer;
-    mAppliedComputeShader  = angle::DirtyPointer;
 
     mAppliedTFObject = angle::DirtyPointer;
 
@@ -4748,15 +4717,9 @@ gl::Error Renderer11::applyComputeShader(const gl::ContextState &data)
 
     ShaderExecutableD3D *computeExe = nullptr;
     ANGLE_TRY(programD3D->getComputeExecutable(&computeExe));
-
     ASSERT(computeExe != nullptr);
-    ID3D11ComputeShader *computeShader = GetAs<ShaderExecutable11>(computeExe)->getComputeShader();
 
-    if (reinterpret_cast<uintptr_t>(computeShader) != mAppliedComputeShader)
-    {
-        mDeviceContext->CSSetShader(computeShader, nullptr, 0);
-        mAppliedComputeShader = reinterpret_cast<uintptr_t>(computeShader);
-    }
+    mStateManager.setComputeShader(&GetAs<ShaderExecutable11>(computeExe)->getComputeShader());
 
     return programD3D->applyComputeUniforms();
 }

@@ -111,6 +111,14 @@ class StateManager11 final : angle::NonCopyable
 
     void setPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY primitiveTopology);
 
+    void setDrawShaders(const d3d11::VertexShader *vertexShader,
+                        const d3d11::GeometryShader *geometryShader,
+                        const d3d11::PixelShader *pixelShader);
+    void setVertexShader(const d3d11::VertexShader *shader);
+    void setGeometryShader(const d3d11::GeometryShader *shader);
+    void setPixelShader(const d3d11::PixelShader *shader);
+    void setComputeShader(const d3d11::ComputeShader *shader);
+
   private:
     void unsetConflictingSRVs(gl::SamplerType shaderType,
                               uintptr_t resource,
@@ -249,6 +257,12 @@ class StateManager11 final : angle::NonCopyable
 
     // Currently applied primitive topology
     D3D11_PRIMITIVE_TOPOLOGY mCurrentPrimitiveTopology;
+
+    // Currently applied shaders
+    ResourceSerial mAppliedVertexShader;
+    ResourceSerial mAppliedGeometryShader;
+    ResourceSerial mAppliedPixelShader;
+    ResourceSerial mAppliedComputeShader;
 };
 
 }  // namespace rx

@@ -966,7 +966,7 @@ gl::Error Blit11::getShaderSupport(const Shader &shader, Blit11::ShaderSupport *
         ANGLE_TRY(mQuad2DIL.resolve(mRenderer));
         ANGLE_TRY(mQuad2DVS.resolve(mRenderer));
         supportOut->inputLayout         = &mQuad2DIL.getObj();
-        supportOut->vertexShader        = mQuad2DVS.get();
+        supportOut->vertexShader        = &mQuad2DVS.getObj();
         supportOut->geometryShader      = nullptr;
         supportOut->vertexWriteFunction = Write2DVertices;
     }
@@ -977,8 +977,8 @@ gl::Error Blit11::getShaderSupport(const Shader &shader, Blit11::ShaderSupport *
         ANGLE_TRY(mQuad3DVS.resolve(mRenderer));
         ANGLE_TRY(mQuad3DGS.resolve(mRenderer));
         supportOut->inputLayout         = &mQuad2DIL.getObj();
-        supportOut->vertexShader        = mQuad3DVS.get();
-        supportOut->geometryShader      = mQuad3DGS.get();
+        supportOut->vertexShader        = &mQuad3DVS.getObj();
+        supportOut->geometryShader      = &mQuad3DGS.getObj();
         supportOut->vertexWriteFunction = Write3DVertices;
     }
 
@@ -1095,10 +1095,9 @@ gl::Error Blit11::swizzleTexture(const gl::Context *context,
     // Apply shaders
     stateManager->setInputLayout(support.inputLayout);
     stateManager->setPrimitiveTopology(topology);
-    deviceContext->VSSetShader(support.vertexShader, nullptr, 0);
 
-    deviceContext->PSSetShader(shader->pixelShader.get(), nullptr, 0);
-    deviceContext->GSSetShader(support.geometryShader, nullptr, 0);
+    stateManager->setDrawShaders(support.vertexShader, support.geometryShader,
+                                 &shader->pixelShader);
 
     // Unset the currently bound shader resource to avoid conflicts
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
@@ -1230,10 +1229,9 @@ gl::Error Blit11::copyTexture(const gl::Context *context,
     // Apply shaders
     stateManager->setInputLayout(support.inputLayout);
     stateManager->setPrimitiveTopology(topology);
-    deviceContext->VSSetShader(support.vertexShader, nullptr, 0);
 
-    deviceContext->PSSetShader(shader->pixelShader.get(), nullptr, 0);
-    deviceContext->GSSetShader(support.geometryShader, nullptr, 0);
+    stateManager->setDrawShaders(support.vertexShader, support.geometryShader,
+                                 &shader->pixelShader);
 
     // Unset the currently bound shader resource to avoid conflicts
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
@@ -1362,10 +1360,8 @@ gl::Error Blit11::copyDepth(const gl::Context *context,
     // Apply shaders
     stateManager->setInputLayout(&mQuad2DIL.getObj());
     stateManager->setPrimitiveTopology(topology);
-    deviceContext->VSSetShader(mQuad2DVS.get(), nullptr, 0);
 
-    deviceContext->PSSetShader(mDepthPS.get(), nullptr, 0);
-    deviceContext->GSSetShader(nullptr, nullptr, 0);
+    stateManager->setDrawShaders(&mQuad2DVS.getObj(), nullptr, &mDepthPS.getObj());
 
     // Unset the currently bound shader resource to avoid conflicts
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
@@ -2021,8 +2017,8 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveDepth(const gl::Context *conte
     // Apply the necessary state changes to the D3D11 immediate device context.
     stateManager->setInputLayout(nullptr);
     stateManager->setPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    deviceContext->VSSetShader(mResolveDepthStencilVS.get(), nullptr, 0);
-    deviceContext->GSSetShader(nullptr, nullptr, 0);
+    stateManager->setDrawShaders(&mResolveDepthStencilVS.getObj(), nullptr,
+                                 &mResolveDepthPS.getObj());
     deviceContext->RSSetState(nullptr);
     deviceContext->OMSetDepthStencilState(mDepthStencilState.get(), 0xFFFFFFFF);
     deviceContext->OMSetRenderTargets(0, nullptr, mResolvedDepthDSView.get());
@@ -2041,8 +2037,6 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveDepth(const gl::Context *conte
     ID3D11ShaderResourceView *pixelViews[] = {depth->getShaderResourceView().get()};
 
     deviceContext->PSSetShaderResources(0, 1, pixelViews);
-
-    deviceContext->PSSetShader(mResolveDepthPS.get(), nullptr, 0);
 
     // Trigger the blit on the GPU.
     deviceContext->Draw(6, 0);
@@ -2178,11 +2172,25 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(const gl::Context *con
 
     ANGLE_TRY(mResolveDepthStencilVS.resolve(mRenderer));
 
+    // Resolving the depth buffer works by sampling the depth in the shader using a SRV, then
+    // writing to the resolved depth buffer using SV_Depth. We can't use this method for stencil
+    // because SV_StencilRef isn't supported until HLSL 5.1/D3D11.3.
+    const d3d11::PixelShader *pixelShader = nullptr;
+    if (alsoDepth)
+    {
+        ANGLE_TRY(mResolveDepthStencilPS.resolve(mRenderer));
+        pixelShader = &mResolveDepthStencilPS.getObj();
+    }
+    else
+    {
+        ANGLE_TRY(mResolveStencilPS.resolve(mRenderer));
+        pixelShader = &mResolveStencilPS.getObj();
+    }
+
     // Apply the necessary state changes to the D3D11 immediate device context.
     stateManager->setInputLayout(nullptr);
     stateManager->setPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    deviceContext->VSSetShader(mResolveDepthStencilVS.get(), nullptr, 0);
-    deviceContext->GSSetShader(nullptr, nullptr, 0);
+    stateManager->setDrawShaders(&mResolveDepthStencilVS.getObj(), nullptr, pixelShader);
     deviceContext->RSSetState(nullptr);
     deviceContext->OMSetDepthStencilState(nullptr, 0xFFFFFFFF);
     deviceContext->OMSetRenderTargets(1, rtvs, nullptr);
@@ -2203,20 +2211,6 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(const gl::Context *con
     };
 
     deviceContext->PSSetShaderResources(0, 2, pixelViews);
-
-    // Resolving the depth buffer works by sampling the depth in the shader using a SRV, then
-    // writing to the resolved depth buffer using SV_Depth. We can't use this method for stencil
-    // because SV_StencilRef isn't supported until HLSL 5.1/D3D11.3.
-    if (alsoDepth)
-    {
-        ANGLE_TRY(mResolveDepthStencilPS.resolve(mRenderer));
-        deviceContext->PSSetShader(mResolveDepthStencilPS.get(), nullptr, 0);
-    }
-    else
-    {
-        ANGLE_TRY(mResolveStencilPS.resolve(mRenderer));
-        deviceContext->PSSetShader(mResolveStencilPS.get(), nullptr, 0);
-    }
 
     // Trigger the blit on the GPU.
     deviceContext->Draw(6, 0);

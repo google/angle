@@ -66,29 +66,29 @@ ShaderExecutable11::~ShaderExecutable11()
 {
 }
 
-ID3D11VertexShader *ShaderExecutable11::getVertexShader() const
+const d3d11::VertexShader &ShaderExecutable11::getVertexShader() const
 {
-    return mVertexExecutable.get();
+    return mVertexExecutable;
 }
 
-ID3D11PixelShader *ShaderExecutable11::getPixelShader() const
+const d3d11::PixelShader &ShaderExecutable11::getPixelShader() const
 {
-    return mPixelExecutable.get();
+    return mPixelExecutable;
 }
 
-ID3D11GeometryShader *ShaderExecutable11::getGeometryShader() const
+const d3d11::GeometryShader &ShaderExecutable11::getGeometryShader() const
 {
-    return mGeometryExecutable.get();
+    return mGeometryExecutable;
 }
 
-ID3D11GeometryShader *ShaderExecutable11::getStreamOutShader() const
+const d3d11::GeometryShader &ShaderExecutable11::getStreamOutShader() const
 {
-    return mStreamOutExecutable.get();
+    return mStreamOutExecutable;
 }
 
-ID3D11ComputeShader *ShaderExecutable11::getComputeShader() const
+const d3d11::ComputeShader &ShaderExecutable11::getComputeShader() const
 {
-    return mComputeExecutable.get();
+    return mComputeExecutable;
 }
 
 UniformStorage11::UniformStorage11(size_t initialSize)

@@ -814,9 +814,7 @@ EGLint SwapChain11::copyOffscreenToBackbuffer(const gl::Context *context,
     // Apply shaders
     stateManager->setInputLayout(&mPassThroughIL);
     stateManager->setPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-    deviceContext->VSSetShader(mPassThroughVS.get(), nullptr, 0);
-    deviceContext->PSSetShader(mPassThroughPS.get(), nullptr, 0);
-    deviceContext->GSSetShader(nullptr, nullptr, 0);
+    stateManager->setDrawShaders(&mPassThroughVS, nullptr, &mPassThroughPS);
 
     // Apply render targets. Use the proxy context in display.
     stateManager->setOneTimeRenderTarget(context, mBackBufferRTView.get(), nullptr);

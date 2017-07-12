@@ -630,12 +630,6 @@ class Renderer11 : public RendererD3D
     // Currently applied transform feedback buffers
     uintptr_t mAppliedTFObject;
 
-    // Currently applied shaders
-    uintptr_t mAppliedVertexShader;
-    uintptr_t mAppliedGeometryShader;
-    uintptr_t mAppliedPixelShader;
-    uintptr_t mAppliedComputeShader;
-
     dx_VertexConstants11 mAppliedVertexConstants;
     d3d11::Buffer mDriverConstantBufferVS;
     SamplerMetadataD3D11 mSamplerMetadataVS;

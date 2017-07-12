@@ -848,6 +848,11 @@ void StateManager11::invalidateEverything(const gl::Context *context)
     invalidateVertexBuffer();
 
     mCurrentPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
+
+    mAppliedVertexShader.dirty();
+    mAppliedGeometryShader.dirty();
+    mAppliedPixelShader.dirty();
+    mAppliedComputeShader.dirty();
 }
 
 void StateManager11::invalidateVertexBuffer()
@@ -1291,6 +1296,63 @@ void StateManager11::setPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY primitiveTopo
     {
         mRenderer->getDeviceContext()->IASetPrimitiveTopology(primitiveTopology);
         mCurrentPrimitiveTopology = primitiveTopology;
+    }
+}
+
+void StateManager11::setDrawShaders(const d3d11::VertexShader *vertexShader,
+                                    const d3d11::GeometryShader *geometryShader,
+                                    const d3d11::PixelShader *pixelShader)
+{
+    setVertexShader(vertexShader);
+    setGeometryShader(geometryShader);
+    setPixelShader(pixelShader);
+}
+
+void StateManager11::setVertexShader(const d3d11::VertexShader *shader)
+{
+    ResourceSerial serial = shader ? shader->getSerial() : 0;
+
+    if (serial != mAppliedVertexShader)
+    {
+        ID3D11VertexShader *appliedShader = shader ? shader->get() : nullptr;
+        mRenderer->getDeviceContext()->VSSetShader(appliedShader, nullptr, 0);
+        mAppliedVertexShader = serial;
+    }
+}
+
+void StateManager11::setGeometryShader(const d3d11::GeometryShader *shader)
+{
+    ResourceSerial serial = shader ? shader->getSerial() : 0;
+
+    if (serial != mAppliedGeometryShader)
+    {
+        ID3D11GeometryShader *appliedShader = shader ? shader->get() : nullptr;
+        mRenderer->getDeviceContext()->GSSetShader(appliedShader, nullptr, 0);
+        mAppliedGeometryShader = serial;
+    }
+}
+
+void StateManager11::setPixelShader(const d3d11::PixelShader *shader)
+{
+    ResourceSerial serial = shader ? shader->getSerial() : 0;
+
+    if (serial != mAppliedPixelShader)
+    {
+        ID3D11PixelShader *appliedShader = shader ? shader->get() : nullptr;
+        mRenderer->getDeviceContext()->PSSetShader(appliedShader, nullptr, 0);
+        mAppliedPixelShader = serial;
+    }
+}
+
+void StateManager11::setComputeShader(const d3d11::ComputeShader *shader)
+{
+    ResourceSerial serial = shader ? shader->getSerial() : 0;
+
+    if (serial != mAppliedComputeShader)
+    {
+        ID3D11ComputeShader *appliedShader = shader ? shader->get() : nullptr;
+        mRenderer->getDeviceContext()->CSSetShader(appliedShader, nullptr, 0);
+        mAppliedComputeShader = serial;
     }
 }
 

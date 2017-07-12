@@ -99,8 +99,8 @@ Clear11::ShaderManager::~ShaderManager()
 gl::Error Clear11::ShaderManager::getShadersAndLayout(Renderer11 *renderer,
                                                       const INT clearType,
                                                       const d3d11::InputLayout **il,
-                                                      ID3D11VertexShader **vs,
-                                                      ID3D11PixelShader **ps)
+                                                      const d3d11::VertexShader **vs,
+                                                      const d3d11::PixelShader **ps)
 {
     if (renderer->getRenderer11DeviceCaps().featureLevel <= D3D_FEATURE_LEVEL_9_3)
     {
@@ -120,29 +120,29 @@ gl::Error Clear11::ShaderManager::getShadersAndLayout(Renderer11 *renderer,
             ANGLE_TRY(renderer->allocateResource(ilDescArray, &vertexShader, &mIl9));
         }
 
-        *vs = mVs9.get();
+        *vs = &mVs9.getObj();
         *il = &mIl9;
-        *ps = mPsFloat9.get();
+        *ps = &mPsFloat9.getObj();
         return gl::NoError();
     }
 
     ANGLE_TRY(mVs.resolve(renderer));
-    *vs = mVs.get();
+    *vs = &mVs.getObj();
     *il = nullptr;
 
     switch (clearType)
     {
         case GL_FLOAT:
             ANGLE_TRY(mPsFloat.resolve(renderer));
-            *ps = mPsFloat.get();
+            *ps = &mPsFloat.getObj();
             break;
         case GL_UNSIGNED_INT:
             ANGLE_TRY(mPsUInt.resolve(renderer));
-            *ps = mPsUInt.get();
+            *ps = &mPsUInt.getObj();
             break;
         case GL_INT:
             ANGLE_TRY(mPsSInt.resolve(renderer));
-            *ps = mPsSInt.get();
+            *ps = &mPsSInt.getObj();
             break;
         default:
             UNREACHABLE();
@@ -680,16 +680,14 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
     auto *stateManager = mRenderer->getStateManager();
 
     // Get Shaders
-    ID3D11VertexShader *vs       = nullptr;
-    const d3d11::InputLayout *il = nullptr;
-    ID3D11PixelShader *ps        = nullptr;
+    const d3d11::VertexShader *vs = nullptr;
+    const d3d11::InputLayout *il  = nullptr;
+    const d3d11::PixelShader *ps  = nullptr;
 
     ANGLE_TRY(mShaderManager.getShadersAndLayout(mRenderer, clearParams.colorType, &il, &vs, &ps));
 
     // Apply Shaders
-    deviceContext->VSSetShader(vs, nullptr, 0);
-    deviceContext->GSSetShader(nullptr, nullptr, 0);
-    deviceContext->PSSetShader(ps, nullptr, 0);
+    stateManager->setDrawShaders(vs, nullptr, ps);
     ID3D11Buffer *constantBuffer = mConstantBuffer.get();
     deviceContext->PSSetConstantBuffers(0, 1, &constantBuffer);
 

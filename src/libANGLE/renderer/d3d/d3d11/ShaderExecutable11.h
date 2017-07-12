@@ -31,11 +31,11 @@ class ShaderExecutable11 : public ShaderExecutableD3D
 
     virtual ~ShaderExecutable11();
 
-    ID3D11PixelShader *getPixelShader() const;
-    ID3D11VertexShader *getVertexShader() const;
-    ID3D11GeometryShader *getGeometryShader() const;
-    ID3D11GeometryShader *getStreamOutShader() const;
-    ID3D11ComputeShader *getComputeShader() const;
+    const d3d11::PixelShader &getPixelShader() const;
+    const d3d11::VertexShader &getVertexShader() const;
+    const d3d11::GeometryShader &getGeometryShader() const;
+    const d3d11::GeometryShader &getStreamOutShader() const;
+    const d3d11::ComputeShader &getComputeShader() const;
 
   private:
     d3d11::PixelShader mPixelExecutable;

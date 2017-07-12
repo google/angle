@@ -73,7 +73,7 @@ class PixelTransfer11
 
     gl::Error loadResources();
     gl::Error buildShaderMap();
-    ID3D11PixelShader *findBufferToTexturePS(GLenum internalFormat) const;
+    const d3d11::PixelShader *findBufferToTexturePS(GLenum internalFormat) const;
 
     Renderer11 *mRenderer;
 

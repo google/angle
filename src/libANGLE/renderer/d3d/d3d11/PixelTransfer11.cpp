@@ -157,7 +157,7 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::Context *context,
 
     ASSERT(mRenderer->supportsFastCopyBufferToTexture(destinationFormat));
 
-    ID3D11PixelShader *pixelShader = findBufferToTexturePS(destinationFormat);
+    const d3d11::PixelShader *pixelShader = findBufferToTexturePS(destinationFormat);
     ASSERT(pixelShader);
 
     // The SRV must be in the proper read format, which may be different from the destination format
@@ -186,13 +186,10 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::Context *context,
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
 
     // Are we doing a 2D or 3D copy?
-    ID3D11GeometryShader *geometryShader =
-        ((destSize.depth > 1) ? mBufferToTextureGS.get() : nullptr);
-    auto stateManager                    = mRenderer->getStateManager();
+    const auto *geometryShader = ((destSize.depth > 1) ? &mBufferToTextureGS : nullptr);
+    auto stateManager          = mRenderer->getStateManager();
 
-    deviceContext->VSSetShader(mBufferToTextureVS.get(), nullptr, 0);
-    deviceContext->GSSetShader(geometryShader, nullptr, 0);
-    deviceContext->PSSetShader(pixelShader, nullptr, 0);
+    stateManager->setDrawShaders(&mBufferToTextureVS, geometryShader, pixelShader);
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, bufferSRV);
     stateManager->setInputLayout(nullptr);
     stateManager->setPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
@@ -261,7 +258,7 @@ gl::Error PixelTransfer11::buildShaderMap()
     return gl::NoError();
 }
 
-ID3D11PixelShader *PixelTransfer11::findBufferToTexturePS(GLenum internalFormat) const
+const d3d11::PixelShader *PixelTransfer11::findBufferToTexturePS(GLenum internalFormat) const
 {
     GLenum componentType = gl::GetSizedInternalFormatInfo(internalFormat).componentType;
     if (componentType == GL_SIGNED_NORMALIZED || componentType == GL_UNSIGNED_NORMALIZED)
@@ -270,7 +267,7 @@ ID3D11PixelShader *PixelTransfer11::findBufferToTexturePS(GLenum internalFormat)
     }
 
     auto shaderMapIt = mBufferToTexturePSMap.find(componentType);
-    return (shaderMapIt == mBufferToTexturePSMap.end() ? nullptr : shaderMapIt->second.get());
+    return (shaderMapIt == mBufferToTexturePSMap.end() ? nullptr : &shaderMapIt->second);
 }
 
 }  // namespace rx

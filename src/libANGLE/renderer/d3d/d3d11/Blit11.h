@@ -201,8 +201,8 @@ class Blit11 : angle::NonCopyable
     struct ShaderSupport
     {
         const d3d11::InputLayout *inputLayout;
-        ID3D11VertexShader *vertexShader;
-        ID3D11GeometryShader *geometryShader;
+        const d3d11::VertexShader *vertexShader;
+        const d3d11::GeometryShader *geometryShader;
         WriteVertexFunction vertexWriteFunction;
     };
 

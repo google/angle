@@ -51,8 +51,8 @@ class Clear11 : angle::NonCopyable
         gl::Error getShadersAndLayout(Renderer11 *renderer,
                                       const INT clearType,
                                       const d3d11::InputLayout **il,
-                                      ID3D11VertexShader **vs,
-                                      ID3D11PixelShader **ps);
+                                      const d3d11::VertexShader **vs,
+                                      const d3d11::PixelShader **ps);
 
       private:
         d3d11::InputLayout mIl9;
