@@ -122,6 +122,8 @@ EGLWindow::EGLWindow(EGLint glesMajorVersion,
       mRobustResourceInit(),
       mSwapInterval(-1),
       mSamples(-1),
+      mVulkanLayersEnabled(),
+      mContextProgramCacheEnabled(),
       mPlatformMethods(nullptr)
 {
 }
@@ -338,6 +340,14 @@ bool EGLWindow::initializeContext()
         return false;
     }
 
+    bool hasProgramCacheControlExtension =
+        strstr(displayExtensions, "EGL_ANGLE_program_cache_control ") != nullptr;
+    if (mContextProgramCacheEnabled.valid() && !hasProgramCacheControlExtension)
+    {
+        destroyGL();
+        return false;
+    }
+
     eglBindAPI(EGL_OPENGL_ES_API);
     if (eglGetError() != EGL_SUCCESS)
     {
@@ -380,6 +390,12 @@ bool EGLWindow::initializeContext()
         {
             contextAttributes.push_back(EGL_CONTEXT_CLIENT_ARRAYS_ENABLED_ANGLE);
             contextAttributes.push_back(mClientArraysEnabled ? EGL_TRUE : EGL_FALSE);
+        }
+
+        if (mContextProgramCacheEnabled.valid())
+        {
+            contextAttributes.push_back(EGL_CONTEXT_PROGRAM_BINARY_CACHE_ENABLED_ANGLE);
+            contextAttributes.push_back(mContextProgramCacheEnabled.value() ? EGL_TRUE : EGL_FALSE);
         }
     }
     contextAttributes.push_back(EGL_NONE);

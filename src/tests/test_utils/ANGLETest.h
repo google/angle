@@ -281,6 +281,7 @@ class ANGLETestBase
     void setVulkanLayersEnabled(bool enabled);
     void setClientArraysEnabled(bool enabled);
     void setRobustResourceInit(bool enabled);
+    void setContextProgramCacheEnabled(bool enabled);
 
     // Some EGL extension tests would like to defer the Context init until the test body.
     void setDeferContextInit(bool enabled);
@@ -299,6 +300,8 @@ class ANGLETestBase
 
     static OSWindow *GetOSWindow() { return mOSWindow; }
 
+    angle::PlatformMethods mPlatformMethods;
+
   private:
     bool destroyEGLContext();
 
@@ -314,7 +317,6 @@ class ANGLETestBase
     GLuint mQuadVertexBuffer;
     GLuint mQuadIndexBuffer;
 
-    angle::PlatformMethods mPlatformMethods;
     TestPlatformContext mPlatformContext;
 
     bool mDeferContextInit;

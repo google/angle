@@ -92,6 +92,7 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     {
         mPlatformMethods = platformMethods;
     }
+    void setContextProgramCacheEnabled(bool enabled) { mContextProgramCacheEnabled = enabled; }
 
     static EGLBoolean FindEGLConfig(EGLDisplay dpy, const EGLint *attrib_list, EGLConfig *config);
 
@@ -159,6 +160,7 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     EGLint mSwapInterval;
     EGLint mSamples;
     Optional<bool> mVulkanLayersEnabled;
+    Optional<bool> mContextProgramCacheEnabled;
     angle::PlatformMethods *mPlatformMethods;
 };
 

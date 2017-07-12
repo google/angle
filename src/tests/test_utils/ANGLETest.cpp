@@ -759,6 +759,11 @@ void ANGLETestBase::setRobustResourceInit(bool enabled)
     mEGLWindow->setRobustResourceInit(enabled);
 }
 
+void ANGLETestBase::setContextProgramCacheEnabled(bool enabled)
+{
+    mEGLWindow->setContextProgramCacheEnabled(enabled);
+}
+
 void ANGLETestBase::setDeferContextInit(bool enabled)
 {
     mDeferContextInit = enabled;
