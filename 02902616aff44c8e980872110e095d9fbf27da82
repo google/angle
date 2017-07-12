@@ -164,6 +164,30 @@
       "revId": "02902616aff44c8e980872110e095d9fbf27da82",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "44fe08d9_15dc1fce",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2608,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-12T06:36:44Z",
+      "side": 1,
+      "message": "I agree with you that it is better only to call this function when the primitive type is valid. (not EgsUndefined)\n\nI have updated this in the new patch as you required.",
+      "parentUuid": "78ce76d8_9da366bf",
+      "range": {
+        "startLine": 2607,
+        "startChar": 8,
+        "endLine": 2608,
+        "endChar": 24
+      },
+      "revId": "02902616aff44c8e980872110e095d9fbf27da82",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
