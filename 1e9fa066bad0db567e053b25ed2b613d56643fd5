@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f12e77ef_40f09abb",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 13
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-12T12:55:30Z",
+      "side": 1,
+      "message": "It\u0027s probably better to not have any concrete values here.",
+      "range": {
+        "startLine": 58,
+        "startChar": 67,
+        "endLine": 58,
+        "endChar": 73
+      },
+      "revId": "1e9fa066bad0db567e053b25ed2b613d56643fd5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f6e330dc_f2c581bd",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 13
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-12T12:55:30Z",
+      "side": 1,
+      "message": "Removed target because it is always FRAMEBUFFER anyway.",
+      "range": {
+        "startLine": 248,
+        "startChar": 33,
+        "endLine": 248,
+        "endChar": 44
+      },
+      "revId": "1e9fa066bad0db567e053b25ed2b613d56643fd5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "634c697a_c4e7f1b2",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 13
+      },
+      "lineNbr": 355,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-12T12:55:30Z",
+      "side": 1,
+      "message": "The value is set to 4 in order to support possible future implementations.\nBut the current underlying OpenGL implementation will support at least 16!",
+      "range": {
+        "startLine": 355,
+        "startChar": 49,
+        "endLine": 355,
+        "endChar": 50
+      },
+      "revId": "1e9fa066bad0db567e053b25ed2b613d56643fd5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8af30402_552e81db",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 13
+      },
+      "lineNbr": 444,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-12T12:55:30Z",
+      "side": 1,
+      "message": "I think this section here is to address any errors not described above. I deliberately did not compile the list of errors to omit repetitions in the spec.",
+      "range": {
+        "startLine": 444,
+        "startChar": 4,
+        "endLine": 444,
+        "endChar": 8
+      },
+      "revId": "1e9fa066bad0db567e053b25ed2b613d56643fd5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

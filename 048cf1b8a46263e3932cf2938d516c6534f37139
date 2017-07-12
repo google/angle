@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "083222df_bf0ed9b0",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-12T12:55:30Z",
+      "side": 1,
+      "message": "I still prefer SIDE_BY_SIDE for now. It has been used multiple times with the same exact meaning: https://www.google.com/?gfe_rd\u003dcr\u0026ei\u003dqRFmWfrJMOnk8Af5q72YAQ#q\u003dside+by+side+stereo+rendering",
+      "parentUuid": "334b9d44_7bc9cd6e",
+      "range": {
+        "startLine": 69,
+        "startChar": 30,
+        "endLine": 69,
+        "endChar": 42
+      },
+      "revId": "048cf1b8a46263e3932cf2938d516c6534f37139",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "38122d14_ad06c74f",
         "filename": "extensions/ANGLE_multiview.txt",
         "patchSetId": 12
@@ -60,6 +84,30 @@
       "writtenOn": "2017-07-11T15:27:06Z",
       "side": 1,
       "message": "Instead of this enum, what about returning GL_NONE when FRAMEBUFFER_ATTACHMENT_MULTIVIEW_LAYOUT_ANGLE is queried on a non-multiview attachment.",
+      "range": {
+        "startLine": 71,
+        "startChar": 8,
+        "endLine": 71,
+        "endChar": 39
+      },
+      "revId": "048cf1b8a46263e3932cf2938d516c6534f37139",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9e333350_f3f92493",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-12T12:55:30Z",
+      "side": 1,
+      "message": "Thought about it and wanted to make it consistent with the other names, but I will replace it with NONE.",
+      "parentUuid": "38122d14_ad06c74f",
       "range": {
         "startLine": 71,
         "startChar": 8,
@@ -130,6 +178,48 @@
     },
     {
       "key": {
+        "uuid": "85b8524b_36fc9ea6",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-12T12:55:30Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "e78f2711_3c8da8ce",
+      "revId": "048cf1b8a46263e3932cf2938d516c6534f37139",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fb1f238b_a6cba478",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-12T12:55:30Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "552ea236_e107e54c",
+      "range": {
+        "startLine": 80,
+        "startChar": 36,
+        "endLine": 80,
+        "endChar": 46
+      },
+      "revId": "048cf1b8a46263e3932cf2938d516c6534f37139",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5b73f0c7_3927255e",
         "filename": "extensions/ANGLE_multiview.txt",
         "patchSetId": 12
@@ -165,6 +255,24 @@
     },
     {
       "key": {
+        "uuid": "363ec9ce_a9318ab3",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-12T12:55:30Z",
+      "side": 1,
+      "message": "Good point. The pseudocode is hinting that only one attachment can be added per view which is not the case.",
+      "parentUuid": "4622fc82_641ff9e3",
+      "revId": "048cf1b8a46263e3932cf2938d516c6534f37139",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7cbd4594_7ccb9f0e",
         "filename": "extensions/ANGLE_multiview.txt",
         "patchSetId": 12
@@ -194,6 +302,24 @@
       "side": 1,
       "message": "This should not be an error but it should make the framebuffer incomplete. Should add it to the section about framebuffer completeness.",
       "parentUuid": "7cbd4594_7ccb9f0e",
+      "revId": "048cf1b8a46263e3932cf2938d516c6534f37139",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "14343a99_54508d3e",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 12
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-12T12:55:30Z",
+      "side": 1,
+      "message": "Thanks for noticing. It should be part of the framebuffer attachment completeness.",
+      "parentUuid": "2791d80e_3d8e6438",
       "revId": "048cf1b8a46263e3932cf2938d516c6534f37139",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
