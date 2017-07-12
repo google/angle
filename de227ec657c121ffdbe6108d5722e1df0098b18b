@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dca4e94f_5b4380df",
+        "filename": "src/libGLESv2/entry_points_egl_ext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 796,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-12T18:34:23Z",
+      "side": 1,
+      "message": "should probably make validation functions for these",
+      "range": {
+        "startLine": 796,
+        "startChar": 33,
+        "endLine": 796,
+        "endChar": 48
+      },
+      "revId": "de227ec657c121ffdbe6108d5722e1df0098b18b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
