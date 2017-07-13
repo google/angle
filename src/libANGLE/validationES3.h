@@ -427,6 +427,22 @@ bool ValidateDrawElementsInstanced(ValidationContext *context,
                                    const void *indices,
                                    GLsizei instanceCount);
 
+bool ValidateFramebufferTextureMultiviewLayeredANGLE(Context *context,
+                                                     GLenum target,
+                                                     GLenum attachment,
+                                                     GLuint texture,
+                                                     GLint level,
+                                                     GLint baseViewIndex,
+                                                     GLsizei numViews);
+
+bool ValidateFramebufferTextureMultiviewSideBySideANGLE(Context *context,
+                                                        GLenum target,
+                                                        GLenum attachment,
+                                                        GLuint texture,
+                                                        GLint level,
+                                                        GLsizei numViews,
+                                                        const GLint *viewportOffsets);
+
 }  // namespace gl
 
 #endif  // LIBANGLE_VALIDATION_ES3_H_

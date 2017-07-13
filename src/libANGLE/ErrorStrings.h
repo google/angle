@@ -19,6 +19,7 @@ namespace gl
 ERRMSG(ActiveTextureRange, "Cannot be less than 0 or greater than maximum number of textures.");
 ERRMSG(BufferNotBound, "A buffer must be bound.");
 ERRMSG(ClearInvalidMask, "Invalid mask bits.");
+ERRMSG(CompressedTexturesNotAttachable, "Compressed textures cannot be attached to a framebuffer.");
 ERRMSG(CubemapFacesEqualDimensions, "Each cubemap face must have equal width and height.");
 ERRMSG(CubemapIncomplete,
        "Texture is not cubemap complete. All cubemaps faces must be defined and be the same size.");

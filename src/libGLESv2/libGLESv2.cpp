@@ -2567,16 +2567,4 @@ void GL_APIENTRY glFramebufferTextureMultiviewSideBySideANGLE(GLenum target,
                                                    viewportOffsets);
 }
 
-void GL_APIENTRY glFramebufferTextureMultiviewSideBySideRobustANGLE(GLenum target,
-                                                                    GLenum attachment,
-                                                                    GLuint texture,
-                                                                    GLint level,
-                                                                    GLsizei numViews,
-                                                                    GLsizei bufSize,
-                                                                    const GLint *viewportOffsets)
-{
-    gl::FramebufferTextureMultiviewSideBySideRobustANGLE(target, attachment, texture, level,
-                                                         numViews, bufSize, viewportOffsets);
-}
-
 }  // extern "C"

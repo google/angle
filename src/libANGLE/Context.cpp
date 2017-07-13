@@ -2653,6 +2653,8 @@ void Context::initCaps(const egl::DisplayExtensions &displayExtensions)
         mExtensions.colorBufferFloat      = false;
         mExtensions.eglImageExternalEssl3 = false;
         mExtensions.textureNorm16         = false;
+        mExtensions.multiview             = false;
+        mExtensions.maxViews              = 1u;
     }
 
     if (getClientVersion() > Version(2, 0))
@@ -3092,6 +3094,26 @@ void Context::framebufferTextureLayer(GLenum target,
     }
 
     mGLState.setObjectDirty(target);
+}
+
+void Context::framebufferTextureMultiviewLayeredANGLE(GLenum target,
+                                                      GLenum attachment,
+                                                      GLuint texture,
+                                                      GLint level,
+                                                      GLint baseViewIndex,
+                                                      GLsizei numViews)
+{
+    UNIMPLEMENTED();
+}
+
+void Context::framebufferTextureMultiviewSideBySideANGLE(GLenum target,
+                                                         GLenum attachment,
+                                                         GLuint texture,
+                                                         GLint level,
+                                                         GLsizei numViews,
+                                                         const GLint *viewportOffsets)
+{
+    UNIMPLEMENTED();
 }
 
 void Context::drawBuffers(GLsizei n, const GLenum *bufs)

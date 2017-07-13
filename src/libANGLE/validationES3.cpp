@@ -12,6 +12,7 @@
 #include "common/mathutil.h"
 #include "common/utilities.h"
 #include "libANGLE/Context.h"
+#include "libANGLE/ErrorStrings.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Renderbuffer.h"
@@ -23,6 +24,65 @@ using namespace angle;
 
 namespace gl
 {
+
+namespace
+{
+bool ValidateFramebufferTextureMultiviewBaseANGLE(Context *context,
+                                                  GLenum target,
+                                                  GLenum attachment,
+                                                  GLuint texture,
+                                                  GLint level,
+                                                  GLsizei numViews)
+{
+    if (!context->getExtensions().multiview)
+    {
+        context->handleError(InvalidOperation() << "ANGLE_multiview is not available.");
+        return false;
+    }
+
+    if (!ValidateFramebufferTextureBase(context, target, attachment, texture, level))
+    {
+        return false;
+    }
+
+    if (numViews < 1)
+    {
+        context->handleError(InvalidValue() << "numViews cannot be less than 1.");
+        return false;
+    }
+
+    const Extensions &extensions = context->getExtensions();
+    if (static_cast<GLuint>(numViews) > extensions.maxViews)
+    {
+        context->handleError(InvalidValue()
+                             << "numViews cannot be greater than GL_MAX_VIEWS_ANGLE.");
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateFramebufferTextureMultiviewLevelAndFormat(Context *context,
+                                                       Texture *texture,
+                                                       GLint level)
+{
+    GLenum texTarget = texture->getTarget();
+    if (!ValidMipLevel(context, texTarget, level))
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidMipLevel);
+        return false;
+    }
+
+    const auto &format = texture->getFormat(texTarget, level);
+    if (format.info->compressed)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), CompressedTexturesNotAttachable);
+        return false;
+    }
+    return true;
+}
+
+}  // namespace
 
 static bool ValidateTexImageFormatCombination(gl::Context *context,
                                               GLenum target,
@@ -2569,6 +2629,110 @@ bool ValidateDrawElementsInstanced(ValidationContext *context,
     }
 
     return ValidateDrawElementsInstancedCommon(context, mode, count, type, indices, instanceCount);
+}
+
+bool ValidateFramebufferTextureMultiviewLayeredANGLE(Context *context,
+                                                     GLenum target,
+                                                     GLenum attachment,
+                                                     GLuint texture,
+                                                     GLint level,
+                                                     GLint baseViewIndex,
+                                                     GLsizei numViews)
+{
+
+    if (!ValidateFramebufferTextureMultiviewBaseANGLE(context, target, attachment, texture, level,
+                                                      numViews))
+    {
+        return false;
+    }
+
+    if (baseViewIndex < 0)
+    {
+        context->handleError(InvalidValue() << "baseViewIndex cannot be less than 0.");
+        return false;
+    }
+
+    if (texture != 0)
+    {
+        Texture *tex = context->getTexture(texture);
+        ASSERT(tex);
+
+        switch (tex->getTarget())
+        {
+            case GL_TEXTURE_2D_ARRAY:
+            {
+                const Caps &caps = context->getCaps();
+                if (static_cast<GLuint>(baseViewIndex + numViews) > caps.maxArrayTextureLayers)
+                {
+                    context->handleError(InvalidValue() << "baseViewIndex+numViews cannot be "
+                                                           "greater than "
+                                                           "GL_MAX_ARRAY_TEXTURE_LAYERS.");
+                    return false;
+                }
+            }
+            break;
+            default:
+                context->handleError(InvalidOperation()
+                                     << "Texture's target must be GL_TEXTURE_2D_ARRAY.");
+                return false;
+        }
+
+        if (!ValidateFramebufferTextureMultiviewLevelAndFormat(context, tex, level))
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool ValidateFramebufferTextureMultiviewSideBySideANGLE(Context *context,
+                                                        GLenum target,
+                                                        GLenum attachment,
+                                                        GLuint texture,
+                                                        GLint level,
+                                                        GLsizei numViews,
+                                                        const GLint *viewportOffsets)
+{
+    if (!ValidateFramebufferTextureMultiviewBaseANGLE(context, target, attachment, texture, level,
+                                                      numViews))
+    {
+        return false;
+    }
+
+    const GLsizei numViewportOffsetValues = numViews * 2;
+    for (GLsizei i = 0; i < numViewportOffsetValues; ++i)
+    {
+        if (viewportOffsets[i] < 0)
+        {
+            context->handleError(InvalidValue()
+                                 << "viewportOffsets cannot contain negative values.");
+            return false;
+        }
+    }
+
+    if (texture != 0)
+    {
+        Texture *tex = context->getTexture(texture);
+        ASSERT(tex);
+
+        switch (tex->getTarget())
+        {
+            case GL_TEXTURE_2D:
+                break;
+            default:
+                context->handleError(InvalidOperation()
+                                     << "Texture's target must be GL_TEXTURE_2D.");
+                return false;
+        }
+
+        if (!ValidateFramebufferTextureMultiviewLevelAndFormat(context, tex, level))
+        {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 }  // namespace gl

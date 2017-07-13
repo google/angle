@@ -712,14 +712,6 @@ FramebufferTextureMultiviewSideBySideANGLE(GLenum target,
                                            GLint level,
                                            GLsizei numViews,
                                            const GLint *viewportOffsets);
-ANGLE_EXPORT void GL_APIENTRY
-FramebufferTextureMultiviewSideBySideRobustANGLE(GLenum target,
-                                                 GLenum attachment,
-                                                 GLuint texture,
-                                                 GLint level,
-                                                 GLsizei numViews,
-                                                 GLsizei bufSize,
-                                                 const GLint *viewportOffsets);
 }  // namespace gl
 
 #endif  // LIBGLESV2_ENTRYPOINTGLES20EXT_H_

@@ -531,11 +531,9 @@ GL_APICALL void GL_APIENTRY glGetQueryObjectui64vRobustANGLE(GLuint id, GLenum p
 #define GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE 0x9637
 typedef void(GL_APIENTRYP PFNGLFRAMEBUFFERTEXTUREMULTIVIEWLAYEREDANGLE)(GLenum target, GLenum attachment, GLuint texture, GLint level, GLint baseViewIndex, GLsizei numViews);
 typedef void(GL_APIENTRYP PFNGLFRAMEBUFFERTEXTUREMULTIVIEWSIDEBYSIDEANGLE)(GLenum target, GLenum attachment, GLuint texture, GLint level, GLsizei numViews, const GLint *viewportOffsets);
-typedef void(GL_APIENTRYP PFNGLFRAMEBUFFERTEXTUREMULTIVIEWSIDEBYSIDEROBUSTANGLE)(GLenum target, GLenum attachment, GLuint texture, GLint level, GLsizei numViews, GLsizei bufSize, const GLint *viewportOffsets);
 #ifdef GL_GLEXT_PROTOTYPES
 GL_APICALL void GL_APIENTRY glFramebufferTextureMultiviewLayeredANGLE(GLenum target, GLenum attachment, GLuint texture, GLint level, GLint baseViewIndex, GLsizei numViews);
 GL_APICALL void GL_APIENTRY glFramebufferTextureMultiviewSideBySideANGLE(GLenum target, GLenum attachment, GLuint texture, GLint level, GLsizei numViews, const GLint *viewportOffsets);
-GL_APICALL void GL_APIENTRY glFramebufferTextureMultiviewSideBySideRobustANGLE(GLenum target, GLenum attachment, GLuint texture, GLint level, GLsizei numViews, GLsizei bufSize, const GLint *viewportOffsets);
 #endif
 #endif /* GL_ANGLE_multiview */
 
