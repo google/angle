@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3996034a_286855b5",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-13T13:29:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c232bde4_7f6eabf2",
+      "revId": "3bb401bda89c3ac42e348ac2e5fc688428f91c06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b7a5e699_29c6ac01",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 4
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "9c7d12a9_4adeba4e",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 877,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-13T13:29:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b7a5e699_29c6ac01",
+      "range": {
+        "startLine": 877,
+        "startChar": 28,
+        "endLine": 877,
+        "endChar": 80
+      },
+      "revId": "3bb401bda89c3ac42e348ac2e5fc688428f91c06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d540c99_d6cb9fb9",
         "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
         "patchSetId": 4
@@ -53,6 +95,24 @@
       "writtenOn": "2017-07-12T15:48:39Z",
       "side": 1,
       "message": "It seems a bit hacky to store this in workarounds, maybe there\u0027s a better way? In a way it\u0027s working around platform limitations, but it\u0027s not working around a bug like all the other workarounds.",
+      "revId": "3bb401bda89c3ac42e348ac2e5fc688428f91c06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "812f5d70_85b3107c",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1064,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-13T13:29:42Z",
+      "side": 1,
+      "message": "It is true that it\u0027s a bit hacky, but I do not know of a better way as there is no precedence. If I am to move away this option and place it to another struct (say ExtensionCompilerTransformations), then it would require a lot more code for initialization and bookkeeping:\n1. Necessary code to keep and initialize the new struct and store it into the renderer\n2. It\u0027s passed in the following order: RendererGL -\u003e ContextGL -\u003e ShaderGL\n3. Currently the D3D implementation does it in the same manner allowing for either the geometry shader code path to be selected, or the one which selects the viewport in the vertex shader. This works pretty well on the D3D side because higher level code like tests can select which code path to be used.\n\nMaybe somebody from the ANGLE team can give an advise on restructuring this.",
+      "parentUuid": "8d540c99_d6cb9fb9",
       "revId": "3bb401bda89c3ac42e348ac2e5fc688428f91c06",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
