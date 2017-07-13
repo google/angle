@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7732697c_05b0381a",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2593,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-13T19:02:01Z",
+      "side": 1,
+      "message": "can we remove or update this comment?",
+      "range": {
+        "startLine": 2591,
+        "startChar": 4,
+        "endLine": 2593,
+        "endChar": 52
+      },
+      "revId": "8407690eb86926cdd2a273bd769f91cd29888d93",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b0410cf0_b649daae",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 443,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-13T19:02:01Z",
+      "side": 1,
+      "message": "nit: you can prefix these guys with k",
+      "range": {
+        "startLine": 443,
+        "startChar": 20,
+        "endLine": 443,
+        "endChar": 25
+      },
+      "revId": "8407690eb86926cdd2a273bd769f91cd29888d93",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
