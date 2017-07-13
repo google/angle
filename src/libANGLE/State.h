@@ -45,7 +45,8 @@ class State : angle::NonCopyable
                     bool debug,
                     bool bindGeneratesResource,
                     bool clientArraysEnabled,
-                    bool robustResourceInit);
+                    bool robustResourceInit,
+                    bool programBinaryCacheEnabled);
     void reset(const Context *context);
 
     // State chunk getters
@@ -568,6 +569,9 @@ class State : angle::NonCopyable
 
     // GL_ANGLE_robust_resource_intialization
     bool mRobustResourceInit;
+
+    // GL_ANGLE_program_cache_control
+    bool mProgramBinaryCacheEnabled;
 
     DirtyBits mDirtyBits;
     DirtyObjects mDirtyObjects;

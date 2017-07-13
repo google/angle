@@ -48,6 +48,9 @@ struct DisplayState final : private angle::NonCopyable
     SurfaceSet surfaceSet;
 };
 
+// Constant coded here as a sanity limit.
+constexpr EGLAttrib kProgramCacheSizeAbsoluteMax = 0x4000000;
+
 class Display final : angle::NonCopyable
 {
   public:
@@ -131,6 +134,18 @@ class Display final : angle::NonCopyable
     const DisplayExtensions &getExtensions() const;
     const std::string &getExtensionString() const;
     const std::string &getVendorString() const;
+
+    EGLint programCacheGetAttrib(EGLenum attrib) const;
+    Error programCacheQuery(EGLint index,
+                            void *key,
+                            EGLint *keysize,
+                            void *binary,
+                            EGLint *binarysize);
+    Error programCachePopulate(const void *key,
+                               EGLint keysize,
+                               const void *binary,
+                               EGLint binarysize);
+    EGLint programCacheResize(EGLint limit, EGLenum mode);
 
     const AttributeMap &getAttributeMap() const { return mAttributeMap; }
     EGLNativeDisplayType getNativeDisplayId() const { return mDisplayId; }

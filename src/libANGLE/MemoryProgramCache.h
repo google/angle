@@ -19,7 +19,8 @@
 namespace gl
 {
 // 160-bit SHA-1 hash key.
-using ProgramHash = std::array<uint8_t, 20>;
+constexpr size_t kProgramHashLength = 20;
+using ProgramHash                   = std::array<uint8_t, kProgramHashLength>;
 }  // namespace gl
 
 namespace std
@@ -72,17 +73,17 @@ class MemoryProgramCache final : angle::NonCopyable
     // Check if the cache contains a binary matching the specified program.
     bool get(const ProgramHash &programHash, const angle::MemoryBuffer **programOut);
 
+    // For querying the contents of the cache.
+    bool getAt(size_t index, ProgramHash *hashOut, const angle::MemoryBuffer **programOut);
+
     // Evict a program from the binary cache.
     void remove(const ProgramHash &programHash);
 
     // Helper method that serializes a program.
     void putProgram(const ProgramHash &programHash, const Context *context, const Program *program);
 
-    // Helper method that copies a user binary.
-    void putBinary(const Context *context,
-                   const Program *program,
-                   const uint8_t *binary,
-                   size_t length);
+    // Store a binary directly.
+    void putBinary(const ProgramHash &programHash, const uint8_t *binary, size_t length);
 
     // Check the cache, and deserialize and load the program if found. Evict existing hash if load
     // fails.
@@ -94,10 +95,24 @@ class MemoryProgramCache final : angle::NonCopyable
     // Empty the cache.
     void clear();
 
+    // Resize the cache. Discards current contents.
+    void resize(size_t maxCacheSizeBytes);
+
+    // Returns the number of entries in the cache.
+    size_t entryCount() const;
+
+    // Reduces the current cache size and returns the number of bytes freed.
+    size_t trim(size_t limit);
+
+    // Returns the current cache size in bytes.
+    size_t size() const;
+
+    // Returns the maximum cache size in bytes.
+    size_t maxSize() const;
+
   private:
     // Insert or update a binary program. Program contents are transferred.
     void put(const ProgramHash &programHash,
-             const Context *context,
              angle::MemoryBuffer &&binaryProgram);
 
     angle::SizedMRUCache<ProgramHash, angle::MemoryBuffer> mProgramBinaryCache;

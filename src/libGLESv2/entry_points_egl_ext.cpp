@@ -790,8 +790,12 @@ EGLint EGLAPIENTRY ProgramCacheGetAttribANGLE(EGLDisplay dpy, EGLenum attrib)
 {
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLenum attrib = 0x%X)", dpy, attrib);
 
-    UNIMPLEMENTED();
-    return 0;
+    Display *display = static_cast<Display *>(dpy);
+    Thread *thread   = GetCurrentThread();
+
+    ANGLE_EGL_TRY_RETURN(thread, ValidateProgramCacheGetAttribANGLE(display, attrib), 0);
+
+    return display->programCacheGetAttrib(attrib);
 }
 
 void EGLAPIENTRY ProgramCacheQueryANGLE(EGLDisplay dpy,
@@ -806,7 +810,13 @@ void EGLAPIENTRY ProgramCacheQueryANGLE(EGLDisplay dpy,
         "0x%0.8p, void *binary = 0x%0.8p, EGLint *size = 0x%0.8p)",
         dpy, index, key, keysize, binary, binarysize);
 
-    UNIMPLEMENTED();
+    Display *display = static_cast<Display *>(dpy);
+    Thread *thread   = GetCurrentThread();
+
+    ANGLE_EGL_TRY(thread,
+                  ValidateProgramCacheQueryANGLE(display, index, key, keysize, binary, binarysize));
+
+    ANGLE_EGL_TRY(thread, display->programCacheQuery(index, key, keysize, binary, binarysize));
 }
 
 void EGLAPIENTRY ProgramCachePopulateANGLE(EGLDisplay dpy,
@@ -820,14 +830,25 @@ void EGLAPIENTRY ProgramCachePopulateANGLE(EGLDisplay dpy,
         "0x%0.8p, EGLint *size = 0x%0.8p)",
         dpy, key, keysize, binary, binarysize);
 
-    UNIMPLEMENTED();
+    Display *display = static_cast<Display *>(dpy);
+    Thread *thread   = GetCurrentThread();
+
+    ANGLE_EGL_TRY(thread,
+                  ValidateProgramCachePopulateANGLE(display, key, keysize, binary, binarysize));
+
+    ANGLE_EGL_TRY(thread, display->programCachePopulate(key, keysize, binary, binarysize));
 }
 
 EGLint EGLAPIENTRY ProgramCacheResizeANGLE(EGLDisplay dpy, EGLint limit, EGLenum mode)
 {
     EVENT("(EGLDisplay dpy = 0x%0.8p, EGLint limit = %d, EGLenum mode = 0x%X)", dpy, limit, mode);
-    UNIMPLEMENTED();
-    return 0;
+
+    Display *display = static_cast<Display *>(dpy);
+    Thread *thread   = GetCurrentThread();
+
+    ANGLE_EGL_TRY_RETURN(thread, ValidateProgramCacheResizeANGLE(display, limit, mode), 0);
+
+    return display->programCacheResize(limit, mode);
 }
 
 }  // namespace egl

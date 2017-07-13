@@ -63,7 +63,8 @@ State::State()
       mMultiSampling(false),
       mSampleAlphaToOne(false),
       mFramebufferSRGB(true),
-      mRobustResourceInit(false)
+      mRobustResourceInit(false),
+      mProgramBinaryCacheEnabled(false)
 {
 }
 
@@ -75,7 +76,8 @@ void State::initialize(const Context *context,
                        bool debug,
                        bool bindGeneratesResource,
                        bool clientArraysEnabled,
-                       bool robustResourceInit)
+                       bool robustResourceInit,
+                       bool programBinaryCacheEnabled)
 {
     const Caps &caps             = context->getCaps();
     const Extensions &extensions = context->getExtensions();
@@ -186,6 +188,7 @@ void State::initialize(const Context *context,
     mPathStencilMask = std::numeric_limits<GLuint>::max();
 
     mRobustResourceInit = robustResourceInit;
+    mProgramBinaryCacheEnabled = programBinaryCacheEnabled;
 }
 
 void State::reset(const Context *context)
@@ -687,7 +690,12 @@ bool State::getEnableFeature(GLenum feature) const
           return getFramebufferSRGB();
       case GL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
           return mRobustResourceInit;
-      default:                               UNREACHABLE(); return false;
+      case GL_PROGRAM_CACHE_ENABLED_ANGLE:
+          return mProgramBinaryCacheEnabled;
+
+      default:
+          UNREACHABLE();
+          return false;
     }
 }
 
@@ -1666,6 +1674,10 @@ void State::getBooleanv(GLenum pname, GLboolean *params)
       case GL_CONTEXT_ROBUST_RESOURCE_INITIALIZATION_ANGLE:
           *params = mRobustResourceInit ? GL_TRUE : GL_FALSE;
           break;
+      case GL_PROGRAM_CACHE_ENABLED_ANGLE:
+          *params = mProgramBinaryCacheEnabled ? GL_TRUE : GL_FALSE;
+          break;
+
       default:
         UNREACHABLE();
         break;

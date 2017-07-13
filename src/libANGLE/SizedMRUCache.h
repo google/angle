@@ -39,13 +39,7 @@ class SizedMRUCache final : angle::NonCopyable
         auto retVal = mStore.Put(key, ValueAndSize(std::move(value), size));
         mCurrentSize += size;
 
-        while (mCurrentSize > mMaximumTotalSize)
-        {
-            ASSERT(!mStore.empty());
-            auto iter = mStore.rbegin();
-            mCurrentSize -= iter->second.size;
-            mStore.Erase(iter);
-        }
+        shrinkToSize(mMaximumTotalSize);
 
         return &retVal->second.value;
     }
@@ -59,6 +53,20 @@ class SizedMRUCache final : angle::NonCopyable
         }
         *valueOut = &iter->second.value;
         return true;
+    }
+
+    bool getAt(size_t index, Key *keyOut, const Value **valueOut)
+    {
+        if (index < mStore.size())
+        {
+            auto it = mStore.begin();
+            std::advance(it, index);
+            *keyOut   = it->first;
+            *valueOut = &it->second.value;
+            return true;
+        }
+        *valueOut = nullptr;
+        return false;
     }
 
     bool empty() const { return mStore.empty(); }
@@ -83,7 +91,34 @@ class SizedMRUCache final : angle::NonCopyable
         return false;
     }
 
+    size_t entryCount() const { return mStore.size(); }
+
     size_t size() const { return mCurrentSize; }
+
+    // Also discards the cache contents.
+    void resize(size_t maximumTotalSize)
+    {
+        clear();
+        mMaximumTotalSize = maximumTotalSize;
+    }
+
+    // Reduce current memory usage.
+    size_t shrinkToSize(size_t limit)
+    {
+        size_t initialSize = mCurrentSize;
+
+        while (mCurrentSize > limit)
+        {
+            ASSERT(!mStore.empty());
+            auto iter = mStore.rbegin();
+            mCurrentSize -= iter->second.size;
+            mStore.Erase(iter);
+        }
+
+        return (initialSize - mCurrentSize);
+    }
+
+    size_t maxSize() const { return mMaximumTotalSize; }
 
   private:
     struct ValueAndSize

@@ -56,6 +56,11 @@ class EGLProgramCacheControlTest : public ANGLETest
         return eglDisplayExtensionEnabled(display, kEGLExtName);
     }
 
+    bool programBinaryAvailable()
+    {
+        return (getClientMajorVersion() >= 3 || extensionEnabled("GL_OES_get_program_binary"));
+    }
+
     ProgramKeyType mCachedKey;
     std::vector<uint8_t> mCachedBinary;
 };
@@ -169,7 +174,7 @@ TEST_P(EGLProgramCacheControlTest, NegativeAPI)
 // Tests a basic use case.
 TEST_P(EGLProgramCacheControlTest, SaveAndReload)
 {
-    ANGLE_SKIP_TEST_IF(!extensionAvailable());
+    ANGLE_SKIP_TEST_IF(!extensionAvailable() || !programBinaryAvailable());
 
     const std::string vertexShader =
         "attribute vec4 position; void main() { gl_Position = position; }";

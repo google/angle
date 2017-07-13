@@ -283,7 +283,8 @@ Context::Context(rx::EGLImplFactory *implFactory,
     initWorkarounds();
 
     mGLState.initialize(this, GetDebug(attribs), GetBindGeneratesResource(attribs),
-                        GetClientArraysEnabled(attribs), robustResourceInit);
+                        GetClientArraysEnabled(attribs), robustResourceInit,
+                        mMemoryProgramCache != nullptr);
 
     mFenceNVHandleAllocator.setBaseHandle(0);
 
@@ -2672,6 +2673,9 @@ void Context::initCaps(const egl::DisplayExtensions &displayExtensions)
     // Determine robust resource init availability from EGL.
     mExtensions.robustResourceInitialization =
         egl::Display::GetClientExtensions().displayRobustResourceInitialization;
+
+    // Enable the cache control query unconditionally.
+    mExtensions.programCacheControl = true;
 
     // Apply implementation limits
     mCaps.maxVertexAttributes = std::min<GLuint>(mCaps.maxVertexAttributes, MAX_VERTEX_ATTRIBS);

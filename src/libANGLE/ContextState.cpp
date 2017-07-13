@@ -434,6 +434,13 @@ bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsign
         return true;
     }
 
+    if (getExtensions().programCacheControl && pname == GL_PROGRAM_CACHE_ENABLED_ANGLE)
+    {
+        *type      = GL_BOOL;
+        *numParams = 1;
+        return true;
+    }
+
     // Check for ES3.0+ parameter names which are also exposed as ES2 extensions
     switch (pname)
     {

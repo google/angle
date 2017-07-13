@@ -14,15 +14,7 @@
 namespace gl
 {
 
-// The size to set for the program cache for default and low-end device cases.
-// Temporarily disabled to prevent double memory use in Chrome.
-// TODO(jmadill): Re-enable once we have memory cache control.
-//#if !defined(ANGLE_PLATFORM_ANDROID)
-// const size_t kDefaultMaxProgramCacheMemoryBytes = 6 * 1024 * 1024;
-//#else
-// const size_t kDefaultMaxProgramCacheMemoryBytes = 2 * 1024 * 1024;
-// const size_t kLowEndMaxProgramCacheMemoryBytes  = 512 * 1024;
-//#endif
+// The binary cache is currently left disable by default, and the application can enable it.
 const size_t kDefaultMaxProgramCacheMemoryBytes = 0;
 
 enum

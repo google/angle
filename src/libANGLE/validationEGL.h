@@ -129,6 +129,41 @@ Error ValidateGetPlatformDisplay(EGLenum platform,
 Error ValidateGetPlatformDisplayEXT(EGLenum platform,
                                     void *native_display,
                                     const EGLint *attrib_list);
+
+Error ValidateProgramCacheGetAttribANGLE(const Display *display, EGLenum attrib);
+
+Error ValidateProgramCacheQueryANGLE(const Display *display,
+                                     EGLint index,
+                                     void *key,
+                                     EGLint *keysize,
+                                     void *binary,
+                                     EGLint *binarysize);
+
+Error ValidateProgramCachePopulateANGLE(const Display *display,
+                                        const void *key,
+                                        EGLint keysize,
+                                        const void *binary,
+                                        EGLint binarysize);
+
+Error ValidateProgramCacheResizeANGLE(const Display *display, EGLint limit, EGLenum mode);
+
 }  // namespace egl
+
+#define ANGLE_EGL_TRY(THREAD, EXPR)                   \
+    {                                                 \
+        auto ANGLE_LOCAL_VAR = (EXPR);                \
+        if (ANGLE_LOCAL_VAR.isError())                \
+            return THREAD->setError(ANGLE_LOCAL_VAR); \
+    }
+
+#define ANGLE_EGL_TRY_RETURN(THREAD, EXPR, RETVAL) \
+    {                                              \
+        auto ANGLE_LOCAL_VAR = (EXPR);             \
+        if (ANGLE_LOCAL_VAR.isError())             \
+        {                                          \
+            THREAD->setError(ANGLE_LOCAL_VAR);     \
+            return RETVAL;                         \
+        }                                          \
+    }
 
 #endif // LIBANGLE_VALIDATIONEGL_H_

@@ -714,6 +714,20 @@ Error ValidateCreateContext(Display *display, Config *configuration, gl::Context
               }
               break;
 
+          case EGL_CONTEXT_PROGRAM_BINARY_CACHE_ENABLED_ANGLE:
+              if (!display->getExtensions().programCacheControl)
+              {
+                  return EglBadAttribute()
+                         << "Attribute EGL_CONTEXT_PROGRAM_BINARY_CACHE_ENABLED_ANGLE "
+                            "requires EGL_ANGLE_program_cache_control.";
+              }
+              if (value != EGL_TRUE && value != EGL_FALSE)
+              {
+                  return EglBadAttribute() << "EGL_CONTEXT_PROGRAM_BINARY_CACHE_ENABLED_ANGLE must "
+                                              "be EGL_TRUE or EGL_FALSE.";
+              }
+              break;
+
           default:
               return EglBadAttribute() << "Unknown attribute.";
         }
@@ -2156,6 +2170,124 @@ Error ValidateGetPlatformDisplayEXT(EGLenum platform,
 {
     const auto &attribMap = AttributeMap::CreateFromIntArray(attrib_list);
     return ValidateGetPlatformDisplayCommon(platform, native_display, attribMap);
+}
+
+Error ValidateProgramCacheGetAttribANGLE(const Display *display, EGLenum attrib)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+
+    if (!display->getExtensions().programCacheControl)
+    {
+        return EglBadAccess() << "Extension not supported";
+    }
+
+    switch (attrib)
+    {
+        case EGL_PROGRAM_CACHE_KEY_LENGTH_ANGLE:
+        case EGL_PROGRAM_CACHE_SIZE_ANGLE:
+            break;
+
+        default:
+            return EglBadParameter() << "Invalid program cache attribute.";
+    }
+
+    return NoError();
+}
+
+Error ValidateProgramCacheQueryANGLE(const Display *display,
+                                     EGLint index,
+                                     void *key,
+                                     EGLint *keysize,
+                                     void *binary,
+                                     EGLint *binarysize)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+
+    if (!display->getExtensions().programCacheControl)
+    {
+        return EglBadAccess() << "Extension not supported";
+    }
+
+    if (index < 0 || index >= display->programCacheGetAttrib(EGL_PROGRAM_CACHE_SIZE_ANGLE))
+    {
+        return EglBadParameter() << "Program index out of range.";
+    }
+
+    if (keysize == nullptr || binarysize == nullptr)
+    {
+        return EglBadParameter() << "keysize and binarysize must always be valid pointers.";
+    }
+
+    if (binary && *keysize != static_cast<EGLint>(gl::kProgramHashLength))
+    {
+        return EglBadParameter() << "Invalid program key size.";
+    }
+
+    if ((key == nullptr) != (binary == nullptr))
+    {
+        return EglBadParameter() << "key and binary must both be null or both non-null.";
+    }
+
+    return NoError();
+}
+
+Error ValidateProgramCachePopulateANGLE(const Display *display,
+                                        const void *key,
+                                        EGLint keysize,
+                                        const void *binary,
+                                        EGLint binarysize)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+
+    if (!display->getExtensions().programCacheControl)
+    {
+        return EglBadAccess() << "Extension not supported";
+    }
+
+    if (keysize != static_cast<EGLint>(gl::kProgramHashLength))
+    {
+        return EglBadParameter() << "Invalid program key size.";
+    }
+
+    if (key == nullptr || binary == nullptr)
+    {
+        return EglBadParameter() << "null pointer in arguments.";
+    }
+
+    // Upper bound for binarysize is arbitrary.
+    if (binarysize <= 0 || binarysize > egl::kProgramCacheSizeAbsoluteMax)
+    {
+        return EglBadParameter() << "binarysize out of valid range.";
+    }
+
+    return NoError();
+}
+
+Error ValidateProgramCacheResizeANGLE(const Display *display, EGLint limit, EGLenum mode)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+
+    if (!display->getExtensions().programCacheControl)
+    {
+        return EglBadAccess() << "Extension not supported";
+    }
+
+    if (limit < 0)
+    {
+        return EglBadParameter() << "limit must be non-negative.";
+    }
+
+    switch (mode)
+    {
+        case EGL_PROGRAM_CACHE_RESIZE_ANGLE:
+        case EGL_PROGRAM_CACHE_TRIM_ANGLE:
+            break;
+
+        default:
+            return EglBadParameter() << "Invalid cache resize mode.";
+    }
+
+    return NoError();
 }
 
 }  // namespace egl

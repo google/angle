@@ -547,6 +547,13 @@ bool MemoryProgramCache::get(const ProgramHash &programHash, const angle::Memory
     return mProgramBinaryCache.get(programHash, programOut);
 }
 
+bool MemoryProgramCache::getAt(size_t index,
+                               ProgramHash *hashOut,
+                               const angle::MemoryBuffer **programOut)
+{
+    return mProgramBinaryCache.getAt(index, hashOut, programOut);
+}
+
 void MemoryProgramCache::remove(const ProgramHash &programHash)
 {
     bool result = mProgramBinaryCache.eraseByKey(programHash);
@@ -554,7 +561,6 @@ void MemoryProgramCache::remove(const ProgramHash &programHash)
 }
 
 void MemoryProgramCache::put(const ProgramHash &program,
-                             const Context *context,
                              angle::MemoryBuffer &&binaryProgram)
 {
     const angle::MemoryBuffer *result =
@@ -576,11 +582,10 @@ void MemoryProgramCache::putProgram(const ProgramHash &programHash,
 {
     angle::MemoryBuffer binaryProgram;
     Serialize(context, program, &binaryProgram);
-    put(programHash, context, std::move(binaryProgram));
+    put(programHash, std::move(binaryProgram));
 }
 
-void MemoryProgramCache::putBinary(const Context *context,
-                                   const Program *program,
+void MemoryProgramCache::putBinary(const ProgramHash &programHash,
                                    const uint8_t *binary,
                                    size_t length)
 {
@@ -589,18 +594,44 @@ void MemoryProgramCache::putBinary(const Context *context,
     binaryProgram.resize(length);
     memcpy(binaryProgram.data(), binary, length);
 
-    // Compute the hash.
-    ProgramHash programHash;
-    ComputeHash(context, program, &programHash);
-
     // Store the binary.
-    put(programHash, context, std::move(binaryProgram));
+    const angle::MemoryBuffer *result =
+        mProgramBinaryCache.put(programHash, std::move(binaryProgram), binaryProgram.size());
+    if (!result)
+    {
+        ERR() << "Failed to store binary program in memory cache, program is too large.";
+    }
 }
 
 void MemoryProgramCache::clear()
 {
     mProgramBinaryCache.clear();
     mIssuedWarnings = 0;
+}
+
+void MemoryProgramCache::resize(size_t maxCacheSizeBytes)
+{
+    mProgramBinaryCache.resize(maxCacheSizeBytes);
+}
+
+size_t MemoryProgramCache::entryCount() const
+{
+    return mProgramBinaryCache.entryCount();
+}
+
+size_t MemoryProgramCache::trim(size_t limit)
+{
+    return mProgramBinaryCache.shrinkToSize(limit);
+}
+
+size_t MemoryProgramCache::size() const
+{
+    return mProgramBinaryCache.size();
+}
+
+size_t MemoryProgramCache::maxSize() const
+{
+    return mProgramBinaryCache.maxSize();
 }
 
 }  // namespace gl
