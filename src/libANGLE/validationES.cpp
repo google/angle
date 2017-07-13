@@ -1446,7 +1446,9 @@ bool ValidateAttachmentTarget(gl::Context *context, GLenum attachment)
 
         if (colorAttachment >= context->getCaps().maxColorAttachments)
         {
-            context->handleError(InvalidValue());
+            context->handleError(
+                InvalidOperation()
+                << "attachment index cannot be greater or equal to MAX_COLOR_ATTACHMENTS.");
             return false;
         }
     }
