@@ -16,6 +16,24 @@
       "revId": "97ca8827614cab65bc87a8a7c4059932c0511579",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f5aef57d_898b0b07",
+        "filename": "src/compiler/translator/IntermNode_util.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-13T08:17:32Z",
+      "side": 1,
+      "message": "Fixed this, though it goes against what Google C++ style guide has started to say:\n\n\"Do not duplicate comments in both the .h and the .cc. Duplicated comments diverge.\"\n\nI\u0027m fine with the opposite policy, but we should probably document any divergence from Google C++ style guide in the ANGLE style document.",
+      "parentUuid": "8ecc6652_817fc9e3",
+      "revId": "97ca8827614cab65bc87a8a7c4059932c0511579",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
