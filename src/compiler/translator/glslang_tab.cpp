@@ -4395,7 +4395,7 @@ yyreduce:
     {
         // This is for user defined type names. The lexical phase looked up the type.
         TType& structure = static_cast<TVariable*>((yyvsp[0].lex).symbol)->getType();
-        (yyval.interm.typeSpecifierNonArray).initializeStruct(&structure, false, (yylsp[0]));
+        (yyval.interm.typeSpecifierNonArray).initializeStruct(structure.getStruct(), false, (yylsp[0]));
     }
 
     break;

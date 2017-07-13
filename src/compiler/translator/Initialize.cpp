@@ -690,15 +690,10 @@ void InsertBuiltInFunctions(sh::GLenum type,
     fields->push_back(diff);
     TStructure *depthRangeStruct =
         new TStructure(NewPoolTString("gl_DepthRangeParameters"), fields);
-    TVariable *depthRangeParameters =
-        new TVariable(&depthRangeStruct->name(), TType(depthRangeStruct), true);
-    symbolTable.insert(COMMON_BUILTINS, depthRangeParameters);
-    TVariable *depthRange = new TVariable(NewPoolTString("gl_DepthRange"), TType(depthRangeStruct));
-    depthRange->setQualifier(EvqUniform);
-    // Do lazy initialization for depth range, so we allocate to the current scope.
-    depthRangeParameters->getType().realize();
-    depthRange->getType().realize();
-    symbolTable.insert(COMMON_BUILTINS, depthRange);
+    symbolTable.insertStructType(COMMON_BUILTINS, depthRangeStruct);
+    TType depthRangeType(depthRangeStruct);
+    depthRangeType.setQualifier(EvqUniform);
+    symbolTable.insertVariable(COMMON_BUILTINS, "gl_DepthRange", depthRangeType);
 
     //
     // Implementation dependent built-in constants.
@@ -796,34 +791,28 @@ void IdentifyBuiltIns(sh::GLenum type,
 
     if (resources.OVR_multiview && type != GL_COMPUTE_SHADER)
     {
-        symbolTable.insert(ESSL3_BUILTINS, "GL_OVR_multiview",
-                           new TVariable(NewPoolTString("gl_ViewID_OVR"),
-                                         TType(EbtUInt, EbpHigh, EvqViewIDOVR, 1)));
+        symbolTable.insertVariableExt(ESSL3_BUILTINS, "GL_OVR_multiview", "gl_ViewID_OVR",
+                                      TType(EbtUInt, EbpHigh, EvqViewIDOVR, 1));
 
         // ESSL 1.00 doesn't have unsigned integers, so gl_ViewID_OVR is a signed integer in ESSL
         // 1.00. This is specified in the WEBGL_multiview spec.
-        symbolTable.insert(ESSL1_BUILTINS, "GL_OVR_multiview",
-                           new TVariable(NewPoolTString("gl_ViewID_OVR"),
-                                         TType(EbtInt, EbpHigh, EvqViewIDOVR, 1)));
+        symbolTable.insertVariableExt(ESSL1_BUILTINS, "GL_OVR_multiview", "gl_ViewID_OVR",
+                                      TType(EbtInt, EbpHigh, EvqViewIDOVR, 1));
     }
 
     switch (type)
     {
         case GL_FRAGMENT_SHADER:
         {
-            symbolTable.insert(COMMON_BUILTINS,
-                               new TVariable(NewPoolTString("gl_FragCoord"),
-                                             TType(EbtFloat, EbpMedium, EvqFragCoord, 4)));
-            symbolTable.insert(COMMON_BUILTINS,
-                               new TVariable(NewPoolTString("gl_FrontFacing"),
-                                             TType(EbtBool, EbpUndefined, EvqFrontFacing, 1)));
-            symbolTable.insert(COMMON_BUILTINS,
-                               new TVariable(NewPoolTString("gl_PointCoord"),
-                                             TType(EbtFloat, EbpMedium, EvqPointCoord, 2)));
+            symbolTable.insertVariable(COMMON_BUILTINS, "gl_FragCoord",
+                                       TType(EbtFloat, EbpMedium, EvqFragCoord, 4));
+            symbolTable.insertVariable(COMMON_BUILTINS, "gl_FrontFacing",
+                                       TType(EbtBool, EbpUndefined, EvqFrontFacing, 1));
+            symbolTable.insertVariable(COMMON_BUILTINS, "gl_PointCoord",
+                                       TType(EbtFloat, EbpMedium, EvqPointCoord, 2));
 
-            symbolTable.insert(ESSL1_BUILTINS,
-                               new TVariable(NewPoolTString("gl_FragColor"),
-                                             TType(EbtFloat, EbpMedium, EvqFragColor, 4)));
+            symbolTable.insertVariable(ESSL1_BUILTINS, "gl_FragColor",
+                                       TType(EbtFloat, EbpMedium, EvqFragColor, 4));
             TType fragData(EbtFloat, EbpMedium, EvqFragData, 4);
             if (spec != SH_WEBGL2_SPEC && spec != SH_WEBGL3_SPEC)
             {
@@ -833,35 +822,29 @@ void IdentifyBuiltIns(sh::GLenum type,
             {
                 fragData.setArraySize(1u);
             }
-            symbolTable.insert(ESSL1_BUILTINS,
-                               new TVariable(NewPoolTString("gl_FragData"), fragData));
+            symbolTable.insertVariable(ESSL1_BUILTINS, "gl_FragData", fragData);
 
             if (resources.EXT_blend_func_extended)
             {
-                symbolTable.insert(
-                    ESSL1_BUILTINS, "GL_EXT_blend_func_extended",
-                    new TVariable(NewPoolTString("gl_SecondaryFragColorEXT"),
-                                  TType(EbtFloat, EbpMedium, EvqSecondaryFragColorEXT, 4)));
+                symbolTable.insertVariableExt(
+                    ESSL1_BUILTINS, "GL_EXT_blend_func_extended", "gl_SecondaryFragColorEXT",
+                    TType(EbtFloat, EbpMedium, EvqSecondaryFragColorEXT, 4));
                 TType secondaryFragData(EbtFloat, EbpMedium, EvqSecondaryFragDataEXT, 4, 1, true);
                 secondaryFragData.setArraySize(resources.MaxDualSourceDrawBuffers);
-                symbolTable.insert(
-                    ESSL1_BUILTINS, "GL_EXT_blend_func_extended",
-                    new TVariable(NewPoolTString("gl_SecondaryFragDataEXT"), secondaryFragData));
+                symbolTable.insertVariableExt(ESSL1_BUILTINS, "GL_EXT_blend_func_extended",
+                                              "gl_SecondaryFragDataEXT", secondaryFragData);
             }
 
             if (resources.EXT_frag_depth)
             {
-                symbolTable.insert(
-                    ESSL1_BUILTINS, "GL_EXT_frag_depth",
-                    new TVariable(
-                        NewPoolTString("gl_FragDepthEXT"),
-                        TType(EbtFloat, resources.FragmentPrecisionHigh ? EbpHigh : EbpMedium,
-                              EvqFragDepthEXT, 1)));
+                symbolTable.insertVariableExt(
+                    ESSL1_BUILTINS, "GL_EXT_frag_depth", "gl_FragDepthEXT",
+                    TType(EbtFloat, resources.FragmentPrecisionHigh ? EbpHigh : EbpMedium,
+                          EvqFragDepthEXT, 1));
             }
 
-            symbolTable.insert(ESSL3_BUILTINS,
-                               new TVariable(NewPoolTString("gl_FragDepth"),
-                                             TType(EbtFloat, EbpHigh, EvqFragDepth, 1)));
+            symbolTable.insertVariable(ESSL3_BUILTINS, "gl_FragDepth",
+                                       TType(EbtFloat, EbpHigh, EvqFragDepth, 1));
 
             if (resources.EXT_shader_framebuffer_fetch || resources.NV_shader_framebuffer_fetch)
             {
@@ -870,68 +853,52 @@ void IdentifyBuiltIns(sh::GLenum type,
 
                 if (resources.EXT_shader_framebuffer_fetch)
                 {
-                    symbolTable.insert(
-                        ESSL1_BUILTINS, "GL_EXT_shader_framebuffer_fetch",
-                        new TVariable(NewPoolTString("gl_LastFragData"), lastFragData));
+                    symbolTable.insertVariableExt(ESSL1_BUILTINS, "GL_EXT_shader_framebuffer_fetch",
+                                                  "gl_LastFragData", lastFragData);
                 }
                 else if (resources.NV_shader_framebuffer_fetch)
                 {
-                    symbolTable.insert(
-                        ESSL1_BUILTINS, "GL_NV_shader_framebuffer_fetch",
-                        new TVariable(NewPoolTString("gl_LastFragColor"),
-                                      TType(EbtFloat, EbpMedium, EvqLastFragColor, 4)));
-                    symbolTable.insert(
-                        ESSL1_BUILTINS, "GL_NV_shader_framebuffer_fetch",
-                        new TVariable(NewPoolTString("gl_LastFragData"), lastFragData));
+                    symbolTable.insertVariableExt(ESSL1_BUILTINS, "GL_NV_shader_framebuffer_fetch",
+                                                  "gl_LastFragColor",
+                                                  TType(EbtFloat, EbpMedium, EvqLastFragColor, 4));
+                    symbolTable.insertVariableExt(ESSL1_BUILTINS, "GL_NV_shader_framebuffer_fetch",
+                                                  "gl_LastFragData", lastFragData);
                 }
             }
             else if (resources.ARM_shader_framebuffer_fetch)
             {
-                symbolTable.insert(ESSL1_BUILTINS, "GL_ARM_shader_framebuffer_fetch",
-                                   new TVariable(NewPoolTString("gl_LastFragColorARM"),
-                                                 TType(EbtFloat, EbpMedium, EvqLastFragColor, 4)));
+                symbolTable.insertVariableExt(ESSL1_BUILTINS, "GL_ARM_shader_framebuffer_fetch",
+                                              "gl_LastFragColorARM",
+                                              TType(EbtFloat, EbpMedium, EvqLastFragColor, 4));
             }
         }
 
         break;
 
         case GL_VERTEX_SHADER:
-            symbolTable.insert(COMMON_BUILTINS,
-                               new TVariable(NewPoolTString("gl_Position"),
-                                             TType(EbtFloat, EbpHigh, EvqPosition, 4)));
-            symbolTable.insert(COMMON_BUILTINS,
-                               new TVariable(NewPoolTString("gl_PointSize"),
-                                             TType(EbtFloat, EbpMedium, EvqPointSize, 1)));
-            symbolTable.insert(ESSL3_BUILTINS,
-                               new TVariable(NewPoolTString("gl_InstanceID"),
-                                             TType(EbtInt, EbpHigh, EvqInstanceID, 1)));
-            symbolTable.insert(ESSL3_BUILTINS,
-                               new TVariable(NewPoolTString("gl_VertexID"),
-                                             TType(EbtInt, EbpHigh, EvqVertexID, 1)));
+            symbolTable.insertVariable(COMMON_BUILTINS, "gl_Position",
+                                       TType(EbtFloat, EbpHigh, EvqPosition, 4));
+            symbolTable.insertVariable(COMMON_BUILTINS, "gl_PointSize",
+                                       TType(EbtFloat, EbpMedium, EvqPointSize, 1));
+            symbolTable.insertVariable(ESSL3_BUILTINS, "gl_InstanceID",
+                                       TType(EbtInt, EbpHigh, EvqInstanceID, 1));
+            symbolTable.insertVariable(ESSL3_BUILTINS, "gl_VertexID",
+                                       TType(EbtInt, EbpHigh, EvqVertexID, 1));
             break;
         case GL_COMPUTE_SHADER:
         {
-            symbolTable.insert(ESSL3_1_BUILTINS,
-                               new TVariable(NewPoolTString("gl_NumWorkGroups"),
-                                             TType(EbtUInt, EbpUndefined, EvqNumWorkGroups, 3)));
-            symbolTable.insert(ESSL3_1_BUILTINS,
-                               new TVariable(NewPoolTString("gl_WorkGroupSize"),
-                                             TType(EbtUInt, EbpUndefined, EvqWorkGroupSize, 3)));
-            symbolTable.insert(ESSL3_1_BUILTINS,
-                               new TVariable(NewPoolTString("gl_WorkGroupID"),
-                                             TType(EbtUInt, EbpUndefined, EvqWorkGroupID, 3)));
-            symbolTable.insert(
-                ESSL3_1_BUILTINS,
-                new TVariable(NewPoolTString("gl_LocalInvocationID"),
-                              TType(EbtUInt, EbpUndefined, EvqLocalInvocationID, 3)));
-            symbolTable.insert(
-                ESSL3_1_BUILTINS,
-                new TVariable(NewPoolTString("gl_GlobalInvocationID"),
-                              TType(EbtUInt, EbpUndefined, EvqGlobalInvocationID, 3)));
-            symbolTable.insert(
-                ESSL3_1_BUILTINS,
-                new TVariable(NewPoolTString("gl_LocalInvocationIndex"),
-                              TType(EbtUInt, EbpUndefined, EvqLocalInvocationIndex, 1)));
+            symbolTable.insertVariable(ESSL3_1_BUILTINS, "gl_NumWorkGroups",
+                                       TType(EbtUInt, EbpUndefined, EvqNumWorkGroups, 3));
+            symbolTable.insertVariable(ESSL3_1_BUILTINS, "gl_WorkGroupSize",
+                                       TType(EbtUInt, EbpUndefined, EvqWorkGroupSize, 3));
+            symbolTable.insertVariable(ESSL3_1_BUILTINS, "gl_WorkGroupID",
+                                       TType(EbtUInt, EbpUndefined, EvqWorkGroupID, 3));
+            symbolTable.insertVariable(ESSL3_1_BUILTINS, "gl_LocalInvocationID",
+                                       TType(EbtUInt, EbpUndefined, EvqLocalInvocationID, 3));
+            symbolTable.insertVariable(ESSL3_1_BUILTINS, "gl_GlobalInvocationID",
+                                       TType(EbtUInt, EbpUndefined, EvqGlobalInvocationID, 3));
+            symbolTable.insertVariable(ESSL3_1_BUILTINS, "gl_LocalInvocationIndex",
+                                       TType(EbtUInt, EbpUndefined, EvqLocalInvocationIndex, 1));
         }
         break;
 

@@ -517,7 +517,7 @@ struct TTypeSpecifierNonArray
     TBasicType type;
     unsigned char primarySize;    // size of vector or cols of matrix
     unsigned char secondarySize;  // rows of matrix
-    TType *userDef;
+    TStructure *userDef;
     TSourceLoc line;
 
     // true if the type was defined by a struct specifier rather than a reference to a type name.
@@ -534,7 +534,7 @@ struct TTypeSpecifierNonArray
         isStructSpecifier = false;
     }
 
-    void initializeStruct(TType *aUserDef, bool aIsStructSpecifier, const TSourceLoc &aLine)
+    void initializeStruct(TStructure *aUserDef, bool aIsStructSpecifier, const TSourceLoc &aLine)
     {
         type              = EbtStruct;
         primarySize       = 1;
@@ -610,7 +610,7 @@ struct TPublicType
     unsigned char getPrimarySize() const { return typeSpecifierNonArray.primarySize; }
     unsigned char getSecondarySize() const { return typeSpecifierNonArray.secondarySize; }
 
-    const TType *getUserDef() const { return typeSpecifierNonArray.userDef; }
+    TStructure *getUserDef() const { return typeSpecifierNonArray.userDef; }
     const TSourceLoc &getLine() const { return typeSpecifierNonArray.line; }
 
     bool isStructSpecifier() const { return typeSpecifierNonArray.isStructSpecifier; }
@@ -622,7 +622,7 @@ struct TPublicType
             return false;
         }
 
-        return typeSpecifierNonArray.userDef->isStructureContainingArrays();
+        return typeSpecifierNonArray.userDef->containsArrays();
     }
 
     bool isStructureContainingType(TBasicType t) const
@@ -632,7 +632,7 @@ struct TPublicType
             return false;
         }
 
-        return typeSpecifierNonArray.userDef->isStructureContainingType(t);
+        return typeSpecifierNonArray.userDef->containsType(t);
     }
 
     bool isUnsizedArray() const { return array && arraySize == 0; }

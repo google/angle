@@ -3,10 +3,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-
-//
-// Symbol table for parsing.  Most functionaliy and main ideas
-// are documented in the header file.
+// Symbol table for parsing. The design principles and most of the functionality are documented in
+// the header file.
 //
 
 #if defined(_MSC_VER)
@@ -269,6 +267,74 @@ const TType *VectorType(const TType *type, int size)
         default:
             return type;
     }
+}
+
+TVariable *TSymbolTable::declareVariable(const TString *name, const TType &type)
+{
+    return insertVariable(currentLevel(), name, type);
+}
+
+TVariable *TSymbolTable::declareStructType(TStructure *str)
+{
+    return insertStructType(currentLevel(), str);
+}
+
+TInterfaceBlockName *TSymbolTable::declareInterfaceBlockName(const TString *name)
+{
+    TInterfaceBlockName *blockNameSymbol = new TInterfaceBlockName(name);
+    if (insert(currentLevel(), blockNameSymbol))
+    {
+        return blockNameSymbol;
+    }
+    return nullptr;
+}
+
+TVariable *TSymbolTable::insertVariable(ESymbolLevel level, const char *name, const TType &type)
+{
+    return insertVariable(level, NewPoolTString(name), type);
+}
+
+TVariable *TSymbolTable::insertVariable(ESymbolLevel level, const TString *name, const TType &type)
+{
+    TVariable *var = new TVariable(name, type);
+    if (insert(level, var))
+    {
+        // Do lazy initialization for struct types, so we allocate to the current scope.
+        if (var->getType().getBasicType() == EbtStruct)
+        {
+            var->getType().realize();
+        }
+        return var;
+    }
+    return nullptr;
+}
+
+TVariable *TSymbolTable::insertVariableExt(ESymbolLevel level,
+                                           const char *ext,
+                                           const char *name,
+                                           const TType &type)
+{
+    TVariable *var = new TVariable(NewPoolTString(name), type);
+    if (insert(level, ext, var))
+    {
+        if (var->getType().getBasicType() == EbtStruct)
+        {
+            var->getType().realize();
+        }
+        return var;
+    }
+    return nullptr;
+}
+
+TVariable *TSymbolTable::insertStructType(ESymbolLevel level, TStructure *str)
+{
+    TVariable *var = new TVariable(&str->name(), TType(str), true);
+    if (insert(level, var))
+    {
+        var->getType().realize();
+        return var;
+    }
+    return nullptr;
 }
 
 void TSymbolTable::insertBuiltIn(ESymbolLevel level,

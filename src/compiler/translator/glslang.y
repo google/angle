@@ -1175,7 +1175,7 @@ type_specifier_nonarray
     | TYPE_NAME {
         // This is for user defined type names. The lexical phase looked up the type.
         TType& structure = static_cast<TVariable*>($1.symbol)->getType();
-        $$.initializeStruct(&structure, false, @1);
+        $$.initializeStruct(structure.getStruct(), false, @1);
     }
     ;
 
