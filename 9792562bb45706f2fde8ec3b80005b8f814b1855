@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "0cb41b78_a6dbf6b4",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-13T18:03:52Z",
+      "side": 1,
+      "message": "It\u0027s fine here in this case, we\u0027ve put limits in the extension struct when they aren\u0027t part of core.",
+      "parentUuid": "c0574f81_6071b936",
+      "revId": "9792562bb45706f2fde8ec3b80005b8f814b1855",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bc53f35f_ea9032d3",
         "filename": "src/libANGLE/Caps.h",
         "patchSetId": 7
@@ -30,6 +48,24 @@
       "writtenOn": "2017-07-13T17:08:29Z",
       "side": 1,
       "message": "multiviewImplementationType seems like an implementation detail of the GL backend that doesn\u0027t need to be exposed at the gl layer (the gl layer is anything before renderer/ directory). I\u0027m not sure what the best spot for it, maybe RendererGL?",
+      "revId": "9792562bb45706f2fde8ec3b80005b8f814b1855",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2b3de9af_ccd5f01e",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-13T18:03:52Z",
+      "side": 1,
+      "message": "Agreed, this shouldn\u0027t be exposed at this level.",
+      "parentUuid": "bc53f35f_ea9032d3",
       "revId": "9792562bb45706f2fde8ec3b80005b8f814b1855",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
