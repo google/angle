@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4936edbb_1ca4e41a",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-13T15:29:33Z",
+      "side": 1,
+      "message": "Nit: Make this conform to ANGLE Coding Standard for enums. See for example CompileStatus in Shader.h.",
+      "revId": "ce779b7d7b136ca829434790214657897991a5a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
