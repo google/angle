@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "edf6f10b_46f0b8f0",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1064,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-13T14:17:01Z",
+      "side": 1,
+      "message": "I looked at this a bit more and I think it would be more reasonable to store this in extensions instead of workarounds. You could add a multiviewImplementationType enum member to extensions, and it should be easy enough to store a reference to extensions in ShaderGL. Let\u0027s do it that way and then ask feedback from Google folks.",
+      "revId": "342a3c062fd2fe6da4d33c5b60995f9fb850d6d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
