@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1eb84a6e_0da5ed08",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 46
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-13T18:29:53Z",
+      "side": 1,
+      "message": "Right, maybe my suggestion for Impl methods wasn\u0027t 100% perfect.\n\nCan you remove the Impl methods for Binding and Divisor, and instead just use the normal set methods? Instead, you can check if the new value is different from the old value and only set the dirty bit if the value is changed. So, in ES 3.0, since the values for binding can\u0027t change, we would never set the dirty bits for binding. Can you redo this? Sorry for not getting it right the first time.\n\nThe only tricky part is the format requires checking multiple values. But let\u0027s take this design for now and optimize it later if it\u0027s too slow.",
+      "parentUuid": "fdf7b86e_3b6e5e2d",
+      "range": {
+        "startLine": 199,
+        "startChar": 0,
+        "endLine": 204,
+        "endChar": 5
+      },
+      "revId": "e59e6e0751034a615db4b2667c8ed7b9453e78b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "98070528_60067dbc",
         "filename": "src/libANGLE/VertexArray.cpp",
         "patchSetId": 46
