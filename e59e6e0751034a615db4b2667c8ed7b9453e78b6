@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "5b3d4568_951445eb",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 46
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-13T18:33:56Z",
+      "side": 1,
+      "message": "Sorry, to clarify, we should keep the Impl methods for Buffer and Format, but remove the Impl methods for Binding and Divisor since there\u0027s only one dirty bit for divisor, and for binding it\u0027ll never change in ES 3.0.",
+      "parentUuid": "1eb84a6e_0da5ed08",
+      "range": {
+        "startLine": 199,
+        "startChar": 0,
+        "endLine": 204,
+        "endChar": 5
+      },
+      "revId": "e59e6e0751034a615db4b2667c8ed7b9453e78b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "98070528_60067dbc",
         "filename": "src/libANGLE/VertexArray.cpp",
         "patchSetId": 46
