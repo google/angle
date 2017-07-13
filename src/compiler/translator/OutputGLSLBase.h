@@ -23,7 +23,7 @@ class TOutputGLSLBase : public TIntermTraverser
                     ShArrayIndexClampingStrategy clampingStrategy,
                     ShHashFunction64 hashFunction,
                     NameMap &nameMap,
-                    TSymbolTable &symbolTable,
+                    TSymbolTable *symbolTable,
                     sh::GLenum shaderType,
                     int shaderVersion,
                     ShShaderOutput output,
@@ -99,8 +99,6 @@ class TOutputGLSLBase : public TIntermTraverser
     ShHashFunction64 mHashFunction;
 
     NameMap &mNameMap;
-
-    TSymbolTable &mSymbolTable;
 
     sh::GLenum mShaderType;
 

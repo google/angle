@@ -16,9 +16,9 @@ namespace sh
 {
 
 class TIntermNode;
-class TSymbolUniqueId;
+class TSymbolTable;
 
-void UnfoldShortCircuitToIf(TIntermNode *root, TSymbolUniqueId *temporaryId);
+void UnfoldShortCircuitToIf(TIntermNode *root, TSymbolTable *symbolTable);
 
 }  // namespace sh
 

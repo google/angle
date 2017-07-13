@@ -20,9 +20,9 @@
 namespace sh
 {
 class TIntermNode;
-class TSymbolUniqueId;
+class TSymbolTable;
 
-void RecordConstantPrecision(TIntermNode *root, TSymbolUniqueId *temporaryId);
+void RecordConstantPrecision(TIntermNode *root, TSymbolTable *symbolTable);
 }  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_RECORDCONSTANTPRECISION_H_

@@ -24,7 +24,7 @@ namespace
 class UnfoldShortCircuitTraverser : public TIntermTraverser
 {
   public:
-    UnfoldShortCircuitTraverser();
+    UnfoldShortCircuitTraverser(TSymbolTable *symbolTable);
 
     bool visitBinary(Visit visit, TIntermBinary *node) override;
     bool visitTernary(Visit visit, TIntermTernary *node) override;
@@ -40,8 +40,8 @@ class UnfoldShortCircuitTraverser : public TIntermTraverser
     IntermNodePatternMatcher mPatternToUnfoldMatcher;
 };
 
-UnfoldShortCircuitTraverser::UnfoldShortCircuitTraverser()
-    : TIntermTraverser(true, false, true),
+UnfoldShortCircuitTraverser::UnfoldShortCircuitTraverser(TSymbolTable *symbolTable)
+    : TIntermTraverser(true, false, true, symbolTable),
       mFoundShortCircuit(false),
       mPatternToUnfoldMatcher(IntermNodePatternMatcher::kUnfoldedShortCircuitExpression)
 {
@@ -170,11 +170,9 @@ void UnfoldShortCircuitTraverser::nextIteration()
 
 }  // namespace
 
-void UnfoldShortCircuitToIf(TIntermNode *root, TSymbolUniqueId *temporaryId)
+void UnfoldShortCircuitToIf(TIntermNode *root, TSymbolTable *symbolTable)
 {
-    UnfoldShortCircuitTraverser traverser;
-    ASSERT(temporaryId != nullptr);
-    traverser.useTemporaryId(temporaryId);
+    UnfoldShortCircuitTraverser traverser(symbolTable);
     // Unfold one operator at a time, and reset the traverser between iterations.
     do
     {

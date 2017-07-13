@@ -135,12 +135,12 @@ void DeclareAndInitBuiltinsForInstancedMultiview(TIntermBlock *root,
                                                  GLenum shaderType,
                                                  ShCompileOptions compileOptions,
                                                  ShShaderOutput shaderOutput,
-                                                 const TSymbolTable &symbolTable)
+                                                 TSymbolTable *symbolTable)
 {
     ASSERT(shaderType == GL_VERTEX_SHADER || shaderType == GL_FRAGMENT_SHADER);
 
     TQualifier viewIDQualifier  = (shaderType == GL_VERTEX_SHADER) ? EvqFlatOut : EvqFlatIn;
-    TIntermSymbol *viewIDSymbol = new TIntermSymbol(TSymbolTable::nextUniqueId(), "ViewID_OVR",
+    TIntermSymbol *viewIDSymbol = new TIntermSymbol(symbolTable->nextUniqueId(), "ViewID_OVR",
                                                     TType(EbtUInt, EbpHigh, viewIDQualifier));
     viewIDSymbol->setInternal(true);
 
@@ -151,13 +151,13 @@ void DeclareAndInitBuiltinsForInstancedMultiview(TIntermBlock *root,
         // Replacing gl_InstanceID with InstanceID should happen before adding the initializers of
         // InstanceID and ViewID.
         TIntermSymbol *instanceIDSymbol = new TIntermSymbol(
-            TSymbolTable::nextUniqueId(), "InstanceID", TType(EbtInt, EbpHigh, EvqGlobal));
+            symbolTable->nextUniqueId(), "InstanceID", TType(EbtInt, EbpHigh, EvqGlobal));
         instanceIDSymbol->setInternal(true);
         DeclareGlobalVariable(root, instanceIDSymbol);
         ReplaceSymbol(root, "gl_InstanceID", instanceIDSymbol);
 
         TIntermSequence *initializers = new TIntermSequence();
-        InitializeViewIDAndInstanceID(viewIDSymbol, instanceIDSymbol, numberOfViews, symbolTable,
+        InitializeViewIDAndInstanceID(viewIDSymbol, instanceIDSymbol, numberOfViews, *symbolTable,
                                       initializers);
 
         // The AST transformation which adds the expression to select the viewport index should

@@ -15,12 +15,8 @@ namespace sh
 
 class TIntermNode;
 class TSymbolTable;
-class TSymbolUniqueId;
 
-void RemoveDynamicIndexing(TIntermNode *root,
-                           TSymbolUniqueId *temporaryId,
-                           const TSymbolTable &symbolTable,
-                           int shaderVersion);
+void RemoveDynamicIndexing(TIntermNode *root, TSymbolTable *symbolTable, int shaderVersion);
 
 }  // namespace sh
 

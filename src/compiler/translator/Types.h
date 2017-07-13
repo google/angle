@@ -20,6 +20,7 @@ struct TPublicType;
 class TType;
 class TSymbol;
 class TIntermSymbol;
+class TSymbolTable;
 
 class TField : angle::NonCopyable
 {
@@ -87,7 +88,7 @@ class TStructure : public TFieldListCollection
 {
   public:
     POOL_ALLOCATOR_NEW_DELETE();
-    TStructure(const TString *name, TFieldList *fields);
+    TStructure(TSymbolTable *symbolTable, const TString *name, TFieldList *fields);
 
     int deepestNesting() const
     {
@@ -138,7 +139,7 @@ class TStructure : public TFieldListCollection
     int calculateDeepestNesting() const;
 
     mutable int mDeepestNesting;
-    int mUniqueId;
+    const int mUniqueId;
     bool mAtGlobalScope;
 };
 

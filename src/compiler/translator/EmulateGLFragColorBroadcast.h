@@ -24,7 +24,7 @@ class TSymbolTable;
 void EmulateGLFragColorBroadcast(TIntermBlock *root,
                                  int maxDrawBuffers,
                                  std::vector<OutputVariable> *outputVariables,
-                                 const TSymbolTable &symbolTable,
+                                 TSymbolTable *symbolTable,
                                  int shaderVersion);
 }
 

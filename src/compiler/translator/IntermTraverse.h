@@ -39,7 +39,10 @@ class TIntermTraverser : angle::NonCopyable
 {
   public:
     POOL_ALLOCATOR_NEW_DELETE();
-    TIntermTraverser(bool preVisit, bool inVisit, bool postVisit);
+    TIntermTraverser(bool preVisit,
+                     bool inVisit,
+                     bool postVisit,
+                     TSymbolTable *symbolTable = nullptr);
     virtual ~TIntermTraverser();
 
     virtual void visitSymbol(TIntermSymbol *node) {}
@@ -98,9 +101,6 @@ class TIntermTraverser : angle::NonCopyable
     // mReplacements/mMultiReplacements during traversal and the user of the traverser should call
     // this function after traversal to perform them.
     void updateTree();
-
-    // Start creating temporary symbols from the given temporary symbol index + 1.
-    void useTemporaryId(TSymbolUniqueId *temporaryId);
 
   protected:
     // Should only be called from traverse*() functions
@@ -246,6 +246,8 @@ class TIntermTraverser : angle::NonCopyable
     std::vector<NodeReplaceWithMultipleEntry> mMultiReplacements;
     std::vector<NodeInsertMultipleEntry> mInsertions;
 
+    TSymbolTable *mSymbolTable;
+
   private:
     static bool CompareInsertion(const NodeInsertMultipleEntry &a,
                                  const NodeInsertMultipleEntry &b);
@@ -300,7 +302,7 @@ class TLValueTrackingTraverser : public TIntermTraverser
     TLValueTrackingTraverser(bool preVisit,
                              bool inVisit,
                              bool postVisit,
-                             const TSymbolTable &symbolTable,
+                             TSymbolTable *symbolTable,
                              int shaderVersion);
     virtual ~TLValueTrackingTraverser() {}
 
@@ -345,7 +347,6 @@ class TLValueTrackingTraverser : public TIntermTraverser
     // Map from function symbol id values to their parameter sequences
     TMap<int, TIntermSequence *> mFunctionMap;
 
-    const TSymbolTable &mSymbolTable;
     const int mShaderVersion;
 };
 

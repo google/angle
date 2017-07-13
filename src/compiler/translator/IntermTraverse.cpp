@@ -102,13 +102,17 @@ void TIntermBranch::traverse(TIntermTraverser *it)
     it->traverseBranch(this);
 }
 
-TIntermTraverser::TIntermTraverser(bool preVisit, bool inVisit, bool postVisit)
+TIntermTraverser::TIntermTraverser(bool preVisit,
+                                   bool inVisit,
+                                   bool postVisit,
+                                   TSymbolTable *symbolTable)
     : preVisit(preVisit),
       inVisit(inVisit),
       postVisit(postVisit),
       mDepth(-1),
       mMaxDepth(0),
       mInGlobalScope(true),
+      mSymbolTable(symbolTable),
       mTemporaryId(nullptr)
 {
 }
@@ -218,15 +222,15 @@ TIntermBinary *TIntermTraverser::createTempAssignment(TIntermTyped *rightNode)
     return assignment;
 }
 
-void TIntermTraverser::useTemporaryId(TSymbolUniqueId *temporaryId)
-{
-    mTemporaryId = temporaryId;
-}
-
 void TIntermTraverser::nextTemporaryId()
 {
-    ASSERT(mTemporaryId != nullptr);
-    *mTemporaryId = TSymbolUniqueId();
+    ASSERT(mSymbolTable);
+    if (!mTemporaryId)
+    {
+        mTemporaryId = new TSymbolUniqueId(mSymbolTable);
+        return;
+    }
+    *mTemporaryId = TSymbolUniqueId(mSymbolTable);
 }
 
 void TLValueTrackingTraverser::addToFunctionMap(const TSymbolUniqueId &id,
@@ -716,14 +720,14 @@ void TIntermTraverser::queueReplacementWithParent(TIntermNode *parent,
 TLValueTrackingTraverser::TLValueTrackingTraverser(bool preVisit,
                                                    bool inVisit,
                                                    bool postVisit,
-                                                   const TSymbolTable &symbolTable,
+                                                   TSymbolTable *symbolTable,
                                                    int shaderVersion)
-    : TIntermTraverser(preVisit, inVisit, postVisit),
+    : TIntermTraverser(preVisit, inVisit, postVisit, symbolTable),
       mOperatorRequiresLValue(false),
       mInFunctionCallOutParameter(false),
-      mSymbolTable(symbolTable),
       mShaderVersion(shaderVersion)
 {
+    ASSERT(symbolTable);
 }
 
 void TLValueTrackingTraverser::traverseFunctionPrototype(TIntermFunctionPrototype *node)
@@ -796,7 +800,7 @@ void TLValueTrackingTraverser::traverseAggregate(TIntermAggregate *node)
             if (!node->isFunctionCall() && !node->isConstructor())
             {
                 builtInFunc = static_cast<TFunction *>(
-                    mSymbolTable.findBuiltIn(node->getSymbolTableMangledName(), mShaderVersion));
+                    mSymbolTable->findBuiltIn(node->getSymbolTableMangledName(), mShaderVersion));
             }
 
             size_t paramIndex = 0;

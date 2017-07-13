@@ -24,7 +24,7 @@ namespace
 class SeparateExpressionsTraverser : public TIntermTraverser
 {
   public:
-    SeparateExpressionsTraverser();
+    SeparateExpressionsTraverser(TSymbolTable *symbolTable);
 
     bool visitBinary(Visit visit, TIntermBinary *node) override;
     bool visitAggregate(Visit visit, TIntermAggregate *node) override;
@@ -40,8 +40,8 @@ class SeparateExpressionsTraverser : public TIntermTraverser
     IntermNodePatternMatcher mPatternToSeparateMatcher;
 };
 
-SeparateExpressionsTraverser::SeparateExpressionsTraverser()
-    : TIntermTraverser(true, false, false),
+SeparateExpressionsTraverser::SeparateExpressionsTraverser(TSymbolTable *symbolTable)
+    : TIntermTraverser(true, false, false, symbolTable),
       mFoundArrayExpression(false),
       mPatternToSeparateMatcher(IntermNodePatternMatcher::kExpressionReturningArray)
 {
@@ -110,11 +110,9 @@ void SeparateExpressionsTraverser::nextIteration()
 
 }  // namespace
 
-void SeparateExpressionsReturningArrays(TIntermNode *root, TSymbolUniqueId *temporaryId)
+void SeparateExpressionsReturningArrays(TIntermNode *root, TSymbolTable *symbolTable)
 {
-    SeparateExpressionsTraverser traverser;
-    ASSERT(temporaryId != nullptr);
-    traverser.useTemporaryId(temporaryId);
+    SeparateExpressionsTraverser traverser(symbolTable);
     // Separate one expression at a time, and reset the traverser between iterations.
     do
     {

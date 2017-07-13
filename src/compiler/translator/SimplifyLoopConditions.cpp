@@ -24,7 +24,7 @@ class SimplifyLoopConditionsTraverser : public TLValueTrackingTraverser
 {
   public:
     SimplifyLoopConditionsTraverser(unsigned int conditionsToSimplifyMask,
-                                    const TSymbolTable &symbolTable,
+                                    TSymbolTable *symbolTable,
                                     int shaderVersion);
 
     void traverseLoop(TIntermLoop *node) override;
@@ -46,7 +46,7 @@ class SimplifyLoopConditionsTraverser : public TLValueTrackingTraverser
 
 SimplifyLoopConditionsTraverser::SimplifyLoopConditionsTraverser(
     unsigned int conditionsToSimplifyMask,
-    const TSymbolTable &symbolTable,
+    TSymbolTable *symbolTable,
     int shaderVersion)
     : TLValueTrackingTraverser(true, false, false, symbolTable, shaderVersion),
       mFoundLoopToChange(false),
@@ -276,13 +276,10 @@ void SimplifyLoopConditionsTraverser::traverseLoop(TIntermLoop *node)
 
 void SimplifyLoopConditions(TIntermNode *root,
                             unsigned int conditionsToSimplifyMask,
-                            TSymbolUniqueId *temporaryId,
-                            const TSymbolTable &symbolTable,
+                            TSymbolTable *symbolTable,
                             int shaderVersion)
 {
     SimplifyLoopConditionsTraverser traverser(conditionsToSimplifyMask, symbolTable, shaderVersion);
-    ASSERT(temporaryId != nullptr);
-    traverser.useTemporaryId(temporaryId);
     root->traverse(&traverser);
     traverser.updateTree();
 }

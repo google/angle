@@ -3080,13 +3080,13 @@ TFunction *TParseContext::parseFunctionHeader(const TPublicType &type,
     }
 
     // Add the function as a prototype after parsing it (we do not support recursion)
-    return new TFunction(name, new TType(type));
+    return new TFunction(&symbolTable, name, new TType(type));
 }
 
 TFunction *TParseContext::addNonConstructorFunc(const TString *name, const TSourceLoc &loc)
 {
     const TType *returnType = TCache::getType(EbtVoid, EbpUndefined);
-    return new TFunction(name, returnType);
+    return new TFunction(&symbolTable, name, returnType);
 }
 
 TFunction *TParseContext::addConstructorFunc(const TPublicType &publicType)
@@ -3110,7 +3110,7 @@ TFunction *TParseContext::addConstructorFunc(const TPublicType &publicType)
         type->setBasicType(EbtFloat);
     }
 
-    return new TFunction(nullptr, type, EOpConstruct);
+    return new TFunction(&symbolTable, nullptr, type, EOpConstruct);
 }
 
 TParameter TParseContext::parseParameterDeclarator(const TPublicType &publicType,
@@ -4143,7 +4143,7 @@ TTypeSpecifierNonArray TParseContext::addStructure(const TSourceLoc &structLine,
                                                    const TString *structName,
                                                    TFieldList *fieldList)
 {
-    TStructure *structure = new TStructure(structName, fieldList);
+    TStructure *structure = new TStructure(&symbolTable, structName, fieldList);
 
     // Store a bool in the struct if we're at global scope, to allow us to
     // skip the local struct scoping workaround in HLSL.

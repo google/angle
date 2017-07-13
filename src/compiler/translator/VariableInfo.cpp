@@ -95,7 +95,7 @@ class CollectVariablesTraverser : public TIntermTraverser
                               std::vector<Varying> *varyings,
                               std::vector<InterfaceBlock> *interfaceBlocks,
                               ShHashFunction64 hashFunction,
-                              const TSymbolTable &symbolTable,
+                              TSymbolTable *symbolTable,
                               int shaderVersion,
                               const TExtensionBehavior &extensionBehavior);
 
@@ -147,7 +147,6 @@ class CollectVariablesTraverser : public TIntermTraverser
 
     ShHashFunction64 mHashFunction;
 
-    const TSymbolTable &mSymbolTable;
     int mShaderVersion;
     const TExtensionBehavior &mExtensionBehavior;
 };
@@ -159,10 +158,10 @@ CollectVariablesTraverser::CollectVariablesTraverser(
     std::vector<sh::Varying> *varyings,
     std::vector<sh::InterfaceBlock> *interfaceBlocks,
     ShHashFunction64 hashFunction,
-    const TSymbolTable &symbolTable,
+    TSymbolTable *symbolTable,
     int shaderVersion,
     const TExtensionBehavior &extensionBehavior)
-    : TIntermTraverser(true, false, false),
+    : TIntermTraverser(true, false, false, symbolTable),
       mAttribs(attribs),
       mOutputVariables(outputVariables),
       mUniforms(uniforms),
@@ -184,7 +183,6 @@ CollectVariablesTraverser::CollectVariablesTraverser(
       mSecondaryFragColorEXTAdded(false),
       mSecondaryFragDataEXTAdded(false),
       mHashFunction(hashFunction),
-      mSymbolTable(symbolTable),
       mShaderVersion(shaderVersion),
       mExtensionBehavior(extensionBehavior)
 {
@@ -194,7 +192,7 @@ void CollectVariablesTraverser::setBuiltInInfoFromSymbolTable(const char *name,
                                                               ShaderVariable *info)
 {
     TVariable *symbolTableVar =
-        reinterpret_cast<TVariable *>(mSymbolTable.findBuiltIn(name, mShaderVersion));
+        reinterpret_cast<TVariable *>(mSymbolTable->findBuiltIn(name, mShaderVersion));
     ASSERT(symbolTableVar);
     const TType &type = symbolTableVar->getType();
 
@@ -212,7 +210,7 @@ void CollectVariablesTraverser::recordBuiltInVaryingUsed(const char *name, bool 
         Varying info;
         setBuiltInInfoFromSymbolTable(name, &info);
         info.staticUse   = true;
-        info.isInvariant = mSymbolTable.isVaryingInvariant(name);
+        info.isInvariant = mSymbolTable->isVaryingInvariant(name);
         mVaryings->push_back(info);
         (*addedFlag) = true;
     }
@@ -502,7 +500,7 @@ Varying CollectVariablesTraverser::recordVarying(const TIntermSymbol &variable) 
         case EvqSmoothOut:
         case EvqFlatOut:
         case EvqCentroidOut:
-            if (mSymbolTable.isVaryingInvariant(std::string(variable.getSymbol().c_str())) ||
+            if (mSymbolTable->isVaryingInvariant(std::string(variable.getSymbol().c_str())) ||
                 type.isInvariant())
             {
                 varying.isInvariant = true;
@@ -652,7 +650,7 @@ void CollectVariables(TIntermBlock *root,
                       std::vector<Varying> *varyings,
                       std::vector<InterfaceBlock> *interfaceBlocks,
                       ShHashFunction64 hashFunction,
-                      const TSymbolTable &symbolTable,
+                      TSymbolTable *symbolTable,
                       int shaderVersion,
                       const TExtensionBehavior &extensionBehavior)
 {

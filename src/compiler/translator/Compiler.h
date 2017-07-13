@@ -157,7 +157,6 @@ class TCompiler : public TShHandleBase
     const char *getSourcePath() const;
     const TPragma &getPragma() const { return mPragma; }
     void writePragma(ShCompileOptions compileOptions);
-    TSymbolUniqueId *getTemporaryId() { return &mTemporaryId; }
     // Relies on collectVariables having been called.
     bool isVaryingDefined(const char *varyingName);
 
@@ -247,8 +246,6 @@ class TCompiler : public TShHandleBase
     NameMap nameMap;
 
     TPragma mPragma;
-
-    TSymbolUniqueId mTemporaryId;
 };
 
 //

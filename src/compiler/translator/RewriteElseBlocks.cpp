@@ -9,6 +9,7 @@
 
 #include "compiler/translator/RewriteElseBlocks.h"
 
+#include "compiler/translator/IntermNode.h"
 #include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/NodeSearch.h"
 #include "compiler/translator/SymbolTable.h"
@@ -22,19 +23,20 @@ namespace
 class ElseBlockRewriter : public TIntermTraverser
 {
   public:
-    ElseBlockRewriter();
+    ElseBlockRewriter(TSymbolTable *symbolTable);
 
   protected:
     bool visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *aggregate) override;
     bool visitBlock(Visit visit, TIntermBlock *block) override;
 
   private:
-    const TType *mFunctionType;
-
     TIntermNode *rewriteIfElse(TIntermIfElse *ifElse);
+
+    const TType *mFunctionType;
 };
 
-ElseBlockRewriter::ElseBlockRewriter() : TIntermTraverser(true, false, true), mFunctionType(nullptr)
+ElseBlockRewriter::ElseBlockRewriter(TSymbolTable *symbolTable)
+    : TIntermTraverser(true, false, true, symbolTable), mFunctionType(nullptr)
 {
 }
 
@@ -109,10 +111,9 @@ TIntermNode *ElseBlockRewriter::rewriteIfElse(TIntermIfElse *ifElse)
 
 }  // anonymous namespace
 
-void RewriteElseBlocks(TIntermNode *node, TSymbolUniqueId *temporaryId)
+void RewriteElseBlocks(TIntermNode *node, TSymbolTable *symbolTable)
 {
-    ElseBlockRewriter rewriter;
-    rewriter.useTemporaryId(temporaryId);
+    ElseBlockRewriter rewriter(symbolTable);
     node->traverse(&rewriter);
 }
 

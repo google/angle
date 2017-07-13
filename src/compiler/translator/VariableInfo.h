@@ -24,7 +24,7 @@ void CollectVariables(TIntermBlock *root,
                       std::vector<Varying> *varyings,
                       std::vector<InterfaceBlock> *interfaceBlocks,
                       ShHashFunction64 hashFunction,
-                      const TSymbolTable &symbolTable,
+                      TSymbolTable *symbolTable,
                       int shaderVersion,
                       const TExtensionBehavior &extensionBehavior);
 

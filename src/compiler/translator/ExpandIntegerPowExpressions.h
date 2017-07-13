@@ -20,9 +20,9 @@ namespace sh
 {
 
 class TIntermNode;
-class TSymbolUniqueId;
+class TSymbolTable;
 
-void ExpandIntegerPowExpressions(TIntermNode *root, TSymbolUniqueId *temporaryId);
+void ExpandIntegerPowExpressions(TIntermNode *root, TSymbolTable *symbolTable);
 
 }  // namespace sh
 

@@ -291,7 +291,7 @@ TIntermFunctionDefinition *GetIndexFunctionDefinition(TType type,
 class RemoveDynamicIndexingTraverser : public TLValueTrackingTraverser
 {
   public:
-    RemoveDynamicIndexingTraverser(const TSymbolTable &symbolTable, int shaderVersion);
+    RemoveDynamicIndexingTraverser(TSymbolTable *symbolTable, int shaderVersion);
 
     bool visitBinary(Visit visit, TIntermBinary *node) override;
 
@@ -305,8 +305,8 @@ class RemoveDynamicIndexingTraverser : public TLValueTrackingTraverser
     // Maps of types that are indexed to the indexing function ids used for them. Note that these
     // can not store multiple variants of the same type with different precisions - only one
     // precision gets stored.
-    std::map<TType, TSymbolUniqueId> mIndexedVecAndMatrixTypes;
-    std::map<TType, TSymbolUniqueId> mWrittenVecAndMatrixTypes;
+    std::map<TType, TSymbolUniqueId *> mIndexedVecAndMatrixTypes;
+    std::map<TType, TSymbolUniqueId *> mWrittenVecAndMatrixTypes;
 
     bool mUsedTreeInsertion;
 
@@ -317,7 +317,7 @@ class RemoveDynamicIndexingTraverser : public TLValueTrackingTraverser
     bool mRemoveIndexSideEffectsInSubtree;
 };
 
-RemoveDynamicIndexingTraverser::RemoveDynamicIndexingTraverser(const TSymbolTable &symbolTable,
+RemoveDynamicIndexingTraverser::RemoveDynamicIndexingTraverser(TSymbolTable *symbolTable,
                                                                int shaderVersion)
     : TLValueTrackingTraverser(true, false, false, symbolTable, shaderVersion),
       mUsedTreeInsertion(false),
@@ -332,11 +332,11 @@ void RemoveDynamicIndexingTraverser::insertHelperDefinitions(TIntermNode *root)
     TIntermSequence insertions;
     for (auto &type : mIndexedVecAndMatrixTypes)
     {
-        insertions.push_back(GetIndexFunctionDefinition(type.first, false, type.second));
+        insertions.push_back(GetIndexFunctionDefinition(type.first, false, *type.second));
     }
     for (auto &type : mWrittenVecAndMatrixTypes)
     {
-        insertions.push_back(GetIndexFunctionDefinition(type.first, true, type.second));
+        insertions.push_back(GetIndexFunctionDefinition(type.first, true, *type.second));
     }
     mInsertions.push_back(NodeInsertMultipleEntry(rootBlock, 0, insertions, TIntermSequence()));
 }
@@ -417,7 +417,7 @@ bool RemoveDynamicIndexingTraverser::visitBinary(Visit visit, TIntermBinary *nod
 #endif
 
             const TType &type = node->getLeft()->getType();
-            TSymbolUniqueId indexingFunctionId;
+            TSymbolUniqueId *indexingFunctionId = new TSymbolUniqueId(mSymbolTable);
             if (mIndexedVecAndMatrixTypes.find(type) == mIndexedVecAndMatrixTypes.end())
             {
                 mIndexedVecAndMatrixTypes[type] = indexingFunctionId;
@@ -459,7 +459,7 @@ bool RemoveDynamicIndexingTraverser::visitBinary(Visit visit, TIntermBinary *nod
                 // TODO(oetuaho@nvidia.com): This is not optimal if the expression using the value
                 // only writes it and doesn't need the previous value. http://anglebug.com/1116
 
-                TSymbolUniqueId indexedWriteFunctionId;
+                TSymbolUniqueId *indexedWriteFunctionId = new TSymbolUniqueId(mSymbolTable);
                 if (mWrittenVecAndMatrixTypes.find(type) == mWrittenVecAndMatrixTypes.end())
                 {
                     mWrittenVecAndMatrixTypes[type] = indexedWriteFunctionId;
@@ -484,14 +484,14 @@ bool RemoveDynamicIndexingTraverser::visitBinary(Visit visit, TIntermBinary *nod
                 TIntermSymbol *tempIndex = createTempSymbol(indexInitializer->getType());
 
                 TIntermAggregate *indexingCall =
-                    CreateIndexFunctionCall(node, tempIndex, indexingFunctionId);
+                    CreateIndexFunctionCall(node, tempIndex, *indexingFunctionId);
 
                 nextTemporaryId();  // From now on, creating temporary symbols that refer to the
                                     // field value.
                 insertionsBefore.push_back(createTempInitDeclaration(indexingCall));
 
                 TIntermAggregate *indexedWriteCall = CreateIndexedWriteFunctionCall(
-                    node, tempIndex, createTempSymbol(fieldType), indexedWriteFunctionId);
+                    node, tempIndex, createTempSymbol(fieldType), *indexedWriteFunctionId);
                 insertionsAfter.push_back(indexedWriteCall);
                 insertStatementsInParentBlock(insertionsBefore, insertionsAfter);
                 queueReplacement(createTempSymbol(fieldType), OriginalNode::IS_DROPPED);
@@ -506,7 +506,7 @@ bool RemoveDynamicIndexingTraverser::visitBinary(Visit visit, TIntermBinary *nod
                 // If the index_expr is unsigned, we'll convert it to signed.
                 ASSERT(!mRemoveIndexSideEffectsInSubtree);
                 TIntermAggregate *indexingCall = CreateIndexFunctionCall(
-                    node, EnsureSignedInt(node->getRight()), indexingFunctionId);
+                    node, EnsureSignedInt(node->getRight()), *indexingFunctionId);
                 queueReplacement(indexingCall, OriginalNode::IS_DROPPED);
             }
         }
@@ -523,14 +523,9 @@ void RemoveDynamicIndexingTraverser::nextIteration()
 
 }  // namespace
 
-void RemoveDynamicIndexing(TIntermNode *root,
-                           TSymbolUniqueId *temporaryId,
-                           const TSymbolTable &symbolTable,
-                           int shaderVersion)
+void RemoveDynamicIndexing(TIntermNode *root, TSymbolTable *symbolTable, int shaderVersion)
 {
     RemoveDynamicIndexingTraverser traverser(symbolTable, shaderVersion);
-    ASSERT(temporaryId != nullptr);
-    traverser.useTemporaryId(temporaryId);
     do
     {
         traverser.nextIteration();

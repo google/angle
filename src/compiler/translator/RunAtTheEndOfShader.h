@@ -14,8 +14,9 @@ namespace sh
 
 class TIntermBlock;
 class TIntermNode;
+class TSymbolTable;
 
-void RunAtTheEndOfShader(TIntermBlock *root, TIntermNode *codeToRun);
+void RunAtTheEndOfShader(TIntermBlock *root, TIntermNode *codeToRun, TSymbolTable *symbolTable);
 
 }  // namespace sh
 

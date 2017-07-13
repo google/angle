@@ -26,13 +26,10 @@ namespace
 class GLFragColorBroadcastTraverser : public TIntermTraverser
 {
   public:
-    GLFragColorBroadcastTraverser(int maxDrawBuffers,
-                                  const TSymbolTable &symbolTable,
-                                  int shaderVersion)
-        : TIntermTraverser(true, false, false),
+    GLFragColorBroadcastTraverser(int maxDrawBuffers, TSymbolTable *symbolTable, int shaderVersion)
+        : TIntermTraverser(true, false, false, symbolTable),
           mGLFragColorUsed(false),
           mMaxDrawBuffers(maxDrawBuffers),
-          mSymbolTable(symbolTable),
           mShaderVersion(shaderVersion)
     {
     }
@@ -50,14 +47,13 @@ class GLFragColorBroadcastTraverser : public TIntermTraverser
   private:
     bool mGLFragColorUsed;
     int mMaxDrawBuffers;
-    const TSymbolTable &mSymbolTable;
     const int mShaderVersion;
 };
 
 TIntermBinary *GLFragColorBroadcastTraverser::constructGLFragDataNode(int index) const
 {
     TIntermSymbol *symbol =
-        ReferenceBuiltInVariable(TString("gl_FragData"), mSymbolTable, mShaderVersion);
+        ReferenceBuiltInVariable(TString("gl_FragData"), *mSymbolTable, mShaderVersion);
     TIntermTyped *indexNode = CreateIndexNode(index);
 
     TIntermBinary *binary = new TIntermBinary(EOpIndexDirect, symbol, indexNode);
@@ -98,7 +94,7 @@ void GLFragColorBroadcastTraverser::broadcastGLFragColor(TIntermBlock *root)
     {
         broadcastBlock->appendStatement(constructGLFragDataAssignNode(colorIndex));
     }
-    RunAtTheEndOfShader(root, broadcastBlock);
+    RunAtTheEndOfShader(root, broadcastBlock, mSymbolTable);
 }
 
 }  // namespace anonymous
@@ -106,7 +102,7 @@ void GLFragColorBroadcastTraverser::broadcastGLFragColor(TIntermBlock *root)
 void EmulateGLFragColorBroadcast(TIntermBlock *root,
                                  int maxDrawBuffers,
                                  std::vector<sh::OutputVariable> *outputVariables,
-                                 const TSymbolTable &symbolTable,
+                                 TSymbolTable *symbolTable,
                                  int shaderVersion)
 {
     ASSERT(maxDrawBuffers > 1);

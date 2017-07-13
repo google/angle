@@ -241,8 +241,7 @@ TCompiler::TCompiler(sh::GLenum type, ShShaderSpec spec, ShShaderOutput output)
       builtInFunctionEmulator(),
       mDiagnostics(infoSink.info),
       mSourcePath(nullptr),
-      mComputeShaderLocalSizeDeclared(false),
-      mTemporaryId()
+      mComputeShaderLocalSizeDeclared(false)
 {
     mComputeShaderLocalSize.fill(1);
 }
@@ -395,7 +394,7 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
 
         if (success && shouldRunLoopAndIndexingValidation(compileOptions))
             success =
-                ValidateLimitations(root, shaderType, symbolTable, shaderVersion, &mDiagnostics);
+                ValidateLimitations(root, shaderType, &symbolTable, shaderVersion, &mDiagnostics);
 
         bool multiview2 = IsExtensionEnabled(extensionBehavior, "GL_OVR_multiview2");
         if (success && compileResources.OVR_multiview && IsWebGLBasedSpec(shaderSpec) &&
@@ -432,12 +431,12 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
             parseContext.isMultiviewExtensionEnabled() && getShaderType() != GL_COMPUTE_SHADER)
         {
             DeclareAndInitBuiltinsForInstancedMultiview(root, mNumViews, shaderType, compileOptions,
-                                                        outputType, symbolTable);
+                                                        outputType, &symbolTable);
         }
 
         // This pass might emit short circuits so keep it before the short circuit unfolding
         if (success && (compileOptions & SH_REWRITE_DO_WHILE_LOOPS))
-            RewriteDoWhile(root, getTemporaryId());
+            RewriteDoWhile(root, &symbolTable);
 
         if (success && (compileOptions & SH_ADD_AND_TRUE_TO_LOOP_CONDITION))
             sh::AddAndTrueToLoopCondition(root);
@@ -458,7 +457,7 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         {
             ASSERT(!variablesCollected);
             CollectVariables(root, &attributes, &outputVariables, &uniforms, &varyings,
-                             &interfaceBlocks, hashFunction, symbolTable, shaderVersion,
+                             &interfaceBlocks, hashFunction, &symbolTable, shaderVersion,
                              extensionBehavior);
             variablesCollected = true;
             if (compileOptions & SH_USE_UNUSED_STANDARD_SHARED_BLOCKS)
@@ -504,12 +503,12 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         if (success && (compileOptions & SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS))
         {
             ScalarizeVecAndMatConstructorArgs(root, shaderType, fragmentPrecisionHigh,
-                                              getTemporaryId());
+                                              &symbolTable);
         }
 
         if (success && (compileOptions & SH_REGENERATE_STRUCT_NAMES))
         {
-            RegenerateStructNames gen(symbolTable, shaderVersion);
+            RegenerateStructNames gen(&symbolTable, shaderVersion);
             root->traverse(&gen);
         }
 
@@ -518,7 +517,7 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
             IsExtensionEnabled(extensionBehavior, "GL_EXT_draw_buffers"))
         {
             EmulateGLFragColorBroadcast(root, compileResources.MaxDrawBuffers, &outputVariables,
-                                        symbolTable, shaderVersion);
+                                        &symbolTable, shaderVersion);
         }
 
         if (success)
@@ -541,7 +540,7 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
                                        IntermNodePatternMatcher::kMultiDeclaration |
                                            IntermNodePatternMatcher::kArrayDeclaration |
                                            IntermNodePatternMatcher::kNamelessStructDeclaration,
-                                       getTemporaryId(), getSymbolTable(), getShaderVersion());
+                                       &getSymbolTable(), getShaderVersion());
             }
             // We only really need to separate array declarations and nameless struct declarations,
             // but it's simpler to just use the regular SeparateDeclarations.
@@ -748,7 +747,6 @@ void TCompiler::clearResults()
     nameMap.clear();
 
     mSourcePath     = nullptr;
-    mTemporaryId    = TSymbolUniqueId();
 }
 
 bool TCompiler::initCallDag(TIntermNode *root)

@@ -504,10 +504,10 @@ int TType::getLocationCount() const
     return count;
 }
 
-TStructure::TStructure(const TString *name, TFieldList *fields)
+TStructure::TStructure(TSymbolTable *symbolTable, const TString *name, TFieldList *fields)
     : TFieldListCollection(name, fields),
       mDeepestNesting(0),
-      mUniqueId(TSymbolTable::nextUniqueId()),
+      mUniqueId(symbolTable->nextUniqueId()),
       mAtGlobalScope(false)
 {
 }

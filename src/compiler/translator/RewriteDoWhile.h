@@ -14,9 +14,9 @@ namespace sh
 {
 
 class TIntermNode;
-class TSymbolUniqueId;
+class TSymbolTable;
 
-void RewriteDoWhile(TIntermNode *root, TSymbolUniqueId *temporaryId);
+void RewriteDoWhile(TIntermNode *root, TSymbolTable *symbolTable);
 
 }  // namespace sh
 

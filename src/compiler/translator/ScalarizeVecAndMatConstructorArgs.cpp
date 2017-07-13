@@ -63,12 +63,11 @@ class ScalarizeArgsTraverser : public TIntermTraverser
   public:
     ScalarizeArgsTraverser(sh::GLenum shaderType,
                            bool fragmentPrecisionHigh,
-                           TSymbolUniqueId *temporaryId)
-        : TIntermTraverser(true, false, false),
+                           TSymbolTable *symbolTable)
+        : TIntermTraverser(true, false, false, symbolTable),
           mShaderType(shaderType),
           mFragmentPrecisionHigh(fragmentPrecisionHigh)
     {
-        useTemporaryId(temporaryId);
     }
 
   protected:
@@ -230,9 +229,9 @@ void ScalarizeArgsTraverser::createTempVariable(TIntermTyped *original)
 void ScalarizeVecAndMatConstructorArgs(TIntermBlock *root,
                                        sh::GLenum shaderType,
                                        bool fragmentPrecisionHigh,
-                                       TSymbolUniqueId *temporaryId)
+                                       TSymbolTable *symbolTable)
 {
-    ScalarizeArgsTraverser scalarizer(shaderType, fragmentPrecisionHigh, temporaryId);
+    ScalarizeArgsTraverser scalarizer(shaderType, fragmentPrecisionHigh, symbolTable);
     root->traverse(&scalarizer);
 }
 

@@ -60,10 +60,13 @@ bool ContainsReturn(TIntermNode *node)
     return traverser.containsReturn();
 }
 
-void WrapMainAndAppend(TIntermBlock *root, TIntermFunctionDefinition *main, TIntermNode *codeToRun)
+void WrapMainAndAppend(TIntermBlock *root,
+                       TIntermFunctionDefinition *main,
+                       TIntermNode *codeToRun,
+                       TSymbolTable *symbolTable)
 {
     // Replace main() with main0() with the same body.
-    TSymbolUniqueId oldMainId;
+    TSymbolUniqueId oldMainId(symbolTable);
     std::stringstream oldMainName;
     oldMainName << "main" << oldMainId.get();
     TIntermFunctionDefinition *oldMain = CreateInternalFunctionDefinitionNode(
@@ -94,7 +97,7 @@ void WrapMainAndAppend(TIntermBlock *root, TIntermFunctionDefinition *main, TInt
 
 }  // anonymous namespace
 
-void RunAtTheEndOfShader(TIntermBlock *root, TIntermNode *codeToRun)
+void RunAtTheEndOfShader(TIntermBlock *root, TIntermNode *codeToRun, TSymbolTable *symbolTable)
 {
     TIntermFunctionDefinition *main = FindMain(root);
     if (!ContainsReturn(main))
@@ -103,7 +106,7 @@ void RunAtTheEndOfShader(TIntermBlock *root, TIntermNode *codeToRun)
         return;
     }
 
-    WrapMainAndAppend(root, main, codeToRun);
+    WrapMainAndAppend(root, main, codeToRun, symbolTable);
 }
 
 }  // namespace sh

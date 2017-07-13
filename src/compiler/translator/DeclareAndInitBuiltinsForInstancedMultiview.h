@@ -35,7 +35,7 @@ void DeclareAndInitBuiltinsForInstancedMultiview(TIntermBlock *root,
                                                  GLenum shaderType,
                                                  ShCompileOptions compileOptions,
                                                  ShShaderOutput shaderOutput,
-                                                 const TSymbolTable &symbolTable);
+                                                 TSymbolTable *symbolTable);
 
 }  // namespace sh
 

@@ -63,7 +63,7 @@ void TranslatorVulkan::translate(TIntermBlock *root, ShCompileOptions compileOpt
 
     // Write translated shader.
     TOutputVulkanGLSL outputGLSL(sink, getArrayIndexClampingStrategy(), getHashFunction(),
-                                 getNameMap(), getSymbolTable(), getShaderType(),
+                                 getNameMap(), &getSymbolTable(), getShaderType(),
                                  getShaderVersion(), getOutputType(), compileOptions);
     root->traverse(&outputGLSL);
 }

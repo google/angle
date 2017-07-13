@@ -24,7 +24,7 @@ namespace sh
 class EmulatePrecision : public TLValueTrackingTraverser
 {
   public:
-    EmulatePrecision(const TSymbolTable &symbolTable, int shaderVersion);
+    EmulatePrecision(TSymbolTable *symbolTable, int shaderVersion);
 
     void visitSymbol(TIntermSymbol *node) override;
     bool visitBinary(Visit visit, TIntermBinary *node) override;

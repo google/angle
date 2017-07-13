@@ -60,10 +60,10 @@ TIntermAggregate *CreateReplacementCall(TIntermAggregate *originalCall,
 class ArrayReturnValueToOutParameterTraverser : private TIntermTraverser
 {
   public:
-    static void apply(TIntermNode *root, TSymbolUniqueId *temporaryId);
+    static void apply(TIntermNode *root, TSymbolTable *symbolTable);
 
   private:
-    ArrayReturnValueToOutParameterTraverser();
+    ArrayReturnValueToOutParameterTraverser(TSymbolTable *symbolTable);
 
     bool visitFunctionPrototype(Visit visit, TIntermFunctionPrototype *node) override;
     bool visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *node) override;
@@ -74,16 +74,16 @@ class ArrayReturnValueToOutParameterTraverser : private TIntermTraverser
     bool mInFunctionWithArrayReturnValue;
 };
 
-void ArrayReturnValueToOutParameterTraverser::apply(TIntermNode *root, TSymbolUniqueId *temporaryId)
+void ArrayReturnValueToOutParameterTraverser::apply(TIntermNode *root, TSymbolTable *symbolTable)
 {
-    ArrayReturnValueToOutParameterTraverser arrayReturnValueToOutParam;
-    arrayReturnValueToOutParam.useTemporaryId(temporaryId);
+    ArrayReturnValueToOutParameterTraverser arrayReturnValueToOutParam(symbolTable);
     root->traverse(&arrayReturnValueToOutParam);
     arrayReturnValueToOutParam.updateTree();
 }
 
-ArrayReturnValueToOutParameterTraverser::ArrayReturnValueToOutParameterTraverser()
-    : TIntermTraverser(true, false, true), mInFunctionWithArrayReturnValue(false)
+ArrayReturnValueToOutParameterTraverser::ArrayReturnValueToOutParameterTraverser(
+    TSymbolTable *symbolTable)
+    : TIntermTraverser(true, false, true, symbolTable), mInFunctionWithArrayReturnValue(false)
 {
 }
 
@@ -194,9 +194,9 @@ bool ArrayReturnValueToOutParameterTraverser::visitBinary(Visit visit, TIntermBi
 
 }  // namespace
 
-void ArrayReturnValueToOutParameter(TIntermNode *root, TSymbolUniqueId *temporaryId)
+void ArrayReturnValueToOutParameter(TIntermNode *root, TSymbolTable *symbolTable)
 {
-    ArrayReturnValueToOutParameterTraverser::apply(root, temporaryId);
+    ArrayReturnValueToOutParameterTraverser::apply(root, symbolTable);
 }
 
 }  // namespace sh

@@ -46,7 +46,7 @@ class TSymbolUniqueId
 {
   public:
     POOL_ALLOCATOR_NEW_DELETE();
-    TSymbolUniqueId();
+    TSymbolUniqueId(TSymbolTable *symbolTable);
     TSymbolUniqueId(const TSymbol &symbol);
     TSymbolUniqueId(const TSymbolUniqueId &) = default;
     TSymbolUniqueId &operator=(const TSymbolUniqueId &) = default;
@@ -62,7 +62,7 @@ class TSymbol : angle::NonCopyable
 {
   public:
     POOL_ALLOCATOR_NEW_DELETE();
-    TSymbol(const TString *n);
+    TSymbol(TSymbolTable *symbolTable, const TString *n);
 
     virtual ~TSymbol()
     {
@@ -103,8 +103,11 @@ class TVariable : public TSymbol
   private:
     friend class TSymbolTable;
 
-    TVariable(const TString *name, const TType &t, bool isUserTypeDefinition = false)
-        : TSymbol(name), type(t), userType(isUserTypeDefinition), unionArray(0)
+    TVariable(TSymbolTable *symbolTable,
+              const TString *name,
+              const TType &t,
+              bool isUserTypeDefinition = false)
+        : TSymbol(symbolTable, name), type(t), userType(isUserTypeDefinition), unionArray(0)
     {
     }
 
@@ -159,11 +162,12 @@ struct TParameter
 class TFunction : public TSymbol
 {
   public:
-    TFunction(const TString *name,
+    TFunction(TSymbolTable *symbolTable,
+              const TString *name,
               const TType *retType,
               TOperator tOp   = EOpNull,
               const char *ext = "")
-        : TSymbol(name),
+        : TSymbol(symbolTable, name),
           returnType(retType),
           mangledName(nullptr),
           op(tOp),
@@ -229,7 +233,9 @@ class TInterfaceBlockName : public TSymbol
 
   private:
     friend class TSymbolTable;
-    TInterfaceBlockName(const TString *name) : TSymbol(name) {}
+    TInterfaceBlockName(TSymbolTable *symbolTable, const TString *name) : TSymbol(symbolTable, name)
+    {
+    }
 };
 
 class TSymbolTableLevel
@@ -292,7 +298,7 @@ const int GLOBAL_LEVEL       = 4;
 class TSymbolTable : angle::NonCopyable
 {
   public:
-    TSymbolTable()
+    TSymbolTable() : mUniqueIdCounter(0)
     {
         // The symbol table cannot be used until push() is called, but
         // the lack of an initial call to push() can be used to detect
@@ -342,7 +348,7 @@ class TSymbolTable : angle::NonCopyable
     bool insertConstInt(ESymbolLevel level, const char *name, int value, TPrecision precision)
     {
         TVariable *constant =
-            new TVariable(NewPoolTString(name), TType(EbtInt, precision, EvqConst, 1));
+            new TVariable(this, NewPoolTString(name), TType(EbtInt, precision, EvqConst, 1));
         TConstantUnion *unionArray = new TConstantUnion[1];
         unionArray[0].setIConst(value);
         constant->shareConstPointer(unionArray);
@@ -352,7 +358,7 @@ class TSymbolTable : angle::NonCopyable
     bool insertConstIntExt(ESymbolLevel level, const char *ext, const char *name, int value)
     {
         TVariable *constant =
-            new TVariable(NewPoolTString(name), TType(EbtInt, EbpUndefined, EvqConst, 1));
+            new TVariable(this, NewPoolTString(name), TType(EbtInt, EbpUndefined, EvqConst, 1));
         TConstantUnion *unionArray = new TConstantUnion[1];
         unionArray[0].setIConst(value);
         constant->shareConstPointer(unionArray);
@@ -365,7 +371,7 @@ class TSymbolTable : angle::NonCopyable
                           TPrecision precision)
     {
         TVariable *constantIvec3 =
-            new TVariable(NewPoolTString(name), TType(EbtInt, precision, EvqConst, 3));
+            new TVariable(this, NewPoolTString(name), TType(EbtInt, precision, EvqConst, 3));
 
         TConstantUnion *unionArray = new TConstantUnion[3];
         for (size_t index = 0u; index < 3u; ++index)
@@ -488,7 +494,7 @@ class TSymbolTable : angle::NonCopyable
         table[currentLevel()]->setGlobalInvariant(invariant);
     }
 
-    static int nextUniqueId() { return ++uniqueIdCounter; }
+    int nextUniqueId() { return ++mUniqueIdCounter; }
 
     // Checks whether there is a built-in accessible by a shader with the specified version.
     bool hasUnmangledBuiltInForShaderVersion(const char *name, int shaderVersion);
@@ -516,7 +522,7 @@ class TSymbolTable : angle::NonCopyable
     typedef TMap<TBasicType, TPrecision> PrecisionStackLevel;
     std::vector<PrecisionStackLevel *> precisionStack;
 
-    static int uniqueIdCounter;
+    int mUniqueIdCounter;
 };
 
 }  // namespace sh

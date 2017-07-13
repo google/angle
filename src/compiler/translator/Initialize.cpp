@@ -689,7 +689,7 @@ void InsertBuiltInFunctions(sh::GLenum type,
     fields->push_back(far);
     fields->push_back(diff);
     TStructure *depthRangeStruct =
-        new TStructure(NewPoolTString("gl_DepthRangeParameters"), fields);
+        new TStructure(&symbolTable, NewPoolTString("gl_DepthRangeParameters"), fields);
     symbolTable.insertStructType(COMMON_BUILTINS, depthRangeStruct);
     TType depthRangeType(depthRangeStruct);
     depthRangeType.setQualifier(EvqUniform);

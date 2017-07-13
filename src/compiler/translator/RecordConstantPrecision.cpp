@@ -28,7 +28,7 @@ namespace
 class RecordConstantPrecisionTraverser : public TIntermTraverser
 {
   public:
-    RecordConstantPrecisionTraverser();
+    RecordConstantPrecisionTraverser(TSymbolTable *symbolTable);
 
     void visitConstantUnion(TIntermConstantUnion *node) override;
 
@@ -41,8 +41,8 @@ class RecordConstantPrecisionTraverser : public TIntermTraverser
     bool mFoundHigherPrecisionConstant;
 };
 
-RecordConstantPrecisionTraverser::RecordConstantPrecisionTraverser()
-    : TIntermTraverser(true, false, true), mFoundHigherPrecisionConstant(false)
+RecordConstantPrecisionTraverser::RecordConstantPrecisionTraverser(TSymbolTable *symbolTable)
+    : TIntermTraverser(true, false, true, symbolTable), mFoundHigherPrecisionConstant(false)
 {
 }
 
@@ -151,11 +151,9 @@ void RecordConstantPrecisionTraverser::nextIteration()
 
 }  // namespace
 
-void RecordConstantPrecision(TIntermNode *root, TSymbolUniqueId *temporaryId)
+void RecordConstantPrecision(TIntermNode *root, TSymbolTable *symbolTable)
 {
-    RecordConstantPrecisionTraverser traverser;
-    ASSERT(temporaryId != nullptr);
-    traverser.useTemporaryId(temporaryId);
+    RecordConstantPrecisionTraverser traverser(symbolTable);
     // Iterate as necessary, and reset the traverser between iterations.
     do
     {

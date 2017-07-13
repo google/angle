@@ -24,7 +24,7 @@ class SplitSequenceOperatorTraverser : public TLValueTrackingTraverser
 {
   public:
     SplitSequenceOperatorTraverser(unsigned int patternsToSplitMask,
-                                   const TSymbolTable &symbolTable,
+                                   TSymbolTable *symbolTable,
                                    int shaderVersion);
 
     bool visitBinary(Visit visit, TIntermBinary *node) override;
@@ -44,7 +44,7 @@ class SplitSequenceOperatorTraverser : public TLValueTrackingTraverser
 };
 
 SplitSequenceOperatorTraverser::SplitSequenceOperatorTraverser(unsigned int patternsToSplitMask,
-                                                               const TSymbolTable &symbolTable,
+                                                               TSymbolTable *symbolTable,
                                                                int shaderVersion)
     : TLValueTrackingTraverser(true, false, true, symbolTable, shaderVersion),
       mFoundExpressionToSplit(false),
@@ -138,13 +138,10 @@ bool SplitSequenceOperatorTraverser::visitTernary(Visit visit, TIntermTernary *n
 
 void SplitSequenceOperator(TIntermNode *root,
                            int patternsToSplitMask,
-                           TSymbolUniqueId *temporaryId,
-                           const TSymbolTable &symbolTable,
+                           TSymbolTable *symbolTable,
                            int shaderVersion)
 {
     SplitSequenceOperatorTraverser traverser(patternsToSplitMask, symbolTable, shaderVersion);
-    ASSERT(temporaryId != nullptr);
-    traverser.useTemporaryId(temporaryId);
     // Separate one expression at a time, and reset the traverser between iterations.
     do
     {
