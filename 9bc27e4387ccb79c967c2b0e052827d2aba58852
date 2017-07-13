@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b2e59c8f_729855f2",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 576,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-13T16:32:22Z",
+      "side": 1,
+      "message": "you can just use updateStorageLevel or updateStorageFaceLevel. You could optionally redesign those methods to take ImageIndex instead of just a level / face+level, but I think it\u0027s fine to just pass the values.",
+      "range": {
+        "startLine": 563,
+        "startChar": 0,
+        "endLine": 576,
+        "endChar": 25
+      },
+      "revId": "9bc27e4387ccb79c967c2b0e052827d2aba58852",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
