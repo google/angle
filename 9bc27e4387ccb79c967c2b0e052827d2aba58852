@@ -22,6 +22,30 @@
       "revId": "9bc27e4387ccb79c967c2b0e052827d2aba58852",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7ea85596_c3559f64",
+        "filename": "src/libANGLE/renderer/d3d/TextureD3D.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 576,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-13T18:48:39Z",
+      "side": 1,
+      "message": "Derp, I missed that method.  Fixed.",
+      "parentUuid": "b2e59c8f_729855f2",
+      "range": {
+        "startLine": 563,
+        "startChar": 0,
+        "endLine": 576,
+        "endChar": 25
+      },
+      "revId": "9bc27e4387ccb79c967c2b0e052827d2aba58852",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
