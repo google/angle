@@ -1822,19 +1822,19 @@ void State::getIntegerv(const Context *context, GLenum pname, GLint *params)
             {
                 switch (pname)
                 {
-                  case GL_SAMPLE_BUFFERS:
-                      if (framebuffer->getSamples(context) != 0)
-                      {
-                          *params = 1;
-                    }
-                    else
-                    {
-                        *params = 0;
-                    }
-                    break;
-                  case GL_SAMPLES:
-                      *params = framebuffer->getSamples(context);
-                      break;
+                    case GL_SAMPLE_BUFFERS:
+                        if (framebuffer->getSamples(context) != 0)
+                        {
+                            *params = 1;
+                        }
+                        else
+                        {
+                            *params = 0;
+                        }
+                        break;
+                    case GL_SAMPLES:
+                        *params = framebuffer->getSamples(context);
+                        break;
                 }
             }
             else

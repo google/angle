@@ -1081,11 +1081,11 @@ int Framebuffer::getSamples(const Context *context)
     {
         // For a complete framebuffer, all attachments must have the same sample count.
         // In this case return the first nonzero sample size.
-        const auto *firstColorAttachment = mState.getFirstColorAttachment();
-        if (firstColorAttachment)
+        const auto *firstNonNullAttachment = mState.getFirstNonNullAttachment();
+        if (firstNonNullAttachment)
         {
-            ASSERT(firstColorAttachment->isAttached());
-            return firstColorAttachment->getSamples();
+            ASSERT(firstNonNullAttachment->isAttached());
+            return firstNonNullAttachment->getSamples();
         }
     }
 

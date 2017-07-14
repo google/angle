@@ -498,6 +498,25 @@ TEST_P(FramebufferTest_ES3, ColorAttachmentIndexOutOfBounds)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Check that depth-only attachments report the correct number of samples.
+TEST_P(FramebufferTest_ES3, MultisampleDepthOnly)
+{
+    GLRenderbuffer renderbuffer;
+    glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, 2, GL_DEPTH_COMPONENT24, 32, 32);
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, renderbuffer);
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    EXPECT_GL_NO_ERROR();
+
+    GLint samples = 0;
+    glGetIntegerv(GL_SAMPLES, &samples);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_GE(samples, 2);
+}
+
 ANGLE_INSTANTIATE_TEST(FramebufferTest_ES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 
 class FramebufferTest_ES31 : public ANGLETest
