@@ -1,0 +1,124 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "948ece3b_82ddf376",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 16
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-14T12:02:27Z",
+      "side": 1,
+      "message": "Add Geoff and Corentin as well.",
+      "revId": "1804e86e6e9e60fe276d3a3c8798f3d4994a6bc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "913bc9f3_6a01a700",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 16
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-14T12:02:27Z",
+      "side": 1,
+      "message": "You can put \"Incomplete\" here for now.",
+      "revId": "1804e86e6e9e60fe276d3a3c8798f3d4994a6bc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ad589a0_1c076e6e",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 16
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-14T12:02:27Z",
+      "side": 1,
+      "message": "Make sure the last modified date is up to date.",
+      "revId": "1804e86e6e9e60fe276d3a3c8798f3d4994a6bc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4651d657_83ed0a2d",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 16
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-14T12:02:27Z",
+      "side": 1,
+      "message": "GLES spec uses the term \"current program object\".",
+      "range": {
+        "startLine": 98,
+        "startChar": 47,
+        "endLine": 98,
+        "endChar": 60
+      },
+      "revId": "1804e86e6e9e60fe276d3a3c8798f3d4994a6bc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fb638997_bb4f1c1d",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 16
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-14T12:02:27Z",
+      "side": 1,
+      "message": "This is sometimes being referred to as just \"layout\" and sometimes \"multi-view layout\". I think using \"multi-view layout\" consistently would be better.",
+      "range": {
+        "startLine": 124,
+        "startChar": 60,
+        "endLine": 124,
+        "endChar": 66
+      },
+      "revId": "1804e86e6e9e60fe276d3a3c8798f3d4994a6bc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "62d444a0_75205ef6",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 16
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-14T12:02:27Z",
+      "side": 1,
+      "message": "Using DRAW_FRAMEBUFFER should be allowed, at least.\n\nPossibly also READ_FRAMEBUFFER. This has limited usefulness since you can\u0027t read from a multi-view framebuffer either way, but currently the WebGL spec doesn\u0027t disallow adding multi-view attachments to READ_FRAMEBUFFER, so it would be helpful to support it.\n\nSame goes for the side-by-side variant of the function.",
+      "range": {
+        "startLine": 233,
+        "startChar": 8,
+        "endLine": 233,
+        "endChar": 71
+      },
+      "revId": "1804e86e6e9e60fe276d3a3c8798f3d4994a6bc3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
