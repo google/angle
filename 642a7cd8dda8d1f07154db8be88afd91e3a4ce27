@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "91854047_4896da32",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 5589,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-14T15:38:17Z",
+      "side": 1,
+      "message": "nit: I\u0027d simplify this message a little bit: \"Invalid parameter for 2D multisampled textures.\"",
+      "range": {
+        "startLine": 5587,
+        "startChar": 55,
+        "endLine": 5589,
+        "endChar": 86
+      },
+      "revId": "642a7cd8dda8d1f07154db8be88afd91e3a4ce27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
