@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0a36756b_c1f93647",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 445,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-14T08:52:06Z",
+      "side": 1,
+      "message": "Hi Geoff, the definition of kWidth and kHeight conflict with the ones in class RobustResourceInitTest (line 18) and cause a compile error when building angle_end2end_tests alone with MSVS.",
+      "range": {
+        "startLine": 444,
+        "startChar": 3,
+        "endLine": 445,
+        "endChar": 35
+      },
+      "revId": "c5af8ba6ebd2246b4c214f30bd50ba80fa8b1e3e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
