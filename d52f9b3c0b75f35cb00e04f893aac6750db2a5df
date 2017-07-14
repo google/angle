@@ -34,6 +34,24 @@
       "revId": "d52f9b3c0b75f35cb00e04f893aac6750db2a5df",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f981cc5c_6e370717",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 716,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-14T12:19:56Z",
+      "side": 1,
+      "message": "Then the validation relate to the buffer size looks something like:\nif (!ValidateRobustEntryPoint(context, bufSize)) return false;\nconst GLsizei kNumViewportOffsetValues \u003d numViews * 2;\nif (!ValidateRobustBufferSize(context, bufSize, kNumViewportOffsetValues)) return false;",
+      "parentUuid": "fe867d36_6ae29c2d",
+      "revId": "d52f9b3c0b75f35cb00e04f893aac6750db2a5df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
