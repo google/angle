@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3c79094b_773ee353",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 3533,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-14T16:29:22Z",
+      "side": 0,
+      "message": "is this related?",
+      "range": {
+        "startLine": 3524,
+        "startChar": 16,
+        "endLine": 3533,
+        "endChar": 23
+      },
+      "revId": "4cafb867cbb910e23f3c4d9b8bf1332231bcbd4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

@@ -69,6 +69,29 @@
       "revId": "17de90aeb960d7a3d58894272102b2c14ad989c4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ae6fb3a7_cd4da1c1",
+        "filename": "src/compiler/translator/IntermNode_util.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-14T16:29:22Z",
+      "side": 1,
+      "message": "nit: ReferenceBuiltIn? Are there built-ins which aren\u0027t symbols? I see it follows the Global naming, but didn\u0027t notice it before. Feel free to ignore this if it doesn\u0027t make sense.",
+      "range": {
+        "startLine": 176,
+        "startChar": 15,
+        "endLine": 176,
+        "endChar": 35
+      },
+      "revId": "17de90aeb960d7a3d58894272102b2c14ad989c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
