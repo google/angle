@@ -13,9 +13,9 @@
 
 #include "compiler/translator/EmulateGLFragColorBroadcast.h"
 
-#include "compiler/translator/FindMain.h"
 #include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/IntermTraverse.h"
+#include "compiler/translator/RunAtTheEndOfShader.h"
 
 namespace sh
 {
@@ -88,15 +88,17 @@ void GLFragColorBroadcastTraverser::broadcastGLFragColor(TIntermBlock *root)
     {
         return;
     }
-    TIntermSequence *mainSequence = FindMainBody(root)->getSequence();
+
+    TIntermBlock *broadcastBlock = new TIntermBlock();
     // Now insert statements
     //   gl_FragData[1] = gl_FragData[0];
     //   ...
     //   gl_FragData[maxDrawBuffers - 1] = gl_FragData[0];
     for (int colorIndex = 1; colorIndex < mMaxDrawBuffers; ++colorIndex)
     {
-        mainSequence->insert(mainSequence->end(), constructGLFragDataAssignNode(colorIndex));
+        broadcastBlock->appendStatement(constructGLFragDataAssignNode(colorIndex));
     }
+    RunAtTheEndOfShader(root, broadcastBlock);
 }
 
 }  // namespace anonymous

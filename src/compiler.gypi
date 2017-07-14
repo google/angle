@@ -114,6 +114,8 @@
             'compiler/translator/RewriteUnaryMinusOperatorFloat.h',
             'compiler/translator/RewriteUnaryMinusOperatorInt.cpp',
             'compiler/translator/RewriteUnaryMinusOperatorInt.h',
+            'compiler/translator/RunAtTheEndOfShader.cpp',
+            'compiler/translator/RunAtTheEndOfShader.h',
             'compiler/translator/ScalarizeVecAndMatConstructorArgs.cpp',
             'compiler/translator/ScalarizeVecAndMatConstructorArgs.h',
             'compiler/translator/SearchSymbol.cpp',
