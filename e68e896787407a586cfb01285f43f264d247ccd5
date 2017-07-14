@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "38c9c74c_4ced1196",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 428,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-14T11:02:43Z",
+      "side": 1,
+      "message": "Since we\u0027ve established that this is an implementation detail of the gl backend, I think this should be defined in some file in the renderer/gl subdirectory. Maybe renderergl_utils.h would be a good place?",
+      "revId": "e68e896787407a586cfb01285f43f264d247ccd5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
