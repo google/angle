@@ -13,6 +13,7 @@
 #include "compiler/translator/AddAndTrueToLoopCondition.h"
 #include "compiler/translator/Cache.h"
 #include "compiler/translator/CallDAG.h"
+#include "compiler/translator/ClampPointSize.h"
 #include "compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.h"
 #include "compiler/translator/DeferGlobalInitializers.h"
 #include "compiler/translator/EmulateGLFragColorBroadcast.h"
@@ -546,6 +547,12 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
             // but it's simpler to just use the regular SeparateDeclarations.
             SeparateDeclarations(root);
             InitializeUninitializedLocals(root, getShaderVersion());
+        }
+
+        if (success && getShaderType() == GL_VERTEX_SHADER &&
+            (compileOptions & SH_CLAMP_POINT_SIZE))
+        {
+            ClampPointSize(root, compileResources.MaxPointSize, &getSymbolTable());
         }
     }
 

@@ -118,6 +118,9 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const ContextState &state)
 
     mResources.MaxUniformBufferBindings = caps.maxUniformBufferBindings;
 
+    // Needed by point size clamping workaround
+    mResources.MaxPointSize = caps.maxAliasedPointSize;
+
     if (state.getClientMajorVersion() == 2 && !extensions.drawBuffers)
     {
         mResources.MaxDrawBuffers = 1;

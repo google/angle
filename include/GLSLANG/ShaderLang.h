@@ -25,7 +25,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 177
+#define ANGLE_SH_VERSION 178
 
 enum ShShaderSpec
 {
@@ -240,6 +240,10 @@ const ShCompileOptions SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW = UINT64_C
 // temporary variable ViewID_OVR declared and initialized.
 const ShCompileOptions SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER = UINT64_C(1) << 34;
 
+// If the flag is enabled, gl_PointSize is clamped to the maximum point size specified in
+// ShBuiltInResources in vertex shaders.
+const ShCompileOptions SH_CLAMP_POINT_SIZE = UINT64_C(1) << 35;
+
 // Defines alternate strategies for implementing array index clamping.
 enum ShArrayIndexClampingStrategy
 {
@@ -404,6 +408,9 @@ struct ShBuiltInResources
 
     // maximum number of shader storage buffer bindings
     int MaxShaderStorageBufferBindings;
+
+    // maximum point size (higher limit from ALIASED_POINT_SIZE_RANGE)
+    float MaxPointSize;
 };
 
 //

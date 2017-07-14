@@ -7,6 +7,7 @@
 // conformance test suite.
 
 #include "test_utils/ANGLETest.h"
+#include "test_utils/gl_raii.h"
 
 #include <cmath>
 
@@ -61,9 +62,7 @@ TEST_P(PointSpritesTest, PointCoordAndPointSizeCompliance)
             gl_Position  = vPosition;
         });
 
-    GLuint program = CompileProgram(vs, fs);
-    ASSERT_NE(program, 0u);
-    ASSERT_GL_NO_ERROR();
+    ANGLE_GL_PROGRAM(program, vs, fs);
 
     glUseProgram(program);
 
@@ -88,12 +87,9 @@ TEST_P(PointSpritesTest, PointCoordAndPointSizeCompliance)
     ASSERT_GL_NO_ERROR();
 
     GLfloat pixelOffset = ((int)maxPointSize % 2) ? (1.0f / (GLfloat)windowWidth) : 0;
-    GLuint vertexObject = 0;
-    glGenBuffers(1, &vertexObject);
-    ASSERT_NE(vertexObject, 0U);
-    ASSERT_GL_NO_ERROR();
+    GLBuffer vertexObject;
 
-    glBindBuffer(GL_ARRAY_BUFFER, vertexObject);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexObject.get());
     ASSERT_GL_NO_ERROR();
 
     GLfloat thePoints[] = {-0.5f + pixelOffset, -0.5f + pixelOffset, 0.5f + pixelOffset,
@@ -110,8 +106,6 @@ TEST_P(PointSpritesTest, PointCoordAndPointSizeCompliance)
 
     glDrawArrays(GL_POINTS, 0, 4);
     ASSERT_GL_NO_ERROR();
-
-    glDeleteBuffers(1, &vertexObject);
 
     std::string debugText;
     for (float py = 0; py < 2; ++py)
@@ -182,8 +176,7 @@ TEST_P(PointSpritesTest, PointWithoutAttributesCompliance)
     );
     // clang-format on
 
-    GLuint program = CompileProgram(vs, fs);
-    ASSERT_NE(program, 0u);
+    ANGLE_GL_PROGRAM(program, vs, fs);
     ASSERT_GL_NO_ERROR();
 
     glUseProgram(program);
@@ -229,8 +222,7 @@ TEST_P(PointSpritesTest, PointCoordRegressionTest)
                           v_color = vec4(0.0, 1.0, 0.0, 1.0);
                       });
 
-    GLuint program = CompileProgram(vs, fs);
-    ASSERT_NE(program, 0u);
+    ANGLE_GL_PROGRAM(program, vs, fs);
     ASSERT_GL_NO_ERROR();
 
     glUseProgram(program);
@@ -253,12 +245,10 @@ TEST_P(PointSpritesTest, PointCoordRegressionTest)
     glUniform1f(pointSizeLoc, pointSize);
     ASSERT_GL_NO_ERROR();
 
-    GLuint vertexObject = 0;
-    glGenBuffers(1, &vertexObject);
-    ASSERT_NE(vertexObject, 0U);
+    GLBuffer vertexObject;
     ASSERT_GL_NO_ERROR();
 
-    glBindBuffer(GL_ARRAY_BUFFER, vertexObject);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexObject.get());
     ASSERT_GL_NO_ERROR();
 
     GLfloat thePoints[] = {0.0f, 0.0f};
@@ -274,8 +264,6 @@ TEST_P(PointSpritesTest, PointCoordRegressionTest)
 
     // expect the center pixel to be green
     EXPECT_PIXEL_EQ((windowWidth - 1) / 2, (windowHeight - 1) / 2, 0, 255, 0, 255);
-
-    glDeleteBuffers(1, &vertexObject);
 }
 
 // Verify GL_VERTEX_PROGRAM_POINT_SIZE is enabled
@@ -306,8 +294,7 @@ TEST_P(PointSpritesTest, PointSizeEnabledCompliance)
     // The WebGL test is drawn on a 2x2 canvas. Emulate this by setting a 2x2 viewport.
     glViewport(0, 0, 2, 2);
 
-    GLuint program = CompileProgram(vs, fs);
-    ASSERT_NE(program, 0u);
+    ANGLE_GL_PROGRAM(program, vs, fs);
     ASSERT_GL_NO_ERROR();
 
     glUseProgram(program);
@@ -320,12 +307,10 @@ TEST_P(PointSpritesTest, PointSizeEnabledCompliance)
     GLfloat vertices[] = {0.4f, 0.4f, 0.0f};
     GLubyte colors[]   = {255, 0, 0, 255};
 
-    GLuint vertexObject = 0;
-    glGenBuffers(1, &vertexObject);
-    ASSERT_NE(vertexObject, 0U);
+    GLBuffer vertexObject;
     ASSERT_GL_NO_ERROR();
 
-    glBindBuffer(GL_ARRAY_BUFFER, vertexObject);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexObject.get());
     ASSERT_GL_NO_ERROR();
 
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices) + sizeof(colors), nullptr, GL_STATIC_DRAW);
@@ -397,8 +382,6 @@ TEST_P(PointSpritesTest, PointSizeEnabledCompliance)
             }
         }
     }
-
-    glDeleteBuffers(1, &vertexObject);
 }
 
 // Verify that rendering works correctly when gl_PointSize is declared in a shader but isn't used
@@ -414,8 +397,7 @@ TEST_P(PointSpritesTest, PointSizeDeclaredButUnused)
     const std::string fs =
         SHADER_SOURCE(void main(void) { gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); });
 
-    GLuint program = CompileProgram(vs, fs);
-    ASSERT_NE(program, 0u);
+    ANGLE_GL_PROGRAM(program, vs, fs);
     ASSERT_GL_NO_ERROR();
 
     glUseProgram(program);
@@ -424,8 +406,6 @@ TEST_P(PointSpritesTest, PointSizeDeclaredButUnused)
 
     // expect the center pixel to be red
     EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 255, 0, 0, 255);
-
-    glDeleteProgram(program);
 }
 
 // Test to cover a bug where the D3D11 rasterizer state would not be update when switching between
@@ -472,12 +452,9 @@ TEST_P(PointSpritesTest, PointSpriteAlternatingDrawTypes)
     );
     // clang-format on
 
-    GLuint pointProgram = CompileProgram(pointVS, pointFS);
-    ASSERT_NE(pointProgram, 0u);
-    ASSERT_GL_NO_ERROR();
+    ANGLE_GL_PROGRAM(pointProgram, pointVS, pointFS);
 
-    GLuint quadProgram = CompileProgram(quadVS, quadFS);
-    ASSERT_NE(pointProgram, 0u);
+    ANGLE_GL_PROGRAM(quadProgram, quadVS, quadFS);
     ASSERT_GL_NO_ERROR();
 
     glEnable(GL_CULL_FACE);
@@ -501,9 +478,88 @@ TEST_P(PointSpritesTest, PointSpriteAlternatingDrawTypes)
 
     // expect the center pixel to be green
     EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, 0, 255, 0, 255);
+}
 
-    glDeleteProgram(pointProgram);
-    glDeleteProgram(quadProgram);
+// This checks for an NVIDIA driver bug where points larger than the maximum reported point size can
+// be drawn. Point size should be clamped to the point size range as specified in GLES 3.0.5 section
+// 3.4.
+TEST_P(PointSpritesTest, PointSizeAboveMaxIsClamped)
+{
+    if (IsD3D9())
+    {
+        // Failed on NVIDIA GeForce GTX 1080 - no pixels from the point were detected in the
+        // framebuffer. http://anglebug.com/2111
+        std::cout << "Test skipped on D3D9." << std::endl;
+        return;
+    }
+
+    if (IsAMD() && IsOpenGL())
+    {
+        // Failed on AMD OSX and Windows trybots - no pixels from the point were detected in the
+        // framebuffer. http://anglebug.com/2113
+        std::cout << "Test skipped on AMD OpenGL." << std::endl;
+        return;
+    }
+
+    GLfloat pointSizeRange[2] = {};
+    glGetFloatv(GL_ALIASED_POINT_SIZE_RANGE, pointSizeRange);
+    GLfloat maxPointSize = pointSizeRange[1];
+
+    if (maxPointSize < 4)
+    {
+        // This test is only able to test larger points.
+        return;
+    }
+
+    const std::string &vs =
+        "attribute vec4 vPosition;\n"
+        "uniform float uPointSize;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_PointSize = uPointSize;\n"
+        "    gl_Position  = vPosition;\n"
+        "}\n";
+    const std::string &fs =
+        "precision mediump float;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vec4(1, 0, 0, 1);\n"
+        "}\n";
+    ANGLE_GL_PROGRAM(program, vs, fs);
+    glUseProgram(program);
+    ASSERT_GL_NO_ERROR();
+
+    GLfloat testPointSize = floorf(maxPointSize * 2.0f);
+
+    GLint pointSizeLoc = glGetUniformLocation(program, "uPointSize");
+    glUniform1f(pointSizeLoc, testPointSize);
+    ASSERT_GL_NO_ERROR();
+
+    // The point will be a square centered at gl_Position. We'll offset it from the center of the
+    // viewport on the x axis so that the left edge of the point square is at the center of the
+    // viewport.
+    GLfloat pointXPosition = (0.5f * maxPointSize) * (2.0f / (GLfloat)getWindowWidth());
+
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.get());
+    GLfloat thePoints[] = {pointXPosition, 0.0f};
+    glBufferData(GL_ARRAY_BUFFER, sizeof(thePoints), thePoints, GL_STATIC_DRAW);
+    ASSERT_GL_NO_ERROR();
+
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+    glClearColor(0, 0, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    glDrawArrays(GL_POINTS, 0, 1);
+    ASSERT_GL_NO_ERROR();
+
+    // Pixel on the right of the viewport center should be covered by the point.
+    EXPECT_PIXEL_NEAR(getWindowWidth() / 2 + 2, getWindowHeight() / 2, 255, 0, 0, 255, 4);
+
+    // Pixel on the left of the viewport center should not be covered by the point.
+    EXPECT_PIXEL_NEAR(getWindowWidth() / 2 - 2, getWindowHeight() / 2, 0, 0, 0, 0, 4);
 }
 
 // Use this to select which configurations (e.g. which renderer, which GLES

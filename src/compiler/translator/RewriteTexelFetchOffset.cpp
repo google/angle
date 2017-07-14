@@ -130,13 +130,8 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
 
     ASSERT(texelFetchArguments->size() == 3u);
 
-    // Get the symbol of the texel fetch function to use.
-    TString mangledName = TFunction::GetMangledNameFromCall("texelFetch", *texelFetchArguments);
-    TSymbol *texelFetchSymbol = symbolTable->findBuiltIn(mangledName, shaderVersion);
-    ASSERT(texelFetchSymbol && texelFetchSymbol->isFunction());
-
-    TIntermAggregate *texelFetchNode = TIntermAggregate::CreateBuiltInFunctionCall(
-        *static_cast<const TFunction *>(texelFetchSymbol), texelFetchArguments);
+    TIntermTyped *texelFetchNode = CreateBuiltInFunctionCallNode("texelFetch", texelFetchArguments,
+                                                                 *symbolTable, shaderVersion);
     texelFetchNode->setLine(node->getLine());
 
     // Replace the old node by this new node.

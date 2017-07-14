@@ -24,6 +24,21 @@ TName GetInternalFunctionName(const char *name)
     return nameObj;
 }
 
+const TFunction *LookUpBuiltInFunction(const TString &name,
+                                       const TIntermSequence *arguments,
+                                       const TSymbolTable &symbolTable,
+                                       int shaderVersion)
+{
+    TString mangledName = TFunction::GetMangledNameFromCall(name, *arguments);
+    TSymbol *symbol     = symbolTable.findBuiltIn(mangledName, shaderVersion);
+    if (symbol)
+    {
+        ASSERT(symbol->isFunction());
+        return static_cast<const TFunction *>(symbol);
+    }
+    return nullptr;
+}
+
 }  // anonymous namespace
 
 TIntermFunctionPrototype *CreateInternalFunctionPrototypeNode(const TType &returnType,
@@ -181,6 +196,25 @@ TIntermSymbol *ReferenceBuiltInVariable(const TString &name,
         reinterpret_cast<const TVariable *>(symbolTable.findBuiltIn(name, shaderVersion));
     ASSERT(var);
     return new TIntermSymbol(var->getUniqueId(), name, var->getType());
+}
+
+TIntermTyped *CreateBuiltInFunctionCallNode(const TString &name,
+                                            TIntermSequence *arguments,
+                                            const TSymbolTable &symbolTable,
+                                            int shaderVersion)
+{
+    const TFunction *fn = LookUpBuiltInFunction(name, arguments, symbolTable, shaderVersion);
+    ASSERT(fn);
+    TOperator op = fn->getBuiltInOp();
+    if (op != EOpNull)
+    {
+        if (arguments->size() == 1)
+        {
+            return new TIntermUnary(op, arguments->at(0)->getAsTyped());
+        }
+        return TIntermAggregate::Create(fn->getReturnType(), op, arguments);
+    }
+    return TIntermAggregate::CreateBuiltInFunctionCall(*fn, arguments);
 }
 
 }  // namespace sh

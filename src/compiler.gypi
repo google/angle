@@ -33,6 +33,8 @@
             'compiler/translator/Cache.h',
             'compiler/translator/CallDAG.cpp',
             'compiler/translator/CallDAG.h',
+            'compiler/translator/ClampPointSize.cpp',
+            'compiler/translator/ClampPointSize.h',
             'compiler/translator/CodeGen.cpp',
             'compiler/translator/Common.h',
             'compiler/translator/Compiler.cpp',

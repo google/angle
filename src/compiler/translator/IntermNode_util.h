@@ -40,6 +40,11 @@ TIntermSymbol *ReferenceBuiltInVariable(const TString &name,
                                         const TSymbolTable &symbolTable,
                                         int shaderVersion);
 
+TIntermTyped *CreateBuiltInFunctionCallNode(const TString &name,
+                                            TIntermSequence *arguments,
+                                            const TSymbolTable &symbolTable,
+                                            int shaderVersion);
+
 }  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_INTERMNODEUTIL_H_

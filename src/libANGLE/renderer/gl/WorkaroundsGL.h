@@ -129,6 +129,10 @@ struct WorkaroundsGL
     // Initializing uninitialized locals caused odd behavior on Mac in a few WebGL 2 tests.
     // Tracking bug: http://anglebug/2041
     bool dontInitializeUninitializedLocals = false;
+
+    // On some NVIDIA drivers the point size range reported from the API is inconsistent with the
+    // actual behavior. Clamp the point size to the value from the API to fix this.
+    bool clampPointSize = false;
 };
 }  // namespace rx
 
