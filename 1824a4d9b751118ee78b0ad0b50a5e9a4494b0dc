@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1d6c34cb_214b940c",
+        "filename": "src/libANGLE/renderer/d3d/IndexDataManager.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-14T16:21:33Z",
+      "side": 1,
+      "message": "I don\u0027t understand, why this change?",
+      "range": {
+        "startLine": 178,
+        "startChar": 23,
+        "endLine": 178,
+        "endChar": 36
+      },
+      "revId": "1824a4d9b751118ee78b0ad0b50a5e9a4494b0dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5900a436_0f8914d2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2080,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-14T16:21:33Z",
+      "side": 1,
+      "message": "can you wrap this in a helper method? something like InstancedPointSpritesActive(programD3D, mode) or something",
+      "range": {
+        "startLine": 2079,
+        "startChar": 0,
+        "endLine": 2080,
+        "endChar": 26
+      },
+      "revId": "1824a4d9b751118ee78b0ad0b50a5e9a4494b0dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "024573e0_73621605",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2094,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-14T16:21:33Z",
+      "side": 1,
+      "message": "can you edit IndexDataManager::isStreamingIndexData to take just a gl::Context and GLenum srcType, and move the first two lines of code into isStreamingIndexData? I think this is the only place in the code it is used.",
+      "range": {
+        "startLine": 2090,
+        "startChar": 0,
+        "endLine": 2094,
+        "endChar": 76
+      },
+      "revId": "1824a4d9b751118ee78b0ad0b50a5e9a4494b0dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
