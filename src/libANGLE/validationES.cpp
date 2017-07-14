@@ -3954,12 +3954,6 @@ bool ValidateGetFramebufferAttachmentParameterivBase(ValidationContext *context,
                                                      GLenum pname,
                                                      GLsizei *numParams)
 {
-    // Only one parameter is returned from glGetFramebufferAttachmentParameteriv
-    if (numParams)
-    {
-        *numParams = 1;
-    }
-
     if (!ValidFramebufferTarget(target))
     {
         context->handleError(InvalidEnum());
@@ -3974,6 +3968,17 @@ bool ValidateGetFramebufferAttachmentParameterivBase(ValidationContext *context,
         case GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME:
         case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL:
         case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE:
+            break;
+
+        case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_NUM_VIEWS_ANGLE:
+        case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_MULTIVIEW_LAYOUT_ANGLE:
+        case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_BASE_VIEW_INDEX_ANGLE:
+        case GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_VIEWPORT_OFFSETS_ANGLE:
+            if (clientVersion < 3 || !context->getExtensions().multiview)
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), EnumNotSupported);
+                return false;
+            }
             break;
 
         case GL_FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING:
@@ -4175,6 +4180,22 @@ bool ValidateGetFramebufferAttachmentParameterivBase(ValidationContext *context,
                                          InvalidRenderbufferTextureParameter);
                     return false;
                 }
+        }
+    }
+
+    if (numParams)
+    {
+        if (pname == GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_VIEWPORT_OFFSETS_ANGLE)
+        {
+            // Only when the viewport offsets are queried we can have a varying number of output
+            // parameters.
+            const int numViews = attachmentObject ? attachmentObject->getNumViews() : 1;
+            *numParams         = numViews * 2;
+        }
+        else
+        {
+            // For all other queries we can have only one output parameter.
+            *numParams = 1;
         }
     }
 

@@ -1522,6 +1522,11 @@ void Context::getIntegervImpl(GLenum pname, GLint *params)
             *params = mExtensions.maxLabelLength;
             break;
 
+        // GL_ANGLE_multiview
+        case GL_MAX_VIEWS_ANGLE:
+            *params = mExtensions.maxViews;
+            break;
+
         // GL_EXT_disjoint_timer_query
         case GL_GPU_DISJOINT_EXT:
             *params = mImplementation->getGPUDisjoint();

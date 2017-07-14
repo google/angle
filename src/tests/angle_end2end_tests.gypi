@@ -42,6 +42,7 @@
             '<(angle_path)/src/tests/gl_tests/FenceSyncTests.cpp',
             '<(angle_path)/src/tests/gl_tests/FloatingPointSurfaceTest.cpp',
             '<(angle_path)/src/tests/gl_tests/FramebufferMixedSamplesTest.cpp',
+            '<(angle_path)/src/tests/gl_tests/FramebufferMultiviewTest.cpp',
             '<(angle_path)/src/tests/gl_tests/FramebufferRenderMipmapTest.cpp',
             '<(angle_path)/src/tests/gl_tests/FramebufferTest.cpp',
             '<(angle_path)/src/tests/gl_tests/GLSLTest.cpp',

@@ -514,6 +514,13 @@ bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsign
         return true;
     }
 
+    if (getExtensions().multiview && pname == GL_MAX_VIEWS_ANGLE)
+    {
+        *type      = GL_INT;
+        *numParams = 1;
+        return true;
+    }
+
     if (getClientVersion() < Version(3, 0))
     {
         return false;

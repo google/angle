@@ -93,6 +93,10 @@ class FramebufferAttachment final
     GLenum cubeMapFace() const;
     GLint mipLevel() const;
     GLint layer() const;
+    GLint getNumViews() const;
+    GLenum getMultiviewLayout() const;
+    GLint getBaseViewIndex() const;
+    const std::vector<Offset> &getMultiviewViewportOffsets() const;
 
     // The size of the underlying resource the attachment points to. The 'depth' value will
     // correspond to a 3D texture depth or the layer count of a 2D array texture. For Surfaces and
@@ -150,6 +154,10 @@ class FramebufferAttachment final
     GLenum mType;
     Target mTarget;
     FramebufferAttachmentObject *mResource;
+    GLint mNumViews;
+    GLenum mMultiviewLayout;
+    GLint mBaseViewIndex;
+    std::vector<Offset> mViewportOffsets;
 };
 
 // A base class for objects that FBO Attachments may point to.

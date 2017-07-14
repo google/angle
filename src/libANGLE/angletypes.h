@@ -78,6 +78,9 @@ struct Offset
     Offset(int x_in, int y_in, int z_in) : x(x_in), y(y_in), z(z_in) { }
 };
 
+bool operator==(const Offset &a, const Offset &b);
+bool operator!=(const Offset &a, const Offset &b);
+
 struct Extents
 {
     int width;

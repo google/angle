@@ -216,6 +216,16 @@ bool Box::operator!=(const Box &other) const
     return !(*this == other);
 }
 
+bool operator==(const Offset &a, const Offset &b)
+{
+    return a.x == b.x && a.y == b.y && a.z == b.z;
+}
+
+bool operator!=(const Offset &a, const Offset &b)
+{
+    return !(a == b);
+}
+
 bool operator==(const Extents &lhs, const Extents &rhs)
 {
     return lhs.width == rhs.width && lhs.height == rhs.height && lhs.depth == rhs.depth;
