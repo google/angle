@@ -22,6 +22,30 @@
       "revId": "e9133daa23d3ac0f2f7ce56b61ac192a719f1c33",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35c223b8_307a1e7f",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 47
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-14T16:32:33Z",
+      "side": 1,
+      "message": "Yes, thank you. To clarify the comment can you make it\n\n\"In ES 3.0 contexts, the binding cannot change, hence the code below is unreachable\"\n\nAnd can you also verify this by adding an ASSERT in here that the context version is \u003e\u003d 31?",
+      "parentUuid": "3f3cb892_5382c56b",
+      "range": {
+        "startLine": 141,
+        "startChar": 0,
+        "endLine": 148,
+        "endChar": 5
+      },
+      "revId": "e9133daa23d3ac0f2f7ce56b61ac192a719f1c33",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
