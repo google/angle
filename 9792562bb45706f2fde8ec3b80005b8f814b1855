@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "789cd68e_5bf590cd",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-14T10:56:37Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "0cb41b78_a6dbf6b4",
+      "revId": "9792562bb45706f2fde8ec3b80005b8f814b1855",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bc53f35f_ea9032d3",
         "filename": "src/libANGLE/Caps.h",
         "patchSetId": 7
@@ -66,6 +84,24 @@
       "side": 1,
       "message": "Agreed, this shouldn\u0027t be exposed at this level.",
       "parentUuid": "bc53f35f_ea9032d3",
+      "revId": "9792562bb45706f2fde8ec3b80005b8f814b1855",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a627eb22_4e28783b",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-14T10:56:37Z",
+      "side": 1,
+      "message": "Thanks for navigating me to a better solution.",
+      "parentUuid": "2b3de9af_ccd5f01e",
       "revId": "9792562bb45706f2fde8ec3b80005b8f814b1855",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
