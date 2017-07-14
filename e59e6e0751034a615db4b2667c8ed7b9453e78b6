@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "6f62713e_059277a8",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 46
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-14T08:46:49Z",
+      "side": 1,
+      "message": "Sorry I\u0027m not sure if I have caught your point...... \nIn current implementation Context isn\u0027t needed to pass into setVertexAttirbDivisor, and I have removed setVertexBindingDivisorImpl and setVertexAttribBindingImpl. Only when we need to change attribBinding will DIRTY_BIT_ATTRIB_XX_BINDING be set.",
+      "parentUuid": "5b3d4568_951445eb",
+      "range": {
+        "startLine": 199,
+        "startChar": 0,
+        "endLine": 204,
+        "endChar": 5
+      },
+      "revId": "e59e6e0751034a615db4b2667c8ed7b9453e78b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "98070528_60067dbc",
         "filename": "src/libANGLE/VertexArray.cpp",
         "patchSetId": 46
