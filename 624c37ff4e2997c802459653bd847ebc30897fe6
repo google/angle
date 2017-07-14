@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0c2908ec_86a9dda8",
+        "filename": "src/libANGLE/renderer/gl/ShaderGL.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-14T11:19:11Z",
+      "side": 1,
+      "message": "I hope this doesn\u0027t cause a compiler error under some compiler but it should be fine. At least we don\u0027t include the header now.",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 41
+      },
+      "revId": "624c37ff4e2997c802459653bd847ebc30897fe6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
