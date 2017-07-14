@@ -52,6 +52,24 @@
       "revId": "d52f9b3c0b75f35cb00e04f893aac6750db2a5df",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ff14595d_be5ffdc1",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 716,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-14T12:43:33Z",
+      "side": 1,
+      "message": "Seems fine to me.",
+      "parentUuid": "f981cc5c_6e370717",
+      "revId": "d52f9b3c0b75f35cb00e04f893aac6750db2a5df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
