@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "05c8eaff_02001175",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-14T13:49:06Z",
+      "side": 1,
+      "message": "Doesn\u0027t the change to IdentifyBuiltins address this?",
+      "revId": "17de90aeb960d7a3d58894272102b2c14ad989c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1141c1d6_aeadb552",
+        "filename": "src/compiler/translator/InitializeVariables.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-14T13:49:06Z",
+      "side": 1,
+      "message": "Why the change from symbol to typed? Isn\u0027t symbol more precise?",
+      "revId": "17de90aeb960d7a3d58894272102b2c14ad989c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
