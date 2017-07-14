@@ -130,7 +130,7 @@ void TranslatorGLSL::translate(TIntermBlock *root, ShCompileOptions compileOptio
     if (getShaderType() == GL_FRAGMENT_SHADER)
     {
         const bool mayHaveESSL1SecondaryOutputs =
-            IsExtensionEnabled(getExtensionBehavior(), "GL_EXT_blend_func_extended") &&
+            IsExtensionEnabled(getExtensionBehavior(), TExtension::EXT_blend_func_extended) &&
             getShaderVersion() == 100;
         const bool declareGLFragmentOutputs = IsGLSL130OrNewer(getOutputType());
 
@@ -264,26 +264,26 @@ void TranslatorGLSL::writeExtensionBehavior(TIntermNode *root, ShCompileOptions 
         {
             // For GLSL output, we don't need to emit most extensions explicitly,
             // but some we need to translate in GL compatibility profile.
-            if (iter.first == "GL_EXT_shader_texture_lod")
+            if (iter.first == TExtension::EXT_shader_texture_lod)
             {
-                sink << "#extension GL_ARB_shader_texture_lod : " << getBehaviorString(iter.second)
+                sink << "#extension GL_ARB_shader_texture_lod : " << GetBehaviorString(iter.second)
                      << "\n";
             }
 
-            if (iter.first == "GL_EXT_draw_buffers")
+            if (iter.first == TExtension::EXT_draw_buffers)
             {
-                sink << "#extension GL_ARB_draw_buffers : " << getBehaviorString(iter.second)
+                sink << "#extension GL_ARB_draw_buffers : " << GetBehaviorString(iter.second)
                      << "\n";
             }
 
-            if (iter.first == "GL_OES_geometry_shader")
+            if (iter.first == TExtension::OES_geometry_shader)
             {
-                sink << "#extension GL_ARB_geometry_shader4 : " << getBehaviorString(iter.second)
+                sink << "#extension GL_ARB_geometry_shader4 : " << GetBehaviorString(iter.second)
                      << "\n";
             }
         }
 
-        const bool isMultiview = (iter.first == "GL_OVR_multiview");
+        const bool isMultiview = (iter.first == TExtension::OVR_multiview);
         if (isMultiview && getShaderType() == GL_VERTEX_SHADER &&
             (compileOptions & SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER) != 0u)
         {

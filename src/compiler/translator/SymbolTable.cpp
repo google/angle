@@ -43,7 +43,7 @@ int TSymbolUniqueId::get() const
 }
 
 TSymbol::TSymbol(TSymbolTable *symbolTable, const TString *n)
-    : uniqueId(symbolTable->nextUniqueId()), name(n)
+    : uniqueId(symbolTable->nextUniqueId()), name(n), extension(TExtension::UNDEFINED)
 {
 }
 
@@ -300,7 +300,7 @@ TInterfaceBlockName *TSymbolTable::declareInterfaceBlockName(const TString *name
 }
 
 TInterfaceBlockName *TSymbolTable::insertInterfaceBlockNameExt(ESymbolLevel level,
-                                                               const char *ext,
+                                                               TExtension ext,
                                                                const TString *name)
 {
     TInterfaceBlockName *blockNameSymbol = new TInterfaceBlockName(this, name);
@@ -332,7 +332,7 @@ TVariable *TSymbolTable::insertVariable(ESymbolLevel level, const TString *name,
 }
 
 TVariable *TSymbolTable::insertVariableExt(ESymbolLevel level,
-                                           const char *ext,
+                                           TExtension ext,
                                            const char *name,
                                            const TType &type)
 {
@@ -361,7 +361,7 @@ TVariable *TSymbolTable::insertStructType(ESymbolLevel level, TStructure *str)
 
 void TSymbolTable::insertBuiltIn(ESymbolLevel level,
                                  TOperator op,
-                                 const char *ext,
+                                 TExtension ext,
                                  const TType *rvalue,
                                  const char *name,
                                  const TType *ptype1,
@@ -530,12 +530,13 @@ void TSymbolTable::insertBuiltInOp(ESymbolLevel level,
     const char *name = GetOperatorString(op);
     ASSERT(strlen(name) > 0);
     insertUnmangledBuiltInName(name, level);
-    insertBuiltIn(level, op, "", rvalue, name, ptype1, ptype2, ptype3, ptype4, ptype5);
+    insertBuiltIn(level, op, TExtension::UNDEFINED, rvalue, name, ptype1, ptype2, ptype3, ptype4,
+                  ptype5);
 }
 
 void TSymbolTable::insertBuiltInOp(ESymbolLevel level,
                                    TOperator op,
-                                   const char *ext,
+                                   TExtension ext,
                                    const TType *rvalue,
                                    const TType *ptype1,
                                    const TType *ptype2,
@@ -558,7 +559,7 @@ void TSymbolTable::insertBuiltInFunctionNoParameters(ESymbolLevel level,
 }
 
 void TSymbolTable::insertBuiltInFunctionNoParametersExt(ESymbolLevel level,
-                                                        const char *ext,
+                                                        TExtension ext,
                                                         TOperator op,
                                                         const TType *rvalue,
                                                         const char *name)

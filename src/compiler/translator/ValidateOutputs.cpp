@@ -51,7 +51,7 @@ ValidateOutputsTraverser::ValidateOutputsTraverser(const TExtensionBehavior &ext
     : TIntermTraverser(true, false, false),
       mMaxDrawBuffers(maxDrawBuffers),
       mAllowUnspecifiedOutputLocationResolution(
-          IsExtensionEnabled(extBehavior, "GL_EXT_blend_func_extended")),
+          IsExtensionEnabled(extBehavior, TExtension::EXT_blend_func_extended)),
       mUsesFragDepth(false)
 {
 }

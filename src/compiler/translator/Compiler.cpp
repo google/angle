@@ -430,7 +430,8 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
             arrayBoundsClamper.MarkIndirectArrayBoundsForClamping(root);
 
         if (success && (compileOptions & SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW) &&
-            parseContext.isMultiviewExtensionEnabled() && getShaderType() != GL_COMPUTE_SHADER)
+            parseContext.isExtensionEnabled(TExtension::OVR_multiview) &&
+            getShaderType() != GL_COMPUTE_SHADER)
         {
             DeclareAndInitBuiltinsForInstancedMultiview(root, mNumViews, shaderType, compileOptions,
                                                         outputType, &symbolTable);
@@ -514,7 +515,7 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
 
         if (success && shaderType == GL_FRAGMENT_SHADER && shaderVersion == 100 &&
             compileResources.EXT_draw_buffers && compileResources.MaxDrawBuffers > 1 &&
-            IsExtensionEnabled(extensionBehavior, "GL_EXT_draw_buffers"))
+            IsExtensionEnabled(extensionBehavior, TExtension::EXT_draw_buffers))
         {
             EmulateGLFragColorBroadcast(root, compileResources.MaxDrawBuffers, &outputVariables,
                                         &symbolTable, shaderVersion);

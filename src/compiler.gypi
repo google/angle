@@ -57,6 +57,7 @@
             'compiler/translator/EmulatePrecision.h',
             'compiler/translator/ExpandIntegerPowExpressions.cpp',
             'compiler/translator/ExpandIntegerPowExpressions.h',
+            'compiler/translator/ExtensionBehavior.cpp',
             'compiler/translator/ExtensionBehavior.h',
             'compiler/translator/FindMain.cpp',
             'compiler/translator/FindMain.h',

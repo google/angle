@@ -302,13 +302,13 @@ void InsertBuiltInFunctions(sh::GLenum type,
         /* The *Grad* variants are new to both vertex and fragment shaders; the fragment
          * shader specific pieces are added separately below.
          */
-        symbolTable.insertBuiltIn(ESSL1_BUILTINS, "GL_EXT_shader_texture_lod", float4,
+        symbolTable.insertBuiltIn(ESSL1_BUILTINS, TExtension::EXT_shader_texture_lod, float4,
                                   "texture2DGradEXT", sampler2D, float2, float2, float2);
-        symbolTable.insertBuiltIn(ESSL1_BUILTINS, "GL_EXT_shader_texture_lod", float4,
+        symbolTable.insertBuiltIn(ESSL1_BUILTINS, TExtension::EXT_shader_texture_lod, float4,
                                   "texture2DProjGradEXT", sampler2D, float3, float2, float2);
-        symbolTable.insertBuiltIn(ESSL1_BUILTINS, "GL_EXT_shader_texture_lod", float4,
+        symbolTable.insertBuiltIn(ESSL1_BUILTINS, TExtension::EXT_shader_texture_lod, float4,
                                   "texture2DProjGradEXT", sampler2D, float4, float2, float2);
-        symbolTable.insertBuiltIn(ESSL1_BUILTINS, "GL_EXT_shader_texture_lod", float4,
+        symbolTable.insertBuiltIn(ESSL1_BUILTINS, TExtension::EXT_shader_texture_lod, float4,
                                   "textureCubeGradEXT", samplerCube, float3, float3, float3);
     }
 
@@ -324,23 +324,23 @@ void InsertBuiltInFunctions(sh::GLenum type,
 
         if (resources.OES_standard_derivatives)
         {
-            symbolTable.insertBuiltInOp(ESSL1_BUILTINS, EOpDFdx, "GL_OES_standard_derivatives",
-                                        genType, genType);
-            symbolTable.insertBuiltInOp(ESSL1_BUILTINS, EOpDFdy, "GL_OES_standard_derivatives",
-                                        genType, genType);
-            symbolTable.insertBuiltInOp(ESSL1_BUILTINS, EOpFwidth, "GL_OES_standard_derivatives",
-                                        genType, genType);
+            symbolTable.insertBuiltInOp(ESSL1_BUILTINS, EOpDFdx,
+                                        TExtension::OES_standard_derivatives, genType, genType);
+            symbolTable.insertBuiltInOp(ESSL1_BUILTINS, EOpDFdy,
+                                        TExtension::OES_standard_derivatives, genType, genType);
+            symbolTable.insertBuiltInOp(ESSL1_BUILTINS, EOpFwidth,
+                                        TExtension::OES_standard_derivatives, genType, genType);
         }
 
         if (resources.EXT_shader_texture_lod)
         {
-            symbolTable.insertBuiltIn(ESSL1_BUILTINS, "GL_EXT_shader_texture_lod", float4,
+            symbolTable.insertBuiltIn(ESSL1_BUILTINS, TExtension::EXT_shader_texture_lod, float4,
                                       "texture2DLodEXT", sampler2D, float2, float1);
-            symbolTable.insertBuiltIn(ESSL1_BUILTINS, "GL_EXT_shader_texture_lod", float4,
+            symbolTable.insertBuiltIn(ESSL1_BUILTINS, TExtension::EXT_shader_texture_lod, float4,
                                       "texture2DProjLodEXT", sampler2D, float3, float1);
-            symbolTable.insertBuiltIn(ESSL1_BUILTINS, "GL_EXT_shader_texture_lod", float4,
+            symbolTable.insertBuiltIn(ESSL1_BUILTINS, TExtension::EXT_shader_texture_lod, float4,
                                       "texture2DProjLodEXT", sampler2D, float4, float1);
-            symbolTable.insertBuiltIn(ESSL1_BUILTINS, "GL_EXT_shader_texture_lod", float4,
+            symbolTable.insertBuiltIn(ESSL1_BUILTINS, TExtension::EXT_shader_texture_lod, float4,
                                       "textureCubeLodEXT", samplerCube, float3, float1);
         }
     }
@@ -395,19 +395,19 @@ void InsertBuiltInFunctions(sh::GLenum type,
     {
         const TType *samplerExternal2DY2YEXT = TCache::getType(EbtSamplerExternal2DY2YEXT);
 
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, "GL_EXT_YUV_target", float4, "texture",
+        symbolTable.insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, float4, "texture",
                                   samplerExternal2DY2YEXT, float2);
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, "GL_EXT_YUV_target", float4, "textureProj",
+        symbolTable.insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, float4, "textureProj",
                                   samplerExternal2DY2YEXT, float3);
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, "GL_EXT_YUV_target", float4, "textureProj",
+        symbolTable.insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, float4, "textureProj",
                                   samplerExternal2DY2YEXT, float4);
 
         const TType *yuvCscStandardEXT = TCache::getType(EbtYuvCscStandardEXT);
 
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, "GL_EXT_YUV_target", float3, "rgb_2_yuv", float3,
-                                  yuvCscStandardEXT);
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, "GL_EXT_YUV_target", float3, "yuv_2_rgb", float3,
-                                  yuvCscStandardEXT);
+        symbolTable.insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, float3, "rgb_2_yuv",
+                                  float3, yuvCscStandardEXT);
+        symbolTable.insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, float3, "yuv_2_rgb",
+                                  float3, yuvCscStandardEXT);
     }
 
     if (type == GL_FRAGMENT_SHADER)
@@ -437,12 +437,12 @@ void InsertBuiltInFunctions(sh::GLenum type,
         {
             const TType *samplerExternal2DY2YEXT = TCache::getType(EbtSamplerExternal2DY2YEXT);
 
-            symbolTable.insertBuiltIn(ESSL3_BUILTINS, "GL_EXT_YUV_target", float4, "texture",
+            symbolTable.insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, float4, "texture",
                                       samplerExternal2DY2YEXT, float2, float1);
-            symbolTable.insertBuiltIn(ESSL3_BUILTINS, "GL_EXT_YUV_target", float4, "textureProj",
-                                      samplerExternal2DY2YEXT, float3, float1);
-            symbolTable.insertBuiltIn(ESSL3_BUILTINS, "GL_EXT_YUV_target", float4, "textureProj",
-                                      samplerExternal2DY2YEXT, float4, float1);
+            symbolTable.insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, float4,
+                                      "textureProj", samplerExternal2DY2YEXT, float3, float1);
+            symbolTable.insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, float4,
+                                      "textureProj", samplerExternal2DY2YEXT, float4, float1);
         }
     }
 
@@ -487,7 +487,7 @@ void InsertBuiltInFunctions(sh::GLenum type,
     {
         const TType *samplerExternal2DY2YEXT = TCache::getType(EbtSamplerExternal2DY2YEXT);
 
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, "GL_EXT_YUV_target", int2, "textureSize",
+        symbolTable.insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, int2, "textureSize",
                                   samplerExternal2DY2YEXT, int1);
     }
 
@@ -575,7 +575,7 @@ void InsertBuiltInFunctions(sh::GLenum type,
     {
         const TType *samplerExternal2DY2YEXT = TCache::getType(EbtSamplerExternal2DY2YEXT);
 
-        symbolTable.insertBuiltIn(ESSL3_BUILTINS, "GL_EXT_YUV_target", float4, "texelFetch",
+        symbolTable.insertBuiltIn(ESSL3_BUILTINS, TExtension::EXT_YUV_target, float4, "texelFetch",
                                   samplerExternal2DY2YEXT, int2, int1);
     }
 
@@ -678,7 +678,7 @@ void InsertBuiltInFunctions(sh::GLenum type,
 
     if (type == GL_GEOMETRY_SHADER_OES)
     {
-        const char *extension = "GL_OES_geometry_shader";
+        TExtension extension = TExtension::OES_geometry_shader;
         symbolTable.insertBuiltInFunctionNoParametersExt(ESSL3_1_BUILTINS, extension, EOpEmitVertex,
                                                          voidType, "EmitVertex");
         symbolTable.insertBuiltInFunctionNoParametersExt(ESSL3_1_BUILTINS, extension,
@@ -727,7 +727,7 @@ void InsertBuiltInFunctions(sh::GLenum type,
                                EbpMedium);
     if (resources.EXT_blend_func_extended)
     {
-        symbolTable.insertConstIntExt(COMMON_BUILTINS, "GL_EXT_blend_func_extended",
+        symbolTable.insertConstIntExt(COMMON_BUILTINS, TExtension::EXT_blend_func_extended,
                                       "gl_MaxDualSourceDrawBuffersEXT",
                                       resources.MaxDualSourceDrawBuffers, EbpMedium);
     }
@@ -789,7 +789,7 @@ void InsertBuiltInFunctions(sh::GLenum type,
 
     if (resources.OES_geometry_shader)
     {
-        const char *ext = "GL_OES_geometry_shader";
+        TExtension ext = TExtension::OES_geometry_shader;
         symbolTable.insertConstIntExt(ESSL3_1_BUILTINS, ext, "gl_MaxGeometryInputComponents",
                                       resources.MaxGeometryInputComponents, EbpMedium);
         symbolTable.insertConstIntExt(ESSL3_1_BUILTINS, ext, "gl_MaxGeometryOutputComponents",
@@ -823,12 +823,12 @@ void IdentifyBuiltIns(sh::GLenum type,
 
     if (resources.OVR_multiview && type != GL_COMPUTE_SHADER)
     {
-        symbolTable.insertVariableExt(ESSL3_BUILTINS, "GL_OVR_multiview", "gl_ViewID_OVR",
+        symbolTable.insertVariableExt(ESSL3_BUILTINS, TExtension::OVR_multiview, "gl_ViewID_OVR",
                                       TType(EbtUInt, EbpHigh, EvqViewIDOVR, 1));
 
         // ESSL 1.00 doesn't have unsigned integers, so gl_ViewID_OVR is a signed integer in ESSL
         // 1.00. This is specified in the WEBGL_multiview spec.
-        symbolTable.insertVariableExt(ESSL1_BUILTINS, "GL_OVR_multiview", "gl_ViewID_OVR",
+        symbolTable.insertVariableExt(ESSL1_BUILTINS, TExtension::OVR_multiview, "gl_ViewID_OVR",
                                       TType(EbtInt, EbpHigh, EvqViewIDOVR, 1));
     }
 
@@ -859,18 +859,18 @@ void IdentifyBuiltIns(sh::GLenum type,
             if (resources.EXT_blend_func_extended)
             {
                 symbolTable.insertVariableExt(
-                    ESSL1_BUILTINS, "GL_EXT_blend_func_extended", "gl_SecondaryFragColorEXT",
+                    ESSL1_BUILTINS, TExtension::EXT_blend_func_extended, "gl_SecondaryFragColorEXT",
                     TType(EbtFloat, EbpMedium, EvqSecondaryFragColorEXT, 4));
                 TType secondaryFragData(EbtFloat, EbpMedium, EvqSecondaryFragDataEXT, 4, 1);
                 secondaryFragData.makeArray(resources.MaxDualSourceDrawBuffers);
-                symbolTable.insertVariableExt(ESSL1_BUILTINS, "GL_EXT_blend_func_extended",
+                symbolTable.insertVariableExt(ESSL1_BUILTINS, TExtension::EXT_blend_func_extended,
                                               "gl_SecondaryFragDataEXT", secondaryFragData);
             }
 
             if (resources.EXT_frag_depth)
             {
                 symbolTable.insertVariableExt(
-                    ESSL1_BUILTINS, "GL_EXT_frag_depth", "gl_FragDepthEXT",
+                    ESSL1_BUILTINS, TExtension::EXT_frag_depth, "gl_FragDepthEXT",
                     TType(EbtFloat, resources.FragmentPrecisionHigh ? EbpHigh : EbpMedium,
                           EvqFragDepthEXT, 1));
             }
@@ -885,28 +885,30 @@ void IdentifyBuiltIns(sh::GLenum type,
 
                 if (resources.EXT_shader_framebuffer_fetch)
                 {
-                    symbolTable.insertVariableExt(ESSL1_BUILTINS, "GL_EXT_shader_framebuffer_fetch",
+                    symbolTable.insertVariableExt(ESSL1_BUILTINS,
+                                                  TExtension::EXT_shader_framebuffer_fetch,
                                                   "gl_LastFragData", lastFragData);
                 }
                 else if (resources.NV_shader_framebuffer_fetch)
                 {
-                    symbolTable.insertVariableExt(ESSL1_BUILTINS, "GL_NV_shader_framebuffer_fetch",
-                                                  "gl_LastFragColor",
-                                                  TType(EbtFloat, EbpMedium, EvqLastFragColor, 4));
-                    symbolTable.insertVariableExt(ESSL1_BUILTINS, "GL_NV_shader_framebuffer_fetch",
+                    symbolTable.insertVariableExt(
+                        ESSL1_BUILTINS, TExtension::NV_shader_framebuffer_fetch, "gl_LastFragColor",
+                        TType(EbtFloat, EbpMedium, EvqLastFragColor, 4));
+                    symbolTable.insertVariableExt(ESSL1_BUILTINS,
+                                                  TExtension::NV_shader_framebuffer_fetch,
                                                   "gl_LastFragData", lastFragData);
                 }
             }
             else if (resources.ARM_shader_framebuffer_fetch)
             {
-                symbolTable.insertVariableExt(ESSL1_BUILTINS, "GL_ARM_shader_framebuffer_fetch",
-                                              "gl_LastFragColorARM",
-                                              TType(EbtFloat, EbpMedium, EvqLastFragColor, 4));
+                symbolTable.insertVariableExt(
+                    ESSL1_BUILTINS, TExtension::ARM_shader_framebuffer_fetch, "gl_LastFragColorARM",
+                    TType(EbtFloat, EbpMedium, EvqLastFragColor, 4));
             }
 
             if (resources.OES_geometry_shader)
             {
-                const char *extension = "GL_OES_geometry_shader";
+                TExtension extension = TExtension::OES_geometry_shader;
                 symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension, "gl_PrimitiveID",
                                               TType(EbtInt, EbpHigh, EvqPrimitiveID, 1));
                 symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension, "gl_Layer",
@@ -950,7 +952,7 @@ void IdentifyBuiltIns(sh::GLenum type,
 
         case GL_GEOMETRY_SHADER_OES:
         {
-            const char *extension = "GL_OES_geometry_shader";
+            TExtension extension = TExtension::OES_geometry_shader;
 
             // Add built-in interface block gl_PerVertex and the built-in array gl_in.
             // TODO(jiawei.shao@intel.com): implement GL_OES_geometry_point_size.
@@ -996,40 +998,64 @@ void IdentifyBuiltIns(sh::GLenum type,
 void InitExtensionBehavior(const ShBuiltInResources &resources, TExtensionBehavior &extBehavior)
 {
     if (resources.OES_standard_derivatives)
-        extBehavior["GL_OES_standard_derivatives"] = EBhUndefined;
+    {
+        extBehavior[TExtension::OES_standard_derivatives] = EBhUndefined;
+    }
     if (resources.OES_EGL_image_external)
-        extBehavior["GL_OES_EGL_image_external"] = EBhUndefined;
+    {
+        extBehavior[TExtension::OES_EGL_image_external] = EBhUndefined;
+    }
     if (resources.OES_EGL_image_external_essl3)
-        extBehavior["GL_OES_EGL_image_external_essl3"] = EBhUndefined;
+    {
+        extBehavior[TExtension::OES_EGL_image_external_essl3] = EBhUndefined;
+    }
     if (resources.NV_EGL_stream_consumer_external)
-        extBehavior["GL_NV_EGL_stream_consumer_external"] = EBhUndefined;
+    {
+        extBehavior[TExtension::NV_EGL_stream_consumer_external] = EBhUndefined;
+    }
     if (resources.ARB_texture_rectangle)
-        extBehavior["GL_ARB_texture_rectangle"] = EBhUndefined;
+    {
+        extBehavior[TExtension::ARB_texture_rectangle] = EBhUndefined;
+    }
     if (resources.EXT_blend_func_extended)
-        extBehavior["GL_EXT_blend_func_extended"] = EBhUndefined;
+    {
+        extBehavior[TExtension::EXT_blend_func_extended] = EBhUndefined;
+    }
     if (resources.EXT_draw_buffers)
-        extBehavior["GL_EXT_draw_buffers"] = EBhUndefined;
+    {
+        extBehavior[TExtension::EXT_draw_buffers] = EBhUndefined;
+    }
     if (resources.EXT_frag_depth)
-        extBehavior["GL_EXT_frag_depth"] = EBhUndefined;
+    {
+        extBehavior[TExtension::EXT_frag_depth] = EBhUndefined;
+    }
     if (resources.EXT_shader_texture_lod)
-        extBehavior["GL_EXT_shader_texture_lod"] = EBhUndefined;
+    {
+        extBehavior[TExtension::EXT_shader_texture_lod] = EBhUndefined;
+    }
     if (resources.EXT_shader_framebuffer_fetch)
-        extBehavior["GL_EXT_shader_framebuffer_fetch"] = EBhUndefined;
+    {
+        extBehavior[TExtension::EXT_shader_framebuffer_fetch] = EBhUndefined;
+    }
     if (resources.NV_shader_framebuffer_fetch)
-        extBehavior["GL_NV_shader_framebuffer_fetch"] = EBhUndefined;
+    {
+        extBehavior[TExtension::NV_shader_framebuffer_fetch] = EBhUndefined;
+    }
     if (resources.ARM_shader_framebuffer_fetch)
-        extBehavior["GL_ARM_shader_framebuffer_fetch"] = EBhUndefined;
+    {
+        extBehavior[TExtension::ARM_shader_framebuffer_fetch] = EBhUndefined;
+    }
     if (resources.OVR_multiview)
     {
-        extBehavior["GL_OVR_multiview"] = EBhUndefined;
+        extBehavior[TExtension::OVR_multiview] = EBhUndefined;
     }
     if (resources.EXT_YUV_target)
     {
-        extBehavior["GL_EXT_YUV_target"] = EBhUndefined;
+        extBehavior[TExtension::EXT_YUV_target] = EBhUndefined;
     }
     if (resources.OES_geometry_shader)
     {
-        extBehavior["GL_OES_geometry_shader"] = EBhUndefined;
+        extBehavior[TExtension::OES_geometry_shader] = EBhUndefined;
     }
 }
 

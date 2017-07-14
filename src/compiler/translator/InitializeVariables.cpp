@@ -107,7 +107,7 @@ void InsertInitCode(TIntermSequence *mainBody,
         {
             initializedSymbol = ReferenceBuiltInVariable(name, symbolTable, shaderVersion);
             if (initializedSymbol->getQualifier() == EvqFragData &&
-                !IsExtensionEnabled(extensionBehavior, "GL_EXT_draw_buffers"))
+                !IsExtensionEnabled(extensionBehavior, TExtension::EXT_draw_buffers))
             {
                 // If GL_EXT_draw_buffers is disabled, only the 0th index of gl_FragData can be
                 // written to.

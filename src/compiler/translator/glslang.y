@@ -146,7 +146,7 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, void *scanner, cons
 }
 
 #define ES3_OR_NEWER_OR_MULTIVIEW(TOKEN, LINE, REASON) {  \
-    if (context->getShaderVersion() < 300 && !context->isMultiviewExtensionEnabled()) {  \
+    if (context->getShaderVersion() < 300 && !context->isExtensionEnabled(TExtension::OVR_multiview)) {  \
         context->error(LINE, REASON " supported in GLSL ES 3.00 and above only", TOKEN);  \
     }  \
 }
@@ -279,7 +279,7 @@ primary_expression
         $$ = context->addScalarLiteral(unionArray, @1);
     }
     | YUVCSCSTANDARDEXTCONSTANT {
-        if (!context->isExtensionEnabled("GL_EXT_YUV_target")) {
+        if (!context->isExtensionEnabled(TExtension::EXT_YUV_target)) {
            context->error(@1, "unsupported value", $1.string->c_str());
         }
         TConstantUnion *unionArray = new TConstantUnion[1];
@@ -1049,7 +1049,7 @@ type_specifier_nonarray
         $$.setMatrix(4, 3);
     }
     | YUVCSCSTANDARDEXT {
-        if (!context->isExtensionEnabled("GL_EXT_YUV_target")) {
+        if (!context->isExtensionEnabled(TExtension::EXT_YUV_target)) {
             context->error(@1, "unsupported type", "yuvCscStandardEXT");
         }
         $$.initialize(EbtYuvCscStandardEXT, @1);
@@ -1109,20 +1109,20 @@ type_specifier_nonarray
         $$.initialize(EbtSampler2DArrayShadow, @1);
     }
     | SAMPLER_EXTERNAL_OES {
-        if (!context->supportsExtension("GL_OES_EGL_image_external") &&
-            !context->supportsExtension("GL_NV_EGL_stream_consumer_external")) {
+        if (!context->supportsExtension(TExtension::OES_EGL_image_external) &&
+            !context->supportsExtension(TExtension::NV_EGL_stream_consumer_external)) {
             context->error(@1, "unsupported type", "samplerExternalOES");
         }
         $$.initialize(EbtSamplerExternalOES, @1);
     }
     | SAMPLEREXTERNAL2DY2YEXT {
-        if (!context->isExtensionEnabled("GL_EXT_YUV_target")) {
+        if (!context->isExtensionEnabled(TExtension::EXT_YUV_target)) {
             context->error(@1, "unsupported type", "__samplerExternal2DY2YEXT");
         }
         $$.initialize(EbtSamplerExternal2DY2YEXT, @1);
     }
     | SAMPLER2DRECT {
-        if (!context->supportsExtension("GL_ARB_texture_rectangle")) {
+        if (!context->supportsExtension(TExtension::ARB_texture_rectangle)) {
             context->error(@1, "unsupported type", "sampler2DRect");
         }
         $$.initialize(EbtSampler2DRect, @1);

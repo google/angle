@@ -189,7 +189,6 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mUsesSecondaryOutputs(false),
       mMinProgramTexelOffset(resources.MinProgramTexelOffset),
       mMaxProgramTexelOffset(resources.MaxProgramTexelOffset),
-      mMultiviewAvailable(resources.OVR_multiview == 1),
       mComputeShaderLocalSizeDeclared(false),
       mNumViews(-1),
       mMaxNumViews(resources.MaxViewsOVR),
@@ -1146,24 +1145,25 @@ void TParseContext::checkIsParameterQualifierValid(
     }
 }
 
-bool TParseContext::checkCanUseExtension(const TSourceLoc &line, const TString &extension)
+bool TParseContext::checkCanUseExtension(const TSourceLoc &line, TExtension extension)
 {
+    ASSERT(extension != TExtension::UNDEFINED);
     const TExtensionBehavior &extBehavior   = extensionBehavior();
-    TExtensionBehavior::const_iterator iter = extBehavior.find(extension.c_str());
+    TExtensionBehavior::const_iterator iter = extBehavior.find(extension);
     if (iter == extBehavior.end())
     {
-        error(line, "extension is not supported", extension.c_str());
+        error(line, "extension is not supported", GetExtensionNameString(extension));
         return false;
     }
     // In GLSL ES, an extension's default behavior is "disable".
     if (iter->second == EBhDisable || iter->second == EBhUndefined)
     {
-        error(line, "extension is disabled", extension.c_str());
+        error(line, "extension is disabled", GetExtensionNameString(extension));
         return false;
     }
     if (iter->second == EBhWarn)
     {
-        warning(line, "extension is being used", extension.c_str());
+        warning(line, "extension is being used", GetExtensionNameString(extension));
         return true;
     }
 
@@ -1212,7 +1212,8 @@ void TParseContext::declarationQualifierErrorCheck(const sh::TQualifier qualifie
 
     // If multiview extension is enabled, "in" qualifier is allowed in the vertex shader in previous
     // parsing steps. So it needs to be checked here.
-    if (isMultiviewExtensionEnabled() && mShaderVersion < 300 && qualifier == EvqVertexIn)
+    if (isExtensionEnabled(TExtension::OVR_multiview) && mShaderVersion < 300 &&
+        qualifier == EvqVertexIn)
     {
         error(location, "storage qualifier supported in GLSL ES 3.00 and above only", "in");
     }
@@ -1626,16 +1627,16 @@ void TParseContext::checkInvariantVariableQualifier(bool invariant,
     }
 }
 
-bool TParseContext::supportsExtension(const char *extension)
+bool TParseContext::supportsExtension(TExtension extension)
 {
     const TExtensionBehavior &extbehavior   = extensionBehavior();
     TExtensionBehavior::const_iterator iter = extbehavior.find(extension);
     return (iter != extbehavior.end());
 }
 
-bool TParseContext::isExtensionEnabled(const char *extension) const
+bool TParseContext::isExtensionEnabled(TExtension extension) const
 {
-    return ::IsExtensionEnabled(extensionBehavior(), extension);
+    return IsExtensionEnabled(extensionBehavior(), extension);
 }
 
 void TParseContext::handleExtensionDirective(const TSourceLoc &loc,
@@ -1709,8 +1710,7 @@ const TVariable *TParseContext::getNamedVariable(const TSourceLoc &location,
 
     const TVariable *variable = static_cast<const TVariable *>(symbol);
 
-    if (symbolTable.findBuiltIn(variable->getName(), mShaderVersion) &&
-        !variable->getExtension().empty())
+    if (variable->getExtension() != TExtension::UNDEFINED)
     {
         checkCanUseExtension(location, variable->getExtension());
     }
@@ -2954,7 +2954,8 @@ void TParseContext::parseGlobalLayoutQualifier(const TTypeQualifierBuilder &type
             return;
         }
     }
-    else if (isMultiviewExtensionEnabled() && typeQualifier.qualifier == EvqVertexIn)
+    else if (isExtensionEnabled(TExtension::OVR_multiview) &&
+             typeQualifier.qualifier == EvqVertexIn)
     {
         // This error is only specified in WebGL, but tightens unspecified behavior in the native
         // specification.
@@ -3826,7 +3827,7 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
         {
             if (baseExpression->getQualifier() == EvqFragData && index > 0)
             {
-                if (!isExtensionEnabled("GL_EXT_draw_buffers"))
+                if (!isExtensionEnabled(TExtension::EXT_draw_buffers))
                 {
                     outOfRangeError(outOfRangeIndexIsError, location,
                                     "array index for gl_FragData must be zero when "
@@ -4059,7 +4060,7 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierTyp
         error(qualifierTypeLine, "invalid layout qualifier: location requires an argument",
               qualifierType.c_str());
     }
-    else if (qualifierType == "yuv" && isExtensionEnabled("GL_EXT_YUV_target") &&
+    else if (qualifierType == "yuv" && isExtensionEnabled(TExtension::EXT_YUV_target) &&
              mShaderType == GL_FRAGMENT_SHADER)
     {
         qualifier.yuv = true;
@@ -4129,43 +4130,46 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierTyp
         checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
         qualifier.imageInternalFormat = EiifR32UI;
     }
-    else if (qualifierType == "points" && isExtensionEnabled("GL_OES_geometry_shader") &&
+    else if (qualifierType == "points" && isExtensionEnabled(TExtension::OES_geometry_shader) &&
              mShaderType == GL_GEOMETRY_SHADER_OES)
     {
         checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
         qualifier.primitiveType = EptPoints;
     }
-    else if (qualifierType == "lines" && isExtensionEnabled("GL_OES_geometry_shader") &&
+    else if (qualifierType == "lines" && isExtensionEnabled(TExtension::OES_geometry_shader) &&
              mShaderType == GL_GEOMETRY_SHADER_OES)
     {
         checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
         qualifier.primitiveType = EptLines;
     }
-    else if (qualifierType == "lines_adjacency" && isExtensionEnabled("GL_OES_geometry_shader") &&
+    else if (qualifierType == "lines_adjacency" &&
+             isExtensionEnabled(TExtension::OES_geometry_shader) &&
              mShaderType == GL_GEOMETRY_SHADER_OES)
     {
         checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
         qualifier.primitiveType = EptLinesAdjacency;
     }
-    else if (qualifierType == "triangles" && isExtensionEnabled("GL_OES_geometry_shader") &&
+    else if (qualifierType == "triangles" && isExtensionEnabled(TExtension::OES_geometry_shader) &&
              mShaderType == GL_GEOMETRY_SHADER_OES)
     {
         checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
         qualifier.primitiveType = EptTriangles;
     }
     else if (qualifierType == "triangles_adjacency" &&
-             isExtensionEnabled("GL_OES_geometry_shader") && mShaderType == GL_GEOMETRY_SHADER_OES)
+             isExtensionEnabled(TExtension::OES_geometry_shader) &&
+             mShaderType == GL_GEOMETRY_SHADER_OES)
     {
         checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
         qualifier.primitiveType = EptTrianglesAdjacency;
     }
-    else if (qualifierType == "line_strip" && isExtensionEnabled("GL_OES_geometry_shader") &&
+    else if (qualifierType == "line_strip" && isExtensionEnabled(TExtension::OES_geometry_shader) &&
              mShaderType == GL_GEOMETRY_SHADER_OES)
     {
         checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
         qualifier.primitiveType = EptLineStrip;
     }
-    else if (qualifierType == "triangle_strip" && isExtensionEnabled("GL_OES_geometry_shader") &&
+    else if (qualifierType == "triangle_strip" &&
+             isExtensionEnabled(TExtension::OES_geometry_shader) &&
              mShaderType == GL_GEOMETRY_SHADER_OES)
     {
         checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310);
@@ -4317,17 +4321,19 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const TString &qualifierTyp
         parseLocalSize(qualifierType, qualifierTypeLine, intValue, intValueLine, intValueString, 2u,
                        &qualifier.localSize);
     }
-    else if (qualifierType == "num_views" && isMultiviewExtensionEnabled() &&
+    else if (qualifierType == "num_views" && isExtensionEnabled(TExtension::OVR_multiview) &&
              mShaderType == GL_VERTEX_SHADER)
     {
         parseNumViews(intValue, intValueLine, intValueString, &qualifier.numViews);
     }
-    else if (qualifierType == "invocations" && isExtensionEnabled("GL_OES_geometry_shader") &&
+    else if (qualifierType == "invocations" &&
+             isExtensionEnabled(TExtension::OES_geometry_shader) &&
              mShaderType == GL_GEOMETRY_SHADER_OES)
     {
         parseInvocations(intValue, intValueLine, intValueString, &qualifier.invocations);
     }
-    else if (qualifierType == "max_vertices" && isExtensionEnabled("GL_OES_geometry_shader") &&
+    else if (qualifierType == "max_vertices" &&
+             isExtensionEnabled(TExtension::OES_geometry_shader) &&
              mShaderType == GL_GEOMETRY_SHADER_OES)
     {
         parseMaxVertices(intValue, intValueLine, intValueString, &qualifier.maxVertices);
@@ -4375,7 +4381,7 @@ TStorageQualifierWrapper *TParseContext::parseInQualifier(const TSourceLoc &loc)
     {
         case GL_VERTEX_SHADER:
         {
-            if (mShaderVersion < 300 && !isMultiviewExtensionEnabled())
+            if (mShaderVersion < 300 && !isExtensionEnabled(TExtension::OVR_multiview))
             {
                 error(loc, "storage qualifier supported in GLSL ES 3.00 and above only", "in");
             }
@@ -5496,7 +5502,7 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(TFunction *fnCall,
             //
             // A declared function.
             //
-            if (builtIn && !fnCandidate->getExtension().empty())
+            if (builtIn && fnCandidate->getExtension() != TExtension::UNDEFINED)
             {
                 checkCanUseExtension(loc, fnCandidate->getExtension());
             }

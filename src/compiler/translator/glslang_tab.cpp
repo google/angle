@@ -416,7 +416,7 @@ extern void yyerror(YYLTYPE* yylloc, TParseContext* context, void *scanner, cons
 }
 
 #define ES3_OR_NEWER_OR_MULTIVIEW(TOKEN, LINE, REASON) {  \
-    if (context->getShaderVersion() < 300 && !context->isMultiviewExtensionEnabled()) {  \
+    if (context->getShaderVersion() < 300 && !context->isExtensionEnabled(TExtension::OVR_multiview)) {  \
         context->error(LINE, REASON " supported in GLSL ES 3.00 and above only", TOKEN);  \
     }  \
 }
@@ -2586,7 +2586,7 @@ yyreduce:
   case 10:
 
     {
-        if (!context->isExtensionEnabled("GL_EXT_YUV_target")) {
+        if (!context->isExtensionEnabled(TExtension::EXT_YUV_target)) {
            context->error((yylsp[0]), "unsupported value", (yyvsp[0].lex).string->c_str());
         }
         TConstantUnion *unionArray = new TConstantUnion[1];
@@ -4089,7 +4089,7 @@ yyreduce:
   case 189:
 
     {
-        if (!context->isExtensionEnabled("GL_EXT_YUV_target")) {
+        if (!context->isExtensionEnabled(TExtension::EXT_YUV_target)) {
             context->error((yylsp[0]), "unsupported type", "yuvCscStandardEXT");
         }
         (yyval.interm.typeSpecifierNonArray).initialize(EbtYuvCscStandardEXT, (yylsp[0]));
@@ -4244,8 +4244,8 @@ yyreduce:
   case 208:
 
     {
-        if (!context->supportsExtension("GL_OES_EGL_image_external") &&
-            !context->supportsExtension("GL_NV_EGL_stream_consumer_external")) {
+        if (!context->supportsExtension(TExtension::OES_EGL_image_external) &&
+            !context->supportsExtension(TExtension::NV_EGL_stream_consumer_external)) {
             context->error((yylsp[0]), "unsupported type", "samplerExternalOES");
         }
         (yyval.interm.typeSpecifierNonArray).initialize(EbtSamplerExternalOES, (yylsp[0]));
@@ -4256,7 +4256,7 @@ yyreduce:
   case 209:
 
     {
-        if (!context->isExtensionEnabled("GL_EXT_YUV_target")) {
+        if (!context->isExtensionEnabled(TExtension::EXT_YUV_target)) {
             context->error((yylsp[0]), "unsupported type", "__samplerExternal2DY2YEXT");
         }
         (yyval.interm.typeSpecifierNonArray).initialize(EbtSamplerExternal2DY2YEXT, (yylsp[0]));
@@ -4267,7 +4267,7 @@ yyreduce:
   case 210:
 
     {
-        if (!context->supportsExtension("GL_ARB_texture_rectangle")) {
+        if (!context->supportsExtension(TExtension::ARB_texture_rectangle)) {
             context->error((yylsp[0]), "unsupported type", "sampler2DRect");
         }
         (yyval.interm.typeSpecifierNonArray).initialize(EbtSampler2DRect, (yylsp[0]));

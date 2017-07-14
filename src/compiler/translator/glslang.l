@@ -80,7 +80,7 @@ static int ES2_ident_ES3_keyword_multiview_keyword(TParseContext *context, int t
 static int ES2_ident_ES3_reserved_ES3_1_keyword(TParseContext *context, int token);
 static int ES2_and_ES3_reserved_ES3_1_keyword(TParseContext *context, int token);
 static int ES2_and_ES3_ident_ES3_1_keyword(TParseContext *context, int token);
-static int ES3_extension_keyword_else_ident(TParseContext *context, const char *extension, int token);
+static int ES3_extension_keyword_else_ident(TParseContext *context, TExtension extension, int token);
 static int uint_constant(TParseContext *context);
 static int int_constant(TParseContext *context);
 static int float_constant(yyscan_t yyscanner);
@@ -198,13 +198,13 @@ O           [0-7]
 "sampler2DShadow"      { return ES2_reserved_ES3_keyword(context, SAMPLER2DSHADOW); }
 "samplerCubeShadow"    { return ES2_ident_ES3_keyword(context, SAMPLERCUBESHADOW); }
 "sampler2DArrayShadow" { return ES2_ident_ES3_keyword(context, SAMPLER2DARRAYSHADOW); }
-"__samplerExternal2DY2YEXT"   { return ES3_extension_keyword_else_ident(context, "GL_EXT_YUV_target", SAMPLEREXTERNAL2DY2YEXT); }
+"__samplerExternal2DY2YEXT"   { return ES3_extension_keyword_else_ident(context, TExtension::EXT_YUV_target, SAMPLEREXTERNAL2DY2YEXT); }
 
 "struct"       { return STRUCT; }
 
 "layout"  { return ES2_ident_ES3_keyword_multiview_keyword(context, LAYOUT); }
 
-"yuvCscStandardEXT"    { return ES3_extension_keyword_else_ident(context, "GL_EXT_YUV_target", YUVCSCSTANDARDEXT); }
+"yuvCscStandardEXT"    { return ES3_extension_keyword_else_ident(context, TExtension::EXT_YUV_target, YUVCSCSTANDARDEXT); }
 "itu_601"              { return yuvcscstandardext_constant(context); }
 "itu_601_full_range"   { return yuvcscstandardext_constant(context); }
 "itu_709"              { return yuvcscstandardext_constant(context); }
@@ -523,7 +523,7 @@ int ES2_ident_ES3_keyword_multiview_keyword(TParseContext *context, int token)
 
     // not a reserved word in GLSL ES 1.00, so could be used as an identifier/type name
     // except when multiview extension is enabled
-    if (context->getShaderVersion() < 300 && !context->isMultiviewExtensionEnabled())
+    if (context->getShaderVersion() < 300 && !context->isExtensionEnabled(TExtension::OVR_multiview))
     {
         yylval->lex.string = NewPoolTString(yytext);
         return check_type(yyscanner);
@@ -559,7 +559,7 @@ int ES2_and_ES3_ident_ES3_1_keyword(TParseContext *context, int token)
     return token;
 }
 
-int ES3_extension_keyword_else_ident(TParseContext *context, const char* extension, int token)
+int ES3_extension_keyword_else_ident(TParseContext *context, TExtension extension, int token)
 {
     struct yyguts_t* yyg = (struct yyguts_t*) context->getScanner();
     yyscan_t yyscanner = (yyscan_t) context->getScanner();
@@ -641,7 +641,7 @@ int yuvcscstandardext_constant(TParseContext *context)
     yyscan_t yyscanner = (yyscan_t) context->getScanner();
 
     // a reserved word in GLSL ES 3.00 with enabled extension, otherwise could be used as an identifier/type name
-    if (context->getShaderVersion() >= 300 && context->isExtensionEnabled("GL_EXT_YUV_target"))
+    if (context->getShaderVersion() >= 300 && context->isExtensionEnabled(TExtension::EXT_YUV_target))
     {
         yylval->lex.string = NewPoolTString(yytext);
         return YUVCSCSTANDARDEXTCONSTANT;
@@ -686,7 +686,7 @@ int glslang_scan(size_t count, const char* const string[], const int length[],
     const TExtensionBehavior& extBehavior = context->extensionBehavior();
     for (TExtensionBehavior::const_iterator iter = extBehavior.begin();
          iter != extBehavior.end(); ++iter) {
-        preprocessor->predefineMacro(iter->first.c_str(), 1);
+        preprocessor->predefineMacro(GetExtensionNameString(iter->first), 1);
     }
     if (context->getFragmentPrecisionHigh())
         preprocessor->predefineMacro("GL_FRAGMENT_PRECISION_HIGH", 1);

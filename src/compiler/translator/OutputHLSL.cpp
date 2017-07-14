@@ -130,7 +130,8 @@ OutputHLSL::OutputHLSL(sh::GLenum shaderType,
     mUsesFrontFacing             = false;
     mUsesPointSize               = false;
     mUsesInstanceID              = false;
-    mHasMultiviewExtensionEnabled = IsExtensionEnabled(mExtensionBehavior, "GL_OVR_multiview");
+    mHasMultiviewExtensionEnabled =
+        IsExtensionEnabled(mExtensionBehavior, TExtension::OVR_multiview);
     mUsesViewID                  = false;
     mUsesVertexID                = false;
     mUsesFragDepth               = false;
@@ -417,9 +418,8 @@ void OutputHLSL::header(TInfoSinkBase &out, const BuiltInFunctionEmulator *built
 
     if (mShaderType == GL_FRAGMENT_SHADER)
     {
-        TExtensionBehavior::const_iterator iter = mExtensionBehavior.find("GL_EXT_draw_buffers");
-        const bool usingMRTExtension            = (iter != mExtensionBehavior.end() &&
-                                        (iter->second == EBhEnable || iter->second == EBhRequire));
+        const bool usingMRTExtension =
+            IsExtensionEnabled(mExtensionBehavior, TExtension::EXT_draw_buffers);
 
         out << "// Varyings\n";
         out << varyings;

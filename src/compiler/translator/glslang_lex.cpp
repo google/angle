@@ -63,13 +63,37 @@
 
 
 
-    #define yyget_lval yyget_lval
-    #define yyset_lval yyset_lval
+    
+#ifdef yyget_lval
+#define yyget_lval_ALREADY_DEFINED
+#else
+#define yyget_lval yyget_lval
+#endif
+
+    
+#ifdef yyset_lval
+#define yyset_lval_ALREADY_DEFINED
+#else
+#define yyset_lval yyset_lval
+#endif
 
 
 
-    #define yyget_lloc yyget_lloc
-    #define yyset_lloc yyset_lloc
+
+    
+#ifdef yyget_lloc
+#define yyget_lloc_ALREADY_DEFINED
+#else
+#define yyget_lloc yyget_lloc
+#endif
+
+    
+#ifdef yyset_lloc
+#define yyset_lloc_ALREADY_DEFINED
+#else
+#define yyset_lloc yyset_lloc
+#endif
+
 
 
 
@@ -1195,7 +1219,7 @@ static int ES2_ident_ES3_keyword_multiview_keyword(TParseContext *context, int t
 static int ES2_ident_ES3_reserved_ES3_1_keyword(TParseContext *context, int token);
 static int ES2_and_ES3_reserved_ES3_1_keyword(TParseContext *context, int token);
 static int ES2_and_ES3_ident_ES3_1_keyword(TParseContext *context, int token);
-static int ES3_extension_keyword_else_ident(TParseContext *context, const char *extension, int token);
+static int ES3_extension_keyword_else_ident(TParseContext *context, TExtension extension, int token);
 static int uint_constant(TParseContext *context);
 static int int_constant(TParseContext *context);
 static int float_constant(yyscan_t yyscanner);
@@ -1995,7 +2019,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 82:
 YY_RULE_SETUP
-{ return ES3_extension_keyword_else_ident(context, "GL_EXT_YUV_target", SAMPLEREXTERNAL2DY2YEXT); }
+{ return ES3_extension_keyword_else_ident(context, TExtension::EXT_YUV_target, SAMPLEREXTERNAL2DY2YEXT); }
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
@@ -2007,7 +2031,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 85:
 YY_RULE_SETUP
-{ return ES3_extension_keyword_else_ident(context, "GL_EXT_YUV_target", YUVCSCSTANDARDEXT); }
+{ return ES3_extension_keyword_else_ident(context, TExtension::EXT_YUV_target, YUVCSCSTANDARDEXT); }
 	YY_BREAK
 case 86:
 YY_RULE_SETUP
@@ -2736,6 +2760,8 @@ static int yy_get_next_buffer (yyscan_t yyscanner)
 			(void *) YY_CURRENT_BUFFER_LVALUE->yy_ch_buf, (yy_size_t) new_size , yyscanner );
 		if ( ! YY_CURRENT_BUFFER_LVALUE->yy_ch_buf )
 			YY_FATAL_ERROR( "out of dynamic memory in yy_get_next_buffer()" );
+		/* "- 2" to take care of EOB's */
+		YY_CURRENT_BUFFER_LVALUE->yy_buf_size = (int) (new_size - 2);
 	}
 
 	yyg->yy_n_chars += number_to_move;
@@ -3853,7 +3879,7 @@ int ES2_ident_ES3_keyword_multiview_keyword(TParseContext *context, int token)
 
     // not a reserved word in GLSL ES 1.00, so could be used as an identifier/type name
     // except when multiview extension is enabled
-    if (context->getShaderVersion() < 300 && !context->isMultiviewExtensionEnabled())
+    if (context->getShaderVersion() < 300 && !context->isExtensionEnabled(TExtension::OVR_multiview))
     {
         yylval->lex.string = NewPoolTString(yytext);
         return check_type(yyscanner);
@@ -3889,7 +3915,7 @@ int ES2_and_ES3_ident_ES3_1_keyword(TParseContext *context, int token)
     return token;
 }
 
-int ES3_extension_keyword_else_ident(TParseContext *context, const char* extension, int token)
+int ES3_extension_keyword_else_ident(TParseContext *context, TExtension extension, int token)
 {
     struct yyguts_t* yyg = (struct yyguts_t*) context->getScanner();
     yyscan_t yyscanner = (yyscan_t) context->getScanner();
@@ -3971,7 +3997,7 @@ int yuvcscstandardext_constant(TParseContext *context)
     yyscan_t yyscanner = (yyscan_t) context->getScanner();
 
     // a reserved word in GLSL ES 3.00 with enabled extension, otherwise could be used as an identifier/type name
-    if (context->getShaderVersion() >= 300 && context->isExtensionEnabled("GL_EXT_YUV_target"))
+    if (context->getShaderVersion() >= 300 && context->isExtensionEnabled(TExtension::EXT_YUV_target))
     {
         yylval->lex.string = NewPoolTString(yytext);
         return YUVCSCSTANDARDEXTCONSTANT;
@@ -4016,7 +4042,7 @@ int glslang_scan(size_t count, const char* const string[], const int length[],
     const TExtensionBehavior& extBehavior = context->extensionBehavior();
     for (TExtensionBehavior::const_iterator iter = extBehavior.begin();
          iter != extBehavior.end(); ++iter) {
-        preprocessor->predefineMacro(iter->first.c_str(), 1);
+        preprocessor->predefineMacro(GetExtensionNameString(iter->first), 1);
     }
     if (context->getFragmentPrecisionHigh())
         preprocessor->predefineMacro("GL_FRAGMENT_PRECISION_HIGH", 1);

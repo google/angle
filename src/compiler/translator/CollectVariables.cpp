@@ -475,7 +475,7 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
                 {
                     OutputVariable info;
                     setBuiltInInfoFromSymbolTable("gl_FragData", &info);
-                    if (!::IsExtensionEnabled(mExtensionBehavior, "GL_EXT_draw_buffers"))
+                    if (!IsExtensionEnabled(mExtensionBehavior, TExtension::EXT_draw_buffers))
                     {
                         info.arraySize = 1;
                     }
@@ -527,7 +527,7 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
                 else
                 {
                     ASSERT(mShaderType == GL_VERTEX_SHADER &&
-                           IsExtensionEnabled(mExtensionBehavior, "GL_OVR_multiview"));
+                           IsExtensionEnabled(mExtensionBehavior, TExtension::OVR_multiview));
                 }
                 break;
             default:

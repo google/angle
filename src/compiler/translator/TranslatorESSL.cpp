@@ -136,16 +136,16 @@ void TranslatorESSL::writeExtensionBehavior(ShCompileOptions compileOptions)
     {
         if (iter->second != EBhUndefined)
         {
-            const bool isMultiview = (iter->first == "GL_OVR_multiview");
+            const bool isMultiview = (iter->first == TExtension::OVR_multiview);
             if (getResources().NV_shader_framebuffer_fetch &&
-                iter->first == "GL_EXT_shader_framebuffer_fetch")
+                iter->first == TExtension::EXT_shader_framebuffer_fetch)
             {
                 sink << "#extension GL_NV_shader_framebuffer_fetch : "
-                     << getBehaviorString(iter->second) << "\n";
+                     << GetBehaviorString(iter->second) << "\n";
             }
-            else if (getResources().NV_draw_buffers && iter->first == "GL_EXT_draw_buffers")
+            else if (getResources().NV_draw_buffers && iter->first == TExtension::EXT_draw_buffers)
             {
-                sink << "#extension GL_NV_draw_buffers : " << getBehaviorString(iter->second)
+                sink << "#extension GL_NV_draw_buffers : " << GetBehaviorString(iter->second)
                      << "\n";
             }
             else if (isMultiview && isMultiviewExtEmulated)
@@ -159,13 +159,13 @@ void TranslatorESSL::writeExtensionBehavior(ShCompileOptions compileOptions)
                     sink << "#extension GL_NV_viewport_array2 : require\n";
                 }
             }
-            else if (iter->first == "GL_OES_geometry_shader")
+            else if (iter->first == TExtension::OES_geometry_shader)
             {
                 sink << "#ifdef GL_OES_geometry_shader\n"
-                     << "#extension GL_OES_geometry_shader : " << getBehaviorString(iter->second)
+                     << "#extension GL_OES_geometry_shader : " << GetBehaviorString(iter->second)
                      << "\n"
                      << "#elif defined GL_EXT_geometry_shader\n"
-                     << "#extension GL_EXT_geometry_shader : " << getBehaviorString(iter->second)
+                     << "#extension GL_EXT_geometry_shader : " << GetBehaviorString(iter->second)
                      << "\n";
                 if (iter->second == EBhRequire)
                 {
@@ -177,8 +177,8 @@ void TranslatorESSL::writeExtensionBehavior(ShCompileOptions compileOptions)
             }
             else
             {
-                sink << "#extension " << iter->first << " : " << getBehaviorString(iter->second)
-                     << "\n";
+                sink << "#extension " << GetExtensionNameString(iter->first) << " : "
+                     << GetBehaviorString(iter->second) << "\n";
             }
         }
     }
