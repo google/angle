@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9f1bbadd_f5b83fe1",
+        "filename": "src/common/third_party/base/anglebase/sha1.cc",
+        "patchSetId": 16
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-14T20:56:13Z",
+      "side": 1,
+      "message": "unrelated git cl format that was missed in a previous patch. I can put it in a split patch if necessary but seemed innocuous",
+      "range": {
+        "startLine": 140,
+        "startChar": 13,
+        "endLine": 140,
+        "endChar": 15
+      },
+      "revId": "66a7f6ab461a120441e1e1710bbc1e23d81741d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a2720e9e_ee6d6c3f",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-14T20:56:13Z",
+      "side": 1,
+      "message": "this is the one irksome thing about passing a context everywhere.",
+      "range": {
+        "startLine": 155,
+        "startChar": 23,
+        "endLine": 155,
+        "endChar": 37
+      },
+      "revId": "66a7f6ab461a120441e1e1710bbc1e23d81741d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
