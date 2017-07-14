@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f7938b1d_8c146713",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-14T19:11:25Z",
+      "side": 1,
+      "message": "This will get userDefined\u003dtrue is that the correct behavior? (even if it was the case before this patch)",
+      "revId": "a54792bb3ddd186c1baa1f5a3fa0706a835f5b5d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
