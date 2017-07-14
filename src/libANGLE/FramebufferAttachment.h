@@ -70,7 +70,11 @@ class FramebufferAttachment final
                 GLenum type,
                 GLenum binding,
                 const ImageIndex &textureIndex,
-                FramebufferAttachmentObject *resource);
+                FramebufferAttachmentObject *resource,
+                GLsizei numViews,
+                GLuint baseViewIndex,
+                GLenum multiviewLayout,
+                const GLint *viewportOffsets);
 
     // Helper methods
     GLuint getRedSize() const;
@@ -124,6 +128,11 @@ class FramebufferAttachment final
 
     bool operator==(const FramebufferAttachment &other) const;
     bool operator!=(const FramebufferAttachment &other) const;
+
+    static const GLint kDefaultNumViews;
+    static const GLenum kDefaultMultiviewLayout;
+    static const GLint kDefaultBaseViewIndex;
+    static const GLint kDefaultViewportOffsets[2];
 
   private:
     gl::Error getRenderTargetImpl(const Context *context,

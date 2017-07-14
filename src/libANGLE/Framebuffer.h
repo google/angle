@@ -148,6 +148,13 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
                        GLenum binding,
                        const ImageIndex &textureIndex,
                        FramebufferAttachmentObject *resource);
+    void setAttachmentMultiviewSideBySide(const Context *context,
+                                          GLenum type,
+                                          GLenum binding,
+                                          const ImageIndex &textureIndex,
+                                          FramebufferAttachmentObject *resource,
+                                          GLsizei numViews,
+                                          const GLint *viewportOffsets);
     void resetAttachment(const Context *context, GLenum binding);
 
     void detachTexture(const Context *context, GLuint texture);
@@ -292,13 +299,29 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
                                   GLuint matchId,
                                   size_t dirtyBit);
     GLenum checkStatusImpl(const Context *context);
-    void commitWebGL1DepthStencilIfConsistent(const Context *context);
-
+    void setAttachment(const Context *context,
+                       GLenum type,
+                       GLenum binding,
+                       const ImageIndex &textureIndex,
+                       FramebufferAttachmentObject *resource,
+                       GLsizei numViews,
+                       GLuint baseViewIndex,
+                       GLenum multiviewLayout,
+                       const GLint *viewportOffsets);
+    void commitWebGL1DepthStencilIfConsistent(const Context *context,
+                                              GLsizei numViews,
+                                              GLuint baseViewIndex,
+                                              GLenum multiviewLayout,
+                                              const GLint *viewportOffsets);
     void setAttachmentImpl(const Context *context,
                            GLenum type,
                            GLenum binding,
                            const ImageIndex &textureIndex,
-                           FramebufferAttachmentObject *resource);
+                           FramebufferAttachmentObject *resource,
+                           GLsizei numViews,
+                           GLuint baseViewIndex,
+                           GLenum multiviewLayout,
+                           const GLint *viewportOffsets);
     void updateAttachment(const Context *context,
                           FramebufferAttachment *attachment,
                           size_t dirtyBit,
@@ -306,7 +329,11 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
                           GLenum type,
                           GLenum binding,
                           const ImageIndex &textureIndex,
-                          FramebufferAttachmentObject *resource);
+                          FramebufferAttachmentObject *resource,
+                          GLsizei numViews,
+                          GLuint baseViewIndex,
+                          GLenum multiviewLayout,
+                          const GLint *viewportOffsets);
 
     FramebufferState mState;
     rx::FramebufferImpl *mImpl;

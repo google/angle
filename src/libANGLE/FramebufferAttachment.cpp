@@ -23,6 +23,11 @@ namespace gl
 
 ////// FramebufferAttachment::Target Implementation //////
 
+const GLint FramebufferAttachment::kDefaultNumViews           = 1;
+const GLenum FramebufferAttachment::kDefaultMultiviewLayout   = GL_NONE;
+const GLint FramebufferAttachment::kDefaultBaseViewIndex      = 0;
+const GLint FramebufferAttachment::kDefaultViewportOffsets[2] = {0};
+
 FramebufferAttachment::Target::Target()
     : mBinding(GL_NONE),
       mTextureIndex(ImageIndex::MakeInvalid())
@@ -53,9 +58,9 @@ FramebufferAttachment::Target &FramebufferAttachment::Target::operator=(const Ta
 FramebufferAttachment::FramebufferAttachment()
     : mType(GL_NONE),
       mResource(nullptr),
-      mNumViews(1),
-      mMultiviewLayout(GL_NONE),
-      mBaseViewIndex(0),
+      mNumViews(kDefaultNumViews),
+      mMultiviewLayout(kDefaultMultiviewLayout),
+      mBaseViewIndex(kDefaultBaseViewIndex),
       mViewportOffsets(1u)
 {
 }
@@ -65,13 +70,10 @@ FramebufferAttachment::FramebufferAttachment(const Context *context,
                                              GLenum binding,
                                              const ImageIndex &textureIndex,
                                              FramebufferAttachmentObject *resource)
-    : mResource(nullptr),
-      mNumViews(1),
-      mMultiviewLayout(GL_NONE),
-      mBaseViewIndex(0),
-      mViewportOffsets(1u)
+    : mResource(nullptr)
 {
-    attach(context, type, binding, textureIndex, resource);
+    attach(context, type, binding, textureIndex, resource, kDefaultNumViews, kDefaultBaseViewIndex,
+           kDefaultMultiviewLayout, kDefaultViewportOffsets);
 }
 
 FramebufferAttachment::FramebufferAttachment(FramebufferAttachment &&other)
@@ -105,9 +107,9 @@ void FramebufferAttachment::detach(const Context *context)
         mResource->onDetach(context);
         mResource = nullptr;
     }
-    mNumViews        = 1;
-    mMultiviewLayout = GL_NONE;
-    mBaseViewIndex   = 0;
+    mNumViews        = kDefaultNumViews;
+    mMultiviewLayout = kDefaultMultiviewLayout;
+    mBaseViewIndex   = kDefaultBaseViewIndex;
     mViewportOffsets.resize(1u);
     mViewportOffsets[0] = Offset();
 
@@ -119,7 +121,11 @@ void FramebufferAttachment::attach(const Context *context,
                                    GLenum type,
                                    GLenum binding,
                                    const ImageIndex &textureIndex,
-                                   FramebufferAttachmentObject *resource)
+                                   FramebufferAttachmentObject *resource,
+                                   GLsizei numViews,
+                                   GLuint baseViewIndex,
+                                   GLenum multiviewLayout,
+                                   const GLint *viewportOffsets)
 {
     if (resource == nullptr)
     {
@@ -129,6 +135,14 @@ void FramebufferAttachment::attach(const Context *context,
 
     mType = type;
     mTarget = Target(binding, textureIndex);
+    mNumViews        = numViews;
+    mBaseViewIndex   = baseViewIndex;
+    mMultiviewLayout = multiviewLayout;
+    mViewportOffsets.resize(numViews);
+    for (size_t i = 0u; i < mViewportOffsets.size(); ++i)
+    {
+        mViewportOffsets[i] = Offset(viewportOffsets[i * 2u], viewportOffsets[i * 2u + 1u], 0);
+    }
     resource->onAttach(context);
 
     if (mResource != nullptr)

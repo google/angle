@@ -3113,7 +3113,23 @@ void Context::framebufferTextureMultiviewSideBySideANGLE(GLenum target,
                                                          GLsizei numViews,
                                                          const GLint *viewportOffsets)
 {
-    UNIMPLEMENTED();
+    Framebuffer *framebuffer = mGLState.getTargetFramebuffer(target);
+    ASSERT(framebuffer);
+
+    if (texture != 0)
+    {
+        Texture *textureObj = getTexture(texture);
+
+        ImageIndex index = ImageIndex::Make2D(level);
+        framebuffer->setAttachmentMultiviewSideBySide(this, GL_TEXTURE, attachment, index,
+                                                      textureObj, numViews, viewportOffsets);
+    }
+    else
+    {
+        framebuffer->resetAttachment(this, attachment);
+    }
+
+    mGLState.setObjectDirty(target);
 }
 
 void Context::drawBuffers(GLsizei n, const GLenum *bufs)

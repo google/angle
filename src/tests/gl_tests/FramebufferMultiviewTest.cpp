@@ -226,4 +226,50 @@ TEST_P(FramebufferMultiviewTest, ExtensionNotAvailableCheck)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Test that glFramebufferTextureMultiviewSideBySideANGLE modifies the internal multiview state.
+TEST_P(FramebufferMultiviewTest, ModifySideBySideState)
+{
+    if (!requestMultiviewExtension())
+    {
+        return;
+    }
+
+    const GLint viewportOffsets[4] = {0, 0, 1, 2};
+    createTexture2D();
+    glFramebufferTextureMultiviewSideBySideANGLE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTexture2D,
+                                                 0, 2, &viewportOffsets[0]);
+    ASSERT_GL_NO_ERROR();
+
+    GLint numViews = -1;
+    glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                          GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_NUM_VIEWS_ANGLE,
+                                          &numViews);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(2, numViews);
+
+    GLint baseViewIndex = -1;
+    glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                          GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_BASE_VIEW_INDEX_ANGLE,
+                                          &baseViewIndex);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(0, baseViewIndex);
+
+    GLint multiviewLayout = GL_NONE;
+    glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                          GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_MULTIVIEW_LAYOUT_ANGLE,
+                                          &multiviewLayout);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_EQ(GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE, multiviewLayout);
+
+    GLint internalViewportOffsets[4] = {-1};
+    glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                          GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_VIEWPORT_OFFSETS_ANGLE,
+                                          &internalViewportOffsets[0]);
+    ASSERT_GL_NO_ERROR();
+    for (size_t i = 0u; i < 4u; ++i)
+    {
+        EXPECT_EQ(viewportOffsets[i], internalViewportOffsets[i]);
+    }
+}
+
 ANGLE_INSTANTIATE_TEST(FramebufferMultiviewTest, ES3_OPENGL());
