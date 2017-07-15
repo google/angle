@@ -16,6 +16,24 @@
       "revId": "a54792bb3ddd186c1baa1f5a3fa0706a835f5b5d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a958fad_4dd33ecd",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-15T17:34:15Z",
+      "side": 1,
+      "message": "Yes, that\u0027s intended.",
+      "parentUuid": "f7938b1d_8c146713",
+      "revId": "a54792bb3ddd186c1baa1f5a3fa0706a835f5b5d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
