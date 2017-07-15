@@ -917,10 +917,10 @@ gl::Error TextureD3D_2D::copyImage(const gl::Context *context,
     else
     {
         ANGLE_TRY(ensureRenderTarget(context));
-        ANGLE_TRY(updateStorageLevel(context, level));
 
         if (sourceArea.width != 0 && sourceArea.height != 0 && isValidLevel(level))
         {
+            ANGLE_TRY(updateStorageLevel(context, level));
             ANGLE_TRY(mRenderer->copyImage2D(context, source, sourceArea, internalFormat,
                                              destOffset, mTexStorage, level));
         }
@@ -1647,12 +1647,12 @@ gl::Error TextureD3D_Cube::copyImage(const gl::Context *context,
     else
     {
         ANGLE_TRY(ensureRenderTarget(context));
-        ANGLE_TRY(updateStorageFaceLevel(context, faceIndex, level));
 
         ASSERT(size.width == size.height);
 
         if (size.width > 0 && isValidFaceLevel(faceIndex, level))
         {
+            ANGLE_TRY(updateStorageFaceLevel(context, faceIndex, level));
             ANGLE_TRY(mRenderer->copyImageCube(context, source, sourceArea, internalFormat,
                                                destOffset, mTexStorage, target, level));
         }
@@ -2970,7 +2970,6 @@ gl::Error TextureD3D_2DArray::copySubImage(const gl::Context *context,
     else
     {
         ANGLE_TRY(ensureRenderTarget(context));
-        ANGLE_TRY(updateStorageLevel(context, level));
 
         if (isValidLevel(level))
         {
