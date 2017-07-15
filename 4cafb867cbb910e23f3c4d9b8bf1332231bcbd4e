@@ -22,6 +22,30 @@
       "revId": "4cafb867cbb910e23f3c4d9b8bf1332231bcbd4e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88a3dc15_3baf88ea",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 3533,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-15T17:38:13Z",
+      "side": 0,
+      "message": "It is. This is related to the change done in Initialize.cpp, which is done to make the simplification of InitializeVariables possible. It could technically be in a separate change too, but I feel it makes sense to do it in this patch.",
+      "parentUuid": "3c79094b_773ee353",
+      "range": {
+        "startLine": 3524,
+        "startChar": 16,
+        "endLine": 3533,
+        "endChar": 23
+      },
+      "revId": "4cafb867cbb910e23f3c4d9b8bf1332231bcbd4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }

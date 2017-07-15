@@ -92,6 +92,30 @@
       "revId": "17de90aeb960d7a3d58894272102b2c14ad989c4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5cd13f35_53a2cc58",
+        "filename": "src/compiler/translator/IntermNode_util.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-15T17:38:13Z",
+      "side": 1,
+      "message": "I made it ReferenceBuiltInVariable (as opposed to built-in function). Also changed the other function to ReferenceGlobalVariable.",
+      "parentUuid": "ae6fb3a7_cd4da1c1",
+      "range": {
+        "startLine": 176,
+        "startChar": 15,
+        "endLine": 176,
+        "endChar": 35
+      },
+      "revId": "17de90aeb960d7a3d58894272102b2c14ad989c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
