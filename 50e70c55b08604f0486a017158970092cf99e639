@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c3c17704_aff84100",
+        "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-17T10:40:46Z",
+      "side": 1,
+      "message": "I don\u0027t think gl_raii is used here at the moment?",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 31
+      },
+      "revId": "50e70c55b08604f0486a017158970092cf99e639",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c36df905_d4287e9f",
+        "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-17T10:40:46Z",
+      "side": 1,
+      "message": "Is it possible to also add a negative test where the multiview extension is not enabled that makes sure the queries are not accepted in that case? Look into existing tests using glRequestExtensionANGLE.",
+      "revId": "50e70c55b08604f0486a017158970092cf99e639",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "481e150e_a363df9a",
+        "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-17T10:40:46Z",
+      "side": 1,
+      "message": "ANGLETest::TearDown() should be called at the end of the TearDown() function.",
+      "revId": "50e70c55b08604f0486a017158970092cf99e639",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
