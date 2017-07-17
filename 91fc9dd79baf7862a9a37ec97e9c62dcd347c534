@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4fab2276_b3606e7e",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-17T09:26:32Z",
+      "side": 1,
+      "message": "I\u0027d suggest making the error message just \"Function requires GLES 3.0 or higher.\", similar to the existing EnumRequiresGLES31 error message.",
+      "range": {
+        "startLine": 35,
+        "startChar": 39,
+        "endLine": 35,
+        "endChar": 76
+      },
+      "revId": "91fc9dd79baf7862a9a37ec97e9c62dcd347c534",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b7f25c2_d32bb9f6",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-17T09:26:32Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 50,
+        "startChar": 57,
+        "endLine": 50,
+        "endChar": 63
+      },
+      "revId": "91fc9dd79baf7862a9a37ec97e9c62dcd347c534",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c90cf90b_33578f9e",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-17T09:26:32Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 58,
+        "startChar": 42,
+        "endLine": 58,
+        "endChar": 48
+      },
+      "revId": "91fc9dd79baf7862a9a37ec97e9c62dcd347c534",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fbcc448e_0e974393",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2642,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-17T09:26:32Z",
+      "side": 1,
+      "message": "I\u0027d put this check inside \"case GL_TEXTURE_2D_ARRAY:\" below, similarly to how it\u0027s done in ValidateFramebufferTextureLayer. This way there are less changes needed if we ever want to enable this path for 3D textures for example.",
+      "range": {
+        "startLine": 2636,
+        "startChar": 0,
+        "endLine": 2642,
+        "endChar": 5
+      },
+      "revId": "91fc9dd79baf7862a9a37ec97e9c62dcd347c534",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b5c41eb_70dd6546",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2655,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-17T09:26:32Z",
+      "side": 1,
+      "message": "All errors should have an error message associated with them. Bunch of more of these below.",
+      "revId": "91fc9dd79baf7862a9a37ec97e9c62dcd347c534",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4322bb83_831594f7",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2690,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-17T09:26:32Z",
+      "side": 1,
+      "message": "Typically the \"k\" prefix has been used in ANGLE only for constants that have their value fixed for the whole duration of the program. Google C++ style guide seems to allow local constants both with and without the prefix, but I\u0027d find it clearer without the prefix.",
+      "range": {
+        "startLine": 2690,
+        "startChar": 18,
+        "endLine": 2690,
+        "endChar": 19
+      },
+      "revId": "91fc9dd79baf7862a9a37ec97e9c62dcd347c534",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
