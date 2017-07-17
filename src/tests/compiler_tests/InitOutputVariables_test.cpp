@@ -201,7 +201,7 @@ class InitOutputVariablesWebGL2FragmentShaderTest : public InitOutputVariablesWe
 {
   protected:
     ::GLenum getShaderType() const override { return GL_FRAGMENT_SHADER; }
-    void initResources(ShBuiltInResources *resources)
+    void initResources(ShBuiltInResources *resources) override
     {
         resources->EXT_draw_buffers = 1;
         resources->MaxDrawBuffers   = 2;
@@ -220,7 +220,7 @@ class InitOutputVariablesWebGL1FragmentShaderTest : public ShaderCompileTreeTest
   protected:
     ::GLenum getShaderType() const override { return GL_FRAGMENT_SHADER; }
     ShShaderSpec getShaderSpec() const override { return SH_WEBGL_SPEC; }
-    void initResources(ShBuiltInResources *resources)
+    void initResources(ShBuiltInResources *resources) override
     {
         resources->EXT_draw_buffers = 1;
         resources->MaxDrawBuffers   = 2;
