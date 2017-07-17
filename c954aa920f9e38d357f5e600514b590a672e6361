@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b9c075a1_7110409f",
+        "filename": "src/compiler/translator/RunAtTheEndOfShader.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2017-07-17T18:03:56Z",
+      "side": 1,
+      "message": "I think in discard we don\u0027t have to worry at all because buffers will not be updated so we don\u0027t need to do anything.\n\nBut Olli, can you add a conformance test case for that?",
+      "parentUuid": "4b46135f_dc55a892",
+      "revId": "c954aa920f9e38d357f5e600514b590a672e6361",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0b508bee_b38ad9a2",
         "filename": "src/compiler/translator/RunAtTheEndOfShader.cpp",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2017-07-17T15:41:58Z",
       "side": 1,
       "message": "How will this renaming of main interact with all the code that uses FindMain?",
+      "revId": "c954aa920f9e38d357f5e600514b590a672e6361",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "760c1e11_01463e34",
+        "filename": "src/compiler/translator/RunAtTheEndOfShader.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1003154
+      },
+      "writtenOn": "2017-07-17T18:03:56Z",
+      "side": 1,
+      "message": "If I remember correctly, FindMain use the function name, so now it will find the new main function instead, which I think should be find.",
+      "parentUuid": "0b508bee_b38ad9a2",
       "revId": "c954aa920f9e38d357f5e600514b590a672e6361",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
