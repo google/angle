@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "56632bb4_8b4aee45",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2653,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-17T15:04:54Z",
+      "side": 1,
+      "message": "I didn\u0027t use that name explicitly because also negative levels have to be checked and this name sort of alludes that it covers both.",
+      "parentUuid": "2d8b1201_7d0036df",
+      "range": {
+        "startLine": 2653,
+        "startChar": 66,
+        "endLine": 2653,
+        "endChar": 79
+      },
+      "revId": "d225a1794e53daa9f84fb284a73c34721c225799",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b3915fc4_3e05e859",
         "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
         "patchSetId": 4
@@ -36,6 +60,24 @@
       "writtenOn": "2017-07-17T14:13:01Z",
       "side": 1,
       "message": "It would probably be less trouble to put this patch in the same dependency chain as the state query patch, since both of them have this file.",
+      "revId": "d225a1794e53daa9f84fb284a73c34721c225799",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b14f1e2_6717f939",
+        "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-17T15:04:54Z",
+      "side": 1,
+      "message": "I didn\u0027t because I wasn\u0027t sure which one could be merged first, but I guess it will be the other one.",
+      "parentUuid": "b3915fc4_3e05e859",
       "revId": "d225a1794e53daa9f84fb284a73c34721c225799",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "51efafd0_2e56ff1c",
+        "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-17T15:04:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1504fff0_fe33aa1c",
+      "range": {
+        "startLine": 98,
+        "startChar": 33,
+        "endLine": 98,
+        "endChar": 57
+      },
+      "revId": "d225a1794e53daa9f84fb284a73c34721c225799",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "03608ee7_5526c59f",
         "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
         "patchSetId": 4
@@ -76,6 +142,30 @@
       "writtenOn": "2017-07-17T14:13:01Z",
       "side": 1,
       "message": "InvalidNumberOfViews would be more descriptive.",
+      "range": {
+        "startLine": 122,
+        "startChar": 33,
+        "endLine": 122,
+        "endChar": 54
+      },
+      "revId": "d225a1794e53daa9f84fb284a73c34721c225799",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4078bc95_c025cf82",
+        "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-17T15:04:54Z",
+      "side": 1,
+      "message": "Changed it to InvalidMultiviewLayeredArguments.",
+      "parentUuid": "03608ee7_5526c59f",
       "range": {
         "startLine": 122,
         "startChar": 33,
