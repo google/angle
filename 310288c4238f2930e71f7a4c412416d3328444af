@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d6a59b2f_47bad088",
+        "filename": "src/libANGLE/ContextState.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 519,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-17T18:21:37Z",
+      "side": 1,
+      "message": "Will this extension never be exposed in ES2?  Either way, it probably makes more sense to put this above the ES3 check.",
+      "range": {
+        "startLine": 514,
+        "startChar": 0,
+        "endLine": 519,
+        "endChar": 5
+      },
+      "revId": "310288c4238f2930e71f7a4c412416d3328444af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2e6fdabd_2dedc852",
+        "filename": "src/libANGLE/FramebufferAttachment.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-17T18:21:37Z",
+      "side": 1,
+      "message": "You can just use the operator\u003d\u003d for std::vector, it will compare the size and then individual elements.",
+      "range": {
+        "startLine": 269,
+        "startChar": 4,
+        "endLine": 274,
+        "endChar": 34
+      },
+      "revId": "310288c4238f2930e71f7a4c412416d3328444af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc2400f5_4495669f",
+        "filename": "src/libANGLE/FramebufferAttachment.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-17T18:21:37Z",
+      "side": 1,
+      "message": "nit: return the vector here, handle copying it to a pointer array in Context.",
+      "range": {
+        "startLine": 99,
+        "startChar": 4,
+        "endLine": 99,
+        "endChar": 52
+      },
+      "revId": "310288c4238f2930e71f7a4c412416d3328444af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a1d9ee38_454d53c3",
+        "filename": "src/libANGLE/FramebufferAttachment.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-17T18:21:37Z",
+      "side": 1,
+      "message": "Let\u0027s store the Offset struct here, it will be much easier to work with.",
+      "range": {
+        "startLine": 160,
+        "startChar": 16,
+        "endLine": 160,
+        "endChar": 21
+      },
+      "revId": "310288c4238f2930e71f7a4c412416d3328444af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b6108c3c_a03ead09",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 4189,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-17T18:21:37Z",
+      "side": 1,
+      "message": "At this point, the pname is validated.  This check isn\u0027t needed.",
+      "range": {
+        "startLine": 4188,
+        "startChar": 77,
+        "endLine": 4189,
+        "endChar": 68
+      },
+      "revId": "310288c4238f2930e71f7a4c412416d3328444af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
