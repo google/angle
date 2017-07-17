@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "20e16fac_c74631b9",
+        "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-17T12:59:49Z",
+      "side": 1,
+      "message": "Actually, there is no reason for this check here since all tests are executed against ES3.",
+      "range": {
+        "startLine": 111,
+        "startChar": 4,
+        "endLine": 115,
+        "endChar": 5
+      },
+      "revId": "44cf00331c1a01facaed5b898569b4c2822c41ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
