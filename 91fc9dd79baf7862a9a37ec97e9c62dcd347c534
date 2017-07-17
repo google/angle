@@ -269,6 +269,30 @@
       "revId": "91fc9dd79baf7862a9a37ec97e9c62dcd347c534",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8c12cc7d_8ee2452e",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2690,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-17T14:13:01Z",
+      "side": 1,
+      "message": "It seems like you only changed one of these, this still needs fixing.",
+      "parentUuid": "adc4fb11_50817ad0",
+      "range": {
+        "startLine": 2690,
+        "startChar": 18,
+        "endLine": 2690,
+        "endChar": 19
+      },
+      "revId": "91fc9dd79baf7862a9a37ec97e9c62dcd347c534",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
