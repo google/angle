@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "735f5fe9_6670c444",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-18T11:53:11Z",
+      "side": 1,
+      "message": "I think we can drop this check if you feel like it\u0027s less work overall to implement GLES 2.0 support as a part of the initial patches rather than separately. Can you also include a change to the spec in this patch that removes the GLES 3.0 requirement? You can say in the spec text:\n\n\"This extension is written against the OpenGL ES 3.0 specification.\n\nOpenGL ES 2.0 is required.\"\n\nAnd maybe add a paragraph that says that the layered functionality is not available on GLES 2.0.",
+      "revId": "c9e1001331a94422d19f0b55d33e82aa311fd335",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "46ea5e9d_987046a6",
+        "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-18T11:53:11Z",
+      "side": 1,
+      "message": "nit: typo",
+      "range": {
+        "startLine": 172,
+        "startChar": 49,
+        "endLine": 172,
+        "endChar": 52
+      },
+      "revId": "c9e1001331a94422d19f0b55d33e82aa311fd335",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
