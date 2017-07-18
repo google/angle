@@ -347,7 +347,7 @@ void Shader::resolveCompile(const Context *context)
         // Remove null characters from the source line
         line.erase(std::remove(line.begin(), line.end(), '\0'), line.end());
 
-        shaderStream << "// " << line;
+        shaderStream << "// " << line << std::endl;
     }
     shaderStream << "\n\n";
     shaderStream << mState.mTranslatedSource;
