@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4d234f77_abb8bc5b",
+        "filename": "src/libANGLE/ContextState.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 519,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-18T07:51:57Z",
+      "side": 1,
+      "message": "Although the extension spec was written against ES3, I think we do want it exposed under even ES2 just so that we can support webgl1. Thanks.\nDone.",
+      "parentUuid": "d6a59b2f_47bad088",
+      "range": {
+        "startLine": 514,
+        "startChar": 0,
+        "endLine": 519,
+        "endChar": 5
+      },
+      "revId": "310288c4238f2930e71f7a4c412416d3328444af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2e6fdabd_2dedc852",
         "filename": "src/libANGLE/FramebufferAttachment.cpp",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2017-07-17T18:21:37Z",
       "side": 1,
       "message": "You can just use the operator\u003d\u003d for std::vector, it will compare the size and then individual elements.",
+      "range": {
+        "startLine": 269,
+        "startChar": 4,
+        "endLine": 274,
+        "endChar": 34
+      },
+      "revId": "310288c4238f2930e71f7a4c412416d3328444af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c3a66e55_21d13591",
+        "filename": "src/libANGLE/FramebufferAttachment.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-18T07:51:57Z",
+      "side": 1,
+      "message": "Oh, I didn\u0027t know that std::vector had any of those comparison operators overloaded at all.\nDone.",
+      "parentUuid": "2e6fdabd_2dedc852",
       "range": {
         "startLine": 269,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "783363f5_e0e929ce",
+        "filename": "src/libANGLE/FramebufferAttachment.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-18T07:51:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cc2400f5_4495669f",
+      "range": {
+        "startLine": 99,
+        "startChar": 4,
+        "endLine": 99,
+        "endChar": 52
+      },
+      "revId": "310288c4238f2930e71f7a4c412416d3328444af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a1d9ee38_454d53c3",
         "filename": "src/libANGLE/FramebufferAttachment.h",
         "patchSetId": 5
@@ -82,6 +154,30 @@
       "writtenOn": "2017-07-17T18:21:37Z",
       "side": 1,
       "message": "Let\u0027s store the Offset struct here, it will be much easier to work with.",
+      "range": {
+        "startLine": 160,
+        "startChar": 16,
+        "endLine": 160,
+        "endChar": 21
+      },
+      "revId": "310288c4238f2930e71f7a4c412416d3328444af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9d48a9d_d6646595",
+        "filename": "src/libANGLE/FramebufferAttachment.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-18T07:51:57Z",
+      "side": 1,
+      "message": "Done. Though I do not like that it is not a tight representation.",
+      "parentUuid": "a1d9ee38_454d53c3",
       "range": {
         "startLine": 160,
         "startChar": 16,
@@ -114,6 +210,30 @@
       "revId": "310288c4238f2930e71f7a4c412416d3328444af",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ab96830_54e83f48",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 4189,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-18T07:51:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b6108c3c_a03ead09",
+      "range": {
+        "startLine": 4188,
+        "startChar": 77,
+        "endLine": 4189,
+        "endChar": 68
+      },
+      "revId": "310288c4238f2930e71f7a4c412416d3328444af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
