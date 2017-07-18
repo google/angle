@@ -353,7 +353,7 @@ class Renderer11 : public RendererD3D
                                       GLenum sourcePixelsType,
                                       const gl::Box &destArea) override;
 
-    void markAllStateDirty();
+    void markAllStateDirty(const gl::Context *context);
     gl::Error packPixels(const TextureHelper11 &textureHelper,
                          const PackPixelsParams &params,
                          uint8_t *pixelsOut);

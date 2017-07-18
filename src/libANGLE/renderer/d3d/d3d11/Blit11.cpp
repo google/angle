@@ -1104,7 +1104,7 @@ gl::Error Blit11::swizzleTexture(const gl::Context *context,
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
 
     // Apply render target
-    stateManager->setOneTimeRenderTarget(dest.get(), nullptr);
+    stateManager->setOneTimeRenderTarget(context, dest.get(), nullptr);
 
     // Set the viewport
     D3D11_VIEWPORT viewport;
@@ -1128,7 +1128,7 @@ gl::Error Blit11::swizzleTexture(const gl::Context *context,
 
     // Unbind shader resources and dirty state.
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
-    mRenderer->markAllStateDirty();
+    mRenderer->markAllStateDirty(context);
 
     return gl::NoError();
 }
@@ -1239,7 +1239,7 @@ gl::Error Blit11::copyTexture(const gl::Context *context,
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
 
     // Apply render target
-    stateManager->setOneTimeRenderTarget(dest.get(), nullptr);
+    stateManager->setOneTimeRenderTarget(context, dest.get(), nullptr);
 
     // Set the viewport
     D3D11_VIEWPORT viewport;
@@ -1277,7 +1277,7 @@ gl::Error Blit11::copyTexture(const gl::Context *context,
     // Unbind shader resource and invalidate state.
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
 
-    mRenderer->markAllStateDirty();
+    mRenderer->markAllStateDirty(context);
 
     return gl::NoError();
 }
@@ -1371,7 +1371,7 @@ gl::Error Blit11::copyDepth(const gl::Context *context,
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
 
     // Apply render target
-    stateManager->setOneTimeRenderTarget(nullptr, dest.get());
+    stateManager->setOneTimeRenderTarget(context, nullptr, dest.get());
 
     // Set the viewport
     D3D11_VIEWPORT viewport;
@@ -1396,7 +1396,7 @@ gl::Error Blit11::copyDepth(const gl::Context *context,
     // Unbind shader resources and invalidate all state.
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
 
-    mRenderer->markAllStateDirty();
+    mRenderer->markAllStateDirty(context);
 
     return gl::NoError();
 }
@@ -2013,7 +2013,7 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveDepth(const gl::Context *conte
     ANGLE_TRY(initResolveDepthOnly(depth->getFormatSet(), extents));
 
     // Notify the Renderer that all state should be invalidated.
-    mRenderer->markAllStateDirty();
+    mRenderer->markAllStateDirty(context);
 
     ANGLE_TRY(mResolveDepthStencilVS.resolve(mRenderer));
     ANGLE_TRY(mResolveDepthPS.resolve(mRenderer));
@@ -2172,7 +2172,7 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(const gl::Context *con
     }
 
     // Notify the Renderer that all state should be invalidated.
-    mRenderer->markAllStateDirty();
+    mRenderer->markAllStateDirty(context);
 
     ID3D11RenderTargetView *rtvs[] = {mResolvedDepthStencilRTView.get()};
 

@@ -61,7 +61,12 @@ void UpdateCachedRenderTarget(const gl::Context *context,
     RenderTarget11 *newRenderTarget = nullptr;
     if (attachment)
     {
-        attachment->getRenderTarget(context, &newRenderTarget);
+        // TODO(jmadill): Don't swallow this error.
+        gl::Error error = attachment->getRenderTarget(context, &newRenderTarget);
+        if (error.isError())
+        {
+            ERR() << "Internal rendertarget error: " << error;
+        }
     }
     if (newRenderTarget != cachedRenderTarget)
     {
@@ -394,8 +399,6 @@ void Framebuffer11::updateDepthStencilRenderTarget(const gl::Context *context)
 void Framebuffer11::syncState(const gl::Context *context,
                               const gl::Framebuffer::DirtyBits &dirtyBits)
 {
-    mRenderer->getStateManager()->invalidateRenderTarget();
-
     const auto &mergedDirtyBits = dirtyBits | mInternalDirtyBits;
     mInternalDirtyBits.reset();
 
@@ -426,6 +429,9 @@ void Framebuffer11::syncState(const gl::Context *context,
     ASSERT(!mInternalDirtyBits.any());
 
     FramebufferD3D::syncState(context, dirtyBits);
+
+    // Call this last to allow the state manager to take advantage of the cached render targets.
+    mRenderer->getStateManager()->invalidateRenderTarget(context);
 }
 
 void Framebuffer11::signal(size_t channelID)
@@ -457,6 +463,20 @@ bool Framebuffer11::hasAnyInternalDirtyBit() const
 void Framebuffer11::syncInternalState(const gl::Context *context)
 {
     syncState(context, gl::Framebuffer::DirtyBits());
+}
+
+RenderTarget11 *Framebuffer11::getFirstRenderTarget() const
+{
+    ASSERT(mInternalDirtyBits.none());
+    for (auto *renderTarget : mCachedColorRenderTargets)
+    {
+        if (renderTarget)
+        {
+            return renderTarget;
+        }
+    }
+
+    return mCachedDepthStencilRenderTarget;
 }
 
 }  // namespace rx

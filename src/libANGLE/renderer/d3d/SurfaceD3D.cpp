@@ -151,7 +151,8 @@ egl::Error SurfaceD3D::resetSwapChain(const egl::Display *display)
         return egl::EglBadAlloc();
     }
 
-    egl::Error error = resetSwapChain(display, width, height);
+    // This is a bit risky to pass the proxy context here, but it can happen at almost any time.
+    egl::Error error = resetSwapChain(display->getProxyContext(), width, height);
     if (error.isError())
     {
         SafeDelete(mSwapChain);
@@ -161,7 +162,7 @@ egl::Error SurfaceD3D::resetSwapChain(const egl::Display *display)
     return egl::NoError();
 }
 
-egl::Error SurfaceD3D::resizeSwapChain(const egl::Display *display,
+egl::Error SurfaceD3D::resizeSwapChain(const gl::Context *context,
                                        int backbufferWidth,
                                        int backbufferHeight)
 {
@@ -169,7 +170,7 @@ egl::Error SurfaceD3D::resizeSwapChain(const egl::Display *display,
     ASSERT(mSwapChain);
 
     EGLint status =
-        mSwapChain->resize(display, std::max(1, backbufferWidth), std::max(1, backbufferHeight));
+        mSwapChain->resize(context, std::max(1, backbufferWidth), std::max(1, backbufferHeight));
 
     if (status == EGL_CONTEXT_LOST)
     {
@@ -187,14 +188,14 @@ egl::Error SurfaceD3D::resizeSwapChain(const egl::Display *display,
     return egl::NoError();
 }
 
-egl::Error SurfaceD3D::resetSwapChain(const egl::Display *display,
+egl::Error SurfaceD3D::resetSwapChain(const gl::Context *context,
                                       int backbufferWidth,
                                       int backbufferHeight)
 {
     ASSERT(backbufferWidth >= 0 && backbufferHeight >= 0);
     ASSERT(mSwapChain);
 
-    EGLint status = mSwapChain->reset(display, std::max(1, backbufferWidth),
+    EGLint status = mSwapChain->reset(context, std::max(1, backbufferWidth),
                                       std::max(1, backbufferHeight), mSwapInterval);
 
     if (status == EGL_CONTEXT_LOST)
@@ -214,7 +215,7 @@ egl::Error SurfaceD3D::resetSwapChain(const egl::Display *display,
     return egl::NoError();
 }
 
-egl::Error SurfaceD3D::swapRect(const egl::Display *display,
+egl::Error SurfaceD3D::swapRect(const gl::Context *context,
                                 EGLint x,
                                 EGLint y,
                                 EGLint width,
@@ -237,7 +238,7 @@ egl::Error SurfaceD3D::swapRect(const egl::Display *display,
 
     if (width != 0 && height != 0)
     {
-        EGLint status = mSwapChain->swapRect(display, x, y, width, height);
+        EGLint status = mSwapChain->swapRect(context, x, y, width, height);
 
         if (status == EGL_CONTEXT_LOST)
         {
@@ -250,12 +251,12 @@ egl::Error SurfaceD3D::swapRect(const egl::Display *display,
         }
     }
 
-    checkForOutOfDateSwapChain(display);
+    checkForOutOfDateSwapChain(context);
 
     return egl::NoError();
 }
 
-bool SurfaceD3D::checkForOutOfDateSwapChain(const egl::Display *display)
+bool SurfaceD3D::checkForOutOfDateSwapChain(const gl::Context *context)
 {
     RECT client;
     int clientWidth = getWidth();
@@ -281,11 +282,11 @@ bool SurfaceD3D::checkForOutOfDateSwapChain(const egl::Display *display)
 
     if (mSwapIntervalDirty)
     {
-        resetSwapChain(display, clientWidth, clientHeight);
+        resetSwapChain(context, clientWidth, clientHeight);
     }
     else if (sizeDirty)
     {
-        resizeSwapChain(display, clientWidth, clientHeight);
+        resizeSwapChain(context, clientWidth, clientHeight);
     }
 
     return wasDirty;
@@ -293,7 +294,7 @@ bool SurfaceD3D::checkForOutOfDateSwapChain(const egl::Display *display)
 
 egl::Error SurfaceD3D::swap(const gl::Context *context)
 {
-    return swapRect(context->getCurrentDisplay(), 0, 0, mWidth, mHeight);
+    return swapRect(context, 0, 0, mWidth, mHeight);
 }
 
 egl::Error SurfaceD3D::postSubBuffer(const gl::Context *context,
@@ -302,7 +303,7 @@ egl::Error SurfaceD3D::postSubBuffer(const gl::Context *context,
                                      EGLint width,
                                      EGLint height)
 {
-    return swapRect(context->getCurrentDisplay(), x, y, width, height);
+    return swapRect(context, x, y, width, height);
 }
 
 rx::SwapChainD3D *SurfaceD3D::getSwapChain() const

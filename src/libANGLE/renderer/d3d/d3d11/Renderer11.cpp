@@ -834,7 +834,8 @@ void Renderer11::initializeDevice()
 
     mStateManager.initialize(rendererCaps);
 
-    markAllStateDirty();
+    // No context is available here, use the proxy context in the display.
+    markAllStateDirty(mDisplay->getProxyContext());
 
     // Gather stats on DXGI and D3D feature level
     ANGLE_HISTOGRAM_BOOLEAN("GPU.ANGLE.SupportsDXGI1_2", mRenderer11DeviceCaps.supportsDXGI1_2);
@@ -2739,7 +2740,7 @@ template void Renderer11::applyDriverConstantsIfNeeded<dx_ComputeConstants11>(
     size_t samplerMetadataReferencedBytes,
     const d3d11::Buffer &driverConstantBuffer);
 
-void Renderer11::markAllStateDirty()
+void Renderer11::markAllStateDirty(const gl::Context *context)
 {
     TRACE_EVENT0("gpu.angle", "Renderer11::markAllStateDirty");
 
@@ -2758,7 +2759,7 @@ void Renderer11::markAllStateDirty()
         mForceSetComputeSamplerStates[csamplerId] = true;
     }
 
-    mStateManager.invalidateEverything();
+    mStateManager.invalidateEverything(context);
 
     mAppliedIB       = nullptr;
     mAppliedIBFormat = DXGI_FORMAT_UNKNOWN;

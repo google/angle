@@ -710,13 +710,13 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
     deviceContext->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     // Apply render targets
-    stateManager->setOneTimeRenderTargets(&rtvs[0], numRtvs, dsv);
+    stateManager->setOneTimeRenderTargets(context, &rtvs[0], numRtvs, dsv);
 
     // Draw the fullscreen quad
     deviceContext->Draw(6, 0);
 
     // Clean up
-    mRenderer->markAllStateDirty();
+    mRenderer->markAllStateDirty(context);
 
     return gl::NoError();
 }

@@ -89,6 +89,9 @@ class FramebufferState final : angle::NonCopyable
     GLint getDefaultSamples() const { return mDefaultSamples; };
     GLboolean getDefaultFixedSampleLocations() const { return mDefaultFixedSampleLocations; };
 
+    bool hasDepth() const;
+    bool hasStencil() const;
+
   private:
     friend class Framebuffer;
 
@@ -200,6 +203,9 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
     // TODO(jmadill): Remove this kludge.
     GLenum checkStatus(const ValidationContext *context);
     int getSamples(const ValidationContext *context);
+
+    // For when we don't want to check completeness in getSamples().
+    int getCachedSamples(const Context *context);
 
     // Helper for checkStatus == GL_FRAMEBUFFER_COMPLETE.
     bool complete(const Context *context);

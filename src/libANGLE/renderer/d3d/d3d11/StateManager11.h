@@ -71,13 +71,18 @@ class StateManager11 final : angle::NonCopyable
                            ID3D11ShaderResourceView *srv);
     gl::Error clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd);
 
-    void invalidateRenderTarget();
-    void invalidateBoundViews();
+    // Checks are done on a framebuffer state change to trigger other state changes.
+    // The Context is allowed to be nullptr for these methods, when called in EGL init code.
+    void invalidateRenderTarget(const gl::Context *context);
+    void invalidateBoundViews(const gl::Context *context);
     void invalidateVertexBuffer();
-    void invalidateEverything();
+    void invalidateEverything(const gl::Context *context);
 
-    void setOneTimeRenderTarget(ID3D11RenderTargetView *rtv, ID3D11DepthStencilView *dsv);
-    void setOneTimeRenderTargets(ID3D11RenderTargetView **rtvs,
+    void setOneTimeRenderTarget(const gl::Context *context,
+                                ID3D11RenderTargetView *rtv,
+                                ID3D11DepthStencilView *dsv);
+    void setOneTimeRenderTargets(const gl::Context *context,
+                                 ID3D11RenderTargetView **rtvs,
                                  UINT numRtvs,
                                  ID3D11DepthStencilView *dsv);
 
@@ -120,14 +125,13 @@ class StateManager11 final : angle::NonCopyable
 
     gl::Error syncDepthStencilState(const gl::State &glState);
 
-    gl::Error syncRasterizerState(const gl::RasterizerState &rasterState);
+    gl::Error syncRasterizerState(const gl::Context *context, GLenum drawMode);
 
     void syncScissorRectangle(const gl::Rectangle &scissor, bool enabled);
 
     void syncViewport(const gl::Caps *caps, const gl::Rectangle &viewport, float zNear, float zFar);
 
-    void syncPresentPath(bool presentPathFastActive,
-                         const gl::FramebufferAttachment *framebufferAttachment);
+    void checkPresentPath(const gl::Context *context);
 
     gl::Error syncFramebuffer(const gl::Context *context, gl::Framebuffer *framebuffer);
 

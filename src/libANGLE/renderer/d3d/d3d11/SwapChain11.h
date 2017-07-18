@@ -31,14 +31,14 @@ class SwapChain11 final : public SwapChainD3D
                 EGLint samples);
     virtual ~SwapChain11();
 
-    EGLint resize(const egl::Display *display,
+    EGLint resize(const gl::Context *context,
                   EGLint backbufferWidth,
                   EGLint backbufferHeight) override;
-    EGLint reset(const egl::Display *display,
+    EGLint reset(const gl::Context *context,
                  EGLint backbufferWidth,
                  EGLint backbufferHeight,
                  EGLint swapInterval) override;
-    EGLint swapRect(const egl::Display *display,
+    EGLint swapRect(const gl::Context *context,
                     EGLint x,
                     EGLint y,
                     EGLint width,
@@ -69,22 +69,22 @@ class SwapChain11 final : public SwapChainD3D
 
     void releaseOffscreenColorBuffer();
     void releaseOffscreenDepthBuffer();
-    EGLint resetOffscreenBuffers(const egl::Display *display,
+    EGLint resetOffscreenBuffers(const gl::Context *context,
                                  int backbufferWidth,
                                  int backbufferHeight);
-    EGLint resetOffscreenColorBuffer(const egl::Display *display,
+    EGLint resetOffscreenColorBuffer(const gl::Context *context,
                                      int backbufferWidth,
                                      int backbufferHeight);
     EGLint resetOffscreenDepthBuffer(int backbufferWidth, int backbufferHeight);
 
     DXGI_FORMAT getSwapChainNativeFormat() const;
 
-    EGLint copyOffscreenToBackbuffer(const egl::Display *display,
+    EGLint copyOffscreenToBackbuffer(const gl::Context *context,
                                      EGLint x,
                                      EGLint y,
                                      EGLint width,
                                      EGLint height);
-    EGLint present(const egl::Display *display, EGLint x, EGLint y, EGLint width, EGLint height);
+    EGLint present(const gl::Context *context, EGLint x, EGLint y, EGLint width, EGLint height);
     UINT getD3DSamples() const;
 
     Renderer11 *mRenderer;

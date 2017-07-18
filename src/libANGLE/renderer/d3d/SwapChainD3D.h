@@ -22,6 +22,11 @@
 #define ANGLE_FORCE_VSYNC_OFF 0
 #endif
 
+namespace gl
+{
+class Context;
+}  // namespace gl
+
 namespace egl
 {
 class Display;
@@ -40,14 +45,14 @@ class SwapChainD3D : angle::NonCopyable
                  GLenum depthBufferFormat);
     virtual ~SwapChainD3D();
 
-    virtual EGLint resize(const egl::Display *display,
+    virtual EGLint resize(const gl::Context *context,
                           EGLint backbufferWidth,
                           EGLint backbufferSize) = 0;
-    virtual EGLint reset(const egl::Display *display,
+    virtual EGLint reset(const gl::Context *context,
                          EGLint backbufferWidth,
                          EGLint backbufferHeight,
                          EGLint swapInterval) = 0;
-    virtual EGLint swapRect(const egl::Display *display,
+    virtual EGLint swapRect(const gl::Context *context,
                             EGLint x,
                             EGLint y,
                             EGLint width,

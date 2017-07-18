@@ -327,7 +327,7 @@ egl::Error DisplayD3D::waitClient(const gl::Context *context) const
     for (auto &surface : mState.surfaceSet)
     {
         SurfaceD3D *surfaceD3D = GetImplAs<SurfaceD3D>(surface);
-        surfaceD3D->checkForOutOfDateSwapChain(context->getCurrentDisplay());
+        surfaceD3D->checkForOutOfDateSwapChain(context);
     }
 
     return egl::NoError();
@@ -341,13 +341,13 @@ egl::Error DisplayD3D::waitNative(const gl::Context *context, EGLint engine) con
     if (drawSurface != nullptr)
     {
         SurfaceD3D *drawSurfaceD3D = GetImplAs<SurfaceD3D>(drawSurface);
-        drawSurfaceD3D->checkForOutOfDateSwapChain(context->getCurrentDisplay());
+        drawSurfaceD3D->checkForOutOfDateSwapChain(context);
     }
 
     if (readSurface != nullptr)
     {
         SurfaceD3D *readurfaceD3D = GetImplAs<SurfaceD3D>(readSurface);
-        readurfaceD3D->checkForOutOfDateSwapChain(context->getCurrentDisplay());
+        readurfaceD3D->checkForOutOfDateSwapChain(context);
     }
 
     return egl::NoError();

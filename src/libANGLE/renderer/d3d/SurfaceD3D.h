@@ -55,7 +55,7 @@ class SurfaceD3D : public SurfaceImpl
     egl::Error resetSwapChain(const egl::Display *display);
 
     // Returns true if swapchain changed due to resize or interval update
-    bool checkForOutOfDateSwapChain(const egl::Display *display);
+    bool checkForOutOfDateSwapChain(const gl::Context *context);
 
     gl::Error getAttachmentRenderTarget(const gl::Context *context,
                                         GLenum binding,
@@ -71,15 +71,15 @@ class SurfaceD3D : public SurfaceImpl
                EGLClientBuffer clientBuffer,
                const egl::AttributeMap &attribs);
 
-    egl::Error swapRect(const egl::Display *display,
+    egl::Error swapRect(const gl::Context *context,
                         EGLint x,
                         EGLint y,
                         EGLint width,
                         EGLint height);
-    egl::Error resetSwapChain(const egl::Display *display,
+    egl::Error resetSwapChain(const gl::Context *context,
                               int backbufferWidth,
                               int backbufferHeight);
-    egl::Error resizeSwapChain(const egl::Display *display,
+    egl::Error resizeSwapChain(const gl::Context *context,
                                int backbufferWidth,
                                int backbufferHeight);
 

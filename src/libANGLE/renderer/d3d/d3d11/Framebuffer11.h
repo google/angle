@@ -47,6 +47,8 @@ class Framebuffer11 : public FramebufferD3D, public OnRenderTargetDirtyReceiver
         return mCachedDepthStencilRenderTarget;
     }
 
+    RenderTarget11 *getFirstRenderTarget() const;
+
     bool hasAnyInternalDirtyBit() const;
     void syncInternalState(const gl::Context *context);
 

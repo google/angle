@@ -11,9 +11,9 @@
 #include <EGL/eglext.h>
 
 #include "libANGLE/features.h"
-#include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
 #include "libANGLE/renderer/d3d/d3d11/NativeWindow11.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
+#include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
 #include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 #include "libANGLE/renderer/d3d/d3d11/texture_format_table.h"
 #include "third_party/trace_event/trace_event.h"
@@ -147,13 +147,13 @@ void SwapChain11::releaseOffscreenDepthBuffer()
     mDepthStencilSRView.reset();
 }
 
-EGLint SwapChain11::resetOffscreenBuffers(const egl::Display *display,
+EGLint SwapChain11::resetOffscreenBuffers(const gl::Context *context,
                                           int backbufferWidth,
                                           int backbufferHeight)
 {
     if (mNeedsOffscreenTexture)
     {
-        EGLint result = resetOffscreenColorBuffer(display, backbufferWidth, backbufferHeight);
+        EGLint result = resetOffscreenColorBuffer(context, backbufferWidth, backbufferHeight);
         if (result != EGL_SUCCESS)
         {
             return result;
@@ -172,7 +172,7 @@ EGLint SwapChain11::resetOffscreenBuffers(const egl::Display *display,
     return EGL_SUCCESS;
 }
 
-EGLint SwapChain11::resetOffscreenColorBuffer(const egl::Display *display,
+EGLint SwapChain11::resetOffscreenColorBuffer(const gl::Context *context,
                                               int backbufferWidth,
                                               int backbufferHeight)
 {
@@ -325,7 +325,7 @@ EGLint SwapChain11::resetOffscreenColorBuffer(const egl::Display *display,
 
         if (mSwapChain)
         {
-            swapRect(display, 0, 0, backbufferWidth, backbufferHeight);
+            swapRect(context, 0, 0, backbufferWidth, backbufferHeight);
         }
     }
 
@@ -414,7 +414,7 @@ EGLint SwapChain11::resetOffscreenDepthBuffer(int backbufferWidth, int backbuffe
     return EGL_SUCCESS;
 }
 
-EGLint SwapChain11::resize(const egl::Display *display,
+EGLint SwapChain11::resize(const gl::Context *context,
                            EGLint backbufferWidth,
                            EGLint backbufferHeight)
 {
@@ -496,7 +496,7 @@ EGLint SwapChain11::resize(const egl::Display *display,
 
     mFirstSwap = true;
 
-    return resetOffscreenBuffers(display, backbufferWidth, backbufferHeight);
+    return resetOffscreenBuffers(context, backbufferWidth, backbufferHeight);
 }
 
 DXGI_FORMAT SwapChain11::getSwapChainNativeFormat() const
@@ -527,7 +527,7 @@ DXGI_FORMAT SwapChain11::getSwapChainNativeFormat() const
     }
 }
 
-EGLint SwapChain11::reset(const egl::Display *display,
+EGLint SwapChain11::reset(const gl::Context *context,
                           EGLint backbufferWidth,
                           EGLint backbufferHeight,
                           EGLint swapInterval)
@@ -543,7 +543,7 @@ EGLint SwapChain11::reset(const egl::Display *display,
     // If the swap chain already exists, just resize
     if (mSwapChain != nullptr)
     {
-        return resize(display, backbufferWidth, backbufferHeight);
+        return resize(context, backbufferWidth, backbufferHeight);
     }
 
     TRACE_EVENT0("gpu.angle", "SwapChain11::reset");
@@ -616,7 +616,7 @@ EGLint SwapChain11::reset(const egl::Display *display,
 
     mFirstSwap = true;
 
-    return resetOffscreenBuffers(display, backbufferWidth, backbufferHeight);
+    return resetOffscreenBuffers(context, backbufferWidth, backbufferHeight);
 }
 
 void SwapChain11::initPassThroughResources()
@@ -718,7 +718,7 @@ void SwapChain11::initPassThroughResources()
 }
 
 // parameters should be validated/clamped by caller
-EGLint SwapChain11::swapRect(const egl::Display *display,
+EGLint SwapChain11::swapRect(const gl::Context *context,
                              EGLint x,
                              EGLint y,
                              EGLint width,
@@ -726,14 +726,14 @@ EGLint SwapChain11::swapRect(const egl::Display *display,
 {
     if (mNeedsOffscreenTexture)
     {
-        EGLint result = copyOffscreenToBackbuffer(display, x, y, width, height);
+        EGLint result = copyOffscreenToBackbuffer(context, x, y, width, height);
         if (result != EGL_SUCCESS)
         {
             return result;
         }
     }
 
-    EGLint result = present(display, x, y, width, height);
+    EGLint result = present(context, x, y, width, height);
     if (result != EGL_SUCCESS)
     {
         return result;
@@ -744,7 +744,7 @@ EGLint SwapChain11::swapRect(const egl::Display *display,
     return EGL_SUCCESS;
 }
 
-EGLint SwapChain11::copyOffscreenToBackbuffer(const egl::Display *display,
+EGLint SwapChain11::copyOffscreenToBackbuffer(const gl::Context *context,
                                               EGLint x,
                                               EGLint y,
                                               EGLint width,
@@ -818,8 +818,8 @@ EGLint SwapChain11::copyOffscreenToBackbuffer(const egl::Display *display,
     deviceContext->PSSetShader(mPassThroughPS.get(), nullptr, 0);
     deviceContext->GSSetShader(nullptr, nullptr, 0);
 
-    // Apply render targets
-    stateManager->setOneTimeRenderTarget(mBackBufferRTView.get(), nullptr);
+    // Apply render targets. Use the proxy context in display.
+    stateManager->setOneTimeRenderTarget(context, mBackBufferRTView.get(), nullptr);
 
     // Set the viewport
     D3D11_VIEWPORT viewport;
@@ -845,12 +845,12 @@ EGLint SwapChain11::copyOffscreenToBackbuffer(const egl::Display *display,
     // cleanup is caught under the current eglSwapBuffers() PIX/Graphics Diagnostics call rather than the next one.
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
 
-    mRenderer->markAllStateDirty();
+    mRenderer->markAllStateDirty(context);
 
     return EGL_SUCCESS;
 }
 
-EGLint SwapChain11::present(const egl::Display *display,
+EGLint SwapChain11::present(const gl::Context *context,
                             EGLint x,
                             EGLint y,
                             EGLint width,
@@ -894,8 +894,8 @@ EGLint SwapChain11::present(const egl::Display *display,
     mFirstSwap = false;
 
     // Some swapping mechanisms such as DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL unbind the current render
-    // target.  Mark it dirty.
-    mRenderer->getStateManager()->invalidateRenderTarget();
+    // target. Mark it dirty. Use the proxy context in display since there is none available.
+    mRenderer->getStateManager()->invalidateRenderTarget(context);
 
     if (result == DXGI_ERROR_DEVICE_REMOVED)
     {

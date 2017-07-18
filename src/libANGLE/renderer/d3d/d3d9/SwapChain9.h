@@ -30,12 +30,12 @@ class SwapChain9 : public SwapChainD3D
                EGLint orientation);
     virtual ~SwapChain9();
 
-    EGLint resize(const egl::Display *display, EGLint backbufferWidth, EGLint backbufferHeight);
-    virtual EGLint reset(const egl::Display *display,
+    EGLint resize(const gl::Context *context, EGLint backbufferWidth, EGLint backbufferHeight);
+    virtual EGLint reset(const gl::Context *context,
                          EGLint backbufferWidth,
                          EGLint backbufferHeight,
                          EGLint swapInterval);
-    virtual EGLint swapRect(const egl::Display *display,
+    virtual EGLint swapRect(const gl::Context *context,
                             EGLint x,
                             EGLint y,
                             EGLint width,
