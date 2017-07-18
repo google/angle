@@ -417,6 +417,9 @@ TString TType::buildMangledName() const
         case EbtUImageCube:
             mangledName += "uimc";
             break;
+        case EbtAtomicCounter:
+            mangledName += "ac";
+            break;
         case EbtStruct:
             mangledName += structure->mangledName();
             break;

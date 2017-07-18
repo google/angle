@@ -246,6 +246,11 @@ void TOutputGLSLBase::writeLayoutQualifier(const TType &type)
         }
     }
 
+    if (IsAtomicCounter(type.getBasicType()))
+    {
+        out << listItemPrefix << "offset = " << layoutQualifier.offset;
+    }
+
     out << ") ";
 }
 

@@ -711,7 +711,20 @@ int VariableSortOrder(GLenum type)
       case GL_SAMPLER_2D_SHADOW:
       case GL_SAMPLER_2D_ARRAY_SHADOW:
       case GL_SAMPLER_CUBE_SHADOW:
-        return 6;
+      case GL_IMAGE_2D:
+      case GL_INT_IMAGE_2D:
+      case GL_UNSIGNED_INT_IMAGE_2D:
+      case GL_IMAGE_3D:
+      case GL_INT_IMAGE_3D:
+      case GL_UNSIGNED_INT_IMAGE_3D:
+      case GL_IMAGE_2D_ARRAY:
+      case GL_INT_IMAGE_2D_ARRAY:
+      case GL_UNSIGNED_INT_IMAGE_2D_ARRAY:
+      case GL_IMAGE_CUBE:
+      case GL_INT_IMAGE_CUBE:
+      case GL_UNSIGNED_INT_IMAGE_CUBE:
+      case GL_UNSIGNED_INT_ATOMIC_COUNTER:
+          return 6;
 
       default:
         UNREACHABLE();
