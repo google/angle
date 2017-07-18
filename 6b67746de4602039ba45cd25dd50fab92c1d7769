@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "af285a2a_2e94a0f8",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-18T17:30:54Z",
+      "side": 1,
+      "message": "nit: use a switch statement like the above function.  Makes it more readable and easier to add new entries.",
+      "range": {
+        "startLine": 46,
+        "startChar": 4,
+        "endLine": 47,
+        "endChar": 51
+      },
+      "revId": "6b67746de4602039ba45cd25dd50fab92c1d7769",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "31e68dbd_fc9b9108",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 931,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-18T17:30:54Z",
+      "side": 1,
+      "message": "nit: Keep this error message simple for now,  \"Invalid program interface.\", we\u0027re in the process of making the error messages more generic and not using formatting.",
+      "range": {
+        "startLine": 930,
+        "startChar": 43,
+        "endLine": 931,
+        "endChar": 80
+      },
+      "revId": "6b67746de4602039ba45cd25dd50fab92c1d7769",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "03083805_388c63ee",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-18T17:30:54Z",
+      "side": 1,
+      "message": "return GL_INVALID_INDEX here too.",
+      "range": {
+        "startLine": 221,
+        "startChar": 19,
+        "endLine": 221,
+        "endChar": 21
+      },
+      "revId": "6b67746de4602039ba45cd25dd50fab92c1d7769",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ca077dbd_88f79379",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-18T17:30:54Z",
+      "side": 1,
+      "message": "return GL_INVALID_INDEX here too.",
+      "range": {
+        "startLine": 225,
+        "startChar": 11,
+        "endLine": 225,
+        "endChar": 13
+      },
+      "revId": "6b67746de4602039ba45cd25dd50fab92c1d7769",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "229c4ea5_2ff637cf",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-18T17:30:54Z",
+      "side": 1,
+      "message": "nit: use GL_INVALID_INDEX",
+      "range": {
+        "startLine": 170,
+        "startChar": 18,
+        "endLine": 170,
+        "endChar": 20
+      },
+      "revId": "6b67746de4602039ba45cd25dd50fab92c1d7769",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d558c4b7_b7a36cf0",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-18T17:30:54Z",
+      "side": 1,
+      "message": "same nit",
+      "range": {
+        "startLine": 179,
+        "startChar": 14,
+        "endLine": 179,
+        "endChar": 16
+      },
+      "revId": "6b67746de4602039ba45cd25dd50fab92c1d7769",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "882a3292_9cdafd03",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-18T17:30:54Z",
+      "side": 1,
+      "message": "same nit",
+      "range": {
+        "startLine": 183,
+        "startChar": 14,
+        "endLine": 183,
+        "endChar": 16
+      },
+      "revId": "6b67746de4602039ba45cd25dd50fab92c1d7769",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
