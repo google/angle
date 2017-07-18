@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fd001fab_114c6491",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1980,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-18T18:47:30Z",
+      "side": 1,
+      "message": "This is probably not necessary.",
+      "range": {
+        "startLine": 1980,
+        "startChar": 55,
+        "endLine": 1980,
+        "endChar": 83
+      },
+      "revId": "9ed9a7f7afd0a7243a97722b7b09f41762991318",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b0b347d7_4b3949d7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2065,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-18T18:47:30Z",
+      "side": 1,
+      "message": "Could this name be more specific? Maybe \"supportsDrawingWithoutIndexRanges\"?",
+      "range": {
+        "startLine": 2065,
+        "startChar": 17,
+        "endLine": 2065,
+        "endChar": 33
+      },
+      "revId": "9ed9a7f7afd0a7243a97722b7b09f41762991318",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
