@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "32a4aeb6_102b3e40",
+        "filename": "src/libANGLE/FramebufferAttachment.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-18T12:43:53Z",
+      "side": 1,
+      "message": "I\u0027m not quite sure if it would make more sense to store the base view index in the ImageIndex. The code is more straightforward if the base view index is separate from the regular layer index (no need to handle querying FRAMEBUFFER_ATTACHMENT_TEXTURE_LAYER in a different way for multiview attachments for example), but mBaseViewIndex is almost a duplicate of the layer in ImageIndex and there might be some confusion between the two down the line. Maybe ANGLE team at Google has an opinion on this?",
+      "revId": "24f719a3e5330208cc4e6bb72c2d43d449f0ca47",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "14bff6d1_d1e44e70",
+        "filename": "src/libANGLE/FramebufferAttachment.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-18T12:43:53Z",
+      "side": 1,
+      "message": "Add \"k\" prefix for these.",
+      "range": {
+        "startLine": 132,
+        "startChar": 27,
+        "endLine": 132,
+        "endChar": 42
+      },
+      "revId": "24f719a3e5330208cc4e6bb72c2d43d449f0ca47",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
