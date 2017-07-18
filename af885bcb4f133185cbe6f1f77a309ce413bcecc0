@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7b25caeb_d5d5830e",
+        "filename": "src/compiler/translator/ClampPointSize.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-18T17:13:10Z",
+      "side": 1,
+      "message": "Should we clamp to the minPointSize too in case it is something like 0.5 but 0.2 also happens to work?",
+      "revId": "af885bcb4f133185cbe6f1f77a309ce413bcecc0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
