@@ -107,11 +107,13 @@ class CollectVariablesTest : public testing::Test
         *outResult = &outputVariable;
     }
 
-    void compile(const std::string &shaderString)
+    void compile(const std::string &shaderString, ShCompileOptions compileOptions)
     {
         const char *shaderStrings[] = {shaderString.c_str()};
-        ASSERT_TRUE(mTranslator->compile(shaderStrings, 1, SH_VARIABLES));
+        ASSERT_TRUE(mTranslator->compile(shaderStrings, 1, SH_VARIABLES | compileOptions));
     }
+
+    void compile(const std::string &shaderString) { compile(shaderString, 0u); }
 
     ::GLenum mShaderType;
     std::unique_ptr<TranslatorGLSL> mTranslator;
@@ -799,4 +801,32 @@ TEST_F(CollectFragmentVariablesTest, EmptyDeclarator)
     EXPECT_TRUE(uniformB.staticUse);
     EXPECT_GLENUM_EQ(GL_FLOAT, uniformB.type);
     EXPECT_EQ("uB", uniformB.name);
+}
+
+// Test collecting variables from an instanced multiview shader that has an internal ViewID_OVR
+// varying.
+TEST_F(CollectVertexVariablesTest, ViewID_OVR)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview : require\n"
+        "precision mediump float;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(0.0);\n"
+        "}\n";
+
+    ShBuiltInResources resources = mTranslator->getResources();
+    resources.OVR_multiview      = 1;
+    resources.MaxViewsOVR        = 4;
+    initTranslator(resources);
+
+    compile(shaderString, SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW |
+                              SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER);
+
+    // The internal ViewID_OVR varying is not exposed through the ShaderVars interface.
+    const auto &varyings = mTranslator->getVaryings();
+    ASSERT_EQ(1u, varyings.size());
+    const Varying *varying = &varyings[0];
+    EXPECT_EQ("gl_Position", varying->name);
 }

@@ -249,8 +249,15 @@ void CollectVariablesTraverser::recordBuiltInAttributeUsed(const char *name, boo
 void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
 {
     ASSERT(symbol != nullptr);
+
+    if (symbol->getName().isInternal())
+    {
+        // Internal variables are not collected.
+        return;
+    }
+
     ShaderVariable *var       = nullptr;
-    const TString &symbolName = symbol->getSymbol();
+    const TString &symbolName = symbol->getName().getString();
 
     if (IsVarying(symbol->getQualifier()))
     {
@@ -577,6 +584,12 @@ bool CollectVariablesTraverser::visitDeclaration(Visit, TIntermDeclaration *node
         // uniforms, varyings, outputs and interface blocks cannot be initialized in a shader, we
         // must have only TIntermSymbol nodes in the sequence in the cases we are interested in.
         const TIntermSymbol &variable = *variableNode->getAsSymbolNode();
+        if (variable.getName().isInternal())
+        {
+            // Internal variables are not collected.
+            continue;
+        }
+
         if (typedNode.getBasicType() == EbtInterfaceBlock)
         {
             // TODO(jiajia.qin@intel.com): In order not to affect the old set of mInterfaceBlocks,
