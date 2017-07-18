@@ -19,6 +19,93 @@
     },
     {
       "key": {
+        "uuid": "d5449fad_95de76da",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-18T17:23:12Z",
+      "side": 1,
+      "message": "Agreed, we can make sure this extension is never exposed in ES2 (in Context::initCaps, there are other similar extensions) and then only have to check that the extension is present in the validation.",
+      "parentUuid": "735f5fe9_6670c444",
+      "revId": "c9e1001331a94422d19f0b55d33e82aa311fd335",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d79831a0_4436ff56",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2643,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-18T17:23:12Z",
+      "side": 1,
+      "message": "nit: don\u0027t need gl:: prefix in this file.",
+      "range": {
+        "startLine": 2643,
+        "startChar": 8,
+        "endLine": 2643,
+        "endChar": 12
+      },
+      "revId": "c9e1001331a94422d19f0b55d33e82aa311fd335",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "596f2959_f2a3570d",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2655,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-18T17:23:12Z",
+      "side": 1,
+      "message": "The ValidMipLevel function should cover this (and level being negative).",
+      "range": {
+        "startLine": 2651,
+        "startChar": 16,
+        "endLine": 2655,
+        "endChar": 17
+      },
+      "revId": "c9e1001331a94422d19f0b55d33e82aa311fd335",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e86cf832_ec3299a2",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2671,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-18T17:23:12Z",
+      "side": 1,
+      "message": "nit: pass the target parameter from the function.  In this case it\u0027s fine but it protects us in the future if cube maps are ever added.",
+      "range": {
+        "startLine": 2671,
+        "startChar": 45,
+        "endLine": 2671,
+        "endChar": 60
+      },
+      "revId": "c9e1001331a94422d19f0b55d33e82aa311fd335",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "34daa789_b67253a7",
         "filename": "src/libANGLE/validationES3.cpp",
         "patchSetId": 7
@@ -66,6 +153,92 @@
       "side": 1,
       "message": "Thanks for the explanation, SGTM since the offsets won\u0027t be exposed to the JS.",
       "parentUuid": "b946f94d_00767748",
+      "revId": "c9e1001331a94422d19f0b55d33e82aa311fd335",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de3dd36e_bebf44ef",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2720,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-18T17:23:12Z",
+      "side": 1,
+      "message": "Same comment as above.",
+      "range": {
+        "startLine": 2716,
+        "startChar": 16,
+        "endLine": 2720,
+        "endChar": 17
+      },
+      "revId": "c9e1001331a94422d19f0b55d33e82aa311fd335",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd9bf9dd_4fbb79aa",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2729,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-18T17:23:12Z",
+      "side": 1,
+      "message": "Same comment as above.",
+      "range": {
+        "startLine": 2729,
+        "startChar": 44,
+        "endLine": 2729,
+        "endChar": 60
+      },
+      "revId": "c9e1001331a94422d19f0b55d33e82aa311fd335",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4fcc0e57_4265ef43",
+        "filename": "src/libANGLE/validationES3.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-18T17:23:12Z",
+      "side": 1,
+      "message": "You can leave this out because the size of viewportOffsets is computable from numViews.",
+      "range": {
+        "startLine": 446,
+        "startChar": 5,
+        "endLine": 446,
+        "endChar": 61
+      },
+      "revId": "c9e1001331a94422d19f0b55d33e82aa311fd335",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "06a87143_02df068b",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_ext.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3531,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-18T17:23:12Z",
+      "side": 1,
+      "message": "For the non-robust functions, do \"context-\u003eskipsValidation() \u0026\u0026 !Validate...\"",
       "revId": "c9e1001331a94422d19f0b55d33e82aa311fd335",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
