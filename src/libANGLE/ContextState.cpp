@@ -181,7 +181,6 @@ bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsign
         case GL_PACK_REVERSE_ROW_ORDER_ANGLE:
         case GL_UNPACK_ALIGNMENT:
         case GL_GENERATE_MIPMAP_HINT:
-        case GL_FRAGMENT_SHADER_DERIVATIVE_HINT_OES:
         case GL_RED_BITS:
         case GL_GREEN_BITS:
         case GL_BLUE_BITS:
@@ -492,6 +491,15 @@ bool ValidationContext::getQueryParameterInfo(GLenum pname, GLenum *type, unsign
             *type      = GL_INT;
             *numParams = 1;
             return true;
+
+            case GL_FRAGMENT_SHADER_DERIVATIVE_HINT:
+                if ((getClientMajorVersion() < 3) && !getExtensions().standardDerivatives)
+                {
+                    return false;
+                }
+                *type      = GL_INT;
+                *numParams = 1;
+                return true;
         }
     }
 
