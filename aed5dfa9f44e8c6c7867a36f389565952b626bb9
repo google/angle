@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "19588d66_a5435d7a",
+        "filename": "src/compiler/translator/ArrayReturnValueToOutParameter.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-18T13:08:08Z",
+      "side": 1,
+      "message": "nit: \"In\" makes the variable sound like a boolean, rename it to mFunctionWithArrauReturnValue?",
+      "revId": "aed5dfa9f44e8c6c7867a36f389565952b626bb9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
