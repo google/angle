@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "84e4f10f_77650cc6",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2696,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-18T17:15:37Z",
+      "side": 1,
+      "message": "Thanks for the explanation, SGTM since the offsets won\u0027t be exposed to the JS.",
+      "parentUuid": "b946f94d_00767748",
+      "revId": "c9e1001331a94422d19f0b55d33e82aa311fd335",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "46ea5e9d_987046a6",
         "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
         "patchSetId": 7
