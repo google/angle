@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "add56064_37c33977",
+        "filename": "src/tests/gl_tests/PointSpritesTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-18T16:23:32Z",
+      "side": 1,
+      "message": "can we use ANGLE_GL_PROGRAM and the other RAII types?",
+      "range": {
+        "startLine": 546,
+        "startChar": 4,
+        "endLine": 547,
+        "endChar": 27
+      },
+      "revId": "a3ee0cfc2fa81ea1fc7f4bdd834d44463b5f914c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
