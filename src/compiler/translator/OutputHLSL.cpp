@@ -2557,34 +2557,33 @@ TString OutputHLSL::argumentString(const TIntermSymbol *symbol)
     {
         ASSERT(qualifier != EvqOut && qualifier != EvqInOut);
         TVector<TIntermSymbol *> samplerSymbols;
-        type.createSamplerSymbols("angle" + nameStr, "", 0u, &samplerSymbols, nullptr);
+        type.createSamplerSymbols("angle" + nameStr, "", type.isArray() ? type.getArraySize() : 0u,
+                                  &samplerSymbols, nullptr);
         for (const TIntermSymbol *sampler : samplerSymbols)
         {
             if (mOutputType == SH_HLSL_4_1_OUTPUT)
             {
-                argString << ", const uint " << sampler->getSymbol() << ArrayString(type);
+                ASSERT(!sampler->getType().isArray());
+                argString << ", const uint " << sampler->getSymbol();
             }
             else if (mOutputType == SH_HLSL_4_0_FL9_3_OUTPUT)
             {
                 const TType &samplerType = sampler->getType();
-                ASSERT((!type.isArray() && !samplerType.isArray()) ||
-                       type.getArraySize() == samplerType.getArraySize());
+                ASSERT(!samplerType.isArray());
                 ASSERT(IsSampler(samplerType.getBasicType()));
                 argString << ", " << QualifierString(qualifier) << " "
                           << TextureString(samplerType.getBasicType()) << " texture_"
-                          << sampler->getSymbol() << ArrayString(type) << ", "
-                          << QualifierString(qualifier) << " "
+                          << sampler->getSymbol() << ", " << QualifierString(qualifier) << " "
                           << SamplerString(samplerType.getBasicType()) << " sampler_"
-                          << sampler->getSymbol() << ArrayString(type);
+                          << sampler->getSymbol();
             }
             else
             {
                 const TType &samplerType = sampler->getType();
-                ASSERT((!type.isArray() && !samplerType.isArray()) ||
-                       type.getArraySize() == samplerType.getArraySize());
+                ASSERT(!samplerType.isArray());
                 ASSERT(IsSampler(samplerType.getBasicType()));
                 argString << ", " << QualifierString(qualifier) << " " << TypeString(samplerType)
-                          << " " << sampler->getSymbol() << ArrayString(type);
+                          << " " << sampler->getSymbol();
             }
         }
     }

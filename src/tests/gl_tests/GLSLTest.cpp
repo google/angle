@@ -3251,6 +3251,68 @@ TEST_P(GLSLTest_ES3, VaryingStructUsedInFragmentShader)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// This test covers passing an array of structs containing samplers as a function argument.
+TEST_P(GLSLTest, ArrayOfStructsWithSamplersAsFunctionArg)
+{
+    if (IsAndroid() && IsAdreno() && IsOpenGLES())
+    {
+        // Shader failed to compile on Android. http://anglebug.com/2114
+        std::cout << "Test skipped on Adreno OpenGLES on Android." << std::endl;
+        return;
+    }
+
+    const std::string &vertexShader =
+        "attribute vec2 position;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(position, 0, 1);\n"
+        "}\n";
+
+    const std::string &fragmentShader =
+        "precision mediump float;\n"
+        "struct S\n"
+        "{\n"
+        "    sampler2D samplerMember; \n"
+        "};\n"
+        "uniform S uStructs[2];\n"
+        "uniform vec2 uTexCoord;\n"
+        "\n"
+        "vec4 foo(S[2] structs)\n"
+        "{\n"
+        "    return texture2D(structs[0].samplerMember, uTexCoord);\n"
+        "}\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = foo(uStructs);\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, vertexShader, fragmentShader);
+
+    // Initialize the texture with green.
+    GLTexture tex;
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    GLubyte texData[] = {0u, 255u, 0u, 255u};
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw
+    glUseProgram(program);
+    GLint samplerMemberLoc = glGetUniformLocation(program, "uStructs[0].samplerMember");
+    ASSERT_NE(-1, samplerMemberLoc);
+    glUniform1i(samplerMemberLoc, 0);
+    GLint texCoordLoc = glGetUniformLocation(program, "uTexCoord");
+    ASSERT_NE(-1, texCoordLoc);
+    glUniform2f(texCoordLoc, 0.5f, 0.5f);
+
+    drawQuad(program, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::green);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest,
                        ES2_D3D9(),
