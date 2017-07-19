@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ec7bbb0e_fdafe79c",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-19T13:30:05Z",
+      "side": 1,
+      "message": "This can probably be added in a header and have some of the other ValidateFramebufferTexture* functions refactored.",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 83,
+        "endChar": 1
+      },
+      "revId": "8e37ed012106d08c73018150519567e09e604d97",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
