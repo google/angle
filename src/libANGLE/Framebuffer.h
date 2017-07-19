@@ -162,6 +162,7 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
     const FramebufferAttachment *getReadColorbuffer() const;
     GLenum getReadColorbufferType() const;
     const FramebufferAttachment *getFirstColorbuffer() const;
+    const FramebufferAttachment *getFirstNonNullAttachment() const;
 
     const FramebufferAttachment *getAttachment(GLenum attachment) const;
 

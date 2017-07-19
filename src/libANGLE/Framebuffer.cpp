@@ -622,6 +622,11 @@ const FramebufferAttachment *Framebuffer::getFirstColorbuffer() const
     return mState.getFirstColorAttachment();
 }
 
+const FramebufferAttachment *Framebuffer::getFirstNonNullAttachment() const
+{
+    return mState.getFirstNonNullAttachment();
+}
+
 const FramebufferAttachment *Framebuffer::getAttachment(GLenum attachment) const
 {
     return mState.getAttachment(attachment);
