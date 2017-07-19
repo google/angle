@@ -196,6 +196,30 @@
     },
     {
       "key": {
+        "uuid": "1bb3dab0_f8018db5",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2671,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-19T15:35:48Z",
+      "side": 1,
+      "message": "Whoops, yes, thinking of textarget from the other entry points.",
+      "parentUuid": "8bcaa06d_479a0e33",
+      "range": {
+        "startLine": 2671,
+        "startChar": 45,
+        "endLine": 2671,
+        "endChar": 60
+      },
+      "revId": "c9e1001331a94422d19f0b55d33e82aa311fd335",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "34daa789_b67253a7",
         "filename": "src/libANGLE/validationES3.cpp",
         "patchSetId": 7
@@ -396,6 +420,30 @@
       "side": 1,
       "message": "Then, should the FramebufferTextureMultiviewSideBySideRobustANGLE end-point be kept at all? Passing bufSize to the robust end-point doesn\u0027t make sense if it won\u0027t be used at all.\nIf you think that the end-point must be modified, I could do that in a subsequent patch.",
       "parentUuid": "4fcc0e57_4265ef43",
+      "range": {
+        "startLine": 446,
+        "startChar": 5,
+        "endLine": 446,
+        "endChar": 61
+      },
+      "revId": "c9e1001331a94422d19f0b55d33e82aa311fd335",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a598a2a3_fd6b351f",
+        "filename": "src/libANGLE/validationES3.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-19T15:35:48Z",
+      "side": 1,
+      "message": "Yes, sorry about being unclear.  It can be removed entirely.",
+      "parentUuid": "8eb0e81d_304ec7c9",
       "range": {
         "startLine": 446,
         "startChar": 5,
