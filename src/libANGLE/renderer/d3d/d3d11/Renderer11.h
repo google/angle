@@ -590,22 +590,23 @@ class Renderer11 : public RendererD3D
         const gl::TextureCaps &colorBufferFormatCaps,
         const gl::TextureCaps &depthStencilBufferFormatCaps) const;
 
-    HMODULE mD3d11Module;
-    HMODULE mDxgiModule;
-    HMODULE mDCompModule;
-    std::vector<D3D_FEATURE_LEVEL> mAvailableFeatureLevels;
-    D3D_DRIVER_TYPE mRequestedDriverType;
-    bool mCreatedWithDeviceEXT;
-    DeviceD3D *mEGLDevice;
-
-    HLSLCompiler mCompiler;
-
     egl::Error initializeD3DDevice();
     void initializeDevice();
     void releaseDeviceResources();
     void release();
 
     d3d11::ANGLED3D11DeviceType getDeviceType() const;
+
+    HMODULE mD3d11Module;
+    HMODULE mDxgiModule;
+    HMODULE mDCompModule;
+    std::vector<D3D_FEATURE_LEVEL> mAvailableFeatureLevels;
+    D3D_DRIVER_TYPE mRequestedDriverType;
+    bool mCreateDebugDevice;
+    bool mCreatedWithDeviceEXT;
+    DeviceD3D *mEGLDevice;
+
+    HLSLCompiler mCompiler;
 
     RenderStateCache mStateCache;
 

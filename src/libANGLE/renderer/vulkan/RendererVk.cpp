@@ -154,17 +154,7 @@ RendererVk::~RendererVk()
 
 vk::Error RendererVk::initialize(const egl::AttributeMap &attribs, const char *wsiName)
 {
-#if !defined(NDEBUG)
-    // Validation layers enabled by default in Debug.
-    mEnableValidationLayers = true;
-#endif
-
-    // If specified in the attributes, override the default.
-    if (attribs.contains(EGL_PLATFORM_ANGLE_ENABLE_VALIDATION_LAYER_ANGLE))
-    {
-        mEnableValidationLayers =
-            (attribs.get(EGL_PLATFORM_ANGLE_ENABLE_VALIDATION_LAYER_ANGLE, EGL_FALSE) == EGL_TRUE);
-    }
+    mEnableValidationLayers = ShouldUseDebugLayers(attribs);
 
     // If we're loading the validation layers, we could be running from any random directory.
     // Change to the executable directory so we can find the layers, then change back to the
@@ -214,7 +204,8 @@ vk::Error RendererVk::initialize(const egl::AttributeMap &attribs, const char *w
         if (!HasStandardValidationLayer(instanceLayerProps))
         {
             // Generate an error if the attribute was requested, warning otherwise.
-            if (attribs.contains(EGL_PLATFORM_ANGLE_ENABLE_VALIDATION_LAYER_ANGLE))
+            if (attribs.get(EGL_PLATFORM_ANGLE_DEBUG_LAYERS_ENABLED_ANGLE, EGL_DONT_CARE) ==
+                EGL_TRUE)
             {
                 ERR() << "Vulkan standard validation layers are missing.";
             }

@@ -382,21 +382,16 @@ Error ValidateGetPlatformDisplayCommon(EGLenum platform,
                     deviceType = value;
                     break;
 
-                case EGL_PLATFORM_ANGLE_ENABLE_VALIDATION_LAYER_ANGLE:
-                    if (!clientExtensions.platformANGLEVulkan)
+                case EGL_PLATFORM_ANGLE_DEBUG_LAYERS_ENABLED_ANGLE:
+                    if (!clientExtensions.platformANGLE)
                     {
-                        return EglBadAttribute()
-                               << "EGL_ANGLE_platform_angle_vulkan extension not active";
+                        return EglBadAttribute() << "EGL_ANGLE_platform_angle extension not active";
                     }
-                    if (platformType != EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
+                    if (value != EGL_TRUE && value != EGL_FALSE && value != EGL_DONT_CARE)
                     {
-                        return EglBadAttribute()
-                               << "Validation can only be enabled for the Vulkan back-end.";
-                    }
-                    if (value != EGL_TRUE && value != EGL_FALSE)
-                    {
-                        return EglBadAttribute()
-                               << "Validation layer attribute must be EGL_TRUE or EGL_FALSE.";
+                        return EglBadAttribute() << "EGL_PLATFORM_ANGLE_DEBUG_LAYERS_ENABLED_ANGLE "
+                                                    "must be EGL_TRUE, EGL_FALSE, or "
+                                                    "EGL_DONT_CARE.";
                     }
                     break;
 

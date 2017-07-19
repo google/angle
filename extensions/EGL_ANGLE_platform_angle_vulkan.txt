@@ -20,7 +20,7 @@ Status
 
 Version
 
-    Version 1, 2016-11-17
+    Version 2, 2017-07-19
 
 Number
 
@@ -52,11 +52,6 @@ New Tokens
 
         EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE               0x3450
 
-    Accepted as an attribute name in the <attrib_list> argument of
-    eglGetPlatformDisplayEXT:
-
-        EGL_PLATFORM_ANGLE_ENABLE_VALIDATION_LAYER_ANGLE   0x3451
-
 Additions to the EGL Specification
 
     None.
@@ -67,13 +62,6 @@ New Behavior
     EGL_PLATFORM_ANGLE_TYPE_ANGLE should be
     EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE.
 
-    If EGL_PLATFORM_ANGLE_ENABLE_VALIDATION_LAYER_ANGLE is specified, it
-    controls enabling the standard Vulkan validation layers. EGL_TRUE enables
-    the validation and EGL_FALSE disables it. Any value other than these will
-    result in an error. If the flag is not specified, validation may default
-    to either enabled or disabled, depending on compile-time parameters in the
-    implementation.
-
     If EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE and
     EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE are not specified, the
     implementation will decide which version of Vulkan to instantiate. If they
@@ -83,21 +71,7 @@ New Behavior
 
 Issues
 
-    1) Would it be better to specify validation layers individually?
-
-       RESOLVED: It would give more fined grained control, but the layers
-       are sensitive to ordering, and there may be new ones added or old ones
-       removed, this abstracts the logic into a simpler form. The validation
-       layers maintainers are also moving towards a single-layer model from
-       the current multiple layers approach.
-
-    2) Should the validation layers default to on, off, or no guarantee?
-
-       Defaulting to off offers some consistency. However, it's customary for
-       some applications like ANGLE to turn on debugging features by default
-       in Debug builds.
-
-    3) Should ANGLE always instantiate the highest available version of Vulkan?
+    1) Should ANGLE always instantiate the highest available version of Vulkan?
 
        RESOLVED: It's possible that in a future implementation of Vulkan there
        may be driver issues present only on some version of Vulkan, and there's
@@ -108,3 +82,5 @@ Revision History
 
     Version 1, 2016-11-17 (Jamie Madill)
       - Initial draft
+    Version 2, 2017-07-19 (Jamie Madill)
+      - Moved debug layer control to EGL_ANGLE_platform_angle

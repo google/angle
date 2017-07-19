@@ -50,6 +50,7 @@
 #define EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE 0x3204
 #define EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE 0x3205
 #define EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE 0x3206
+#define EGL_PLATFORM_ANGLE_DEBUG_LAYERS_ENABLED_ANGLE 0x3451
 #endif /* EGL_ANGLE_platform_angle */
 
 #ifndef EGL_ANGLE_platform_angle_d3d
@@ -77,7 +78,6 @@
 #ifndef EGL_ANGLE_platform_angle_vulkan
 #define EGL_ANGLE_platform_angle_vulkan 1
 #define EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE 0x3450
-#define EGL_PLATFORM_ANGLE_ENABLE_VALIDATION_LAYER_ANGLE 0x3451
 #endif /* EGL_ANGLE_platform_angle_vulkan */
 
 #ifndef EGL_ANGLE_x11_visual

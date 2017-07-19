@@ -84,7 +84,7 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     {
         mBindGeneratesResource = bindGeneratesResource;
     }
-    void setVulkanLayersEnabled(bool enabled) { mVulkanLayersEnabled = enabled; }
+    void setDebugLayersEnabled(bool enabled) { mDebugLayersEnabled = enabled; }
     void setClientArraysEnabled(bool enabled) { mClientArraysEnabled = enabled; }
     void setRobustResourceInit(bool enabled) { mRobustResourceInit = enabled; }
     void setSwapInterval(EGLint swapInterval) { mSwapInterval = swapInterval; }
@@ -159,7 +159,7 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     Optional<bool> mRobustResourceInit;
     EGLint mSwapInterval;
     EGLint mSamples;
-    Optional<bool> mVulkanLayersEnabled;
+    Optional<bool> mDebugLayersEnabled;
     Optional<bool> mContextProgramCacheEnabled;
     angle::PlatformMethods *mPlatformMethods;
 };

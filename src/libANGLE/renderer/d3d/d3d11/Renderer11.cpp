@@ -382,6 +382,7 @@ const uint32_t ScratchMemoryBufferLifetime = 1000;
 
 Renderer11::Renderer11(egl::Display *display)
     : RendererD3D(display),
+      mCreateDebugDevice(false),
       mStateCache(),
       mStateManager(this),
       mLastHistogramUpdateTime(
@@ -488,6 +489,8 @@ Renderer11::Renderer11(egl::Display *display)
         const EGLenum presentPath = static_cast<EGLenum>(attributes.get(
             EGL_EXPERIMENTAL_PRESENT_PATH_ANGLE, EGL_EXPERIMENTAL_PRESENT_PATH_COPY_ANGLE));
         mPresentPathFastEnabled = (presentPath == EGL_EXPERIMENTAL_PRESENT_PATH_FAST_ANGLE);
+
+        mCreateDebugDevice = ShouldUseDebugLayers(attributes);
     }
     else if (display->getPlatform() == EGL_PLATFORM_DEVICE_EXT)
     {
@@ -707,7 +710,7 @@ egl::Error Renderer11::initializeD3DDevice()
         }
 #endif
 
-#ifdef _DEBUG
+        if (mCreateDebugDevice)
         {
             TRACE_EVENT0("gpu.angle", "D3D11CreateDevice (Debug)");
             result = D3D11CreateDevice(nullptr, mRequestedDriverType, nullptr,
@@ -715,15 +718,14 @@ egl::Error Renderer11::initializeD3DDevice()
                                        static_cast<unsigned int>(mAvailableFeatureLevels.size()),
                                        D3D11_SDK_VERSION, &mDevice,
                                        &(mRenderer11DeviceCaps.featureLevel), &mDeviceContext);
+
+            if (!mDevice || FAILED(result))
+            {
+                WARN() << "Failed creating Debug D3D11 device - falling back to release runtime.";
+            }
         }
 
         if (!mDevice || FAILED(result))
-        {
-            WARN() << "Failed creating Debug D3D11 device - falling back to release runtime.";
-        }
-
-        if (!mDevice || FAILED(result))
-#endif
         {
             SCOPED_ANGLE_HISTOGRAM_TIMER("GPU.ANGLE.D3D11CreateDeviceMS");
             TRACE_EVENT0("gpu.angle", "D3D11CreateDevice");
@@ -2813,17 +2815,13 @@ bool Renderer11::testDeviceResettable()
     ID3D11Device *dummyDevice;
     D3D_FEATURE_LEVEL dummyFeatureLevel;
     ID3D11DeviceContext *dummyContext;
+    UINT flags = (mCreateDebugDevice ? D3D11_CREATE_DEVICE_DEBUG : 0);
 
     ASSERT(mRequestedDriverType != D3D_DRIVER_TYPE_UNKNOWN);
     HRESULT result = D3D11CreateDevice(
-        nullptr, mRequestedDriverType, nullptr,
-#if defined(_DEBUG)
-        D3D11_CREATE_DEVICE_DEBUG,
-#else
-        0,
-#endif
-        mAvailableFeatureLevels.data(), static_cast<unsigned int>(mAvailableFeatureLevels.size()),
-        D3D11_SDK_VERSION, &dummyDevice, &dummyFeatureLevel, &dummyContext);
+        nullptr, mRequestedDriverType, nullptr, flags, mAvailableFeatureLevels.data(),
+        static_cast<unsigned int>(mAvailableFeatureLevels.size()), D3D11_SDK_VERSION, &dummyDevice,
+        &dummyFeatureLevel, &dummyContext);
 
     if (!mDevice || FAILED(result))
     {

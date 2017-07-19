@@ -35,6 +35,7 @@
 #include "libANGLE/renderer/gl/TransformFeedbackGL.h"
 #include "libANGLE/renderer/gl/VertexArrayGL.h"
 #include "libANGLE/renderer/gl/renderergl_utils.h"
+#include "libANGLE/renderer/renderer_utils.h"
 
 namespace
 {
@@ -54,7 +55,6 @@ std::vector<GLuint> GatherPaths(const std::vector<gl::Path *> &paths)
 
 }  // namespace
 
-#ifndef NDEBUG
 static void INTERNAL_GL_APIENTRY LogGLDebugMessage(GLenum source,
                                                    GLenum type,
                                                    GLuint id,
@@ -158,7 +158,6 @@ static void INTERNAL_GL_APIENTRY LogGLDebugMessage(GLenum source,
                << "\tMessage: " << message;
     }
 }
-#endif
 
 namespace rx
 {
@@ -168,7 +167,7 @@ RendererGL::RendererGL(const FunctionsGL *functions, const egl::AttributeMap &at
       mFunctions(functions),
       mStateManager(nullptr),
       mBlitter(nullptr),
-      mHasDebugOutput(false),
+      mUseDebugOutput(false),
       mSkipDrawCalls(false),
       mCapsInitialized(false),
       mMultiviewImplementationType(MultiviewImplementationTypeGL::UNSPECIFIED)
@@ -178,12 +177,14 @@ RendererGL::RendererGL(const FunctionsGL *functions, const egl::AttributeMap &at
     mStateManager = new StateManagerGL(mFunctions, getNativeCaps());
     mBlitter      = new BlitGL(functions, mWorkarounds, mStateManager);
 
-    mHasDebugOutput = mFunctions->isAtLeastGL(gl::Version(4, 3)) ||
-                      mFunctions->hasGLExtension("GL_KHR_debug") ||
-                      mFunctions->isAtLeastGLES(gl::Version(3, 2)) ||
-                      mFunctions->hasGLESExtension("GL_KHR_debug");
-#ifndef NDEBUG
-    if (mHasDebugOutput)
+    bool hasDebugOutput = mFunctions->isAtLeastGL(gl::Version(4, 3)) ||
+                          mFunctions->hasGLExtension("GL_KHR_debug") ||
+                          mFunctions->isAtLeastGLES(gl::Version(3, 2)) ||
+                          mFunctions->hasGLESExtension("GL_KHR_debug");
+
+    mUseDebugOutput = hasDebugOutput && ShouldUseDebugLayers(attribMap);
+
+    if (mUseDebugOutput)
     {
         mFunctions->enable(GL_DEBUG_OUTPUT);
         mFunctions->enable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
@@ -197,7 +198,6 @@ RendererGL::RendererGL(const FunctionsGL *functions, const egl::AttributeMap &at
                                         0, nullptr, GL_FALSE);
         mFunctions->debugMessageCallback(&LogGLDebugMessage, nullptr);
     }
-#endif
 
     EGLint deviceType =
         static_cast<EGLint>(attribMap.get(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE, EGL_NONE));
@@ -232,21 +232,17 @@ gl::Error RendererGL::flush()
 
 gl::Error RendererGL::finish()
 {
-#ifdef NDEBUG
-    if (mWorkarounds.finishDoesNotCauseQueriesToBeAvailable && mHasDebugOutput)
+    if (mWorkarounds.finishDoesNotCauseQueriesToBeAvailable && mUseDebugOutput)
     {
         mFunctions->enable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
     }
-#endif
 
     mFunctions->finish();
 
-#ifdef NDEBUG
-    if (mWorkarounds.finishDoesNotCauseQueriesToBeAvailable && mHasDebugOutput)
+    if (mWorkarounds.finishDoesNotCauseQueriesToBeAvailable && mUseDebugOutput)
     {
         mFunctions->disable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
     }
-#endif
 
     return gl::NoError();
 }

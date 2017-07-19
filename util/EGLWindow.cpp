@@ -122,7 +122,7 @@ EGLWindow::EGLWindow(EGLint glesMajorVersion,
       mRobustResourceInit(),
       mSwapInterval(-1),
       mSamples(-1),
-      mVulkanLayersEnabled(),
+      mDebugLayersEnabled(),
       mContextProgramCacheEnabled(),
       mPlatformMethods(nullptr)
 {
@@ -195,11 +195,11 @@ bool EGLWindow::initializeDisplayAndSurface(OSWindow *osWindow)
         displayAttributes.push_back(mPlatform.presentPath);
     }
 
-    // Set vulkan validation layer settings if requested.
-    if (mVulkanLayersEnabled.valid())
+    // Set debug layer settings if requested.
+    if (mDebugLayersEnabled.valid())
     {
-        displayAttributes.push_back(EGL_PLATFORM_ANGLE_ENABLE_VALIDATION_LAYER_ANGLE);
-        displayAttributes.push_back(mVulkanLayersEnabled.value() ? EGL_TRUE : EGL_FALSE);
+        displayAttributes.push_back(EGL_PLATFORM_ANGLE_DEBUG_LAYERS_ENABLED_ANGLE);
+        displayAttributes.push_back(mDebugLayersEnabled.value() ? EGL_TRUE : EGL_FALSE);
     }
 
     if (mPlatformMethods)

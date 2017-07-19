@@ -22,7 +22,7 @@ Status
 
 Version
 
-    Version 3, 2014-10-20
+    Version 4, 2017-07-19
 
 Number
 
@@ -70,6 +70,7 @@ New Tokens
         EGL_PLATFORM_ANGLE_TYPE_ANGLE                      0x3203
         EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE         0x3204
         EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE         0x3205
+        EGL_PLATFORM_ANGLE_DEBUG_LAYERS_ENABLED            0x3451
 
     Accepted as values for the EGL_PLATFORM_ANGLE_TYPE_ANGLE attribute:
 
@@ -103,6 +104,10 @@ New Behavior
     EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE are implicitly set to
     EGL_DONT_CARE.
 
+    If no <attrib_list> is specified, the value of
+    EGL_PLATFORM_ANGLE_DEBUG_LAYERS_ENABLED is implicitly set to
+    EGL_DONT_CARE.
+
     If EGL_PLATFORM_ANGLE_MAX_VERSION_MAJOR_ANGLE is set to EGL_DONT_CARE and
     EGL_PLATFORM_ANGLE_MAX_VERSION_MINOR_ANGLE is not set to EGL_DONT_CARE,
     an EGL_BAD_ATTRIBUTE error is generated and EGL_NO_DISPLAY is returned.
@@ -111,9 +116,21 @@ New Behavior
     requested by the value of EGL_PLATFORM_ANGLE_TYPE_ANGLE is available,
     EGL_NO_DISPLAY is returned. No error condition is raised in this case.
 
+    If EGL_PLATFORM_ANGLE_DEBUG_LAYERS_ENABLED is specified, it
+    controls enabling back-end validation layers. EGL_TRUE enables
+    validation and EGL_FALSE disables it. If it is set to EGL_DONT_CARE, the
+    default setting depends on the implementation. Any value other than these
+    will result in an error.
+
 Issues
 
-    None
+    1) Should the validation layers default to on, off, or no guarantee?
+
+       Defaulting to off offers some consistency. However, it's customary for
+       some applications like ANGLE to turn on debugging features by default
+       in Debug builds.
+
+       RESOLVED: default to implementation-dependent behaviour.
 
 Revision History
 
@@ -125,3 +142,5 @@ Revision History
     Version 3, 2014-10-20 (Geoff Lang)
       - Add attributes to request specific feature level and context versions.
       - Moved descriptions of platforms to child extension specs.
+    Version 4, 2017-07-19 (Jamie Madill)
+      - Add a debug layers enabled attribute to control runtime validation.

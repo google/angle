@@ -12,6 +12,7 @@
 #include "image_util/copyimage.h"
 #include "image_util/imageformats.h"
 
+#include "libANGLE/AttributeMap.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/Format.h"
 
@@ -298,6 +299,19 @@ ColorCopyFunction FastCopyFunctionMap::get(const gl::FormatType &formatType) con
     }
 
     return nullptr;
+}
+
+bool ShouldUseDebugLayers(const egl::AttributeMap &attribs)
+{
+    EGLAttrib debugSetting =
+        attribs.get(EGL_PLATFORM_ANGLE_DEBUG_LAYERS_ENABLED_ANGLE, EGL_DONT_CARE);
+
+// Prefer to enable debug layers if compiling in Debug, and disabled in Release.
+#if !defined(NDEBUG)
+    return (debugSetting != EGL_FALSE);
+#else
+    return (debugSetting == EGL_TRUE);
+#endif  // !defined(NDEBUG)
 }
 
 }  // namespace rx

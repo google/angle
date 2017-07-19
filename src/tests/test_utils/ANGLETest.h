@@ -281,7 +281,7 @@ class ANGLETestBase
     void setNoErrorEnabled(bool enabled);
     void setWebGLCompatibilityEnabled(bool webglCompatibility);
     void setBindGeneratesResource(bool bindGeneratesResource);
-    void setVulkanLayersEnabled(bool enabled);
+    void setDebugLayersEnabled(bool enabled);
     void setClientArraysEnabled(bool enabled);
     void setRobustResourceInit(bool enabled);
     void setContextProgramCacheEnabled(bool enabled);

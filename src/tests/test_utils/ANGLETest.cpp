@@ -211,14 +211,11 @@ ANGLETestBase::ANGLETestBase(const angle::PlatformParameters &params)
 {
     mEGLWindow = new EGLWindow(params.majorVersion, params.minorVersion, params.eglParameters);
 
-    // Default vulkan layers to enabled.
-    EGLint renderer = params.getRenderer();
-    if (renderer == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
-    {
-        mEGLWindow->setVulkanLayersEnabled(true);
-    }
+    // Default debug layers to enabled in tests.
+    mEGLWindow->setDebugLayersEnabled(true);
 
     // Workaround for NVIDIA not being able to share OpenGL and Vulkan contexts.
+    EGLint renderer      = params.getRenderer();
     bool needsWindowSwap = mLastRendererType.valid() &&
                            ((renderer != EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE) !=
                             (mLastRendererType.value() != EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE));
@@ -744,9 +741,9 @@ void ANGLETestBase::setBindGeneratesResource(bool bindGeneratesResource)
     mEGLWindow->setBindGeneratesResource(bindGeneratesResource);
 }
 
-void ANGLETestBase::setVulkanLayersEnabled(bool enabled)
+void ANGLETestBase::setDebugLayersEnabled(bool enabled)
 {
-    mEGLWindow->setVulkanLayersEnabled(enabled);
+    mEGLWindow->setDebugLayersEnabled(enabled);
 }
 
 void ANGLETestBase::setClientArraysEnabled(bool enabled)

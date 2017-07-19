@@ -21,13 +21,18 @@
 namespace angle
 {
 struct Format;
-}
+}  // namespace angle
 
 namespace gl
 {
 struct FormatType;
 struct InternalFormat;
-}
+}  // namespace gl
+
+namespace egl
+{
+class AttributeMap;
+}  // namespace egl
 
 namespace rx
 {
@@ -181,6 +186,8 @@ struct LoadImageFunctionInfo
 };
 
 using LoadFunctionMap = LoadImageFunctionInfo (*)(GLenum);
+
+bool ShouldUseDebugLayers(const egl::AttributeMap &attribs);
 
 }  // namespace rx
 

@@ -191,7 +191,7 @@ class RendererGL : angle::NonCopyable
 
     WorkaroundsGL mWorkarounds;
 
-    bool mHasDebugOutput;
+    bool mUseDebugOutput;
 
     // For performance debugging
     bool mSkipDrawCalls;
