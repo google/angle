@@ -104,7 +104,10 @@ egl::Error DisplayWGL::initialize(egl::Display *display)
     // Work around compile error from not defining "UNICODE" while Chromium does
     const LPSTR idcArrow = MAKEINTRESOURCEA(32512);
 
-    std::string className = FormatString("ANGLE DisplayWGL 0x%0.8p Intermediate Window Class", mDisplay);
+    std::ostringstream stream;
+    stream << "ANGLE DisplayWGL " << std::internal << std::setw(10) << std::setfill('0') << mDisplay
+           << " Intermediate Window Class";
+    std::string className = stream.str();
 
     WNDCLASSA intermediateClassDesc = { 0 };
     intermediateClassDesc.style = CS_OWNDC;

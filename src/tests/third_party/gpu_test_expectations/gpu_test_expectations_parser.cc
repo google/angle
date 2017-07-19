@@ -4,6 +4,8 @@
 
 #include "gpu_test_expectations_parser.h"
 
+#include <sstream>
+
 #include "common/angleutils.h"
 
 namespace base {
@@ -558,20 +560,18 @@ bool GPUTestExpectationsParser::DetectConflictsBetweenEntries() {
 
 void GPUTestExpectationsParser::PushErrorMessage(
     const std::string& message, size_t line_number) {
-  error_messages_.push_back(
-      base::StringPrintf("Line %d : %s",
-                         static_cast<int>(line_number), message.c_str()));
+    std::ostringstream stream;
+    stream << "Line " << line_number << " : " << message;
+    error_messages_.push_back(stream.str());
 }
 
 void GPUTestExpectationsParser::PushErrorMessage(
     const std::string& message,
     size_t entry1_line_number,
     size_t entry2_line_number) {
-  error_messages_.push_back(
-      base::StringPrintf("Line %d and %d : %s",
-                         static_cast<int>(entry1_line_number),
-                         static_cast<int>(entry2_line_number),
-                         message.c_str()));
+    std::ostringstream stream;
+    stream << "Line " << entry1_line_number << " and " << entry2_line_number << " : " << message;
+    error_messages_.push_back(stream.str());
 }
 
 GPUTestExpectationsParser:: GPUTestExpectationEntry::GPUTestExpectationEntry()

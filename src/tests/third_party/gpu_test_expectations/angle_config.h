@@ -41,11 +41,6 @@ namespace base
     using angle::SplitStringAlongWhitespace;
     using angle::HexStringToUInt;
     using angle::ReadFileToString;
-
-    // StringPrintf is called differently in ANGLE but using cannot change
-    // the name of the imported function. Use a define to change the name.
-    using ::FormatString;
-    #define StringPrintf FormatString
 }
 
 // TODO(jmadill): other platforms

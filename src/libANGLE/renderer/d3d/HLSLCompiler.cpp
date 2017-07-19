@@ -6,6 +6,8 @@
 
 #include "libANGLE/renderer/d3d/HLSLCompiler.h"
 
+#include <sstream>
+
 #include "common/utilities.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/features.h"
@@ -190,7 +192,9 @@ gl::Error HLSLCompiler::compileToBinary(gl::InfoLog &infoLog, const std::string 
     if (gl::DebugAnnotationsActive())
     {
         std::string sourcePath = getTempPath();
-        std::string sourceText = FormatString("#line 2 \"%s\"\n\n%s", sourcePath.c_str(), hlsl.c_str());
+        std::ostringstream stream;
+        stream << "#line 2 \"" << sourcePath << "\"\n\n" << hlsl;
+        std::string sourceText = stream.str();
         writeFile(sourcePath.c_str(), sourceText.c_str(), sourceText.size());
     }
 #endif
