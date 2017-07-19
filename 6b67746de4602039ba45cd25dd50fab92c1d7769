@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4e3f347e_1353dbc6",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-07-19T05:18:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "af285a2a_2e94a0f8",
+      "range": {
+        "startLine": 46,
+        "startChar": 4,
+        "endLine": 47,
+        "endChar": 51
+      },
+      "revId": "6b67746de4602039ba45cd25dd50fab92c1d7769",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "31e68dbd_fc9b9108",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 3
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "4246d87c_2708e732",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 931,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-07-19T05:18:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "31e68dbd_fc9b9108",
+      "range": {
+        "startLine": 930,
+        "startChar": 43,
+        "endLine": 931,
+        "endChar": 80
+      },
+      "revId": "6b67746de4602039ba45cd25dd50fab92c1d7769",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "03083805_388c63ee",
         "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
         "patchSetId": 3
@@ -59,6 +107,30 @@
       "writtenOn": "2017-07-18T17:30:54Z",
       "side": 1,
       "message": "return GL_INVALID_INDEX here too.",
+      "range": {
+        "startLine": 221,
+        "startChar": 19,
+        "endLine": 221,
+        "endChar": 21
+      },
+      "revId": "6b67746de4602039ba45cd25dd50fab92c1d7769",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc665ca9_1692b9e5",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 221,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-07-19T05:18:20Z",
+      "side": 1,
+      "message": "The spec explicitly says at page 87, it \"returns the location assigned to the variable named \u0027name\u0027 in interface \u0027programInterface\u0027 of program object \u0027program\u0027. \u0027programInterface\u0027 must be one of UNIFORM, PROGRAM_INPUT, or ROGRAM_OUTPUT. The value -1 will be returned if an error occurs, if \u0027name\u0027 does not identify an active variable on \u0027programInterface\u0027, or if \u0027name\u0027 identifies an active variable that does not have a valid location assigned, as described above. The locations returned by these commands are the same locations returned when querying the LOCATION resource properties.\"\nAlthough it looks a bit indecent in coding, we\u0027d better respect the spec.",
+      "parentUuid": "03083805_388c63ee",
       "range": {
         "startLine": 221,
         "startChar": 19,
