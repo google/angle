@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e90477cf_0730f62c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 728,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-07-19T20:29:14Z",
+      "side": 1,
+      "message": "I think you also need mCreateDebugDevice here.",
+      "range": {
+        "startLine": 728,
+        "startChar": 8,
+        "endLine": 728,
+        "endChar": 39
+      },
+      "revId": "af125cb01792be27aa62e054f40804c3fa4f7294",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
