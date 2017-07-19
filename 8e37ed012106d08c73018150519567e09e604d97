@@ -22,6 +22,30 @@
       "revId": "8e37ed012106d08c73018150519567e09e604d97",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23d8a1a8_e37f32dc",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-19T14:52:46Z",
+      "side": 1,
+      "message": "Maybe, but I think that\u0027s best left as a follow-up, as you probably intended. It\u0027s also a bit unclear why the validation for FramebufferTexture2D is disallowing attaching a compressed texture - it seems to me from the GLES 2.0 spec that that should cause an incomplete framebuffer rather than an error when attaching the texture.\n\nIt\u0027s okay to have the compressed texture rule for multiview at least for now, though.",
+      "parentUuid": "ec7bbb0e_fdafe79c",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 83,
+        "endChar": 1
+      },
+      "revId": "8e37ed012106d08c73018150519567e09e604d97",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
