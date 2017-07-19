@@ -75,8 +75,7 @@ Error Buffer::bufferData(const Context *context,
     if (context && context->getGLState().isRobustResourceInitEnabled() && !data && size > 0)
     {
         angle::MemoryBuffer *scratchBuffer = nullptr;
-        ANGLE_TRY(context->getScratchBuffer(static_cast<size_t>(size), &scratchBuffer));
-        std::fill(scratchBuffer->data(), scratchBuffer->data() + size, static_cast<uint8_t>(0));
+        ANGLE_TRY(context->getZeroFilledBuffer(static_cast<size_t>(size), &scratchBuffer));
         dataForImpl = scratchBuffer->data();
     }
 

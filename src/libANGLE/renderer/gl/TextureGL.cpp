@@ -575,9 +575,8 @@ gl::Error TextureGL::copyImage(const gl::Context *context,
         GLuint pixelBytes =
             gl::GetInternalFormatInfo(copyTexImageFormat.internalFormat, type).pixelBytes;
         angle::MemoryBuffer *zero;
-        ANGLE_TRY(context->getScratchBuffer(
+        ANGLE_TRY(context->getZeroFilledBuffer(
             origSourceArea.width * origSourceArea.height * pixelBytes, &zero));
-        zero->fill(0);
         mStateManager->setPixelUnpackState(gl::PixelUnpackState(1, 0));
         mFunctions->texImage2D(target, static_cast<GLint>(level), copyTexImageFormat.internalFormat,
                                origSourceArea.width, origSourceArea.height, 0,

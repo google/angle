@@ -108,6 +108,20 @@ ScratchBuffer::~ScratchBuffer()
 
 bool ScratchBuffer::get(size_t requestedSize, MemoryBuffer **memoryBufferOut)
 {
+    return getImpl(requestedSize, memoryBufferOut, Optional<uint8_t>::Invalid());
+}
+
+bool ScratchBuffer::getInitialized(size_t requestedSize,
+                                   MemoryBuffer **memoryBufferOut,
+                                   uint8_t initValue)
+{
+    return getImpl(requestedSize, memoryBufferOut, Optional<uint8_t>(initValue));
+}
+
+bool ScratchBuffer::getImpl(size_t requestedSize,
+                            MemoryBuffer **memoryBufferOut,
+                            Optional<uint8_t> initValue)
+{
     if (mScratchMemory.size() == requestedSize)
     {
         mResetCounter    = mLifetime;
@@ -128,6 +142,10 @@ bool ScratchBuffer::get(size_t requestedSize, MemoryBuffer **memoryBufferOut)
             return false;
         }
         mResetCounter = mLifetime;
+        if (initValue.valid())
+        {
+            mScratchMemory.fill(initValue.value());
+        }
     }
 
     ASSERT(mScratchMemory.size() >= requestedSize);

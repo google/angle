@@ -888,9 +888,8 @@ gl::Error TextureD3D_2D::copyImage(const gl::Context *context,
         !mRenderer->isRobustResourceInitEnabled())
     {
         angle::MemoryBuffer *zero;
-        ANGLE_TRY(context->getScratchBuffer(
+        ANGLE_TRY(context->getZeroFilledBuffer(
             origSourceArea.width * origSourceArea.height * internalFormatInfo.pixelBytes, &zero));
-        zero->fill(0);
         setImage(context, target, imageLevel, internalFormat, sourceExtents,
                  internalFormatInfo.format, internalFormatInfo.type, gl::PixelUnpackState(1, 0),
                  zero->data());

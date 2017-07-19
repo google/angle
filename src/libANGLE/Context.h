@@ -793,7 +793,8 @@ class Context final : public ValidationContext
     void getFramebufferParameteriv(GLenum target, GLenum pname, GLint *params);
     void setFramebufferParameteri(GLenum target, GLenum pname, GLint param);
 
-    Error getScratchBuffer(size_t requestedSize, angle::MemoryBuffer **scratchBufferOut) const;
+    Error getScratchBuffer(size_t requestedSizeBytes, angle::MemoryBuffer **scratchBufferOut) const;
+    Error getZeroFilledBuffer(size_t requstedSizeBytes, angle::MemoryBuffer **zeroBufferOut) const;
 
     void dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ);
 
@@ -915,6 +916,7 @@ class Context final : public ValidationContext
 
     // Not really a property of context state. The size and contexts change per-api-call.
     mutable angle::ScratchBuffer mScratchBuffer;
+    mutable angle::ScratchBuffer mZeroFilledBuffer;
 };
 
 template <EntryPoint EP, typename... ArgsT>
