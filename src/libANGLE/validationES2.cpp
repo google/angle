@@ -782,11 +782,11 @@ bool ValidCap(const Context *context, GLenum cap, bool queryOnly)
 
 // Return true if a character belongs to the ASCII subset as defined in GLSL ES 1.0 spec section
 // 3.1.
-bool IsValidESSLCharacter(unsigned char c, bool allowBackslash)
+bool IsValidESSLCharacter(unsigned char c)
 {
     // Printing characters are valid except " $ ` @ \ ' DEL.
-    if (c >= 32 && c <= 126 && c != '"' && c != '$' && c != '`' && c != '@' &&
-        (allowBackslash || c != '\\') && c != '\'')
+    if (c >= 32 && c <= 126 && c != '"' && c != '$' && c != '`' && c != '@' && c != '\\' &&
+        c != '\'')
     {
         return true;
     }
@@ -800,13 +800,133 @@ bool IsValidESSLCharacter(unsigned char c, bool allowBackslash)
     return false;
 }
 
-bool IsValidESSLString(const char *str, size_t len, bool allowBackslash)
+bool IsValidESSLString(const char *str, size_t len)
 {
     for (size_t i = 0; i < len; i++)
     {
-        if (!IsValidESSLCharacter(str[i], allowBackslash))
+        if (!IsValidESSLCharacter(str[i]))
         {
             return false;
+        }
+    }
+
+    return true;
+}
+
+bool IsValidESSLShaderSourceString(const char *str, size_t len, bool lineContinuationAllowed)
+{
+    enum class ParseState
+    {
+        // Have not seen an ASCII non-whitespace character yet on
+        // this line. Possible that we might see a preprocessor
+        // directive.
+        BEGINING_OF_LINE,
+
+        // Have seen at least one ASCII non-whitespace character
+        // on this line.
+        MIDDLE_OF_LINE,
+
+        // Handling a preprocessor directive. Passes through all
+        // characters up to the end of the line. Disables comment
+        // processing.
+        IN_PREPROCESSOR_DIRECTIVE,
+
+        // Handling a single-line comment. The comment text is
+        // replaced with a single space.
+        IN_SINGLE_LINE_COMMENT,
+
+        // Handling a multi-line comment. Newlines are passed
+        // through to preserve line numbers.
+        IN_MULTI_LINE_COMMENT
+    };
+
+    ParseState state = ParseState::BEGINING_OF_LINE;
+    size_t pos       = 0;
+
+    while (pos < len)
+    {
+        char c    = str[pos];
+        char next = pos + 1 < len ? str[pos + 1] : 0;
+
+        // Check for newlines
+        if (c == '\n' || c == '\r')
+        {
+            if (state != ParseState::IN_MULTI_LINE_COMMENT)
+            {
+                state = ParseState::BEGINING_OF_LINE;
+            }
+
+            pos++;
+            continue;
+        }
+
+        switch (state)
+        {
+            case ParseState::BEGINING_OF_LINE:
+                if (c == ' ')
+                {
+                    // Maintain the BEGINING_OF_LINE state until a non-space is seen
+                    pos++;
+                }
+                else if (c == '#')
+                {
+                    state = ParseState::IN_PREPROCESSOR_DIRECTIVE;
+                    pos++;
+                }
+                else
+                {
+                    // Don't advance, re-process this character with the MIDDLE_OF_LINE state
+                    state = ParseState::MIDDLE_OF_LINE;
+                }
+                break;
+
+            case ParseState::MIDDLE_OF_LINE:
+                if (c == '/' && next == '/')
+                {
+                    state = ParseState::IN_SINGLE_LINE_COMMENT;
+                    pos++;
+                }
+                else if (c == '/' && next == '*')
+                {
+                    state = ParseState::IN_MULTI_LINE_COMMENT;
+                    pos++;
+                }
+                else if (lineContinuationAllowed && c == '\\' && (next == '\n' || next == '\r'))
+                {
+                    // Skip line continuation characters
+                }
+                else if (!IsValidESSLCharacter(c))
+                {
+                    return false;
+                }
+                pos++;
+                break;
+
+            case ParseState::IN_PREPROCESSOR_DIRECTIVE:
+                // No matter what the character is, just pass it
+                // through. Do not parse comments in this state.
+                pos++;
+                break;
+
+            case ParseState::IN_SINGLE_LINE_COMMENT:
+                // Line-continuation characters are processed before comment processing.
+                // Advance string if a new line character is immediately behind
+                // line-continuation character.
+                if (c == '\\' && (next == '\n' || next == '\r'))
+                {
+                    pos++;
+                }
+                pos++;
+                break;
+
+            case ParseState::IN_MULTI_LINE_COMMENT:
+                if (c == '*' && next == '/')
+                {
+                    state = ParseState::MIDDLE_OF_LINE;
+                    pos++;
+                }
+                pos++;
+                break;
         }
     }
 
@@ -2745,8 +2865,7 @@ bool ValidateBindUniformLocationCHROMIUM(Context *context,
 
     // The WebGL spec (section 6.20) disallows strings containing invalid ESSL characters for
     // shader-related entry points
-    if (context->getExtensions().webglCompatibility &&
-        !IsValidESSLString(name, strlen(name), false))
+    if (context->getExtensions().webglCompatibility && !IsValidESSLString(name, strlen(name)))
     {
         ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidNameCharacters);
         return false;
@@ -4076,8 +4195,7 @@ bool ValidateBindAttribLocation(ValidationContext *context,
 
     // The WebGL spec (section 6.20) disallows strings containing invalid ESSL characters for
     // shader-related entry points
-    if (context->getExtensions().webglCompatibility &&
-        !IsValidESSLString(name, strlen(name), false))
+    if (context->getExtensions().webglCompatibility && !IsValidESSLString(name, strlen(name)))
     {
         ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidNameCharacters);
         return false;
@@ -4809,8 +4927,7 @@ bool ValidateGetAttribLocation(ValidationContext *context, GLuint program, const
 {
     // The WebGL spec (section 6.20) disallows strings containing invalid ESSL characters for
     // shader-related entry points
-    if (context->getExtensions().webglCompatibility &&
-        !IsValidESSLString(name, strlen(name), false))
+    if (context->getExtensions().webglCompatibility && !IsValidESSLString(name, strlen(name)))
     {
         ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidNameCharacters);
         return false;
@@ -4969,8 +5086,7 @@ bool ValidateGetUniformLocation(ValidationContext *context, GLuint program, cons
 
     // The WebGL spec (section 6.20) disallows strings containing invalid ESSL characters for
     // shader-related entry points
-    if (context->getExtensions().webglCompatibility &&
-        !IsValidESSLString(name, strlen(name), false))
+    if (context->getExtensions().webglCompatibility && !IsValidESSLString(name, strlen(name)))
     {
         ANGLE_VALIDATION_ERR(context, InvalidValue(), InvalidNameCharacters);
         return false;
@@ -5197,10 +5313,12 @@ bool ValidateShaderSource(ValidationContext *context,
     {
         for (GLsizei i = 0; i < count; i++)
         {
-            size_t len = length ? static_cast<size_t>(length[i]) : strlen(string[i]);
+            size_t len =
+                (length && length[i] >= 0) ? static_cast<size_t>(length[i]) : strlen(string[i]);
 
             // Backslash as line-continuation is allowed in WebGL 2.0.
-            if (!IsValidESSLString(string[i], len, context->getClientVersion() >= ES_3_0))
+            if (!IsValidESSLShaderSourceString(string[i], len,
+                                               context->getClientVersion() >= ES_3_0))
             {
                 ANGLE_VALIDATION_ERR(context, InvalidValue(), ShaderSourceInvalidCharacters);
                 return false;

@@ -892,11 +892,14 @@ TEST_P(WebGLCompatibilityTest, InvalidAttributeAndUniformNames)
         "precision highp float;\n"
         "uniform vec4 ";
     frag += validUniformName;
+    // Insert illegal characters into comments
     frag +=
         ";\n"
+        "    // $ \" @ /*\n"
         "void main()\n"
-        "{\n"
-        "    gl_FragColor = vec4(1.0);\n"
+        "{/*\n"
+        "    ` @ $\n"
+        "    */gl_FragColor = vec4(1.0);\n"
         "}\n";
 
     ANGLE_GL_PROGRAM(program, vert, frag);
@@ -940,6 +943,39 @@ TEST_P(WebGLCompatibilityTest, InvalidAttributeAndUniformNames)
         EXPECT_GL_ERROR(GL_INVALID_VALUE);
         glDeleteShader(shader);
     }
+}
+
+// Test that line continuation is handled correctly when valdiating shader source
+TEST_P(WebGL2CompatibilityTest, ShaderSourceLineContinuation)
+{
+    const char *validVert =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "\n"
+        "void main ()\n"
+        "{\n"
+        "    float f\\\n"
+        "oo = 1.0;\n"
+        "    gl_Position = vec4(foo);\n"
+        "}\n";
+
+    const char *invalidVert =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "\n"
+        "void main ()\n"
+        "{\n"
+        "    float f\\$\n"
+        "oo = 1.0;\n"
+        "    gl_Position = vec4(foo);\n"
+        "}\n";
+
+    GLuint shader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(shader, 1, &validVert, nullptr);
+    EXPECT_GL_NO_ERROR();
+    glShaderSource(shader, 1, &invalidVert, nullptr);
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+    glDeleteShader(shader);
 }
 
 // Test the checks for OOB reads in the vertex buffers, instanced version
