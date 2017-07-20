@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "efd9a5c8_938c533f",
+        "filename": "src/libANGLE/FramebufferAttachment.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-20T12:22:21Z",
+      "side": 1,
+      "message": "We cannot have arrays here without defining it in the cpp. Read it in the second (not accepted) answer https://stackoverflow.com/questions/8016780/undefined-reference-to-static-constexpr-char\n\nSo, I decided to just go with the guaranteed to compile solution.",
+      "range": {
+        "startLine": 135,
+        "startChar": 4,
+        "endLine": 135,
+        "endChar": 60
+      },
+      "revId": "a9e1069a05238c96d7d88543168349e2ab14c875",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
