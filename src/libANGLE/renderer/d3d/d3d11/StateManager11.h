@@ -47,6 +47,35 @@ struct dx_ComputeConstants11
     unsigned int padding;  // This just pads the struct to 16 bytes
 };
 
+class SamplerMetadata11 final : angle::NonCopyable
+{
+  public:
+    SamplerMetadata11();
+    ~SamplerMetadata11();
+
+    struct dx_SamplerMetadata
+    {
+        int baseLevel;
+        int internalFormatBits;
+        int wrapModes;
+        int padding;  // This just pads the struct to 16 bytes
+    };
+    static_assert(sizeof(dx_SamplerMetadata) == 16u,
+                  "Sampler metadata struct must be one 4-vec / 16 bytes.");
+
+    void initData(unsigned int samplerCount);
+    void update(unsigned int samplerIndex, const gl::Texture &texture);
+
+    const dx_SamplerMetadata *getData() const;
+    size_t sizeBytes() const;
+    bool isDirty() const { return mDirty; }
+    void markClean() { mDirty = false; }
+
+  private:
+    std::vector<dx_SamplerMetadata> mSamplerMetadata;
+    bool mDirty;
+};
+
 class StateManager11 final : angle::NonCopyable
 {
   public:
@@ -58,18 +87,25 @@ class StateManager11 final : angle::NonCopyable
 
     void syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits);
 
+    // TODO(jmadill): Don't expose these.
     const dx_VertexConstants11 &getVertexConstants() const { return mVertexConstants; }
     const dx_PixelConstants11 &getPixelConstants() const { return mPixelConstants; }
     const dx_ComputeConstants11 &getComputeConstants() const { return mComputeConstants; }
 
-    void setComputeConstants(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ);
+    SamplerMetadata11 *getVertexSamplerMetadata() { return &mSamplerMetadataVS; }
+    SamplerMetadata11 *getPixelSamplerMetadata() { return &mSamplerMetadataPS; }
+    SamplerMetadata11 *getComputeSamplerMetadata() { return &mSamplerMetadataCS; }
+
+    gl::Error updateStateForCompute(const gl::Context *context,
+                                    GLuint numGroupsX,
+                                    GLuint numGroupsY,
+                                    GLuint numGroupsZ);
 
     void updateStencilSizeIfChanged(bool depthStencilInitialized, unsigned int stencilSize);
 
     void setShaderResource(gl::SamplerType shaderType,
                            UINT resourceSlot,
                            ID3D11ShaderResourceView *srv);
-    gl::Error clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd);
 
     // Checks are done on a framebuffer state change to trigger other state changes.
     // The Context is allowed to be nullptr for these methods, when called in EGL init code.
@@ -143,6 +179,25 @@ class StateManager11 final : angle::NonCopyable
     void checkPresentPath(const gl::Context *context);
 
     gl::Error syncFramebuffer(const gl::Context *context, gl::Framebuffer *framebuffer);
+
+    gl::Error syncTextures(const gl::Context *context);
+    gl::Error applyTextures(const gl::Context *context,
+                            gl::SamplerType shaderType,
+                            const FramebufferTextureArray &framebufferTextures,
+                            size_t framebufferTextureCount);
+
+    gl::Error setSamplerState(const gl::Context *context,
+                              gl::SamplerType type,
+                              int index,
+                              gl::Texture *texture,
+                              const gl::SamplerState &sampler);
+    gl::Error setTexture(const gl::Context *context,
+                         gl::SamplerType type,
+                         int index,
+                         gl::Texture *texture);
+
+    // Faster than calling setTexture a jillion times
+    gl::Error clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd);
 
     enum DirtyBitType
     {
@@ -263,6 +318,20 @@ class StateManager11 final : angle::NonCopyable
     ResourceSerial mAppliedGeometryShader;
     ResourceSerial mAppliedPixelShader;
     ResourceSerial mAppliedComputeShader;
+
+    // Currently applied sampler states
+    std::vector<bool> mForceSetVertexSamplerStates;
+    std::vector<gl::SamplerState> mCurVertexSamplerStates;
+
+    std::vector<bool> mForceSetPixelSamplerStates;
+    std::vector<gl::SamplerState> mCurPixelSamplerStates;
+
+    std::vector<bool> mForceSetComputeSamplerStates;
+    std::vector<gl::SamplerState> mCurComputeSamplerStates;
+
+    SamplerMetadata11 mSamplerMetadataVS;
+    SamplerMetadata11 mSamplerMetadataPS;
+    SamplerMetadata11 mSamplerMetadataCS;
 };
 
 }  // namespace rx

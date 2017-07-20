@@ -13,9 +13,11 @@
 #include "libANGLE/Context.h"
 #include "libANGLE/Query.h"
 #include "libANGLE/VertexArray.h"
+#include "libANGLE/renderer/d3d/TextureD3D.h"
 #include "libANGLE/renderer/d3d/d3d11/Framebuffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
+#include "libANGLE/renderer/d3d/d3d11/TextureStorage11.h"
 
 namespace rx
 {
@@ -97,7 +99,25 @@ ID3D11Resource *GetViewResource(ID3D11View *view)
     return resource;
 }
 
+int GetWrapBits(GLenum wrap)
+{
+    switch (wrap)
+    {
+        case GL_CLAMP_TO_EDGE:
+            return 0x1;
+        case GL_REPEAT:
+            return 0x2;
+        case GL_MIRRORED_REPEAT:
+            return 0x3;
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
 }  // anonymous namespace
+
+// StateManager11::SRVCache Implementation.
 
 void StateManager11::SRVCache::update(size_t resourceIndex, ID3D11ShaderResourceView *srv)
 {
@@ -134,6 +154,110 @@ void StateManager11::SRVCache::clear()
 
     memset(&mCurrentSRVs[0], 0, sizeof(SRVRecord) * mCurrentSRVs.size());
     mHighestUsedSRV = 0;
+}
+
+// SamplerMetadataD3D11 implementation
+
+SamplerMetadata11::SamplerMetadata11() : mDirty(true)
+{
+}
+
+SamplerMetadata11::~SamplerMetadata11()
+{
+}
+
+void SamplerMetadata11::initData(unsigned int samplerCount)
+{
+    mSamplerMetadata.resize(samplerCount);
+}
+
+void SamplerMetadata11::update(unsigned int samplerIndex, const gl::Texture &texture)
+{
+    unsigned int baseLevel = texture.getTextureState().getEffectiveBaseLevel();
+    GLenum sizedFormat =
+        texture.getFormat(texture.getTarget(), baseLevel).info->sizedInternalFormat;
+    if (mSamplerMetadata[samplerIndex].baseLevel != static_cast<int>(baseLevel))
+    {
+        mSamplerMetadata[samplerIndex].baseLevel = static_cast<int>(baseLevel);
+        mDirty                                   = true;
+    }
+
+    // Some metadata is needed only for integer textures. We avoid updating the constant buffer
+    // unnecessarily by changing the data only in case the texture is an integer texture and
+    // the values have changed.
+    bool needIntegerTextureMetadata = false;
+    // internalFormatBits == 0 means a 32-bit texture in the case of integer textures.
+    int internalFormatBits = 0;
+    switch (sizedFormat)
+    {
+        case GL_RGBA32I:
+        case GL_RGBA32UI:
+        case GL_RGB32I:
+        case GL_RGB32UI:
+        case GL_RG32I:
+        case GL_RG32UI:
+        case GL_R32I:
+        case GL_R32UI:
+            needIntegerTextureMetadata = true;
+            break;
+        case GL_RGBA16I:
+        case GL_RGBA16UI:
+        case GL_RGB16I:
+        case GL_RGB16UI:
+        case GL_RG16I:
+        case GL_RG16UI:
+        case GL_R16I:
+        case GL_R16UI:
+            needIntegerTextureMetadata = true;
+            internalFormatBits         = 16;
+            break;
+        case GL_RGBA8I:
+        case GL_RGBA8UI:
+        case GL_RGB8I:
+        case GL_RGB8UI:
+        case GL_RG8I:
+        case GL_RG8UI:
+        case GL_R8I:
+        case GL_R8UI:
+            needIntegerTextureMetadata = true;
+            internalFormatBits         = 8;
+            break;
+        case GL_RGB10_A2UI:
+            needIntegerTextureMetadata = true;
+            internalFormatBits         = 10;
+            break;
+        default:
+            break;
+    }
+    if (needIntegerTextureMetadata)
+    {
+        if (mSamplerMetadata[samplerIndex].internalFormatBits != internalFormatBits)
+        {
+            mSamplerMetadata[samplerIndex].internalFormatBits = internalFormatBits;
+            mDirty                                            = true;
+        }
+        // Pack the wrap values into one integer so we can fit all the metadata in one 4-integer
+        // vector.
+        GLenum wrapS  = texture.getWrapS();
+        GLenum wrapT  = texture.getWrapT();
+        GLenum wrapR  = texture.getWrapR();
+        int wrapModes = GetWrapBits(wrapS) | (GetWrapBits(wrapT) << 2) | (GetWrapBits(wrapR) << 4);
+        if (mSamplerMetadata[samplerIndex].wrapModes != wrapModes)
+        {
+            mSamplerMetadata[samplerIndex].wrapModes = wrapModes;
+            mDirty                                   = true;
+        }
+    }
+}
+
+const SamplerMetadata11::dx_SamplerMetadata *SamplerMetadata11::getData() const
+{
+    return mSamplerMetadata.data();
+}
+
+size_t SamplerMetadata11::sizeBytes() const
+{
+    return sizeof(dx_SamplerMetadata) * mSamplerMetadata.size();
 }
 
 static const GLenum QueryTypes[] = {GL_ANY_SAMPLES_PASSED, GL_ANY_SAMPLES_PASSED_CONSERVATIVE,
@@ -252,11 +376,19 @@ void StateManager11::checkPresentPath(const gl::Context *context)
     }
 }
 
-void StateManager11::setComputeConstants(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ)
+gl::Error StateManager11::updateStateForCompute(const gl::Context *context,
+                                                GLuint numGroupsX,
+                                                GLuint numGroupsY,
+                                                GLuint numGroupsZ)
 {
     mComputeConstants.numWorkGroups[0] = numGroupsX;
     mComputeConstants.numWorkGroups[1] = numGroupsY;
     mComputeConstants.numWorkGroups[2] = numGroupsZ;
+
+    // TODO(jmadill): More complete implementation.
+    ANGLE_TRY(syncTextures(context));
+
+    return gl::NoError();
 }
 
 void StateManager11::syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits)
@@ -853,6 +985,10 @@ void StateManager11::invalidateEverything(const gl::Context *context)
     mAppliedGeometryShader.dirty();
     mAppliedPixelShader.dirty();
     mAppliedComputeShader.dirty();
+
+    std::fill(mForceSetVertexSamplerStates.begin(), mForceSetVertexSamplerStates.end(), true);
+    std::fill(mForceSetPixelSamplerStates.begin(), mForceSetPixelSamplerStates.end(), true);
+    std::fill(mForceSetComputeSamplerStates.begin(), mForceSetComputeSamplerStates.end(), true);
 }
 
 void StateManager11::invalidateVertexBuffer()
@@ -1020,6 +1156,18 @@ void StateManager11::initialize(const gl::Caps &caps)
     mNullSRVs.resize(caps.maxTextureImageUnits, nullptr);
 
     mCurrentValueAttribs.resize(caps.maxVertexAttributes);
+
+    mForceSetVertexSamplerStates.resize(caps.maxVertexTextureImageUnits);
+    mForceSetPixelSamplerStates.resize(caps.maxTextureImageUnits);
+    mForceSetComputeSamplerStates.resize(caps.maxComputeTextureImageUnits);
+
+    mCurVertexSamplerStates.resize(caps.maxVertexTextureImageUnits);
+    mCurPixelSamplerStates.resize(caps.maxTextureImageUnits);
+    mCurComputeSamplerStates.resize(caps.maxComputeTextureImageUnits);
+
+    mSamplerMetadataVS.initData(caps.maxVertexTextureImageUnits);
+    mSamplerMetadataPS.initData(caps.maxTextureImageUnits);
+    mSamplerMetadataCS.initData(caps.maxComputeTextureImageUnits);
 }
 
 void StateManager11::deinitialize()
@@ -1284,6 +1432,9 @@ gl::Error StateManager11::updateState(const gl::Context *context, GLenum drawMod
         }
     }
 
+    // TODO(jmadill): Use dirty bits.
+    ANGLE_TRY(syncTextures(context));
+
     // Check that we haven't set any dirty bits in the flushing of the dirty bits loop.
     ASSERT(mInternalDirtyBits.none());
 
@@ -1354,6 +1505,220 @@ void StateManager11::setComputeShader(const d3d11::ComputeShader *shader)
         mRenderer->getDeviceContext()->CSSetShader(appliedShader, nullptr, 0);
         mAppliedComputeShader = serial;
     }
+}
+
+// For each Direct3D sampler of either the pixel or vertex stage,
+// looks up the corresponding OpenGL texture image unit and texture type,
+// and sets the texture and its addressing/filtering state (or NULL when inactive).
+// Sampler mapping needs to be up-to-date on the program object before this is called.
+gl::Error StateManager11::applyTextures(const gl::Context *context,
+                                        gl::SamplerType shaderType,
+                                        const FramebufferTextureArray &framebufferTextures,
+                                        size_t framebufferTextureCount)
+{
+    const auto &glState    = context->getGLState();
+    const auto &caps       = context->getCaps();
+    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(glState.getProgram());
+
+    ASSERT(!programD3D->isSamplerMappingDirty());
+
+    // TODO(jmadill): Use the Program's sampler bindings.
+
+    unsigned int samplerRange = programD3D->getUsedSamplerRange(shaderType);
+    for (unsigned int samplerIndex = 0; samplerIndex < samplerRange; samplerIndex++)
+    {
+        GLenum textureType = programD3D->getSamplerTextureType(shaderType, samplerIndex);
+        GLint textureUnit  = programD3D->getSamplerMapping(shaderType, samplerIndex, caps);
+        if (textureUnit != -1)
+        {
+            gl::Texture *texture = glState.getSamplerTexture(textureUnit, textureType);
+            ASSERT(texture);
+
+            gl::Sampler *samplerObject = glState.getSampler(textureUnit);
+
+            const gl::SamplerState &samplerState =
+                samplerObject ? samplerObject->getSamplerState() : texture->getSamplerState();
+
+            // TODO: std::binary_search may become unavailable using older versions of GCC
+            if (texture->getTextureState().isSamplerComplete(samplerState,
+                                                             context->getContextState()) &&
+                !std::binary_search(framebufferTextures.begin(),
+                                    framebufferTextures.begin() + framebufferTextureCount, texture))
+            {
+                ANGLE_TRY(
+                    setSamplerState(context, shaderType, samplerIndex, texture, samplerState));
+                ANGLE_TRY(setTexture(context, shaderType, samplerIndex, texture));
+            }
+            else
+            {
+                // Texture is not sampler complete or it is in use by the framebuffer.  Bind the
+                // incomplete texture.
+                gl::Texture *incompleteTexture =
+                    mRenderer->getIncompleteTexture(context, textureType);
+
+                ANGLE_TRY(setSamplerState(context, shaderType, samplerIndex, incompleteTexture,
+                                          incompleteTexture->getSamplerState()));
+                ANGLE_TRY(setTexture(context, shaderType, samplerIndex, incompleteTexture));
+            }
+        }
+        else
+        {
+            // No texture bound to this slot even though it is used by the shader, bind a NULL
+            // texture
+            ANGLE_TRY(setTexture(context, shaderType, samplerIndex, nullptr));
+        }
+    }
+
+    // Set all the remaining textures to NULL
+    size_t samplerCount = (shaderType == gl::SAMPLER_PIXEL) ? caps.maxTextureImageUnits
+                                                            : caps.maxVertexTextureImageUnits;
+    clearTextures(shaderType, samplerRange, samplerCount);
+
+    return gl::NoError();
+}
+
+gl::Error StateManager11::syncTextures(const gl::Context *context)
+{
+    FramebufferTextureArray framebufferTextures;
+    size_t framebufferSerialCount =
+        mRenderer->getBoundFramebufferTextures(context->getContextState(), &framebufferTextures);
+
+    ANGLE_TRY(
+        applyTextures(context, gl::SAMPLER_VERTEX, framebufferTextures, framebufferSerialCount));
+    ANGLE_TRY(
+        applyTextures(context, gl::SAMPLER_PIXEL, framebufferTextures, framebufferSerialCount));
+    return gl::NoError();
+}
+
+gl::Error StateManager11::setSamplerState(const gl::Context *context,
+                                          gl::SamplerType type,
+                                          int index,
+                                          gl::Texture *texture,
+                                          const gl::SamplerState &samplerState)
+{
+#if !defined(NDEBUG)
+    // Storage should exist, texture should be complete. Only verified in Debug.
+    TextureD3D *textureD3D  = GetImplAs<TextureD3D>(texture);
+    TextureStorage *storage = nullptr;
+    ANGLE_TRY(textureD3D->getNativeTexture(context, &storage));
+    ASSERT(storage);
+#endif  // !defined(NDEBUG)
+
+    // Sampler metadata that's passed to shaders in uniforms is stored separately from rest of the
+    // sampler state since having it in contiguous memory makes it possible to memcpy to a constant
+    // buffer, and it doesn't affect the state set by PSSetSamplers/VSSetSamplers.
+    SamplerMetadata11 *metadata = nullptr;
+
+    auto *deviceContext = mRenderer->getDeviceContext();
+
+    if (type == gl::SAMPLER_PIXEL)
+    {
+        ASSERT(static_cast<unsigned int>(index) < mRenderer->getNativeCaps().maxTextureImageUnits);
+
+        if (mForceSetPixelSamplerStates[index] ||
+            memcmp(&samplerState, &mCurPixelSamplerStates[index], sizeof(gl::SamplerState)) != 0)
+        {
+            ID3D11SamplerState *dxSamplerState = nullptr;
+            ANGLE_TRY(mRenderer->getSamplerState(samplerState, &dxSamplerState));
+
+            ASSERT(dxSamplerState != nullptr);
+            deviceContext->PSSetSamplers(index, 1, &dxSamplerState);
+
+            mCurPixelSamplerStates[index] = samplerState;
+        }
+
+        mForceSetPixelSamplerStates[index] = false;
+
+        metadata = &mSamplerMetadataPS;
+    }
+    else if (type == gl::SAMPLER_VERTEX)
+    {
+        ASSERT(static_cast<unsigned int>(index) <
+               mRenderer->getNativeCaps().maxVertexTextureImageUnits);
+
+        if (mForceSetVertexSamplerStates[index] ||
+            memcmp(&samplerState, &mCurVertexSamplerStates[index], sizeof(gl::SamplerState)) != 0)
+        {
+            ID3D11SamplerState *dxSamplerState = nullptr;
+            ANGLE_TRY(mRenderer->getSamplerState(samplerState, &dxSamplerState));
+
+            ASSERT(dxSamplerState != nullptr);
+            deviceContext->VSSetSamplers(index, 1, &dxSamplerState);
+
+            mCurVertexSamplerStates[index] = samplerState;
+        }
+
+        mForceSetVertexSamplerStates[index] = false;
+
+        metadata = &mSamplerMetadataVS;
+    }
+    else if (type == gl::SAMPLER_COMPUTE)
+    {
+        ASSERT(static_cast<unsigned int>(index) <
+               mRenderer->getNativeCaps().maxComputeTextureImageUnits);
+
+        if (mForceSetComputeSamplerStates[index] ||
+            memcmp(&samplerState, &mCurComputeSamplerStates[index], sizeof(gl::SamplerState)) != 0)
+        {
+            ID3D11SamplerState *dxSamplerState = nullptr;
+            ANGLE_TRY(mRenderer->getSamplerState(samplerState, &dxSamplerState));
+
+            ASSERT(dxSamplerState != nullptr);
+            deviceContext->CSSetSamplers(index, 1, &dxSamplerState);
+
+            mCurComputeSamplerStates[index] = samplerState;
+        }
+
+        mForceSetComputeSamplerStates[index] = false;
+
+        metadata = &mSamplerMetadataCS;
+    }
+    else
+        UNREACHABLE();
+
+    ASSERT(metadata != nullptr);
+    metadata->update(index, *texture);
+
+    return gl::NoError();
+}
+
+gl::Error StateManager11::setTexture(const gl::Context *context,
+                                     gl::SamplerType type,
+                                     int index,
+                                     gl::Texture *texture)
+{
+    const d3d11::SharedSRV *textureSRV = nullptr;
+
+    if (texture)
+    {
+        TextureD3D *textureImpl = GetImplAs<TextureD3D>(texture);
+
+        TextureStorage *texStorage = nullptr;
+        ANGLE_TRY(textureImpl->getNativeTexture(context, &texStorage));
+
+        // Texture should be complete and have a storage
+        ASSERT(texStorage);
+
+        TextureStorage11 *storage11 = GetAs<TextureStorage11>(texStorage);
+
+        ANGLE_TRY(storage11->getSRV(context, texture->getTextureState(), &textureSRV));
+
+        // If we get an invalid SRV here, something went wrong in the texture class and we're
+        // unexpectedly missing the shader resource view.
+        ASSERT(textureSRV->valid());
+
+        textureImpl->resetDirty();
+    }
+
+    ASSERT(
+        (type == gl::SAMPLER_PIXEL &&
+         static_cast<unsigned int>(index) < mRenderer->getNativeCaps().maxTextureImageUnits) ||
+        (type == gl::SAMPLER_VERTEX &&
+         static_cast<unsigned int>(index) < mRenderer->getNativeCaps().maxVertexTextureImageUnits));
+
+    setShaderResource(type, index, textureSRV->get());
+
+    return gl::NoError();
 }
 
 }  // namespace rx

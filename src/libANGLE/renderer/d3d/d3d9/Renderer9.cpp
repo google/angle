@@ -3082,20 +3082,6 @@ angle::WorkaroundsD3D Renderer9::generateWorkarounds() const
     return d3d9::GenerateWorkarounds();
 }
 
-gl::Error Renderer9::clearTextures(const gl::Context *context,
-                                   gl::SamplerType samplerType,
-                                   size_t rangeStart,
-                                   size_t rangeEnd)
-{
-    // TODO(jmadill): faster way?
-    for (size_t samplerIndex = rangeStart; samplerIndex < rangeEnd; samplerIndex++)
-    {
-        ANGLE_TRY(setTexture(context, samplerType, static_cast<int>(samplerIndex), nullptr));
-    }
-
-    return gl::NoError();
-}
-
 egl::Error Renderer9::getEGLDevice(DeviceImpl **device)
 {
     if (mEGLDevice == nullptr)
@@ -3231,6 +3217,93 @@ gl::Error Renderer9::clearRenderTarget(RenderTargetD3D *renderTarget, const gl::
 {
     UNIMPLEMENTED();
     return gl::InternalError() << "clearRenderTarget is not implemented on D3D9";
+}
+
+// For each Direct3D sampler of either the pixel or vertex stage,
+// looks up the corresponding OpenGL texture image unit and texture type,
+// and sets the texture and its addressing/filtering state (or NULL when inactive).
+// Sampler mapping needs to be up-to-date on the program object before this is called.
+gl::Error Renderer9::applyTextures(const gl::Context *context,
+                                   gl::SamplerType shaderType,
+                                   const FramebufferTextureArray &framebufferTextures,
+                                   size_t framebufferTextureCount)
+{
+    const auto &glState    = context->getGLState();
+    const auto &caps       = context->getCaps();
+    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(glState.getProgram());
+
+    ASSERT(!programD3D->isSamplerMappingDirty());
+
+    // TODO(jmadill): Use the Program's sampler bindings.
+
+    unsigned int samplerRange = programD3D->getUsedSamplerRange(shaderType);
+    for (unsigned int samplerIndex = 0; samplerIndex < samplerRange; samplerIndex++)
+    {
+        GLenum textureType = programD3D->getSamplerTextureType(shaderType, samplerIndex);
+        GLint textureUnit  = programD3D->getSamplerMapping(shaderType, samplerIndex, caps);
+        if (textureUnit != -1)
+        {
+            gl::Texture *texture = glState.getSamplerTexture(textureUnit, textureType);
+            ASSERT(texture);
+
+            gl::Sampler *samplerObject = glState.getSampler(textureUnit);
+
+            const gl::SamplerState &samplerState =
+                samplerObject ? samplerObject->getSamplerState() : texture->getSamplerState();
+
+            // TODO: std::binary_search may become unavailable using older versions of GCC
+            if (texture->getTextureState().isSamplerComplete(samplerState,
+                                                             context->getContextState()) &&
+                !std::binary_search(framebufferTextures.begin(),
+                                    framebufferTextures.begin() + framebufferTextureCount, texture))
+            {
+                ANGLE_TRY(
+                    setSamplerState(context, shaderType, samplerIndex, texture, samplerState));
+                ANGLE_TRY(setTexture(context, shaderType, samplerIndex, texture));
+            }
+            else
+            {
+                // Texture is not sampler complete or it is in use by the framebuffer.  Bind the
+                // incomplete texture.
+                gl::Texture *incompleteTexture = getIncompleteTexture(context, textureType);
+
+                ANGLE_TRY(setSamplerState(context, shaderType, samplerIndex, incompleteTexture,
+                                          incompleteTexture->getSamplerState()));
+                ANGLE_TRY(setTexture(context, shaderType, samplerIndex, incompleteTexture));
+            }
+        }
+        else
+        {
+            // No texture bound to this slot even though it is used by the shader, bind a NULL
+            // texture
+            ANGLE_TRY(setTexture(context, shaderType, samplerIndex, nullptr));
+        }
+    }
+
+    // Set all the remaining textures to NULL
+    size_t samplerCount = (shaderType == gl::SAMPLER_PIXEL) ? caps.maxTextureImageUnits
+                                                            : caps.maxVertexTextureImageUnits;
+
+    // TODO(jmadill): faster way?
+    for (size_t samplerIndex = samplerRange; samplerIndex < samplerCount; samplerIndex++)
+    {
+        ANGLE_TRY(setTexture(context, shaderType, static_cast<int>(samplerIndex), nullptr));
+    }
+
+    return gl::NoError();
+}
+
+gl::Error Renderer9::applyTextures(const gl::Context *context)
+{
+    FramebufferTextureArray framebufferTextures;
+    size_t framebufferSerialCount =
+        getBoundFramebufferTextures(context->getContextState(), &framebufferTextures);
+
+    ANGLE_TRY(
+        applyTextures(context, gl::SAMPLER_VERTEX, framebufferTextures, framebufferSerialCount));
+    ANGLE_TRY(
+        applyTextures(context, gl::SAMPLER_PIXEL, framebufferTextures, framebufferSerialCount));
+    return gl::NoError();
 }
 
 }  // namespace rx

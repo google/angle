@@ -123,11 +123,11 @@ class Renderer9 : public RendererD3D
                               gl::SamplerType type,
                               int index,
                               gl::Texture *texture,
-                              const gl::SamplerState &sampler) override;
+                              const gl::SamplerState &sampler);
     gl::Error setTexture(const gl::Context *context,
                          gl::SamplerType type,
                          int index,
-                         gl::Texture *texture) override;
+                         gl::Texture *texture);
 
     gl::Error setUniformBuffers(const gl::ContextState &data,
                                 const std::vector<GLint> &vertexUniformBuffers,
@@ -398,12 +398,6 @@ class Renderer9 : public RendererD3D
     gl::Error clearRenderTarget(RenderTargetD3D *renderTarget,
                                 const gl::ColorF &clearValues) override;
 
-  protected:
-    gl::Error clearTextures(const gl::Context *context,
-                            gl::SamplerType samplerType,
-                            size_t rangeStart,
-                            size_t rangeEnd) override;
-
   private:
     gl::Error drawArraysImpl(const gl::ContextState &data,
                              GLenum mode,
@@ -419,6 +413,12 @@ class Renderer9 : public RendererD3D
                                GLsizei instances);
 
     gl::Error applyShaders(const gl::Context *context, GLenum drawMode);
+
+    gl::Error applyTextures(const gl::Context *context);
+    gl::Error applyTextures(const gl::Context *context,
+                            gl::SamplerType shaderType,
+                            const FramebufferTextureArray &framebufferTextures,
+                            size_t framebufferTextureCount);
 
     void generateCaps(gl::Caps *outCaps,
                       gl::TextureCapsMap *outTextureCaps,

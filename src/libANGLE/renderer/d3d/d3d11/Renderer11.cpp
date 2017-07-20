@@ -360,22 +360,6 @@ void GetTriFanIndices(const void *indices,
     }
 }
 
-int GetWrapBits(GLenum wrap)
-{
-    switch (wrap)
-    {
-        case GL_CLAMP_TO_EDGE:
-            return 0x1;
-        case GL_REPEAT:
-            return 0x2;
-        case GL_MIRRORED_REPEAT:
-            return 0x3;
-        default:
-            UNREACHABLE();
-            return 0;
-    }
-}
-
 const uint32_t ScratchMemoryBufferLifetime = 1000;
 
 }  // anonymous namespace
@@ -814,20 +798,6 @@ void Renderer11::initializeDevice()
     mPixelTransfer = new PixelTransfer11(this);
 
     const gl::Caps &rendererCaps = getNativeCaps();
-
-    mStateManager.initialize(rendererCaps);
-
-    mForceSetVertexSamplerStates.resize(rendererCaps.maxVertexTextureImageUnits);
-    mCurVertexSamplerStates.resize(rendererCaps.maxVertexTextureImageUnits);
-    mSamplerMetadataVS.initData(rendererCaps.maxVertexTextureImageUnits);
-
-    mForceSetPixelSamplerStates.resize(rendererCaps.maxTextureImageUnits);
-    mCurPixelSamplerStates.resize(rendererCaps.maxTextureImageUnits);
-    mSamplerMetadataPS.initData(rendererCaps.maxTextureImageUnits);
-
-    mForceSetComputeSamplerStates.resize(rendererCaps.maxComputeTextureImageUnits);
-    mCurComputeSamplerStates.resize(rendererCaps.maxComputeTextureImageUnits);
-    mSamplerMetadataCS.initData(rendererCaps.maxComputeTextureImageUnits);
 
     mStateManager.initialize(rendererCaps);
 
@@ -1402,134 +1372,6 @@ gl::Error Renderer11::generateSwizzles(const gl::Context *context)
 {
     ANGLE_TRY(generateSwizzles(context, gl::SAMPLER_VERTEX));
     ANGLE_TRY(generateSwizzles(context, gl::SAMPLER_PIXEL));
-    return gl::NoError();
-}
-gl::Error Renderer11::setSamplerState(const gl::Context *context,
-                                      gl::SamplerType type,
-                                      int index,
-                                      gl::Texture *texture,
-                                      const gl::SamplerState &samplerState)
-{
-#if !defined(NDEBUG)
-    // Make sure to add the level offset for our tiny compressed texture workaround
-    TextureD3D *textureD3D = GetImplAs<TextureD3D>(texture);
-
-    TextureStorage *storage = nullptr;
-    ANGLE_TRY(textureD3D->getNativeTexture(context, &storage));
-
-    // Storage should exist, texture should be complete
-    ASSERT(storage);
-#endif  // !defined(NDEBUG)
-
-    // Sampler metadata that's passed to shaders in uniforms is stored separately from rest of the
-    // sampler state since having it in contiguous memory makes it possible to memcpy to a constant
-    // buffer, and it doesn't affect the state set by PSSetSamplers/VSSetSamplers.
-    SamplerMetadataD3D11 *metadata = nullptr;
-
-    if (type == gl::SAMPLER_PIXEL)
-    {
-        ASSERT(static_cast<unsigned int>(index) < getNativeCaps().maxTextureImageUnits);
-
-        if (mForceSetPixelSamplerStates[index] ||
-            memcmp(&samplerState, &mCurPixelSamplerStates[index], sizeof(gl::SamplerState)) != 0)
-        {
-            ID3D11SamplerState *dxSamplerState = nullptr;
-            ANGLE_TRY(mStateCache.getSamplerState(this, samplerState, &dxSamplerState));
-
-            ASSERT(dxSamplerState != nullptr);
-            mDeviceContext->PSSetSamplers(index, 1, &dxSamplerState);
-
-            mCurPixelSamplerStates[index] = samplerState;
-        }
-
-        mForceSetPixelSamplerStates[index] = false;
-
-        metadata = &mSamplerMetadataPS;
-    }
-    else if (type == gl::SAMPLER_VERTEX)
-    {
-        ASSERT(static_cast<unsigned int>(index) < getNativeCaps().maxVertexTextureImageUnits);
-
-        if (mForceSetVertexSamplerStates[index] ||
-            memcmp(&samplerState, &mCurVertexSamplerStates[index], sizeof(gl::SamplerState)) != 0)
-        {
-            ID3D11SamplerState *dxSamplerState = nullptr;
-            ANGLE_TRY(mStateCache.getSamplerState(this, samplerState, &dxSamplerState));
-
-            ASSERT(dxSamplerState != nullptr);
-            mDeviceContext->VSSetSamplers(index, 1, &dxSamplerState);
-
-            mCurVertexSamplerStates[index] = samplerState;
-        }
-
-        mForceSetVertexSamplerStates[index] = false;
-
-        metadata = &mSamplerMetadataVS;
-    }
-    else if (type == gl::SAMPLER_COMPUTE)
-    {
-        ASSERT(static_cast<unsigned int>(index) < getNativeCaps().maxComputeTextureImageUnits);
-
-        if (mForceSetComputeSamplerStates[index] ||
-            memcmp(&samplerState, &mCurComputeSamplerStates[index], sizeof(gl::SamplerState)) != 0)
-        {
-            ID3D11SamplerState *dxSamplerState = nullptr;
-            ANGLE_TRY(mStateCache.getSamplerState(this, samplerState, &dxSamplerState));
-
-            ASSERT(dxSamplerState != nullptr);
-            mDeviceContext->CSSetSamplers(index, 1, &dxSamplerState);
-
-            mCurComputeSamplerStates[index] = samplerState;
-        }
-
-        mForceSetComputeSamplerStates[index] = false;
-
-        metadata = &mSamplerMetadataCS;
-    }
-    else
-        UNREACHABLE();
-
-    ASSERT(metadata != nullptr);
-    metadata->update(index, *texture);
-
-    return gl::NoError();
-}
-
-gl::Error Renderer11::setTexture(const gl::Context *context,
-                                 gl::SamplerType type,
-                                 int index,
-                                 gl::Texture *texture)
-{
-    const d3d11::SharedSRV *textureSRV = nullptr;
-
-    if (texture)
-    {
-        TextureD3D *textureImpl = GetImplAs<TextureD3D>(texture);
-
-        TextureStorage *texStorage = nullptr;
-        ANGLE_TRY(textureImpl->getNativeTexture(context, &texStorage));
-
-        // Texture should be complete and have a storage
-        ASSERT(texStorage);
-
-        TextureStorage11 *storage11 = GetAs<TextureStorage11>(texStorage);
-
-        ANGLE_TRY(storage11->getSRV(context, texture->getTextureState(), &textureSRV));
-
-        // If we get an invalid SRV here, something went wrong in the texture class and we're
-        // unexpectedly missing the shader resource view.
-        ASSERT(textureSRV->valid());
-
-        textureImpl->resetDirty();
-    }
-
-    ASSERT((type == gl::SAMPLER_PIXEL &&
-            static_cast<unsigned int>(index) < getNativeCaps().maxTextureImageUnits) ||
-           (type == gl::SAMPLER_VERTEX &&
-            static_cast<unsigned int>(index) < getNativeCaps().maxVertexTextureImageUnits));
-
-    mStateManager.setShaderResource(type, index, textureSRV->get());
-
     return gl::NoError();
 }
 
@@ -2398,6 +2240,7 @@ gl::Error Renderer11::applyShaders(const gl::Context *context, GLenum drawMode)
     return programD3D->applyUniforms(drawMode);
 }
 
+// TODO(jmadill): Move to StateManager11.
 gl::Error Renderer11::applyUniforms(const ProgramD3D &programD3D,
                                     GLenum drawMode,
                                     const std::vector<D3DUniform *> &uniformArray)
@@ -2505,12 +2348,15 @@ gl::Error Renderer11::applyUniforms(const ProgramD3D &programD3D,
         mCurrentPixelConstantBuffer = reinterpret_cast<uintptr_t>(appliedPixelConstants);
     }
 
+    auto *samplerMetadataVS = mStateManager.getVertexSamplerMetadata();
+    auto *samplerMetadataPS = mStateManager.getPixelSamplerMetadata();
+
     if (!mDriverConstantBufferVS.valid())
     {
         D3D11_BUFFER_DESC constantBufferDescription = {0};
         d3d11::InitConstantBufferDesc(
             &constantBufferDescription,
-            sizeof(dx_VertexConstants11) + mSamplerMetadataVS.sizeBytes());
+            sizeof(dx_VertexConstants11) + samplerMetadataVS->sizeBytes());
         ANGLE_TRY(allocateResource(constantBufferDescription, &mDriverConstantBufferVS));
 
         ID3D11Buffer *driverVSConstants = mDriverConstantBufferVS.get();
@@ -2522,7 +2368,7 @@ gl::Error Renderer11::applyUniforms(const ProgramD3D &programD3D,
     {
         D3D11_BUFFER_DESC constantBufferDescription = {0};
         d3d11::InitConstantBufferDesc(&constantBufferDescription,
-                                      sizeof(dx_PixelConstants11) + mSamplerMetadataPS.sizeBytes());
+                                      sizeof(dx_PixelConstants11) + samplerMetadataPS->sizeBytes());
         ANGLE_TRY(allocateResource(constantBufferDescription, &mDriverConstantBufferPS));
 
         ID3D11Buffer *driverVSConstants = mDriverConstantBufferPS.get();
@@ -2533,15 +2379,15 @@ gl::Error Renderer11::applyUniforms(const ProgramD3D &programD3D,
     // Sampler metadata and driver constants need to coexist in the same constant buffer to conserve
     // constant buffer slots. We update both in the constant buffer if needed.
     const dx_VertexConstants11 &vertexConstants = mStateManager.getVertexConstants();
-    size_t samplerMetadataReferencedBytesVS     = sizeof(SamplerMetadataD3D11::dx_SamplerMetadata) *
+    size_t samplerMetadataReferencedBytesVS     = sizeof(SamplerMetadata11::dx_SamplerMetadata) *
                                               programD3D.getUsedSamplerRange(gl::SAMPLER_VERTEX);
-    applyDriverConstantsIfNeeded(&mAppliedVertexConstants, vertexConstants, &mSamplerMetadataVS,
+    applyDriverConstantsIfNeeded(&mAppliedVertexConstants, vertexConstants, samplerMetadataVS,
                                  samplerMetadataReferencedBytesVS, mDriverConstantBufferVS);
 
     const dx_PixelConstants11 &pixelConstants = mStateManager.getPixelConstants();
-    size_t samplerMetadataReferencedBytesPS   = sizeof(SamplerMetadataD3D11::dx_SamplerMetadata) *
+    size_t samplerMetadataReferencedBytesPS   = sizeof(SamplerMetadata11::dx_SamplerMetadata) *
                                               programD3D.getUsedSamplerRange(gl::SAMPLER_PIXEL);
-    applyDriverConstantsIfNeeded(&mAppliedPixelConstants, pixelConstants, &mSamplerMetadataPS,
+    applyDriverConstantsIfNeeded(&mAppliedPixelConstants, pixelConstants, samplerMetadataPS,
                                  samplerMetadataReferencedBytesPS, mDriverConstantBufferPS);
 
     // GSSetConstantBuffers triggers device removal on 9_3, so we should only call it if necessary
@@ -2560,115 +2406,10 @@ gl::Error Renderer11::applyUniforms(const ProgramD3D &programD3D,
     return gl::NoError();
 }
 
-// SamplerMetadataD3D11 implementation
-
-Renderer11::SamplerMetadataD3D11::SamplerMetadataD3D11() : mDirty(true)
-{
-}
-
-Renderer11::SamplerMetadataD3D11::~SamplerMetadataD3D11()
-{
-}
-
-void Renderer11::SamplerMetadataD3D11::initData(unsigned int samplerCount)
-{
-    mSamplerMetadata.resize(samplerCount);
-}
-
-void Renderer11::SamplerMetadataD3D11::update(unsigned int samplerIndex, const gl::Texture &texture)
-{
-    unsigned int baseLevel = texture.getTextureState().getEffectiveBaseLevel();
-    GLenum sizedFormat =
-        texture.getFormat(texture.getTarget(), baseLevel).info->sizedInternalFormat;
-    if (mSamplerMetadata[samplerIndex].baseLevel != static_cast<int>(baseLevel))
-    {
-        mSamplerMetadata[samplerIndex].baseLevel = static_cast<int>(baseLevel);
-        mDirty                                   = true;
-    }
-
-    // Some metadata is needed only for integer textures. We avoid updating the constant buffer
-    // unnecessarily by changing the data only in case the texture is an integer texture and
-    // the values have changed.
-    bool needIntegerTextureMetadata = false;
-    // internalFormatBits == 0 means a 32-bit texture in the case of integer textures.
-    int internalFormatBits = 0;
-    switch (sizedFormat)
-    {
-        case GL_RGBA32I:
-        case GL_RGBA32UI:
-        case GL_RGB32I:
-        case GL_RGB32UI:
-        case GL_RG32I:
-        case GL_RG32UI:
-        case GL_R32I:
-        case GL_R32UI:
-            needIntegerTextureMetadata = true;
-            break;
-        case GL_RGBA16I:
-        case GL_RGBA16UI:
-        case GL_RGB16I:
-        case GL_RGB16UI:
-        case GL_RG16I:
-        case GL_RG16UI:
-        case GL_R16I:
-        case GL_R16UI:
-            needIntegerTextureMetadata = true;
-            internalFormatBits         = 16;
-            break;
-        case GL_RGBA8I:
-        case GL_RGBA8UI:
-        case GL_RGB8I:
-        case GL_RGB8UI:
-        case GL_RG8I:
-        case GL_RG8UI:
-        case GL_R8I:
-        case GL_R8UI:
-            needIntegerTextureMetadata = true;
-            internalFormatBits         = 8;
-            break;
-        case GL_RGB10_A2UI:
-            needIntegerTextureMetadata = true;
-            internalFormatBits         = 10;
-            break;
-        default:
-            break;
-    }
-    if (needIntegerTextureMetadata)
-    {
-        if (mSamplerMetadata[samplerIndex].internalFormatBits != internalFormatBits)
-        {
-            mSamplerMetadata[samplerIndex].internalFormatBits = internalFormatBits;
-            mDirty                                            = true;
-        }
-        // Pack the wrap values into one integer so we can fit all the metadata in one 4-integer
-        // vector.
-        GLenum wrapS  = texture.getWrapS();
-        GLenum wrapT  = texture.getWrapT();
-        GLenum wrapR  = texture.getWrapR();
-        int wrapModes = GetWrapBits(wrapS) | (GetWrapBits(wrapT) << 2) | (GetWrapBits(wrapR) << 4);
-        if (mSamplerMetadata[samplerIndex].wrapModes != wrapModes)
-        {
-            mSamplerMetadata[samplerIndex].wrapModes = wrapModes;
-            mDirty                                   = true;
-        }
-    }
-}
-
-const Renderer11::SamplerMetadataD3D11::dx_SamplerMetadata *
-Renderer11::SamplerMetadataD3D11::getData() const
-{
-    return mSamplerMetadata.data();
-}
-
-size_t Renderer11::SamplerMetadataD3D11::sizeBytes() const
-{
-    return sizeof(SamplerMetadataD3D11::dx_SamplerMetadata) * mSamplerMetadata.size();
-}
-
 template <class TShaderConstants>
 void Renderer11::applyDriverConstantsIfNeeded(TShaderConstants *appliedConstants,
                                               const TShaderConstants &constants,
-                                              SamplerMetadataD3D11 *samplerMetadata,
+                                              SamplerMetadata11 *samplerMetadata,
                                               size_t samplerMetadataReferencedBytes,
                                               const d3d11::Buffer &driverConstantBuffer)
 {
@@ -2696,40 +2437,25 @@ void Renderer11::applyDriverConstantsIfNeeded(TShaderConstants *appliedConstants
 template void Renderer11::applyDriverConstantsIfNeeded<dx_VertexConstants11>(
     dx_VertexConstants11 *appliedConstants,
     const dx_VertexConstants11 &constants,
-    SamplerMetadataD3D11 *samplerMetadata,
+    SamplerMetadata11 *samplerMetadata,
     size_t samplerMetadataReferencedBytes,
     const d3d11::Buffer &driverConstantBuffer);
 template void Renderer11::applyDriverConstantsIfNeeded<dx_PixelConstants11>(
     dx_PixelConstants11 *appliedConstants,
     const dx_PixelConstants11 &constants,
-    SamplerMetadataD3D11 *samplerMetadata,
+    SamplerMetadata11 *samplerMetadata,
     size_t samplerMetadataReferencedBytes,
     const d3d11::Buffer &driverConstantBuffer);
 template void Renderer11::applyDriverConstantsIfNeeded<dx_ComputeConstants11>(
     dx_ComputeConstants11 *appliedConstants,
     const dx_ComputeConstants11 &constants,
-    SamplerMetadataD3D11 *samplerMetadata,
+    SamplerMetadata11 *samplerMetadata,
     size_t samplerMetadataReferencedBytes,
     const d3d11::Buffer &driverConstantBuffer);
 
 void Renderer11::markAllStateDirty(const gl::Context *context)
 {
     TRACE_EVENT0("gpu.angle", "Renderer11::markAllStateDirty");
-
-    for (size_t vsamplerId = 0; vsamplerId < mForceSetVertexSamplerStates.size(); ++vsamplerId)
-    {
-        mForceSetVertexSamplerStates[vsamplerId] = true;
-    }
-
-    for (size_t fsamplerId = 0; fsamplerId < mForceSetPixelSamplerStates.size(); ++fsamplerId)
-    {
-        mForceSetPixelSamplerStates[fsamplerId] = true;
-    }
-
-    for (size_t csamplerId = 0; csamplerId < mForceSetComputeSamplerStates.size(); ++csamplerId)
-    {
-        mForceSetComputeSamplerStates[csamplerId] = true;
-    }
 
     mStateManager.invalidateEverything(context);
 
@@ -4523,14 +4249,6 @@ angle::WorkaroundsD3D Renderer11::generateWorkarounds() const
     return d3d11::GenerateWorkarounds(mRenderer11DeviceCaps, mAdapterDescription);
 }
 
-gl::Error Renderer11::clearTextures(const gl::Context *context,
-                                    gl::SamplerType samplerType,
-                                    size_t rangeStart,
-                                    size_t rangeEnd)
-{
-    return mStateManager.clearTextures(samplerType, rangeStart, rangeEnd);
-}
-
 egl::Error Renderer11::getEGLDevice(DeviceImpl **device)
 {
     if (mEGLDevice == nullptr)
@@ -4595,7 +4313,6 @@ gl::Error Renderer11::genericDrawElements(const gl::Context *context,
     size_t vertexCount = indexInfo.indexRange.vertexCount();
     ANGLE_TRY(applyVertexBuffer(context, mode, static_cast<GLsizei>(indexInfo.indexRange.start),
                                 static_cast<GLsizei>(vertexCount), instances, &indexInfo));
-    ANGLE_TRY(applyTextures(context));
     ANGLE_TRY(applyShaders(context, mode));
     ANGLE_TRY(programD3D->applyUniformBuffers(data));
 
@@ -4631,7 +4348,6 @@ gl::Error Renderer11::genericDrawArrays(const gl::Context *context,
     ANGLE_TRY(mStateManager.updateState(context, mode));
     ANGLE_TRY(applyTransformFeedbackBuffers(data));
     ANGLE_TRY(applyVertexBuffer(context, mode, first, count, instances, nullptr));
-    ANGLE_TRY(applyTextures(context));
     ANGLE_TRY(applyShaders(context, mode));
     ANGLE_TRY(programD3D->applyUniformBuffers(data));
 
@@ -4666,7 +4382,6 @@ gl::Error Renderer11::genericDrawIndirect(const gl::Context *context,
     ANGLE_TRY(mStateManager.updateState(context, mode));
     ANGLE_TRY(applyTransformFeedbackBuffers(contextState));
     ASSERT(!glState.isTransformFeedbackActiveUnpaused());
-    ANGLE_TRY(applyTextures(context));
     ANGLE_TRY(applyShaders(context, mode));
     ANGLE_TRY(programD3D->applyUniformBuffers(contextState));
 
@@ -4706,11 +4421,11 @@ gl::DebugAnnotator *Renderer11::getAnnotator()
     return mAnnotator;
 }
 
-gl::Error Renderer11::applyComputeShader(const gl::ContextState &data)
+gl::Error Renderer11::applyComputeShader(const gl::Context *context)
 {
     ANGLE_TRY(ensureHLSLCompilerInitialized());
 
-    const auto &glState    = data.getState();
+    const auto &glState    = context->getGLState();
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(glState.getProgram());
 
     ShaderExecutableD3D *computeExe = nullptr;
@@ -4727,18 +4442,16 @@ gl::Error Renderer11::dispatchCompute(const gl::Context *context,
                                       GLuint numGroupsY,
                                       GLuint numGroupsZ)
 {
-    const auto &data     = context->getContextState();
-    gl::Program *program = data.getState().getProgram();
+    gl::Program *program = context->getGLState().getProgram();
     ASSERT(program != nullptr);
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
 
-    mStateManager.setComputeConstants(numGroupsX, numGroupsY, numGroupsZ);
-
     programD3D->updateSamplerMapping();
-
     ANGLE_TRY(generateSwizzles(context, gl::SAMPLER_COMPUTE));
-    ANGLE_TRY(applyTextures(context));
-    ANGLE_TRY(applyComputeShader(data));
+
+    ANGLE_TRY(mStateManager.updateStateForCompute(context, numGroupsX, numGroupsY, numGroupsZ));
+
+    ANGLE_TRY(applyComputeShader(context));
     // TODO(Xinghua): applyUniformBuffers for compute shader.
     mDeviceContext->Dispatch(numGroupsX, numGroupsY, numGroupsZ);
 
@@ -4805,12 +4518,14 @@ gl::Error Renderer11::applyComputeUniforms(const ProgramD3D &programD3D,
         mCurrentComputeConstantBuffer = reinterpret_cast<uintptr_t>(computeConstantBuffer);
     }
 
+    auto *samplerMetadataCS = mStateManager.getComputeSamplerMetadata();
+
     if (!mDriverConstantBufferCS.valid())
     {
         D3D11_BUFFER_DESC constantBufferDescription = {0};
         d3d11::InitConstantBufferDesc(
             &constantBufferDescription,
-            sizeof(dx_ComputeConstants11) + mSamplerMetadataCS.sizeBytes());
+            sizeof(dx_ComputeConstants11) + samplerMetadataCS->sizeBytes());
         ANGLE_TRY(allocateResource(constantBufferDescription, &mDriverConstantBufferCS));
         ID3D11Buffer *buffer = mDriverConstantBufferCS.get();
         mDeviceContext->CSSetConstantBuffers(d3d11::RESERVED_CONSTANT_BUFFER_SLOT_DRIVER, 1,
@@ -4818,9 +4533,9 @@ gl::Error Renderer11::applyComputeUniforms(const ProgramD3D &programD3D,
     }
 
     const dx_ComputeConstants11 &computeConstants = mStateManager.getComputeConstants();
-    size_t samplerMetadataReferencedBytesCS = sizeof(SamplerMetadataD3D11::dx_SamplerMetadata) *
+    size_t samplerMetadataReferencedBytesCS       = sizeof(SamplerMetadata11::dx_SamplerMetadata) *
                                               programD3D.getUsedSamplerRange(gl::SAMPLER_COMPUTE);
-    applyDriverConstantsIfNeeded(&mAppliedComputeConstants, computeConstants, &mSamplerMetadataCS,
+    applyDriverConstantsIfNeeded(&mAppliedComputeConstants, computeConstants, samplerMetadataCS,
                                  samplerMetadataReferencedBytesCS, mDriverConstantBufferCS);
 
     return gl::NoError();

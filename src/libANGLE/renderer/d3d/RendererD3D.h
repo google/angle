@@ -104,6 +104,8 @@ class BufferFactoryD3D : angle::NonCopyable
 };
 
 using AttribIndexArray = std::array<int, gl::MAX_VERTEX_ATTRIBS>;
+using FramebufferTextureArray =
+    std::array<gl::Texture *, gl::IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS>;
 
 class RendererD3D : public BufferFactoryD3D
 {
@@ -146,16 +148,6 @@ class RendererD3D : public BufferFactoryD3D
     virtual egl::Error validateShareHandle(const egl::Config *config,
                                            HANDLE shareHandle,
                                            const egl::AttributeMap &attribs) const = 0;
-
-    virtual gl::Error setSamplerState(const gl::Context *context,
-                                      gl::SamplerType type,
-                                      int index,
-                                      gl::Texture *texture,
-                                      const gl::SamplerState &sampler) = 0;
-    virtual gl::Error setTexture(const gl::Context *context,
-                                 gl::SamplerType type,
-                                 int index,
-                                 gl::Texture *texture) = 0;
 
     virtual gl::Error setUniformBuffers(const gl::ContextState &data,
                                         const std::vector<GLint> &vertexUniformBuffers,
@@ -301,12 +293,6 @@ class RendererD3D : public BufferFactoryD3D
     GLint getGPUDisjoint();
     GLint64 getTimestamp();
 
-    // In D3D11, faster than calling setTexture a jillion times
-    virtual gl::Error clearTextures(const gl::Context *context,
-                                    gl::SamplerType samplerType,
-                                    size_t rangeStart,
-                                    size_t rangeEnd) = 0;
-
     virtual gl::Error clearRenderTarget(RenderTargetD3D *renderTarget,
                                         const gl::ColorF &clearValues) = 0;
 
@@ -336,6 +322,11 @@ class RendererD3D : public BufferFactoryD3D
 
     bool isRobustResourceInitEnabled() const;
 
+    size_t getBoundFramebufferTextures(const gl::ContextState &data,
+                                       FramebufferTextureArray *outTextureArray);
+
+    gl::Texture *getIncompleteTexture(const gl::Context *context, GLenum type);
+
   protected:
     virtual bool getLUID(LUID *adapterLuid) const = 0;
     virtual void generateCaps(gl::Caps *outCaps,
@@ -347,7 +338,6 @@ class RendererD3D : public BufferFactoryD3D
 
     // dirtyPointer is a special value that will make the comparison with any valid pointer fail and force the renderer to re-apply the state.
 
-    gl::Error applyTextures(const gl::Context *context);
     bool skipDraw(const gl::ContextState &data, GLenum drawMode);
     gl::Error markTransformFeedbackUsage(const gl::ContextState &data);
 
@@ -357,17 +347,6 @@ class RendererD3D : public BufferFactoryD3D
 
   private:
     void ensureCapsInitialized() const;
-
-    typedef std::array<gl::Texture*, gl::IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS> FramebufferTextureArray;
-
-    gl::Error applyTextures(const gl::Context *context,
-                            gl::SamplerType shaderType,
-                            const FramebufferTextureArray &framebufferTextures,
-                            size_t framebufferTextureCount);
-
-    size_t getBoundFramebufferTextures(const gl::ContextState &data,
-                                       FramebufferTextureArray *outTextureArray);
-    gl::Texture *getIncompleteTexture(const gl::Context *context, GLenum type);
 
     virtual angle::WorkaroundsD3D generateWorkarounds() const = 0;
 

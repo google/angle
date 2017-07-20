@@ -138,16 +138,6 @@ class Renderer11 : public RendererD3D
                                    HANDLE shareHandle,
                                    const egl::AttributeMap &attribs) const override;
 
-    gl::Error setSamplerState(const gl::Context *context,
-                              gl::SamplerType type,
-                              int index,
-                              gl::Texture *texture,
-                              const gl::SamplerState &sampler) override;
-    gl::Error setTexture(const gl::Context *context,
-                         gl::SamplerType type,
-                         int index,
-                         gl::Texture *texture) override;
-
     gl::Error setUniformBuffers(const gl::ContextState &data,
                                 const std::vector<GLint> &vertexUniformBuffers,
                                 const std::vector<GLint> &fragmentUniformBuffers) override;
@@ -435,7 +425,7 @@ class Renderer11 : public RendererD3D
                               GLuint numGroupsZ);
     gl::Error applyComputeUniforms(const ProgramD3D &programD3D,
                                    const std::vector<D3DUniform *> &uniformArray) override;
-    gl::Error applyComputeShader(const gl::ContextState &data);
+    gl::Error applyComputeShader(const gl::Context *context);
 
     gl::ErrorOrResult<TextureHelper11> createStagingTexture(ResourceType textureType,
                                                             const d3d11::Format &formatSet,
@@ -480,12 +470,6 @@ class Renderer11 : public RendererD3D
 
     gl::Error clearRenderTarget(RenderTargetD3D *renderTarget,
                                 const gl::ColorF &clearValues) override;
-
-  protected:
-    gl::Error clearTextures(const gl::Context *context,
-                            gl::SamplerType samplerType,
-                            size_t rangeStart,
-                            size_t rangeEnd) override;
 
   private:
     gl::Error drawArraysImpl(const gl::Context *context,
@@ -543,39 +527,10 @@ class Renderer11 : public RendererD3D
 
     void updateHistograms();
 
-    class SamplerMetadataD3D11 final : angle::NonCopyable
-    {
-      public:
-        SamplerMetadataD3D11();
-        ~SamplerMetadataD3D11();
-
-        struct dx_SamplerMetadata
-        {
-            int baseLevel;
-            int internalFormatBits;
-            int wrapModes;
-            int padding;  // This just pads the struct to 16 bytes
-        };
-        static_assert(sizeof(dx_SamplerMetadata) == 16u,
-                      "Sampler metadata struct must be one 4-vec / 16 bytes.");
-
-        void initData(unsigned int samplerCount);
-        void update(unsigned int samplerIndex, const gl::Texture &texture);
-
-        const dx_SamplerMetadata *getData() const;
-        size_t sizeBytes() const;
-        bool isDirty() const { return mDirty; }
-        void markClean() { mDirty = false; }
-
-      private:
-        std::vector<dx_SamplerMetadata> mSamplerMetadata;
-        bool mDirty;
-    };
-
     template <class TShaderConstants>
     void applyDriverConstantsIfNeeded(TShaderConstants *appliedConstants,
                                       const TShaderConstants &constants,
-                                      SamplerMetadataD3D11 *samplerMetadata,
+                                      SamplerMetadata11 *samplerMetadata,
                                       size_t samplerMetadataReferencedBytes,
                                       const d3d11::Buffer &driverConstantBuffer);
 
@@ -610,16 +565,6 @@ class Renderer11 : public RendererD3D
 
     RenderStateCache mStateCache;
 
-    // Currently applied sampler states
-    std::vector<bool> mForceSetVertexSamplerStates;
-    std::vector<gl::SamplerState> mCurVertexSamplerStates;
-
-    std::vector<bool> mForceSetPixelSamplerStates;
-    std::vector<gl::SamplerState> mCurPixelSamplerStates;
-
-    std::vector<bool> mForceSetComputeSamplerStates;
-    std::vector<gl::SamplerState> mCurComputeSamplerStates;
-
     StateManager11 mStateManager;
 
     // Currently applied index buffer
@@ -633,7 +578,6 @@ class Renderer11 : public RendererD3D
 
     dx_VertexConstants11 mAppliedVertexConstants;
     d3d11::Buffer mDriverConstantBufferVS;
-    SamplerMetadataD3D11 mSamplerMetadataVS;
     uintptr_t mCurrentVertexConstantBuffer;
     unsigned int mCurrentConstantBufferVS[gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS];
     GLintptr mCurrentConstantBufferVSOffset[gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS];
@@ -641,7 +585,6 @@ class Renderer11 : public RendererD3D
 
     dx_PixelConstants11 mAppliedPixelConstants;
     d3d11::Buffer mDriverConstantBufferPS;
-    SamplerMetadataD3D11 mSamplerMetadataPS;
     uintptr_t mCurrentPixelConstantBuffer;
     unsigned int mCurrentConstantBufferPS[gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS];
     GLintptr mCurrentConstantBufferPSOffset[gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS];
@@ -649,7 +592,6 @@ class Renderer11 : public RendererD3D
 
     dx_ComputeConstants11 mAppliedComputeConstants;
     d3d11::Buffer mDriverConstantBufferCS;
-    SamplerMetadataD3D11 mSamplerMetadataCS;
     uintptr_t mCurrentComputeConstantBuffer;
 
     uintptr_t mCurrentGeometryConstantBuffer;
