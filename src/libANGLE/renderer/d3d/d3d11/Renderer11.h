@@ -513,7 +513,6 @@ class Renderer11 : public RendererD3D
                               int baseVertex,
                               int instances);
 
-    gl::Error applyShaders(const gl::Context *context, GLenum drawMode);
     gl::Error generateSwizzle(const gl::Context *context, gl::Texture *texture);
     gl::Error generateSwizzles(const gl::Context *context, gl::SamplerType type);
     gl::Error generateSwizzles(const gl::Context *context);

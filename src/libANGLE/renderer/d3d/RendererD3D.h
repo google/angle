@@ -367,7 +367,7 @@ class RendererD3D : public BufferFactoryD3D
     angle::WorkerThreadPool mWorkerThreadPool;
 };
 
-unsigned int GetBlendSampleMask(const gl::ContextState &data, int samples);
+unsigned int GetBlendSampleMask(const gl::State &glState, int samples);
 
 }  // namespace rx
 

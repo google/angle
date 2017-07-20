@@ -1037,8 +1037,7 @@ gl::Error Renderer9::setUniformBuffers(const gl::ContextState & /*data*/,
 
 gl::Error Renderer9::updateState(const gl::Context *context, GLenum drawMode)
 {
-    const auto &data    = context->getContextState();
-    const auto &glState = data.getState();
+    const auto &glState = context->getGLState();
 
     // Applies the render target surface, depth stencil surface, viewport rectangle and
     // scissor rectangle to the renderer
@@ -1071,7 +1070,7 @@ gl::Error Renderer9::updateState(const gl::Context *context, GLenum drawMode)
     rasterizer.pointDrawMode       = (drawMode == GL_POINTS);
     rasterizer.multiSample         = (samples != 0);
 
-    unsigned int mask = GetBlendSampleMask(data, samples);
+    unsigned int mask = GetBlendSampleMask(glState, samples);
     ANGLE_TRY(setBlendDepthRasterStates(context, mask));
 
     mStateManager.resetDirtyBits();
@@ -1105,7 +1104,7 @@ gl::Error Renderer9::setBlendDepthRasterStates(const gl::Context *context, GLenu
     rasterizer.pointDrawMode       = (drawMode == GL_POINTS);
     rasterizer.multiSample         = (samples != 0);
 
-    unsigned int mask = GetBlendSampleMask(context->getContextState(), samples);
+    unsigned int mask = GetBlendSampleMask(glState, samples);
     return mStateManager.setBlendDepthRasterStates(glState, mask);
 }
 

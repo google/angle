@@ -288,9 +288,8 @@ bool RendererD3D::isRobustResourceInitEnabled() const
     return mDisplay->isRobustResourceInitEnabled();
 }
 
-unsigned int GetBlendSampleMask(const gl::ContextState &data, int samples)
+unsigned int GetBlendSampleMask(const gl::State &glState, int samples)
 {
-    const auto &glState = data.getState();
     unsigned int mask   = 0;
     if (glState.isSampleCoverageEnabled())
     {
