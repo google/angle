@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "051d06cc_f6eb52ad",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2740,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-20T09:12:20Z",
+      "side": 1,
+      "message": "ES spec section 19.3.1 does say that \"The maximum value in SAMPLES is guaranteed to be at least the lowest of the following:\" ... \"The value of MAX_COLOR_TEXTURE_SAMPLES, if internalformat is a color-renderable format and target is TEXTURE_2D_MULTISAMPLE\". The extension that adds the BGRA format doesn\u0027t make any exception to this, since it was written way before GLES 3.1. So it seems that the Intel driver doesn\u0027t agree with the spec exactly.\n\nI think it\u0027s still reasonable to change the code like this, but I think we should add a comment explaining some of the complexity. The comment could say for example:\n\n\"The GLES 3.1 spec section 19.3.1 does require that all renderable formats are taken into account when determining the MAX_*_SAMPLES values. However, here we only take the required renderbuffer formats in the core spec into account. This is because we don\u0027t want to limit MAX_*_SAMPLES according to extension formats from extensions written way before GLES 3.1. At least EXT_texture_format_BGRA8888 adds a color-renderable format and Intel drivers don\u0027t expose BGRA multisampling. Also, EXT_color_buffer_float explicitly mentions that the floating point formats are excluded from multisampling.\"\n\nI think the comment should be inside the else if so that it doesn\u0027t push the else if too far from the if statement it is associated with.\n\nIdeally the EXT_texture_format_BGRA8888 spec would be changed to document that multisampled BGRA is not required in case the extension is exposed on GLES 3.1. Do you think you could push for that?",
+      "revId": "3bf4f79431d8e7f8c11f1f21e3e6573e7513824c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c48a069_cbb9860e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1159,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-20T09:12:20Z",
+      "side": 1,
+      "message": "Using std::max here doesn\u0027t make much sense. \"maxIntegerSamples\" is the guaranteed number of samples that\u0027s supported for any renderable integer format. Maybe we could just set a large number to all the max*Samples values here, let\u0027s say 64, and then let the logic in Context handle determining the actual values? It doesn\u0027t make sense to duplicate the logic from Context here or have a half-baked version of it.",
+      "revId": "3bf4f79431d8e7f8c11f1f21e3e6573e7513824c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
