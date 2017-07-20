@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5c28af6f_5f8c27fd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 11
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-20T15:15:23Z",
+      "side": 1,
+      "message": "nit: typo.",
+      "range": {
+        "startLine": 11,
+        "startChar": 35,
+        "endLine": 11,
+        "endChar": 37
+      },
+      "revId": "23e6e77112b9f5b6f1ac9dc7498c6c334bf5e0e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d0774a7_4629ab4b",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 332,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-20T15:15:23Z",
+      "side": 1,
+      "message": "Just \"Test skipped on AMD desktop OpenGL\" is enough - vendor-specific skip implies driver bug.",
+      "range": {
+        "startLine": 332,
+        "startChar": 22,
+        "endLine": 332,
+        "endChar": 87
+      },
+      "revId": "23e6e77112b9f5b6f1ac9dc7498c6c334bf5e0e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
