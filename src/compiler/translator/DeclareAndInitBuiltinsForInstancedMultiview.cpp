@@ -113,7 +113,8 @@ void DeclareGlobalVariable(TIntermBlock *root, TIntermTyped *typedNode)
 // added to the end of the initializers' sequence.
 void SelectViewIndexInVertexShader(TIntermTyped *viewIDSymbol,
                                    TIntermTyped *multiviewBaseViewLayerIndexSymbol,
-                                   TIntermSequence *initializers)
+                                   TIntermSequence *initializers,
+                                   const TSymbolTable &symbolTable)
 {
     // Create an int(ViewID_OVR) node.
     TIntermSequence *viewIDSymbolCastArguments = new TIntermSequence();
@@ -123,7 +124,7 @@ void SelectViewIndexInVertexShader(TIntermTyped *viewIDSymbol,
 
     // Create a gl_ViewportIndex node.
     TIntermSymbol *viewportIndexSymbol =
-        new TIntermSymbol(0, "gl_ViewportIndex", TType(EbtInt, EbpHigh, EvqViewportIndex));
+        ReferenceBuiltInVariable("gl_ViewportIndex", symbolTable, 0);
 
     // Create a { gl_ViewportIndex = int(ViewID_OVR) } node.
     TIntermBlock *viewportIndexInitializerInBlock = new TIntermBlock();
@@ -206,7 +207,7 @@ void DeclareAndInitBuiltinsForInstancedMultiview(TIntermBlock *root,
             // initialization.
             SelectViewIndexInVertexShader(viewIDSymbol->deepCopy(),
                                           multiviewBaseViewLayerIndexSymbol->deepCopy(),
-                                          initializers);
+                                          initializers, *symbolTable);
         }
 
         // Insert initializers at the beginning of main().

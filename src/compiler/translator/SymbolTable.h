@@ -292,8 +292,11 @@ const int COMMON_BUILTINS    = 0;
 const int ESSL1_BUILTINS     = 1;
 const int ESSL3_BUILTINS     = 2;
 const int ESSL3_1_BUILTINS   = 3;
-const int LAST_BUILTIN_LEVEL = ESSL3_1_BUILTINS;
-const int GLOBAL_LEVEL       = 4;
+// GLSL_BUILTINS are desktop GLSL builtins that don't exist in ESSL but are used to implement
+// features in ANGLE's GLSL backend. They're not visible to the parser.
+const int GLSL_BUILTINS      = 4;
+const int LAST_BUILTIN_LEVEL = GLSL_BUILTINS;
+const int GLOBAL_LEVEL       = 5;
 
 class TSymbolTable : angle::NonCopyable
 {
@@ -453,6 +456,8 @@ class TSymbolTable : angle::NonCopyable
     TSymbol *findGlobal(const TString &name) const;
 
     TSymbol *findBuiltIn(const TString &name, int shaderVersion) const;
+
+    TSymbol *findBuiltIn(const TString &name, int shaderVersion, bool includeGLSLBuiltins) const;
 
     TSymbolTableLevel *getOuterLevel()
     {

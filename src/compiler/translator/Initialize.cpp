@@ -871,11 +871,11 @@ void IdentifyBuiltIns(sh::GLenum type,
                                               "gl_LastFragColorARM",
                                               TType(EbtFloat, EbpMedium, EvqLastFragColor, 4));
             }
+
+            break;
         }
-
-        break;
-
         case GL_VERTEX_SHADER:
+        {
             symbolTable.insertVariable(COMMON_BUILTINS, "gl_Position",
                                        TType(EbtFloat, EbpHigh, EvqPosition, 4));
             symbolTable.insertVariable(COMMON_BUILTINS, "gl_PointSize",
@@ -884,7 +884,12 @@ void IdentifyBuiltIns(sh::GLenum type,
                                        TType(EbtInt, EbpHigh, EvqInstanceID, 1));
             symbolTable.insertVariable(ESSL3_BUILTINS, "gl_VertexID",
                                        TType(EbtInt, EbpHigh, EvqVertexID, 1));
+
+            // For internal use by ANGLE - not exposed to the parser.
+            symbolTable.insertVariable(GLSL_BUILTINS, "gl_ViewportIndex",
+                                       TType(EbtInt, EbpHigh, EvqViewportIndex));
             break;
+        }
         case GL_COMPUTE_SHADER:
         {
             symbolTable.insertVariable(ESSL3_1_BUILTINS, "gl_NumWorkGroups",
@@ -899,15 +904,15 @@ void IdentifyBuiltIns(sh::GLenum type,
                                        TType(EbtUInt, EbpUndefined, EvqGlobalInvocationID, 3));
             symbolTable.insertVariable(ESSL3_1_BUILTINS, "gl_LocalInvocationIndex",
                                        TType(EbtUInt, EbpUndefined, EvqLocalInvocationIndex, 1));
+            break;
         }
-        break;
 
         case GL_GEOMETRY_SHADER_OES:
             // TODO(jiawei.shao@intel.com): add Geometry Shader built-in variables.
             break;
 
         default:
-            assert(false && "Language not supported");
+            UNREACHABLE();
     }
 }
 

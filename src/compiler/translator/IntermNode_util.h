@@ -35,7 +35,10 @@ TIntermConstantUnion *CreateBoolNode(bool value);
 // If the input node is not a block node, put it inside a block node and return that.
 TIntermBlock *EnsureBlock(TIntermNode *node);
 
+// Should be called from inside Compiler::compileTreeImpl() where the global level is in scope.
 TIntermSymbol *ReferenceGlobalVariable(const TString &name, const TSymbolTable &symbolTable);
+
+// Note: this can access desktop GLSL built-ins that are hidden from the parser.
 TIntermSymbol *ReferenceBuiltInVariable(const TString &name,
                                         const TSymbolTable &symbolTable,
                                         int shaderVersion);

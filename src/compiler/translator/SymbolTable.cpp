@@ -141,6 +141,8 @@ TSymbol *TSymbolTable::find(const TString &name,
 
     do
     {
+        if (level == GLSL_BUILTINS)
+            level--;
         if (level == ESSL3_1_BUILTINS && shaderVersion != 310)
             level--;
         if (level == ESSL3_BUILTINS && shaderVersion < 300)
@@ -167,8 +169,17 @@ TSymbol *TSymbolTable::findGlobal(const TString &name) const
 
 TSymbol *TSymbolTable::findBuiltIn(const TString &name, int shaderVersion) const
 {
+    return findBuiltIn(name, shaderVersion, false);
+}
+
+TSymbol *TSymbolTable::findBuiltIn(const TString &name,
+                                   int shaderVersion,
+                                   bool includeGLSLBuiltins) const
+{
     for (int level = LAST_BUILTIN_LEVEL; level >= 0; level--)
     {
+        if (level == GLSL_BUILTINS && !includeGLSLBuiltins)
+            level--;
         if (level == ESSL3_1_BUILTINS && shaderVersion != 310)
             level--;
         if (level == ESSL3_BUILTINS && shaderVersion < 300)
@@ -182,7 +193,7 @@ TSymbol *TSymbolTable::findBuiltIn(const TString &name, int shaderVersion) const
             return symbol;
     }
 
-    return 0;
+    return nullptr;
 }
 
 TSymbolTable::~TSymbolTable()

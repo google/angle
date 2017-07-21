@@ -193,7 +193,7 @@ TIntermSymbol *ReferenceBuiltInVariable(const TString &name,
                                         int shaderVersion)
 {
     const TVariable *var =
-        reinterpret_cast<const TVariable *>(symbolTable.findBuiltIn(name, shaderVersion));
+        reinterpret_cast<const TVariable *>(symbolTable.findBuiltIn(name, shaderVersion, true));
     ASSERT(var);
     return new TIntermSymbol(var->getUniqueId(), name, var->getType());
 }

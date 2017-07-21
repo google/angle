@@ -4401,3 +4401,20 @@ TEST_F(FragmentShaderValidationTest, RedefinedParamInFunctionHeader)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test that using gl_ViewportIndex is not allowed in an ESSL 3.10 shader.
+TEST_F(VertexShaderValidationTest, ViewportIndexInESSL310)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(gl_ViewportIndex);\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}

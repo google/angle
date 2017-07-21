@@ -628,11 +628,12 @@ bool TCompiler::InitBuiltInSymbolTable(const ShBuiltInResources &resources)
     compileResources = resources;
     setResourceString();
 
-    assert(symbolTable.isEmpty());
+    ASSERT(symbolTable.isEmpty());
     symbolTable.push();  // COMMON_BUILTINS
     symbolTable.push();  // ESSL1_BUILTINS
     symbolTable.push();  // ESSL3_BUILTINS
     symbolTable.push();  // ESSL3_1_BUILTINS
+    symbolTable.push();  // GLSL_BUILTINS
 
     switch (shaderType)
     {
