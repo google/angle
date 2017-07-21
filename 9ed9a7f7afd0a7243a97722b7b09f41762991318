@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2ac1e5c6_f26fe9e8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1980,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-21T16:04:02Z",
+      "side": 1,
+      "message": "It will have below error if we remove it.\nerror C2296: \u0027/\u0027: illegal, left operand has type \u0027const uint8_t *\u0027",
+      "parentUuid": "fd001fab_114c6491",
+      "range": {
+        "startLine": 1980,
+        "startChar": 55,
+        "endLine": 1980,
+        "endChar": 83
+      },
+      "revId": "9ed9a7f7afd0a7243a97722b7b09f41762991318",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b0b347d7_4b3949d7",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 5
@@ -45,6 +69,30 @@
       "revId": "9ed9a7f7afd0a7243a97722b7b09f41762991318",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7608e35_5aa4c21e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2065,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-21T16:04:02Z",
+      "side": 1,
+      "message": "This function also used for drawArraysIndirectImpl. I think \"supportsDrawingWithoutIndexRanges\" is a little weird for drawArraysIndirectImpl. If true is returned, it means we can directly use the corresponding d3d draw calls with the same parameters. So I called it supportsFastDraw. How do you think?",
+      "parentUuid": "b0b347d7_4b3949d7",
+      "range": {
+        "startLine": 2065,
+        "startChar": 17,
+        "endLine": 2065,
+        "endChar": 33
+      },
+      "revId": "9ed9a7f7afd0a7243a97722b7b09f41762991318",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
