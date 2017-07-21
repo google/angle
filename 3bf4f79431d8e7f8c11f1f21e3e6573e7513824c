@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "29a250bc_f1634140",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2740,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-07-21T10:26:32Z",
+      "side": 1,
+      "message": "Multisampling support is guaranteed for required renderbuffer formats. That\u0027s clearly stated in GLES 3.0.5 section 4.4.2.2 quoted below, or GLES 3.1 section 9.2.5. So it should be safe to assume that we\u0027ll get non-zero max samples for each of the required renderbuffer formats. We can make exceptions to mitigate the impact of buggy drivers, but I don\u0027t think we should do that unless it\u0027s proven to be needed.",
+      "parentUuid": "406676e4_bd92cddd",
+      "revId": "3bf4f79431d8e7f8c11f1f21e3e6573e7513824c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8c48a069_cbb9860e",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 3
