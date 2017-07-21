@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "9885ea1b_ef4fbf4c",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 818,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-21T20:56:51Z",
+      "side": 1,
+      "message": "nit: enum class",
+      "range": {
+        "startLine": 818,
+        "startChar": 4,
+        "endLine": 818,
+        "endChar": 9
+      },
+      "revId": "155cd6087474ea1f4a5d2b024d340e054515ecd1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ef72d76d_4a5889cc",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 3
@@ -30,6 +53,24 @@
       "writtenOn": "2017-07-21T20:10:23Z",
       "side": 1,
       "message": "Aren\u0027t line continuations only allowed if they are the last character of the line though?",
+      "revId": "155cd6087474ea1f4a5d2b024d340e054515ecd1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "86e8fc3b_b573e86e",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 894,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-21T20:56:51Z",
+      "side": 1,
+      "message": "Think so, any space after them I think confuses the compiler in C++. Not 100% sure.",
+      "parentUuid": "f0c91d1a_fb95c79d",
       "revId": "155cd6087474ea1f4a5d2b024d340e054515ecd1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
