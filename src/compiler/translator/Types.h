@@ -12,6 +12,7 @@
 
 #include "compiler/translator/BaseTypes.h"
 #include "compiler/translator/Common.h"
+#include "compiler/translator/SymbolUniqueId.h"
 
 namespace sh
 {
@@ -103,15 +104,12 @@ class TStructure : public TFieldListCollection
     void createSamplerSymbols(const TString &namePrefix,
                               const TString &apiNamePrefix,
                               TVector<TIntermSymbol *> *outputSymbols,
-                              TMap<TIntermSymbol *, TString> *outputSymbolsToAPINames) const;
+                              TMap<TIntermSymbol *, TString> *outputSymbolsToAPINames,
+                              TSymbolTable *symbolTable) const;
 
     bool equals(const TStructure &other) const;
 
-    int uniqueId() const
-    {
-        ASSERT(mUniqueId != 0);
-        return mUniqueId;
-    }
+    int uniqueId() const { return mUniqueId.get(); }
 
     void setAtGlobalScope(bool atGlobalScope) { mAtGlobalScope = atGlobalScope; }
 
@@ -138,7 +136,7 @@ class TStructure : public TFieldListCollection
     int calculateDeepestNesting() const;
 
     mutable int mDeepestNesting;
-    const int mUniqueId;
+    const TSymbolUniqueId mUniqueId;
     bool mAtGlobalScope;
 };
 
@@ -478,7 +476,8 @@ class TType
     void createSamplerSymbols(const TString &namePrefix,
                               const TString &apiNamePrefix,
                               TVector<TIntermSymbol *> *outputSymbols,
-                              TMap<TIntermSymbol *, TString> *outputSymbolsToAPINames) const;
+                              TMap<TIntermSymbol *, TString> *outputSymbolsToAPINames,
+                              TSymbolTable *symbolTable) const;
 
     // Initializes all lazily-initialized members.
     void realize() { getMangledName(); }

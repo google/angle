@@ -7,11 +7,12 @@
 //   Unit tests for the AST node classes.
 //
 
-#include "angle_gl.h"
-#include "gtest/gtest.h"
-#include "compiler/translator/InfoSink.h"
 #include "compiler/translator/IntermNode.h"
+#include "angle_gl.h"
+#include "compiler/translator/InfoSink.h"
 #include "compiler/translator/PoolAlloc.h"
+#include "compiler/translator/SymbolTable.h"
+#include "gtest/gtest.h"
 
 using namespace sh;
 
@@ -40,7 +41,11 @@ class IntermNodeTest : public testing::Test
         TString symbolName = symbolNameOut.c_str();
         ++mUniqueIndex;
 
-        TIntermSymbol *node = new TIntermSymbol(0, symbolName, type);
+        // We're using a dummy symbol table here, don't need to assign proper symbol ids to these
+        // nodes.
+        TSymbolTable symbolTable;
+
+        TIntermSymbol *node = new TIntermSymbol(symbolTable.nextUniqueId(), symbolName, type);
         node->setLine(createUniqueSourceLoc());
         node->setInternal(true);
         node->getTypePointer()->setQualifier(EvqTemporary);
@@ -117,7 +122,11 @@ class IntermNodeTest : public testing::Test
 TEST_F(IntermNodeTest, DeepCopySymbolNode)
 {
     TType type(EbtInt, EbpHigh);
-    TIntermSymbol *original = new TIntermSymbol(0, TString("name"), type);
+
+    // We're using a dummy symbol table here, don't need to assign proper symbol ids to these nodes.
+    TSymbolTable symbolTable;
+
+    TIntermSymbol *original = new TIntermSymbol(symbolTable.nextUniqueId(), TString("name"), type);
     original->setLine(getTestSourceLoc());
     original->setInternal(true);
     TIntermTyped *copy = original->deepCopy();

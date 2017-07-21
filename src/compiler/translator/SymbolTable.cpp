@@ -29,19 +29,6 @@ static const char kFunctionMangledNameSeparator = '(';
 
 }  // anonymous namespace
 
-TSymbolUniqueId::TSymbolUniqueId(TSymbolTable *symbolTable) : mId(symbolTable->nextUniqueId())
-{
-}
-
-TSymbolUniqueId::TSymbolUniqueId(const TSymbol &symbol) : mId(symbol.getUniqueId())
-{
-}
-
-int TSymbolUniqueId::get() const
-{
-    return mId;
-}
-
 TSymbol::TSymbol(TSymbolTable *symbolTable, const TString *n)
     : uniqueId(symbolTable->nextUniqueId()), name(n), extension(TExtension::UNDEFINED)
 {

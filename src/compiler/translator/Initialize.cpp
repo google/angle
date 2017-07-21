@@ -964,6 +964,8 @@ void IdentifyBuiltIns(sh::GLenum type,
             // For internal use by ANGLE - not exposed to the parser.
             symbolTable.insertVariable(GLSL_BUILTINS, "gl_ViewportIndex",
                                        TType(EbtInt, EbpHigh, EvqViewportIndex));
+            // gl_Layer exists in other shader stages in ESSL, but not in vertex shader so far.
+            symbolTable.insertVariable(GLSL_BUILTINS, "gl_Layer", TType(EbtInt, EbpHigh, EvqLayer));
             break;
         }
         case GL_COMPUTE_SHADER:

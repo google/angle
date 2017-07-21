@@ -119,8 +119,9 @@ OutputHLSL::OutputHLSL(sh::GLenum shaderType,
                        ShShaderOutput outputType,
                        int numRenderTargets,
                        const std::vector<Uniform> &uniforms,
-                       ShCompileOptions compileOptions)
-    : TIntermTraverser(true, true, true),
+                       ShCompileOptions compileOptions,
+                       TSymbolTable *symbolTable)
+    : TIntermTraverser(true, true, true, symbolTable),
       mShaderType(shaderType),
       mShaderVersion(shaderVersion),
       mExtensionBehavior(extensionBehavior),
@@ -375,7 +376,7 @@ void OutputHLSL::header(TInfoSinkBase &out, const BuiltInFunctionEmulator *built
 
     out << mStructureHLSL->structsHeader();
 
-    mUniformHLSL->uniformsHeader(out, mOutputType, mReferencedUniforms);
+    mUniformHLSL->uniformsHeader(out, mOutputType, mReferencedUniforms, mSymbolTable);
     out << mUniformHLSL->uniformBlocksHeader(mReferencedUniformBlocks);
 
     if (!mEqualityFunctions.empty())
@@ -1895,8 +1896,8 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                     const TType &argType = typedArg->getType();
                     TVector<TIntermSymbol *> samplerSymbols;
                     TString structName = samplerNamePrefixFromStruct(typedArg);
-                    argType.createSamplerSymbols("angle_" + structName, "",
-                                                 &samplerSymbols, nullptr);
+                    argType.createSamplerSymbols("angle_" + structName, "", &samplerSymbols,
+                                                 nullptr, mSymbolTable);
                     for (const TIntermSymbol *sampler : samplerSymbols)
                     {
                         if (mOutputType == SH_HLSL_4_0_FL9_3_OUTPUT)
@@ -2626,7 +2627,7 @@ TString OutputHLSL::argumentString(const TIntermSymbol *symbol)
     {
         ASSERT(qualifier != EvqOut && qualifier != EvqInOut);
         TVector<TIntermSymbol *> samplerSymbols;
-        type.createSamplerSymbols("angle" + nameStr, "", &samplerSymbols, nullptr);
+        type.createSamplerSymbols("angle" + nameStr, "", &samplerSymbols, nullptr, mSymbolTable);
         for (const TIntermSymbol *sampler : samplerSymbols)
         {
             const TType &samplerType = sampler->getType();

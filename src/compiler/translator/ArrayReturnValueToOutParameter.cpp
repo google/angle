@@ -30,7 +30,7 @@ void CopyAggregateChildren(TIntermAggregateBase *from, TIntermAggregateBase *to)
 
 TIntermSymbol *CreateReturnValueSymbol(const TSymbolUniqueId &id, const TType &type)
 {
-    TIntermSymbol *node = new TIntermSymbol(id.get(), "angle_return", type);
+    TIntermSymbol *node = new TIntermSymbol(id, "angle_return", type);
     node->setInternal(true);
     node->getTypePointer()->setQualifier(EvqOut);
     return node;

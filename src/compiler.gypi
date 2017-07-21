@@ -140,6 +140,8 @@
             'compiler/translator/SplitSequenceOperator.h',
             'compiler/translator/SymbolTable.cpp',
             'compiler/translator/SymbolTable.h',
+            'compiler/translator/SymbolUniqueId.cpp',
+            'compiler/translator/SymbolUniqueId.h',
             'compiler/translator/Types.cpp',
             'compiler/translator/Types.h',
             'compiler/translator/UnfoldShortCircuitAST.cpp',

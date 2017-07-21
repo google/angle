@@ -16,6 +16,7 @@
 namespace sh
 {
 class StructureHLSL;
+class TSymbolTable;
 
 class UniformHLSL : angle::NonCopyable
 {
@@ -28,7 +29,8 @@ class UniformHLSL : angle::NonCopyable
     void reserveUniformBlockRegisters(unsigned int registerCount);
     void uniformsHeader(TInfoSinkBase &out,
                         ShShaderOutput outputType,
-                        const ReferencedSymbols &referencedUniforms);
+                        const ReferencedSymbols &referencedUniforms,
+                        TSymbolTable *symbolTable);
 
     // Must be called after uniformsHeader
     void samplerMetadataUniforms(TInfoSinkBase &out, const char *reg);

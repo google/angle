@@ -22,6 +22,7 @@ namespace sh
 {
 class StructureHLSL;
 class TextureFunctionHLSL;
+class TSymbolTable;
 class UnfoldShortCircuit;
 class UniformHLSL;
 
@@ -37,7 +38,8 @@ class OutputHLSL : public TIntermTraverser
                ShShaderOutput outputType,
                int numRenderTargets,
                const std::vector<Uniform> &uniforms,
-               ShCompileOptions compileOptions);
+               ShCompileOptions compileOptions,
+               TSymbolTable *symbolTable);
 
     ~OutputHLSL();
 

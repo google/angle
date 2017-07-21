@@ -132,7 +132,7 @@ void SelectViewIndexInVertexShader(TIntermTyped *viewIDSymbol,
         new TIntermBinary(EOpAssign, viewportIndexSymbol, viewIDAsInt));
 
     // Create a gl_Layer node.
-    TIntermSymbol *layerSymbol = new TIntermSymbol(0, "gl_Layer", TType(EbtInt, EbpHigh, EvqLayer));
+    TIntermSymbol *layerSymbol = ReferenceBuiltInVariable("gl_Layer", symbolTable, 0);
 
     // Create an int(ViewID_OVR) + multiviewBaseViewLayerIndex node
     TIntermBinary *sumOfViewIDAndBaseViewIndex =

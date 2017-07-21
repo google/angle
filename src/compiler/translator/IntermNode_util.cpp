@@ -178,7 +178,7 @@ TIntermSymbol *CreateTempSymbolNode(const TSymbolUniqueId &id,
     symbolNameOut << "s" << id.get();
     TString symbolName = symbolNameOut.c_str();
 
-    TIntermSymbol *node = new TIntermSymbol(id.get(), symbolName, type);
+    TIntermSymbol *node = new TIntermSymbol(id, symbolName, type);
     node->setInternal(true);
 
     ASSERT(qualifier == EvqTemporary || qualifier == EvqConst || qualifier == EvqGlobal);

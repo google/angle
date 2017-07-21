@@ -126,7 +126,7 @@ void TranslatorHLSL::translate(TIntermBlock *root, ShCompileOptions compileOptio
 
     sh::OutputHLSL outputHLSL(getShaderType(), getShaderVersion(), getExtensionBehavior(),
                               getSourcePath(), getOutputType(), numRenderTargets, getUniforms(),
-                              compileOptions);
+                              compileOptions, &getSymbolTable());
 
     outputHLSL.output(root, getInfoSink().obj);
 
