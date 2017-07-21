@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "d88530b7_485e0066",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1980,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-21T17:04:32Z",
+      "side": 1,
+      "message": "You should be able to cast the indices pointer to uintptr_t.",
+      "parentUuid": "2ac1e5c6_f26fe9e8",
+      "range": {
+        "startLine": 1980,
+        "startChar": 55,
+        "endLine": 1980,
+        "endChar": 83
+      },
+      "revId": "9ed9a7f7afd0a7243a97722b7b09f41762991318",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b0b347d7_4b3949d7",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 5
@@ -84,6 +108,30 @@
       "side": 1,
       "message": "This function also used for drawArraysIndirectImpl. I think \"supportsDrawingWithoutIndexRanges\" is a little weird for drawArraysIndirectImpl. If true is returned, it means we can directly use the corresponding d3d draw calls with the same parameters. So I called it supportsFastDraw. How do you think?",
       "parentUuid": "b0b347d7_4b3949d7",
+      "range": {
+        "startLine": 2065,
+        "startChar": 17,
+        "endLine": 2065,
+        "endChar": 33
+      },
+      "revId": "9ed9a7f7afd0a7243a97722b7b09f41762991318",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "000924b3_a4e0f068",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2065,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-21T17:04:32Z",
+      "side": 1,
+      "message": "Sure, that\u0027s fine, I just wish we could be more specific than \u0027Fast\u0027.",
+      "parentUuid": "d7608e35_5aa4c21e",
       "range": {
         "startLine": 2065,
         "startChar": 17,
