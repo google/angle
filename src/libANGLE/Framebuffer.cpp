@@ -201,7 +201,6 @@ FramebufferState::FramebufferState(const Caps &caps)
 {
     ASSERT(mDrawBufferStates.size() > 0);
     mDrawBufferStates[0] = GL_COLOR_ATTACHMENT0_EXT;
-    mEnabledDrawBuffers.set(0);
 }
 
 FramebufferState::~FramebufferState()
@@ -1430,11 +1429,12 @@ bool Framebuffer::formsRenderingFeedbackLoopWith(const State &state) const
     // The bitset will skip inactive draw buffers.
     for (size_t drawIndex : mState.mEnabledDrawBuffers)
     {
-        const FramebufferAttachment *attachment = getDrawBuffer(drawIndex);
-        if (attachment && attachment->type() == GL_TEXTURE)
+        const FramebufferAttachment &attachment = mState.mColorAttachments[drawIndex];
+        ASSERT(attachment.isAttached());
+        if (attachment.type() == GL_TEXTURE)
         {
             // Validate the feedback loop.
-            if (program->samplesFromTexture(state, attachment->id()))
+            if (program->samplesFromTexture(state, attachment.id()))
             {
                 return true;
             }
