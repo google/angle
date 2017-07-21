@@ -44,7 +44,9 @@ namespace
 class DoWhileRewriter : public TIntermTraverser
 {
   public:
-    DoWhileRewriter(const TSymbolTable *symbolTable) : TIntermTraverser(true, false, false) {}
+    DoWhileRewriter(TSymbolTable *symbolTable) : TIntermTraverser(true, false, false, symbolTable)
+    {
+    }
 
     bool visitBlock(Visit, TIntermBlock *node) override
     {
@@ -66,6 +68,9 @@ class DoWhileRewriter : public TIntermTraverser
             {
                 continue;
             }
+
+            // Found a loop to change.
+            nextTemporaryId();
 
             TType boolType = TType(EbtBool);
 
@@ -137,8 +142,6 @@ class DoWhileRewriter : public TIntermTraverser
             replacement.push_back(newLoop);
 
             node->replaceChildNodeWithMultiple(loop, replacement);
-
-            nextTemporaryId();
         }
         return true;
     }
