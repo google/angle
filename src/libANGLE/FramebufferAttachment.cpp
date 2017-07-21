@@ -23,7 +23,7 @@ namespace gl
 
 ////// FramebufferAttachment::Target Implementation //////
 
-const GLint FramebufferAttachment::kDefaultNumViews           = 1;
+const GLsizei FramebufferAttachment::kDefaultNumViews         = 1;
 const GLenum FramebufferAttachment::kDefaultMultiviewLayout   = GL_NONE;
 const GLint FramebufferAttachment::kDefaultBaseViewIndex      = 0;
 const GLint FramebufferAttachment::kDefaultViewportOffsets[2] = {0};
@@ -231,7 +231,7 @@ GLint FramebufferAttachment::layer() const
     return 0;
 }
 
-GLint FramebufferAttachment::getNumViews() const
+GLsizei FramebufferAttachment::getNumViews() const
 {
     return mNumViews;
 }

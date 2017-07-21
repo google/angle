@@ -97,7 +97,7 @@ class FramebufferAttachment final
     GLenum cubeMapFace() const;
     GLint mipLevel() const;
     GLint layer() const;
-    GLint getNumViews() const;
+    GLsizei getNumViews() const;
     GLenum getMultiviewLayout() const;
     GLint getBaseViewIndex() const;
     const std::vector<Offset> &getMultiviewViewportOffsets() const;
@@ -129,7 +129,7 @@ class FramebufferAttachment final
     bool operator==(const FramebufferAttachment &other) const;
     bool operator!=(const FramebufferAttachment &other) const;
 
-    static const GLint kDefaultNumViews;
+    static const GLsizei kDefaultNumViews;
     static const GLenum kDefaultMultiviewLayout;
     static const GLint kDefaultBaseViewIndex;
     static const GLint kDefaultViewportOffsets[2];
@@ -163,7 +163,7 @@ class FramebufferAttachment final
     GLenum mType;
     Target mTarget;
     FramebufferAttachmentObject *mResource;
-    GLint mNumViews;
+    GLsizei mNumViews;
     GLenum mMultiviewLayout;
     GLint mBaseViewIndex;
     std::vector<Offset> mViewportOffsets;

@@ -11,6 +11,20 @@
 
 using namespace angle;
 
+namespace
+{
+
+GLuint CreateTexture2D(GLenum internalFormat, GLenum format, GLenum type)
+{
+    GLuint tex;
+    glGenTextures(1, &tex);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, 1, 1, 0, format, type, nullptr);
+    return tex;
+}
+
+}  // namespace
+
 class FramebufferMultiviewTest : public ANGLETest
 {
   protected:
@@ -55,14 +69,6 @@ class FramebufferMultiviewTest : public ANGLETest
         ANGLETest::TearDown();
     }
 
-    void createTexture2D()
-    {
-        glGenTextures(1, &mTexture2D);
-        glBindTexture(GL_TEXTURE_2D, mTexture2D);
-        glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA16F, 1, 1);
-        ASSERT_GL_NO_ERROR();
-    }
-
     void createTexture2DArray()
     {
         glGenTextures(1, &mTexture2DArray);
@@ -102,7 +108,8 @@ TEST_P(FramebufferMultiviewTest, DefaultState)
         return;
     }
 
-    createTexture2D();
+    mTexture2D = CreateTexture2D(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE);
+    ASSERT_GL_NO_ERROR();
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTexture2D, 0);
 
     GLint numViews = -1;
@@ -139,7 +146,8 @@ TEST_P(FramebufferMultiviewTest, DefaultState)
 // the ANGLE_multiview tokens results in an INVALID_ENUM error.
 TEST_P(FramebufferMultiviewTest, NegativeFramebufferStateQueries)
 {
-    createTexture2D();
+    mTexture2D = CreateTexture2D(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE);
+    ASSERT_GL_NO_ERROR();
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTexture2D, 0);
 
     GLint numViews = -1;
@@ -176,7 +184,8 @@ TEST_P(FramebufferMultiviewTest, InvalidMultiviewSideBySideArguments)
         return;
     }
 
-    createTexture2D();
+    mTexture2D = CreateTexture2D(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE);
+    ASSERT_GL_NO_ERROR();
     // Negative offsets.
     int viewportOffsets[2] = {-1};
     glFramebufferTextureMultiviewSideBySideANGLE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTexture2D,
@@ -219,7 +228,8 @@ TEST_P(FramebufferMultiviewTest, InvalidMultiviewLayeredArguments)
 // available.
 TEST_P(FramebufferMultiviewTest, ExtensionNotAvailableCheck)
 {
-    createTexture2D();
+    mTexture2D = CreateTexture2D(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE);
+    ASSERT_GL_NO_ERROR();
     int viewportOffsets[2] = {0};
     glFramebufferTextureMultiviewSideBySideANGLE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTexture2D,
                                                  0, 1, &viewportOffsets[0]);
@@ -235,7 +245,8 @@ TEST_P(FramebufferMultiviewTest, ModifySideBySideState)
     }
 
     const GLint viewportOffsets[4] = {0, 0, 1, 2};
-    createTexture2D();
+    mTexture2D                     = CreateTexture2D(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE);
+    ASSERT_GL_NO_ERROR();
     glFramebufferTextureMultiviewSideBySideANGLE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTexture2D,
                                                  0, 2, &viewportOffsets[0]);
     ASSERT_GL_NO_ERROR();
@@ -270,6 +281,102 @@ TEST_P(FramebufferMultiviewTest, ModifySideBySideState)
     {
         EXPECT_EQ(viewportOffsets[i], internalViewportOffsets[i]);
     }
+}
+
+// Test framebuffer completeness status of a side-by-side framebuffer with color and depth
+// attachments.
+TEST_P(FramebufferMultiviewTest, IncompleteViewTargetsSideBySide)
+{
+    if (!requestMultiviewExtension())
+    {
+        return;
+    }
+
+    mTexture2D = CreateTexture2D(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE);
+    ASSERT_GL_NO_ERROR();
+
+    GLuint otherTexture = CreateTexture2D(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE);
+    ASSERT_GL_NO_ERROR();
+
+    GLuint depthTexture = CreateTexture2D(GL_DEPTH_COMPONENT32F, GL_DEPTH_COMPONENT, GL_FLOAT);
+    ASSERT_GL_NO_ERROR();
+
+    const GLint viewportOffsets[4]      = {0, 0, 2, 0};
+    const GLint otherViewportOffsets[4] = {2, 0, 4, 0};
+
+    // Set the 0th attachment and keep it as it is till the end of the test. The 1st or depth
+    // attachment will me modified to change the framebuffer's status.
+    glFramebufferTextureMultiviewSideBySideANGLE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTexture2D,
+                                                 0, 2, &viewportOffsets[0]);
+    ASSERT_GL_NO_ERROR();
+
+    // Color attachment 1.
+    {
+        // Test framebuffer completeness when the number of views differ.
+        glFramebufferTextureMultiviewSideBySideANGLE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1,
+                                                     otherTexture, 0, 1, &viewportOffsets[0]);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_VIEW_TARGETS_ANGLE,
+                         glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+        // Test framebuffer completeness when the viewport offsets differ.
+        glFramebufferTextureMultiviewSideBySideANGLE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1,
+                                                     otherTexture, 0, 2, &otherViewportOffsets[0]);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_VIEW_TARGETS_ANGLE,
+                         glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+        // Test framebuffer completeness when attachment layouts differ.
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, otherTexture,
+                               0);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_VIEW_TARGETS_ANGLE,
+                         glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+        // Test that framebuffer is complete when the number of views, viewport offsets and layouts
+        // are the same.
+        glFramebufferTextureMultiviewSideBySideANGLE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1,
+                                                     otherTexture, 0, 2, &viewportOffsets[0]);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+        // Reset attachment 1
+        glFramebufferTextureMultiviewSideBySideANGLE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, 0, 0, 1,
+                                                     &viewportOffsets[0]);
+    }
+
+    // Depth attachment.
+    {
+        // Test framebuffer completeness when the number of views differ.
+        glFramebufferTextureMultiviewSideBySideANGLE(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                                                     depthTexture, 0, 1, &viewportOffsets[0]);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_VIEW_TARGETS_ANGLE,
+                         glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+        // Test framebuffer completeness when the viewport offsets differ.
+        glFramebufferTextureMultiviewSideBySideANGLE(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                                                     depthTexture, 0, 2, &otherViewportOffsets[0]);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_VIEW_TARGETS_ANGLE,
+                         glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+        // Test framebuffer completeness when attachment layouts differ.
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_INCOMPLETE_VIEW_TARGETS_ANGLE,
+                         glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+        // Test that framebuffer is complete when the number of views, viewport offsets and layouts
+        // are the same.
+        glFramebufferTextureMultiviewSideBySideANGLE(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                                                     depthTexture, 0, 2, &viewportOffsets[0]);
+        ASSERT_GL_NO_ERROR();
+        EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    }
+
+    glDeleteTextures(1, &depthTexture);
+    glDeleteTextures(1, &otherTexture);
 }
 
 ANGLE_INSTANTIATE_TEST(FramebufferMultiviewTest, ES3_OPENGL());
