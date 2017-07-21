@@ -29,6 +29,7 @@ class RenderTargetD3D : public FramebufferAttachmentRenderTarget
     virtual GLenum getInternalFormat() const = 0;
     virtual GLsizei getSamples() const = 0;
     gl::Extents getExtents() const { return gl::Extents(getWidth(), getHeight(), getDepth()); }
+    bool isMultisampled() const { return getSamples() > 0; }
 
     virtual unsigned int getSerial() const;
     static unsigned int issueSerials(unsigned int count);

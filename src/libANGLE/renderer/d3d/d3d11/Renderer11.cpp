@@ -3824,7 +3824,7 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Context *context,
     unsigned int readSubresource      = 0;
     d3d11::SharedSRV readSRV;
 
-    if (readRenderTarget->getSamples() > 1)
+    if (readRenderTarget->isMultisampled())
     {
         ANGLE_TRY_RESULT(
             resolveMultisampledTexture(context, readRenderTarget11, depthBlit, stencilBlit),
@@ -4119,7 +4119,11 @@ gl::ErrorOrResult<TextureHelper11> Renderer11::resolveMultisampledTexture(
 
     const auto &formatSet = renderTarget->getFormatSet();
 
-    ASSERT(renderTarget->getSamples() > 1);
+    ASSERT(renderTarget->isMultisampled());
+    const d3d11::SharedSRV &sourceSRV = renderTarget->getShaderResourceView();
+    D3D11_SHADER_RESOURCE_VIEW_DESC sourceSRVDesc;
+    sourceSRV.get()->GetDesc(&sourceSRVDesc);
+    ASSERT(sourceSRVDesc.ViewDimension == D3D_SRV_DIMENSION_TEXTURE2DMS);
 
     D3D11_TEXTURE2D_DESC resolveDesc;
     resolveDesc.Width              = renderTarget->getWidth();
