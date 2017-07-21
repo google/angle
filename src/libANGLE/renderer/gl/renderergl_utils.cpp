@@ -89,8 +89,12 @@ static bool MeetsRequirements(const FunctionsGL *functions, const nativegl::Supp
     }
 }
 
-static gl::TextureCaps GenerateTextureFormatCaps(const FunctionsGL *functions, GLenum internalFormat)
+static gl::TextureCaps GenerateTextureFormatCaps(const FunctionsGL *functions,
+                                                 const WorkaroundsGL &workarounds,
+                                                 GLenum internalFormat)
 {
+    ASSERT(functions->getError() == GL_NO_ERROR);
+
     gl::TextureCaps textureCaps;
 
     const nativegl::InternalFormat &formatInfo = nativegl::GetInternalFormatInfo(internalFormat, functions->standard);
@@ -102,16 +106,27 @@ static gl::TextureCaps GenerateTextureFormatCaps(const FunctionsGL *functions, G
     // extension GL_ARB_internalformat_query
     if (textureCaps.renderable && functions->getInternalformativ)
     {
+        GLenum queryInternalFormat = internalFormat;
+
+        if (internalFormat == GL_BGRA8_EXT && workarounds.avoidInternalFormativForBGRA8)
+        {
+            // Querying GL_NUM_SAMPLE_COUNTS for GL_BGRA8_EXT generates an INVALID_ENUM error on
+            // macOS' Core Profile OpenGL driver. It seems however that allocating a multisampled
+            // renderbuffer of this format succeeds. To avoid breaking multisampling for this
+            // format, query the supported sample counts for GL_RGBA8 instead.
+            queryInternalFormat = GL_RGBA8;
+        }
+
         GLint numSamples = 0;
-        functions->getInternalformativ(GL_RENDERBUFFER, internalFormat, GL_NUM_SAMPLE_COUNTS, 1, &numSamples);
+        functions->getInternalformativ(GL_RENDERBUFFER, queryInternalFormat, GL_NUM_SAMPLE_COUNTS,
+                                       1, &numSamples);
 
         if (numSamples > 0)
         {
             std::vector<GLint> samples(numSamples);
-            functions->getInternalformativ(GL_RENDERBUFFER, internalFormat, GL_SAMPLES,
+            functions->getInternalformativ(GL_RENDERBUFFER, queryInternalFormat, GL_SAMPLES,
                                            static_cast<GLsizei>(samples.size()), &samples[0]);
 
-            GLenum queryInternalFormat = internalFormat;
             if (internalFormat == GL_STENCIL_INDEX8)
             {
                 // The query below does generates an error with STENCIL_INDEX8 on NVIDIA driver
@@ -149,6 +164,7 @@ static gl::TextureCaps GenerateTextureFormatCaps(const FunctionsGL *functions, G
         }
     }
 
+    ASSERT(functions->getError() == GL_NO_ERROR);
     return textureCaps;
 }
 
@@ -229,7 +245,8 @@ void GenerateCaps(const FunctionsGL *functions,
     const gl::FormatSet &allFormats = gl::GetAllSizedInternalFormats();
     for (GLenum internalFormat : allFormats)
     {
-        gl::TextureCaps textureCaps = GenerateTextureFormatCaps(functions, internalFormat);
+        gl::TextureCaps textureCaps =
+            GenerateTextureFormatCaps(functions, workarounds, internalFormat);
         textureCapsMap->insert(internalFormat, textureCaps);
 
         if (gl::GetSizedInternalFormatInfo(internalFormat).compressed)
@@ -539,9 +556,14 @@ void GenerateCaps(const FunctionsGL *functions,
         LimitVersion(maxSupportedESVersion, gl::Version(2, 0));
     }
 
-    if (functions->isAtLeastGL(gl::Version(3, 0)) ||
-        functions->hasGLExtension("GL_ARB_ES2_compatibility") ||
-        functions->isAtLeastGLES(gl::Version(2, 0)))
+    if (functions->isAtLeastGL(gl::Version(3, 2)) &&
+        (functions->profile & GL_CONTEXT_CORE_PROFILE_BIT) != 0)
+    {
+        caps->maxVaryingComponents = QuerySingleGLInt(functions, GL_MAX_VERTEX_OUTPUT_COMPONENTS);
+    }
+    else if (functions->isAtLeastGL(gl::Version(3, 0)) ||
+             functions->hasGLExtension("GL_ARB_ES2_compatibility") ||
+             functions->isAtLeastGLES(gl::Version(2, 0)))
     {
         caps->maxVaryingComponents = QuerySingleGLInt(functions, GL_MAX_VARYING_COMPONENTS);
     }
@@ -1060,6 +1082,12 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
     workarounds->reapplyUBOBindingsAfterUsingBinaryProgram = true;
 
     workarounds->clampPointSize = true;
+#endif
+
+#if defined(ANGLE_PLATFORM_APPLE)
+    workarounds->avoidInternalFormativForBGRA8 = true;
+#else
+    workarounds->avoidInternalFormativForBGRA8 = IsAMD(vendor);
 #endif
 }
 

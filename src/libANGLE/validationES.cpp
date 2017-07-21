@@ -1727,7 +1727,7 @@ bool ValidateBlitFramebufferParameters(ValidationContext *context,
                     }
 
                     if (readColorBuffer->getSamples() > 0 &&
-                        (!Format::SameSized(readFormat, drawFormat) || !sameBounds))
+                        (!Format::EquivalentForBlit(readFormat, drawFormat) || !sameBounds))
                     {
                         context->handleError(InvalidOperation());
                         return false;
@@ -1778,7 +1778,7 @@ bool ValidateBlitFramebufferParameters(ValidationContext *context,
 
             if (readBuffer && drawBuffer)
             {
-                if (!Format::SameSized(readBuffer->getFormat(), drawBuffer->getFormat()))
+                if (!Format::EquivalentForBlit(readBuffer->getFormat(), drawBuffer->getFormat()))
                 {
                     context->handleError(InvalidOperation());
                     return false;
