@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ad9ed1c8_7b21ec5c",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3050,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-21T16:04:52Z",
+      "side": 1,
+      "message": "Yes, in a way it is better because the update will happen only once at the level of syncing the dirty draw framebuffer. I implemented this approach but the issue is that I would have to change the order of syncing the dirty objects and dirty state bits leading to a dependency which we probably don\u0027t want. For now, I will keep it as it is.\nCan Google\u0027s ANGLE team give a suggestion please?",
+      "parentUuid": "dfc4796a_c944fa46",
+      "revId": "4e2842704bda6e1f376bed27ff73f43721f55862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "633a72dc_e0fb2dd3",
         "filename": "src/libANGLE/State.cpp",
         "patchSetId": 5
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "fe2b7f84_dc3ac636",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2296,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-21T16:04:52Z",
+      "side": 1,
+      "message": "Removed it.",
+      "parentUuid": "633a72dc_e0fb2dd3",
+      "range": {
+        "startLine": 2296,
+        "startChar": 12,
+        "endLine": 2296,
+        "endChar": 43
+      },
+      "revId": "4e2842704bda6e1f376bed27ff73f43721f55862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f21463e_3d7552db",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
         "patchSetId": 5
@@ -53,6 +95,30 @@
       "writtenOn": "2017-07-20T14:08:53Z",
       "side": 1,
       "message": "The forceUpdate flag is a bit awkward. I\u0027d rather pass the viewportOffsets as a parameter here, and do viewportOffsets !\u003d mViewportOffsets. It might be less optimal if just the scissor rect is being changed, but it\u0027s simpler and scissor changes should not be that frequent that it would become a bottleneck. Same goes for setViewport.",
+      "range": {
+        "startLine": 995,
+        "startChar": 28,
+        "endLine": 995,
+        "endChar": 42
+      },
+      "revId": "4e2842704bda6e1f376bed27ff73f43721f55862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf55d670_61833003",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 995,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-21T16:04:52Z",
+      "side": 1,
+      "message": "I purposely didn\u0027t write it like that not only for performance reasons, but mostly because something along the lines of\nif (mViewportOffsets !\u003d viewportOffsets)\n{\n   mViewportOffsets \u003d viewportOffsets\n   send to driver\n}\nwould be wrong if it happens in both setScissor and setViewport, because setViewport will update the local mViewportOffsets member and to setScissor it would seem that there is no such change.\nBut I restructured the code in a different way and I think it is better now.",
+      "parentUuid": "9f21463e_3d7552db",
       "range": {
         "startLine": 995,
         "startChar": 28,
@@ -88,6 +154,30 @@
     },
     {
       "key": {
+        "uuid": "5a6d97bb_9b038263",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1525,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-21T16:04:52Z",
+      "side": 1,
+      "message": "I restructured the code and incorporated this suggestion.\nDone.",
+      "parentUuid": "9a7ae0f7_60049b80",
+      "range": {
+        "startLine": 1525,
+        "startChar": 16,
+        "endLine": 1525,
+        "endChar": 68
+      },
+      "revId": "4e2842704bda6e1f376bed27ff73f43721f55862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ca4f6bee_14725294",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.h",
         "patchSetId": 5
@@ -111,6 +201,30 @@
     },
     {
       "key": {
+        "uuid": "1f16cd2a_c069f2e2",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-21T16:04:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ca4f6bee_14725294",
+      "range": {
+        "startLine": 183,
+        "startChar": 9,
+        "endLine": 183,
+        "endChar": 36
+      },
+      "revId": "4e2842704bda6e1f376bed27ff73f43721f55862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e717b279_e656c87f",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.h",
         "patchSetId": 5
@@ -131,6 +245,30 @@
       "revId": "4e2842704bda6e1f376bed27ff73f43721f55862",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3d50398_a7b397e7",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-21T16:04:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e717b279_e656c87f",
+      "range": {
+        "startLine": 259,
+        "startChar": 9,
+        "endLine": 259,
+        "endChar": 33
+      },
+      "revId": "4e2842704bda6e1f376bed27ff73f43721f55862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
