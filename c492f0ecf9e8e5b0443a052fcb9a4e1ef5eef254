@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a9482157_914271f8",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-21T05:08:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8123a39a_44901dd5",
+      "range": {
+        "startLine": 28,
+        "startChar": 25,
+        "endLine": 28,
+        "endChar": 28
+      },
+      "revId": "c492f0ecf9e8e5b0443a052fcb9a4e1ef5eef254",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ee832088_d5d093a6",
         "filename": "include/GLSLANG/ShaderLang.h",
         "patchSetId": 14
@@ -36,6 +60,30 @@
       "writtenOn": "2017-07-20T15:19:08Z",
       "side": 1,
       "message": "OES_geometry_shader is the latest version of the extension (ratified by Khronos) but EXT_geometry_shader may be used more because it has the same name as the desktop extension.  I would prefer that you changed the strings to OES_geometry_shader but we could also support both names.",
+      "range": {
+        "startLine": 294,
+        "startChar": 8,
+        "endLine": 294,
+        "endChar": 27
+      },
+      "revId": "c492f0ecf9e8e5b0443a052fcb9a4e1ef5eef254",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c64f525_dad9cd73",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 294,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-21T05:08:25Z",
+      "side": 1,
+      "message": "I think we should add both OES_geometry_shader and EXT_geometry_shader because since OES_geometry_shader is the later one, there are platforms that only support EXT_geometry_shader , in this situation \"GL_OES_geometry_shader\" cannot be used.\n\nI have also updated all GL_GEOMETRY_SHADER_EXT into GL_GEOMETRY_SHADER_OES as the enum of geometry shader in this patch.",
+      "parentUuid": "ee832088_d5d093a6",
       "range": {
         "startLine": 294,
         "startChar": 8,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "44315afd_b38c6064",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 420,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-21T05:08:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4c0f48aa_238f2d92",
+      "range": {
+        "startLine": 418,
+        "startChar": 4,
+        "endLine": 420,
+        "endChar": 31
+      },
+      "revId": "c492f0ecf9e8e5b0443a052fcb9a4e1ef5eef254",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b8af5be9_76798a89",
         "filename": "src/compiler/translator/Compiler.cpp",
         "patchSetId": 14
@@ -91,6 +163,30 @@
       "revId": "c492f0ecf9e8e5b0443a052fcb9a4e1ef5eef254",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2697cfc4_f9484992",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 651,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-21T05:08:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b8af5be9_76798a89",
+      "range": {
+        "startLine": 651,
+        "startChar": 12,
+        "endLine": 651,
+        "endChar": 25
+      },
+      "revId": "c492f0ecf9e8e5b0443a052fcb9a4e1ef5eef254",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "e9d051e9_ca376048",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 951,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-21T05:08:25Z",
+      "side": 1,
+      "message": "Done\nNow both GL_EXT_geometry_shader and GL_OES_geometry_shader are supported.",
+      "parentUuid": "73b33157_4bf6f1f8",
+      "range": {
+        "startLine": 951,
+        "startChar": 24,
+        "endLine": 951,
+        "endChar": 27
+      },
+      "revId": "c492f0ecf9e8e5b0443a052fcb9a4e1ef5eef254",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e750bb52_219a1d18",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 14
@@ -131,6 +251,24 @@
       "revId": "c492f0ecf9e8e5b0443a052fcb9a4e1ef5eef254",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3226c355_5fdac2c9",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2900,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-21T05:08:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e750bb52_219a1d18",
+      "revId": "c492f0ecf9e8e5b0443a052fcb9a4e1ef5eef254",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

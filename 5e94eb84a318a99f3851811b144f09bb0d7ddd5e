@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8324905c_6a9f5d69",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-21T05:08:25Z",
+      "side": 1,
+      "message": "I suggest we use GL_EXT_geometry_shader so that the shaders that use GL_OES_geometry_shader can also be compiled on platforms that only support GL_EXT_geometry_shader.",
+      "range": {
+        "startLine": 236,
+        "startChar": 0,
+        "endLine": 237,
+        "endChar": 29
+      },
+      "revId": "5e94eb84a318a99f3851811b144f09bb0d7ddd5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
