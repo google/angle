@@ -263,6 +263,58 @@ TEST_P(DrawElementsTest, DeletingAfterStreamingIndexes)
 
     ASSERT_GL_NO_ERROR();
 }
+// Test that the offset in the index buffer is forced to be a multiple of the element size
+TEST_P(DrawElementsTest, DrawElementsTypeAlignment)
+{
+    const std::string &vert =
+        "attribute vec3 a_pos;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(a_pos, 1.0);\n"
+        "}\n";
+
+    const std::string &frag =
+        "precision highp float;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vec4(1.0);\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, vert, frag);
+
+    GLint posLocation = glGetAttribLocation(program, "a_pos");
+    ASSERT_NE(-1, posLocation);
+    glUseProgram(program);
+
+    const auto &vertices = GetQuadVertices();
+
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * vertices.size(), vertices.data(),
+                 GL_STATIC_DRAW);
+
+    glVertexAttribPointer(posLocation, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(posLocation);
+
+    GLBuffer indexBuffer;
+    const GLubyte indices1[] = {0, 0, 0, 0, 0, 0};
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices1), indices1, GL_STATIC_DRAW);
+
+    ASSERT_GL_NO_ERROR();
+
+    const char *zeroIndices = nullptr;
+
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, zeroIndices);
+    ASSERT_GL_NO_ERROR();
+
+    const GLubyte indices2[] = {0, 0, 0, 0, 0};
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices2), indices2, GL_STATIC_DRAW);
+
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, zeroIndices + 1);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
 
 ANGLE_INSTANTIATE_TEST(DrawElementsTest, ES3_OPENGL(), ES3_OPENGLES());
 }
