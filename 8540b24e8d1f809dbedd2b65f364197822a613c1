@@ -22,6 +22,30 @@
       "revId": "8540b24e8d1f809dbedd2b65f364197822a613c1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d60b080e_aefe631c",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-21T15:53:44Z",
+      "side": 1,
+      "message": "I think we could even be smart about it and support both OES_geometry_shader and EXT_geometry_shader when the driver only supports one or the other.  We may be able generate something similar to the following ESSL code:\n\n    #if GL_OES_geometry_shader\n    #extension GL_OES_geometry_shader require\n    #else if GL_EXT_geometry_shader\n    #extension GL_OES_geometry_shader require\n    #else\n    #error \"No geometry shader extensions available.\" // Only generate this if the extension is \"required\"\n    #endif\n\nOtherwise we need to make a separation in the resources object for what the driver supports and what ANGLE supports so that the correct shader code gets generated.",
+      "parentUuid": "623f0735_8de6acc6",
+      "range": {
+        "startLine": 233,
+        "startChar": 0,
+        "endLine": 247,
+        "endChar": 13
+      },
+      "revId": "8540b24e8d1f809dbedd2b65f364197822a613c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
