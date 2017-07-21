@@ -46,6 +46,30 @@
       "revId": "8540b24e8d1f809dbedd2b65f364197822a613c1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "155fa1a4_7ef06d80",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-21T15:54:44Z",
+      "side": 1,
+      "message": "Whoops, I have a typo in there, the second #extension should be GL_EXT_geometry_shader",
+      "parentUuid": "d60b080e_aefe631c",
+      "range": {
+        "startLine": 233,
+        "startChar": 0,
+        "endLine": 247,
+        "endChar": 13
+      },
+      "revId": "8540b24e8d1f809dbedd2b65f364197822a613c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
