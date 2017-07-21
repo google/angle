@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "406676e4_bd92cddd",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2740,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-21T08:40:17Z",
+      "side": 1,
+      "message": "Thank you for your response.\n\nShall we only take the formats that support multisamples into account here? \n\nAccording to SPEC:\n\"NUM_SAMPLE_COUNTS returns the number of samples that would be returned by querying SAMPLES is returned in params. If target does not support multiple samples, zero is returned.\"\n\nWe can see that NUM_SAMPLE_COUNTS means the number of values returned in the query of SAMPLES, as query for GL_BGRA_EXT returns 0, the query of SAMPLES should return no values, thus there is no valid maximum values in SAMPLES as it is empty. \n\nThe SPEC also says:\n\"SAMPLES: The sample counts supported for internalformat and target are written into params, in descending numeric order. Only positive values are returned.\"\n \nI query SAMPLES with a buffer sized 1 on GL_BGRA_EXT and get 0, which is against SPEC, so there is actually no valid values returned in SAMPLES for this format.",
+      "parentUuid": "051d06cc_f6eb52ad",
+      "revId": "3bf4f79431d8e7f8c11f1f21e3e6573e7513824c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8c48a069_cbb9860e",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 3
