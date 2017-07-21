@@ -70,16 +70,14 @@ bool ValidateDrawAttribs(ValidationContext *context,
                 // no buffer is bound to that attribute via bindBuffer and vertexAttribPointer,
                 // then calls to drawArrays or drawElements will generate an INVALID_OPERATION
                 // error.
-                context->handleError(InvalidOperation()
-                                     << "An enabled vertex array has no buffer.");
+                ANGLE_VALIDATION_ERR(context, InvalidOperation(), VertexArrayNoBuffer);
                 return false;
             }
             else if (attrib.pointer == nullptr)
             {
                 // This is an application error that would normally result in a crash,
                 // but we catch it and return an error
-                context->handleError(InvalidOperation()
-                                     << "An enabled vertex array has no buffer and no pointer.");
+                ANGLE_VALIDATION_ERR(context, InvalidOperation(), VertexArrayNoBufferPointer);
                 return false;
             }
             continue;
@@ -134,7 +132,7 @@ bool ValidateDrawAttribs(ValidationContext *context,
         uint64_t attribOffset = ComputeVertexAttributeOffset(attrib, binding);
         if (attribDataSizeNoOffset > kUint64Max - attribOffset)
         {
-            context->handleError(InvalidOperation() << "Integer overflow.");
+            ANGLE_VALIDATION_ERR(context, InvalidOperation(), IntegerOverflow);
             return false;
         }
         uint64_t attribDataSizeWithOffset = attribDataSizeNoOffset + attribOffset;
@@ -144,8 +142,7 @@ bool ValidateDrawAttribs(ValidationContext *context,
         // enough backing data.
         if (attribDataSizeWithOffset > static_cast<uint64_t>(buffer->getSize()))
         {
-            context->handleError(InvalidOperation()
-                                 << "Vertex buffer is not big enough for the draw call");
+            ANGLE_VALIDATION_ERR(context, InvalidOperation(), InsufficientVertexBufferSize);
             return false;
         }
     }
@@ -269,14 +266,13 @@ bool ValidateTextureWrapModeValue(Context *context, ParamType *params, bool rest
             if (restrictedWrapModes)
             {
                 // OES_EGL_image_external and ANGLE_texture_rectangle specifies this error.
-                context->handleError(InvalidEnum()
-                                     << "texture only support CLAMP_TO_EDGE wrap mode");
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidWrapModeTexture);
                 return false;
             }
             break;
 
         default:
-            context->handleError(InvalidEnum() << "Unknown param value.");
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidTextureWrap);
             return false;
     }
 
@@ -299,8 +295,7 @@ bool ValidateTextureMinFilterValue(Context *context, ParamType *params, bool res
             if (restrictedMinFilter)
             {
                 // OES_EGL_image_external specifies this error.
-                context->handleError(InvalidEnum()
-                                     << "texture only support NEAREST and LINEAR filtering");
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidFilterTexture);
                 return false;
             }
             break;
@@ -341,7 +336,7 @@ bool ValidateTextureCompareModeValue(Context *context, ParamType *params)
             break;
 
         default:
-            context->handleError(InvalidEnum() << "Unknown param value.");
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), UnknownParameter);
             return false;
     }
 
@@ -365,7 +360,7 @@ bool ValidateTextureCompareFuncValue(Context *context, ParamType *params)
             break;
 
         default:
-            context->handleError(InvalidEnum() << "Unknown param value.");
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), UnknownParameter);
             return false;
     }
 
@@ -388,7 +383,7 @@ bool ValidateTextureSRGBDecodeValue(Context *context, ParamType *params)
             break;
 
         default:
-            context->handleError(InvalidEnum() << "Unknown param value.");
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), UnknownParameter);
             return false;
     }
 
@@ -404,20 +399,20 @@ bool ValidateSamplerParameterBase(Context *context,
 {
     if (context->getClientMajorVersion() < 3)
     {
-        context->handleError(InvalidOperation() << "Context does not support OpenGL ES 3.0.");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
         return false;
     }
 
     if (!context->isSampler(sampler))
     {
-        context->handleError(InvalidOperation() << "Sampler is not valid.");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidSampler);
         return false;
     }
 
     const GLsizei minBufSize = 1;
     if (bufSize >= 0 && bufSize < minBufSize)
     {
-        context->handleError(InvalidOperation() << "bufSize must be at least " << minBufSize);
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), InsufficientBufferSize);
         return false;
     }
 
@@ -492,13 +487,13 @@ bool ValidateGetSamplerParameterBase(Context *context,
 
     if (context->getClientMajorVersion() < 3)
     {
-        context->handleError(InvalidOperation() << "Context does not support OpenGL ES 3.0.");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
         return false;
     }
 
     if (!context->isSampler(sampler))
     {
-        context->handleError(InvalidOperation() << "Sampler is not valid.");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidSampler);
         return false;
     }
 
@@ -638,7 +633,7 @@ bool ValidateGetInternalFormativBase(Context *context,
             break;
 
         default:
-            context->handleError(InvalidEnum() << "Invalid target.");
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidTarget);
             return false;
     }
 
@@ -779,7 +774,7 @@ bool ValidateUniformValue(ValidationContext *context, GLenum valueType, GLenum u
         return true;
     }
 
-    ANGLE_VALIDATION_ERR(context, InvalidOperation(), UniformSizeDoesNotMatchMethod);
+    ANGLE_VALIDATION_ERR(context, InvalidOperation(), UniformSizeMismatch);
     return false;
 }
 
@@ -944,7 +939,7 @@ bool ValidateDrawElementsInstancedBase(ValidationContext *context,
 {
     if (primcount < 0)
     {
-        context->handleError(InvalidValue() << "primcount cannot be negative.");
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), NegativePrimcount);
         return false;
     }
 
@@ -965,7 +960,7 @@ bool ValidateDrawArraysInstancedBase(Context *context,
 {
     if (primcount < 0)
     {
-        context->handleError(InvalidValue() << "primcount cannot be negative.");
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), NegativePrimcount);
         return false;
     }
 
@@ -997,8 +992,7 @@ bool ValidateDrawInstancedANGLE(ValidationContext *context)
         }
     }
 
-    context->handleError(InvalidOperation()
-                         << "At least one attribute must have a divisor of zero.");
+    ANGLE_VALIDATION_ERR(context, InvalidOperation(), NoZeroDivisor);
     return false;
 }
 
@@ -1927,7 +1921,7 @@ bool ValidateGenQueriesEXT(gl::Context *context, GLsizei n)
     if (!context->getExtensions().occlusionQueryBoolean &&
         !context->getExtensions().disjointTimerQuery)
     {
-        context->handleError(InvalidOperation() << "Query extension not enabled");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), QueryExtensionNotEnabled);
         return false;
     }
 
@@ -1939,7 +1933,7 @@ bool ValidateDeleteQueriesEXT(gl::Context *context, GLsizei n)
     if (!context->getExtensions().occlusionQueryBoolean &&
         !context->getExtensions().disjointTimerQuery)
     {
-        context->handleError(InvalidOperation() << "Query extension not enabled");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), QueryExtensionNotEnabled);
         return false;
     }
 
@@ -1950,7 +1944,7 @@ bool ValidateBeginQueryBase(gl::Context *context, GLenum target, GLuint id)
 {
     if (!ValidQueryType(context, target))
     {
-        context->handleError(InvalidEnum() << "Invalid query target");
+        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidQueryType);
         return false;
     }
 
@@ -1987,7 +1981,7 @@ bool ValidateBeginQueryBase(gl::Context *context, GLenum target, GLuint id)
     // check that name was obtained with glGenQueries
     if (!queryObject)
     {
-        context->handleError(InvalidOperation() << "Invalid query id");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidQueryId);
         return false;
     }
 
@@ -2006,7 +2000,7 @@ bool ValidateBeginQueryEXT(gl::Context *context, GLenum target, GLuint id)
     if (!context->getExtensions().occlusionQueryBoolean &&
         !context->getExtensions().disjointTimerQuery && !context->getExtensions().syncQuery)
     {
-        context->handleError(InvalidOperation() << "Query extension not enabled");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), QueryExtensionNotEnabled);
         return false;
     }
 
@@ -2017,7 +2011,7 @@ bool ValidateEndQueryBase(gl::Context *context, GLenum target)
 {
     if (!ValidQueryType(context, target))
     {
-        context->handleError(InvalidEnum() << "Invalid query target");
+        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidQueryType);
         return false;
     }
 
@@ -2037,7 +2031,7 @@ bool ValidateEndQueryEXT(gl::Context *context, GLenum target)
     if (!context->getExtensions().occlusionQueryBoolean &&
         !context->getExtensions().disjointTimerQuery && !context->getExtensions().syncQuery)
     {
-        context->handleError(InvalidOperation() << "Query extension not enabled");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), QueryExtensionNotEnabled);
         return false;
     }
 
@@ -2054,20 +2048,20 @@ bool ValidateQueryCounterEXT(Context *context, GLuint id, GLenum target)
 
     if (target != GL_TIMESTAMP_EXT)
     {
-        context->handleError(InvalidEnum() << "Invalid query target");
+        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidQueryTarget);
         return false;
     }
 
     Query *queryObject = context->getQuery(id, true, target);
     if (queryObject == nullptr)
     {
-        context->handleError(InvalidOperation() << "Invalid query id");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidQueryId);
         return false;
     }
 
     if (context->getGLState().isQueryActive(queryObject))
     {
-        context->handleError(InvalidOperation() << "Query is active");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), QueryActive);
         return false;
     }
 
@@ -2083,7 +2077,7 @@ bool ValidateGetQueryivBase(Context *context, GLenum target, GLenum pname, GLsiz
 
     if (!ValidQueryType(context, target) && target != GL_TIMESTAMP_EXT)
     {
-        context->handleError(InvalidEnum() << "Invalid query type");
+        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidQueryType);
         return false;
     }
 
@@ -2100,12 +2094,12 @@ bool ValidateGetQueryivBase(Context *context, GLenum target, GLenum pname, GLsiz
             if (!context->getExtensions().disjointTimerQuery ||
                 (target != GL_TIMESTAMP_EXT && target != GL_TIME_ELAPSED_EXT))
             {
-                context->handleError(InvalidEnum() << "Invalid pname");
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidPname);
                 return false;
             }
             break;
         default:
-            context->handleError(InvalidEnum() << "Invalid pname");
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidPname);
             return false;
     }
 
@@ -2166,13 +2160,13 @@ bool ValidateGetQueryObjectValueBase(Context *context, GLuint id, GLenum pname, 
 
     if (!queryObject)
     {
-        context->handleError(InvalidOperation() << "Query does not exist");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidQueryId);
         return false;
     }
 
     if (context->getGLState().isQueryActive(queryObject))
     {
-        context->handleError(InvalidOperation() << "Query currently active");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), QueryActive);
         return false;
     }
 
@@ -2538,7 +2532,7 @@ bool ValidateStateQuery(ValidationContext *context,
 
             if (framebuffer->getReadBufferState() == GL_NONE)
             {
-                context->handleError(InvalidOperation() << "Read buffer is GL_NONE");
+                ANGLE_VALIDATION_ERR(context, InvalidOperation(), ReadBufferNone);
                 return false;
             }
 
@@ -2650,7 +2644,7 @@ bool ValidateCopyTexImageParametersBase(ValidationContext *context,
 
     if (readFramebuffer->getReadBufferState() == GL_NONE)
     {
-        context->handleError(InvalidOperation() << "Read buffer is GL_NONE");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ReadBufferNone);
         return false;
     }
 
@@ -2777,9 +2771,7 @@ bool ValidateCopyTexImageParametersBase(ValidationContext *context,
     {
         if (readFramebuffer->formsCopyingFeedbackLoopWith(texture->id(), level, zoffset))
         {
-            context->handleError(InvalidOperation() << "Texture copying feedback loop formed "
-                                                       "between Framebuffer and specified "
-                                                       "Texture level.");
+            ANGLE_VALIDATION_ERR(context, InvalidOperation(), FeedbackLoop);
             return false;
         }
     }
@@ -2943,9 +2935,7 @@ bool ValidateDrawBase(ValidationContext *context, GLenum mode, GLsizei count)
         // Detect rendering feedback loops for WebGL.
         if (framebuffer->formsRenderingFeedbackLoopWith(state))
         {
-            context->handleError(
-                InvalidOperation()
-                << "Rendering feedback loop formed between Framebuffer and active Texture.");
+            ANGLE_VALIDATION_ERR(context, InvalidOperation(), FeedbackLoop);
             return false;
         }
 
@@ -3329,7 +3319,7 @@ static bool ValidateSizedGetUniform(Context *context,
 
     if (bufSize < 0)
     {
-        context->handleError(InvalidValue() << "bufSize cannot be negative.");
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), NegativeBufferSize);
         return false;
     }
 
@@ -3341,8 +3331,7 @@ static bool ValidateSizedGetUniform(Context *context,
     size_t requiredBytes         = VariableExternalSize(uniform.type);
     if (static_cast<size_t>(bufSize) < requiredBytes)
     {
-        context->handleError(InvalidOperation()
-                             << "bufSize of at least " << requiredBytes << " is required.");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), InsufficientBufferSize);
         return false;
     }
 
@@ -3434,7 +3423,7 @@ bool ValidateDiscardFramebufferBase(Context *context,
 {
     if (numAttachments < 0)
     {
-        context->handleError(InvalidValue() << "numAttachments must not be less than zero");
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), NegativeAttachments);
         return false;
     }
 
@@ -3444,8 +3433,7 @@ bool ValidateDiscardFramebufferBase(Context *context,
         {
             if (defaultFramebuffer)
             {
-                context->handleError(InvalidEnum()
-                                     << "Invalid attachment when the default framebuffer is bound");
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), DefaultFramebufferInvalidAttachment);
                 return false;
             }
 
@@ -3466,9 +3454,8 @@ bool ValidateDiscardFramebufferBase(Context *context,
                 case GL_DEPTH_STENCIL_ATTACHMENT:
                     if (defaultFramebuffer)
                     {
-                        context->handleError(
-                            InvalidEnum()
-                            << "Invalid attachment when the default framebuffer is bound");
+                        ANGLE_VALIDATION_ERR(context, InvalidEnum(),
+                                             DefaultFramebufferInvalidAttachment);
                         return false;
                     }
                     break;
@@ -3477,14 +3464,13 @@ bool ValidateDiscardFramebufferBase(Context *context,
                 case GL_STENCIL:
                     if (!defaultFramebuffer)
                     {
-                        context->handleError(
-                            InvalidEnum()
-                            << "Invalid attachment when the default framebuffer is not bound");
+                        ANGLE_VALIDATION_ERR(context, InvalidEnum(),
+                                             DefaultFramebufferInvalidAttachment);
                         return false;
                     }
                     break;
                 default:
-                    context->handleError(InvalidEnum() << "Invalid attachment");
+                    ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidAttachment);
                     return false;
             }
         }
@@ -3602,7 +3588,7 @@ bool ValidateEGLImageTargetRenderbufferStorageOES(Context *context,
             break;
 
         default:
-            context->handleError(InvalidEnum() << "invalid renderbuffer target.");
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidRenderbufferTarget);
             return false;
     }
 
@@ -3701,10 +3687,14 @@ bool ValidateGetProgramBinaryBase(Context *context,
 bool ValidateDrawBuffersBase(ValidationContext *context, GLsizei n, const GLenum *bufs)
 {
     // INVALID_VALUE is generated if n is negative or greater than value of MAX_DRAW_BUFFERS
-    if (n < 0 || static_cast<GLuint>(n) > context->getCaps().maxDrawBuffers)
+    if (n < 0)
     {
-        context->handleError(InvalidValue()
-                             << "n must be non-negative and no greater than MAX_DRAW_BUFFERS");
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), NegativeCount);
+        return false;
+    }
+    if (static_cast<GLuint>(n) > context->getCaps().maxDrawBuffers)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), IndexExceedsMaxDrawBuffer);
         return false;
     }
 
@@ -4142,7 +4132,7 @@ bool ValidateGetFramebufferAttachmentParameterivBase(ValidationContext *context,
                 break;
 
             default:
-                ANGLE_VALIDATION_ERR(context, InvalidOperation(), FramebufferInvalidAttachment);
+                ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidAttachment);
                 return false;
         }
     }
@@ -4169,7 +4159,7 @@ bool ValidateGetFramebufferAttachmentParameterivBase(ValidationContext *context,
                     break;
 
                 default:
-                    ANGLE_VALIDATION_ERR(context, InvalidOperation(), FramebufferInvalidAttachment);
+                    ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidAttachment);
                     return false;
             }
         }
@@ -4212,7 +4202,7 @@ bool ValidateGetFramebufferAttachmentParameterivBase(ValidationContext *context,
             case GL_FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE:
                 if (attachment == GL_DEPTH_STENCIL_ATTACHMENT)
                 {
-                    ANGLE_VALIDATION_ERR(context, InvalidOperation(), FramebufferInvalidAttachment);
+                    ANGLE_VALIDATION_ERR(context, InvalidOperation(), InvalidAttachment);
                     return false;
                 }
                 break;
@@ -4247,7 +4237,7 @@ bool ValidateGetFramebufferAttachmentParameterivBase(ValidationContext *context,
                 if (clientVersion < 3)
                 {
                     ANGLE_VALIDATION_ERR(context, InvalidEnum(),
-                                         InvalidRenderbufferTextureParameter);
+                                         InvalidFramebufferTextureParameter);
                     return false;
                 }
                 break;
@@ -4256,13 +4246,13 @@ bool ValidateGetFramebufferAttachmentParameterivBase(ValidationContext *context,
                 if (clientVersion < 3)
                 {
                     ANGLE_VALIDATION_ERR(context, InvalidEnum(),
-                                         InvalidRenderbufferTextureParameter);
+                                         InvalidFramebufferTextureParameter);
                     return false;
                 }
                 else
                 {
                     ANGLE_VALIDATION_ERR(context, InvalidOperation(),
-                                         InvalidRenderbufferTextureParameter);
+                                         InvalidFramebufferTextureParameter);
                     return false;
                 }
         }
@@ -4919,7 +4909,7 @@ bool ValidateVertexFormatBase(ValidationContext *context,
     const Caps &caps = context->getCaps();
     if (attribIndex >= caps.maxVertexAttributes)
     {
-        ANGLE_VALIDATION_ERR(context, InvalidValue(), IndexExceedsMax);
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), IndexExceedsMaxVertexAttribute);
         return false;
     }
 
@@ -5344,7 +5334,7 @@ bool ValidateGetVertexAttribBase(Context *context,
 
     if (index >= context->getCaps().maxVertexAttributes)
     {
-        ANGLE_VALIDATION_ERR(context, InvalidValue(), IndexExceedsMax);
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), IndexExceedsMaxVertexAttribute);
         return false;
     }
 
@@ -5474,7 +5464,7 @@ bool ValidateReadPixelsBase(Context *context,
 
     if (framebuffer->getReadBufferState() == GL_NONE)
     {
-        context->handleError(InvalidOperation() << "Read buffer is GL_NONE");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ReadBufferNone);
         return false;
     }
 
@@ -5510,13 +5500,13 @@ bool ValidateReadPixelsBase(Context *context,
         // dEQP/WebGL.
         if (!ValidReadPixelsFormatEnum(context, format))
         {
-            context->handleError(InvalidEnum() << "Invalid read format.");
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidFormat);
             return false;
         }
 
         if (!ValidReadPixelsTypeEnum(context, type))
         {
-            context->handleError(InvalidEnum() << "Invalid read type.");
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidType);
             return false;
         }
     }
@@ -5561,8 +5551,7 @@ bool ValidateReadPixelsBase(Context *context,
     {
         if (pixelPackBuffer == nullptr && static_cast<size_t>(bufSize) < endByte)
         {
-            context->handleError(InvalidOperation()
-                                 << "bufSize must be at least " << endByte << " bytes.");
+            ANGLE_VALIDATION_ERR(context, InvalidOperation(), InsufficientBufferSize);
             return false;
         }
     }
@@ -5670,7 +5659,7 @@ bool ValidateTexParameterBase(Context *context,
         case GL_TEXTURE_MAX_LOD:
             if (context->getClientMajorVersion() < 3)
             {
-                context->handleError(InvalidEnum() << "pname requires OpenGL ES 3.0.");
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), ES3Required);
                 return false;
             }
             if (target == GL_TEXTURE_EXTERNAL_OES &&

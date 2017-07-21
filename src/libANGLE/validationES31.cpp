@@ -9,6 +9,7 @@
 #include "libANGLE/validationES31.h"
 
 #include "libANGLE/Context.h"
+#include "libANGLE/ErrorStrings.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/validationES.h"
@@ -277,7 +278,7 @@ bool ValidateGetBooleani_v(Context *context, GLenum target, GLuint index, GLbool
 {
     if (context->getClientVersion() < ES_3_1)
     {
-        context->handleError(InvalidOperation() << "Context does not support GLES3.1");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);
         return false;
     }
 
@@ -298,7 +299,7 @@ bool ValidateGetBooleani_vRobustANGLE(Context *context,
 {
     if (context->getClientVersion() < ES_3_1)
     {
-        context->handleError(InvalidOperation() << "Context does not support GLES3.1");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);
         return false;
     }
 
@@ -324,7 +325,7 @@ bool ValidateDrawIndirectBase(Context *context, GLenum mode, const void *indirec
 {
     if (context->getClientVersion() < ES_3_1)
     {
-        context->handleError(InvalidOperation() << "Context does not support GLES3.1");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);
         return false;
     }
 
@@ -452,7 +453,7 @@ bool ValidateGetTexLevelParameterBase(Context *context,
 {
     if (context->getClientVersion() < ES_3_1)
     {
-        context->handleError(InvalidOperation() << "Context does not support GLES3.1");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);
         return false;
     }
 
@@ -463,7 +464,7 @@ bool ValidateGetTexLevelParameterBase(Context *context,
 
     if (!ValidTexLevelDestinationTarget(context, target))
     {
-        context->handleError(InvalidEnum() << "Invalid texture target");
+        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidTextureTarget);
         return false;
     }
 
@@ -507,7 +508,7 @@ bool ValidateGetTexLevelParameterBase(Context *context,
         case GL_TEXTURE_COMPRESSED:
             break;
         default:
-            context->handleError(InvalidEnum() << "Unknown pname.");
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidPname);
             return false;
     }
 
@@ -546,7 +547,7 @@ bool ValidateTexStorage2DMultiSample(Context *context,
 {
     if (context->getClientVersion() < ES_3_1)
     {
-        context->handleError(InvalidOperation() << "Context does not support GLES3.1.");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);
         return false;
     }
 
@@ -558,7 +559,7 @@ bool ValidateTexStorage2DMultiSample(Context *context,
 
     if (width < 1 || height < 1)
     {
-        context->handleError(InvalidValue() << "Width and height must be positive.");
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), NegativeSize);
         return false;
     }
 
@@ -627,7 +628,7 @@ bool ValidateGetMultisamplefv(Context *context, GLenum pname, GLuint index, GLfl
 {
     if (context->getClientVersion() < ES_3_1)
     {
-        context->handleError(InvalidOperation() << "Context does not support GLES3.1.");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);
         return false;
     }
 
@@ -651,7 +652,7 @@ bool ValidationFramebufferParameteri(Context *context, GLenum target, GLenum pna
 {
     if (context->getClientVersion() < ES_3_1)
     {
-        context->handleError(InvalidOperation() << "Context does not support GLES3.1.");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);
         return false;
     }
 
@@ -705,8 +706,7 @@ bool ValidationFramebufferParameteri(Context *context, GLenum target, GLenum pna
         }
         default:
         {
-            context->handleError(InvalidEnum()
-                                 << "Invalid pname: 0x" << std::hex << std::uppercase << pname);
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidPname);
             return false;
         }
     }
@@ -728,13 +728,13 @@ bool ValidationGetFramebufferParameteri(Context *context,
 {
     if (context->getClientVersion() < ES_3_1)
     {
-        context->handleError(InvalidOperation() << "Context does not support GLES3.1.");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);
         return false;
     }
 
     if (!ValidFramebufferTarget(target))
     {
-        context->handleError(InvalidEnum() << "Invalid framebuffer target.");
+        ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidFramebufferTarget);
         return false;
     }
 
@@ -746,8 +746,7 @@ bool ValidationGetFramebufferParameteri(Context *context,
         case GL_FRAMEBUFFER_DEFAULT_FIXED_SAMPLE_LOCATIONS:
             break;
         default:
-            context->handleError(InvalidEnum()
-                                 << "Invalid pname: 0x" << std::hex << std::uppercase << pname);
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), InvalidPname);
             return false;
     }
 
@@ -769,7 +768,7 @@ bool ValidateGetProgramResourceIndex(Context *context,
 {
     if (context->getClientVersion() < ES_3_1)
     {
-        context->handleError(InvalidOperation() << "Context does not support GLES 3.1.");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);
         return false;
     }
 
@@ -797,7 +796,7 @@ bool ValidateBindVertexBuffer(ValidationContext *context,
 {
     if (context->getClientVersion() < ES_3_1)
     {
-        context->handleError(InvalidOperation() << "Context does not support GLES3.1.");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);
         return false;
     }
 
@@ -817,7 +816,7 @@ bool ValidateBindVertexBuffer(ValidationContext *context,
 
     if (offset < 0)
     {
-        context->handleError(InvalidValue() << "offset cannot be negative.");
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), NegativeOffset);
         return false;
     }
 
@@ -843,7 +842,7 @@ bool ValidateVertexBindingDivisor(ValidationContext *context, GLuint bindingInde
 {
     if (context->getClientVersion() < ES_3_1)
     {
-        context->handleError(InvalidOperation() << "Context does not support GLES3.1.");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);
         return false;
     }
 
@@ -875,7 +874,7 @@ bool ValidateVertexAttribFormat(ValidationContext *context,
 {
     if (context->getClientVersion() < ES_3_1)
     {
-        context->handleError(InvalidOperation() << "Context does not support GLES3.1.");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);
         return false;
     }
 
@@ -905,7 +904,7 @@ bool ValidateVertexAttribBinding(ValidationContext *context,
 {
     if (context->getClientVersion() < ES_3_1)
     {
-        context->handleError(InvalidOperation() << "Context does not support GLES3.1.");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);
         return false;
     }
 
@@ -920,8 +919,7 @@ bool ValidateVertexAttribBinding(ValidationContext *context,
     const Caps &caps = context->getCaps();
     if (attribIndex >= caps.maxVertexAttributes)
     {
-        context->handleError(InvalidValue()
-                             << "attribindex must be smaller than MAX_VERTEX_ATTRIBS.");
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), IndexExceedsMaxVertexAttribute);
         return false;
     }
 
@@ -945,7 +943,7 @@ bool ValidateGetProgramResourceName(Context *context,
 {
     if (context->getClientVersion() < ES_3_1)
     {
-        context->handleError(InvalidOperation() << "Context does not support GLES3.1.");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);
         return false;
     }
 
@@ -970,7 +968,7 @@ bool ValidateGetProgramResourceName(Context *context,
 
     if (bufSize < 0)
     {
-        context->handleError(InvalidValue() << "Invalid bufSize: " << bufSize);
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), NegativeBufferSize);
         return false;
     }
 
@@ -984,7 +982,7 @@ bool ValidateDispatchCompute(Context *context,
 {
     if (context->getClientVersion() < ES_3_1)
     {
-        context->handleError(InvalidOperation() << "Context does not support GLES3.1.");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);
         return false;
     }
 
@@ -1119,7 +1117,7 @@ bool ValidateGetProgramResourceLocation(Context *context,
 {
     if (context->getClientVersion() < ES_3_1)
     {
-        context->handleError(InvalidOperation() << "Context does not support GLES3.1.");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);
         return false;
     }
 
