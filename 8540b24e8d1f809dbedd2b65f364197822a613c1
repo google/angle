@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "623f0735_8de6acc6",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-21T07:05:54Z",
+      "side": 1,
+      "message": "I think this can be a better solution to handle OES_geometry_shader and EXT_geometry_shader. \n\nNow the compiler can always generate correct shaders with the extension string accepted by driver, and both \"OES_geometry_shader\" and \"EXT_geometry_shader\" can be accepted on all drivers that support OES_geometry_shader or EXT_geometry_shader.",
+      "range": {
+        "startLine": 233,
+        "startChar": 0,
+        "endLine": 247,
+        "endChar": 13
+      },
+      "revId": "8540b24e8d1f809dbedd2b65f364197822a613c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
