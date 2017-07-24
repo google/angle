@@ -45,6 +45,16 @@ void VertexArray11::destroy(const gl::Context *context)
 void VertexArray11::syncState(const gl::Context *context,
                               const gl::VertexArray::DirtyBits &dirtyBits)
 {
+    ASSERT(dirtyBits.any());
+
+    // Generate a state serial. This serial is used in the program class to validate the cached
+    // input layout, and skip recomputation in the fast path.
+    auto renderer       = GetImplAs<Context11>(context)->getRenderer();
+    mCurrentStateSerial = renderer->generateSerial();
+
+    // TODO(jmadill): Individual attribute invalidation.
+    renderer->getStateManager()->invalidateVertexBuffer();
+
     for (auto dirtyBit : dirtyBits)
     {
         if (dirtyBit == gl::VertexArray::DIRTY_BIT_ELEMENT_ARRAY_BUFFER)

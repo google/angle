@@ -136,6 +136,8 @@ class Context9 : public ContextImpl
                               GLuint numGroupsY,
                               GLuint numGroupsZ) override;
 
+    Renderer9 *getRenderer() const { return mRenderer; }
+
   private:
     Renderer9 *mRenderer;
 };

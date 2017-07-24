@@ -260,7 +260,7 @@ class ProgramD3D : public ProgramImpl
         return mAttribLocationToD3DSemantic;
     }
 
-    void updateCachedInputLayout(const gl::State &state);
+    void updateCachedInputLayout(Serial associatedSerial, const gl::State &state);
     const gl::InputLayout &getCachedInputLayout() const { return mCachedInputLayout; }
 
     bool isSamplerMappingDirty() { return mDirtySamplerMapping; }
@@ -438,6 +438,8 @@ class ProgramD3D : public ProgramImpl
 
     static unsigned int issueSerial();
     static unsigned int mCurrentSerial;
+
+    Serial mCurrentVertexArrayStateSerial;
 };
 }
 

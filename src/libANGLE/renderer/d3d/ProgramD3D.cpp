@@ -2389,8 +2389,14 @@ void ProgramD3D::initAttribLocationsToD3DSemantic(const gl::Context *context)
     }
 }
 
-void ProgramD3D::updateCachedInputLayout(const gl::State &state)
+void ProgramD3D::updateCachedInputLayout(Serial associatedSerial, const gl::State &state)
 {
+    if (mCurrentVertexArrayStateSerial == associatedSerial)
+    {
+        return;
+    }
+
+    mCurrentVertexArrayStateSerial = associatedSerial;
     mCachedInputLayout.clear();
     const auto &vertexAttributes = state.getVertexArray()->getVertexAttributes();
 

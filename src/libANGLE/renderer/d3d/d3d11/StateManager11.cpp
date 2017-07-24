@@ -19,6 +19,7 @@
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/ShaderExecutable11.h"
 #include "libANGLE/renderer/d3d/d3d11/TextureStorage11.h"
+#include "libANGLe/renderer/d3d/d3d11/VertexArray11.h"
 
 namespace rx
 {
@@ -284,6 +285,7 @@ StateManager11::StateManager11(Renderer11 *renderer)
       mDirtyCurrentValueAttribs(),
       mCurrentValueAttribs(),
       mCurrentInputLayout(),
+      mInputLayoutIsDirty(false),
       mDirtyVertexBufferRange(gl::MAX_VERTEX_ATTRIBS, 0),
       mCurrentPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_UNDEFINED)
 {
@@ -618,6 +620,10 @@ void StateManager11::syncState(const gl::Context *context, const gl::State::Dirt
                 }
                 break;
             case gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING:
+                invalidateRenderTarget(context);
+                break;
+            case gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE:
+                invalidateVertexBuffer();
                 invalidateRenderTarget(context);
                 break;
             default:
@@ -997,6 +1003,7 @@ void StateManager11::invalidateVertexBuffer()
     unsigned int limit = std::min<unsigned int>(mRenderer->getNativeCaps().maxVertexAttributes,
                                                 gl::MAX_VERTEX_ATTRIBS);
     mDirtyVertexBufferRange = gl::RangeUI(0, limit);
+    mInputLayoutIsDirty     = true;
 }
 
 void StateManager11::setOneTimeRenderTarget(const gl::Context *context,
@@ -1733,9 +1740,11 @@ gl::Error StateManager11::syncProgram(const gl::Context *context, GLenum drawMod
     // This method is called single-threaded.
     ANGLE_TRY(mRenderer->ensureHLSLCompilerInitialized());
 
-    const auto &glState    = context->getGLState();
+    const auto &glState = context->getGLState();
+    const auto *va11 = GetImplAs<VertexArray11>(glState.getVertexArray());
+
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(glState.getProgram());
-    programD3D->updateCachedInputLayout(glState);
+    programD3D->updateCachedInputLayout(va11->getCurrentStateSerial(), glState);
 
     const auto &inputLayout = programD3D->getCachedInputLayout();
 

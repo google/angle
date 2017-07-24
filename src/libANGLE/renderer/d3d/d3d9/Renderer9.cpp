@@ -1784,7 +1784,8 @@ gl::Error Renderer9::applyShaders(const gl::Context *context, GLenum drawMode)
     ANGLE_TRY(ensureHLSLCompilerInitialized());
 
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(state.getProgram());
-    programD3D->updateCachedInputLayout(state);
+    VertexArray9 *vao      = GetImplAs<VertexArray9>(state.getVertexArray());
+    programD3D->updateCachedInputLayout(vao->getCurrentStateSerial(), state);
 
     const auto &inputLayout = programD3D->getCachedInputLayout();
 

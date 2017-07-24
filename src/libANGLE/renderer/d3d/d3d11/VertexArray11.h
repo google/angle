@@ -40,6 +40,8 @@ class VertexArray11 : public VertexArrayImpl, public OnBufferDataDirtyReceiver
     // SignalReceiver implementation
     void signal(size_t channelID) override;
 
+    Serial getCurrentStateSerial() const { return mCurrentStateSerial; }
+
   private:
     void updateVertexAttribStorage(const gl::Context *context, size_t attribIndex);
     void flushAttribUpdates(const gl::Context *context);
@@ -60,6 +62,8 @@ class VertexArray11 : public VertexArrayImpl, public OnBufferDataDirtyReceiver
     std::vector<gl::BindingPointer<gl::Buffer>> mCurrentBuffers;
 
     std::vector<OnBufferDataDirtyBinding> mOnBufferDataDirty;
+
+    Serial mCurrentStateSerial;
 };
 
 }  // namespace rx

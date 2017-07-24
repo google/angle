@@ -303,6 +303,7 @@ class StateManager11 final : angle::NonCopyable
 
     // Current applied input layout.
     ResourceSerial mCurrentInputLayout;
+    bool mInputLayoutIsDirty;
 
     // Current applied vertex states.
     // TODO(jmadill): Figure out how to use ResourceSerial here.

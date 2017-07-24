@@ -362,6 +362,9 @@ class State : angle::NonCopyable
     bool hasMappedBuffer(GLenum target) const;
     bool isRobustResourceInitEnabled() const { return mRobustResourceInit; }
 
+    // Sets the dirty bit for the program executable.
+    void onProgramExecutableChange(Program *program);
+
     enum DirtyBitType
     {
         DIRTY_BIT_SCISSOR_TEST_ENABLED,
@@ -419,6 +422,7 @@ class State : angle::NonCopyable
         DIRTY_BIT_VERTEX_ARRAY_BINDING,
         DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING,
         DIRTY_BIT_PROGRAM_BINDING,
+        DIRTY_BIT_PROGRAM_EXECUTABLE,
         DIRTY_BIT_MULTISAMPLING,
         DIRTY_BIT_SAMPLE_ALPHA_TO_ONE,
         DIRTY_BIT_COVERAGE_MODULATION,         // CHROMIUM_framebuffer_mixed_samples
@@ -438,7 +442,6 @@ class State : angle::NonCopyable
         DIRTY_OBJECT_READ_FRAMEBUFFER,
         DIRTY_OBJECT_DRAW_FRAMEBUFFER,
         DIRTY_OBJECT_VERTEX_ARRAY,
-        DIRTY_OBJECT_PROGRAM,
         DIRTY_OBJECT_UNKNOWN,
         DIRTY_OBJECT_MAX = DIRTY_OBJECT_UNKNOWN,
     };
