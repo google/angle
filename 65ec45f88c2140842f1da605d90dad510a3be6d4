@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c2367ccf_d922cdca",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2760,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-24T10:29:49Z",
+      "side": 1,
+      "message": "Hi Olli, in this patch only formats that support multisampling can affect maxIntegerSamples, maxDepthTextureSamples and maxColorTextureSamples.\n- For required formats, they should always support multisampling, so we won\u0027t miss any of them here.\n- For formats that are not required, we only consider those that support multisampling, because the formats that don\u0027t support multisampling have no valid sample counts.\ne.g.\nGL_BGRA_EXT is skipped because it isn\u0027t a required format and doesn\u0027t support multisampling on Intel.\n\nHow do you think about this solution?",
+      "revId": "65ec45f88c2140842f1da605d90dad510a3be6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
