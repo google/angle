@@ -44,6 +44,7 @@ class GLWrapper
     GLuint mHandle = 0;
 };
 
+using GLVertexArray  = GLWrapper<glGenVertexArrays, glDeleteVertexArrays>;
 using GLBuffer       = GLWrapper<glGenBuffers, glDeleteBuffers>;
 using GLTexture      = GLWrapper<glGenTextures, glDeleteTextures>;
 using GLFramebuffer  = GLWrapper<glGenFramebuffers, glDeleteFramebuffers>;

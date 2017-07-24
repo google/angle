@@ -1604,4 +1604,14 @@ int Framebuffer::getSamples(const ValidationContext *context)
     return getSamples(static_cast<const Context *>(context));
 }
 
+GLsizei Framebuffer::getNumViews() const
+{
+    const FramebufferAttachment *attachment = getFirstNonNullAttachment();
+    if (attachment == nullptr)
+    {
+        return FramebufferAttachment::kDefaultNumViews;
+    }
+    return attachment->getNumViews();
+}
+
 }  // namespace gl
