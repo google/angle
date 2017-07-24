@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c500955a_03e4bcf4",
+        "filename": "src/tests/perf_tests/DrawElementsPerf.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-24T15:25:54Z",
+      "side": 1,
+      "message": "Thanks you for adding this test, but I had asked for it in a separate patch. If you are fine with having a slower review there is no need to make a split patch now. I was not sure if you had seen my comment.",
+      "revId": "80decfb9bc791cbf0f4acda8f2f7c6ba4ee4d20a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "057f0cd1_11301b1a",
+        "filename": "src/tests/perf_tests/DrawElementsPerf.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-24T15:25:54Z",
+      "side": 1,
+      "message": "make a separate params structure for DrawElements for new types of parameter. You can probably inherit from DrawCallPerfParams, but do not include a runtime of 10 seconds, keep it to 5.",
+      "range": {
+        "startLine": 18,
+        "startChar": 71,
+        "endLine": 18,
+        "endChar": 89
+      },
+      "revId": "80decfb9bc791cbf0f4acda8f2f7c6ba4ee4d20a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c36d9ae3_68102db3",
+        "filename": "src/tests/perf_tests/DrawElementsPerf.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-24T15:25:54Z",
+      "side": 1,
+      "message": "This is going to be too very slow, because it triggers memory reallocation and calls rand(), which is not guaranteed to be fast. What I suggest is you make use the DrawElementsPerfParams class to have new parameters that test the following:\n\na) DrawElements with an unchanging buffer every frame\nb) DrawElements with a buffer that changes every frame\nc) (optional) DrawElements with a client-side pointer\n\nfor b) (and optionally c)), initialize two arrays in setup and use those to reset the buffer data so it changes every frame, but there is no allocation done in the test body.",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 101,
+        "endChar": 9
+      },
+      "revId": "80decfb9bc791cbf0f4acda8f2f7c6ba4ee4d20a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
