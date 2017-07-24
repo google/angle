@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "022ee4e6_5eff7068",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 783,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-24T22:12:04Z",
+      "side": 1,
+      "message": "Could also return a bool, simplifying some of the calls.",
+      "range": {
+        "startLine": 783,
+        "startChar": 4,
+        "endLine": 783,
+        "endChar": 10
+      },
+      "revId": "ff9d78f4965f5d536c6bce8d6e3d1a9c2f42e4d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "86a98e9e_a5239fe9",
+        "filename": "src/libANGLE/renderer/ContextImpl.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-24T22:12:04Z",
+      "side": 1,
+      "message": "Any reason not to do this logic in the Contex11::draw functions instead?  Giving the Impl access to a non-const cache would be ok and it lets the backends use as many parameters as they want for recompilation.",
+      "range": {
+        "startLine": 162,
+        "startChar": 4,
+        "endLine": 167,
+        "endChar": 65
+      },
+      "revId": "ff9d78f4965f5d536c6bce8d6e3d1a9c2f42e4d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
