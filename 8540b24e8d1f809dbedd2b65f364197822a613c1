@@ -70,6 +70,30 @@
       "revId": "8540b24e8d1f809dbedd2b65f364197822a613c1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea1aaec7_d14bda76",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-24T07:27:16Z",
+      "side": 1,
+      "message": "Done\nIn the new patch I have removed resources.EXT_geometry_shader and applied the macro statements.\nNow resources.OES_geometry_shader can indicate both OES_geometry_shader and EXT_geometry_shader.",
+      "parentUuid": "155fa1a4_7ef06d80",
+      "range": {
+        "startLine": 233,
+        "startChar": 0,
+        "endLine": 247,
+        "endChar": 13
+      },
+      "revId": "8540b24e8d1f809dbedd2b65f364197822a613c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
