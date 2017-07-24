@@ -1837,14 +1837,14 @@ void Context::texParameteriv(GLenum target, GLenum pname, const GLint *params)
 
 void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
 {
-    ANGLE_CONTEXT_TRY(prepareForDraw());
+    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
     ANGLE_CONTEXT_TRY(mImplementation->drawArrays(this, mode, first, count));
     MarkTransformFeedbackBufferUsage(mGLState.getCurrentTransformFeedback());
 }
 
 void Context::drawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsizei instanceCount)
 {
-    ANGLE_CONTEXT_TRY(prepareForDraw());
+    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
     ANGLE_CONTEXT_TRY(
         mImplementation->drawArraysInstanced(this, mode, first, count, instanceCount));
     MarkTransformFeedbackBufferUsage(mGLState.getCurrentTransformFeedback());
@@ -1852,7 +1852,7 @@ void Context::drawArraysInstanced(GLenum mode, GLint first, GLsizei count, GLsiz
 
 void Context::drawElements(GLenum mode, GLsizei count, GLenum type, const void *indices)
 {
-    ANGLE_CONTEXT_TRY(prepareForDraw());
+    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
     ANGLE_CONTEXT_TRY(mImplementation->drawElements(this, mode, count, type, indices));
 }
 
@@ -1862,7 +1862,7 @@ void Context::drawElementsInstanced(GLenum mode,
                                     const void *indices,
                                     GLsizei instances)
 {
-    ANGLE_CONTEXT_TRY(prepareForDraw());
+    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
     ANGLE_CONTEXT_TRY(
         mImplementation->drawElementsInstanced(this, mode, count, type, indices, instances));
 }
@@ -1874,20 +1874,20 @@ void Context::drawRangeElements(GLenum mode,
                                 GLenum type,
                                 const void *indices)
 {
-    ANGLE_CONTEXT_TRY(prepareForDraw());
+    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
     ANGLE_CONTEXT_TRY(
         mImplementation->drawRangeElements(this, mode, start, end, count, type, indices));
 }
 
 void Context::drawArraysIndirect(GLenum mode, const void *indirect)
 {
-    ANGLE_CONTEXT_TRY(prepareForDraw());
+    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
     ANGLE_CONTEXT_TRY(mImplementation->drawArraysIndirect(this, mode, indirect));
 }
 
 void Context::drawElementsIndirect(GLenum mode, GLenum type, const void *indirect)
 {
-    ANGLE_CONTEXT_TRY(prepareForDraw());
+    ANGLE_CONTEXT_TRY(prepareForDraw(mode));
     ANGLE_CONTEXT_TRY(mImplementation->drawElementsIndirect(this, mode, type, indirect));
 }
 
@@ -2170,7 +2170,7 @@ GLint Context::getProgramResourceLocation(GLuint program,
     return QueryProgramResourceLocation(programObject, programInterface, name);
 }
 
-void Context::handleError(const Error &error)
+Error Context::handleError(const Error &error)
 {
     if (error.isError())
     {
@@ -2188,6 +2188,8 @@ void Context::handleError(const Error &error)
                                  GL_DEBUG_SEVERITY_HIGH, error.getMessage());
         }
     }
+
+    return error;
 }
 
 // Get one of the recorded errors and clear its flag, if any.
@@ -2820,10 +2822,18 @@ void Context::initWorkarounds()
     mWorkarounds.loseContextOnOutOfMemory = (mResetStrategy == GL_LOSE_CONTEXT_ON_RESET_EXT);
 }
 
-Error Context::prepareForDraw()
+Error Context::prepareForDraw(GLenum drawMode)
 {
     syncRendererState();
-    return NoError();
+
+    InfoLog infoLog;
+    Error err = mImplementation->triggerDrawCallProgramRecompilation(this, &infoLog,
+                                                                     mMemoryProgramCache, drawMode);
+    if (err.isError())
+    {
+        WARN() << "Dynamic recompilation error log: " << infoLog.str();
+    }
+    return err;
 }
 
 void Context::syncRendererState()

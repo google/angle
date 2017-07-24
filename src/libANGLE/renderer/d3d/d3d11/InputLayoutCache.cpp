@@ -35,19 +35,6 @@ size_t GetReservedBufferCount(bool usesPointSpriteEmulation)
     return usesPointSpriteEmulation ? 1 : 0;
 }
 
-gl::InputLayout GetInputLayout(const std::vector<const TranslatedAttribute *> &translatedAttributes)
-{
-    gl::InputLayout inputLayout(translatedAttributes.size(), gl::VERTEX_FORMAT_INVALID);
-
-    for (size_t attributeIndex = 0; attributeIndex < translatedAttributes.size(); ++attributeIndex)
-    {
-        const TranslatedAttribute *translatedAttribute = translatedAttributes[attributeIndex];
-        inputLayout[attributeIndex]                    = gl::GetVertexFormatType(
-            *translatedAttribute->attribute, translatedAttribute->currentValueType);
-    }
-    return inputLayout;
-}
-
 GLenum GetGLSLAttributeType(const std::vector<sh::Attribute> &shaderAttributes, size_t index)
 {
     // Count matrices differently
@@ -547,10 +534,8 @@ gl::Error InputLayoutCache::createInputLayout(Renderer11 *renderer,
         inputElementCount++;
     }
 
-    const gl::InputLayout &shaderInputLayout = GetInputLayout(mCurrentAttributes);
-
     ShaderExecutableD3D *shader = nullptr;
-    ANGLE_TRY(programD3D->getVertexExecutableForInputLayout(shaderInputLayout, &shader, nullptr));
+    ANGLE_TRY(programD3D->getVertexExecutableForCachedInputLayout(&shader, nullptr));
 
     ShaderExecutableD3D *shader11 = GetAs<ShaderExecutable11>(shader);
 

@@ -1796,14 +1796,14 @@ gl::Error Renderer9::applyShaders(const gl::Context *context, GLenum drawMode)
     VertexArray9 *vao      = GetImplAs<VertexArray9>(state.getVertexArray());
     programD3D->updateCachedInputLayout(vao->getCurrentStateSerial(), state);
 
-    const auto &inputLayout = programD3D->getCachedInputLayout();
-
     ShaderExecutableD3D *vertexExe = nullptr;
-    ANGLE_TRY(programD3D->getVertexExecutableForInputLayout(inputLayout, &vertexExe, nullptr));
+    ANGLE_TRY(programD3D->getVertexExecutableForCachedInputLayout(&vertexExe, nullptr));
 
     const gl::Framebuffer *drawFramebuffer = state.getDrawFramebuffer();
-    ShaderExecutableD3D *pixelExe          = nullptr;
-    ANGLE_TRY(programD3D->getPixelExecutableForFramebuffer(context, drawFramebuffer, &pixelExe));
+    programD3D->updateCachedOutputLayout(context, drawFramebuffer);
+
+    ShaderExecutableD3D *pixelExe = nullptr;
+    ANGLE_TRY(programD3D->getPixelExecutableForCachedOutputLayout(&pixelExe, nullptr));
 
     IDirect3DVertexShader9 *vertexShader =
         (vertexExe ? GetAs<ShaderExecutable9>(vertexExe)->getVertexShader() : nullptr);

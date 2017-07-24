@@ -779,7 +779,8 @@ class Context final : public ValidationContext
                           void *binary);
     void programBinary(GLuint program, GLenum binaryFormat, const void *binary, GLsizei length);
 
-    void handleError(const Error &error) override;
+    // Returns the error.
+    Error handleError(const Error &error) override;
 
     GLenum getError();
     void markContextLost();
@@ -832,7 +833,7 @@ class Context final : public ValidationContext
     egl::Surface *getCurrentReadSurface() const { return mCurrentSurface; }
 
   private:
-    Error prepareForDraw();
+    Error prepareForDraw(GLenum drawMode);
     void syncRendererState();
     void syncRendererState(const State::DirtyBits &bitMask, const State::DirtyObjects &objectMask);
     void syncStateForReadPixels();

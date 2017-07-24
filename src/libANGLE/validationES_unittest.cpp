@@ -52,7 +52,7 @@ class MockValidationContext : public ValidationContext
     {
     }
 
-    MOCK_METHOD1(handleError, void(const Error &));
+    MOCK_METHOD1(handleError, Error(const Error &));
 };
 
 // Test that ANGLE generates an INVALID_OPERATION when validating index data that uses a value

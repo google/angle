@@ -1709,8 +1709,7 @@ gl::Error Renderer11::drawArraysImpl(const gl::Context *context,
         }
 
         rx::ShaderExecutableD3D *pixelExe = nullptr;
-        ANGLE_TRY(programD3D->getPixelExecutableForFramebuffer(
-            context, glState.getDrawFramebuffer(), &pixelExe));
+        ANGLE_TRY(programD3D->getPixelExecutableForCachedOutputLayout(&pixelExe, nullptr));
 
         // Skip the draw call if rasterizer discard is enabled (or no fragment shader).
         if (!pixelExe || glState.getRasterizerState().rasterizerDiscard)

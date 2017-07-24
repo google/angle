@@ -34,10 +34,12 @@ namespace rx
 namespace
 {
 
-gl::InputLayout GetDefaultInputLayoutFromShader(const gl::Context *context,
-                                                gl::Shader *vertexShader)
+void GetDefaultInputLayoutFromShader(const gl::Context *context,
+                                     gl::Shader *vertexShader,
+                                     gl::InputLayout *inputLayoutOut)
 {
-    gl::InputLayout defaultLayout;
+    inputLayoutOut->clear();
+
     for (const sh::Attribute &shaderAttr : vertexShader->getActiveAttributes(context))
     {
         if (shaderAttr.type != GL_NONE)
@@ -53,26 +55,48 @@ gl::InputLayout GetDefaultInputLayoutFromShader(const gl::Context *context,
                 gl::VertexFormatType defaultType =
                     gl::GetVertexFormatType(componentType, GL_FALSE, components, pureInt);
 
-                defaultLayout.push_back(defaultType);
+                inputLayoutOut->push_back(defaultType);
             }
         }
     }
-
-    return defaultLayout;
 }
 
-std::vector<GLenum> GetDefaultOutputLayoutFromShader(
-    const std::vector<PixelShaderOutputVariable> &shaderOutputVars)
+void GetDefaultOutputLayoutFromShader(
+    const std::vector<PixelShaderOutputVariable> &shaderOutputVars,
+    std::vector<GLenum> *outputLayoutOut)
 {
-    std::vector<GLenum> defaultPixelOutput;
+    outputLayoutOut->clear();
 
     if (!shaderOutputVars.empty())
     {
-        defaultPixelOutput.push_back(GL_COLOR_ATTACHMENT0 +
-                                     static_cast<unsigned int>(shaderOutputVars[0].outputIndex));
+        outputLayoutOut->push_back(GL_COLOR_ATTACHMENT0 +
+                                   static_cast<unsigned int>(shaderOutputVars[0].outputIndex));
     }
+}
 
-    return defaultPixelOutput;
+void GetPixelOutputLayoutFromFramebuffer(const gl::Context *context,
+                                         const gl::Framebuffer *framebuffer,
+                                         std::vector<GLenum> *signature)
+{
+    signature->clear();
+
+    FramebufferD3D *fboD3D   = GetImplAs<FramebufferD3D>(framebuffer);
+    const auto &colorbuffers = fboD3D->getColorAttachmentsForRender(context);
+
+    for (size_t colorAttachment = 0; colorAttachment < colorbuffers.size(); ++colorAttachment)
+    {
+        const gl::FramebufferAttachment *colorbuffer = colorbuffers[colorAttachment];
+
+        if (colorbuffer)
+        {
+            signature->push_back(colorbuffer->getBinding() == GL_BACK ? GL_COLOR_ATTACHMENT0
+                                                                      : colorbuffer->getBinding());
+        }
+        else
+        {
+            signature->push_back(GL_NONE);
+        }
+    }
 }
 
 bool IsRowMajorLayout(const sh::InterfaceBlockField &var)
@@ -1133,49 +1157,20 @@ void ProgramD3D::setSeparable(bool /* separable */)
 {
 }
 
-gl::Error ProgramD3D::getPixelExecutableForFramebuffer(const gl::Context *context,
-                                                       const gl::Framebuffer *fbo,
-                                                       ShaderExecutableD3D **outExecutable)
-{
-    mPixelShaderOutputFormatCache.clear();
-
-    FramebufferD3D *fboD3D                 = GetImplAs<FramebufferD3D>(fbo);
-    const gl::AttachmentList &colorbuffers = fboD3D->getColorAttachmentsForRender(context);
-
-    for (size_t colorAttachment = 0; colorAttachment < colorbuffers.size(); ++colorAttachment)
-    {
-        const gl::FramebufferAttachment *colorbuffer = colorbuffers[colorAttachment];
-
-        if (colorbuffer)
-        {
-            mPixelShaderOutputFormatCache.push_back(colorbuffer->getBinding() == GL_BACK
-                                                        ? GL_COLOR_ATTACHMENT0
-                                                        : colorbuffer->getBinding());
-        }
-        else
-        {
-            mPixelShaderOutputFormatCache.push_back(GL_NONE);
-        }
-    }
-
-    return getPixelExecutableForOutputLayout(mPixelShaderOutputFormatCache, outExecutable, nullptr);
-}
-
-gl::Error ProgramD3D::getPixelExecutableForOutputLayout(const std::vector<GLenum> &outputSignature,
-                                                        ShaderExecutableD3D **outExectuable,
-                                                        gl::InfoLog *infoLog)
+gl::Error ProgramD3D::getPixelExecutableForCachedOutputLayout(ShaderExecutableD3D **outExecutable,
+                                                              gl::InfoLog *infoLog)
 {
     for (size_t executableIndex = 0; executableIndex < mPixelExecutables.size(); executableIndex++)
     {
-        if (mPixelExecutables[executableIndex]->matchesSignature(outputSignature))
+        if (mPixelExecutables[executableIndex]->matchesSignature(mPixelShaderOutputLayoutCache))
         {
-            *outExectuable = mPixelExecutables[executableIndex]->shaderExecutable();
+            *outExecutable = mPixelExecutables[executableIndex]->shaderExecutable();
             return gl::NoError();
         }
     }
 
     std::string finalPixelHLSL = mDynamicHLSL->generatePixelShaderForOutputSignature(
-        mPixelHLSL, mPixelShaderKey, mUsesFragDepth, outputSignature);
+        mPixelHLSL, mPixelShaderKey, mUsesFragDepth, mPixelShaderOutputLayoutCache);
 
     // Generate new pixel executable
     ShaderExecutableD3D *pixelExecutable = nullptr;
@@ -1191,7 +1186,7 @@ gl::Error ProgramD3D::getPixelExecutableForOutputLayout(const std::vector<GLenum
     if (pixelExecutable)
     {
         mPixelExecutables.push_back(std::unique_ptr<PixelExecutable>(
-            new PixelExecutable(outputSignature, pixelExecutable)));
+            new PixelExecutable(mPixelShaderOutputLayoutCache, pixelExecutable)));
     }
     else if (!infoLog)
     {
@@ -1199,16 +1194,13 @@ gl::Error ProgramD3D::getPixelExecutableForOutputLayout(const std::vector<GLenum
               << tempInfoLog.str() << std::endl;
     }
 
-    *outExectuable = pixelExecutable;
+    *outExecutable = pixelExecutable;
     return gl::NoError();
 }
 
-gl::Error ProgramD3D::getVertexExecutableForInputLayout(const gl::InputLayout &inputLayout,
-                                                        ShaderExecutableD3D **outExectuable,
-                                                        gl::InfoLog *infoLog)
+gl::Error ProgramD3D::getVertexExecutableForCachedInputLayout(ShaderExecutableD3D **outExectuable,
+                                                              gl::InfoLog *infoLog)
 {
-    VertexExecutable::getSignature(mRenderer, inputLayout, &mCachedVertexSignature);
-
     for (size_t executableIndex = 0; executableIndex < mVertexExecutables.size(); executableIndex++)
     {
         if (mVertexExecutables[executableIndex]->matchesSignature(mCachedVertexSignature))
@@ -1220,7 +1212,7 @@ gl::Error ProgramD3D::getVertexExecutableForInputLayout(const gl::InputLayout &i
 
     // Generate new dynamic layout with attribute conversions
     std::string finalVertexHLSL = mDynamicHLSL->generateVertexShaderForInputLayout(
-        mVertexHLSL, inputLayout, mState.getAttributes());
+        mVertexHLSL, mCachedInputLayout, mState.getAttributes());
 
     // Generate new vertex executable
     ShaderExecutableD3D *vertexExecutable = nullptr;
@@ -1236,7 +1228,7 @@ gl::Error ProgramD3D::getVertexExecutableForInputLayout(const gl::InputLayout &i
     if (vertexExecutable)
     {
         mVertexExecutables.push_back(std::unique_ptr<VertexExecutable>(
-            new VertexExecutable(inputLayout, mCachedVertexSignature, vertexExecutable)));
+            new VertexExecutable(mCachedInputLayout, mCachedVertexSignature, vertexExecutable)));
     }
     else if (!infoLog)
     {
@@ -1338,11 +1330,9 @@ class ProgramD3D::GetVertexExecutableTask : public ProgramD3D::GetExecutableTask
     }
     gl::Error run() override
     {
-        const auto &defaultInputLayout =
-            GetDefaultInputLayoutFromShader(mContext, mProgram->mState.getAttachedVertexShader());
+        mProgram->updateCachedInputLayoutFromShader(mContext);
 
-        ANGLE_TRY(
-            mProgram->getVertexExecutableForInputLayout(defaultInputLayout, &mResult, &mInfoLog));
+        ANGLE_TRY(mProgram->getVertexExecutableForCachedInputLayout(&mResult, &mInfoLog));
 
         return gl::NoError();
     }
@@ -1351,21 +1341,30 @@ class ProgramD3D::GetVertexExecutableTask : public ProgramD3D::GetExecutableTask
     const gl::Context *mContext;
 };
 
+void ProgramD3D::updateCachedInputLayoutFromShader(const gl::Context *context)
+{
+    GetDefaultInputLayoutFromShader(context, mState.getAttachedVertexShader(), &mCachedInputLayout);
+    VertexExecutable::getSignature(mRenderer, mCachedInputLayout, &mCachedVertexSignature);
+}
+
 class ProgramD3D::GetPixelExecutableTask : public ProgramD3D::GetExecutableTask
 {
   public:
     GetPixelExecutableTask(ProgramD3D *program) : GetExecutableTask(program) {}
     gl::Error run() override
     {
-        const auto &defaultPixelOutput =
-            GetDefaultOutputLayoutFromShader(mProgram->getPixelShaderKey());
+        mProgram->updateCachedOutputLayoutFromShader();
 
-        ANGLE_TRY(
-            mProgram->getPixelExecutableForOutputLayout(defaultPixelOutput, &mResult, &mInfoLog));
+        ANGLE_TRY(mProgram->getPixelExecutableForCachedOutputLayout(&mResult, &mInfoLog));
 
         return gl::NoError();
     }
 };
+
+void ProgramD3D::updateCachedOutputLayoutFromShader()
+{
+    GetDefaultOutputLayoutFromShader(mPixelShaderKey, &mPixelShaderOutputLayoutCache);
+}
 
 class ProgramD3D::GetGeometryExecutableTask : public ProgramD3D::GetExecutableTask
 {
@@ -2415,6 +2414,14 @@ void ProgramD3D::updateCachedInputLayout(Serial associatedSerial, const gl::Stat
                                     state.getVertexAttribCurrentValue(locationIndex).Type);
         }
     }
+
+    VertexExecutable::getSignature(mRenderer, mCachedInputLayout, &mCachedVertexSignature);
+}
+
+void ProgramD3D::updateCachedOutputLayout(const gl::Context *context,
+                                          const gl::Framebuffer *framebuffer)
+{
+    GetPixelOutputLayoutFromFramebuffer(context, framebuffer, &mPixelShaderOutputLayoutCache);
 }
 
 void ProgramD3D::gatherTransformFeedbackVaryings(const gl::VaryingPacking &varyingPacking,
@@ -2525,6 +2532,46 @@ void ProgramD3D::setPathFragmentInputGen(const std::string &inputName,
                                          const GLfloat *coeffs)
 {
     UNREACHABLE();
+}
+
+bool ProgramD3D::hasVertexExecutableForCachedInputLayout()
+{
+    VertexExecutable::getSignature(mRenderer, mCachedInputLayout, &mCachedVertexSignature);
+
+    for (size_t executableIndex = 0; executableIndex < mVertexExecutables.size(); executableIndex++)
+    {
+        if (mVertexExecutables[executableIndex]->matchesSignature(mCachedVertexSignature))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool ProgramD3D::hasGeometryExecutableForPrimitiveType(GLenum drawMode)
+{
+    if (!usesGeometryShader(drawMode))
+    {
+        // No shader necessary mean we have the required (null) executable.
+        return true;
+    }
+
+    gl::PrimitiveType geometryShaderType = GetGeometryShaderTypeFromDrawMode(drawMode);
+    return mGeometryExecutables[geometryShaderType].get() != nullptr;
+}
+
+bool ProgramD3D::hasPixelExecutableForCachedOutputLayout()
+{
+    for (size_t executableIndex = 0; executableIndex < mPixelExecutables.size(); executableIndex++)
+    {
+        if (mPixelExecutables[executableIndex]->matchesSignature(mPixelShaderOutputLayoutCache))
+        {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 }  // namespace rx

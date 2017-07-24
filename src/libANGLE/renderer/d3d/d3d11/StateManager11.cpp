@@ -1737,23 +1737,22 @@ gl::Error StateManager11::setTexture(const gl::Context *context,
 
 gl::Error StateManager11::syncProgram(const gl::Context *context, GLenum drawMode)
 {
-    // This method is called single-threaded.
-    ANGLE_TRY(mRenderer->ensureHLSLCompilerInitialized());
-
     const auto &glState = context->getGLState();
-    const auto *va11 = GetImplAs<VertexArray11>(glState.getVertexArray());
+    const auto *va11    = GetImplAs<VertexArray11>(glState.getVertexArray());
+    auto *programD3D    = GetImplAs<ProgramD3D>(glState.getProgram());
 
-    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(glState.getProgram());
     programD3D->updateCachedInputLayout(va11->getCurrentStateSerial(), glState);
 
-    const auto &inputLayout = programD3D->getCachedInputLayout();
+    // Binaries must be compiled before the sync.
+    ASSERT(programD3D->hasVertexExecutableForCachedInputLayout());
+    ASSERT(programD3D->hasGeometryExecutableForPrimitiveType(drawMode));
+    ASSERT(programD3D->hasPixelExecutableForCachedOutputLayout());
 
     ShaderExecutableD3D *vertexExe = nullptr;
-    ANGLE_TRY(programD3D->getVertexExecutableForInputLayout(inputLayout, &vertexExe, nullptr));
+    ANGLE_TRY(programD3D->getVertexExecutableForCachedInputLayout(&vertexExe, nullptr));
 
-    const gl::Framebuffer *drawFramebuffer = glState.getDrawFramebuffer();
-    ShaderExecutableD3D *pixelExe          = nullptr;
-    ANGLE_TRY(programD3D->getPixelExecutableForFramebuffer(context, drawFramebuffer, &pixelExe));
+    ShaderExecutableD3D *pixelExe = nullptr;
+    ANGLE_TRY(programD3D->getPixelExecutableForCachedOutputLayout(&pixelExe, nullptr));
 
     ShaderExecutableD3D *geometryExe = nullptr;
     ANGLE_TRY(programD3D->getGeometryExecutableForPrimitiveType(context->getContextState(),

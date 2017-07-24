@@ -82,6 +82,9 @@ class MemoryProgramCache final : angle::NonCopyable
     // Helper method that serializes a program.
     void putProgram(const ProgramHash &programHash, const Context *context, const Program *program);
 
+    // Same as putProgram but computes the hash.
+    void updateProgram(const Context *context, const Program *program);
+
     // Store a binary directly.
     void putBinary(const ProgramHash &programHash, const uint8_t *binary, size_t length);
 
