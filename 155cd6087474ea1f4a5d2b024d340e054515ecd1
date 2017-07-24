@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a14f20e2_7115c745",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 818,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-24T19:50:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9885ea1b_ef4fbf4c",
+      "range": {
+        "startLine": 818,
+        "startChar": 4,
+        "endLine": 818,
+        "endChar": 9
+      },
+      "revId": "155cd6087474ea1f4a5d2b024d340e054515ecd1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ef72d76d_4a5889cc",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 3
@@ -39,6 +63,24 @@
       "revId": "155cd6087474ea1f4a5d2b024d340e054515ecd1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b0ffcca9_d250369c",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 873,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-24T19:50:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ef72d76d_4a5889cc",
+      "revId": "155cd6087474ea1f4a5d2b024d340e054515ecd1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -89,6 +131,24 @@
       "side": 1,
       "message": "Then this needs to check next \u003d\u003d \u0027\\n\u0027",
       "parentUuid": "86e8fc3b_b573e86e",
+      "revId": "155cd6087474ea1f4a5d2b024d340e054515ecd1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d8987d2b_70d9c7d5",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 894,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-24T19:50:25Z",
+      "side": 1,
+      "message": "Done, verified in the spec and added a test.",
+      "parentUuid": "bead0d75_4bfa771e",
       "revId": "155cd6087474ea1f4a5d2b024d340e054515ecd1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
