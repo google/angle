@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b301fb82_41ea1c4a",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 952,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-24T22:23:32Z",
+      "side": 1,
+      "message": "If we only expose OES_geometry_shader, this line should be removed.",
+      "range": {
+        "startLine": 952,
+        "startChar": 8,
+        "endLine": 952,
+        "endChar": 61
+      },
+      "revId": "f510a76e057c5387ab59d445ba36ea5dc5fe48cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad67f9d2_62577525",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-24T22:23:32Z",
+      "side": 1,
+      "message": "This line should be removed too.",
+      "range": {
+        "startLine": 234,
+        "startChar": 21,
+        "endLine": 234,
+        "endChar": 60
+      },
+      "revId": "f510a76e057c5387ab59d445ba36ea5dc5fe48cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c8121b33_1fb603e8",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-24T22:23:32Z",
+      "side": 1,
+      "message": "This too.",
+      "range": {
+        "startLine": 349,
+        "startChar": 16,
+        "endLine": 349,
+        "endChar": 54
+      },
+      "revId": "f510a76e057c5387ab59d445ba36ea5dc5fe48cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
