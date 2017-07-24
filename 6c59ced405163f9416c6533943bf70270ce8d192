@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "551ff722_dfe1fffb",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1006,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-24T20:23:31Z",
+      "side": 1,
+      "message": "We should try to push as much of this logic down to the implementation layer as possible.  StateManagerGL can do this logic when syncing dirty bits.",
+      "range": {
+        "startLine": 982,
+        "startChar": 4,
+        "endLine": 1006,
+        "endChar": 5
+      },
+      "revId": "6c59ced405163f9416c6533943bf70270ce8d192",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7ca1bf80_22982622",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 518,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-24T20:23:31Z",
+      "side": 1,
+      "message": "I think we should avoid mirroring this state in both the Framebuffer and State objects.  The framebuffer has dirty bits that could represent this and when the StateManagerGL is handling the dirty bits related to framebuffer state then it can make sure to update the viewports.",
+      "range": {
+        "startLine": 517,
+        "startChar": 4,
+        "endLine": 518,
+        "endChar": 38
+      },
+      "revId": "6c59ced405163f9416c6533943bf70270ce8d192",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b45df36b_2d4da75e",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 992,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-24T20:23:31Z",
+      "side": 1,
+      "message": "I don\u0027t think this is a safe way to apply the scissor.  If the scissor and mScissor are the same then the scissor array may never be set or if isDrawframebufferSideBySide is true then mScissor will be updated but not applied.\n\nWe should try to track the applied scissor and viewports as closely to the spec as possible.  We would need to change mScissor to an array of scissors and have appropriate setter functions.",
+      "range": {
+        "startLine": 992,
+        "startChar": 60,
+        "endLine": 992,
+        "endChar": 94
+      },
+      "revId": "6c59ced405163f9416c6533943bf70270ce8d192",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
