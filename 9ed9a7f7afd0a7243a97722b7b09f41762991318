@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "9c488a99_7d6bdddf",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1980,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-24T05:07:53Z",
+      "side": 1,
+      "message": "Yes, you are right. Thanks.",
+      "parentUuid": "d88530b7_485e0066",
+      "range": {
+        "startLine": 1980,
+        "startChar": 55,
+        "endLine": 1980,
+        "endChar": 83
+      },
+      "revId": "9ed9a7f7afd0a7243a97722b7b09f41762991318",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b0b347d7_4b3949d7",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 5
@@ -132,6 +156,30 @@
       "side": 1,
       "message": "Sure, that\u0027s fine, I just wish we could be more specific than \u0027Fast\u0027.",
       "parentUuid": "d7608e35_5aa4c21e",
+      "range": {
+        "startLine": 2065,
+        "startChar": 17,
+        "endLine": 2065,
+        "endChar": 33
+      },
+      "revId": "9ed9a7f7afd0a7243a97722b7b09f41762991318",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2678b27b_89012163",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2065,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-24T05:07:53Z",
+      "side": 1,
+      "message": "Ok. Rename it to supportsDirectDrawing which means that we can directly draw with the drawing parameters and don\u0027t need to change them.",
+      "parentUuid": "000924b3_a4e0f068",
       "range": {
         "startLine": 2065,
         "startChar": 17,

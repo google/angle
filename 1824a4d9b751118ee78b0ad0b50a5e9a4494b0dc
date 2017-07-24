@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f18652b5_4ab957d2",
+        "filename": "src/libANGLE/renderer/d3d/IndexDataManager.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-24T05:07:53Z",
+      "side": 1,
+      "message": "This fixed an earlier error. If the staticBuffer is not nullptr and the buffer size is zero, it corresponds to line 307  \u0027if (!staticBufferInitialized)\u0027 in prepareIndexData. So in this case, it should return true to go StreamInIndexBuffer path.\nPatch set 3 try-bots caught this error. \nUnexpected Failures:\ngpu_tests.webgl_conformance_integration_test.WebGLConformanceIntegrationTest.WebglConformance_conformance_rendering_negative_one_index",
+      "parentUuid": "1d6c34cb_214b940c",
+      "range": {
+        "startLine": 178,
+        "startChar": 23,
+        "endLine": 178,
+        "endChar": 36
+      },
+      "revId": "1824a4d9b751118ee78b0ad0b50a5e9a4494b0dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5900a436_0f8914d2",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
         "patchSetId": 4
