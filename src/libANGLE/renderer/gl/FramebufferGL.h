@@ -95,6 +95,17 @@ class FramebufferGL : public FramebufferImpl
     void maskOutInactiveOutputDrawBuffers(gl::DrawBufferMask maxSet);
 
   private:
+    // Enum containing the different types of Clear* commands.
+    enum class ClearCommandType
+    {
+        Clear,
+        ClearBufferfv,
+        ClearBufferuiv,
+        ClearBufferiv,
+        ClearBufferfi
+    };
+
+  private:
     void syncClearState(const gl::Context *context, GLbitfield mask);
     void syncClearBufferState(const gl::Context *context, GLenum buffer, GLint drawBuffer);
 
@@ -117,6 +128,15 @@ class FramebufferGL : public FramebufferImpl
                                   const gl::PixelPackState &pack,
                                   GLubyte *pixels,
                                   bool readLastRowSeparately) const;
+
+    void genericSideBySideClear(const gl::Context *context,
+                                ClearCommandType clearCommandType,
+                                GLbitfield mask,
+                                GLenum buffer,
+                                GLint drawbuffer,
+                                const uint8_t *values,
+                                GLfloat depth,
+                                GLint stencil);
 
     const FunctionsGL *mFunctions;
     StateManagerGL *mStateManager;

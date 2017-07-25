@@ -76,6 +76,7 @@ class StateManagerGL final : angle::NonCopyable
 
     void setScissorTestEnabled(bool enabled);
     void setScissor(const gl::Rectangle &scissor);
+    void setScissorIndexed(GLuint index, const gl::Rectangle &scissor);
     void setScissorArrayv(GLuint first, const std::vector<gl::Rectangle> &viewports);
 
     void setViewport(const gl::Rectangle &viewport);

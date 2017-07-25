@@ -103,6 +103,12 @@ void RetrieveMultiviewFieldsFromAttachment(const gl::FramebufferAttachment *atta
     }
 }
 
+bool RequiresMultipleClears(const FramebufferAttachment *attachment)
+{
+    return attachment != nullptr &&
+           attachment->getMultiviewLayout() == GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE;
+}
+
 }  // namespace
 
 FramebufferGL::FramebufferGL(const FramebufferState &state,
@@ -213,7 +219,16 @@ Error FramebufferGL::clear(const gl::Context *context, GLbitfield mask)
 {
     syncClearState(context, mask);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
-    mFunctions->clear(mask);
+
+    if (RequiresMultipleClears(mState.getFirstNonNullAttachment()))
+    {
+        genericSideBySideClear(context, ClearCommandType::Clear, mask, GL_NONE, 0, nullptr, 0.0f,
+                               0);
+    }
+    else
+    {
+        mFunctions->clear(mask);
+    }
 
     return gl::NoError();
 }
@@ -225,7 +240,17 @@ Error FramebufferGL::clearBufferfv(const gl::Context *context,
 {
     syncClearBufferState(context, buffer, drawbuffer);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
-    mFunctions->clearBufferfv(buffer, drawbuffer, values);
+
+    if (RequiresMultipleClears(mState.getFirstNonNullAttachment()))
+    {
+        genericSideBySideClear(context, ClearCommandType::ClearBufferfv,
+                               static_cast<GLbitfield>(0u), buffer, drawbuffer,
+                               reinterpret_cast<const uint8_t *>(values), 0.0f, 0);
+    }
+    else
+    {
+        mFunctions->clearBufferfv(buffer, drawbuffer, values);
+    }
 
     return gl::NoError();
 }
@@ -237,7 +262,17 @@ Error FramebufferGL::clearBufferuiv(const gl::Context *context,
 {
     syncClearBufferState(context, buffer, drawbuffer);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
-    mFunctions->clearBufferuiv(buffer, drawbuffer, values);
+
+    if (RequiresMultipleClears(mState.getFirstNonNullAttachment()))
+    {
+        genericSideBySideClear(context, ClearCommandType::ClearBufferuiv,
+                               static_cast<GLbitfield>(0u), buffer, drawbuffer,
+                               reinterpret_cast<const uint8_t *>(values), 0.0f, 0);
+    }
+    else
+    {
+        mFunctions->clearBufferuiv(buffer, drawbuffer, values);
+    }
 
     return gl::NoError();
 }
@@ -249,7 +284,17 @@ Error FramebufferGL::clearBufferiv(const gl::Context *context,
 {
     syncClearBufferState(context, buffer, drawbuffer);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
-    mFunctions->clearBufferiv(buffer, drawbuffer, values);
+
+    if (RequiresMultipleClears(mState.getFirstNonNullAttachment()))
+    {
+        genericSideBySideClear(context, ClearCommandType::ClearBufferiv,
+                               static_cast<GLbitfield>(0u), buffer, drawbuffer,
+                               reinterpret_cast<const uint8_t *>(values), 0.0f, 0);
+    }
+    else
+    {
+        mFunctions->clearBufferiv(buffer, drawbuffer, values);
+    }
 
     return gl::NoError();
 }
@@ -262,9 +307,68 @@ Error FramebufferGL::clearBufferfi(const gl::Context *context,
 {
     syncClearBufferState(context, buffer, drawbuffer);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
-    mFunctions->clearBufferfi(buffer, drawbuffer, depth, stencil);
+
+    if (RequiresMultipleClears(mState.getFirstNonNullAttachment()))
+    {
+        genericSideBySideClear(context, ClearCommandType::ClearBufferfi,
+                               static_cast<GLbitfield>(0u), buffer, drawbuffer, nullptr, depth,
+                               stencil);
+    }
+    else
+    {
+        mFunctions->clearBufferfi(buffer, drawbuffer, depth, stencil);
+    }
 
     return gl::NoError();
+}
+
+void FramebufferGL::genericSideBySideClear(const gl::Context *context,
+                                           ClearCommandType clearCommandType,
+                                           GLbitfield mask,
+                                           GLenum buffer,
+                                           GLint drawbuffer,
+                                           const uint8_t *values,
+                                           GLfloat depth,
+                                           GLint stencil)
+{
+    // For side-by-side framebuffers we have to go over each view and set its scissor rectangle
+    // as the first one and just then call Clear*. This is necessary because Clear* commands use
+    // only the first viewport's scissor rectangle.
+    const auto &scissorBase                 = context->getGLState().getScissor();
+    const FramebufferAttachment *attachment = mState.getFirstNonNullAttachment();
+    ASSERT(attachment != nullptr);
+    const auto &viewportOffsets = attachment->getMultiviewViewportOffsets();
+
+    for (size_t i = 0u; i < viewportOffsets.size(); ++i)
+    {
+        gl::Rectangle scissor(scissorBase.x + viewportOffsets[i].x,
+                              scissorBase.y + viewportOffsets[i].y, scissorBase.width,
+                              scissorBase.height);
+        mStateManager->setScissorIndexed(0u, scissor);
+        switch (clearCommandType)
+        {
+            case ClearCommandType::Clear:
+                mFunctions->clear(mask);
+                break;
+            case ClearCommandType::ClearBufferfv:
+                mFunctions->clearBufferfv(buffer, drawbuffer,
+                                          reinterpret_cast<const GLfloat *>(values));
+                break;
+            case ClearCommandType::ClearBufferuiv:
+                mFunctions->clearBufferuiv(buffer, drawbuffer,
+                                           reinterpret_cast<const GLuint *>(values));
+                break;
+            case ClearCommandType::ClearBufferiv:
+                mFunctions->clearBufferiv(buffer, drawbuffer,
+                                          reinterpret_cast<const GLint *>(values));
+                break;
+            case ClearCommandType::ClearBufferfi:
+                mFunctions->clearBufferfi(buffer, drawbuffer, depth, stencil);
+                break;
+            default:
+                UNREACHABLE();
+        }
+    }
 }
 
 GLenum FramebufferGL::getImplementationColorReadFormat(const gl::Context *context) const
