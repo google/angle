@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7f2a94d1_f8f656d7",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 783,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-25T16:45:15Z",
+      "side": 1,
+      "message": "I added a prior patch to clean up how the errors are handled based on work I did for lazy resource init.",
+      "parentUuid": "022ee4e6_5eff7068",
+      "range": {
+        "startLine": 783,
+        "startChar": 4,
+        "endLine": 783,
+        "endChar": 10
+      },
+      "revId": "ff9d78f4965f5d536c6bce8d6e3d1a9c2f42e4d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "86a98e9e_a5239fe9",
         "filename": "src/libANGLE/renderer/ContextImpl.h",
         "patchSetId": 23
@@ -36,6 +60,30 @@
       "writtenOn": "2017-07-24T22:12:04Z",
       "side": 1,
       "message": "Any reason not to do this logic in the Contex11::draw functions instead?  Giving the Impl access to a non-const cache would be ok and it lets the backends use as many parameters as they want for recompilation.",
+      "range": {
+        "startLine": 162,
+        "startChar": 4,
+        "endLine": 167,
+        "endChar": 65
+      },
+      "revId": "ff9d78f4965f5d536c6bce8d6e3d1a9c2f42e4d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98351f44_ece2efb4",
+        "filename": "src/libANGLE/renderer/ContextImpl.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-25T16:45:15Z",
+      "side": 1,
+      "message": "Yeah -- the primary reason is that I wanted to keep the Impl call signature for the draw* methods as close to the real GL call arguments as possible. The secondary benefit is that it doesn\u0027t add a lot of code churn to back-ends (like null/gl/d3d9) that don\u0027t need to do any extra work here. It\u0027s true about the extra parameters, though that shouldn\u0027t be too hard to add.\n\nI cleaned up the comment a bit.",
+      "parentUuid": "86a98e9e_a5239fe9",
       "range": {
         "startLine": 162,
         "startChar": 4,
