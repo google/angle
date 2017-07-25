@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fdda795d_a622d217",
+        "filename": "src/libANGLE/renderer/gl/WorkaroundsGL.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2017-07-25T21:30:31Z",
+      "side": 1,
+      "message": "At this point: \"...and on some OpenGL drivers on other OSs.\"",
+      "range": {
+        "startLine": 138,
+        "startChar": 3,
+        "endLine": 138,
+        "endChar": 4
+      },
+      "revId": "2972f1c6613fc7b7656a38fa9c269c3b7510dfec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
