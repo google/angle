@@ -1,0 +1,157 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "430d9980_b94c5df1",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 2704,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-25T14:02:23Z",
+      "side": 1,
+      "message": "nit: this error could be \"invalid primitive type for \u0027in\u0027 layout\"",
+      "revId": "0e137bb3bd98d70c8105fd9ac1d682ca73255324",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4703afb9_2b28b75f",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 2756,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-25T14:02:23Z",
+      "side": 1,
+      "message": "nit: ditto",
+      "revId": "0e137bb3bd98d70c8105fd9ac1d682ca73255324",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0bc43e16_82f8e468",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 4086,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-25T14:02:23Z",
+      "side": 1,
+      "message": "nit: I haven\u0027t been able to find invocations has to be \u003e\u003d 1 in the spec. This limits looks fine because 0 would make the GS a noop and negative numbers don\u0027t make sense; however if this isn\u0027t present in the spec we should at least add a comment about it and explain the limit we chose.",
+      "revId": "0e137bb3bd98d70c8105fd9ac1d682ca73255324",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2df5695a_8492a270",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 4104,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-25T14:02:23Z",
+      "side": 1,
+      "message": "nit: Same thing as for the invocations limit.",
+      "revId": "0e137bb3bd98d70c8105fd9ac1d682ca73255324",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "48e7fab6_25ece1ba",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-25T14:02:23Z",
+      "side": 1,
+      "message": "nit: you can use getGeometryShaderPrimitiveTypeString",
+      "revId": "0e137bb3bd98d70c8105fd9ac1d682ca73255324",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fd24f9d4_d2fa1556",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-25T14:02:23Z",
+      "side": 1,
+      "message": "ditto.",
+      "revId": "0e137bb3bd98d70c8105fd9ac1d682ca73255324",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d74fa7e_c9f20857",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-25T14:02:23Z",
+      "side": 1,
+      "message": "note: we should find a way to factor this code of this function between GLSL and ESSL, it is mostly the same.",
+      "revId": "0e137bb3bd98d70c8105fd9ac1d682ca73255324",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19373d8c_9168f5c2",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-25T14:02:23Z",
+      "side": 1,
+      "message": "ditto.",
+      "revId": "0e137bb3bd98d70c8105fd9ac1d682ca73255324",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e5383be1_48ce9685",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-25T14:02:23Z",
+      "side": 1,
+      "message": "ditto.",
+      "revId": "0e137bb3bd98d70c8105fd9ac1d682ca73255324",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

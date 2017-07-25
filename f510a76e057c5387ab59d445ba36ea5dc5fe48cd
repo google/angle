@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "a55c76f0_f1a09a91",
+        "filename": "samples/shader_translator/shader_translator.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-25T14:02:23Z",
+      "side": 1,
+      "message": "nit: you can run ```git cl format``` to fix alignment and style issues.",
+      "revId": "f510a76e057c5387ab59d445ba36ea5dc5fe48cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b2e68fcd_7ff7e2d6",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 632,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-25T14:02:23Z",
+      "side": 1,
+      "message": "nit: Ept prefix to be consistent with other qualifier enums.",
+      "revId": "f510a76e057c5387ab59d445ba36ea5dc5fe48cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b301fb82_41ea1c4a",
         "filename": "src/compiler/translator/Initialize.cpp",
         "patchSetId": 19
