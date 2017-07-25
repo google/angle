@@ -1802,7 +1802,7 @@ gl::Error Renderer11::drawElementsImpl(const gl::Context *context,
     const auto &data = context->getContextState();
     TranslatedIndexData indexInfo;
 
-    if (supportsDirectDrawing(context, mode, type))
+    if (!drawCallNeedsTranslation(context, mode, type))
     {
         ANGLE_TRY(applyIndexBuffer(data, nullptr, 0, mode, type, &indexInfo));
         ANGLE_TRY(applyVertexBuffer(context, mode, 0, 0, 0, &indexInfo));
@@ -1892,7 +1892,9 @@ gl::Error Renderer11::drawElementsImpl(const gl::Context *context,
     return gl::NoError();
 }
 
-bool Renderer11::supportsDirectDrawing(const gl::Context *context, GLenum mode, GLenum type) const
+bool Renderer11::drawCallNeedsTranslation(const gl::Context *context,
+                                          GLenum mode,
+                                          GLenum type) const
 {
     const auto &glState     = context->getGLState();
     const auto &vertexArray = glState.getVertexArray();
@@ -1902,22 +1904,22 @@ bool Renderer11::supportsDirectDrawing(const gl::Context *context, GLenum mode, 
     // either since we need to simulate them in D3D.
     if (vertexArray11->hasDynamicAttrib(context) || mode == GL_LINE_LOOP || mode == GL_TRIANGLE_FAN)
     {
-        return false;
+        return true;
     }
 
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(glState.getProgram());
     if (instancedPointSpritesActive(programD3D, mode))
     {
-        return false;
+        return true;
     }
 
     if (type != GL_NONE)
     {
         // Only non-streaming index data can be directly used to draw since they don't
         // need the indices and count informations.
-        return !mIndexDataManager->isStreamingIndexData(context, type);
+        return mIndexDataManager->isStreamingIndexData(context, type);
     }
-    return true;
+    return false;
 }
 
 gl::Error Renderer11::drawArraysIndirectImpl(const gl::Context *context,
@@ -1936,7 +1938,7 @@ gl::Error Renderer11::drawArraysIndirectImpl(const gl::Context *context,
     Buffer11 *storage = GetImplAs<Buffer11>(drawIndirectBuffer);
     uintptr_t offset  = reinterpret_cast<uintptr_t>(indirect);
 
-    if (supportsDirectDrawing(context, mode, GL_NONE))
+    if (!drawCallNeedsTranslation(context, mode, GL_NONE))
     {
         applyVertexBuffer(context, mode, 0, 0, 0, nullptr);
         ID3D11Buffer *buffer = nullptr;
@@ -1987,7 +1989,7 @@ gl::Error Renderer11::drawElementsIndirectImpl(const gl::Context *context,
     uintptr_t offset  = reinterpret_cast<uintptr_t>(indirect);
 
     TranslatedIndexData indexInfo;
-    if (supportsDirectDrawing(context, mode, type))
+    if (!drawCallNeedsTranslation(context, mode, type))
     {
         ANGLE_TRY(applyIndexBuffer(contextState, nullptr, 0, mode, type, &indexInfo));
         ANGLE_TRY(applyVertexBuffer(context, mode, 0, 0, 0, &indexInfo));

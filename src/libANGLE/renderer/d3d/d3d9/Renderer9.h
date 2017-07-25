@@ -397,10 +397,6 @@ class Renderer9 : public RendererD3D
     gl::Error clearRenderTarget(RenderTargetD3D *renderTarget,
                                 const gl::ColorF &clearValues) override;
 
-  protected:
-    // Support direct drawing with the drawing parameters.
-    bool supportsDirectDrawing(const gl::Context *context, GLenum mode, GLenum type) const override;
-
   private:
     gl::Error drawArraysImpl(const gl::ContextState &data,
                              GLenum mode,

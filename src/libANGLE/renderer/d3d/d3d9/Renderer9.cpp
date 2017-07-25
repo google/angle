@@ -3197,13 +3197,6 @@ gl::Error Renderer9::genericDrawArrays(const gl::Context *context,
     return gl::NoError();
 }
 
-bool Renderer9::supportsDirectDrawing(const gl::Context *context, GLenum mode, GLenum type) const
-{
-    // TODO(jiajia.qin@intel.com): Add direct drawing for d3d9
-    UNIMPLEMENTED();
-    return false;
-}
-
 FramebufferImpl *Renderer9::createDefaultFramebuffer(const gl::FramebufferState &state)
 {
     return new Framebuffer9(state, this);

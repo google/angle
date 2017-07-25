@@ -470,10 +470,6 @@ class Renderer11 : public RendererD3D
     gl::Error clearRenderTarget(RenderTargetD3D *renderTarget,
                                 const gl::ColorF &clearValues) override;
 
-  protected:
-    // Support direct drawing with the drawing parameters.
-    bool supportsDirectDrawing(const gl::Context *context, GLenum mode, GLenum type) const override;
-
   private:
     gl::Error drawArraysImpl(const gl::Context *context,
                              GLenum mode,
@@ -549,6 +545,8 @@ class Renderer11 : public RendererD3D
     void release();
 
     d3d11::ANGLED3D11DeviceType getDeviceType() const;
+
+    bool drawCallNeedsTranslation(const gl::Context *context, GLenum mode, GLenum type) const;
 
     HMODULE mD3d11Module;
     HMODULE mDxgiModule;
