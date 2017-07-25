@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "12a45c4f_c79e0ba1",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1814,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-25T17:12:16Z",
+      "side": 1,
+      "message": "does this comment need to be updated?",
+      "range": {
+        "startLine": 1811,
+        "startChar": 0,
+        "endLine": 1814,
+        "endChar": 40
+      },
+      "revId": "7fa29daa6a222b823fb00b2684eb9212eb4443f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "536ae600_ebd6b936",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-25T17:12:16Z",
+      "side": 1,
+      "message": "nit: you can now use a new macro : \n\nANGLE_SKIP_TEST_IF(IsD3D11());\n\nand \n\nANGLE_SKIP_TEST_IF(IsAMD() \u0026\u0026 IsDesktopOpenGL() \u0026\u0026 IsWindows());",
+      "range": {
+        "startLine": 322,
+        "startChar": 4,
+        "endLine": 322,
+        "endChar": 18
+      },
+      "revId": "7fa29daa6a222b823fb00b2684eb9212eb4443f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94f1bc80_e859e260",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 350,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-25T17:12:16Z",
+      "side": 1,
+      "message": "nit: you can make these constexpr and kTextureWidth, kTextureHeight",
+      "range": {
+        "startLine": 350,
+        "startChar": 4,
+        "endLine": 350,
+        "endChar": 8
+      },
+      "revId": "7fa29daa6a222b823fb00b2684eb9212eb4443f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
