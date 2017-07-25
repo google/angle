@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ce56903e_18e3056f",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 952,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-25T05:12:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b301fb82_41ea1c4a",
+      "range": {
+        "startLine": 952,
+        "startChar": 8,
+        "endLine": 952,
+        "endChar": 61
+      },
+      "revId": "f510a76e057c5387ab59d445ba36ea5dc5fe48cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ad67f9d2_62577525",
         "filename": "src/compiler/translator/TranslatorESSL.cpp",
         "patchSetId": 19
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "04ea6610_75beb767",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-25T05:12:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad67f9d2_62577525",
+      "range": {
+        "startLine": 234,
+        "startChar": 21,
+        "endLine": 234,
+        "endChar": 60
+      },
+      "revId": "f510a76e057c5387ab59d445ba36ea5dc5fe48cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c8121b33_1fb603e8",
         "filename": "src/compiler/translator/TranslatorGLSL.cpp",
         "patchSetId": 19
@@ -64,6 +112,53 @@
         "startChar": 16,
         "endLine": 349,
         "endChar": 54
+      },
+      "revId": "f510a76e057c5387ab59d445ba36ea5dc5fe48cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "80b96763_e962ec1d",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-25T05:12:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c8121b33_1fb603e8",
+      "range": {
+        "startLine": 349,
+        "startChar": 16,
+        "endLine": 349,
+        "endChar": 54
+      },
+      "revId": "f510a76e057c5387ab59d445ba36ea5dc5fe48cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8d1e5175_223efde7",
+        "filename": "src/tests/compiler_tests/GeometryShader_test.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-25T05:12:07Z",
+      "side": 1,
+      "message": "Now ANGLE GLSL compiler can only accept GL_OES_geometry_shader and doesn\u0027t support GL_EXT_geometry_shader.",
+      "range": {
+        "startLine": 157,
+        "startChar": 0,
+        "endLine": 173,
+        "endChar": 1
       },
       "revId": "f510a76e057c5387ab59d445ba36ea5dc5fe48cd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
