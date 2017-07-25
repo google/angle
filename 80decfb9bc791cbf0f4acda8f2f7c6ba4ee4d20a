@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "e5e50d1a_44db409e",
+        "filename": "src/tests/perf_tests/DrawElementsPerf.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-25T03:31:28Z",
+      "side": 1,
+      "message": "Sorry, my fault. I misunderstood Geoff\u0027s earlier comment. I agree with you that we should put the test in a separate patch. So we can speed up the review.",
+      "parentUuid": "c500955a_03e4bcf4",
+      "revId": "80decfb9bc791cbf0f4acda8f2f7c6ba4ee4d20a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "057f0cd1_11301b1a",
         "filename": "src/tests/perf_tests/DrawElementsPerf.cpp",
         "patchSetId": 6
@@ -53,6 +71,30 @@
       "writtenOn": "2017-07-24T15:25:54Z",
       "side": 1,
       "message": "This is going to be too very slow, because it triggers memory reallocation and calls rand(), which is not guaranteed to be fast. What I suggest is you make use the DrawElementsPerfParams class to have new parameters that test the following:\n\na) DrawElements with an unchanging buffer every frame\nb) DrawElements with a buffer that changes every frame\nc) (optional) DrawElements with a client-side pointer\n\nfor b) (and optionally c)), initialize two arrays in setup and use those to reset the buffer data so it changes every frame, but there is no allocation done in the test body.",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 101,
+        "endChar": 9
+      },
+      "revId": "80decfb9bc791cbf0f4acda8f2f7c6ba4ee4d20a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "941f29fd_9c9fd771",
+        "filename": "src/tests/perf_tests/DrawElementsPerf.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-25T03:31:28Z",
+      "side": 1,
+      "message": "Thanks for your suggestion. I will do it in another patch.",
+      "parentUuid": "c36d9ae3_68102db3",
       "range": {
         "startLine": 96,
         "startChar": 0,
