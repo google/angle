@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "66c8240c_eacaaf37",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1058,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-26T12:38:22Z",
+      "side": 1,
+      "message": "I decided to use floats for the viewport bookkeeping within the GL state, because glViewportArrayv and glViewportIndexedf work with floating-point values. Both are available through OpenGL 4.1 and extensions like NV_viewport_array / ARB_viewport_array.\nI am aware that in ANGLE_multiview the viewport offsets are of integer type, but I thought it would be better to follow closer those two specs.\nWhat does Geoff think of this change?",
+      "parentUuid": "d1c81c64_c0b46ddd",
+      "revId": "72361065a0fb7b68f6ee5ba097e3370f059bacfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2309e88b_7868ae61",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.h",
         "patchSetId": 4
