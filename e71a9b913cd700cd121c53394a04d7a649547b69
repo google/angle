@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "02e2b6da_914cd1df",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-26T12:10:24Z",
+      "side": 1,
+      "message": "This is used only once, maybe it isn\u0027t needed and could be inlined?",
+      "revId": "e71a9b913cd700cd121c53394a04d7a649547b69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c75ffccd_9dc237a0",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-26T12:10:24Z",
+      "side": 1,
+      "message": "You can use the helpers in gl_raii.h in this test. ANGLE_GL_PROGRAM will help avoid the need for this helper function but RAII versions of the GL objects should be used instead of GLuints too.",
+      "revId": "e71a9b913cd700cd121c53394a04d7a649547b69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d5479ec_dc31a5cc",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-26T12:10:24Z",
+      "side": 1,
+      "message": "Do we have validation that num_views matches the number of views of the framebuffer? If not, is it something that will happen?",
+      "revId": "e71a9b913cd700cd121c53394a04d7a649547b69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
