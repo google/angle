@@ -39,6 +39,15 @@ Surface::Surface(EGLint surfaceType, const egl::Config *config, const AttributeM
       mDestroyed(false),
       mType(surfaceType),
       mPostSubBufferRequested(false),
+      mLargestPbuffer(false),
+      mGLColorspace(EGL_GL_COLORSPACE_LINEAR),
+      mVGAlphaFormat(EGL_VG_ALPHA_FORMAT_NONPRE),
+      mVGColorspace(EGL_VG_COLORSPACE_sRGB),
+      mMipmapTexture(false),
+      mMipmapLevel(0),
+      mHorizontalResolution(EGL_UNKNOWN),
+      mVerticalResolution(EGL_UNKNOWN),
+      mMultisampleResolve(EGL_MULTISAMPLE_RESOLVE_DEFAULT),
       mFixedSize(false),
       mFixedWidth(0),
       mFixedHeight(0),
@@ -56,6 +65,18 @@ Surface::Surface(EGLint surfaceType, const egl::Config *config, const AttributeM
     mPostSubBufferRequested = (attributes.get(EGL_POST_SUB_BUFFER_SUPPORTED_NV, EGL_FALSE) == EGL_TRUE);
     mFlexibleSurfaceCompatibilityRequested =
         (attributes.get(EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE, EGL_FALSE) == EGL_TRUE);
+
+    if (mType == EGL_PBUFFER_BIT)
+    {
+        mLargestPbuffer = (attributes.get(EGL_LARGEST_PBUFFER, EGL_FALSE) == EGL_TRUE);
+    }
+
+    mGLColorspace =
+        static_cast<EGLenum>(attributes.get(EGL_GL_COLORSPACE, EGL_GL_COLORSPACE_LINEAR));
+    mVGAlphaFormat =
+        static_cast<EGLenum>(attributes.get(EGL_VG_ALPHA_FORMAT, EGL_VG_ALPHA_FORMAT_NONPRE));
+    mVGColorspace = static_cast<EGLenum>(attributes.get(EGL_VG_COLORSPACE, EGL_VG_COLORSPACE_sRGB));
+    mMipmapTexture = (attributes.get(EGL_MIPMAP_TEXTURE, EGL_FALSE) == EGL_TRUE);
 
     mDirectComposition = (attributes.get(EGL_DIRECT_COMPOSITION_ANGLE, EGL_FALSE) == EGL_TRUE);
 
@@ -197,6 +218,27 @@ void Surface::setSwapInterval(EGLint interval)
     mImplementation->setSwapInterval(interval);
 }
 
+void Surface::setMipmapLevel(EGLint level)
+{
+    // Level is set but ignored
+    UNIMPLEMENTED();
+    mMipmapLevel = level;
+}
+
+void Surface::setMultisampleResolve(EGLenum resolve)
+{
+    // Behaviour is set but ignored
+    UNIMPLEMENTED();
+    mMultisampleResolve = resolve;
+}
+
+void Surface::setSwapBehavior(EGLenum behavior)
+{
+    // Behaviour is set but ignored
+    UNIMPLEMENTED();
+    mSwapBehavior = behavior;
+}
+
 const Config *Surface::getConfig() const
 {
     return mState.config;
@@ -225,6 +267,51 @@ EGLenum Surface::getTextureFormat() const
 EGLenum Surface::getTextureTarget() const
 {
     return mTextureTarget;
+}
+
+bool Surface::getLargestPbuffer() const
+{
+    return mLargestPbuffer;
+}
+
+EGLenum Surface::getGLColorspace() const
+{
+    return mGLColorspace;
+}
+
+EGLenum Surface::getVGAlphaFormat() const
+{
+    return mVGAlphaFormat;
+}
+
+EGLenum Surface::getVGColorspace() const
+{
+    return mVGColorspace;
+}
+
+bool Surface::getMipmapTexture() const
+{
+    return mMipmapTexture;
+}
+
+EGLint Surface::getMipmapLevel() const
+{
+    return mMipmapLevel;
+}
+
+EGLint Surface::getHorizontalResolution() const
+{
+    return mHorizontalResolution;
+}
+
+EGLint Surface::getVerticalResolution() const
+{
+    return mVerticalResolution;
+}
+
+EGLenum Surface::getMultisampleResolve() const
+{
+    return mMultisampleResolve;
 }
 
 EGLint Surface::isFixedSize() const

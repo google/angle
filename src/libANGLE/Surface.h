@@ -72,6 +72,10 @@ class Surface : public gl::FramebufferAttachmentObject
     Error setIsCurrent(const gl::Context *context, bool isCurrent);
     Error onDestroy(const Display *display);
 
+    void setMipmapLevel(EGLint level);
+    void setMultisampleResolve(EGLenum resolve);
+    void setSwapBehavior(EGLenum behavior);
+
     const Config *getConfig() const;
 
     // width and height can change with client window resizing
@@ -82,6 +86,15 @@ class Surface : public gl::FramebufferAttachmentObject
     EGLenum getSwapBehavior() const;
     EGLenum getTextureFormat() const;
     EGLenum getTextureTarget() const;
+    bool getLargestPbuffer() const;
+    EGLenum getGLColorspace() const;
+    EGLenum getVGAlphaFormat() const;
+    EGLenum getVGColorspace() const;
+    bool getMipmapTexture() const;
+    EGLint getMipmapLevel() const;
+    EGLint getHorizontalResolution() const;
+    EGLint getVerticalResolution() const;
+    EGLenum getMultisampleResolve() const;
 
     gl::Texture *getBoundTexture() const { return mTexture.get(); }
     gl::Framebuffer *getDefaultFramebuffer() { return mState.defaultFramebuffer; }
@@ -126,6 +139,16 @@ class Surface : public gl::FramebufferAttachmentObject
 
     bool mPostSubBufferRequested;
     bool mFlexibleSurfaceCompatibilityRequested;
+
+    bool mLargestPbuffer;
+    EGLenum mGLColorspace;
+    EGLenum mVGAlphaFormat;
+    EGLenum mVGColorspace;
+    bool mMipmapTexture;
+    EGLint mMipmapLevel;
+    EGLint mHorizontalResolution;
+    EGLint mVerticalResolution;
+    EGLenum mMultisampleResolve;
 
     bool mFixedSize;
     size_t mFixedWidth;

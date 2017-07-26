@@ -1251,13 +1251,13 @@ void QuerySurfaceAttrib(const Surface *surface, EGLint attribute, EGLint *value)
     switch (attribute)
     {
         case EGL_GL_COLORSPACE:
-            UNIMPLEMENTED();  // FIXME
+            *value = surface->getGLColorspace();
             break;
         case EGL_VG_ALPHA_FORMAT:
-            UNIMPLEMENTED();  // FIXME
+            *value = surface->getVGAlphaFormat();
             break;
         case EGL_VG_COLORSPACE:
-            UNIMPLEMENTED();  // FIXME
+            *value = surface->getVGColorspace();
             break;
         case EGL_CONFIG_ID:
             *value = surface->getConfig()->configID;
@@ -1266,19 +1266,31 @@ void QuerySurfaceAttrib(const Surface *surface, EGLint attribute, EGLint *value)
             *value = surface->getHeight();
             break;
         case EGL_HORIZONTAL_RESOLUTION:
-            UNIMPLEMENTED();  // FIXME
+            *value = surface->getHorizontalResolution();
             break;
         case EGL_LARGEST_PBUFFER:
-            UNIMPLEMENTED();  // FIXME
+            // The EGL spec states that value is not written if the surface is not a pbuffer
+            if (surface->getType() == EGL_PBUFFER_BIT)
+            {
+                *value = surface->getLargestPbuffer();
+            }
             break;
         case EGL_MIPMAP_TEXTURE:
-            UNIMPLEMENTED();  // FIXME
+            // The EGL spec states that value is not written if the surface is not a pbuffer
+            if (surface->getType() == EGL_PBUFFER_BIT)
+            {
+                *value = surface->getMipmapTexture();
+            }
             break;
         case EGL_MIPMAP_LEVEL:
-            UNIMPLEMENTED();  // FIXME
+            // The EGL spec states that value is not written if the surface is not a pbuffer
+            if (surface->getType() == EGL_PBUFFER_BIT)
+            {
+                *value = surface->getMipmapLevel();
+            }
             break;
         case EGL_MULTISAMPLE_RESOLVE:
-            UNIMPLEMENTED();  // FIXME
+            *value = surface->getMultisampleResolve();
             break;
         case EGL_PIXEL_ASPECT_RATIO:
             *value = surface->getPixelAspectRatio();
@@ -1290,13 +1302,21 @@ void QuerySurfaceAttrib(const Surface *surface, EGLint attribute, EGLint *value)
             *value = surface->getSwapBehavior();
             break;
         case EGL_TEXTURE_FORMAT:
-            *value = surface->getTextureFormat();
+            // The EGL spec states that value is not written if the surface is not a pbuffer
+            if (surface->getType() == EGL_PBUFFER_BIT)
+            {
+                *value = surface->getTextureFormat();
+            }
             break;
         case EGL_TEXTURE_TARGET:
-            *value = surface->getTextureTarget();
+            // The EGL spec states that value is not written if the surface is not a pbuffer
+            if (surface->getType() == EGL_PBUFFER_BIT)
+            {
+                *value = surface->getTextureTarget();
+            }
             break;
         case EGL_VERTICAL_RESOLUTION:
-            UNIMPLEMENTED();  // FIXME
+            *value = surface->getVerticalResolution();
             break;
         case EGL_WIDTH:
             *value = surface->getWidth();
@@ -1327,13 +1347,13 @@ void SetSurfaceAttrib(Surface *surface, EGLint attribute, EGLint value)
     switch (attribute)
     {
         case EGL_MIPMAP_LEVEL:
-            UNIMPLEMENTED();  // FIXME
+            surface->setMipmapLevel(value);
             break;
         case EGL_MULTISAMPLE_RESOLVE:
-            UNIMPLEMENTED();  // FIXME
+            surface->setMultisampleResolve(value);
             break;
         case EGL_SWAP_BEHAVIOR:
-            UNIMPLEMENTED();  // FIXME
+            surface->setSwapBehavior(value);
             break;
         default:
             UNREACHABLE();
