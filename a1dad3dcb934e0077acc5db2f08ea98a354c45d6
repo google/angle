@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "009e2806_efbf5c2a",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-07-26T10:36:48Z",
+      "side": 1,
+      "message": "GetResourceProperty is too general. This function handles a VariableWithLocation, not a general ShaderVariable. Would you propose a more suitable name if GetLocationVariableProperty is still weird?",
+      "parentUuid": "3e7e90d8_5198ee88",
+      "range": {
+        "startLine": 194,
+        "startChar": 6,
+        "endLine": 194,
+        "endChar": 33
+      },
+      "revId": "a1dad3dcb934e0077acc5db2f08ea98a354c45d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2a6270b0_b7a488d8",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 4
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "8056a566_89bede21",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1214,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-07-26T10:36:48Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "2a6270b0_b7a488d8",
+      "range": {
+        "startLine": 1214,
+        "startChar": 8,
+        "endLine": 1214,
+        "endChar": 44
+      },
+      "revId": "a1dad3dcb934e0077acc5db2f08ea98a354c45d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "90d0d135_11b21bc8",
         "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
         "patchSetId": 4
@@ -68,6 +116,30 @@
       "revId": "a1dad3dcb934e0077acc5db2f08ea98a354c45d6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "638e7710_1c384aae",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-07-26T10:36:48Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "90d0d135_11b21bc8",
+      "range": {
+        "startLine": 224,
+        "startChar": 22,
+        "endLine": 224,
+        "endChar": 23
+      },
+      "revId": "a1dad3dcb934e0077acc5db2f08ea98a354c45d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
