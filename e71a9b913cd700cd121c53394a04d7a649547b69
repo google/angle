@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7c5f5390_425e7597",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-26T13:19:27Z",
+      "side": 1,
+      "message": "I\u0027ll inline it.\nBut it will be have to be added as a function in the upcoming patches.",
+      "parentUuid": "02e2b6da_914cd1df",
+      "revId": "e71a9b913cd700cd121c53394a04d7a649547b69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c75ffccd_9dc237a0",
         "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
         "patchSetId": 4
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "fbee1a5a_a2bf2d17",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-26T13:19:27Z",
+      "side": 1,
+      "message": "Thanks. It\u0027s a bit better.",
+      "parentUuid": "c75ffccd_9dc237a0",
+      "revId": "e71a9b913cd700cd121c53394a04d7a649547b69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3d5479ec_dc31a5cc",
         "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
         "patchSetId": 4
@@ -47,6 +83,24 @@
       "writtenOn": "2017-07-26T12:10:24Z",
       "side": 1,
       "message": "Do we have validation that num_views matches the number of views of the framebuffer? If not, is it something that will happen?",
+      "revId": "e71a9b913cd700cd121c53394a04d7a649547b69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0879b12e_9808155c",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-26T13:19:27Z",
+      "side": 1,
+      "message": "Thanks for noticing this. It\u0027s an error to have a mismatch between the number of views in the program and the active draw framebuffer. There should be a separate program to be used with a framebuffer with only 1 view.\nI will write a separate patch to validate that.",
+      "parentUuid": "3d5479ec_dc31a5cc",
       "revId": "e71a9b913cd700cd121c53394a04d7a649547b69",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
