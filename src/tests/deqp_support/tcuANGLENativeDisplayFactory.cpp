@@ -302,9 +302,10 @@ void NativeWindow::setSurfaceSize(IVec2 size)
 void NativeWindow::readScreenPixels(tcu::TextureLevel *dst) const
 {
     dst->setStorage(TextureFormat(TextureFormat::BGRA, TextureFormat::UNORM_INT8), mWindow->getWidth(), mWindow->getHeight());
-    bool success = mWindow->takeScreenshot(reinterpret_cast<uint8_t*>(dst->getAccess().getDataPtr()));
-    DE_ASSERT(success);
-    DE_UNREF(success);
+    if (!mWindow->takeScreenshot(reinterpret_cast<uint8_t *>(dst->getAccess().getDataPtr())))
+    {
+        throw InternalError("Failed to read screen pixels", DE_NULL, __FILE__, __LINE__);
+    }
 }
 
 } // anonymous

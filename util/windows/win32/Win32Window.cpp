@@ -627,7 +627,7 @@ bool Win32Window::takeScreenshot(uint8_t *pixelData)
 
     if (!error)
     {
-        screenDC = GetDC(nullptr);
+        screenDC = GetDC(HWND_DESKTOP);
         error    = screenDC == nullptr;
     }
 
@@ -649,18 +649,20 @@ bool Win32Window::takeScreenshot(uint8_t *pixelData)
         error     = tmpBitmap == nullptr;
     }
 
-    RECT rect = {0, 0, 0, 0};
+    POINT topLeft = {0, 0};
     if (!error)
     {
-        MapWindowPoints(mNativeWindow, nullptr, reinterpret_cast<LPPOINT>(&rect), 0);
+        error = (MapWindowPoints(mNativeWindow, HWND_DESKTOP, &topLeft, 1) == 0);
+    }
 
+    if (!error)
+    {
         error = SelectObject(tmpDC, tmpBitmap) == nullptr;
     }
 
     if (!error)
     {
-        error =
-            BitBlt(tmpDC, 0, 0, mWidth, mHeight, screenDC, rect.left, rect.top, SRCCOPY) == TRUE;
+        error = BitBlt(tmpDC, 0, 0, mWidth, mHeight, screenDC, topLeft.x, topLeft.y, SRCCOPY) == 0;
     }
 
     if (!error)
@@ -679,7 +681,7 @@ bool Win32Window::takeScreenshot(uint8_t *pixelData)
         bitmapInfo.biClrImportant  = 0;
         int getBitsResult = GetDIBits(screenDC, tmpBitmap, 0, mHeight, pixelData,
                                       reinterpret_cast<BITMAPINFO *>(&bitmapInfo), DIB_RGB_COLORS);
-        error = getBitsResult != 0;
+        error = (getBitsResult == 0);
     }
 
     if (tmpBitmap != nullptr)
