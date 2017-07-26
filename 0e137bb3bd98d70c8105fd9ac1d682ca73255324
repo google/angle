@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "dbbe0b4f_d2713633",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 2704,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-26T13:35:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "430d9980_b94c5df1",
+      "revId": "0e137bb3bd98d70c8105fd9ac1d682ca73255324",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4703afb9_2b28b75f",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 20
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "9566bb5f_c7f78056",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 2756,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-26T13:35:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4703afb9_2b28b75f",
+      "revId": "0e137bb3bd98d70c8105fd9ac1d682ca73255324",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0bc43e16_82f8e468",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 20
@@ -50,6 +86,24 @@
       "revId": "0e137bb3bd98d70c8105fd9ac1d682ca73255324",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f5339067_433936fd",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 4086,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-26T13:35:55Z",
+      "side": 1,
+      "message": "Done\nI have verified that invocations\u003c\u003d0 and negative max_vertices will cause compile errors on both Intel and Nvidia OpenGL drivers.",
+      "parentUuid": "0bc43e16_82f8e468",
+      "revId": "0e137bb3bd98d70c8105fd9ac1d682ca73255324",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -87,6 +141,24 @@
     },
     {
       "key": {
+        "uuid": "6214d869_b87253c0",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-26T13:35:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48e7fab6_25ece1ba",
+      "revId": "0e137bb3bd98d70c8105fd9ac1d682ca73255324",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fd24f9d4_d2fa1556",
         "filename": "src/compiler/translator/TranslatorESSL.cpp",
         "patchSetId": 20
@@ -101,6 +173,24 @@
       "revId": "0e137bb3bd98d70c8105fd9ac1d682ca73255324",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "72d0ba15_c543fd20",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-26T13:35:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fd24f9d4_d2fa1556",
+      "revId": "0e137bb3bd98d70c8105fd9ac1d682ca73255324",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -121,6 +211,24 @@
     },
     {
       "key": {
+        "uuid": "9da5618f_44daebc4",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-26T13:35:55Z",
+      "side": 1,
+      "message": "Done\nI have moved this code into OutputGLSLBase.cpp, where both TranslatorGLSL and TranslatorESSL can access.",
+      "parentUuid": "3d74fa7e_c9f20857",
+      "revId": "0e137bb3bd98d70c8105fd9ac1d682ca73255324",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19373d8c_9168f5c2",
         "filename": "src/compiler/translator/TranslatorGLSL.cpp",
         "patchSetId": 20
@@ -135,6 +243,24 @@
       "revId": "0e137bb3bd98d70c8105fd9ac1d682ca73255324",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "512d1da9_285b516c",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 213,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-26T13:35:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "19373d8c_9168f5c2",
+      "revId": "0e137bb3bd98d70c8105fd9ac1d682ca73255324",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {

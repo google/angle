@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9a21fd13_a1aa7e09",
+        "filename": "samples/shader_translator/shader_translator.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-26T13:35:55Z",
+      "side": 1,
+      "message": "Actually it is the result of \u0027git cl format\u0027.\nI think we need to solve all format issues by \u0027git cl format --full\u0027 for this file in another patch.",
+      "parentUuid": "a55c76f0_f1a09a91",
+      "revId": "f510a76e057c5387ab59d445ba36ea5dc5fe48cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b2e68fcd_7ff7e2d6",
         "filename": "src/compiler/translator/BaseTypes.h",
         "patchSetId": 19
@@ -33,6 +51,24 @@
       "revId": "f510a76e057c5387ab59d445ba36ea5dc5fe48cd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3b42fd79_283556bc",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 632,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-07-26T13:35:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b2e68fcd_7ff7e2d6",
+      "revId": "f510a76e057c5387ab59d445ba36ea5dc5fe48cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
