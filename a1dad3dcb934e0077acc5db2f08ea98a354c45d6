@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3e7e90d8_5198ee88",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-26T05:52:04Z",
+      "side": 1,
+      "message": "Rename to GetVariableProperty or GetResourceProperty? \u0027LocationVariable\u0027 is a little weird.",
+      "range": {
+        "startLine": 194,
+        "startChar": 6,
+        "endLine": 194,
+        "endChar": 33
+      },
+      "revId": "a1dad3dcb934e0077acc5db2f08ea98a354c45d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2a6270b0_b7a488d8",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1214,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-26T05:52:04Z",
+      "side": 1,
+      "message": "case GL_REFERENCED_BY_VERTEX_SHADER:\ncase GL_REFERENCED_BY_COMPUTE_SHADER:",
+      "range": {
+        "startLine": 1214,
+        "startChar": 8,
+        "endLine": 1214,
+        "endChar": 44
+      },
+      "revId": "a1dad3dcb934e0077acc5db2f08ea98a354c45d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90d0d135_11b21bc8",
+        "filename": "src/tests/gl_tests/ProgramInterfaceTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-26T05:52:04Z",
+      "side": 1,
+      "message": "How about constexpr kPropCount \u003d 7?",
+      "range": {
+        "startLine": 224,
+        "startChar": 22,
+        "endLine": 224,
+        "endChar": 23
+      },
+      "revId": "a1dad3dcb934e0077acc5db2f08ea98a354c45d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
