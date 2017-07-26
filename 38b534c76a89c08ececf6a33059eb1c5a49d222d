@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9069b23f_e9280c7a",
+        "filename": "src/compiler/translator/TranslatorESSL.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-26T10:42:50Z",
+      "side": 1,
+      "message": "nit: sh:: is unnecessary.",
+      "revId": "38b534c76a89c08ececf6a33059eb1c5a49d222d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "31289d5d_5cd30c92",
+        "filename": "src/compiler/translator/TranslatorGLSL.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-07-26T10:42:50Z",
+      "side": 1,
+      "message": "ditto.",
+      "revId": "38b534c76a89c08ececf6a33059eb1c5a49d222d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
