@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2309e88b_7868ae61",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-26T11:12:37Z",
+      "side": 1,
+      "message": "The newly added functions are made public so that they could be accessed from other GL wrappers like FramebufferGL. They are not managed through dirty bits atm because I would not want them to be accidentally accessed by having all bits set dirty or similar.",
+      "range": {
+        "startLine": 79,
+        "startChar": 4,
+        "endLine": 84,
+        "endChar": 75
+      },
+      "revId": "72361065a0fb7b68f6ee5ba097e3370f059bacfd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
