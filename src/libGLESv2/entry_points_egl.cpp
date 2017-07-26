@@ -393,123 +393,17 @@ EGLBoolean EGLAPIENTRY QuerySurface(EGLDisplay dpy,
         dpy, surface, attribute, value);
     Thread *thread = GetCurrentThread();
 
-    Display *display    = static_cast<Display *>(dpy);
-    Surface *eglSurface = (Surface *)surface;
+    const Display *display    = static_cast<const Display *>(dpy);
+    const Surface *eglSurface = static_cast<const Surface *>(surface);
 
-    Error error = ValidateSurface(display, eglSurface);
+    Error error = ValidateQuerySurface(display, eglSurface, attribute, value);
     if (error.isError())
     {
         thread->setError(error);
         return EGL_FALSE;
     }
 
-    if (surface == EGL_NO_SURFACE)
-    {
-        thread->setError(EglBadSurface());
-        return EGL_FALSE;
-    }
-
-    switch (attribute)
-    {
-        case EGL_VG_ALPHA_FORMAT:
-            UNIMPLEMENTED();  // FIXME
-            break;
-        case EGL_VG_COLORSPACE:
-            UNIMPLEMENTED();  // FIXME
-            break;
-        case EGL_CONFIG_ID:
-            *value = eglSurface->getConfig()->configID;
-            break;
-        case EGL_HEIGHT:
-            *value = eglSurface->getHeight();
-            break;
-        case EGL_HORIZONTAL_RESOLUTION:
-            UNIMPLEMENTED();  // FIXME
-            break;
-        case EGL_LARGEST_PBUFFER:
-            UNIMPLEMENTED();  // FIXME
-            break;
-        case EGL_MIPMAP_TEXTURE:
-            UNIMPLEMENTED();  // FIXME
-            break;
-        case EGL_MIPMAP_LEVEL:
-            UNIMPLEMENTED();  // FIXME
-            break;
-        case EGL_MULTISAMPLE_RESOLVE:
-            UNIMPLEMENTED();  // FIXME
-            break;
-        case EGL_PIXEL_ASPECT_RATIO:
-            *value = eglSurface->getPixelAspectRatio();
-            break;
-        case EGL_RENDER_BUFFER:
-            *value = eglSurface->getRenderBuffer();
-            break;
-        case EGL_SWAP_BEHAVIOR:
-            *value = eglSurface->getSwapBehavior();
-            break;
-        case EGL_TEXTURE_FORMAT:
-            *value = eglSurface->getTextureFormat();
-            break;
-        case EGL_TEXTURE_TARGET:
-            *value = eglSurface->getTextureTarget();
-            break;
-        case EGL_VERTICAL_RESOLUTION:
-            UNIMPLEMENTED();  // FIXME
-            break;
-        case EGL_WIDTH:
-            *value = eglSurface->getWidth();
-            break;
-        case EGL_POST_SUB_BUFFER_SUPPORTED_NV:
-            if (!display->getExtensions().postSubBuffer)
-            {
-                thread->setError(EglBadAttribute());
-                return EGL_FALSE;
-            }
-            *value = eglSurface->isPostSubBufferSupported();
-            break;
-        case EGL_FIXED_SIZE_ANGLE:
-            if (!display->getExtensions().windowFixedSize)
-            {
-                thread->setError(EglBadAttribute());
-                return EGL_FALSE;
-            }
-            *value = eglSurface->isFixedSize();
-            break;
-        case EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE:
-            if (!display->getExtensions().flexibleSurfaceCompatibility)
-            {
-                thread->setError(
-                    EglBadAttribute()
-                    << "EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE cannot be "
-                       "used without EGL_ANGLE_flexible_surface_compatibility support.");
-                return EGL_FALSE;
-            }
-            *value = eglSurface->flexibleSurfaceCompatibilityRequested();
-            break;
-        case EGL_SURFACE_ORIENTATION_ANGLE:
-            if (!display->getExtensions().surfaceOrientation)
-            {
-                thread->setError(EglBadAttribute() << "EGL_SURFACE_ORIENTATION_ANGLE cannot be "
-                                                      "queried without "
-                                                      "EGL_ANGLE_surface_orientation support.");
-                return EGL_FALSE;
-            }
-            *value = eglSurface->getOrientation();
-            break;
-        case EGL_DIRECT_COMPOSITION_ANGLE:
-            if (!display->getExtensions().directComposition)
-            {
-                thread->setError(EglBadAttribute() << "EGL_DIRECT_COMPOSITION_ANGLE cannot be "
-                                                      "used without "
-                                                      "EGL_ANGLE_direct_composition support.");
-                return EGL_FALSE;
-            }
-            *value = eglSurface->directComposition();
-            break;
-        default:
-            thread->setError(EglBadAttribute());
-            return EGL_FALSE;
-    }
+    QuerySurfaceAttrib(eglSurface, attribute, value);
 
     thread->setError(NoError());
     return EGL_TRUE;
@@ -920,14 +814,14 @@ EGLBoolean EGLAPIENTRY SurfaceAttrib(EGLDisplay dpy,
     Display *display    = static_cast<Display *>(dpy);
     Surface *eglSurface = static_cast<Surface *>(surface);
 
-    Error error = ValidateSurface(display, eglSurface);
+    Error error = ValidateSurfaceAttrib(display, eglSurface, attribute, value);
     if (error.isError())
     {
         thread->setError(error);
         return EGL_FALSE;
     }
 
-    UNIMPLEMENTED();  // FIXME
+    SetSurfaceAttrib(eglSurface, attribute, value);
 
     thread->setError(NoError());
     return EGL_TRUE;

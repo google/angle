@@ -19,6 +19,7 @@
 #include "libANGLE/Renderbuffer.h"
 #include "libANGLE/Sampler.h"
 #include "libANGLE/Shader.h"
+#include "libANGLE/Surface.h"
 #include "libANGLE/Texture.h"
 #include "libANGLE/Uniform.h"
 #include "libANGLE/VertexAttribute.h"
@@ -1238,6 +1239,101 @@ void QueryConfigAttrib(const Config *config, EGLint attribute, EGLint *value)
             break;
         case EGL_COLOR_COMPONENT_TYPE_EXT:
             *value = config->colorComponentType;
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+}
+
+void QuerySurfaceAttrib(const Surface *surface, EGLint attribute, EGLint *value)
+{
+    switch (attribute)
+    {
+        case EGL_GL_COLORSPACE:
+            UNIMPLEMENTED();  // FIXME
+            break;
+        case EGL_VG_ALPHA_FORMAT:
+            UNIMPLEMENTED();  // FIXME
+            break;
+        case EGL_VG_COLORSPACE:
+            UNIMPLEMENTED();  // FIXME
+            break;
+        case EGL_CONFIG_ID:
+            *value = surface->getConfig()->configID;
+            break;
+        case EGL_HEIGHT:
+            *value = surface->getHeight();
+            break;
+        case EGL_HORIZONTAL_RESOLUTION:
+            UNIMPLEMENTED();  // FIXME
+            break;
+        case EGL_LARGEST_PBUFFER:
+            UNIMPLEMENTED();  // FIXME
+            break;
+        case EGL_MIPMAP_TEXTURE:
+            UNIMPLEMENTED();  // FIXME
+            break;
+        case EGL_MIPMAP_LEVEL:
+            UNIMPLEMENTED();  // FIXME
+            break;
+        case EGL_MULTISAMPLE_RESOLVE:
+            UNIMPLEMENTED();  // FIXME
+            break;
+        case EGL_PIXEL_ASPECT_RATIO:
+            *value = surface->getPixelAspectRatio();
+            break;
+        case EGL_RENDER_BUFFER:
+            *value = surface->getRenderBuffer();
+            break;
+        case EGL_SWAP_BEHAVIOR:
+            *value = surface->getSwapBehavior();
+            break;
+        case EGL_TEXTURE_FORMAT:
+            *value = surface->getTextureFormat();
+            break;
+        case EGL_TEXTURE_TARGET:
+            *value = surface->getTextureTarget();
+            break;
+        case EGL_VERTICAL_RESOLUTION:
+            UNIMPLEMENTED();  // FIXME
+            break;
+        case EGL_WIDTH:
+            *value = surface->getWidth();
+            break;
+        case EGL_POST_SUB_BUFFER_SUPPORTED_NV:
+            *value = surface->isPostSubBufferSupported();
+            break;
+        case EGL_FIXED_SIZE_ANGLE:
+            *value = surface->isFixedSize();
+            break;
+        case EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE:
+            *value = surface->flexibleSurfaceCompatibilityRequested();
+            break;
+        case EGL_SURFACE_ORIENTATION_ANGLE:
+            *value = surface->getOrientation();
+            break;
+        case EGL_DIRECT_COMPOSITION_ANGLE:
+            *value = surface->directComposition();
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+}
+
+void SetSurfaceAttrib(Surface *surface, EGLint attribute, EGLint value)
+{
+    switch (attribute)
+    {
+        case EGL_MIPMAP_LEVEL:
+            UNIMPLEMENTED();  // FIXME
+            break;
+        case EGL_MULTISAMPLE_RESOLVE:
+            UNIMPLEMENTED();  // FIXME
+            break;
+        case EGL_SWAP_BEHAVIOR:
+            UNIMPLEMENTED();  // FIXME
             break;
         default:
             UNREACHABLE();

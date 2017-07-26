@@ -147,6 +147,15 @@ Error ValidateProgramCachePopulateANGLE(const Display *display,
 
 Error ValidateProgramCacheResizeANGLE(const Display *display, EGLint limit, EGLenum mode);
 
+Error ValidateSurfaceAttrib(const Display *display,
+                            const Surface *surface,
+                            EGLint attribute,
+                            EGLint value);
+Error ValidateQuerySurface(const Display *display,
+                           const Surface *surface,
+                           EGLint attribute,
+                           EGLint *value);
+
 }  // namespace egl
 
 #define ANGLE_EGL_TRY(THREAD, EXPR)                   \

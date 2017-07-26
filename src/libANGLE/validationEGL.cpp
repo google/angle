@@ -2285,4 +2285,149 @@ Error ValidateProgramCacheResizeANGLE(const Display *display, EGLint limit, EGLe
     return NoError();
 }
 
+Error ValidateSurfaceAttrib(const Display *display,
+                            const Surface *surface,
+                            EGLint attribute,
+                            EGLint value)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+    ANGLE_TRY(ValidateSurface(display, surface));
+
+    if (surface == EGL_NO_SURFACE)
+    {
+        return EglBadSurface() << "Surface cannot be EGL_NO_SURFACE.";
+    }
+
+    switch (attribute)
+    {
+        case EGL_MIPMAP_LEVEL:
+            break;
+
+        case EGL_MULTISAMPLE_RESOLVE:
+            switch (value)
+            {
+                case EGL_MULTISAMPLE_RESOLVE_DEFAULT:
+                    break;
+
+                case EGL_MULTISAMPLE_RESOLVE_BOX:
+                    if ((surface->getConfig()->surfaceType & EGL_MULTISAMPLE_RESOLVE_BOX_BIT) == 0)
+                    {
+                        return EglBadMatch()
+                               << "Surface does not support EGL_MULTISAMPLE_RESOLVE_BOX.";
+                    }
+                    break;
+
+                default:
+                    return EglBadAttribute() << "Invalid multisample resolve type.";
+            }
+
+        case EGL_SWAP_BEHAVIOR:
+            switch (value)
+            {
+                case EGL_BUFFER_PRESERVED:
+                    if ((surface->getConfig()->surfaceType & EGL_SWAP_BEHAVIOR_PRESERVED_BIT) == 0)
+                    {
+                        return EglBadMatch()
+                               << "Surface does not support EGL_SWAP_BEHAVIOR_PRESERVED.";
+                    }
+                    break;
+
+                case EGL_BUFFER_DESTROYED:
+                    break;
+
+                default:
+                    return EglBadAttribute() << "Invalid swap behaviour.";
+            }
+
+        default:
+            return EglBadAttribute() << "Invalid surface attribute.";
+    }
+
+    return NoError();
+}
+
+Error ValidateQuerySurface(const Display *display,
+                           const Surface *surface,
+                           EGLint attribute,
+                           EGLint *value)
+{
+    ANGLE_TRY(ValidateDisplay(display));
+    ANGLE_TRY(ValidateSurface(display, surface));
+
+    if (surface == EGL_NO_SURFACE)
+    {
+        return EglBadSurface() << "Surface cannot be EGL_NO_SURFACE.";
+    }
+
+    switch (attribute)
+    {
+        case EGL_GL_COLORSPACE:
+        case EGL_VG_ALPHA_FORMAT:
+        case EGL_VG_COLORSPACE:
+        case EGL_CONFIG_ID:
+        case EGL_HEIGHT:
+        case EGL_HORIZONTAL_RESOLUTION:
+        case EGL_LARGEST_PBUFFER:
+        case EGL_MIPMAP_TEXTURE:
+        case EGL_MIPMAP_LEVEL:
+        case EGL_MULTISAMPLE_RESOLVE:
+        case EGL_PIXEL_ASPECT_RATIO:
+        case EGL_RENDER_BUFFER:
+        case EGL_SWAP_BEHAVIOR:
+        case EGL_TEXTURE_FORMAT:
+        case EGL_TEXTURE_TARGET:
+        case EGL_VERTICAL_RESOLUTION:
+        case EGL_WIDTH:
+            break;
+
+        case EGL_POST_SUB_BUFFER_SUPPORTED_NV:
+            if (!display->getExtensions().postSubBuffer)
+            {
+                return EglBadAttribute() << "EGL_POST_SUB_BUFFER_SUPPORTED_NV cannot be used "
+                                            "without EGL_ANGLE_surface_orientation support.";
+            }
+            break;
+
+        case EGL_FIXED_SIZE_ANGLE:
+            if (!display->getExtensions().windowFixedSize)
+            {
+                return EglBadAttribute() << "EGL_FIXED_SIZE_ANGLE cannot be used without "
+                                            "EGL_ANGLE_window_fixed_size support.";
+            }
+            break;
+
+        case EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE:
+            if (!display->getExtensions().flexibleSurfaceCompatibility)
+            {
+                return EglBadAttribute()
+                       << "EGL_FLEXIBLE_SURFACE_COMPATIBILITY_SUPPORTED_ANGLE cannot be "
+                          "used without EGL_ANGLE_flexible_surface_compatibility support.";
+            }
+            break;
+
+        case EGL_SURFACE_ORIENTATION_ANGLE:
+            if (!display->getExtensions().surfaceOrientation)
+            {
+                return EglBadAttribute() << "EGL_SURFACE_ORIENTATION_ANGLE cannot be "
+                                            "queried without "
+                                            "EGL_ANGLE_surface_orientation support.";
+            }
+            break;
+
+        case EGL_DIRECT_COMPOSITION_ANGLE:
+            if (!display->getExtensions().directComposition)
+            {
+                return EglBadAttribute() << "EGL_DIRECT_COMPOSITION_ANGLE cannot be "
+                                            "used without "
+                                            "EGL_ANGLE_direct_composition support.";
+            }
+            break;
+
+        default:
+            return EglBadAttribute() << "Invalid surface attribute.";
+    }
+
+    return NoError();
+}
+
 }  // namespace egl

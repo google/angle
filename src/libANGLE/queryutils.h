@@ -137,8 +137,12 @@ GLint QueryProgramResourceLocation(const Program *program,
 namespace egl
 {
 struct Config;
+class Surface;
 
 void QueryConfigAttrib(const Config *config, EGLint attribute, EGLint *value);
+
+void QuerySurfaceAttrib(const Surface *surface, EGLint attribute, EGLint *value);
+void SetSurfaceAttrib(Surface *surface, EGLint attribute, EGLint value);
 
 }  // namespace egl
 
