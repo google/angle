@@ -2350,8 +2350,8 @@ bool ValidateBlitFramebufferANGLE(Context *context,
                     }
 
                     // Return an error if the destination formats do not match
-                    if (!Format::EquivalentForBlit(attachment->getFormat(),
-                                                   readColorAttachment->getFormat()))
+                    if (!Format::SameSized(attachment->getFormat(),
+                                           readColorAttachment->getFormat()))
                     {
                         context->handleError(InvalidOperation());
                         return false;

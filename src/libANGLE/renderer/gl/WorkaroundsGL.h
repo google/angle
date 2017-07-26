@@ -133,10 +133,6 @@ struct WorkaroundsGL
     // On some NVIDIA drivers the point size range reported from the API is inconsistent with the
     // actual behavior. Clamp the point size to the value from the API to fix this.
     bool clampPointSize = false;
-
-    // Calling getInternalformativ for GL_NUM_SAMPLES and the internal
-    // format GL_BGRA8_EXT generates a GL_INVALID_ENUM error on macOS.
-    bool avoidInternalFormativForBGRA8 = false;
 };
 }  // namespace rx
 

@@ -150,7 +150,6 @@ struct Format
 
     static Format Invalid();
     static bool SameSized(const Format &a, const Format &b);
-    static bool EquivalentForBlit(const Format &a, const Format &b);
 
     friend std::ostream &operator<<(std::ostream &os, const Format &fmt);
 
