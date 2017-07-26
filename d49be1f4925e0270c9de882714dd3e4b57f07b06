@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d7d3eae3_dc3f3453",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1090,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2017-07-26T22:40:21Z",
+      "side": 1,
+      "message": "Weird spacing. Also, should we just do this everywhere and not call it a workaround anymore? It sounds like it might be a fluke that it works on NVIDIA\u0027s OpenGL driver.",
+      "revId": "d49be1f4925e0270c9de882714dd3e4b57f07b06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
