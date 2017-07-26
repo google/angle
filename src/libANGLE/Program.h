@@ -324,6 +324,9 @@ class ProgramState final : angle::NonCopyable
 
     bool mBinaryRetrieveableHint;
     bool mSeparable;
+
+    // ANGLE_multiview.
+    int mNumViews;
 };
 
 class Program final : angle::NonCopyable, public LabeledObject
@@ -522,6 +525,8 @@ class Program final : angle::NonCopyable, public LabeledObject
     const Bindings &getAttributeBindings() const { return mAttributeBindings; }
     const Bindings &getUniformLocationBindings() const { return mUniformLocationBindings; }
     const Bindings &getFragmentInputBindings() const { return mFragmentInputBindings; }
+
+    int getNumViews() const { return mState.mNumViews; }
 
   private:
     ~Program();

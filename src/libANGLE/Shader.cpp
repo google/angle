@@ -78,6 +78,7 @@ ShaderState::ShaderState(GLenum shaderType)
     : mLabel(),
       mShaderType(shaderType),
       mShaderVersion(100),
+      mNumViews(-1),
       mCompileStatus(CompileStatus::NOT_COMPILED)
 {
     mLocalSize.fill(-1);
@@ -272,6 +273,7 @@ void Shader::compile(const Context *context)
     mState.mInterfaceBlocks.clear();
     mState.mActiveAttributes.clear();
     mState.mActiveOutputVariables.clear();
+    mState.mNumViews = -1;
 
     mState.mCompileStatus = CompileStatus::COMPILE_REQUESTED;
     mBoundCompiler.set(context, context->getCompiler());
@@ -370,7 +372,11 @@ void Shader::resolveCompile(const Context *context)
         }
         case GL_VERTEX_SHADER:
         {
-            mState.mActiveAttributes = GetActiveShaderVariables(sh::GetAttributes(compilerHandle));
+            {
+                mState.mActiveAttributes =
+                    GetActiveShaderVariables(sh::GetAttributes(compilerHandle));
+                mState.mNumViews = sh::GetVertexShaderNumViews(compilerHandle);
+            }
             break;
         }
         case GL_FRAGMENT_SHADER:
@@ -467,6 +473,12 @@ const sh::WorkGroupSize &Shader::getWorkGroupSize(const Context *context)
 {
     resolveCompile(context);
     return mState.mLocalSize;
+}
+
+int Shader::getNumViews(const Context *context)
+{
+    resolveCompile(context);
+    return mState.mNumViews;
 }
 
 const std::string &Shader::getCompilerResourcesString() const

@@ -298,7 +298,8 @@ ProgramState::ProgramState()
       mSamplerUniformRange(0, 0),
       mImageUniformRange(0, 0),
       mAtomicCounterUniformRange(0, 0),
-      mBinaryRetrieveableHint(false)
+      mBinaryRetrieveableHint(false),
+      mNumViews(-1)
 {
     mComputeShaderLocalSize.fill(1);
 }
@@ -739,6 +740,8 @@ Error Program::link(const gl::Context *context)
             return NoError();
         }
 
+        mState.mNumViews = vertexShader->getNumViews(context);
+
         linkOutputVariables(context);
 
         // Validate we can pack the varyings.
@@ -797,6 +800,7 @@ void Program::unlink()
     mState.mComputeShaderLocalSize.fill(1);
     mState.mSamplerBindings.clear();
     mState.mImageBindings.clear();
+    mState.mNumViews = -1;
 
     mValidated = false;
 

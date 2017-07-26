@@ -168,6 +168,8 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
     state->mComputeShaderLocalSize[1] = stream.readInt<int>();
     state->mComputeShaderLocalSize[2] = stream.readInt<int>();
 
+    state->mNumViews = stream.readInt<int>();
+
     static_assert(MAX_VERTEX_ATTRIBS <= sizeof(unsigned long) * 8,
                   "Too many vertex attribs for mask");
     state->mActiveAttribLocationsMask = stream.readInt<unsigned long>();
@@ -358,6 +360,8 @@ void MemoryProgramCache::Serialize(const Context *context,
     stream.writeInt(computeLocalSize[0]);
     stream.writeInt(computeLocalSize[1]);
     stream.writeInt(computeLocalSize[2]);
+
+    stream.writeInt(state.mNumViews);
 
     stream.writeInt(state.getActiveAttribLocationsMask().to_ulong());
 

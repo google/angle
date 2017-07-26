@@ -91,6 +91,9 @@ class ShaderState final : angle::NonCopyable
     std::vector<sh::Attribute> mActiveAttributes;
     std::vector<sh::OutputVariable> mActiveOutputVariables;
 
+    // ANGLE_multiview.
+    int mNumViews;
+
     // Indicates if this shader has been successfully compiled
     CompileStatus mCompileStatus;
 };
@@ -150,6 +153,8 @@ class Shader final : angle::NonCopyable, public LabeledObject
     const std::vector<sh::OutputVariable> &getActiveOutputVariables(const Context *context);
 
     const sh::WorkGroupSize &getWorkGroupSize(const Context *context);
+
+    int getNumViews(const Context *context);
 
     const std::string &getCompilerResourcesString() const;
 
