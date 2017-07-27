@@ -379,4 +379,48 @@ TEST_P(FramebufferMultiviewTest, IncompleteViewTargetsSideBySide)
     glDeleteTextures(1, &otherTexture);
 }
 
+// Test that the active read framebuffer cannot be read from through glCopyTex* if it has multi-view
+// attachments.
+TEST_P(FramebufferMultiviewTest, InvalidCopyTex)
+{
+    if (!requestMultiviewExtension())
+    {
+        return;
+    }
+
+    mTexture2D = CreateTexture2D(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE);
+    ASSERT_GL_NO_ERROR();
+
+    const GLint viewportOffsets[2] = {0};
+    glFramebufferTextureMultiviewSideBySideANGLE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTexture2D,
+                                                 0, 1, &viewportOffsets[0]);
+    ASSERT_GL_NO_ERROR();
+
+    // Test glCopyTexImage2D and glCopyTexSubImage2D.
+    {
+        GLuint tex = CreateTexture2D(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE);
+
+        glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 0, 0, 1, 1, 0);
+        EXPECT_GL_ERROR(GL_INVALID_FRAMEBUFFER_OPERATION);
+
+        glCopyTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 0, 0, 1, 1);
+        EXPECT_GL_ERROR(GL_INVALID_FRAMEBUFFER_OPERATION);
+
+        glDeleteTextures(1, &tex);
+    }
+
+    // Test glCopyTexSubImage3D.
+    {
+        GLuint tex = 0u;
+        glGenTextures(1, &tex);
+        glBindTexture(GL_TEXTURE_3D, tex);
+        glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA8, 1, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+        glCopyTexSubImage3D(GL_TEXTURE_3D, 0, 0, 0, 0, 0, 0, 1, 1);
+        EXPECT_GL_ERROR(GL_INVALID_FRAMEBUFFER_OPERATION);
+
+        glDeleteTextures(1, &tex);
+    }
+}
+
 ANGLE_INSTANTIATE_TEST(FramebufferMultiviewTest, ES3_OPENGL());

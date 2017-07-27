@@ -2624,9 +2624,21 @@ bool ValidateCopyTexImageParametersBase(ValidationContext *context,
     // In OpenGL ES it is undefined what happens when an operation tries to read from a missing
     // attachment and WebGL defines it to be an error. We do the check unconditionally as the
     // situation is an application error that would lead to a crash in ANGLE.
-    if (readFramebuffer->getReadColorbuffer() == nullptr)
+    const FramebufferAttachment *source = readFramebuffer->getReadColorbuffer();
+    if (source == nullptr)
     {
         ANGLE_VALIDATION_ERR(context, InvalidOperation(), MissingReadAttachment);
+        return false;
+    }
+
+    // ANGLE_multiview spec, Revision 1:
+    // Calling CopyTexSubImage3D, CopyTexImage2D, or CopyTexSubImage2D will result in an
+    // INVALID_FRAMEBUFFER_OPERATION error if the multi-view layout of the current read framebuffer
+    // is not NONE.
+    if (source->getMultiviewLayout() != GL_NONE)
+    {
+        context->handleError(InvalidFramebufferOperation()
+                             << "The active read framebuffer object has multiview attachments.");
         return false;
     }
 
