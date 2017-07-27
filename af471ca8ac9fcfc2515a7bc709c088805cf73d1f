@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9817e875_40b0866e",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 743,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-27T15:10:47Z",
+      "side": 1,
+      "message": "This also needs to be read and written in program binary read/write (see MemoryProgramCache::Serialize and MemoryProgramCache::Deserialize).",
+      "range": {
+        "startLine": 743,
+        "startChar": 8,
+        "endLine": 743,
+        "endChar": 24
+      },
+      "revId": "af471ca8ac9fcfc2515a7bc709c088805cf73d1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
