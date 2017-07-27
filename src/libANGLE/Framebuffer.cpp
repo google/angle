@@ -1564,6 +1564,16 @@ GLint Framebuffer::getDefaultSamples() const
     return mState.getDefaultSamples();
 }
 
+GLenum Framebuffer::getMultiviewLayout() const
+{
+    const FramebufferAttachment *firstAttachment = getFirstNonNullAttachment();
+    if (firstAttachment == nullptr)
+    {
+        return GL_NONE;
+    }
+    return firstAttachment->getMultiviewLayout();
+}
+
 GLboolean Framebuffer::getDefaultFixedSampleLocations() const
 {
     return mState.getDefaultFixedSampleLocations();

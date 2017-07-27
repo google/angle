@@ -291,6 +291,7 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
     bool formsCopyingFeedbackLoopWith(GLuint copyTextureID,
                                       GLint copyTextureLevel,
                                       GLint copyTextureLayer) const;
+    GLenum getMultiviewLayout() const;
 
   private:
     void detachResourceById(const Context *context, GLenum resourceType, GLuint resourceId);

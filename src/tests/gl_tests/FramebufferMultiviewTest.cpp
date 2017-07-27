@@ -423,4 +423,39 @@ TEST_P(FramebufferMultiviewTest, InvalidCopyTex)
     }
 }
 
+// Test that glBlitFramebuffer generates an invalid framebuffer operation when either the current
+// draw framebuffer, or current read framebuffer have multiview attachments.
+TEST_P(FramebufferMultiviewTest, InvalidBlit)
+{
+    if (!requestMultiviewExtension())
+    {
+        return;
+    }
+
+    mTexture2D = CreateTexture2D(GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE);
+    ASSERT_GL_NO_ERROR();
+
+    const GLint viewportOffsets[2] = {0};
+    glFramebufferTextureMultiviewSideBySideANGLE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTexture2D,
+                                                 0, 1, &viewportOffsets[0]);
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    ASSERT_GL_NO_ERROR();
+
+    // Blit with the active read framebuffer having multiview attachments.
+    {
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, mFramebuffer);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+        glBlitFramebuffer(0, 0, 1, 1, 0, 0, 1, 1, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+        EXPECT_GL_ERROR(GL_INVALID_FRAMEBUFFER_OPERATION);
+    }
+
+    // Blit with the active draw framebuffer having multiview attachments.
+    {
+        glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mFramebuffer);
+        glBlitFramebuffer(0, 0, 1, 1, 0, 0, 1, 1, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+        EXPECT_GL_ERROR(GL_INVALID_FRAMEBUFFER_OPERATION);
+    }
+}
+
 ANGLE_INSTANTIATE_TEST(FramebufferMultiviewTest, ES3_OPENGL());

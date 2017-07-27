@@ -1809,6 +1809,22 @@ bool ValidateBlitFramebufferParameters(ValidationContext *context,
         }
     }
 
+    // ANGLE_multiview, Revision 1:
+    // Calling BlitFramebuffer will result in an INVALID_FRAMEBUFFER_OPERATION error if the
+    // multi-view layout of the current draw framebuffer or read framebuffer is not NONE.
+    if (readFramebuffer->getMultiviewLayout() != GL_NONE)
+    {
+        context->handleError(InvalidFramebufferOperation()
+                             << "Attempt to read from a multi-view framebuffer.");
+        return false;
+    }
+    if (drawFramebuffer->getMultiviewLayout() != GL_NONE)
+    {
+        context->handleError(InvalidFramebufferOperation()
+                             << "Attempt to write to a multi-view framebuffer.");
+        return false;
+    }
+
     return true;
 }
 
