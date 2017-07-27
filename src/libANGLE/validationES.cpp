@@ -2821,11 +2821,23 @@ bool ValidateDrawBase(ValidationContext *context, GLenum mode, GLsizei count)
 
     if (context->getExtensions().multiview)
     {
-        const int programNumViews = program->getNumViews();
-        if (programNumViews != -1 && framebuffer->getNumViews() != programNumViews)
+        const int programNumViews     = program->getNumViews();
+        const int framebufferNumViews = framebuffer->getNumViews();
+        if (programNumViews != -1 && framebufferNumViews != programNumViews)
         {
             context->handleError(InvalidOperation() << "The number of views in the active program "
                                                        "and draw framebuffer does not match.");
+            return false;
+        }
+
+        const TransformFeedback *transformFeedbackObject = state.getCurrentTransformFeedback();
+        if (transformFeedbackObject != nullptr && transformFeedbackObject->isActive() &&
+            framebufferNumViews > 1)
+        {
+            context->handleError(InvalidOperation()
+                                 << "There is an active transform feedback object "
+                                    "when the number of views in the active draw "
+                                    "framebuffer is greater than 1.");
             return false;
         }
     }

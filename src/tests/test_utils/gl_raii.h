@@ -44,12 +44,13 @@ class GLWrapper
     GLuint mHandle = 0;
 };
 
-using GLVertexArray  = GLWrapper<glGenVertexArrays, glDeleteVertexArrays>;
-using GLBuffer       = GLWrapper<glGenBuffers, glDeleteBuffers>;
-using GLTexture      = GLWrapper<glGenTextures, glDeleteTextures>;
-using GLFramebuffer  = GLWrapper<glGenFramebuffers, glDeleteFramebuffers>;
-using GLRenderbuffer = GLWrapper<glGenRenderbuffers, glDeleteRenderbuffers>;
-using GLSampler      = GLWrapper<glGenSamplers, glDeleteSamplers>;
+using GLVertexArray       = GLWrapper<glGenVertexArrays, glDeleteVertexArrays>;
+using GLBuffer            = GLWrapper<glGenBuffers, glDeleteBuffers>;
+using GLTexture           = GLWrapper<glGenTextures, glDeleteTextures>;
+using GLFramebuffer       = GLWrapper<glGenFramebuffers, glDeleteFramebuffers>;
+using GLRenderbuffer      = GLWrapper<glGenRenderbuffers, glDeleteRenderbuffers>;
+using GLSampler           = GLWrapper<glGenSamplers, glDeleteSamplers>;
+using GLTransformFeedback = GLWrapper<glGenTransformFeedbacks, glDeleteTransformFeedbacks>;
 
 // Don't use GLProgram directly, use ANGLE_GL_PROGRAM.
 namespace priv

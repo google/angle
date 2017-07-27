@@ -234,4 +234,59 @@ TEST_P(MultiviewDrawValidationTest, NumViewsMismatch)
     }
 }
 
+// The test verifies that glDraw*:
+// 1) generates an INVALID_OPERATION error if the number of views in the active draw framebuffer is
+// greater than 1 and there is an active transform feedback object.
+// 2) does not generate any error if the number of views in the draw framebuffer is 1.
+TEST_P(MultiviewDrawValidationTest, ActiveTransformFeedback)
+{
+    if (!requestMultiviewExtension())
+    {
+        return;
+    }
+
+    const GLint viewportOffsets[4] = {0, 0, 2, 0};
+
+    const std::string &vsSource =
+        "#version 300 es\n"
+        "void main()\n"
+        "{}\n";
+    const std::string &fsSource =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "void main()\n"
+        "{}\n";
+    ANGLE_GL_PROGRAM(program, vsSource, fsSource);
+    glUseProgram(program);
+
+    GLBuffer tbo;
+    glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, tbo);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, sizeof(float) * 4u, nullptr, GL_STATIC_DRAW);
+
+    GLTransformFeedback transformFeedback;
+    glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, transformFeedback);
+    glBeginTransformFeedback(GL_TRIANGLES);
+    ASSERT_GL_NO_ERROR();
+
+    // Check that drawArrays generates an error when there is an active transform feedback object
+    // and the number of views in the draw framebuffer is greater than 1.
+    {
+        glFramebufferTextureMultiviewSideBySideANGLE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTex2d,
+                                                     0, 2, &viewportOffsets[0]);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    }
+
+    // Check that drawArrays does not generate an error when the number of views in the draw
+    // framebuffer is 1.
+    {
+        glFramebufferTextureMultiviewSideBySideANGLE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTex2d,
+                                                     0, 1, &viewportOffsets[0]);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        EXPECT_GL_NO_ERROR();
+    }
+
+    glEndTransformFeedback();
+}
+
 ANGLE_INSTANTIATE_TEST(MultiviewDrawValidationTest, ES31_OPENGL());
