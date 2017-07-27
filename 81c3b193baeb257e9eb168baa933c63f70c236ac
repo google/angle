@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cbad4bb4_1601aeb0",
+        "filename": "src/libANGLE/angletypes.inl",
+        "patchSetId": 5
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-07-27T15:51:58Z",
+      "side": 1,
+      "message": "git cl format",
+      "range": {
+        "startLine": 27,
+        "startChar": 11,
+        "endLine": 27,
+        "endChar": 25
+      },
+      "revId": "81c3b193baeb257e9eb168baa933c63f70c236ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
