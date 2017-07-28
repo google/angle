@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "27125a80_b1f72672",
+        "filename": "src/libANGLE/FramebufferAttachment.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-28T15:45:07Z",
+      "side": 1,
+      "message": "We\u0027re trying to remove all usage of static variables.  Can this return a vector by value instead? Looks like it is always copied to the destination anyways.",
+      "range": {
+        "startLine": 51,
+        "startChar": 4,
+        "endLine": 51,
+        "endChar": 36
+      },
+      "revId": "c9c9fb5d7d70189d8e9718c9759fe19f2a35b9d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e0da4f79_d2bcdc1a",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 372,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-28T15:45:07Z",
+      "side": 1,
+      "message": "These are state of the framebuffer and shouldn\u0027t be here.  Instead we can create a second set of dirty bits in StateManager11 with these and iterate over it before the other one.",
+      "range": {
+        "startLine": 370,
+        "startChar": 8,
+        "endLine": 372,
+        "endChar": 35
+      },
+      "revId": "c9c9fb5d7d70189d8e9718c9759fe19f2a35b9d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
