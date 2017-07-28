@@ -172,7 +172,9 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
     const FramebufferAttachment *getFirstNonNullAttachment() const;
 
     const FramebufferAttachment *getAttachment(GLenum attachment) const;
+    GLenum getMultiviewLayout() const;
     GLsizei getNumViews() const;
+    const std::vector<Offset> *getViewportOffsets() const;
 
     size_t getDrawbufferStateCount() const;
     GLenum getDrawBufferState(size_t drawBuffer) const;
@@ -291,7 +293,6 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
     bool formsCopyingFeedbackLoopWith(GLuint copyTextureID,
                                       GLint copyTextureLevel,
                                       GLint copyTextureLayer) const;
-    GLenum getMultiviewLayout() const;
 
   private:
     void detachResourceById(const Context *context, GLenum resourceType, GLuint resourceId);

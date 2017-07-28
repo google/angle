@@ -174,7 +174,7 @@ RendererGL::RendererGL(const FunctionsGL *functions, const egl::AttributeMap &at
 {
     ASSERT(mFunctions);
     nativegl_gl::GenerateWorkarounds(mFunctions, &mWorkarounds);
-    mStateManager = new StateManagerGL(mFunctions, getNativeCaps());
+    mStateManager = new StateManagerGL(mFunctions, getNativeCaps(), getNativeExtensions());
     mBlitter      = new BlitGL(functions, mWorkarounds, mStateManager);
 
     bool hasDebugOutput = mFunctions->isAtLeastGL(gl::Version(4, 3)) ||

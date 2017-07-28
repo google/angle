@@ -1564,16 +1564,6 @@ GLint Framebuffer::getDefaultSamples() const
     return mState.getDefaultSamples();
 }
 
-GLenum Framebuffer::getMultiviewLayout() const
-{
-    const FramebufferAttachment *firstAttachment = getFirstNonNullAttachment();
-    if (firstAttachment == nullptr)
-    {
-        return GL_NONE;
-    }
-    return firstAttachment->getMultiviewLayout();
-}
-
 GLboolean Framebuffer::getDefaultFixedSampleLocations() const
 {
     return mState.getDefaultFixedSampleLocations();
@@ -1622,6 +1612,26 @@ GLsizei Framebuffer::getNumViews() const
         return FramebufferAttachment::kDefaultNumViews;
     }
     return attachment->getNumViews();
+}
+
+const std::vector<Offset> *Framebuffer::getViewportOffsets() const
+{
+    const FramebufferAttachment *attachment = getFirstNonNullAttachment();
+    if (attachment == nullptr)
+    {
+        return nullptr;
+    }
+    return &attachment->getMultiviewViewportOffsets();
+}
+
+GLenum Framebuffer::getMultiviewLayout() const
+{
+    const FramebufferAttachment *attachment = getFirstNonNullAttachment();
+    if (attachment == nullptr)
+    {
+        return GL_NONE;
+    }
+    return attachment->getMultiviewLayout();
 }
 
 }  // namespace gl
