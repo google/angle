@@ -319,7 +319,7 @@ TEST_P(ComputeShaderTest, ImageArrayWithoutBindingQualifier)
 
     // TODO(xinghua.cao@intel.com): On AMD desktop OpenGL, bind two image variables to unit 0,
     // only one variable is valid.
-    ANGLE_SKIP_TEST_IF(IsAMD() && IsDesktopOpenGL() && IsWindows());
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsDesktopOpenGL());
 
     GLTexture mTexture;
     GLFramebuffer mFramebuffer;
