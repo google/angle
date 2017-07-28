@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a13da655_0f033896",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1575,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-28T14:48:35Z",
+      "side": 1,
+      "message": "Maybe I could write a patch to refactor other parts of the code to use this.",
+      "range": {
+        "startLine": 1567,
+        "startChar": 0,
+        "endLine": 1575,
+        "endChar": 1
+      },
+      "revId": "c42bc7b04aad727d7fd96b4c1de9f55858139e23",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
