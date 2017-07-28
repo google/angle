@@ -1136,6 +1136,38 @@ gl::Version GetMaximumClientVersion(D3D_FEATURE_LEVEL featureLevel)
     }
 }
 
+unsigned int GetMaxViewportAndScissorRectanglesPerPipeline(D3D_FEATURE_LEVEL featureLevel)
+{
+    switch (featureLevel)
+    {
+        case D3D_FEATURE_LEVEL_11_1:
+        case D3D_FEATURE_LEVEL_11_0:
+            return D3D11_VIEWPORT_AND_SCISSORRECT_OBJECT_COUNT_PER_PIPELINE;
+        case D3D_FEATURE_LEVEL_10_1:
+        case D3D_FEATURE_LEVEL_10_0:
+        case D3D_FEATURE_LEVEL_9_3:
+        case D3D_FEATURE_LEVEL_9_2:
+        case D3D_FEATURE_LEVEL_9_1:
+            return 1;
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+bool IsMultiviewSupported(D3D_FEATURE_LEVEL featureLevel)
+{
+    // The ANGLE_multiview extension can always be supported in D3D11 through geometry shaders.
+    switch (featureLevel)
+    {
+        case D3D_FEATURE_LEVEL_11_1:
+        case D3D_FEATURE_LEVEL_11_0:
+            return true;
+        default:
+            return false;
+    }
+}
+
 void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, const Renderer11DeviceCaps &renderer11DeviceCaps, gl::Caps *caps,
                   gl::TextureCapsMap *textureCapsMap, gl::Extensions *extensions, gl::Limitations *limitations)
 {
@@ -1326,6 +1358,13 @@ void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, cons
     extensions->standardDerivatives = GetDerivativeInstructionSupport(featureLevel);
     extensions->shaderTextureLOD = GetShaderTextureLODSupport(featureLevel);
     extensions->fragDepth = true;
+    extensions->multiview              = IsMultiviewSupported(featureLevel);
+    if (extensions->multiview)
+    {
+        extensions->maxViews =
+            std::min(static_cast<GLuint>(GetMaximum2DTextureArraySize(featureLevel)),
+                     GetMaxViewportAndScissorRectanglesPerPipeline(featureLevel));
+    }
     extensions->textureUsage = true; // This could be false since it has no effect in D3D11
     extensions->discardFramebuffer = true;
     extensions->translatedShaderSource = true;
