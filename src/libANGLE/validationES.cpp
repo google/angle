@@ -5456,6 +5456,16 @@ bool ValidateReadPixelsBase(Context *context,
         return false;
     }
 
+    // ANGLE_multiview, Revision 1:
+    // ReadPixels generates an INVALID_FRAMEBUFFER_OPERATION error if the multi-view layout of the
+    // current read framebuffer is not NONE.
+    if (readBuffer->getMultiviewLayout() != GL_NONE)
+    {
+        context->handleError(InvalidFramebufferOperation()
+                             << "Attempting to read from a multi-view framebuffer.");
+        return false;
+    }
+
     if (context->getExtensions().webglCompatibility)
     {
         // The ES 2.0 spec states that the format must be "among those defined in table 3.4,

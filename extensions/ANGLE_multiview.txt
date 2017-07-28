@@ -161,7 +161,7 @@ Additions to Chapter 4 of the OpenGL ES 3.0 Specification
     Add to the end of the section:
 
     "   ReadPixels generates an INVALID_FRAMEBUFFER_OPERATION error if
-    the multi-view layout of the current read buffer is not NONE."
+    the multi-view layout of the current read framebuffer is not NONE."
 
     Modify section 4.3.3 (Copying pixels), p. 198
 
