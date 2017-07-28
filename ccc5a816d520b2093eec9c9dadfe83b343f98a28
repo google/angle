@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "95f79abd_b59a0960",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-28T15:54:29Z",
+      "side": 1,
+      "message": "nit: I would invert this and early-return.",
+      "range": {
+        "startLine": 314,
+        "startChar": 4,
+        "endLine": 315,
+        "endChar": 21
+      },
+      "revId": "ccc5a816d520b2093eec9c9dadfe83b343f98a28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c17bb659_91ac231a",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-28T15:54:29Z",
+      "side": 1,
+      "message": "The state manager doesn\u0027t necessarily have the correct scissors which is why it keeps it\u0027s own internal dirty bits.  Instead, you should probably compute the viewport to use here, possibly using the gl::Context from the calls above.",
+      "range": {
+        "startLine": 320,
+        "startChar": 8,
+        "endLine": 321,
+        "endChar": 44
+      },
+      "revId": "ccc5a816d520b2093eec9c9dadfe83b343f98a28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d7aef3d_25fdcbcf",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-28T15:54:29Z",
+      "side": 1,
+      "message": "Shouldn\u0027t need to worry about restoring anything.",
+      "range": {
+        "startLine": 351,
+        "startChar": 8,
+        "endLine": 352,
+        "endChar": 63
+      },
+      "revId": "ccc5a816d520b2093eec9c9dadfe83b343f98a28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
