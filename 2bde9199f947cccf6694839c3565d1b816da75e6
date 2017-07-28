@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8c508048_55507dcd",
+        "filename": "src/libANGLE/ContextState.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-28T20:22:18Z",
+      "side": 0,
+      "message": "This needs to be reverted.",
+      "range": {
+        "startLine": 129,
+        "startChar": 22,
+        "endLine": 129,
+        "endChar": 36
+      },
+      "revId": "2bde9199f947cccf6694839c3565d1b816da75e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
