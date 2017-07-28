@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "2fdb16f1_84205c75",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-07-28T05:48:53Z",
+      "side": 1,
+      "message": "Thanks for pointing it out. I am just thinking how to reuse the code. Currently, it seems that we can\u0027t do much unless you refactor these shader variables or add a program interface file to store all needed information. I am ok to keep current implementation. Let\u0027s do the refactor step by step.",
+      "parentUuid": "009e2806_efbf5c2a",
+      "range": {
+        "startLine": 194,
+        "startChar": 6,
+        "endLine": 194,
+        "endChar": 33
+      },
+      "revId": "a1dad3dcb934e0077acc5db2f08ea98a354c45d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2a6270b0_b7a488d8",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 4
