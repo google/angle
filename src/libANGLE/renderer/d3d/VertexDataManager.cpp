@@ -452,7 +452,8 @@ gl::Error VertexDataManager::reserveSpaceForAttrib(const TranslatedAttribute &tr
     BufferD3D *bufferD3D = buffer ? GetImplAs<BufferD3D>(buffer) : nullptr;
     ASSERT(!bufferD3D || bufferD3D->getStaticVertexBuffer(attrib, binding) == nullptr);
 
-    size_t totalCount = ComputeVertexBindingElementCount(binding, count, instances);
+    size_t totalCount = gl::ComputeVertexBindingElementCount(
+        binding.getDivisor(), static_cast<size_t>(count), static_cast<size_t>(instances));
     ASSERT(!bufferD3D ||
            ElementsInBuffer(attrib, binding, static_cast<unsigned int>(bufferD3D->getSize())) >=
                static_cast<int>(totalCount));
@@ -499,7 +500,8 @@ gl::Error VertexDataManager::storeDynamicAttrib(TranslatedAttribute *translated,
     translated->storage = nullptr;
     ANGLE_TRY_RESULT(mFactory->getVertexSpaceRequired(attrib, binding, 1, 0), translated->stride);
 
-    size_t totalCount = ComputeVertexBindingElementCount(binding, count, instances);
+    size_t totalCount = gl::ComputeVertexBindingElementCount(
+        binding.getDivisor(), static_cast<size_t>(count), static_cast<size_t>(instances));
 
     ANGLE_TRY(mStreamingBuffer->storeDynamicAttribute(
         attrib, binding, translated->currentValueType, firstVertexIndex,

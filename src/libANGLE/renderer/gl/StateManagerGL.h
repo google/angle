@@ -30,6 +30,7 @@ namespace rx
 class FramebufferGL;
 class FunctionsGL;
 class TransformFeedbackGL;
+class VertexArrayGL;
 class QueryGL;
 
 class StateManagerGL final : angle::NonCopyable
@@ -192,6 +193,7 @@ class StateManagerGL final : angle::NonCopyable
                                             const gl::Framebuffer &drawFramebuffer);
     void applyViewportOffsetsAndSetViewports(const gl::Rectangle &viewport,
                                              const gl::Framebuffer &drawFramebuffer);
+    void propagateNumViewsToVAO(const gl::Program *program, VertexArrayGL *vao);
 
     enum MultiviewDirtyBitType
     {

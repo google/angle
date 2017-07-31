@@ -633,6 +633,231 @@ TEST_P(MultiviewSideBySideRenderTest, DrawArraysInstanced)
     }
 }
 
+// The test verifies that the attribute divisor is correctly adjusted when drawing with a multi-view
+// program. The test draws 4 instances of a quad each of which covers a single pixel. The x and y
+// offset of each quad are passed as separate attributes which are indexed based on the
+// corresponding attribute divisors. A divisor of 1 is used for the y offset to have all quads
+// drawn vertically next to each other. A divisor of 3 is used for the x offset to have the last
+// quad offsetted by one pixel to the right. Note that the number of views is divisible by 1, but
+// not by 3.
+TEST_P(MultiviewSideBySideRenderTest, AttribDivisor)
+{
+    if (!requestMultiviewExtension())
+    {
+        return;
+    }
+
+    const std::string &vsSource =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview2 : require\n"
+        "layout(num_views = 2) in;\n"
+        "in vec3 vPosition;\n"
+        "in float offsetX;\n"
+        "in float offsetY;\n"
+        "void main()\n"
+        "{\n"
+        "       vec4 p = vec4(vPosition, 1.);\n"
+        "       p.xy = p.xy * 0.25 - 0.75 + vec2(offsetX, offsetY);\n"
+        "       gl_Position.x = (gl_ViewID_OVR == 0u ? p.x : p.x + 1.0);\n"
+        "       gl_Position.yzw = p.yzw;\n"
+        "}\n";
+
+    const std::string &fsSource =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview2 : require\n"
+        "precision mediump float;\n"
+        "out vec4 col;\n"
+        "void main()\n"
+        "{\n"
+        "    col = vec4(1,0,0,0);\n"
+        "}\n";
+    createFBO(8, 4, 2);
+    ANGLE_GL_PROGRAM(program, vsSource, fsSource);
+    glUseProgram(program);
+
+    GLBuffer xOffsetVBO;
+    glBindBuffer(GL_ARRAY_BUFFER, xOffsetVBO);
+    const GLfloat xOffsetData[4] = {0.0f, 0.5f, 1.0f, 1.0f};
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 4, xOffsetData, GL_STATIC_DRAW);
+    GLint xOffsetLoc = glGetAttribLocation(program, "offsetX");
+    glVertexAttribPointer(xOffsetLoc, 1, GL_FLOAT, GL_FALSE, 0, 0);
+    glVertexAttribDivisor(xOffsetLoc, 3);
+    glEnableVertexAttribArray(xOffsetLoc);
+
+    GLBuffer yOffsetVBO;
+    glBindBuffer(GL_ARRAY_BUFFER, yOffsetVBO);
+    const GLfloat yOffsetData[4] = {0.0f, 0.5f, 1.0f, 1.5f};
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 4, yOffsetData, GL_STATIC_DRAW);
+    GLint yOffsetLoc = glGetAttribLocation(program, "offsetY");
+    glVertexAttribDivisor(yOffsetLoc, 1);
+    glVertexAttribPointer(yOffsetLoc, 1, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(yOffsetLoc);
+
+    drawQuad(program, "vPosition", 0.0f, 1.0f, true, true, 4);
+    ASSERT_GL_NO_ERROR();
+
+    const GLubyte expectedRedChannel[4][8] = {{255, 0, 0, 0, 0, 0, 255, 0},
+                                              {255, 0, 0, 0, 0, 0, 255, 0},
+                                              {255, 0, 0, 0, 0, 0, 255, 0},
+                                              {0, 255, 0, 0, 0, 0, 0, 255}};
+    for (int row = 0; row < 4; ++row)
+    {
+        for (int col = 0; col < 8; ++col)
+        {
+            EXPECT_PIXEL_EQ(col, row, expectedRedChannel[row][col], 0, 0, 0);
+        }
+    }
+}
+
+// Test that different sequences of vertexAttribDivisor, useProgram and bindVertexArray in a
+// multi-view context propagate the correct divisor to the driver.
+TEST_P(MultiviewSideBySideRenderTest, DivisorOrderOfOperation)
+{
+    if (!requestMultiviewExtension())
+    {
+        return;
+    }
+
+    createFBO(2, 1, 2);
+
+    // Create multiview program.
+    const std::string &vs =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview2 : require\n"
+        "layout(num_views = 2) in;\n"
+        "layout(location = 0) in vec2 vPosition;\n"
+        "layout(location = 1) in float offsetX;\n"
+        "void main()\n"
+        "{\n"
+        "       vec4 p = vec4(vPosition, 0.0, 1.0);\n"
+        "       p.x += offsetX;\n"
+        "       gl_Position = p;\n"
+        "}\n";
+
+    const std::string &fs =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview2 : require\n"
+        "precision mediump float;\n"
+        "out vec4 col;\n"
+        "void main()\n"
+        "{\n"
+        "    col = vec4(1,0,0,0);\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, vs, fs);
+
+    const std::string &dummyVS =
+        "#version 300 es\n"
+        "layout(location = 0) in vec2 vPosition;\n"
+        "layout(location = 1) in float offsetX;\n"
+        "void main()\n"
+        "{\n"
+        "       gl_Position = vec4(vPosition, 0.0, 1.0);\n"
+        "}\n";
+
+    const std::string &dummyFS =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 col;\n"
+        "void main()\n"
+        "{\n"
+        "    col = vec4(0,0,0,0);\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(dummyProgram, dummyVS, dummyFS);
+
+    GLBuffer xOffsetVBO;
+    glBindBuffer(GL_ARRAY_BUFFER, xOffsetVBO);
+    const GLfloat xOffsetData[12] = {0.0f, 4.0f, 4.0f, 4.0f, 4.0f, 4.0f,
+                                     4.0f, 4.0f, 4.0f, 4.0f, 4.0f, 4.0f};
+    glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 12, xOffsetData, GL_STATIC_DRAW);
+
+    GLBuffer vertexVBO;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexVBO);
+    Vector2 kQuadVertices[6] = {Vector2(-1.f, -1.f), Vector2(1.f, -1.f), Vector2(1.f, 1.f),
+                                Vector2(-1.f, -1.f), Vector2(1.f, 1.f),  Vector2(-1.f, 1.f)};
+    glBufferData(GL_ARRAY_BUFFER, sizeof(kQuadVertices), kQuadVertices, GL_STATIC_DRAW);
+
+    GLVertexArray vao[2];
+    for (size_t i = 0u; i < 2u; ++i)
+    {
+        glBindVertexArray(vao[i]);
+
+        glBindBuffer(GL_ARRAY_BUFFER, vertexVBO);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
+        glEnableVertexAttribArray(0);
+
+        glBindBuffer(GL_ARRAY_BUFFER, xOffsetVBO);
+        glVertexAttribPointer(1, 1, GL_FLOAT, GL_FALSE, 0, 0);
+        glEnableVertexAttribArray(1);
+    }
+    ASSERT_GL_NO_ERROR();
+
+    glViewport(0, 0, 1, 1);
+    glScissor(0, 0, 1, 1);
+    glClearColor(0, 0, 0, 0);
+
+    // Clear the buffers, propagate divisor to the driver, bind the vao and keep it active.
+    // It is necessary to call draw, so that the divisor is propagated and to guarantee that dirty
+    // bits are cleared.
+    glUseProgram(dummyProgram);
+    glBindVertexArray(vao[0]);
+    glVertexAttribDivisor(1, 0);
+    glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 1);
+    glUseProgram(0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    // Check that vertexAttribDivisor uses the number of views to update the divisor.
+    glUseProgram(program);
+    glVertexAttribDivisor(1, 1);
+    glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 1);
+    EXPECT_PIXEL_EQ(0, 0, 255, 0, 0, 0);
+    EXPECT_PIXEL_EQ(1, 0, 255, 0, 0, 0);
+
+    // Clear the buffers and propagate divisor to the driver.
+    // We keep the vao active and propagate the divisor to guarantee that there are no unresolved
+    // dirty bits when useProgram is called.
+    glUseProgram(dummyProgram);
+    glVertexAttribDivisor(1, 1);
+    glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 1);
+    glUseProgram(0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    // Check that useProgram uses the number of views to update the divisor.
+    glUseProgram(program);
+    glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 1);
+    EXPECT_PIXEL_EQ(0, 0, 255, 0, 0, 0);
+    EXPECT_PIXEL_EQ(1, 0, 255, 0, 0, 0);
+
+    // We go through similar steps as before.
+    glUseProgram(dummyProgram);
+    glVertexAttribDivisor(1, 1);
+    glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 1);
+    glUseProgram(0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    // Check that bindVertexArray uses the number of views to update the divisor.
+    {
+        // Call useProgram with vao[1] being active to guarantee that useProgram will adjust the
+        // divisor for vao[1] only.
+        glBindVertexArray(vao[1]);
+        glUseProgram(program);
+        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 1);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glBindVertexArray(0);
+        ASSERT_GL_NO_ERROR();
+    }
+    // Bind vao[0] after useProgram is called to ensure that bindVertexArray is the call which
+    // adjusts the divisor.
+    glBindVertexArray(vao[0]);
+    glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 1);
+    EXPECT_PIXEL_EQ(0, 0, 255, 0, 0, 0);
+    EXPECT_PIXEL_EQ(1, 0, 255, 0, 0, 0);
+}
+
 ANGLE_INSTANTIATE_TEST(MultiviewDrawValidationTest, ES31_OPENGL());
 ANGLE_INSTANTIATE_TEST(MultiviewSideBySideRenderDualViewTest, ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(MultiviewSideBySideRenderTest, ES3_OPENGL());

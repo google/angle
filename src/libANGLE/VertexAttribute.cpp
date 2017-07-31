@@ -110,16 +110,13 @@ GLintptr ComputeVertexAttributeOffset(const VertexAttribute &attrib, const Verte
     return attrib.relativeOffset + binding.getOffset();
 }
 
-size_t ComputeVertexBindingElementCount(const VertexBinding &binding,
-                                        size_t drawCount,
-                                        size_t instanceCount)
+size_t ComputeVertexBindingElementCount(GLuint divisor, size_t drawCount, size_t instanceCount)
 {
     // For instanced rendering, we draw "instanceDrawCount" sets of "vertexDrawCount" vertices.
     //
     // A vertex attribute with a positive divisor loads one instanced vertex for every set of
     // non-instanced vertices, and the instanced vertex index advances once every "mDivisor"
     // instances.
-    GLuint divisor = binding.getDivisor();
     if (instanceCount > 0 && divisor > 0)
     {
         // When instanceDrawCount is not a multiple attrib.divisor, the division must round up.
