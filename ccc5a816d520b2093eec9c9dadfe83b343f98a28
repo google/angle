@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "960cb942_4f9e24c0",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-31T15:22:30Z",
+      "side": 1,
+      "message": "Restructured the code.",
+      "parentUuid": "95f79abd_b59a0960",
+      "range": {
+        "startLine": 314,
+        "startChar": 4,
+        "endLine": 315,
+        "endChar": 21
+      },
+      "revId": "ccc5a816d520b2093eec9c9dadfe83b343f98a28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c17bb659_91ac231a",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 2
@@ -41,6 +65,53 @@
         "startChar": 8,
         "endLine": 321,
         "endChar": 44
+      },
+      "revId": "ccc5a816d520b2093eec9c9dadfe83b343f98a28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "237fe5f9_115f31dc",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-31T15:22:30Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "c17bb659_91ac231a",
+      "range": {
+        "startLine": 320,
+        "startChar": 8,
+        "endLine": 321,
+        "endChar": 44
+      },
+      "revId": "ccc5a816d520b2093eec9c9dadfe83b343f98a28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7d570313_31368515",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-31T15:22:30Z",
+      "side": 1,
+      "message": "I changed it so that the loop starts from 0. The earlier version was also correct as the driver had the correct scissor rectangle already, but maybe the code is easier to follow with the new changes.",
+      "range": {
+        "startLine": 323,
+        "startChar": 25,
+        "endLine": 323,
+        "endChar": 26
       },
       "revId": "ccc5a816d520b2093eec9c9dadfe83b343f98a28",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -68,6 +139,30 @@
       "revId": "ccc5a816d520b2093eec9c9dadfe83b343f98a28",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9cdf4e6c_e8bc98c4",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-31T15:22:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2d7aef3d_25fdcbcf",
+      "range": {
+        "startLine": 351,
+        "startChar": 8,
+        "endLine": 352,
+        "endChar": 63
+      },
+      "revId": "ccc5a816d520b2093eec9c9dadfe83b343f98a28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
