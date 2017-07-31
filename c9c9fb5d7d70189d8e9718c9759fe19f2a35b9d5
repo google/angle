@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "df7679b6_045611f6",
+        "filename": "src/libANGLE/FramebufferAttachment.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-31T12:25:06Z",
+      "side": 1,
+      "message": "Yes, it was mostly for convenience and performance sake, but I modified the code. It\u0027s just that at some point there might be no attachments to a framebuffer, but the viewport offsets would be requested. In such cases it would be more convenient to return a const reference to the default value instead of returning a pointer to either the member or nullptr.\nDone.",
+      "parentUuid": "27125a80_b1f72672",
+      "range": {
+        "startLine": 51,
+        "startChar": 4,
+        "endLine": 51,
+        "endChar": 36
+      },
+      "revId": "c9c9fb5d7d70189d8e9718c9759fe19f2a35b9d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e0da4f79_d2bcdc1a",
         "filename": "src/libANGLE/State.h",
         "patchSetId": 7
@@ -36,6 +60,30 @@
       "writtenOn": "2017-07-28T15:45:07Z",
       "side": 1,
       "message": "These are state of the framebuffer and shouldn\u0027t be here.  Instead we can create a second set of dirty bits in StateManager11 with these and iterate over it before the other one.",
+      "range": {
+        "startLine": 370,
+        "startChar": 8,
+        "endLine": 372,
+        "endChar": 35
+      },
+      "revId": "c9c9fb5d7d70189d8e9718c9759fe19f2a35b9d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "41c2578f_8fa736f6",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 372,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-07-31T12:25:06Z",
+      "side": 1,
+      "message": "I moved those into a separate enum inside StateManagerGL. They will likely be the same for the D3D side, but let\u0027s see!",
+      "parentUuid": "e0da4f79_d2bcdc1a",
       "range": {
         "startLine": 370,
         "startChar": 8,
