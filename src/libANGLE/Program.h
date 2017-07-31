@@ -112,15 +112,24 @@ class InfoLog : angle::NonCopyable
     template <typename T>
     StreamHelper operator<<(const T &value)
     {
-        StreamHelper helper(&mStream);
+        ensureInitialized();
+        StreamHelper helper(mLazyStream.get());
         helper << value;
         return helper;
     }
 
-    std::string str() const { return mStream.str(); }
+    std::string str() const { return mLazyStream ? mLazyStream->str() : ""; }
 
   private:
-    std::stringstream mStream;
+    void ensureInitialized()
+    {
+        if (!mLazyStream)
+        {
+            mLazyStream.reset(new std::stringstream());
+        }
+    }
+
+    std::unique_ptr<std::stringstream> mLazyStream;
 };
 
 // Struct used for correlating uniforms/elements of uniform arrays to handles

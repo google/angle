@@ -205,7 +205,12 @@ InfoLog::~InfoLog()
 
 size_t InfoLog::getLength() const
 {
-    const std::string &logString = mStream.str();
+    if (!mLazyStream)
+    {
+        return 0;
+    }
+
+    const std::string &logString = mLazyStream->str();
     return logString.empty() ? 0 : logString.length() + 1;
 }
 
@@ -215,12 +220,12 @@ void InfoLog::getLog(GLsizei bufSize, GLsizei *length, char *infoLog) const
 
     if (bufSize > 0)
     {
-        const std::string str(mStream.str());
+        const std::string logString(str());
 
-        if (!str.empty())
+        if (!logString.empty())
         {
-            index = std::min(static_cast<size_t>(bufSize) - 1, str.length());
-            memcpy(infoLog, str.c_str(), index);
+            index = std::min(static_cast<size_t>(bufSize) - 1, logString.length());
+            memcpy(infoLog, logString.c_str(), index);
         }
 
         infoLog[index] = '\0';
@@ -237,6 +242,8 @@ void InfoLog::getLog(GLsizei bufSize, GLsizei *length, char *infoLog) const
 // messages, so lets remove all occurrences of this fake file path from the log.
 void InfoLog::appendSanitized(const char *message)
 {
+    ensureInitialized();
+
     std::string msg(message);
 
     size_t found;
@@ -250,7 +257,7 @@ void InfoLog::appendSanitized(const char *message)
     }
     while (found != std::string::npos);
 
-    mStream << message << std::endl;
+    *mLazyStream << message << std::endl;
 }
 
 void InfoLog::reset()
