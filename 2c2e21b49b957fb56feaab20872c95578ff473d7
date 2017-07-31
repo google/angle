@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "13c8132a_c90a856e",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 502,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-31T15:09:37Z",
+      "side": 1,
+      "message": "Please move the code in these functions into query_utils.  You can add a getter method for getting the output variable:\n\n  const sh::OutputVariable\u0026 getOutputResource(size_t index) const;",
+      "range": {
+        "startLine": 501,
+        "startChar": 4,
+        "endLine": 502,
+        "endChar": 69
+      },
+      "revId": "2c2e21b49b957fb56feaab20872c95578ff473d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8cb7aaed_59a10c80",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1141,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-31T15:09:37Z",
+      "side": 1,
+      "message": "might as well initialize this in all cases.",
+      "range": {
+        "startLine": 1138,
+        "startChar": 8,
+        "endLine": 1141,
+        "endChar": 9
+      },
+      "revId": "2c2e21b49b957fb56feaab20872c95578ff473d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ffdc5fa3_f790f975",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1141,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-31T15:09:37Z",
+      "side": 1,
+      "message": "Missing return?",
+      "revId": "2c2e21b49b957fb56feaab20872c95578ff473d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32669d05_8e69af7e",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1144,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-31T15:09:37Z",
+      "side": 1,
+      "message": "Pre-compute the property count instead of having a break in the loop.\n\n  size_t count \u003d std::min(propCount, bufSize);",
+      "range": {
+        "startLine": 1144,
+        "startChar": 4,
+        "endLine": 1144,
+        "endChar": 14
+      },
+      "revId": "2c2e21b49b957fb56feaab20872c95578ff473d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8089b818_4cda6c13",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1172,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-31T15:09:37Z",
+      "side": 1,
+      "message": "Just write to params[i] in the switch.",
+      "range": {
+        "startLine": 1172,
+        "startChar": 8,
+        "endLine": 1172,
+        "endChar": 26
+      },
+      "revId": "2c2e21b49b957fb56feaab20872c95578ff473d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
