@@ -289,4 +289,59 @@ TEST_P(MultiviewDrawValidationTest, ActiveTransformFeedback)
     glEndTransformFeedback();
 }
 
+// The test verifies that glDraw*:
+// 1) generates an INVALID_OPERATION error if the number of views in the active draw framebuffer is
+// greater than 1 and there is an active query for target GL_TIME_ELAPSED_EXT.
+// 2) does not generate any error if the number of views in the draw framebuffer is 1.
+TEST_P(MultiviewDrawValidationTest, ActiveTimeElapsedQuery)
+{
+    if (!requestMultiviewExtension())
+    {
+        return;
+    }
+
+    if (!extensionEnabled("GL_EXT_disjoint_timer_query"))
+    {
+        std::cout << "Test skipped because GL_EXT_disjoint_timer_query is not available."
+                  << std::endl;
+        return;
+    }
+
+    const GLint viewportOffsets[4] = {0, 0, 2, 0};
+    const std::string &vsSource =
+        "#version 300 es\n"
+        "void main()\n"
+        "{}\n";
+    const std::string &fsSource =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "void main()\n"
+        "{}\n";
+    ANGLE_GL_PROGRAM(program, vsSource, fsSource);
+    glUseProgram(program);
+
+    GLuint query = 0u;
+    glGenQueriesEXT(1, &query);
+    glBeginQueryEXT(GL_TIME_ELAPSED_EXT, query);
+
+    // Check first case.
+    {
+        glFramebufferTextureMultiviewSideBySideANGLE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTex2d,
+                                                     0, 2, &viewportOffsets[0]);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    }
+
+    // Check second case.
+    {
+        glFramebufferTextureMultiviewSideBySideANGLE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mTex2d,
+                                                     0, 1, &viewportOffsets[0]);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        EXPECT_GL_NO_ERROR();
+    }
+
+    glEndQueryEXT(GL_TIME_ELAPSED_EXT);
+    glDeleteQueries(1, &query);
+}
+
 ANGLE_INSTANTIATE_TEST(MultiviewDrawValidationTest, ES31_OPENGL());

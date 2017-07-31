@@ -2800,8 +2800,8 @@ bool ValidateDrawBase(ValidationContext *context, GLenum mode, GLsizei count)
     // Note: these separate values are not supported in WebGL, due to D3D's limitations. See
     // Section 6.10 of the WebGL 1.0 spec.
     Framebuffer *framebuffer = state.getDrawFramebuffer();
-    if (context->getLimitations().noSeparateStencilRefsAndMasks ||
-        context->getExtensions().webglCompatibility)
+    const Extensions &extensions = context->getExtensions();
+    if (context->getLimitations().noSeparateStencilRefsAndMasks || extensions.webglCompatibility)
     {
         const FramebufferAttachment *dsAttachment =
             framebuffer->getStencilOrDepthStencilAttachment();
@@ -2818,7 +2818,7 @@ bool ValidateDrawBase(ValidationContext *context, GLenum mode, GLsizei count)
 
         if (differentRefs || differentWritemasks || differentMasks)
         {
-            if (!context->getExtensions().webglCompatibility)
+            if (!extensions.webglCompatibility)
             {
                 ERR() << "This ANGLE implementation does not support separate front/back stencil "
                          "writemasks, reference values, or stencil mask values.";
@@ -2847,7 +2847,7 @@ bool ValidateDrawBase(ValidationContext *context, GLenum mode, GLsizei count)
         return false;
     }
 
-    if (context->getExtensions().multiview)
+    if (extensions.multiview)
     {
         const int programNumViews     = program->getNumViews();
         const int framebufferNumViews = framebuffer->getNumViews();
@@ -2866,6 +2866,16 @@ bool ValidateDrawBase(ValidationContext *context, GLenum mode, GLsizei count)
                                  << "There is an active transform feedback object "
                                     "when the number of views in the active draw "
                                     "framebuffer is greater than 1.");
+            return false;
+        }
+
+        if (extensions.disjointTimerQuery && framebufferNumViews > 1 &&
+            state.isQueryActive(GL_TIME_ELAPSED_EXT))
+        {
+            context->handleError(InvalidOperation() << "There is an active query for target "
+                                                       "GL_TIME_ELAPSED_EXT when the number of "
+                                                       "views in the active draw framebuffer is "
+                                                       "greater than 1.");
             return false;
         }
     }
@@ -2906,7 +2916,7 @@ bool ValidateDrawBase(ValidationContext *context, GLenum mode, GLsizei count)
     }
 
     // Do some additonal WebGL-specific validation
-    if (context->getExtensions().webglCompatibility)
+    if (extensions.webglCompatibility)
     {
         // Detect rendering feedback loops for WebGL.
         if (framebuffer->formsRenderingFeedbackLoopWith(state))
