@@ -93,6 +93,30 @@
       "revId": "c9c9fb5d7d70189d8e9718c9759fe19f2a35b9d5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f1ce2217_a3442fe8",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 372,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-07-31T15:25:13Z",
+      "side": 1,
+      "message": "I agree, we might have some duplicated dirty bits but I think that\u0027s preferable to putting the implementation details at this level.",
+      "parentUuid": "41c2578f_8fa736f6",
+      "range": {
+        "startLine": 370,
+        "startChar": 8,
+        "endLine": 372,
+        "endChar": 35
+      },
+      "revId": "c9c9fb5d7d70189d8e9718c9759fe19f2a35b9d5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
