@@ -473,9 +473,9 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         if (success && shouldCollectVariables(compileOptions))
         {
             ASSERT(!variablesCollected);
-            CollectVariables(root, &attributes, &outputVariables, &uniforms, &varyings,
-                             &interfaceBlocks, hashFunction, &symbolTable, shaderVersion,
-                             extensionBehavior);
+            CollectVariables(root, &attributes, &outputVariables, &uniforms, &inputVaryings,
+                             &outputVaryings, &interfaceBlocks, hashFunction, &symbolTable,
+                             shaderVersion, extensionBehavior);
             variablesCollected = true;
             if (compileOptions & SH_USE_UNUSED_STANDARD_SHARED_BLOCKS)
             {
@@ -760,7 +760,8 @@ void TCompiler::clearResults()
     attributes.clear();
     outputVariables.clear();
     uniforms.clear();
-    varyings.clear();
+    inputVaryings.clear();
+    outputVaryings.clear();
     interfaceBlocks.clear();
     variablesCollected = false;
     mGLPositionInitialized = false;
@@ -999,7 +1000,7 @@ void TCompiler::initializeOutputVariables(TIntermBlock *root)
     InitVariableList list;
     if (shaderType == GL_VERTEX_SHADER)
     {
-        for (auto var : varyings)
+        for (auto var : outputVaryings)
         {
             list.push_back(var);
             if (var.name == "gl_Position")
@@ -1063,9 +1064,16 @@ void TCompiler::writePragma(ShCompileOptions compileOptions)
 bool TCompiler::isVaryingDefined(const char *varyingName)
 {
     ASSERT(variablesCollected);
-    for (size_t ii = 0; ii < varyings.size(); ++ii)
+    for (size_t ii = 0; ii < inputVaryings.size(); ++ii)
     {
-        if (varyings[ii].name == varyingName)
+        if (inputVaryings[ii].name == varyingName)
+        {
+            return true;
+        }
+    }
+    for (size_t ii = 0; ii < outputVaryings.size(); ++ii)
+    {
+        if (outputVaryings[ii].name == varyingName)
         {
             return true;
         }

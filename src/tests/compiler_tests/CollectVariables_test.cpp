@@ -421,7 +421,7 @@ TEST_F(CollectVertexVariablesTest, VaryingInterpolation)
 
     compile(shaderString);
 
-    const std::vector<Varying> &varyings = mTranslator->getVaryings();
+    const std::vector<Varying> &varyings = mTranslator->getOutputVaryings();
     ASSERT_EQ(2u, varyings.size());
 
     const Varying *varying = &varyings[0];
@@ -825,7 +825,7 @@ TEST_F(CollectVertexVariablesTest, ViewID_OVR)
                               SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER);
 
     // The internal ViewID_OVR varying is not exposed through the ShaderVars interface.
-    const auto &varyings = mTranslator->getVaryings();
+    const auto &varyings = mTranslator->getOutputVaryings();
     ASSERT_EQ(1u, varyings.size());
     const Varying *varying = &varyings[0];
     EXPECT_EQ("gl_Position", varying->name);

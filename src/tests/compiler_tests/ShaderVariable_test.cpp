@@ -315,14 +315,14 @@ TEST(ShaderVariableTest, InvariantLeakAcrossShaders)
     };
 
     EXPECT_TRUE(sh::Compile(compiler, program1, 1, SH_VARIABLES));
-    const std::vector<sh::Varying> *varyings = sh::GetVaryings(compiler);
+    const std::vector<sh::Varying> *varyings = sh::GetOutputVaryings(compiler);
     for (const sh::Varying &varying : *varyings)
     {
         if (varying.name == "v_varying")
             EXPECT_TRUE(varying.isInvariant);
     }
     EXPECT_TRUE(sh::Compile(compiler, program2, 1, SH_VARIABLES));
-    varyings = sh::GetVaryings(compiler);
+    varyings = sh::GetOutputVaryings(compiler);
     for (const sh::Varying &varying : *varyings)
     {
         if (varying.name == "v_varying")
@@ -357,14 +357,14 @@ TEST(ShaderVariableTest, GlobalInvariantLeakAcrossShaders)
     };
 
     EXPECT_TRUE(sh::Compile(compiler, program1, 1, SH_VARIABLES));
-    const std::vector<sh::Varying> *varyings = sh::GetVaryings(compiler);
+    const std::vector<sh::Varying> *varyings = sh::GetOutputVaryings(compiler);
     for (const sh::Varying &varying : *varyings)
     {
         if (varying.name == "v_varying")
             EXPECT_TRUE(varying.isInvariant);
     }
     EXPECT_TRUE(sh::Compile(compiler, program2, 1, SH_VARIABLES));
-    varyings = sh::GetVaryings(compiler);
+    varyings = sh::GetOutputVaryings(compiler);
     for (const sh::Varying &varying : *varyings)
     {
         if (varying.name == "v_varying")
@@ -405,14 +405,14 @@ TEST(ShaderVariableTest, BuiltinInvariantVarying)
     };
 
     EXPECT_TRUE(sh::Compile(compiler, program1, 1, SH_VARIABLES));
-    const std::vector<sh::Varying> *varyings = sh::GetVaryings(compiler);
+    const std::vector<sh::Varying> *varyings = sh::GetOutputVaryings(compiler);
     for (const sh::Varying &varying : *varyings)
     {
         if (varying.name == "gl_Position")
             EXPECT_TRUE(varying.isInvariant);
     }
     EXPECT_TRUE(sh::Compile(compiler, program2, 1, SH_VARIABLES));
-    varyings = sh::GetVaryings(compiler);
+    varyings = sh::GetOutputVaryings(compiler);
     for (const sh::Varying &varying : *varyings)
     {
         if (varying.name == "gl_Position")

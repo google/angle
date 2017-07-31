@@ -536,6 +536,8 @@ const std::map<std::string, std::string> *GetNameHashingMap(const ShHandle handl
 // handle: Specifies the compiler
 const std::vector<sh::Uniform> *GetUniforms(const ShHandle handle);
 const std::vector<sh::Varying> *GetVaryings(const ShHandle handle);
+const std::vector<sh::Varying> *GetInputVaryings(const ShHandle handle);
+const std::vector<sh::Varying> *GetOutputVaryings(const ShHandle handle);
 const std::vector<sh::Attribute> *GetAttributes(const ShHandle handle);
 const std::vector<sh::OutputVariable> *GetOutputVariables(const ShHandle handle);
 const std::vector<sh::InterfaceBlock> *GetInterfaceBlocks(const ShHandle handle);

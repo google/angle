@@ -92,7 +92,8 @@ class CollectVariablesTraverser : public TIntermTraverser
     CollectVariablesTraverser(std::vector<Attribute> *attribs,
                               std::vector<OutputVariable> *outputVariables,
                               std::vector<Uniform> *uniforms,
-                              std::vector<Varying> *varyings,
+                              std::vector<Varying> *inputVaryings,
+                              std::vector<Varying> *outputVaryings,
                               std::vector<InterfaceBlock> *interfaceBlocks,
                               ShHashFunction64 hashFunction,
                               TSymbolTable *symbolTable,
@@ -116,14 +117,17 @@ class CollectVariablesTraverser : public TIntermTraverser
 
     void setBuiltInInfoFromSymbolTable(const char *name, ShaderVariable *info);
 
-    void recordBuiltInVaryingUsed(const char *name, bool *addedFlag);
+    void recordBuiltInVaryingUsed(const char *name,
+                                  bool *addedFlag,
+                                  std::vector<Varying> *varyings);
     void recordBuiltInFragmentOutputUsed(const char *name, bool *addedFlag);
     void recordBuiltInAttributeUsed(const char *name, bool *addedFlag);
 
     std::vector<Attribute> *mAttribs;
     std::vector<OutputVariable> *mOutputVariables;
     std::vector<Uniform> *mUniforms;
-    std::vector<Varying> *mVaryings;
+    std::vector<Varying> *mInputVaryings;
+    std::vector<Varying> *mOutputVaryings;
     std::vector<InterfaceBlock> *mInterfaceBlocks;
 
     std::map<std::string, InterfaceBlockField *> mInterfaceBlockFields;
@@ -155,7 +159,8 @@ CollectVariablesTraverser::CollectVariablesTraverser(
     std::vector<sh::Attribute> *attribs,
     std::vector<sh::OutputVariable> *outputVariables,
     std::vector<sh::Uniform> *uniforms,
-    std::vector<sh::Varying> *varyings,
+    std::vector<sh::Varying> *inputVaryings,
+    std::vector<sh::Varying> *outputVaryings,
     std::vector<sh::InterfaceBlock> *interfaceBlocks,
     ShHashFunction64 hashFunction,
     TSymbolTable *symbolTable,
@@ -165,7 +170,8 @@ CollectVariablesTraverser::CollectVariablesTraverser(
       mAttribs(attribs),
       mOutputVariables(outputVariables),
       mUniforms(uniforms),
-      mVaryings(varyings),
+      mInputVaryings(inputVaryings),
+      mOutputVaryings(outputVaryings),
       mInterfaceBlocks(interfaceBlocks),
       mDepthRangeAdded(false),
       mPointCoordAdded(false),
@@ -203,15 +209,18 @@ void CollectVariablesTraverser::setBuiltInInfoFromSymbolTable(const char *name,
     info->precision  = GLVariablePrecision(type);
 }
 
-void CollectVariablesTraverser::recordBuiltInVaryingUsed(const char *name, bool *addedFlag)
+void CollectVariablesTraverser::recordBuiltInVaryingUsed(const char *name,
+                                                         bool *addedFlag,
+                                                         std::vector<Varying> *varyings)
 {
+    ASSERT(varyings);
     if (!(*addedFlag))
     {
         Varying info;
         setBuiltInInfoFromSymbolTable(name, &info);
         info.staticUse   = true;
         info.isInvariant = mSymbolTable->isVaryingInvariant(name);
-        mVaryings->push_back(info);
+        varyings->push_back(info);
         (*addedFlag) = true;
     }
 }
@@ -259,9 +268,13 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
     ShaderVariable *var       = nullptr;
     const TString &symbolName = symbol->getName().getString();
 
-    if (IsVarying(symbol->getQualifier()))
+    if (IsVaryingIn(symbol->getQualifier()))
     {
-        var = FindVariable(symbolName, mVaryings);
+        var = FindVariable(symbolName, mInputVaryings);
+    }
+    else if (IsVaryingOut(symbol->getQualifier()))
+    {
+        var = FindVariable(symbolName, mOutputVaryings);
     }
     else if (symbol->getType().getBasicType() == EbtInterfaceBlock)
     {
@@ -351,13 +364,13 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
             }
             break;
             case EvqFragCoord:
-                recordBuiltInVaryingUsed("gl_FragCoord", &mFragCoordAdded);
+                recordBuiltInVaryingUsed("gl_FragCoord", &mFragCoordAdded, mInputVaryings);
                 return;
             case EvqFrontFacing:
-                recordBuiltInVaryingUsed("gl_FrontFacing", &mFrontFacingAdded);
+                recordBuiltInVaryingUsed("gl_FrontFacing", &mFrontFacingAdded, mInputVaryings);
                 return;
             case EvqPointCoord:
-                recordBuiltInVaryingUsed("gl_PointCoord", &mPointCoordAdded);
+                recordBuiltInVaryingUsed("gl_PointCoord", &mPointCoordAdded, mInputVaryings);
                 return;
             case EvqInstanceID:
                 // Whenever the SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW option is set,
@@ -384,13 +397,13 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
                 recordBuiltInAttributeUsed("gl_VertexID", &mVertexIDAdded);
                 return;
             case EvqPosition:
-                recordBuiltInVaryingUsed("gl_Position", &mPositionAdded);
+                recordBuiltInVaryingUsed("gl_Position", &mPositionAdded, mOutputVaryings);
                 return;
             case EvqPointSize:
-                recordBuiltInVaryingUsed("gl_PointSize", &mPointSizeAdded);
+                recordBuiltInVaryingUsed("gl_PointSize", &mPointSizeAdded, mOutputVaryings);
                 return;
             case EvqLastFragData:
-                recordBuiltInVaryingUsed("gl_LastFragData", &mLastFragDataAdded);
+                recordBuiltInVaryingUsed("gl_LastFragData", &mLastFragDataAdded, mInputVaryings);
                 return;
             case EvqFragColor:
                 recordBuiltInFragmentOutputUsed("gl_FragColor", &mFragColorAdded);
@@ -615,7 +628,15 @@ bool CollectVariablesTraverser::visitDeclaration(Visit, TIntermDeclaration *node
                     mUniforms->push_back(recordUniform(variable));
                     break;
                 default:
-                    mVaryings->push_back(recordVarying(variable));
+                    if (IsVaryingIn(qualifier))
+                    {
+                        mInputVaryings->push_back(recordVarying(variable));
+                    }
+                    else
+                    {
+                        ASSERT(IsVaryingOut(qualifier));
+                        mOutputVaryings->push_back(recordVarying(variable));
+                    }
                     break;
             }
         }
@@ -660,16 +681,17 @@ void CollectVariables(TIntermBlock *root,
                       std::vector<Attribute> *attributes,
                       std::vector<OutputVariable> *outputVariables,
                       std::vector<Uniform> *uniforms,
-                      std::vector<Varying> *varyings,
+                      std::vector<Varying> *inputVaryings,
+                      std::vector<Varying> *outputVaryings,
                       std::vector<InterfaceBlock> *interfaceBlocks,
                       ShHashFunction64 hashFunction,
                       TSymbolTable *symbolTable,
                       int shaderVersion,
                       const TExtensionBehavior &extensionBehavior)
 {
-    CollectVariablesTraverser collect(attributes, outputVariables, uniforms, varyings,
-                                      interfaceBlocks, hashFunction, symbolTable, shaderVersion,
-                                      extensionBehavior);
+    CollectVariablesTraverser collect(attributes, outputVariables, uniforms, inputVaryings,
+                                      outputVaryings, interfaceBlocks, hashFunction, symbolTable,
+                                      shaderVersion, extensionBehavior);
     root->traverse(&collect);
 }
 
