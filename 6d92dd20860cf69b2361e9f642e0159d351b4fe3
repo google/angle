@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b8c07b2f_4a9a5260",
+        "filename": "src/libANGLE/.Program.cpp.swp",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-01T22:32:17Z",
+      "side": 1,
+      "message": "Temporary file that should be removed.",
+      "revId": "6d92dd20860cf69b2361e9f642e0159d351b4fe3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "975cdf76_cafdbe06",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1180,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-01T22:32:17Z",
+      "side": 1,
+      "message": "Shouldn\u0027t we validate the index with ValidateProgramResourceIndex too?",
+      "revId": "6d92dd20860cf69b2361e9f642e0159d351b4fe3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
