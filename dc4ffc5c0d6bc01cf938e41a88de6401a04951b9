@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5ae98b0f_c2e800ce",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-01T15:08:13Z",
+      "side": 1,
+      "message": "nit: you don\u0027t need to add braces in switch statements unless the compiler requires it for local variables.",
+      "range": {
+        "startLine": 51,
+        "startChar": 8,
+        "endLine": 51,
+        "endChar": 9
+      },
+      "revId": "dc4ffc5c0d6bc01cf938e41a88de6401a04951b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1e3930ac_6e42d12c",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 631,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-01T15:08:13Z",
+      "side": 1,
+      "message": "same brace nit.",
+      "range": {
+        "startLine": 631,
+        "startChar": 16,
+        "endLine": 631,
+        "endChar": 17
+      },
+      "revId": "dc4ffc5c0d6bc01cf938e41a88de6401a04951b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
