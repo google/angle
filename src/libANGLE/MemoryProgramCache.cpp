@@ -16,6 +16,7 @@
 #include "libANGLE/BinaryStream.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Uniform.h"
+#include "libANGLE/histogram_macros.h"
 #include "libANGLE/renderer/ProgramImpl.h"
 #include "platform/Platform.h"
 
@@ -24,6 +25,14 @@ namespace gl
 
 namespace
 {
+enum CacheResult
+{
+    kCacheMiss,
+    kCacheHitMemory,
+    kCacheHitDisk,
+    kCacheResultMax,
+};
+
 constexpr unsigned int kWarningLimit = 3;
 
 void WriteShaderVar(BinaryOutputStream *stream, const sh::ShaderVariable &var)
@@ -534,6 +543,7 @@ LinkResult MemoryProgramCache::getProgram(const Context *context,
         ANGLE_TRY_RESULT(Deserialize(context, program, state, binaryProgram->data(),
                                      binaryProgram->size(), infoLog),
                          result);
+        ANGLE_HISTOGRAM_BOOLEAN("GPU.ANGLE.ProgramCache.LoadBinarySuccess", result.getResult());
         if (!result.getResult())
         {
             // Cache load failed, evict.
@@ -555,14 +565,41 @@ LinkResult MemoryProgramCache::getProgram(const Context *context,
 
 bool MemoryProgramCache::get(const ProgramHash &programHash, const angle::MemoryBuffer **programOut)
 {
-    return mProgramBinaryCache.get(programHash, programOut);
+    const CacheEntry *entry = nullptr;
+    if (!mProgramBinaryCache.get(programHash, &entry))
+    {
+        ANGLE_HISTOGRAM_ENUMERATION("GPU.ANGLE.ProgramCache.CacheResult", kCacheMiss,
+                                    kCacheResultMax);
+        return false;
+    }
+
+    if (entry->second == CacheSource::PutProgram)
+    {
+        ANGLE_HISTOGRAM_ENUMERATION("GPU.ANGLE.ProgramCache.CacheResult", kCacheHitMemory,
+                                    kCacheResultMax);
+    }
+    else
+    {
+        ANGLE_HISTOGRAM_ENUMERATION("GPU.ANGLE.ProgramCache.CacheResult", kCacheHitDisk,
+                                    kCacheResultMax);
+    }
+
+    *programOut = &entry->first;
+    return true;
 }
 
 bool MemoryProgramCache::getAt(size_t index,
                                ProgramHash *hashOut,
                                const angle::MemoryBuffer **programOut)
 {
-    return mProgramBinaryCache.getAt(index, hashOut, programOut);
+    const CacheEntry *entry = nullptr;
+    if (!mProgramBinaryCache.getAt(index, hashOut, &entry))
+    {
+        return false;
+    }
+
+    *programOut = &entry->first;
+    return true;
 }
 
 void MemoryProgramCache::remove(const ProgramHash &programHash)
@@ -571,11 +608,19 @@ void MemoryProgramCache::remove(const ProgramHash &programHash)
     ASSERT(result);
 }
 
-void MemoryProgramCache::put(const ProgramHash &program,
-                             angle::MemoryBuffer &&binaryProgram)
+void MemoryProgramCache::putProgram(const ProgramHash &programHash,
+                                    const Context *context,
+                                    const Program *program)
 {
-    const angle::MemoryBuffer *result =
-        mProgramBinaryCache.put(program, std::move(binaryProgram), binaryProgram.size());
+    CacheEntry newEntry;
+    Serialize(context, program, &newEntry.first);
+    newEntry.second = CacheSource::PutProgram;
+
+    ANGLE_HISTOGRAM_COUNTS("GPU.ANGLE.ProgramCache.ProgramBinarySizeBytes",
+                           static_cast<int>(newEntry.first.size()));
+
+    const CacheEntry *result =
+        mProgramBinaryCache.put(programHash, std::move(newEntry), newEntry.first.size());
     if (!result)
     {
         ERR() << "Failed to store binary program in memory cache, program is too large.";
@@ -583,17 +628,8 @@ void MemoryProgramCache::put(const ProgramHash &program,
     else
     {
         auto *platform = ANGLEPlatformCurrent();
-        platform->cacheProgram(platform, program, result->size(), result->data());
+        platform->cacheProgram(platform, programHash, result->first.size(), result->first.data());
     }
-}
-
-void MemoryProgramCache::putProgram(const ProgramHash &programHash,
-                                    const Context *context,
-                                    const Program *program)
-{
-    angle::MemoryBuffer binaryProgram;
-    Serialize(context, program, &binaryProgram);
-    put(programHash, std::move(binaryProgram));
 }
 
 void MemoryProgramCache::updateProgram(const Context *context, const Program *program)
@@ -608,13 +644,13 @@ void MemoryProgramCache::putBinary(const ProgramHash &programHash,
                                    size_t length)
 {
     // Copy the binary.
-    angle::MemoryBuffer binaryProgram;
-    binaryProgram.resize(length);
-    memcpy(binaryProgram.data(), binary, length);
+    CacheEntry newEntry;
+    newEntry.first.resize(length);
+    memcpy(newEntry.first.data(), binary, length);
+    newEntry.second = CacheSource::PutBinary;
 
     // Store the binary.
-    const angle::MemoryBuffer *result =
-        mProgramBinaryCache.put(programHash, std::move(binaryProgram), binaryProgram.size());
+    const CacheEntry *result = mProgramBinaryCache.put(programHash, std::move(newEntry), length);
     if (!result)
     {
         ERR() << "Failed to store binary program in memory cache, program is too large.";

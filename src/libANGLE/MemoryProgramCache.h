@@ -114,11 +114,14 @@ class MemoryProgramCache final : angle::NonCopyable
     size_t maxSize() const;
 
   private:
-    // Insert or update a binary program. Program contents are transferred.
-    void put(const ProgramHash &programHash,
-             angle::MemoryBuffer &&binaryProgram);
+    enum class CacheSource
+    {
+        PutProgram,
+        PutBinary,
+    };
 
-    angle::SizedMRUCache<ProgramHash, angle::MemoryBuffer> mProgramBinaryCache;
+    using CacheEntry = std::pair<angle::MemoryBuffer, CacheSource>;
+    angle::SizedMRUCache<ProgramHash, CacheEntry> mProgramBinaryCache;
     unsigned int mIssuedWarnings;
 };
 

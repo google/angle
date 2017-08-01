@@ -23,9 +23,11 @@
 #include "libANGLE/UniformLinker.h"
 #include "libANGLE/VaryingPacking.h"
 #include "libANGLE/features.h"
+#include "libANGLE/histogram_macros.h"
 #include "libANGLE/queryconversions.h"
 #include "libANGLE/renderer/GLImplFactory.h"
 #include "libANGLE/renderer/ProgramImpl.h"
+#include "platform/Platform.h"
 
 namespace gl
 {
@@ -624,6 +626,9 @@ Error Program::link(const gl::Context *context)
 {
     const auto &data = context->getContextState();
 
+    auto *platform   = ANGLEPlatformCurrent();
+    double startTime = platform->currentTime(platform);
+
     unlink();
 
     ProgramHash programHash;
@@ -631,10 +636,14 @@ Error Program::link(const gl::Context *context)
     if (cache)
     {
         ANGLE_TRY_RESULT(cache->getProgram(context, this, &mState, &programHash), mLinked);
+        ANGLE_HISTOGRAM_BOOLEAN("GPU.ANGLE.ProgramCache.LoadBinarySuccess", mLinked);
     }
 
     if (mLinked)
     {
+        double delta = platform->currentTime(platform) - startTime;
+        int us       = static_cast<int>(delta * 1000000.0);
+        ANGLE_HISTOGRAM_COUNTS("GPU.ANGLE.ProgramCache.ProgramCacheHitTimeUS", us);
         return NoError();
     }
 
@@ -785,6 +794,10 @@ Error Program::link(const gl::Context *context)
     {
         cache->putProgram(programHash, context, this);
     }
+
+    double delta = platform->currentTime(platform) - startTime;
+    int us       = static_cast<int>(delta * 1000000.0);
+    ANGLE_HISTOGRAM_COUNTS("GPU.ANGLE.ProgramCache.ProgramCacheMissTimeUS", us);
 
     return NoError();
 }
