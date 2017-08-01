@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bba4a6d5_3d75ff66",
+        "filename": "src/libANGLE/renderer/gl/ContextGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-01T14:55:14Z",
+      "side": 1,
+      "message": "Can you do this logic in RendererGL instead?  It already does some implementation-specific stuff and this would fit in better there.",
+      "range": {
+        "startLine": 157,
+        "startChar": 3,
+        "endLine": 161,
+        "endChar": 5
+      },
+      "revId": "a7ae651641591b82e27cc5dd3a98d4f871153353",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d6e722e2_de37ba4d",
+        "filename": "src/libANGLE/renderer/gl/ContextGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-01T14:55:14Z",
+      "side": 1,
+      "message": "nit: Don\u0027t modify input variables if possible, make a copy.",
+      "range": {
+        "startLine": 174,
+        "startChar": 8,
+        "endLine": 174,
+        "endChar": 21
+      },
+      "revId": "a7ae651641591b82e27cc5dd3a98d4f871153353",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
