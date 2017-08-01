@@ -60,22 +60,6 @@ bool MemoryBuffer::resize(size_t size)
     return true;
 }
 
-size_t MemoryBuffer::size() const
-{
-    return mSize;
-}
-
-const uint8_t *MemoryBuffer::data() const
-{
-    return mData;
-}
-
-uint8_t *MemoryBuffer::data()
-{
-    ASSERT(mData);
-    return mData;
-}
-
 void MemoryBuffer::fill(uint8_t datum)
 {
     if (!empty())

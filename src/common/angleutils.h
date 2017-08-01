@@ -254,4 +254,24 @@ std::string ToString(const T &value)
         return gl::InternalError() << "Integer overflow."; \
     }
 
+// The below inlining code lifted from V8.
+#if defined(__clang__) || defined(__GNUC__)
+#define ANGLE_HAS_ATTRIBUTE_ALWAYS_INLINE (__has_attribute(always_inline))
+#define ANGLE_HAS___FORCEINLINE 0
+#elif defined(_MSC_VER)
+#define ANGLE_HAS_ATTRIBUTE_ALWAYS_INLINE 0
+#define ANGLE_HAS___FORCEINLINE 1
+#else
+#define ANGLE_HAS_ATTRIBUTE_ALWAYS_INLINE 0
+#define ANGLE_HAS___FORCEINLINE 0
+#endif
+
+#if defined(NDEBUG) && ANGLE_HAS_ATTRIBUTE_ALWAYS_INLINE
+#define ANGLE_INLINE inline __attribute__((always_inline))
+#elif defined(NDEBUG) && ANGLE_HAS___FORCEINLINE
+#define ANGLE_INLINE __forceinline
+#else
+#define ANGLE_INLINE inline
+#endif
+
 #endif // COMMON_ANGLEUTILS_H_

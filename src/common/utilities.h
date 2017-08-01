@@ -23,6 +23,7 @@ namespace gl
 
 int VariableComponentCount(GLenum type);
 GLenum VariableComponentType(GLenum type);
+bool IsVariableComponentTypeBool(GLenum type);
 size_t VariableComponentSize(GLenum type);
 size_t VariableInternalSize(GLenum type);
 size_t VariableExternalSize(GLenum type);
@@ -40,6 +41,17 @@ int VariableRegisterCount(GLenum type);
 int MatrixRegisterCount(GLenum type, bool isRowMajorMatrix);
 int MatrixComponentCount(GLenum type, bool isRowMajorMatrix);
 int VariableSortOrder(GLenum type);
+
+// Inlined for speed
+ANGLE_INLINE bool IsVariableComponentTypeBool(GLenum type)
+{
+    static_assert((GL_BOOL_VEC2 == GL_BOOL + 1) && (GL_BOOL_VEC3 == GL_BOOL + 2) &&
+                      (GL_BOOL_VEC4 == GL_BOOL + 3),
+                  "GL_BOOL and GL_BOOL_VEC2-4 are contiguous");
+    ASSERT((static_cast<uint32_t>(type - GL_BOOL) <= 3) ==
+           (VariableComponentType(type) == GL_BOOL));
+    return (static_cast<uint32_t>(type - GL_BOOL) <= 3);
+}
 
 int AllocateFirstFreeBits(unsigned int *bits, unsigned int allocationSize, unsigned int bitsSize);
 

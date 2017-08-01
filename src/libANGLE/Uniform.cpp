@@ -83,18 +83,6 @@ size_t LinkedUniform::dataSize() const
     return mLazyData.size();
 }
 
-uint8_t *LinkedUniform::data()
-{
-    if (mLazyData.empty())
-    {
-        // dataSize() will init the data store.
-        size_t size = dataSize();
-        memset(mLazyData.data(), 0, size);
-    }
-
-    return mLazyData.data();
-}
-
 const uint8_t *LinkedUniform::data() const
 {
     return const_cast<LinkedUniform *>(this)->data();

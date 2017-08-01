@@ -9,6 +9,7 @@
 
 #include "common/Optional.h"
 #include "common/angleutils.h"
+#include "common/debug.h"
 
 #include <stdint.h>
 #include <cstddef>
@@ -26,11 +27,15 @@ class MemoryBuffer final : NonCopyable
     MemoryBuffer &operator=(MemoryBuffer &&other);
 
     bool resize(size_t size);
-    size_t size() const;
+    size_t size() const { return mSize; }
     bool empty() const { return mSize == 0; }
 
-    const uint8_t *data() const;
-    uint8_t *data();
+    const uint8_t *data() const { return mData; }
+    uint8_t *data()
+    {
+        ASSERT(mData);
+        return mData;
+    }
 
     void fill(uint8_t datum);
 

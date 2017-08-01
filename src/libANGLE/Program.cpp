@@ -2901,7 +2901,9 @@ GLsizei Program::setUniformInternal(GLint location, GLsizei countIn, int vectorS
         count        = maxElementCount / vectorSize;
     }
 
-    if (VariableComponentType(linkedUniform->type) == GL_BOOL)
+    // VariableComponentType(linkedUniform->type) has a dozens of compares and thus is evil for
+    // inlining with regards to code size. This version is one subtract and one compare only.
+    if (IsVariableComponentTypeBool(linkedUniform->type))
     {
         // Do a cast conversion for boolean types. From the spec:
         // "The uniform is set to FALSE if the input value is 0 or 0.0f, and set to TRUE otherwise."

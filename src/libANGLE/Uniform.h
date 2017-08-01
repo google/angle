@@ -38,7 +38,17 @@ struct LinkedUniform : public sh::Uniform
     ~LinkedUniform();
 
     size_t dataSize() const;
-    uint8_t *data();
+    uint8_t *data()
+    {
+        if (mLazyData.empty())
+        {
+            // dataSize() will init the data store.
+            size_t size = dataSize();
+            memset(mLazyData.data(), 0, size);
+        }
+
+        return mLazyData.data();
+    }
     const uint8_t *data() const;
     bool isSampler() const;
     bool isImage() const;

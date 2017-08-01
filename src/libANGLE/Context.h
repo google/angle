@@ -934,7 +934,7 @@ class Context final : public ValidationContext
 };
 
 template <EntryPoint EP, typename... ArgsT>
-void Context::gatherParams(ArgsT &&... args)
+ANGLE_INLINE void Context::gatherParams(ArgsT &&... args)
 {
     static_assert(sizeof(EntryPointParamType<EP>) <= kParamsBufferSize,
                   "Params struct too large, please increase kParamsBufferSize.");

@@ -53,7 +53,7 @@ class ParamTypeInfo
 class ParamsBase : angle::NonCopyable
 {
   public:
-    ParamsBase(Context *context, ...);
+    ParamsBase(Context *context, ...){};
 
     template <EntryPoint EP, typename... ArgsT>
     static void Factory(EntryPointParamType<EP> *objBuffer, ArgsT... args);
@@ -63,7 +63,7 @@ class ParamsBase : angle::NonCopyable
 
 // static
 template <EntryPoint EP, typename... ArgsT>
-void ParamsBase::Factory(EntryPointParamType<EP> *objBuffer, ArgsT... args)
+ANGLE_INLINE void ParamsBase::Factory(EntryPointParamType<EP> *objBuffer, ArgsT... args)
 {
     new (objBuffer) EntryPointParamType<EP>(args...);
 }
@@ -71,7 +71,10 @@ void ParamsBase::Factory(EntryPointParamType<EP> *objBuffer, ArgsT... args)
 class HasIndexRange : public ParamsBase
 {
   public:
-    HasIndexRange(Context *context, GLsizei count, GLenum type, const void *indices);
+    HasIndexRange(Context *context, GLsizei count, GLenum type, const void *indices)
+        : ParamsBase(context), mContext(context), mCount(count), mType(type), mIndices(indices)
+    {
+    }
 
     template <EntryPoint EP, typename... ArgsT>
     static void Factory(HasIndexRange *objBuffer, ArgsT... args);
