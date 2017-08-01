@@ -119,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "007f2ee6_cc150b34",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-01T14:59:32Z",
+      "side": 1,
+      "message": "Thanks, I mostly didn\u0027t want to start relying on reading back values from the StateManager because who knows what other workarounds may have been applied to them already.  This way is much clearer and future proof.",
+      "parentUuid": "7d570313_31368515",
+      "range": {
+        "startLine": 323,
+        "startChar": 25,
+        "endLine": 323,
+        "endChar": 26
+      },
+      "revId": "ccc5a816d520b2093eec9c9dadfe83b343f98a28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2d7aef3d_25fdcbcf",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 2
