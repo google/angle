@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b01d94ff_75924f87",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 540,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-01T05:03:05Z",
+      "side": 1,
+      "message": "I have added GetInputVaryings and GetOutputVaryings.",
+      "range": {
+        "startLine": 539,
+        "startChar": 0,
+        "endLine": 540,
+        "endChar": 73
+      },
+      "revId": "2e85d3b1783b140f9b0c9ef070959ab518762293",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
