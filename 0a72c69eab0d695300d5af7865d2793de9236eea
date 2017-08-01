@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f160b60e_2ef355d8",
+        "filename": "src/tests/perf_tests/DrawElementsPerf.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-01T16:38:38Z",
+      "side": 1,
+      "message": "remove mNumTris, mType, mIndexBufferChanged - query these from GetParam() or make helper methods if you really don\u0027t like to do that.",
+      "range": {
+        "startLine": 33,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 61
+      },
+      "revId": "0a72c69eab0d695300d5af7865d2793de9236eea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f6cbbdc_450dd97f",
+        "filename": "src/tests/perf_tests/DrawElementsPerf.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-01T16:38:38Z",
+      "side": 1,
+      "message": "we don\u0027t need this many permutations.",
+      "range": {
+        "startLine": 123,
+        "startChar": 0,
+        "endLine": 137,
+        "endChar": 0
+      },
+      "revId": "0a72c69eab0d695300d5af7865d2793de9236eea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c4c88b75_889200fd",
+        "filename": "src/tests/perf_tests/DrawElementsPerfParams.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-01T16:38:38Z",
+      "side": 1,
+      "message": "call the base class to get these suffixes.",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 5
+      },
+      "revId": "0a72c69eab0d695300d5af7865d2793de9236eea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "22a375a3_eae88581",
+        "filename": "src/tests/perf_tests/DrawElementsPerfParams.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-01T16:38:38Z",
+      "side": 1,
+      "message": "instead of using renderToTexture, make indexBufferChanged an option for the other config generator helper methods.",
+      "range": {
+        "startLine": 51,
+        "startChar": 23,
+        "endLine": 51,
+        "endChar": 72
+      },
+      "revId": "0a72c69eab0d695300d5af7865d2793de9236eea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad22ee10_4bb053d9",
+        "filename": "src/tests/perf_tests/DrawElementsPerfParams.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-01T16:38:38Z",
+      "side": 1,
+      "message": "remove the renderToTexture option.",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 83,
+        "endChar": 1
+      },
+      "revId": "0a72c69eab0d695300d5af7865d2793de9236eea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "70be86d7_559c0a4c",
+        "filename": "src/tests/perf_tests/DrawElementsPerfParams.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-01T16:38:38Z",
+      "side": 1,
+      "message": "no need for this. remove it.",
+      "range": {
+        "startLine": 85,
+        "startChar": 0,
+        "endLine": 92,
+        "endChar": 1
+      },
+      "revId": "0a72c69eab0d695300d5af7865d2793de9236eea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "26bc6288_279c39e6",
+        "filename": "src/tests/perf_tests/DrawElementsPerfParams.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-01T16:38:38Z",
+      "side": 1,
+      "message": "Don\u0027t think we need a separate file for these, you can define them in the class cpp file.",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 56
+      },
+      "revId": "0a72c69eab0d695300d5af7865d2793de9236eea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c45ea499_77bdd99d",
+        "filename": "src/tests/test_utils/draw_call_perf_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-01T16:38:38Z",
+      "side": 1,
+      "message": "there\u0027s no need to put this in draw_call_perf_utils.h.. put it in the cpp file as an anonymous function. Also call it CreateElementArrayBuffer to match GL terminology.",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 68
+      },
+      "revId": "0a72c69eab0d695300d5af7865d2793de9236eea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
