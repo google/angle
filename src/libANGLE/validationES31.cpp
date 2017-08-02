@@ -13,6 +13,7 @@
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/validationES.h"
+#include "libANGLE/validationES2.h"
 #include "libANGLE/validationES3.h"
 
 #include "common/utilities.h"
@@ -1257,6 +1258,55 @@ bool ValidateGetProgramInterfaceiv(Context *context,
                     << "MAX_NUM_ACTIVE_VARIABLES requires a buffer or block interface.");
                 return false;
         }
+    }
+
+    return true;
+}
+
+static bool ValidateGenOrDeleteES31(Context *context, GLint n)
+{
+    if (context->getClientVersion() < ES_3_1)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);
+        return false;
+    }
+
+    return ValidateGenOrDelete(context, n);
+}
+
+bool ValidateGenProgramPipelines(Context *context, GLint n, GLuint *)
+{
+    return ValidateGenOrDeleteES31(context, n);
+}
+
+bool ValidateDeleteProgramPipelines(Context *context, GLint n, const GLuint *)
+{
+    return ValidateGenOrDeleteES31(context, n);
+}
+
+bool ValidateBindProgramPipeline(Context *context, GLuint pipeline)
+{
+    if (context->getClientVersion() < ES_3_1)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);
+        return false;
+    }
+
+    if (!context->isProgramPipelineGenerated(pipeline))
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ObjectNotGenerated);
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateIsProgramPipeline(Context *context, GLuint pipeline)
+{
+    if (context->getClientVersion() < ES_3_1)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);
+        return false;
     }
 
     return true;

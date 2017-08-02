@@ -237,6 +237,8 @@ void State::reset(const Context *context)
     }
     mProgram = nullptr;
 
+    mProgramPipeline.set(context, nullptr);
+
     mTransformFeedback.set(context, nullptr);
 
     for (State::ActiveQueryMap::iterator i = mActiveQueries.begin(); i != mActiveQueries.end(); i++)
@@ -1156,6 +1158,16 @@ bool State::removeTransformFeedbackBinding(const Context *context, GLuint transf
     }
 
     return false;
+}
+
+void State::setProgramPipelineBinding(const Context *context, ProgramPipeline *pipeline)
+{
+    mProgramPipeline.set(context, pipeline);
+}
+
+void State::detachProgramPipeline(const Context *context, GLuint pipeline)
+{
+    mProgramPipeline.set(context, nullptr);
 }
 
 bool State::isQueryActive(const GLenum type) const

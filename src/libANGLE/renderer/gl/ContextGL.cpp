@@ -16,6 +16,7 @@
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/PathGL.h"
 #include "libANGLE/renderer/gl/ProgramGL.h"
+#include "libANGLE/renderer/gl/ProgramPipelineGL.h"
 #include "libANGLE/renderer/gl/QueryGL.h"
 #include "libANGLE/renderer/gl/RenderbufferGL.h"
 #include "libANGLE/renderer/gl/RendererGL.h"
@@ -120,6 +121,11 @@ TransformFeedbackImpl *ContextGL::createTransformFeedback(const gl::TransformFee
 SamplerImpl *ContextGL::createSampler(const gl::SamplerState &state)
 {
     return new SamplerGL(state, getFunctions(), getStateManager());
+}
+
+ProgramPipelineImpl *ContextGL::createProgramPipeline(const gl::ProgramPipelineState &data)
+{
+    return new ProgramPipelineGL(data, getFunctions());
 }
 
 std::vector<PathImpl *> ContextGL::createPaths(GLsizei range)

@@ -58,6 +58,7 @@ class Texture;
 class TransformFeedback;
 class VertexArray;
 struct VertexAttribute;
+class ProgramPipeline;
 
 class Context final : public ValidationContext
 {
@@ -85,6 +86,7 @@ class Context final : public ValidationContext
     GLuint createTexture();
     GLuint createRenderbuffer();
     GLuint createPaths(GLsizei range);
+    GLuint createProgramPipeline();
 
     void deleteBuffer(GLuint buffer);
     void deleteShader(GLuint shader);
@@ -92,6 +94,7 @@ class Context final : public ValidationContext
     void deleteTexture(GLuint texture);
     void deleteRenderbuffer(GLuint renderbuffer);
     void deletePaths(GLuint first, GLsizei range);
+    void deleteProgramPipeline(GLuint pipeline);
 
     // CHROMIUM_path_rendering
     bool hasPathData(GLuint path) const;
@@ -159,6 +162,7 @@ class Context final : public ValidationContext
     void useProgram(GLuint program);
     void bindTransformFeedback(GLenum target, GLuint transformFeedbackHandle);
     void bindDrawIndirectBuffer(GLuint bufferHandle);
+    void bindProgramPipeline(GLuint pipelineHandle);
 
     void beginQuery(GLenum target, GLuint query);
     void endQuery(GLenum target);
@@ -229,6 +233,8 @@ class Context final : public ValidationContext
     Query *getQuery(GLuint handle, bool create, GLenum type);
     Query *getQuery(GLuint handle) const;
     TransformFeedback *getTransformFeedback(GLuint handle) const;
+    ProgramPipeline *getProgramPipeline(GLuint handle) const;
+
     void objectLabel(GLenum identifier, GLuint name, GLsizei length, const GLchar *label);
     void objectPtrLabel(const void *ptr, GLsizei length, const GLchar *label);
     void getObjectLabel(GLenum identifier,
@@ -880,6 +886,10 @@ class Context final : public ValidationContext
 
     void programUniform1iv(GLuint program, GLint location, GLsizei count, const GLint *value);
 
+    void deleteProgramPipelines(GLsizei n, const GLuint *pipelines);
+    void genProgramPipelines(GLsizei n, GLuint *pipelines);
+    GLboolean isProgramPipeline(GLuint pipeline);
+
     // Consumes the error.
     void handleError(const Error &error) override;
 
@@ -953,6 +963,7 @@ class Context final : public ValidationContext
     void detachVertexArray(GLuint vertexArray);
     void detachTransformFeedback(GLuint transformFeedback);
     void detachSampler(GLuint sampler);
+    void detachProgramPipeline(GLuint pipeline);
 
     void initRendererString();
     void initVersionStrings();

@@ -15,6 +15,7 @@
 #include "angle_gl.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/Program.h"
+#include "libANGLE/ProgramPipeline.h"
 #include "libANGLE/Shader.h"
 #include "libANGLE/TransformFeedback.h"
 #include "libANGLE/VertexArray.h"
@@ -34,6 +35,7 @@ class SyncImpl;
 class FramebufferImpl;
 class PathImpl;
 class ProgramImpl;
+class ProgramPipelineImpl;
 class QueryImpl;
 class RenderbufferImpl;
 class SamplerImpl;
@@ -79,6 +81,9 @@ class GLImplFactory : angle::NonCopyable
 
     // Sampler object creation
     virtual SamplerImpl *createSampler(const gl::SamplerState &state) = 0;
+
+    // Program Pipeline object creation
+    virtual ProgramPipelineImpl *createProgramPipeline(const gl::ProgramPipelineState &data) = 0;
 
     virtual std::vector<PathImpl *> createPaths(GLsizei range) = 0;
 };

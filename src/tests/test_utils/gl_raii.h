@@ -72,6 +72,7 @@ using GLFramebuffer       = GLWrapper<glGenFramebuffers, glDeleteFramebuffers>;
 using GLRenderbuffer      = GLWrapper<glGenRenderbuffers, glDeleteRenderbuffers>;
 using GLSampler           = GLWrapper<glGenSamplers, glDeleteSamplers>;
 using GLTransformFeedback = GLWrapper<glGenTransformFeedbacks, glDeleteTransformFeedbacks>;
+using GLProgramPipeline   = GLWrapper<glGenProgramPipelines, glDeleteProgramPipelines>;
 
 // Don't use GLProgram directly, use ANGLE_GL_PROGRAM.
 namespace priv

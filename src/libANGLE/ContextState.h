@@ -21,6 +21,7 @@ class BufferManager;
 class ContextState;
 class FramebufferManager;
 class PathManager;
+class ProgramPipelineManager;
 class RenderbufferManager;
 class SamplerManager;
 class ShaderProgramManager;
@@ -85,6 +86,7 @@ class ContextState final : angle::NonCopyable
     SyncManager *mSyncs;
     PathManager *mPaths;
     FramebufferManager *mFramebuffers;
+    ProgramPipelineManager *mPipelines;
 };
 
 class ValidationContext : angle::NonCopyable
@@ -125,6 +127,7 @@ class ValidationContext : angle::NonCopyable
     bool isBufferGenerated(GLuint buffer) const;
     bool isRenderbufferGenerated(GLuint renderbuffer) const;
     bool isFramebufferGenerated(GLuint framebuffer) const;
+    bool isProgramPipelineGenerated(GLuint pipeline) const;
 
     bool usingDisplayTextureShareGroup() const;
 

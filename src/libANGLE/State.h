@@ -17,6 +17,7 @@
 #include "common/bitset_utils.h"
 #include "libANGLE/Debug.h"
 #include "libANGLE/Program.h"
+#include "libANGLE/ProgramPipeline.h"
 #include "libANGLE/RefCountObject.h"
 #include "libANGLE/Renderbuffer.h"
 #include "libANGLE/Sampler.h"
@@ -218,6 +219,10 @@ class State : public OnAttachmentDirtyReceiver, angle::NonCopyable
     void setActiveQuery(const Context *context, GLenum target, Query *query);
     GLuint getActiveQueryId(GLenum target) const;
     Query *getActiveQuery(GLenum target) const;
+
+    // Program Pipeline binding manipulation
+    void setProgramPipelineBinding(const Context *context, ProgramPipeline *pipeline);
+    void detachProgramPipeline(const Context *context, GLuint pipeline);
 
     //// Typed buffer binding point manipulation ////
     // GL_ARRAY_BUFFER
@@ -524,6 +529,7 @@ class State : public OnAttachmentDirtyReceiver, angle::NonCopyable
     Framebuffer *mDrawFramebuffer;
     BindingPointer<Renderbuffer> mRenderbuffer;
     Program *mProgram;
+    BindingPointer<ProgramPipeline> mProgramPipeline;
 
     typedef std::vector<VertexAttribCurrentValueData> VertexAttribVector;
     VertexAttribVector mVertexAttribCurrentValues;  // From glVertexAttrib

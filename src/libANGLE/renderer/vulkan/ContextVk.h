@@ -128,6 +128,9 @@ class ContextVk : public ContextImpl, public ResourceVk
     // Sampler object creation
     SamplerImpl *createSampler(const gl::SamplerState &state) override;
 
+    // Program Pipeline object creation
+    ProgramPipelineImpl *createProgramPipeline(const gl::ProgramPipelineState &data) override;
+
     // Path object creation
     std::vector<PathImpl *> createPaths(GLsizei) override;
 

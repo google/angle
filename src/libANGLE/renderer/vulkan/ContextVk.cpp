@@ -19,6 +19,7 @@
 #include "libANGLE/renderer/vulkan/FenceNVVk.h"
 #include "libANGLE/renderer/vulkan/FramebufferVk.h"
 #include "libANGLE/renderer/vulkan/ImageVk.h"
+#include "libANGLE/renderer/vulkan/ProgramPipelineVk.h"
 #include "libANGLE/renderer/vulkan/ProgramVk.h"
 #include "libANGLE/renderer/vulkan/QueryVk.h"
 #include "libANGLE/renderer/vulkan/RenderbufferVk.h"
@@ -543,6 +544,11 @@ TransformFeedbackImpl *ContextVk::createTransformFeedback(const gl::TransformFee
 SamplerImpl *ContextVk::createSampler(const gl::SamplerState &state)
 {
     return new SamplerVk(state);
+}
+
+ProgramPipelineImpl *ContextVk::createProgramPipeline(const gl::ProgramPipelineState &state)
+{
+    return new ProgramPipelineVk(state);
 }
 
 std::vector<PathImpl *> ContextVk::createPaths(GLsizei)

@@ -13,6 +13,7 @@
 #include "libANGLE/Fence.h"
 #include "libANGLE/Path.h"
 #include "libANGLE/Program.h"
+#include "libANGLE/ProgramPipeline.h"
 #include "libANGLE/Renderbuffer.h"
 #include "libANGLE/Sampler.h"
 #include "libANGLE/Shader.h"
@@ -104,6 +105,7 @@ template class TypedResourceManager<Renderbuffer, HandleAllocator, RenderbufferM
 template class TypedResourceManager<Sampler, HandleAllocator, SamplerManager>;
 template class TypedResourceManager<Sync, HandleAllocator, SyncManager>;
 template class TypedResourceManager<Framebuffer, HandleAllocator, FramebufferManager>;
+template class TypedResourceManager<ProgramPipeline, HandleAllocator, ProgramPipelineManager>;
 
 // BufferManager Implementation.
 
@@ -438,6 +440,33 @@ void FramebufferManager::invalidateFramebufferComplenessCache() const
             framebuffer.second->invalidateCompletenessCache();
         }
     }
+}
+
+// ProgramPipelineManager Implementation.
+
+// static
+ProgramPipeline *ProgramPipelineManager::AllocateNewObject(rx::GLImplFactory *factory,
+                                                           GLuint handle)
+{
+    ProgramPipeline *pipeline = new ProgramPipeline(factory, handle);
+    pipeline->addRef();
+    return pipeline;
+}
+
+// static
+void ProgramPipelineManager::DeleteObject(const Context *context, ProgramPipeline *pipeline)
+{
+    pipeline->release(context);
+}
+
+GLuint ProgramPipelineManager::createProgramPipeline()
+{
+    return AllocateEmptyObject(&mHandleAllocator, &mObjectMap);
+}
+
+ProgramPipeline *ProgramPipelineManager::getProgramPipeline(GLuint handle) const
+{
+    return mObjectMap.query(handle);
 }
 
 }  // namespace gl

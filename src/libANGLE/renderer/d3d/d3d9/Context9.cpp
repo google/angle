@@ -120,6 +120,12 @@ SamplerImpl *Context9::createSampler(const gl::SamplerState &state)
     return new SamplerD3D(state);
 }
 
+ProgramPipelineImpl *Context9::createProgramPipeline(const gl::ProgramPipelineState &data)
+{
+    UNREACHABLE();
+    return nullptr;
+}
+
 std::vector<PathImpl *> Context9::createPaths(GLsizei)
 {
     return std::vector<PathImpl *>();

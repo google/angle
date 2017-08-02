@@ -21,6 +21,7 @@
 #include "libANGLE/renderer/d3d/d3d11/Buffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/Fence11.h"
 #include "libANGLE/renderer/d3d/d3d11/Framebuffer11.h"
+#include "libANGLE/renderer/d3d/d3d11/ProgramPipeline11.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/StateManager11.h"
 #include "libANGLE/renderer/d3d/d3d11/TransformFeedback11.h"
@@ -134,6 +135,11 @@ TransformFeedbackImpl *Context11::createTransformFeedback(const gl::TransformFee
 SamplerImpl *Context11::createSampler(const gl::SamplerState &state)
 {
     return new SamplerD3D(state);
+}
+
+ProgramPipelineImpl *Context11::createProgramPipeline(const gl::ProgramPipelineState &data)
+{
+    return new ProgramPipeline11(data);
 }
 
 std::vector<PathImpl *> Context11::createPaths(GLsizei)

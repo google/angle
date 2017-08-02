@@ -116,6 +116,10 @@ bool ValidateBindImageTexture(Context *context,
                               GLenum access,
                               GLenum format);
 
+bool ValidateGenProgramPipelines(Context *context, GLint n, GLuint *pipelines);
+bool ValidateDeleteProgramPipelines(Context *context, GLint n, const GLuint *pipelines);
+bool ValidateBindProgramPipeline(Context *context, GLuint pipeline);
+bool ValidateIsProgramPipeline(Context *context, GLuint pipeline);
 }  // namespace gl
 
 #endif  // LIBANGLE_VALIDATION_ES31_H_

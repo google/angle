@@ -63,6 +63,12 @@ class NullFactory : public GLImplFactory
     // Sampler object creation
     SamplerImpl *createSampler(const gl::SamplerState &state) override { return nullptr; }
 
+    // Program Pipeline creation
+    ProgramPipelineImpl *createProgramPipeline(const gl::ProgramPipelineState &data) override
+    {
+        return nullptr;
+    }
+
     std::vector<PathImpl *> createPaths(GLsizei range) override
     {
         return std::vector<PathImpl *>();
@@ -77,6 +83,7 @@ class MockGLFactory : public GLImplFactory
     MOCK_METHOD0(createCompiler, CompilerImpl *());
     MOCK_METHOD1(createShader, ShaderImpl *(const gl::ShaderState &));
     MOCK_METHOD1(createProgram, ProgramImpl *(const gl::ProgramState &));
+    MOCK_METHOD1(createProgramPipeline, ProgramPipelineImpl *(const gl::ProgramPipelineState &));
     MOCK_METHOD1(createFramebuffer, FramebufferImpl *(const gl::FramebufferState &));
     MOCK_METHOD1(createTexture, TextureImpl *(const gl::TextureState &));
     MOCK_METHOD0(createRenderbuffer, RenderbufferImpl *());
