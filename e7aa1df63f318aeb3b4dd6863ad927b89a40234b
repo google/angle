@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7d648748_2efd175e",
+        "filename": "src/tests/gl_tests/TextureRectangleTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-02T21:12:20Z",
+      "side": 1,
+      "message": "nit: you can use ANGLE_SKIP_TEST(!extensionSupported()) or whatever",
+      "range": {
+        "startLine": 53,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 5
+      },
+      "revId": "e7aa1df63f318aeb3b4dd6863ad927b89a40234b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f951b794_1da3c537",
+        "filename": "src/tests/gl_tests/TextureRectangleTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 431,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-02T21:12:20Z",
+      "side": 1,
+      "message": "nit: closing namespace comment",
+      "revId": "e7aa1df63f318aeb3b4dd6863ad927b89a40234b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
