@@ -1171,7 +1171,6 @@ bool IsMultiviewSupported(D3D_FEATURE_LEVEL featureLevel)
 void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, const Renderer11DeviceCaps &renderer11DeviceCaps, gl::Caps *caps,
                   gl::TextureCapsMap *textureCapsMap, gl::Extensions *extensions, gl::Limitations *limitations)
 {
-    GLuint maxSamples = 0;
     D3D_FEATURE_LEVEL featureLevel = renderer11DeviceCaps.featureLevel;
     const gl::FormatSet &allFormats = gl::GetAllSizedInternalFormats();
     for (GLenum internalFormat : allFormats)
@@ -1179,8 +1178,6 @@ void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, cons
         gl::TextureCaps textureCaps = GenerateTextureFormatCaps(
             GetMaximumClientVersion(featureLevel), internalFormat, device, renderer11DeviceCaps);
         textureCapsMap->insert(internalFormat, textureCaps);
-
-        maxSamples = std::max(maxSamples, textureCaps.getMaxSamples());
 
         if (gl::GetSizedInternalFormatInfo(internalFormat).compressed)
         {
@@ -1324,9 +1321,12 @@ void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, cons
     caps->maxTransformFeedbackSeparateComponents =
         static_cast<GLuint>(GetMaximumStreamOutputSeparateComponents(featureLevel));
 
-    // Multisample limits
-    caps->maxSamples = maxSamples;
-    caps->maxColorTextureSamples = maxSamples;
+    // Defer the computation of multisample limits to Context::updateCaps() where max*Samples values
+    // are determined according to available sample counts for each individual format.
+    caps->maxSamples             = std::numeric_limits<GLint>::max();
+    caps->maxColorTextureSamples = std::numeric_limits<GLint>::max();
+    caps->maxDepthTextureSamples = std::numeric_limits<GLint>::max();
+    caps->maxIntegerSamples      = std::numeric_limits<GLint>::max();
 
     // GL extension support
     extensions->setTextureExtensionSupport(*textureCapsMap);

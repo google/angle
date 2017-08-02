@@ -140,6 +140,36 @@ TEST_P(TextureMultisampleTestES31, ValidateTextureStorageMultisampleParameters)
     ASSERT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Tests the value of MAX_INTEGER_SAMPLES is no less than 1.
+// [OpenGL ES 3.1 SPEC Table 20.40]
+TEST_P(TextureMultisampleTestES31, MaxIntegerSamples)
+{
+    GLint maxIntegerSamples;
+    glGetIntegerv(GL_MAX_INTEGER_SAMPLES, &maxIntegerSamples);
+    EXPECT_GE(maxIntegerSamples, 1);
+    EXPECT_NE(std::numeric_limits<GLint>::max(), maxIntegerSamples);
+}
+
+// Tests the value of MAX_COLOR_TEXTURE_SAMPLES is no less than 1.
+// [OpenGL ES 3.1 SPEC Table 20.40]
+TEST_P(TextureMultisampleTestES31, MaxColorTextureSamples)
+{
+    GLint maxColorTextureSamples;
+    glGetIntegerv(GL_MAX_COLOR_TEXTURE_SAMPLES, &maxColorTextureSamples);
+    EXPECT_GE(maxColorTextureSamples, 1);
+    EXPECT_NE(std::numeric_limits<GLint>::max(), maxColorTextureSamples);
+}
+
+// Tests the value of MAX_DEPTH_TEXTURE_SAMPLES is no less than 1.
+// [OpenGL ES 3.1 SPEC Table 20.40]
+TEST_P(TextureMultisampleTestES31, MaxDepthTextureSamples)
+{
+    GLint maxDepthTextureSamples;
+    glGetIntegerv(GL_MAX_DEPTH_TEXTURE_SAMPLES, &maxDepthTextureSamples);
+    EXPECT_GE(maxDepthTextureSamples, 1);
+    EXPECT_NE(std::numeric_limits<GLint>::max(), maxDepthTextureSamples);
+}
+
 ANGLE_INSTANTIATE_TEST(TextureMultisampleTest,
                        ES31_D3D11(),
                        ES3_OPENGL(),
