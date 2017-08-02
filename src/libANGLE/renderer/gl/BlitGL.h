@@ -14,6 +14,8 @@
 #include "libANGLE/angletypes.h"
 #include "libANGLE/Error.h"
 
+#include <map>
+
 namespace gl
 {
 class Framebuffer;
@@ -95,13 +97,24 @@ class BlitGL : angle::NonCopyable
     const WorkaroundsGL &mWorkarounds;
     StateManagerGL *mStateManager;
 
-    GLuint mBlitProgram;
-    GLint mTexCoordAttributeLocation;
-    GLint mSourceTextureLocation;
-    GLint mScaleLocation;
-    GLint mOffsetLocation;
-    GLint mMultiplyAlphaLocation;
-    GLint mUnMultiplyAlphaLocation;
+    struct BlitProgram
+    {
+        GLuint program                = 0;
+        GLint sourceTextureLocation   = -1;
+        GLint scaleLocation           = -1;
+        GLint offsetLocation          = -1;
+        GLint multiplyAlphaLocation   = -1;
+        GLint unMultiplyAlphaLocation = -1;
+    };
+
+    enum class BlitProgramType
+    {
+        FLOAT_TO_FLOAT,
+    };
+
+    gl::Error getBlitProgram(BlitProgramType type, BlitProgram **program);
+
+    std::map<BlitProgramType, BlitProgram> mBlitPrograms;
 
     GLuint mScratchTextures[2];
     GLuint mScratchFBO;
