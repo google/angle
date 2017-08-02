@@ -22,6 +22,30 @@
       "revId": "5d4d1a8a6881a2a0b321b3ccb6a111eedebeab0e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "14eeaea4_195e02b3",
+        "filename": "src/libANGLE/renderer/gl/RendererGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-02T13:27:57Z",
+      "side": 1,
+      "message": "Agreed, it\u0027s more readable.",
+      "parentUuid": "5f2ad5b8_10916369",
+      "range": {
+        "startLine": 256,
+        "startChar": 4,
+        "endLine": 271,
+        "endChar": 5
+      },
+      "revId": "5d4d1a8a6881a2a0b321b3ccb6a111eedebeab0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
