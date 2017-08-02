@@ -471,6 +471,69 @@ TEST_P(RobustResourceInitTest, CopyTexSubImage3DTextureWronglyInitialized)
     EXPECT_EQ(data, pixels);
 }
 
+// Test that binding an EGL surface to a texture does not cause it to be cleared.
+TEST_P(RobustResourceInitTest, BindTexImage)
+{
+    if (!setup() || getClientMajorVersion() < 3)
+    {
+        return;
+    }
+
+    if (IsOpenGL())
+    {
+        std::cout << "Robust resource init is not yet fully implemented. (" << GetParam() << ")"
+                  << std::endl;
+        return;
+    }
+
+    EGLWindow *window  = getEGLWindow();
+    EGLSurface surface = window->getSurface();
+    EGLDisplay display = window->getDisplay();
+    EGLConfig config   = window->getConfig();
+    EGLContext context = window->getContext();
+
+    EGLint surfaceType = 0;
+    eglGetConfigAttrib(display, config, EGL_SURFACE_TYPE, &surfaceType);
+    if ((surfaceType & EGL_PBUFFER_BIT) == 0)
+    {
+        std::cout << "Test skipped because EGL config cannot be used to create pbuffers."
+                  << std::endl;
+        return;
+    }
+
+    EGLint attribs[] = {
+        EGL_WIDTH,          32,
+        EGL_HEIGHT,         32,
+        EGL_TEXTURE_FORMAT, EGL_TEXTURE_RGBA,
+        EGL_TEXTURE_TARGET, EGL_TEXTURE_2D,
+        EGL_NONE,
+    };
+
+    EGLSurface pbuffer = eglCreatePbufferSurface(display, config, attribs);
+    ASSERT_NE(EGL_NO_SURFACE, pbuffer);
+
+    // Clear the pbuffer
+    eglMakeCurrent(display, pbuffer, pbuffer, context);
+    GLColor clearColor = GLColor::magenta;
+    glClearColor(clearColor.R, clearColor.G, clearColor.B, clearColor.A);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, clearColor);
+
+    // Bind the pbuffer to a texture and read its color
+    eglMakeCurrent(display, surface, surface, context);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    eglBindTexImage(display, pbuffer, EGL_BACK_BUFFER);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, clearColor);
+
+    eglDestroySurface(display, pbuffer);
+}
+
 ANGLE_INSTANTIATE_TEST(RobustResourceInitTest,
                        ES2_D3D9(),
                        ES2_D3D11(),

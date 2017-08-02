@@ -1150,7 +1150,9 @@ gl::Error TextureD3D_2D::bindTexImage(const gl::Context *context, egl::Surface *
     mTexStorage = mRenderer->createTextureStorage2D(surfaceD3D->getSwapChain());
     mEGLImageTarget = false;
 
-    mDirtyImages = true;
+    mDirtyImages = false;
+    mImageArray[0]->markClean();
+
     return gl::NoError();
 }
 
