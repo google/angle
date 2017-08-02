@@ -352,4 +352,9 @@ TEST_P(EGLContextCompatibilityTest, PbufferDifferentConfig)
     }
 }
 
+// Only run the EGLContextCompatibilityTest on release builds.  The execution time of this test
+// scales with the square of the number of configs exposed and can time out in some debug builds.
+// http://anglebug.com/2121
+#if defined(NDEBUG)
 ANGLE_INSTANTIATE_TEST(EGLContextCompatibilityTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL());
+#endif
