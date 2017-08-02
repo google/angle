@@ -16,6 +16,24 @@
       "revId": "0ff7915f55298abcaf486f2d808dee2be0591d93",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "233a741e_24a20108",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 619,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-02T16:34:55Z",
+      "side": 1,
+      "message": "Geoff is correct, you should add a test for this in StateChangeTest.cpp. We currently only call this function if the dirty bit for the divisor is flagged. If your program changes between multiview and non, you will need to dirty this bit either at the GL layer or in the implementation layer, depending on if this is a GL-back-end specific workaround or something that would apply to every back-end that implements multiview. You will also need to think about the case where the program changes, then the VAO changes after that, with a new divisor.",
+      "parentUuid": "fcc4c9f0_19215a4f",
+      "revId": "0ff7915f55298abcaf486f2d808dee2be0591d93",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
