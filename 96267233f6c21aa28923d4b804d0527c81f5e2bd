@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "490fb768_bc2125ea",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-02T16:30:18Z",
+      "side": 1,
+      "message": "can you make this into a separate patch and land it quickly? Also this should check that __GNUC__ is defined first. Also, does GNU C \u003c 5 not have __has_attribute?",
+      "range": {
+        "startLine": 258,
+        "startChar": 0,
+        "endLine": 258,
+        "endChar": 39
+      },
+      "revId": "96267233f6c21aa28923d4b804d0527c81f5e2bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "42137dfc_89b8818d",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 453,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-02T16:30:18Z",
+      "side": 1,
+      "message": "nit: spelling",
+      "range": {
+        "startLine": 453,
+        "startChar": 49,
+        "endLine": 453,
+        "endChar": 55
+      },
+      "revId": "96267233f6c21aa28923d4b804d0527c81f5e2bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
