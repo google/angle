@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e529cf5c_d647d36f",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-08-02T07:52:46Z",
+      "side": 1,
+      "message": "__has_attribute was firstly introduced in GCC 5. My old ubuntu with GCC 4.8 can\u0027t work without this change.",
+      "revId": "a31413ab7de8e15ad2ee2485a2a46cf9fba52019",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
