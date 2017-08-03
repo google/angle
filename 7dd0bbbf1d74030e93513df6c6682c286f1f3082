@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "156bac0f_50629a19",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-03T14:23:37Z",
+      "side": 1,
+      "message": "From the https://gcc.gnu.org/gcc-5/changes.html doc, it suggests doing\n\n  #ifdef __has_attribute\n\nto determine support for __has_attribute.  That seems like a better solution than checking compiler types.",
+      "range": {
+        "startLine": 258,
+        "startChar": 4,
+        "endLine": 258,
+        "endChar": 62
+      },
+      "revId": "7dd0bbbf1d74030e93513df6c6682c286f1f3082",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
