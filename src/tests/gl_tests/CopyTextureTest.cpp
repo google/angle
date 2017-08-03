@@ -1260,13 +1260,6 @@ TEST_P(CopyTextureTestES3, ES3UintFormats)
         return;
     }
 
-    if (IsOpenGL() || IsOpenGLES())
-    {
-        std::cout << "Test on OpenGL and OpenGLES because not all formats are implemented yet."
-                  << std::endl;
-        return;
-    }
-
     using GLColor32U = std::tuple<GLuint, GLuint, GLuint, GLuint>;
 
     auto testOutput = [this](GLuint texture, const GLColor32U &expectedColor) {
@@ -1350,12 +1343,22 @@ TEST_P(CopyTextureTestES3, ES3UintFormats)
     testCopyCombination(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GLColor(128, 64, 32, 128), GL_RGBA8UI,
                         GL_UNSIGNED_BYTE, false, false, true, GLColor32U(255, 128, 64, 128));
 
-    testCopyCombination(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GLColor(128, 64, 32, 128), GL_RGB8UI,
-                        GL_UNSIGNED_BYTE, false, false, false, GLColor32U(128, 64, 32, 1));
-    testCopyCombination(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GLColor(128, 64, 32, 128), GL_RGB8UI,
-                        GL_UNSIGNED_BYTE, false, true, false, GLColor32U(64, 32, 16, 1));
-    testCopyCombination(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GLColor(128, 64, 32, 128), GL_RGB8UI,
-                        GL_UNSIGNED_BYTE, false, false, true, GLColor32U(255, 128, 64, 1));
+    if (IsOpenGL() || IsOpenGLES())
+    {
+        std::cout << "Skipping GL_RGB8UI because it is not implemented yet." << std::endl;
+    }
+    else
+    {
+        testCopyCombination(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GLColor(128, 64, 32, 128),
+                            GL_RGB8UI, GL_UNSIGNED_BYTE, false, false, false,
+                            GLColor32U(128, 64, 32, 1));
+        testCopyCombination(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GLColor(128, 64, 32, 128),
+                            GL_RGB8UI, GL_UNSIGNED_BYTE, false, true, false,
+                            GLColor32U(64, 32, 16, 1));
+        testCopyCombination(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GLColor(128, 64, 32, 128),
+                            GL_RGB8UI, GL_UNSIGNED_BYTE, false, false, true,
+                            GLColor32U(255, 128, 64, 1));
+    }
 
     testCopyCombination(GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE, GLColor(128, 64, 32, 128), GL_RG8UI,
                         GL_UNSIGNED_BYTE, false, false, false, GLColor32U(128, 64, 0, 1));

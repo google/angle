@@ -37,6 +37,9 @@ struct LevelInfoGL
     // Format of the data used in this mip level.
     GLenum sourceFormat;
 
+    // Internal format used for the native call to define this texture
+    GLenum nativeInternalFormat;
+
     // If this mip level requires sampler-state re-writing so that only a red channel is exposed.
     bool depthStencilWorkaround;
 
@@ -45,6 +48,7 @@ struct LevelInfoGL
 
     LevelInfoGL();
     LevelInfoGL(GLenum sourceFormat,
+                GLenum nativeInternalFormat,
                 bool depthStencilWorkaround,
                 const LUMAWorkaroundGL &lumaWorkaround);
 };
@@ -134,6 +138,7 @@ class TextureGL : public TextureImpl
                                    size_t sourceLevel,
                                    const gl::Rectangle &sourceArea,
                                    GLenum destFormat,
+                                   GLenum destType,
                                    bool unpackFlipY,
                                    bool unpackPremultiplyAlpha,
                                    bool unpackUnmultiplyAlpha,

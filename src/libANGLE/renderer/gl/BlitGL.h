@@ -67,9 +67,11 @@ class BlitGL : angle::NonCopyable
     gl::Error copySubTexture(const gl::Context *context,
                              TextureGL *source,
                              size_t sourceLevel,
+                             GLenum sourceComponentType,
                              TextureGL *dest,
                              GLenum destTarget,
                              size_t destLevel,
+                             GLenum destComponentType,
                              const gl::Extents &sourceSize,
                              const gl::Rectangle &sourceArea,
                              const gl::Offset &destOffset,
@@ -110,8 +112,11 @@ class BlitGL : angle::NonCopyable
     enum class BlitProgramType
     {
         FLOAT_TO_FLOAT,
+        FLOAT_TO_UINT,
+        UINT_TO_UINT,
     };
 
+    static BlitProgramType getBlitProgramType(GLenum sourceComponentType, GLenum destComponentType);
     gl::Error getBlitProgram(BlitProgramType type, BlitProgram **program);
 
     std::map<BlitProgramType, BlitProgram> mBlitPrograms;

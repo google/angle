@@ -431,9 +431,11 @@ gl::Error BlitGL::blitColorBufferWithShader(const gl::Framebuffer *source,
 gl::Error BlitGL::copySubTexture(const gl::Context *context,
                                  TextureGL *source,
                                  size_t sourceLevel,
+                                 GLenum sourceComponentType,
                                  TextureGL *dest,
                                  GLenum destTarget,
                                  size_t destLevel,
+                                 GLenum destComponentType,
                                  const gl::Extents &sourceSize,
                                  const gl::Rectangle &sourceArea,
                                  const gl::Offset &destOffset,
@@ -445,8 +447,9 @@ gl::Error BlitGL::copySubTexture(const gl::Context *context,
 {
     ANGLE_TRY(initializeResources());
 
-    BlitProgram *blitProgram = nullptr;
-    ANGLE_TRY(getBlitProgram(BlitProgramType::FLOAT_TO_FLOAT, &blitProgram));
+    BlitProgramType blitProgramType = getBlitProgramType(sourceComponentType, destComponentType);
+    BlitProgram *blitProgram        = nullptr;
+    ANGLE_TRY(getBlitProgram(blitProgramType, &blitProgram));
 
     // Setup the source texture
     if (needsLumaWorkaround)
@@ -614,6 +617,30 @@ void BlitGL::setScratchTextureParameter(GLenum param, GLenum value)
     }
 }
 
+BlitGL::BlitProgramType BlitGL::getBlitProgramType(GLenum sourceComponentType,
+                                                   GLenum destComponentType)
+{
+    if (sourceComponentType == GL_UNSIGNED_INT)
+    {
+        ASSERT(destComponentType == GL_UNSIGNED_INT);
+        return BlitProgramType::UINT_TO_UINT;
+    }
+    else
+    {
+        // Source is a float type
+        ASSERT(sourceComponentType != GL_INT);
+        if (destComponentType == GL_UNSIGNED_INT)
+        {
+            return BlitProgramType::FLOAT_TO_UINT;
+        }
+        else
+        {
+            // Dest is a float type
+            return BlitProgramType::FLOAT_TO_FLOAT;
+        }
+    }
+}
+
 gl::Error BlitGL::getBlitProgram(BlitProgramType type, BlitProgram **program)
 {
     BlitProgram &result = mBlitPrograms[type];
@@ -621,58 +648,175 @@ gl::Error BlitGL::getBlitProgram(BlitProgramType type, BlitProgram **program)
     {
         result.program = mFunctions->createProgram();
 
-        // Compile the fragment shader
-        const char *vsSource =
-            "#version 100\n"
-            "varying vec2 v_texcoord;\n"
-            "uniform vec2 u_scale;\n"
-            "uniform vec2 u_offset;\n"
-            "attribute vec2 a_texcoord;\n"
-            "\n"
-            "void main()\n"
-            "{\n"
-            "    gl_Position = vec4((a_texcoord * 2.0) - 1.0, 0.0, 1.0);\n"
-            "    v_texcoord = a_texcoord * u_scale + u_offset;\n"
-            "}\n";
+        // Depending on what types need to be output by the shaders, different versions need to be
+        // used.
+        std::string version;
+        std::string vsInputVariableQualifier;
+        std::string vsOutputVariableQualifier;
+        std::string fsInputVariableQualifier;
+        std::string fsOutputVariableQualifier;
+        std::string sampleFunction;
+        if (type == BlitProgramType::FLOAT_TO_FLOAT)
+        {
+            version                   = "100";
+            vsInputVariableQualifier  = "attribute";
+            vsOutputVariableQualifier = "varying";
+            fsInputVariableQualifier  = "varying";
+            fsOutputVariableQualifier = "";
+            sampleFunction            = "texture2D";
+        }
+        else
+        {
+            // Need to use a higher version to support non-float output types
+            if (mFunctions->standard == STANDARD_GL_DESKTOP)
+            {
+                version = "330";
+            }
+            else
+            {
+                ASSERT(mFunctions->standard == STANDARD_GL_ES);
+                version = "300 es";
+            }
+            vsInputVariableQualifier  = "in";
+            vsOutputVariableQualifier = "out";
+            fsInputVariableQualifier  = "in";
+            fsOutputVariableQualifier = "out";
+            sampleFunction            = "texture";
+        }
 
-        GLuint vs = mFunctions->createShader(GL_VERTEX_SHADER);
-        mFunctions->shaderSource(vs, 1, &vsSource, nullptr);
-        mFunctions->compileShader(vs);
-        ANGLE_TRY(CheckCompileStatus(mFunctions, vs));
+        {
+            // Compile the vertex shader
+            std::ostringstream vsSourceStream;
+            vsSourceStream << "#version " << version << "\n";
+            vsSourceStream << vsInputVariableQualifier << " vec2 a_texcoord;\n";
+            vsSourceStream << "uniform vec2 u_scale;\n";
+            vsSourceStream << "uniform vec2 u_offset;\n";
+            vsSourceStream << vsOutputVariableQualifier << " vec2 v_texcoord;\n";
+            vsSourceStream << "\n";
+            vsSourceStream << "void main()\n";
+            vsSourceStream << "{\n";
+            vsSourceStream << "    gl_Position = vec4((a_texcoord * 2.0) - 1.0, 0.0, 1.0);\n";
+            vsSourceStream << "    v_texcoord = a_texcoord * u_scale + u_offset;\n";
+            vsSourceStream << "}\n";
 
-        mFunctions->attachShader(result.program, vs);
-        mFunctions->deleteShader(vs);
+            std::string vsSourceStr  = vsSourceStream.str();
+            const char *vsSourceCStr = vsSourceStr.c_str();
 
-        // Compile the vertex shader
-        // It discards if the texcoord is outside (0, 1)^2 so the blitframebuffer workaround
-        // doesn't write when the point sampled is outside of the source framebuffer.
-        const char *fsSource =
-            "#version 100\n"
-            "precision highp float;"
-            "uniform sampler2D u_source_texture;\n"
-            "uniform bool u_multiply_alpha;\n"
-            "uniform bool u_unmultiply_alpha;\n"
-            "varying vec2 v_texcoord;\n"
-            "\n"
-            "void main()\n"
-            "{\n"
-            "    if (clamp(v_texcoord, vec2(0.0), vec2(1.0)) != v_texcoord)\n"
-            "    {\n"
-            "        discard;\n"
-            "    }\n"
-            "    vec4 color = texture2D(u_source_texture, v_texcoord);\n"
-            "    if (u_multiply_alpha) {color.xyz = color.xyz * color.a;}"
-            "    if (u_unmultiply_alpha && color.a != 0.0) {color.xyz = color.xyz / color.a;}"
-            "    gl_FragColor = color;"
-            "}\n";
+            GLuint vs = mFunctions->createShader(GL_VERTEX_SHADER);
+            mFunctions->shaderSource(vs, 1, &vsSourceCStr, nullptr);
+            mFunctions->compileShader(vs);
+            ANGLE_TRY(CheckCompileStatus(mFunctions, vs));
 
-        GLuint fs = mFunctions->createShader(GL_FRAGMENT_SHADER);
-        mFunctions->shaderSource(fs, 1, &fsSource, nullptr);
-        mFunctions->compileShader(fs);
-        ANGLE_TRY(CheckCompileStatus(mFunctions, fs));
+            mFunctions->attachShader(result.program, vs);
+            mFunctions->deleteShader(vs);
+        }
 
-        mFunctions->attachShader(result.program, fs);
-        mFunctions->deleteShader(fs);
+        {
+            // Sampling texture uniform changes depending on source texture type.
+            std::string samplerType;
+            std::string samplerResultType;
+            switch (type)
+            {
+                case BlitProgramType::FLOAT_TO_FLOAT:
+                case BlitProgramType::FLOAT_TO_UINT:
+                    samplerType       = "sampler2D";
+                    samplerResultType = "vec4";
+                    break;
+
+                case BlitProgramType::UINT_TO_UINT:
+                    samplerType       = "usampler2D";
+                    samplerResultType = "uvec4";
+                    break;
+
+                default:
+                    UNREACHABLE();
+                    break;
+            }
+
+            // Output variables depend on the output type
+            std::string outputType;
+            std::string outputVariableName;
+            std::string outputMultiplier;
+            switch (type)
+            {
+                case BlitProgramType::FLOAT_TO_FLOAT:
+                    outputType         = "";
+                    outputVariableName = "gl_FragColor";
+                    outputMultiplier   = "1.0";
+                    break;
+
+                case BlitProgramType::FLOAT_TO_UINT:
+                case BlitProgramType::UINT_TO_UINT:
+                    outputType         = "uvec4";
+                    outputVariableName = "outputUint";
+                    outputMultiplier   = "255.0";
+                    break;
+
+                default:
+                    UNREACHABLE();
+                    break;
+            }
+
+            // Compile the fragment shader
+            std::ostringstream fsSourceStream;
+            fsSourceStream << "#version " << version << "\n";
+            fsSourceStream << "precision highp float;\n";
+            fsSourceStream << "uniform " << samplerType << " u_source_texture;\n";
+
+            // Write the rest of the uniforms and varyings
+            fsSourceStream << "uniform bool u_multiply_alpha;\n";
+            fsSourceStream << "uniform bool u_unmultiply_alpha;\n";
+            fsSourceStream << fsInputVariableQualifier << " vec2 v_texcoord;\n";
+            if (!outputType.empty())
+            {
+                fsSourceStream << fsOutputVariableQualifier << " " << outputType << " "
+                               << outputVariableName << ";\n";
+            }
+
+            // Write the main body
+            fsSourceStream << "\n";
+            fsSourceStream << "void main()\n";
+            fsSourceStream << "{\n";
+
+            // discard if the texcoord is outside (0, 1)^2 so the blitframebuffer workaround
+            // doesn't write when the point sampled is outside of the source framebuffer.
+            fsSourceStream << "    if (clamp(v_texcoord, vec2(0.0), vec2(1.0)) != v_texcoord)\n";
+            fsSourceStream << "    {\n";
+            fsSourceStream << "        discard;\n";
+            fsSourceStream << "    }\n";
+
+            // Sampling code depends on the input data type
+            fsSourceStream << "    " << samplerResultType << " color = " << sampleFunction
+                           << "(u_source_texture, v_texcoord);\n";
+
+            // Perform the premultiply or unmultiply alpha logic
+            fsSourceStream << "    if (u_multiply_alpha)\n";
+            fsSourceStream << "    {\n";
+            fsSourceStream << "        color.xyz = color.xyz * color.a;\n";
+            fsSourceStream << "    }\n";
+            fsSourceStream << "    if (u_unmultiply_alpha && color.a != 0.0)\n";
+            fsSourceStream << "    {\n";
+            fsSourceStream << "         color.xyz = color.xyz / color.a;\n";
+            fsSourceStream << "    }\n";
+
+            // Write the conversion to the destionation type
+            fsSourceStream << "    color = color * " << outputMultiplier << ";\n";
+
+            // Write the output assignment code
+            fsSourceStream << "    " << outputVariableName << " = " << outputType << "(color);\n";
+            fsSourceStream << "}\n";
+
+            std::string fsSourceStr  = fsSourceStream.str();
+            const char *fsSourceCStr = fsSourceStr.c_str();
+
+            GLuint fs = mFunctions->createShader(GL_FRAGMENT_SHADER);
+            mFunctions->shaderSource(fs, 1, &fsSourceCStr, nullptr);
+            mFunctions->compileShader(fs);
+            ANGLE_TRY(CheckCompileStatus(mFunctions, fs));
+
+            mFunctions->attachShader(result.program, fs);
+            mFunctions->deleteShader(fs);
+        }
 
         mFunctions->linkProgram(result.program);
         ANGLE_TRY(CheckLinkStatus(mFunctions, result.program));
