@@ -115,6 +115,7 @@ class StateManager11 final : angle::NonCopyable
     void invalidateBoundViews(const gl::Context *context);
     void invalidateVertexBuffer();
     void invalidateEverything(const gl::Context *context);
+    void invalidateViewport(const gl::Context *context);
 
     // Called from VertexArray11::updateVertexAttribStorage.
     void invalidateCurrentValueAttrib(size_t attribIndex);
@@ -199,7 +200,7 @@ class StateManager11 final : angle::NonCopyable
 
     void syncScissorRectangle(const gl::Rectangle &scissor, bool enabled);
 
-    void syncViewport(const gl::Caps *caps, const gl::Rectangle &viewport, float zNear, float zFar);
+    void syncViewport(const gl::Context *context);
 
     void checkPresentPath(const gl::Context *context);
 

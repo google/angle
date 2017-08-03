@@ -51,8 +51,6 @@
 1442 OPENGL : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_4_texture_uint_2d_array = FAIL
 
 // D3D11 Failing Tests
-1442 D3D11 : dEQP-GLES31.functional.fbo.completeness.no_attachments = FAIL
-1442 D3D11 : dEQP-GLES31.functional.fbo.no_attachments.* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_color_texture_samples_* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_depth_texture_samples_* = FAIL
@@ -83,10 +81,6 @@
 1442 D3D11 : dEQP-GLES31.functional.state_query.internal_format.renderbuffer.* = FAIL
 1679 D3D11 : dEQP-GLES31.functional.state_query.texture_level.texture_2d_multisample.* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.texture.multisample.samples* = FAIL
-1442 D3D11 : dEQP-GLES31.functional.state_query.framebuffer_default.framebuffer_default_width_get_framebuffer_parameteriv = FAIL
-1442 D3D11 : dEQP-GLES31.functional.state_query.framebuffer_default.framebuffer_default_height_get_framebuffer_parameteriv = FAIL
-1442 D3D11 : dEQP-GLES31.functional.state_query.framebuffer_default.framebuffer_default_samples_get_framebuffer_parameteriv = FAIL
-1442 D3D11 : dEQP-GLES31.functional.state_query.framebuffer_default.framebuffer_default_fixed_sample_locations_get_framebuffer_parameteriv = FAIL
 1442 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.callbacks.texture.texparameter* = SKIP
 1442 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.get_error.texture.texparameter* = SKIP
 1442 D3D11 : dEQP-GLES31.functional.debug.negative_coverage.log.texture.texparameter* = SKIP

@@ -1058,6 +1058,31 @@ size_t GetMaximumStreamOutputSeparateComponents(D3D_FEATURE_LEVEL featureLevel)
     }
 }
 
+size_t GetMaximumRenderToBufferWindowSize(D3D_FEATURE_LEVEL featureLevel)
+{
+    switch (featureLevel)
+    {
+        case D3D_FEATURE_LEVEL_11_1:
+        case D3D_FEATURE_LEVEL_11_0:
+            return D3D11_REQ_RENDER_TO_BUFFER_WINDOW_WIDTH;
+        case D3D_FEATURE_LEVEL_10_1:
+        case D3D_FEATURE_LEVEL_10_0:
+            return D3D10_REQ_RENDER_TO_BUFFER_WINDOW_WIDTH;
+
+        // REQ_RENDER_TO_BUFFER_WINDOW_WIDTH not supported on D3D11 Feature Level 9,
+        // use the maximum texture sizes
+        case D3D_FEATURE_LEVEL_9_3:
+            return D3D_FL9_3_REQ_TEXTURE2D_U_OR_V_DIMENSION;
+        case D3D_FEATURE_LEVEL_9_2:
+        case D3D_FEATURE_LEVEL_9_1:
+            return D3D_FL9_1_REQ_TEXTURE2D_U_OR_V_DIMENSION;
+
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
 IntelDriverVersion GetIntelDriverVersion(const Optional<LARGE_INTEGER> driverVersion)
 {
     if (!driverVersion.valid())
@@ -1327,6 +1352,12 @@ void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, cons
     caps->maxColorTextureSamples = std::numeric_limits<GLint>::max();
     caps->maxDepthTextureSamples = std::numeric_limits<GLint>::max();
     caps->maxIntegerSamples      = std::numeric_limits<GLint>::max();
+
+    // Framebuffer limits
+    caps->maxFramebufferSamples = std::numeric_limits<GLint>::max();
+    caps->maxFramebufferWidth =
+        static_cast<GLuint>(GetMaximumRenderToBufferWindowSize(featureLevel));
+    caps->maxFramebufferHeight = caps->maxFramebufferWidth;
 
     // GL extension support
     extensions->setTextureExtensionSupport(*textureCapsMap);

@@ -8,19 +8,20 @@
 
 #include "libANGLE/renderer/d3d/d3d11/Framebuffer11.h"
 
-#include "common/debug.h"
 #include "common/bitset_utils.h"
-#include "libANGLE/renderer/d3d/d3d11/Buffer11.h"
-#include "libANGLE/renderer/d3d/d3d11/Clear11.h"
-#include "libANGLE/renderer/d3d/d3d11/TextureStorage11.h"
-#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
-#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
-#include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
-#include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
-#include "libANGLE/renderer/d3d/TextureD3D.h"
+#include "common/debug.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/Framebuffer.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Texture.h"
+#include "libANGLE/renderer/d3d/TextureD3D.h"
+#include "libANGLE/renderer/d3d/d3d11/Buffer11.h"
+#include "libANGLE/renderer/d3d/d3d11/Clear11.h"
+#include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
+#include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
+#include "libANGLE/renderer/d3d/d3d11/TextureStorage11.h"
+#include "libANGLE/renderer/d3d/d3d11/formatutils11.h"
+#include "libANGLE/renderer/d3d/d3d11/renderer11_utils.h"
 
 using namespace angle;
 
@@ -413,6 +414,11 @@ void Framebuffer11::syncState(const gl::Context *context,
             case gl::Framebuffer::DIRTY_BIT_DRAW_BUFFERS:
             case gl::Framebuffer::DIRTY_BIT_READ_BUFFER:
                 break;
+            case gl::Framebuffer::DIRTY_BIT_DEFAULT_WIDTH:
+            case gl::Framebuffer::DIRTY_BIT_DEFAULT_HEIGHT:
+            case gl::Framebuffer::DIRTY_BIT_DEFAULT_SAMPLES:
+            case gl::Framebuffer::DIRTY_BIT_DEFAULT_FIXED_SAMPLE_LOCATIONS:
+                break;
             default:
             {
                 ASSERT(gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_0 == 0 &&
@@ -432,6 +438,12 @@ void Framebuffer11::syncState(const gl::Context *context,
 
     // Call this last to allow the state manager to take advantage of the cached render targets.
     mRenderer->getStateManager()->invalidateRenderTarget(context);
+
+    // Call this to syncViewport for framebuffer default parameters.
+    if (mState.getDefaultWidth() != 0 || mState.getDefaultHeight() != 0)
+    {
+        mRenderer->getStateManager()->invalidateViewport(context);
+    }
 }
 
 void Framebuffer11::signal(size_t channelID)
