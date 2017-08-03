@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "e9bce572_91a00745",
+        "filename": "src/libANGLE/Caps.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 703,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-03T17:06:24Z",
+      "side": 1,
+      "message": "If we make this enableableExtension instead, then the linux webgl test should pass.  We\u0027ll just make sure to enable this in the command buffer when needed.",
+      "range": {
+        "startLine": 703,
+        "startChar": 44,
+        "endLine": 703,
+        "endChar": 59
+      },
+      "revId": "e7aa1df63f318aeb3b4dd6863ad927b89a40234b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "073222eb_b56927ce",
         "filename": "src/libANGLE/ContextState.cpp",
         "patchSetId": 4
