@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4810ec9d_8426b3ab",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 696,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-03T18:05:54Z",
+      "side": 1,
+      "message": "can you make this an array of angle::GLColor? Assuming these are RGBA values.",
+      "range": {
+        "startLine": 696,
+        "startChar": 10,
+        "endLine": 696,
+        "endChar": 18
+      },
+      "revId": "d64d8d041ffd7ebd7b4bf60b3b5db092e786b917",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
