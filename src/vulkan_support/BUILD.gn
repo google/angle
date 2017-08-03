@@ -476,7 +476,7 @@ foreach(layer_info, layers) {
     }
     sources = rebase_path(layer_info[1], ".", "src")
     if (is_win) {
-      sources += [ "$vulkan_layers_dir/layers/VKLayer_$name.def" ]
+      sources += [ "$vulkan_layers_dir/layers/VkLayer_$name.def" ]
     }
   }
 }
