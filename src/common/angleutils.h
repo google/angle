@@ -255,7 +255,7 @@ std::string ToString(const T &value)
     }
 
 // The below inlining code lifted from V8.
-#if defined(__clang__) || defined(__GNUC__)
+#if defined(__clang__) || (defined(__GNUC__) && defined(__has_attribute))
 #define ANGLE_HAS_ATTRIBUTE_ALWAYS_INLINE (__has_attribute(always_inline))
 #define ANGLE_HAS___FORCEINLINE 0
 #elif defined(_MSC_VER)
