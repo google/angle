@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d28db7de_c5a717c5",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-08-03T08:22:06Z",
+      "side": 1,
+      "message": "You store duplicated data here (interfaceBlock vector \u003d uniform block vector + shader storage block vector), it seems to be not a very good design.",
+      "range": {
+        "startLine": 193,
+        "startChar": 2,
+        "endLine": 196,
+        "endChar": 0
+      },
+      "revId": "e0f4767c38c0aeb8b763807952b1fffc117a3968",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
