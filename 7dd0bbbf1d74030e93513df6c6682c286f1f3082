@@ -22,6 +22,30 @@
       "revId": "7dd0bbbf1d74030e93513df6c6682c286f1f3082",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "77f22e6f_9719bfe2",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-03T14:31:59Z",
+      "side": 1,
+      "message": "That sounds good to me.",
+      "parentUuid": "156bac0f_50629a19",
+      "range": {
+        "startLine": 258,
+        "startChar": 4,
+        "endLine": 258,
+        "endChar": 62
+      },
+      "revId": "7dd0bbbf1d74030e93513df6c6682c286f1f3082",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
