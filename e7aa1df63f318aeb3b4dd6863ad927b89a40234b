@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "073222eb_b56927ce",
+        "filename": "src/libANGLE/ContextState.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-03T17:04:53Z",
+      "side": 1,
+      "message": "Think this should be with the other enum below so it has the extension check.",
+      "range": {
+        "startLine": 218,
+        "startChar": 8,
+        "endLine": 218,
+        "endChar": 49
+      },
+      "revId": "e7aa1df63f318aeb3b4dd6863ad927b89a40234b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "7d648748_2efd175e",
         "filename": "src/tests/gl_tests/TextureRectangleTest.cpp",
         "patchSetId": 4
