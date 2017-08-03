@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "6d2dedd3_07f9af99",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 449,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-08-03T01:48:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "814cd3b7_aea6122d",
+      "range": {
+        "startLine": 449,
+        "startChar": 12,
+        "endLine": 449,
+        "endChar": 29
+      },
+      "revId": "a31413ab7de8e15ad2ee2485a2a46cf9fba52019",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "93b3848b_5942eceb",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 9
@@ -53,6 +77,30 @@
       "writtenOn": "2017-08-02T13:24:52Z",
       "side": 1,
       "message": "Shouldn\u0027t this return be in the \"!program-\u003eisLinked()\" scope?  The intention is to not write anything when the program is not linked, right?",
+      "range": {
+        "startLine": 1240,
+        "startChar": 12,
+        "endLine": 1240,
+        "endChar": 19
+      },
+      "revId": "a31413ab7de8e15ad2ee2485a2a46cf9fba52019",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a02a70c1_cac89b1e",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1240,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-08-03T01:48:39Z",
+      "side": 1,
+      "message": "Sorry for such a silly mistake! Lucky to have been caught by you.",
+      "parentUuid": "93b3848b_5942eceb",
       "range": {
         "startLine": 1240,
         "startChar": 12,
@@ -85,6 +133,30 @@
       "revId": "a31413ab7de8e15ad2ee2485a2a46cf9fba52019",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cb90f8ac_2acbfa99",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1256,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-08-03T01:48:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2e3101ee_c5951a49",
+      "range": {
+        "startLine": 1256,
+        "startChar": 16,
+        "endLine": 1256,
+        "endChar": 21
+      },
+      "revId": "a31413ab7de8e15ad2ee2485a2a46cf9fba52019",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

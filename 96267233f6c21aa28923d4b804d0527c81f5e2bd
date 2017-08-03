@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "03f14d11_711e848c",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-08-03T01:48:39Z",
+      "side": 1,
+      "message": "Moved to https://chromium-review.googlesource.com/c/599152.",
+      "parentUuid": "490fb768_bc2125ea",
+      "range": {
+        "startLine": 258,
+        "startChar": 0,
+        "endLine": 258,
+        "endChar": 39
+      },
+      "revId": "96267233f6c21aa28923d4b804d0527c81f5e2bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "42137dfc_89b8818d",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 10
@@ -45,6 +69,30 @@
       "revId": "96267233f6c21aa28923d4b804d0527c81f5e2bd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3b0a503_540d1210",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 453,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-08-03T01:48:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "42137dfc_89b8818d",
+      "range": {
+        "startLine": 453,
+        "startChar": 49,
+        "endLine": 453,
+        "endChar": 55
+      },
+      "revId": "96267233f6c21aa28923d4b804d0527c81f5e2bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
