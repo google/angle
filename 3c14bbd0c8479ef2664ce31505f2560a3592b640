@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9eb0fce7_0913d135",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 445,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-03T14:49:05Z",
+      "side": 1,
+      "message": "final nit: Please just remove this and put scopes in the case statements if they need local variables.",
+      "range": {
+        "startLine": 445,
+        "startChar": 10,
+        "endLine": 445,
+        "endChar": 16
+      },
+      "revId": "3c14bbd0c8479ef2664ce31505f2560a3592b640",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
