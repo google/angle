@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1c44ad77_9cafbc2b",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 525,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-03T23:08:12Z",
+      "side": 1,
+      "message": "This is the key thing that happens in this patch.",
+      "revId": "1da2f05ad7e8315ef691793373693dd045b0d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
