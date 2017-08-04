@@ -22,6 +22,30 @@
       "revId": "d64d8d041ffd7ebd7b4bf60b3b5db092e786b917",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "82b527c9_674ad9be",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 696,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-04T08:38:16Z",
+      "side": 1,
+      "message": "They represent only the red channel color, so it will end up being just a lot more zero\u0027s at the end.\nI hope the test is not too convoluted.",
+      "parentUuid": "4810ec9d_8426b3ab",
+      "range": {
+        "startLine": 696,
+        "startChar": 10,
+        "endLine": 696,
+        "endChar": 18
+      },
+      "revId": "d64d8d041ffd7ebd7b4bf60b3b5db092e786b917",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
