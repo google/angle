@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e88e0651_778e5f55",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 260,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-08-04T08:40:29Z",
+      "side": 0,
+      "message": "nullptr has been assigned to mProgram on line 227",
+      "revId": "44183ccead4e9a6d2609ee1521e616c8d2cdf92d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

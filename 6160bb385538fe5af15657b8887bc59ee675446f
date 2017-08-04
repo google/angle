@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7aa1f03a_5dcb98d5",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 893,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-08-04T08:40:29Z",
+      "side": 1,
+      "message": "Make the name be aligned with the other HandleAllocators.",
+      "revId": "6160bb385538fe5af15657b8887bc59ee675446f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
