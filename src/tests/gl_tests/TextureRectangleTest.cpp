@@ -52,10 +52,10 @@ TEST_P(TextureRectangleTest, TexImage2D)
 {
     ANGLE_SKIP_TEST_IF(!checkExtensionSupported());
 
-    if (IsLinux() && IsNVIDIA() && IsDesktopOpenGL())
+    if ((IsLinux() || IsWindows()) && IsNVIDIA() && IsDesktopOpenGL())
     {
         // TODO(cwallez): Investigate the failure (http://anglebug.com/2122)
-        std::cout << "Test disabled on Linux NVIDIA OpenGL." << std::endl;
+        std::cout << "Test disabled on Linux and Windows NVIDIA OpenGL." << std::endl;
         return;
     }
 
@@ -122,10 +122,10 @@ TEST_P(TextureRectangleTest, TexStorage2D)
     ANGLE_SKIP_TEST_IF(!checkExtensionSupported());
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_texture_storage"));
 
-    if (IsLinux() && IsNVIDIA() && IsDesktopOpenGL())
+    if ((IsLinux() || IsWindows()) && IsNVIDIA() && IsDesktopOpenGL())
     {
         // TODO(cwallez): Investigate the failure (http://anglebug.com/2122)
-        std::cout << "Test disabled on Linux NVIDIA OpenGL." << std::endl;
+        std::cout << "Test disabled on Linux and Windows NVIDIA OpenGL." << std::endl;
         return;
     }
 
