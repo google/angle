@@ -261,8 +261,6 @@ void State::reset(const Context *context)
         buf.set(context, nullptr);
     }
 
-    mProgram = nullptr;
-
     angle::Matrix<GLfloat>::setToIdentity(mPathMatrixProj);
     angle::Matrix<GLfloat>::setToIdentity(mPathMatrixMV);
     mPathStencilFunc = GL_ALWAYS;

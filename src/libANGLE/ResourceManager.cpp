@@ -272,7 +272,7 @@ GLuint RenderbufferManager::createRenderbuffer()
     return AllocateEmptyObject(&mHandleAllocator, &mObjectMap);
 }
 
-Renderbuffer *RenderbufferManager::getRenderbuffer(GLuint handle)
+Renderbuffer *RenderbufferManager::getRenderbuffer(GLuint handle) const
 {
     return mObjectMap.query(handle);
 }
@@ -298,12 +298,12 @@ GLuint SamplerManager::createSampler()
     return AllocateEmptyObject(&mHandleAllocator, &mObjectMap);
 }
 
-Sampler *SamplerManager::getSampler(GLuint handle)
+Sampler *SamplerManager::getSampler(GLuint handle) const
 {
     return mObjectMap.query(handle);
 }
 
-bool SamplerManager::isSampler(GLuint sampler)
+bool SamplerManager::isSampler(GLuint sampler) const
 {
     return mObjectMap.contains(sampler);
 }
@@ -325,7 +325,7 @@ GLuint FenceSyncManager::createFenceSync(rx::GLImplFactory *factory)
     return handle;
 }
 
-FenceSync *FenceSyncManager::getFenceSync(GLuint handle)
+FenceSync *FenceSyncManager::getFenceSync(GLuint handle) const
 {
     return mObjectMap.query(handle);
 }

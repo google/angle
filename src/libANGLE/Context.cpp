@@ -638,7 +638,7 @@ GLuint Context::createSampler()
 
 GLuint Context::createTransformFeedback()
 {
-    GLuint transformFeedback = mTransformFeedbackAllocator.allocate();
+    GLuint transformFeedback = mTransformFeedbackHandleAllocator.allocate();
     mTransformFeedbackMap.assign(transformFeedback, nullptr);
     return transformFeedback;
 }
@@ -845,7 +845,7 @@ void Context::deleteTransformFeedback(GLuint transformFeedback)
             transformFeedbackObject->release(this);
         }
 
-        mTransformFeedbackAllocator.release(transformFeedback);
+        mTransformFeedbackHandleAllocator.release(transformFeedback);
     }
 }
 

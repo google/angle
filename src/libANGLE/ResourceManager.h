@@ -173,7 +173,7 @@ class RenderbufferManager
 {
   public:
     GLuint createRenderbuffer();
-    Renderbuffer *getRenderbuffer(GLuint handle);
+    Renderbuffer *getRenderbuffer(GLuint handle) const;
 
     Renderbuffer *checkRenderbufferAllocation(rx::GLImplFactory *factory, GLuint handle)
     {
@@ -191,8 +191,8 @@ class SamplerManager : public TypedResourceManager<Sampler, HandleAllocator, Sam
 {
   public:
     GLuint createSampler();
-    Sampler *getSampler(GLuint handle);
-    bool isSampler(GLuint sampler);
+    Sampler *getSampler(GLuint handle) const;
+    bool isSampler(GLuint sampler) const;
 
     Sampler *checkSamplerAllocation(rx::GLImplFactory *factory, GLuint handle)
     {
@@ -210,7 +210,7 @@ class FenceSyncManager : public TypedResourceManager<FenceSync, HandleAllocator,
 {
   public:
     GLuint createFenceSync(rx::GLImplFactory *factory);
-    FenceSync *getFenceSync(GLuint handle);
+    FenceSync *getFenceSync(GLuint handle) const;
 
     static void DeleteObject(const Context *context, FenceSync *fenceSync);
 

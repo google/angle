@@ -898,7 +898,7 @@ class Context final : public ValidationContext
     HandleAllocator mVertexArrayHandleAllocator;
 
     ResourceMap<TransformFeedback> mTransformFeedbackMap;
-    HandleAllocator mTransformFeedbackAllocator;
+    HandleAllocator mTransformFeedbackHandleAllocator;
 
     const char *mVersionString;
     const char *mShadingLanguageString;
