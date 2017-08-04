@@ -22,6 +22,30 @@
       "revId": "e0f4767c38c0aeb8b763807952b1fffc117a3968",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "acc01056_5de5ebb3",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-04T07:06:10Z",
+      "side": 1,
+      "message": "I have no good idea to void copying. Like we offline talked, one thing I can do is to move the calculation of interfaceBlocks to getInterfaceBlocks() from compileTreeImpl. But when the user frequently call getInterfaceBlocks(), it\u0027s still not a good way.",
+      "parentUuid": "d28db7de_c5a717c5",
+      "range": {
+        "startLine": 193,
+        "startChar": 2,
+        "endLine": 196,
+        "endChar": 0
+      },
+      "revId": "e0f4767c38c0aeb8b763807952b1fffc117a3968",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
