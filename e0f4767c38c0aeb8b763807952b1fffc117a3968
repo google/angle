@@ -46,6 +46,30 @@
       "revId": "e0f4767c38c0aeb8b763807952b1fffc117a3968",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8aaf6329_ec564d30",
+        "filename": "src/compiler/translator/Compiler.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-08-04T08:27:55Z",
+      "side": 1,
+      "message": "OK, the new code lgtm. Maybe ANGLE folks have better solution for this.",
+      "parentUuid": "acc01056_5de5ebb3",
+      "range": {
+        "startLine": 193,
+        "startChar": 2,
+        "endLine": 196,
+        "endChar": 0
+      },
+      "revId": "e0f4767c38c0aeb8b763807952b1fffc117a3968",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
