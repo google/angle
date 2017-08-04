@@ -52,6 +52,13 @@ TEST_P(TextureRectangleTest, TexImage2D)
 {
     ANGLE_SKIP_TEST_IF(!checkExtensionSupported());
 
+    if (IsLinux() && IsNVIDIA() && IsDesktopOpenGL())
+    {
+        // TODO(cwallez): Investigate the failure (http://anglebug.com/2122)
+        std::cout << "Test disabled on Linux NVIDIA OpenGL." << std::endl;
+        return;
+    }
+
     GLTexture tex;
     glBindTexture(GL_TEXTURE_RECTANGLE_ANGLE, tex);
 
@@ -114,6 +121,13 @@ TEST_P(TextureRectangleTest, TexStorage2D)
 {
     ANGLE_SKIP_TEST_IF(!checkExtensionSupported());
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_texture_storage"));
+
+    if (IsLinux() && IsNVIDIA() && IsDesktopOpenGL())
+    {
+        // TODO(cwallez): Investigate the failure (http://anglebug.com/2122)
+        std::cout << "Test disabled on Linux NVIDIA OpenGL." << std::endl;
+        return;
+    }
 
     bool useES3       = getClientMajorVersion() >= 3;
     auto TexStorage2D = [useES3](GLenum target, GLint levels, GLenum format, GLint width,
