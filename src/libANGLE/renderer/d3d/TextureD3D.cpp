@@ -1619,7 +1619,7 @@ gl::Error TextureD3D_Cube::setCompressedSubImage(const gl::Context *context,
 gl::Error TextureD3D_Cube::copyImage(const gl::Context *context,
                                      GLenum target,
                                      size_t imageLevel,
-                                     const gl::Rectangle &sourceArea,
+                                     const gl::Rectangle &origSourceArea,
                                      GLenum internalFormat,
                                      const gl::Framebuffer *source)
 {
@@ -1629,13 +1629,43 @@ gl::Error TextureD3D_Cube::copyImage(const gl::Context *context,
 
     GLint level = static_cast<GLint>(imageLevel);
 
-    gl::Extents size(sourceArea.width, sourceArea.height, 1);
+    gl::Extents size(origSourceArea.width, origSourceArea.height, 1);
     ANGLE_TRY(redefineImage(context, static_cast<int>(faceIndex), level,
                             internalFormatInfo.sizedInternalFormat, size,
                             mRenderer->isRobustResourceInitEnabled()));
 
+    gl::Extents fbSize = source->getReadColorbuffer()->getSize();
+
+    // Does the read area extend beyond the framebuffer?
+    bool outside = origSourceArea.x < 0 || origSourceArea.y < 0 ||
+                   origSourceArea.x + origSourceArea.width > fbSize.width ||
+                   origSourceArea.y + origSourceArea.height > fbSize.height;
+
+    // In WebGL mode we need to zero the texture outside the framebuffer.
+    // If we have robust resource init, it was already zeroed by redefineImage() above, otherwise
+    // zero it explicitly.
+    // TODO(fjhenigman): When robust resource is fully implemented look into making it a
+    // prerequisite for WebGL and deleting this code.
+    if (outside && context->getExtensions().webglCompatibility &&
+        !mRenderer->isRobustResourceInitEnabled())
+    {
+        angle::MemoryBuffer *zero;
+        ANGLE_TRY(context->getZeroFilledBuffer(
+            origSourceArea.width * origSourceArea.height * internalFormatInfo.pixelBytes, &zero));
+        setImage(context, target, imageLevel, internalFormat, size, internalFormatInfo.format,
+                 internalFormatInfo.type, gl::PixelUnpackState(1, 0), zero->data());
+    }
+
+    gl::Rectangle sourceArea;
+    if (!ClipRectangle(origSourceArea, gl::Rectangle(0, 0, fbSize.width, fbSize.height),
+                       &sourceArea))
+    {
+        // Empty source area, nothing to do.
+        return gl::NoError();
+    }
+
     gl::ImageIndex index = gl::ImageIndex::MakeCube(target, level);
-    gl::Offset destOffset(0, 0, 0);
+    gl::Offset destOffset(sourceArea.x - origSourceArea.x, sourceArea.y - origSourceArea.y, 0);
 
     // If the zero max LOD workaround is active, then we can't sample from individual layers of the framebuffer in shaders,
     // so we should use the non-rendering copy path.
@@ -1665,10 +1695,20 @@ gl::Error TextureD3D_Cube::copyImage(const gl::Context *context,
 gl::Error TextureD3D_Cube::copySubImage(const gl::Context *context,
                                         GLenum target,
                                         size_t imageLevel,
-                                        const gl::Offset &destOffset,
-                                        const gl::Rectangle &sourceArea,
+                                        const gl::Offset &origDestOffset,
+                                        const gl::Rectangle &origSourceArea,
                                         const gl::Framebuffer *source)
 {
+    gl::Extents fbSize = source->getReadColorbuffer()->getSize();
+    gl::Rectangle sourceArea;
+    if (!ClipRectangle(origSourceArea, gl::Rectangle(0, 0, fbSize.width, fbSize.height),
+                       &sourceArea))
+    {
+        return gl::NoError();
+    }
+    const gl::Offset destOffset(origDestOffset.x + sourceArea.x - origSourceArea.x,
+                                origDestOffset.y + sourceArea.y - origSourceArea.y, 0);
+
     int faceIndex = static_cast<int>(gl::CubeMapTextureTargetToLayerIndex(target));
 
     GLint level          = static_cast<GLint>(imageLevel);

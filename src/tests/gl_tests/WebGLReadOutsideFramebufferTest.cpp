@@ -368,8 +368,16 @@ TEST_P(WebGLReadOutsideFramebufferTest, CopyTexSubImage2D)
 
     Main2D(&WebGLReadOutsideFramebufferTest::TestCopyTexSubImage2D, false);
 
-    // TODO(fjhenigman): Enable this test as part of a CL that lets the test pass.
-    //Main2D(&WebGLReadOutsideFramebufferTest::TestCopyTexSubImageCube, false);
+#ifdef _WIN64
+    // TODO(fjhenigman): Figure out this failure.
+    if (GetParam() == ES2_D3D11_FL9_3())
+    {
+        std::cout << "Cube map skipped on 64-bit " << GetParam() << "." << std::endl;
+        return;
+    }
+#endif
+
+    Main2D(&WebGLReadOutsideFramebufferTest::TestCopyTexSubImageCube, false);
 }
 
 // Check that copyTexImage2D sets (0,0,0,0) for pixels outside the framebuffer.
@@ -384,8 +392,16 @@ TEST_P(WebGLReadOutsideFramebufferTest, CopyTexImage2D)
 
     Main2D(&WebGLReadOutsideFramebufferTest::TestCopyTexImage2D, true);
 
-    // TODO(fjhenigman): Enable this test as part of a CL that lets the test pass.
-    //Main2D(&WebGLReadOutsideFramebufferTest::TestCopyTexImageCube, true);
+#ifdef _WIN64
+    // TODO(fjhenigman): Figure out this failure.
+    if (GetParam() == ES2_D3D11_FL9_3())
+    {
+        std::cout << "Cube map skipped on 64-bit " << GetParam() << "." << std::endl;
+        return;
+    }
+#endif
+
+    Main2D(&WebGLReadOutsideFramebufferTest::TestCopyTexImageCube, true);
 }
 
 // Check that copyTexSubImage3D does not set a destination pixel when
