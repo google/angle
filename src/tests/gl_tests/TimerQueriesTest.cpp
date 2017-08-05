@@ -312,19 +312,11 @@ TEST_P(TimerQueriesTest, TimeElapsedValidationTest)
 // Tests timer queries operating under multiple EGL contexts with mid-query switching
 TEST_P(TimerQueriesTest, TimeElapsedMulticontextTest)
 {
-    if (IsAMD() && IsOpenGL() && IsWindows())
+    if (IsAMD() && IsOpenGL())
     {
-        // TODO(jmadill): Figure out why this test is flaky on Win/AMD/OpenGL.
+        // TODO(jmadill): Figure out why this test is flaky on AMD/OpenGL.
         // http://anglebug.com/1541
-        std::cout << "Test skipped on Windows AMD OpenGL Debug." << std::endl;
-        return;
-    }
-
-    if (IsAMD() && IsOSX())
-    {
-        // TODO(cwallez): Figure out why this test is flaky on OSX/AMD.
-        // http://anglebug.com/1866
-        std::cout << "Test skipped on Mac AMD." << std::endl;
+        std::cout << "Test skipped on AMD OpenGL." << std::endl;
         return;
     }
 
