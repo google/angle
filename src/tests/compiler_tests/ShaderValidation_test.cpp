@@ -4324,3 +4324,25 @@ TEST_F(FragmentShaderValidationTest, InvalidUseOfMaxVertices)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test that using the same variable name twice in function parameters fails without crashing.
+TEST_F(FragmentShaderValidationTest, RedefinedParamInFunctionHeader)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void foo(int a, float a)\n"
+        "{\n"
+        "    return;\n"
+        "}\n"
+        "void main()\n"
+        "{\n"
+        "    my_FragColor = vec4(0.0);\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}

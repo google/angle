@@ -3005,7 +3005,7 @@ TIntermFunctionPrototype *TParseContext::createPrototypeNodeFromFunction(
                 }
                 else
                 {
-                    error(location, "redefinition", variable->getName().c_str());
+                    error(location, "redefinition", param.name->c_str());
                 }
             }
         }
