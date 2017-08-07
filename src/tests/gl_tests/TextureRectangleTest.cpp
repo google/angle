@@ -52,13 +52,6 @@ TEST_P(TextureRectangleTest, TexImage2D)
 {
     ANGLE_SKIP_TEST_IF(!checkExtensionSupported());
 
-    if ((IsLinux() || IsWindows()) && IsNVIDIA() && IsDesktopOpenGL())
-    {
-        // TODO(cwallez): Investigate the failure (http://anglebug.com/2122)
-        std::cout << "Test disabled on Linux and Windows NVIDIA OpenGL." << std::endl;
-        return;
-    }
-
     GLTexture tex;
     glBindTexture(GL_TEXTURE_RECTANGLE_ANGLE, tex);
 
@@ -78,7 +71,8 @@ TEST_P(TextureRectangleTest, TexImage2D)
     // Defining a texture of the max size is allowed
     glTexImage2D(GL_TEXTURE_RECTANGLE_ANGLE, 0, GL_RGBA, maxSize, maxSize, 0, GL_RGBA,
                  GL_UNSIGNED_BYTE, nullptr);
-    ASSERT_GL_NO_ERROR();
+    GLenum error = glGetError();
+    ASSERT_TRUE(error == GL_NO_ERROR || error == GL_OUT_OF_MEMORY);
 
     // Defining a texture of the max size is allowed
     glTexImage2D(GL_TEXTURE_RECTANGLE_ANGLE, 0, GL_RGBA, maxSize + 1, maxSize, 0, GL_RGBA,
@@ -122,13 +116,6 @@ TEST_P(TextureRectangleTest, TexStorage2D)
     ANGLE_SKIP_TEST_IF(!checkExtensionSupported());
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3 && !extensionEnabled("GL_EXT_texture_storage"));
 
-    if ((IsLinux() || IsWindows()) && IsNVIDIA() && IsDesktopOpenGL())
-    {
-        // TODO(cwallez): Investigate the failure (http://anglebug.com/2122)
-        std::cout << "Test disabled on Linux and Windows NVIDIA OpenGL." << std::endl;
-        return;
-    }
-
     bool useES3       = getClientMajorVersion() >= 3;
     auto TexStorage2D = [useES3](GLenum target, GLint levels, GLenum format, GLint width,
                                  GLint height) {
@@ -163,15 +150,16 @@ TEST_P(TextureRectangleTest, TexStorage2D)
     GLint maxSize = 0;
     glGetIntegerv(GL_MAX_RECTANGLE_TEXTURE_SIZE_ANGLE, &maxSize);
 
-    // Defining a texture of the max size is allowed
+    // Defining a texture of the max size is allowed but still allow for OOM
     {
         GLTexture tex;
         glBindTexture(GL_TEXTURE_RECTANGLE_ANGLE, tex);
         TexStorage2D(GL_TEXTURE_RECTANGLE_ANGLE, 1, GL_RGBA8UI, maxSize, maxSize);
-        ASSERT_GL_NO_ERROR();
+        GLenum error = glGetError();
+        ASSERT_TRUE(error == GL_NO_ERROR || error == GL_OUT_OF_MEMORY);
     }
 
-    // Defining a texture of the max size is allowed
+    // Defining a texture of the max size is disallowed
     {
         GLTexture tex;
         glBindTexture(GL_TEXTURE_RECTANGLE_ANGLE, tex);
