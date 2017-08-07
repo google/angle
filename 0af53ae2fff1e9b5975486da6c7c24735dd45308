@@ -16,6 +16,24 @@
       "revId": "0af53ae2fff1e9b5975486da6c7c24735dd45308",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0b37339_0f9f962f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1348,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-07T14:51:50Z",
+      "side": 1,
+      "message": "Yes, true.\nI didn\u0027t add a check for the number of views.\nThe number of views should be at least 16:\nhttps://msdn.microsoft.com/en-us/library/windows/desktop/ff819065(v\u003dvs.85).aspx",
+      "parentUuid": "6c9349ee_f0baf3f1",
+      "revId": "0af53ae2fff1e9b5975486da6c7c24735dd45308",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
