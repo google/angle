@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b40aebf5_b4acd578",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 752,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-07T15:07:35Z",
+      "side": 1,
+      "message": "Can we removed this method and corresponding member? I don\u0027t see where it is used. This would avoid the need for a mutable.",
+      "revId": "fb5198eac7b5e7c9df29f945b18226f29cabb558",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aeeef0c1_c8fb93c6",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-07T15:07:35Z",
+      "side": 1,
+      "message": "Should the naming change be propagated to mUniformHLSL too?",
+      "revId": "fb5198eac7b5e7c9df29f945b18226f29cabb558",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c66e9439_ad37ffd0",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-07T15:07:35Z",
+      "side": 1,
+      "message": "nit: there could be a \"GetVariableList\" defined for these two, and we could use GetShaderVariable\u003c\u003e here and in the next function.",
+      "revId": "fb5198eac7b5e7c9df29f945b18226f29cabb558",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
