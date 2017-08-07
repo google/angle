@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "dc647dcd_b9a59aca",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2162,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-07T15:49:03Z",
+      "side": 1,
+      "message": "Can you move this code to inside applyNumViewsToDivisor? The code in GetAdjustedDivisor that lives in the same file is very much analogous.",
+      "range": {
+        "startLine": 2158,
+        "startChar": 0,
+        "endLine": 2162,
+        "endChar": 9
+      },
+      "revId": "099ae407e143b1d538d80fb3486c4f3fcda0acbd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "77a2eea9_67f5bb8d",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-07T15:49:03Z",
+      "side": 1,
+      "message": "I\u0027d rather pass only the program here as it\u0027s all that is needed.",
+      "range": {
+        "startLine": 275,
+        "startChar": 51,
+        "endLine": 275,
+        "endChar": 77
+      },
+      "revId": "099ae407e143b1d538d80fb3486c4f3fcda0acbd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2ffd9ff0_40ade2ad",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 6
@@ -30,6 +76,120 @@
       "writtenOn": "2017-08-07T15:23:54Z",
       "side": 1,
       "message": "Setting this dirty bit is only necessary when applyNumViewsToDivisor is called, we could do it there which would simplify parts of the changes to VertexArrayGL.",
+      "revId": "099ae407e143b1d538d80fb3486c4f3fcda0acbd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bd805eb8_dd2b17ef",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 654,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-07T15:49:03Z",
+      "side": 1,
+      "message": "Code style nit: spaces around operator. Also space after comma later in the line.",
+      "range": {
+        "startLine": 654,
+        "startChar": 27,
+        "endLine": 654,
+        "endChar": 28
+      },
+      "revId": "099ae407e143b1d538d80fb3486c4f3fcda0acbd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "76acd879_6110b223",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 672,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-07T15:49:03Z",
+      "side": 1,
+      "message": "Including an explanation what is actually being drawn in a comment would be useful.",
+      "revId": "099ae407e143b1d538d80fb3486c4f3fcda0acbd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3bb2c951_30eac91d",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-07T15:49:03Z",
+      "side": 1,
+      "message": "\"expectedRedChannel\" would be a clearer name.",
+      "range": {
+        "startLine": 693,
+        "startChar": 18,
+        "endLine": 693,
+        "endChar": 32
+      },
+      "revId": "099ae407e143b1d538d80fb3486c4f3fcda0acbd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8f3c5151_1be4ae16",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-07T15:49:03Z",
+      "side": 1,
+      "message": "I think the multiview test file is a better place for this test. That way you don\u0027t have to duplicate the extension requesting code either.",
+      "revId": "099ae407e143b1d538d80fb3486c4f3fcda0acbd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c08393a_3b5a2ce0",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 639,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-07T15:49:03Z",
+      "side": 1,
+      "message": "Use gl_raii.",
+      "revId": "099ae407e143b1d538d80fb3486c4f3fcda0acbd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e13f809c_d5dc72d1",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 322,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-07T15:49:03Z",
+      "side": 1,
+      "message": "Doesn\u0027t make sense to expose these here, it makes the API of this class less clean. Just allocate a buffer in the test if you need it.",
       "revId": "099ae407e143b1d538d80fb3486c4f3fcda0acbd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
