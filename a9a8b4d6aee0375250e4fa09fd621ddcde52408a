@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "be55e8b2_589a0f35",
+        "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-07T15:10:58Z",
+      "side": 1,
+      "message": "Why the changes from EXPECT to ASSERT here? It looks ok, but it is weird that it is done only in this test.",
+      "revId": "a9a8b4d6aee0375250e4fa09fd621ddcde52408a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
