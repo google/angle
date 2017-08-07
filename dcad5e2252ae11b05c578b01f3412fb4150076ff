@@ -1,0 +1,216 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bc8afd07_d02d2af7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-07T04:29:35Z",
+      "side": 1,
+      "message": "S -\u003e s ?",
+      "range": {
+        "startLine": 94,
+        "startChar": 14,
+        "endLine": 94,
+        "endChar": 15
+      },
+      "revId": "dcad5e2252ae11b05c578b01f3412fb4150076ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "214d1b23_17ae7e11",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SamplePosition11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-07T04:29:35Z",
+      "side": 1,
+      "message": "Can you explain why only these two formats are valid?",
+      "range": {
+        "startLine": 140,
+        "startChar": 0,
+        "endLine": 144,
+        "endChar": 41
+      },
+      "revId": "dcad5e2252ae11b05c578b01f3412fb4150076ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f1631d92_ed74b493",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SamplePosition11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-07T04:29:35Z",
+      "side": 1,
+      "message": "Can you directly use mReadBuffer to Map so that we can avoid once \u0027CopyResource\u0027?",
+      "revId": "dcad5e2252ae11b05c578b01f3412fb4150076ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "74a67d8f_6bec8bfe",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SamplePosition11.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-07T04:29:35Z",
+      "side": 1,
+      "message": "Rename to SamplePosition",
+      "range": {
+        "startLine": 55,
+        "startChar": 11,
+        "endLine": 55,
+        "endChar": 18
+      },
+      "revId": "dcad5e2252ae11b05c578b01f3412fb4150076ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "252ade62_fc0732fe",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2982,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-07T04:29:35Z",
+      "side": 1,
+      "message": "Not needed?",
+      "revId": "dcad5e2252ae11b05c578b01f3412fb4150076ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "479cb8b8_3646418b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3059,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-07T04:29:35Z",
+      "side": 1,
+      "message": "Same",
+      "revId": "dcad5e2252ae11b05c578b01f3412fb4150076ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cbae1abf_3b00f586",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/SamplePosition11.hlsl",
+        "patchSetId": 8
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-07T04:29:35Z",
+      "side": 1,
+      "message": "Don\u0027t needed?",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 4
+      },
+      "revId": "dcad5e2252ae11b05c578b01f3412fb4150076ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38b3c171_5c14deec",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/SamplePosition11.hlsl",
+        "patchSetId": 8
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-07T04:29:35Z",
+      "side": 1,
+      "message": "rename to SamplePosition?",
+      "range": {
+        "startLine": 10,
+        "startChar": 7,
+        "endLine": 10,
+        "endChar": 14
+      },
+      "revId": "dcad5e2252ae11b05c578b01f3412fb4150076ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "741d851c_b052e7e3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/SamplePosition11.hlsl",
+        "patchSetId": 8
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-07T04:29:35Z",
+      "side": 1,
+      "message": "Rename to SamplePositionsBuffer?",
+      "range": {
+        "startLine": 14,
+        "startChar": 28,
+        "endLine": 14,
+        "endChar": 37
+      },
+      "revId": "dcad5e2252ae11b05c578b01f3412fb4150076ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df89ee33_cbcef8b3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/compiled/sampleposition_vs.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-07T04:29:35Z",
+      "side": 1,
+      "message": "Do you run \u0027gl cl format\u0027 for these compiled/sampleposition*.h?",
+      "range": {
+        "startLine": 11,
+        "startChar": 67,
+        "endLine": 11,
+        "endChar": 69
+      },
+      "revId": "dcad5e2252ae11b05c578b01f3412fb4150076ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
