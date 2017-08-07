@@ -453,6 +453,36 @@ bool FramebufferState::hasStencil() const
     return (mStencilAttachment.isAttached() && mStencilAttachment.getStencilSize() > 0);
 }
 
+GLsizei FramebufferState::getNumViews() const
+{
+    const FramebufferAttachment *attachment = getFirstNonNullAttachment();
+    if (attachment == nullptr)
+    {
+        return FramebufferAttachment::kDefaultNumViews;
+    }
+    return attachment->getNumViews();
+}
+
+const std::vector<Offset> *FramebufferState::getViewportOffsets() const
+{
+    const FramebufferAttachment *attachment = getFirstNonNullAttachment();
+    if (attachment == nullptr)
+    {
+        return nullptr;
+    }
+    return &attachment->getMultiviewViewportOffsets();
+}
+
+GLenum FramebufferState::getMultiviewLayout() const
+{
+    const FramebufferAttachment *attachment = getFirstNonNullAttachment();
+    if (attachment == nullptr)
+    {
+        return GL_NONE;
+    }
+    return attachment->getMultiviewLayout();
+}
+
 Framebuffer::Framebuffer(const Caps &caps, rx::GLImplFactory *factory, GLuint id)
     : mState(caps),
       mImpl(factory->createFramebuffer(mState)),
@@ -1619,32 +1649,17 @@ int Framebuffer::getSamples(const ValidationContext *context)
 
 GLsizei Framebuffer::getNumViews() const
 {
-    const FramebufferAttachment *attachment = getFirstNonNullAttachment();
-    if (attachment == nullptr)
-    {
-        return FramebufferAttachment::kDefaultNumViews;
-    }
-    return attachment->getNumViews();
+    return mState.getNumViews();
 }
 
 const std::vector<Offset> *Framebuffer::getViewportOffsets() const
 {
-    const FramebufferAttachment *attachment = getFirstNonNullAttachment();
-    if (attachment == nullptr)
-    {
-        return nullptr;
-    }
-    return &attachment->getMultiviewViewportOffsets();
+    return mState.getViewportOffsets();
 }
 
 GLenum Framebuffer::getMultiviewLayout() const
 {
-    const FramebufferAttachment *attachment = getFirstNonNullAttachment();
-    if (attachment == nullptr)
-    {
-        return GL_NONE;
-    }
-    return attachment->getMultiviewLayout();
+    return mState.getMultiviewLayout();
 }
 
 }  // namespace gl

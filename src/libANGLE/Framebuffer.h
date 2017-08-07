@@ -92,6 +92,10 @@ class FramebufferState final : angle::NonCopyable
     bool hasDepth() const;
     bool hasStencil() const;
 
+    GLenum getMultiviewLayout() const;
+    GLsizei getNumViews() const;
+    const std::vector<Offset> *getViewportOffsets() const;
+
   private:
     friend class Framebuffer;
 
