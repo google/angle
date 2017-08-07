@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2ffd9ff0_40ade2ad",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 635,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-07T15:23:54Z",
+      "side": 1,
+      "message": "We can replace context-\u003egetGLState().getProgram().getNumViews() with mAppliedNumViews.",
+      "revId": "099ae407e143b1d538d80fb3486c4f3fcda0acbd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b7d012ce_f3faddaa",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 655,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-07T15:23:54Z",
+      "side": 1,
+      "message": "Setting this dirty bit is only necessary when applyNumViewsToDivisor is called, we could do it there which would simplify parts of the changes to VertexArrayGL.",
+      "revId": "099ae407e143b1d538d80fb3486c4f3fcda0acbd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
