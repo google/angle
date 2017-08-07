@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6c9349ee_f0baf3f1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1348,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-07T14:25:01Z",
+      "side": 1,
+      "message": "Multiview should be disabled in case the feature level is less than 11 and the required viewports/scissors can\u0027t be supported.",
+      "revId": "0af53ae2fff1e9b5975486da6c7c24735dd45308",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
