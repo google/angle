@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "49ee7953_f326947a",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1025,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-08T05:54:31Z",
+      "side": 1,
+      "message": "Compute shader has no outputs, so I think this function shouldn\u0027t be called for a compute shader.",
+      "parentUuid": "57aea092_3ed4b424",
+      "range": {
+        "startLine": 1025,
+        "startChar": 8,
+        "endLine": 1025,
+        "endChar": 49
+      },
+      "revId": "16b6e648eb64da4fb7fc4e9583fbd789d6b4a580",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8d975cb1_f71871b0",
         "filename": "src/compiler/translator/Initialize.cpp",
         "patchSetId": 9
@@ -36,6 +60,30 @@
       "writtenOn": "2017-08-07T07:00:16Z",
       "side": 1,
       "message": "How about \u0027Add built-in variable array gl_in[]\u0027?",
+      "range": {
+        "startLine": 950,
+        "startChar": 15,
+        "endLine": 950,
+        "endChar": 57
+      },
+      "revId": "16b6e648eb64da4fb7fc4e9583fbd789d6b4a580",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38877a9b_43d634d4",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 950,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-08T05:54:31Z",
+      "side": 1,
+      "message": "I think it is better to call gl_in an interface block.",
+      "parentUuid": "8d975cb1_f71871b0",
       "range": {
         "startLine": 950,
         "startChar": 15,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "e05ebbde_a2898612",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-08T05:54:31Z",
+      "side": 1,
+      "message": "gl_in is an input, so it cannot be l-value, just like the inputs of vertex, fragment and other geometry shader.",
+      "parentUuid": "b691cb2d_147e66b8",
+      "range": {
+        "startLine": 529,
+        "startChar": 0,
+        "endLine": 530,
+        "endChar": 57
+      },
+      "revId": "16b6e648eb64da4fb7fc4e9583fbd789d6b4a580",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "98ee74ab_3e688c8f",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 9
@@ -82,6 +154,30 @@
       "writtenOn": "2017-08-07T07:00:16Z",
       "side": 1,
       "message": "What about \u0027EvqBuffer\u0027?",
+      "range": {
+        "startLine": 3732,
+        "startChar": 16,
+        "endLine": 3732,
+        "endChar": 31
+      },
+      "revId": "16b6e648eb64da4fb7fc4e9583fbd789d6b4a580",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b69436a5_92d32a64",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 3732,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-08T05:54:31Z",
+      "side": 1,
+      "message": "Oh I missed it. Thanks to point out this!\nI believe we need a unit test to verify a shader storage block array can only be indexed by constant integral expressions.",
+      "parentUuid": "98ee74ab_3e688c8f",
       "range": {
         "startLine": 3732,
         "startChar": 16,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "cfda078e_581cd572",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-08T05:54:31Z",
+      "side": 1,
+      "message": "The size of gl_in is unknown before we meet a valid input primitive declaration, and the inputs of geometry shader can also be unsized arrays.\n\nI need this bool to indicate the gl_in and other unsized geometry shader input interface blocks are unsized interface block arrays.",
+      "parentUuid": "9b0ba2fc_483dccc3",
+      "range": {
+        "startLine": 154,
+        "startChar": 25,
+        "endLine": 154,
+        "endChar": 32
+      },
+      "revId": "16b6e648eb64da4fb7fc4e9583fbd789d6b4a580",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "45610786_81c4edbf",
         "filename": "src/compiler/translator/VariableInfo.cpp",
         "patchSetId": 9
@@ -128,6 +248,30 @@
       "writtenOn": "2017-08-07T07:00:16Z",
       "side": 1,
       "message": "Can you directly use \u0027if (blockNode-\u003egetType().getQualifier() \u003d\u003d EvqPerVertexIn)\u0027 ?",
+      "range": {
+        "startLine": 740,
+        "startChar": 0,
+        "endLine": 750,
+        "endChar": 74
+      },
+      "revId": "16b6e648eb64da4fb7fc4e9583fbd789d6b4a580",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "97e0c586_b37eb5e0",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 750,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-08T05:54:31Z",
+      "side": 1,
+      "message": "Here the blockNode is an IntermBinary (gl_in[index]), whose qualifier isn\u0027t EvqPerVertexIn.\nIt is the left operator that represents gl_in whose qualifier is EvqPerVertexIn.",
+      "parentUuid": "45610786_81c4edbf",
       "range": {
         "startLine": 740,
         "startChar": 0,
