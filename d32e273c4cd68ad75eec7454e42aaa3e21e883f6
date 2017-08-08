@@ -46,6 +46,30 @@
       "revId": "d32e273c4cd68ad75eec7454e42aaa3e21e883f6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "11163241_b42c88be",
+        "filename": "src/tests/gl_tests/TextureRectangleTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-08T21:36:57Z",
+      "side": 1,
+      "message": "It is allowed but not guaranteed to not return an OOM error.  In this case we just want to make sure that this limit is working.\n\nWe should also eventually add error checks after GL calls that would allocate memory.",
+      "parentUuid": "b703e57b_8f0ee5e7",
+      "range": {
+        "startLine": 163,
+        "startChar": 64,
+        "endLine": 163,
+        "endChar": 80
+      },
+      "revId": "d32e273c4cd68ad75eec7454e42aaa3e21e883f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
