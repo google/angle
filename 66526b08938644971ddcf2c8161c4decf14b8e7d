@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a8f9a291_847b0b7b",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 715,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-08T17:28:02Z",
+      "side": 1,
+      "message": "This call isn\u0027t needed because the dirty bit will case this to be called on syncState.",
+      "revId": "66526b08938644971ddcf2c8161c4decf14b8e7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
