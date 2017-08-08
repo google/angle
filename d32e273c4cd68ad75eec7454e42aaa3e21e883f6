@@ -22,6 +22,30 @@
       "revId": "d32e273c4cd68ad75eec7454e42aaa3e21e883f6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b703e57b_8f0ee5e7",
+        "filename": "src/tests/gl_tests/TextureRectangleTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 163,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-08-08T21:22:35Z",
+      "side": 1,
+      "message": "Briefly reading the spec makes me think that maxSize x maxSize texture is actually allowed.\nPerhaps the failure is AMD driver bug and the skip I added should remain?",
+      "parentUuid": "5b0c5341_1eb15ac5",
+      "range": {
+        "startLine": 163,
+        "startChar": 64,
+        "endLine": 163,
+        "endChar": 80
+      },
+      "revId": "d32e273c4cd68ad75eec7454e42aaa3e21e883f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
