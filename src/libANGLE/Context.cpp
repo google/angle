@@ -3142,7 +3142,23 @@ void Context::framebufferTextureMultiviewLayeredANGLE(GLenum target,
                                                       GLint baseViewIndex,
                                                       GLsizei numViews)
 {
-    UNIMPLEMENTED();
+    Framebuffer *framebuffer = mGLState.getTargetFramebuffer(target);
+    ASSERT(framebuffer);
+
+    if (texture != 0)
+    {
+        Texture *textureObj = getTexture(texture);
+
+        ImageIndex index = ImageIndex::Make2DArray(level, baseViewIndex);
+        framebuffer->setAttachmentMultiviewLayered(this, GL_TEXTURE, attachment, index, textureObj,
+                                                   numViews, baseViewIndex);
+    }
+    else
+    {
+        framebuffer->resetAttachment(this, attachment);
+    }
+
+    mGLState.setObjectDirty(target);
 }
 
 void Context::framebufferTextureMultiviewSideBySideANGLE(GLenum target,

@@ -1244,6 +1244,19 @@ void Framebuffer::setAttachment(const Context *context,
                                          viewportOffsets);
 }
 
+void Framebuffer::setAttachmentMultiviewLayered(const Context *context,
+                                                GLenum type,
+                                                GLenum binding,
+                                                const ImageIndex &textureIndex,
+                                                FramebufferAttachmentObject *resource,
+                                                GLsizei numViews,
+                                                GLint baseViewIndex)
+{
+    setAttachment(context, type, binding, textureIndex, resource, numViews, baseViewIndex,
+                  GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE,
+                  FramebufferAttachment::kDefaultViewportOffsets);
+}
+
 void Framebuffer::setAttachmentMultiviewSideBySide(const Context *context,
                                                    GLenum type,
                                                    GLenum binding,

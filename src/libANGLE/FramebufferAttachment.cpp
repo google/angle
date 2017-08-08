@@ -161,7 +161,14 @@ void FramebufferAttachment::attach(const Context *context,
     mNumViews        = numViews;
     mBaseViewIndex   = baseViewIndex;
     mMultiviewLayout = multiviewLayout;
-    mViewportOffsets = TransformViewportOffsetArrayToVectorOfOffsets(viewportOffsets, numViews);
+    if (multiviewLayout == GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE)
+    {
+        mViewportOffsets = TransformViewportOffsetArrayToVectorOfOffsets(viewportOffsets, numViews);
+    }
+    else
+    {
+        mViewportOffsets = GetDefaultViewportOffsetVector();
+    }
     resource->onAttach(context);
 
     if (mResource != nullptr)

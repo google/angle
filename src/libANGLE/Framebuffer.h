@@ -148,6 +148,13 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
                        GLenum binding,
                        const ImageIndex &textureIndex,
                        FramebufferAttachmentObject *resource);
+    void setAttachmentMultiviewLayered(const Context *context,
+                                       GLenum type,
+                                       GLenum binding,
+                                       const ImageIndex &textureIndex,
+                                       FramebufferAttachmentObject *resource,
+                                       GLsizei numViews,
+                                       GLint baseViewIndex);
     void setAttachmentMultiviewSideBySide(const Context *context,
                                           GLenum type,
                                           GLenum binding,
