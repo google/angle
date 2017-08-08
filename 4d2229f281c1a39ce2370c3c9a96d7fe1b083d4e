@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "de7fcd67_e50f022c",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-08T20:54:44Z",
+      "side": 1,
+      "message": "Missing period at the end.",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 46
+      },
+      "revId": "4d2229f281c1a39ce2370c3c9a96d7fe1b083d4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "84bf66c5_49582fab",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-08T20:54:44Z",
+      "side": 1,
+      "message": "nit: IndexExceedsMaxDrawBuffer",
+      "range": {
+        "startLine": 48,
+        "startChar": 7,
+        "endLine": 48,
+        "endChar": 26
+      },
+      "revId": "4d2229f281c1a39ce2370c3c9a96d7fe1b083d4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "366d701f_516ea926",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-08T20:54:44Z",
+      "side": 1,
+      "message": "nit: IndexExceedsMaxVertexAttribute",
+      "range": {
+        "startLine": 49,
+        "startChar": 7,
+        "endLine": 49,
+        "endChar": 28
+      },
+      "revId": "4d2229f281c1a39ce2370c3c9a96d7fe1b083d4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
