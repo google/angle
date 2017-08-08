@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "ab7bfc3d_83108ef7",
+        "filename": "src/libANGLE/InternalEnums.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-08T20:42:02Z",
+      "side": 1,
+      "message": "We should decide on a naming convention that isn\u0027t too verbose but keeping as close to the GL enums as possible I think.",
+      "range": {
+        "startLine": 13,
+        "startChar": 4,
+        "endLine": 13,
+        "endChar": 5
+      },
+      "revId": "1da2f05ad7e8315ef691793373693dd045b0d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1368de37_42e21b3d",
+        "filename": "src/libANGLE/InternalEnums.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-08T20:42:02Z",
+      "side": 1,
+      "message": "We could make an UNKNOWN in each enum to return for the failure case.",
+      "range": {
+        "startLine": 23,
+        "startChar": 7,
+        "endLine": 23,
+        "endChar": 12
+      },
+      "revId": "1da2f05ad7e8315ef691793373693dd045b0d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "188322f7_95c92b42",
+        "filename": "src/libANGLE/InternalEnums.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-08T20:42:02Z",
+      "side": 1,
+      "message": "We could add additional typedefs for each enum in this file...\n\n   template \u003ctypename T\u003e\n   using TextureTargetMap \u003d EnumArray\u003cT, TextureTarget, kCountTextureTarget\u003e;",
+      "range": {
+        "startLine": 71,
+        "startChar": 7,
+        "endLine": 71,
+        "endChar": 17
+      },
+      "revId": "1da2f05ad7e8315ef691793373693dd045b0d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1c44ad77_9cafbc2b",
         "filename": "src/libANGLE/State.h",
         "patchSetId": 1
