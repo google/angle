@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "46786836_e7c7f70a",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-08T05:19:58Z",
+      "side": 1,
+      "message": "Yes, I should change the naming in mUniformHLSL too.",
+      "parentUuid": "aeeef0c1_c8fb93c6",
+      "revId": "fb5198eac7b5e7c9df29f945b18226f29cabb558",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c66e9439_ad37ffd0",
         "filename": "src/compiler/translator/ShaderLang.cpp",
         "patchSetId": 4
@@ -47,6 +65,24 @@
       "writtenOn": "2017-08-07T15:07:35Z",
       "side": 1,
       "message": "nit: there could be a \"GetVariableList\" defined for these two, and we could use GetShaderVariable\u003c\u003e here and in the next function.",
+      "revId": "fb5198eac7b5e7c9df29f945b18226f29cabb558",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7caf2d7_66c3b3a3",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-08T05:19:58Z",
+      "side": 1,
+      "message": "Currently, the type of UniformBlock and ShaderStorageBlock both is InterfaceBlock. If we use GetShaderVariable\u003c\u003e. We must define struct UniformBlock and struct ShaderStorageBlock which both inherit InterfaceBlock. So it can distinguish which method to call. It should be like below:\nconst std::vector\u003cUniformBlock\u003e *GetUniformBlocks(const ShHandle handle)\n{\n    return GetShaderVariables\u003cUniformBlock\u003e(handle);\n}\n\nconst std::vector\u003cShaderStorageBlock\u003e *GetUniformBlocks(const ShHandle handle)\n{\n    return GetShaderVariables\u003cShaderStorageBlock\u003e(handle);\n}\n\nIs this what you want?",
+      "parentUuid": "c66e9439_ad37ffd0",
       "revId": "fb5198eac7b5e7c9df29f945b18226f29cabb558",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
