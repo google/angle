@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "74390d5a_5341fb51",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1292,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-08T11:42:39Z",
+      "side": 1,
+      "message": "Uppercase C. Somebody doing a case-sensitive grep for \"Context::updateCaps\" should find this comment.\n\nI\u0027d also expand the comment to say \"... Context::updateCaps() where max*Samples values are determined according to available sample counts for each individual format\".",
+      "range": {
+        "startLine": 1292,
+        "startChar": 54,
+        "endLine": 1292,
+        "endChar": 55
+      },
+      "revId": "bdaac7dece5b092d0c0466d4a3f23766837ca3f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
