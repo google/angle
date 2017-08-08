@@ -131,6 +131,24 @@
     },
     {
       "key": {
+        "uuid": "570cdb72_55251178",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SamplePosition11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-08-08T08:39:35Z",
+      "side": 1,
+      "message": "Sorry, I discussed with Xinghua and Jiawei, the readbuffer can be created with adding D3D11_CPU_ACCESS_READ, without D3D11_USAGE_STAGING. So we can avoid one copy resource now.",
+      "parentUuid": "a0c731a0_a93e6da4",
+      "revId": "dcad5e2252ae11b05c578b01f3412fb4150076ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "74a67d8f_6bec8bfe",
         "filename": "src/libANGLE/renderer/d3d/d3d11/SamplePosition11.h",
         "patchSetId": 8
