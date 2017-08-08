@@ -1,0 +1,107 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3f07314d_8cafd713",
+        "filename": "src/tests/perf_tests/ANGLEPerfTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-08T11:33:47Z",
+      "side": 1,
+      "message": "The usual convention is to leave the copyright dates untouched.",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "8895d2f040cf75687fd2731c3a6c3d38b5e39327",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45353085_f25ca7ab",
+        "filename": "src/tests/perf_tests/ANGLEPerfTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-08T11:33:47Z",
+      "side": 1,
+      "message": "I\u0027d prefer stopping the loop after the first missing extension is found. You could put this into a helper function so it would be like if (areExtensionPrerequisitesFulfilled()) { mSkipTest \u003d true; }",
+      "revId": "8895d2f040cf75687fd2731c3a6c3d38b5e39327",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5bb339c5_1039d84a",
+        "filename": "src/tests/perf_tests/MultiviewPerf.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-08T11:33:47Z",
+      "side": 1,
+      "message": "Code style nit: prefer placing the break; inside the braces - that way it\u0027s on the same indentation level whether there are braces or not.",
+      "range": {
+        "startLine": 202,
+        "startChar": 8,
+        "endLine": 202,
+        "endChar": 14
+      },
+      "revId": "8895d2f040cf75687fd2731c3a6c3d38b5e39327",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f718033_9bde9a72",
+        "filename": "src/tests/perf_tests/MultiviewPerf.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 394,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-08T11:33:47Z",
+      "side": 1,
+      "message": "Add a comment explaining what kind of geometry goes to the buffer. I think ideally we should have a more generic helper for building vertex buffers that could be shared between all tests that need those (there\u0027s a very basic one in draw_call_perf_utils.cpp), but we can leave that be for now.",
+      "revId": "8895d2f040cf75687fd2731c3a6c3d38b5e39327",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ff3ea977_7e27277d",
+        "filename": "src/tests/perf_tests/MultiviewPerf.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 440,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-08T11:33:47Z",
+      "side": 1,
+      "message": "offsetof is not standard C++ and as such should not be used. See https://google.github.io/styleguide/cppguide.html#Nonstandard_Extensions",
+      "range": {
+        "startLine": 440,
+        "startChar": 24,
+        "endLine": 440,
+        "endChar": 32
+      },
+      "revId": "8895d2f040cf75687fd2731c3a6c3d38b5e39327",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
