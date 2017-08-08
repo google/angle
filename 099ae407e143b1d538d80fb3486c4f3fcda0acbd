@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "12358785_3b10e7ae",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2162,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-08T13:05:24Z",
+      "side": 1,
+      "message": "Yep, the new version looks much better.",
+      "parentUuid": "7f6fd8c2_b8f7e70e",
+      "range": {
+        "startLine": 2158,
+        "startChar": 0,
+        "endLine": 2162,
+        "endChar": 9
+      },
+      "revId": "099ae407e143b1d538d80fb3486c4f3fcda0acbd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "77a2eea9_67f5bb8d",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 6
