@@ -86,6 +86,24 @@
       "revId": "fb5198eac7b5e7c9df29f945b18226f29cabb558",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "30d65575_af0662fe",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-08T17:21:15Z",
+      "side": 1,
+      "message": "Hadn\u0027t realized that it would require separating UniformBlock and ShaderStorageBlock. Current LGTM then. Thanks!",
+      "parentUuid": "d7caf2d7_66c3b3a3",
+      "revId": "fb5198eac7b5e7c9df29f945b18226f29cabb558",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
