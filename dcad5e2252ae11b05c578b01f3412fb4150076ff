@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "872d235f_843d3487",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-08-08T06:31:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bc8afd07_d02d2af7",
+      "range": {
+        "startLine": 94,
+        "startChar": 14,
+        "endLine": 94,
+        "endChar": 15
+      },
+      "revId": "dcad5e2252ae11b05c578b01f3412fb4150076ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "214d1b23_17ae7e11",
         "filename": "src/libANGLE/renderer/d3d/d3d11/SamplePosition11.cpp",
         "patchSetId": 8
@@ -36,6 +60,30 @@
       "writtenOn": "2017-08-07T04:29:35Z",
       "side": 1,
       "message": "Can you explain why only these two formats are valid?",
+      "range": {
+        "startLine": 140,
+        "startChar": 0,
+        "endLine": 144,
+        "endChar": 41
+      },
+      "revId": "dcad5e2252ae11b05c578b01f3412fb4150076ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8dd20b06_25845c3a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SamplePosition11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-08-08T06:31:48Z",
+      "side": 1,
+      "message": "Sorry, I removed the code because the two formats are checked in GetComponentType(in line 135). There are six kinds of componentType including GL_SIGNED_NORMALIZED, GL_UNSIGNED_NORMALIZED, GLFloat, GL_UNSIGNED_INT, GL_INT and GL_NONE. For GL_SIGNED_NORMALIZED, GL_UNSIGNED_NORMALIZED, they are actually of byte type(see formatutils.cpp). So they are converted to GL_FLOAT in findSamplePostionPS(in line 252).",
+      "parentUuid": "214d1b23_17ae7e11",
       "range": {
         "startLine": 140,
         "startChar": 0,
@@ -65,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "a0c731a0_a93e6da4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SamplePosition11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-08-08T06:31:48Z",
+      "side": 1,
+      "message": "I tried to map the same read buffer but it can\u0027t be created if I add flags D3D11_CPU_ACCESS_READ and D3D11_USAGE_STAGING to mReadBuffer. \nHere is where I found some explanation with a sample together (http://aranna.altervista.org/data2/3d_game_programming_with_DirectX11.pdf).\nIn chapter 12.3.5, it says,\n\u0027So the question is how do we get our results from GPU memory (remember when we write to a structured buffer via a UAV, that buffer is stored in GPU memory) back to system memory. The common pattern is to create a system memory buffer with the staging flag D3D11_USAGE_STAGING and the CPU access flag D3D11_CPU_ACCESS_READ. Then we can use the ID3D11DeviceContext::CopyResource method to copy the GPU resource to the system memory resource. The system memory resource must be the same type and size as the resource we want to copy. Finally,we can map the system memory buffer with the mapping API to read it on the CPU. From there we can then copy the data into a system memory array for further processing on the CPU side.\u0027",
+      "parentUuid": "f1631d92_ed74b493",
+      "revId": "dcad5e2252ae11b05c578b01f3412fb4150076ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "74a67d8f_6bec8bfe",
         "filename": "src/libANGLE/renderer/d3d/d3d11/SamplePosition11.h",
         "patchSetId": 8
@@ -88,6 +154,30 @@
     },
     {
       "key": {
+        "uuid": "f51cea34_05bbf486",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SamplePosition11.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-08-08T06:31:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "74a67d8f_6bec8bfe",
+      "range": {
+        "startLine": 55,
+        "startChar": 11,
+        "endLine": 55,
+        "endChar": 18
+      },
+      "revId": "dcad5e2252ae11b05c578b01f3412fb4150076ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "252ade62_fc0732fe",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 8
@@ -105,6 +195,24 @@
     },
     {
       "key": {
+        "uuid": "fc4f273f_c4cdac42",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2982,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-08-08T06:31:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "252ade62_fc0732fe",
+      "revId": "dcad5e2252ae11b05c578b01f3412fb4150076ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "479cb8b8_3646418b",
         "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
         "patchSetId": 8
@@ -119,6 +227,24 @@
       "revId": "dcad5e2252ae11b05c578b01f3412fb4150076ff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8a1ffd1e_20c31d99",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3059,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-08-08T06:31:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "479cb8b8_3646418b",
+      "revId": "dcad5e2252ae11b05c578b01f3412fb4150076ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -145,6 +271,30 @@
     },
     {
       "key": {
+        "uuid": "04827e87_3925225a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/SamplePosition11.hlsl",
+        "patchSetId": 8
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-08-08T06:31:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cbae1abf_3b00f586",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 4
+      },
+      "revId": "dcad5e2252ae11b05c578b01f3412fb4150076ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "38b3c171_5c14deec",
         "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/SamplePosition11.hlsl",
         "patchSetId": 8
@@ -165,6 +315,30 @@
       "revId": "dcad5e2252ae11b05c578b01f3412fb4150076ff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "43455d9b_4d0d950c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/SamplePosition11.hlsl",
+        "patchSetId": 8
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-08-08T06:31:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "38b3c171_5c14deec",
+      "range": {
+        "startLine": 10,
+        "startChar": 7,
+        "endLine": 10,
+        "endChar": 14
+      },
+      "revId": "dcad5e2252ae11b05c578b01f3412fb4150076ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -191,6 +365,30 @@
     },
     {
       "key": {
+        "uuid": "1d0cf259_14ecb804",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/SamplePosition11.hlsl",
+        "patchSetId": 8
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-08-08T06:31:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "741d851c_b052e7e3",
+      "range": {
+        "startLine": 14,
+        "startChar": 28,
+        "endLine": 14,
+        "endChar": 37
+      },
+      "revId": "dcad5e2252ae11b05c578b01f3412fb4150076ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df89ee33_cbcef8b3",
         "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/compiled/sampleposition_vs.h",
         "patchSetId": 8
@@ -202,6 +400,30 @@
       "writtenOn": "2017-08-07T04:29:35Z",
       "side": 1,
       "message": "Do you run \u0027gl cl format\u0027 for these compiled/sampleposition*.h?",
+      "range": {
+        "startLine": 11,
+        "startChar": 67,
+        "endLine": 11,
+        "endChar": 69
+      },
+      "revId": "dcad5e2252ae11b05c578b01f3412fb4150076ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2940ed96_829024c7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/compiled/sampleposition_vs.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-08-08T06:31:48Z",
+      "side": 1,
+      "message": "It seems that git cl format doesn\u0027t format this file and .hlsl file.\nThe file is auto generated by generate_shaders.bat. So I removed the white spaces manually.",
+      "parentUuid": "df89ee33_cbcef8b3",
       "range": {
         "startLine": 11,
         "startChar": 67,
