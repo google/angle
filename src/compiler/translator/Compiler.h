@@ -119,6 +119,7 @@ class TCompiler : public TShHandleBase
     {
         return shaderStorageBlocks;
     }
+    const std::vector<sh::InterfaceBlock> &getInBlocks() const { return inBlocks; }
 
     ShHashFunction64 getHashFunction() const { return hashFunction; }
     NameMap &getNameMap() { return nameMap; }
@@ -196,6 +197,7 @@ class TCompiler : public TShHandleBase
     std::vector<sh::InterfaceBlock> interfaceBlocks;
     std::vector<sh::InterfaceBlock> uniformBlocks;
     std::vector<sh::InterfaceBlock> shaderStorageBlocks;
+    std::vector<sh::InterfaceBlock> inBlocks;
 
   private:
     // Creates the function call DAG for further analysis, returning false if there is a recursion

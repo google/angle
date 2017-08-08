@@ -299,6 +299,18 @@ TInterfaceBlockName *TSymbolTable::declareInterfaceBlockName(const TString *name
     return nullptr;
 }
 
+TInterfaceBlockName *TSymbolTable::insertInterfaceBlockNameExt(ESymbolLevel level,
+                                                               const char *ext,
+                                                               const TString *name)
+{
+    TInterfaceBlockName *blockNameSymbol = new TInterfaceBlockName(this, name);
+    if (insert(level, ext, blockNameSymbol))
+    {
+        return blockNameSymbol;
+    }
+    return nullptr;
+}
+
 TVariable *TSymbolTable::insertVariable(ESymbolLevel level, const char *name, const TType &type)
 {
     return insertVariable(level, NewPoolTString(name), type);

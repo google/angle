@@ -475,8 +475,8 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         {
             ASSERT(!variablesCollected);
             CollectVariables(root, &attributes, &outputVariables, &uniforms, &inputVaryings,
-                             &outputVaryings, &uniformBlocks, &shaderStorageBlocks, hashFunction,
-                             &symbolTable, shaderVersion, extensionBehavior);
+                             &outputVaryings, &uniformBlocks, &shaderStorageBlocks, &inBlocks,
+                             hashFunction, &symbolTable, shaderVersion, extensionBehavior);
             collectInterfaceBlocks();
             variablesCollected = true;
             if (compileOptions & SH_USE_UNUSED_STANDARD_SHARED_BLOCKS)
@@ -751,10 +751,11 @@ void TCompiler::setResourceString()
 void TCompiler::collectInterfaceBlocks()
 {
     ASSERT(interfaceBlocks.empty());
-    interfaceBlocks.reserve(uniformBlocks.size() + shaderStorageBlocks.size());
+    interfaceBlocks.reserve(uniformBlocks.size() + shaderStorageBlocks.size() + inBlocks.size());
     interfaceBlocks.insert(interfaceBlocks.end(), uniformBlocks.begin(), uniformBlocks.end());
     interfaceBlocks.insert(interfaceBlocks.end(), shaderStorageBlocks.begin(),
                            shaderStorageBlocks.end());
+    interfaceBlocks.insert(interfaceBlocks.end(), inBlocks.begin(), inBlocks.end());
 }
 
 void TCompiler::clearResults()
@@ -773,6 +774,7 @@ void TCompiler::clearResults()
     interfaceBlocks.clear();
     uniformBlocks.clear();
     shaderStorageBlocks.clear();
+    inBlocks.clear();
     variablesCollected = false;
     mGLPositionInitialized = false;
 

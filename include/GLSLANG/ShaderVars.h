@@ -45,7 +45,11 @@ enum BlockLayoutType
 enum class BlockType
 {
     BLOCK_UNIFORM,
-    BLOCK_BUFFER
+    BLOCK_BUFFER,
+
+    // Required in OpenGL ES 3.1 extension GL_OES_shader_io_blocks.
+    // TODO(jiawei.shao@intel.com): add BLOCK_OUT.
+    BLOCK_IN
 };
 
 // Base class for all variables defined in shaders, including Varyings, Uniforms, etc
@@ -217,6 +221,8 @@ struct InterfaceBlock
 
     // Decide whether two interface blocks are the same at shader link time.
     bool isSameInterfaceBlockAtLinkTime(const InterfaceBlock &other) const;
+
+    bool isBuiltIn() const { return name.compare(0, 3, "gl_") == 0; }
 
     std::string name;
     std::string mappedName;

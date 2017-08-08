@@ -908,9 +908,32 @@ void IdentifyBuiltIns(sh::GLenum type,
         }
 
         case GL_GEOMETRY_SHADER_OES:
-            // TODO(jiawei.shao@intel.com): add Geometry Shader built-in variables.
-            break;
+        {
+            // TODO(jiawei.shao@intel.com): add all Geometry Shader built-in variables.
+            const char *extension = "GL_OES_geometry_shader";
 
+            // Add built-in interface block gl_PerVertex and the built-in array gl_in.
+            // TODO(jiawei.shao@intel.com): implement GL_OES_geometry_point_size.
+            const TString *glPerVertexString = NewPoolTString("gl_PerVertex");
+            symbolTable.insertInterfaceBlockNameExt(ESSL3_1_BUILTINS, extension, glPerVertexString);
+
+            TFieldList *fieldList    = NewPoolTFieldList();
+            TSourceLoc zeroSourceLoc = {0, 0, 0, 0};
+            TField *glPositionField  = new TField(new TType(EbtFloat, EbpHigh, EvqPosition, 4),
+                                                 NewPoolTString("gl_Position"), zeroSourceLoc);
+            fieldList->push_back(glPositionField);
+
+            TInterfaceBlock *glInBlock = new TInterfaceBlock(
+                glPerVertexString, fieldList, NewPoolTString("gl_in"), TLayoutQualifier::create());
+
+            // The array size of gl_in is undefined until we get a valid input primitive
+            // declaration.
+            TType glInType(glInBlock, EvqPerVertexIn, TLayoutQualifier::create(), 0);
+            glInType.setArrayUnsized();
+            symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension, "gl_in", glInType);
+
+            break;
+        }
         default:
             UNREACHABLE();
     }

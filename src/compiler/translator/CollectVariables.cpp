@@ -36,6 +36,7 @@ BlockLayoutType GetBlockLayoutType(TLayoutBlockStorage blockStorage)
     }
 }
 
+// TODO(jiawei.shao@intel.com): implement GL_OES_shader_io_blocks.
 BlockType GetBlockType(TQualifier qualifier)
 {
     switch (qualifier)
@@ -44,6 +45,8 @@ BlockType GetBlockType(TQualifier qualifier)
             return BlockType::BLOCK_UNIFORM;
         case EvqBuffer:
             return BlockType::BLOCK_BUFFER;
+        case EvqPerVertexIn:
+            return BlockType::BLOCK_IN;
         default:
             UNREACHABLE();
             return BlockType::BLOCK_UNIFORM;
@@ -93,6 +96,7 @@ class CollectVariablesTraverser : public TIntermTraverser
                               std::vector<Varying> *outputVaryings,
                               std::vector<InterfaceBlock> *uniformBlocks,
                               std::vector<InterfaceBlock> *shaderStorageBlocks,
+                              std::vector<InterfaceBlock> *inBlocks,
                               ShHashFunction64 hashFunction,
                               TSymbolTable *symbolTable,
                               int shaderVersion,
@@ -110,7 +114,8 @@ class CollectVariablesTraverser : public TIntermTraverser
     Attribute recordAttribute(const TIntermSymbol &variable) const;
     OutputVariable recordOutputVariable(const TIntermSymbol &variable) const;
     Varying recordVarying(const TIntermSymbol &variable) const;
-    InterfaceBlock recordInterfaceBlock(const TIntermSymbol &variable) const;
+    void recordInterfaceBlock(const TType &interfaceBlockType,
+                              InterfaceBlock *interfaceBlock) const;
     Uniform recordUniform(const TIntermSymbol &variable) const;
 
     void setBuiltInInfoFromSymbolTable(const char *name, ShaderVariable *info);
@@ -120,6 +125,8 @@ class CollectVariablesTraverser : public TIntermTraverser
                                   std::vector<Varying> *varyings);
     void recordBuiltInFragmentOutputUsed(const char *name, bool *addedFlag);
     void recordBuiltInAttributeUsed(const char *name, bool *addedFlag);
+    InterfaceBlock *recordGLInUsed(const TType &glInType);
+    InterfaceBlock *findNamedInterfaceBlock(const TString &name) const;
 
     std::vector<Attribute> *mAttribs;
     std::vector<OutputVariable> *mOutputVariables;
@@ -128,6 +135,7 @@ class CollectVariablesTraverser : public TIntermTraverser
     std::vector<Varying> *mOutputVaryings;
     std::vector<InterfaceBlock> *mUniformBlocks;
     std::vector<InterfaceBlock> *mShaderStorageBlocks;
+    std::vector<InterfaceBlock> *mInBlocks;
 
     std::map<std::string, InterfaceBlockField *> mInterfaceBlockFields;
 
@@ -148,6 +156,8 @@ class CollectVariablesTraverser : public TIntermTraverser
     bool mSecondaryFragColorEXTAdded;
     bool mSecondaryFragDataEXTAdded;
 
+    bool mPerVertexInAdded;
+
     ShHashFunction64 mHashFunction;
 
     int mShaderVersion;
@@ -162,6 +172,7 @@ CollectVariablesTraverser::CollectVariablesTraverser(
     std::vector<sh::Varying> *outputVaryings,
     std::vector<sh::InterfaceBlock> *uniformBlocks,
     std::vector<sh::InterfaceBlock> *shaderStorageBlocks,
+    std::vector<sh::InterfaceBlock> *inBlocks,
     ShHashFunction64 hashFunction,
     TSymbolTable *symbolTable,
     int shaderVersion,
@@ -174,6 +185,7 @@ CollectVariablesTraverser::CollectVariablesTraverser(
       mOutputVaryings(outputVaryings),
       mUniformBlocks(uniformBlocks),
       mShaderStorageBlocks(shaderStorageBlocks),
+      mInBlocks(inBlocks),
       mDepthRangeAdded(false),
       mPointCoordAdded(false),
       mFrontFacingAdded(false),
@@ -189,6 +201,7 @@ CollectVariablesTraverser::CollectVariablesTraverser(
       mFragDepthAdded(false),
       mSecondaryFragColorEXTAdded(false),
       mSecondaryFragDataEXTAdded(false),
+      mPerVertexInAdded(false),
       mHashFunction(hashFunction),
       mShaderVersion(shaderVersion),
       mExtensionBehavior(extensionBehavior)
@@ -248,6 +261,25 @@ void CollectVariablesTraverser::recordBuiltInAttributeUsed(const char *name, boo
         info.location  = -1;
         mAttribs->push_back(info);
         (*addedFlag) = true;
+    }
+}
+
+InterfaceBlock *CollectVariablesTraverser::recordGLInUsed(const TType &glInType)
+{
+    if (!mPerVertexInAdded)
+    {
+        ASSERT(glInType.getQualifier() == EvqPerVertexIn);
+        InterfaceBlock info;
+        recordInterfaceBlock(glInType, &info);
+        info.staticUse = true;
+
+        mPerVertexInAdded = true;
+        mInBlocks->push_back(info);
+        return &mInBlocks->back();
+    }
+    else
+    {
+        return FindVariable("gl_PerVertex", mInBlocks);
     }
 }
 
@@ -535,21 +567,30 @@ Varying CollectVariablesTraverser::recordVarying(const TIntermSymbol &variable) 
     return varying;
 }
 
-InterfaceBlock CollectVariablesTraverser::recordInterfaceBlock(const TIntermSymbol &variable) const
+// TODO(jiawei.shao@intel.com): implement GL_OES_shader_io_blocks.
+void CollectVariablesTraverser::recordInterfaceBlock(const TType &interfaceBlockType,
+                                                     InterfaceBlock *interfaceBlock) const
 {
-    const TInterfaceBlock *blockType = variable.getType().getInterfaceBlock();
+    ASSERT(interfaceBlockType.getBasicType() == EbtInterfaceBlock);
+    ASSERT(interfaceBlock);
+
+    const TInterfaceBlock *blockType = interfaceBlockType.getInterfaceBlock();
     ASSERT(blockType);
 
-    InterfaceBlock interfaceBlock;
-    interfaceBlock.name       = blockType->name().c_str();
-    interfaceBlock.mappedName = HashName(blockType->name().c_str(), mHashFunction).c_str();
-    interfaceBlock.instanceName =
+    interfaceBlock->name       = blockType->name().c_str();
+    interfaceBlock->mappedName = HashName(blockType->name().c_str(), mHashFunction).c_str();
+    interfaceBlock->instanceName =
         (blockType->hasInstanceName() ? blockType->instanceName().c_str() : "");
-    interfaceBlock.arraySize        = variable.getArraySize();
-    interfaceBlock.isRowMajorLayout = (blockType->matrixPacking() == EmpRowMajor);
-    interfaceBlock.binding          = blockType->blockBinding();
-    interfaceBlock.layout           = GetBlockLayoutType(blockType->blockStorage());
-    interfaceBlock.blockType        = GetBlockType(variable.getType().getQualifier());
+    interfaceBlock->arraySize = interfaceBlockType.getArraySize();
+
+    interfaceBlock->blockType = GetBlockType(interfaceBlockType.getQualifier());
+    if (interfaceBlock->blockType == BlockType::BLOCK_UNIFORM ||
+        interfaceBlock->blockType == BlockType::BLOCK_BUFFER)
+    {
+        interfaceBlock->isRowMajorLayout = (blockType->matrixPacking() == EmpRowMajor);
+        interfaceBlock->binding          = blockType->blockBinding();
+        interfaceBlock->layout           = GetBlockLayoutType(blockType->blockStorage());
+    }
 
     // Gather field information
     for (const TField *field : blockType->fields())
@@ -560,9 +601,8 @@ InterfaceBlock CollectVariablesTraverser::recordInterfaceBlock(const TIntermSymb
         setCommonVariableProperties(fieldType, field->name(), &fieldVariable);
         fieldVariable.isRowMajorLayout =
             (fieldType.getLayoutQualifier().matrixPacking == EmpRowMajor);
-        interfaceBlock.fields.push_back(fieldVariable);
+        interfaceBlock->fields.push_back(fieldVariable);
     }
-    return interfaceBlock;
 }
 
 Uniform CollectVariablesTraverser::recordUniform(const TIntermSymbol &variable) const
@@ -605,15 +645,22 @@ bool CollectVariablesTraverser::visitDeclaration(Visit, TIntermDeclaration *node
             continue;
         }
 
+        // TODO(jiawei.shao@intel.com): implement GL_OES_shader_io_blocks.
         if (typedNode.getBasicType() == EbtInterfaceBlock)
         {
-            if (qualifier == EvqUniform)
+            InterfaceBlock interfaceBlock;
+            recordInterfaceBlock(variable.getType(), &interfaceBlock);
+
+            switch (qualifier)
             {
-                mUniformBlocks->push_back(recordInterfaceBlock(variable));
-            }
-            else if (qualifier == EvqBuffer)
-            {
-                mShaderStorageBlocks->push_back(recordInterfaceBlock(variable));
+                case EvqUniform:
+                    mUniformBlocks->push_back(interfaceBlock);
+                    break;
+                case EvqBuffer:
+                    mShaderStorageBlocks->push_back(interfaceBlock);
+                    break;
+                default:
+                    UNREACHABLE();
             }
         }
         else
@@ -650,6 +697,18 @@ bool CollectVariablesTraverser::visitDeclaration(Visit, TIntermDeclaration *node
     return false;
 }
 
+// TODO(jiawei.shao@intel.com): add search on mInBlocks and mOutBlocks when implementing
+// GL_OES_shader_io_blocks.
+InterfaceBlock *CollectVariablesTraverser::findNamedInterfaceBlock(const TString &blockName) const
+{
+    InterfaceBlock *namedBlock = FindVariable(blockName, mUniformBlocks);
+    if (!namedBlock)
+    {
+        namedBlock = FindVariable(blockName, mShaderStorageBlocks);
+    }
+    return namedBlock;
+}
+
 bool CollectVariablesTraverser::visitBinary(Visit, TIntermBinary *binaryNode)
 {
     if (binaryNode->getOp() == EOpIndexDirectInterfaceBlock)
@@ -661,17 +720,43 @@ bool CollectVariablesTraverser::visitBinary(Visit, TIntermBinary *binaryNode)
         TIntermConstantUnion *constantUnion = binaryNode->getRight()->getAsConstantUnion();
         ASSERT(constantUnion);
 
+        InterfaceBlock *namedBlock = nullptr;
+
+        bool traverseIndexExpression         = false;
+        TIntermBinary *interfaceIndexingNode = blockNode->getAsBinaryNode();
+        if (interfaceIndexingNode)
+        {
+            TIntermTyped *interfaceNode = interfaceIndexingNode->getLeft()->getAsTyped();
+            ASSERT(interfaceNode);
+
+            const TType &interfaceType = interfaceNode->getType();
+            if (interfaceType.getQualifier() == EvqPerVertexIn)
+            {
+                namedBlock = recordGLInUsed(interfaceType);
+                ASSERT(namedBlock);
+
+                // We need to continue traversing to collect useful variables in the index
+                // expression of gl_in.
+                traverseIndexExpression = true;
+            }
+        }
+
         const TInterfaceBlock *interfaceBlock = blockNode->getType().getInterfaceBlock();
-        InterfaceBlock *namedBlock = FindVariable(interfaceBlock->name(), mUniformBlocks);
         if (!namedBlock)
         {
-            namedBlock = FindVariable(interfaceBlock->name(), mShaderStorageBlocks);
+            namedBlock = findNamedInterfaceBlock(interfaceBlock->name());
         }
         ASSERT(namedBlock);
         namedBlock->staticUse   = true;
         unsigned int fieldIndex = static_cast<unsigned int>(constantUnion->getIConst(0));
         ASSERT(fieldIndex < namedBlock->fields.size());
         namedBlock->fields[fieldIndex].staticUse = true;
+
+        if (traverseIndexExpression)
+        {
+            ASSERT(interfaceIndexingNode);
+            interfaceIndexingNode->getRight()->traverse(this);
+        }
         return false;
     }
 
@@ -688,13 +773,14 @@ void CollectVariables(TIntermBlock *root,
                       std::vector<Varying> *outputVaryings,
                       std::vector<InterfaceBlock> *uniformBlocks,
                       std::vector<InterfaceBlock> *shaderStorageBlocks,
+                      std::vector<InterfaceBlock> *inBlocks,
                       ShHashFunction64 hashFunction,
                       TSymbolTable *symbolTable,
                       int shaderVersion,
                       const TExtensionBehavior &extensionBehavior)
 {
     CollectVariablesTraverser collect(attributes, outputVariables, uniforms, inputVaryings,
-                                      outputVaryings, uniformBlocks, shaderStorageBlocks,
+                                      outputVaryings, uniformBlocks, shaderStorageBlocks, inBlocks,
                                       hashFunction, symbolTable, shaderVersion, extensionBehavior);
     root->traverse(&collect);
 }

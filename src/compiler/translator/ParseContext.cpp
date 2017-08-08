@@ -95,6 +95,27 @@ bool CanSetDefaultPrecisionOnType(const TPublicType &type)
     return true;
 }
 
+// Map input primitive types to input array sizes in a geometry shader.
+GLuint GetGeometryShaderInputArraySize(TLayoutPrimitiveType primitiveType)
+{
+    switch (primitiveType)
+    {
+        case EptPoints:
+            return 1u;
+        case EptLines:
+            return 2u;
+        case EptTriangles:
+            return 3u;
+        case EptLinesAdjacency:
+            return 4u;
+        case EptTrianglesAdjacency:
+            return 6u;
+        default:
+            UNREACHABLE();
+            return 0u;
+    }
+}
+
 }  // namespace
 
 // This tracks each binding point's current default offset for inheritance of subsequent
@@ -184,7 +205,8 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mGeometryShaderInvocations(0),
       mGeometryShaderMaxVertices(-1),
       mMaxGeometryShaderInvocations(resources.MaxGeometryShaderInvocations),
-      mMaxGeometryShaderMaxVertices(resources.MaxGeometryOutputVertices)
+      mMaxGeometryShaderMaxVertices(resources.MaxGeometryOutputVertices),
+      mGeometryShaderInputArraySize(0)
 {
     mComputeShaderLocalSize.fill(-1);
 }
@@ -495,6 +517,9 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
             break;
         case EvqComputeIn:
             message = "can't modify work group size variable";
+            break;
+        case EvqPerVertexIn:
+            message = "can't modify any member in gl_in";
             break;
         default:
             //
@@ -1748,6 +1773,13 @@ TIntermTyped *TParseContext::parseVariableIdentifier(const TSourceLoc &location,
         type.setQualifier(EvqConst);
         node = new TIntermConstantUnion(constArray, type);
     }
+    // TODO(jiawei.shao@intel.com): set array sizes for user-defined geometry shader inputs.
+    else if (variable->getType().getQualifier() == EvqPerVertexIn)
+    {
+        TType type(variable->getType());
+        type.setArraySize(mGeometryShaderInputArraySize);
+        node = new TIntermSymbol(variable->getUniqueId(), variable->getName(), type);
+    }
     else
     {
         node = new TIntermSymbol(variable->getUniqueId(), variable->getName(), variable->getType());
@@ -2683,6 +2715,15 @@ bool TParseContext::checkPrimitiveTypeMatchesTypeQualifier(const TTypeQualifier 
     }
 }
 
+void TParseContext::setGeometryShaderInputArraySizes()
+{
+    // TODO(jiawei.shao@intel.com): check former input array sizes match the input primitive
+    // declaration.
+    ASSERT(mGeometryShaderInputArraySize == 0);
+    mGeometryShaderInputArraySize =
+        GetGeometryShaderInputArraySize(mGeometryShaderInputPrimitiveType);
+}
+
 bool TParseContext::parseGeometryShaderInputLayoutQualifier(const TTypeQualifier &typeQualifier)
 {
     ASSERT(typeQualifier.qualifier == EvqGeometryIn);
@@ -2708,6 +2749,7 @@ bool TParseContext::parseGeometryShaderInputLayoutQualifier(const TTypeQualifier
         if (mGeometryShaderInputPrimitiveType == EptUndefined)
         {
             mGeometryShaderInputPrimitiveType = layoutQualifier.primitiveType;
+            setGeometryShaderInputArraySizes();
         }
         else if (mGeometryShaderInputPrimitiveType != layoutQualifier.primitiveType)
         {
@@ -3337,6 +3379,7 @@ TIntermTyped *TParseContext::addConstructor(TIntermSequence *arguments,
 
 //
 // Interface/uniform blocks
+// TODO(jiawei.shao@intel.com): implement GL_OES_shader_io_blocks.
 //
 TIntermDeclaration *TParseContext::addInterfaceBlock(
     const TTypeQualifierBuilder &typeQualifierBuilder,
@@ -3641,6 +3684,16 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
         return CreateZeroNode(TType(EbtFloat, EbpHigh, EvqConst));
     }
 
+    if (baseExpression->getQualifier() == EvqPerVertexIn)
+    {
+        ASSERT(mShaderType == GL_GEOMETRY_SHADER_OES);
+        if (mGeometryShaderInputPrimitiveType == EptUndefined)
+        {
+            error(location, "missing input primitive declaration before indexing gl_in.", "[");
+            return CreateZeroNode(TType(EbtFloat, EbpHigh, EvqConst));
+        }
+    }
+
     TIntermConstantUnion *indexConstantUnion = indexExpression->getAsConstantUnion();
 
     // TODO(oetuaho@nvidia.com): Get rid of indexConstantUnion == nullptr below once ANGLE is able
@@ -3651,9 +3704,21 @@ TIntermTyped *TParseContext::addIndexExpression(TIntermTyped *baseExpression,
     {
         if (baseExpression->isInterfaceBlock())
         {
-            error(location,
-                  "array indexes for interface blocks arrays must be constant integral expressions",
-                  "[");
+            // TODO(jiawei.shao@intel.com): implement GL_OES_shader_io_blocks.
+            switch (baseExpression->getQualifier())
+            {
+                case EvqPerVertexIn:
+                    break;
+                case EvqUniform:
+                case EvqBuffer:
+                    error(location,
+                          "array indexes for uniform block arrays and shader storage block arrays "
+                          "must be constant integral expressions",
+                          "[");
+                    break;
+                default:
+                    UNREACHABLE();
+            }
         }
         else if (baseExpression->getQualifier() == EvqFragmentOut)
         {
@@ -5325,6 +5390,11 @@ TIntermTyped *TParseContext::addMethod(TFunction *fnCall,
     else if (typedThis == nullptr || !typedThis->isArray())
     {
         error(loc, "length can only be called on arrays", "length");
+    }
+    else if (typedThis->getQualifier() == EvqPerVertexIn &&
+             mGeometryShaderInputPrimitiveType == EptUndefined)
+    {
+        error(loc, "missing input primitive declaration before calling length on gl_in", "length");
     }
     else
     {

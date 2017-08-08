@@ -347,6 +347,9 @@ class TSymbolTable : angle::NonCopyable
                                  const char *name,
                                  const TType &type);
     TVariable *insertStructType(ESymbolLevel level, TStructure *str);
+    TInterfaceBlockName *insertInterfaceBlockNameExt(ESymbolLevel level,
+                                                     const char *ext,
+                                                     const TString *name);
 
     bool insertConstInt(ESymbolLevel level, const char *name, int value, TPrecision precision)
     {

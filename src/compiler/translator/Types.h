@@ -253,7 +253,7 @@ class TType
     TType(TInterfaceBlock *interfaceBlockIn,
           TQualifier qualifierIn,
           TLayoutQualifier layoutQualifierIn,
-          int arraySizeIn)
+          unsigned int arraySizeIn)
         : type(EbtInterfaceBlock),
           precision(EbpUndefined),
           qualifier(qualifierIn),
@@ -349,6 +349,7 @@ class TType
             invalidateMangledName();
         }
     }
+    void setArrayUnsized() { setArraySize(0u); }
     void clearArrayness()
     {
         if (array)
