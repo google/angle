@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "239471aa_8c93c15e",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1025,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-08T09:01:27Z",
+      "side": 1,
+      "message": "Ok. I just didn\u0027t find such kind of code to point it out that compute shader will be skipped for initializeOutputVariables.",
+      "parentUuid": "49ee7953_f326947a",
+      "range": {
+        "startLine": 1025,
+        "startChar": 8,
+        "endLine": 1025,
+        "endChar": 49
+      },
+      "revId": "16b6e648eb64da4fb7fc4e9583fbd789d6b4a580",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8d975cb1_f71871b0",
         "filename": "src/compiler/translator/Initialize.cpp",
         "patchSetId": 9
@@ -140,6 +164,30 @@
       "revId": "16b6e648eb64da4fb7fc4e9583fbd789d6b4a580",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d303e99_376753d5",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-08T09:01:27Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "e05ebbde_a2898612",
+      "range": {
+        "startLine": 529,
+        "startChar": 0,
+        "endLine": 530,
+        "endChar": 57
+      },
+      "revId": "16b6e648eb64da4fb7fc4e9583fbd789d6b4a580",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -237,6 +285,30 @@
     },
     {
       "key": {
+        "uuid": "8e0ce515_fea39190",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-08T09:01:27Z",
+      "side": 1,
+      "message": "Maybe for unsized array, you can initialize it to 1 to indicate that it\u0027s an array. I\u0027m also ok with this change.",
+      "parentUuid": "cfda078e_581cd572",
+      "range": {
+        "startLine": 154,
+        "startChar": 25,
+        "endLine": 154,
+        "endChar": 32
+      },
+      "revId": "16b6e648eb64da4fb7fc4e9583fbd789d6b4a580",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "45610786_81c4edbf",
         "filename": "src/compiler/translator/VariableInfo.cpp",
         "patchSetId": 9
@@ -281,6 +353,30 @@
       "revId": "16b6e648eb64da4fb7fc4e9583fbd789d6b4a580",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bb681c20_94621bd5",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 750,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-08T09:01:27Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "97e0c586_b37eb5e0",
+      "range": {
+        "startLine": 740,
+        "startChar": 0,
+        "endLine": 750,
+        "endChar": 74
+      },
+      "revId": "16b6e648eb64da4fb7fc4e9583fbd789d6b4a580",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
