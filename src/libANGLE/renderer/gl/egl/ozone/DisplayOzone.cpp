@@ -309,7 +309,8 @@ FramebufferGL *DisplayOzone::Buffer::framebufferGL(const gl::FramebufferState &s
 {
     return new FramebufferGL(
         mGLFB, state, mDisplay->mFunctionsGL, mDisplay->getRenderer()->getWorkarounds(),
-        mDisplay->getRenderer()->getBlitter(), mDisplay->getRenderer()->getStateManager());
+        mDisplay->getRenderer()->getBlitter(), mDisplay->getRenderer()->getMultiviewClearer(),
+        mDisplay->getRenderer()->getStateManager());
 }
 
 void DisplayOzone::Buffer::present()

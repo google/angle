@@ -36,6 +36,7 @@ struct BlockMemberInfo;
 namespace rx
 {
 class BlitGL;
+class ClearMultiviewGL;
 class ContextImpl;
 class FunctionsGL;
 class StateManagerGL;
@@ -159,6 +160,7 @@ class RendererGL : angle::NonCopyable
     StateManagerGL *getStateManager() const { return mStateManager; }
     const WorkaroundsGL &getWorkarounds() const { return mWorkarounds; }
     BlitGL *getBlitter() const { return mBlitter; }
+    ClearMultiviewGL *getMultiviewClearer() const { return mMultiviewClearer; }
 
     MultiviewImplementationTypeGL getMultiviewImplementationType() const;
     const gl::Caps &getNativeCaps() const;
@@ -185,6 +187,7 @@ class RendererGL : angle::NonCopyable
     StateManagerGL *mStateManager;
 
     BlitGL *mBlitter;
+    ClearMultiviewGL *mMultiviewClearer;
 
     WorkaroundsGL mWorkarounds;
 

@@ -559,6 +559,8 @@
             'libANGLE/renderer/gl/BlitGL.h',
             'libANGLE/renderer/gl/BufferGL.cpp',
             'libANGLE/renderer/gl/BufferGL.h',
+            'libANGLE/renderer/gl/ClearMultiviewGL.cpp',
+            'libANGLE/renderer/gl/ClearMultiviewGL.h',
             'libANGLE/renderer/gl/CompilerGL.cpp',
             'libANGLE/renderer/gl/CompilerGL.h',
             'libANGLE/renderer/gl/ContextGL.cpp',

@@ -330,7 +330,7 @@ FramebufferImpl *WindowSurfaceCGL::createDefaultFramebuffer(const gl::Framebuffe
 {
     // TODO(cwallez) assert it happens only once?
     return new FramebufferGL(mFramebuffer, state, mFunctions, mWorkarounds, mRenderer->getBlitter(),
-                             mStateManager);
+                             mRenderer->getMultiviewClearer(), mStateManager);
 }
 
 }  // namespace rx

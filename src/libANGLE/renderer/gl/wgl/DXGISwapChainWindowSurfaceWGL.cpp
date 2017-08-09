@@ -270,7 +270,8 @@ FramebufferImpl *DXGISwapChainWindowSurfaceWGL::createDefaultFramebuffer(
     const gl::FramebufferState &data)
 {
     return new FramebufferGL(mFramebufferID, data, mFunctionsGL, mWorkarounds,
-                             mRenderer->getBlitter(), mStateManager);
+                             mRenderer->getBlitter(), mRenderer->getMultiviewClearer(),
+                             mStateManager);
 }
 
 HDC DXGISwapChainWindowSurfaceWGL::getDC() const

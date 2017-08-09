@@ -141,7 +141,8 @@ FramebufferImpl *PbufferSurfaceCGL::createDefaultFramebuffer(const gl::Framebuff
 {
     // TODO(cwallez) assert it happens only once?
     return new FramebufferGL(mFramebuffer, state, mFunctions, mRenderer->getWorkarounds(),
-                             mRenderer->getBlitter(), mStateManager);
+                             mRenderer->getBlitter(), mRenderer->getMultiviewClearer(),
+                             mStateManager);
 }
 
 }  // namespace rx

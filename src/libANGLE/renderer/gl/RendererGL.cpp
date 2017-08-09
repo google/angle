@@ -18,6 +18,7 @@
 #include "libANGLE/Surface.h"
 #include "libANGLE/renderer/gl/BlitGL.h"
 #include "libANGLE/renderer/gl/BufferGL.h"
+#include "libANGLE/renderer/gl/ClearMultiviewGL.h"
 #include "libANGLE/renderer/gl/CompilerGL.h"
 #include "libANGLE/renderer/gl/ContextGL.h"
 #include "libANGLE/renderer/gl/FenceNVGL.h"
@@ -168,6 +169,7 @@ RendererGL::RendererGL(const FunctionsGL *functions, const egl::AttributeMap &at
       mFunctions(functions),
       mStateManager(nullptr),
       mBlitter(nullptr),
+      mMultiviewClearer(nullptr),
       mUseDebugOutput(false),
       mSkipDrawCalls(false),
       mCapsInitialized(false),
@@ -177,6 +179,7 @@ RendererGL::RendererGL(const FunctionsGL *functions, const egl::AttributeMap &at
     nativegl_gl::GenerateWorkarounds(mFunctions, &mWorkarounds);
     mStateManager = new StateManagerGL(mFunctions, getNativeCaps(), getNativeExtensions());
     mBlitter      = new BlitGL(functions, mWorkarounds, mStateManager);
+    mMultiviewClearer = new ClearMultiviewGL(functions, mStateManager);
 
     bool hasDebugOutput = mFunctions->isAtLeastGL(gl::Version(4, 3)) ||
                           mFunctions->hasGLExtension("GL_KHR_debug") ||
@@ -222,6 +225,7 @@ RendererGL::RendererGL(const FunctionsGL *functions, const egl::AttributeMap &at
 RendererGL::~RendererGL()
 {
     SafeDelete(mBlitter);
+    SafeDelete(mMultiviewClearer);
     SafeDelete(mStateManager);
 }
 

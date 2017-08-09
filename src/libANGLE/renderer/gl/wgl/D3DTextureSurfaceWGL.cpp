@@ -466,7 +466,8 @@ EGLint D3DTextureSurfaceWGL::getSwapBehavior() const
 FramebufferImpl *D3DTextureSurfaceWGL::createDefaultFramebuffer(const gl::FramebufferState &data)
 {
     return new FramebufferGL(mFramebufferID, data, mFunctionsGL, mWorkarounds,
-                             mRenderer->getBlitter(), mStateManager);
+                             mRenderer->getBlitter(), mRenderer->getMultiviewClearer(),
+                             mStateManager);
 }
 
 HDC D3DTextureSurfaceWGL::getDC() const
