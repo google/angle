@@ -484,13 +484,9 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
             }
             if (compileOptions & SH_ENFORCE_PACKING_RESTRICTIONS)
             {
-                std::vector<sh::ShaderVariable> expandedUniforms;
-                sh::ExpandUniforms(uniforms, &expandedUniforms);
-                VariablePacker packer;
                 // Returns true if, after applying the packing rules in the GLSL ES 1.00.17 spec
                 // Appendix A, section 7, the shader does not use too many uniforms.
-                success =
-                    packer.CheckVariablesWithinPackingLimits(maxUniformVectors, expandedUniforms);
+                success = CheckVariablesInPackingLimits(maxUniformVectors, uniforms);
                 if (!success)
                 {
                     mDiagnostics.globalError("too many uniforms");

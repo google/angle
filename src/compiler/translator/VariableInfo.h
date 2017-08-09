@@ -29,15 +29,6 @@ void CollectVariables(TIntermBlock *root,
                       TSymbolTable *symbolTable,
                       int shaderVersion,
                       const TExtensionBehavior &extensionBehavior);
-
-void ExpandVariable(const ShaderVariable &variable,
-                    const std::string &name,
-                    const std::string &mappedName,
-                    bool markStaticUse,
-                    std::vector<ShaderVariable> *expanded);
-
-// Expand struct uniforms to flattened lists of split variables
-void ExpandUniforms(const std::vector<Uniform> &compact, std::vector<ShaderVariable> *expanded);
 }
 
 #endif  // COMPILER_TRANSLATOR_VARIABLEINFO_H_

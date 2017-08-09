@@ -49,24 +49,6 @@ BlockType GetBlockType(TQualifier qualifier)
     }
 }
 
-void ExpandUserDefinedVariable(const ShaderVariable &variable,
-                               const std::string &name,
-                               const std::string &mappedName,
-                               bool markStaticUse,
-                               std::vector<ShaderVariable> *expanded)
-{
-    ASSERT(variable.isStruct());
-
-    const std::vector<ShaderVariable> &fields = variable.fields;
-
-    for (size_t fieldIndex = 0; fieldIndex < fields.size(); fieldIndex++)
-    {
-        const ShaderVariable &field = fields[fieldIndex];
-        ExpandVariable(field, name + "." + field.name, mappedName + "." + field.mappedName,
-                       markStaticUse, expanded);
-    }
-}
-
 template <class VarT>
 VarT *FindVariable(const TString &name, std::vector<VarT> *infoList)
 {
@@ -714,60 +696,6 @@ void CollectVariables(TIntermBlock *root,
                                       outputVaryings, uniformBlocks, shaderStorageBlocks,
                                       hashFunction, symbolTable, shaderVersion, extensionBehavior);
     root->traverse(&collect);
-}
-
-void ExpandVariable(const ShaderVariable &variable,
-                    const std::string &name,
-                    const std::string &mappedName,
-                    bool markStaticUse,
-                    std::vector<ShaderVariable> *expanded)
-{
-    if (variable.isStruct())
-    {
-        if (variable.isArray())
-        {
-            for (unsigned int elementIndex = 0; elementIndex < variable.elementCount();
-                 elementIndex++)
-            {
-                std::string lname       = name + ::ArrayString(elementIndex);
-                std::string lmappedName = mappedName + ::ArrayString(elementIndex);
-                ExpandUserDefinedVariable(variable, lname, lmappedName, markStaticUse, expanded);
-            }
-        }
-        else
-        {
-            ExpandUserDefinedVariable(variable, name, mappedName, markStaticUse, expanded);
-        }
-    }
-    else
-    {
-        ShaderVariable expandedVar = variable;
-
-        expandedVar.name       = name;
-        expandedVar.mappedName = mappedName;
-
-        // Mark all expanded fields as used if the parent is used
-        if (markStaticUse)
-        {
-            expandedVar.staticUse = true;
-        }
-
-        if (expandedVar.isArray())
-        {
-            expandedVar.name += "[0]";
-            expandedVar.mappedName += "[0]";
-        }
-
-        expanded->push_back(expandedVar);
-    }
-}
-
-void ExpandUniforms(const std::vector<Uniform> &compact, std::vector<ShaderVariable> *expanded)
-{
-    for (const Uniform &variable : compact)
-    {
-        ExpandVariable(variable, variable.name, variable.mappedName, variable.staticUse, expanded);
-    }
 }
 
 }  // namespace sh
