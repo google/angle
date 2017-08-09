@@ -782,21 +782,6 @@ TEST_P(VertexAttributeTest, DrawArraysBufferTooSmall)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
-// Verify that index draw with an out-of-range offset generates INVALID_OPERATION.
-TEST_P(VertexAttributeTest, DrawElementsBufferTooSmall)
-{
-    std::array<GLfloat, kVertexCount> inputData;
-    std::array<GLfloat, kVertexCount> expectedData;
-    InitTestData(inputData, expectedData);
-
-    TestData data(GL_FLOAT, GL_FALSE, Source::BUFFER, inputData.data(), expectedData.data());
-    data.bufferOffset = (kVertexCount - 3) * TypeStride(GL_FLOAT);
-
-    setupTest(data, 1);
-    drawIndexedQuad(mProgram, "position", 0.5f);
-    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
-}
-
 // Verify that using a different start vertex doesn't mess up the draw.
 TEST_P(VertexAttributeTest, DrawArraysWithBufferOffset)
 {
