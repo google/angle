@@ -2,6 +2,57 @@
   "comments": [
     {
       "key": {
+        "uuid": "f04ba80c_e413aabc",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-09T13:55:23Z",
+      "side": 1,
+      "message": "Do we want to have a convention in error message names? Right know some names state what must happen and some describe the problem. Having things consistent seems better, and I\u0027d personally vote for having the names describe the problem. So this would be \"NoZeroDivisor\"",
+      "revId": "4d2229f281c1a39ce2370c3c9a96d7fe1b083d4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cb226888_0236fcf1",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-09T13:55:23Z",
+      "side": 1,
+      "message": "nit: InvalidClearMask",
+      "revId": "4d2229f281c1a39ce2370c3c9a96d7fe1b083d4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7d2bb439_b3991544",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-09T13:55:23Z",
+      "side": 1,
+      "message": "nit: DebugInvalid -\u003e InvalidDebug",
+      "revId": "4d2229f281c1a39ce2370c3c9a96d7fe1b083d4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "de7fcd67_e50f022c",
         "filename": "src/libANGLE/ErrorStrings.h",
         "patchSetId": 3
@@ -65,6 +116,108 @@
         "endLine": 49,
         "endChar": 28
       },
+      "revId": "4d2229f281c1a39ce2370c3c9a96d7fe1b083d4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b13c9d9_b45f9520",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-09T13:55:23Z",
+      "side": 1,
+      "message": "nit: Here and other QueryInvalid... make it InvalidQuery...",
+      "revId": "4d2229f281c1a39ce2370c3c9a96d7fe1b083d4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0eb6f171_04a41c4d",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-09T13:55:23Z",
+      "side": 1,
+      "message": "nit: this changed with the texture rectangle extension as rectangle textures don\u0027t support these wrap modes either. Please revert the change to the comment. For the error message we could just say that it is an invalid wrap mode for the texture type.",
+      "revId": "4d2229f281c1a39ce2370c3c9a96d7fe1b083d4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a4f9957b_e7255c12",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-09T13:55:23Z",
+      "side": 1,
+      "message": "Same as above, rectangle textures have this constraint too.",
+      "revId": "4d2229f281c1a39ce2370c3c9a96d7fe1b083d4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6f664e6f_88f43759",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 496,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-09T13:55:23Z",
+      "side": 1,
+      "message": "nit: this should be about the sampler being invalid.",
+      "revId": "4d2229f281c1a39ce2370c3c9a96d7fe1b083d4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92a78b51_ecd3cb9f",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 942,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-09T13:55:23Z",
+      "side": 1,
+      "message": "nit: PrimCountNegative",
+      "revId": "4d2229f281c1a39ce2370c3c9a96d7fe1b083d4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1cc994ce_be3bab32",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 4239,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-09T13:55:23Z",
+      "side": 1,
+      "message": "nit: Shouldn\u0027t these be invalid framebuffer parameters instead?",
       "revId": "4d2229f281c1a39ce2370c3c9a96d7fe1b083d4e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
