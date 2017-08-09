@@ -248,6 +248,20 @@ TString StructureHLSL::addConstructor(const TType &type,
     const TStructure *structure = type.getStruct();
     if (structure)
     {
+        const TFieldList &fields = structure->fields();
+        for (const TField *field : fields)
+        {
+            const TType *fieldType = field->type();
+            if (!IsSampler(fieldType->getBasicType()))
+            {
+                ctorParameters.push_back(*fieldType);
+            }
+            if (fieldType->getBasicType() == EbtStruct)
+            {
+                addConstructor(*fieldType, StructNameString(*fieldType->getStruct()), nullptr);
+            }
+        }
+
         mStructNames.insert(name);
 
         // Add element index
@@ -275,15 +289,6 @@ TString StructureHLSL::addConstructor(const TType &type,
             mStructDeclarations.push_back(std140RowMajorString);
         }
 
-        const TFieldList &fields = structure->fields();
-        for (const TField *field : fields)
-        {
-            const TType *fieldType = field->type();
-            if (!IsSampler(fieldType->getBasicType()))
-            {
-                ctorParameters.push_back(*fieldType);
-            }
-        }
         constructorFunctionName = TString(name);
     }
     else if (parameters)
@@ -556,9 +561,9 @@ void StructureHLSL::storeStd140ElementIndex(const TStructure &structure,
     Std140PaddingHelper padHelper = getPaddingHelper();
     const TFieldList &fields      = structure.fields();
 
-    for (unsigned int i = 0; i < fields.size(); i++)
+    for (const TField *field : fields)
     {
-        padHelper.prePadding(*fields[i]->type());
+        padHelper.prePadding(*field->type());
     }
 
     // Add remaining element index to the global map, for use with nested structs in standard
@@ -566,4 +571,5 @@ void StructureHLSL::storeStd140ElementIndex(const TStructure &structure,
     const TString &structName = QualifiedStructNameString(structure, useHLSLRowMajorPacking, true);
     mStd140StructElementIndexes[structName] = padHelper.elementIndex();
 }
-}
+
+}  // namespace sh

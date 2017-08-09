@@ -906,6 +906,55 @@ TEST_P(UniformBufferTest, BlockContainingArrayOfStructsContainingArrays)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Test with a block containing nested structs.
+TEST_P(UniformBufferTest, BlockContainingNestedStructs)
+{
+    const std::string &fragmentShader =
+        "#version 300 es\n"
+        "precision highp float;\n"
+        "out vec4 my_FragColor;\n"
+        "struct light_t {\n"
+        "    vec4 intensity;\n"
+        "};\n"
+        "struct lightWrapper_t {\n"
+        "    light_t light;\n"
+        "};\n"
+        "const int maxLights = 2;\n"
+        "layout(std140) uniform lightData { lightWrapper_t lightWrapper; };\n"
+        "vec4 processLight(vec4 lighting, lightWrapper_t aLightWrapper)\n"
+        "{\n"
+        "    return lighting + aLightWrapper.light.intensity;\n"
+        "}\n"
+        "void main()\n"
+        "{\n"
+        "    vec4 lighting = vec4(0, 0, 0, 1);\n"
+        "    for (int n = 0; n < maxLights; n++)\n"
+        "    {\n"
+        "        lighting = processLight(lighting, lightWrapper);\n"
+        "    }\n"
+        "    my_FragColor = lighting;\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, mVertexShaderSource, fragmentShader);
+    GLint uniformBufferIndex = glGetUniformBlockIndex(program, "lightData");
+
+    glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
+    const GLsizei kVectorsPerStruct  = 3;
+    const GLsizei kElementsPerVector = 4;
+    const GLsizei kBytesPerElement   = 4;
+    const GLsizei kDataSize          = kVectorsPerStruct * kElementsPerVector * kBytesPerElement;
+    std::vector<GLubyte> v(kDataSize, 0);
+    float *vAsFloat = reinterpret_cast<float *>(v.data());
+
+    vAsFloat[1] = 1.0f;
+
+    glBufferData(GL_UNIFORM_BUFFER, kDataSize, v.data(), GL_STATIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
+    glUniformBlockBinding(program, uniformBufferIndex, 0);
+    drawQuad(program.get(), "position", 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(UniformBufferTest,
                        ES3_D3D11(),
