@@ -14,6 +14,7 @@
 #include "compiler/translator/Cache.h"
 #include "compiler/translator/CallDAG.h"
 #include "compiler/translator/ClampPointSize.h"
+#include "compiler/translator/CollectVariables.h"
 #include "compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.h"
 #include "compiler/translator/DeferGlobalInitializers.h"
 #include "compiler/translator/EmulateGLFragColorBroadcast.h"

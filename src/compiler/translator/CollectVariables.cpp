@@ -3,8 +3,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
+// CollectVariables.cpp: Collect lists of shader interface variables based on the AST.
 
-#include "compiler/translator/VariableInfo.h"
+#include "compiler/translator/CollectVariables.h"
 
 #include "angle_gl.h"
 #include "common/utilities.h"
@@ -540,7 +541,7 @@ InterfaceBlock CollectVariablesTraverser::recordInterfaceBlock(const TIntermSymb
     ASSERT(blockType);
 
     InterfaceBlock interfaceBlock;
-    interfaceBlock.name = blockType->name().c_str();
+    interfaceBlock.name       = blockType->name().c_str();
     interfaceBlock.mappedName = HashName(blockType->name().c_str(), mHashFunction).c_str();
     interfaceBlock.instanceName =
         (blockType->hasInstanceName() ? blockType->instanceName().c_str() : "");
@@ -568,7 +569,7 @@ Uniform CollectVariablesTraverser::recordUniform(const TIntermSymbol &variable) 
 {
     Uniform uniform;
     setCommonVariableProperties(variable.getType(), variable.getSymbol(), &uniform);
-    uniform.binding = variable.getType().getLayoutQualifier().binding;
+    uniform.binding  = variable.getType().getLayoutQualifier().binding;
     uniform.location = variable.getType().getLayoutQualifier().location;
     uniform.offset   = variable.getType().getLayoutQualifier().offset;
     return uniform;

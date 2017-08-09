@@ -14,6 +14,8 @@
 // This should not be included by driver code.
 //
 
+#include <GLSLANG/ShaderVars.h>
+
 #include "compiler/translator/BuiltInFunctionEmulator.h"
 #include "compiler/translator/CallDAG.h"
 #include "compiler/translator/Diagnostics.h"
@@ -22,7 +24,6 @@
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/Pragma.h"
 #include "compiler/translator/SymbolTable.h"
-#include "compiler/translator/VariableInfo.h"
 #include "third_party/compiler/ArrayBoundsClamper.h"
 
 namespace sh

@@ -3,9 +3,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
+// CollectVariables.h: Collect lists of shader interface variables based on the AST.
 
-#ifndef COMPILER_TRANSLATOR_VARIABLEINFO_H_
-#define COMPILER_TRANSLATOR_VARIABLEINFO_H_
+#ifndef COMPILER_TRANSLATOR_COLLECTVARIABLES_H_
+#define COMPILER_TRANSLATOR_COLLECTVARIABLES_H_
 
 #include <GLSLANG/ShaderLang.h>
 
@@ -31,4 +32,4 @@ void CollectVariables(TIntermBlock *root,
                       const TExtensionBehavior &extensionBehavior);
 }
 
-#endif  // COMPILER_TRANSLATOR_VARIABLEINFO_H_
+#endif  // COMPILER_TRANSLATOR_COLLECTVARIABLES_H_
