@@ -576,6 +576,7 @@ enum TQualifier
     // GLSL ES 3.1 extension OES_geometry_shader qualifiers
     EvqGeometryIn,
     EvqGeometryOut,
+    EvqLayer,  // gl_Layer
 
     // end of list
     EvqLast
@@ -807,6 +808,7 @@ inline const char *getQualifierString(TQualifier q)
     case EvqSecondaryFragDataEXT:   return "SecondaryFragDataEXT";
     case EvqViewIDOVR:              return "ViewIDOVR";
     case EvqViewportIndex:          return "ViewportIndex";
+    case EvqLayer:                  return "Layer";
     case EvqLastFragColor:          return "LastFragColor";
     case EvqLastFragData:           return "LastFragData";
     case EvqSmoothOut:              return "smooth out";

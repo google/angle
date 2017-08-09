@@ -931,4 +931,34 @@ TEST_F(WEBGLMultiviewVertexShaderOutputCodeTest, GlViewportIndexIsSet)
     EXPECT_LT(viewIDOVRAssignmentLoc, glViewportIndexAssignmentLoc);
 }
 
+// The test checks that the layer is selected after the initialization of ViewID_OVR for
+// GLSL and ESSL ouputs.
+TEST_F(WEBGLMultiviewVertexShaderOutputCodeTest, GlLayerIsSet)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview : require\n"
+        "layout(num_views = 3) in;\n"
+        "void main()\n"
+        "{\n"
+        "}\n";
+    compile(shaderString, SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW |
+                              SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER);
+    const char glLayerAssignment[] =
+        "gl_Layer = (int(webgl_angle_ViewID_OVR) + webgl_angle_multiviewBaseViewLayerIndex)";
+
+    // Check that the layer is selected.
+    EXPECT_TRUE(foundInAllGLSLCode(glLayerAssignment));
+
+    // Setting gl_Layer must happen after ViewID_OVR's initialization.
+    const char viewIDOVRAssignment[] = "webgl_angle_ViewID_OVR = (uint(gl_InstanceID) % 3u)";
+    size_t viewIDOVRAssignmentLoc = findInCode(SH_GLSL_COMPATIBILITY_OUTPUT, viewIDOVRAssignment);
+    size_t glLayerAssignmentLoc   = findInCode(SH_GLSL_COMPATIBILITY_OUTPUT, glLayerAssignment);
+    EXPECT_LT(viewIDOVRAssignmentLoc, glLayerAssignmentLoc);
+
+    viewIDOVRAssignmentLoc = findInCode(SH_ESSL_OUTPUT, viewIDOVRAssignment);
+    glLayerAssignmentLoc   = findInCode(SH_ESSL_OUTPUT, glLayerAssignment);
+    EXPECT_LT(viewIDOVRAssignmentLoc, glLayerAssignmentLoc);
+}
+
 }  // namespace

@@ -483,6 +483,16 @@ GLenum FramebufferState::getMultiviewLayout() const
     return attachment->getMultiviewLayout();
 }
 
+int FramebufferState::getBaseViewIndex() const
+{
+    const FramebufferAttachment *attachment = getFirstNonNullAttachment();
+    if (attachment == nullptr)
+    {
+        return GL_NONE;
+    }
+    return attachment->getBaseViewIndex();
+}
+
 Framebuffer::Framebuffer(const Caps &caps, rx::GLImplFactory *factory, GLuint id)
     : mState(caps),
       mImpl(factory->createFramebuffer(mState)),
@@ -1650,6 +1660,11 @@ int Framebuffer::getSamples(const ValidationContext *context)
 GLsizei Framebuffer::getNumViews() const
 {
     return mState.getNumViews();
+}
+
+GLint Framebuffer::getBaseViewIndex() const
+{
+    return mState.getBaseViewIndex();
 }
 
 const std::vector<Offset> *Framebuffer::getViewportOffsets() const

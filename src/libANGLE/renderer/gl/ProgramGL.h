@@ -78,6 +78,9 @@ class ProgramGL : public ProgramImpl
 
     GLuint getProgramID() const;
 
+    void enableSideBySideRenderingPath() const;
+    void enableLayeredRenderingPath(int baseViewIndex) const;
+
   private:
     void preLink();
     bool checkLinkStatus(gl::InfoLog &infoLog);
@@ -102,6 +105,7 @@ class ProgramGL : public ProgramImpl
     std::vector<PathRenderingFragmentInput> mPathRenderingFragmentInputs;
 
     bool mEnablePathRendering;
+    GLint mMultiviewBaseViewLayerIndexUniformLocation;
 
     GLuint mProgramID;
 };

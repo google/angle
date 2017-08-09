@@ -14,8 +14,14 @@
 // - Add initializers of ViewID_OVR and InstanceID to the beginning of the body of main. The pass
 // should be executed before any variables get collected so that usage of gl_InstanceID is recorded.
 // - If the output is ESSL or GLSL and the SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER option is
-// enabled, the expression "gl_ViewportIndex = int(ViewID_OVR)" is added after ViewID and InstanceID
-// are initialized.
+// enabled, the expression
+// "if (multiviewBaseViewLayerIndex < 0) {
+//      gl_ViewportIndex = int(ViewID_OVR);
+//  } else {
+//      gl_Layer = int(ViewID_OVR) + multiviewBaseViewLayerIndex;
+//  }"
+// is added after ViewID and InstanceID are initialized. Also, MultiviewRenderPath is added as a
+// uniform.
 //
 
 #ifndef COMPILER_TRANSLATOR_DECLAREANDINITBUILTINSFORINSTANCEDMULTIVIEW_H_

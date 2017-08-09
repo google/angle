@@ -280,6 +280,9 @@ class ProgramState final : angle::NonCopyable
     GLuint getSamplerIndexFromUniformIndex(GLuint uniformIndex) const;
     GLuint getAttributeLocation(const std::string &name) const;
 
+    int getNumViews() const { return mNumViews; }
+    bool usesMultiview() const { return mNumViews != -1; }
+
   private:
     friend class MemoryProgramCache;
     friend class Program;
@@ -537,8 +540,8 @@ class Program final : angle::NonCopyable, public LabeledObject
     const Bindings &getUniformLocationBindings() const { return mUniformLocationBindings; }
     const Bindings &getFragmentInputBindings() const { return mFragmentInputBindings; }
 
-    int getNumViews() const { return mState.mNumViews; }
-    bool usesMultiview() const { return mState.mNumViews != -1; }
+    int getNumViews() const { return mState.getNumViews(); }
+    bool usesMultiview() const { return mState.usesMultiview(); }
 
   private:
     ~Program();

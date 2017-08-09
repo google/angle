@@ -95,6 +95,7 @@ class FramebufferState final : angle::NonCopyable
     GLenum getMultiviewLayout() const;
     GLsizei getNumViews() const;
     const std::vector<Offset> *getViewportOffsets() const;
+    GLint getBaseViewIndex() const;
 
   private:
     friend class Framebuffer;
@@ -185,6 +186,7 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
     const FramebufferAttachment *getAttachment(GLenum attachment) const;
     GLenum getMultiviewLayout() const;
     GLsizei getNumViews() const;
+    GLint getBaseViewIndex() const;
     const std::vector<Offset> *getViewportOffsets() const;
 
     size_t getDrawbufferStateCount() const;

@@ -95,12 +95,14 @@ void BindFramebufferAttachment(const FunctionsGL *functions,
 
 void RetrieveMultiviewFieldsFromAttachment(const gl::FramebufferAttachment *attachment,
                                            const std::vector<gl::Offset> **viewportOffsets,
-                                           GLenum *multiviewLayout)
+                                           GLenum *multiviewLayout,
+                                           int *baseViewIndex)
 {
     if (attachment)
     {
         *viewportOffsets = &attachment->getMultiviewViewportOffsets();
         *multiviewLayout = attachment->getMultiviewLayout();
+        *baseViewIndex   = attachment->getBaseViewIndex();
     }
 }
 
@@ -596,6 +598,7 @@ void FramebufferGL::syncState(const gl::Context *context, const Framebuffer::Dir
 
     const std::vector<gl::Offset> *attachmentViewportOffsets = nullptr;
     GLenum multiviewLayout                                   = GL_NONE;
+    int baseViewIndex                                        = -1;
     bool isAttachmentModified                                = false;
 
     for (auto dirtyBit : dirtyBits)
@@ -606,14 +609,16 @@ void FramebufferGL::syncState(const gl::Context *context, const Framebuffer::Dir
                 BindFramebufferAttachment(mFunctions, GL_DEPTH_ATTACHMENT,
                                           mState.getDepthAttachment());
                 RetrieveMultiviewFieldsFromAttachment(mState.getDepthAttachment(),
-                                                      &attachmentViewportOffsets, &multiviewLayout);
+                                                      &attachmentViewportOffsets, &multiviewLayout,
+                                                      &baseViewIndex);
                 isAttachmentModified = true;
                 break;
             case Framebuffer::DIRTY_BIT_STENCIL_ATTACHMENT:
                 BindFramebufferAttachment(mFunctions, GL_STENCIL_ATTACHMENT,
                                           mState.getStencilAttachment());
                 RetrieveMultiviewFieldsFromAttachment(mState.getStencilAttachment(),
-                                                      &attachmentViewportOffsets, &multiviewLayout);
+                                                      &attachmentViewportOffsets, &multiviewLayout,
+                                                      &baseViewIndex);
                 isAttachmentModified = true;
                 break;
             case Framebuffer::DIRTY_BIT_DRAW_BUFFERS:
@@ -654,7 +659,8 @@ void FramebufferGL::syncState(const gl::Context *context, const Framebuffer::Dir
                                           static_cast<GLenum>(GL_COLOR_ATTACHMENT0 + index),
                                           mState.getColorAttachment(index));
                 RetrieveMultiviewFieldsFromAttachment(mState.getColorAttachment(index),
-                                                      &attachmentViewportOffsets, &multiviewLayout);
+                                                      &attachmentViewportOffsets, &multiviewLayout,
+                                                      &baseViewIndex);
                 isAttachmentModified = true;
                 break;
             }
@@ -674,6 +680,9 @@ void FramebufferGL::syncState(const gl::Context *context, const Framebuffer::Dir
             mStateManager->setViewportOffsets(
                 FramebufferAttachment::GetDefaultViewportOffsetVector());
         }
+
+        mStateManager->updateMultiviewBaseViewLayerIndexUniform(context->getGLState().getProgram(),
+                                                                getState());
     }
 }
 

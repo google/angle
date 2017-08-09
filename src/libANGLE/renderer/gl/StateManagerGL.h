@@ -22,6 +22,7 @@ namespace gl
 struct Caps;
 class ContextState;
 class State;
+class FramebufferState;
 }
 
 namespace rx
@@ -179,6 +180,10 @@ class StateManagerGL final : angle::NonCopyable
     gl::Error onMakeCurrent(const gl::Context *context);
 
     void syncState(const gl::Context *context, const gl::State::DirtyBits &glDirtyBits);
+
+    void updateMultiviewBaseViewLayerIndexUniform(
+        const gl::Program *program,
+        const gl::FramebufferState &drawFramebufferState) const;
 
   private:
     // Set state that's common among draw commands and compute invocations.
