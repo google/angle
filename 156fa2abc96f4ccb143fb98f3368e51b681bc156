@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "66648766_4649e562",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-09T03:22:27Z",
+      "side": 1,
+      "message": "Seems that this part of code can be shared between ImageLoad and ImageStore",
+      "range": {
+        "startLine": 146,
+        "startChar": 0,
+        "endLine": 166,
+        "endChar": 86
+      },
+      "revId": "156fa2abc96f4ccb143fb98f3368e51b681bc156",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e14de4d4_8b2c8f83",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-09T03:22:27Z",
+      "side": 1,
+      "message": "I am wondering whether outputHLSLSamplerUniformGroup needs the same limitation?",
+      "range": {
+        "startLine": 275,
+        "startChar": 4,
+        "endLine": 275,
+        "endChar": 99
+      },
+      "revId": "156fa2abc96f4ccb143fb98f3368e51b681bc156",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "119d32a2_36d5ea20",
+        "filename": "src/compiler/translator/UniformHLSL.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-09T03:22:27Z",
+      "side": 1,
+      "message": "It seems that mSamplerRegister can be replaced by mSRVRegister. mSRVRegister will stand for the available register index for readonly texture. Is it right?",
+      "range": {
+        "startLine": 93,
+        "startChar": 17,
+        "endLine": 93,
+        "endChar": 33
+      },
+      "revId": "156fa2abc96f4ccb143fb98f3368e51b681bc156",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "10f9edb8_f152c4e5",
+        "filename": "src/compiler/translator/UtilsHLSL.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-09T03:22:27Z",
+      "side": 1,
+      "message": "Rename to TextureImageGroup?",
+      "range": {
+        "startLine": 202,
+        "startChar": 17,
+        "endLine": 202,
+        "endChar": 29
+      },
+      "revId": "156fa2abc96f4ccb143fb98f3368e51b681bc156",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8f62bc60_ae4a269b",
+        "filename": "src/compiler/translator/UtilsHLSL.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-09T03:22:27Z",
+      "side": 1,
+      "message": "Rename to TextureImageTypeSuffix?",
+      "range": {
+        "startLine": 433,
+        "startChar": 8,
+        "endLine": 433,
+        "endChar": 25
+      },
+      "revId": "156fa2abc96f4ccb143fb98f3368e51b681bc156",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bb87e4db_585e4afc",
+        "filename": "src/compiler/translator/UtilsHLSL.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-09T03:22:27Z",
+      "side": 1,
+      "message": "HLSL?",
+      "range": {
+        "startLine": 57,
+        "startChar": 49,
+        "endLine": 57,
+        "endChar": 53
+      },
+      "revId": "156fa2abc96f4ccb143fb98f3368e51b681bc156",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "656b5bee_d86c154a",
+        "filename": "src/compiler/translator/UtilsHLSL.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-09T03:22:27Z",
+      "side": 1,
+      "message": "HLSLTextureImageGroup?",
+      "range": {
+        "startLine": 58,
+        "startChar": 5,
+        "endLine": 58,
+        "endChar": 21
+      },
+      "revId": "156fa2abc96f4ccb143fb98f3368e51b681bc156",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
