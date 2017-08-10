@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a6b5a547_e3420a90",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-08-10T08:56:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed9714ea_815254d8",
+      "range": {
+        "startLine": 10,
+        "startChar": 34,
+        "endLine": 10,
+        "endChar": 52
+      },
+      "revId": "1cf41a1123d52ea0fb2da6ca24b73cbfb99ef3a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "91c2457b_3313081c",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 1
@@ -45,6 +69,30 @@
       "revId": "1cf41a1123d52ea0fb2da6ca24b73cbfb99ef3a6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7fd93eec_c6f5ead9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 859,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-08-10T08:56:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "91c2457b_3313081c",
+      "range": {
+        "startLine": 854,
+        "startChar": 1,
+        "endLine": 859,
+        "endChar": 90
+      },
+      "revId": "1cf41a1123d52ea0fb2da6ca24b73cbfb99ef3a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
