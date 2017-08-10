@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "147cccd2_ea508455",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 709,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-10T09:41:11Z",
+      "side": 1,
+      "message": "This call could be inside the if.",
+      "revId": "66526b08938644971ddcf2c8161c4decf14b8e7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a8f9a291_847b0b7b",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 7
@@ -31,6 +48,24 @@
       "side": 1,
       "message": "It is needed here. The dirty bit system for VAOs (and framebuffers) is a bit odd.\nHere\u0027s what happens if it\u0027s not there:\n1) There is an active program with multiple views (check last scenario in the DivisorOrderOfOperation test).\n2) We bind the vao at a moment it has not dirtied bits.\n3) setVertexArrayBinding gets called and only the DIRTY_BIT_VERTEX_ARRAY_BINDING dirty bit gets set. The DIRTY_OBJECT_VERTEX_ARRAY is not set.\n4) DIRTY_BIT_VERTEX_ARRAY_BINDING gets gone through in StateManagerGL, applyNumViewsToDivisor gets called and the local dirty bits are set, but updateBindingDivisor doesn\u0027t get called.\n5) syncState never gets called because DIRTY_OBJECT_VERTEX_ARRAY was never set dirty.\n\nLet\u0027s keep it as it is for now, it can probably be removed if we can do some kind of refactoring of the dirty bit system.",
       "parentUuid": "a8f9a291_847b0b7b",
+      "revId": "66526b08938644971ddcf2c8161c4decf14b8e7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0bfadaa4_36f03afa",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 715,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-10T09:41:11Z",
+      "side": 1,
+      "message": "However, since the state is updated here, I don\u0027t think that the local dirty bits are actually needed at all. Can you still clean that up?",
+      "parentUuid": "2452b2b1_6827c694",
       "revId": "66526b08938644971ddcf2c8161c4decf14b8e7d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
