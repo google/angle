@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1d7c1a3b_1b4f6530",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 759,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-10T14:47:13Z",
+      "side": 1,
+      "message": "Instead of re-building this vector every time, please pass the interfaceBlocks vector to CollectVariables and have it insert all interface blocks into this vector as well.",
+      "range": {
+        "startLine": 754,
+        "startChar": 4,
+        "endLine": 759,
+        "endChar": 27
+      },
+      "revId": "f170b9eb4c603c9c209449fb4ed72c5b4b870d6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c357fa39_0065dfa2",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 634,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-10T14:47:13Z",
+      "side": 1,
+      "message": "Continue inserting into mInterfaceBlocks here (as well as mUniformBlocks/mShaderStorageBlocks)",
+      "revId": "f170b9eb4c603c9c209449fb4ed72c5b4b870d6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
