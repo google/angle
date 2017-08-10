@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ea269ad4_eaca9763",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 945,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-10T16:11:20Z",
+      "side": 1,
+      "message": "This seems like a little bit roundabout way of checking if the view is chosen in the geometry shader. Maybe use a different flag for this?",
+      "range": {
+        "startLine": 945,
+        "startChar": 8,
+        "endLine": 945,
+        "endChar": 60
+      },
+      "revId": "31c186ed40c98c2ca8a26fe098df4efe8f78450b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ffafcaff_07adeca3",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1310,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-10T16:11:20Z",
+      "side": 1,
+      "message": "Why is this needed? I\u0027m not too familiar with what this code does.",
+      "revId": "31c186ed40c98c2ca8a26fe098df4efe8f78450b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
