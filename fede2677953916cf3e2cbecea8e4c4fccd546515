@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5ae093d1_b2cb0d48",
+        "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-10T14:34:57Z",
+      "side": 1,
+      "message": "nit: can we also test that it isn\u0027t INT_MAX which would mean the code in updateCaps didn\u0027t update the samples correctly?",
+      "revId": "fede2677953916cf3e2cbecea8e4c4fccd546515",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
