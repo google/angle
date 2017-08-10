@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed9714ea_815254d8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-10T08:36:25Z",
+      "side": 1,
+      "message": "framebuffer default parameters",
+      "range": {
+        "startLine": 10,
+        "startChar": 34,
+        "endLine": 10,
+        "endChar": 52
+      },
+      "revId": "1cf41a1123d52ea0fb2da6ca24b73cbfb99ef3a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "91c2457b_3313081c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 859,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-10T08:36:25Z",
+      "side": 1,
+      "message": "This comment is misleading. I think what you want to say is \"The OpenGL ES 3.1 spec section 9.2(p209) sates that, \u0027If there are no attachments, rendering will be limited to a rectangle having a lower left of (0, 0) and an upper right of (width, height), where width and height are the framebuffer object’s default width and height.\u0027\"\n\nPlease modify the commit message correspondingly.",
+      "range": {
+        "startLine": 854,
+        "startChar": 1,
+        "endLine": 859,
+        "endChar": 90
+      },
+      "revId": "1cf41a1123d52ea0fb2da6ca24b73cbfb99ef3a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
