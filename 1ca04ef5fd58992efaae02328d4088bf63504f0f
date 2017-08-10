@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dca3243a_05dec50f",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 817,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-10T09:44:18Z",
+      "side": 1,
+      "message": "These comments could be clearer. What is being reset and why?",
+      "range": {
+        "startLine": 817,
+        "startChar": 4,
+        "endLine": 817,
+        "endChar": 13
+      },
+      "revId": "1ca04ef5fd58992efaae02328d4088bf63504f0f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
