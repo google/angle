@@ -1,0 +1,186 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c85c5c2d_edbfae8a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-10T13:12:59Z",
+      "side": 1,
+      "message": "nit: typo",
+      "range": {
+        "startLine": 7,
+        "startChar": 5,
+        "endLine": 7,
+        "endChar": 7
+      },
+      "revId": "81ddc3e5ed181328c9e86932024825425633d56b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a2c5a9be_5efb366e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-10T13:12:59Z",
+      "side": 1,
+      "message": "An empty scissor rect should cause an early return for multiview as well.",
+      "revId": "81ddc3e5ed181328c9e86932024825425633d56b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d0457126_40cced15",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 678,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-10T13:12:59Z",
+      "side": 1,
+      "message": "nit: Superfluous comment. It\u0027s clear from the code itself in this case what is being done.",
+      "revId": "81ddc3e5ed181328c9e86932024825425633d56b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eab7b99b_9ac2ba88",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 737,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-10T13:12:59Z",
+      "side": 1,
+      "message": "It seems more likely that this would slightly reduce performance rather than improve it, since we\u0027re more often CPU limited rather than GPU limited. So I\u0027d leave this out unless we have a test case that clearly demonstrates that this makes a significant positive impact on performance.",
+      "revId": "81ddc3e5ed181328c9e86932024825425633d56b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c81d7303_715aa3df",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 745,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-10T13:12:59Z",
+      "side": 1,
+      "message": "This call goes to outside the loop.",
+      "revId": "81ddc3e5ed181328c9e86932024825425633d56b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9cf12b5_68fb13bc",
+        "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-10T13:12:59Z",
+      "side": 1,
+      "message": "I\u0027d split this into two functions - one for creating the framebuffers and another for creating the program. The program also doesn\u0027t need to be stored as a member - I\u0027d think that having less state in the test class is better even if querying the uniform location needs to be duplicated - that\u0027s still only one line of code. Particularly because some of the tests don\u0027t use all of the state. You should also be able to use ANGLE_GL_PROGRAM in gl_raii for the program.",
+      "revId": "81ddc3e5ed181328c9e86932024825425633d56b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7c59b265_32e208cf",
+        "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-10T13:12:59Z",
+      "side": 1,
+      "message": "Would rather have a single comment explaining that we\u0027re expecting alternating columns of red and green. Or you could rename the function \"checkAlternatingColumnsOfRedAndGreenInFBO\" which would make the code more self-documenting. The name is a bit on the long side but still not insane.",
+      "revId": "81ddc3e5ed181328c9e86932024825425633d56b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "20c50dc8_33c18152",
+        "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-10T13:12:59Z",
+      "side": 1,
+      "message": "Forgot to say this on earlier reviews, but EXPECT_PIXEL_COLOR_EQ() makes the test code clearer.",
+      "revId": "81ddc3e5ed181328c9e86932024825425633d56b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6aafb66f_c7d5c644",
+        "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-10T13:12:59Z",
+      "side": 1,
+      "message": "\"mNonMultiviewFBO\" would be better. What\u0027s considered \"normal\" is very open to interpretation.",
+      "range": {
+        "startLine": 193,
+        "startChar": 18,
+        "endLine": 193,
+        "endChar": 28
+      },
+      "revId": "81ddc3e5ed181328c9e86932024825425633d56b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a78a7086_c4a1e5d9",
+        "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 760,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-10T13:12:59Z",
+      "side": 1,
+      "message": "Would be simpler to iterate over the pixels in a loop, since they\u0027re all expected to be the same color.",
+      "revId": "81ddc3e5ed181328c9e86932024825425633d56b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
