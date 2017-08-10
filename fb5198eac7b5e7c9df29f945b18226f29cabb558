@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "4d29c804_8f2d1d38",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-10T05:17:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "46786836_e7c7f70a",
+      "revId": "fb5198eac7b5e7c9df29f945b18226f29cabb558",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c66e9439_ad37ffd0",
         "filename": "src/compiler/translator/ShaderLang.cpp",
         "patchSetId": 4
