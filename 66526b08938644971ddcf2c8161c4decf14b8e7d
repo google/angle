@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ffbd9ce9_83d66957",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 709,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-10T11:15:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "147cccd2_ea508455",
+      "revId": "66526b08938644971ddcf2c8161c4decf14b8e7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a8f9a291_847b0b7b",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 7
@@ -69,6 +87,24 @@
       "revId": "66526b08938644971ddcf2c8161c4decf14b8e7d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "51844da8_747176ab",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 715,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-10T11:15:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0bfadaa4_36f03afa",
+      "revId": "66526b08938644971ddcf2c8161c4decf14b8e7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
