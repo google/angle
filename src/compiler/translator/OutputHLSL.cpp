@@ -241,14 +241,6 @@ const std::map<std::string, unsigned int> &OutputHLSL::getUniformRegisterMap() c
     return mUniformHLSL->getUniformRegisterMap();
 }
 
-int OutputHLSL::vectorSize(const TType &type) const
-{
-    int elementSize        = type.isMatrix() ? type.getCols() : 1;
-    unsigned int arraySize = type.isArray() ? type.getArraySize() : 1u;
-
-    return elementSize * arraySize;
-}
-
 TString OutputHLSL::structInitializerString(int indent, const TType &type, const TString &name)
 {
     TString init;

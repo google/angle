@@ -96,7 +96,6 @@ class OutputHLSL : public TIntermTraverser
                        const char *postString);
     void outputLineDirective(TInfoSinkBase &out, int line);
     TString argumentString(const TIntermSymbol *symbol);
-    int vectorSize(const TType &type) const;
 
     // Emit constructor. Called with literal names so using const char* instead of TString.
     void outputConstructor(TInfoSinkBase &out,
