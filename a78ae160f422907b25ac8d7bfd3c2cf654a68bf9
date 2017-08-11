@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ee33a85b_86c08b1d",
+        "filename": "src/compiler/translator/VariablePacker.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-11T10:02:13Z",
+      "side": 1,
+      "message": "Would be nicer to not to have to template this function, but since the ShaderLang API is passing vectors of objects rather than vectors of pointers I couldn\u0027t come up with a better solution. Do you think this is okay as it is?",
+      "revId": "a78ae160f422907b25ac8d7bfd3c2cf654a68bf9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
