@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "3f581a08_861263f0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1297,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-11T06:11:04Z",
+      "side": 1,
+      "message": "I can imagine one type of case where Geoff\u0027s suggestion could go wrong: GL driver reports max samples 4. All formats report that they support 8 samples, except for one format where the samples query is broken and we have to disable it, but which only supports 4 samples.\n\nProbably this won\u0027t happen in practice and changing the GL backend would be safe enough. However, I think that this warrants merging this change separately and making an independent decision on whether we also change the GL backend.",
+      "parentUuid": "f4e32c58_fc8b4478",
+      "range": {
+        "startLine": 1294,
+        "startChar": 4,
+        "endLine": 1297,
+        "endChar": 70
+      },
+      "revId": "fede2677953916cf3e2cbecea8e4c4fccd546515",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5ae093d1_b2cb0d48",
         "filename": "src/tests/gl_tests/TextureMultisampleTest.cpp",
         "patchSetId": 3
