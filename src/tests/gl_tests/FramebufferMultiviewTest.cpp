@@ -471,7 +471,7 @@ TEST_P(FramebufferMultiviewTest, InvalidReadPixels)
     EXPECT_GL_ERROR(GL_INVALID_FRAMEBUFFER_OPERATION);
 }
 
-// Test that glClear clears only the contents of each view.
+// Test that glClear clears only the contents of each view if the scissor test is enabled.
 TEST_P(FramebufferMultiviewTest, SideBySideClear)
 {
     if (!requestMultiviewExtension())
@@ -496,34 +496,35 @@ TEST_P(FramebufferMultiviewTest, SideBySideClear)
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
 
     // Clear the contents of the texture.
-    glClearColor(0, 0, 0, 0);
+    glClearColor(0, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT);
 
     // Bind and specify viewport/scissor dimensions for each view.
     glBindFramebuffer(GL_FRAMEBUFFER, multiviewFBO);
     glViewport(0, 0, 1, 2);
     glScissor(0, 0, 1, 2);
+    glEnable(GL_SCISSOR_TEST);
 
-    glClearColor(1, 0, 0, 0);
+    glClearColor(1, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT);
 
     glBindFramebuffer(GL_FRAMEBUFFER, normalFBO);
 
     // column 0
-    EXPECT_PIXEL_EQ(0, 0, 0, 0, 0, 0);
-    EXPECT_PIXEL_EQ(0, 1, 0, 0, 0, 0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(0, 1, GLColor::black);
 
     // column 1
-    EXPECT_PIXEL_EQ(1, 0, 255, 0, 0, 0);
-    EXPECT_PIXEL_EQ(1, 1, 255, 0, 0, 0);
+    EXPECT_PIXEL_COLOR_EQ(1, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::red);
 
     // column 2
-    EXPECT_PIXEL_EQ(2, 0, 0, 0, 0, 0);
-    EXPECT_PIXEL_EQ(2, 1, 0, 0, 0, 0);
+    EXPECT_PIXEL_COLOR_EQ(2, 0, GLColor::black);
+    EXPECT_PIXEL_COLOR_EQ(2, 1, GLColor::black);
 
     // column 3
-    EXPECT_PIXEL_EQ(3, 0, 255, 0, 0, 0);
-    EXPECT_PIXEL_EQ(3, 1, 255, 0, 0, 0);
+    EXPECT_PIXEL_COLOR_EQ(3, 0, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(3, 1, GLColor::red);
 }
 
 // Test that glFramebufferTextureMultiviewLayeredANGLE modifies the internal multiview state.
@@ -629,6 +630,53 @@ TEST_P(FramebufferMultiviewTest, IncompleteViewTargetsLayered)
                                               0, 0, 2);
     ASSERT_GL_NO_ERROR();
     EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+}
+
+// Test that glClear clears all of the contents if the scissor test is disabled.
+TEST_P(FramebufferMultiviewTest, SideBySideClearWithDisabledScissorTest)
+{
+    if (!requestMultiviewExtension())
+    {
+        return;
+    }
+
+    GLFramebuffer multiviewFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, multiviewFBO);
+
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 4, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    const GLint kViewportOffsets[2] = {1, 0};
+    glFramebufferTextureMultiviewSideBySideANGLE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, tex, 0, 1,
+                                                 &kViewportOffsets[0]);
+
+    // Create and bind a normal framebuffer to access the 2D texture.
+    GLFramebuffer normalFBO;
+    glBindFramebuffer(GL_FRAMEBUFFER, normalFBO);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+
+    // Clear the contents of the texture.
+    glClearColor(0, 1, 0, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Bind and specify viewport/scissor dimensions for each view.
+    glBindFramebuffer(GL_FRAMEBUFFER, multiviewFBO);
+    glViewport(0, 0, 1, 2);
+    glScissor(0, 0, 1, 2);
+
+    glClearColor(1, 0, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, normalFBO);
+
+    for (int i = 0; i < 4; ++i)
+    {
+        for (int j = 0; j < 2; ++j)
+        {
+            EXPECT_PIXEL_COLOR_EQ(i, j, GLColor::red);
+        }
+    }
 }
 
 ANGLE_INSTANTIATE_TEST(FramebufferMultiviewTest, ES3_OPENGL());

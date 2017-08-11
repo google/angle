@@ -1665,9 +1665,7 @@ void StateManagerGL::syncState(const gl::Context *context, const gl::State::Dirt
         switch (dirtyBit)
         {
             case gl::State::DIRTY_BIT_SCISSOR_TEST_ENABLED:
-                // If the active draw framebuffer has a side-by-side layout, then the scissor test
-                // is always enabled.
-                setScissorTestEnabled(state.isScissorTestEnabled() || mIsSideBySideDrawFramebuffer);
+                setScissorTestEnabled(state.isScissorTestEnabled());
                 break;
             case gl::State::DIRTY_BIT_SCISSOR:
             {

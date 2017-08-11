@@ -101,6 +101,10 @@ Additions to Chapter 2 of the OpenGL ES 3.0 Specification (OpenGL ES Operation)
     uses the multi-view extension, the number of views specified in the
     program must match the number of views in the draw framebuffer. If
     there is a mismatch, an INVALID_OPERATION error is generated.
+
+    If the active draw framebuffer has a side-by-side multi-view layout
+    and the scissor test is not enabled, the result of any draw command
+    is undefined, but is not followed by program termination.
     "
 
     Modify section 2.15.2 Transform Feedback Primitive Capture, p. 91
@@ -154,6 +158,10 @@ Additions to Chapter 4 of the OpenGL ES 3.0 Specification
     Clearing commands are applied to each view in the current multi-view
     framebuffer object and have the same constraints as described
     in section 4.2.3 Clearing the Buffers.
+
+    If the active draw framebuffer has a side-by-side multi-view layout
+    and the scissor test is not enabled, the clearing command clears
+    the whole content of the specified buffers.
     "
 
     Modify section 4.3.2 (Reading pixels), p. 193

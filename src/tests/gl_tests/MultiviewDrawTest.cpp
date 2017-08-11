@@ -134,8 +134,9 @@ class MultiviewSideBySideRenderTest : public MultiviewDrawTest
         ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_READ_FRAMEBUFFER));
 
         // Clear the buffers.
-        glViewport(0, 0, width, height);
-        glScissor(0, 0, width, height);
+        glViewport(0, 0, widthPerView, height);
+        glScissor(0, 0, widthPerView, height);
+        glEnable(GL_SCISSOR_TEST);
         glClearColor(0, 0, 0, 0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -814,6 +815,7 @@ TEST_P(MultiviewSideBySideRenderTest, DivisorOrderOfOperation)
 
     glViewport(0, 0, 1, 1);
     glScissor(0, 0, 1, 1);
+    glEnable(GL_SCISSOR_TEST);
     glClearColor(0, 0, 0, 0);
 
     // Clear the buffers, propagate divisor to the driver, bind the vao and keep it active.

@@ -104,10 +104,11 @@ void RetrieveMultiviewFieldsFromAttachment(const gl::FramebufferAttachment *atta
     }
 }
 
-bool RequiresMultipleClears(const FramebufferAttachment *attachment)
+bool RequiresMultipleClears(const FramebufferAttachment *attachment, bool scissorTestEnabled)
 {
     return attachment != nullptr &&
-           attachment->getMultiviewLayout() == GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE;
+           attachment->getMultiviewLayout() == GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE &&
+           scissorTestEnabled;
 }
 
 }  // namespace
@@ -221,7 +222,8 @@ Error FramebufferGL::clear(const gl::Context *context, GLbitfield mask)
     syncClearState(context, mask);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
 
-    if (RequiresMultipleClears(mState.getFirstNonNullAttachment()))
+    if (RequiresMultipleClears(mState.getFirstNonNullAttachment(),
+                               context->getGLState().isScissorTestEnabled()))
     {
         genericSideBySideClear(context, ClearCommandType::Clear, mask, GL_NONE, 0, nullptr, 0.0f,
                                0);
@@ -242,7 +244,8 @@ Error FramebufferGL::clearBufferfv(const gl::Context *context,
     syncClearBufferState(context, buffer, drawbuffer);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
 
-    if (RequiresMultipleClears(mState.getFirstNonNullAttachment()))
+    if (RequiresMultipleClears(mState.getFirstNonNullAttachment(),
+                               context->getGLState().isScissorTestEnabled()))
     {
         genericSideBySideClear(context, ClearCommandType::ClearBufferfv,
                                static_cast<GLbitfield>(0u), buffer, drawbuffer,
@@ -264,7 +267,8 @@ Error FramebufferGL::clearBufferuiv(const gl::Context *context,
     syncClearBufferState(context, buffer, drawbuffer);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
 
-    if (RequiresMultipleClears(mState.getFirstNonNullAttachment()))
+    if (RequiresMultipleClears(mState.getFirstNonNullAttachment(),
+                               context->getGLState().isScissorTestEnabled()))
     {
         genericSideBySideClear(context, ClearCommandType::ClearBufferuiv,
                                static_cast<GLbitfield>(0u), buffer, drawbuffer,
@@ -286,7 +290,8 @@ Error FramebufferGL::clearBufferiv(const gl::Context *context,
     syncClearBufferState(context, buffer, drawbuffer);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
 
-    if (RequiresMultipleClears(mState.getFirstNonNullAttachment()))
+    if (RequiresMultipleClears(mState.getFirstNonNullAttachment(),
+                               context->getGLState().isScissorTestEnabled()))
     {
         genericSideBySideClear(context, ClearCommandType::ClearBufferiv,
                                static_cast<GLbitfield>(0u), buffer, drawbuffer,
@@ -309,7 +314,8 @@ Error FramebufferGL::clearBufferfi(const gl::Context *context,
     syncClearBufferState(context, buffer, drawbuffer);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
 
-    if (RequiresMultipleClears(mState.getFirstNonNullAttachment()))
+    if (RequiresMultipleClears(mState.getFirstNonNullAttachment(),
+                               context->getGLState().isScissorTestEnabled()))
     {
         genericSideBySideClear(context, ClearCommandType::ClearBufferfi,
                                static_cast<GLbitfield>(0u), buffer, drawbuffer, nullptr, depth,
@@ -659,8 +665,6 @@ void FramebufferGL::syncState(const gl::Context *context, const Framebuffer::Dir
     {
         const bool isSideBySide = multiviewLayout == GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE;
         mStateManager->setSideBySide(isSideBySide);
-        mStateManager->setScissorTestEnabled(isSideBySide ||
-                                             context->getGLState().isScissorTestEnabled());
         if (attachmentViewportOffsets != nullptr)
         {
             mStateManager->setViewportOffsets(*attachmentViewportOffsets);
