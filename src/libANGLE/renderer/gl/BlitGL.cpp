@@ -9,14 +9,18 @@
 #include "libANGLE/renderer/gl/BlitGL.h"
 
 #include "common/vector_utils.h"
-#include "libANGLE/formatutils.h"
+#include "image_util/copyimage.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/Framebuffer.h"
-#include "libANGLE/renderer/gl/formatutilsgl.h"
+#include "libANGLE/formatutils.h"
+#include "libANGLE/renderer/Format.h"
 #include "libANGLE/renderer/gl/FramebufferGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
-#include "libANGLE/renderer/gl/TextureGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
+#include "libANGLE/renderer/gl/TextureGL.h"
 #include "libANGLE/renderer/gl/WorkaroundsGL.h"
+#include "libANGLE/renderer/gl/formatutilsgl.h"
+#include "libANGLE/renderer/renderer_utils.h"
 
 using angle::Vector2;
 
@@ -517,6 +521,78 @@ gl::Error BlitGL::copySubTexture(const gl::Context *context,
 
     mStateManager->bindVertexArray(mVAO, 0);
     mFunctions->drawArrays(GL_TRIANGLES, 0, 3);
+
+    return gl::NoError();
+}
+
+gl::Error BlitGL::copySubTextureCPUReadback(const gl::Context *context,
+                                            TextureGL *source,
+                                            size_t sourceLevel,
+                                            GLenum sourceComponentType,
+                                            TextureGL *dest,
+                                            GLenum destTarget,
+                                            size_t destLevel,
+                                            GLenum destFormat,
+                                            GLenum destType,
+                                            const gl::Rectangle &sourceArea,
+                                            const gl::Offset &destOffset,
+                                            bool unpackFlipY,
+                                            bool unpackPremultiplyAlpha,
+                                            bool unpackUnmultiplyAlpha)
+{
+    ASSERT(source->getTarget() == GL_TEXTURE_2D);
+    const auto &destInternalFormatInfo = gl::GetInternalFormatInfo(destFormat, destType);
+
+    // Create a buffer for holding the source and destination memory
+    const size_t sourcePixelSize = 4;
+    size_t sourceBufferSize      = sourceArea.width * sourceArea.height * sourcePixelSize;
+    size_t destBufferSize =
+        sourceArea.width * sourceArea.height * destInternalFormatInfo.pixelBytes;
+    angle::MemoryBuffer *buffer = nullptr;
+    ANGLE_TRY(context->getScratchBuffer(sourceBufferSize + destBufferSize, &buffer));
+    uint8_t *sourceMemory = buffer->data();
+    uint8_t *destMemory   = buffer->data() + sourceBufferSize;
+
+    mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mScratchFBO);
+    mFunctions->framebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, source->getTarget(),
+                                     source->getTextureID(), static_cast<GLint>(sourceLevel));
+
+    GLenum readPixelsFormat        = GL_NONE;
+    ColorReadFunction readFunction = nullptr;
+    if (sourceComponentType == GL_UNSIGNED_INT)
+    {
+        readPixelsFormat = GL_RGBA_INTEGER;
+        readFunction     = angle::ReadColor<angle::R8G8B8A8, GLuint>;
+    }
+    else
+    {
+        ASSERT(sourceComponentType != GL_INT);
+        readPixelsFormat = GL_RGBA;
+        readFunction     = angle::ReadColor<angle::R8G8B8A8, GLfloat>;
+    }
+
+    mStateManager->setPixelUnpackState(gl::PixelUnpackState(1, 0));
+    mFunctions->readPixels(sourceArea.x, sourceArea.y, sourceArea.width, sourceArea.height,
+                           readPixelsFormat, GL_UNSIGNED_BYTE, sourceMemory);
+
+    angle::Format::ID destFormatID =
+        angle::Format::InternalFormatToID(destInternalFormatInfo.sizedInternalFormat);
+    const auto &destFormatInfo = angle::Format::Get(destFormatID);
+    CopyImageCHROMIUM(
+        sourceMemory, sourceArea.width * sourcePixelSize, sourcePixelSize, readFunction, destMemory,
+        sourceArea.width * destInternalFormatInfo.pixelBytes, destInternalFormatInfo.pixelBytes,
+        destFormatInfo.colorWriteFunction, destInternalFormatInfo.format,
+        destInternalFormatInfo.componentType, sourceArea.width, sourceArea.height, unpackFlipY,
+        unpackPremultiplyAlpha, unpackUnmultiplyAlpha);
+
+    mStateManager->setPixelPackState(gl::PixelPackState(1, false));
+
+    nativegl::TexSubImageFormat texSubImageFormat =
+        nativegl::GetTexSubImageFormat(mFunctions, mWorkarounds, destFormat, destType);
+
+    mFunctions->texSubImage2D(destTarget, static_cast<GLint>(destLevel), destOffset.x, destOffset.y,
+                              sourceArea.width, sourceArea.height, texSubImageFormat.format,
+                              texSubImageFormat.type, destMemory);
 
     return gl::NoError();
 }

@@ -38,6 +38,7 @@ struct Format final : private angle::NonCopyable
                      GLuint stencilBits);
 
     static const Format &Get(ID id);
+    static ID InternalFormatToID(GLenum internalFormat);
 
     ID id;
 
