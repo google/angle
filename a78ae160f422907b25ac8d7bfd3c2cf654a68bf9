@@ -34,6 +34,24 @@
       "revId": "a78ae160f422907b25ac8d7bfd3c2cf654a68bf9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ddb9d5bf_c2895696",
+        "filename": "src/compiler/translator/VariablePacker.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-11T19:09:06Z",
+      "side": 1,
+      "message": "I\u0027m not a big fan of having GetNumComponentsPerRow and GetNumRows disassociated from VariablePacker. That\u0027s confusing since there\u0027s already TType::getRows() that returns matrix rows. And there\u0027s also std140 packing and GLSL ES 1.00 appendix A packing, so even another name like \"GetNumRowsWhenPacked\" isn\u0027t necessarily unambiguous either. If it wasn\u0027t for needing these in tests I\u0027d prefer to just have them in an anonymous namespace in VariablePacker.cpp. But I think for now we can leave them be.\n\nI\u0027ll change this patch to have the template instantiation next week.",
+      "parentUuid": "3ac60300_c93e077e",
+      "revId": "a78ae160f422907b25ac8d7bfd3c2cf654a68bf9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
