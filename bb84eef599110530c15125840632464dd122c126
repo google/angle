@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a0bf7ab1_05a48b39",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-08-11T06:19:04Z",
+      "side": 1,
+      "message": "unsigned int?",
+      "range": {
+        "startLine": 179,
+        "startChar": 22,
+        "endLine": 179,
+        "endChar": 25
+      },
+      "revId": "bb84eef599110530c15125840632464dd122c126",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
