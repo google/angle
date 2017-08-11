@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1ab8c76f_e41a16db",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-11T14:01:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a8c3707_885a4222",
+      "revId": "62f411c29bfd356ffc2b778b87528f090dcc22c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fc5206d5_ace3a4eb",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
         "patchSetId": 5
@@ -30,6 +48,24 @@
       "writtenOn": "2017-08-11T10:34:09Z",
       "side": 1,
       "message": "I think this doesn\u0027t work correctly now if scissor rect is empty, scissor is not enabled and a side-by-side framebuffer is being cleared. Make sure this works by adding a test.",
+      "revId": "62f411c29bfd356ffc2b778b87528f090dcc22c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7a575e71_687bf28c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 377,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-11T14:01:20Z",
+      "side": 1,
+      "message": "There was a misunderstanding from before of whether the scissor test should be implicitly enabled, but we have reached a consensus of what the expected behavior should be.\nA test is added to verify that the whole content of the fbo will be cleared in the situation of doing a side-by-side clear with the scissor test being disabled.",
+      "parentUuid": "fc5206d5_ace3a4eb",
       "revId": "62f411c29bfd356ffc2b778b87528f090dcc22c9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -59,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "64c3d156_90572fce",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 387,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-11T14:01:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c150e696_d65d7d4c",
+      "range": {
+        "startLine": 387,
+        "startChar": 23,
+        "endLine": 387,
+        "endChar": 34
+      },
+      "revId": "62f411c29bfd356ffc2b778b87528f090dcc22c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "250f4673_c607f8e8",
         "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
         "patchSetId": 5
@@ -82,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "e676b718_7573e27f",
+        "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-11T14:01:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "250f4673_c607f8e8",
+      "range": {
+        "startLine": 70,
+        "startChar": 9,
+        "endLine": 70,
+        "endChar": 18
+      },
+      "revId": "62f411c29bfd356ffc2b778b87528f090dcc22c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ef9ab869_e0dc7bf8",
         "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
         "patchSetId": 5
@@ -96,6 +180,24 @@
       "revId": "62f411c29bfd356ffc2b778b87528f090dcc22c9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f711270a_838f520c",
+        "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-11T14:01:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ef9ab869_e0dc7bf8",
+      "revId": "62f411c29bfd356ffc2b778b87528f090dcc22c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
