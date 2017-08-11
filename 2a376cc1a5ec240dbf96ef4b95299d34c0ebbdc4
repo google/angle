@@ -22,6 +22,30 @@
       "revId": "2a376cc1a5ec240dbf96ef4b95299d34c0ebbdc4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c76f053_b62a4c5c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 882,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-08-11T02:58:07Z",
+      "side": 1,
+      "message": "Thanks for the comment. I\u0027ve considered the idea as well, but I found we can\u0027t make sure calling sequence of syncFramebuffer and syncViewport. So the attachment count might be wrong if we don\u0027t check current attachments count.\nIn addition, it\u0027s not easy to reuse the code in syncFramebuffer because some other operations are made when syncFramebuffer. So it\u0027s safer to check current attachment count here though it might be checked twice in some conditions.",
+      "parentUuid": "0bfaf9cc_7ecc719c",
+      "range": {
+        "startLine": 861,
+        "startChar": 0,
+        "endLine": 882,
+        "endChar": 5
+      },
+      "revId": "2a376cc1a5ec240dbf96ef4b95299d34c0ebbdc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
