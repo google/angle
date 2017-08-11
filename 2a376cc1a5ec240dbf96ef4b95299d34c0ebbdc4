@@ -46,6 +46,30 @@
       "revId": "2a376cc1a5ec240dbf96ef4b95299d34c0ebbdc4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "17585fee_62443b94",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 882,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-11T03:07:47Z",
+      "side": 1,
+      "message": "Ok. LGTM then. Thanks.",
+      "parentUuid": "0c76f053_b62a4c5c",
+      "range": {
+        "startLine": 861,
+        "startChar": 0,
+        "endLine": 882,
+        "endChar": 5
+      },
+      "revId": "2a376cc1a5ec240dbf96ef4b95299d34c0ebbdc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
