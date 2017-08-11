@@ -39,6 +39,24 @@
       "revId": "f170b9eb4c603c9c209449fb4ed72c5b4b870d6e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e903ae1e_bcc17f1f",
+        "filename": "src/compiler/translator/VariableInfo.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 634,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-11T03:03:32Z",
+      "side": 1,
+      "message": "Hi Geoff, if I put mInterfaceBlocks here, I have to do the same operations again to the member of mInterfaceBlocks like mUniformBlocks and mShaderStorageBlocks did so that they can keep consistent. For example, in CollectVariablesTraverser::visitBinary, I have to do it like below (line 682-691):\n\n        InterfaceBlock *namedBlock \u003d FindVariable(interfaceBlock-\u003ename(), mUniformBlocks);\n        if (!namedBlock)\n        {\n            namedBlock \u003d FindVariable(interfaceBlock-\u003ename(), mShaderStorageBlocks);\n        }\n        ASSERT(namedBlock);\n        namedBlock-\u003estaticUse   \u003d true;\n        unsigned int fieldIndex \u003d static_cast\u003cunsigned int\u003e(constantUnion-\u003egetIConst(0));\n        ASSERT(fieldIndex \u003c namedBlock-\u003efields.size());\n        namedBlock-\u003efields[fieldIndex].staticUse \u003d true;\n\n        InterfaceBlock *namedInterfaceBlock \u003d FindVariable(interfaceBlock-\u003ename(), mInterfaceBlocks);\n        ASSERT(namedInterfaceBlock);\n        namedInterfaceBlock-\u003estaticUse   \u003d true;\n        namedInterfaceBlock-\u003efields[fieldIndex].staticUse \u003d true;\n\n So I prefer the current implementation. What do you think?",
+      "parentUuid": "c357fa39_0065dfa2",
+      "revId": "f170b9eb4c603c9c209449fb4ed72c5b4b870d6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
