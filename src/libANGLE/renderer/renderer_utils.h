@@ -189,6 +189,22 @@ using LoadFunctionMap = LoadImageFunctionInfo (*)(GLenum);
 
 bool ShouldUseDebugLayers(const egl::AttributeMap &attribs);
 
+void CopyImageCHROMIUM(const uint8_t *sourceData,
+                       size_t sourceRowPitch,
+                       size_t sourcePixelBytes,
+                       ColorReadFunction readFunction,
+                       uint8_t *destData,
+                       size_t destRowPitch,
+                       size_t destPixelBytes,
+                       ColorWriteFunction colorWriteFunction,
+                       GLenum destUnsizedFormat,
+                       GLenum destComponentType,
+                       size_t width,
+                       size_t height,
+                       bool unpackFlipY,
+                       bool unpackPremultiplyAlpha,
+                       bool unpackUnmultiplyAlpha);
+
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_RENDERER_UTILS_H_

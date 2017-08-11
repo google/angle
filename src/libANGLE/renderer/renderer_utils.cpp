@@ -148,6 +148,81 @@ static FormatWriteFunctionMap BuildFormatWriteFunctionMap()
 
     return map;
 }
+
+void CopyColor(gl::ColorF *color)
+{
+    // No-op
+}
+
+void PremultiplyAlpha(gl::ColorF *color)
+{
+    color->red *= color->alpha;
+    color->green *= color->alpha;
+    color->blue *= color->alpha;
+}
+
+void UnmultiplyAlpha(gl::ColorF *color)
+{
+    if (color->alpha != 0.0f)
+    {
+        float invAlpha = 1.0f / color->alpha;
+        color->red *= invAlpha;
+        color->green *= invAlpha;
+        color->blue *= invAlpha;
+    }
+}
+
+void ClipChannelsR(gl::ColorF *color)
+{
+    color->green = 0.0f;
+    color->blue  = 0.0f;
+    color->alpha = 1.0f;
+}
+
+void ClipChannelsRG(gl::ColorF *color)
+{
+    color->blue  = 0.0f;
+    color->alpha = 1.0f;
+}
+
+void ClipChannelsRGB(gl::ColorF *color)
+{
+    color->alpha = 1.0f;
+}
+
+void ClipChannelsLuminance(gl::ColorF *color)
+{
+    color->alpha = 1.0f;
+}
+
+void ClipChannelsAlpha(gl::ColorF *color)
+{
+    color->red   = 0.0f;
+    color->green = 0.0f;
+    color->blue  = 0.0f;
+}
+
+void ClipChannelsNoOp(gl::ColorF *color)
+{
+}
+
+void WriteUintColor(const gl::ColorF &color,
+                    ColorWriteFunction colorWriteFunction,
+                    uint8_t *destPixelData)
+{
+    gl::ColorUI destColor(
+        static_cast<unsigned int>(color.red * 255), static_cast<unsigned int>(color.green * 255),
+        static_cast<unsigned int>(color.blue * 255), static_cast<unsigned int>(color.alpha * 255));
+    colorWriteFunction(reinterpret_cast<const uint8_t *>(&destColor), destPixelData);
+}
+
+void WriteFloatColor(const gl::ColorF &color,
+                     ColorWriteFunction colorWriteFunction,
+                     uint8_t *destPixelData)
+{
+    colorWriteFunction(reinterpret_cast<const uint8_t *>(&color), destPixelData);
+}
+
 }  // anonymous namespace
 
 PackPixelsParams::PackPixelsParams()
@@ -312,6 +387,87 @@ bool ShouldUseDebugLayers(const egl::AttributeMap &attribs)
 #else
     return (debugSetting == EGL_TRUE);
 #endif  // !defined(NDEBUG)
+}
+
+void CopyImageCHROMIUM(const uint8_t *sourceData,
+                       size_t sourceRowPitch,
+                       size_t sourcePixelBytes,
+                       ColorReadFunction colorReadFunction,
+                       uint8_t *destData,
+                       size_t destRowPitch,
+                       size_t destPixelBytes,
+                       ColorWriteFunction colorWriteFunction,
+                       GLenum destUnsizedFormat,
+                       GLenum destComponentType,
+                       size_t width,
+                       size_t height,
+                       bool unpackFlipY,
+                       bool unpackPremultiplyAlpha,
+                       bool unpackUnmultiplyAlpha)
+{
+    using ConversionFunction              = void (*)(gl::ColorF *);
+    ConversionFunction conversionFunction = CopyColor;
+    if (unpackPremultiplyAlpha != unpackUnmultiplyAlpha)
+    {
+        if (unpackPremultiplyAlpha)
+        {
+            conversionFunction = PremultiplyAlpha;
+        }
+        else
+        {
+            conversionFunction = UnmultiplyAlpha;
+        }
+    }
+
+    auto clipChannelsFunction = ClipChannelsNoOp;
+    switch (destUnsizedFormat)
+    {
+        case GL_RED:
+            clipChannelsFunction = ClipChannelsR;
+            break;
+        case GL_RG:
+            clipChannelsFunction = ClipChannelsRG;
+            break;
+        case GL_RGB:
+            clipChannelsFunction = ClipChannelsRGB;
+            break;
+        case GL_LUMINANCE:
+            clipChannelsFunction = ClipChannelsLuminance;
+            break;
+        case GL_ALPHA:
+            clipChannelsFunction = ClipChannelsAlpha;
+            break;
+    }
+
+    auto writeFunction = (destComponentType == GL_UNSIGNED_INT) ? WriteUintColor : WriteFloatColor;
+
+    for (size_t y = 0; y < height; y++)
+    {
+        for (size_t x = 0; x < width; x++)
+        {
+            const uint8_t *sourcePixelData = sourceData + y * sourceRowPitch + x * sourcePixelBytes;
+
+            gl::ColorF sourceColor;
+            colorReadFunction(sourcePixelData, reinterpret_cast<uint8_t *>(&sourceColor));
+
+            conversionFunction(&sourceColor);
+            clipChannelsFunction(&sourceColor);
+
+            size_t destY = 0;
+            if (unpackFlipY)
+            {
+                destY += (height - 1);
+                destY -= y;
+            }
+            else
+            {
+                destY += y;
+            }
+
+            uint8_t *destPixelData = destData + destY * destRowPitch + x * destPixelBytes;
+            writeFunction(sourceColor, colorWriteFunction, destPixelData);
+        }
+    }
 }
 
 }  // namespace rx
