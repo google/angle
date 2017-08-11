@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aec5c568_c1d57714",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1669,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-11T14:33:30Z",
+      "side": 1,
+      "message": "Remember to update comments as well when you\u0027re changing code.",
+      "range": {
+        "startLine": 1668,
+        "startChar": 16,
+        "endLine": 1669,
+        "endChar": 37
+      },
+      "revId": "7a14cd5bade078d960aeb1a7e6ffeee4032a367f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "424867ad_63294f96",
+        "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 572,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-11T14:33:30Z",
+      "side": 1,
+      "message": "nit: The common convention is to use green as the correct result color (assuming that the test is possible to do with just one correct result color). Could you change this test around to do that?",
+      "range": {
+        "startLine": 572,
+        "startChar": 49,
+        "endLine": 572,
+        "endChar": 52
+      },
+      "revId": "7a14cd5bade078d960aeb1a7e6ffeee4032a367f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
