@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9a5aced9_f2674bac",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 945,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-11T07:33:51Z",
+      "side": 1,
+      "message": "I will look into this. Maybe I can write it in such a way so that selecting layer later shouldn\u0027t be all that hard.",
+      "parentUuid": "ea269ad4_eaca9763",
+      "range": {
+        "startLine": 945,
+        "startChar": 8,
+        "endLine": 945,
+        "endChar": 60
+      },
+      "revId": "31c186ed40c98c2ca8a26fe098df4efe8f78450b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ffafcaff_07adeca3",
         "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
         "patchSetId": 4
@@ -36,6 +60,24 @@
       "writtenOn": "2017-08-10T16:11:20Z",
       "side": 1,
       "message": "Why is this needed? I\u0027m not too familiar with what this code does.",
+      "revId": "31c186ed40c98c2ca8a26fe098df4efe8f78450b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23300c2d_70d7842f",
+        "filename": "src/libANGLE/renderer/d3d/DynamicHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1310,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-11T07:33:51Z",
+      "side": 1,
+      "message": "They are used to describe semantics in the given shader stage.\nSo, builtins-\u003eglViewIDOVR.enable(userSemantic, reservedSemanticIndex++);\nwill direct the glViewIDOVR variable towards some semantic index i.e. TEXCOORDi.\nAnd builtins-\u003eglViewIDOVR.enableSystem(\"SV_ViewportArrayIndex\")\nwill direct SV_ViewportArrayIndex towards glViewIDOVR in the pixel shader.",
+      "parentUuid": "ffafcaff_07adeca3",
       "revId": "31c186ed40c98c2ca8a26fe098df4efe8f78450b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
