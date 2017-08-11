@@ -22,6 +22,30 @@
       "revId": "bb84eef599110530c15125840632464dd122c126",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0dc1700c_92f9a6a8",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 179,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-11T08:52:46Z",
+      "side": 1,
+      "message": "Done\nThanks for catching this!",
+      "parentUuid": "a0bf7ab1_05a48b39",
+      "range": {
+        "startLine": 179,
+        "startChar": 22,
+        "endLine": 179,
+        "endChar": 25
+      },
+      "revId": "bb84eef599110530c15125840632464dd122c126",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
