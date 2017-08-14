@@ -46,6 +46,30 @@
       "revId": "f24e42076080c77634b3fdaeb9111ec296d14e06",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d3d873e_9834b9ec",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 431,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-14T16:04:09Z",
+      "side": 1,
+      "message": "Ah, I get it, the scissored clear is applied to each side-by-side view as if it\u0027s offset is the window origin.",
+      "parentUuid": "ca29f57a_8b409eff",
+      "range": {
+        "startLine": 431,
+        "startChar": 42,
+        "endLine": 431,
+        "endChar": 49
+      },
+      "revId": "f24e42076080c77634b3fdaeb9111ec296d14e06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
