@@ -22,6 +22,30 @@
       "revId": "f24e42076080c77634b3fdaeb9111ec296d14e06",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ca29f57a_8b409eff",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 431,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-14T15:27:51Z",
+      "side": 1,
+      "message": "Scissor is relative to window coordinates, not viewport. So the offsets need to be applied the same way to scissor and viewport.",
+      "parentUuid": "c4a65f13_2608ec9e",
+      "range": {
+        "startLine": 431,
+        "startChar": 42,
+        "endLine": 431,
+        "endChar": 49
+      },
+      "revId": "f24e42076080c77634b3fdaeb9111ec296d14e06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
