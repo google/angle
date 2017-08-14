@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0756f1ed_ae4bb96c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 83,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-14T07:18:51Z",
+      "side": 1,
+      "message": "Done.\nI used \"whole numbers\" as in the set of non-negative integers.",
+      "parentUuid": "72065682_158b4dad",
+      "range": {
+        "startLine": 83,
+        "startChar": 5,
+        "endLine": 83,
+        "endChar": 42
+      },
+      "revId": "a82b0f7bf4380fc9746b12f799ccd0f943267e13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f7697345_e80c181c",
         "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
         "patchSetId": 8
@@ -36,6 +60,24 @@
       "writtenOn": "2017-08-11T14:20:02Z",
       "side": 1,
       "message": "This test should be added at the same time as the spec text is changed to specify this. Generally you shouldn\u0027t test for unspecified behavior. So put this in a separate patch.",
+      "revId": "a82b0f7bf4380fc9746b12f799ccd0f943267e13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "93813c08_55bfc4c2",
+        "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 619,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-14T07:18:51Z",
+      "side": 1,
+      "message": "I added that patch as a dependency and this change is from it.",
+      "parentUuid": "f7697345_e80c181c",
       "revId": "a82b0f7bf4380fc9746b12f799ccd0f943267e13",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
