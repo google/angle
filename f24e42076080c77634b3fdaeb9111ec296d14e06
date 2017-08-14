@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c4a65f13_2608ec9e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Clear11.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 431,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-14T15:21:33Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this be offsetting from the viewport instead of scissor?",
+      "range": {
+        "startLine": 431,
+        "startChar": 42,
+        "endLine": 431,
+        "endChar": 49
+      },
+      "revId": "f24e42076080c77634b3fdaeb9111ec296d14e06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
