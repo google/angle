@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f6ce731a_24957e62",
+        "filename": "src/compiler/translator/CollectVariables.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-14T13:19:54Z",
+      "side": 1,
+      "message": "nit: can we have a comment explaining what this file is for?",
+      "revId": "3e885d79b46aec10ed1d882a2ce4bb23e6abc1a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
