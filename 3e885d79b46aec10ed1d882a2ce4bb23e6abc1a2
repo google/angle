@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "36f34a16_0ff7f4ce",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-14T14:03:28Z",
+      "side": 1,
+      "message": "comment here too according to our style conventions, but not a big deal.",
+      "range": {
+        "startLine": 5,
+        "startChar": 2,
+        "endLine": 5,
+        "endChar": 0
+      },
+      "revId": "3e885d79b46aec10ed1d882a2ce4bb23e6abc1a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f6ce731a_24957e62",
         "filename": "src/compiler/translator/CollectVariables.h",
         "patchSetId": 4
