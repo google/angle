@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dcc119d6_f7fc7ba8",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 543,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-14T21:08:43Z",
+      "side": 1,
+      "message": "Can\u0027t GL_CHROMIUM_copy_texture copy from a GL_TEXTURE_RECTANGLE_ANGLE?",
+      "revId": "a8574b12d3f0845ff6e268c3206afa09047a2be2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cb9d9f2f_ab04ea73",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-14T21:08:43Z",
+      "side": 1,
+      "message": "Is pixelSize guaranteed to by 4? If yes we should ASSERT it.",
+      "revId": "a8574b12d3f0845ff6e268c3206afa09047a2be2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0a5a7b65_ac36be62",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 566,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-14T21:08:43Z",
+      "side": 1,
+      "message": "else {UNIMPLEMENTED()} or UNREACHABLE()",
+      "revId": "a8574b12d3f0845ff6e268c3206afa09047a2be2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "54705a66_1b017f01",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-14T21:08:43Z",
+      "side": 1,
+      "message": "gl::PixelPackState(1, false);",
+      "revId": "a8574b12d3f0845ff6e268c3206afa09047a2be2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
