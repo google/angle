@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3586eba1_f81a781a",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 8
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-14T13:26:32Z",
+      "side": 1,
+      "message": "What\u0027s the need for this? I\u0027m worried this will introduce UB when the WebGL implementation exposes an opaque multiview FBO: if the page decides to clear it without scissor enabled what happens?",
+      "revId": "df8d11032f436ba5f8a5f0e19b15685adb9ad471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
