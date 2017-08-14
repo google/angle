@@ -25,6 +25,53 @@
     },
     {
       "key": {
+        "uuid": "58ac075d_f67fafdd",
+        "filename": "src/libANGLE/InternalEnums.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-14T14:21:50Z",
+      "side": 1,
+      "message": "hm, yes. I dont have a strong preference, but I would prefer if every value had the prefix instead of only the numeric ones. \"e\" or \"E\" is fine with me. I think I prefer the upper-case. I\u0027m not familiar with the value assignment inside an enum class either - in my code that uses strongly typed enums I was adding conversion helper functions to cast enum values to integer values - is that what the value assignment here does?",
+      "parentUuid": "ab7bfc3d_83108ef7",
+      "range": {
+        "startLine": 13,
+        "startChar": 4,
+        "endLine": 13,
+        "endChar": 5
+      },
+      "revId": "1da2f05ad7e8315ef691793373693dd045b0d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2dcf1376_e63b4fe6",
+        "filename": "src/libANGLE/InternalEnums.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-14T14:21:50Z",
+      "side": 1,
+      "message": "if you decide to make an UNKNOWN value then you could make that the last value and use that to init the count/size.",
+      "range": {
+        "startLine": 21,
+        "startChar": 14,
+        "endLine": 21,
+        "endChar": 34
+      },
+      "revId": "1da2f05ad7e8315ef691793373693dd045b0d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1368de37_42e21b3d",
         "filename": "src/libANGLE/InternalEnums.h",
         "patchSetId": 1
@@ -41,6 +88,53 @@
         "startChar": 7,
         "endLine": 23,
         "endChar": 12
+      },
+      "revId": "1da2f05ad7e8315ef691793373693dd045b0d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "950d08b8_95203b6c",
+        "filename": "src/libANGLE/InternalEnums.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-14T14:21:50Z",
+      "side": 1,
+      "message": "I\u0027m fine with either option. I could also see returning a gl Error.",
+      "parentUuid": "1368de37_42e21b3d",
+      "range": {
+        "startLine": 23,
+        "startChar": 7,
+        "endLine": 23,
+        "endChar": 12
+      },
+      "revId": "1da2f05ad7e8315ef691793373693dd045b0d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef59cae7_ef67191a",
+        "filename": "src/libANGLE/InternalEnums.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-14T14:21:50Z",
+      "side": 1,
+      "message": "nit: formatting",
+      "range": {
+        "startLine": 52,
+        "startChar": 20,
+        "endLine": 52,
+        "endChar": 22
       },
       "revId": "1da2f05ad7e8315ef691793373693dd045b0d6d4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
@@ -71,6 +165,30 @@
     },
     {
       "key": {
+        "uuid": "b98c32d9_0c9ee2da",
+        "filename": "src/libANGLE/InternalEnums.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-14T14:21:50Z",
+      "side": 1,
+      "message": "This class seems reasonable. I don\u0027t think we use \"enum arrays\" very often - maybe just for the GL state class, and zero textures?",
+      "parentUuid": "188322f7_95c92b42",
+      "range": {
+        "startLine": 71,
+        "startChar": 7,
+        "endLine": 71,
+        "endChar": 17
+      },
+      "revId": "1da2f05ad7e8315ef691793373693dd045b0d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1c44ad77_9cafbc2b",
         "filename": "src/libANGLE/State.h",
         "patchSetId": 1
@@ -82,6 +200,29 @@
       "writtenOn": "2017-08-03T23:08:12Z",
       "side": 1,
       "message": "This is the key thing that happens in this patch.",
+      "revId": "1da2f05ad7e8315ef691793373693dd045b0d6d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f6742bac_7e7ecdf0",
+        "filename": "src/libGLESv2/entry_points_gles_2_0_autogen.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-14T14:21:50Z",
+      "side": 1,
+      "message": "for updating the auto-gen, you would have to have some kind of mapping from a {function name, GLenum parameter name} to {internal enum}, and build that into the entry point auto-gen. We could also take advantage of that mapping to build a GLenum to string function for the EVENT macro at some point.",
+      "range": {
+        "startLine": 126,
+        "startChar": 0,
+        "endLine": 133,
+        "endChar": 9
+      },
       "revId": "1da2f05ad7e8315ef691793373693dd045b0d6d4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
