@@ -2089,6 +2089,17 @@ bool ValidateBeginTransformFeedback(Context *context, GLenum primitiveMode)
         context->handleError(InvalidOperation() << "Transform feedback is already active.");
         return false;
     }
+
+    for (size_t i = 0; i < transformFeedback->getIndexedBufferCount(); i++)
+    {
+        const auto &buffer = transformFeedback->getIndexedBuffer(i);
+        if (buffer.get() && buffer->isMapped())
+        {
+            context->handleError(InvalidOperation() << "Transform feedback has a mapped buffer.");
+            return false;
+        }
+    }
+
     return true;
 }
 

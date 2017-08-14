@@ -2777,7 +2777,7 @@ bool ValidateMapBufferOES(Context *context, GLenum target, GLenum access)
         return false;
     }
 
-    return true;
+    return ValidateMapBufferBase(context, target);
 }
 
 bool ValidateUnmapBufferOES(Context *context, GLenum target)
@@ -2804,6 +2804,30 @@ bool ValidateMapBufferRangeEXT(Context *context,
     }
 
     return ValidateMapBufferRangeBase(context, target, offset, length, access);
+}
+
+bool ValidateMapBufferBase(Context *context, GLenum target)
+{
+    Buffer *buffer = context->getGLState().getTargetBuffer(target);
+    ASSERT(buffer != nullptr);
+
+    // Check if this buffer is currently being used as a transform feedback output buffer
+    TransformFeedback *transformFeedback = context->getGLState().getCurrentTransformFeedback();
+    if (transformFeedback != nullptr && transformFeedback->isActive())
+    {
+        for (size_t i = 0; i < transformFeedback->getIndexedBufferCount(); i++)
+        {
+            const auto &transformFeedbackBuffer = transformFeedback->getIndexedBuffer(i);
+            if (transformFeedbackBuffer.get() == buffer)
+            {
+                context->handleError(InvalidOperation()
+                                     << "Buffer is currently bound for transform feedback.");
+                return false;
+            }
+        }
+    }
+
+    return true;
 }
 
 bool ValidateFlushMappedBufferRangeEXT(Context *context,

@@ -3936,7 +3936,8 @@ bool ValidateMapBufferRangeBase(Context *context,
             << "The explicit flushing bit may only be set if the buffer is mapped for writing.");
         return false;
     }
-    return true;
+
+    return ValidateMapBufferBase(context, target);
 }
 
 bool ValidateFlushMappedBufferRangeBase(Context *context,

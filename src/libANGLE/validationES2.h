@@ -208,6 +208,7 @@ bool ValidateMapBufferRangeEXT(Context *context,
                                GLintptr offset,
                                GLsizeiptr length,
                                GLbitfield access);
+bool ValidateMapBufferBase(Context *context, GLenum target);
 bool ValidateFlushMappedBufferRangeEXT(Context *context,
                                        GLenum target,
                                        GLintptr offset,
