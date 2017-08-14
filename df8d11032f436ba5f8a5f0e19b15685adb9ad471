@@ -16,6 +16,24 @@
       "revId": "df8d11032f436ba5f8a5f0e19b15685adb9ad471",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9071cbcd_20f16881",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 8
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-14T13:41:24Z",
+      "side": 1,
+      "message": "The intent is that the WebGL implementation can always enable scissoring when an opaque multiview FBO is bound, so no UB will be exposed to web apps. The WebGL implementation will need to have some management for splitting the framebuffer either way, since at the ANGLE level we only know about viewport offsets. We decided on this design since it keeps the ANGLE API flexible and maps well to the underlying native APIs.",
+      "parentUuid": "3586eba1_f81a781a",
+      "revId": "df8d11032f436ba5f8a5f0e19b15685adb9ad471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
