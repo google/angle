@@ -588,7 +588,7 @@ GLint QueryProgramInterfaceMaxNameLength(const Program *program, GLenum programI
 
         case GL_UNIFORM_BLOCK:
             maxNameLength =
-                FindMaxSize(program->getState().getUniformBlocks(), &UniformBlock::name);
+                FindMaxSize(program->getState().getUniformBlocks(), &InterfaceBlock::name);
             break;
 
         // TODO(jie.a.chen@intel.com): more interfaces.
@@ -612,7 +612,7 @@ GLint QueryProgramInterfaceMaxNumActiveVariables(const Program *program, GLenum 
     {
         case GL_UNIFORM_BLOCK:
             return FindMaxSize(program->getState().getUniformBlocks(),
-                               &UniformBlock::memberIndexes);
+                               &InterfaceBlock::memberIndexes);
 
         // TODO(jie.a.chen@intel.com): more interfaces.
         case GL_SHADER_STORAGE_BLOCK:
@@ -1010,7 +1010,7 @@ void QueryActiveUniformBlockiv(const Program *program,
                                GLenum pname,
                                GLint *params)
 {
-    const UniformBlock &uniformBlock = program->getUniformBlockByIndex(uniformBlockIndex);
+    const InterfaceBlock &uniformBlock = program->getUniformBlockByIndex(uniformBlockIndex);
     switch (pname)
     {
         case GL_UNIFORM_BLOCK_BINDING:

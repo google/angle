@@ -1237,6 +1237,12 @@ void TOutputGLSLBase::declareInterfaceBlockLayout(const TInterfaceBlock *interfa
 
     out << ", ";
 
+    if (interfaceBlock->blockBinding() > 0)
+    {
+        out << "binding = " << interfaceBlock->blockBinding();
+        out << ", ";
+    }
+
     switch (interfaceBlock->matrixPacking())
     {
         case EmpUnspecified:

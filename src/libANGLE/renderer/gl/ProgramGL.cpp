@@ -508,7 +508,7 @@ void ProgramGL::setUniformBlockBinding(GLuint uniformBlockIndex, GLuint uniformB
     if (mUniformBlockRealLocationMap.empty())
     {
         mUniformBlockRealLocationMap.reserve(mState.getUniformBlocks().size());
-        for (const gl::UniformBlock &uniformBlock : mState.getUniformBlocks())
+        for (const gl::InterfaceBlock &uniformBlock : mState.getUniformBlocks())
         {
             const std::string &mappedNameWithIndex = uniformBlock.mappedNameWithArrayIndex();
             GLuint blockIndex =

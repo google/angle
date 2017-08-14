@@ -120,6 +120,7 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const ContextState &state)
     mResources.MaxAtomicCounterBufferSize      = caps.maxAtomicCounterBufferSize;
 
     mResources.MaxUniformBufferBindings = caps.maxUniformBufferBindings;
+    mResources.MaxShaderStorageBufferBindings = caps.maxShaderStorageBufferBindings;
 
     // Needed by point size clamping workaround
     mResources.MaxPointSize = caps.maxAliasedPointSize;

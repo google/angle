@@ -74,17 +74,17 @@ struct ShaderVariableBuffer
 
 using AtomicCounterBuffer = ShaderVariableBuffer;
 
-// Helper struct representing a single shader uniform block
-struct UniformBlock : public ShaderVariableBuffer
+// Helper struct representing a single shader interface block
+struct InterfaceBlock : public ShaderVariableBuffer
 {
-    UniformBlock();
-    UniformBlock(const std::string &nameIn,
-                 const std::string &mappedNameIn,
-                 bool isArrayIn,
-                 unsigned int arrayElementIn,
-                 int bindingIn);
-    UniformBlock(const UniformBlock &other) = default;
-    UniformBlock &operator=(const UniformBlock &other) = default;
+    InterfaceBlock();
+    InterfaceBlock(const std::string &nameIn,
+                   const std::string &mappedNameIn,
+                   bool isArrayIn,
+                   unsigned int arrayElementIn,
+                   int bindingIn);
+    InterfaceBlock(const InterfaceBlock &other) = default;
+    InterfaceBlock &operator=(const InterfaceBlock &other) = default;
 
     std::string nameWithArrayIndex() const;
     std::string mappedNameWithArrayIndex() const;

@@ -116,21 +116,21 @@ ShaderVariableBuffer::~ShaderVariableBuffer()
 {
 }
 
-UniformBlock::UniformBlock() : isArray(false), arrayElement(0)
+InterfaceBlock::InterfaceBlock() : isArray(false), arrayElement(0)
 {
 }
 
-UniformBlock::UniformBlock(const std::string &nameIn,
-                           const std::string &mappedNameIn,
-                           bool isArrayIn,
-                           unsigned int arrayElementIn,
-                           int bindingIn)
+InterfaceBlock::InterfaceBlock(const std::string &nameIn,
+                               const std::string &mappedNameIn,
+                               bool isArrayIn,
+                               unsigned int arrayElementIn,
+                               int bindingIn)
     : name(nameIn), mappedName(mappedNameIn), isArray(isArrayIn), arrayElement(arrayElementIn)
 {
     binding = bindingIn;
 }
 
-std::string UniformBlock::nameWithArrayIndex() const
+std::string InterfaceBlock::nameWithArrayIndex() const
 {
     std::stringstream fullNameStr;
     fullNameStr << name;
@@ -142,7 +142,7 @@ std::string UniformBlock::nameWithArrayIndex() const
     return fullNameStr.str();
 }
 
-std::string UniformBlock::mappedNameWithArrayIndex() const
+std::string InterfaceBlock::mappedNameWithArrayIndex() const
 {
     std::stringstream fullNameStr;
     fullNameStr << mappedName;
