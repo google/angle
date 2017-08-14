@@ -149,15 +149,29 @@ void TranslatorESSL::writeExtensionBehavior(ShCompileOptions compileOptions)
                 sink << "#extension GL_NV_draw_buffers : " << getBehaviorString(iter->second)
                      << "\n";
             }
-            else if (isMultiview && isMultiviewExtEmulated)
+            else if (isMultiview)
             {
-                if (getShaderType() == GL_VERTEX_SHADER &&
-                    (compileOptions & SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER) != 0u)
+                // Emit the OVR_multiview extension
+                sink << "#extension " << iter->first << " : " << getBehaviorString(iter->second)
+                     << "\n";
+
+                if (getShaderType() == GL_VERTEX_SHADER)
                 {
                     // Emit the NV_viewport_array2 extension in a vertex shader if the
                     // SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER option is set and the
                     // OVR_multiview(2) extension is requested.
-                    sink << "#extension GL_NV_viewport_array2 : require\n";
+                    if (isMultiviewExtEmulated && (compileOptions & SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER) != 0u)
+                    {
+                        sink << "#extension GL_NV_viewport_array2 : require\n";
+                    }
+
+                    // Vertex shaders allows the num_views layout qualifier.
+                    // If this qualifier is not declared, the behavior is as if it had been set to 1.
+                    if (getNumViews() >= 2)
+                    {
+                        sink << "layout(num_views=" << getNumViews() << ") in;"
+                             << "\n"; 
+                    }
                 }
             }
             else if (iter->first == "GL_OES_geometry_shader")
