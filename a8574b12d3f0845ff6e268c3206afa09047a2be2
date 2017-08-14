@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1465e80d_8a838e66",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 543,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-14T21:14:55Z",
+      "side": 1,
+      "message": "Not yet, a lot of higher-level validation currently blocks it.",
+      "parentUuid": "dcc119d6_f7fc7ba8",
+      "revId": "a8574b12d3f0845ff6e268c3206afa09047a2be2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "cb9d9f2f_ab04ea73",
         "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
         "patchSetId": 2
@@ -30,6 +48,24 @@
       "writtenOn": "2017-08-14T21:08:43Z",
       "side": 1,
       "message": "Is pixelSize guaranteed to by 4? If yes we should ASSERT it.",
+      "revId": "a8574b12d3f0845ff6e268c3206afa09047a2be2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0179f730_e08301c6",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 547,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-14T21:14:55Z",
+      "side": 1,
+      "message": "It is only because the source is from the glReadPixels call which always packs into an UNSIGNED_BYTE format.",
+      "parentUuid": "cb9d9f2f_ab04ea73",
       "revId": "a8574b12d3f0845ff6e268c3206afa09047a2be2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "facec9df_c7aadd62",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 566,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-14T21:14:55Z",
+      "side": 1,
+      "message": "This is a bit inverted, the original assignments act like the \"else\".  Cleaned it up.",
+      "parentUuid": "0a5a7b65_ac36be62",
+      "revId": "a8574b12d3f0845ff6e268c3206afa09047a2be2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "54705a66_1b017f01",
         "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
         "patchSetId": 2
@@ -67,6 +121,24 @@
       "revId": "a8574b12d3f0845ff6e268c3206afa09047a2be2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c1cb87a4_8f3200c4",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-14T21:14:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "54705a66_1b017f01",
+      "revId": "a8574b12d3f0845ff6e268c3206afa09047a2be2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
