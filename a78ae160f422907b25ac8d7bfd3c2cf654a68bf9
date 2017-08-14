@@ -52,6 +52,24 @@
       "revId": "a78ae160f422907b25ac8d7bfd3c2cf654a68bf9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5b93ab5c_477531b1",
+        "filename": "src/compiler/translator/VariablePacker.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-14T13:19:14Z",
+      "side": 1,
+      "message": "Not moving GetNum* sounds good. However I\u0027m still concerned that this class is always used in the following way:\n\n    VariablePacker packer;\n    packer.checkVariablesWithinPackingLimits(...);\n\nThe class is an implementation detail, and could be hidden inside the .cpp file like we\u0027ve been doing for all AST transforms. This header would then just have the template declaration and the two GetNum* functions.",
+      "parentUuid": "ddb9d5bf_c2895696",
+      "revId": "a78ae160f422907b25ac8d7bfd3c2cf654a68bf9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
