@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c78e2b1d_78c5f627",
+        "filename": "src/compiler/translator/ImageFunctionHLSL.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-08-14T10:22:27Z",
+      "side": 1,
+      "message": "I had checked the ES31 Spec, section 8.22, I think the original design was right, here does not need to translate the coordinates.",
+      "parentUuid": "66648766_4649e562",
+      "range": {
+        "startLine": 146,
+        "startChar": 0,
+        "endLine": 166,
+        "endChar": 86
+      },
+      "revId": "156fa2abc96f4ccb143fb98f3368e51b681bc156",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e14de4d4_8b2c8f83",
         "filename": "src/compiler/translator/UniformHLSL.cpp",
         "patchSetId": 14
@@ -36,6 +60,30 @@
       "writtenOn": "2017-08-09T03:22:27Z",
       "side": 1,
       "message": "I am wondering whether outputHLSLSamplerUniformGroup needs the same limitation?",
+      "range": {
+        "startLine": 275,
+        "startChar": 4,
+        "endLine": 275,
+        "endChar": 99
+      },
+      "revId": "156fa2abc96f4ccb143fb98f3368e51b681bc156",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f362c1d_f915287e",
+        "filename": "src/compiler/translator/UniformHLSL.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-08-14T10:22:27Z",
+      "side": 1,
+      "message": "I had merged the hlsl texture objects of samplers and images, and add a assert statement in outputHLSLSamplerUniformGroup function.",
+      "parentUuid": "e14de4d4_8b2c8f83",
       "range": {
         "startLine": 275,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "50d4c6fa_e9e15cbf",
+        "filename": "src/compiler/translator/UniformHLSL.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-08-14T10:22:27Z",
+      "side": 1,
+      "message": "mSamplerRegister is used to record the count of samplers, and is used in samplerMetadataUniforms function.",
+      "parentUuid": "119d32a2_36d5ea20",
+      "range": {
+        "startLine": 93,
+        "startChar": 17,
+        "endLine": 93,
+        "endChar": 33
+      },
+      "revId": "156fa2abc96f4ccb143fb98f3368e51b681bc156",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "10f9edb8_f152c4e5",
         "filename": "src/compiler/translator/UtilsHLSL.cpp",
         "patchSetId": 14
@@ -82,6 +154,30 @@
       "writtenOn": "2017-08-09T03:22:27Z",
       "side": 1,
       "message": "Rename to TextureImageGroup?",
+      "range": {
+        "startLine": 202,
+        "startChar": 17,
+        "endLine": 202,
+        "endChar": 29
+      },
+      "revId": "156fa2abc96f4ccb143fb98f3368e51b681bc156",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "358e1975_52d1e279",
+        "filename": "src/compiler/translator/UtilsHLSL.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-08-14T10:22:27Z",
+      "side": 1,
+      "message": "Merge HLSL Texture objects for samplers and images",
+      "parentUuid": "10f9edb8_f152c4e5",
       "range": {
         "startLine": 202,
         "startChar": 17,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "d2cb19aa_4df5a496",
+        "filename": "src/compiler/translator/UtilsHLSL.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-08-14T10:22:27Z",
+      "side": 1,
+      "message": "The same as above.",
+      "parentUuid": "8f62bc60_ae4a269b",
+      "range": {
+        "startLine": 433,
+        "startChar": 8,
+        "endLine": 433,
+        "endChar": 25
+      },
+      "revId": "156fa2abc96f4ccb143fb98f3368e51b681bc156",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bb87e4db_585e4afc",
         "filename": "src/compiler/translator/UtilsHLSL.h",
         "patchSetId": 14
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "399a9c76_204ce80c",
+        "filename": "src/compiler/translator/UtilsHLSL.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-08-14T10:22:27Z",
+      "side": 1,
+      "message": "image is the conception of GLSL, so i think here is right.",
+      "parentUuid": "bb87e4db_585e4afc",
+      "range": {
+        "startLine": 57,
+        "startChar": 49,
+        "endLine": 57,
+        "endChar": 53
+      },
+      "revId": "156fa2abc96f4ccb143fb98f3368e51b681bc156",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "656b5bee_d86c154a",
         "filename": "src/compiler/translator/UtilsHLSL.h",
         "patchSetId": 14
@@ -151,6 +295,30 @@
       "writtenOn": "2017-08-09T03:22:27Z",
       "side": 1,
       "message": "HLSLTextureImageGroup?",
+      "range": {
+        "startLine": 58,
+        "startChar": 5,
+        "endLine": 58,
+        "endChar": 21
+      },
+      "revId": "156fa2abc96f4ccb143fb98f3368e51b681bc156",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ab39675_1700d33f",
+        "filename": "src/compiler/translator/UtilsHLSL.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-08-14T10:22:27Z",
+      "side": 1,
+      "message": "Merged HLSL Texture objects for samplers and images.",
+      "parentUuid": "656b5bee_d86c154a",
       "range": {
         "startLine": 58,
         "startChar": 5,
