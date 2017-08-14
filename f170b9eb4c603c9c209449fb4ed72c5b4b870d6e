@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "75eb2d45_4c579d14",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 572,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-14T04:06:00Z",
+      "side": 1,
+      "message": "Done. I put it below CollectVariables. Thanks.",
+      "parentUuid": "6885673d_37dcf988",
+      "revId": "f170b9eb4c603c9c209449fb4ed72c5b4b870d6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1d7c1a3b_1b4f6530",
         "filename": "src/compiler/translator/Compiler.cpp",
         "patchSetId": 6
