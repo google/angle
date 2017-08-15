@@ -2579,29 +2579,26 @@ TString OutputHLSL::argumentString(const TIntermSymbol *symbol)
                                   &samplerSymbols, nullptr);
         for (const TIntermSymbol *sampler : samplerSymbols)
         {
+            const TType &samplerType = sampler->getType();
             if (mOutputType == SH_HLSL_4_1_OUTPUT)
             {
-                ASSERT(!sampler->getType().isArray());
-                argString << ", const uint " << sampler->getSymbol();
+                argString << ", const uint " << sampler->getSymbol() << ArrayString(samplerType);
             }
             else if (mOutputType == SH_HLSL_4_0_FL9_3_OUTPUT)
             {
-                const TType &samplerType = sampler->getType();
-                ASSERT(!samplerType.isArray());
                 ASSERT(IsSampler(samplerType.getBasicType()));
                 argString << ", " << QualifierString(qualifier) << " "
                           << TextureString(samplerType.getBasicType()) << " texture_"
-                          << sampler->getSymbol() << ", " << QualifierString(qualifier) << " "
+                          << sampler->getSymbol() << ArrayString(samplerType) << ", "
+                          << QualifierString(qualifier) << " "
                           << SamplerString(samplerType.getBasicType()) << " sampler_"
-                          << sampler->getSymbol();
+                          << sampler->getSymbol() << ArrayString(samplerType);
             }
             else
             {
-                const TType &samplerType = sampler->getType();
-                ASSERT(!samplerType.isArray());
                 ASSERT(IsSampler(samplerType.getBasicType()));
                 argString << ", " << QualifierString(qualifier) << " " << TypeString(samplerType)
-                          << " " << sampler->getSymbol();
+                          << " " << sampler->getSymbol() << ArrayString(samplerType);
             }
         }
     }
