@@ -52,6 +52,24 @@
       "revId": "df8d11032f436ba5f8a5f0e19b15685adb9ad471",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f2e2f70b_9cd60649",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 8
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-15T16:44:19Z",
+      "side": 1,
+      "message": "Let me try to clarify the thinking behind how we ended up suggesting this kind of an API design.\n\nThere will always need to be at least a thin WebGL layer on top even after the passthrough command buffer is implemented. I think managing the opaque framebuffers will fit much better there rather than inside ANGLE, ANGLE just needs to give the higher level code sufficient tools to do that. The web-facing API is intended to be something like \"vrThingy.getOpaqueMultiviewFramebuffer({depth: true})\" - what kind of format that actually means at the native level will need to be filled in by the browser either way. It could be either layered or side-by-side. It might depend on the VR headset you want to render to, for example, and as far as I understand that kind of details aren\u0027t really within ANGLE\u0027s jurisdiction even after the passthrough command buffer will be in use.",
+      "parentUuid": "9817e92a_73aa37e3",
+      "revId": "df8d11032f436ba5f8a5f0e19b15685adb9ad471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
