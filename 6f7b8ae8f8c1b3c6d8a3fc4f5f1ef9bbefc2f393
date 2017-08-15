@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "04c4049e_2cafc407",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-15T13:12:16Z",
+      "side": 1,
+      "message": "Base view index missing here as well.",
+      "revId": "6f7b8ae8f8c1b3c6d8a3fc4f5f1ef9bbefc2f393",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d71a65ab_2151eaa0",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-15T13:12:16Z",
+      "side": 1,
+      "message": "I think I\u0027d prefer \"multiviewBaseViewLayerIndex\" as the variable name. With that name it\u0027s self-evident that it\u0027s applied to the layer index, and it makes sense that it would be \u003c 0 when it doesn\u0027t apply. On the other hand \"multiviewRenderPath\" name doesn\u0027t explain that it contains the base view index.",
+      "revId": "6f7b8ae8f8c1b3c6d8a3fc4f5f1ef9bbefc2f393",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d98dc9a4_670e0117",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-15T13:12:16Z",
+      "side": 1,
+      "message": "Applying the base view index is missing here.",
+      "revId": "6f7b8ae8f8c1b3c6d8a3fc4f5f1ef9bbefc2f393",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d215699_b89d158f",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-15T13:12:16Z",
+      "side": 1,
+      "message": "This comment is unrelated to this patch, but I think there may be a bug here. Let\u0027s consider a case where a FBO first has color and depth attachments. Then the depth attachment is removed. When syncState is going to be called for that framebuffer the next time, wouldn\u0027t this code cause the baseViewIndex and multiviewLayout to be set back to their default values? You should add a test for this case and make sure that it works.",
+      "revId": "6f7b8ae8f8c1b3c6d8a3fc4f5f1ef9bbefc2f393",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
