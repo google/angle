@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "04ec34e3_eb6f7efe",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 810,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-15T13:46:46Z",
+      "side": 1,
+      "message": "use const auto \u0026caps \u003d context-\u003egetCaps().",
+      "range": {
+        "startLine": 810,
+        "startChar": 10,
+        "endLine": 810,
+        "endChar": 14
+      },
+      "revId": "e378934e59cb0b865e32b5d344aa7a9b248b3c77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "70841fce_9e1ec658",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 860,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-15T13:46:46Z",
+      "side": 1,
+      "message": "nit: this needs a grammar clean-up.\n\nI\u0027m not sure what a \u0027viewport set conflict\u0027 is, but you could phrase this as\n\n\"If the Framebuffer has no color attachment and the default width or height is smaller than the current viewport, use the smaller of the two sizes.\"",
+      "range": {
+        "startLine": 858,
+        "startChar": 1,
+        "endLine": 860,
+        "endChar": 20
+      },
+      "revId": "e378934e59cb0b865e32b5d344aa7a9b248b3c77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "91e719dc_e36fb0cf",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 893,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-15T13:46:46Z",
+      "side": 1,
+      "message": "I don\u0027t like that you copied and pasted the code from the syncFramebuffer method. I would prefer if you could figure out a better way to re-use code.",
+      "range": {
+        "startLine": 869,
+        "startChar": 0,
+        "endLine": 893,
+        "endChar": 5
+      },
+      "revId": "e378934e59cb0b865e32b5d344aa7a9b248b3c77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d8092b7_4f09abd8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1310,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-15T13:46:46Z",
+      "side": 1,
+      "message": "I don\u0027t like you calling syncViewport from syncFramebuffer. You\u0027ll need a way to make sure we sync the viewport if we\u0027re using default fb without calling one from the other. \n\nAlso, I think this would trigger for depth-stencil-only framebuffers, as well as default without attachments, so I\u0027m not sure it is correct.",
+      "range": {
+        "startLine": 1310,
+        "startChar": 8,
+        "endLine": 1310,
+        "endChar": 43
+      },
+      "revId": "e378934e59cb0b865e32b5d344aa7a9b248b3c77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a476ad3_050e7994",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1470,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-15T13:46:46Z",
+      "side": 1,
+      "message": "nit: getDrawFramebuffer should be cheap - you don\u0027t really need to pass the framebuffer either.",
+      "range": {
+        "startLine": 1470,
+        "startChar": 38,
+        "endLine": 1470,
+        "endChar": 49
+      },
+      "revId": "e378934e59cb0b865e32b5d344aa7a9b248b3c77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
