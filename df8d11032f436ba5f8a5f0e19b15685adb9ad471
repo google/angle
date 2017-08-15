@@ -34,6 +34,24 @@
       "revId": "df8d11032f436ba5f8a5f0e19b15685adb9ad471",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9817e92a_73aa37e3",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 8
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-15T15:02:12Z",
+      "side": 1,
+      "message": "I\u0027m also concerned about this because with the passthrough command decoder and/or in other browsers, handling this undefined behaviour gets moved into ANGLE.  I think we should either make it an error in this extension or add an interaction with the WebGL compatibility extension that makes it an error.",
+      "parentUuid": "9071cbcd_20f16881",
+      "revId": "df8d11032f436ba5f8a5f0e19b15685adb9ad471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
