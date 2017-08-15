@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "06394e28_5ffafe4a",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-15T13:53:41Z",
+      "side": 1,
+      "message": "Use output colors with alpha 1.",
+      "revId": "3b9ae25f4a6eb538cc463e176d574a1849127fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f75299d_19bf1ad7",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-15T13:53:41Z",
+      "side": 1,
+      "message": "How about \"checkRedChannel\"? Makes the code at the call sites clearer.",
+      "range": {
+        "startLine": 259,
+        "startChar": 9,
+        "endLine": 259,
+        "endChar": 20
+      },
+      "revId": "3b9ae25f4a6eb538cc463e176d574a1849127fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5f0b5478_4672e08d",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-15T13:53:41Z",
+      "side": 1,
+      "message": "Member variables should have the m prefix.",
+      "range": {
+        "startLine": 271,
+        "startChar": 18,
+        "endLine": 271,
+        "endChar": 21
+      },
+      "revId": "3b9ae25f4a6eb538cc463e176d574a1849127fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0331a40c_6aa909d5",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1011,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-15T13:53:41Z",
+      "side": 1,
+      "message": "I\u0027m not sure if asserting a pixel pattern like this is reliable.\n\nFor example, the ES 3.0.5 spec says in its section on line rasterization that \"The coordinates of a fragment produced by the algorithm may not deviate by more than one unit in either x or y window coordinates from a corresponding fragment produced by the diamond-exit rule.\"\n\nThis suggests that the line may be offset by up to 1 pixel.\n\nI didn\u0027t read through the spec on triangle rasterization to see if there\u0027s something similar for triangles, but there might be.\n\nWe should try to make tests where we allow for this kind of possible variations if it\u0027s possible.",
+      "revId": "3b9ae25f4a6eb538cc463e176d574a1849127fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
