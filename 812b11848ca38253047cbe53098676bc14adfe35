@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b448d36_de288bbb",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-15T15:21:11Z",
+      "side": 1,
+      "message": "Probably don\u0027t want to return here, there is more logic happening below.",
+      "range": {
+        "startLine": 319,
+        "startChar": 8,
+        "endLine": 319,
+        "endChar": 15
+      },
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "356317f8_a45a2c06",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2710,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-15T15:21:11Z",
+      "side": 1,
+      "message": "nit: setArraySizeOfGeometryShaderInputs or setGeometryShaderInputArraySizes",
+      "range": {
+        "startLine": 2710,
+        "startChar": 20,
+        "endLine": 2710,
+        "endChar": 54
+      },
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
