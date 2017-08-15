@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b49f2236_355285d2",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-15T17:46:49Z",
+      "side": 1,
+      "message": "This is independent of arrayIndex and could be moved out of the loop.",
+      "range": {
+        "startLine": 562,
+        "startChar": 0,
+        "endLine": 563,
+        "endChar": 45
+      },
+      "revId": "e1eff429eef91c8e3a2d2ea69543b6f3bce11ddd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
