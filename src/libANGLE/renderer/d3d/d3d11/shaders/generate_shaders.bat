@@ -5,7 +5,7 @@ REM Use of this source code is governed by a BSD-style license that can be
 REM found in the LICENSE file.
 REM
 
-PATH %PATH%;%ProgramFiles(x86)%\Windows Kits\8.1\bin\x86;%DXSDK_DIR%\Utilities\bin\x86
+PATH %ProgramFiles(x86)%\Windows Kits\8.1\bin\x86;%DXSDK_DIR%\Utilities\bin\x86;%PATH%
 
 setlocal
 set errorCount=0
@@ -49,6 +49,8 @@ call:BuildShader Clear11.hlsl           VS_Clear_FL9             vs_4_0_level_9_
 call:BuildShader Clear11.hlsl           PS_ClearFloat_FL9        ps_4_0_level_9_3  compiled\clearfloat11_fl9ps.h        %debug%
 
 call:BuildShader Clear11.hlsl           VS_Clear                 vs_4_0            compiled\clear11vs.h                 %debug%
+call:BuildShader Clear11.hlsl           VS_Multiview_Clear                 vs_4_0            compiled\clear11multiviewvs.h                 %debug%
+call:BuildShader Clear11.hlsl           GS_Multiview_Clear                 gs_4_0            compiled\clear11multiviewgs.h                 %debug%
 call:BuildShader Clear11.hlsl           PS_ClearDepth            ps_4_0            compiled\cleardepth11ps.h            %debug%
 call:BuildShader Clear11.hlsl           PS_ClearFloat1           ps_4_0            compiled\clearfloat11ps1.h           %debug%
 call:BuildShader Clear11.hlsl           PS_ClearFloat2           ps_4_0            compiled\clearfloat11ps2.h           %debug%

@@ -51,8 +51,10 @@ class Clear11 : angle::NonCopyable
         gl::Error getShadersAndLayout(Renderer11 *renderer,
                                       const INT clearType,
                                       const uint32_t numRTs,
+                                      const bool hasLayeredLayout,
                                       const d3d11::InputLayout **il,
                                       const d3d11::VertexShader **vs,
+                                      const d3d11::GeometryShader **gs,
                                       const d3d11::PixelShader **ps);
 
       private:
@@ -62,6 +64,8 @@ class Clear11 : angle::NonCopyable
         d3d11::LazyShader<ID3D11VertexShader> mVs9;
         d3d11::LazyShader<ID3D11PixelShader> mPsFloat9;
         d3d11::LazyShader<ID3D11VertexShader> mVs;
+        d3d11::LazyShader<ID3D11VertexShader> mVsMultiview;
+        d3d11::LazyShader<ID3D11GeometryShader> mGsMultiview;
         d3d11::LazyShader<ID3D11PixelShader> mPsDepth;
         std::array<d3d11::LazyShader<ID3D11PixelShader>, kNumShaders> mPsFloat;
         std::array<d3d11::LazyShader<ID3D11PixelShader>, kNumShaders> mPsUInt;

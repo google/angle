@@ -21,6 +21,8 @@
 
 // Precompiled shaders
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clear11_fl9vs.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clear11multiviewgs.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clear11multiviewvs.h"
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clear11vs.h"
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/cleardepth11ps.h"
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearfloat11_fl9ps.h"
@@ -125,6 +127,8 @@ Clear11::ShaderManager::ShaderManager()
       mVs9(g_VS_Clear_FL9, ArraySize(g_VS_Clear_FL9), "Clear11 VS FL9"),
       mPsFloat9(g_PS_ClearFloat_FL9, ArraySize(g_PS_ClearFloat_FL9), "Clear11 PS FloatFL9"),
       mVs(g_VS_Clear, ArraySize(g_VS_Clear), "Clear11 VS"),
+      mVsMultiview(g_VS_Multiview_Clear, ArraySize(g_VS_Multiview_Clear), "Clear11 VS Multiview"),
+      mGsMultiview(g_GS_Multiview_Clear, ArraySize(g_GS_Multiview_Clear), "Clear11 GS Multiview"),
       mPsDepth(g_PS_ClearDepth, ArraySize(g_PS_ClearDepth), "Clear11 PS Depth"),
       mPsFloat{{CLEARPS(Float1), CLEARPS(Float2), CLEARPS(Float3), CLEARPS(Float4), CLEARPS(Float5),
                 CLEARPS(Float6), CLEARPS(Float7), CLEARPS(Float8)}},
@@ -144,8 +148,10 @@ Clear11::ShaderManager::~ShaderManager()
 gl::Error Clear11::ShaderManager::getShadersAndLayout(Renderer11 *renderer,
                                                       const INT clearType,
                                                       const uint32_t numRTs,
+                                                      const bool hasLayeredLayout,
                                                       const d3d11::InputLayout **il,
                                                       const d3d11::VertexShader **vs,
+                                                      const d3d11::GeometryShader **gs,
                                                       const d3d11::PixelShader **ps)
 {
     if (renderer->getRenderer11DeviceCaps().featureLevel <= D3D_FEATURE_LEVEL_9_3)
@@ -167,13 +173,26 @@ gl::Error Clear11::ShaderManager::getShadersAndLayout(Renderer11 *renderer,
         }
 
         *vs = &mVs9.getObj();
+        *gs = nullptr;
         *il = &mIl9;
         *ps = &mPsFloat9.getObj();
         return gl::NoError();
     }
+    if (!hasLayeredLayout)
+    {
+        ANGLE_TRY(mVs.resolve(renderer));
+        *vs = &mVs.getObj();
+        *gs = nullptr;
+    }
+    else
+    {
+        // For layered framebuffers we have to use the multi-view versions of the VS and GS.
+        ANGLE_TRY(mVsMultiview.resolve(renderer));
+        ANGLE_TRY(mGsMultiview.resolve(renderer));
+        *vs = &mVsMultiview.getObj();
+        *gs = &mGsMultiview.getObj();
+    }
 
-    ANGLE_TRY(mVs.resolve(renderer));
-    *vs = &mVs.getObj();
     *il = nullptr;
 
     if (numRTs == 0)
@@ -771,14 +790,16 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
 
     // Get Shaders
     const d3d11::VertexShader *vs = nullptr;
+    const d3d11::GeometryShader *gs = nullptr;
     const d3d11::InputLayout *il  = nullptr;
     const d3d11::PixelShader *ps  = nullptr;
-
-    ANGLE_TRY(mShaderManager.getShadersAndLayout(mRenderer, clearParams.colorType, numRtvs, &il,
-                                                 &vs, &ps));
+    const bool hasLayeredLayout =
+        (fboData.getMultiviewLayout() == GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE);
+    ANGLE_TRY(mShaderManager.getShadersAndLayout(mRenderer, clearParams.colorType, numRtvs,
+                                                 hasLayeredLayout, &il, &vs, &gs, &ps));
 
     // Apply Shaders
-    stateManager->setDrawShaders(vs, nullptr, ps);
+    stateManager->setDrawShaders(vs, gs, ps);
     ID3D11Buffer *constantBuffer = mConstantBuffer.get();
     deviceContext->PSSetConstantBuffers(0, 1, &constantBuffer);
 
@@ -812,7 +833,15 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
             deviceContext->RSSetScissorRects(1, &scissorRects[i]);
         }
         // Draw the fullscreen quad.
-        deviceContext->Draw(6, 0);
+        if (!hasLayeredLayout || isSideBySideFBO)
+        {
+            deviceContext->Draw(6, 0);
+        }
+        else
+        {
+            ASSERT(hasLayeredLayout);
+            deviceContext->DrawInstanced(6, static_cast<UINT>(fboData.getNumViews()), 0, 0);
+        }
     }
 
     // Clean up

@@ -2621,12 +2621,13 @@ void TextureStorage11_2DArray::associateImage(Image11 *image, const gl::ImageInd
 {
     const GLint level       = index.mipIndex;
     const GLint layerTarget = index.layerIndex;
+    const GLint numLayers   = index.numLayers;
 
     ASSERT(0 <= level && level < getLevelCount());
 
     if (0 <= level && level < getLevelCount())
     {
-        LevelLayerKey key(level, layerTarget);
+        LevelLayerRangeKey key(level, layerTarget, numLayers);
         mAssociatedImages[key] = image;
     }
 }
@@ -2636,8 +2637,9 @@ void TextureStorage11_2DArray::verifyAssociatedImageValid(const gl::ImageIndex &
 {
     const GLint level       = index.mipIndex;
     const GLint layerTarget = index.layerIndex;
+    const GLint numLayers   = index.numLayers;
 
-    LevelLayerKey key(level, layerTarget);
+    LevelLayerRangeKey key(level, layerTarget, numLayers);
 
     // This validation check should never return false. It means the Image/TextureStorage
     // association is broken.
@@ -2652,8 +2654,9 @@ void TextureStorage11_2DArray::disassociateImage(const gl::ImageIndex &index,
 {
     const GLint level       = index.mipIndex;
     const GLint layerTarget = index.layerIndex;
+    const GLint numLayers   = index.numLayers;
 
-    LevelLayerKey key(level, layerTarget);
+    LevelLayerRangeKey key(level, layerTarget, numLayers);
 
     bool imageAssociationCorrect = (mAssociatedImages.find(key) != mAssociatedImages.end() &&
                                     (mAssociatedImages[key] == expectedImage));
@@ -2669,8 +2672,9 @@ gl::Error TextureStorage11_2DArray::releaseAssociatedImage(const gl::Context *co
 {
     const GLint level       = index.mipIndex;
     const GLint layerTarget = index.layerIndex;
+    const GLint numLayers   = index.numLayers;
 
-    LevelLayerKey key(level, layerTarget);
+    LevelLayerRangeKey key(level, layerTarget, numLayers);
 
     if (mAssociatedImages.find(key) != mAssociatedImages.end())
     {
@@ -2750,7 +2754,7 @@ gl::Error TextureStorage11_2DArray::createRenderTargetSRV(const TextureHelper11 
     srvDesc.Texture2DArray.MostDetailedMip = mTopLevel + index.mipIndex;
     srvDesc.Texture2DArray.MipLevels       = 1;
     srvDesc.Texture2DArray.FirstArraySlice = index.layerIndex;
-    srvDesc.Texture2DArray.ArraySize       = 1;
+    srvDesc.Texture2DArray.ArraySize       = index.numLayers;
 
     ANGLE_TRY(mRenderer->allocateResource(srvDesc, texture.get(), srv));
 
@@ -2765,10 +2769,11 @@ gl::Error TextureStorage11_2DArray::getRenderTarget(const gl::Context *context,
 
     const int mipLevel = index.mipIndex;
     const int layer    = index.layerIndex;
+    const int numLayers = index.numLayers;
 
     ASSERT(mipLevel >= 0 && mipLevel < getLevelCount());
 
-    LevelLayerKey key(mipLevel, layer);
+    LevelLayerRangeKey key(mipLevel, layer, numLayers);
     if (mRenderTargets.find(key) == mRenderTargets.end())
     {
         const TextureHelper11 *texture = nullptr;
@@ -2794,7 +2799,7 @@ gl::Error TextureStorage11_2DArray::getRenderTarget(const gl::Context *context,
             rtvDesc.ViewDimension                  = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
             rtvDesc.Texture2DArray.MipSlice        = mTopLevel + mipLevel;
             rtvDesc.Texture2DArray.FirstArraySlice = layer;
-            rtvDesc.Texture2DArray.ArraySize       = 1;
+            rtvDesc.Texture2DArray.ArraySize       = numLayers;
 
             d3d11::RenderTargetView rtv;
             ANGLE_TRY(mRenderer->allocateResource(rtvDesc, texture->get(), &rtv));
@@ -2813,7 +2818,7 @@ gl::Error TextureStorage11_2DArray::getRenderTarget(const gl::Context *context,
             dsvDesc.ViewDimension                  = D3D11_DSV_DIMENSION_TEXTURE2DARRAY;
             dsvDesc.Texture2DArray.MipSlice        = mTopLevel + mipLevel;
             dsvDesc.Texture2DArray.FirstArraySlice = layer;
-            dsvDesc.Texture2DArray.ArraySize       = 1;
+            dsvDesc.Texture2DArray.ArraySize       = numLayers;
             dsvDesc.Flags                          = 0;
 
             d3d11::DepthStencilView dsv;

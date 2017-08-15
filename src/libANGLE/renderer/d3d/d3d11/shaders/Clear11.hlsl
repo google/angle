@@ -30,10 +30,46 @@ void VS_Clear(in uint id : SV_VertexID,
     outPosition = float4(corner.x, corner.y, 0.0f, 1.0f);
 }
 
+void VS_Multiview_Clear(in uint id : SV_VertexID,
+                        in uint instanceID : SV_InstanceID,
+                        out float4 outPosition : SV_POSITION,
+                        out uint outLayerID : TEXCOORD0)
+{
+    float2 corner = g_Corners[id];
+    outPosition = float4(corner.x, corner.y, 0.0f, 1.0f);
+    outLayerID = instanceID;
+}
+
 void VS_Clear_FL9( in float4 inPosition : POSITION,
                    out float4 outPosition : SV_POSITION)
 {
     outPosition = inPosition;
+}
+
+// Geometry shader for clearing multiview layered textures
+struct GS_INPUT
+{
+    float4 inPosition : SV_Position;
+    uint inLayerID : TEXCOORD0;
+};
+
+struct GS_OUTPUT
+{
+    float4 outPosition : SV_Position;
+    uint outLayerID : SV_RenderTargetArrayIndex;
+};
+
+[maxvertexcount(3)]
+void GS_Multiview_Clear(triangle GS_INPUT input[3], inout TriangleStream<GS_OUTPUT> outStream)
+{
+    GS_OUTPUT output = (GS_OUTPUT)0;
+    for (int i = 0; i < 3; i++)
+    {
+        output.outPosition = input[i].inPosition;
+        output.outLayerID = input[i].inLayerID;
+        outStream.Append(output);
+    }
+    outStream.RestartStrip();
 }
 
 // Pixel Shader Constant Buffers

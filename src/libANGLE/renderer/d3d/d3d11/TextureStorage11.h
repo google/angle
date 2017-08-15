@@ -485,6 +485,30 @@ class TextureStorage11_2DArray : public TextureStorage11
     gl::ErrorOrResult<DropStencil> ensureDropStencilTexture(const gl::Context *context) override;
 
   private:
+    struct LevelLayerRangeKey
+    {
+        LevelLayerRangeKey(int mipLevelIn, int layerIn, int numLayersIn)
+            : mipLevel(mipLevelIn), layer(layerIn), numLayers(numLayersIn)
+        {
+        }
+        bool operator<(const LevelLayerRangeKey &other) const
+        {
+            if (mipLevel != other.mipLevel)
+            {
+                return mipLevel < other.mipLevel;
+            }
+            if (layer != other.layer)
+            {
+                return layer < other.layer;
+            }
+            return numLayers < other.numLayers;
+        }
+        int mipLevel;
+        int layer;
+        int numLayers;
+    };
+
+  private:
     gl::Error createSRV(const gl::Context *context,
                         int baseLevel,
                         int mipLevels,
@@ -496,8 +520,7 @@ class TextureStorage11_2DArray : public TextureStorage11
                                     DXGI_FORMAT resourceFormat,
                                     d3d11::SharedSRV *srv) const;
 
-    typedef std::pair<int, int> LevelLayerKey;
-    typedef std::map<LevelLayerKey, RenderTarget11*> RenderTargetMap;
+    typedef std::map<LevelLayerRangeKey, RenderTarget11 *> RenderTargetMap;
     RenderTargetMap mRenderTargets;
 
     TextureHelper11 mTexture;
@@ -505,7 +528,7 @@ class TextureStorage11_2DArray : public TextureStorage11
     TextureHelper11 mSwizzleTexture;
     d3d11::RenderTargetView mSwizzleRenderTargets[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
-    typedef std::map<LevelLayerKey, Image11*> ImageMap;
+    typedef std::map<LevelLayerRangeKey, Image11 *> ImageMap;
     ImageMap mAssociatedImages;
 };
 

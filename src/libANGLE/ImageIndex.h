@@ -23,6 +23,7 @@ struct ImageIndex
     GLenum type;
     GLint mipIndex;
     GLint layerIndex;
+    GLint numLayers;
 
     ImageIndex(const ImageIndex &other);
     ImageIndex &operator=(const ImageIndex &other);
@@ -34,6 +35,7 @@ struct ImageIndex
     static ImageIndex MakeRectangle(GLint mipIndex);
     static ImageIndex MakeCube(GLenum target, GLint mipIndex);
     static ImageIndex Make2DArray(GLint mipIndex, GLint layerIndex);
+    static ImageIndex Make2DArrayRange(GLint mipIndex, GLint layerIndex, GLint numLayers);
     static ImageIndex Make3D(GLint mipIndex, GLint layerIndex = ENTIRE_LEVEL);
     static ImageIndex MakeGeneric(GLenum target, GLint mipIndex);
     static ImageIndex Make2DMultisample();
@@ -49,7 +51,7 @@ struct ImageIndex
   private:
     friend class ImageIndexIterator;
 
-    ImageIndex(GLenum typeIn, GLint mipIndexIn, GLint layerIndexIn);
+    ImageIndex(GLenum typeIn, GLint mipIndexIn, GLint layerIndexIn, GLint numLayersIn);
 };
 
 class ImageIndexIterator

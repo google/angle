@@ -3072,7 +3072,7 @@ void Context::framebufferTextureMultiviewLayeredANGLE(GLenum target,
     {
         Texture *textureObj = getTexture(texture);
 
-        ImageIndex index = ImageIndex::Make2DArray(level, baseViewIndex);
+        ImageIndex index = ImageIndex::Make2DArrayRange(level, baseViewIndex, numViews);
         framebuffer->setAttachmentMultiviewLayered(this, GL_TEXTURE, attachment, index, textureObj,
                                                    numViews, baseViewIndex);
     }
