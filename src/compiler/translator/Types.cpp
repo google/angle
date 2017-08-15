@@ -548,73 +548,58 @@ bool TStructure::containsSamplers() const
     return false;
 }
 
-void TStructure::createSamplerSymbols(const TString &structName,
-                                      const TString &structAPIName,
-                                      const unsigned int arrayOfStructsSize,
+void TType::createSamplerSymbols(const TString &namePrefix,
+                                 const TString &apiNamePrefix,
+                                 TVector<TIntermSymbol *> *outputSymbols,
+                                 TMap<TIntermSymbol *, TString> *outputSymbolsToAPINames) const
+{
+    if (isStructureContainingSamplers())
+    {
+        if (isArray())
+        {
+            TType elementType(*this);
+            elementType.clearArrayness();
+            for (unsigned int arrayIndex = 0u; arrayIndex < getArraySize(); ++arrayIndex)
+            {
+                TStringStream elementName;
+                elementName << namePrefix << "_" << arrayIndex;
+                TStringStream elementApiName;
+                elementApiName << apiNamePrefix << "[" << arrayIndex << "]";
+                elementType.createSamplerSymbols(elementName.str(), elementApiName.str(),
+                                                 outputSymbols, outputSymbolsToAPINames);
+            }
+        }
+        else
+        {
+            structure->createSamplerSymbols(namePrefix, apiNamePrefix, outputSymbols,
+                                            outputSymbolsToAPINames);
+        }
+        return;
+    }
+    ASSERT(IsSampler(type));
+    TIntermSymbol *symbol = new TIntermSymbol(0, namePrefix, *this);
+    outputSymbols->push_back(symbol);
+    if (outputSymbolsToAPINames)
+    {
+        (*outputSymbolsToAPINames)[symbol] = apiNamePrefix;
+    }
+}
+
+void TStructure::createSamplerSymbols(const TString &namePrefix,
+                                      const TString &apiNamePrefix,
                                       TVector<TIntermSymbol *> *outputSymbols,
                                       TMap<TIntermSymbol *, TString> *outputSymbolsToAPINames) const
 {
+    ASSERT(containsSamplers());
     for (auto &field : *mFields)
     {
         const TType *fieldType = field->type();
-        if (IsSampler(fieldType->getBasicType()))
+        if (IsSampler(fieldType->getBasicType()) || fieldType->isStructureContainingSamplers())
         {
-            if (arrayOfStructsSize > 0u)
-            {
-                for (unsigned int arrayIndex = 0u; arrayIndex < arrayOfStructsSize; ++arrayIndex)
-                {
-                    TStringStream name;
-                    name << structName << "_" << arrayIndex << "_" << field->name();
-                    TIntermSymbol *symbol = new TIntermSymbol(0, name.str(), *fieldType);
-                    outputSymbols->push_back(symbol);
-
-                    if (outputSymbolsToAPINames)
-                    {
-                        TStringStream apiName;
-                        apiName << structAPIName << "[" << arrayIndex << "]." << field->name();
-                        (*outputSymbolsToAPINames)[symbol] = apiName.str();
-                    }
-                }
-            }
-            else
-            {
-                TString symbolName    = structName + "_" + field->name();
-                TIntermSymbol *symbol = new TIntermSymbol(0, symbolName, *fieldType);
-                outputSymbols->push_back(symbol);
-
-                if (outputSymbolsToAPINames)
-                {
-                    TString apiName                    = structAPIName + "." + field->name();
-                    (*outputSymbolsToAPINames)[symbol] = apiName;
-                }
-            }
-        }
-        else if (fieldType->isStructureContainingSamplers())
-        {
-            unsigned int nestedArrayOfStructsSize =
-                fieldType->isArray() ? fieldType->getArraySize() : 0u;
-            if (arrayOfStructsSize > 0)
-            {
-                for (unsigned int arrayIndex = 0u; arrayIndex < arrayOfStructsSize; ++arrayIndex)
-                {
-                    TStringStream fieldName;
-                    fieldName << structName << "_" << arrayIndex << "_" << field->name();
-                    TStringStream fieldAPIName;
-                    if (outputSymbolsToAPINames)
-                    {
-                        fieldAPIName << structAPIName << "[" << arrayIndex << "]." << field->name();
-                    }
-                    fieldType->createSamplerSymbols(fieldName.str(), fieldAPIName.str(),
-                                                    nestedArrayOfStructsSize, outputSymbols,
-                                                    outputSymbolsToAPINames);
-                }
-            }
-            else
-            {
-                fieldType->createSamplerSymbols(
-                    structName + "_" + field->name(), structAPIName + "." + field->name(),
-                    nestedArrayOfStructsSize, outputSymbols, outputSymbolsToAPINames);
-            }
+            TString fieldName    = namePrefix + "_" + field->name();
+            TString fieldApiName = apiNamePrefix + "." + field->name();
+            fieldType->createSamplerSymbols(fieldName, fieldApiName, outputSymbols,
+                                            outputSymbolsToAPINames);
         }
     }
 }

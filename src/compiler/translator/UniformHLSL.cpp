@@ -286,9 +286,8 @@ void UniformHLSL::uniformsHeader(TInfoSinkBase &out,
             {
                 TVector<TIntermSymbol *> samplerSymbols;
                 TMap<TIntermSymbol *, TString> symbolsToAPINames;
-                unsigned int arrayOfStructsSize = type.isArray() ? type.getArraySize() : 0u;
                 type.createSamplerSymbols("angle_" + name.getString(), name.getString(),
-                                          arrayOfStructsSize, &samplerSymbols, &symbolsToAPINames);
+                                          &samplerSymbols, &symbolsToAPINames);
                 for (TIntermSymbol *sampler : samplerSymbols)
                 {
                     const TType &samplerType = sampler->getType();

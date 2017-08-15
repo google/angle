@@ -1829,7 +1829,6 @@ bool OutputHLSL::visitAggregate(Visit visit, TIntermAggregate *node)
                     TVector<TIntermSymbol *> samplerSymbols;
                     TString structName = samplerNamePrefixFromStruct(typedArg);
                     argType.createSamplerSymbols("angle_" + structName, "",
-                                                 argType.isArray() ? argType.getArraySize() : 0u,
                                                  &samplerSymbols, nullptr);
                     for (const TIntermSymbol *sampler : samplerSymbols)
                     {
@@ -2575,8 +2574,7 @@ TString OutputHLSL::argumentString(const TIntermSymbol *symbol)
     {
         ASSERT(qualifier != EvqOut && qualifier != EvqInOut);
         TVector<TIntermSymbol *> samplerSymbols;
-        type.createSamplerSymbols("angle" + nameStr, "", type.isArray() ? type.getArraySize() : 0u,
-                                  &samplerSymbols, nullptr);
+        type.createSamplerSymbols("angle" + nameStr, "", &samplerSymbols, nullptr);
         for (const TIntermSymbol *sampler : samplerSymbols)
         {
             const TType &samplerType = sampler->getType();

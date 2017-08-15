@@ -100,9 +100,8 @@ class TStructure : public TFieldListCollection
     bool containsType(TBasicType t) const;
     bool containsSamplers() const;
 
-    void createSamplerSymbols(const TString &structName,
-                              const TString &structAPIName,
-                              const unsigned int arrayOfStructsSize,
+    void createSamplerSymbols(const TString &namePrefix,
+                              const TString &apiNamePrefix,
                               TVector<TIntermSymbol *> *outputSymbols,
                               TMap<TIntermSymbol *, TString> *outputSymbolsToAPINames) const;
 
@@ -473,16 +472,10 @@ class TType
         return structure ? structure->containsSamplers() : false;
     }
 
-    void createSamplerSymbols(const TString &structName,
-                              const TString &structAPIName,
-                              const unsigned int arrayOfStructsSize,
+    void createSamplerSymbols(const TString &namePrefix,
+                              const TString &apiNamePrefix,
                               TVector<TIntermSymbol *> *outputSymbols,
-                              TMap<TIntermSymbol *, TString> *outputSymbolsToAPINames) const
-    {
-        ASSERT(structure != nullptr && structure->containsSamplers());
-        structure->createSamplerSymbols(structName, structAPIName, arrayOfStructsSize,
-                                        outputSymbols, outputSymbolsToAPINames);
-    }
+                              TMap<TIntermSymbol *, TString> *outputSymbolsToAPINames) const;
 
     // Initializes all lazily-initialized members.
     void realize() { getMangledName(); }
