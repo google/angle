@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "72f91da3_73fd3a44",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-15T13:48:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "04c4049e_2cafc407",
+      "revId": "6f7b8ae8f8c1b3c6d8a3fc4f5f1ef9bbefc2f393",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d71a65ab_2151eaa0",
         "filename": "src/compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.h",
         "patchSetId": 4
@@ -33,6 +51,24 @@
       "revId": "6f7b8ae8f8c1b3c6d8a3fc4f5f1ef9bbefc2f393",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "99666efb_6a21f098",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-15T13:48:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d71a65ab_2151eaa0",
+      "revId": "6f7b8ae8f8c1b3c6d8a3fc4f5f1ef9bbefc2f393",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "f2162b27_a501ea43",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-15T13:48:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d98dc9a4_670e0117",
+      "revId": "6f7b8ae8f8c1b3c6d8a3fc4f5f1ef9bbefc2f393",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2d215699_b89d158f",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 4
@@ -64,6 +118,24 @@
       "writtenOn": "2017-08-15T13:12:16Z",
       "side": 1,
       "message": "This comment is unrelated to this patch, but I think there may be a bug here. Let\u0027s consider a case where a FBO first has color and depth attachments. Then the depth attachment is removed. When syncState is going to be called for that framebuffer the next time, wouldn\u0027t this code cause the baseViewIndex and multiviewLayout to be set back to their default values? You should add a test for this case and make sure that it works.",
+      "revId": "6f7b8ae8f8c1b3c6d8a3fc4f5f1ef9bbefc2f393",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "db9fa75b_0aa644d4",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 606,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-15T13:48:49Z",
+      "side": 1,
+      "message": "Yes, it is a bug. Will fix in a subsequent patch.",
+      "parentUuid": "2d215699_b89d158f",
       "revId": "6f7b8ae8f8c1b3c6d8a3fc4f5f1ef9bbefc2f393",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
