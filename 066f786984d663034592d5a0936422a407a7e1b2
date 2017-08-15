@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3957f6c9_dac84443",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 543,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-15T14:42:21Z",
+      "side": 1,
+      "message": "Can you add EvqLayer under the GLSL ES 3.1 extension OES_geometry_shader instead?",
+      "revId": "066f786984d663034592d5a0936422a407a7e1b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "078d448c_99a6b071",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-15T14:42:21Z",
+      "side": 1,
+      "message": "Can this call the method in the state manager?",
+      "revId": "066f786984d663034592d5a0936422a407a7e1b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea1a9940_c8979904",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 665,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-15T14:42:21Z",
+      "side": 1,
+      "message": "nit: ASSERT it is not -1",
+      "revId": "066f786984d663034592d5a0936422a407a7e1b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
