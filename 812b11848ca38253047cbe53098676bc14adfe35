@@ -2,6 +2,40 @@
   "comments": [
     {
       "key": {
+        "uuid": "d62d8a3a_2ed34d2d",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-15T15:21:27Z",
+      "side": 1,
+      "message": "It looks like there might be a way to reuse recordBuiltInVaryingUsed here, which would avoid the need to recreate the whole type in this method.",
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3a5a3a7_cbf7bb82",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-15T15:21:27Z",
+      "side": 1,
+      "message": "[1]",
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6b448d36_de288bbb",
         "filename": "src/compiler/translator/CollectVariables.cpp",
         "patchSetId": 11
@@ -25,6 +59,40 @@
     },
     {
       "key": {
+        "uuid": "2a1a60eb_5c8f3974",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-15T15:21:27Z",
+      "side": 1,
+      "message": "I might be missing something, but it seems that most of the work done here could be done inside [1] in visitSymbol, this way we wouldn\u0027t need to extract the gl_in manually from the blockNode which would simplify things a bit.",
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a6b5466a_ee512559",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 908,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-15T15:21:27Z",
+      "side": 1,
+      "message": "nit: no need for constexpr here.",
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "356317f8_a45a2c06",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 11
@@ -42,6 +110,40 @@
         "endLine": 2710,
         "endChar": 54
       },
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "654baa5b_0e2df11c",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-15T15:21:27Z",
+      "side": 1,
+      "message": "This new parameter is set to arraySize \u003e 0 which is the semantic of the mArraySize member already. What\u0027s the use for the new parameter / member combination?",
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8d883ade_0e900a7b",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-15T15:21:27Z",
+      "side": 1,
+      "message": "It seems that either the interface block, or the type should be an array, setting the arrayness on both sounds like it makes it an array of array. Maybe only the TType arrayness could be updated.",
       "revId": "812b11848ca38253047cbe53098676bc14adfe35",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
