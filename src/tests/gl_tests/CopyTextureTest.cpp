@@ -1111,6 +1111,8 @@ TEST_P(CopyTextureTestES3, ES3UnormFormats)
 // Test the newly added ES3 float formats
 TEST_P(CopyTextureTestES3, ES3FloatFormats)
 {
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsWindows() && IsOpenGL());
+
     if (!checkExtensions())
     {
         return;
