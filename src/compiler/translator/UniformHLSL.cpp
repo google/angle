@@ -363,11 +363,14 @@ TString UniformHLSL::uniformBlocksHeader(const ReferencedSymbols &referencedInte
         const TType &nodeType                 = interfaceBlockIt->second->getType();
         const TInterfaceBlock &interfaceBlock = *nodeType.getInterfaceBlock();
 
-        unsigned int arraySize      = static_cast<unsigned int>(interfaceBlock.arraySize());
+        // nodeType.isInterfaceBlock() == false means the node is a field of a uniform block which
+        // doesn't have instance name, so this block cannot be an array.
+        unsigned int interfaceBlockArraySize =
+            nodeType.isInterfaceBlock() ? nodeType.getArraySize() : 0;
         unsigned int activeRegister = mUniformBlockRegister;
 
         mUniformBlockRegisterMap[interfaceBlock.name().c_str()] = activeRegister;
-        mUniformBlockRegister += std::max(1u, arraySize);
+        mUniformBlockRegister += std::max(1u, interfaceBlockArraySize);
 
         // FIXME: interface block field names
 
@@ -376,9 +379,9 @@ TString UniformHLSL::uniformBlocksHeader(const ReferencedSymbols &referencedInte
             interfaceBlocks += uniformBlockStructString(interfaceBlock);
         }
 
-        if (arraySize > 0)
+        if (interfaceBlockArraySize > 0)
         {
-            for (unsigned int arrayIndex = 0; arrayIndex < arraySize; arrayIndex++)
+            for (unsigned int arrayIndex = 0; arrayIndex < interfaceBlockArraySize; arrayIndex++)
             {
                 interfaceBlocks +=
                     uniformBlockString(interfaceBlock, activeRegister + arrayIndex, arrayIndex);
@@ -429,7 +432,7 @@ TString UniformHLSL::uniformBlockInstanceString(const TInterfaceBlock &interface
     {
         return "";
     }
-    else if (interfaceBlock.isArray())
+    else if (arrayIndex != GL_INVALID_INDEX)
     {
         return DecoratePrivate(interfaceBlock.instanceName()) + "_" + str(arrayIndex);
     }

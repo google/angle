@@ -3517,7 +3517,7 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
     }
 
     TInterfaceBlock *interfaceBlock =
-        new TInterfaceBlock(&blockName, fieldList, instanceName, arraySize, blockLayoutQualifier);
+        new TInterfaceBlock(&blockName, fieldList, instanceName, blockLayoutQualifier);
     TType interfaceBlockType(interfaceBlock, typeQualifier.qualifier, blockLayoutQualifier,
                              arraySize);
 

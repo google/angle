@@ -149,11 +149,9 @@ class TInterfaceBlock : public TFieldListCollection
     TInterfaceBlock(const TString *name,
                     TFieldList *fields,
                     const TString *instanceName,
-                    int arraySize,
                     const TLayoutQualifier &layoutQualifier)
         : TFieldListCollection(name, fields),
           mInstanceName(instanceName),
-          mArraySize(arraySize),
           mBlockStorage(layoutQualifier.blockStorage),
           mMatrixPacking(layoutQualifier.matrixPacking),
           mBinding(layoutQualifier.binding)
@@ -162,8 +160,6 @@ class TInterfaceBlock : public TFieldListCollection
 
     const TString &instanceName() const { return *mInstanceName; }
     bool hasInstanceName() const { return mInstanceName != nullptr; }
-    bool isArray() const { return mArraySize > 0; }
-    int arraySize() const { return mArraySize; }
     TLayoutBlockStorage blockStorage() const { return mBlockStorage; }
     TLayoutMatrixPacking matrixPacking() const { return mMatrixPacking; }
     int blockBinding() const { return mBinding; }
@@ -176,7 +172,6 @@ class TInterfaceBlock : public TFieldListCollection
 
   private:
     const TString *mInstanceName;  // for interface block instance names
-    int mArraySize;                // 0 if not an array
     TLayoutBlockStorage mBlockStorage;
     TLayoutMatrixPacking mMatrixPacking;
     int mBinding;
@@ -495,7 +490,10 @@ class TType
     bool array;
     unsigned int arraySize;
 
-    // 0 unless this is an interface block, or interface block member variable
+    // This is set only in the following two cases:
+    // 1) Represents an interface block.
+    // 2) Represents the member variable of an unnamed interface block.
+    // It's nullptr also for members of named interface blocks.
     TInterfaceBlock *interfaceBlock;
 
     // 0 unless this is a struct
