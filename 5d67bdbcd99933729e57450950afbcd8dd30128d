@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b145b5f8_69dbcd77",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1169,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-16T10:50:00Z",
+      "side": 1,
+      "message": "Looks like you fixed this test to use the pixel centers as vertex coordinates. The code would be the more readable/maintainable if you had a function which returns the normalized device coordinates for given integer coordinates and viewport dimensions and used it in these functions to generate the normalized device coordinates.\n\nIt could look like something like this:\n\nstd::vector\u003cOffset2D\u003e pixelOffsets;\npixelOffsets.push_back(Offset2D(0, 3));\npixelOffsets.push_back(Offset2D(0, 0));\n\nstd::vector\u003cfloat\u003e vertexData \u003d convertPixelOffsetsToNDC(pixelOffsets, 4, 4);",
+      "revId": "5d67bdbcd99933729e57450950afbcd8dd30128d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

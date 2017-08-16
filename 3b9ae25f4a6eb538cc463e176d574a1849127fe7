@@ -163,6 +163,24 @@
       "revId": "3b9ae25f4a6eb538cc463e176d574a1849127fe7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a00871c_306fa621",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1011,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-16T10:50:00Z",
+      "side": 1,
+      "message": "It might be that on some platform the pixel alignment is systematically offset for lines for example - and it\u0027s not really a bug since the spec allows it.\n\nThat being said, maybe in this case it\u0027s reasonable to rely on the actual driver behavior rather than to make it correct by the spec. But we should have at least a comment saying that this behavior is not guaranteed by the spec.",
+      "parentUuid": "715da8d9_0aa477bd",
+      "revId": "3b9ae25f4a6eb538cc463e176d574a1849127fe7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
