@@ -68,11 +68,15 @@ void AddArrayZeroInitSequence(const TIntermTyped *initializedNode, TIntermSequen
     // doesn't have array assignment.
     // Note that it is important to have the array init in the right order to workaround
     // http://crbug.com/709317
-    for (unsigned int i = 0; i < initializedNode->getArraySize(); ++i)
+    for (unsigned int i = 0; i < initializedNode->getOutermostArraySize(); ++i)
     {
         TIntermBinary *element =
             new TIntermBinary(EOpIndexDirect, initializedNode->deepCopy(), CreateIndexNode(i));
-        if (element->getType().isStructureContainingArrays())
+        if (element->isArray())
+        {
+            AddArrayZeroInitSequence(element, initSequenceOut);
+        }
+        else if (element->getType().isStructureContainingArrays())
         {
             AddStructZeroInitSequence(element, initSequenceOut);
         }

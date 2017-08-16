@@ -31,6 +31,23 @@
 namespace sh
 {
 
+namespace
+{
+
+TString ArrayHelperFunctionName(const char *prefix, const TType &type)
+{
+    TStringStream fnName;
+    fnName << prefix << "_";
+    for (unsigned int arraySize : type.getArraySizes())
+    {
+        fnName << arraySize << "_";
+    }
+    fnName << TypeString(type);
+    return fnName.str();
+}
+
+}  // anonymous namespace
+
 void OutputHLSL::writeFloat(TInfoSinkBase &out, float f)
 {
     // This is known not to work for NaN on all drivers but make the best effort to output NaNs
@@ -257,14 +274,14 @@ TString OutputHLSL::structInitializerString(int indent, const TType &type, const
     if (type.isArray())
     {
         init += indentString + "{\n";
-        for (unsigned int arrayIndex = 0u; arrayIndex < type.getArraySize(); ++arrayIndex)
+        for (unsigned int arrayIndex = 0u; arrayIndex < type.getOutermostArraySize(); ++arrayIndex)
         {
             TStringStream indexedString;
             indexedString << name << "[" << arrayIndex << "]";
             TType elementType = type;
-            elementType.clearArrayness();
+            elementType.toArrayElementType();
             init += structInitializerString(indent + 1, elementType, indexedString.str());
-            if (arrayIndex < type.getArraySize() - 1)
+            if (arrayIndex < type.getOutermostArraySize() - 1)
             {
                 init += ",";
             }
@@ -948,6 +965,19 @@ void OutputHLSL::outputEqual(Visit visit, const TType &type, TOperator op, TInfo
     }
 }
 
+void OutputHLSL::outputAssign(Visit visit, const TType &type, TInfoSinkBase &out)
+{
+    if (type.isArray())
+    {
+        const TString &functionName = addArrayAssignmentFunction(type);
+        outputTriplet(out, visit, (functionName + "(").c_str(), ", ", ")");
+    }
+    else
+    {
+        outputTriplet(out, visit, "(", " = ", ")");
+    }
+}
+
 bool OutputHLSL::ancestorEvaluatesToSamplerInStruct()
 {
     for (unsigned int n = 0u; getAncestorNode(n) != nullptr; ++n)
@@ -1010,7 +1040,7 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
             outputTriplet(out, visit, "(", ", ", ")");
             break;
         case EOpAssign:
-            if (node->getLeft()->isArray())
+            if (node->isArray())
             {
                 TIntermAggregate *rightAgg = node->getRight()->getAsAggregate();
                 if (rightAgg != nullptr && rightAgg->isConstructor())
@@ -1030,14 +1060,8 @@ bool OutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
                 // ArrayReturnValueToOutParameter should have eliminated expressions where a
                 // function call is assigned.
                 ASSERT(rightAgg == nullptr);
-
-                const TString &functionName = addArrayAssignmentFunction(node->getType());
-                outputTriplet(out, visit, (functionName + "(").c_str(), ", ", ")");
             }
-            else
-            {
-                outputTriplet(out, visit, "(", " = ", ")");
-            }
+            outputAssign(visit, node->getType(), out);
             break;
         case EOpInitialize:
             if (visit == PreVisit)
@@ -2744,31 +2768,33 @@ bool OutputHLSL::canWriteAsHLSLLiteral(TIntermTyped *expression)
 {
     // We support writing constant unions and constructors that only take constant unions as
     // parameters as HLSL literals.
-    return expression->getAsConstantUnion() ||
-           expression->isConstructorWithOnlyConstantUnionParameters();
+    return !expression->getType().isArrayOfArrays() &&
+           (expression->getAsConstantUnion() ||
+            expression->isConstructorWithOnlyConstantUnionParameters());
 }
 
 bool OutputHLSL::writeConstantInitialization(TInfoSinkBase &out,
                                              TIntermSymbol *symbolNode,
-                                             TIntermTyped *expression)
+                                             TIntermTyped *initializer)
 {
-    if (canWriteAsHLSLLiteral(expression))
+    if (canWriteAsHLSLLiteral(initializer))
     {
         symbolNode->traverse(this);
-        if (expression->getType().isArray())
+        ASSERT(!symbolNode->getType().isArrayOfArrays());
+        if (symbolNode->getType().isArray())
         {
-            out << "[" << expression->getType().getArraySize() << "]";
+            out << "[" << symbolNode->getType().getOutermostArraySize() << "]";
         }
         out << " = {";
-        if (expression->getAsConstantUnion())
+        if (initializer->getAsConstantUnion())
         {
-            TIntermConstantUnion *nodeConst  = expression->getAsConstantUnion();
+            TIntermConstantUnion *nodeConst  = initializer->getAsConstantUnion();
             const TConstantUnion *constUnion = nodeConst->getUnionArrayPointer();
             writeConstantUnionArray(out, constUnion, nodeConst->getType().getObjectSize());
         }
         else
         {
-            TIntermAggregate *constructor = expression->getAsAggregate();
+            TIntermAggregate *constructor = initializer->getAsAggregate();
             ASSERT(constructor != nullptr);
             for (TIntermNode *&node : *constructor->getSequence())
             {
@@ -2856,33 +2882,31 @@ TString OutputHLSL::addArrayEqualityFunction(const TType &type)
         }
     }
 
-    const TString &typeName = TypeString(type);
+    TType elementType(type);
+    elementType.toArrayElementType();
 
     ArrayHelperFunction *function = new ArrayHelperFunction();
     function->type                = type;
 
-    TInfoSinkBase fnNameOut;
-    fnNameOut << "angle_eq_" << type.getArraySize() << "_" << typeName;
-    function->functionName = fnNameOut.c_str();
-
-    TType nonArrayType = type;
-    nonArrayType.clearArrayness();
+    function->functionName = ArrayHelperFunctionName("angle_eq", type);
 
     TInfoSinkBase fnOut;
 
-    fnOut << "bool " << function->functionName << "(" << typeName << " a[" << type.getArraySize()
-          << "], " << typeName << " b[" << type.getArraySize() << "])\n"
+    const TString &typeName = TypeString(type);
+    fnOut << "bool " << function->functionName << "(" << typeName << " a" << ArrayString(type)
+          << ", " << typeName << " b" << ArrayString(type) << ")\n"
           << "{\n"
              "    for (int i = 0; i < "
-          << type.getArraySize() << "; ++i)\n"
-                                    "    {\n"
-                                    "        if (";
+          << type.getOutermostArraySize()
+          << "; ++i)\n"
+             "    {\n"
+             "        if (";
 
-    outputEqual(PreVisit, nonArrayType, EOpNotEqual, fnOut);
+    outputEqual(PreVisit, elementType, EOpNotEqual, fnOut);
     fnOut << "a[i]";
-    outputEqual(InVisit, nonArrayType, EOpNotEqual, fnOut);
+    outputEqual(InVisit, elementType, EOpNotEqual, fnOut);
     fnOut << "b[i]";
-    outputEqual(PostVisit, nonArrayType, EOpNotEqual, fnOut);
+    outputEqual(PostVisit, elementType, EOpNotEqual, fnOut);
 
     fnOut << ") { return false; }\n"
              "    }\n"
@@ -2907,26 +2931,35 @@ TString OutputHLSL::addArrayAssignmentFunction(const TType &type)
         }
     }
 
-    const TString &typeName = TypeString(type);
+    TType elementType(type);
+    elementType.toArrayElementType();
 
     ArrayHelperFunction function;
     function.type = type;
 
-    TInfoSinkBase fnNameOut;
-    fnNameOut << "angle_assign_" << type.getArraySize() << "_" << typeName;
-    function.functionName = fnNameOut.c_str();
+    function.functionName = ArrayHelperFunctionName("angle_assign", type);
 
     TInfoSinkBase fnOut;
 
-    fnOut << "void " << function.functionName << "(out " << typeName << " a[" << type.getArraySize()
-          << "], " << typeName << " b[" << type.getArraySize() << "])\n"
+    const TString &typeName = TypeString(type);
+    fnOut << "void " << function.functionName << "(out " << typeName << " a" << ArrayString(type)
+          << ", " << typeName << " b" << ArrayString(type) << ")\n"
           << "{\n"
              "    for (int i = 0; i < "
-          << type.getArraySize() << "; ++i)\n"
-                                    "    {\n"
-                                    "        a[i] = b[i];\n"
-                                    "    }\n"
-                                    "}\n";
+          << type.getOutermostArraySize()
+          << "; ++i)\n"
+             "    {\n"
+             "        ";
+
+    outputAssign(PreVisit, elementType, fnOut);
+    fnOut << "a[i]";
+    outputAssign(InVisit, elementType, fnOut);
+    fnOut << "b[i]";
+    outputAssign(PostVisit, elementType, fnOut);
+
+    fnOut << ";\n"
+             "    }\n"
+             "}\n";
 
     function.functionDefinition = fnOut.c_str();
 
@@ -2945,29 +2978,34 @@ TString OutputHLSL::addArrayConstructIntoFunction(const TType &type)
         }
     }
 
-    const TString &typeName = TypeString(type);
+    TType elementType(type);
+    elementType.toArrayElementType();
 
     ArrayHelperFunction function;
     function.type = type;
 
-    TInfoSinkBase fnNameOut;
-    fnNameOut << "angle_construct_into_" << type.getArraySize() << "_" << typeName;
-    function.functionName = fnNameOut.c_str();
+    function.functionName = ArrayHelperFunctionName("angle_construct_into", type);
 
     TInfoSinkBase fnOut;
 
-    fnOut << "void " << function.functionName << "(out " << typeName << " a[" << type.getArraySize()
-          << "]";
-    for (unsigned int i = 0u; i < type.getArraySize(); ++i)
+    const TString &typeName = TypeString(type);
+    fnOut << "void " << function.functionName << "(out " << typeName << " a" << ArrayString(type);
+    for (unsigned int i = 0u; i < type.getOutermostArraySize(); ++i)
     {
-        fnOut << ", " << typeName << " b" << i;
+        fnOut << ", " << typeName << " b" << i << ArrayString(elementType);
     }
     fnOut << ")\n"
              "{\n";
 
-    for (unsigned int i = 0u; i < type.getArraySize(); ++i)
+    for (unsigned int i = 0u; i < type.getOutermostArraySize(); ++i)
     {
-        fnOut << "    a[" << i << "] = b" << i << ";\n";
+        fnOut << "    ";
+        outputAssign(PreVisit, elementType, fnOut);
+        fnOut << "a[" << i << "]";
+        outputAssign(InVisit, elementType, fnOut);
+        fnOut << "b" << i;
+        outputAssign(PostVisit, elementType, fnOut);
+        fnOut << ";\n";
     }
     fnOut << "}\n";
 

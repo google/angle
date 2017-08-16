@@ -108,6 +108,7 @@ class OutputHLSL : public TIntermTraverser
                                              const TConstantUnion *constUnion);
 
     void outputEqual(Visit visit, const TType &type, TOperator op, TInfoSinkBase &out);
+    void outputAssign(Visit visit, const TType &type, TInfoSinkBase &out);
 
     void writeEmulatedFunctionTriplet(TInfoSinkBase &out, Visit visit, TOperator op);
     void makeFlaggedStructMaps(const std::vector<TIntermTyped *> &flaggedStructs);

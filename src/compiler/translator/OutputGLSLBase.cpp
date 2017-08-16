@@ -10,6 +10,7 @@
 #include "common/debug.h"
 #include "common/mathutil.h"
 #include "compiler/translator/Compiler.h"
+#include "compiler/translator/util.h"
 
 #include <cfloat>
 
@@ -18,13 +19,6 @@ namespace sh
 
 namespace
 {
-TString arrayBrackets(const TType &type)
-{
-    ASSERT(type.isArray());
-    TInfoSinkBase out;
-    out << "[" << type.getArraySize() << "]";
-    return TString(out.c_str());
-}
 
 bool isSingleStatement(TIntermNode *node)
 {
@@ -382,7 +376,7 @@ void TOutputGLSLBase::writeFunctionParameters(const TIntermSequence &args)
         if (!arg->getName().getString().empty())
             out << " " << hashName(arg->getName());
         if (type.isArray())
-            out << arrayBrackets(type);
+            out << ArrayString(type);
 
         // Put a comma if this is not the last argument.
         if (iter != args.end() - 1)
@@ -456,7 +450,7 @@ void TOutputGLSLBase::writeConstructorTriplet(Visit visit, const TType &type)
         if (type.isArray())
         {
             out << getTypeName(type);
-            out << arrayBrackets(type);
+            out << ArrayString(type);
             out << "(";
         }
         else
@@ -476,7 +470,7 @@ void TOutputGLSLBase::visitSymbol(TIntermSymbol *node)
     out << hashVariableName(node->getName());
 
     if (mDeclaringVariables && node->getType().isArray())
-        out << arrayBrackets(node->getType());
+        out << ArrayString(node->getType());
 }
 
 void TOutputGLSLBase::visitConstantUnion(TIntermConstantUnion *node)
@@ -573,7 +567,7 @@ bool TOutputGLSLBase::visitBinary(Visit visit, TIntermBinary *node)
                     if (left->isArray())
                     {
                         // The shader will fail validation if the array length is not > 0.
-                        maxSize = static_cast<int>(leftType.getArraySize()) - 1;
+                        maxSize = static_cast<int>(leftType.getOutermostArraySize()) - 1;
                     }
                     else
                     {
@@ -931,7 +925,7 @@ bool TOutputGLSLBase::visitFunctionPrototype(Visit visit, TIntermFunctionPrototy
     const TType &type = node->getType();
     writeVariableType(type);
     if (type.isArray())
-        out << arrayBrackets(type);
+        out << ArrayString(type);
 
     out << " " << hashFunctionNameIfNeeded(*node->getFunctionSymbolInfo());
 
@@ -1226,7 +1220,7 @@ void TOutputGLSLBase::declareStruct(const TStructure *structure)
             out << " ";
         out << getTypeName(*field->type()) << " " << hashName(TName(field->name()));
         if (field->type()->isArray())
-            out << arrayBrackets(*field->type());
+            out << ArrayString(*field->type());
         out << ";\n";
     }
     out << "}";
@@ -1294,7 +1288,7 @@ void TOutputGLSLBase::declareInterfaceBlock(const TInterfaceBlock *interfaceBloc
             out << " ";
         out << getTypeName(*field->type()) << " " << hashName(TName(field->name()));
         if (field->type()->isArray())
-            out << arrayBrackets(*field->type());
+            out << ArrayString(*field->type());
         out << ";\n";
     }
     out << "}";

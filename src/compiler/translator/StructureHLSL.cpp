@@ -236,7 +236,10 @@ TString StructureHLSL::addConstructor(const TType &type,
     }
 
     TType ctorType = type;
-    ctorType.clearArrayness();
+    while (ctorType.isArray())
+    {
+        ctorType.toArrayElementType();
+    }
     ctorType.setPrecision(EbpHigh);
     ctorType.setQualifier(EvqTemporary);
 

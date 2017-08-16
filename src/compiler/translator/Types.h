@@ -193,8 +193,6 @@ class TType
           layoutQualifier(TLayoutQualifier::create()),
           primarySize(0),
           secondarySize(0),
-          array(false),
-          arraySize(0),
           interfaceBlock(nullptr),
           structure(nullptr)
     {
@@ -208,8 +206,6 @@ class TType
           layoutQualifier(TLayoutQualifier::create()),
           primarySize(ps),
           secondarySize(ss),
-          array(false),
-          arraySize(0),
           interfaceBlock(0),
           structure(0)
     {
@@ -218,8 +214,7 @@ class TType
           TPrecision p,
           TQualifier q     = EvqTemporary,
           unsigned char ps = 1,
-          unsigned char ss = 1,
-          bool a           = false)
+          unsigned char ss = 1)
         : type(t),
           precision(p),
           qualifier(q),
@@ -228,8 +223,6 @@ class TType
           layoutQualifier(TLayoutQualifier::create()),
           primarySize(ps),
           secondarySize(ss),
-          array(a),
-          arraySize(0),
           interfaceBlock(0),
           structure(0)
     {
@@ -244,16 +237,13 @@ class TType
           layoutQualifier(TLayoutQualifier::create()),
           primarySize(1),
           secondarySize(1),
-          array(false),
-          arraySize(0),
           interfaceBlock(0),
           structure(userDef)
     {
     }
     TType(TInterfaceBlock *interfaceBlockIn,
           TQualifier qualifierIn,
-          TLayoutQualifier layoutQualifierIn,
-          unsigned int arraySizeIn)
+          TLayoutQualifier layoutQualifierIn)
         : type(EbtInterfaceBlock),
           precision(EbpUndefined),
           qualifier(qualifierIn),
@@ -262,8 +252,6 @@ class TType
           layoutQualifier(layoutQualifierIn),
           primarySize(1),
           secondarySize(1),
-          array(arraySizeIn > 0),
-          arraySize(arraySizeIn),
           interfaceBlock(interfaceBlockIn),
           structure(0)
     {
@@ -337,25 +325,38 @@ class TType
 
     bool isMatrix() const { return primarySize > 1 && secondarySize > 1; }
     bool isNonSquareMatrix() const { return isMatrix() && primarySize != secondarySize; }
-    bool isArray() const { return array; }
-    bool isUnsizedArray() const { return array && arraySize == 0u; }
-    unsigned int getArraySize() const { return arraySize; }
-    void setArraySize(unsigned int s)
+    bool isArray() const { return !mArraySizes.empty(); }
+    bool isArrayOfArrays() const { return mArraySizes.size() > 1u; }
+    const TVector<unsigned int> &getArraySizes() const { return mArraySizes; }
+    unsigned int getArraySizeProduct() const;
+    bool isUnsizedArray() const;
+    unsigned int getOutermostArraySize() const { return mArraySizes.back(); }
+    void makeArray(unsigned int s)
     {
-        if (!array || arraySize != s)
+        mArraySizes.push_back(s);
+        invalidateMangledName();
+    }
+    // Here, the array dimension value 0 corresponds to the innermost array.
+    void setArraySize(size_t arrayDimension, unsigned int s)
+    {
+        ASSERT(arrayDimension < mArraySizes.size());
+        if (mArraySizes.at(arrayDimension) != s)
         {
-            array     = true;
-            arraySize = s;
+            mArraySizes[arrayDimension] = s;
             invalidateMangledName();
         }
     }
-    void setArrayUnsized() { setArraySize(0u); }
-    void clearArrayness()
+
+    // Will set unsized array sizes according to arraySizes. In case there are more unsized arrays
+    // than there are sizes in arraySizes, defaults to setting array sizes to 1.
+    void sizeUnsizedArrays(const TVector<unsigned int> &arraySizes);
+
+    // Note that the array element type might still be an array type in GLSL ES version >= 3.10.
+    void toArrayElementType()
     {
-        if (array)
+        if (mArraySizes.size() > 0)
         {
-            array     = false;
-            arraySize = 0u;
+            mArraySizes.pop_back();
             invalidateMangledName();
         }
     }
@@ -372,7 +373,10 @@ class TType
     bool isInterfaceBlock() const { return type == EbtInterfaceBlock; }
 
     bool isVector() const { return primarySize > 1 && secondarySize == 1; }
-    bool isScalar() const { return primarySize == 1 && secondarySize == 1 && !structure && !array; }
+    bool isScalar() const
+    {
+        return primarySize == 1 && secondarySize == 1 && !structure && !isArray();
+    }
     bool isScalarFloat() const { return isScalar() && type == EbtFloat; }
     bool isScalarInt() const { return isScalar() && (type == EbtInt || type == EbtUInt); }
 
@@ -399,16 +403,16 @@ class TType
         return mangled;
     }
 
-    bool sameElementType(const TType &right) const
-    {
-        return type == right.type && primarySize == right.primarySize &&
-               secondarySize == right.secondarySize && structure == right.structure;
-    }
+    bool sameNonArrayType(const TType &right) const;
+
+    // Returns true if arrayType is an array made of this type.
+    bool isElementTypeOf(const TType &arrayType) const;
+
     bool operator==(const TType &right) const
     {
         return type == right.type && primarySize == right.primarySize &&
-               secondarySize == right.secondarySize && array == right.array &&
-               (!array || arraySize == right.arraySize) && structure == right.structure;
+               secondarySize == right.secondarySize && mArraySizes == right.mArraySizes &&
+               structure == right.structure;
         // don't check the qualifier, it's not ever what's being sought after
     }
     bool operator!=(const TType &right) const { return !operator==(right); }
@@ -420,10 +424,13 @@ class TType
             return primarySize < right.primarySize;
         if (secondarySize != right.secondarySize)
             return secondarySize < right.secondarySize;
-        if (array != right.array)
-            return array < right.array;
-        if (arraySize != right.arraySize)
-            return arraySize < right.arraySize;
+        if (mArraySizes.size() != right.mArraySizes.size())
+            return mArraySizes.size() < right.mArraySizes.size();
+        for (size_t i = 0; i < mArraySizes.size(); ++i)
+        {
+            if (mArraySizes[i] != right.mArraySizes[i])
+                return mArraySizes[i] < right.mArraySizes[i];
+        }
         if (structure != right.structure)
             return structure < right.structure;
 
@@ -488,8 +495,10 @@ class TType
     TLayoutQualifier layoutQualifier;
     unsigned char primarySize;    // size of vector or cols matrix
     unsigned char secondarySize;  // rows of a matrix
-    bool array;
-    unsigned int arraySize;
+
+    // Used to make an array type. Outermost array size is stored at the end of the vector. Having 0
+    // in this vector means an unsized array.
+    TVector<unsigned int> mArraySizes;
 
     // This is set only in the following two cases:
     // 1) Represents an interface block.

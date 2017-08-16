@@ -502,7 +502,7 @@ void TIntermDeclaration::appendDeclarator(TIntermTyped *declarator)
            (declarator->getAsBinaryNode() != nullptr &&
             declarator->getAsBinaryNode()->getOp() == EOpInitialize));
     ASSERT(mDeclarators.empty() ||
-           declarator->getType().sameElementType(mDeclarators.back()->getAsTyped()->getType()));
+           declarator->getType().sameNonArrayType(mDeclarators.back()->getAsTyped()->getType()));
     mDeclarators.push_back(declarator);
 }
 
@@ -1063,7 +1063,7 @@ void TIntermBinary::promote()
         case EOpIndexIndirect:
             if (mLeft->isArray())
             {
-                mType.clearArrayness();
+                mType.toArrayElementType();
             }
             else if (mLeft->isMatrix())
             {
@@ -1242,9 +1242,9 @@ const TConstantUnion *TIntermConstantUnion::foldIndexing(int index)
 {
     if (isArray())
     {
-        ASSERT(index < static_cast<int>(getType().getArraySize()));
+        ASSERT(index < static_cast<int>(getType().getOutermostArraySize()));
         TType arrayElementType = getType();
-        arrayElementType.clearArrayness();
+        arrayElementType.toArrayElementType();
         size_t arrayElementSize = arrayElementType.getObjectSize();
         return &mUnionArrayPointer[arrayElementSize * index];
     }

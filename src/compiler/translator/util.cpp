@@ -437,12 +437,14 @@ GLenum GLVariablePrecision(const TType &type)
 
 TString ArrayString(const TType &type)
 {
-    if (!type.isArray())
+    TStringStream arrayString;
+    const TVector<unsigned int> &arraySizes = type.getArraySizes();
+    for (auto arraySizeIter = arraySizes.rbegin(); arraySizeIter != arraySizes.rend();
+         ++arraySizeIter)
     {
-        return "";
+        arrayString << "[" << (*arraySizeIter) << "]";
     }
-
-    return "[" + str(type.getArraySize()) + "]";
+    return arrayString.str();
 }
 
 bool IsVaryingOut(TQualifier qualifier)

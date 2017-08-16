@@ -71,7 +71,7 @@ ExpectedLValues CreateIndexedLValueNodeList(const TString &lValueName,
                                             unsigned arraySize)
 {
     ASSERT(elementType.isArray() == false);
-    elementType.setArraySize(arraySize);
+    elementType.makeArray(arraySize);
 
     ExpectedLValues expected(arraySize);
     for (unsigned index = 0u; index < arraySize; ++index)

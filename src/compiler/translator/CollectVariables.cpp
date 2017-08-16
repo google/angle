@@ -219,8 +219,9 @@ void CollectVariablesTraverser::setBuiltInInfoFromSymbolTable(const char *name,
     info->name       = name;
     info->mappedName = name;
     info->type       = GLVariableType(type);
-    info->arraySize  = type.isArray() ? type.getArraySize() : 0;
-    info->precision  = GLVariablePrecision(type);
+    ASSERT(!type.isArrayOfArrays());
+    info->arraySize = type.isArray() ? type.getOutermostArraySize() : 0;
+    info->precision = GLVariablePrecision(type);
 }
 
 void CollectVariablesTraverser::recordBuiltInVaryingUsed(const char *name,
@@ -511,7 +512,11 @@ void CollectVariablesTraverser::setCommonVariableProperties(const TType &type,
     }
     variableOut->name       = name.c_str();
     variableOut->mappedName = HashName(name, mHashFunction).c_str();
-    variableOut->arraySize  = type.getArraySize();
+
+    // TODO(oetuaho@nvidia.com): Uniforms can be arrays of arrays, so this assert will need to be
+    // removed.
+    ASSERT(!type.isArrayOfArrays());
+    variableOut->arraySize = type.isArray() ? type.getOutermostArraySize() : 0;
 }
 
 Attribute CollectVariablesTraverser::recordAttribute(const TIntermSymbol &variable) const
@@ -581,7 +586,8 @@ void CollectVariablesTraverser::recordInterfaceBlock(const TType &interfaceBlock
     interfaceBlock->mappedName = HashName(blockType->name().c_str(), mHashFunction).c_str();
     interfaceBlock->instanceName =
         (blockType->hasInstanceName() ? blockType->instanceName().c_str() : "");
-    interfaceBlock->arraySize = interfaceBlockType.getArraySize();
+    ASSERT(!interfaceBlockType.isArrayOfArrays());  // Disallowed by GLSL ES 3.10 section 4.3.9
+    interfaceBlock->arraySize = interfaceBlockType.isArray() ? interfaceBlockType.getOutermostArraySize() : 0;
 
     interfaceBlock->blockType = GetBlockType(interfaceBlockType.getQualifier());
     if (interfaceBlock->blockType == BlockType::BLOCK_UNIFORM ||

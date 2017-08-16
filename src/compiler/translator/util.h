@@ -39,6 +39,9 @@ bool IsVaryingIn(TQualifier qualifier);
 bool IsVaryingOut(TQualifier qualifier);
 bool IsVarying(TQualifier qualifier);
 InterpolationType GetInterpolationType(TQualifier qualifier);
+
+// Returns array brackets including size with outermost array size first, as specified in GLSL ES
+// 3.10 section 4.1.9.
 TString ArrayString(const TType &type);
 
 TType GetShaderVariableBasicType(const sh::ShaderVariable &var);

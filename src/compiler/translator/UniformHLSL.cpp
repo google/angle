@@ -18,6 +18,9 @@
 namespace sh
 {
 
+namespace
+{
+
 static const char *UniformRegisterPrefix(const TType &type)
 {
     if (IsSampler(type.getBasicType()))
@@ -60,6 +63,34 @@ static TString InterfaceBlockStructName(const TInterfaceBlock &interfaceBlock)
 {
     return DecoratePrivate(interfaceBlock.name()) + "_type";
 }
+
+void OutputSamplerIndexArrayInitializer(TInfoSinkBase &out,
+                                        const TType &type,
+                                        unsigned int startIndex)
+{
+    out << "{";
+    TType elementType(type);
+    elementType.toArrayElementType();
+    for (unsigned int i = 0u; i < type.getOutermostArraySize(); ++i)
+    {
+        if (i > 0u)
+        {
+            out << ", ";
+        }
+        if (elementType.isArray())
+        {
+            OutputSamplerIndexArrayInitializer(out, elementType,
+                                               startIndex + i * elementType.getArraySizeProduct());
+        }
+        else
+        {
+            out << (startIndex + i);
+        }
+    }
+    out << "}";
+}
+
+}  // anonymous namespace
 
 UniformHLSL::UniformHLSL(StructureHLSL *structureHLSL,
                          ShShaderOutput outputType,
@@ -133,7 +164,7 @@ unsigned int UniformHLSL::assignSamplerInStructUniformRegister(const TType &type
     ASSERT(IsSampler(type.getBasicType()));
     unsigned int registerIndex                     = mSamplerRegister;
     mUniformRegisterMap[std::string(name.c_str())] = registerIndex;
-    unsigned int registerCount                     = type.isArray() ? type.getArraySize() : 1u;
+    unsigned int registerCount = type.isArray() ? type.getArraySizeProduct() : 1u;
     mSamplerRegister += registerCount;
     if (outRegisterCount)
     {
@@ -179,14 +210,9 @@ void UniformHLSL::outputHLSLSamplerUniformGroup(
         if (type.isArray())
         {
             out << "static const uint " << DecorateVariableIfNeeded(uniform->getName())
-                << ArrayString(type) << " = {";
-            for (unsigned int i = 0u; i < type.getArraySize(); ++i)
-            {
-                if (i > 0u)
-                    out << ", ";
-                out << (samplerArrayIndex + i);
-            }
-            out << "};\n";
+                << ArrayString(type) << " = ";
+            OutputSamplerIndexArrayInitializer(out, type, samplerArrayIndex);
+            out << ";\n";
         }
         else
         {
@@ -365,8 +391,11 @@ TString UniformHLSL::uniformBlocksHeader(const ReferencedSymbols &referencedInte
 
         // nodeType.isInterfaceBlock() == false means the node is a field of a uniform block which
         // doesn't have instance name, so this block cannot be an array.
-        unsigned int interfaceBlockArraySize =
-            nodeType.isInterfaceBlock() ? nodeType.getArraySize() : 0;
+        unsigned int interfaceBlockArraySize = 0u;
+        if (nodeType.isInterfaceBlock() && nodeType.isArray())
+        {
+            interfaceBlockArraySize = nodeType.getOutermostArraySize();
+        }
         unsigned int activeRegister = mUniformBlockRegister;
 
         mUniformBlockRegisterMap[interfaceBlock.name().c_str()] = activeRegister;

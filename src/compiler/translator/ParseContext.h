@@ -484,8 +484,12 @@ class TParseContext : angle::NonCopyable
     void checkBindingIsValid(const TSourceLoc &identifierLocation, const TType &type);
     void checkBindingIsNotSpecified(const TSourceLoc &location, int binding);
     void checkOffsetIsNotSpecified(const TSourceLoc &location, int offset);
-    void checkImageBindingIsValid(const TSourceLoc &location, int binding, int arraySize);
-    void checkSamplerBindingIsValid(const TSourceLoc &location, int binding, int arraySize);
+    void checkImageBindingIsValid(const TSourceLoc &location,
+                                  int binding,
+                                  int arrayTotalElementCount);
+    void checkSamplerBindingIsValid(const TSourceLoc &location,
+                                    int binding,
+                                    int arrayTotalElementCount);
     void checkBlockBindingIsValid(const TSourceLoc &location,
                                   const TQualifier &qualifier,
                                   int binding,
@@ -497,6 +501,10 @@ class TParseContext : angle::NonCopyable
                                      const TLayoutQualifier &layoutQualifier);
 
     void checkYuvIsNotSpecified(const TSourceLoc &location, bool yuv);
+
+    bool checkUnsizedArrayConstructorArgumentDimensionality(TIntermSequence *arguments,
+                                                            TType type,
+                                                            const TSourceLoc &line);
 
     TIntermTyped *addBinaryMathInternal(TOperator op,
                                         TIntermTyped *left,

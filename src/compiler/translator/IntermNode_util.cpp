@@ -116,7 +116,10 @@ TIntermTyped *CreateZeroNode(const TType &type)
         // Void array. This happens only on error condition, similarly to the case above. We don't
         // have a constructor operator for void, so this needs special handling. We'll end up with a
         // value without the array type, but that should not be a problem.
-        constType.clearArrayness();
+        while (constType.isArray())
+        {
+            constType.toArrayElementType();
+        }
         return CreateZeroNode(constType);
     }
 
@@ -125,9 +128,9 @@ TIntermTyped *CreateZeroNode(const TType &type)
     if (type.isArray())
     {
         TType elementType(type);
-        elementType.clearArrayness();
+        elementType.toArrayElementType();
 
-        size_t arraySize = type.getArraySize();
+        size_t arraySize = type.getOutermostArraySize();
         for (size_t i = 0; i < arraySize; ++i)
         {
             arguments->push_back(CreateZeroNode(elementType));

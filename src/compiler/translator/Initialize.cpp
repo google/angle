@@ -816,11 +816,11 @@ void IdentifyBuiltIns(sh::GLenum type,
             TType fragData(EbtFloat, EbpMedium, EvqFragData, 4);
             if (spec != SH_WEBGL2_SPEC && spec != SH_WEBGL3_SPEC)
             {
-                fragData.setArraySize(resources.MaxDrawBuffers);
+                fragData.makeArray(resources.MaxDrawBuffers);
             }
             else
             {
-                fragData.setArraySize(1u);
+                fragData.makeArray(1u);
             }
             symbolTable.insertVariable(ESSL1_BUILTINS, "gl_FragData", fragData);
 
@@ -829,8 +829,8 @@ void IdentifyBuiltIns(sh::GLenum type,
                 symbolTable.insertVariableExt(
                     ESSL1_BUILTINS, "GL_EXT_blend_func_extended", "gl_SecondaryFragColorEXT",
                     TType(EbtFloat, EbpMedium, EvqSecondaryFragColorEXT, 4));
-                TType secondaryFragData(EbtFloat, EbpMedium, EvqSecondaryFragDataEXT, 4, 1, true);
-                secondaryFragData.setArraySize(resources.MaxDualSourceDrawBuffers);
+                TType secondaryFragData(EbtFloat, EbpMedium, EvqSecondaryFragDataEXT, 4, 1);
+                secondaryFragData.makeArray(resources.MaxDualSourceDrawBuffers);
                 symbolTable.insertVariableExt(ESSL1_BUILTINS, "GL_EXT_blend_func_extended",
                                               "gl_SecondaryFragDataEXT", secondaryFragData);
             }
@@ -848,8 +848,8 @@ void IdentifyBuiltIns(sh::GLenum type,
 
             if (resources.EXT_shader_framebuffer_fetch || resources.NV_shader_framebuffer_fetch)
             {
-                TType lastFragData(EbtFloat, EbpMedium, EvqLastFragData, 4, 1, true);
-                lastFragData.setArraySize(resources.MaxDrawBuffers);
+                TType lastFragData(EbtFloat, EbpMedium, EvqLastFragData, 4, 1);
+                lastFragData.makeArray(resources.MaxDrawBuffers);
 
                 if (resources.EXT_shader_framebuffer_fetch)
                 {
@@ -928,8 +928,8 @@ void IdentifyBuiltIns(sh::GLenum type,
 
             // The array size of gl_in is undefined until we get a valid input primitive
             // declaration.
-            TType glInType(glInBlock, EvqPerVertexIn, TLayoutQualifier::create(), 0);
-            glInType.setArrayUnsized();
+            TType glInType(glInBlock, EvqPerVertexIn, TLayoutQualifier::create());
+            glInType.makeArray(0u);
             symbolTable.insertVariableExt(ESSL3_1_BUILTINS, extension, "gl_in", glInType);
 
             break;
