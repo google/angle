@@ -201,7 +201,11 @@ void DisplayNULL::generateExtensions(egl::DisplayExtensions *outExtensions) cons
     outExtensions->createContextWebGLCompatibility    = true;
     outExtensions->createContextBindGeneratesResource = true;
     outExtensions->swapBuffersWithDamage              = true;
+    outExtensions->pixelFormatFloat                   = true;
     outExtensions->surfacelessContext                 = true;
+    outExtensions->displayTextureShareGroup           = true;
+    outExtensions->createContextClientArrays          = true;
+    outExtensions->programCacheControl                = true;
 }
 
 void DisplayNULL::generateCaps(egl::Caps *outCaps) const
