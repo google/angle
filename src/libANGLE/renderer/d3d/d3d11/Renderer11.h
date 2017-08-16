@@ -546,8 +546,6 @@ class Renderer11 : public RendererD3D
 
     d3d11::ANGLED3D11DeviceType getDeviceType() const;
 
-    bool drawCallNeedsTranslation(const gl::Context *context, GLenum mode, GLenum type) const;
-
     HMODULE mD3d11Module;
     HMODULE mDxgiModule;
     HMODULE mDCompModule;

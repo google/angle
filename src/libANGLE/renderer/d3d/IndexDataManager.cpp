@@ -139,20 +139,25 @@ IndexDataManager::~IndexDataManager()
     SafeDelete(mStreamingBufferInt);
 }
 
-bool IndexDataManager::usePrimitiveRestartWorkaround(bool primitiveRestartFixedIndexEnabled,
-                                                     GLenum type)
+// static
+bool IndexDataManager::UsePrimitiveRestartWorkaround(bool primitiveRestartFixedIndexEnabled,
+                                                     GLenum type,
+                                                     RendererClass rendererClass)
 {
     // We should never have to deal with primitive restart workaround issue with GL_UNSIGNED_INT
     // indices, since we restrict it via MAX_ELEMENT_INDEX.
     return (!primitiveRestartFixedIndexEnabled && type == GL_UNSIGNED_SHORT &&
-            mRendererClass == RENDERER_D3D11);
+            rendererClass == RENDERER_D3D11);
 }
 
-bool IndexDataManager::isStreamingIndexData(const gl::Context *context, GLenum srcType)
+// static
+bool IndexDataManager::IsStreamingIndexData(const gl::Context *context,
+                                            GLenum srcType,
+                                            RendererClass rendererClass)
 {
     const auto &glState = context->getGLState();
     bool primitiveRestartWorkaround =
-        usePrimitiveRestartWorkaround(glState.isPrimitiveRestartEnabled(), srcType);
+        UsePrimitiveRestartWorkaround(glState.isPrimitiveRestartEnabled(), srcType, rendererClass);
     gl::Buffer *glBuffer = glState.getVertexArray()->getElementArrayBuffer().get();
 
     // Case 1: the indices are passed by pointer, which forces the streaming of index data
@@ -208,7 +213,7 @@ gl::Error IndexDataManager::prepareIndexData(GLenum srcType,
         translated->indexRange.vertexIndexCount < static_cast<size_t>(count) ||
         translated->indexRange.end == gl::GetPrimitiveRestartIndex(srcType);
     bool primitiveRestartWorkaround =
-        usePrimitiveRestartWorkaround(primitiveRestartFixedIndexEnabled, srcType) &&
+        UsePrimitiveRestartWorkaround(primitiveRestartFixedIndexEnabled, srcType, mRendererClass) &&
         hasPrimitiveRestartIndex;
 
     // We should never have to deal with MAX_UINT indices, since we restrict it via

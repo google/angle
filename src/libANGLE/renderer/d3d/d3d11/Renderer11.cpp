@@ -360,6 +360,34 @@ void GetTriFanIndices(const void *indices,
     }
 }
 
+bool DrawCallNeedsTranslation(const gl::Context *context, GLenum mode, GLenum type)
+{
+    const auto &glState     = context->getGLState();
+    const auto &vertexArray = glState.getVertexArray();
+    auto *vertexArray11     = GetImplAs<VertexArray11>(vertexArray);
+    // Direct drawing doesn't support dynamic attribute storage since it needs the first and count
+    // to translate when applyVertexBuffer. GL_LINE_LOOP and GL_TRIANGLE_FAN are not supported
+    // either since we need to simulate them in D3D.
+    if (vertexArray11->hasDynamicAttrib(context) || mode == GL_LINE_LOOP || mode == GL_TRIANGLE_FAN)
+    {
+        return true;
+    }
+
+    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(glState.getProgram());
+    if (InstancedPointSpritesActive(programD3D, mode))
+    {
+        return true;
+    }
+
+    if (type != GL_NONE)
+    {
+        // Only non-streaming index data can be directly used to draw since they don't
+        // need the indices and count informations.
+        return IndexDataManager::IsStreamingIndexData(context, type, RENDERER_D3D11);
+    }
+    return false;
+}
+
 const uint32_t ScratchMemoryBufferLifetime = 1000;
 
 }  // anonymous namespace
@@ -1801,7 +1829,7 @@ gl::Error Renderer11::drawElementsImpl(const gl::Context *context,
     const auto &data = context->getContextState();
     TranslatedIndexData indexInfo;
 
-    if (!drawCallNeedsTranslation(context, mode, type))
+    if (!DrawCallNeedsTranslation(context, mode, type))
     {
         ANGLE_TRY(applyIndexBuffer(data, nullptr, 0, mode, type, &indexInfo));
         ANGLE_TRY(applyVertexBuffer(context, mode, 0, 0, 0, &indexInfo));
@@ -1891,36 +1919,6 @@ gl::Error Renderer11::drawElementsImpl(const gl::Context *context,
     return gl::NoError();
 }
 
-bool Renderer11::drawCallNeedsTranslation(const gl::Context *context,
-                                          GLenum mode,
-                                          GLenum type) const
-{
-    const auto &glState     = context->getGLState();
-    const auto &vertexArray = glState.getVertexArray();
-    auto *vertexArray11     = GetImplAs<VertexArray11>(vertexArray);
-    // Direct drawing doesn't support dynamic attribute storage since it needs the first and count
-    // to translate when applyVertexBuffer. GL_LINE_LOOP and GL_TRIANGLE_FAN are not supported
-    // either since we need to simulate them in D3D.
-    if (vertexArray11->hasDynamicAttrib(context) || mode == GL_LINE_LOOP || mode == GL_TRIANGLE_FAN)
-    {
-        return true;
-    }
-
-    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(glState.getProgram());
-    if (instancedPointSpritesActive(programD3D, mode))
-    {
-        return true;
-    }
-
-    if (type != GL_NONE)
-    {
-        // Only non-streaming index data can be directly used to draw since they don't
-        // need the indices and count informations.
-        return mIndexDataManager->isStreamingIndexData(context, type);
-    }
-    return false;
-}
-
 gl::Error Renderer11::drawArraysIndirectImpl(const gl::Context *context,
                                              GLenum mode,
                                              const void *indirect)
@@ -1937,7 +1935,7 @@ gl::Error Renderer11::drawArraysIndirectImpl(const gl::Context *context,
     Buffer11 *storage = GetImplAs<Buffer11>(drawIndirectBuffer);
     uintptr_t offset  = reinterpret_cast<uintptr_t>(indirect);
 
-    if (!drawCallNeedsTranslation(context, mode, GL_NONE))
+    if (!DrawCallNeedsTranslation(context, mode, GL_NONE))
     {
         applyVertexBuffer(context, mode, 0, 0, 0, nullptr);
         ID3D11Buffer *buffer = nullptr;
@@ -1988,7 +1986,7 @@ gl::Error Renderer11::drawElementsIndirectImpl(const gl::Context *context,
     uintptr_t offset  = reinterpret_cast<uintptr_t>(indirect);
 
     TranslatedIndexData indexInfo;
-    if (!drawCallNeedsTranslation(context, mode, type))
+    if (!DrawCallNeedsTranslation(context, mode, type))
     {
         ANGLE_TRY(applyIndexBuffer(contextState, nullptr, 0, mode, type, &indexInfo));
         ANGLE_TRY(applyVertexBuffer(context, mode, 0, 0, 0, &indexInfo));

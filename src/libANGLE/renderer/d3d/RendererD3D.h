@@ -336,7 +336,6 @@ class RendererD3D : public BufferFactoryD3D
                               gl::TextureCapsMap *outTextureCaps,
                               gl::Extensions *outExtensions,
                               gl::Limitations *outLimitations) const = 0;
-    virtual bool instancedPointSpritesActive(ProgramD3D *programD3D, GLenum mode) const;
 
     void cleanup();
 
@@ -374,6 +373,7 @@ class RendererD3D : public BufferFactoryD3D
 };
 
 unsigned int GetBlendSampleMask(const gl::State &glState, int samples);
+bool InstancedPointSpritesActive(ProgramD3D *programD3D, GLenum mode);
 
 }  // namespace rx
 
