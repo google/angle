@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2389a129_7105d2c2",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-16T11:54:16Z",
+      "side": 1,
+      "message": "Could you document it here that this is set only in the following two cases:\n1) Represents an interface block\n2) Represents the member variable of an unnamed interface block.\n\nIt\u0027s nullptr also for members of named interface blocks.\n\nThat makes understanding this patch easier.",
+      "revId": "95ed4b6e7bdcc235faea226f4d678e481b7629cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
