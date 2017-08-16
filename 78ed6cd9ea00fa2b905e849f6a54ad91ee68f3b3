@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1044cfa9_9b7e8799",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 3522,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-16T11:03:30Z",
+      "side": 0,
+      "message": "You can see the arraySize in both IInterfaceBlock and TType are same, so we should either remove the one in TInterfaceBlock or update them together.",
+      "range": {
+        "startLine": 3519,
+        "startChar": 0,
+        "endLine": 3522,
+        "endChar": 40
+      },
+      "revId": "78ed6cd9ea00fa2b905e849f6a54ad91ee68f3b3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

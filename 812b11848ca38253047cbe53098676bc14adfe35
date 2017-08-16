@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "8d931b58_4784f665",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-16T11:03:30Z",
+      "side": 1,
+      "message": "Now there is only one member \u0027gl_Position\u0027 in gl_in, so it is reasonable to combine this with recordBultInVaryingUsed in this patch. \n\nWhat I consider is if we want to support more members in gl_in (gl_PointSize, gl_ViewportArrayIndex, etc), it is better to only record the member that is really used in gl_in, instead of adding all members available when we meet the first member being used. We can know the refered member in CollectVariablesTraverser::visitBinary(), pass its index into this function and only add this member to the definition of gl_in.",
+      "parentUuid": "d62d8a3a_2ed34d2d",
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e3a5a3a7_cbf7bb82",
         "filename": "src/compiler/translator/CollectVariables.cpp",
         "patchSetId": 11
@@ -59,6 +77,30 @@
     },
     {
       "key": {
+        "uuid": "a204094d_e98e2943",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-16T11:03:30Z",
+      "side": 1,
+      "message": "I think we can, because the remaining logic is else-ifs and one if that doesn\u0027t relate to gl_in.(we don\u0027t need to use \u0027var\u0027 because gl_in is a built-in variable)",
+      "parentUuid": "6b448d36_de288bbb",
+      "range": {
+        "startLine": 319,
+        "startChar": 8,
+        "endLine": 319,
+        "endChar": 15
+      },
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2a1a60eb_5c8f3974",
         "filename": "src/compiler/translator/CollectVariables.cpp",
         "patchSetId": 11
@@ -70,6 +112,24 @@
       "writtenOn": "2017-08-15T15:21:27Z",
       "side": 1,
       "message": "I might be missing something, but it seems that most of the work done here could be done inside [1] in visitSymbol, this way we wouldn\u0027t need to extract the gl_in manually from the blockNode which would simplify things a bit.",
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "34fe8ec3_4d8388f1",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-16T11:03:30Z",
+      "side": 1,
+      "message": "Here we deal with the binary node block[n].member, where the operator is \u0027.\u0027, the left node is \u0027block[n]\u0027, and the right node is the index of \u0027member\u0027 in the definition of block.\n\nIf the block is a uniform block or a shader storage block, SPEC requires the index \u0027n\u0027 must be a constant integral number, and \u0027block\u0027 must be declared before, so here we just need to label the staticUse of \u0027member\u0027 so that \u0027member\u0027 won\u0027t be dropped in the output code. That\u0027s why in this situation collecting variables needn\u0027t be continued because it is impossible to meet new variables.\n\nIf the block is shader input or output block (including gl_in), \u0027n\u0027 can be a variable that should be collected. e.g. When handling \u0027gl_in[gl_InvocationID].gl_Position\u0027, we should continue traversing to collect gl_InvocationID.",
+      "parentUuid": "2a1a60eb_5c8f3974",
       "revId": "812b11848ca38253047cbe53098676bc14adfe35",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -90,6 +150,24 @@
       "revId": "812b11848ca38253047cbe53098676bc14adfe35",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b2677ba_c80c6f0a",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 908,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-16T11:03:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a6b5466a_ee512559",
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -116,6 +194,30 @@
     },
     {
       "key": {
+        "uuid": "922244c2_b51d4d41",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2710,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-16T11:03:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "356317f8_a45a2c06",
+      "range": {
+        "startLine": 2710,
+        "startChar": 20,
+        "endLine": 2710,
+        "endChar": 54
+      },
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "654baa5b_0e2df11c",
         "filename": "src/compiler/translator/Types.h",
         "patchSetId": 11
@@ -133,6 +235,24 @@
     },
     {
       "key": {
+        "uuid": "c68983ae_8b059d80",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-16T11:03:30Z",
+      "side": 1,
+      "message": "I add this because I need a method to initialize \u0027gl_in\u0027 and other user defined unsized shader input blocks whose array sizes are undefined until a valid input primitive declaration is met.\n\nI have three ways to handle this issue:\n1. (This patch) Add a boolean mIsArray to indicate it is a unsized interface block array. In the definition of TType there are both array and arraySize. I just refer to this pattern.\n2. (PatchSet 12) Use a large number in the initialization. I think \u00270\u0027 isn\u0027t good because it makes these interface blocks not be an array according to the current structure. We should set both TType.arraySize and interfaceBlock-\u003esetArraySize(arraySize) to make the two array size values consistent to each other.\n3. Delete mArraySize in TInterfaceBlock, and only use TType.arraySize. I have made an implementation and it can pass all CQ. https://chromium-review.googlesource.com/c/615759",
+      "parentUuid": "654baa5b_0e2df11c",
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8d883ade_0e900a7b",
         "filename": "src/compiler/translator/Types.h",
         "patchSetId": 11
@@ -144,6 +264,24 @@
       "writtenOn": "2017-08-15T15:21:27Z",
       "side": 1,
       "message": "It seems that either the interface block, or the type should be an array, setting the arrayness on both sounds like it makes it an array of array. Maybe only the TType arrayness could be updated.",
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c05b2d38_ed1e4487",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-16T11:03:30Z",
+      "side": 1,
+      "message": "It doesn\u0027t mean an array of array, actually it is redundant to store interface block array size twice. If we decide to reserve the array size in TInterfaceBlock, we should keep it consistent with the array size in TType.",
+      "parentUuid": "8d883ade_0e900a7b",
       "revId": "812b11848ca38253047cbe53098676bc14adfe35",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
