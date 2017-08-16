@@ -294,8 +294,13 @@ std::string DynamicHLSL::generatePixelShaderForOutputSignature(
     declarationStream << "struct PS_OUTPUT\n"
                          "{\n";
 
+    size_t numOutputs = outputLayout.size();
+
     // Workaround for HLSL 3.x: We can't do a depth/stencil only render, the runtime will complain.
-    size_t numOutputs = outputLayout.empty() ? 1u : outputLayout.size();
+    if (numOutputs == 0 && (shaderModel == 3 || !mRenderer->getShaderModelSuffix().empty()))
+    {
+        numOutputs = 1u;
+    }
     const PixelShaderOutputVariable defaultOutput(GL_FLOAT_VEC4, "dummy", "float4(0, 0, 0, 1)", 0);
 
     for (size_t layoutIndex = 0; layoutIndex < numOutputs; ++layoutIndex)

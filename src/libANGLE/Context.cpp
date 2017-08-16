@@ -2853,7 +2853,7 @@ Error Context::prepareForDraw(GLenum drawMode)
     InfoLog infoLog;
     Error err = mImplementation->triggerDrawCallProgramRecompilation(this, &infoLog,
                                                                      mMemoryProgramCache, drawMode);
-    if (err.isError())
+    if (err.isError() || infoLog.getLength() > 0)
     {
         WARN() << "Dynamic recompilation error log: " << infoLog.str();
     }

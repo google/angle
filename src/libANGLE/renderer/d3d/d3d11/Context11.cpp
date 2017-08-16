@@ -326,6 +326,10 @@ gl::Error Context11::triggerDrawCallProgramRecompilation(const gl::Context *cont
     {
         ShaderExecutableD3D *vertexExe = nullptr;
         ANGLE_TRY(programD3D->getVertexExecutableForCachedInputLayout(&vertexExe, infoLog));
+        if (!programD3D->hasVertexExecutableForCachedInputLayout())
+        {
+            return gl::InternalError() << "Error compiling dynamic vertex executable.";
+        }
     }
 
     if (recompileGS)
@@ -333,12 +337,20 @@ gl::Error Context11::triggerDrawCallProgramRecompilation(const gl::Context *cont
         ShaderExecutableD3D *geometryExe = nullptr;
         ANGLE_TRY(programD3D->getGeometryExecutableForPrimitiveType(
             context->getContextState(), drawMode, &geometryExe, infoLog));
+        if (!programD3D->hasGeometryExecutableForPrimitiveType(drawMode))
+        {
+            return gl::InternalError() << "Error compiling dynamic geometry executable.";
+        }
     }
 
     if (recompilePS)
     {
         ShaderExecutableD3D *pixelExe = nullptr;
         ANGLE_TRY(programD3D->getPixelExecutableForCachedOutputLayout(&pixelExe, infoLog));
+        if (!programD3D->hasPixelExecutableForCachedOutputLayout())
+        {
+            return gl::InternalError() << "Error compiling dynamic pixel executable.";
+        }
     }
 
     // Refresh the program cache entry.
