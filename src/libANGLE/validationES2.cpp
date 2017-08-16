@@ -290,6 +290,13 @@ bool IsValidCopyTextureDestinationFormatType(Context *context, GLint internalFor
         return false;
     }
 
+    if (!ValidES3FormatCombination(GetUnsizedFormat(internalFormat), type, internalFormat))
+    {
+        context->handleError(InvalidOperation()
+                             << "Invalid combination of type and internalFormat.");
+        return false;
+    }
+
     const InternalFormat &internalFormatInfo = GetInternalFormatInfo(internalFormat, type);
     if (!internalFormatInfo.textureSupport(context->getClientVersion(), context->getExtensions()))
     {
