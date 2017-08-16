@@ -88,6 +88,24 @@
       "revId": "df8d11032f436ba5f8a5f0e19b15685adb9ad471",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a9b5c2a9_cc9ec704",
+        "filename": "extensions/ANGLE_multiview.txt",
+        "patchSetId": 8
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-16T14:55:52Z",
+      "side": 1,
+      "message": "This seems reasonable.  If there are always layers above ANGLE to handle it, then I\u0027m comfortable.  Browsers like Edge intend on putting as few layers between ANGLE and WebGL as possible so I\u0027ve had to consider these cases more carefully.",
+      "parentUuid": "94508ec3_a4a7f71b",
+      "revId": "df8d11032f436ba5f8a5f0e19b15685adb9ad471",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
