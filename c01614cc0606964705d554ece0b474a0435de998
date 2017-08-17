@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c532954f_8ef2d8b7",
+        "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-17T14:37:45Z",
+      "side": 1,
+      "message": "Sorry, I don\u0027t think this suggestion works. It would require reserving more space in the vertex buffer, possibly up to the last available element, and this could lead to a situation where subsequent dynamic attributes would not have space to stream.\n\nAnother option is to scan the set of dynamic attributes in IndexDataManager::prepareIndexData and force the index buffer to clamp any out of range indices in ConvertIndexArray. A final option would be to get rid of the ring buffer in D3D11 and use an approach similar to static buffers, where reading past the end wouldn\u0027t read into unvalidated data. However, your solution is so much simpler I think I\u0027m okay with keeping it like you have it for now.\n\nThe only danger is that because we entered the implementation call for drawing, and then error out, we might leave something in a partially initialized state on error, but the tests should be able to cover this.",
+      "parentUuid": "098c4d06_e12fed8f",
+      "range": {
+        "startLine": 468,
+        "startChar": 0,
+        "endLine": 471,
+        "endChar": 9
+      },
+      "revId": "c01614cc0606964705d554ece0b474a0435de998",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0e9e5e6f_3fcf1b42",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 5
