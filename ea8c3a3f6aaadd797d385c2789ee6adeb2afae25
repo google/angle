@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "bae30d4a_95592f28",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 4267,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-17T16:31:18Z",
+      "side": 1,
+      "message": "Yes, there are already dirty bits for DIRTY_BIT_DEFAULT_WIDTH, DIRTY_BIT_DEFAULT_HEIGHT. You can invalidate the viewport if necessary in Framebuffer11::syncState.",
+      "parentUuid": "ae5dde82_f515a2f7",
+      "range": {
+        "startLine": 4267,
+        "startChar": 4,
+        "endLine": 4267,
+        "endChar": 51
+      },
+      "revId": "ea8c3a3f6aaadd797d385c2789ee6adeb2afae25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "07fe7fe3_8fd48a07",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 12
@@ -36,6 +60,30 @@
       "writtenOn": "2017-08-17T14:16:30Z",
       "side": 1,
       "message": "I would refactor this into a Framebuffer::hasAttachments.",
+      "range": {
+        "startLine": 867,
+        "startChar": 8,
+        "endLine": 868,
+        "endChar": 59
+      },
+      "revId": "ea8c3a3f6aaadd797d385c2789ee6adeb2afae25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e342970_01ce50e6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 868,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-17T16:31:18Z",
+      "side": 1,
+      "message": "+1.",
+      "parentUuid": "07fe7fe3_8fd48a07",
       "range": {
         "startLine": 867,
         "startChar": 8,
@@ -87,6 +135,29 @@
         "startChar": 49,
         "endLine": 876,
         "endChar": 86
+      },
+      "revId": "ea8c3a3f6aaadd797d385c2789ee6adeb2afae25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5579514a_52bc4463",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 885,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-17T16:31:18Z",
+      "side": 1,
+      "message": "maybe you won\u0027t need these member variables once you update the dirty bit implementation. not sure.",
+      "range": {
+        "startLine": 884,
+        "startChar": 0,
+        "endLine": 885,
+        "endChar": 64
       },
       "revId": "ea8c3a3f6aaadd797d385c2789ee6adeb2afae25",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
