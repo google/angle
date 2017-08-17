@@ -902,7 +902,9 @@ void GenerateCaps(const FunctionsGL *functions,
         const int maxLayers = QuerySingleGLInt(functions, GL_MAX_ARRAY_TEXTURE_LAYERS);
         // GL_MAX_VIEWPORTS is guaranteed to be at least 16.
         const int maxViewports       = QuerySingleGLInt(functions, GL_MAX_VIEWPORTS);
-        extensions->maxViews         = static_cast<GLuint>(std::min(maxLayers, maxViewports));
+        extensions->maxViews         = static_cast<GLuint>(
+            std::min(static_cast<int>(gl::IMPLEMENTATION_ANGLE_MULTIVIEW_MAX_VIEWS),
+                     std::min(maxLayers, maxViewports)));
         *multiviewImplementationType = MultiviewImplementationTypeGL::NV_VIEWPORT_ARRAY2;
     }
 

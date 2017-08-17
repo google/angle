@@ -1393,8 +1393,9 @@ void GenerateCaps(ID3D11Device *device, ID3D11DeviceContext *deviceContext, cons
     if (extensions->multiview)
     {
         extensions->maxViews =
-            std::min(static_cast<GLuint>(GetMaximum2DTextureArraySize(featureLevel)),
-                     GetMaxViewportAndScissorRectanglesPerPipeline(featureLevel));
+            std::min(static_cast<GLuint>(gl::IMPLEMENTATION_ANGLE_MULTIVIEW_MAX_VIEWS),
+                     std::min(static_cast<GLuint>(GetMaximum2DTextureArraySize(featureLevel)),
+                              GetMaxViewportAndScissorRectanglesPerPipeline(featureLevel)));
     }
     extensions->textureUsage = true; // This could be false since it has no effect in D3D11
     extensions->discardFramebuffer = true;

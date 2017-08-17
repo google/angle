@@ -388,6 +388,19 @@ bool DrawCallNeedsTranslation(const gl::Context *context, GLenum mode, GLenum ty
     return false;
 }
 
+int GetAdjustedInstanceCount(const gl::Program *program, int instanceCount)
+{
+    if (!program->usesMultiview())
+    {
+        return instanceCount;
+    }
+    if (instanceCount == 0)
+    {
+        return program->getNumViews();
+    }
+    return program->getNumViews() * instanceCount;
+}
+
 const uint32_t ScratchMemoryBufferLifetime = 1000;
 
 }  // anonymous namespace
@@ -819,7 +832,7 @@ egl::Error Renderer11::initializeDevice()
 
     const gl::Caps &rendererCaps = getNativeCaps();
 
-    if (mStateManager.initialize(rendererCaps).isError())
+    if (mStateManager.initialize(rendererCaps, getNativeExtensions()).isError())
     {
         return egl::EglBadAlloc() << "Error initializing state manager.";
     }
@@ -1626,7 +1639,9 @@ gl::Error Renderer11::drawArraysImpl(const gl::Context *context,
 {
     const auto &data       = context->getContextState();
     const auto &glState    = data.getState();
-    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(glState.getProgram());
+    gl::Program *program          = glState.getProgram();
+    ProgramD3D *programD3D        = GetImplAs<ProgramD3D>(program);
+    GLsizei adjustedInstanceCount = GetAdjustedInstanceCount(program, instances);
 
     if (programD3D->usesGeometryShader(mode) && glState.isTransformFeedbackActiveUnpaused())
     {
@@ -1636,9 +1651,9 @@ gl::Error Renderer11::drawArraysImpl(const gl::Context *context,
         // geometry shader + pixel shader to rasterize the primitives.
         mStateManager.setPixelShader(nullptr);
 
-        if (instances > 0)
+        if (adjustedInstanceCount > 0)
         {
-            mDeviceContext->DrawInstanced(count, instances, 0, 0);
+            mDeviceContext->DrawInstanced(count, adjustedInstanceCount, 0, 0);
         }
         else
         {
@@ -1664,9 +1679,9 @@ gl::Error Renderer11::drawArraysImpl(const gl::Context *context,
         mStateManager.setGeometryShader(
             &GetAs<ShaderExecutable11>(geometryExe)->getGeometryShader());
 
-        if (instances > 0)
+        if (adjustedInstanceCount > 0)
         {
-            mDeviceContext->DrawInstanced(count, instances, 0, 0);
+            mDeviceContext->DrawInstanced(count, adjustedInstanceCount, 0, 0);
         }
         else
         {
@@ -1677,12 +1692,12 @@ gl::Error Renderer11::drawArraysImpl(const gl::Context *context,
 
     if (mode == GL_LINE_LOOP)
     {
-        return drawLineLoop(data, count, GL_NONE, nullptr, 0, instances);
+        return drawLineLoop(data, count, GL_NONE, nullptr, 0, adjustedInstanceCount);
     }
 
     if (mode == GL_TRIANGLE_FAN)
     {
-        return drawTriangleFan(data, count, GL_NONE, nullptr, 0, instances);
+        return drawTriangleFan(data, count, GL_NONE, nullptr, 0, adjustedInstanceCount);
     }
 
     bool useInstancedPointSpriteEmulation =
@@ -1690,21 +1705,24 @@ gl::Error Renderer11::drawArraysImpl(const gl::Context *context,
 
     if (mode != GL_POINTS || !useInstancedPointSpriteEmulation)
     {
-        if (instances == 0)
+        if (adjustedInstanceCount == 0)
         {
             mDeviceContext->Draw(count, 0);
         }
         else
         {
-            mDeviceContext->DrawInstanced(count, instances, 0, 0);
+            mDeviceContext->DrawInstanced(count, adjustedInstanceCount, 0, 0);
         }
         return gl::NoError();
     }
 
+    // This code should not be reachable by multi-view programs.
+    ASSERT(program->usesMultiview() == false);
+
     // If the shader is writing to gl_PointSize, then pointsprites are being rendered.
     // Emulating instanced point sprites for FL9_3 requires the topology to be
     // D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST and DrawIndexedInstanced is called instead.
-    if (instances == 0)
+    if (adjustedInstanceCount == 0)
     {
         mDeviceContext->DrawIndexedInstanced(6, count, 0, 0, 0);
         return gl::NoError();
@@ -1735,6 +1753,8 @@ gl::Error Renderer11::drawElementsImpl(const gl::Context *context,
 {
     const auto &data = context->getContextState();
     TranslatedIndexData indexInfo;
+    const gl::Program *program    = data.getState().getProgram();
+    GLsizei adjustedInstanceCount = GetAdjustedInstanceCount(program, instances);
 
     if (!DrawCallNeedsTranslation(context, mode, type))
     {
@@ -1743,9 +1763,10 @@ gl::Error Renderer11::drawElementsImpl(const gl::Context *context,
         const gl::Type &typeInfo = gl::GetTypeInfo(type);
         unsigned int startIndexLocation =
             static_cast<unsigned int>(reinterpret_cast<const uintptr_t>(indices)) / typeInfo.bytes;
-        if (instances > 0)
+        if (adjustedInstanceCount > 0)
         {
-            mDeviceContext->DrawIndexedInstanced(count, instances, startIndexLocation, 0, 0);
+            mDeviceContext->DrawIndexedInstanced(count, adjustedInstanceCount, startIndexLocation,
+                                                 0, 0);
         }
         else
         {
@@ -1769,28 +1790,31 @@ gl::Error Renderer11::drawElementsImpl(const gl::Context *context,
 
     if (mode == GL_LINE_LOOP)
     {
-        return drawLineLoop(data, count, type, indices, baseVertex, instances);
+        return drawLineLoop(data, count, type, indices, baseVertex, adjustedInstanceCount);
     }
 
     if (mode == GL_TRIANGLE_FAN)
     {
-        return drawTriangleFan(data, count, type, indices, baseVertex, instances);
+        return drawTriangleFan(data, count, type, indices, baseVertex, adjustedInstanceCount);
     }
 
     const ProgramD3D *programD3D = GetImplAs<ProgramD3D>(data.getState().getProgram());
 
     if (mode != GL_POINTS || !programD3D->usesInstancedPointSpriteEmulation())
     {
-        if (instances == 0)
+        if (adjustedInstanceCount == 0)
         {
             mDeviceContext->DrawIndexed(count, 0, baseVertex);
         }
         else
         {
-            mDeviceContext->DrawIndexedInstanced(count, instances, 0, baseVertex, 0);
+            mDeviceContext->DrawIndexedInstanced(count, adjustedInstanceCount, 0, baseVertex, 0);
         }
         return gl::NoError();
     }
+
+    // This code should not be reachable by multi-view programs.
+    ASSERT(program->usesMultiview() == false);
 
     // If the shader is writing to gl_PointSize, then pointsprites are being rendered.
     // Emulating instanced point sprites for FL9_3 requires the topology to be

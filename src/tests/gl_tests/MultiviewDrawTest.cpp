@@ -14,15 +14,18 @@ using namespace angle;
 
 namespace
 {
-GLuint CreateSimplePassthroughProgram()
+GLuint CreateSimplePassthroughProgram(int numViews)
 {
     const std::string vsSource =
         "#version 300 es\n"
         "#extension GL_OVR_multiview : require\n"
-        "layout(num_views = 2) in;\n"
+        "layout(num_views = " +
+        ToString(numViews) +
+        ") in;\n"
         "layout(location=0) in vec2 vPosition;\n"
         "void main()\n"
         "{\n"
+        "   gl_PointSize = 1.;\n"
         "   gl_Position = vec4(vPosition.xy, 0.0, 1.0);\n"
         "}\n";
 
@@ -1383,7 +1386,7 @@ TEST_P(MultiviewRenderPrimitiveTest, Lines)
         return;
     }
 
-    GLuint program = CreateSimplePassthroughProgram();
+    GLuint program = CreateSimplePassthroughProgram(2);
     ASSERT_NE(program, 0u);
     glUseProgram(program);
     ASSERT_GL_NO_ERROR();
@@ -1420,7 +1423,7 @@ TEST_P(MultiviewRenderPrimitiveTest, LineStrip)
         return;
     }
 
-    GLuint program = CreateSimplePassthroughProgram();
+    GLuint program = CreateSimplePassthroughProgram(2);
     ASSERT_NE(program, 0u);
     glUseProgram(program);
     ASSERT_GL_NO_ERROR();
@@ -1457,7 +1460,7 @@ TEST_P(MultiviewRenderPrimitiveTest, LineLoop)
         return;
     }
 
-    GLuint program = CreateSimplePassthroughProgram();
+    GLuint program = CreateSimplePassthroughProgram(2);
     ASSERT_NE(program, 0u);
     glUseProgram(program);
     ASSERT_GL_NO_ERROR();
@@ -1491,7 +1494,7 @@ TEST_P(MultiviewRenderPrimitiveTest, TriangleStrip)
         return;
     }
 
-    GLuint program = CreateSimplePassthroughProgram();
+    GLuint program = CreateSimplePassthroughProgram(2);
     ASSERT_NE(program, 0u);
     glUseProgram(program);
     ASSERT_GL_NO_ERROR();
@@ -1522,7 +1525,7 @@ TEST_P(MultiviewRenderPrimitiveTest, TriangleFan)
         return;
     }
 
-    GLuint program = CreateSimplePassthroughProgram();
+    GLuint program = CreateSimplePassthroughProgram(2);
     ASSERT_NE(program, 0u);
     glUseProgram(program);
     ASSERT_GL_NO_ERROR();
@@ -1760,6 +1763,60 @@ TEST_P(MultiviewRenderTest, ProgramRelinkUpdatesAttribDivisor)
     }
 }
 
+// Test that useProgram applies the number of views in computing the final value of the attribute
+// divisor.
+TEST_P(MultiviewRenderTest, DivisorUpdatedOnProgramChange)
+{
+    if (!requestMultiviewExtension())
+    {
+        return;
+    }
+
+    GLVertexArray vao;
+    glBindVertexArray(vao);
+    GLBuffer vbo;
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    std::vector<Vector2I> windowCoordinates = {Vector2I(0, 0), Vector2I(1, 0), Vector2I(2, 0),
+                                               Vector2I(3, 0)};
+    std::vector<Vector2> vertexDataInClipSpace =
+        ConvertPixelCoordinatesToClipSpace(windowCoordinates, 4, 1);
+    // Fill with x positions so that the resulting clip space coordinate fails the clip test.
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vector2) * vertexDataInClipSpace.size(),
+                 vertexDataInClipSpace.data(), GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, 0, 0, nullptr);
+    glVertexAttribDivisor(0, 1);
+    ASSERT_GL_NO_ERROR();
+
+    // Create a program and fbo with N views and draw N instances of a point horizontally.
+    for (int numViews = 2; numViews <= 4; ++numViews)
+    {
+        createFBO(4, 1, numViews);
+        ASSERT_GL_NO_ERROR();
+
+        GLuint program = CreateSimplePassthroughProgram(numViews);
+        ASSERT_NE(program, 0u);
+        glUseProgram(program);
+        ASSERT_GL_NO_ERROR();
+
+        glDrawArraysInstanced(GL_POINTS, 0, 1, numViews);
+
+        for (int view = 0; view < numViews; ++view)
+        {
+            for (int j = 0; j < numViews; ++j)
+            {
+                EXPECT_EQ(GLColor::red, GetViewColor(j, 0, view));
+            }
+            for (int j = numViews; j < 4; ++j)
+            {
+                EXPECT_EQ(GLColor::black, GetViewColor(j, 0, view));
+            }
+        }
+
+        glDeleteProgram(program);
+    }
+}
+
 MultiviewTestParams SideBySideOpenGL()
 {
     return MultiviewTestParams(GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE, egl_platform::OPENGL());
@@ -1776,9 +1833,17 @@ MultiviewTestParams SideBySideD3D11()
 }
 
 ANGLE_INSTANTIATE_TEST(MultiviewDrawValidationTest, ES31_OPENGL());
-ANGLE_INSTANTIATE_TEST(MultiviewRenderDualViewTest, SideBySideOpenGL(), LayeredOpenGL());
-ANGLE_INSTANTIATE_TEST(MultiviewRenderTest, SideBySideOpenGL(), LayeredOpenGL());
-ANGLE_INSTANTIATE_TEST(MultiviewOcclusionQueryTest, SideBySideOpenGL(), LayeredOpenGL());
+ANGLE_INSTANTIATE_TEST(MultiviewRenderDualViewTest,
+                       SideBySideOpenGL(),
+                       LayeredOpenGL(),
+                       SideBySideD3D11());
+ANGLE_INSTANTIATE_TEST(MultiviewRenderTest, SideBySideOpenGL(), LayeredOpenGL(), SideBySideD3D11());
+ANGLE_INSTANTIATE_TEST(MultiviewOcclusionQueryTest,
+                       SideBySideOpenGL(),
+                       LayeredOpenGL(),
+                       SideBySideD3D11());
 ANGLE_INSTANTIATE_TEST(MultiviewProgramGenerationTest, SideBySideOpenGL(), SideBySideD3D11());
-ANGLE_INSTANTIATE_TEST(MultiviewRenderPrimitiveTest, SideBySideOpenGL(), LayeredOpenGL());
-ANGLE_INSTANTIATE_TEST(MultiviewSideBySideRenderTest, ES3_OPENGL());
+ANGLE_INSTANTIATE_TEST(MultiviewRenderPrimitiveTest,
+                       SideBySideOpenGL(),
+                       LayeredOpenGL(),
+                       SideBySideD3D11());

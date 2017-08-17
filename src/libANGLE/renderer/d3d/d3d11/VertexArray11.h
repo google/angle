@@ -43,6 +43,10 @@ class VertexArray11 : public VertexArrayImpl, public OnBufferDataDirtyReceiver
 
     Serial getCurrentStateSerial() const { return mCurrentStateSerial; }
 
+    // In case of a multi-view program change, we have to update all attributes so that the divisor
+    // is adjusted.
+    void markAllAttributeDivisorsForAdjustment(int numViews);
+
   private:
     void updateVertexAttribStorage(const gl::Context *context, size_t attribIndex);
     void flushAttribUpdates(const gl::Context *context);
@@ -65,6 +69,9 @@ class VertexArray11 : public VertexArrayImpl, public OnBufferDataDirtyReceiver
     std::vector<OnBufferDataDirtyBinding> mOnBufferDataDirty;
 
     Serial mCurrentStateSerial;
+
+    // The numViews value used to adjust the divisor.
+    int mAppliedNumViewsToDivisor;
 };
 
 }  // namespace rx
