@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ae5dde82_f515a2f7",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 4267,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-17T14:16:30Z",
+      "side": 1,
+      "message": "This isn\u0027t the right approach to sychronizing the viewport.  We don\u0027t want D3D11 implementation details in gl::Context and it doesn\u0027t cover updating the viewport when framebuffer attachments are added/removed.  We should notify StateManager11 about the change from within Framebuffer11 somehow.",
+      "range": {
+        "startLine": 4267,
+        "startChar": 4,
+        "endLine": 4267,
+        "endChar": 51
+      },
+      "revId": "ea8c3a3f6aaadd797d385c2789ee6adeb2afae25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "07fe7fe3_8fd48a07",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 868,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-17T14:16:30Z",
+      "side": 1,
+      "message": "I would refactor this into a Framebuffer::hasAttachments.",
+      "range": {
+        "startLine": 867,
+        "startChar": 8,
+        "endLine": 868,
+        "endChar": 59
+      },
+      "revId": "ea8c3a3f6aaadd797d385c2789ee6adeb2afae25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "26060363_0441a704",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 873,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-17T14:16:30Z",
+      "side": 1,
+      "message": "std::min(viewport.width, framebuffer-\u003egetDefaultWidth())",
+      "range": {
+        "startLine": 871,
+        "startChar": 48,
+        "endLine": 873,
+        "endChar": 84
+      },
+      "revId": "ea8c3a3f6aaadd797d385c2789ee6adeb2afae25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7aa926cf_8f2488ac",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 876,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-17T14:16:30Z",
+      "side": 1,
+      "message": "same std::min",
+      "range": {
+        "startLine": 874,
+        "startChar": 49,
+        "endLine": 876,
+        "endChar": 86
+      },
+      "revId": "ea8c3a3f6aaadd797d385c2789ee6adeb2afae25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
