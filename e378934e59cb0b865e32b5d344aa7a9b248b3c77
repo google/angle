@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b7ade964_9a45da4e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 810,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-08-17T13:18:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "04ec34e3_eb6f7efe",
+      "range": {
+        "startLine": 810,
+        "startChar": 10,
+        "endLine": 810,
+        "endChar": 14
+      },
+      "revId": "e378934e59cb0b865e32b5d344aa7a9b248b3c77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "70841fce_9e1ec658",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 6
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "6a662368_2760aca6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 860,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-08-17T13:18:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70841fce_9e1ec658",
+      "range": {
+        "startLine": 858,
+        "startChar": 1,
+        "endLine": 860,
+        "endChar": 20
+      },
+      "revId": "e378934e59cb0b865e32b5d344aa7a9b248b3c77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "91e719dc_e36fb0cf",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 6
@@ -59,6 +107,30 @@
       "writtenOn": "2017-08-15T13:46:46Z",
       "side": 1,
       "message": "I don\u0027t like that you copied and pasted the code from the syncFramebuffer method. I would prefer if you could figure out a better way to re-use code.",
+      "range": {
+        "startLine": 869,
+        "startChar": 0,
+        "endLine": 893,
+        "endChar": 5
+      },
+      "revId": "e378934e59cb0b865e32b5d344aa7a9b248b3c77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6fa55b7a_0fe9279d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 893,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-08-17T13:18:21Z",
+      "side": 1,
+      "message": "Thanks for the comment Jamie. Remove the code here. I add two functions to get active color attachment count and depth or stencil attachment count in Framebuffer.cpp. I want to check if fbo has any active attachments here since we don\u0027t need to set viewport if fbo has attachments.",
+      "parentUuid": "91e719dc_e36fb0cf",
       "range": {
         "startLine": 869,
         "startChar": 0,
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "579e9416_69f775bd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1310,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-08-17T13:18:21Z",
+      "side": 1,
+      "message": "Removed the code. I add dirty bit when calling setFramebufferParameteri in Context.cpp and line 618 to sync default params in syncViewport.",
+      "parentUuid": "2d8092b7_4f09abd8",
+      "range": {
+        "startLine": 1310,
+        "startChar": 8,
+        "endLine": 1310,
+        "endChar": 43
+      },
+      "revId": "e378934e59cb0b865e32b5d344aa7a9b248b3c77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "3a476ad3_050e7994",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 6
@@ -114,6 +210,30 @@
       "revId": "e378934e59cb0b865e32b5d344aa7a9b248b3c77",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e8f0171_15d84a07",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1470,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-08-17T13:18:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3a476ad3_050e7994",
+      "range": {
+        "startLine": 1470,
+        "startChar": 38,
+        "endLine": 1470,
+        "endChar": 49
+      },
+      "revId": "e378934e59cb0b865e32b5d344aa7a9b248b3c77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
