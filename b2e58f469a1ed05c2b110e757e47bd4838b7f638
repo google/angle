@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "007bbbd1_179ea0aa",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-17T09:02:49Z",
+      "side": 1,
+      "message": "Normalized device coordinates or NDC result from dividing the clip xyz by clip w. So the name NDC doesn\u0027t makes sense here. I\u0027d use pixelCenterRelativeX / pixelCenterRelativeY.",
+      "range": {
+        "startLine": 49,
+        "startChar": 14,
+        "endLine": 49,
+        "endChar": 20
+      },
+      "revId": "b2e58f469a1ed05c2b110e757e47bd4838b7f638",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2093873c_edda4855",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1210,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-17T09:02:49Z",
+      "side": 1,
+      "message": "nit: typo (also in other tests)",
+      "range": {
+        "startLine": 1210,
+        "startChar": 37,
+        "endLine": 1210,
+        "endChar": 38
+      },
+      "revId": "b2e58f469a1ed05c2b110e757e47bd4838b7f638",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
