@@ -16,6 +16,24 @@
       "revId": "5d67bdbcd99933729e57450950afbcd8dd30128d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "39a6611e_72737a23",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1169,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-17T07:27:49Z",
+      "side": 1,
+      "message": "Yes, it is better that way.\nThey are actually in clip space.",
+      "parentUuid": "b145b5f8_69dbcd77",
+      "revId": "5d67bdbcd99933729e57450950afbcd8dd30128d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
