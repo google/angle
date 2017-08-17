@@ -50,18 +50,22 @@ class Clear11 : angle::NonCopyable
         ~ShaderManager();
         gl::Error getShadersAndLayout(Renderer11 *renderer,
                                       const INT clearType,
+                                      const uint32_t numRTs,
                                       const d3d11::InputLayout **il,
                                       const d3d11::VertexShader **vs,
                                       const d3d11::PixelShader **ps);
 
       private:
+        constexpr static size_t kNumShaders = D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT;
+
         d3d11::InputLayout mIl9;
         d3d11::LazyShader<ID3D11VertexShader> mVs9;
         d3d11::LazyShader<ID3D11PixelShader> mPsFloat9;
         d3d11::LazyShader<ID3D11VertexShader> mVs;
-        d3d11::LazyShader<ID3D11PixelShader> mPsFloat;
-        d3d11::LazyShader<ID3D11PixelShader> mPsUInt;
-        d3d11::LazyShader<ID3D11PixelShader> mPsSInt;
+        d3d11::LazyShader<ID3D11PixelShader> mPsDepth;
+        std::array<d3d11::LazyShader<ID3D11PixelShader>, kNumShaders> mPsFloat;
+        std::array<d3d11::LazyShader<ID3D11PixelShader>, kNumShaders> mPsUInt;
+        std::array<d3d11::LazyShader<ID3D11PixelShader>, kNumShaders> mPsSInt;
     };
 
     bool useVertexBuffer() const;

@@ -49,7 +49,15 @@ call:BuildShader Clear11.hlsl           VS_Clear_FL9             vs_4_0_level_9_
 call:BuildShader Clear11.hlsl           PS_ClearFloat_FL9        ps_4_0_level_9_3  compiled\clearfloat11_fl9ps.h        %debug%
 
 call:BuildShader Clear11.hlsl           VS_Clear                 vs_4_0            compiled\clear11vs.h                 %debug%
-call:BuildShader Clear11.hlsl           PS_ClearFloat            ps_4_0            compiled\clearfloat11ps.h            %debug%
+call:BuildShader Clear11.hlsl           PS_ClearDepth            ps_4_0            compiled\cleardepth11ps.h            %debug%
+call:BuildShader Clear11.hlsl           PS_ClearFloat1           ps_4_0            compiled\clearfloat11ps1.h           %debug%
+call:BuildShader Clear11.hlsl           PS_ClearFloat2           ps_4_0            compiled\clearfloat11ps2.h           %debug%
+call:BuildShader Clear11.hlsl           PS_ClearFloat3           ps_4_0            compiled\clearfloat11ps3.h           %debug%
+call:BuildShader Clear11.hlsl           PS_ClearFloat4           ps_4_0            compiled\clearfloat11ps4.h           %debug%
+call:BuildShader Clear11.hlsl           PS_ClearFloat5           ps_4_0            compiled\clearfloat11ps5.h           %debug%
+call:BuildShader Clear11.hlsl           PS_ClearFloat6           ps_4_0            compiled\clearfloat11ps6.h           %debug%
+call:BuildShader Clear11.hlsl           PS_ClearFloat7           ps_4_0            compiled\clearfloat11ps7.h           %debug%
+call:BuildShader Clear11.hlsl           PS_ClearFloat8           ps_4_0            compiled\clearfloat11ps8.h           %debug%
 
 :: Shaders for OpenGL ES 3.0+ only
 ::              | Input file               | Entry point            | Type   | Output file                        | Debug |
@@ -92,8 +100,22 @@ call:BuildShader Swizzle11.hlsl             PS_SwizzleF2DArray       ps_4_0   co
 call:BuildShader Swizzle11.hlsl             PS_SwizzleI2DArray       ps_4_0   compiled\swizzlei2darrayps.h         %debug%
 call:BuildShader Swizzle11.hlsl             PS_SwizzleUI2DArray      ps_4_0   compiled\swizzleui2darrayps.h        %debug%
 
-call:BuildShader Clear11.hlsl               PS_ClearUint             ps_4_0   compiled\clearuint11ps.h             %debug%
-call:BuildShader Clear11.hlsl               PS_ClearSint             ps_4_0   compiled\clearsint11ps.h             %debug%
+call:BuildShader Clear11.hlsl               PS_ClearUint1            ps_4_0   compiled\clearuint11ps1.h            %debug%
+call:BuildShader Clear11.hlsl               PS_ClearUint2            ps_4_0   compiled\clearuint11ps2.h            %debug%
+call:BuildShader Clear11.hlsl               PS_ClearUint3            ps_4_0   compiled\clearuint11ps3.h            %debug%
+call:BuildShader Clear11.hlsl               PS_ClearUint4            ps_4_0   compiled\clearuint11ps4.h            %debug%
+call:BuildShader Clear11.hlsl               PS_ClearUint5            ps_4_0   compiled\clearuint11ps5.h            %debug%
+call:BuildShader Clear11.hlsl               PS_ClearUint6            ps_4_0   compiled\clearuint11ps6.h            %debug%
+call:BuildShader Clear11.hlsl               PS_ClearUint7            ps_4_0   compiled\clearuint11ps7.h            %debug%
+call:BuildShader Clear11.hlsl               PS_ClearUint8            ps_4_0   compiled\clearuint11ps8.h            %debug%
+call:BuildShader Clear11.hlsl               PS_ClearSint1            ps_4_0   compiled\clearsint11ps1.h            %debug%
+call:BuildShader Clear11.hlsl               PS_ClearSint2            ps_4_0   compiled\clearsint11ps2.h            %debug%
+call:BuildShader Clear11.hlsl               PS_ClearSint3            ps_4_0   compiled\clearsint11ps3.h            %debug%
+call:BuildShader Clear11.hlsl               PS_ClearSint4            ps_4_0   compiled\clearsint11ps4.h            %debug%
+call:BuildShader Clear11.hlsl               PS_ClearSint5            ps_4_0   compiled\clearsint11ps5.h            %debug%
+call:BuildShader Clear11.hlsl               PS_ClearSint6            ps_4_0   compiled\clearsint11ps6.h            %debug%
+call:BuildShader Clear11.hlsl               PS_ClearSint7            ps_4_0   compiled\clearsint11ps7.h            %debug%
+call:BuildShader Clear11.hlsl               PS_ClearSint8            ps_4_0   compiled\clearsint11ps8.h            %debug%
 
 call:BuildShader BufferToTexture11.hlsl     VS_BufferToTexture       vs_4_0   compiled/buffertotexture11_vs.h      %debug%
 call:BuildShader BufferToTexture11.hlsl     GS_BufferToTexture       gs_4_0   compiled/buffertotexture11_gs.h      %debug%

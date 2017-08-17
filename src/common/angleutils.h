@@ -99,6 +99,13 @@ class WrappedArray final : angle::NonCopyable
 
     constexpr WrappedArray() : mArray(nullptr), mSize(0) {}
     constexpr WrappedArray(const T *data, size_t size) : mArray(data), mSize(size) {}
+
+    constexpr WrappedArray(WrappedArray &&other) : WrappedArray()
+    {
+        std::swap(mArray, other.mArray);
+        std::swap(mSize, other.mSize);
+    }
+
     ~WrappedArray() {}
 
     constexpr const T *get() const { return mArray; }
@@ -273,6 +280,14 @@ std::string ToString(const T &value)
 #define ANGLE_INLINE __forceinline
 #else
 #define ANGLE_INLINE inline
+#endif
+
+#ifndef ANGLE_STRINGIFY
+#define ANGLE_STRINGIFY(x) #x
+#endif
+
+#ifndef ANGLE_MACRO_STRINGIFY
+#define ANGLE_MACRO_STRINGIFY(x) ANGLE_STRINGIFY(x)
 #endif
 
 #endif // COMMON_ANGLEUTILS_H_

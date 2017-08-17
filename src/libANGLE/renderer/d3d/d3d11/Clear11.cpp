@@ -22,10 +22,32 @@
 // Precompiled shaders
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clear11_fl9vs.h"
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clear11vs.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/cleardepth11ps.h"
 #include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearfloat11_fl9ps.h"
-#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearfloat11ps.h"
-#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearuint11ps.h"
-#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearsint11ps.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearfloat11ps1.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearfloat11ps2.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearfloat11ps3.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearfloat11ps4.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearfloat11ps5.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearfloat11ps6.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearfloat11ps7.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearfloat11ps8.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearsint11ps1.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearsint11ps2.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearsint11ps3.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearsint11ps4.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearsint11ps5.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearsint11ps6.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearsint11ps7.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearsint11ps8.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearuint11ps1.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearuint11ps2.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearuint11ps3.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearuint11ps4.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearuint11ps5.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearuint11ps6.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearuint11ps7.h"
+#include "libANGLE/renderer/d3d/d3d11/shaders/compiled/clearuint11ps8.h"
 
 namespace rx
 {
@@ -94,16 +116,26 @@ bool AllOffsetsAreNonNegative(const std::vector<gl::Offset> &viewportOffsets)
 }
 }  // anonymous namespace
 
+#define CLEARPS(Index)                                                                    \
+    d3d11::LazyShader<ID3D11PixelShader>(g_PS_Clear##Index, ArraySize(g_PS_Clear##Index), \
+                                         "Clear11 PS " ANGLE_STRINGIFY(Index))
+
 Clear11::ShaderManager::ShaderManager()
     : mIl9(),
       mVs9(g_VS_Clear_FL9, ArraySize(g_VS_Clear_FL9), "Clear11 VS FL9"),
       mPsFloat9(g_PS_ClearFloat_FL9, ArraySize(g_PS_ClearFloat_FL9), "Clear11 PS FloatFL9"),
       mVs(g_VS_Clear, ArraySize(g_VS_Clear), "Clear11 VS"),
-      mPsFloat(g_PS_ClearFloat, ArraySize(g_PS_ClearFloat), "Clear11 PS Float"),
-      mPsUInt(g_PS_ClearUint, ArraySize(g_PS_ClearUint), "Clear11 PS UINT"),
-      mPsSInt(g_PS_ClearSint, ArraySize(g_PS_ClearSint), "Clear11 PS SINT")
+      mPsDepth(g_PS_ClearDepth, ArraySize(g_PS_ClearDepth), "Clear11 PS Depth"),
+      mPsFloat{{CLEARPS(Float1), CLEARPS(Float2), CLEARPS(Float3), CLEARPS(Float4), CLEARPS(Float5),
+                CLEARPS(Float6), CLEARPS(Float7), CLEARPS(Float8)}},
+      mPsUInt{{CLEARPS(Uint1), CLEARPS(Uint2), CLEARPS(Uint3), CLEARPS(Uint4), CLEARPS(Uint5),
+               CLEARPS(Uint6), CLEARPS(Uint7), CLEARPS(Uint8)}},
+      mPsSInt{{CLEARPS(Sint1), CLEARPS(Sint2), CLEARPS(Sint3), CLEARPS(Sint4), CLEARPS(Sint5),
+               CLEARPS(Sint6), CLEARPS(Sint7), CLEARPS(Sint8)}}
 {
 }
+
+#undef CLEARPS
 
 Clear11::ShaderManager::~ShaderManager()
 {
@@ -111,6 +143,7 @@ Clear11::ShaderManager::~ShaderManager()
 
 gl::Error Clear11::ShaderManager::getShadersAndLayout(Renderer11 *renderer,
                                                       const INT clearType,
+                                                      const uint32_t numRTs,
                                                       const d3d11::InputLayout **il,
                                                       const d3d11::VertexShader **vs,
                                                       const d3d11::PixelShader **ps)
@@ -143,19 +176,26 @@ gl::Error Clear11::ShaderManager::getShadersAndLayout(Renderer11 *renderer,
     *vs = &mVs.getObj();
     *il = nullptr;
 
+    if (numRTs == 0)
+    {
+        ANGLE_TRY(mPsDepth.resolve(renderer));
+        *ps = &mPsDepth.getObj();
+        return gl::NoError();
+    }
+
     switch (clearType)
     {
         case GL_FLOAT:
-            ANGLE_TRY(mPsFloat.resolve(renderer));
-            *ps = &mPsFloat.getObj();
+            ANGLE_TRY(mPsFloat[numRTs - 1].resolve(renderer));
+            *ps = &mPsFloat[numRTs - 1].getObj();
             break;
         case GL_UNSIGNED_INT:
-            ANGLE_TRY(mPsUInt.resolve(renderer));
-            *ps = &mPsUInt.getObj();
+            ANGLE_TRY(mPsUInt[numRTs - 1].resolve(renderer));
+            *ps = &mPsUInt[numRTs - 1].getObj();
             break;
         case GL_INT:
-            ANGLE_TRY(mPsSInt.resolve(renderer));
-            *ps = &mPsSInt.getObj();
+            ANGLE_TRY(mPsSInt[numRTs - 1].resolve(renderer));
+            *ps = &mPsSInt[numRTs - 1].getObj();
             break;
         default:
             UNREACHABLE();
@@ -734,7 +774,8 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
     const d3d11::InputLayout *il  = nullptr;
     const d3d11::PixelShader *ps  = nullptr;
 
-    ANGLE_TRY(mShaderManager.getShadersAndLayout(mRenderer, clearParams.colorType, &il, &vs, &ps));
+    ANGLE_TRY(mShaderManager.getShadersAndLayout(mRenderer, clearParams.colorType, numRtvs, &il,
+                                                 &vs, &ps));
 
     // Apply Shaders
     stateManager->setDrawShaders(vs, nullptr, ps);
