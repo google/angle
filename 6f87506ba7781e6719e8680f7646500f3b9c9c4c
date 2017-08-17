@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "843bab49_9eba8249",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-17T16:26:21Z",
+      "side": 1,
+      "message": "Either re-set this in preLink or in an else statement.",
+      "range": {
+        "startLine": 664,
+        "startChar": 8,
+        "endLine": 664,
+        "endChar": 51
+      },
+      "revId": "6f87506ba7781e6719e8680f7646500f3b9c9c4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d023023_47afed7a",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2187,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-17T16:26:21Z",
+      "side": 1,
+      "message": "UNREACHABLE?",
+      "range": {
+        "startLine": 2187,
+        "startChar": 16,
+        "endLine": 2187,
+        "endChar": 22
+      },
+      "revId": "6f87506ba7781e6719e8680f7646500f3b9c9c4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
