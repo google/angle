@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "30203ac6_e3086613",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-17T16:30:41Z",
+      "side": 1,
+      "message": "How important is it to have per-member granularity? Since it is a builtin interface that has a fixed and small number of members, it seems tagging the whole \"gl_in\" as statically used could be ok.",
+      "parentUuid": "8d931b58_4784f665",
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e3a5a3a7_cbf7bb82",
         "filename": "src/compiler/translator/CollectVariables.cpp",
         "patchSetId": 11
@@ -101,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "0df1bc1b_7c8846da",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-17T16:30:41Z",
+      "side": 1,
+      "message": "It is correct currently, but as soon as we add a \"var \u003d foo\" statement, we\u0027ll need to remember to remove the return statement so that var is marked as statically used at the bottom of the function. So we might skip it now and save us some thinking later on. WDYT?",
+      "parentUuid": "a204094d_e98e2943",
+      "range": {
+        "startLine": 319,
+        "startChar": 8,
+        "endLine": 319,
+        "endChar": 15
+      },
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2a1a60eb_5c8f3974",
         "filename": "src/compiler/translator/CollectVariables.cpp",
         "patchSetId": 11
@@ -130,6 +172,24 @@
       "side": 1,
       "message": "Here we deal with the binary node block[n].member, where the operator is \u0027.\u0027, the left node is \u0027block[n]\u0027, and the right node is the index of \u0027member\u0027 in the definition of block.\n\nIf the block is a uniform block or a shader storage block, SPEC requires the index \u0027n\u0027 must be a constant integral number, and \u0027block\u0027 must be declared before, so here we just need to label the staticUse of \u0027member\u0027 so that \u0027member\u0027 won\u0027t be dropped in the output code. That\u0027s why in this situation collecting variables needn\u0027t be continued because it is impossible to meet new variables.\n\nIf the block is shader input or output block (including gl_in), \u0027n\u0027 can be a variable that should be collected. e.g. When handling \u0027gl_in[gl_InvocationID].gl_Position\u0027, we should continue traversing to collect gl_InvocationID.",
       "parentUuid": "2a1a60eb_5c8f3974",
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27801f2e_a7874dff",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-17T16:30:41Z",
+      "side": 1,
+      "message": "Thanks for the explanation. Let me rephrase it to see if I understood it correctly.\n\nThere are two cases here:\n 1 - block[constantN].member situation, and we want to tag \"member\" as statically used. Nothing else needs to happen because N is a constant.\n 2 - gl_in[n].member situation where we want to tag either gl_in or gl_in.member as statically used (see other comment) and keep processing \"n\" to find more builtins.\n\nIt seems like ideally we would want the code to look like this:\n\n     TInterfaceBlock* namedBlock \u003d SomehowGetBlockFrom(binaryNode);\n     TIntermConstantUnion* memberIndex \u003d binaryNode-\u003egetRight()-\u003egetAsConstantUnion();\n     namedBlock-\u003estaticUse \u003d true;\n     namedBlock-\u003efields[memberIndex-\u003egetIConst(0)]-\u003estaticUse \u003d true;\n     return false; // This will end up doing nothing for case 1) and will handle gl_InvocationID in your example for 2).\n\nOf course things are much more complex in practice so I\u0027m not sure how feasible this would be.",
+      "parentUuid": "34fe8ec3_4d8388f1",
       "revId": "812b11848ca38253047cbe53098676bc14adfe35",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -253,6 +313,24 @@
     },
     {
       "key": {
+        "uuid": "46fddf3c_8a2fe10f",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-17T16:30:41Z",
+      "side": 1,
+      "message": "3) Just landed, thanks for looking into it!",
+      "parentUuid": "c68983ae_8b059d80",
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8d883ade_0e900a7b",
         "filename": "src/compiler/translator/Types.h",
         "patchSetId": 11
@@ -282,6 +360,24 @@
       "side": 1,
       "message": "It doesn\u0027t mean an array of array, actually it is redundant to store interface block array size twice. If we decide to reserve the array size in TInterfaceBlock, we should keep it consistent with the array size in TType.",
       "parentUuid": "8d883ade_0e900a7b",
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d0a808a8_b19642e5",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-17T16:30:41Z",
+      "side": 1,
+      "message": "Can be done with 3) above.",
+      "parentUuid": "c05b2d38_ed1e4487",
       "revId": "812b11848ca38253047cbe53098676bc14adfe35",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
