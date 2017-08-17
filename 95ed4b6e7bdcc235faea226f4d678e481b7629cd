@@ -16,6 +16,24 @@
       "revId": "95ed4b6e7bdcc235faea226f4d678e481b7629cd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "892c9ad5_58a3a180",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 500,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-17T04:29:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2389a129_7105d2c2",
+      "revId": "95ed4b6e7bdcc235faea226f4d678e481b7629cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
