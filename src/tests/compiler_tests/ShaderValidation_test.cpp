@@ -407,6 +407,61 @@ TEST_F(FragmentShaderValidationTest, ArraysOfArrays2)
     }
 }
 
+// Arrays of arrays are not allowed (ESSL 3.00 section 4.1.9). Test this in a struct.
+TEST_F(FragmentShaderValidationTest, ArraysOfArraysInStruct)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "struct S {\n"
+        "    float[2] foo[3];\n"
+        "};\n"
+        "void main() {\n"
+        "    my_FragColor = vec4(1.0);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test invalid dimensionality of implicitly sized array constructor arguments.
+TEST_F(FragmentShaderValidationTest,
+       TooHighDimensionalityOfImplicitlySizedArrayOfArraysConstructorArguments)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "    float[][] a = float[][](float[1][1](float[1](1.0)), float[1][1](float[1](2.0)));\n"
+        "    my_FragColor = vec4(a[0][0]);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test invalid dimensionality of implicitly sized array constructor arguments.
+TEST_F(FragmentShaderValidationTest,
+       TooLowDimensionalityOfImplicitlySizedArrayOfArraysConstructorArguments)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "out vec4 my_FragColor;\n"
+        "void main() {\n"
+        "    float[][][] a = float[][][](float[2](1.0, 2.0), float[2](3.0, 4.0));\n"
+        "    my_FragColor = vec4(a[0][0][0]);\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
 // Implicitly sized arrays need to be initialized (ESSL 3.00 section 4.1.9)
 TEST_F(FragmentShaderValidationTest, UninitializedImplicitArraySize)
 {
