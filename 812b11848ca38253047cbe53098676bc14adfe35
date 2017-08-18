@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "4d0a7996_deeeca53",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-18T12:53:32Z",
+      "side": 1,
+      "message": "Thanks for your suggestion.\nNow gl_in together with all its members is recorded in recordInterfaceBlockInfo().",
+      "parentUuid": "30203ac6_e3086613",
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e3a5a3a7_cbf7bb82",
         "filename": "src/compiler/translator/CollectVariables.cpp",
         "patchSetId": 11
@@ -143,6 +161,30 @@
     },
     {
       "key": {
+        "uuid": "a408998e_1f750b57",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-18T12:53:32Z",
+      "side": 1,
+      "message": "It\u0027s also OK for me to remove this \"return\", but you can see in this function, there is a \"return\" in every call of recordBuiltInVaryingUsed(), and I just follow this style.",
+      "parentUuid": "0df1bc1b_7c8846da",
+      "range": {
+        "startLine": 319,
+        "startChar": 8,
+        "endLine": 319,
+        "endChar": 15
+      },
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2a1a60eb_5c8f3974",
         "filename": "src/compiler/translator/CollectVariables.cpp",
         "patchSetId": 11
@@ -190,6 +232,24 @@
       "side": 1,
       "message": "Thanks for the explanation. Let me rephrase it to see if I understood it correctly.\n\nThere are two cases here:\n 1 - block[constantN].member situation, and we want to tag \"member\" as statically used. Nothing else needs to happen because N is a constant.\n 2 - gl_in[n].member situation where we want to tag either gl_in or gl_in.member as statically used (see other comment) and keep processing \"n\" to find more builtins.\n\nIt seems like ideally we would want the code to look like this:\n\n     TInterfaceBlock* namedBlock \u003d SomehowGetBlockFrom(binaryNode);\n     TIntermConstantUnion* memberIndex \u003d binaryNode-\u003egetRight()-\u003egetAsConstantUnion();\n     namedBlock-\u003estaticUse \u003d true;\n     namedBlock-\u003efields[memberIndex-\u003egetIConst(0)]-\u003estaticUse \u003d true;\n     return false; // This will end up doing nothing for case 1) and will handle gl_InvocationID in your example for 2).\n\nOf course things are much more complex in practice so I\u0027m not sure how feasible this would be.",
       "parentUuid": "34fe8ec3_4d8388f1",
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "244156d4_34d7e3cb",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-18T12:53:32Z",
+      "side": 1,
+      "message": "Done\nNow the code here follows the solution you provide. PTAL.",
+      "parentUuid": "27801f2e_a7874dff",
       "revId": "812b11848ca38253047cbe53098676bc14adfe35",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -331,6 +391,24 @@
     },
     {
       "key": {
+        "uuid": "d32aeb51_97eb645c",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-18T12:53:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "46fddf3c_8a2fe10f",
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8d883ade_0e900a7b",
         "filename": "src/compiler/translator/Types.h",
         "patchSetId": 11
@@ -378,6 +456,24 @@
       "side": 1,
       "message": "Can be done with 3) above.",
       "parentUuid": "c05b2d38_ed1e4487",
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "80adffd7_54a673ac",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-18T12:53:32Z",
+      "side": 1,
+      "message": "I need setArrayUnsized to label the gl_in as an unsized interface block explicitly to meet the definition of SPEC.",
+      "parentUuid": "d0a808a8_b19642e5",
       "revId": "812b11848ca38253047cbe53098676bc14adfe35",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
