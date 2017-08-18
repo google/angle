@@ -468,7 +468,9 @@ class Renderer11 : public RendererD3D
                               TextureHelper11 *textureOut);
 
     gl::Error clearRenderTarget(RenderTargetD3D *renderTarget,
-                                const gl::ColorF &clearValues) override;
+                                const gl::ColorF &clearColorValue,
+                                const float clearDepthValue,
+                                const unsigned int clearStencilValue) override;
 
   private:
     gl::Error drawArraysImpl(const gl::Context *context,

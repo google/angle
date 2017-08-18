@@ -102,7 +102,9 @@ class TextureD3D : public TextureImpl
 
     gl::Error clearLevel(const gl::Context *context,
                          const gl::ImageIndex &index,
-                         const gl::ColorF &clearValues);
+                         const gl::ColorF &clearColorValue,
+                         const float clearDepthValue,
+                         const unsigned int clearStencilValue);
 
   protected:
     gl::Error setImageImpl(const gl::Context *context,

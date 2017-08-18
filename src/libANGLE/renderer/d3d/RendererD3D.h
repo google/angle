@@ -295,7 +295,9 @@ class RendererD3D : public BufferFactoryD3D
     GLint64 getTimestamp();
 
     virtual gl::Error clearRenderTarget(RenderTargetD3D *renderTarget,
-                                        const gl::ColorF &clearValues) = 0;
+                                        const gl::ColorF &clearColorValue,
+                                        const float clearDepthValue,
+                                        const unsigned int clearStencilValue) = 0;
 
     virtual egl::Error getEGLDevice(DeviceImpl **device) = 0;
 

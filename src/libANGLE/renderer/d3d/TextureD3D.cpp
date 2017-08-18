@@ -635,14 +635,17 @@ void TextureD3D::syncState(const gl::Texture::DirtyBits &dirtyBits)
 
 gl::Error TextureD3D::clearLevel(const gl::Context *context,
                                  const gl::ImageIndex &index,
-                                 const gl::ColorF &clearValues)
+                                 const gl::ColorF &clearColorValue,
+                                 const float clearDepthValue,
+                                 const unsigned int clearStencilValue)
 {
     TextureStorage *storage = nullptr;
     ANGLE_TRY(getNativeTexture(context, &storage));
     RenderTargetD3D *renderTargetD3D = nullptr;
     ANGLE_TRY(storage->getRenderTarget(context, index, &renderTargetD3D));
 
-    mRenderer->clearRenderTarget(renderTargetD3D, clearValues);
+    mRenderer->clearRenderTarget(renderTargetD3D, clearColorValue, clearDepthValue,
+                                 clearStencilValue);
 
     return gl::NoError();
 }

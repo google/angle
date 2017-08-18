@@ -4606,12 +4606,15 @@ gl::Error Renderer11::getSamplerState(const gl::SamplerState &samplerState,
 }
 
 gl::Error Renderer11::clearRenderTarget(RenderTargetD3D *renderTarget,
-                                        const gl::ColorF &clearValues)
+                                        const gl::ColorF &clearColorValue,
+                                        const float clearDepthValue,
+                                        const unsigned int clearStencilValue)
 {
     RenderTarget11 *renderTarget11     = GetAs<RenderTarget11>(renderTarget);
     const d3d11::RenderTargetView &rtv = renderTarget11->getRenderTargetView();
+    ASSERT(rtv.valid());
 
-    mDeviceContext->ClearRenderTargetView(rtv.get(), &clearValues.red);
+    mDeviceContext->ClearRenderTargetView(rtv.get(), &clearColorValue.red);
 
     return gl::NoError();
 }

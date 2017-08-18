@@ -3214,7 +3214,10 @@ gl::Error Renderer9::applyComputeUniforms(const ProgramD3D &programD3D,
     return gl::InternalError() << "Compute shader is not implemented on D3D9";
 }
 
-gl::Error Renderer9::clearRenderTarget(RenderTargetD3D *renderTarget, const gl::ColorF &clearValues)
+gl::Error Renderer9::clearRenderTarget(RenderTargetD3D *renderTarget,
+                                       const gl::ColorF &clearColorValue,
+                                       const float clearDepthValue,
+                                       const unsigned int clearStencilValue)
 {
     UNIMPLEMENTED();
     return gl::InternalError() << "clearRenderTarget is not implemented on D3D9";

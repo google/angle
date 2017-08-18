@@ -170,7 +170,7 @@ gl::Texture *RendererD3D::getIncompleteTexture(const gl::Context *context, GLenu
         {
             gl::ColorF clearValue(0, 0, 0, 1);
             gl::ImageIndex index = gl::ImageIndex::Make2DMultisample();
-            GetImplAs<TextureD3D>(t)->clearLevel(context, index, clearValue);
+            GetImplAs<TextureD3D>(t)->clearLevel(context, index, clearValue, 1.0f, 0);
         }
         else
         {
