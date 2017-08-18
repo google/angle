@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ce0d0799_daefd3e3",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-18T08:33:53Z",
+      "side": 1,
+      "message": "Double \"Symbol\"",
+      "range": {
+        "startLine": 115,
+        "startChar": 76,
+        "endLine": 115,
+        "endChar": 88
+      },
+      "revId": "62523619b204fe31668c91bc5604f08811537295",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd520399_8cf0f0c2",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-18T08:33:53Z",
+      "side": 1,
+      "message": "nit: EvqConst would make more sense here (though CreateZeroNode changes the qualifier to const anyway).",
+      "range": {
+        "startLine": 148,
+        "startChar": 64,
+        "endLine": 148,
+        "endChar": 76
+      },
+      "revId": "62523619b204fe31668c91bc5604f08811537295",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
