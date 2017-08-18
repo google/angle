@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "f4d2b300_c2eeafb2",
+        "filename": "src/libANGLE/renderer/d3d/VertexDataManager.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 471,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-18T13:12:50Z",
+      "side": 1,
+      "message": "The difference between this an OutOfMemory is that on OutOfMemory Chromium we restart the GPU process, but here it\u0027s an expected validation error. InternalError should also be very rare, not a normal validation error.",
+      "parentUuid": "823d7b8d_29fad5c9",
+      "range": {
+        "startLine": 468,
+        "startChar": 0,
+        "endLine": 471,
+        "endChar": 9
+      },
+      "revId": "c01614cc0606964705d554ece0b474a0435de998",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0e9e5e6f_3fcf1b42",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 5
@@ -108,6 +132,30 @@
       "side": 1,
       "message": "The original data.bufferOffset won\u0027t produce invalid operation error when we remove the IndexRange validation. It\u0027s just like the one that failed on try-bot. If we want to pass the case and don\u0027t change the bufferoffset, we must modify it like below:\nreplace \u0027EXPECT_GL_ERROR(GL_INVALID_OPERATION);\u0027 to\nGLenum error \u003d glGetError();\nif (error \u003d\u003d GL_INVALID_OPERATION) {\n    // ok\n} else if (error \u003d\u003d GL_NO_ERROR) {\n    // ok, out of range, check the buffer data\n}\n\nWebgl conformance test have covered such kind of situation. So I think the most simple change is to modify bufferOffset to ensure that it must produce the invalid operation error.",
       "parentUuid": "0e9e5e6f_3fcf1b42",
+      "range": {
+        "startLine": 719,
+        "startChar": 24,
+        "endLine": 719,
+        "endChar": 42
+      },
+      "revId": "c01614cc0606964705d554ece0b474a0435de998",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4fdb3c58_eff240ea",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 719,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-18T13:12:50Z",
+      "side": 1,
+      "message": "so, if we call vertexAttribPointer with (kVertexCount - 3) * sizeof(float), it should be 84 bytes, and the total size of the vertex buffer is kVertexCount * sizeof(float) or 96 bytes.  DrawIndexedQuad will read four vertices, for a total of 16 bytes. So 84 + 16 \u003d 100, so it should read past the end of the buffer. Then this should generate an error.",
+      "parentUuid": "19800ad7_916bbff2",
       "range": {
         "startLine": 719,
         "startChar": 24,
