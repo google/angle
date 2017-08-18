@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "3e1d3a04_2fc240a2",
+        "filename": "src/libANGLE/renderer/gl/ClearMultiviewGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-18T13:29:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3c923c53_3bce1588",
+      "revId": "0687801befeaa52b05fa889860cbfc0aaf1f8d6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "aed0eb1a_1079ffe8",
         "filename": "src/libANGLE/renderer/gl/ClearMultiviewGL.cpp",
         "patchSetId": 5
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "e873bdd3_00cc096d",
+        "filename": "src/libANGLE/renderer/gl/ClearMultiviewGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-18T13:29:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aed0eb1a_1079ffe8",
+      "range": {
+        "startLine": 39,
+        "startChar": 8,
+        "endLine": 39,
+        "endChar": 14
+      },
+      "revId": "0687801befeaa52b05fa889860cbfc0aaf1f8d6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e6659a39_64f7a5b9",
         "filename": "src/libANGLE/renderer/gl/ClearMultiviewGL.cpp",
         "patchSetId": 5
@@ -53,6 +95,24 @@
       "writtenOn": "2017-08-16T13:43:33Z",
       "side": 1,
       "message": "What if there has been a framebuffer attachment that\u0027s been previously attached to this attachment point? It seems like in that case the attachment point is not reset. Is it possible that an extra buffer is cleared in this case, or does the validation somehow prevent this from happening?",
+      "revId": "0687801befeaa52b05fa889860cbfc0aaf1f8d6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "63ecfb14_f6dbc36b",
+        "filename": "src/libANGLE/renderer/gl/ClearMultiviewGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-18T13:29:57Z",
+      "side": 1,
+      "message": "Did some restructuring, this should be addressed now.\nAdded relevant tests too.",
+      "parentUuid": "e6659a39_64f7a5b9",
       "revId": "0687801befeaa52b05fa889860cbfc0aaf1f8d6e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -76,6 +136,24 @@
     },
     {
       "key": {
+        "uuid": "6bb32900_e3d7b880",
+        "filename": "src/libANGLE/renderer/gl/ClearMultiviewGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-18T13:29:57Z",
+      "side": 1,
+      "message": "This is an excerpt from the spec:\n\"Setting attachment to the value DEPTH_STENCIL_ATTACHMENT is a special\ncase causing both the depth and stencil attachments of the framebuffer object to be set to texture. texture must have base internal format DEPTH_STENCIL, or the\ndepth and stencil framebuffer attachments will be incomplete\"\nMy interpretation is that both will be detached.",
+      "parentUuid": "91dad075_76d71de4",
+      "revId": "0687801befeaa52b05fa889860cbfc0aaf1f8d6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "04349411_ba0f18e8",
         "filename": "src/libANGLE/renderer/gl/ClearMultiviewGL.cpp",
         "patchSetId": 5
@@ -87,6 +165,30 @@
       "writtenOn": "2017-08-16T13:43:33Z",
       "side": 1,
       "message": "Is the return value needed?",
+      "range": {
+        "startLine": 181,
+        "startChar": 0,
+        "endLine": 181,
+        "endChar": 9
+      },
+      "revId": "0687801befeaa52b05fa889860cbfc0aaf1f8d6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "330b4f95_d2995651",
+        "filename": "src/libANGLE/renderer/gl/ClearMultiviewGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-18T13:29:57Z",
+      "side": 1,
+      "message": "Not really I guess, but I just took BlitGL as a template.",
+      "parentUuid": "04349411_ba0f18e8",
       "range": {
         "startLine": 181,
         "startChar": 0,
@@ -122,6 +224,30 @@
     },
     {
       "key": {
+        "uuid": "52f310fb_2efe9cc1",
+        "filename": "src/libANGLE/renderer/gl/ClearMultiviewGL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-18T13:29:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1af3da3b_a3e7d7e8",
+      "range": {
+        "startLine": 7,
+        "startChar": 59,
+        "endLine": 7,
+        "endChar": 60
+      },
+      "revId": "0687801befeaa52b05fa889860cbfc0aaf1f8d6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6134c462_97667ebf",
         "filename": "src/libANGLE/renderer/gl/ClearMultiviewGL.h",
         "patchSetId": 5
@@ -145,6 +271,30 @@
     },
     {
       "key": {
+        "uuid": "6cd858ed_f46272b3",
+        "filename": "src/libANGLE/renderer/gl/ClearMultiviewGL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-18T13:29:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6134c462_97667ebf",
+      "range": {
+        "startLine": 85,
+        "startChar": 18,
+        "endLine": 85,
+        "endChar": 19
+      },
+      "revId": "0687801befeaa52b05fa889860cbfc0aaf1f8d6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1fe21633_b52c9ba7",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 5
@@ -156,6 +306,24 @@
       "writtenOn": "2017-08-16T13:43:33Z",
       "side": 1,
       "message": "Is it enough to check this for the first attachment? I don\u0027t think we have any rule saying that the different texture arrays attached to the same framebuffer should have the same number of layers. Do you think we should add that rule, or is it simple enough to just check from all attachments whether they need multiple clears? Either way we also need a test for this.",
+      "revId": "0687801befeaa52b05fa889860cbfc0aaf1f8d6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d734543_dead4cf3",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-18T13:29:57Z",
+      "side": 1,
+      "message": "This should hold whenever the webglCompatibility extension is enabled because the webgl spec requires the framebuffer to have attachments of the same size (width, height, depth).\nBut it is wrong for the case when webgl compatibility is not enabled and any but the first attachment has more layers.\nI removed this check and the multi-view clear will always be executed for now. I can address it in a future patch.",
+      "parentUuid": "1fe21633_b52c9ba7",
       "revId": "0687801befeaa52b05fa889860cbfc0aaf1f8d6e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -176,6 +344,24 @@
       "revId": "0687801befeaa52b05fa889860cbfc0aaf1f8d6e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "87c5a89a_496c5629",
+        "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-18T13:29:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d2705d4f_4f4f8da6",
+      "revId": "0687801befeaa52b05fa889860cbfc0aaf1f8d6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -202,6 +388,30 @@
     },
     {
       "key": {
+        "uuid": "34573dba_57ab87fe",
+        "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-18T13:29:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "93f55be8_96bdf79b",
+      "range": {
+        "startLine": 237,
+        "startChar": 12,
+        "endLine": 237,
+        "endChar": 20
+      },
+      "revId": "0687801befeaa52b05fa889860cbfc0aaf1f8d6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c035ad39_e192acd0",
         "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
         "patchSetId": 5
@@ -213,6 +423,30 @@
       "writtenOn": "2017-08-16T13:43:33Z",
       "side": 1,
       "message": "I suppose these should not be needed? You could add a separate test for scissored multi-layer clear though.",
+      "range": {
+        "startLine": 1013,
+        "startChar": 1,
+        "endLine": 1014,
+        "endChar": 26
+      },
+      "revId": "0687801befeaa52b05fa889860cbfc0aaf1f8d6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b2ad7a9_b6ba8c5e",
+        "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1014,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-18T13:29:57Z",
+      "side": 1,
+      "message": "Not needed, yes.",
+      "parentUuid": "c035ad39_e192acd0",
       "range": {
         "startLine": 1013,
         "startChar": 1,
@@ -248,6 +482,30 @@
     },
     {
       "key": {
+        "uuid": "4b66e882_1639749c",
+        "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1016,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-18T13:29:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e0e0cfcd_d39357f9",
+      "range": {
+        "startLine": 1016,
+        "startChar": 0,
+        "endLine": 1016,
+        "endChar": 66
+      },
+      "revId": "0687801befeaa52b05fa889860cbfc0aaf1f8d6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7945da77_823833d9",
         "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
         "patchSetId": 5
@@ -259,6 +517,24 @@
       "writtenOn": "2017-08-16T13:43:33Z",
       "side": 1,
       "message": "Wouldn\u0027t it be simpler to just use glClear to set the texture layers to the desired value here, or is there some other reason why draw needs to be called?",
+      "revId": "0687801befeaa52b05fa889860cbfc0aaf1f8d6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45760283_ba7d2c70",
+        "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1067,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-18T13:29:57Z",
+      "side": 1,
+      "message": "No, there is no reason for this to happen here. I guess I might have had other ideas for a test initially.",
+      "parentUuid": "7945da77_823833d9",
       "revId": "0687801befeaa52b05fa889860cbfc0aaf1f8d6e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
