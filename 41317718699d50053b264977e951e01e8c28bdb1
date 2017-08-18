@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b70dc3a_a07a962a",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-18T16:49:10Z",
+      "side": 1,
+      "message": "I re-read the SPEC and I find gl_in should be treated as interface block instead of a varying struct.",
+      "revId": "41317718699d50053b264977e951e01e8c28bdb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45c46cf8_75304a69",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-18T16:49:10Z",
+      "side": 1,
+      "message": "Now we won\u0027t reach here because we only traverse the index expression of gl_in.",
+      "revId": "41317718699d50053b264977e951e01e8c28bdb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
