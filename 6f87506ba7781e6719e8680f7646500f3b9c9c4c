@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "bd818c2a_bee568e7",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 664,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-18T08:02:15Z",
+      "side": 1,
+      "message": "Done. Put it in prelink()",
+      "parentUuid": "843bab49_9eba8249",
+      "range": {
+        "startLine": 664,
+        "startChar": 8,
+        "endLine": 664,
+        "endChar": 51
+      },
+      "revId": "6f87506ba7781e6719e8680f7646500f3b9c9c4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9d023023_47afed7a",
         "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2017-08-17T16:26:21Z",
       "side": 1,
       "message": "UNREACHABLE?",
+      "range": {
+        "startLine": 2187,
+        "startChar": 16,
+        "endLine": 2187,
+        "endChar": 22
+      },
+      "revId": "6f87506ba7781e6719e8680f7646500f3b9c9c4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "acf2653a_d3b509c8",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2187,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-18T08:02:15Z",
+      "side": 1,
+      "message": "No, I think this function can be reached for non-multiview framebuffers too, but that will just have no effect. I think it is fine as it is.",
+      "parentUuid": "9d023023_47afed7a",
       "range": {
         "startLine": 2187,
         "startChar": 16,
