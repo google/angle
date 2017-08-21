@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "eadba9c6_42f0c126",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 4267,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-08-21T03:33:37Z",
+      "side": 1,
+      "message": "Thanks,agree with you. It does\u0027t need to syncViewport on OpenGL part, so it\u0027s better to set dirty bit in Framebuffer11.cpp on D3D part.\nI add invalidateViewport function to  StateManager11.cpp.\n\nHere are four senarios I have considered:\n1. The fbo default size are changed, then add dirtybit in Framebuffer11::syncState.\n2. The viewport size is changed, then syncViewport(angle has already done this).\n3. The fbo attachments are added/removed,thus framebuffer default params are invalid/valid, syncViewport. Add dirtybit in Framebuffer11::syncState.\n4. The binding draw fframebuffer is changed with different default width/height or different attachment count. Add dirtybit in Framebuffer11::syncState.\n\nHow do you think?",
+      "parentUuid": "bae30d4a_95592f28",
+      "range": {
+        "startLine": 4267,
+        "startChar": 4,
+        "endLine": 4267,
+        "endChar": 51
+      },
+      "revId": "ea8c3a3f6aaadd797d385c2789ee6adeb2afae25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "07fe7fe3_8fd48a07",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 12
@@ -96,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "09521070_5df9a1ff",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 868,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-08-21T03:33:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7e342970_01ce50e6",
+      "range": {
+        "startLine": 867,
+        "startChar": 8,
+        "endLine": 868,
+        "endChar": 59
+      },
+      "revId": "ea8c3a3f6aaadd797d385c2789ee6adeb2afae25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "26060363_0441a704",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 12
@@ -116,6 +164,30 @@
       "revId": "ea8c3a3f6aaadd797d385c2789ee6adeb2afae25",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa3a2f9c_2c0d47ee",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 873,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-08-21T03:33:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "26060363_0441a704",
+      "range": {
+        "startLine": 871,
+        "startChar": 48,
+        "endLine": 873,
+        "endChar": 84
+      },
+      "revId": "ea8c3a3f6aaadd797d385c2789ee6adeb2afae25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -142,6 +214,30 @@
     },
     {
       "key": {
+        "uuid": "087fe849_d432dcee",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 876,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-08-21T03:33:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7aa926cf_8f2488ac",
+      "range": {
+        "startLine": 874,
+        "startChar": 49,
+        "endLine": 876,
+        "endChar": 86
+      },
+      "revId": "ea8c3a3f6aaadd797d385c2789ee6adeb2afae25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5579514a_52bc4463",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 12
@@ -162,6 +258,30 @@
       "revId": "ea8c3a3f6aaadd797d385c2789ee6adeb2afae25",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9971b815_79556f40",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 885,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-08-21T03:33:37Z",
+      "side": 1,
+      "message": "Removed",
+      "parentUuid": "5579514a_52bc4463",
+      "range": {
+        "startLine": 884,
+        "startChar": 0,
+        "endLine": 885,
+        "endChar": 64
+      },
+      "revId": "ea8c3a3f6aaadd797d385c2789ee6adeb2afae25",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
