@@ -73,6 +73,24 @@
     },
     {
       "key": {
+        "uuid": "6bc79812_b149418f",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-21T06:34:00Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "4d0a7996_deeeca53",
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e3a5a3a7_cbf7bb82",
         "filename": "src/compiler/translator/CollectVariables.cpp",
         "patchSetId": 11
@@ -185,6 +203,53 @@
     },
     {
       "key": {
+        "uuid": "de3a1aa3_6cd96cd2",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 319,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-21T06:34:00Z",
+      "side": 1,
+      "message": "I have updated the structure in visitBinary(), now the code here remains UNREACHABLE.",
+      "parentUuid": "a408998e_1f750b57",
+      "range": {
+        "startLine": 319,
+        "startChar": 8,
+        "endLine": 319,
+        "endChar": 15
+      },
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35562d4d_0fdcfab2",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 576,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-21T06:34:00Z",
+      "side": 1,
+      "message": "I change this to make recordGLIn() reuse this code.\nI also pass a pointer to this function instead of return a TInterfaceBlock to avoid unnecessary copies.",
+      "range": {
+        "startLine": 576,
+        "startChar": 1,
+        "endLine": 576,
+        "endChar": 99
+      },
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2a1a60eb_5c8f3974",
         "filename": "src/compiler/translator/CollectVariables.cpp",
         "patchSetId": 11
@@ -250,6 +315,24 @@
       "side": 1,
       "message": "Done\nNow the code here follows the solution you provide. PTAL.",
       "parentUuid": "27801f2e_a7874dff",
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e1fc8590_67e0bbab",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-21T06:34:00Z",
+      "side": 1,
+      "message": "Now we only traverse the index expression when it is a gl_in.",
+      "parentUuid": "244156d4_34d7e3cb",
       "revId": "812b11848ca38253047cbe53098676bc14adfe35",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true

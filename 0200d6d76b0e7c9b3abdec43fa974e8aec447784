@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f753b676_42947c16",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-21T06:34:00Z",
+      "side": 1,
+      "message": "I re-read SPEC and I think we should treat gl_in as an input interface block instead of a struct. I use inBlocks to store gl_in.\nI don\u0027t add outBlocks here because it isn\u0027t used now.",
+      "range": {
+        "startLine": 175,
+        "startChar": 1,
+        "endLine": 175,
+        "endChar": 46
+      },
+      "revId": "0200d6d76b0e7c9b3abdec43fa974e8aec447784",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
