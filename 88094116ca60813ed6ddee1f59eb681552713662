@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8bbce5f8_ec220d36",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1374,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-21T14:03:28Z",
+      "side": 1,
+      "message": "nit: this could be ASSERT_NE(program, 0) here and in other tests.",
+      "revId": "88094116ca60813ed6ddee1f59eb681552713662",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4b8292e0_cea846d2",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1394,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-21T14:03:28Z",
+      "side": 1,
+      "message": "nit: this is missing GL_TRIANGLES too. Also do we have tests that check that primitives are correctly scissored to their respective views?",
+      "revId": "88094116ca60813ed6ddee1f59eb681552713662",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
