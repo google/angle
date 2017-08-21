@@ -22,6 +22,40 @@
       "revId": "0200d6d76b0e7c9b3abdec43fa974e8aec447784",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eeeb087e_690f1db9",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 2718,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-21T14:51:28Z",
+      "side": 1,
+      "message": "The same symbol table can be reused for multiple GLSL compilations and the builtins in it should e treated as immutable during parsing. We\u0027ve already had at least one tricky bug where messing up with the builtins caused incorrect behavior. So I\u0027d rather treat the size of gl_in as a similar special case as the value of gl_WorkGroupSize is treated in parseVariableIdentifier().",
+      "revId": "0200d6d76b0e7c9b3abdec43fa974e8aec447784",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9996701d_84181920",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-21T14:51:28Z",
+      "side": 1,
+      "message": "The \"declareInterfaceBlockNameExt\" function is not consistent with this comment. Change it to \"insertInterfaceBlockNameExt\" and move it further down in the code next to other insert* functions.",
+      "revId": "0200d6d76b0e7c9b3abdec43fa974e8aec447784",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
