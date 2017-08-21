@@ -14,7 +14,9 @@
 #include "libANGLE/Query.h"
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/renderer/d3d/TextureD3D.h"
+#include "libANGLE/renderer/d3d/d3d11/Buffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/Framebuffer11.h"
+#include "libANGLE/renderer/d3d/d3d11/IndexBuffer11.h"
 #include "libANGLE/renderer/d3d/d3d11/RenderTarget11.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/ShaderExecutable11.h"
@@ -287,7 +289,13 @@ StateManager11::StateManager11(Renderer11 *renderer)
       mCurrentInputLayout(),
       mInputLayoutIsDirty(false),
       mDirtyVertexBufferRange(gl::MAX_VERTEX_ATTRIBS, 0),
-      mCurrentPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_UNDEFINED)
+      mCurrentPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_UNDEFINED),
+      mAppliedIB(nullptr),
+      mAppliedIBFormat(DXGI_FORMAT_UNKNOWN),
+      mAppliedIBOffset(0),
+      mAppliedIBChanged(false),
+      mVertexDataManager(renderer),
+      mIndexDataManager(renderer, RENDERER_D3D11)
 {
     mCurBlendState.blend                 = false;
     mCurBlendState.sourceBlendRGB        = GL_ONE;
@@ -996,6 +1004,10 @@ void StateManager11::invalidateEverything(const gl::Context *context)
     std::fill(mForceSetVertexSamplerStates.begin(), mForceSetVertexSamplerStates.end(), true);
     std::fill(mForceSetPixelSamplerStates.begin(), mForceSetPixelSamplerStates.end(), true);
     std::fill(mForceSetComputeSamplerStates.begin(), mForceSetComputeSamplerStates.end(), true);
+
+    mAppliedIB       = nullptr;
+    mAppliedIBFormat = DXGI_FORMAT_UNKNOWN;
+    mAppliedIBOffset = 0;
 }
 
 void StateManager11::invalidateVertexBuffer()
@@ -1155,7 +1167,7 @@ void StateManager11::unsetConflictingAttachmentResources(
     }
 }
 
-void StateManager11::initialize(const gl::Caps &caps)
+gl::Error StateManager11::initialize(const gl::Caps &caps)
 {
     mCurVertexSRVs.initialize(caps.maxVertexTextureImageUnits);
     mCurPixelSRVs.initialize(caps.maxTextureImageUnits);
@@ -1176,11 +1188,17 @@ void StateManager11::initialize(const gl::Caps &caps)
     mSamplerMetadataVS.initData(caps.maxVertexTextureImageUnits);
     mSamplerMetadataPS.initData(caps.maxTextureImageUnits);
     mSamplerMetadataCS.initData(caps.maxComputeTextureImageUnits);
+
+    ANGLE_TRY(mVertexDataManager.initialize());
+    return gl::NoError();
 }
 
 void StateManager11::deinitialize()
 {
     mCurrentValueAttribs.clear();
+    mInputLayoutCache.clear();
+    mVertexDataManager.deinitialize();
+    mIndexDataManager.deinitialize();
 }
 
 gl::Error StateManager11::syncFramebuffer(const gl::Context *context, gl::Framebuffer *framebuffer)
@@ -1266,20 +1284,30 @@ gl::Error StateManager11::syncFramebuffer(const gl::Context *context, gl::Frameb
     return gl::NoError();
 }
 
-gl::Error StateManager11::updateCurrentValueAttribs(const gl::State &state,
-                                                    VertexDataManager *vertexDataManager)
+void StateManager11::invalidateCurrentValueAttrib(size_t attribIndex)
+{
+    mDirtyCurrentValueAttribs.set(attribIndex);
+}
+
+gl::Error StateManager11::syncCurrentValueAttribs(const gl::State &state)
 {
     const auto &activeAttribsMask  = state.getProgram()->getActiveAttribLocationsMask();
     const auto &dirtyActiveAttribs = (activeAttribsMask & mDirtyCurrentValueAttribs);
     const auto &vertexAttributes   = state.getVertexArray()->getVertexAttributes();
     const auto &vertexBindings     = state.getVertexArray()->getVertexBindings();
 
+    if (!dirtyActiveAttribs.any())
+    {
+        return gl::NoError();
+    }
+
+    invalidateVertexBuffer();
+    mDirtyCurrentValueAttribs = (mDirtyCurrentValueAttribs & ~dirtyActiveAttribs);
+
     for (auto attribIndex : dirtyActiveAttribs)
     {
         if (vertexAttributes[attribIndex].enabled)
             continue;
-
-        mDirtyCurrentValueAttribs.reset(attribIndex);
 
         const auto *attrib                   = &vertexAttributes[attribIndex];
         const auto &currentValue             = state.getVertexAttribCurrentValue(attribIndex);
@@ -1288,16 +1316,11 @@ gl::Error StateManager11::updateCurrentValueAttribs(const gl::State &state,
         currentValueAttrib->attribute        = attrib;
         currentValueAttrib->binding          = &vertexBindings[attrib->bindingIndex];
 
-        ANGLE_TRY(vertexDataManager->storeCurrentValue(currentValue, currentValueAttrib,
+        ANGLE_TRY(mVertexDataManager.storeCurrentValue(currentValue, currentValueAttrib,
                                                        static_cast<size_t>(attribIndex)));
     }
 
     return gl::NoError();
-}
-
-const std::vector<TranslatedAttribute> &StateManager11::getCurrentValueAttribs() const
-{
-    return mCurrentValueAttribs;
 }
 
 void StateManager11::setInputLayout(const d3d11::InputLayout *inputLayout)
@@ -1782,6 +1805,110 @@ gl::Error StateManager11::syncProgram(const gl::Context *context, GLenum drawMod
 
     setDrawShaders(vertexShader, geometryShader, pixelShader);
     return gl::NoError();
+}
+
+gl::Error StateManager11::applyVertexBuffer(const gl::Context *context,
+                                            GLenum mode,
+                                            GLint first,
+                                            GLsizei count,
+                                            GLsizei instances,
+                                            TranslatedIndexData *indexInfo)
+{
+    const auto &state       = context->getGLState();
+    const auto &vertexArray = state.getVertexArray();
+    auto *vertexArray11     = GetImplAs<VertexArray11>(vertexArray);
+
+    ANGLE_TRY(vertexArray11->updateDirtyAndDynamicAttribs(context, &mVertexDataManager, first,
+                                                          count, instances));
+
+    ANGLE_TRY(syncCurrentValueAttribs(state));
+
+    // If index information is passed, mark it with the current changed status.
+    if (indexInfo)
+    {
+        indexInfo->srcIndexData.srcIndicesChanged = mAppliedIBChanged;
+    }
+
+    GLsizei numIndicesPerInstance = 0;
+    if (instances > 0)
+    {
+        numIndicesPerInstance = count;
+    }
+    const auto &vertexArrayAttribs = vertexArray11->getTranslatedAttribs();
+    ANGLE_TRY(mInputLayoutCache.applyVertexBuffers(mRenderer, state, vertexArrayAttribs,
+                                                   mCurrentValueAttribs, mode, first, indexInfo,
+                                                   numIndicesPerInstance));
+
+    // InputLayoutCache::applyVertexBuffers calls through to the Bufer11 to get the native vertex
+    // buffer (ID3D11Buffer *). Because we allocate these buffers lazily, this will trigger
+    // allocation. This in turn will signal that the buffer is dirty. Since we just resolved the
+    // dirty-ness in VertexArray11::updateDirtyAndDynamicAttribs, this can make us do a needless
+    // update on the second draw call.
+    // Hence we clear the flags here, after we've applied vertex data, since we know everything
+    // is clean. This is a bit of a hack.
+    vertexArray11->clearDirtyAndPromoteDynamicAttribs(state, count);
+
+    return gl::NoError();
+}
+
+gl::Error StateManager11::applyIndexBuffer(const gl::ContextState &data,
+                                           const void *indices,
+                                           GLsizei count,
+                                           GLenum type,
+                                           TranslatedIndexData *indexInfo)
+{
+    const auto &glState            = data.getState();
+    gl::VertexArray *vao           = glState.getVertexArray();
+    gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
+    ANGLE_TRY(mIndexDataManager.prepareIndexData(type, count, elementArrayBuffer, indices,
+                                                 indexInfo, glState.isPrimitiveRestartEnabled()));
+
+    ID3D11Buffer *buffer = nullptr;
+    DXGI_FORMAT bufferFormat =
+        (indexInfo->indexType == GL_UNSIGNED_INT) ? DXGI_FORMAT_R32_UINT : DXGI_FORMAT_R16_UINT;
+
+    if (indexInfo->storage)
+    {
+        Buffer11 *storage = GetAs<Buffer11>(indexInfo->storage);
+        ANGLE_TRY_RESULT(storage->getBuffer(BUFFER_USAGE_INDEX), buffer);
+    }
+    else
+    {
+        IndexBuffer11 *indexBuffer = GetAs<IndexBuffer11>(indexInfo->indexBuffer);
+        buffer                     = indexBuffer->getBuffer().get();
+    }
+
+    mAppliedIBChanged = false;
+    setIndexBuffer(buffer, bufferFormat, indexInfo->startOffset, true);
+
+    return gl::NoError();
+}
+
+void StateManager11::setIndexBuffer(ID3D11Buffer *buffer,
+                                    DXGI_FORMAT indexFormat,
+                                    unsigned int offset,
+                                    bool indicesChanged)
+{
+    if (buffer != mAppliedIB || indexFormat != mAppliedIBFormat || offset != mAppliedIBOffset)
+    {
+        mRenderer->getDeviceContext()->IASetIndexBuffer(buffer, indexFormat, offset);
+
+        mAppliedIB       = buffer;
+        mAppliedIBFormat = indexFormat;
+        mAppliedIBOffset = offset;
+
+        if (indicesChanged)
+        {
+            mAppliedIBChanged = true;
+        }
+    }
+}
+
+gl::Error StateManager11::updateVertexOffsetsForPointSpritesEmulation(GLint startVertex,
+                                                                      GLsizei emulatedInstanceId)
+{
+    return mInputLayoutCache.updateVertexOffsetsForPointSpritesEmulation(mRenderer, startVertex,
+                                                                         emulatedInstanceId);
 }
 
 }  // namespace rx

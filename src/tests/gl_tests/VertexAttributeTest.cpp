@@ -860,6 +860,60 @@ TEST_P(VertexAttributeTest, DrawArraysWithDisabledAttribute)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test based on WebGL Test attribs/gl-disabled-vertex-attrib.html
+TEST_P(VertexAttributeTest, DisabledAttribArrays)
+{
+    // Known failure on Retina MBP: http://crbug.com/635081
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsNVIDIA());
+
+    const std::string vsSource =
+        "attribute vec4 a_position;\n"
+        "attribute vec4 a_color;\n"
+        "varying vec4 v_color;\n"
+        "bool isCorrectColor(vec4 v) {\n"
+        "    return v.x == 0.0 && v.y == 0.0 && v.z == 0.0 && v.w == 1.0;\n"
+        "}"
+        "void main() {\n"
+        "    gl_Position = a_position;\n"
+        "    v_color = isCorrectColor(a_color) ? vec4(0, 1, 0, 1) : vec4(1, 0, 0, 1);\n"
+        "}";
+
+    const std::string fsSource =
+        "varying mediump vec4 v_color;\n"
+        "void main() {\n"
+        "    gl_FragColor = v_color;\n"
+        "}";
+
+    GLint maxVertexAttribs = 0;
+    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &maxVertexAttribs);
+
+    for (GLint colorIndex = 0; colorIndex < maxVertexAttribs; ++colorIndex)
+    {
+        GLuint vs = CompileShader(GL_VERTEX_SHADER, vsSource);
+        ASSERT_NE(0u, vs);
+        GLuint fs = CompileShader(GL_FRAGMENT_SHADER, fsSource);
+        ASSERT_NE(0u, fs);
+
+        GLuint program = glCreateProgram();
+        glBindAttribLocation(program, colorIndex, "a_color");
+
+        glAttachShader(program, vs);
+        glDeleteShader(vs);
+
+        glAttachShader(program, fs);
+        glDeleteShader(fs);
+
+        ASSERT_TRUE(LinkAttachedProgram(program));
+
+        drawQuad(program, "a_position", 0.5f);
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+        glDeleteProgram(program);
+    }
+}
+
 class VertexAttributeTestES31 : public VertexAttributeTestES3
 {
   protected:

@@ -32,6 +32,7 @@ ANGLE_EXPORT GLuint CompileProgram(const std::string &vsSource, const std::strin
 ANGLE_EXPORT GLuint CompileProgramFromFiles(const std::string &vsPath, const std::string &fsPath);
 ANGLE_EXPORT GLuint CompileComputeProgram(const std::string &csSource,
                                           bool outputErrorMessages = true);
+ANGLE_EXPORT bool LinkAttachedProgram(GLuint program);
 
 ANGLE_EXPORT GLuint LoadBinaryProgramOES(const std::vector<uint8_t> &binary, GLenum binaryFormat);
 ANGLE_EXPORT GLuint LoadBinaryProgramES3(const std::vector<uint8_t> &binary, GLenum binaryFormat);

@@ -128,15 +128,19 @@ gl::Error StreamInIndexBuffer(IndexBufferInterface *buffer,
 IndexDataManager::IndexDataManager(BufferFactoryD3D *factory, RendererClass rendererClass)
     : mFactory(factory),
       mRendererClass(rendererClass),
-      mStreamingBufferShort(nullptr),
-      mStreamingBufferInt(nullptr)
+      mStreamingBufferShort(),
+      mStreamingBufferInt()
 {
 }
 
 IndexDataManager::~IndexDataManager()
 {
-    SafeDelete(mStreamingBufferShort);
-    SafeDelete(mStreamingBufferInt);
+}
+
+void IndexDataManager::deinitialize()
+{
+    mStreamingBufferShort.reset();
+    mStreamingBufferInt.reset();
 }
 
 // static
@@ -376,41 +380,19 @@ gl::Error IndexDataManager::getStreamingIndexBuffer(GLenum destinationIndexType,
                                                     IndexBufferInterface **outBuffer)
 {
     ASSERT(outBuffer);
-    if (destinationIndexType == GL_UNSIGNED_INT)
+    ASSERT(destinationIndexType == GL_UNSIGNED_SHORT || destinationIndexType == GL_UNSIGNED_INT);
+
+    auto &streamingBuffer =
+        (destinationIndexType == GL_UNSIGNED_INT) ? mStreamingBufferInt : mStreamingBufferShort;
+
+    if (!streamingBuffer)
     {
-        if (!mStreamingBufferInt)
-        {
-            mStreamingBufferInt = new StreamingIndexBufferInterface(mFactory);
-            gl::Error error =
-                mStreamingBufferInt->reserveBufferSpace(INITIAL_INDEX_BUFFER_SIZE, GL_UNSIGNED_INT);
-            if (error.isError())
-            {
-                SafeDelete(mStreamingBufferInt);
-                return error;
-            }
-        }
-
-        *outBuffer = mStreamingBufferInt;
-        return gl::NoError();
+        StreamingBuffer newBuffer(new StreamingIndexBufferInterface(mFactory));
+        ANGLE_TRY(newBuffer->reserveBufferSpace(INITIAL_INDEX_BUFFER_SIZE, destinationIndexType));
+        streamingBuffer = std::move(newBuffer);
     }
-    else
-    {
-        ASSERT(destinationIndexType == GL_UNSIGNED_SHORT);
 
-        if (!mStreamingBufferShort)
-        {
-            mStreamingBufferShort = new StreamingIndexBufferInterface(mFactory);
-            gl::Error error = mStreamingBufferShort->reserveBufferSpace(INITIAL_INDEX_BUFFER_SIZE,
-                                                                        GL_UNSIGNED_SHORT);
-            if (error.isError())
-            {
-                SafeDelete(mStreamingBufferShort);
-                return error;
-            }
-        }
-
-        *outBuffer = mStreamingBufferShort;
-        return gl::NoError();
-    }
+    *outBuffer = streamingBuffer.get();
+    return gl::NoError();
 }
-}
+}  // namespace rx

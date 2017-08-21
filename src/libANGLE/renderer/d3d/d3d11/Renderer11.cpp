@@ -403,12 +403,8 @@ Renderer11::Renderer11(egl::Display *display)
       mScratchMemoryBuffer(ScratchMemoryBufferLifetime),
       mAnnotator(nullptr)
 {
-    mVertexDataManager = nullptr;
-    mIndexDataManager  = nullptr;
-
     mLineLoopIB       = nullptr;
     mTriangleFanIB    = nullptr;
-    mAppliedIBChanged = false;
 
     mBlit          = nullptr;
     mPixelTransfer = nullptr;
@@ -683,7 +679,7 @@ egl::Error Renderer11::initialize()
     mDebug = d3d11::DynamicCastComObject<ID3D11Debug>(mDevice);
 #endif
 
-    initializeDevice();
+    ANGLE_TRY(initializeDevice());
 
     return egl::NoError();
 }
@@ -790,7 +786,7 @@ egl::Error Renderer11::initializeD3DDevice()
 // do any one-time device initialization
 // NOTE: this is also needed after a device lost/reset
 // to reset the scene status and ensure the default states are reset.
-void Renderer11::initializeDevice()
+egl::Error Renderer11::initializeDevice()
 {
     SCOPED_ANGLE_HISTOGRAM_TIMER("GPU.ANGLE.Renderer11InitializeDeviceMS");
     TRACE_EVENT0("gpu.angle", "Renderer11::initializeDevice");
@@ -798,10 +794,6 @@ void Renderer11::initializeDevice()
     populateRenderer11DeviceCaps();
 
     mStateCache.clear();
-
-    ASSERT(!mVertexDataManager && !mIndexDataManager);
-    mVertexDataManager = new VertexDataManager(this);
-    mIndexDataManager  = new IndexDataManager(this, getRendererClass());
 
     ASSERT(!mBlit);
     mBlit = new Blit11(this);
@@ -827,7 +819,10 @@ void Renderer11::initializeDevice()
 
     const gl::Caps &rendererCaps = getNativeCaps();
 
-    mStateManager.initialize(rendererCaps);
+    if (mStateManager.initialize(rendererCaps).isError())
+    {
+        return egl::EglBadAlloc() << "Error initializing state manager.";
+    }
 
     // No context is available here, use the proxy context in the display.
     markAllStateDirty(mDisplay->getProxyContext());
@@ -848,6 +843,8 @@ void Renderer11::initializeDevice()
 
     ANGLE_HISTOGRAM_ENUMERATION("GPU.ANGLE.D3D11FeatureLevel", angleFeatureLevel,
                                 NUM_ANGLE_FEATURE_LEVELS);
+
+    return egl::NoError();
 }
 
 void Renderer11::populateRenderer11DeviceCaps()
@@ -1585,94 +1582,6 @@ bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSi
     return count >= minCount;
 }
 
-gl::Error Renderer11::applyVertexBuffer(const gl::Context *context,
-                                        GLenum mode,
-                                        GLint first,
-                                        GLsizei count,
-                                        GLsizei instances,
-                                        TranslatedIndexData *indexInfo)
-{
-    const auto &state       = context->getGLState();
-    const auto &vertexArray = state.getVertexArray();
-    auto *vertexArray11     = GetImplAs<VertexArray11>(vertexArray);
-
-    ANGLE_TRY(vertexArray11->updateDirtyAndDynamicAttribs(context, mVertexDataManager, first, count,
-                                                          instances));
-
-    ANGLE_TRY(mStateManager.updateCurrentValueAttribs(state, mVertexDataManager));
-
-    // If index information is passed, mark it with the current changed status.
-    if (indexInfo)
-    {
-        indexInfo->srcIndexData.srcIndicesChanged = mAppliedIBChanged;
-    }
-
-    GLsizei numIndicesPerInstance = 0;
-    if (instances > 0)
-    {
-        numIndicesPerInstance = count;
-    }
-    const auto &vertexArrayAttribs  = vertexArray11->getTranslatedAttribs();
-    const auto &currentValueAttribs = mStateManager.getCurrentValueAttribs();
-    ANGLE_TRY(mInputLayoutCache.applyVertexBuffers(this, state, vertexArrayAttribs,
-                                                   currentValueAttribs, mode, first, indexInfo,
-                                                   numIndicesPerInstance));
-
-    // InputLayoutCache::applyVertexBuffers calls through to the Bufer11 to get the native vertex
-    // buffer (ID3D11Buffer *). Because we allocate these buffers lazily, this will trigger
-    // allocation. This in turn will signal that the buffer is dirty. Since we just resolved the
-    // dirty-ness in VertexArray11::updateDirtyAndDynamicAttribs, this can make us do a needless
-    // update on the second draw call.
-    // Hence we clear the flags here, after we've applied vertex data, since we know everything
-    // is clean. This is a bit of a hack.
-    vertexArray11->clearDirtyAndPromoteDynamicAttribs(state, count);
-
-    return gl::NoError();
-}
-
-gl::Error Renderer11::applyIndexBuffer(const gl::ContextState &data,
-                                       const void *indices,
-                                       GLsizei count,
-                                       GLenum mode,
-                                       GLenum type,
-                                       TranslatedIndexData *indexInfo)
-{
-    const auto &glState            = data.getState();
-    gl::VertexArray *vao           = glState.getVertexArray();
-    gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
-    ANGLE_TRY(mIndexDataManager->prepareIndexData(type, count, elementArrayBuffer, indices,
-                                                  indexInfo, glState.isPrimitiveRestartEnabled()));
-
-    ID3D11Buffer *buffer = nullptr;
-    DXGI_FORMAT bufferFormat =
-        (indexInfo->indexType == GL_UNSIGNED_INT) ? DXGI_FORMAT_R32_UINT : DXGI_FORMAT_R16_UINT;
-
-    if (indexInfo->storage)
-    {
-        Buffer11 *storage = GetAs<Buffer11>(indexInfo->storage);
-        ANGLE_TRY_RESULT(storage->getBuffer(BUFFER_USAGE_INDEX), buffer);
-    }
-    else
-    {
-        IndexBuffer11 *indexBuffer = GetAs<IndexBuffer11>(indexInfo->indexBuffer);
-        buffer                     = indexBuffer->getBuffer().get();
-    }
-
-    mAppliedIBChanged = false;
-    if (buffer != mAppliedIB || bufferFormat != mAppliedIBFormat ||
-        indexInfo->startOffset != mAppliedIBOffset)
-    {
-        mDeviceContext->IASetIndexBuffer(buffer, bufferFormat, indexInfo->startOffset);
-
-        mAppliedIB        = buffer;
-        mAppliedIBFormat  = bufferFormat;
-        mAppliedIBOffset  = indexInfo->startOffset;
-        mAppliedIBChanged = true;
-    }
-
-    return gl::NoError();
-}
-
 gl::Error Renderer11::applyTransformFeedbackBuffers(const gl::ContextState &data)
 {
     const auto &state = data.getState();
@@ -1779,24 +1688,11 @@ gl::Error Renderer11::drawArraysImpl(const gl::Context *context,
     bool useInstancedPointSpriteEmulation =
         programD3D->usesPointSize() && getWorkarounds().useInstancedPointSpriteEmulation;
 
-    if (instances > 0)
+    if (mode != GL_POINTS || !useInstancedPointSpriteEmulation)
     {
-        if (mode == GL_POINTS && useInstancedPointSpriteEmulation)
+        if (instances == 0)
         {
-            // If pointsprite emulation is used with glDrawArraysInstanced then we need to take a
-            // less efficent code path.
-            // Instanced rendering of emulated pointsprites requires a loop to draw each batch of
-            // points. An offset into the instanced data buffer is calculated and applied on each
-            // iteration to ensure all instances are rendered correctly.
-
-            // Each instance being rendered requires the inputlayout cache to reapply buffers and
-            // offsets.
-            for (GLsizei i = 0; i < instances; i++)
-            {
-                ANGLE_TRY(mInputLayoutCache.updateVertexOffsetsForPointSpritesEmulation(
-                    this, startVertex, i));
-                mDeviceContext->DrawIndexedInstanced(6, count, 0, 0, 0);
-            }
+            mDeviceContext->Draw(count, 0);
         }
         else
         {
@@ -1808,13 +1704,21 @@ gl::Error Renderer11::drawArraysImpl(const gl::Context *context,
     // If the shader is writing to gl_PointSize, then pointsprites are being rendered.
     // Emulating instanced point sprites for FL9_3 requires the topology to be
     // D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST and DrawIndexedInstanced is called instead.
-    if (mode == GL_POINTS && useInstancedPointSpriteEmulation)
+    if (instances == 0)
     {
         mDeviceContext->DrawIndexedInstanced(6, count, 0, 0, 0);
+        return gl::NoError();
     }
-    else
+
+    // If pointsprite emulation is used with glDrawArraysInstanced then we need to take a less
+    // efficent code path. Instanced rendering of emulated pointsprites requires a loop to draw each
+    // batch of points. An offset into the instanced data buffer is calculated and applied on each
+    // iteration to ensure all instances are rendered correctly. Each instance being rendered
+    // requires the inputlayout cache to reapply buffers and offsets.
+    for (GLsizei i = 0; i < instances; i++)
     {
-        mDeviceContext->Draw(count, 0);
+        ANGLE_TRY(mStateManager.updateVertexOffsetsForPointSpritesEmulation(startVertex, i));
+        mDeviceContext->DrawIndexedInstanced(6, count, 0, 0, 0);
     }
     return gl::NoError();
 }
@@ -1831,8 +1735,8 @@ gl::Error Renderer11::drawElementsImpl(const gl::Context *context,
 
     if (!DrawCallNeedsTranslation(context, mode, type))
     {
-        ANGLE_TRY(applyIndexBuffer(data, nullptr, 0, mode, type, &indexInfo));
-        ANGLE_TRY(applyVertexBuffer(context, mode, 0, 0, 0, &indexInfo));
+        ANGLE_TRY(mStateManager.applyIndexBuffer(data, nullptr, 0, type, &indexInfo));
+        ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, 0, 0, 0, &indexInfo));
         const gl::Type &typeInfo = gl::GetTypeInfo(type);
         unsigned int startIndexLocation =
             static_cast<unsigned int>(reinterpret_cast<const uintptr_t>(indices)) / typeInfo.bytes;
@@ -1851,10 +1755,11 @@ gl::Error Renderer11::drawElementsImpl(const gl::Context *context,
         context->getParams<gl::HasIndexRange>().getIndexRange().value();
     indexInfo.indexRange = indexRange;
 
-    ANGLE_TRY(applyIndexBuffer(data, indices, count, mode, type, &indexInfo));
+    ANGLE_TRY(mStateManager.applyIndexBuffer(data, indices, count, type, &indexInfo));
     size_t vertexCount = indexInfo.indexRange.vertexCount();
-    ANGLE_TRY(applyVertexBuffer(context, mode, static_cast<GLsizei>(indexInfo.indexRange.start),
-                                static_cast<GLsizei>(vertexCount), instances, &indexInfo));
+    ANGLE_TRY(mStateManager.applyVertexBuffer(
+        context, mode, static_cast<GLsizei>(indexInfo.indexRange.start),
+        static_cast<GLsizei>(vertexCount), instances, &indexInfo));
 
     int startVertex = static_cast<int>(indexInfo.indexRange.start);
     int baseVertex  = -startVertex;
@@ -1870,25 +1775,12 @@ gl::Error Renderer11::drawElementsImpl(const gl::Context *context,
     }
 
     const ProgramD3D *programD3D = GetImplAs<ProgramD3D>(data.getState().getProgram());
-    if (instances > 0)
-    {
-        if (mode == GL_POINTS && programD3D->usesInstancedPointSpriteEmulation())
-        {
-            // If pointsprite emulation is used with glDrawElementsInstanced then we need to take a
-            // less efficent code path.
-            // Instanced rendering of emulated pointsprites requires a loop to draw each batch of
-            // points. An offset into the instanced data buffer is calculated and applied on each
-            // iteration to ensure all instances are rendered correctly.
-            GLsizei elementsToRender = static_cast<GLsizei>(indexInfo.indexRange.vertexCount());
 
-            // Each instance being rendered requires the inputlayout cache to reapply buffers and
-            // offsets.
-            for (GLsizei i = 0; i < instances; i++)
-            {
-                ANGLE_TRY(mInputLayoutCache.updateVertexOffsetsForPointSpritesEmulation(
-                    this, startVertex, i));
-                mDeviceContext->DrawIndexedInstanced(6, elementsToRender, 0, 0, 0);
-            }
+    if (mode != GL_POINTS || !programD3D->usesInstancedPointSpriteEmulation())
+    {
+        if (instances == 0)
+        {
+            mDeviceContext->DrawIndexed(count, 0, baseVertex);
         }
         else
         {
@@ -1900,21 +1792,30 @@ gl::Error Renderer11::drawElementsImpl(const gl::Context *context,
     // If the shader is writing to gl_PointSize, then pointsprites are being rendered.
     // Emulating instanced point sprites for FL9_3 requires the topology to be
     // D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST and DrawIndexedInstanced is called instead.
-    if (mode == GL_POINTS && programD3D->usesInstancedPointSpriteEmulation())
+    //
+    // The count parameter passed to drawElements represents the total number of instances to be
+    // rendered. Each instance is referenced by the bound index buffer from the the caller.
+    //
+    // Indexed pointsprite emulation replicates data for duplicate entries found in the index
+    // buffer. This is not an efficent rendering mechanism and is only used on downlevel renderers
+    // that do not support geometry shaders.
+    if (instances == 0)
     {
-        // The count parameter passed to drawElements represents the total number of instances
-        // to be rendered. Each instance is referenced by the bound index buffer from the
-        // the caller.
-        //
-        // Indexed pointsprite emulation replicates data for duplicate entries found
-        // in the index buffer.
-        // This is not an efficent rendering mechanism and is only used on downlevel renderers
-        // that do not support geometry shaders.
         mDeviceContext->DrawIndexedInstanced(6, count, 0, 0, 0);
+        return gl::NoError();
     }
-    else
+
+    // If pointsprite emulation is used with glDrawElementsInstanced then we need to take a less
+    // efficent code path. Instanced rendering of emulated pointsprites requires a loop to draw each
+    // batch of points. An offset into the instanced data buffer is calculated and applied on each
+    // iteration to ensure all instances are rendered correctly.
+    GLsizei elementsToRender = static_cast<GLsizei>(indexInfo.indexRange.vertexCount());
+
+    // Each instance being rendered requires the inputlayout cache to reapply buffers and offsets.
+    for (GLsizei i = 0; i < instances; i++)
     {
-        mDeviceContext->DrawIndexed(count, 0, baseVertex);
+        ANGLE_TRY(mStateManager.updateVertexOffsetsForPointSpritesEmulation(startVertex, i));
+        mDeviceContext->DrawIndexedInstanced(6, elementsToRender, 0, 0, 0);
     }
     return gl::NoError();
 }
@@ -1937,7 +1838,7 @@ gl::Error Renderer11::drawArraysIndirectImpl(const gl::Context *context,
 
     if (!DrawCallNeedsTranslation(context, mode, GL_NONE))
     {
-        applyVertexBuffer(context, mode, 0, 0, 0, nullptr);
+        mStateManager.applyVertexBuffer(context, mode, 0, 0, 0, nullptr);
         ID3D11Buffer *buffer = nullptr;
         ANGLE_TRY_RESULT(storage->getBuffer(BUFFER_USAGE_INDIRECT), buffer);
         mDeviceContext->DrawInstancedIndirect(buffer, static_cast<unsigned int>(offset));
@@ -1953,7 +1854,7 @@ gl::Error Renderer11::drawArraysIndirectImpl(const gl::Context *context,
     GLuint instances = args->instanceCount;
     GLuint first     = args->first;
 
-    ANGLE_TRY(applyVertexBuffer(context, mode, first, count, instances, nullptr));
+    ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, first, count, instances, nullptr));
 
     if (mode == GL_LINE_LOOP)
     {
@@ -1988,8 +1889,8 @@ gl::Error Renderer11::drawElementsIndirectImpl(const gl::Context *context,
     TranslatedIndexData indexInfo;
     if (!DrawCallNeedsTranslation(context, mode, type))
     {
-        ANGLE_TRY(applyIndexBuffer(contextState, nullptr, 0, mode, type, &indexInfo));
-        ANGLE_TRY(applyVertexBuffer(context, mode, 0, 0, 0, &indexInfo));
+        ANGLE_TRY(mStateManager.applyIndexBuffer(contextState, nullptr, 0, type, &indexInfo));
+        ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, 0, 0, 0, &indexInfo));
         ID3D11Buffer *buffer = nullptr;
         ANGLE_TRY_RESULT(storage->getBuffer(BUFFER_USAGE_INDIRECT), buffer);
         mDeviceContext->DrawIndexedInstancedIndirect(buffer, static_cast<unsigned int>(offset));
@@ -2017,10 +1918,11 @@ gl::Error Renderer11::drawElementsIndirectImpl(const gl::Context *context,
                                                 glState.isPrimitiveRestartEnabled(), &indexRange));
 
     indexInfo.indexRange = indexRange;
-    ANGLE_TRY(applyIndexBuffer(contextState, indices, count, mode, type, &indexInfo));
+    ANGLE_TRY(mStateManager.applyIndexBuffer(contextState, indices, count, type, &indexInfo));
     size_t vertexCount = indexRange.vertexCount();
-    ANGLE_TRY(applyVertexBuffer(context, mode, static_cast<GLsizei>(indexRange.start) + baseVertex,
-                                static_cast<GLsizei>(vertexCount), instances, &indexInfo));
+    ANGLE_TRY(mStateManager.applyVertexBuffer(
+        context, mode, static_cast<GLsizei>(indexRange.start) + baseVertex,
+        static_cast<GLsizei>(vertexCount), instances, &indexInfo));
 
     int baseVertexLocation = -static_cast<int>(indexRange.start);
     if (mode == GL_LINE_LOOP)
@@ -2105,14 +2007,7 @@ gl::Error Renderer11::drawLineLoop(const gl::ContextState &data,
     const d3d11::Buffer &d3dIndexBuffer = indexBuffer->getBuffer();
     DXGI_FORMAT indexFormat      = indexBuffer->getIndexFormat();
 
-    if (mAppliedIB != d3dIndexBuffer.get() || mAppliedIBFormat != indexFormat ||
-        mAppliedIBOffset != offset)
-    {
-        mDeviceContext->IASetIndexBuffer(d3dIndexBuffer.get(), indexFormat, offset);
-        mAppliedIB       = d3dIndexBuffer.get();
-        mAppliedIBFormat = indexFormat;
-        mAppliedIBOffset = offset;
-    }
+    mStateManager.setIndexBuffer(d3dIndexBuffer.get(), indexFormat, offset, false);
 
     UINT indexCount = static_cast<UINT>(mScratchIndexDataBuffer.size());
 
@@ -2194,14 +2089,7 @@ gl::Error Renderer11::drawTriangleFan(const gl::ContextState &data,
     const d3d11::Buffer &d3dIndexBuffer = indexBuffer->getBuffer();
     DXGI_FORMAT indexFormat      = indexBuffer->getIndexFormat();
 
-    if (mAppliedIB != d3dIndexBuffer.get() || mAppliedIBFormat != indexFormat ||
-        mAppliedIBOffset != offset)
-    {
-        mDeviceContext->IASetIndexBuffer(d3dIndexBuffer.get(), indexFormat, offset);
-        mAppliedIB       = d3dIndexBuffer.get();
-        mAppliedIBFormat = indexFormat;
-        mAppliedIBOffset = offset;
-    }
+    mStateManager.setIndexBuffer(d3dIndexBuffer.get(), indexFormat, offset, false);
 
     UINT indexCount = static_cast<UINT>(mScratchIndexDataBuffer.size());
 
@@ -2436,10 +2324,6 @@ void Renderer11::markAllStateDirty(const gl::Context *context)
 
     mStateManager.invalidateEverything(context);
 
-    mAppliedIB       = nullptr;
-    mAppliedIBFormat = DXGI_FORMAT_UNKNOWN;
-    mAppliedIBOffset = 0;
-
     mAppliedTFObject = angle::DirtyPointer;
 
     memset(&mAppliedVertexConstants, 0, sizeof(dx_VertexConstants11));
@@ -2465,10 +2349,7 @@ void Renderer11::releaseDeviceResources()
 {
     mStateManager.deinitialize();
     mStateCache.clear();
-    mInputLayoutCache.clear();
 
-    SafeDelete(mVertexDataManager);
-    SafeDelete(mIndexDataManager);
     SafeDelete(mLineLoopIB);
     SafeDelete(mTriangleFanIB);
     SafeDelete(mBlit);
@@ -4318,7 +4199,7 @@ gl::Error Renderer11::genericDrawArrays(const gl::Context *context,
 
     ANGLE_TRY(mStateManager.updateState(context, mode));
     ANGLE_TRY(applyTransformFeedbackBuffers(data));
-    ANGLE_TRY(applyVertexBuffer(context, mode, first, count, instances, nullptr));
+    ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, first, count, instances, nullptr));
     ANGLE_TRY(programD3D->applyUniformBuffers(data));
 
     if (!skipDraw(data, mode))

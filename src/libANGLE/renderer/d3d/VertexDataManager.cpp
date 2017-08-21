@@ -113,6 +113,7 @@ bool DirectStoragePossible(const gl::VertexAttribute &attrib, const gl::VertexBi
 TranslatedAttribute::TranslatedAttribute()
     : active(false),
       attribute(nullptr),
+      binding(nullptr),
       currentValueType(GL_NONE),
       baseOffset(0),
       usesFirstVertexOffset(false),
@@ -176,9 +177,7 @@ VertexStorageType ClassifyAttributeStorage(const gl::VertexAttribute &attrib,
     }
 }
 
-VertexDataManager::CurrentValueState::CurrentValueState()
-    : buffer(nullptr),
-      offset(0)
+VertexDataManager::CurrentValueState::CurrentValueState() : buffer(), offset(0)
 {
     data.FloatValues[0] = std::numeric_limits<float>::quiet_NaN();
     data.FloatValues[1] = std::numeric_limits<float>::quiet_NaN();
@@ -189,26 +188,33 @@ VertexDataManager::CurrentValueState::CurrentValueState()
 
 VertexDataManager::CurrentValueState::~CurrentValueState()
 {
-    SafeDelete(buffer);
 }
 
 VertexDataManager::VertexDataManager(BufferFactoryD3D *factory)
-    : mFactory(factory),
-      mStreamingBuffer(nullptr),
-      // TODO(jmadill): use context caps
-      mCurrentValueCache(gl::MAX_VERTEX_ATTRIBS)
+    : mFactory(factory), mStreamingBuffer(), mCurrentValueCache(gl::MAX_VERTEX_ATTRIBS)
 {
-    mStreamingBuffer = new StreamingVertexBufferInterface(factory, INITIAL_STREAM_BUFFER_SIZE);
-
-    if (!mStreamingBuffer)
-    {
-        ERR() << "Failed to allocate the streaming vertex buffer.";
-    }
 }
 
 VertexDataManager::~VertexDataManager()
 {
-    SafeDelete(mStreamingBuffer);
+}
+
+gl::Error VertexDataManager::initialize()
+{
+    mStreamingBuffer.reset(
+        new StreamingVertexBufferInterface(mFactory, INITIAL_STREAM_BUFFER_SIZE));
+    if (!mStreamingBuffer)
+    {
+        return gl::OutOfMemory() << "Failed to allocate the streaming vertex buffer.";
+    }
+
+    return gl::NoError();
+}
+
+void VertexDataManager::deinitialize()
+{
+    mStreamingBuffer.reset();
+    mCurrentValueCache.clear();
 }
 
 gl::Error VertexDataManager::prepareVertexData(const gl::State &state,
@@ -398,7 +404,7 @@ gl::Error VertexDataManager::storeDynamicAttribs(
     };
 
     // Will trigger unmapping on return.
-    StreamingBufferUnmapper localUnmapper(mStreamingBuffer);
+    StreamingBufferUnmapper localUnmapper(mStreamingBuffer.get());
 
     // Reserve the required space for the dynamic buffers.
     for (auto attribIndex : dynamicAttribsMask)
@@ -522,11 +528,11 @@ gl::Error VertexDataManager::storeCurrentValue(const gl::VertexAttribCurrentValu
                                                size_t attribIndex)
 {
     CurrentValueState *cachedState = &mCurrentValueCache[attribIndex];
-    auto *&buffer                  = cachedState->buffer;
+    auto &buffer                   = cachedState->buffer;
 
     if (!buffer)
     {
-        buffer = new StreamingVertexBufferInterface(mFactory, CONSTANT_VERTEX_BUFFER_SIZE);
+        buffer.reset(new StreamingVertexBufferInterface(mFactory, CONSTANT_VERTEX_BUFFER_SIZE));
     }
 
     if (cachedState->data != currentValue)

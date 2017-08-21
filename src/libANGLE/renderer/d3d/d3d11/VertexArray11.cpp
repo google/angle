@@ -121,13 +121,20 @@ void VertexArray11::updateVertexAttribStorage(const gl::Context *context, size_t
     Buffer11 *oldBuffer11   = oldBufferGL ? GetImplAs<Buffer11>(oldBufferGL) : nullptr;
     Buffer11 *newBuffer11   = newBufferGL ? GetImplAs<Buffer11>(newBufferGL) : nullptr;
 
+    StateManager11 *stateManager = GetImplAs<Context11>(context)->getRenderer()->getStateManager();
+
     if (oldBuffer11 != newBuffer11 || oldStorageType != newStorageType)
     {
-        // Note that for static callbacks, promotion to a static buffer from a dynamic buffer means
-        // we need to tag dynamic buffers with static callbacks.
         OnBufferDataDirtyChannel *newChannel = nullptr;
-        if (newBuffer11 != nullptr)
+
+        if (newStorageType == VertexStorageType::CURRENT_VALUE)
         {
+            stateManager->invalidateCurrentValueAttrib(attribIndex);
+        }
+        else if (newBuffer11 != nullptr)
+        {
+            // Note that for static callbacks, promotion to a static buffer from a dynamic buffer
+            // means we need to tag dynamic buffers with static callbacks.
             switch (newStorageType)
             {
                 case VertexStorageType::DIRECT:
@@ -138,9 +145,11 @@ void VertexArray11::updateVertexAttribStorage(const gl::Context *context, size_t
                     newChannel = newBuffer11->getStaticBroadcastChannel();
                     break;
                 default:
+                    UNREACHABLE();
                     break;
             }
         }
+
         mOnBufferDataDirty[attribIndex].bind(newChannel);
         mCurrentBuffers[attribIndex].set(context, binding.getBuffer().get());
     }

@@ -456,7 +456,7 @@ class Renderer9 : public RendererD3D
 
     HMODULE mD3d9Module;
 
-    void initializeDevice();
+    egl::Error initializeDevice();
     D3DPRESENT_PARAMETERS getDefaultPresentParameters();
     void releaseDeviceResources();
 

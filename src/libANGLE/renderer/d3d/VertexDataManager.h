@@ -87,6 +87,9 @@ class VertexDataManager : angle::NonCopyable
     VertexDataManager(BufferFactoryD3D *factory);
     virtual ~VertexDataManager();
 
+    gl::Error initialize();
+    void deinitialize();
+
     gl::Error prepareVertexData(const gl::State &state,
                                 GLint start,
                                 GLsizei count,
@@ -118,7 +121,7 @@ class VertexDataManager : angle::NonCopyable
         CurrentValueState();
         ~CurrentValueState();
 
-        StreamingVertexBufferInterface *buffer;
+        std::unique_ptr<StreamingVertexBufferInterface> buffer;
         gl::VertexAttribCurrentValueData data;
         size_t offset;
     };
@@ -134,7 +137,7 @@ class VertexDataManager : angle::NonCopyable
 
     BufferFactoryD3D *const mFactory;
 
-    StreamingVertexBufferInterface *mStreamingBuffer;
+    std::unique_ptr<StreamingVertexBufferInterface> mStreamingBuffer;
     std::vector<CurrentValueState> mCurrentValueCache;
     gl::AttributesMask mDynamicAttribsMaskCache;
 };

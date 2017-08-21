@@ -339,7 +339,7 @@ egl::Error Renderer9::initialize()
                                 mAdapter, mDeviceType, currentDisplayMode.Format,
                                 D3DUSAGE_QUERY_VERTEXTEXTURE, D3DRTYPE_TEXTURE, D3DFMT_R16F));
 
-    initializeDevice();
+    ANGLE_TRY(initializeDevice());
 
     return egl::NoError();
 }
@@ -347,7 +347,7 @@ egl::Error Renderer9::initialize()
 // do any one-time device initialization
 // NOTE: this is also needed after a device lost/reset
 // to reset the scene status and ensure the default states are reset.
-void Renderer9::initializeDevice()
+egl::Error Renderer9::initializeDevice()
 {
     // Permanent non-default states
     mDevice->SetRenderState(D3DRS_POINTSPRITEENABLE, TRUE);
@@ -382,9 +382,16 @@ void Renderer9::initializeDevice()
     mVertexDataManager = new VertexDataManager(this);
     mIndexDataManager  = new IndexDataManager(this, getRendererClass());
 
+    if (mVertexDataManager->initialize().isError())
+    {
+        return egl::EglBadAlloc() << "Error initializing VertexDataManager";
+    }
+
     mTranslatedAttribCache.resize(getNativeCaps().maxVertexAttributes);
 
     mStateManager.initialize();
+
+    return egl::NoError();
 }
 
 D3DPRESENT_PARAMETERS Renderer9::getDefaultPresentParameters()
@@ -2362,7 +2369,10 @@ bool Renderer9::resetDevice()
     if (!removedDevice)
     {
         // reset device defaults
-        initializeDevice();
+        if (initializeDevice().isError())
+        {
+            return false;
+        }
     }
 
     return true;

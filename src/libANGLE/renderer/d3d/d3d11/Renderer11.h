@@ -18,7 +18,6 @@
 #include "libANGLE/renderer/d3d/RenderTargetD3D.h"
 #include "libANGLE/renderer/d3d/RendererD3D.h"
 #include "libANGLE/renderer/d3d/d3d11/DebugAnnotator11.h"
-#include "libANGLE/renderer/d3d/d3d11/InputLayoutCache.h"
 #include "libANGLE/renderer/d3d/d3d11/RenderStateCache.h"
 #include "libANGLE/renderer/d3d/d3d11/ResourceManager11.h"
 #include "libANGLE/renderer/d3d/d3d11/StateManager11.h"
@@ -146,18 +145,6 @@ class Renderer11 : public RendererD3D
     gl::Error applyUniforms(const ProgramD3D &programD3D,
                             GLenum drawMode,
                             const std::vector<D3DUniform *> &uniformArray) override;
-    gl::Error applyVertexBuffer(const gl::Context *context,
-                                GLenum mode,
-                                GLint first,
-                                GLsizei count,
-                                GLsizei instances,
-                                TranslatedIndexData *indexInfo);
-    gl::Error applyIndexBuffer(const gl::ContextState &data,
-                               const void *indices,
-                               GLsizei count,
-                               GLenum mode,
-                               GLenum type,
-                               TranslatedIndexData *indexInfo);
     gl::Error applyTransformFeedbackBuffers(const gl::ContextState &data);
 
     // lost device
@@ -384,7 +371,6 @@ class Renderer11 : public RendererD3D
     const Renderer11DeviceCaps &getRenderer11DeviceCaps() const { return mRenderer11DeviceCaps; };
 
     RendererClass getRendererClass() const override { return RENDERER_D3D11; }
-    InputLayoutCache *getInputLayoutCache() { return &mInputLayoutCache; }
     StateManager11 *getStateManager() { return &mStateManager; }
 
     void onSwap();
@@ -542,7 +528,7 @@ class Renderer11 : public RendererD3D
         const gl::TextureCaps &depthStencilBufferFormatCaps) const;
 
     egl::Error initializeD3DDevice();
-    void initializeDevice();
+    egl::Error initializeDevice();
     void releaseDeviceResources();
     void release();
 
@@ -562,12 +548,6 @@ class Renderer11 : public RendererD3D
     RenderStateCache mStateCache;
 
     StateManager11 mStateManager;
-
-    // Currently applied index buffer
-    ID3D11Buffer *mAppliedIB;
-    DXGI_FORMAT mAppliedIBFormat;
-    unsigned int mAppliedIBOffset;
-    bool mAppliedIBChanged;
 
     // Currently applied transform feedback buffers
     uintptr_t mAppliedTFObject;
@@ -591,11 +571,6 @@ class Renderer11 : public RendererD3D
     uintptr_t mCurrentComputeConstantBuffer;
 
     uintptr_t mCurrentGeometryConstantBuffer;
-
-    // Vertex, index and input layouts
-    VertexDataManager *mVertexDataManager;
-    IndexDataManager *mIndexDataManager;
-    InputLayoutCache mInputLayoutCache;
 
     StreamingIndexBufferInterface *mLineLoopIB;
     StreamingIndexBufferInterface *mTriangleFanIB;

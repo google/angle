@@ -68,6 +68,8 @@ class IndexDataManager : angle::NonCopyable
     explicit IndexDataManager(BufferFactoryD3D *factory, RendererClass rendererClass);
     virtual ~IndexDataManager();
 
+    void deinitialize();
+
     static bool UsePrimitiveRestartWorkaround(bool primitiveRestartFixedIndexEnabled,
                                               GLenum type,
                                               RendererClass rendererClass);
@@ -91,11 +93,13 @@ class IndexDataManager : angle::NonCopyable
     gl::Error getStreamingIndexBuffer(GLenum destinationIndexType,
                                       IndexBufferInterface **outBuffer);
 
+    using StreamingBuffer = std::unique_ptr<StreamingIndexBufferInterface>;
+
     BufferFactoryD3D *const mFactory;
     RendererClass mRendererClass;
-    StreamingIndexBufferInterface *mStreamingBufferShort;
-    StreamingIndexBufferInterface *mStreamingBufferInt;
+    std::unique_ptr<StreamingIndexBufferInterface> mStreamingBufferShort;
+    std::unique_ptr<StreamingIndexBufferInterface> mStreamingBufferInt;
 };
-}
+}  // namespace rx
 
 #endif  // LIBANGLE_INDEXDATAMANAGER_H_

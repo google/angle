@@ -208,3 +208,9 @@ GLuint LoadBinaryProgramES3(const std::vector<uint8_t> &binary, GLenum binaryFor
     glProgramBinary(program, binaryFormat, binary.data(), static_cast<GLint>(binary.size()));
     return CheckLinkStatusAndReturnProgram(program, true);
 }
+
+bool LinkAttachedProgram(GLuint program)
+{
+    glLinkProgram(program);
+    return (CheckLinkStatusAndReturnProgram(program, true) != 0);
+}
