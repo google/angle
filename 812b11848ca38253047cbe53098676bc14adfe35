@@ -339,6 +339,24 @@
     },
     {
       "key": {
+        "uuid": "6a58b922_26adf702",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-21T13:50:15Z",
+      "side": 1,
+      "message": "Where there test failures when traversing the index expression even when it isn\u0027t a gl_in?",
+      "parentUuid": "e1fc8590_67e0bbab",
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a6b5466a_ee512559",
         "filename": "src/compiler/translator/Initialize.cpp",
         "patchSetId": 11
