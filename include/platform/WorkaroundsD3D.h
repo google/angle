@@ -107,6 +107,11 @@ struct WorkaroundsD3D
     // for buffer data.
     // D3D11-only workaround. See http://crbug.com/593024.
     bool useSystemMemoryForConstantBuffers = false;
+
+    // This workaround is for the ANGLE_multiview extension. If enabled the viewport or render
+    // target slice will be selected in the geometry shader stage. The workaround flag is added to
+    // make it possible to select the code path in end2end and performance tests.
+    bool selectViewInGeometryShader = false;
 };
 
 }  // namespace angle

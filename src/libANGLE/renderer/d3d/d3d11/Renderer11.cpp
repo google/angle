@@ -450,6 +450,7 @@ Renderer11::Renderer11(egl::Display *display)
 
     mRenderer11DeviceCaps.supportsClearView             = false;
     mRenderer11DeviceCaps.supportsConstantBufferOffsets = false;
+    mRenderer11DeviceCaps.supportsVpRtIndexWriteFromVertexShader = false;
     mRenderer11DeviceCaps.supportsDXGI1_2               = false;
     mRenderer11DeviceCaps.B5G6R5support                 = 0;
     mRenderer11DeviceCaps.B4G4R4A4support               = 0;
@@ -918,6 +919,18 @@ void Renderer11::populateRenderer11DeviceCaps()
             mRenderer11DeviceCaps.supportsClearView = (d3d11Options.ClearView != FALSE);
             mRenderer11DeviceCaps.supportsConstantBufferOffsets =
                 (d3d11Options.ConstantBufferOffsetting != FALSE);
+        }
+    }
+
+    if (mDeviceContext3)
+    {
+        D3D11_FEATURE_DATA_D3D11_OPTIONS3 d3d11Options3;
+        HRESULT result = mDevice->CheckFeatureSupport(D3D11_FEATURE_D3D11_OPTIONS3, &d3d11Options3,
+                                                      sizeof(D3D11_FEATURE_DATA_D3D11_OPTIONS3));
+        if (SUCCEEDED(result))
+        {
+            mRenderer11DeviceCaps.supportsVpRtIndexWriteFromVertexShader =
+                (d3d11Options3.VPAndRTArrayIndexFromAnyShaderFeedingRasterizer == TRUE);
         }
     }
 
@@ -4475,6 +4488,12 @@ gl::Error Renderer11::clearRenderTarget(RenderTargetD3D *renderTarget,
     mDeviceContext->ClearRenderTargetView(rtv.get(), &clearColorValue.red);
 
     return gl::NoError();
+}
+
+bool Renderer11::canSelectViewInVertexShader() const
+{
+    return !getWorkarounds().selectViewInGeometryShader &&
+           getRenderer11DeviceCaps().supportsVpRtIndexWriteFromVertexShader;
 }
 
 }  // namespace rx

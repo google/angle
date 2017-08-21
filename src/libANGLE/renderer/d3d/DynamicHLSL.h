@@ -132,13 +132,15 @@ class DynamicHLSL : angle::NonCopyable
 
     std::string generateGeometryShaderPreamble(const gl::VaryingPacking &varyingPacking,
                                                const BuiltinVaryingsD3D &builtinsD3D,
-                                               const bool hasANGLEMultiviewEnabled) const;
+                                               const bool hasANGLEMultiviewEnabled,
+                                               const bool selectViewInVS) const;
 
     std::string generateGeometryShaderHLSL(gl::PrimitiveType primitiveType,
                                            const gl::ContextState &data,
                                            const gl::ProgramState &programData,
                                            const bool useViewScale,
                                            const bool hasANGLEMultiviewEnabled,
+                                           const bool selectViewInVS,
                                            const bool pointSpriteEmulation,
                                            const std::string &preambleString) const;
 

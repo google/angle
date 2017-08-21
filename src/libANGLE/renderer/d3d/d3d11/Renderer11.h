@@ -49,6 +49,8 @@ struct Renderer11DeviceCaps
     bool supportsDXGI1_2;                // Support for DXGI 1.2
     bool supportsClearView;              // Support for ID3D11DeviceContext1::ClearView
     bool supportsConstantBufferOffsets;  // Support for Constant buffer offset
+    bool supportsVpRtIndexWriteFromVertexShader;  // VP/RT can be selected in the Vertex Shader
+                                                  // stage.
     UINT B5G6R5support;    // Bitfield of D3D11_FORMAT_SUPPORT values for DXGI_FORMAT_B5G6R5_UNORM
     UINT B5G6R5maxSamples;  // Maximum number of samples supported by DXGI_FORMAT_B5G6R5_UNORM
     UINT B4G4R4A4support;  // Bitfield of D3D11_FORMAT_SUPPORT values for DXGI_FORMAT_B4G4R4A4_UNORM
@@ -462,6 +464,8 @@ class Renderer11 : public RendererD3D
                                 const gl::ColorF &clearColorValue,
                                 const float clearDepthValue,
                                 const unsigned int clearStencilValue) override;
+
+    bool canSelectViewInVertexShader() const override;
 
   private:
     gl::Error drawArraysImpl(const gl::Context *context,

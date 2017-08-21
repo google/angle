@@ -507,7 +507,18 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
 
     if (vertexBuiltins.glViewIDOVR.enabled)
     {
-        vertexStream << "   output.gl_ViewID_OVR = _ViewID_OVR;\n";
+        vertexStream << "    output.gl_ViewID_OVR = _ViewID_OVR;\n";
+    }
+    if (programMetadata.hasANGLEMultiviewEnabled() && programMetadata.canSelectViewInVertexShader())
+    {
+        ASSERT(vertexBuiltins.glViewportIndex.enabled && vertexBuiltins.glLayer.enabled);
+        vertexStream << "    if (multiviewSelectViewportIndex)\n"
+                     << "    {\n"
+                     << "         output.gl_ViewportIndex = _ViewID_OVR;\n"
+                     << "    } else {\n"
+                     << "         output.gl_ViewportIndex = 0;\n"
+                     << "         output.gl_Layer = _ViewID_OVR;\n"
+                     << "    }\n";
     }
 
     // On D3D9 or D3D11 Feature Level 9, we need to emulate large viewports using dx_ViewAdjust.
@@ -906,7 +917,8 @@ std::string DynamicHLSL::generateComputeShaderLinkHLSL(const gl::Context *contex
 
 std::string DynamicHLSL::generateGeometryShaderPreamble(const VaryingPacking &varyingPacking,
                                                         const BuiltinVaryingsD3D &builtinsD3D,
-                                                        const bool hasANGLEMultiviewEnabled) const
+                                                        const bool hasANGLEMultiviewEnabled,
+                                                        const bool selectViewInVS) const
 {
     ASSERT(mRenderer->getMajorShaderModel() >= 4);
 
@@ -932,6 +944,21 @@ std::string DynamicHLSL::generateGeometryShaderPreamble(const VaryingPacking &va
         preambleStream << "    output.gl_PointSize = input.gl_PointSize;\n";
     }
 
+    if (hasANGLEMultiviewEnabled)
+    {
+        preambleStream << "    output.gl_ViewID_OVR = input.gl_ViewID_OVR;\n";
+        if (selectViewInVS)
+        {
+            ASSERT(builtinsD3D[SHADER_GEOMETRY].glViewportIndex.enabled &&
+                   builtinsD3D[SHADER_GEOMETRY].glLayer.enabled);
+
+            // If the view is already selected in the VS, then we just pass the gl_ViewportIndex and
+            // gl_Layer to the output.
+            preambleStream << "    output.gl_ViewportIndex = input.gl_ViewportIndex;\n"
+                           << "    output.gl_Layer = input.gl_Layer;\n";
+        }
+    }
+
     for (const PackedVaryingRegister &varyingRegister : varyingPacking.getRegisterList())
     {
         preambleStream << "    output.v" << varyingRegister.semanticIndex << " = ";
@@ -953,7 +980,7 @@ std::string DynamicHLSL::generateGeometryShaderPreamble(const VaryingPacking &va
                    << "#endif  // ANGLE_POINT_SPRITE_SHADER\n"
                    << "}\n";
 
-    if (hasANGLEMultiviewEnabled)
+    if (hasANGLEMultiviewEnabled && !selectViewInVS)
     {
         ASSERT(builtinsD3D[SHADER_GEOMETRY].glViewportIndex.enabled &&
                builtinsD3D[SHADER_GEOMETRY].glLayer.enabled);
@@ -966,7 +993,6 @@ std::string DynamicHLSL::generateGeometryShaderPreamble(const VaryingPacking &va
         preambleStream << "\n"
                        << "void selectView(inout GS_OUTPUT output, GS_INPUT input)\n"
                        << "{\n"
-                       << "    output.gl_ViewID_OVR = input.gl_ViewID_OVR;\n"
                        << "    if (multiviewSelectViewportIndex)\n"
                        << "    {\n"
                        << "        output.gl_ViewportIndex = input.gl_ViewID_OVR;\n"
@@ -985,6 +1011,7 @@ std::string DynamicHLSL::generateGeometryShaderHLSL(gl::PrimitiveType primitiveT
                                                     const gl::ProgramState &programData,
                                                     const bool useViewScale,
                                                     const bool hasANGLEMultiviewEnabled,
+                                                    const bool selectViewInVS,
                                                     const bool pointSpriteEmulation,
                                                     const std::string &preambleString) const
 {
@@ -1120,7 +1147,7 @@ std::string DynamicHLSL::generateGeometryShaderHLSL(gl::PrimitiveType primitiveT
     {
         shaderStream << "    copyVertex(output, input[" << vertexIndex
                      << "], input[lastVertexIndex]);\n";
-        if (hasANGLEMultiviewEnabled)
+        if (hasANGLEMultiviewEnabled && !selectViewInVS)
         {
             shaderStream << "   selectView(output, input[" << vertexIndex << "]);\n";
         }
@@ -1345,6 +1372,11 @@ void BuiltinVaryingsD3D::updateBuiltins(ShaderType shaderType,
     if (shaderType == SHADER_VERTEX && metadata.hasANGLEMultiviewEnabled())
     {
         builtins->glViewIDOVR.enable(userSemantic, reservedSemanticIndex++);
+        if (metadata.canSelectViewInVertexShader())
+        {
+            builtins->glViewportIndex.enableSystem("SV_ViewportArrayIndex");
+            builtins->glLayer.enableSystem("SV_RenderTargetArrayIndex");
+        }
     }
 
     if (shaderType == SHADER_PIXEL && metadata.hasANGLEMultiviewEnabled())

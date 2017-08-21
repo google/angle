@@ -398,6 +398,8 @@ class Renderer9 : public RendererD3D
                                 const float clearDepthValue,
                                 const unsigned int clearStencilValue) override;
 
+    bool canSelectViewInVertexShader() const override { return false; }
+
   private:
     gl::Error drawArraysImpl(const gl::ContextState &data,
                              GLenum mode,
