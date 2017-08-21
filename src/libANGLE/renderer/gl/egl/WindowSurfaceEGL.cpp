@@ -16,9 +16,8 @@ WindowSurfaceEGL::WindowSurfaceEGL(const egl::SurfaceState &state,
                                    EGLConfig config,
                                    EGLNativeWindowType window,
                                    const std::vector<EGLint> &attribList,
-                                   EGLContext context,
                                    RendererGL *renderer)
-    : SurfaceEGL(state, egl, config, attribList, context, renderer), mWindow(window)
+    : SurfaceEGL(state, egl, config, attribList, renderer), mWindow(window)
 {
 }
 

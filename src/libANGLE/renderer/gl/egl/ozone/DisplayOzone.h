@@ -145,6 +145,8 @@ class DisplayOzone final : public DisplayEGL
     void setSwapInterval(EGLSurface drawable, SwapControlData *data);
 
   private:
+    egl::Error makeCurrentSurfaceless(gl::Context *context) override;
+
     GLuint makeShader(GLuint type, const char *src);
     void drawBuffer(Buffer *buffer);
     void drawWithBlit(Buffer *buffer);

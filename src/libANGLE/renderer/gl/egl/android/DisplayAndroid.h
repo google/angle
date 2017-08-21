@@ -56,7 +56,13 @@ class DisplayAndroid : public DisplayEGL
     egl::Error waitClient(const gl::Context *context) const override;
     egl::Error waitNative(const gl::Context *context, EGLint engine) const override;
 
+    egl::Error makeCurrent(egl::Surface *drawSurface,
+                           egl::Surface *readSurface,
+                           gl::Context *context) override;
+
   private:
+    egl::Error makeCurrentSurfaceless(gl::Context *context) override;
+
     template <typename T>
     void getConfigAttrib(EGLConfig config, EGLint attribute, T *value) const;
 
@@ -70,6 +76,7 @@ class DisplayAndroid : public DisplayEGL
     std::vector<EGLint> mConfigAttribList;
     std::map<EGLint, EGLint> mConfigIds;
     EGLSurface mDummyPbuffer;
+    EGLSurface mCurrentSurface;
 };
 
 }  // namespace rx

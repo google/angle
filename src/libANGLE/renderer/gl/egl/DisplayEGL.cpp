@@ -105,6 +105,9 @@ void DisplayEGL::generateExtensions(egl::DisplayExtensions *outExtensions) const
 
     // Contexts are virtualized so textures can be shared globally
     outExtensions->displayTextureShareGroup = true;
+
+    // Surfaceless contexts are emulated even if there is no native support.
+    outExtensions->surfacelessContext = true;
 }
 
 void DisplayEGL::generateCaps(egl::Caps *outCaps) const

@@ -955,4 +955,10 @@ void DisplayOzone::setSwapInterval(EGLSurface drawable, SwapControlData *data)
     ASSERT(data != nullptr);
 }
 
+egl::Error DisplayOzone::makeCurrentSurfaceless(gl::Context *context)
+{
+    // Nothing to do, handled in the GL layers
+    return egl::NoError();
+}
+
 }  // namespace rx

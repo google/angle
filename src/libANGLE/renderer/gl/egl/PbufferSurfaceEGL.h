@@ -24,7 +24,6 @@ class PbufferSurfaceEGL : public SurfaceEGL
                       const FunctionsEGL *egl,
                       EGLConfig config,
                       const std::vector<EGLint> &attribList,
-                      EGLContext context,
                       RendererGL *renderer);
     ~PbufferSurfaceEGL() override;
 

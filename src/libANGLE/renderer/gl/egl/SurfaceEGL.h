@@ -24,7 +24,6 @@ class SurfaceEGL : public SurfaceGL
                const FunctionsEGL *egl,
                EGLConfig config,
                const std::vector<EGLint> &attribList,
-               EGLContext context,
                RendererGL *renderer);
     ~SurfaceEGL() override;
 
@@ -44,14 +43,13 @@ class SurfaceEGL : public SurfaceGL
     EGLint isPostSubBufferSupported() const override;
     EGLint getSwapBehavior() const override;
 
+    EGLSurface getSurface() const;
+
   protected:
     const FunctionsEGL *mEGL;
     EGLConfig mConfig;
     std::vector<EGLint> mAttribList;
     EGLSurface mSurface;
-
-  private:
-    EGLContext mContext;
 };
 
 }  // namespace rx
