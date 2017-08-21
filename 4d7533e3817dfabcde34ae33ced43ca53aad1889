@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "54738306_aa6834fe",
+        "filename": "src/libANGLE/renderer/gl/ClearMultiviewGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-21T17:08:19Z",
+      "side": 1,
+      "message": "This could be refactored into a new method.",
+      "range": {
+        "startLine": 52,
+        "startChar": 4,
+        "endLine": 76,
+        "endChar": 30
+      },
+      "revId": "4d7533e3817dfabcde34ae33ced43ca53aad1889",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8617f2a4_a4829a6d",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-21T17:08:19Z",
+      "side": 1,
+      "message": "I\u0027d prefer if this was refactored into a single check and call on the mMultiviewClearer.  A FramebufferGL::requresMultiviewClear (could even call a method on mMultiviewClearer) and then have the multiview clearer decide which method it will use to clear internally.  This keeps the multiview logic all in one place.",
+      "range": {
+        "startLine": 251,
+        "startChar": 4,
+        "endLine": 263,
+        "endChar": 5
+      },
+      "revId": "4d7533e3817dfabcde34ae33ced43ca53aad1889",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0eae51a3_571afd42",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 9
