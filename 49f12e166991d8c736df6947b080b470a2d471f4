@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fe25721d_bfc94857",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1665,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-21T14:43:02Z",
+      "side": 1,
+      "message": "You can call getFirstNonNullAttachment !\u003d nullptr",
+      "range": {
+        "startLine": 1652,
+        "startChar": 0,
+        "endLine": 1665,
+        "endChar": 17
+      },
+      "revId": "49f12e166991d8c736df6947b080b470a2d471f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "577e6978_bb108a1c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-21T14:43:02Z",
+      "side": 1,
+      "message": "put the check for the default case here instead of in StateManager11.",
+      "range": {
+        "startLine": 442,
+        "startChar": 4,
+        "endLine": 442,
+        "endChar": 62
+      },
+      "revId": "49f12e166991d8c736df6947b080b470a2d471f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
