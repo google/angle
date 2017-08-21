@@ -330,6 +330,24 @@
     },
     {
       "key": {
+        "uuid": "2d1ecc33_60e5e056",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-21T08:55:55Z",
+      "side": 1,
+      "message": "Ok, sounds reasonable. Add a TODO inside RequiresMultipleLayeredClears to optimize this for the case where all layers of all attachments are cleared.",
+      "parentUuid": "5d734543_dead4cf3",
+      "revId": "0687801befeaa52b05fa889860cbfc0aaf1f8d6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d2705d4f_4f4f8da6",
         "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
         "patchSetId": 5

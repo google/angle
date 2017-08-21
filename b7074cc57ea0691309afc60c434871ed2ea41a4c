@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "772f4ffe_145b2b61",
+        "filename": "src/libANGLE/renderer/gl/ClearMultiviewGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-21T08:55:55Z",
+      "side": 1,
+      "message": "Just make the function return void if this is not necessary. The same with the other functions returning gl::Error.",
+      "range": {
+        "startLine": 204,
+        "startChar": 0,
+        "endLine": 205,
+        "endChar": 9
+      },
+      "revId": "b7074cc57ea0691309afc60c434871ed2ea41a4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7372babf_329e2fc4",
+        "filename": "src/libANGLE/renderer/gl/ClearMultiviewGL.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-21T08:55:55Z",
+      "side": 1,
+      "message": "It doesn\u0027t look like the unknown value is needed for anything?",
+      "revId": "b7074cc57ea0691309afc60c434871ed2ea41a4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c21eb6f7_a1b71847",
+        "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-21T08:55:55Z",
+      "side": 1,
+      "message": "You could overload this function with another one that doesn\u0027t take the x/y arguments and just assumes they are zero. That makes a bunch of the call sites easier to read.",
+      "revId": "b7074cc57ea0691309afc60c434871ed2ea41a4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ad26824d_668c644b",
+        "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1177,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-21T08:55:55Z",
+      "side": 1,
+      "message": "For good measure, you could check here that the values in GL_COLOR_ATTACHMENT0 did change.",
+      "revId": "b7074cc57ea0691309afc60c434871ed2ea41a4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
