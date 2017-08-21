@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0eae51a3_571afd42",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 684,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-21T12:39:50Z",
+      "side": 1,
+      "message": "This is related to a possibly exposed bug. I will cover this in a subsequent patch.",
+      "range": {
+        "startLine": 684,
+        "startChar": 4,
+        "endLine": 684,
+        "endChar": 87
+      },
+      "revId": "4d7533e3817dfabcde34ae33ced43ca53aad1889",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
