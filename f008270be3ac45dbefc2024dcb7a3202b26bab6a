@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "0feb21ce_87f8f045",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1222,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-21T14:48:31Z",
+      "side": 1,
+      "message": "do you want to change ArrayString to take an out stream instead of returning a string?",
+      "range": {
+        "startLine": 1222,
+        "startChar": 19,
+        "endLine": 1222,
+        "endChar": 30
+      },
+      "revId": "f008270be3ac45dbefc2024dcb7a3202b26bab6a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "abb15099_4f38b330",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2858,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-21T14:48:31Z",
+      "side": 1,
+      "message": "nit: this should go at the top in the anonymous functions block",
+      "range": {
+        "startLine": 2858,
+        "startChar": 8,
+        "endLine": 2858,
+        "endChar": 31
+      },
+      "revId": "f008270be3ac45dbefc2024dcb7a3202b26bab6a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dae1e24f_64d55bdf",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 3
@@ -30,6 +76,52 @@
       "writtenOn": "2017-08-21T14:45:54Z",
       "side": 1,
       "message": "Should this invalidate the mangled name?",
+      "revId": "f008270be3ac45dbefc2024dcb7a3202b26bab6a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eb41d718_f8259219",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-21T14:48:31Z",
+      "side": 1,
+      "message": "is there a maximum array nesting size defined in the spec at all?",
+      "range": {
+        "startLine": 501,
+        "startChar": 3,
+        "endLine": 501,
+        "endChar": 38
+      },
+      "revId": "f008270be3ac45dbefc2024dcb7a3202b26bab6a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a401782c_b527a1f7",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 447,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-21T14:48:31Z",
+      "side": 1,
+      "message": "should use use a stream here?",
+      "range": {
+        "startLine": 440,
+        "startChar": 0,
+        "endLine": 447,
+        "endChar": 23
+      },
       "revId": "f008270be3ac45dbefc2024dcb7a3202b26bab6a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
