@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c2a63054_ca6bbd47",
+        "filename": "src/libANGLE/renderer/gl/ClearMultiviewGL.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-21T12:34:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "772f4ffe_145b2b61",
+      "range": {
+        "startLine": 204,
+        "startChar": 0,
+        "endLine": 205,
+        "endChar": 9
+      },
+      "revId": "b7074cc57ea0691309afc60c434871ed2ea41a4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7372babf_329e2fc4",
         "filename": "src/libANGLE/renderer/gl/ClearMultiviewGL.h",
         "patchSetId": 7
@@ -36,6 +60,24 @@
       "writtenOn": "2017-08-21T08:55:55Z",
       "side": 1,
       "message": "It doesn\u0027t look like the unknown value is needed for anything?",
+      "revId": "b7074cc57ea0691309afc60c434871ed2ea41a4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "66d3bbb6_c46a0787",
+        "filename": "src/libANGLE/renderer/gl/ClearMultiviewGL.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-21T12:34:29Z",
+      "side": 1,
+      "message": "Removed it. I just tried having it in the same style as in other places.",
+      "parentUuid": "7372babf_329e2fc4",
       "revId": "b7074cc57ea0691309afc60c434871ed2ea41a4c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "fe5b4617_d5065d7c",
+        "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 257,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-21T12:34:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c21eb6f7_a1b71847",
+      "revId": "b7074cc57ea0691309afc60c434871ed2ea41a4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ad26824d_668c644b",
         "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
         "patchSetId": 7
@@ -73,6 +133,24 @@
       "revId": "b7074cc57ea0691309afc60c434871ed2ea41a4c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5a0d32ea_f339e8d1",
+        "filename": "src/tests/gl_tests/FramebufferMultiviewTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1177,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-21T12:34:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ad26824d_668c644b",
+      "revId": "b7074cc57ea0691309afc60c434871ed2ea41a4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
