@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "c699be7b_5fe7ce9f",
+        "filename": "src/libANGLE/renderer/gl/ClearMultiviewGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-22T07:57:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d5ba038d_8463dfbf",
+      "range": {
+        "startLine": 52,
+        "startChar": 4,
+        "endLine": 76,
+        "endChar": 30
+      },
+      "revId": "4d7533e3817dfabcde34ae33ced43ca53aad1889",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8617f2a4_a4829a6d",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 9
@@ -72,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "5cc606e5_d2c4d59f",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-22T07:57:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8617f2a4_a4829a6d",
+      "range": {
+        "startLine": 251,
+        "startChar": 4,
+        "endLine": 263,
+        "endChar": 5
+      },
+      "revId": "4d7533e3817dfabcde34ae33ced43ca53aad1889",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3ded977a_30a57ac2",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 9
@@ -83,6 +131,24 @@
       "writtenOn": "2017-08-21T17:37:26Z",
       "side": 1,
       "message": "In all of these can we have the base case for clear first to avoid the double branch before the most common case?",
+      "revId": "4d7533e3817dfabcde34ae33ced43ca53aad1889",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c1e0002_f4e5a39b",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-22T07:57:32Z",
+      "side": 1,
+      "message": "Sure, though I would assume this should not matter.",
+      "parentUuid": "3ded977a_30a57ac2",
       "revId": "4d7533e3817dfabcde34ae33ced43ca53aad1889",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
