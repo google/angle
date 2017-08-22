@@ -87,28 +87,31 @@ class InputLayoutCache : angle::NonCopyable
 
     gl::Error applyVertexBuffers(Renderer11 *renderer,
                                  const gl::State &state,
-                                 const std::vector<TranslatedAttribute> &vertexArrayAttribs,
-                                 const std::vector<TranslatedAttribute> &currentValueAttribs,
+                                 const std::vector<const TranslatedAttribute *> &currentAttributes,
                                  GLenum mode,
                                  GLint start,
-                                 TranslatedIndexData *indexInfo,
-                                 GLsizei numIndicesPerInstance);
+                                 TranslatedIndexData *indexInfo);
 
-    gl::Error updateVertexOffsetsForPointSpritesEmulation(Renderer11 *renderer,
-                                                          GLint startVertex,
-                                                          GLsizei emulatedInstanceId);
+    gl::Error updateVertexOffsetsForPointSpritesEmulation(
+        Renderer11 *renderer,
+        const std::vector<const TranslatedAttribute *> &currentAttributes,
+        GLint startVertex,
+        GLsizei emulatedInstanceId);
 
     // Useful for testing
     void setCacheSize(size_t newCacheSize);
 
-  private:
     gl::Error updateInputLayout(Renderer11 *renderer,
                                 const gl::State &state,
+                                const std::vector<const TranslatedAttribute *> &currentAttributes,
                                 GLenum mode,
                                 const AttribIndexArray &sortedSemanticIndices,
                                 GLsizei numIndicesPerInstance);
+
+  private:
     gl::Error createInputLayout(Renderer11 *renderer,
                                 const AttribIndexArray &sortedSemanticIndices,
+                                const std::vector<const TranslatedAttribute *> &currentAttributes,
                                 GLenum mode,
                                 gl::Program *program,
                                 GLsizei numIndicesPerInstance,
@@ -122,8 +125,6 @@ class InputLayoutCache : angle::NonCopyable
 
     using LayoutCache = angle::base::HashingMRUCache<PackedAttributeLayout, d3d11::InputLayout>;
     LayoutCache mLayoutCache;
-
-    std::vector<const TranslatedAttribute *> mCurrentAttributes;
 
     d3d11::Buffer mPointSpriteVertexBuffer;
     d3d11::Buffer mPointSpriteIndexBuffer;

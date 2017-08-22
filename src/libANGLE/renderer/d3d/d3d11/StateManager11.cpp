@@ -119,6 +119,54 @@ int GetWrapBits(GLenum wrap)
     }
 }
 
+Optional<size_t> FindFirstNonInstanced(
+    const std::vector<const TranslatedAttribute *> &currentAttributes)
+{
+    for (size_t index = 0; index < currentAttributes.size(); ++index)
+    {
+        if (currentAttributes[index]->divisor == 0)
+        {
+            return Optional<size_t>(index);
+        }
+    }
+
+    return Optional<size_t>::Invalid();
+}
+
+void SortAttributesByLayout(const gl::Program *program,
+                            const std::vector<TranslatedAttribute> &vertexArrayAttribs,
+                            const std::vector<TranslatedAttribute> &currentValueAttribs,
+                            AttribIndexArray *sortedD3DSemanticsOut,
+                            std::vector<const TranslatedAttribute *> *sortedAttributesOut)
+{
+    sortedAttributesOut->clear();
+
+    const auto &locationToSemantic =
+        GetImplAs<ProgramD3D>(program)->getAttribLocationToD3DSemantics();
+
+    for (auto locationIndex : program->getActiveAttribLocationsMask())
+    {
+        int d3dSemantic = locationToSemantic[locationIndex];
+        if (sortedAttributesOut->size() <= static_cast<size_t>(d3dSemantic))
+        {
+            sortedAttributesOut->resize(d3dSemantic + 1);
+        }
+
+        (*sortedD3DSemanticsOut)[d3dSemantic] = d3dSemantic;
+
+        const auto *arrayAttrib = &vertexArrayAttribs[locationIndex];
+        if (arrayAttrib->attribute && arrayAttrib->attribute->enabled)
+        {
+            (*sortedAttributesOut)[d3dSemantic] = arrayAttrib;
+        }
+        else
+        {
+            ASSERT(currentValueAttribs[locationIndex].attribute);
+            (*sortedAttributesOut)[d3dSemantic] = &currentValueAttribs[locationIndex];
+        }
+    }
+}
+
 }  // anonymous namespace
 
 // StateManager11::SRVCache Implementation.
@@ -1190,6 +1238,9 @@ gl::Error StateManager11::initialize(const gl::Caps &caps)
     mSamplerMetadataCS.initData(caps.maxComputeTextureImageUnits);
 
     ANGLE_TRY(mVertexDataManager.initialize());
+
+    mCurrentAttributes.reserve(gl::MAX_VERTEX_ATTRIBS);
+
     return gl::NoError();
 }
 
@@ -1835,9 +1886,37 @@ gl::Error StateManager11::applyVertexBuffer(const gl::Context *context,
         numIndicesPerInstance = count;
     }
     const auto &vertexArrayAttribs = vertexArray11->getTranslatedAttribs();
-    ANGLE_TRY(mInputLayoutCache.applyVertexBuffers(mRenderer, state, vertexArrayAttribs,
-                                                   mCurrentValueAttribs, mode, first, indexInfo,
-                                                   numIndicesPerInstance));
+    gl::Program *program           = state.getProgram();
+
+    // Sort the attributes according to ensure we re-use similar input layouts.
+    AttribIndexArray sortedSemanticIndices;
+    SortAttributesByLayout(program, vertexArrayAttribs, mCurrentValueAttribs,
+                           &sortedSemanticIndices, &mCurrentAttributes);
+
+    auto featureLevel = mRenderer->getRenderer11DeviceCaps().featureLevel;
+
+    // If we are using FL 9_3, make sure the first attribute is not instanced
+    if (featureLevel <= D3D_FEATURE_LEVEL_9_3 && !mCurrentAttributes.empty())
+    {
+        if (mCurrentAttributes[0]->divisor > 0)
+        {
+            Optional<size_t> firstNonInstancedIndex = FindFirstNonInstanced(mCurrentAttributes);
+            if (firstNonInstancedIndex.valid())
+            {
+                size_t index = firstNonInstancedIndex.value();
+                std::swap(mCurrentAttributes[0], mCurrentAttributes[index]);
+                std::swap(sortedSemanticIndices[0], sortedSemanticIndices[index]);
+            }
+        }
+    }
+
+    // Update the applied input layout by querying the cache.
+    ANGLE_TRY(mInputLayoutCache.updateInputLayout(mRenderer, state, mCurrentAttributes, mode,
+                                                  sortedSemanticIndices, numIndicesPerInstance));
+
+    // Update the applied vertex buffers.
+    ANGLE_TRY(mInputLayoutCache.applyVertexBuffers(mRenderer, state, mCurrentAttributes, mode,
+                                                   first, indexInfo));
 
     // InputLayoutCache::applyVertexBuffers calls through to the Bufer11 to get the native vertex
     // buffer (ID3D11Buffer *). Because we allocate these buffers lazily, this will trigger
@@ -1907,8 +1986,8 @@ void StateManager11::setIndexBuffer(ID3D11Buffer *buffer,
 gl::Error StateManager11::updateVertexOffsetsForPointSpritesEmulation(GLint startVertex,
                                                                       GLsizei emulatedInstanceId)
 {
-    return mInputLayoutCache.updateVertexOffsetsForPointSpritesEmulation(mRenderer, startVertex,
-                                                                         emulatedInstanceId);
+    return mInputLayoutCache.updateVertexOffsetsForPointSpritesEmulation(
+        mRenderer, mCurrentAttributes, startVertex, emulatedInstanceId);
 }
 
 }  // namespace rx
