@@ -56,10 +56,39 @@ std::vector<Vector2> ConvertPixelCoordinatesToClipSpace(const std::vector<Vector
 }
 }  // namespace
 
-class MultiviewDrawTest : public ANGLETest
+struct MultiviewTestParams final : public PlatformParameters
+{
+    MultiviewTestParams(GLenum multiviewLayout, const EGLPlatformParameters &eglPlatformParameters)
+        : PlatformParameters(3, 0, eglPlatformParameters), mMultiviewLayout(multiviewLayout)
+    {
+        ASSERT(multiviewLayout == GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE ||
+               multiviewLayout == GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE);
+    }
+    GLenum mMultiviewLayout;
+};
+
+std::ostream &operator<<(std::ostream &os, const MultiviewTestParams &params)
+{
+    const PlatformParameters &base = static_cast<const PlatformParameters &>(params);
+    os << base;
+    switch (params.mMultiviewLayout)
+    {
+        case GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE:
+            os << "_layered";
+            break;
+        case GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE:
+            os << "_side_by_side";
+            break;
+        default:
+            UNREACHABLE();
+    }
+    return os;
+}
+
+class MultiviewDrawTest : public ANGLETestBase
 {
   protected:
-    MultiviewDrawTest()
+    MultiviewDrawTest(const PlatformParameters &params) : ANGLETestBase(params)
     {
         setWindowWidth(128);
         setWindowHeight(128);
@@ -67,9 +96,9 @@ class MultiviewDrawTest : public ANGLETest
     }
     virtual ~MultiviewDrawTest() {}
 
-    void SetUp() override
+    void DrawTestSetUp()
     {
-        ANGLETest::SetUp();
+        ANGLETestBase::ANGLETestSetUp();
 
         glRequestExtensionANGLE = reinterpret_cast<PFNGLREQUESTEXTENSIONANGLEPROC>(
             eglGetProcAddress("glRequestExtensionANGLE"));
@@ -94,14 +123,15 @@ class MultiviewDrawTest : public ANGLETest
     PFNGLREQUESTEXTENSIONANGLEPROC glRequestExtensionANGLE = nullptr;
 };
 
-class MultiviewDrawValidationTest : public MultiviewDrawTest
+class MultiviewDrawValidationTest : public MultiviewDrawTest,
+                                    public ::testing::TestWithParam<PlatformParameters>
 {
   protected:
-    MultiviewDrawValidationTest() {}
+    MultiviewDrawValidationTest() : MultiviewDrawTest(GetParam()) {}
 
     void SetUp() override
     {
-        MultiviewDrawTest::SetUp();
+        MultiviewDrawTest::DrawTestSetUp();
 
         glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
 
@@ -128,42 +158,88 @@ class MultiviewDrawValidationTest : public MultiviewDrawTest
     GLFramebuffer mFramebuffer;
 };
 
-class MultiviewSideBySideRenderTest : public MultiviewDrawTest
+class MultiviewRenderTestBase : public MultiviewDrawTest
 {
   protected:
-    void createFBO(int width, int height, int numViews)
+    MultiviewRenderTestBase(const PlatformParameters &params, GLenum multiviewLayout)
+        : MultiviewDrawTest(params),
+          mMultiviewLayout(multiviewLayout),
+          mViewWidth(0),
+          mViewHeight(0),
+          mNumViews(0)
     {
-        // Assert that width is a multiple of numViews.
-        ASSERT_TRUE(width % numViews == 0);
-        const int widthPerView = width / numViews;
+    }
+    void RenderTestSetUp() { MultiviewDrawTest::DrawTestSetUp(); }
+    void createFBO(int viewWidth, int height, int numViews)
+    {
+        mViewWidth  = viewWidth;
+        mViewHeight = height;
+        mNumViews   = numViews;
 
         // Create color and depth textures.
-        glBindTexture(GL_TEXTURE_2D, mColorTexture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        ASSERT_GL_NO_ERROR();
-
-        glBindTexture(GL_TEXTURE_2D, mDepthTexture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, width, height, 0, GL_DEPTH_COMPONENT,
-                     GL_FLOAT, NULL);
-        glBindTexture(GL_TEXTURE_2D, 0);
-        ASSERT_GL_NO_ERROR();
-
-        // Create draw framebuffer to be used for side-by-side rendering.
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mDrawFramebuffer);
-        std::vector<GLint> viewportOffsets(numViews * 2u);
-        for (int i = 0u; i < numViews; ++i)
+        switch (mMultiviewLayout)
         {
-            viewportOffsets[i * 2]     = i * widthPerView;
-            viewportOffsets[i * 2 + 1] = 0;
+            case GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE:
+            {
+                int textureWidth = viewWidth * numViews;
+                glBindTexture(GL_TEXTURE_2D, mColorTexture);
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, textureWidth, height, 0, GL_RGBA,
+                             GL_UNSIGNED_BYTE, NULL);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+                glBindTexture(GL_TEXTURE_2D, mDepthTexture);
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, textureWidth, height, 0,
+                             GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+                glBindTexture(GL_TEXTURE_2D, 0);
+                break;
+            }
+            case GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE:
+                glBindTexture(GL_TEXTURE_2D_ARRAY, mColorTexture);
+                glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, viewWidth, height, numViews, 0,
+                             GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+                glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+                glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+                glBindTexture(GL_TEXTURE_2D_ARRAY, mDepthTexture);
+                glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_DEPTH_COMPONENT32F, viewWidth, height,
+                             numViews, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+                glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+                break;
+            default:
+                UNREACHABLE();
         }
-        glFramebufferTextureMultiviewSideBySideANGLE(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                                                     mColorTexture, 0, numViews,
-                                                     &viewportOffsets[0]);
-        glFramebufferTextureMultiviewSideBySideANGLE(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-                                                     mDepthTexture, 0, numViews,
-                                                     &viewportOffsets[0]);
+        ASSERT_GL_NO_ERROR();
+
+        // Create draw framebuffer to be used for multiview rendering.
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mDrawFramebuffer);
+        switch (mMultiviewLayout)
+        {
+            case GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE:
+            {
+                std::vector<GLint> viewportOffsets(numViews * 2);
+                for (int i = 0u; i < numViews; ++i)
+                {
+                    viewportOffsets[i * 2]     = i * viewWidth;
+                    viewportOffsets[i * 2 + 1] = 0;
+                }
+                glFramebufferTextureMultiviewSideBySideANGLE(GL_DRAW_FRAMEBUFFER,
+                                                             GL_COLOR_ATTACHMENT0, mColorTexture, 0,
+                                                             numViews, &viewportOffsets[0]);
+                glFramebufferTextureMultiviewSideBySideANGLE(GL_DRAW_FRAMEBUFFER,
+                                                             GL_DEPTH_ATTACHMENT, mDepthTexture, 0,
+                                                             numViews, &viewportOffsets[0]);
+                break;
+            }
+            case GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE:
+                glFramebufferTextureMultiviewLayeredANGLE(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                                          mColorTexture, 0, 0, numViews);
+                glFramebufferTextureMultiviewLayeredANGLE(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                                                          mDepthTexture, 0, 0, numViews);
+                break;
+            default:
+                UNREACHABLE();
+        }
 
         GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
         glDrawBuffers(1, DrawBuffers);
@@ -172,34 +248,79 @@ class MultiviewSideBySideRenderTest : public MultiviewDrawTest
 
         // Create read framebuffer to be used to retrieve the pixel information for testing
         // purposes.
-        glBindFramebuffer(GL_READ_FRAMEBUFFER, mReadFramebuffer);
-        glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-                               mColorTexture, 0);
+        switch (mMultiviewLayout)
+        {
+            case GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE:
+                mReadFramebuffer.resize(1);
+                glBindFramebuffer(GL_READ_FRAMEBUFFER, mReadFramebuffer[0]);
+                glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                       mColorTexture, 0);
+                break;
+            case GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE:
+                mReadFramebuffer.resize(numViews);
+                for (int i = 0; i < numViews; ++i)
+                {
+                    glBindFramebuffer(GL_READ_FRAMEBUFFER, mReadFramebuffer[i]);
+                    glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                                              mColorTexture, 0, i);
+                }
+                break;
+            default:
+                UNREACHABLE();
+        }
         ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_READ_FRAMEBUFFER));
 
         // Clear the buffers.
-        glViewport(0, 0, widthPerView, height);
-        glScissor(0, 0, widthPerView, height);
-        glEnable(GL_SCISSOR_TEST);
+        glViewport(0, 0, viewWidth, height);
+        if (mMultiviewLayout == GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE)
+        {
+            // Enable the scissor test only for side-by-side framebuffers.
+            glEnable(GL_SCISSOR_TEST);
+            glScissor(0, 0, viewWidth, height);
+        }
         glClearColor(0, 0, 0, 1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
 
-        // Set viewport and scissor of each view.
-        glViewport(0, 0, widthPerView, height);
-        glScissor(0, 0, widthPerView, height);
+    GLColor GetViewColor(int x, int y, int view)
+    {
+        switch (mMultiviewLayout)
+        {
+            case GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE:
+                return ReadColor(view * mViewWidth + x, y);
+            case GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE:
+                ASSERT(static_cast<size_t>(view) < mReadFramebuffer.size());
+                glBindFramebuffer(GL_READ_FRAMEBUFFER, mReadFramebuffer[view]);
+                return ReadColor(x, y);
+            default:
+                UNREACHABLE();
+        }
+        return GLColor(0, 0, 0, 0);
     }
 
     GLTexture mColorTexture;
     GLTexture mDepthTexture;
     GLFramebuffer mDrawFramebuffer;
-    GLFramebuffer mReadFramebuffer;
+    std::vector<GLFramebuffer> mReadFramebuffer;
+    GLenum mMultiviewLayout;
+    int mViewWidth;
+    int mViewHeight;
+    int mNumViews;
 };
 
-class MultiviewSideBySideRenderDualViewTest : public MultiviewSideBySideRenderTest
+class MultiviewRenderTest : public MultiviewRenderTestBase,
+                            public ::testing::TestWithParam<MultiviewTestParams>
 {
   protected:
-    MultiviewSideBySideRenderDualViewTest() : mProgram(0u) {}
-    ~MultiviewSideBySideRenderDualViewTest()
+    MultiviewRenderTest() : MultiviewRenderTestBase(GetParam(), GetParam().mMultiviewLayout) {}
+    void SetUp() override { MultiviewRenderTestBase::RenderTestSetUp(); }
+};
+
+class MultiviewRenderDualViewTest : public MultiviewRenderTest
+{
+  protected:
+    MultiviewRenderDualViewTest() : mProgram(0u) {}
+    ~MultiviewRenderDualViewTest()
     {
         if (mProgram != 0u)
         {
@@ -209,7 +330,7 @@ class MultiviewSideBySideRenderDualViewTest : public MultiviewSideBySideRenderTe
 
     void SetUp() override
     {
-        MultiviewSideBySideRenderTest::SetUp();
+        MultiviewRenderTest::SetUp();
 
         if (!requestMultiviewExtension())
         {
@@ -237,7 +358,7 @@ class MultiviewSideBySideRenderDualViewTest : public MultiviewSideBySideRenderTe
             "   col = vec4(1,0,0,1);\n"
             "}\n";
 
-        createFBO(4, 1, 2);
+        createFBO(2, 1, 2);
         mProgram = CompileProgram(vsSource, fsSource);
         ASSERT_NE(mProgram, 0u);
         glUseProgram(mProgram);
@@ -246,19 +367,19 @@ class MultiviewSideBySideRenderDualViewTest : public MultiviewSideBySideRenderTe
 
     void checkOutput()
     {
-        EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
-        EXPECT_PIXEL_COLOR_EQ(1, 0, GLColor::red);
-        EXPECT_PIXEL_COLOR_EQ(2, 0, GLColor::red);
-        EXPECT_PIXEL_COLOR_EQ(3, 0, GLColor::black);
+        EXPECT_EQ(GLColor::black, GetViewColor(0, 0, 0));
+        EXPECT_EQ(GLColor::red, GetViewColor(1, 0, 0));
+        EXPECT_EQ(GLColor::red, GetViewColor(0, 0, 1));
+        EXPECT_EQ(GLColor::black, GetViewColor(1, 0, 1));
     }
 
     GLuint mProgram;
 };
 
-class MultiviewSideBySideOcclusionQueryTest : public MultiviewSideBySideRenderTest
+class MultiviewOcclusionQueryTest : public MultiviewRenderTest
 {
   protected:
-    MultiviewSideBySideOcclusionQueryTest() {}
+    MultiviewOcclusionQueryTest() {}
 
     GLuint drawAndRetrieveOcclusionQueryResult(GLuint program)
     {
@@ -274,20 +395,19 @@ class MultiviewSideBySideOcclusionQueryTest : public MultiviewSideBySideRenderTe
     }
 };
 
-class MultiviewProgramGenerationTest : public MultiviewSideBySideRenderTest
+class MultiviewProgramGenerationTest : public MultiviewRenderTest
 {
   protected:
     MultiviewProgramGenerationTest() {}
 };
 
-class MultiviewSideBySideRenderPrimitiveTest : public MultiviewSideBySideRenderTest
+class MultiviewRenderPrimitiveTest : public MultiviewRenderTest
 {
   protected:
-    MultiviewSideBySideRenderPrimitiveTest() {}
+    MultiviewRenderPrimitiveTest() {}
 
     void setupGeometry(const std::vector<Vector2> &vertexData)
     {
-        glBindVertexArray(mVAO);
         glBindBuffer(GL_ARRAY_BUFFER, mVBO);
         glBufferData(GL_ARRAY_BUFFER, vertexData.size() * sizeof(Vector2), vertexData.data(),
                      GL_STATIC_DRAW);
@@ -295,20 +415,34 @@ class MultiviewSideBySideRenderPrimitiveTest : public MultiviewSideBySideRenderT
         glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
     }
 
-    void checkRedChannel(const GLubyte expectedRedChannelData[], int width, int height)
+    void checkRedChannel(const GLubyte expectedRedChannelData[])
     {
-        for (int w = 0; w < width; ++w)
+        for (int view = 0; view < mNumViews; ++view)
         {
-            for (int h = 0; h < height; ++h)
+            for (int w = 0; w < mViewWidth; ++w)
             {
-                int flatIndex = h * width + w;
-                EXPECT_PIXEL_COLOR_EQ(w, h, GLColor(expectedRedChannelData[flatIndex], 0, 0, 255));
+                for (int h = 0; h < mViewHeight; ++h)
+                {
+                    size_t flatIndex =
+                        static_cast<size_t>(view * mViewWidth * mViewHeight + mViewWidth * h + w);
+                    EXPECT_EQ(GLColor(expectedRedChannelData[flatIndex], 0, 0, 255),
+                              GetViewColor(w, h, view));
+                }
             }
         }
     }
-
-    GLVertexArray mVAO;
     GLBuffer mVBO;
+};
+
+class MultiviewSideBySideRenderTest : public MultiviewRenderTestBase,
+                                      public ::testing::TestWithParam<PlatformParameters>
+{
+  protected:
+    MultiviewSideBySideRenderTest()
+        : MultiviewRenderTestBase(GetParam(), GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE)
+    {
+    }
+    void SetUp() override { MultiviewRenderTestBase::RenderTestSetUp(); }
 };
 
 // The test verifies that glDraw*Indirect:
@@ -572,7 +706,7 @@ TEST_P(MultiviewDrawValidationTest, ActiveTimeElapsedQuery)
 }
 
 // The test checks that glDrawArrays can be used to render into two views.
-TEST_P(MultiviewSideBySideRenderDualViewTest, DrawArrays)
+TEST_P(MultiviewRenderDualViewTest, DrawArrays)
 {
     if (!requestMultiviewExtension())
     {
@@ -585,7 +719,7 @@ TEST_P(MultiviewSideBySideRenderDualViewTest, DrawArrays)
 }
 
 // The test checks that glDrawElements can be used to render into two views.
-TEST_P(MultiviewSideBySideRenderDualViewTest, DrawElements)
+TEST_P(MultiviewRenderDualViewTest, DrawElements)
 {
     if (!requestMultiviewExtension())
     {
@@ -598,7 +732,7 @@ TEST_P(MultiviewSideBySideRenderDualViewTest, DrawElements)
 }
 
 // The test checks that glDrawRangeElements can be used to render into two views.
-TEST_P(MultiviewSideBySideRenderDualViewTest, DrawRangeElements)
+TEST_P(MultiviewRenderDualViewTest, DrawRangeElements)
 {
     if (!requestMultiviewExtension())
     {
@@ -611,7 +745,7 @@ TEST_P(MultiviewSideBySideRenderDualViewTest, DrawRangeElements)
 }
 
 // The test checks that glDrawArrays can be used to render into four views.
-TEST_P(MultiviewSideBySideRenderTest, DrawArraysFourViews)
+TEST_P(MultiviewRenderTest, DrawArraysFourViews)
 {
     if (!requestMultiviewExtension())
     {
@@ -647,7 +781,7 @@ TEST_P(MultiviewSideBySideRenderTest, DrawArraysFourViews)
         "    col = vec4(1,0,0,1);\n"
         "}\n";
 
-    createFBO(16, 1, 4);
+    createFBO(4, 1, 4);
     ANGLE_GL_PROGRAM(program, vsSource, fsSource);
     glUseProgram(program);
 
@@ -658,14 +792,13 @@ TEST_P(MultiviewSideBySideRenderTest, DrawArraysFourViews)
     {
         for (int j = 0; j < 4; ++j)
         {
-            const int arrayIndex = i * 4 + j;
             if (i == j)
             {
-                EXPECT_PIXEL_COLOR_EQ(arrayIndex, 0, GLColor::red);
+                EXPECT_EQ(GLColor::red, GetViewColor(j, 0, i));
             }
             else
             {
-                EXPECT_PIXEL_COLOR_EQ(arrayIndex, 0, GLColor::black);
+                EXPECT_EQ(GLColor::black, GetViewColor(j, 0, i));
             }
         }
     }
@@ -673,7 +806,7 @@ TEST_P(MultiviewSideBySideRenderTest, DrawArraysFourViews)
 }
 
 // The test checks that glDrawArraysInstanced can be used to render into two views.
-TEST_P(MultiviewSideBySideRenderTest, DrawArraysInstanced)
+TEST_P(MultiviewRenderTest, DrawArraysInstanced)
 {
     if (!requestMultiviewExtension())
     {
@@ -707,21 +840,28 @@ TEST_P(MultiviewSideBySideRenderTest, DrawArraysInstanced)
         "    col = vec4(1,0,0,1);\n"
         "}\n";
 
-    createFBO(4, 2, 2);
+    const int kViewWidth  = 2;
+    const int kViewHeight = 2;
+    const int kNumViews   = 2;
+    createFBO(kViewWidth, kViewHeight, kNumViews);
     ANGLE_GL_PROGRAM(program, vsSource, fsSource);
     glUseProgram(program);
 
     drawQuad(program, "vPosition", 0.0f, 1.0f, true, true, 2);
     ASSERT_GL_NO_ERROR();
 
-    const GLubyte expectedResult[2][4] = {
-        {0, 255, 255, 0}, {0, 255, 255, 0},
-    };
-    for (int row = 0; row < 2; ++row)
+    const GLubyte expectedRedChannel[kNumViews][kViewHeight][kViewWidth] = {{{0, 255}, {0, 255}},
+                                                                            {{255, 0}, {255, 0}}};
+
+    for (int view = 0; view < 2; ++view)
     {
-        for (int col = 0; col < 4; ++col)
+        for (int y = 0; y < 2; ++y)
         {
-            EXPECT_PIXEL_EQ(col, row, expectedResult[row][col], 0, 0, 255);
+            for (int x = 0; x < 2; ++x)
+            {
+                EXPECT_EQ(GLColor(expectedRedChannel[view][y][x], 0, 0, 255),
+                          GetViewColor(x, y, view));
+            }
         }
     }
 }
@@ -733,7 +873,7 @@ TEST_P(MultiviewSideBySideRenderTest, DrawArraysInstanced)
 // drawn vertically next to each other. A divisor of 3 is used for the x offset to have the last
 // quad offsetted by one pixel to the right. Note that the number of views is divisible by 1, but
 // not by 3.
-TEST_P(MultiviewSideBySideRenderTest, AttribDivisor)
+TEST_P(MultiviewRenderTest, AttribDivisor)
 {
     if (!requestMultiviewExtension())
     {
@@ -764,7 +904,11 @@ TEST_P(MultiviewSideBySideRenderTest, AttribDivisor)
         "{\n"
         "    col = vec4(1,0,0,1);\n"
         "}\n";
-    createFBO(8, 4, 2);
+
+    const int kViewWidth  = 4;
+    const int kViewHeight = 4;
+    const int kNumViews   = 2;
+    createFBO(kViewWidth, kViewHeight, kNumViews);
     ANGLE_GL_PROGRAM(program, vsSource, fsSource);
     glUseProgram(program);
 
@@ -789,29 +933,32 @@ TEST_P(MultiviewSideBySideRenderTest, AttribDivisor)
     drawQuad(program, "vPosition", 0.0f, 1.0f, true, true, 4);
     ASSERT_GL_NO_ERROR();
 
-    const GLubyte expectedRedChannel[4][8] = {{255, 0, 0, 0, 0, 0, 255, 0},
-                                              {255, 0, 0, 0, 0, 0, 255, 0},
-                                              {255, 0, 0, 0, 0, 0, 255, 0},
-                                              {0, 255, 0, 0, 0, 0, 0, 255}};
-    for (int row = 0; row < 4; ++row)
+    const GLubyte expectedRedChannel[kNumViews][kViewHeight][kViewWidth] = {
+        {{255, 0, 0, 0}, {255, 0, 0, 0}, {255, 0, 0, 0}, {0, 255, 0, 0}},
+        {{0, 0, 255, 0}, {0, 0, 255, 0}, {0, 0, 255, 0}, {0, 0, 0, 255}}};
+    for (int view = 0; view < 2; ++view)
     {
-        for (int col = 0; col < 8; ++col)
+        for (int row = 0; row < 4; ++row)
         {
-            EXPECT_PIXEL_EQ(col, row, expectedRedChannel[row][col], 0, 0, 255);
+            for (int col = 0; col < 4; ++col)
+            {
+                EXPECT_EQ(GLColor(expectedRedChannel[view][row][col], 0, 0, 255),
+                          GetViewColor(col, row, view));
+            }
         }
     }
 }
 
 // Test that different sequences of vertexAttribDivisor, useProgram and bindVertexArray in a
 // multi-view context propagate the correct divisor to the driver.
-TEST_P(MultiviewSideBySideRenderTest, DivisorOrderOfOperation)
+TEST_P(MultiviewRenderTest, DivisorOrderOfOperation)
 {
     if (!requestMultiviewExtension())
     {
         return;
     }
 
-    createFBO(2, 1, 2);
+    createFBO(1, 1, 2);
 
     // Create multiview program.
     const std::string &vs =
@@ -906,8 +1053,8 @@ TEST_P(MultiviewSideBySideRenderTest, DivisorOrderOfOperation)
     glUseProgram(program);
     glVertexAttribDivisor(1, 1);
     glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 1);
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(1, 0, GLColor::red);
+    EXPECT_EQ(GLColor::red, GetViewColor(0, 0, 0));
+    EXPECT_EQ(GLColor::red, GetViewColor(0, 0, 1));
 
     // Clear the buffers and propagate divisor to the driver.
     // We keep the vao active and propagate the divisor to guarantee that there are no unresolved
@@ -922,8 +1069,8 @@ TEST_P(MultiviewSideBySideRenderTest, DivisorOrderOfOperation)
     // Check that useProgram uses the number of views to update the divisor.
     glUseProgram(program);
     glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 1);
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(1, 0, GLColor::red);
+    EXPECT_EQ(GLColor::red, GetViewColor(0, 0, 0));
+    EXPECT_EQ(GLColor::red, GetViewColor(0, 0, 1));
 
     // We go through similar steps as before.
     glUseProgram(dummyProgram);
@@ -948,13 +1095,13 @@ TEST_P(MultiviewSideBySideRenderTest, DivisorOrderOfOperation)
     // adjusts the divisor.
     glBindVertexArray(vao[0]);
     glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 1);
-    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(1, 0, GLColor::red);
+    EXPECT_EQ(GLColor::red, GetViewColor(0, 0, 0));
+    EXPECT_EQ(GLColor::red, GetViewColor(0, 0, 1));
 }
 
 // Test that no fragments pass the occlusion query for a multi-view vertex shader which always
 // transforms geometry to be outside of the clip region.
-TEST_P(MultiviewSideBySideOcclusionQueryTest, OcclusionQueryNothingVisible)
+TEST_P(MultiviewOcclusionQueryTest, OcclusionQueryNothingVisible)
 {
     if (!requestMultiviewExtension())
     {
@@ -983,7 +1130,7 @@ TEST_P(MultiviewSideBySideOcclusionQueryTest, OcclusionQueryNothingVisible)
         "}\n";
     ANGLE_GL_PROGRAM(program, vsSource, fsSource);
     glUseProgram(program);
-    createFBO(2, 1, 2);
+    createFBO(1, 1, 2);
 
     GLuint result = drawAndRetrieveOcclusionQueryResult(program);
     ASSERT_GL_NO_ERROR();
@@ -992,7 +1139,7 @@ TEST_P(MultiviewSideBySideOcclusionQueryTest, OcclusionQueryNothingVisible)
 
 // Test that there are fragments passing the occlusion query if only view 0 can produce
 // output.
-TEST_P(MultiviewSideBySideOcclusionQueryTest, OcclusionQueryOnlyLeftVisible)
+TEST_P(MultiviewOcclusionQueryTest, OcclusionQueryOnlyLeftVisible)
 {
     if (!requestMultiviewExtension())
     {
@@ -1021,7 +1168,7 @@ TEST_P(MultiviewSideBySideOcclusionQueryTest, OcclusionQueryOnlyLeftVisible)
         "}\n";
     ANGLE_GL_PROGRAM(program, vsSource, fsSource);
     glUseProgram(program);
-    createFBO(2, 1, 2);
+    createFBO(1, 1, 2);
 
     GLuint result = drawAndRetrieveOcclusionQueryResult(program);
     ASSERT_GL_NO_ERROR();
@@ -1030,7 +1177,7 @@ TEST_P(MultiviewSideBySideOcclusionQueryTest, OcclusionQueryOnlyLeftVisible)
 
 // Test that there are fragments passing the occlusion query if only view 1 can produce
 // output.
-TEST_P(MultiviewSideBySideOcclusionQueryTest, OcclusionQueryOnlyRightVisible)
+TEST_P(MultiviewOcclusionQueryTest, OcclusionQueryOnlyRightVisible)
 {
     if (!requestMultiviewExtension())
     {
@@ -1059,7 +1206,7 @@ TEST_P(MultiviewSideBySideOcclusionQueryTest, OcclusionQueryOnlyRightVisible)
         "}\n";
     ANGLE_GL_PROGRAM(program, vsSource, fsSource);
     glUseProgram(program);
-    createFBO(2, 1, 2);
+    createFBO(1, 1, 2);
 
     GLuint result = drawAndRetrieveOcclusionQueryResult(program);
     ASSERT_GL_NO_ERROR();
@@ -1171,7 +1318,7 @@ TEST_P(MultiviewProgramGenerationTest, UseViewIDInFragmentShader)
 }
 
 // The test checks that GL_POINTS is correctly rendered.
-TEST_P(MultiviewSideBySideRenderPrimitiveTest, Points)
+TEST_P(MultiviewRenderPrimitiveTest, Points)
 {
     if (!requestMultiviewExtension())
     {
@@ -1201,7 +1348,10 @@ TEST_P(MultiviewSideBySideRenderPrimitiveTest, Points)
     ANGLE_GL_PROGRAM(program, vsSource, fsSource);
     glUseProgram(program);
 
-    createFBO(8, 2, 2);
+    const int kViewWidth  = 4;
+    const int kViewHeight = 2;
+    const int kNumViews   = 2;
+    createFBO(kViewWidth, kViewHeight, kNumViews);
 
     std::vector<Vector2I> windowCoordinates = {Vector2I(0, 0), Vector2I(3, 1)};
     std::vector<Vector2> vertexDataInClipSpace =
@@ -1210,9 +1360,9 @@ TEST_P(MultiviewSideBySideRenderPrimitiveTest, Points)
 
     glDrawArrays(GL_POINTS, 0, 2);
 
-    const GLubyte expectedRedChannelData[2][8] = {{255, 0, 0, 0, 255, 0, 0, 0},
-                                                  {0, 0, 0, 255, 0, 0, 0, 255}};
-    checkRedChannel(expectedRedChannelData[0], 8, 2);
+    const GLubyte expectedRedChannelData[kNumViews][kViewHeight][kViewWidth] = {
+        {{255, 0, 0, 0}, {0, 0, 0, 255}}, {{255, 0, 0, 0}, {0, 0, 0, 255}}};
+    checkRedChannel(expectedRedChannelData[0][0]);
 }
 
 // The test checks that GL_LINES is correctly rendered.
@@ -1221,7 +1371,7 @@ TEST_P(MultiviewSideBySideRenderPrimitiveTest, Points)
 // "The coordinates of a fragment produced by the algorithm may not deviate by more than one unit in
 // either x or y window coordinates from a corresponding fragment produced by the diamond-exit
 // rule."
-TEST_P(MultiviewSideBySideRenderPrimitiveTest, Lines)
+TEST_P(MultiviewRenderPrimitiveTest, Lines)
 {
     if (!requestMultiviewExtension())
     {
@@ -1233,7 +1383,10 @@ TEST_P(MultiviewSideBySideRenderPrimitiveTest, Lines)
     glUseProgram(program);
     ASSERT_GL_NO_ERROR();
 
-    createFBO(8, 2, 2);
+    const int kViewWidth  = 4;
+    const int kViewHeight = 2;
+    const int kNumViews   = 2;
+    createFBO(kViewWidth, kViewHeight, kNumViews);
 
     std::vector<Vector2I> windowCoordinates = {Vector2I(0, 0), Vector2I(4, 0)};
     std::vector<Vector2> vertexDataInClipSpace =
@@ -1242,9 +1395,9 @@ TEST_P(MultiviewSideBySideRenderPrimitiveTest, Lines)
 
     glDrawArrays(GL_LINES, 0, 2);
 
-    const GLubyte expectedRedChannelData[2][8] = {{255, 255, 255, 255, 255, 255, 255, 255},
-                                                  {0, 0, 0, 0, 0, 0, 0, 0}};
-    checkRedChannel(expectedRedChannelData[0], 8, 2);
+    const GLubyte expectedRedChannelData[kNumViews][kViewHeight][kViewWidth] = {
+        {{255, 255, 255, 255}, {0, 0, 0, 0}}, {{255, 255, 255, 255}, {0, 0, 0, 0}}};
+    checkRedChannel(expectedRedChannelData[0][0]);
 
     glDeleteProgram(program);
 }
@@ -1255,7 +1408,7 @@ TEST_P(MultiviewSideBySideRenderPrimitiveTest, Lines)
 // "The coordinates of a fragment produced by the algorithm may not deviate by more than one unit in
 // either x or y window coordinates from a corresponding fragment produced by the diamond-exit
 // rule."
-TEST_P(MultiviewSideBySideRenderPrimitiveTest, LineStrip)
+TEST_P(MultiviewRenderPrimitiveTest, LineStrip)
 {
     if (!requestMultiviewExtension())
     {
@@ -1267,7 +1420,10 @@ TEST_P(MultiviewSideBySideRenderPrimitiveTest, LineStrip)
     glUseProgram(program);
     ASSERT_GL_NO_ERROR();
 
-    createFBO(8, 2, 2);
+    const int kViewWidth  = 4;
+    const int kViewHeight = 2;
+    const int kNumViews   = 2;
+    createFBO(kViewWidth, kViewHeight, kNumViews);
 
     std::vector<Vector2I> windowCoordinates = {Vector2I(0, 0), Vector2I(3, 0), Vector2I(3, 2)};
     std::vector<Vector2> vertexDataInClipSpace =
@@ -1276,9 +1432,9 @@ TEST_P(MultiviewSideBySideRenderPrimitiveTest, LineStrip)
 
     glDrawArrays(GL_LINE_STRIP, 0, 3);
 
-    const GLubyte expectedRedChannelData[2][8] = {{255, 255, 255, 255, 255, 255, 255, 255},
-                                                  {0, 0, 0, 255, 0, 0, 0, 255}};
-    checkRedChannel(expectedRedChannelData[0], 8, 2);
+    const GLubyte expectedRedChannelData[kNumViews][kViewHeight][kViewWidth] = {
+        {{255, 255, 255, 255}, {0, 0, 0, 255}}, {{255, 255, 255, 255}, {0, 0, 0, 255}}};
+    checkRedChannel(expectedRedChannelData[0][0]);
 
     glDeleteProgram(program);
 }
@@ -1289,7 +1445,7 @@ TEST_P(MultiviewSideBySideRenderPrimitiveTest, LineStrip)
 // "The coordinates of a fragment produced by the algorithm may not deviate by more than one unit in
 // either x or y window coordinates from a corresponding fragment produced by the diamond-exit
 // rule."
-TEST_P(MultiviewSideBySideRenderPrimitiveTest, LineLoop)
+TEST_P(MultiviewRenderPrimitiveTest, LineLoop)
 {
     if (!requestMultiviewExtension())
     {
@@ -1301,7 +1457,10 @@ TEST_P(MultiviewSideBySideRenderPrimitiveTest, LineLoop)
     glUseProgram(program);
     ASSERT_GL_NO_ERROR();
 
-    createFBO(8, 4, 2);
+    const int kViewWidth  = 4;
+    const int kViewHeight = 4;
+    const int kNumViews   = 2;
+    createFBO(kViewWidth, kViewHeight, kNumViews);
 
     std::vector<Vector2I> windowCoordinates = {Vector2I(0, 0), Vector2I(3, 0), Vector2I(3, 3),
                                                Vector2I(0, 3)};
@@ -1311,17 +1470,16 @@ TEST_P(MultiviewSideBySideRenderPrimitiveTest, LineLoop)
 
     glDrawArrays(GL_LINE_LOOP, 0, 4);
 
-    const GLubyte expectedRedChannelData[4][8] = {{255, 255, 255, 255, 255, 255, 255, 255},
-                                                  {255, 0, 0, 255, 255, 0, 0, 255},
-                                                  {255, 0, 0, 255, 255, 0, 0, 255},
-                                                  {255, 255, 255, 255, 255, 255, 255, 255}};
-    checkRedChannel(expectedRedChannelData[0], 8, 4);
+    const GLubyte expectedRedChannelData[kNumViews][kViewHeight][kViewWidth] = {
+        {{255, 255, 255, 255}, {255, 0, 0, 255}, {255, 0, 0, 255}, {255, 255, 255, 255}},
+        {{255, 255, 255, 255}, {255, 0, 0, 255}, {255, 0, 0, 255}, {255, 255, 255, 255}}};
+    checkRedChannel(expectedRedChannelData[0][0]);
 
     glDeleteProgram(program);
 }
 
 // The test checks that GL_TRIANGLE_STRIP is correctly rendered.
-TEST_P(MultiviewSideBySideRenderPrimitiveTest, TriangleStrip)
+TEST_P(MultiviewRenderPrimitiveTest, TriangleStrip)
 {
     if (!requestMultiviewExtension())
     {
@@ -1337,18 +1495,22 @@ TEST_P(MultiviewSideBySideRenderPrimitiveTest, TriangleStrip)
                                                   Vector2(1.0f, 1.0f), Vector2(0.0f, 1.0f)};
     setupGeometry(vertexDataInClipSpace);
 
-    createFBO(4, 2, 2);
+    const int kViewWidth  = 2;
+    const int kViewHeight = 2;
+    const int kNumViews   = 2;
+    createFBO(kViewWidth, kViewHeight, kNumViews);
 
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-    const GLubyte expectedRedChannelData[2][4] = {{0, 0, 0, 0}, {0, 255, 0, 255}};
-    checkRedChannel(expectedRedChannelData[0], 4, 2);
+    const GLubyte expectedRedChannelData[kNumViews][kViewHeight][kViewWidth] = {{{0, 0}, {0, 255}},
+                                                                                {{0, 0}, {0, 255}}};
+    checkRedChannel(expectedRedChannelData[0][0]);
 
     glDeleteProgram(program);
 }
 
 // The test checks that GL_TRIANGLE_FAN is correctly rendered.
-TEST_P(MultiviewSideBySideRenderPrimitiveTest, TriangleFan)
+TEST_P(MultiviewRenderPrimitiveTest, TriangleFan)
 {
     if (!requestMultiviewExtension())
     {
@@ -1364,26 +1526,30 @@ TEST_P(MultiviewSideBySideRenderPrimitiveTest, TriangleFan)
                                                   Vector2(1.0f, 1.0f), Vector2(1.0f, 0.0f)};
     setupGeometry(vertexDataInClipSpace);
 
-    createFBO(4, 2, 2);
+    const int kViewWidth  = 2;
+    const int kViewHeight = 2;
+    const int kNumViews   = 2;
+    createFBO(kViewWidth, kViewHeight, kNumViews);
 
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
-    const GLubyte expectedRedChannelData[2][4] = {{0, 0, 0, 0}, {0, 255, 0, 255}};
-    checkRedChannel(expectedRedChannelData[0], 4, 2);
+    const GLubyte expectedRedChannelData[kNumViews][kViewHeight][kViewWidth] = {{{0, 0}, {0, 255}},
+                                                                                {{0, 0}, {0, 255}}};
+    checkRedChannel(expectedRedChannelData[0][0]);
 
     glDeleteProgram(program);
 }
 
 // Test that rendering enlarged points and lines does not leak fragments outside of the views'
 // bounds. The test does not rely on the actual line width being greater than 1.0.
-TEST_P(MultiviewSideBySideRenderPrimitiveTest, NoLeakingFragments)
+TEST_P(MultiviewSideBySideRenderTest, NoLeakingFragments)
 {
     if (!requestMultiviewExtension())
     {
         return;
     }
 
-    createFBO(4, 1, 2);
+    createFBO(2, 1, 2);
 
     GLint viewportOffsets[4] = {1, 0, 3, 0};
     glFramebufferTextureMultiviewSideBySideANGLE(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
@@ -1425,7 +1591,13 @@ TEST_P(MultiviewSideBySideRenderPrimitiveTest, NoLeakingFragments)
     const std::vector<Vector2I> &windowCoordinates = {Vector2I(0, 0), Vector2I(2, 0)};
     const std::vector<Vector2> &vertexDataInClipSpace =
         ConvertPixelCoordinatesToClipSpace(windowCoordinates, 1, 1);
-    setupGeometry(vertexDataInClipSpace);
+
+    GLBuffer vbo;
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, vertexDataInClipSpace.size() * sizeof(Vector2),
+                 vertexDataInClipSpace.data(), GL_STATIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
 
     // Test rendering points.
     {
@@ -1449,9 +1621,25 @@ TEST_P(MultiviewSideBySideRenderPrimitiveTest, NoLeakingFragments)
     }
 }
 
+MultiviewTestParams SideBySideOpenGL()
+{
+    return MultiviewTestParams(GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE, egl_platform::OPENGL());
+}
+
+MultiviewTestParams LayeredOpenGL()
+{
+    return MultiviewTestParams(GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE, egl_platform::OPENGL());
+}
+
+MultiviewTestParams SideBySideD3D11()
+{
+    return MultiviewTestParams(GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE, egl_platform::D3D11());
+}
+
 ANGLE_INSTANTIATE_TEST(MultiviewDrawValidationTest, ES31_OPENGL());
-ANGLE_INSTANTIATE_TEST(MultiviewSideBySideRenderDualViewTest, ES3_OPENGL());
+ANGLE_INSTANTIATE_TEST(MultiviewRenderDualViewTest, SideBySideOpenGL(), LayeredOpenGL());
+ANGLE_INSTANTIATE_TEST(MultiviewRenderTest, SideBySideOpenGL(), LayeredOpenGL());
+ANGLE_INSTANTIATE_TEST(MultiviewOcclusionQueryTest, SideBySideOpenGL(), LayeredOpenGL());
+ANGLE_INSTANTIATE_TEST(MultiviewProgramGenerationTest, SideBySideOpenGL(), SideBySideD3D11());
+ANGLE_INSTANTIATE_TEST(MultiviewRenderPrimitiveTest, SideBySideOpenGL(), LayeredOpenGL());
 ANGLE_INSTANTIATE_TEST(MultiviewSideBySideRenderTest, ES3_OPENGL());
-ANGLE_INSTANTIATE_TEST(MultiviewSideBySideOcclusionQueryTest, ES3_OPENGL());
-ANGLE_INSTANTIATE_TEST(MultiviewProgramGenerationTest, ES3_OPENGL(), ES3_D3D11());
-ANGLE_INSTANTIATE_TEST(MultiviewSideBySideRenderPrimitiveTest, ES3_OPENGL());
