@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eb9cc4cc_904f494a",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1443,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-22T10:19:40Z",
+      "side": 1,
+      "message": "On many GL implementations, the maximum line width is actually 1.0 and the value set here will be clamped to that. You could add a comment mentioning that this test doesn\u0027t rely on the actual line width being greater than 1.0.",
+      "revId": "2dad93b6cf84747eb237e031a9d2b45695a5f008",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
