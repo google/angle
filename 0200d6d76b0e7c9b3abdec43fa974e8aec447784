@@ -42,6 +42,24 @@
     },
     {
       "key": {
+        "uuid": "bce89e30_792a6e4b",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 2718,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-22T04:55:55Z",
+      "side": 1,
+      "message": "Done\nI have moved the assignment to parseVariableIdentifier() and left gl_in always unsized in the symbol table.",
+      "parentUuid": "eeeb087e_690f1db9",
+      "revId": "0200d6d76b0e7c9b3abdec43fa974e8aec447784",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9996701d_84181920",
         "filename": "src/compiler/translator/SymbolTable.h",
         "patchSetId": 15
@@ -56,6 +74,24 @@
       "revId": "0200d6d76b0e7c9b3abdec43fa974e8aec447784",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f40d188_a82b0f1a",
+        "filename": "src/compiler/translator/SymbolTable.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-22T04:55:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9996701d_84181920",
+      "revId": "0200d6d76b0e7c9b3abdec43fa974e8aec447784",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }

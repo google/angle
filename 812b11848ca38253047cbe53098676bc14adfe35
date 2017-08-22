@@ -357,6 +357,24 @@
     },
     {
       "key": {
+        "uuid": "1d3f36ce_9193df34",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 693,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-22T04:55:55Z",
+      "side": 1,
+      "message": "Here we only handle the shaders that can pass the grammar validation. It is just an optimization to stop traversing here, and it is still correct to continue traversing the index of a shader storage buffer or a uniform buffer but we cannot get anything useful.\n\nThe check if a shader storage block or a uniform block is using a non-constant index is done in ParseContext.cpp. I have added tests on using constant integer or integer variable as the index of gl_in in this patch. Unfortunately I fail to find a unit test on the index of interface blocks. I suggest we add them in another patch.",
+      "parentUuid": "6a58b922_26adf702",
+      "revId": "812b11848ca38253047cbe53098676bc14adfe35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a6b5466a_ee512559",
         "filename": "src/compiler/translator/Initialize.cpp",
         "patchSetId": 11
