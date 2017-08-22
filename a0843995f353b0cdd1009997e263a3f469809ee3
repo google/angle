@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "889ab4e8_6ded1553",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 652,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-22T15:10:01Z",
+      "side": 1,
+      "message": "I\u0027m not too crazy about this design. I don\u0027t think we want to have the back-ends calling sync state if we can avoid it. I\u0027m not actually that clear on what\u0027s happening here - you\u0027re doing some kind of workaround? Can\u0027t you handle this in the VertexArray dirty bits yourself?",
+      "range": {
+        "startLine": 652,
+        "startChar": 1,
+        "endLine": 652,
+        "endChar": 59
+      },
+      "revId": "a0843995f353b0cdd1009997e263a3f469809ee3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "accb3b9a_8d26a2ba",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-22T15:10:01Z",
+      "side": 1,
+      "message": "nit: I think you should put multiview in the name of this function.",
+      "range": {
+        "startLine": 676,
+        "startChar": 21,
+        "endLine": 676,
+        "endChar": 48
+      },
+      "revId": "a0843995f353b0cdd1009997e263a3f469809ee3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "09d533c6_801b13f6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-22T15:10:01Z",
+      "side": 1,
+      "message": "if this isn\u0027t necessary, remove it. If it is necessary, please add a comment. This check is a bit of a hack so it\u0027s good to clarify that.",
+      "range": {
+        "startLine": 678,
+        "startChar": 0,
+        "endLine": 681,
+        "endChar": 5
+      },
+      "revId": "a0843995f353b0cdd1009997e263a3f469809ee3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "adfc5ab6_8665e358",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 852,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-22T15:10:01Z",
+      "side": 1,
+      "message": "we don\u0027t really want to be creating local vectors in a sync call, even if it\u0027s for something as unchanging as a scissor. Can you use a std::array here, or other static memory?",
+      "range": {
+        "startLine": 852,
+        "startChar": 8,
+        "endLine": 852,
+        "endChar": 43
+      },
+      "revId": "a0843995f353b0cdd1009997e263a3f469809ee3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fbeed57d_8c85d614",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 895,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-22T15:10:01Z",
+      "side": 1,
+      "message": "same goes for here. If the number of max viewports is \u003c\u003d 4 I think you can use a static array and ignore the value at the end.",
+      "range": {
+        "startLine": 895,
+        "startChar": 4,
+        "endLine": 895,
+        "endChar": 44
+      },
+      "revId": "a0843995f353b0cdd1009997e263a3f469809ee3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a894a917_f0f15170",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1284,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-22T15:10:01Z",
+      "side": 1,
+      "message": "you can probably omit this.. deinitialize is mainly to release resources that need to be freed before the Renderer destroys the D3D11 device.",
+      "range": {
+        "startLine": 1283,
+        "startChar": 0,
+        "endLine": 1284,
+        "endChar": 32
+      },
+      "revId": "a0843995f353b0cdd1009997e263a3f469809ee3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32ad3dc6_bde9dc36",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1469,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-22T15:10:01Z",
+      "side": 1,
+      "message": "you can use ANGLE_SKIP_TEST_IF",
+      "range": {
+        "startLine": 1466,
+        "startChar": 0,
+        "endLine": 1469,
+        "endChar": 5
+      },
+      "revId": "a0843995f353b0cdd1009997e263a3f469809ee3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
