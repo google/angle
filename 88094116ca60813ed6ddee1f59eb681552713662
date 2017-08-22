@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "8cc9558d_30ecaaa1",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1374,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-22T08:26:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8bbce5f8_ec220d36",
+      "revId": "88094116ca60813ed6ddee1f59eb681552713662",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4b8292e0_cea846d2",
         "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
         "patchSetId": 10
@@ -30,6 +48,24 @@
       "writtenOn": "2017-08-21T14:03:28Z",
       "side": 1,
       "message": "nit: this is missing GL_TRIANGLES too. Also do we have tests that check that primitives are correctly scissored to their respective views?",
+      "revId": "88094116ca60813ed6ddee1f59eb681552713662",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7b75b440_86b0b918",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1394,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-22T08:26:24Z",
+      "side": 1,
+      "message": "I didn\u0027t add a test for GL_TRIANGLES as it is handled by all other tests like MultiviewSideBySideRenderDualViewTest and MultiviewSideBySideRenderTest.\nI will add a test for changing point size and line width.",
+      "parentUuid": "4b8292e0_cea846d2",
       "revId": "88094116ca60813ed6ddee1f59eb681552713662",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
