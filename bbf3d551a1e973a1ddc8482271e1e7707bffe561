@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "9c3362bc_5ab107c1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 704,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-22T14:28:32Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "555506d3_4c68e436",
+      "revId": "bbf3d551a1e973a1ddc8482271e1e7707bffe561",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "39e642af_f755bb1f",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 5
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "60406d53_df252168",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 706,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-22T14:28:32Z",
+      "side": 1,
+      "message": "It does, but I decided to have mViewportOffsets to have size of the maximum number of possible views. In that way resizing it is avoided.\nBut I guess not doing that makes the code simpler, so I will refactor it.",
+      "parentUuid": "39e642af_f755bb1f",
+      "revId": "bbf3d551a1e973a1ddc8482271e1e7707bffe561",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ca336b69_12dba642",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 5
@@ -47,6 +83,24 @@
       "writtenOn": "2017-08-21T12:10:50Z",
       "side": 1,
       "message": "I wonder if these loops were faster if instead of using emplace_back you\u0027d be assigning values directly to elements in the vector? So you\u0027d call rectangles.resize() before the beginning of the loop and then do rectangles[i].left \u003d std::max(0, x) etc. But maybe the resize() is slower than reserve().",
+      "revId": "bbf3d551a1e973a1ddc8482271e1e7707bffe561",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "451cc843_d11d719f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 873,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-22T14:28:32Z",
+      "side": 1,
+      "message": "It\u0027s very likely much the same for this case. resize() I can assume being slightly slower than this.",
+      "parentUuid": "ca336b69_12dba642",
       "revId": "bbf3d551a1e973a1ddc8482271e1e7707bffe561",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -76,6 +130,30 @@
     },
     {
       "key": {
+        "uuid": "a95bcc0b_83ce503b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 875,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-22T14:28:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "af4d742b_d79decb4",
+      "range": {
+        "startLine": 875,
+        "startChar": 75,
+        "endLine": 875,
+        "endChar": 90
+      },
+      "revId": "bbf3d551a1e973a1ddc8482271e1e7707bffe561",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "016c028b_ea0c2779",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 5
@@ -87,6 +165,24 @@
       "writtenOn": "2017-08-21T12:10:50Z",
       "side": 1,
       "message": "These declarations can go inside the loop.",
+      "revId": "bbf3d551a1e973a1ddc8482271e1e7707bffe561",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4263417b_56585fa1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 908,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-22T14:28:32Z",
+      "side": 1,
+      "message": "They get used later on line 957. That code path would be taken in a case in which angle_multiview is not supported.",
+      "parentUuid": "016c028b_ea0c2779",
       "revId": "bbf3d551a1e973a1ddc8482271e1e7707bffe561",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -121,6 +217,24 @@
       "writtenOn": "2017-08-21T12:10:50Z",
       "side": 1,
       "message": "This should not be needed. The whole point of these raii classes is that deallocation happens automatically when the handle goes out of scope.",
+      "revId": "bbf3d551a1e973a1ddc8482271e1e7707bffe561",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed115358_4ceda80b",
+        "filename": "src/tests/test_utils/gl_raii.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-22T14:28:32Z",
+      "side": 1,
+      "message": "Yes, I didn\u0027t feel comfortable putting this code here.\nDone.",
+      "parentUuid": "bd98e5a9_c71e9272",
       "revId": "bbf3d551a1e973a1ddc8482271e1e7707bffe561",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
