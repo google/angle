@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "eb2ac9e4_c594bcb7",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1222,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-22T10:38:30Z",
+      "side": 1,
+      "message": "That\u0027s a big change, because ArrayString is used in several places where there is no stream and it is just appended to a string. It\u0027s also used for different types of streams, TStringStream and TInfoSinkBase. I\u0027d rather leave it to be done separately.",
+      "parentUuid": "0feb21ce_87f8f045",
+      "range": {
+        "startLine": 1222,
+        "startChar": 19,
+        "endLine": 1222,
+        "endChar": 30
+      },
+      "revId": "f008270be3ac45dbefc2024dcb7a3202b26bab6a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "abb15099_4f38b330",
         "filename": "src/compiler/translator/OutputHLSL.cpp",
         "patchSetId": 3
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "b192bb58_52b7c9a0",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2858,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-22T10:38:30Z",
+      "side": 1,
+      "message": "Ah, of course. Done.",
+      "parentUuid": "abb15099_4f38b330",
+      "range": {
+        "startLine": 2858,
+        "startChar": 8,
+        "endLine": 2858,
+        "endChar": 31
+      },
+      "revId": "f008270be3ac45dbefc2024dcb7a3202b26bab6a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dae1e24f_64d55bdf",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 3
@@ -62,6 +110,24 @@
       "revId": "f008270be3ac45dbefc2024dcb7a3202b26bab6a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "968f920f_c005d9ac",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3357,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-22T10:38:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dae1e24f_64d55bdf",
+      "revId": "f008270be3ac45dbefc2024dcb7a3202b26bab6a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -82,6 +148,24 @@
     },
     {
       "key": {
+        "uuid": "9576fa6e_9b0d9d00",
+        "filename": "src/compiler/translator/Types.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-22T10:38:30Z",
+      "side": 1,
+      "message": "Good catch. I think the mangled name should never be queried for unsized arrays, but the code would be more robust for possible future changes if the invalidation was here.\n\nThis function also had a bigger bug in that it sets array sizes also for the dimensions that are already sized - this could cause some errors not to be caught by the parser, I think. Also fixed that.",
+      "parentUuid": "80635c72_e30a4142",
+      "revId": "f008270be3ac45dbefc2024dcb7a3202b26bab6a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eb41d718_f8259219",
         "filename": "src/compiler/translator/Types.h",
         "patchSetId": 3
@@ -93,6 +177,30 @@
       "writtenOn": "2017-08-21T14:48:31Z",
       "side": 1,
       "message": "is there a maximum array nesting size defined in the spec at all?",
+      "range": {
+        "startLine": 501,
+        "startChar": 3,
+        "endLine": 501,
+        "endChar": 38
+      },
+      "revId": "f008270be3ac45dbefc2024dcb7a3202b26bab6a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "99739a40_7de15f05",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-22T10:38:30Z",
+      "side": 1,
+      "message": "No. We\u0027ll have to define a limit ourselves to avoid stack overflow. I\u0027ll do this in a follow-up patch, it doesn\u0027t need to be included in this one since parsing of arrays of arrays is not supported yet. The WebGL spec restricts struct nesting to 4, and it would make sense to set the array nesting limit to something similar. We could also consider a combined limit for structs and arrays, so there won\u0027t be problems with something like:\n\nstruct S {\n    float foo[1][1][1][1];\n}\n\nstruct S2 {\n    S foo[1][1][1][1];\n}\n\nstruct S3 {\n    S2 foo[1][1][1][1];\n}\n\nOnce we have a limit, I suppose making mArraySizes fixed size might also be possible. I\u0027d like to keep it a vector though to allow for runtime configuration of the nesting limit.",
+      "parentUuid": "eb41d718_f8259219",
       "range": {
         "startLine": 501,
         "startChar": 3,
@@ -125,6 +233,30 @@
       "revId": "f008270be3ac45dbefc2024dcb7a3202b26bab6a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c9a82b98_6da30697",
+        "filename": "src/compiler/translator/util.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 447,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-22T10:38:30Z",
+      "side": 1,
+      "message": "Changed it, makes sense to avoid the temporaries, though I\u0027m not sure if it has a significant effect in practice.",
+      "parentUuid": "a401782c_b527a1f7",
+      "range": {
+        "startLine": 440,
+        "startChar": 0,
+        "endLine": 447,
+        "endChar": 23
+      },
+      "revId": "f008270be3ac45dbefc2024dcb7a3202b26bab6a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
