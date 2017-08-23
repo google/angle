@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1b8fab1f_512d1cfc",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 4211,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-23T07:24:38Z",
+      "side": 1,
+      "message": "Can you add a comment for this change? It\u0027s better to reference the spec sentence.",
+      "range": {
+        "startLine": 4211,
+        "startChar": 0,
+        "endLine": 4211,
+        "endChar": 56
+      },
+      "revId": "79cb4772d9bb50a16a5d2aa063bbd6bf96fbc570",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e70f51b8_0764df7c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 461,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-23T07:24:38Z",
+      "side": 1,
+      "message": "Why you use getReadAttachment not mState.getFirstNonNullAttachment()?",
+      "range": {
+        "startLine": 456,
+        "startChar": 0,
+        "endLine": 461,
+        "endChar": 5
+      },
+      "revId": "79cb4772d9bb50a16a5d2aa063bbd6bf96fbc570",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "04e75fc1_43a314d7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SamplePosition11.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-23T07:24:38Z",
+      "side": 1,
+      "message": "I think once unmap, pData will become an invalid pointer.",
+      "range": {
+        "startLine": 199,
+        "startChar": 4,
+        "endLine": 199,
+        "endChar": 9
+      },
+      "revId": "79cb4772d9bb50a16a5d2aa063bbd6bf96fbc570",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
