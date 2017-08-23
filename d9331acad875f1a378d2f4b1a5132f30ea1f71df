@@ -34,6 +34,24 @@
       "revId": "d9331acad875f1a378d2f4b1a5132f30ea1f71df",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "135af1fc_804d0590",
+        "filename": "src/compiler/translator/glslang_tab.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 760,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-23T15:25:41Z",
+      "side": 1,
+      "message": "Ah I thought it was the jump table. LGTM.",
+      "parentUuid": "ed056100_1ffcf9f5",
+      "revId": "d9331acad875f1a378d2f4b1a5132f30ea1f71df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
