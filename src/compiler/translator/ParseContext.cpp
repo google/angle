@@ -737,7 +737,7 @@ bool TParseContext::checkConstructorArguments(const TSourceLoc &line,
         for (TIntermNode *const &argNode : *arguments)
         {
             const TType &argType = argNode->getAsTyped()->getType();
-            if (argType.isArray())
+            if (mShaderVersion < 310 && argType.isArray())
             {
                 error(line, "constructing from a non-dereferenced array", "constructor");
                 return false;
@@ -1028,7 +1028,7 @@ bool TParseContext::checkIsValidQualifierForArray(const TSourceLoc &line,
 bool TParseContext::checkArrayElementIsNotArray(const TSourceLoc &line,
                                                 const TPublicType &elementType)
 {
-    if (elementType.array)
+    if (mShaderVersion < 310 && elementType.isArray())
     {
         error(line, "cannot declare arrays of arrays",
               TType(elementType).getCompleteString().c_str());
@@ -2138,7 +2138,7 @@ void TParseContext::addFullySpecifiedType(TPublicType *typeSpecifier)
     checkPrecisionSpecified(typeSpecifier->getLine(), typeSpecifier->precision,
                             typeSpecifier->getBasicType());
 
-    if (mShaderVersion < 300 && typeSpecifier->array)
+    if (mShaderVersion < 300 && typeSpecifier->isArray())
     {
         error(typeSpecifier->getLine(), "not supported", "first-class array");
         typeSpecifier->clearArrayness();
@@ -2172,7 +2172,7 @@ TPublicType TParseContext::addFullySpecifiedType(const TTypeQualifierBuilder &ty
 
     if (mShaderVersion < 300)
     {
-        if (typeSpecifier.array)
+        if (typeSpecifier.isArray())
         {
             error(typeSpecifier.getLine(), "not supported", "first-class array");
             returnType.clearArrayness();
@@ -2229,7 +2229,7 @@ void TParseContext::checkInputOutputTypeIsValidES3(const TQualifier qualifier,
     {
         case EvqVertexIn:
             // ESSL 3.00 section 4.3.4
-            if (type.array)
+            if (type.isArray())
             {
                 error(qualifierLocation, "cannot be array", getQualifierString(qualifier));
             }
@@ -2263,7 +2263,7 @@ void TParseContext::checkInputOutputTypeIsValidES3(const TQualifier qualifier,
         // ESSL 3.00 sections 4.3.4 and 4.3.6.
         // These restrictions are only implied by the ESSL 3.00 spec, but
         // the ESSL 3.10 spec lists these restrictions explicitly.
-        if (type.array)
+        if (type.isArray())
         {
             error(qualifierLocation, "cannot be an array of structures",
                   getQualifierString(qualifier));
@@ -2483,11 +2483,12 @@ TIntermDeclaration *TParseContext::parseSingleDeclaration(
     return declaration;
 }
 
-TIntermDeclaration *TParseContext::parseSingleArrayDeclaration(TPublicType &elementType,
-                                                               const TSourceLoc &identifierLocation,
-                                                               const TString &identifier,
-                                                               const TSourceLoc &indexLocation,
-                                                               unsigned int arraySize)
+TIntermDeclaration *TParseContext::parseSingleArrayDeclaration(
+    TPublicType &elementType,
+    const TSourceLoc &identifierLocation,
+    const TString &identifier,
+    const TSourceLoc &indexLocation,
+    const TVector<unsigned int> &arraySizes)
 {
     mDeferredNonEmptyDeclarationErrorCheck = false;
 
@@ -2499,7 +2500,7 @@ TIntermDeclaration *TParseContext::parseSingleArrayDeclaration(TPublicType &elem
     checkIsValidTypeAndQualifierForArray(indexLocation, elementType);
 
     TType arrayType(elementType);
-    arrayType.makeArray(arraySize);
+    arrayType.makeArrays(arraySizes);
 
     checkGeometryShaderInputAndSetArraySize(indexLocation, identifier.c_str(), &arrayType);
 
@@ -2556,7 +2557,7 @@ TIntermDeclaration *TParseContext::parseSingleArrayInitDeclaration(
     const TSourceLoc &identifierLocation,
     const TString &identifier,
     const TSourceLoc &indexLocation,
-    unsigned int arraySize,
+    const TVector<unsigned int> &arraySizes,
     const TSourceLoc &initLocation,
     TIntermTyped *initializer)
 {
@@ -2570,7 +2571,7 @@ TIntermDeclaration *TParseContext::parseSingleArrayInitDeclaration(
     checkIsValidTypeAndQualifierForArray(indexLocation, elementType);
 
     TType arrayType(elementType);
-    arrayType.makeArray(arraySize);
+    arrayType.makeArrays(arraySizes);
 
     TIntermDeclaration *declaration = new TIntermDeclaration();
     declaration->setLine(identifierLocation);
@@ -2682,7 +2683,7 @@ void TParseContext::parseArrayDeclarator(TPublicType &elementType,
                                          const TSourceLoc &identifierLocation,
                                          const TString &identifier,
                                          const TSourceLoc &arrayLocation,
-                                         unsigned int arraySize,
+                                         const TVector<unsigned int> &arraySizes,
                                          TIntermDeclaration *declarationOut)
 {
     // If the declaration starting this declarator list was empty (example: int,), some checks were
@@ -2698,7 +2699,7 @@ void TParseContext::parseArrayDeclarator(TPublicType &elementType,
     if (checkIsValidTypeAndQualifierForArray(arrayLocation, elementType))
     {
         TType arrayType(elementType);
-        arrayType.makeArray(arraySize);
+        arrayType.makeArrays(arraySizes);
 
         checkGeometryShaderInputAndSetArraySize(identifierLocation, identifier.c_str(), &arrayType);
 
@@ -2754,7 +2755,7 @@ void TParseContext::parseArrayInitDeclarator(const TPublicType &elementType,
                                              const TSourceLoc &identifierLocation,
                                              const TString &identifier,
                                              const TSourceLoc &indexLocation,
-                                             unsigned int arraySize,
+                                             const TVector<unsigned int> &arraySizes,
                                              const TSourceLoc &initLocation,
                                              TIntermTyped *initializer,
                                              TIntermDeclaration *declarationOut)
@@ -2772,7 +2773,7 @@ void TParseContext::parseArrayInitDeclarator(const TPublicType &elementType,
     checkIsValidTypeAndQualifierForArray(indexLocation, elementType);
 
     TType arrayType(elementType);
-    arrayType.makeArray(arraySize);
+    arrayType.makeArrays(arraySizes);
 
     // initNode will correspond to the whole of "b[n] = initializer".
     TIntermBinary *initNode = nullptr;
@@ -3440,7 +3441,7 @@ TFunction *TParseContext::parseFunctionHeader(const TPublicType &type,
     {
         // Array return values are forbidden, but there's also no valid syntax for declaring array
         // return values in ESSL 1.00.
-        ASSERT(type.arraySize == 0 || mDiagnostics->numErrors() > 0);
+        ASSERT(!type.isArray() || mDiagnostics->numErrors() > 0);
 
         if (type.isStructureContainingArrays())
         {
@@ -3462,7 +3463,7 @@ TFunction *TParseContext::addNonConstructorFunc(const TString *name, const TSour
 
 TFunction *TParseContext::addConstructorFunc(const TPublicType &publicType)
 {
-    if (mShaderVersion < 300 && publicType.array)
+    if (mShaderVersion < 300 && publicType.isArray())
     {
         error(publicType.getLine(), "array constructor supported in GLSL ES 3.00 and above only",
               "[]");
@@ -3522,13 +3523,13 @@ TParameter TParseContext::parseParameterDeclarator(const TPublicType &publicType
 
 TParameter TParseContext::parseParameterArrayDeclarator(const TString *name,
                                                         const TSourceLoc &nameLoc,
-                                                        unsigned int arraySize,
+                                                        const TVector<unsigned int> &arraySizes,
                                                         const TSourceLoc &arrayLoc,
                                                         TPublicType *elementType)
 {
     checkArrayElementIsNotArray(arrayLoc, *elementType);
     TType *arrayType = new TType(*elementType);
-    arrayType->makeArray(arraySize);
+    arrayType->makeArrays(arraySizes);
     return parseParameterDeclarator(arrayType, name, nameLoc);
 }
 
@@ -4665,13 +4666,13 @@ TField *TParseContext::parseStructDeclarator(TString *identifier, const TSourceL
 
 TField *TParseContext::parseStructArrayDeclarator(TString *identifier,
                                                   const TSourceLoc &loc,
-                                                  unsigned int arraySize,
+                                                  const TVector<unsigned int> &arraySizes,
                                                   const TSourceLoc &arraySizeLoc)
 {
     checkIsNotReserved(loc, *identifier);
 
     TType *type       = new TType(EbtVoid, EbpUndefined);
-    type->makeArray(arraySize);
+    type->makeArrays(arraySizes);
 
     return new TField(type, identifier, loc);
 }
@@ -4746,7 +4747,7 @@ TFieldList *TParseContext::addStructDeclaratorList(const TPublicType &typeSpecif
     for (TField *declarator : *declaratorList)
     {
         auto declaratorArraySizes = declarator->type()->getArraySizes();
-        // don't allow arrays of arrays
+        // Don't allow arrays of arrays in ESSL < 3.10.
         if (!declaratorArraySizes.empty())
         {
             checkArrayElementIsNotArray(typeSpecifier.getLine(), typeSpecifier);

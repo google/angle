@@ -652,6 +652,52 @@ TEST_P(BindUniformLocationES31Test, LocationLayoutQualifierConflictsWithAPIBindi
     ASSERT_GL_FALSE(linked);
 }
 
+// Test for binding a location for an array of arrays uniform.
+TEST_P(BindUniformLocationES31Test, ArrayOfArrays)
+{
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_CHROMIUM_bind_uniform_location"));
+
+    const std::string vsSource =
+        R"(#version 310 es
+
+        in vec4 a_position;
+
+        void main()
+        {
+            gl_Position = a_position;
+        })";
+
+    const std::string fsSource =
+        R"(#version 310 es
+        precision highp float;
+        uniform vec4 sourceColor[2][1];
+        out highp vec4 my_FragColor;
+        void main()
+        {
+            my_FragColor = sourceColor[1][0];
+        })";
+
+    const GLuint location = 8;
+
+    GLuint vs = CompileShader(GL_VERTEX_SHADER, vsSource);
+    EXPECT_NE(0u, vs);
+    GLuint fs = CompileShader(GL_FRAGMENT_SHADER, fsSource);
+    EXPECT_NE(0u, fs);
+    linkProgramWithUniformLocation(vs, fs, "sourceColor[1]", location);
+
+    GLint linked = GL_FALSE;
+    glGetProgramiv(mProgram, GL_LINK_STATUS, &linked);
+    ASSERT_GL_TRUE(linked);
+
+    glUseProgram(mProgram);
+    glUniform4f(location, 0.0f, 1.0f, 0.0f, 1.0f);
+
+    drawQuad(mProgram, "a_position", 0.5f);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(BindUniformLocationTest,

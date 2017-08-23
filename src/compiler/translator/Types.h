@@ -247,8 +247,10 @@ class TType
     unsigned int getArraySizeProduct() const;
     bool isUnsizedArray() const;
     unsigned int getOutermostArraySize() const { return mArraySizes.back(); }
-    void makeArray(unsigned int s);
 
+    void makeArray(unsigned int s);
+    // sizes contain new outermost array sizes.
+    void makeArrays(const TVector<unsigned int> &sizes);
     // Here, the array dimension value 0 corresponds to the innermost array.
     void setArraySize(size_t arrayDimension, unsigned int s);
 
@@ -475,7 +477,8 @@ struct TPublicType
 
     bool isStructureContainingArrays() const;
     bool isStructureContainingType(TBasicType t) const;
-    void setArraySize(int s);
+    void setArraySizes(TVector<unsigned int> *sizes);
+    bool isArray() const;
     void clearArrayness();
     bool isAggregate() const;
 
@@ -485,8 +488,11 @@ struct TPublicType
     TQualifier qualifier;
     bool invariant;
     TPrecision precision;
-    bool array;
-    int arraySize;
+
+    // Either nullptr or empty in case the type is not an array. The last element is the outermost
+    // array size. Note that due to bison restrictions, copies of the public type created by the
+    // copy constructor share the same arraySizes pointer.
+    const TVector<unsigned int> *arraySizes;
 };
 
 }  // namespace sh
