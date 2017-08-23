@@ -16,6 +16,24 @@
       "revId": "d9331acad875f1a378d2f4b1a5132f30ea1f71df",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ed056100_1ffcf9f5",
+        "filename": "src/compiler/translator/glslang_tab.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 760,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-23T15:14:25Z",
+      "side": 1,
+      "message": "It changes when lines are added or removed.",
+      "parentUuid": "84e10648_d5d53fd6",
+      "revId": "d9331acad875f1a378d2f4b1a5132f30ea1f71df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
