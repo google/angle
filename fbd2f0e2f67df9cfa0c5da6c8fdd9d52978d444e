@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c555dbfc_5e425c5e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1723,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-23T15:13:05Z",
+      "side": 1,
+      "message": "There a lot of early returns in this function (and below), is this intended to only be called in this path?  A comment explaining why could help too.",
+      "range": {
+        "startLine": 1723,
+        "startChar": 4,
+        "endLine": 1723,
+        "endChar": 43
+      },
+      "revId": "fbd2f0e2f67df9cfa0c5da6c8fdd9d52978d444e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
