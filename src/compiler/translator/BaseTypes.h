@@ -576,8 +576,11 @@ enum TQualifier
     // GLSL ES 3.1 extension OES_geometry_shader qualifiers
     EvqGeometryIn,
     EvqGeometryOut,
-    EvqPerVertexIn,
-    EvqLayer,  // gl_Layer
+    EvqPerVertexIn,    // gl_in
+    EvqPrimitiveIDIn,  // gl_PrimitiveIDIn
+    EvqInvocationID,   // gl_InvocationID
+    EvqPrimitiveID,    // gl_PrimitiveID
+    EvqLayer,          // gl_Layer
 
     // end of list
     EvqLast

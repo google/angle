@@ -521,6 +521,24 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
         case EvqPerVertexIn:
             message = "can't modify any member in gl_in";
             break;
+        case EvqPrimitiveIDIn:
+            message = "can't modify gl_PrimitiveIDIn";
+            break;
+        case EvqInvocationID:
+            message = "can't modify gl_InvocationID";
+            break;
+        case EvqPrimitiveID:
+            if (mShaderType == GL_FRAGMENT_SHADER)
+            {
+                message = "can't modify gl_PrimitiveID in a fragment shader";
+            }
+            break;
+        case EvqLayer:
+            if (mShaderType == GL_FRAGMENT_SHADER)
+            {
+                message = "can't modify gl_Layer in a fragment shader";
+            }
+            break;
         default:
             //
             // Type that can't be written to?

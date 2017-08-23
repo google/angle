@@ -1006,6 +1006,8 @@ bool TOutputGLSLBase::visitAggregate(Visit visit, TIntermAggregate *node)
         case EOpMemoryBarrierImage:
         case EOpMemoryBarrierShared:
         case EOpGroupMemoryBarrier:
+        case EOpEmitVertex:
+        case EOpEndPrimitive:
             writeBuiltInFunctionTriplet(visit, node->getOp(), node->getUseEmulatedFunction());
             break;
         default:

@@ -100,6 +100,7 @@ class CollectVariablesTraverser : public TIntermTraverser
                               ShHashFunction64 hashFunction,
                               TSymbolTable *symbolTable,
                               int shaderVersion,
+                              GLenum shaderType,
                               const TExtensionBehavior &extensionBehavior);
 
     void visitSymbol(TIntermSymbol *symbol) override;
@@ -139,15 +140,21 @@ class CollectVariablesTraverser : public TIntermTraverser
 
     std::map<std::string, InterfaceBlockField *> mInterfaceBlockFields;
 
+    // Shader uniforms
     bool mDepthRangeAdded;
+
+    // Vertex Shader builtins
+    bool mInstanceIDAdded;
+    bool mVertexIDAdded;
+    bool mPointSizeAdded;
+
+    // Vertex Shader and Geometry Shader builtins
+    bool mPositionAdded;
+
+    // Fragment Shader builtins
     bool mPointCoordAdded;
     bool mFrontFacingAdded;
     bool mFragCoordAdded;
-
-    bool mInstanceIDAdded;
-    bool mVertexIDAdded;
-    bool mPositionAdded;
-    bool mPointSizeAdded;
     bool mLastFragDataAdded;
     bool mFragColorAdded;
     bool mFragDataAdded;
@@ -156,11 +163,19 @@ class CollectVariablesTraverser : public TIntermTraverser
     bool mSecondaryFragColorEXTAdded;
     bool mSecondaryFragDataEXTAdded;
 
+    // Geometry Shader builtins
     bool mPerVertexInAdded;
+    bool mPrimitiveIDInAdded;
+    bool mInvocationIDAdded;
+
+    // Geometry Shader and Fragment Shader builtins
+    bool mPrimitiveIDAdded;
+    bool mLayerAdded;
 
     ShHashFunction64 mHashFunction;
 
     int mShaderVersion;
+    GLenum mShaderType;
     const TExtensionBehavior &mExtensionBehavior;
 };
 
@@ -176,6 +191,7 @@ CollectVariablesTraverser::CollectVariablesTraverser(
     ShHashFunction64 hashFunction,
     TSymbolTable *symbolTable,
     int shaderVersion,
+    GLenum shaderType,
     const TExtensionBehavior &extensionBehavior)
     : TIntermTraverser(true, false, false, symbolTable),
       mAttribs(attribs),
@@ -187,13 +203,13 @@ CollectVariablesTraverser::CollectVariablesTraverser(
       mShaderStorageBlocks(shaderStorageBlocks),
       mInBlocks(inBlocks),
       mDepthRangeAdded(false),
+      mInstanceIDAdded(false),
+      mVertexIDAdded(false),
+      mPointSizeAdded(false),
+      mPositionAdded(false),
       mPointCoordAdded(false),
       mFrontFacingAdded(false),
       mFragCoordAdded(false),
-      mInstanceIDAdded(false),
-      mVertexIDAdded(false),
-      mPositionAdded(false),
-      mPointSizeAdded(false),
       mLastFragDataAdded(false),
       mFragColorAdded(false),
       mFragDataAdded(false),
@@ -202,8 +218,13 @@ CollectVariablesTraverser::CollectVariablesTraverser(
       mSecondaryFragColorEXTAdded(false),
       mSecondaryFragDataEXTAdded(false),
       mPerVertexInAdded(false),
+      mPrimitiveIDInAdded(false),
+      mInvocationIDAdded(false),
+      mPrimitiveIDAdded(false),
+      mLayerAdded(false),
       mHashFunction(hashFunction),
       mShaderVersion(shaderVersion),
+      mShaderType(shaderType),
       mExtensionBehavior(extensionBehavior)
 {
 }
@@ -470,6 +491,38 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
                 recordBuiltInFragmentOutputUsed("gl_SecondaryFragDataEXT",
                                                 &mSecondaryFragDataEXTAdded);
                 return;
+            case EvqInvocationID:
+                recordBuiltInVaryingUsed("gl_InvocationID", &mInvocationIDAdded, mInputVaryings);
+                break;
+            case EvqPrimitiveIDIn:
+                recordBuiltInVaryingUsed("gl_PrimitiveIDIn", &mPrimitiveIDInAdded, mInputVaryings);
+                break;
+            case EvqPrimitiveID:
+                if (mShaderType == GL_GEOMETRY_SHADER_OES)
+                {
+                    recordBuiltInVaryingUsed("gl_PrimitiveID", &mPrimitiveIDAdded, mOutputVaryings);
+                }
+                else
+                {
+                    ASSERT(mShaderType == GL_FRAGMENT_SHADER);
+                    recordBuiltInVaryingUsed("gl_PrimitiveID", &mPrimitiveIDAdded, mInputVaryings);
+                }
+                break;
+            case EvqLayer:
+                if (mShaderType == GL_GEOMETRY_SHADER_OES)
+                {
+                    recordBuiltInVaryingUsed("gl_Layer", &mLayerAdded, mOutputVaryings);
+                }
+                else if (mShaderType == GL_FRAGMENT_SHADER)
+                {
+                    recordBuiltInVaryingUsed("gl_Layer", &mLayerAdded, mInputVaryings);
+                }
+                else
+                {
+                    ASSERT(mShaderType == GL_VERTEX_SHADER &&
+                           IsExtensionEnabled(mExtensionBehavior, "GL_OVR_multiview"));
+                }
+                break;
             default:
                 break;
         }
@@ -783,11 +836,13 @@ void CollectVariables(TIntermBlock *root,
                       ShHashFunction64 hashFunction,
                       TSymbolTable *symbolTable,
                       int shaderVersion,
+                      GLenum shaderType,
                       const TExtensionBehavior &extensionBehavior)
 {
     CollectVariablesTraverser collect(attributes, outputVariables, uniforms, inputVaryings,
                                       outputVaryings, uniformBlocks, shaderStorageBlocks, inBlocks,
-                                      hashFunction, symbolTable, shaderVersion, extensionBehavior);
+                                      hashFunction, symbolTable, shaderVersion, shaderType,
+                                      extensionBehavior);
     root->traverse(&collect);
 }
 

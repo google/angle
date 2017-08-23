@@ -986,3 +986,173 @@ TEST_F(GeometryShaderTest, AssignValueToGLIn)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Verify Geometry Shader supports all required built-in variables.
+TEST_F(GeometryShaderTest, BuiltInVariables)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "#extension GL_OES_geometry_shader : require\n"
+        "layout (points, invocations = 2) in;\n"
+        "layout (points, max_vertices = 2) out;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = gl_in[gl_InvocationID].gl_Position;\n"
+        "    int invocation = gl_InvocationID;\n"
+        "    gl_Layer = invocation;\n"
+        "    int primitiveIn = gl_PrimitiveIDIn;\n"
+        "    gl_PrimitiveID = primitiveIn;\n"
+        "}\n";
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+    }
+}
+
+// Verify that gl_PrimitiveIDIn cannot be l-value.
+TEST_F(GeometryShaderTest, AssignValueToGLPrimitiveIn)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "#extension GL_OES_geometry_shader : require\n"
+        "layout (points, invocations = 2) in;\n"
+        "layout (points, max_vertices = 2) out;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_PrimitiveIDIn = 1;\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Verify that gl_InvocationID cannot be l-value.
+TEST_F(GeometryShaderTest, AssignValueToGLInvocations)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "#extension GL_OES_geometry_shader : require\n"
+        "layout (points, invocations = 2) in;\n"
+        "layout (points, max_vertices = 2) out;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_InvocationID = 1;\n"
+        "}\n";
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Verify that both EmitVertex() and EndPrimitive() are supported in Geometry Shader.
+TEST_F(GeometryShaderTest, GeometryShaderBuiltInFunctions)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "#extension GL_OES_geometry_shader : require\n"
+        "layout (points) in;\n"
+        "layout (points, max_vertices = 2) out;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = gl_in[0].gl_Position;\n"
+        "    EmitVertex();\n"
+        "    EndPrimitive();\n"
+        "}\n";
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+    }
+}
+
+// Verify that using EmitVertex() or EndPrimitive() without GL_OES_geometry_shader declared causes a
+// compile error.
+TEST_F(GeometryShaderTest, GeometryShaderBuiltInFunctionsWithoutExtension)
+{
+    const std::string &shaderString1 =
+        "#version 310 es\n"
+        "void main()\n"
+        "{\n"
+        "    EmitVertex();\n"
+        "}\n";
+
+    const std::string &shaderString2 =
+        "#version 310 es\n"
+        "void main()\n"
+        "{\n"
+        "    EndPrimitive();\n"
+        "}\n";
+
+    if (compile(shaderString1) || compile(shaderString2))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Verify that all required built-in constant values are supported in Geometry Shaders
+TEST_F(GeometryShaderTest, GeometryShaderBuiltInConstants)
+{
+    const std::string &kShaderHeader =
+        "#version 310 es\n"
+        "#extension GL_OES_geometry_shader : require\n"
+        "layout (points) in;\n"
+        "layout (points, max_vertices = 2) out;\n"
+        "void main()\n"
+        "{\n"
+        "    int val = ";
+
+    const std::array<std::string, 9> kGeometryShaderBuiltinConstants = {{
+        "gl_MaxGeometryInputComponents", "gl_MaxGeometryOutputComponents",
+        "gl_MaxGeometryImageUniforms", "gl_MaxGeometryTextureImageUnits",
+        "gl_MaxGeometryOutputVertices", "gl_MaxGeometryTotalOutputComponents",
+        "gl_MaxGeometryUniformComponents", "gl_MaxGeometryAtomicCounters",
+        "gl_MaxGeometryAtomicCounterBuffers",
+    }};
+
+    const std::string &kShaderTail =
+        ";\n"
+        "}\n";
+
+    for (const std::string &kGSBuiltinConstant : kGeometryShaderBuiltinConstants)
+    {
+        std::ostringstream ostream;
+        ostream << kShaderHeader << kGSBuiltinConstant << kShaderTail;
+        if (!compile(ostream.str()))
+        {
+            FAIL() << "Shader compilation failed, expecting success: \n" << mInfoLog;
+        }
+    }
+}
+
+// Verify that using any Geometry Shader built-in constant values without GL_OES_geometry_shader
+// declared causes a compile error.
+TEST_F(GeometryShaderTest, GeometryShaderBuiltInConstantsWithoutExtension)
+{
+    const std::string &kShaderHeader =
+        "#version 310 es\n"
+        "void main()\n"
+        "{\n"
+        "    int val = ";
+
+    const std::array<std::string, 9> kGeometryShaderBuiltinConstants = {{
+        "gl_MaxGeometryInputComponents", "gl_MaxGeometryOutputComponents",
+        "gl_MaxGeometryImageUniforms", "gl_MaxGeometryTextureImageUnits",
+        "gl_MaxGeometryOutputVertices", "gl_MaxGeometryTotalOutputComponents",
+        "gl_MaxGeometryUniformComponents", "gl_MaxGeometryAtomicCounters",
+        "gl_MaxGeometryAtomicCounterBuffers",
+    }};
+
+    const std::string &kShaderTail =
+        ";\n"
+        "}\n";
+
+    for (const std::string &kGSBuiltinConstant : kGeometryShaderBuiltinConstants)
+    {
+        std::ostringstream ostream;
+        ostream << kShaderHeader << kGSBuiltinConstant << kShaderTail;
+        if (compile(ostream.str()))
+        {
+            FAIL() << "Shader compilation succeeded, expecting failure: \n" << mInfoLog;
+        }
+    }
+}

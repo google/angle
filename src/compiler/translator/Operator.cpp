@@ -341,6 +341,11 @@ const char *GetOperatorString(TOperator op)
             return "memoryBarrierShared";
         case EOpGroupMemoryBarrier:
             return "groupMemoryBarrier";
+
+        case EOpEmitVertex:
+            return "EmitVertex";
+        case EOpEndPrimitive:
+            return "EndPrimitive";
         default:
             break;
     }

@@ -236,10 +236,18 @@ void InitBuiltInResources(ShBuiltInResources *resources)
 
     resources->MaxUniformBufferBindings = 32;
 
-    // TODO(jiawei.shao@intel.com): add complete geometry shader constants.
-    resources->MaxGeometryUniformComponents = 1024;
-    resources->MaxGeometryOutputVertices    = 256;
-    resources->MaxGeometryShaderInvocations = 32;
+    resources->MaxGeometryUniformComponents     = 1024;
+    resources->MaxGeometryUniformBlocks         = 12;
+    resources->MaxGeometryInputComponents       = 64;
+    resources->MaxGeometryOutputComponents      = 64;
+    resources->MaxGeometryOutputVertices        = 256;
+    resources->MaxGeometryTotalOutputComponents = 1024;
+    resources->MaxGeometryTextureImageUnits     = 16;
+    resources->MaxGeometryAtomicCounterBuffers  = 0;
+    resources->MaxGeometryAtomicCounters        = 0;
+    resources->MaxGeometryShaderStorageBlocks   = 0;
+    resources->MaxGeometryShaderInvocations     = 32;
+    resources->MaxGeometryImageUniforms         = 0;
 }
 
 //
@@ -365,7 +373,7 @@ const std::vector<Uniform> *GetUniforms(const ShHandle handle)
     return GetShaderVariables<Uniform>(handle);
 }
 
-const std::vector<sh::Varying> *GetInputVaryings(const ShHandle handle)
+const std::vector<Varying> *GetInputVaryings(const ShHandle handle)
 {
     TCompiler *compiler = GetCompilerFromHandle(handle);
     if (compiler == nullptr)
@@ -375,7 +383,7 @@ const std::vector<sh::Varying> *GetInputVaryings(const ShHandle handle)
     return &compiler->getInputVaryings();
 }
 
-const std::vector<sh::Varying> *GetOutputVaryings(const ShHandle handle)
+const std::vector<Varying> *GetOutputVaryings(const ShHandle handle)
 {
     TCompiler *compiler = GetCompilerFromHandle(handle);
     if (compiler == nullptr)
