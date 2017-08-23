@@ -16,6 +16,24 @@
       "revId": "e052ef5e60027318c735e2b4e2e8632ab1618e42",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a1e97c52_50f863aa",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2017-08-23T10:17:47Z",
+      "side": 1,
+      "message": "Here if IsExtensionEnabled(mExtensionBehavior, \"GL_OVR_multiview\") \u003d true and refer \"gl_Layer\"(fragment built in variable) in fragment shader, it will skip to record \"gl_Layer\" is being used in fragment shader. But it may be legal to refer gl_Layer(fragment built-in variable) in fragment shader. Is that right?\nI think you cannot use EvqLayer which was defined by Olli. The two \"EvqLayer\" qualifiers are not the same.",
+      "parentUuid": "55df8ba6_1078565f",
+      "revId": "e052ef5e60027318c735e2b4e2e8632ab1618e42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
