@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2492bfca_7c2ea6d8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 447,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-23T14:14:12Z",
+      "side": 1,
+      "message": "Let\u0027s assume that \"this\" framebuffer is the draw framebuffer. It will mean that on blit, readpixels and copyTexImage we do this state update, which isn\u0027t optimal, but it\u0027s ok for now. We can fix this in the future.\n\nThis check can become (mState.getFirstNonNullAttachment() !\u003d nullptr \u0026\u0026 (mState.getDefaultWidth() !\u003d 0 || mState.getDefaultHeight() !\u003d 0))",
+      "range": {
+        "startLine": 443,
+        "startChar": 0,
+        "endLine": 447,
+        "endChar": 5
+      },
+      "revId": "96cb92a45af38538a3d834222411e3452f216064",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
