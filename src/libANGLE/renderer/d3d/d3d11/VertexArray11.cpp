@@ -161,6 +161,12 @@ bool VertexArray11::hasDynamicAttrib(const gl::Context *context)
     return mDynamicAttribsMask.any();
 }
 
+bool VertexArray11::hasDirtyOrDynamicAttrib(const gl::Context *context)
+{
+    flushAttribUpdates(context);
+    return mAttribsToTranslate.any() || mDynamicAttribsMask.any();
+}
+
 gl::Error VertexArray11::updateDirtyAndDynamicAttribs(const gl::Context *context,
                                                       VertexDataManager *vertexDataManager,
                                                       GLint start,
@@ -229,8 +235,8 @@ gl::Error VertexArray11::updateDirtyAndDynamicAttribs(const gl::Context *context
             dynamicAttrib->divisor          = dynamicAttrib->binding->getDivisor();
         }
 
-        return vertexDataManager->storeDynamicAttribs(&mTranslatedAttribs, activeDynamicAttribs,
-                                                      start, count, instances);
+        ANGLE_TRY(vertexDataManager->storeDynamicAttribs(&mTranslatedAttribs, activeDynamicAttribs,
+                                                         start, count, instances));
     }
 
     return gl::NoError();

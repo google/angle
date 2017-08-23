@@ -373,6 +373,7 @@ class StateManager11 final : angle::NonCopyable
     IndexDataManager mIndexDataManager;
     InputLayoutCache mInputLayoutCache;
     std::vector<const TranslatedAttribute *> mCurrentAttributes;
+    Optional<GLint> mLastFirstVertex;
 };
 
 }  // namespace rx

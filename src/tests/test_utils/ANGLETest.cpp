@@ -132,14 +132,6 @@ angle::Vector4 GLColor::toNormalizedVector() const
     return angle::Vector4(ColorNorm(R), ColorNorm(G), ColorNorm(B), ColorNorm(A));
 }
 
-GLColor32F::GLColor32F() : GLColor32F(0.0f, 0.0f, 0.0f, 0.0f)
-{
-}
-
-GLColor32F::GLColor32F(GLfloat r, GLfloat g, GLfloat b, GLfloat a) : R(r), G(g), B(b), A(a)
-{
-}
-
 GLColor ReadColor(GLint x, GLint y)
 {
     GLColor actual;
