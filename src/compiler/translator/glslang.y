@@ -943,11 +943,8 @@ type_specifier_no_prec
     }
     | type_specifier_nonarray LEFT_BRACKET constant_expression RIGHT_BRACKET {
         $$.initialize($1, (context->symbolTable.atGlobalLevel() ? EvqGlobal : EvqTemporary));
-        if (context->checkIsValidTypeForArray(@2, $$))
-        {
-            unsigned int size = context->checkIsValidArraySize(@2, $3);
-            $$.setArraySize(size);
-        }
+        unsigned int size = context->checkIsValidArraySize(@2, $3);
+        $$.setArraySize(size);
     }
     ;
 

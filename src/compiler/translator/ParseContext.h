@@ -125,7 +125,7 @@ class TParseContext : angle::NonCopyable
     // Returns a sanitized array size to use (the size is at least 1).
     unsigned int checkIsValidArraySize(const TSourceLoc &line, TIntermTyped *expr);
     bool checkIsValidQualifierForArray(const TSourceLoc &line, const TPublicType &elementQualifier);
-    bool checkIsValidTypeForArray(const TSourceLoc &line, const TPublicType &elementType);
+    bool checkArrayElementIsNotArray(const TSourceLoc &line, const TPublicType &elementType);
     bool checkIsNonVoid(const TSourceLoc &line, const TString &identifier, const TBasicType &type);
     bool checkIsScalarBool(const TSourceLoc &line, const TIntermTyped *type);
     void checkIsScalarBool(const TSourceLoc &line, const TPublicType &pType);

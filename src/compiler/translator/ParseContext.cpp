@@ -968,15 +968,29 @@ bool TParseContext::checkIsValidQualifierForArray(const TSourceLoc &line,
 }
 
 // See if this element type can be formed into an array.
-bool TParseContext::checkIsValidTypeForArray(const TSourceLoc &line, const TPublicType &elementType)
+bool TParseContext::checkArrayElementIsNotArray(const TSourceLoc &line,
+                                                const TPublicType &elementType)
 {
-    //
-    // Can the type be an array?
-    //
     if (elementType.array)
     {
         error(line, "cannot declare arrays of arrays",
               TType(elementType).getCompleteString().c_str());
+        return false;
+    }
+    return true;
+}
+
+// Check if this qualified element type can be formed into an array. This is only called when array
+// brackets are associated with an identifier in a declaration, like this:
+//   float a[2];
+// Similar checks are done in addFullySpecifiedType for array declarations where the array brackets
+// are associated with the type, like this:
+//   float[2] a;
+bool TParseContext::checkIsValidTypeAndQualifierForArray(const TSourceLoc &indexLocation,
+                                                         const TPublicType &elementType)
+{
+    if (!checkArrayElementIsNotArray(indexLocation, elementType))
+    {
         return false;
     }
     // In ESSL1.00 shaders, structs cannot be varying (section 4.3.5). This is checked elsewhere.
@@ -985,23 +999,11 @@ bool TParseContext::checkIsValidTypeForArray(const TSourceLoc &line, const TPubl
     if (mShaderVersion >= 300 && elementType.getBasicType() == EbtStruct &&
         sh::IsVarying(elementType.qualifier))
     {
-        error(line, "cannot declare arrays of structs of this qualifier",
+        error(indexLocation, "cannot declare arrays of structs of this qualifier",
               TType(elementType).getCompleteString().c_str());
         return false;
     }
-
-    return true;
-}
-
-// Check if this qualified element type can be formed into an array.
-bool TParseContext::checkIsValidTypeAndQualifierForArray(const TSourceLoc &indexLocation,
-                                                         const TPublicType &elementType)
-{
-    if (checkIsValidTypeForArray(indexLocation, elementType))
-    {
-        return checkIsValidQualifierForArray(indexLocation, elementType);
-    }
-    return false;
+    return checkIsValidQualifierForArray(indexLocation, elementType);
 }
 
 // Enforce non-initializer type/qualifier rules.
@@ -3345,7 +3347,7 @@ TParameter TParseContext::parseParameterArrayDeclarator(const TString *identifie
                                                         const TSourceLoc &arrayLoc,
                                                         TPublicType *type)
 {
-    checkIsValidTypeForArray(arrayLoc, *type);
+    checkArrayElementIsNotArray(arrayLoc, *type);
     unsigned int size = checkIsValidArraySize(arrayLoc, arraySize);
     type->setArraySize(size);
     return parseParameterDeclarator(*type, identifier, identifierLoc);
@@ -4528,7 +4530,7 @@ TFieldList *TParseContext::addStructDeclaratorList(const TPublicType &typeSpecif
         // don't allow arrays of arrays
         if (!declaratorArraySizes.empty())
         {
-            checkIsValidTypeForArray(typeSpecifier.getLine(), typeSpecifier);
+            checkArrayElementIsNotArray(typeSpecifier.getLine(), typeSpecifier);
         }
 
         TType *type = (*declaratorList)[i]->type();
