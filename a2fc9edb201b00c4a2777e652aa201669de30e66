@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4720e4d2_80104d05",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SamplePosition11.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-23T09:17:45Z",
+      "side": 1,
+      "message": "mSamplePositionsBuffer is used to write not read. It\u0027s weird to say \u0027set read buffer UAV\u0027.",
+      "range": {
+        "startLine": 171,
+        "startChar": 7,
+        "endLine": 171,
+        "endChar": 26
+      },
+      "revId": "a2fc9edb201b00c4a2777e652aa201669de30e66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "364696ca_ec5f3bd8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SamplePosition11.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-23T09:17:45Z",
+      "side": 1,
+      "message": "Don\u0027t use \u0027m\u0027 as prefix. Usually, m*** is used form class member.",
+      "range": {
+        "startLine": 180,
+        "startChar": 18,
+        "endLine": 180,
+        "endChar": 31
+      },
+      "revId": "a2fc9edb201b00c4a2777e652aa201669de30e66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "36023cba_dda37e9f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SamplePosition11.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-23T09:17:45Z",
+      "side": 1,
+      "message": "nit: mSamplePositionMap",
+      "range": {
+        "startLine": 59,
+        "startChar": 61,
+        "endLine": 59,
+        "endChar": 79
+      },
+      "revId": "a2fc9edb201b00c4a2777e652aa201669de30e66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
