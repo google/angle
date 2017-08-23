@@ -22,6 +22,30 @@
       "revId": "fbd2f0e2f67df9cfa0c5da6c8fdd9d52978d444e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3a97c24_ede18f3e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1723,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-23T16:10:12Z",
+      "side": 1,
+      "message": "Yes it\u0027s intentional. Added a comment.",
+      "parentUuid": "c555dbfc_5e425c5e",
+      "range": {
+        "startLine": 1723,
+        "startChar": 4,
+        "endLine": 1723,
+        "endChar": 43
+      },
+      "revId": "fbd2f0e2f67df9cfa0c5da6c8fdd9d52978d444e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
