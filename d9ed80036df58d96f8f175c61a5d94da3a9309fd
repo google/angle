@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f38d399b_4c3dd5da",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-24T15:58:21Z",
+      "side": 1,
+      "message": "The spec lists the following\n\n\n      const mediump int gl_MaxGeometryInputComponents \u003d 64;\n      const mediump int gl_MaxGeometryOutputComponents \u003d 128;\n      const mediump int gl_MaxGeometryImageUniforms \u003d 0;\n      const mediump int gl_MaxGeometryTextureImageUnits \u003d 16;\n      const mediump int gl_MaxGeometryOutputVertices \u003d 256;\n      const mediump int gl_MaxGeometryTotalOutputComponents \u003d 1024;\n      const mediump int gl_MaxGeometryUniformComponents \u003d 1024;\n      const mediump int gl_MaxGeometryAtomicCounters \u003d 0;\n      const mediump int gl_MaxGeometryAtomicCounterBuffers \u003d 0;\n\n\nWhere do MaxGeometryUniformBlocks, MaxGeometryShaderStorageBlocks and MaxGeometryShaderInvocations come from?",
+      "revId": "d9ed80036df58d96f8f175c61a5d94da3a9309fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d46d0408_8cb00de0",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-24T15:58:21Z",
+      "side": 1,
+      "message": "nit: can you add comment these blocks of members with the shader stage they correspond to?\n\n    // Vertex shader builtins\n    bool mDepthRangeAdded;",
+      "revId": "d9ed80036df58d96f8f175c61a5d94da3a9309fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "be631340_6b1666e8",
+        "filename": "src/tests/compiler_tests/GeometryShader_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1070,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-24T15:58:21Z",
+      "side": 1,
+      "message": "nit: this would still fail if only one of them was allowed. It\u0027d be ok to test only one of them and assuming the other behaves the same, or there could one test for each.",
+      "revId": "d9ed80036df58d96f8f175c61a5d94da3a9309fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "37c2430d_d0cf7412",
+        "filename": "src/tests/compiler_tests/GeometryShader_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1113,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-24T15:58:21Z",
+      "side": 1,
+      "message": "nit: same comment as for EmitVertex / EndPrimitive. If we choose to test them individually, have a single TEST_F looping over constants would be ok.",
+      "revId": "d9ed80036df58d96f8f175c61a5d94da3a9309fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8335fa01_e3e4dacf",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4590,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-24T15:58:21Z",
+      "side": 1,
+      "message": "nit: same comment as the same test for geometry shaders.",
+      "revId": "d9ed80036df58d96f8f175c61a5d94da3a9309fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
