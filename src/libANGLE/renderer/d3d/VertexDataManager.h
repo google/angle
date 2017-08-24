@@ -127,7 +127,6 @@ class VertexDataManager : angle::NonCopyable
     };
 
     gl::Error reserveSpaceForAttrib(const TranslatedAttribute &translatedAttrib,
-                                    GLint start,
                                     GLsizei count,
                                     GLsizei instances) const;
 
