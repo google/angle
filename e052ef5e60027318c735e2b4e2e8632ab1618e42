@@ -52,6 +52,24 @@
       "revId": "e052ef5e60027318c735e2b4e2e8632ab1618e42",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "11086b0c_cbcdd831",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-24T07:13:34Z",
+      "side": 1,
+      "message": "Thanks for your advice. I have updated the patch and it looks much better.",
+      "parentUuid": "6817af6c_5b7473ad",
+      "revId": "e052ef5e60027318c735e2b4e2e8632ab1618e42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
