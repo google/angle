@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "389e330f_c9c1b3e8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 652,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-24T11:02:10Z",
+      "side": 1,
+      "message": "Because we are using instancing to multiply geometry, we have to adjust the attribute divisor so that each view gets its corresponding attributes.\nIf the a new program is bound which has a different number of views, then the attribute divisor has to be adjusted again.\nI am not sure whether I can do it another way as the VAO does not get marked as dirty. It\u0027s done in a very similar way on the GL side too.\nAny recommendations?",
+      "parentUuid": "889ab4e8_6ded1553",
+      "range": {
+        "startLine": 652,
+        "startChar": 1,
+        "endLine": 652,
+        "endChar": 59
+      },
+      "revId": "a0843995f353b0cdd1009997e263a3f469809ee3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "accb3b9a_8d26a2ba",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 6
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "b340973e_e7d0dced",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 676,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-24T11:02:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "accb3b9a_8d26a2ba",
+      "range": {
+        "startLine": 676,
+        "startChar": 21,
+        "endLine": 676,
+        "endChar": 48
+      },
+      "revId": "a0843995f353b0cdd1009997e263a3f469809ee3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "09d533c6_801b13f6",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 6
@@ -59,6 +107,30 @@
       "writtenOn": "2017-08-22T15:10:01Z",
       "side": 1,
       "message": "if this isn\u0027t necessary, remove it. If it is necessary, please add a comment. This check is a bit of a hack so it\u0027s good to clarify that.",
+      "range": {
+        "startLine": 678,
+        "startChar": 0,
+        "endLine": 681,
+        "endChar": 5
+      },
+      "revId": "a0843995f353b0cdd1009997e263a3f469809ee3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "444c4c7d_fd1ed25f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-24T11:02:10Z",
+      "side": 1,
+      "message": "Should not be necessary. There was some other piece of code doing the exact same thing and thought it was needed because of that.",
+      "parentUuid": "09d533c6_801b13f6",
       "range": {
         "startLine": 678,
         "startChar": 0,
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "4af9098f_952af968",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 852,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-24T11:02:10Z",
+      "side": 1,
+      "message": "Yes, I will set an implementation maximum of the number of views to be 4. Then we can use static memory everywhere, including GL side.",
+      "parentUuid": "adfc5ab6_8665e358",
+      "range": {
+        "startLine": 852,
+        "startChar": 8,
+        "endLine": 852,
+        "endChar": 43
+      },
+      "revId": "a0843995f353b0cdd1009997e263a3f469809ee3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fbeed57d_8c85d614",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 6
@@ -114,6 +210,30 @@
       "revId": "a0843995f353b0cdd1009997e263a3f469809ee3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "04cf9ba3_5e40b931",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 895,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-24T11:02:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fbeed57d_8c85d614",
+      "range": {
+        "startLine": 895,
+        "startChar": 4,
+        "endLine": 895,
+        "endChar": 44
+      },
+      "revId": "a0843995f353b0cdd1009997e263a3f469809ee3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "e30151b3_9dc96009",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1284,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-24T11:02:10Z",
+      "side": 1,
+      "message": "In other parts (Shader/Program related?) of the code Geoff or Corentin have recommended me to reset the state in the deinitialize method. Is there some convention? Do some of the initialized objects get reused on occasion?",
+      "parentUuid": "a894a917_f0f15170",
+      "range": {
+        "startLine": 1283,
+        "startChar": 0,
+        "endLine": 1284,
+        "endChar": 32
+      },
+      "revId": "a0843995f353b0cdd1009997e263a3f469809ee3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "32ad3dc6_bde9dc36",
         "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
         "patchSetId": 6
@@ -151,6 +295,30 @@
       "writtenOn": "2017-08-22T15:10:01Z",
       "side": 1,
       "message": "you can use ANGLE_SKIP_TEST_IF",
+      "range": {
+        "startLine": 1466,
+        "startChar": 0,
+        "endLine": 1469,
+        "endChar": 5
+      },
+      "revId": "a0843995f353b0cdd1009997e263a3f469809ee3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f1ae97d7_a1e3b9ee",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1469,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-24T11:02:10Z",
+      "side": 1,
+      "message": "I will refactor both MultiviewDrawTest.cpp and FramebufferMultiviewTest.cpp in a separate patch.\nI don\u0027t really want to replace this in all of the tests in this patch.",
+      "parentUuid": "32ad3dc6_bde9dc36",
       "range": {
         "startLine": 1466,
         "startChar": 0,

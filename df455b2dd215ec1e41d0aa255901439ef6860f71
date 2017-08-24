@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "63d83949_18c30a24",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-24T11:02:10Z",
+      "side": 1,
+      "message": "I could possibly change every use of std::vector for multiview related functionality to std::array in another patch?",
+      "range": {
+        "startLine": 278,
+        "startChar": 4,
+        "endLine": 278,
+        "endChar": 45
+      },
+      "revId": "df455b2dd215ec1e41d0aa255901439ef6860f71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
