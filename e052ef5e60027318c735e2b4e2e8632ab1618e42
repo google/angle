@@ -34,6 +34,24 @@
       "revId": "e052ef5e60027318c735e2b4e2e8632ab1618e42",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6817af6c_5b7473ad",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-24T01:13:18Z",
+      "side": 1,
+      "message": "I don\u0027t agree with you. They are all called \"gl_Layer\", so they should share the same qualifier. You can see Olli put EvqLayer together with other geometry shader qualifiers instead of the other multiview qualifiers in BaseTypes.h, which shows they treat gl_Layer as the same one in geometry shader.\n\nI re-read the spec of OVR_multiview and OVR_multiview2, it isn\u0027t allowed to use geometry shader when OVR_multiview and OVR_multiview2 are enabled. \nhttps://www.khronos.org/registry/OpenGL/extensions/OVR/OVR_multiview.txt \nhttps://www.khronos.org/registry/OpenGL/extensions/OVR/OVR_multiview2.txt \n\nAccording to the existing code, Olli just uses gl_Layer to emulate gl_ViewID_OVR in vertex shader in the compiler, which means gl_Layer shouldn\u0027t be collected at all. The compiler should collect gl_ViewID_OVR instead.",
+      "parentUuid": "a1e97c52_50f863aa",
+      "revId": "e052ef5e60027318c735e2b4e2e8632ab1618e42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
