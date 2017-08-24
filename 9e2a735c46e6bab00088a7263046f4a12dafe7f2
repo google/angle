@@ -69,6 +69,24 @@
       "revId": "9e2a735c46e6bab00088a7263046f4a12dafe7f2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "17e69777_9cd8047f",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-24T21:19:26Z",
+      "side": 1,
+      "message": "not sure actually, I remember Martin\u0027s example used them but I don\u0027t know about what\u0027s in the code now. If the TODO cannot be done right now, can we DISABLE the test instead so that we remember to come back to it?",
+      "parentUuid": "a642cf5e_bd509c09",
+      "revId": "9e2a735c46e6bab00088a7263046f4a12dafe7f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
