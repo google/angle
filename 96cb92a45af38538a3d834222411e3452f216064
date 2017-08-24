@@ -46,6 +46,30 @@
       "revId": "96cb92a45af38538a3d834222411e3452f216064",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ca2b5a1_efd1ce0b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 447,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-24T17:01:06Z",
+      "side": 1,
+      "message": "No, I mean instead of checking the context for the draw framebuffer, assume that when we\u0027re in this function the current framebuffer (this pointer) is the draw framebuffer.",
+      "parentUuid": "cf6a4119_5f2a91d0",
+      "range": {
+        "startLine": 443,
+        "startChar": 0,
+        "endLine": 447,
+        "endChar": 5
+      },
+      "revId": "96cb92a45af38538a3d834222411e3452f216064",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
