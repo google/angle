@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "a12563fd_59faf4ea",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-24T21:33:49Z",
+      "side": 1,
+      "message": "nit: you can just pass the program here to avoid querying the multiview stuff until you need it.",
+      "range": {
+        "startLine": 391,
+        "startChar": 28,
+        "endLine": 391,
+        "endChar": 61
+      },
+      "revId": "df455b2dd215ec1e41d0aa255901439ef6860f71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "754ca8c5_af5193f4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 700,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-24T21:33:49Z",
+      "side": 1,
+      "message": "First question. what happens if a program is re-linked successfully when it is currently bound? Maybe use the program executable dirty bit.\n\nSecond question, can we do this without manually calling vao-\u003esyncState? This is not nice IMO, and isn\u0027t how things are supposed to work. I\u0027m not super familiar with the multiview stuff so I can try to look more in depth tomorrow.",
+      "range": {
+        "startLine": 691,
+        "startChar": 0,
+        "endLine": 700,
+        "endChar": 59
+      },
+      "revId": "df455b2dd215ec1e41d0aa255901439ef6860f71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "63d83949_18c30a24",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
         "patchSetId": 8
