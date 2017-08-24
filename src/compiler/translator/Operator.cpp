@@ -30,6 +30,9 @@ const char *GetOperatorString(TOperator op)
         case EOpPreDecrement:
             return "--";
 
+        case EOpArrayLength:
+            return ".length()";
+
         case EOpAdd:
             return "+";
         case EOpSub:

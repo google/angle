@@ -318,6 +318,10 @@ bool TOutputTraverser::visitUnary(Visit visit, TIntermUnary *node)
             mOut << "Pre-Decrement";
             break;
 
+        case EOpArrayLength:
+            mOut << "Array length";
+            break;
+
         case EOpLogicalNotComponentWise:
             mOut << "component-wise not";
             break;

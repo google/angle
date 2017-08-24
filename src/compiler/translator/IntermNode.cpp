@@ -803,6 +803,13 @@ TOperator TIntermBinary::GetMulAssignOpBasedOnOperands(const TType &left, const 
 //
 void TIntermUnary::promote()
 {
+    if (mOp == EOpArrayLength)
+    {
+        // Special case: the qualifier of .length() doesn't depend on the operand qualifier.
+        setType(TType(EbtInt, EbpUndefined, EvqConst));
+        return;
+    }
+
     TQualifier resultQualifier = EvqTemporary;
     if (mOperand->getQualifier() == EvqConst)
         resultQualifier = EvqConst;
@@ -1355,36 +1362,49 @@ TIntermTyped *TIntermBinary::fold(TDiagnostics *diagnostics)
 
 TIntermTyped *TIntermUnary::fold(TDiagnostics *diagnostics)
 {
-    TIntermConstantUnion *operandConstant = mOperand->getAsConstantUnion();
-    if (operandConstant == nullptr)
-    {
-        return this;
-    }
-
     TConstantUnion *constArray = nullptr;
-    switch (mOp)
+
+    if (mOp == EOpArrayLength)
     {
-        case EOpAny:
-        case EOpAll:
-        case EOpLength:
-        case EOpTranspose:
-        case EOpDeterminant:
-        case EOpInverse:
-        case EOpPackSnorm2x16:
-        case EOpUnpackSnorm2x16:
-        case EOpPackUnorm2x16:
-        case EOpUnpackUnorm2x16:
-        case EOpPackHalf2x16:
-        case EOpUnpackHalf2x16:
-        case EOpPackUnorm4x8:
-        case EOpPackSnorm4x8:
-        case EOpUnpackUnorm4x8:
-        case EOpUnpackSnorm4x8:
-            constArray = operandConstant->foldUnaryNonComponentWise(mOp);
-            break;
-        default:
-            constArray = operandConstant->foldUnaryComponentWise(mOp, diagnostics);
-            break;
+        if (mOperand->hasSideEffects())
+        {
+            return this;
+        }
+        constArray = new TConstantUnion[1];
+        constArray->setIConst(mOperand->getOutermostArraySize());
+    }
+    else
+    {
+        TIntermConstantUnion *operandConstant = mOperand->getAsConstantUnion();
+        if (operandConstant == nullptr)
+        {
+            return this;
+        }
+
+        switch (mOp)
+        {
+            case EOpAny:
+            case EOpAll:
+            case EOpLength:
+            case EOpTranspose:
+            case EOpDeterminant:
+            case EOpInverse:
+            case EOpPackSnorm2x16:
+            case EOpUnpackSnorm2x16:
+            case EOpPackUnorm2x16:
+            case EOpUnpackUnorm2x16:
+            case EOpPackHalf2x16:
+            case EOpUnpackHalf2x16:
+            case EOpPackUnorm4x8:
+            case EOpPackSnorm4x8:
+            case EOpUnpackUnorm4x8:
+            case EOpUnpackSnorm4x8:
+                constArray = operandConstant->foldUnaryNonComponentWise(mOp);
+                break;
+            default:
+                constArray = operandConstant->foldUnaryComponentWise(mOp, diagnostics);
+                break;
+        }
     }
     if (constArray == nullptr)
     {

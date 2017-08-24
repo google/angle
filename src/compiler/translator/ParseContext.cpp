@@ -5447,8 +5447,6 @@ TIntermTyped *TParseContext::addMethod(TFunction *fnCall,
                                        TIntermNode *thisNode,
                                        const TSourceLoc &loc)
 {
-    TConstantUnion *unionArray = new TConstantUnion[1];
-    int arraySize              = 0;
     TIntermTyped *typedThis    = thisNode->getAsTyped();
     // It's possible for the name pointer in the TFunction to be null in case it gets parsed as
     // a constructor. But such a TFunction can't reach here, since the lexer goes into FIELDS
@@ -5471,29 +5469,18 @@ TIntermTyped *TParseContext::addMethod(TFunction *fnCall,
     {
         error(loc, "missing input primitive declaration before calling length on gl_in", "length");
     }
+    else if (typedThis->hasSideEffects())
+    {
+        error(loc, "length method not supported on expressions with possible side effects",
+              "length");
+    }
     else
     {
-        arraySize = typedThis->getOutermostArraySize();
-        if (typedThis->getAsSymbolNode() == nullptr)
-        {
-            // This code path can be hit with expressions like these:
-            // (a = b).length()
-            // (func()).length()
-            // (int[3](0, 1, 2)).length()
-            // ESSL 3.00 section 5.9 defines expressions so that this is not actually a valid
-            // expression.
-            // It allows "An array name with the length method applied" in contrast to GLSL 4.4
-            // spec section 5.9 which allows "An array, vector or matrix expression with the
-            // length method applied".
-            error(loc, "length can only be called on array names, not on array expressions",
-                  "length");
-        }
+        TIntermUnary *node = new TIntermUnary(EOpArrayLength, typedThis);
+        node->setLine(loc);
+        return node->fold(mDiagnostics);
     }
-    unionArray->setIConst(arraySize);
-    TIntermConstantUnion *node =
-        new TIntermConstantUnion(unionArray, TType(EbtInt, EbpUndefined, EvqConst));
-    node->setLine(loc);
-    return node;
+    return CreateZeroNode(TType(EbtInt, EbpUndefined, EvqConst));
 }
 
 TIntermTyped *TParseContext::addNonConstructorFunctionCall(TFunction *fnCall,
