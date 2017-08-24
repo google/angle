@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "168821ec_ba985a2b",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 791,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-24T21:16:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7955497f_decf897b",
+      "revId": "9e2a735c46e6bab00088a7263046f4a12dafe7f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a137c33_cfc293c9",
         "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
         "patchSetId": 13
@@ -30,6 +48,24 @@
       "writtenOn": "2017-08-24T19:47:53Z",
       "side": 1,
       "message": "You could add a storage buffer and write the result of \"texture\" to it.",
+      "revId": "9e2a735c46e6bab00088a7263046f4a12dafe7f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a642cf5e_bd509c09",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-24T21:16:30Z",
+      "side": 1,
+      "message": "I didn\u0027t see any existing tests for these.. do we support them?",
+      "parentUuid": "9a137c33_cfc293c9",
       "revId": "9e2a735c46e6bab00088a7263046f4a12dafe7f2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
