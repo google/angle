@@ -1,0 +1,429 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "52758f79_a0bf81e8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-24T20:48:37Z",
+      "side": 1,
+      "message": "framebuffer",
+      "range": {
+        "startLine": 460,
+        "startChar": 68,
+        "endLine": 460,
+        "endChar": 75
+      },
+      "revId": "28d1a68cf5549b61325f1672457011f6be0ff65d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7cfa909_bd9a790d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-24T20:48:37Z",
+      "side": 1,
+      "message": "Use ANGLE_TRY",
+      "range": {
+        "startLine": 464,
+        "startChar": 4,
+        "endLine": 464,
+        "endChar": 22
+      },
+      "revId": "28d1a68cf5549b61325f1672457011f6be0ff65d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd602b77_b9523ad1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 4514,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-24T20:48:37Z",
+      "side": 1,
+      "message": "Error is not checked.",
+      "range": {
+        "startLine": 4514,
+        "startChar": 21,
+        "endLine": 4514,
+        "endChar": 30
+      },
+      "revId": "28d1a68cf5549b61325f1672457011f6be0ff65d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7aff523f_f17ede8b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SamplePosition11.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-24T20:48:37Z",
+      "side": 1,
+      "message": "Should not be needed.",
+      "revId": "28d1a68cf5549b61325f1672457011f6be0ff65d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "594c7346_4cf2b95f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SamplePosition11.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-24T20:48:37Z",
+      "side": 1,
+      "message": "Because this function makes draw calls, there is going to be a bunch more work to make sure that any active queries or transform feedback is not affected.  You will need to add a method to StateManager11 to pause and resume queries in the same way it does in StateManager11::onMakeCurrent.  Similar will need to be done for the currently bound transform feedback buffers in Renderer11.",
+      "revId": "28d1a68cf5549b61325f1672457011f6be0ff65d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aad53dc1_5d679476",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SamplePosition11.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-24T20:48:37Z",
+      "side": 1,
+      "message": "Do this transform when you write to mSamplePositionsMap, not read.",
+      "range": {
+        "startLine": 93,
+        "startChar": 8,
+        "endLine": 94,
+        "endChar": 51
+      },
+      "revId": "28d1a68cf5549b61325f1672457011f6be0ff65d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a1706e03_6d31b29d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SamplePosition11.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-24T20:48:37Z",
+      "side": 1,
+      "message": "Should not be needed.  You can draw a single point with no vertex data.",
+      "range": {
+        "startLine": 106,
+        "startChar": 4,
+        "endLine": 120,
+        "endChar": 49
+      },
+      "revId": "28d1a68cf5549b61325f1672457011f6be0ff65d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e88d6b9_a9bff6c3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SamplePosition11.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-24T20:48:37Z",
+      "side": 1,
+      "message": "Don\u0027t use the m prefix here.",
+      "range": {
+        "startLine": 139,
+        "startChar": 30,
+        "endLine": 139,
+        "endChar": 31
+      },
+      "revId": "28d1a68cf5549b61325f1672457011f6be0ff65d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "401972ea_7bc1498e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SamplePosition11.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-24T20:48:37Z",
+      "side": 1,
+      "message": "You can pre-create this buffer with enough elements to hold the max sample count.",
+      "range": {
+        "startLine": 153,
+        "startChar": 4,
+        "endLine": 173,
+        "endChar": 70
+      },
+      "revId": "28d1a68cf5549b61325f1672457011f6be0ff65d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "52f6e9d0_88e912fd",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SamplePosition11.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-24T20:48:37Z",
+      "side": 1,
+      "message": "Can the original buffer type not use a combination of types that allows it to be mapped too?  If not, this buffer should be allocated already, not per call.",
+      "range": {
+        "startLine": 177,
+        "startChar": 3,
+        "endLine": 191,
+        "endChar": 82
+      },
+      "revId": "28d1a68cf5549b61325f1672457011f6be0ff65d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "be70c54f_c6d3a320",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SamplePosition11.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-24T20:48:37Z",
+      "side": 1,
+      "message": "No need to unmap if the map failed.",
+      "range": {
+        "startLine": 196,
+        "startChar": 8,
+        "endLine": 196,
+        "endChar": 52
+      },
+      "revId": "28d1a68cf5549b61325f1672457011f6be0ff65d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9bb08ca2_5ba3a66a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SamplePosition11.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-24T20:48:37Z",
+      "side": 1,
+      "message": "C++ cast.",
+      "range": {
+        "startLine": 200,
+        "startChar": 28,
+        "endLine": 200,
+        "endChar": 46
+      },
+      "revId": "28d1a68cf5549b61325f1672457011f6be0ff65d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3468d0bd_d7ece16b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SamplePosition11.cpp",
+        "patchSetId": 22
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-24T20:48:37Z",
+      "side": 1,
+      "message": "No need to do this.",
+      "range": {
+        "startLine": 211,
+        "startChar": 4,
+        "endLine": 216,
+        "endChar": 100
+      },
+      "revId": "28d1a68cf5549b61325f1672457011f6be0ff65d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "86b281f4_72088963",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SamplePosition11.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-24T20:48:37Z",
+      "side": 1,
+      "message": "getSamplePosition",
+      "range": {
+        "startLine": 31,
+        "startChar": 14,
+        "endLine": 31,
+        "endChar": 23
+      },
+      "revId": "28d1a68cf5549b61325f1672457011f6be0ff65d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "722fcdb2_1602859e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SamplePosition11.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-24T20:48:37Z",
+      "side": 1,
+      "message": "It doesn\u0027t make much sense to use a specific render target to generate the initial sample position cache.  It doesn\u0027t cover the cases where different formats could have different sample patterns or if different render targets have different multisample qualities.  The mSamplePositionsMap will have to key on more than just sample count.",
+      "range": {
+        "startLine": 32,
+        "startChar": 24,
+        "endLine": 32,
+        "endChar": 63
+      },
+      "revId": "28d1a68cf5549b61325f1672457011f6be0ff65d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "581dabb2_4bb8974d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SamplePosition11.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-24T20:48:37Z",
+      "side": 1,
+      "message": "No need to store this.",
+      "range": {
+        "startLine": 54,
+        "startChar": 4,
+        "endLine": 54,
+        "endChar": 55
+      },
+      "revId": "28d1a68cf5549b61325f1672457011f6be0ff65d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b9b4147c_5640e875",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SamplePosition11.h",
+        "patchSetId": 22
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-24T20:48:37Z",
+      "side": 1,
+      "message": "Use a std::vector.",
+      "range": {
+        "startLine": 59,
+        "startChar": 33,
+        "endLine": 59,
+        "endChar": 43
+      },
+      "revId": "28d1a68cf5549b61325f1672457011f6be0ff65d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe47eb3f_1a832306",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/SamplePosition11.hlsl",
+        "patchSetId": 22
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-24T20:48:37Z",
+      "side": 1,
+      "message": "You should only need SV_POSITION.  You can write a constant position at 0,0,0,0",
+      "range": {
+        "startLine": 11,
+        "startChar": 23,
+        "endLine": 12,
+        "endChar": 76
+      },
+      "revId": "28d1a68cf5549b61325f1672457011f6be0ff65d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c28bbad8_11a3b5d0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/SamplePosition11.hlsl",
+        "patchSetId": 22
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-24T20:48:37Z",
+      "side": 1,
+      "message": "not needed.",
+      "range": {
+        "startLine": 18,
+        "startChar": 26,
+        "endLine": 18,
+        "endChar": 95
+      },
+      "revId": "28d1a68cf5549b61325f1672457011f6be0ff65d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
