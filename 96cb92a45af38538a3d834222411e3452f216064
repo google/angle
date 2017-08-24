@@ -22,6 +22,30 @@
       "revId": "96cb92a45af38538a3d834222411e3452f216064",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf6a4119_5f2a91d0",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 447,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-08-24T07:55:05Z",
+      "side": 1,
+      "message": "Hi Jamie, I\u0027m confused. Do you mean if the draw framebuffer has no attachment and the default width or height is set, then the drawing pixels are throwned away when calling readpixels, copyTexImage or blit, so we don\u0027t need to sync view port?",
+      "parentUuid": "2492bfca_7c2ea6d8",
+      "range": {
+        "startLine": 443,
+        "startChar": 0,
+        "endLine": 447,
+        "endChar": 5
+      },
+      "revId": "96cb92a45af38538a3d834222411e3452f216064",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
