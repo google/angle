@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "08efc934_74277666",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-24T11:57:01Z",
+      "side": 1,
+      "message": "Moved it to the draw framebuffer.",
+      "parentUuid": "fc90c2e1_1e6613c4",
+      "revId": "560ddf53aa11deb71829b8246fa51901d335d5b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "29f53f66_27a0fa39",
         "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
         "patchSetId": 3
@@ -33,6 +51,24 @@
       "revId": "560ddf53aa11deb71829b8246fa51901d335d5b6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2abaa574_c112db48",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 427,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-24T11:57:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29f53f66_27a0fa39",
+      "revId": "560ddf53aa11deb71829b8246fa51901d335d5b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "34fc980d_7f1ea4a2",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1326,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-24T11:57:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c70206ba_4a4a76d4",
+      "revId": "560ddf53aa11deb71829b8246fa51901d335d5b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5e808735_685f6d31",
         "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
         "patchSetId": 3
@@ -64,6 +118,24 @@
       "writtenOn": "2017-08-23T11:17:33Z",
       "side": 1,
       "message": "You might as well move setupGeometry() to MultiviewRenderTest, so you don\u0027t need to duplicate the functionality here.\n\nThe VAO also seems superfluous - is there any particular reason why the default VAO isn\u0027t used?",
+      "revId": "560ddf53aa11deb71829b8246fa51901d335d5b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "71ea20a4_6c0ae58a",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1550,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-24T11:57:01Z",
+      "side": 1,
+      "message": "I prefer keeping setupGeometry as part of the MultiviewRenderPrimitiveTest tests. I think that having this duplicate here is better than moving to the method to an upper layer.\nI removed the vertex array generation from most places.",
+      "parentUuid": "5e808735_685f6d31",
       "revId": "560ddf53aa11deb71829b8246fa51901d335d5b6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
