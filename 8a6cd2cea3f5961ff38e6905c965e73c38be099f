@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ecbd983e_23cc6d0f",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-24T12:51:19Z",
+      "side": 1,
+      "message": "It\u0027s a bit better than having this where the read framebuffer is defined, but I don\u0027t think this fits here that great either. The comment on top of this section of the code says \"Create draw framebuffer to be used for multiview rendering.\" It\u0027s surprising to have anything else than code related to that inside the switch statement. You could just turn the scissor test on in an if statement next to where the scissor rectangle is defined.",
+      "revId": "8a6cd2cea3f5961ff38e6905c965e73c38be099f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

@@ -139,6 +139,24 @@
       "revId": "560ddf53aa11deb71829b8246fa51901d335d5b6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c386d2cd_8779bfe2",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1550,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-24T12:51:19Z",
+      "side": 1,
+      "message": "I guess it makes some sense to duplicate some of the code here since setupGeometry relies on the mVBO member of MultiviewRenderPrimitiveTest, and it\u0027s nice not to have it where it\u0027s not needed. Fine to keep this as it is now.",
+      "parentUuid": "71ea20a4_6c0ae58a",
+      "revId": "560ddf53aa11deb71829b8246fa51901d335d5b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
