@@ -100,7 +100,7 @@ class WrappedArray final : angle::NonCopyable
     constexpr WrappedArray() : mArray(nullptr), mSize(0) {}
     constexpr WrappedArray(const T *data, size_t size) : mArray(data), mSize(size) {}
 
-    constexpr WrappedArray(WrappedArray &&other) : WrappedArray()
+    WrappedArray(WrappedArray &&other) : WrappedArray()
     {
         std::swap(mArray, other.mArray);
         std::swap(mSize, other.mSize);
