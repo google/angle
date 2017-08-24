@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "67de957c_d807d30f",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3784,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-24T11:12:59Z",
+      "side": 1,
+      "message": "\"invalid interface block qualifier\" would be a better error message.",
+      "range": {
+        "startLine": 3784,
+        "startChar": 37,
+        "endLine": 3784,
+        "endChar": 66
+      },
+      "revId": "c94c0a33b8a6f8c0e0b664a53285755fc40357dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b36de769_b845a569",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4427,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-24T11:12:59Z",
+      "side": 1,
+      "message": "Will this test be sufficient to catch the crash bug once GL_OES_shader_io_block is implemented? Maybe you could add a test with for example a \"const\" block in addition to these tests to make sure it\u0027s covered.",
+      "revId": "c94c0a33b8a6f8c0e0b664a53285755fc40357dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "667e1922_538ae376",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4433,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-24T11:12:59Z",
+      "side": 1,
+      "message": "No need to have this variable in this or the other test, just use 0 as the index expression.",
+      "range": {
+        "startLine": 4433,
+        "startChar": 13,
+        "endLine": 4433,
+        "endChar": 22
+      },
+      "revId": "c94c0a33b8a6f8c0e0b664a53285755fc40357dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
