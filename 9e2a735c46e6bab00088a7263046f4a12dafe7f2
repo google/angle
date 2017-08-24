@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7955497f_decf897b",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 791,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-24T19:47:53Z",
+      "side": 1,
+      "message": "typo: implementation",
+      "revId": "9e2a735c46e6bab00088a7263046f4a12dafe7f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9a137c33_cfc293c9",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-24T19:47:53Z",
+      "side": 1,
+      "message": "You could add a storage buffer and write the result of \"texture\" to it.",
+      "revId": "9e2a735c46e6bab00088a7263046f4a12dafe7f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
