@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "08458792_56dc69b3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/TextureStorage11.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 531,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-25T09:48:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e27093ee_4ec471f9",
+      "range": {
+        "startLine": 531,
+        "startChar": 21,
+        "endLine": 531,
+        "endChar": 36
+      },
+      "revId": "6321cf07a8c047272cbcf420745c8a04c681755e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0cee7644_62927d5f",
         "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/compiled/buffertotexture11_gs.h",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2017-08-24T17:30:34Z",
       "side": 1,
       "message": "Using a new compiler is fine but we should watch for reports of compatibility issues.   The generated assembly looks the same in the shaders but the bytecode is different.",
+      "range": {
+        "startLine": 3,
+        "startChar": 51,
+        "endLine": 3,
+        "endChar": 55
+      },
+      "revId": "6321cf07a8c047272cbcf420745c8a04c681755e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "045c3d01_ee59cabc",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/compiled/buffertotexture11_gs.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-25T09:48:29Z",
+      "side": 1,
+      "message": "I modified the generate_shaders batch script so that it uses the old shader compiler.",
+      "parentUuid": "0cee7644_62927d5f",
       "range": {
         "startLine": 3,
         "startChar": 51,
