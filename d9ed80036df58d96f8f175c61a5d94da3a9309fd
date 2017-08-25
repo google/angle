@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "1eceeba2_865e540b",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-25T06:10:36Z",
+      "side": 1,
+      "message": "These constants and their order come from table 20.43gs and table 20.46 defined in spec.\n\n- MaxGeometryUniformBlocks and MaxGeometryShaderStorageBlocks are used in link validations. I \n  can remove it since it isn\u0027t useful now.\n- MaxGeometryShaderInvocations are used for the validation of the layout declaration \n  \u0027invocations\u0027. \n  SPEC says:\n  \"If a shader specifies an invocation count greater than the implementation-dependent maximum, it will fail to compile.\"",
+      "parentUuid": "f38d399b_4c3dd5da",
+      "revId": "d9ed80036df58d96f8f175c61a5d94da3a9309fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d46d0408_8cb00de0",
         "filename": "src/compiler/translator/CollectVariables.cpp",
         "patchSetId": 7
@@ -33,6 +51,24 @@
       "revId": "d9ed80036df58d96f8f175c61a5d94da3a9309fd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7b65e628_3377e74d",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-25T06:10:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d46d0408_8cb00de0",
+      "revId": "d9ed80036df58d96f8f175c61a5d94da3a9309fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "b6662251_2b3eddfe",
+        "filename": "src/tests/compiler_tests/GeometryShader_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1070,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-25T06:10:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "be631340_6b1666e8",
+      "revId": "d9ed80036df58d96f8f175c61a5d94da3a9309fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "37c2430d_d0cf7412",
         "filename": "src/tests/compiler_tests/GeometryShader_test.cpp",
         "patchSetId": 7
@@ -70,6 +124,24 @@
     },
     {
       "key": {
+        "uuid": "8ae12130_cb8fb45e",
+        "filename": "src/tests/compiler_tests/GeometryShader_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1113,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-25T06:10:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37c2430d_d0cf7412",
+      "revId": "d9ed80036df58d96f8f175c61a5d94da3a9309fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8335fa01_e3e4dacf",
         "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
         "patchSetId": 7
@@ -84,6 +156,24 @@
       "revId": "d9ed80036df58d96f8f175c61a5d94da3a9309fd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2e3cc919_8fb4d177",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4590,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-25T06:10:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8335fa01_e3e4dacf",
+      "revId": "d9ed80036df58d96f8f175c61a5d94da3a9309fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
