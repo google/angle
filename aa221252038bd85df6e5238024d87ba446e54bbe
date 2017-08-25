@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "30159462_07fc1c63",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3166,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-25T16:34:15Z",
+      "side": 1,
+      "message": "Do you mean to use \u0027%\u0027 instead of \u0027/\u0027?  This is only checking that the buffer size is not less than typeSize.  Also please use \u0027\u003d\u003d 0\u0027 instead of \u0027!\u0027, it will be much clearer.",
+      "range": {
+        "startLine": 3166,
+        "startChar": 16,
+        "endLine": 3166,
+        "endChar": 59
+      },
+      "revId": "aa221252038bd85df6e5238024d87ba446e54bbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "18cc233c_b94fb651",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4270,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-25T16:34:15Z",
+      "side": 1,
+      "message": "Put these in the anonymous namespace at the top of the file and remove \u0027static\u0027.",
+      "range": {
+        "startLine": 4270,
+        "startChar": 0,
+        "endLine": 4270,
+        "endChar": 7
+      },
+      "revId": "aa221252038bd85df6e5238024d87ba446e54bbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a08ead2_c8a36092",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4276,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-25T16:34:15Z",
+      "side": 1,
+      "message": "I would just hard-code these instead of re-computing it every time.",
+      "range": {
+        "startLine": 4276,
+        "startChar": 32,
+        "endLine": 4276,
+        "endChar": 48
+      },
+      "revId": "aa221252038bd85df6e5238024d87ba446e54bbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "03622bb8_2ce1da65",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4336,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-25T16:34:15Z",
+      "side": 1,
+      "message": "Please merge this with the above block and pre-compute the length of the string to pass to all the validation.",
+      "range": {
+        "startLine": 4335,
+        "startChar": 4,
+        "endLine": 4336,
+        "endChar": 5
+      },
+      "revId": "aa221252038bd85df6e5238024d87ba446e54bbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e18bb85a_ae55c3b0",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4337,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-25T16:34:15Z",
+      "side": 1,
+      "message": "What about validating uniform names?",
+      "range": {
+        "startLine": 4337,
+        "startChar": 12,
+        "endLine": 4337,
+        "endChar": 94
+      },
+      "revId": "aa221252038bd85df6e5238024d87ba446e54bbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94cf55f5_b472dc69",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-25T16:34:15Z",
+      "side": 1,
+      "message": "If we\u0027re including this then these new tests should be part of angle_white_box_tests.",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 41
+      },
+      "revId": "aa221252038bd85df6e5238024d87ba446e54bbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "65951cf0_518f7965",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-25T16:34:15Z",
+      "side": 1,
+      "message": "If you add an operator\u003d\u003d for Message, you can use ASSERT_EQ(message1, message2)",
+      "range": {
+        "startLine": 75,
+        "startChar": 0,
+        "endLine": 85,
+        "endChar": 1
+      },
+      "revId": "aa221252038bd85df6e5238024d87ba446e54bbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
