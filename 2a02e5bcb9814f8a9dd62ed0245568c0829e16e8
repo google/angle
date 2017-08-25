@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b8dce56e_4b857699",
+        "filename": "src/libANGLE/Compiler.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-25T16:47:04Z",
+      "side": 1,
+      "message": "nit: make a reference and de-reference it in the .cpp file before returning (unless it is expected to be null ever)",
+      "range": {
+        "startLine": 35,
+        "startChar": 45,
+        "endLine": 35,
+        "endChar": 46
+      },
+      "revId": "2a02e5bcb9814f8a9dd62ed0245568c0829e16e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f1c35d1a_219f0c58",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-25T16:47:04Z",
+      "side": 1,
+      "message": "Missing reference.",
+      "range": {
+        "startLine": 90,
+        "startChar": 79,
+        "endLine": 90,
+        "endChar": 80
+      },
+      "revId": "2a02e5bcb9814f8a9dd62ed0245568c0829e16e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a6d0ca7_3c5824ab",
+        "filename": "src/libANGLE/renderer/gl/ShaderGL.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-25T16:47:04Z",
+      "side": 1,
+      "message": "Any good place to typedef this? It\u0027s used in a bunch of places.",
+      "range": {
+        "startLine": 38,
+        "startChar": 10,
+        "endLine": 38,
+        "endChar": 54
+      },
+      "revId": "2a02e5bcb9814f8a9dd62ed0245568c0829e16e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
