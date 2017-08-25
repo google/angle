@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "8c83d1a7_63e996bf",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3767,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-25T01:55:03Z",
+      "side": 1,
+      "message": "You can see this UNREACHABLE() may happen when we check if an interface block can use an integer variable as its index. SPEC restricts that uniform block arrays and shader storage block arrays can only use constant integral expressions as their indexes.\n\nSo this bug cannot be reproduced if the index is a constant integer or the qualifier of the interface block is \u0027const\u0027.",
+      "range": {
+        "startLine": 3767,
+        "startChar": 1,
+        "endLine": 3767,
+        "endChar": 82
+      },
+      "revId": "c94c0a33b8a6f8c0e0b664a53285755fc40357dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "67de957c_d807d30f",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 1
@@ -25,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "c42170bd_0c718d01",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3784,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-25T01:55:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "67de957c_d807d30f",
+      "range": {
+        "startLine": 3784,
+        "startChar": 37,
+        "endLine": 3784,
+        "endChar": 66
+      },
+      "revId": "c94c0a33b8a6f8c0e0b664a53285755fc40357dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b36de769_b845a569",
         "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
         "patchSetId": 1
@@ -42,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "97abd043_1c3347e5",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4427,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-25T01:55:03Z",
+      "side": 1,
+      "message": "Once OES_shader_io_block is implemented, \u0027in\u0027 will become a legal interface qualifier and shouldn\u0027t cause the crash. \n\n\u0027const\u0027 block cannot reproduce the bug. I have left comments about this in ParseContext.cpp. PTAL.",
+      "parentUuid": "b36de769_b845a569",
+      "revId": "c94c0a33b8a6f8c0e0b664a53285755fc40357dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "667e1922_538ae376",
         "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
         "patchSetId": 1
@@ -53,6 +118,30 @@
       "writtenOn": "2017-08-24T11:12:59Z",
       "side": 1,
       "message": "No need to have this variable in this or the other test, just use 0 as the index expression.",
+      "range": {
+        "startLine": 4433,
+        "startChar": 13,
+        "endLine": 4433,
+        "endChar": 22
+      },
+      "revId": "c94c0a33b8a6f8c0e0b664a53285755fc40357dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a9ae138c_4fd40ae2",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4433,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-25T01:55:03Z",
+      "side": 1,
+      "message": "Using \u00270\u0027 and other constant integral expressions cannot reproduce the bug. I have left comments about this in ParseContext.cpp. PTAL.",
+      "parentUuid": "667e1922_538ae376",
       "range": {
         "startLine": 4433,
         "startChar": 13,
