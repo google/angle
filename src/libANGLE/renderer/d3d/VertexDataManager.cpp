@@ -410,7 +410,7 @@ gl::Error VertexDataManager::storeDynamicAttribs(
     for (auto attribIndex : dynamicAttribsMask)
     {
         const auto &dynamicAttrib = (*translatedAttribs)[attribIndex];
-        ANGLE_TRY(reserveSpaceForAttrib(dynamicAttrib, count, instances));
+        ANGLE_TRY(reserveSpaceForAttrib(dynamicAttrib, start, count, instances));
     }
 
     // Store dynamic attributes
@@ -445,6 +445,7 @@ void VertexDataManager::PromoteDynamicAttribs(
 }
 
 gl::Error VertexDataManager::reserveSpaceForAttrib(const TranslatedAttribute &translatedAttrib,
+                                                   GLint start,
                                                    GLsizei count,
                                                    GLsizei instances) const
 {
@@ -460,10 +461,23 @@ gl::Error VertexDataManager::reserveSpaceForAttrib(const TranslatedAttribute &tr
 
     size_t totalCount = gl::ComputeVertexBindingElementCount(
         binding.getDivisor(), static_cast<size_t>(count), static_cast<size_t>(instances));
-    ASSERT(!bufferD3D ||
-           ElementsInBuffer(attrib, binding, static_cast<unsigned int>(bufferD3D->getSize())) >=
-               static_cast<int>(totalCount));
+    // TODO(jiajia.qin@intel.com): force the index buffer to clamp any out of range indices instead
+    // of invalid operation here.
+    if (bufferD3D)
+    {
+        // Vertices do not apply the 'start' offset when the divisor is non-zero even when doing
+        // a non-instanced draw call
+        GLint firstVertexIndex = binding.getDivisor() > 0 ? 0 : start;
+        int64_t maxVertexCount =
+            static_cast<int64_t>(firstVertexIndex) + static_cast<int64_t>(totalCount);
+        int elementsInBuffer =
+            ElementsInBuffer(attrib, binding, static_cast<unsigned int>(bufferD3D->getSize()));
 
+        if (maxVertexCount > elementsInBuffer)
+        {
+            return gl::InvalidOperation() << "Vertex buffer is not big enough for the draw call.";
+        }
+    }
     return mStreamingBuffer->reserveVertexSpace(attrib, binding, static_cast<GLsizei>(totalCount),
                                                 instances);
 }

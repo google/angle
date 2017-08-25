@@ -280,11 +280,6 @@ Context::Context(rx::EGLImplFactory *implFactory,
       mScratchBuffer(1000u),
       mZeroFilledBuffer(1000u)
 {
-    if (mRobustAccess)
-    {
-        UNIMPLEMENTED();
-    }
-
     initCaps(displayExtensions);
     initWorkarounds();
 
@@ -2609,6 +2604,11 @@ void Context::initCaps(const egl::DisplayExtensions &displayExtensions)
     // Determine robust resource init availability from EGL.
     mExtensions.robustResourceInitialization =
         egl::Display::GetClientExtensions().displayRobustResourceInitialization;
+
+    // mExtensions.robustBufferAccessBehavior is true only if robust access is true and the backend
+    // supports it.
+    mExtensions.robustBufferAccessBehavior =
+        mRobustAccess && mExtensions.robustBufferAccessBehavior;
 
     // Enable the cache control query unconditionally.
     mExtensions.programCacheControl = true;

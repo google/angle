@@ -119,6 +119,7 @@ EGLWindow::EGLWindow(EGLint glesMajorVersion,
       mWebGLCompatibility(false),
       mBindGeneratesResource(true),
       mClientArraysEnabled(true),
+      mRobustAccess(false),
       mRobustResourceInit(),
       mSwapInterval(-1),
       mSamples(-1),
@@ -323,6 +324,13 @@ bool EGLWindow::initializeContext()
         return false;
     }
 
+    bool hasRobustness = strstr(displayExtensions, "EGL_EXT_create_context_robustness") != nullptr;
+    if (mRobustAccess && !hasRobustness)
+    {
+        destroyGL();
+        return false;
+    }
+
     bool hasBindGeneratesResource =
         strstr(displayExtensions, "EGL_CHROMIUM_create_context_bind_generates_resource") != nullptr;
     if (!mBindGeneratesResource && !hasBindGeneratesResource)
@@ -378,6 +386,12 @@ bool EGLWindow::initializeContext()
         {
             contextAttributes.push_back(EGL_CONTEXT_WEBGL_COMPATIBILITY_ANGLE);
             contextAttributes.push_back(mWebGLCompatibility ? EGL_TRUE : EGL_FALSE);
+        }
+
+        if (hasRobustness)
+        {
+            contextAttributes.push_back(EGL_CONTEXT_OPENGL_ROBUST_ACCESS_EXT);
+            contextAttributes.push_back(mRobustAccess ? EGL_TRUE : EGL_FALSE);
         }
 
         if (hasBindGeneratesResource)

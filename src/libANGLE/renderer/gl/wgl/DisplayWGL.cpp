@@ -773,6 +773,8 @@ HGLRC DisplayWGL::createContextAttribs(const gl::Version &version, int profileMa
 
     if (mHasWGLCreateContextRobustness)
     {
+        attribs.push_back(WGL_CONTEXT_FLAGS_ARB);
+        attribs.push_back(WGL_CONTEXT_ROBUST_ACCESS_BIT_ARB);
         attribs.push_back(WGL_CONTEXT_RESET_NOTIFICATION_STRATEGY_ARB);
         attribs.push_back(WGL_LOSE_CONTEXT_ON_RESET_ARB);
     }

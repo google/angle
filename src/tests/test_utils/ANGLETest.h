@@ -303,6 +303,7 @@ class ANGLETestBase
     void setDebugEnabled(bool enabled);
     void setNoErrorEnabled(bool enabled);
     void setWebGLCompatibilityEnabled(bool webglCompatibility);
+    void setRobustAccess(bool enabled);
     void setBindGeneratesResource(bool bindGeneratesResource);
     void setDebugLayersEnabled(bool enabled);
     void setClientArraysEnabled(bool enabled);

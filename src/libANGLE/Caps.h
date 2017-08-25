@@ -218,6 +218,9 @@ struct Extensions
     // GL_EXT_robustness
     bool robustness;
 
+    // GL_KHR_robust_buffer_access_behavior
+    bool robustBufferAccessBehavior;
+
     // GL_EXT_blend_minmax
     bool blendMinMax;
 

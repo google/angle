@@ -785,6 +785,13 @@ TEST_P(VertexAttributeTest, DrawArraysBufferTooSmall)
 // Verify that index draw with an out-of-range offset generates INVALID_OPERATION.
 TEST_P(VertexAttributeTest, DrawElementsBufferTooSmall)
 {
+    if (extensionEnabled("GL_KHR_robust_buffer_access_behavior"))
+    {
+        std::cout << "Test skipped due to supporting GL_KHR_robust_buffer_access_behavior"
+                  << std::endl;
+        return;
+    }
+
     std::array<GLfloat, kVertexCount> inputData;
     std::array<GLfloat, kVertexCount> expectedData;
     InitTestData(inputData, expectedData);

@@ -819,6 +819,11 @@ void ANGLETestBase::setWebGLCompatibilityEnabled(bool webglCompatibility)
     mEGLWindow->setWebGLCompatibilityEnabled(webglCompatibility);
 }
 
+void ANGLETestBase::setRobustAccess(bool enabled)
+{
+    mEGLWindow->setRobustAccess(enabled);
+}
+
 void ANGLETestBase::setBindGeneratesResource(bool bindGeneratesResource)
 {
     mEGLWindow->setBindGeneratesResource(bindGeneratesResource);

@@ -177,6 +177,7 @@ Extensions::Extensions()
       queryCounterBitsTimeElapsed(0),
       queryCounterBitsTimestamp(0),
       robustness(false),
+      robustBufferAccessBehavior(false),
       blendMinMax(false),
       framebufferBlit(false),
       framebufferMultisample(false),
@@ -651,6 +652,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_ANGLE_timer_query"] = esOnlyExtension(&Extensions::timerQuery);
         map["GL_EXT_disjoint_timer_query"] = esOnlyExtension(&Extensions::disjointTimerQuery);
         map["GL_EXT_robustness"] = esOnlyExtension(&Extensions::robustness);
+        map["GL_KHR_robust_buffer_access_behavior"] = esOnlyExtension(&Extensions::robustBufferAccessBehavior);
         map["GL_EXT_blend_minmax"] = esOnlyExtension(&Extensions::blendMinMax);
         map["GL_ANGLE_framebuffer_blit"] = esOnlyExtension(&Extensions::framebufferBlit);
         map["GL_ANGLE_framebuffer_multisample"] = esOnlyExtension(&Extensions::framebufferMultisample);

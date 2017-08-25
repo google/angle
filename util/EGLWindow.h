@@ -86,6 +86,7 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     }
     void setDebugLayersEnabled(bool enabled) { mDebugLayersEnabled = enabled; }
     void setClientArraysEnabled(bool enabled) { mClientArraysEnabled = enabled; }
+    void setRobustAccess(bool enabled) { mRobustAccess = enabled; }
     void setRobustResourceInit(bool enabled) { mRobustResourceInit = enabled; }
     void setSwapInterval(EGLint swapInterval) { mSwapInterval = swapInterval; }
     void setPlatformMethods(angle::PlatformMethods *platformMethods)
@@ -156,6 +157,7 @@ class ANGLE_EXPORT EGLWindow : angle::NonCopyable
     bool mWebGLCompatibility;
     bool mBindGeneratesResource;
     bool mClientArraysEnabled;
+    bool mRobustAccess;
     Optional<bool> mRobustResourceInit;
     EGLint mSwapInterval;
     EGLint mSamples;
