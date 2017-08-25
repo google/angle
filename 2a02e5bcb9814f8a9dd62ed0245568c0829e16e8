@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "dde890b3_7e444b91",
+        "filename": "src/libANGLE/Compiler.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-25T19:24:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b8dce56e_4b857699",
+      "range": {
+        "startLine": 35,
+        "startChar": 45,
+        "endLine": 35,
+        "endChar": 46
+      },
+      "revId": "2a02e5bcb9814f8a9dd62ed0245568c0829e16e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f1c35d1a_219f0c58",
         "filename": "src/libANGLE/renderer/gl/ProgramGL.h",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "d383b85d_b202183e",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-25T19:24:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f1c35d1a_219f0c58",
+      "range": {
+        "startLine": 90,
+        "startChar": 79,
+        "endLine": 90,
+        "endChar": 80
+      },
+      "revId": "2a02e5bcb9814f8a9dd62ed0245568c0829e16e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1a6d0ca7_3c5824ab",
         "filename": "src/libANGLE/renderer/gl/ShaderGL.h",
         "patchSetId": 2
@@ -59,6 +107,30 @@
       "writtenOn": "2017-08-25T16:47:04Z",
       "side": 1,
       "message": "Any good place to typedef this? It\u0027s used in a bunch of places.",
+      "range": {
+        "startLine": 38,
+        "startChar": 10,
+        "endLine": 38,
+        "endChar": 54
+      },
+      "revId": "2a02e5bcb9814f8a9dd62ed0245568c0829e16e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c1e27a4b_40213a93",
+        "filename": "src/libANGLE/renderer/gl/ShaderGL.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-25T19:24:22Z",
+      "side": 1,
+      "message": "I\u0027m not sure where to put it: it is GL-backend specific but ProgramGL.h doesn\u0027t include ShaderGL.h.",
+      "parentUuid": "1a6d0ca7_3c5824ab",
       "range": {
         "startLine": 38,
         "startChar": 10,
