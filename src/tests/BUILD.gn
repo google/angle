@@ -319,10 +319,8 @@ if (build_angle_deqp_tests) {
     sources = deqp_gypi.deqp_gpu_test_expectations_sources
     sources += [ "//gpu/angle_deqp_tests_main.cc" ]
 
-    # Taken from gpu/BUILD.gn
-    # TODO(jmadill): this should be in a shared location
-    if (is_linux && !is_chromecast) {
-      libs = [ "pci" ]
+    if (!is_android) {
+      public_deps += ["//third_party/angle:angle_gpu_info_util"]
     }
   }
 

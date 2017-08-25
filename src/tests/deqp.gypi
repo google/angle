@@ -1806,7 +1806,16 @@
                         'angle_test_support',
                         '<(angle_path)/util/util.gyp:angle_util',
                     ],
-
+                    'conditions':
+                    [
+                        ['OS!="android"',
+                        {
+                            'dependencies':
+                            [
+                                '<(angle_path)/src/angle.gyp:angle_gpu_info_util',
+                            ],
+                        }],
+                    ],
                     'direct_dependent_settings':
                     {
                         'include_dirs':
@@ -1836,35 +1845,15 @@
                                 ],
                             },
                         },
-
                         'conditions':
                         [
-                            # NOTE(smcgruer): Guarding with use_libpci allows gyp to run successfully
-                            # on systems without libpci, but the test targets will not compile or link.
-                            ['OS=="linux" and use_libpci==1',
-                            {
-                                'ldflags':
-                                [
-                                    '<!@(<(pkg-config) --libs-only-L --libs-only-other libpci)',
-                                ],
-                                'libraries':
-                                [
-                                    '<!@(<(pkg-config) --libs-only-l libpci)',
-                                ],
-                            }],
                             ['OS=="mac"',
                             {
                                 'sources':
                                 [
+                                    'third_party/gpu_test_expectations/gpu_test_config_mac.h',
                                     'third_party/gpu_test_expectations/gpu_test_config_mac.mm',
                                 ],
-                                'link_settings':
-                                {
-                                    'libraries':
-                                    [
-                                        '$(SDKROOT)/System/Library/Frameworks/IOKit.framework',
-                                    ],
-                                },
                             }],
                         ],
                     },
