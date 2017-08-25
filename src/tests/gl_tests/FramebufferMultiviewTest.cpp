@@ -1294,6 +1294,39 @@ TEST_P(FramebufferMultiviewLayeredClearTest, ScissoredClearBufferfi)
     EXPECT_EQ(GLColor::red, getLayerColor(3, GL_COLOR_ATTACHMENT0, 0, 1));
 }
 
+// Test that detaching an attachment does not generate an error whenever the multi-view related
+// arguments are invalid.
+TEST_P(FramebufferMultiviewTest, InvalidMultiviewArgumentsOnDetach)
+{
+    if (!requestMultiviewExtension())
+    {
+        return;
+    }
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    // Invalid base view index.
+    glFramebufferTextureMultiviewLayeredANGLE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, 0, 0, -1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Invalid number of views.
+    glFramebufferTextureMultiviewLayeredANGLE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, 0, 0, 0, 0);
+    EXPECT_GL_NO_ERROR();
+
+    // Invalid number of views.
+    const GLint kValidViewportOffsets[2] = {0, 0};
+    glFramebufferTextureMultiviewSideBySideANGLE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, 0, 0, 0,
+                                                 kValidViewportOffsets);
+    EXPECT_GL_NO_ERROR();
+
+    // Invalid viewport offsets.
+    const GLint kInvalidViewportOffsets[2] = {-1, -1};
+    glFramebufferTextureMultiviewSideBySideANGLE(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, 0, 0, 1,
+                                                 kInvalidViewportOffsets);
+    EXPECT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST(FramebufferMultiviewTest, ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(FramebufferMultiviewSideBySideClearTest, ES3_OPENGL(), ES3_D3D11());
 ANGLE_INSTANTIATE_TEST(FramebufferMultiviewLayeredClearTest, ES3_OPENGL(), ES3_D3D11());

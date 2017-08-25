@@ -45,7 +45,7 @@ bool ValidateFramebufferTextureMultiviewBaseANGLE(Context *context,
         return false;
     }
 
-    if (numViews < 1)
+    if (texture != 0 && numViews < 1)
     {
         context->handleError(InvalidValue() << "numViews cannot be less than 1.");
         return false;
@@ -2727,14 +2727,14 @@ bool ValidateFramebufferTextureMultiviewLayeredANGLE(Context *context,
         return false;
     }
 
-    if (baseViewIndex < 0)
-    {
-        context->handleError(InvalidValue() << "baseViewIndex cannot be less than 0.");
-        return false;
-    }
-
     if (texture != 0)
     {
+        if (baseViewIndex < 0)
+        {
+            context->handleError(InvalidValue() << "baseViewIndex cannot be less than 0.");
+            return false;
+        }
+
         Texture *tex = context->getTexture(texture);
         ASSERT(tex);
 
@@ -2781,19 +2781,19 @@ bool ValidateFramebufferTextureMultiviewSideBySideANGLE(Context *context,
         return false;
     }
 
-    const GLsizei numViewportOffsetValues = numViews * 2;
-    for (GLsizei i = 0; i < numViewportOffsetValues; ++i)
-    {
-        if (viewportOffsets[i] < 0)
-        {
-            context->handleError(InvalidValue()
-                                 << "viewportOffsets cannot contain negative values.");
-            return false;
-        }
-    }
-
     if (texture != 0)
     {
+        const GLsizei numViewportOffsetValues = numViews * 2;
+        for (GLsizei i = 0; i < numViewportOffsetValues; ++i)
+        {
+            if (viewportOffsets[i] < 0)
+            {
+                context->handleError(InvalidValue()
+                                     << "viewportOffsets cannot contain negative values.");
+                return false;
+            }
+        }
+
         Texture *tex = context->getTexture(texture);
         ASSERT(tex);
 

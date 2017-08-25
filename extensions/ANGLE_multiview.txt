@@ -257,11 +257,12 @@ Additions to Chapter 4 of the OpenGL ES 3.0 Specification
         and does not name an existing texture object of type TEXTURE_2D_ARRAY.
         An INVALID_OPERATION error is generated if texture is not zero,
         and names a texture with a compressed texture format.
-        An INVALID_VALUE error is generated if baseViewIndex+numViews is
-        greater than GL_MAX_ARRAY_TEXTURE_LAYERS.
-        An INVALID_VALUE error is generated if numViews is less than 1
-        or greater than MAX_VIEWS_ANGLE.
-        An INVALID_VALUE error is generated if baseViewIndex is less than 0.
+        An INVALID_VALUE error is generated if texture is not zero, and
+        baseViewIndex+numViews is greater than GL_MAX_ARRAY_TEXTURE_LAYERS.
+        An INVALID_VALUE error is generated if texture is not zero, and
+        numViews is less than 1 or greater than MAX_VIEWS_ANGLE.
+        An INVALID_VALUE error is generated if texture is not zero, and
+        baseViewIndex is less than 0.
 
     The command
 
@@ -331,10 +332,10 @@ Additions to Chapter 4 of the OpenGL ES 3.0 Specification
         and does not name an existing texture object of type TEXTURE_2D.
         An INVALID_OPERATION error is generated if texture is not zero,
         and names a texture with a compressed texture format.
-        An INVALID_VALUE error is generated if numViews is less than 1
-        or greater than MAX_VIEWS_ANGLE.
-        An INVALID_VALUE error is generated if viewportOffsets contains
-        negative values.
+        An INVALID_VALUE error is generated if texture is not zero, and
+        numViews is less than 1 or greater than MAX_VIEWS_ANGLE.
+        An INVALID_VALUE error is generated if texture is not zero, and
+        any of the first numViews * 2 values in viewportOffsets is negative.
 
     Having overlapping scissor rectangles after viewport offsets are
     applied causes undefined behavior.
