@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ab409800_6596988e",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 3040,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-25T16:41:44Z",
+      "side": 1,
+      "message": "Can we push this logic into ProgramGL?",
+      "range": {
+        "startLine": 3039,
+        "startChar": 0,
+        "endLine": 3040,
+        "endChar": 90
+      },
+      "revId": "71b9c15416b3b64d3828a809f036df03b5be1f2b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
