@@ -70,6 +70,30 @@
       "revId": "96cb92a45af38538a3d834222411e3452f216064",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ca821850_39d17f72",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 447,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-08-25T14:12:17Z",
+      "side": 1,
+      "message": "Hi Jamie, I realized that the check should remove mState.getFirstNonNullAttachment() !\u003d nullptr, so it will be if(mState.getDefaultWidth() !\u003d 0 || mState.getDefaultHeight() !\u003d 0).\n\nConsider the scenario,if the framebuffer has removed its attachment, the size of the framebuffer should be the default size, viewport should also sync in this case.\nI have wrote an end2end test case to validate the code.",
+      "parentUuid": "9ca2b5a1_efd1ce0b",
+      "range": {
+        "startLine": 443,
+        "startChar": 0,
+        "endLine": 447,
+        "endChar": 5
+      },
+      "revId": "96cb92a45af38538a3d834222411e3452f216064",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
