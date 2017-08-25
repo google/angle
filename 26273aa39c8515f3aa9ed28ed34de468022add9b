@@ -1,0 +1,124 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "552fd9d6_829d366e",
+        "filename": "src/libANGLE/MemoryProgramCache.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-08-25T06:25:09Z",
+      "side": 1,
+      "message": "Bad smell of copy/paste!",
+      "range": {
+        "startLine": 243,
+        "startChar": 0,
+        "endLine": 258,
+        "endChar": 0
+      },
+      "revId": "26273aa39c8515f3aa9ed28ed34de468022add9b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f2e18af_b803f49a",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2849,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-08-25T06:25:09Z",
+      "side": 1,
+      "message": "Too much copy/parse! Any chance to just reuse uniform block code?",
+      "range": {
+        "startLine": 2813,
+        "startChar": 0,
+        "endLine": 2849,
+        "endChar": 5
+      },
+      "revId": "26273aa39c8515f3aa9ed28ed34de468022add9b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9a81ee0a_09002a94",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2990,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-08-25T06:25:09Z",
+      "side": 1,
+      "message": "No block members defined! Are you going to do that with another CL?",
+      "revId": "26273aa39c8515f3aa9ed28ed34de468022add9b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d2773478_56db83e7",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3024,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-08-25T06:25:09Z",
+      "side": 1,
+      "message": "Not \u0027uniform\u0027. Try not to copy/paste.",
+      "range": {
+        "startLine": 3022,
+        "startChar": 0,
+        "endLine": 3024,
+        "endChar": 65
+      },
+      "revId": "26273aa39c8515f3aa9ed28ed34de468022add9b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "48532732_45679ab6",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-08-25T06:25:09Z",
+      "side": 1,
+      "message": "Should there be a bindShaderStorageBlock(...) as well?",
+      "revId": "26273aa39c8515f3aa9ed28ed34de468022add9b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f6201c0e_46bfabbc",
+        "filename": "src/tests/gl_tests/ShaderStorageBufferTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-08-25T06:25:09Z",
+      "side": 1,
+      "message": "Better to have more cases to cover maxFragmentShaderStorageBlocks, maxCombinedShaderStorageBlocks, maxShaderStorageBufferBindings ...",
+      "revId": "26273aa39c8515f3aa9ed28ed34de468022add9b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
