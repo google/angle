@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ba33afbb_bb112201",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3784,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-25T10:04:52Z",
+      "side": 1,
+      "message": "Actually in all of these cases a similar error has already been generated. This error message is redundant, so it would be better if we replace this with:\n\n// We can reach here only in error cases.\nASSERT(mDiagnostics-\u003enumErrors() \u003e 0);",
+      "revId": "4b9453bd67cd5ea93e366873848d13c5a3c18170",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f070433e_4d401517",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4449,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-25T10:04:52Z",
+      "side": 1,
+      "message": "I tested this to make sure and if you just replace this with \"const\" it does reproduce the crash and will keep taking the same code path also after support for GL_OES_shader_io_block is added. You should add one more variation of this test that uses \"const\" here.",
+      "range": {
+        "startLine": 4449,
+        "startChar": 9,
+        "endLine": 4449,
+        "endChar": 11
+      },
+      "revId": "4b9453bd67cd5ea93e366873848d13c5a3c18170",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f24aa927_e4c786a9",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4456,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-25T10:04:52Z",
+      "side": 1,
+      "message": "There might have been some misunderstanding: I didn\u0027t mean to make this const, that of course would not reproduce the crash.",
+      "range": {
+        "startLine": 4456,
+        "startChar": 13,
+        "endLine": 4456,
+        "endChar": 18
+      },
+      "revId": "4b9453bd67cd5ea93e366873848d13c5a3c18170",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
