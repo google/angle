@@ -443,6 +443,8 @@ bool ValidateFramebufferTextureMultiviewSideBySideANGLE(Context *context,
                                                         GLsizei numViews,
                                                         const GLint *viewportOffsets);
 
+bool ValidateIsQuery(Context *context, GLuint id);
+
 bool ValidateUniform1ui(Context *context, GLint location, GLuint v0);
 bool ValidateUniform2ui(Context *context, GLint location, GLuint v0, GLuint v1);
 bool ValidateUniform3ui(Context *context, GLint location, GLuint v0, GLuint v1, GLuint v2);

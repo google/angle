@@ -656,14 +656,6 @@ GLuint Context::createFenceNV()
     return handle;
 }
 
-// Returns an unused query name
-GLuint Context::createQuery()
-{
-    GLuint handle = mQueryHandleAllocator.allocate();
-    mQueryMap.assign(handle, nullptr);
-    return handle;
-}
-
 void Context::deleteBuffer(GLuint buffer)
 {
     if (mState.mBuffers->getBuffer(buffer))
@@ -866,19 +858,6 @@ void Context::deleteFenceNV(GLuint fence)
     {
         mFenceNVHandleAllocator.release(fence);
         delete fenceObject;
-    }
-}
-
-void Context::deleteQuery(GLuint query)
-{
-    Query *queryObject = nullptr;
-    if (mQueryMap.erase(query, &queryObject))
-    {
-        mQueryHandleAllocator.release(query);
-        if (queryObject)
-        {
-            queryObject->release(this);
-        }
     }
 }
 
@@ -1181,45 +1160,37 @@ void Context::bindTransformFeedback(GLuint transformFeedbackHandle)
     mGLState.setTransformFeedbackBinding(this, transformFeedback);
 }
 
-Error Context::beginQuery(GLenum target, GLuint query)
+void Context::beginQuery(GLenum target, GLuint query)
 {
     Query *queryObject = getQuery(query, true, target);
     ASSERT(queryObject);
 
     // begin query
-    Error error = queryObject->begin();
-    if (error.isError())
-    {
-        return error;
-    }
+    ANGLE_CONTEXT_TRY(queryObject->begin());
 
     // set query as active for specified target only if begin succeeded
     mGLState.setActiveQuery(this, target, queryObject);
-
-    return NoError();
 }
 
-Error Context::endQuery(GLenum target)
+void Context::endQuery(GLenum target)
 {
     Query *queryObject = mGLState.getActiveQuery(target);
     ASSERT(queryObject);
 
-    gl::Error error = queryObject->end();
+    handleError(queryObject->end());
 
     // Always unbind the query, even if there was an error. This may delete the query object.
     mGLState.setActiveQuery(this, target, nullptr);
-
-    return error;
 }
 
-Error Context::queryCounter(GLuint id, GLenum target)
+void Context::queryCounter(GLuint id, GLenum target)
 {
     ASSERT(target == GL_TIMESTAMP_EXT);
 
     Query *queryObject = getQuery(id, true, target);
     ASSERT(queryObject);
 
-    return queryObject->queryCounter();
+    handleError(queryObject->queryCounter());
 }
 
 void Context::getQueryiv(GLenum target, GLenum pname, GLint *params)
@@ -4950,6 +4921,39 @@ void Context::uniform4uiv(GLint location, GLsizei count, const GLuint *value)
 {
     Program *program = mGLState.getProgram();
     program->setUniform4uiv(location, count, value);
+}
+
+void Context::genQueries(GLsizei n, GLuint *ids)
+{
+    for (GLsizei i = 0; i < n; i++)
+    {
+        GLuint handle = mQueryHandleAllocator.allocate();
+        mQueryMap.assign(handle, nullptr);
+        ids[i] = handle;
+    }
+}
+
+void Context::deleteQueries(GLsizei n, const GLuint *ids)
+{
+    for (int i = 0; i < n; i++)
+    {
+        GLuint query = ids[i];
+
+        Query *queryObject = nullptr;
+        if (mQueryMap.erase(query, &queryObject))
+        {
+            mQueryHandleAllocator.release(query);
+            if (queryObject)
+            {
+                queryObject->release(this);
+            }
+        }
+    }
+}
+
+GLboolean Context::isQuery(GLuint id)
+{
+    return (getQuery(id, false, GL_NONE) != nullptr) ? GL_TRUE : GL_FALSE;
 }
 
 }  // namespace gl

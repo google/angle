@@ -52,15 +52,12 @@ void GL_APIENTRY GenQueriesEXT(GLsizei n, GLuint *ids)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateGenQueriesEXT(context, n))
+        if (!context->skipValidation() && !ValidateGenQueriesEXT(context, n, ids))
         {
             return;
         }
 
-        for (GLsizei i = 0; i < n; i++)
-        {
-            ids[i] = context->createQuery();
-        }
+        context->genQueries(n, ids);
     }
 }
 
@@ -71,15 +68,12 @@ void GL_APIENTRY DeleteQueriesEXT(GLsizei n, const GLuint *ids)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation() && !ValidateDeleteQueriesEXT(context, n))
+        if (!context->skipValidation() && !ValidateDeleteQueriesEXT(context, n, ids))
         {
             return;
         }
 
-        for (int i = 0; i < n; i++)
-        {
-            context->deleteQuery(ids[i]);
-        }
+        context->deleteQueries(n, ids);
     }
 }
 
@@ -90,7 +84,12 @@ GLboolean GL_APIENTRY IsQueryEXT(GLuint id)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        return (context->getQuery(id, false, GL_NONE) != nullptr) ? GL_TRUE : GL_FALSE;
+        if (!context->skipValidation() && !ValidateIsQueryEXT(context, id))
+        {
+            return GL_FALSE;
+        }
+
+        return context->isQuery(id);
     }
 
     return GL_FALSE;
@@ -103,17 +102,12 @@ void GL_APIENTRY BeginQueryEXT(GLenum target, GLuint id)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateBeginQueryEXT(context, target, id))
+        if (!context->skipValidation() && !ValidateBeginQueryEXT(context, target, id))
         {
             return;
         }
 
-        Error error = context->beginQuery(target, id);
-        if (error.isError())
-        {
-            context->handleError(error);
-            return;
-        }
+        context->beginQuery(target, id);
     }
 }
 
@@ -124,17 +118,12 @@ void GL_APIENTRY EndQueryEXT(GLenum target)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateEndQueryEXT(context, target))
+        if (!context->skipValidation() && !ValidateEndQueryEXT(context, target))
         {
             return;
         }
 
-        Error error = context->endQuery(target);
-        if (error.isError())
-        {
-            context->handleError(error);
-            return;
-        }
+        context->endQuery(target);
     }
 }
 
@@ -145,17 +134,12 @@ void GL_APIENTRY QueryCounterEXT(GLuint id, GLenum target)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateQueryCounterEXT(context, id, target))
+        if (!context->skipValidation() && !ValidateQueryCounterEXT(context, id, target))
         {
             return;
         }
 
-        Error error = context->queryCounter(id, target);
-        if (error.isError())
-        {
-            context->handleError(error);
-            return;
-        }
+        context->queryCounter(id, target);
     }
 }
 

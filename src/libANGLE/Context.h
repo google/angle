@@ -120,10 +120,6 @@ class Context final : public ValidationContext
     GLuint createFenceNV();
     void deleteFenceNV(GLuint fence);
 
-    // Queries are owned by the Context;
-    GLuint createQuery();
-    void deleteQuery(GLuint query);
-
     // Vertex arrays are owned by the Context
     GLuint createVertexArray();
     void deleteVertexArray(GLuint vertexArray);
@@ -174,9 +170,9 @@ class Context final : public ValidationContext
     void bindTransformFeedback(GLuint transformFeedbackHandle);
     void bindDrawIndirectBuffer(GLuint bufferHandle);
 
-    Error beginQuery(GLenum target, GLuint query);
-    Error endQuery(GLenum target);
-    Error queryCounter(GLuint id, GLenum target);
+    void beginQuery(GLenum target, GLuint query);
+    void endQuery(GLenum target);
+    void queryCounter(GLuint id, GLenum target);
     void getQueryiv(GLenum target, GLenum pname, GLint *params);
     void getQueryObjectiv(GLuint id, GLenum pname, GLint *params);
     void getQueryObjectuiv(GLuint id, GLenum pname, GLuint *params);
@@ -779,6 +775,10 @@ class Context final : public ValidationContext
     void uniformMatrix3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
     void uniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
     void validateProgram(GLuint program);
+
+    void genQueries(GLsizei n, GLuint *ids);
+    void deleteQueries(GLsizei n, const GLuint *ids);
+    GLboolean isQuery(GLuint id);
 
     void uniform1ui(GLint location, GLuint v0);
     void uniform2ui(GLint location, GLuint v0, GLuint v1);

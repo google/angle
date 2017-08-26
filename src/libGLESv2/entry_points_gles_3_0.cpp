@@ -245,10 +245,7 @@ void GL_APIENTRY GenQueries(GLsizei n, GLuint *ids)
             return;
         }
 
-        for (GLsizei i = 0; i < n; i++)
-        {
-            ids[i] = context->createQuery();
-        }
+        context->genQueries(n, ids);
     }
 }
 
@@ -264,10 +261,7 @@ void GL_APIENTRY DeleteQueries(GLsizei n, const GLuint *ids)
             return;
         }
 
-        for (int i = 0; i < n; i++)
-        {
-            context->deleteQuery(ids[i]);
-        }
+        context->deleteQueries(n, ids);
     }
 }
 
@@ -278,13 +272,12 @@ GLboolean GL_APIENTRY IsQuery(GLuint id)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
+        if (!context->skipValidation() && !ValidateIsQuery(context, id))
         {
-            context->handleError(InvalidOperation());
             return GL_FALSE;
         }
 
-        return (context->getQuery(id, false, GL_NONE) != nullptr) ? GL_TRUE : GL_FALSE;
+        return context->isQuery(id);
     }
 
     return GL_FALSE;
@@ -297,17 +290,12 @@ void GL_APIENTRY BeginQuery(GLenum target, GLuint id)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateBeginQuery(context, target, id))
+        if (!context->skipValidation() && !ValidateBeginQuery(context, target, id))
         {
             return;
         }
 
-        Error error = context->beginQuery(target, id);
-        if (error.isError())
-        {
-            context->handleError(error);
-            return;
-        }
+        context->beginQuery(target, id);
     }
 }
 
@@ -318,17 +306,12 @@ void GL_APIENTRY EndQuery(GLenum target)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateEndQuery(context, target))
+        if (!context->skipValidation() && !ValidateEndQuery(context, target))
         {
             return;
         }
 
-        Error error = context->endQuery(target);
-        if (error.isError())
-        {
-            context->handleError(error);
-            return;
-        }
+        context->endQuery(target);
     }
 }
 
@@ -340,7 +323,7 @@ void GL_APIENTRY GetQueryiv(GLenum target, GLenum pname, GLint *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateGetQueryiv(context, target, pname, params))
+        if (!context->skipValidation() && !ValidateGetQueryiv(context, target, pname, params))
         {
             return;
         }
@@ -356,7 +339,7 @@ void GL_APIENTRY GetQueryObjectuiv(GLuint id, GLenum pname, GLuint *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateGetQueryObjectuiv(context, id, pname, params))
+        if (!context->skipValidation() && !ValidateGetQueryObjectuiv(context, id, pname, params))
         {
             return;
         }

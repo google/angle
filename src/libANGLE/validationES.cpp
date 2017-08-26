@@ -1916,7 +1916,7 @@ bool ValidateReadnPixelsRobustANGLE(Context *context,
     return true;
 }
 
-bool ValidateGenQueriesEXT(gl::Context *context, GLsizei n)
+bool ValidateGenQueriesEXT(gl::Context *context, GLsizei n, GLuint *ids)
 {
     if (!context->getExtensions().occlusionQueryBoolean &&
         !context->getExtensions().disjointTimerQuery)
@@ -1928,7 +1928,7 @@ bool ValidateGenQueriesEXT(gl::Context *context, GLsizei n)
     return ValidateGenOrDelete(context, n);
 }
 
-bool ValidateDeleteQueriesEXT(gl::Context *context, GLsizei n)
+bool ValidateDeleteQueriesEXT(gl::Context *context, GLsizei n, const GLuint *ids)
 {
     if (!context->getExtensions().occlusionQueryBoolean &&
         !context->getExtensions().disjointTimerQuery)
@@ -1938,6 +1938,18 @@ bool ValidateDeleteQueriesEXT(gl::Context *context, GLsizei n)
     }
 
     return ValidateGenOrDelete(context, n);
+}
+
+bool ValidateIsQueryEXT(gl::Context *context, GLuint id)
+{
+    if (!context->getExtensions().occlusionQueryBoolean &&
+        !context->getExtensions().disjointTimerQuery)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), QueryExtensionNotEnabled);
+        return false;
+    }
+
+    return true;
 }
 
 bool ValidateBeginQueryBase(gl::Context *context, GLenum target, GLuint id)

@@ -160,8 +160,9 @@ bool ValidateReadnPixelsRobustANGLE(Context *context,
                                     GLsizei *rows,
                                     void *data);
 
-bool ValidateGenQueriesEXT(gl::Context *context, GLsizei n);
-bool ValidateDeleteQueriesEXT(gl::Context *context, GLsizei n);
+bool ValidateGenQueriesEXT(gl::Context *context, GLsizei n, GLuint *ids);
+bool ValidateDeleteQueriesEXT(gl::Context *context, GLsizei n, const GLuint *ids);
+bool ValidateIsQueryEXT(gl::Context *context, GLuint id);
 bool ValidateBeginQueryBase(Context *context, GLenum target, GLuint id);
 bool ValidateBeginQueryEXT(Context *context, GLenum target, GLuint id);
 bool ValidateEndQueryBase(Context *context, GLenum target);

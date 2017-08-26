@@ -2833,4 +2833,15 @@ bool ValidateUniform4uiv(Context *context, GLint location, GLsizei count, const 
     return ValidateUniformES3(context, GL_UNSIGNED_INT_VEC4, location, count);
 }
 
+bool ValidateIsQuery(Context *context, GLuint id)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    return true;
+}
+
 }  // namespace gl
