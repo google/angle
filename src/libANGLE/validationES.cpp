@@ -2415,13 +2415,6 @@ bool ValidateProgramUniformMatrix(gl::Context *context,
 
 bool ValidateUniform(ValidationContext *context, GLenum valueType, GLint location, GLsizei count)
 {
-    // Check for ES3 uniform entry points
-    if (VariableComponentType(valueType) == GL_UNSIGNED_INT && context->getClientMajorVersion() < 3)
-    {
-        context->handleError(InvalidOperation());
-        return false;
-    }
-
     const LinkedUniform *uniform = nullptr;
     gl::Program *programObject   = context->getGLState().getProgram();
     return ValidateUniformCommonBase(context, programObject, location, count, &uniform) &&

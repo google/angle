@@ -443,6 +443,21 @@ bool ValidateFramebufferTextureMultiviewSideBySideANGLE(Context *context,
                                                         GLsizei numViews,
                                                         const GLint *viewportOffsets);
 
+bool ValidateUniform1ui(Context *context, GLint location, GLuint v0);
+bool ValidateUniform2ui(Context *context, GLint location, GLuint v0, GLuint v1);
+bool ValidateUniform3ui(Context *context, GLint location, GLuint v0, GLuint v1, GLuint v2);
+bool ValidateUniform4ui(Context *context,
+                        GLint location,
+                        GLuint v0,
+                        GLuint v1,
+                        GLuint v2,
+                        GLuint v3);
+
+bool ValidateUniform1uiv(Context *context, GLint location, GLsizei count, const GLuint *value);
+bool ValidateUniform2uiv(Context *context, GLint location, GLsizei count, const GLuint *value);
+bool ValidateUniform3uiv(Context *context, GLint location, GLsizei count, const GLuint *value);
+bool ValidateUniform4uiv(Context *context, GLint location, GLsizei count, const GLuint *value);
+
 }  // namespace gl
 
 #endif  // LIBANGLE_VALIDATION_ES3_H_

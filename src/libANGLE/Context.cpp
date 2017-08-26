@@ -4902,4 +4902,54 @@ void Context::programBinary(GLuint program, GLenum binaryFormat, const void *bin
     handleError(programObject->loadBinary(this, binaryFormat, binary, length));
 }
 
+void Context::uniform1ui(GLint location, GLuint v0)
+{
+    Program *program = mGLState.getProgram();
+    program->setUniform1uiv(location, 1, &v0);
+}
+
+void Context::uniform2ui(GLint location, GLuint v0, GLuint v1)
+{
+    Program *program  = mGLState.getProgram();
+    const GLuint xy[] = {v0, v1};
+    program->setUniform2uiv(location, 1, xy);
+}
+
+void Context::uniform3ui(GLint location, GLuint v0, GLuint v1, GLuint v2)
+{
+    Program *program   = mGLState.getProgram();
+    const GLuint xyz[] = {v0, v1, v2};
+    program->setUniform3uiv(location, 1, xyz);
+}
+
+void Context::uniform4ui(GLint location, GLuint v0, GLuint v1, GLuint v2, GLuint v3)
+{
+    Program *program    = mGLState.getProgram();
+    const GLuint xyzw[] = {v0, v1, v2, v3};
+    program->setUniform4uiv(location, 1, xyzw);
+}
+
+void Context::uniform1uiv(GLint location, GLsizei count, const GLuint *value)
+{
+    Program *program = mGLState.getProgram();
+    program->setUniform1uiv(location, count, value);
+}
+void Context::uniform2uiv(GLint location, GLsizei count, const GLuint *value)
+{
+    Program *program = mGLState.getProgram();
+    program->setUniform2uiv(location, count, value);
+}
+
+void Context::uniform3uiv(GLint location, GLsizei count, const GLuint *value)
+{
+    Program *program = mGLState.getProgram();
+    program->setUniform3uiv(location, count, value);
+}
+
+void Context::uniform4uiv(GLint location, GLsizei count, const GLuint *value)
+{
+    Program *program = mGLState.getProgram();
+    program->setUniform4uiv(location, count, value);
+}
+
 }  // namespace gl

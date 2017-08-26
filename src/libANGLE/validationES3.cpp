@@ -82,7 +82,18 @@ bool ValidateFramebufferTextureMultiviewLevelAndFormat(Context *context,
     return true;
 }
 
-}  // namespace
+bool ValidateUniformES3(Context *context, GLenum uniformType, GLint location, GLint count)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    return ValidateUniform(context, uniformType, location, count);
+}
+
+}  // anonymous namespace
 
 static bool ValidateTexImageFormatCombination(gl::Context *context,
                                               GLenum target,
@@ -2775,6 +2786,51 @@ bool ValidateFramebufferTextureMultiviewSideBySideANGLE(Context *context,
     }
 
     return true;
+}
+
+bool ValidateUniform1ui(Context *context, GLint location, GLuint v0)
+{
+    return ValidateUniformES3(context, GL_UNSIGNED_INT, location, 1);
+}
+
+bool ValidateUniform2ui(Context *context, GLint location, GLuint v0, GLuint v1)
+{
+    return ValidateUniformES3(context, GL_UNSIGNED_INT_VEC2, location, 1);
+}
+
+bool ValidateUniform3ui(Context *context, GLint location, GLuint v0, GLuint v1, GLuint v2)
+{
+    return ValidateUniformES3(context, GL_UNSIGNED_INT_VEC3, location, 1);
+}
+
+bool ValidateUniform4ui(Context *context,
+                        GLint location,
+                        GLuint v0,
+                        GLuint v1,
+                        GLuint v2,
+                        GLuint v3)
+{
+    return ValidateUniformES3(context, GL_UNSIGNED_INT_VEC4, location, 1);
+}
+
+bool ValidateUniform1uiv(Context *context, GLint location, GLsizei count, const GLuint *value)
+{
+    return ValidateUniformES3(context, GL_UNSIGNED_INT, location, count);
+}
+
+bool ValidateUniform2uiv(Context *context, GLint location, GLsizei count, const GLuint *value)
+{
+    return ValidateUniformES3(context, GL_UNSIGNED_INT_VEC2, location, count);
+}
+
+bool ValidateUniform3uiv(Context *context, GLint location, GLsizei count, const GLuint *value)
+{
+    return ValidateUniformES3(context, GL_UNSIGNED_INT_VEC3, location, count);
+}
+
+bool ValidateUniform4uiv(Context *context, GLint location, GLsizei count, const GLuint *value)
+{
+    return ValidateUniformES3(context, GL_UNSIGNED_INT_VEC4, location, count);
 }
 
 }  // namespace gl

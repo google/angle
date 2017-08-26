@@ -780,6 +780,15 @@ class Context final : public ValidationContext
     void uniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
     void validateProgram(GLuint program);
 
+    void uniform1ui(GLint location, GLuint v0);
+    void uniform2ui(GLint location, GLuint v0, GLuint v1);
+    void uniform3ui(GLint location, GLuint v0, GLuint v1, GLuint v2);
+    void uniform4ui(GLint location, GLuint v0, GLuint v1, GLuint v2, GLuint v3);
+    void uniform1uiv(GLint location, GLsizei count, const GLuint *value);
+    void uniform2uiv(GLint location, GLsizei count, const GLuint *value);
+    void uniform3uiv(GLint location, GLsizei count, const GLuint *value);
+    void uniform4uiv(GLint location, GLsizei count, const GLuint *value);
+
     void getProgramBinary(GLuint program,
                           GLsizei bufSize,
                           GLsizei *length,

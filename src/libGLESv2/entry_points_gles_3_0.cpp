@@ -1151,25 +1151,68 @@ GLint GL_APIENTRY GetFragDataLocation(GLuint program, const GLchar *name)
 
 void GL_APIENTRY Uniform1ui(GLint location, GLuint v0)
 {
-    Uniform1uiv(location, 1, &v0);
+    EVENT("(GLint location = %d, GLuint v0 = %u)", location, v0);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() && !ValidateUniform1ui(context, location, v0))
+        {
+            return;
+        }
+
+        context->uniform1ui(location, v0);
+    }
 }
 
 void GL_APIENTRY Uniform2ui(GLint location, GLuint v0, GLuint v1)
 {
-    const GLuint xy[] = {v0, v1};
-    Uniform2uiv(location, 1, xy);
+    EVENT("(GLint location = %d, GLuint v0 = %u, GLuint v1 = %u)", location, v0, v1);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() && !ValidateUniform2ui(context, location, v0, v1))
+        {
+            return;
+        }
+
+        context->uniform2ui(location, v0, v1);
+    }
 }
 
 void GL_APIENTRY Uniform3ui(GLint location, GLuint v0, GLuint v1, GLuint v2)
 {
-    const GLuint xyz[] = {v0, v1, v2};
-    Uniform3uiv(location, 1, xyz);
+    EVENT("(GLint location = %d, GLuint v0 = %u, GLuint v1 = %u, GLuint v2 = %u)", location, v0, v1,
+          v2);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() && !ValidateUniform3ui(context, location, v0, v1, v2))
+        {
+            return;
+        }
+
+        context->uniform3ui(location, v0, v1, v2);
+    }
 }
 
 void GL_APIENTRY Uniform4ui(GLint location, GLuint v0, GLuint v1, GLuint v2, GLuint v3)
 {
-    const GLuint xyzw[] = {v0, v1, v2, v3};
-    Uniform4uiv(location, 1, xyzw);
+    EVENT("(GLint location = %d, GLuint v0 = %u, GLuint v1 = %u, GLuint v2 = %u, GLuint v3 = %u)",
+          location, v0, v1, v2, v3);
+
+    Context *context = GetValidGlobalContext();
+    if (context)
+    {
+        if (!context->skipValidation() && !ValidateUniform4ui(context, location, v0, v1, v2, v3))
+        {
+            return;
+        }
+
+        context->uniform4ui(location, v0, v1, v2, v3);
+    }
 }
 
 void GL_APIENTRY Uniform1uiv(GLint location, GLsizei count, const GLuint *value)
@@ -1180,13 +1223,12 @@ void GL_APIENTRY Uniform1uiv(GLint location, GLsizei count, const GLuint *value)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateUniform(context, GL_UNSIGNED_INT, location, count))
+        if (!context->skipValidation() && !ValidateUniform1uiv(context, location, count, value))
         {
             return;
         }
 
-        Program *program = context->getGLState().getProgram();
-        program->setUniform1uiv(location, count, value);
+        context->uniform1uiv(location, count, value);
     }
 }
 
@@ -1198,13 +1240,12 @@ void GL_APIENTRY Uniform2uiv(GLint location, GLsizei count, const GLuint *value)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateUniform(context, GL_UNSIGNED_INT_VEC2, location, count))
+        if (!context->skipValidation() && !ValidateUniform2uiv(context, location, count, value))
         {
             return;
         }
 
-        Program *program = context->getGLState().getProgram();
-        program->setUniform2uiv(location, count, value);
+        context->uniform2uiv(location, count, value);
     }
 }
 
@@ -1215,13 +1256,12 @@ void GL_APIENTRY Uniform3uiv(GLint location, GLsizei count, const GLuint *value)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateUniform(context, GL_UNSIGNED_INT_VEC3, location, count))
+        if (!context->skipValidation() && !ValidateUniform3uiv(context, location, count, value))
         {
             return;
         }
 
-        Program *program = context->getGLState().getProgram();
-        program->setUniform3uiv(location, count, value);
+        context->uniform3uiv(location, count, value);
     }
 }
 
@@ -1233,13 +1273,12 @@ void GL_APIENTRY Uniform4uiv(GLint location, GLsizei count, const GLuint *value)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateUniform(context, GL_UNSIGNED_INT_VEC4, location, count))
+        if (!context->skipValidation() && !ValidateUniform4uiv(context, location, count, value))
         {
             return;
         }
 
-        Program *program = context->getGLState().getProgram();
-        program->setUniform4uiv(location, count, value);
+        context->uniform4uiv(location, count, value);
     }
 }
 
