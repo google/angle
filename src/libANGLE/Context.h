@@ -85,7 +85,6 @@ class Context final : public ValidationContext
     GLuint createTexture();
     GLuint createRenderbuffer();
     GLuint createSampler();
-    GLuint createTransformFeedback();
     GLsync createFenceSync();
     GLuint createPaths(GLsizei range);
 
@@ -95,7 +94,6 @@ class Context final : public ValidationContext
     void deleteTexture(GLuint texture);
     void deleteRenderbuffer(GLuint renderbuffer);
     void deleteSampler(GLuint sampler);
-    void deleteTransformFeedback(GLuint transformFeedback);
     void deleteFenceSync(GLsync fenceSync);
     void deletePaths(GLuint first, GLsizei range);
 
@@ -163,7 +161,7 @@ class Context final : public ValidationContext
     void bindPixelPackBuffer(GLuint bufferHandle);
     void bindPixelUnpackBuffer(GLuint bufferHandle);
     void useProgram(GLuint program);
-    void bindTransformFeedback(GLuint transformFeedbackHandle);
+    void bindTransformFeedback(GLenum target, GLuint transformFeedbackHandle);
     void bindDrawIndirectBuffer(GLuint bufferHandle);
 
     void beginQuery(GLenum target, GLuint query);
@@ -813,6 +811,25 @@ class Context final : public ValidationContext
     void deleteVertexArrays(GLsizei n, const GLuint *arrays);
     void genVertexArrays(GLsizei n, GLuint *arrays);
     bool isVertexArray(GLuint array);
+
+    void endTransformFeedback();
+    void transformFeedbackVaryings(GLuint program,
+                                   GLsizei count,
+                                   const GLchar *const *varyings,
+                                   GLenum bufferMode);
+    void getTransformFeedbackVarying(GLuint program,
+                                     GLuint index,
+                                     GLsizei bufSize,
+                                     GLsizei *length,
+                                     GLsizei *size,
+                                     GLenum *type,
+                                     GLchar *name);
+
+    void deleteTransformFeedbacks(GLsizei n, const GLuint *ids);
+    void genTransformFeedbacks(GLsizei n, GLuint *ids);
+    bool isTransformFeedback(GLuint id);
+    void pauseTransformFeedback();
+    void resumeTransformFeedback();
 
     void getProgramBinary(GLuint program,
                           GLsizei bufSize,

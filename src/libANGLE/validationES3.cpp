@@ -2914,4 +2914,200 @@ bool ValidateUniformMatrix4x3fv(Context *context,
     return ValidateUniformMatrixES3(context, GL_FLOAT_MAT4x3, location, count, transpose);
 }
 
+bool ValidateEndTransformFeedback(Context *context)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    TransformFeedback *transformFeedback = context->getGLState().getCurrentTransformFeedback();
+    ASSERT(transformFeedback != nullptr);
+
+    if (!transformFeedback->isActive())
+    {
+        context->handleError(InvalidOperation());
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateTransformFeedbackVaryings(Context *context,
+                                       GLuint program,
+                                       GLsizei count,
+                                       const GLchar *const *varyings,
+                                       GLenum bufferMode)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    if (count < 0)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), NegativeCount);
+        return false;
+    }
+
+    switch (bufferMode)
+    {
+        case GL_INTERLEAVED_ATTRIBS:
+            break;
+        case GL_SEPARATE_ATTRIBS:
+        {
+            const Caps &caps = context->getCaps();
+            if (static_cast<GLuint>(count) > caps.maxTransformFeedbackSeparateAttributes)
+            {
+                context->handleError(InvalidValue());
+                return false;
+            }
+            break;
+        }
+        default:
+            context->handleError(InvalidEnum());
+            return false;
+    }
+
+    Program *programObject = GetValidProgram(context, program);
+    if (!programObject)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetTransformFeedbackVarying(Context *context,
+                                         GLuint program,
+                                         GLuint index,
+                                         GLsizei bufSize,
+                                         GLsizei *length,
+                                         GLsizei *size,
+                                         GLenum *type,
+                                         GLchar *name)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    if (bufSize < 0)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), NegativeBufferSize);
+        return false;
+    }
+
+    Program *programObject = GetValidProgram(context, program);
+    if (!programObject)
+    {
+        return false;
+    }
+
+    if (index >= static_cast<GLuint>(programObject->getTransformFeedbackVaryingCount()))
+    {
+        context->handleError(InvalidValue());
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateBindTransformFeedback(Context *context, GLenum target, GLuint id)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    switch (target)
+    {
+        case GL_TRANSFORM_FEEDBACK:
+        {
+            // Cannot bind a transform feedback object if the current one is started and not
+            // paused (3.0.2 pg 85 section 2.14.1)
+            TransformFeedback *curTransformFeedback =
+                context->getGLState().getCurrentTransformFeedback();
+            if (curTransformFeedback && curTransformFeedback->isActive() &&
+                !curTransformFeedback->isPaused())
+            {
+                context->handleError(InvalidOperation());
+                return false;
+            }
+
+            // Cannot bind a transform feedback object that does not exist (3.0.2 pg 85 section
+            // 2.14.1)
+            if (!context->isTransformFeedbackGenerated(id))
+            {
+                ANGLE_VALIDATION_ERR(context, InvalidOperation(), TransformFeedbackDoesNotExist);
+                return false;
+            }
+        }
+        break;
+
+        default:
+            context->handleError(InvalidEnum());
+            return false;
+    }
+
+    return true;
+}
+
+bool ValidateIsTransformFeedback(Context *context, GLuint id)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidatePauseTransformFeedback(Context *context)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    TransformFeedback *transformFeedback = context->getGLState().getCurrentTransformFeedback();
+    ASSERT(transformFeedback != nullptr);
+
+    // Current transform feedback must be active and not paused in order to pause (3.0.2 pg 86)
+    if (!transformFeedback->isActive() || transformFeedback->isPaused())
+    {
+        context->handleError(InvalidOperation());
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateResumeTransformFeedback(Context *context)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    TransformFeedback *transformFeedback = context->getGLState().getCurrentTransformFeedback();
+    ASSERT(transformFeedback != nullptr);
+
+    // Current transform feedback must be active and paused in order to resume (3.0.2 pg 86)
+    if (!transformFeedback->isActive() || !transformFeedback->isPaused())
+    {
+        context->handleError(InvalidOperation());
+        return false;
+    }
+
+    return true;
+}
+
 }  // namespace gl

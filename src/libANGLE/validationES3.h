@@ -491,6 +491,25 @@ bool ValidateUniformMatrix4x3fv(Context *context,
                                 GLboolean transpose,
                                 const GLfloat *value);
 
+bool ValidateEndTransformFeedback(Context *context);
+bool ValidateTransformFeedbackVaryings(Context *context,
+                                       GLuint program,
+                                       GLsizei count,
+                                       const GLchar *const *varyings,
+                                       GLenum bufferMode);
+bool ValidateGetTransformFeedbackVarying(Context *context,
+                                         GLuint program,
+                                         GLuint index,
+                                         GLsizei bufSize,
+                                         GLsizei *length,
+                                         GLsizei *size,
+                                         GLenum *type,
+                                         GLchar *name);
+bool ValidateBindTransformFeedback(Context *context, GLenum target, GLuint id);
+bool ValidateIsTransformFeedback(Context *context, GLuint id);
+bool ValidatePauseTransformFeedback(Context *context);
+bool ValidateResumeTransformFeedback(Context *context);
+
 }  // namespace gl
 
 #endif  // LIBANGLE_VALIDATION_ES3_H_

@@ -735,6 +735,7 @@ void GL_APIENTRY GetIntegeri_v(GLenum target, GLuint index, GLint *data)
         {
             return;
         }
+
         context->getIntegeri_v(target, index, data);
     }
 }
@@ -762,22 +763,12 @@ void GL_APIENTRY EndTransformFeedback(void)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
+        if (!context->skipValidation() && !ValidateEndTransformFeedback(context))
         {
-            context->handleError(InvalidOperation());
             return;
         }
 
-        TransformFeedback *transformFeedback = context->getGLState().getCurrentTransformFeedback();
-        ASSERT(transformFeedback != nullptr);
-
-        if (!transformFeedback->isActive())
-        {
-            context->handleError(InvalidOperation());
-            return;
-        }
-
-        transformFeedback->end(context);
+        context->endTransformFeedback();
     }
 }
 
@@ -797,6 +788,7 @@ BindBufferRange(GLenum target, GLuint index, GLuint buffer, GLintptr offset, GLs
         {
             return;
         }
+
         context->bindBufferRange(target, index, buffer, offset, size);
     }
 }
@@ -812,6 +804,7 @@ void GL_APIENTRY BindBufferBase(GLenum target, GLuint index, GLuint buffer)
         {
             return;
         }
+
         context->bindBufferBase(target, index, buffer);
     }
 }
@@ -829,42 +822,13 @@ void GL_APIENTRY TransformFeedbackVaryings(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
-        {
-            context->handleError(InvalidOperation());
-            return;
-        }
-
-        if (count < 0)
-        {
-            context->handleError(InvalidValue());
-            return;
-        }
-
-        const Caps &caps = context->getCaps();
-        switch (bufferMode)
-        {
-            case GL_INTERLEAVED_ATTRIBS:
-                break;
-            case GL_SEPARATE_ATTRIBS:
-                if (static_cast<GLuint>(count) > caps.maxTransformFeedbackSeparateAttributes)
-                {
-                    context->handleError(InvalidValue());
-                    return;
-                }
-                break;
-            default:
-                context->handleError(InvalidEnum());
-                return;
-        }
-
-        Program *programObject = GetValidProgram(context, program);
-        if (!programObject)
+        if (!context->skipValidation() &&
+            !ValidateTransformFeedbackVaryings(context, program, count, varyings, bufferMode))
         {
             return;
         }
 
-        programObject->setTransformFeedbackVaryings(count, varyings, bufferMode);
+        context->transformFeedbackVaryings(program, count, varyings, bufferMode);
     }
 }
 
@@ -884,31 +848,14 @@ void GL_APIENTRY GetTransformFeedbackVarying(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
-        {
-            context->handleError(InvalidOperation());
-            return;
-        }
-
-        if (bufSize < 0)
-        {
-            context->handleError(InvalidValue());
-            return;
-        }
-
-        Program *programObject = GetValidProgram(context, program);
-        if (!programObject)
+        if (!context->skipValidation() &&
+            !ValidateGetTransformFeedbackVarying(context, program, index, bufSize, length, size,
+                                                 type, name))
         {
             return;
         }
 
-        if (index >= static_cast<GLuint>(programObject->getTransformFeedbackVaryingCount()))
-        {
-            context->handleError(InvalidValue());
-            return;
-        }
-
-        programObject->getTransformFeedbackVarying(index, bufSize, length, size, type, name);
+        context->getTransformFeedbackVarying(program, index, bufSize, length, size, type, name);
     }
 }
 
@@ -2143,45 +2090,12 @@ void GL_APIENTRY BindTransformFeedback(GLenum target, GLuint id)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
+        if (!context->skipValidation() && !ValidateBindTransformFeedback(context, target, id))
         {
-            context->handleError(InvalidOperation());
             return;
         }
 
-        switch (target)
-        {
-            case GL_TRANSFORM_FEEDBACK:
-            {
-                // Cannot bind a transform feedback object if the current one is started and not
-                // paused (3.0.2 pg 85 section 2.14.1)
-                TransformFeedback *curTransformFeedback =
-                    context->getGLState().getCurrentTransformFeedback();
-                if (curTransformFeedback && curTransformFeedback->isActive() &&
-                    !curTransformFeedback->isPaused())
-                {
-                    context->handleError(InvalidOperation());
-                    return;
-                }
-
-                // Cannot bind a transform feedback object that does not exist (3.0.2 pg 85 section
-                // 2.14.1)
-                if (!context->isTransformFeedbackGenerated(id))
-                {
-                    context->handleError(
-                        InvalidOperation()
-                        << "Cannot bind a transform feedback object that does not exist.");
-                    return;
-                }
-
-                context->bindTransformFeedback(id);
-            }
-            break;
-
-            default:
-                context->handleError(InvalidEnum());
-                return;
-        }
+        context->bindTransformFeedback(target, id);
     }
 }
 
@@ -2197,10 +2111,7 @@ void GL_APIENTRY DeleteTransformFeedbacks(GLsizei n, const GLuint *ids)
             return;
         }
 
-        for (int i = 0; i < n; i++)
-        {
-            context->deleteTransformFeedback(ids[i]);
-        }
+        context->deleteTransformFeedbacks(n, ids);
     }
 }
 
@@ -2216,10 +2127,7 @@ void GL_APIENTRY GenTransformFeedbacks(GLsizei n, GLuint *ids)
             return;
         }
 
-        for (int i = 0; i < n; i++)
-        {
-            ids[i] = context->createTransformFeedback();
-        }
+        context->genTransformFeedbacks(n, ids);
     }
 }
 
@@ -2230,21 +2138,12 @@ GLboolean GL_APIENTRY IsTransformFeedback(GLuint id)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
+        if (!context->skipValidation() && !ValidateIsTransformFeedback(context, id))
         {
-            context->handleError(InvalidOperation());
             return GL_FALSE;
         }
 
-        if (id == 0)
-        {
-            // The 3.0.4 spec [section 6.1.11] states that if ID is zero, IsTransformFeedback
-            // returns FALSE
-            return GL_FALSE;
-        }
-
-        const TransformFeedback *transformFeedback = context->getTransformFeedback(id);
-        return ((transformFeedback != nullptr) ? GL_TRUE : GL_FALSE);
+        return context->isTransformFeedback(id);
     }
 
     return GL_FALSE;
@@ -2257,23 +2156,12 @@ void GL_APIENTRY PauseTransformFeedback(void)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
+        if (!context->skipValidation() && !ValidatePauseTransformFeedback(context))
         {
-            context->handleError(InvalidOperation());
             return;
         }
 
-        TransformFeedback *transformFeedback = context->getGLState().getCurrentTransformFeedback();
-        ASSERT(transformFeedback != nullptr);
-
-        // Current transform feedback must be active and not paused in order to pause (3.0.2 pg 86)
-        if (!transformFeedback->isActive() || transformFeedback->isPaused())
-        {
-            context->handleError(InvalidOperation());
-            return;
-        }
-
-        transformFeedback->pause();
+        context->pauseTransformFeedback();
     }
 }
 
@@ -2284,23 +2172,12 @@ void GL_APIENTRY ResumeTransformFeedback(void)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
+        if (!context->skipValidation() && !ValidateResumeTransformFeedback(context))
         {
-            context->handleError(InvalidOperation());
             return;
         }
 
-        TransformFeedback *transformFeedback = context->getGLState().getCurrentTransformFeedback();
-        ASSERT(transformFeedback != nullptr);
-
-        // Current transform feedback must be active and paused in order to resume (3.0.2 pg 86)
-        if (!transformFeedback->isActive() || !transformFeedback->isPaused())
-        {
-            context->handleError(InvalidOperation());
-            return;
-        }
-
-        transformFeedback->resume();
+        context->resumeTransformFeedback();
     }
 }
 

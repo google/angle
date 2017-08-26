@@ -374,7 +374,7 @@ Context::Context(rx::EGLImplFactory *implFactory,
         // In the initial state, a default transform feedback object is bound and treated as
         // a transform feedback object with a name of zero. That object is bound any time
         // BindTransformFeedback is called with id of zero
-        bindTransformFeedback(0);
+        bindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
     }
 
     // Initialize dirty bit masks
@@ -629,13 +629,6 @@ GLuint Context::createSampler()
     return mState.mSamplers->createSampler();
 }
 
-GLuint Context::createTransformFeedback()
-{
-    GLuint transformFeedback = mTransformFeedbackHandleAllocator.allocate();
-    mTransformFeedbackMap.assign(transformFeedback, nullptr);
-    return transformFeedback;
-}
-
 // Returns an unused framebuffer name
 GLuint Context::createFramebuffer()
 {
@@ -797,26 +790,6 @@ void Context::deleteSampler(GLuint sampler)
     }
 
     mState.mSamplers->deleteObject(this, sampler);
-}
-
-void Context::deleteTransformFeedback(GLuint transformFeedback)
-{
-    if (transformFeedback == 0)
-    {
-        return;
-    }
-
-    TransformFeedback *transformFeedbackObject = nullptr;
-    if (mTransformFeedbackMap.erase(transformFeedback, &transformFeedbackObject))
-    {
-        if (transformFeedbackObject != nullptr)
-        {
-            detachTransformFeedback(transformFeedback);
-            transformFeedbackObject->release(this);
-        }
-
-        mTransformFeedbackHandleAllocator.release(transformFeedback);
-    }
 }
 
 void Context::deleteFramebuffer(GLuint framebuffer)
@@ -1131,8 +1104,9 @@ void Context::useProgram(GLuint program)
     mGLState.setProgram(this, getProgram(program));
 }
 
-void Context::bindTransformFeedback(GLuint transformFeedbackHandle)
+void Context::bindTransformFeedback(GLenum target, GLuint transformFeedbackHandle)
 {
+    ASSERT(target == GL_TRANSFORM_FEEDBACK);
     TransformFeedback *transformFeedback =
         checkTransformFeedbackAllocation(transformFeedbackHandle);
     mGLState.setTransformFeedbackBinding(this, transformFeedback);
@@ -2383,7 +2357,7 @@ void Context::detachTransformFeedback(GLuint transformFeedback)
     // VAOs and FBOs and set the current bound transform feedback back to 0.
     if (mGLState.removeTransformFeedbackBinding(this, transformFeedback))
     {
-        bindTransformFeedback(0);
+        bindTransformFeedback(GL_TRANSFORM_FEEDBACK, 0);
     }
 }
 
@@ -5030,6 +5004,94 @@ bool Context::isVertexArray(GLuint array)
 
     VertexArray *vao = getVertexArray(array);
     return (vao != nullptr ? GL_TRUE : GL_FALSE);
+}
+
+void Context::endTransformFeedback()
+{
+    TransformFeedback *transformFeedback = mGLState.getCurrentTransformFeedback();
+    transformFeedback->end(this);
+}
+
+void Context::transformFeedbackVaryings(GLuint program,
+                                        GLsizei count,
+                                        const GLchar *const *varyings,
+                                        GLenum bufferMode)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->setTransformFeedbackVaryings(count, varyings, bufferMode);
+}
+
+void Context::getTransformFeedbackVarying(GLuint program,
+                                          GLuint index,
+                                          GLsizei bufSize,
+                                          GLsizei *length,
+                                          GLsizei *size,
+                                          GLenum *type,
+                                          GLchar *name)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    programObject->getTransformFeedbackVarying(index, bufSize, length, size, type, name);
+}
+
+void Context::deleteTransformFeedbacks(GLsizei n, const GLuint *ids)
+{
+    for (int i = 0; i < n; i++)
+    {
+        GLuint transformFeedback = ids[i];
+        if (transformFeedback == 0)
+        {
+            continue;
+        }
+
+        TransformFeedback *transformFeedbackObject = nullptr;
+        if (mTransformFeedbackMap.erase(transformFeedback, &transformFeedbackObject))
+        {
+            if (transformFeedbackObject != nullptr)
+            {
+                detachTransformFeedback(transformFeedback);
+                transformFeedbackObject->release(this);
+            }
+
+            mTransformFeedbackHandleAllocator.release(transformFeedback);
+        }
+    }
+}
+
+void Context::genTransformFeedbacks(GLsizei n, GLuint *ids)
+{
+    for (int i = 0; i < n; i++)
+    {
+        GLuint transformFeedback = mTransformFeedbackHandleAllocator.allocate();
+        mTransformFeedbackMap.assign(transformFeedback, nullptr);
+        ids[i] = transformFeedback;
+    }
+}
+
+bool Context::isTransformFeedback(GLuint id)
+{
+    if (id == 0)
+    {
+        // The 3.0.4 spec [section 6.1.11] states that if ID is zero, IsTransformFeedback
+        // returns FALSE
+        return GL_FALSE;
+    }
+
+    const TransformFeedback *transformFeedback = getTransformFeedback(id);
+    return ((transformFeedback != nullptr) ? GL_TRUE : GL_FALSE);
+}
+
+void Context::pauseTransformFeedback()
+{
+    TransformFeedback *transformFeedback = mGLState.getCurrentTransformFeedback();
+    transformFeedback->pause();
+}
+
+void Context::resumeTransformFeedback()
+{
+    TransformFeedback *transformFeedback = mGLState.getCurrentTransformFeedback();
+    transformFeedback->resume();
 }
 
 }  // namespace gl
