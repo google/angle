@@ -460,6 +460,37 @@ bool ValidateUniform2uiv(Context *context, GLint location, GLsizei count, const 
 bool ValidateUniform3uiv(Context *context, GLint location, GLsizei count, const GLuint *value);
 bool ValidateUniform4uiv(Context *context, GLint location, GLsizei count, const GLuint *value);
 
+bool ValidateUniformMatrix2x3fv(Context *context,
+                                GLint location,
+                                GLsizei count,
+                                GLboolean transpose,
+                                const GLfloat *value);
+bool ValidateUniformMatrix3x2fv(Context *context,
+                                GLint location,
+                                GLsizei count,
+                                GLboolean transpose,
+                                const GLfloat *value);
+bool ValidateUniformMatrix2x4fv(Context *context,
+                                GLint location,
+                                GLsizei count,
+                                GLboolean transpose,
+                                const GLfloat *value);
+bool ValidateUniformMatrix4x2fv(Context *context,
+                                GLint location,
+                                GLsizei count,
+                                GLboolean transpose,
+                                const GLfloat *value);
+bool ValidateUniformMatrix3x4fv(Context *context,
+                                GLint location,
+                                GLsizei count,
+                                GLboolean transpose,
+                                const GLfloat *value);
+bool ValidateUniformMatrix4x3fv(Context *context,
+                                GLint location,
+                                GLsizei count,
+                                GLboolean transpose,
+                                const GLfloat *value);
+
 }  // namespace gl
 
 #endif  // LIBANGLE_VALIDATION_ES3_H_

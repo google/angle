@@ -411,13 +411,13 @@ void GL_APIENTRY UniformMatrix2x3fv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateUniformMatrix(context, GL_FLOAT_MAT2x3, location, count, transpose))
+        if (!context->skipValidation() &&
+            !ValidateUniformMatrix2x3fv(context, location, count, transpose, value))
         {
             return;
         }
 
-        Program *program = context->getGLState().getProgram();
-        program->setUniformMatrix2x3fv(location, count, transpose, value);
+        context->uniformMatrix2x3fv(location, count, transpose, value);
     }
 }
 
@@ -434,13 +434,13 @@ void GL_APIENTRY UniformMatrix3x2fv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateUniformMatrix(context, GL_FLOAT_MAT3x2, location, count, transpose))
+        if (!context->skipValidation() &&
+            !ValidateUniformMatrix3x2fv(context, location, count, transpose, value))
         {
             return;
         }
 
-        Program *program = context->getGLState().getProgram();
-        program->setUniformMatrix3x2fv(location, count, transpose, value);
+        context->uniformMatrix3x2fv(location, count, transpose, value);
     }
 }
 
@@ -457,13 +457,13 @@ void GL_APIENTRY UniformMatrix2x4fv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateUniformMatrix(context, GL_FLOAT_MAT2x4, location, count, transpose))
+        if (!context->skipValidation() &&
+            !ValidateUniformMatrix2x4fv(context, location, count, transpose, value))
         {
             return;
         }
 
-        Program *program = context->getGLState().getProgram();
-        program->setUniformMatrix2x4fv(location, count, transpose, value);
+        context->uniformMatrix2x4fv(location, count, transpose, value);
     }
 }
 
@@ -480,13 +480,13 @@ void GL_APIENTRY UniformMatrix4x2fv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateUniformMatrix(context, GL_FLOAT_MAT4x2, location, count, transpose))
+        if (!context->skipValidation() &&
+            !ValidateUniformMatrix4x2fv(context, location, count, transpose, value))
         {
             return;
         }
 
-        Program *program = context->getGLState().getProgram();
-        program->setUniformMatrix4x2fv(location, count, transpose, value);
+        context->uniformMatrix4x2fv(location, count, transpose, value);
     }
 }
 
@@ -503,13 +503,13 @@ void GL_APIENTRY UniformMatrix3x4fv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateUniformMatrix(context, GL_FLOAT_MAT3x4, location, count, transpose))
+        if (!context->skipValidation() &&
+            !ValidateUniformMatrix3x4fv(context, location, count, transpose, value))
         {
             return;
         }
 
-        Program *program = context->getGLState().getProgram();
-        program->setUniformMatrix3x4fv(location, count, transpose, value);
+        context->uniformMatrix3x4fv(location, count, transpose, value);
     }
 }
 
@@ -526,13 +526,13 @@ void GL_APIENTRY UniformMatrix4x3fv(GLint location,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateUniformMatrix(context, GL_FLOAT_MAT4x3, location, count, transpose))
+        if (!context->skipValidation() &&
+            !ValidateUniformMatrix4x3fv(context, location, count, transpose, value))
         {
             return;
         }
 
-        Program *program = context->getGLState().getProgram();
-        program->setUniformMatrix4x3fv(location, count, transpose, value);
+        context->uniformMatrix4x3fv(location, count, transpose, value);
     }
 }
 

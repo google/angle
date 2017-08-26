@@ -93,6 +93,22 @@ bool ValidateUniformES3(Context *context, GLenum uniformType, GLint location, GL
     return ValidateUniform(context, uniformType, location, count);
 }
 
+bool ValidateUniformMatrixES3(Context *context,
+                              GLenum valueType,
+                              GLint location,
+                              GLsizei count,
+                              GLboolean transpose)
+{
+    // Check for ES3 uniform entry points
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    return ValidateUniformMatrix(context, valueType, location, count, transpose);
+}
+
 }  // anonymous namespace
 
 static bool ValidateTexImageFormatCombination(gl::Context *context,
@@ -2842,6 +2858,60 @@ bool ValidateIsQuery(Context *context, GLuint id)
     }
 
     return true;
+}
+
+bool ValidateUniformMatrix2x3fv(Context *context,
+                                GLint location,
+                                GLsizei count,
+                                GLboolean transpose,
+                                const GLfloat *value)
+{
+    return ValidateUniformMatrixES3(context, GL_FLOAT_MAT2x3, location, count, transpose);
+}
+
+bool ValidateUniformMatrix3x2fv(Context *context,
+                                GLint location,
+                                GLsizei count,
+                                GLboolean transpose,
+                                const GLfloat *value)
+{
+    return ValidateUniformMatrixES3(context, GL_FLOAT_MAT3x2, location, count, transpose);
+}
+
+bool ValidateUniformMatrix2x4fv(Context *context,
+                                GLint location,
+                                GLsizei count,
+                                GLboolean transpose,
+                                const GLfloat *value)
+{
+    return ValidateUniformMatrixES3(context, GL_FLOAT_MAT2x4, location, count, transpose);
+}
+
+bool ValidateUniformMatrix4x2fv(Context *context,
+                                GLint location,
+                                GLsizei count,
+                                GLboolean transpose,
+                                const GLfloat *value)
+{
+    return ValidateUniformMatrixES3(context, GL_FLOAT_MAT4x2, location, count, transpose);
+}
+
+bool ValidateUniformMatrix3x4fv(Context *context,
+                                GLint location,
+                                GLsizei count,
+                                GLboolean transpose,
+                                const GLfloat *value)
+{
+    return ValidateUniformMatrixES3(context, GL_FLOAT_MAT3x4, location, count, transpose);
+}
+
+bool ValidateUniformMatrix4x3fv(Context *context,
+                                GLint location,
+                                GLsizei count,
+                                GLboolean transpose,
+                                const GLfloat *value)
+{
+    return ValidateUniformMatrixES3(context, GL_FLOAT_MAT4x3, location, count, transpose);
 }
 
 }  // namespace gl

@@ -4956,4 +4956,58 @@ GLboolean Context::isQuery(GLuint id)
     return (getQuery(id, false, GL_NONE) != nullptr) ? GL_TRUE : GL_FALSE;
 }
 
+void Context::uniformMatrix2x3fv(GLint location,
+                                 GLsizei count,
+                                 GLboolean transpose,
+                                 const GLfloat *value)
+{
+    Program *program = mGLState.getProgram();
+    program->setUniformMatrix2x3fv(location, count, transpose, value);
+}
+
+void Context::uniformMatrix3x2fv(GLint location,
+                                 GLsizei count,
+                                 GLboolean transpose,
+                                 const GLfloat *value)
+{
+    Program *program = mGLState.getProgram();
+    program->setUniformMatrix3x2fv(location, count, transpose, value);
+}
+
+void Context::uniformMatrix2x4fv(GLint location,
+                                 GLsizei count,
+                                 GLboolean transpose,
+                                 const GLfloat *value)
+{
+    Program *program = mGLState.getProgram();
+    program->setUniformMatrix2x4fv(location, count, transpose, value);
+}
+
+void Context::uniformMatrix4x2fv(GLint location,
+                                 GLsizei count,
+                                 GLboolean transpose,
+                                 const GLfloat *value)
+{
+    Program *program = mGLState.getProgram();
+    program->setUniformMatrix4x2fv(location, count, transpose, value);
+}
+
+void Context::uniformMatrix3x4fv(GLint location,
+                                 GLsizei count,
+                                 GLboolean transpose,
+                                 const GLfloat *value)
+{
+    Program *program = mGLState.getProgram();
+    program->setUniformMatrix3x4fv(location, count, transpose, value);
+}
+
+void Context::uniformMatrix4x3fv(GLint location,
+                                 GLsizei count,
+                                 GLboolean transpose,
+                                 const GLfloat *value)
+{
+    Program *program = mGLState.getProgram();
+    program->setUniformMatrix4x3fv(location, count, transpose, value);
+}
+
 }  // namespace gl

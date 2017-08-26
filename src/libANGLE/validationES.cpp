@@ -2450,15 +2450,6 @@ bool ValidateUniformMatrix(ValidationContext *context,
                            GLsizei count,
                            GLboolean transpose)
 {
-    // Check for ES3 uniform entry points
-    int rows = VariableRowCount(valueType);
-    int cols = VariableColumnCount(valueType);
-    if (rows != cols && context->getClientMajorVersion() < 3)
-    {
-        context->handleError(InvalidOperation());
-        return false;
-    }
-
     if (transpose != GL_FALSE && context->getClientMajorVersion() < 3)
     {
         context->handleError(InvalidValue());
