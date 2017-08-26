@@ -202,7 +202,7 @@ bool ValidateCompressedTexImage3DRobustANGLE(Context *context,
                                              const void *data);
 
 bool ValidateBindVertexArray(Context *context, GLuint array);
-bool ValidateIsVertexArray(Context *context);
+bool ValidateIsVertexArray(Context *context, GLuint array);
 
 bool ValidateBindBufferBase(Context *context, GLenum target, GLuint index, GLuint buffer);
 bool ValidateBindBufferRange(Context *context,

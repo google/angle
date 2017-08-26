@@ -1057,7 +1057,7 @@ void GL_APIENTRY BindVertexArrayOES(GLuint array)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateBindVertexArrayOES(context, array))
+        if (!context->skipValidation() && !ValidateBindVertexArrayOES(context, array))
         {
             return;
         }
@@ -1073,18 +1073,12 @@ void GL_APIENTRY DeleteVertexArraysOES(GLsizei n, const GLuint *arrays)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateDeleteVertexArraysOES(context, n))
+        if (!context->skipValidation() && !ValidateDeleteVertexArraysOES(context, n, arrays))
         {
             return;
         }
 
-        for (int arrayIndex = 0; arrayIndex < n; arrayIndex++)
-        {
-            if (arrays[arrayIndex] != 0)
-            {
-                context->deleteVertexArray(arrays[arrayIndex]);
-            }
-        }
+        context->deleteVertexArrays(n, arrays);
     }
 }
 
@@ -1095,15 +1089,12 @@ void GL_APIENTRY GenVertexArraysOES(GLsizei n, GLuint *arrays)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateGenVertexArraysOES(context, n))
+        if (!context->skipValidation() && !ValidateGenVertexArraysOES(context, n, arrays))
         {
             return;
         }
 
-        for (int arrayIndex = 0; arrayIndex < n; arrayIndex++)
-        {
-            arrays[arrayIndex] = context->createVertexArray();
-        }
+        context->genVertexArrays(n, arrays);
     }
 }
 
@@ -1114,19 +1105,12 @@ GLboolean GL_APIENTRY IsVertexArrayOES(GLuint array)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateIsVertexArrayOES(context))
+        if (!context->skipValidation() && !ValidateIsVertexArrayOES(context, array))
         {
             return GL_FALSE;
         }
 
-        if (array == 0)
-        {
-            return GL_FALSE;
-        }
-
-        VertexArray *vao = context->getVertexArray(array);
-
-        return (vao != nullptr ? GL_TRUE : GL_FALSE);
+        return context->isVertexArray(array);
     }
 
     return GL_FALSE;

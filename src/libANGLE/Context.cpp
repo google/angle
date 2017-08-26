@@ -624,13 +624,6 @@ GLuint Context::createPaths(GLsizei range)
     return resultOrError.getResult();
 }
 
-GLuint Context::createVertexArray()
-{
-    GLuint vertexArray = mVertexArrayHandleAllocator.allocate();
-    mVertexArrayMap.assign(vertexArray, nullptr);
-    return vertexArray;
-}
-
 GLuint Context::createSampler()
 {
     return mState.mSamplers->createSampler();
@@ -794,21 +787,6 @@ void Context::getPathParameterfv(GLuint path, GLenum pname, GLfloat *value) cons
 void Context::setPathStencilFunc(GLenum func, GLint ref, GLuint mask)
 {
     mGLState.setPathStencilFunc(func, ref, mask);
-}
-
-void Context::deleteVertexArray(GLuint vertexArray)
-{
-    VertexArray *vertexArrayObject = nullptr;
-    if (mVertexArrayMap.erase(vertexArray, &vertexArrayObject))
-    {
-        if (vertexArrayObject != nullptr)
-        {
-            detachVertexArray(vertexArray);
-            vertexArrayObject->onDestroy(this);
-        }
-
-        mVertexArrayHandleAllocator.release(vertexArray);
-    }
 }
 
 void Context::deleteSampler(GLuint sampler)
@@ -5008,6 +4986,50 @@ void Context::uniformMatrix4x3fv(GLint location,
 {
     Program *program = mGLState.getProgram();
     program->setUniformMatrix4x3fv(location, count, transpose, value);
+}
+
+void Context::deleteVertexArrays(GLsizei n, const GLuint *arrays)
+{
+    for (int arrayIndex = 0; arrayIndex < n; arrayIndex++)
+    {
+        GLuint vertexArray = arrays[arrayIndex];
+
+        if (arrays[arrayIndex] != 0)
+        {
+            VertexArray *vertexArrayObject = nullptr;
+            if (mVertexArrayMap.erase(vertexArray, &vertexArrayObject))
+            {
+                if (vertexArrayObject != nullptr)
+                {
+                    detachVertexArray(vertexArray);
+                    vertexArrayObject->onDestroy(this);
+                }
+
+                mVertexArrayHandleAllocator.release(vertexArray);
+            }
+        }
+    }
+}
+
+void Context::genVertexArrays(GLsizei n, GLuint *arrays)
+{
+    for (int arrayIndex = 0; arrayIndex < n; arrayIndex++)
+    {
+        GLuint vertexArray = mVertexArrayHandleAllocator.allocate();
+        mVertexArrayMap.assign(vertexArray, nullptr);
+        arrays[arrayIndex] = vertexArray;
+    }
+}
+
+bool Context::isVertexArray(GLuint array)
+{
+    if (array == 0)
+    {
+        return GL_FALSE;
+    }
+
+    VertexArray *vao = getVertexArray(array);
+    return (vao != nullptr ? GL_TRUE : GL_FALSE);
 }
 
 }  // namespace gl

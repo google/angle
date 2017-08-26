@@ -120,10 +120,6 @@ class Context final : public ValidationContext
     GLuint createFenceNV();
     void deleteFenceNV(GLuint fence);
 
-    // Vertex arrays are owned by the Context
-    GLuint createVertexArray();
-    void deleteVertexArray(GLuint vertexArray);
-
     void bindArrayBuffer(GLuint bufferHandle);
     void bindElementArrayBuffer(GLuint bufferHandle);
     void bindTexture(GLenum target, GLuint handle);
@@ -813,6 +809,10 @@ class Context final : public ValidationContext
                             GLsizei count,
                             GLboolean transpose,
                             const GLfloat *value);
+
+    void deleteVertexArrays(GLsizei n, const GLuint *arrays);
+    void genVertexArrays(GLsizei n, GLuint *arrays);
+    bool isVertexArray(GLuint array);
 
     void getProgramBinary(GLuint program,
                           GLsizei bufSize,

@@ -1765,7 +1765,7 @@ bool ValidateBindVertexArrayOES(Context *context, GLuint array)
     return ValidateBindVertexArrayBase(context, array);
 }
 
-bool ValidateDeleteVertexArraysOES(Context *context, GLsizei n)
+bool ValidateDeleteVertexArraysOES(Context *context, GLsizei n, const GLuint *arrays)
 {
     if (!context->getExtensions().vertexArrayObject)
     {
@@ -1776,7 +1776,7 @@ bool ValidateDeleteVertexArraysOES(Context *context, GLsizei n)
     return ValidateGenOrDelete(context, n);
 }
 
-bool ValidateGenVertexArraysOES(Context *context, GLsizei n)
+bool ValidateGenVertexArraysOES(Context *context, GLsizei n, GLuint *arrays)
 {
     if (!context->getExtensions().vertexArrayObject)
     {
@@ -1787,7 +1787,7 @@ bool ValidateGenVertexArraysOES(Context *context, GLsizei n)
     return ValidateGenOrDelete(context, n);
 }
 
-bool ValidateIsVertexArrayOES(Context *context)
+bool ValidateIsVertexArrayOES(Context *context, GLuint array)
 {
     if (!context->getExtensions().vertexArrayObject)
     {

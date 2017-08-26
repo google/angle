@@ -686,13 +686,7 @@ void GL_APIENTRY DeleteVertexArrays(GLsizei n, const GLuint *arrays)
             return;
         }
 
-        for (int arrayIndex = 0; arrayIndex < n; arrayIndex++)
-        {
-            if (arrays[arrayIndex] != 0)
-            {
-                context->deleteVertexArray(arrays[arrayIndex]);
-            }
-        }
+        context->deleteVertexArrays(n, arrays);
     }
 }
 
@@ -708,10 +702,7 @@ void GL_APIENTRY GenVertexArrays(GLsizei n, GLuint *arrays)
             return;
         }
 
-        for (int arrayIndex = 0; arrayIndex < n; arrayIndex++)
-        {
-            arrays[arrayIndex] = context->createVertexArray();
-        }
+        context->genVertexArrays(n, arrays);
     }
 }
 
@@ -722,19 +713,12 @@ GLboolean GL_APIENTRY IsVertexArray(GLuint array)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateIsVertexArray(context))
+        if (!context->skipValidation() && !ValidateIsVertexArray(context, array))
         {
             return GL_FALSE;
         }
 
-        if (array == 0)
-        {
-            return GL_FALSE;
-        }
-
-        VertexArray *vao = context->getVertexArray(array);
-
-        return (vao != nullptr ? GL_TRUE : GL_FALSE);
+        return context->isVertexArray(array);
     }
 
     return GL_FALSE;
