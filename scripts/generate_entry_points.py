@@ -142,7 +142,7 @@ format_dict = {
     "GLsizei": "%d",
     "GLsizeiptr": "%d",
     "GLsync": "0x%0.8p",
-    "GLuint": "%d",
+    "GLuint": "%u",
     "GLuint64": "%llu"
 }
 
