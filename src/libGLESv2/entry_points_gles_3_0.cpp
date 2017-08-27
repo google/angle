@@ -6,8 +6,6 @@
 
 // entry_points_gles_3_0.cpp : Implements the GLES 3.0 entry points.
 
-#include "libGLESv2/entry_points_gles_3_0.h"
-
 #include "libANGLE/Context.h"
 #include "libANGLE/validationES3.h"
 #include "libGLESv2/global_state.h"
