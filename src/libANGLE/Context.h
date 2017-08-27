@@ -84,7 +84,6 @@ class Context final : public ValidationContext
     GLuint createProgram();
     GLuint createTexture();
     GLuint createRenderbuffer();
-    GLuint createSampler();
     GLuint createPaths(GLsizei range);
 
     void deleteBuffer(GLuint buffer);
@@ -92,7 +91,6 @@ class Context final : public ValidationContext
     void deleteProgram(GLuint program);
     void deleteTexture(GLuint texture);
     void deleteRenderbuffer(GLuint renderbuffer);
-    void deleteSampler(GLuint sampler);
     void deletePaths(GLuint first, GLsizei range);
 
     // CHROMIUM_path_rendering
@@ -171,7 +169,7 @@ class Context final : public ValidationContext
     void getQueryObjecti64v(GLuint id, GLenum pname, GLint64 *params);
     void getQueryObjectui64v(GLuint id, GLenum pname, GLuint64 *params);
 
-    void setVertexAttribDivisor(GLuint index, GLuint divisor);
+    void vertexAttribDivisor(GLuint index, GLuint divisor);
     void setVertexBindingDivisor(GLuint bindingIndex, GLuint divisor);
 
     void getBufferParameteriv(GLenum target, GLenum pname, GLint *params);
@@ -865,6 +863,15 @@ class Context final : public ValidationContext
     GLenum clientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout);
     void waitSync(GLsync sync, GLbitfield flags, GLuint64 timeout);
     void getInteger64v(GLenum pname, GLint64 *params);
+
+    void getBufferParameteri64v(GLenum target, GLenum pname, GLint64 *params);
+    void genSamplers(GLsizei count, GLuint *samplers);
+    void deleteSamplers(GLsizei count, const GLuint *samplers);
+    void getInternalformativ(GLenum target,
+                             GLenum internalformat,
+                             GLenum pname,
+                             GLsizei bufSize,
+                             GLint *params);
 
     // Returns the error.
     Error handleError(const Error &error) override;

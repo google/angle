@@ -1604,8 +1604,7 @@ void GL_APIENTRY GetBufferParameteri64v(GLenum target, GLenum pname, GLint64 *pa
             return;
         }
 
-        Buffer *buffer = context->getGLState().getTargetBuffer(target);
-        QueryBufferParameteri64v(buffer, pname, params);
+        context->getBufferParameteri64v(target, pname, params);
     }
 }
 
@@ -1621,10 +1620,7 @@ void GL_APIENTRY GenSamplers(GLsizei count, GLuint *samplers)
             return;
         }
 
-        for (int i = 0; i < count; i++)
-        {
-            samplers[i] = context->createSampler();
-        }
+        context->genSamplers(count, samplers);
     }
 }
 
@@ -1640,10 +1636,7 @@ void GL_APIENTRY DeleteSamplers(GLsizei count, const GLuint *samplers)
             return;
         }
 
-        for (int i = 0; i < count; i++)
-        {
-            context->deleteSampler(samplers[i]);
-        }
+        context->deleteSamplers(count, samplers);
     }
 }
 
@@ -1654,9 +1647,8 @@ GLboolean GL_APIENTRY IsSampler(GLuint sampler)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
+        if (!context->skipValidation() && !ValidateIsSampler(context, sampler))
         {
-            context->handleError(InvalidOperation());
             return GL_FALSE;
         }
 
@@ -1673,21 +1665,8 @@ void GL_APIENTRY BindSampler(GLuint unit, GLuint sampler)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
+        if (!context->skipValidation() && !ValidateBindSampler(context, unit, sampler))
         {
-            context->handleError(InvalidOperation());
-            return;
-        }
-
-        if (sampler != 0 && !context->isSampler(sampler))
-        {
-            context->handleError(InvalidOperation());
-            return;
-        }
-
-        if (unit >= context->getCaps().maxCombinedTextureImageUnits)
-        {
-            context->handleError(InvalidValue());
             return;
         }
 
@@ -1808,19 +1787,12 @@ void GL_APIENTRY VertexAttribDivisor(GLuint index, GLuint divisor)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
+        if (!context->skipValidation() && !ValidateVertexAttribDivisor(context, index, divisor))
         {
-            context->handleError(InvalidOperation());
             return;
         }
 
-        if (index >= MAX_VERTEX_ATTRIBS)
-        {
-            context->handleError(InvalidValue());
-            return;
-        }
-
-        context->setVertexAttribDivisor(index, divisor);
+        context->vertexAttribDivisor(index, divisor);
     }
 }
 
@@ -2025,7 +1997,8 @@ void GL_APIENTRY InvalidateSubFramebuffer(GLenum target,
     if (context)
     {
         if (!context->skipValidation() &&
-            !ValidateInvalidateFramebuffer(context, target, numAttachments, attachments))
+            !ValidateInvalidateSubFramebuffer(context, target, numAttachments, attachments, x, y,
+                                              width, height))
         {
             return;
         }
@@ -2045,14 +2018,8 @@ TexStorage2D(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
-        {
-            context->handleError(InvalidOperation());
-            return;
-        }
-
-        if (!ValidateES3TexStorage2DParameters(context, target, levels, internalformat, width,
-                                               height, 1))
+        if (!context->skipValidation() &&
+            !ValidateTexStorage2D(context, target, levels, internalformat, width, height))
         {
             return;
         }
@@ -2077,14 +2044,8 @@ void GL_APIENTRY TexStorage3D(GLenum target,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
-        {
-            context->handleError(InvalidOperation());
-            return;
-        }
-
-        if (!ValidateES3TexStorage3DParameters(context, target, levels, internalformat, width,
-                                               height, depth))
+        if (!context->skipValidation() &&
+            !ValidateTexStorage3D(context, target, levels, internalformat, width, height, depth))
         {
             return;
         }
@@ -2114,8 +2075,7 @@ void GL_APIENTRY GetInternalformativ(GLenum target,
             return;
         }
 
-        const TextureCaps &formatCaps = context->getTextureCaps().get(internalformat);
-        QueryInternalFormativ(formatCaps, pname, bufSize, params);
+        context->getInternalformativ(target, internalformat, pname, bufSize, params);
     }
 }
 }

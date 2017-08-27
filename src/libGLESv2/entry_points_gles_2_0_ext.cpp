@@ -690,7 +690,7 @@ void GL_APIENTRY VertexAttribDivisorANGLE(GLuint index, GLuint divisor)
             }
         }
 
-        context->setVertexAttribDivisor(index, divisor);
+        context->vertexAttribDivisor(index, divisor);
     }
 }
 

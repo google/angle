@@ -1176,6 +1176,18 @@ bool ValidateInvalidateFramebuffer(Context *context,
                                           defaultFramebuffer);
 }
 
+bool ValidateInvalidateSubFramebuffer(Context *context,
+                                      GLenum target,
+                                      GLsizei numAttachments,
+                                      const GLenum *attachments,
+                                      GLint x,
+                                      GLint y,
+                                      GLsizei width,
+                                      GLsizei height)
+{
+    return ValidateInvalidateFramebuffer(context, target, numAttachments, attachments);
+}
+
 bool ValidateClearBuffer(ValidationContext *context)
 {
     if (context->getClientMajorVersion() < 3)
@@ -3490,6 +3502,96 @@ bool ValidateGetInteger64v(Context *context, GLenum pname, GLint64 *params)
     GLenum nativeType      = GL_NONE;
     unsigned int numParams = 0;
     if (!ValidateStateQuery(context, pname, &nativeType, &numParams))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateIsSampler(Context *context, GLuint sampler)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        context->handleError(InvalidOperation());
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateBindSampler(Context *context, GLuint unit, GLuint sampler)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    if (sampler != 0 && !context->isSampler(sampler))
+    {
+        context->handleError(InvalidOperation());
+        return false;
+    }
+
+    if (unit >= context->getCaps().maxCombinedTextureImageUnits)
+    {
+        context->handleError(InvalidValue());
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateVertexAttribDivisor(Context *context, GLuint index, GLuint divisor)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    return ValidateVertexAttribIndex(context, index);
+}
+
+bool ValidateTexStorage2D(Context *context,
+                          GLenum target,
+                          GLsizei levels,
+                          GLenum internalformat,
+                          GLsizei width,
+                          GLsizei height)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    if (!ValidateES3TexStorage2DParameters(context, target, levels, internalformat, width, height,
+                                           1))
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateTexStorage3D(Context *context,
+                          GLenum target,
+                          GLsizei levels,
+                          GLenum internalformat,
+                          GLsizei width,
+                          GLsizei height,
+                          GLsizei depth)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    if (!ValidateES3TexStorage3DParameters(context, target, levels, internalformat, width, height,
+                                           depth))
     {
         return false;
     }

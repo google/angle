@@ -617,11 +617,6 @@ GLuint Context::createPaths(GLsizei range)
     return resultOrError.getResult();
 }
 
-GLuint Context::createSampler()
-{
-    return mState.mSamplers->createSampler();
-}
-
 // Returns an unused framebuffer name
 GLuint Context::createFramebuffer()
 {
@@ -772,16 +767,6 @@ void Context::getPathParameterfv(GLuint path, GLenum pname, GLfloat *value) cons
 void Context::setPathStencilFunc(GLenum func, GLint ref, GLuint mask)
 {
     mGLState.setPathStencilFunc(func, ref, mask);
-}
-
-void Context::deleteSampler(GLuint sampler)
-{
-    if (mState.mSamplers->getSampler(sampler))
-    {
-        detachSampler(sampler);
-    }
-
-    mState.mSamplers->deleteObject(this, sampler);
 }
 
 void Context::deleteFramebuffer(GLuint framebuffer)
@@ -2358,7 +2343,7 @@ void Context::detachSampler(GLuint sampler)
     mGLState.detachSampler(this, sampler);
 }
 
-void Context::setVertexAttribDivisor(GLuint index, GLuint divisor)
+void Context::vertexAttribDivisor(GLuint index, GLuint divisor)
 {
     mGLState.setVertexAttribDivisor(this, index, divisor);
 }
@@ -5218,6 +5203,45 @@ void Context::getInteger64v(GLenum pname, GLint64 *params)
     {
         CastStateValues(this, nativeType, pname, numParams, params);
     }
+}
+
+void Context::getBufferParameteri64v(GLenum target, GLenum pname, GLint64 *params)
+{
+    Buffer *buffer = mGLState.getTargetBuffer(target);
+    QueryBufferParameteri64v(buffer, pname, params);
+}
+
+void Context::genSamplers(GLsizei count, GLuint *samplers)
+{
+    for (int i = 0; i < count; i++)
+    {
+        samplers[i] = mState.mSamplers->createSampler();
+    }
+}
+
+void Context::deleteSamplers(GLsizei count, const GLuint *samplers)
+{
+    for (int i = 0; i < count; i++)
+    {
+        GLuint sampler = samplers[i];
+
+        if (mState.mSamplers->getSampler(sampler))
+        {
+            detachSampler(sampler);
+        }
+
+        mState.mSamplers->deleteObject(this, sampler);
+    }
+}
+
+void Context::getInternalformativ(GLenum target,
+                                  GLenum internalformat,
+                                  GLenum pname,
+                                  GLsizei bufSize,
+                                  GLint *params)
+{
+    const TextureCaps &formatCaps = mTextureCaps.get(internalformat);
+    QueryInternalFormativ(formatCaps, pname, bufSize, params);
 }
 
 }  // namespace gl

@@ -165,6 +165,15 @@ bool ValidateInvalidateFramebuffer(Context *context,
                                    GLsizei numAttachments,
                                    const GLenum *attachments);
 
+bool ValidateInvalidateSubFramebuffer(Context *context,
+                                      GLenum target,
+                                      GLsizei numAttachments,
+                                      const GLenum *attachments,
+                                      GLint x,
+                                      GLint y,
+                                      GLsizei width,
+                                      GLsizei height);
+
 bool ValidateClearBuffer(ValidationContext *context);
 
 bool ValidateDrawRangeElements(Context *context,
@@ -558,6 +567,23 @@ bool ValidateDeleteSync(Context *context, GLsync sync);
 bool ValidateClientWaitSync(Context *context, GLsync sync, GLbitfield flags, GLuint64 timeout);
 bool ValidateWaitSync(Context *context, GLsync sync, GLbitfield flags, GLuint64 timeout);
 bool ValidateGetInteger64v(Context *context, GLenum pname, GLint64 *params);
+
+bool ValidateIsSampler(Context *context, GLuint sampler);
+bool ValidateBindSampler(Context *context, GLuint unit, GLuint sampler);
+bool ValidateVertexAttribDivisor(Context *context, GLuint index, GLuint divisor);
+bool ValidateTexStorage2D(Context *context,
+                          GLenum target,
+                          GLsizei levels,
+                          GLenum internalformat,
+                          GLsizei width,
+                          GLsizei height);
+bool ValidateTexStorage3D(Context *context,
+                          GLenum target,
+                          GLsizei levels,
+                          GLenum internalformat,
+                          GLsizei width,
+                          GLsizei height,
+                          GLsizei depth);
 
 }  // namespace gl
 
