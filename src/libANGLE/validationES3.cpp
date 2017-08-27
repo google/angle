@@ -3373,4 +3373,128 @@ bool ValidateDrawArraysInstanced(Context *context,
     return ValidateDrawArraysInstancedBase(context, mode, first, count, primcount);
 }
 
+bool ValidateFenceSync(Context *context, GLenum condition, GLbitfield flags)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    if (condition != GL_SYNC_GPU_COMMANDS_COMPLETE)
+    {
+        context->handleError(InvalidEnum());
+        return false;
+    }
+
+    if (flags != 0)
+    {
+        context->handleError(InvalidValue());
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateIsSync(Context *context, GLsync sync)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateDeleteSync(Context *context, GLsync sync)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    if (sync != static_cast<GLsync>(0) && !context->getFenceSync(sync))
+    {
+        context->handleError(InvalidValue());
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateClientWaitSync(Context *context, GLsync sync, GLbitfield flags, GLuint64 timeout)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    if ((flags & ~(GL_SYNC_FLUSH_COMMANDS_BIT)) != 0)
+    {
+        context->handleError(InvalidValue());
+        return false;
+    }
+
+    FenceSync *fenceSync = context->getFenceSync(sync);
+
+    if (!fenceSync)
+    {
+        context->handleError(InvalidValue());
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateWaitSync(Context *context, GLsync sync, GLbitfield flags, GLuint64 timeout)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    if (flags != 0)
+    {
+        context->handleError(InvalidValue());
+        return false;
+    }
+
+    if (timeout != GL_TIMEOUT_IGNORED)
+    {
+        context->handleError(InvalidValue());
+        return false;
+    }
+
+    FenceSync *fenceSync = context->getFenceSync(sync);
+    if (!fenceSync)
+    {
+        context->handleError(InvalidValue());
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetInteger64v(Context *context, GLenum pname, GLint64 *params)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    GLenum nativeType      = GL_NONE;
+    unsigned int numParams = 0;
+    if (!ValidateStateQuery(context, pname, &nativeType, &numParams))
+    {
+        return false;
+    }
+
+    return true;
+}
+
 }  // namespace gl

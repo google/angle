@@ -552,6 +552,13 @@ bool ValidateDrawArraysInstanced(Context *context,
                                  GLsizei count,
                                  GLsizei primcount);
 
+bool ValidateFenceSync(Context *context, GLenum condition, GLbitfield flags);
+bool ValidateIsSync(Context *context, GLsync sync);
+bool ValidateDeleteSync(Context *context, GLsync sync);
+bool ValidateClientWaitSync(Context *context, GLsync sync, GLbitfield flags, GLuint64 timeout);
+bool ValidateWaitSync(Context *context, GLsync sync, GLbitfield flags, GLuint64 timeout);
+bool ValidateGetInteger64v(Context *context, GLenum pname, GLint64 *params);
+
 }  // namespace gl
 
 #endif  // LIBANGLE_VALIDATION_ES3_H_

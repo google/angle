@@ -606,13 +606,6 @@ GLuint Context::createRenderbuffer()
     return mState.mRenderbuffers->createRenderbuffer();
 }
 
-GLsync Context::createFenceSync()
-{
-    GLuint handle = mState.mFenceSyncs->createFenceSync(mImplementation.get());
-
-    return reinterpret_cast<GLsync>(static_cast<uintptr_t>(handle));
-}
-
 GLuint Context::createPaths(GLsizei range)
 {
     auto resultOrError = mState.mPaths->createPaths(mImplementation.get(), range);
@@ -682,14 +675,13 @@ void Context::deleteRenderbuffer(GLuint renderbuffer)
     mState.mRenderbuffers->deleteObject(this, renderbuffer);
 }
 
-void Context::deleteFenceSync(GLsync fenceSync)
+void Context::deleteSync(GLsync sync)
 {
     // The spec specifies the underlying Fence object is not deleted until all current
     // wait commands finish. However, since the name becomes invalid, we cannot query the fence,
     // and since our API is currently designed for being called from a single thread, we can delete
     // the fence immediately.
-    mState.mFenceSyncs->deleteObject(this,
-                                     static_cast<GLuint>(reinterpret_cast<uintptr_t>(fenceSync)));
+    mState.mFenceSyncs->deleteObject(this, static_cast<GLuint>(reinterpret_cast<uintptr_t>(sync)));
 }
 
 void Context::deletePaths(GLuint first, GLsizei range)
@@ -1599,7 +1591,7 @@ void Context::getIntegervImpl(GLenum pname, GLint *params)
     }
 }
 
-void Context::getInteger64v(GLenum pname, GLint64 *params)
+void Context::getInteger64vImpl(GLenum pname, GLint64 *params)
 {
     // Queries about context capabilities and maximums are answered by Context.
     // Queries about current GL state values are answered by State.
@@ -5173,6 +5165,59 @@ void Context::uniformBlockBinding(GLuint program,
 {
     Program *programObject = getProgram(program);
     programObject->bindUniformBlock(uniformBlockIndex, uniformBlockBinding);
+}
+
+GLsync Context::fenceSync(GLenum condition, GLbitfield flags)
+{
+    GLuint handle    = mState.mFenceSyncs->createFenceSync(mImplementation.get());
+    GLsync fenceSync = reinterpret_cast<GLsync>(static_cast<uintptr_t>(handle));
+
+    FenceSync *fenceSyncObject = getFenceSync(fenceSync);
+    Error error                = fenceSyncObject->set(condition, flags);
+    if (error.isError())
+    {
+        deleteSync(fenceSync);
+        handleError(error);
+        return nullptr;
+    }
+
+    return fenceSync;
+}
+
+GLboolean Context::isSync(GLsync sync)
+{
+    return (getFenceSync(sync) != nullptr);
+}
+
+GLenum Context::clientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
+{
+    FenceSync *syncObject = getFenceSync(sync);
+
+    GLenum result = GL_WAIT_FAILED;
+    handleError(syncObject->clientWait(flags, timeout, &result));
+    return result;
+}
+
+void Context::waitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
+{
+    FenceSync *syncObject = getFenceSync(sync);
+    handleError(syncObject->serverWait(flags, timeout));
+}
+
+void Context::getInteger64v(GLenum pname, GLint64 *params)
+{
+    GLenum nativeType      = GL_NONE;
+    unsigned int numParams = 0;
+    getQueryParameterInfo(pname, &nativeType, &numParams);
+
+    if (nativeType == GL_INT_64_ANGLEX)
+    {
+        getInteger64vImpl(pname, params);
+    }
+    else
+    {
+        CastStateValues(this, nativeType, pname, numParams, params);
+    }
 }
 
 }  // namespace gl

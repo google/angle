@@ -1455,36 +1455,12 @@ GLsync GL_APIENTRY FenceSync_(GLenum condition, GLbitfield flags)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
+        if (!context->skipValidation() && !ValidateFenceSync(context, condition, flags))
         {
-            context->handleError(InvalidOperation());
-            return 0;
-        }
-
-        if (condition != GL_SYNC_GPU_COMMANDS_COMPLETE)
-        {
-            context->handleError(InvalidEnum());
-            return 0;
-        }
-
-        if (flags != 0)
-        {
-            context->handleError(InvalidValue());
-            return 0;
-        }
-
-        GLsync fenceSync = context->createFenceSync();
-
-        FenceSync *fenceSyncObject = context->getFenceSync(fenceSync);
-        Error error                = fenceSyncObject->set(condition, flags);
-        if (error.isError())
-        {
-            context->deleteFenceSync(fenceSync);
-            context->handleError(error);
             return nullptr;
         }
 
-        return fenceSync;
+        return context->fenceSync(condition, flags);
     }
 
     return nullptr;
@@ -1497,13 +1473,12 @@ GLboolean GL_APIENTRY IsSync(GLsync sync)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
+        if (!context->skipValidation() && !ValidateIsSync(context, sync))
         {
-            context->handleError(InvalidOperation());
             return GL_FALSE;
         }
 
-        return (context->getFenceSync(sync) != nullptr);
+        return context->isSync(sync);
     }
 
     return GL_FALSE;
@@ -1516,19 +1491,12 @@ void GL_APIENTRY DeleteSync(GLsync sync)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
+        if (!context->skipValidation() && !ValidateDeleteSync(context, sync))
         {
-            context->handleError(InvalidOperation());
             return;
         }
 
-        if (sync != static_cast<GLsync>(0) && !context->getFenceSync(sync))
-        {
-            context->handleError(InvalidValue());
-            return;
-        }
-
-        context->deleteFenceSync(sync);
+        context->deleteSync(sync);
     }
 }
 
@@ -1540,38 +1508,15 @@ GLenum GL_APIENTRY ClientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeou
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
+        if (!context->skipValidation() && !ValidateClientWaitSync(context, sync, flags, timeout))
         {
-            context->handleError(InvalidOperation());
             return GL_WAIT_FAILED;
         }
 
-        if ((flags & ~(GL_SYNC_FLUSH_COMMANDS_BIT)) != 0)
-        {
-            context->handleError(InvalidValue());
-            return GL_WAIT_FAILED;
-        }
-
-        FenceSync *fenceSync = context->getFenceSync(sync);
-
-        if (!fenceSync)
-        {
-            context->handleError(InvalidValue());
-            return GL_WAIT_FAILED;
-        }
-
-        GLenum result = GL_WAIT_FAILED;
-        Error error   = fenceSync->clientWait(flags, timeout, &result);
-        if (error.isError())
-        {
-            context->handleError(error);
-            return GL_WAIT_FAILED;
-        }
-
-        return result;
+        return context->clientWaitSync(sync, flags, timeout);
     }
 
-    return GL_FALSE;
+    return GL_WAIT_FAILED;
 }
 
 void GL_APIENTRY WaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
@@ -1582,37 +1527,12 @@ void GL_APIENTRY WaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
+        if (!context->skipValidation() && !ValidateWaitSync(context, sync, flags, timeout))
         {
-            context->handleError(InvalidOperation());
             return;
         }
 
-        if (flags != 0)
-        {
-            context->handleError(InvalidValue());
-            return;
-        }
-
-        if (timeout != GL_TIMEOUT_IGNORED)
-        {
-            context->handleError(InvalidValue());
-            return;
-        }
-
-        FenceSync *fenceSync = context->getFenceSync(sync);
-
-        if (!fenceSync)
-        {
-            context->handleError(InvalidValue());
-            return;
-        }
-
-        Error error = fenceSync->serverWait(flags, timeout);
-        if (error.isError())
-        {
-            context->handleError(error);
-        }
+        context->waitSync(sync, flags, timeout);
     }
 }
 
@@ -1623,27 +1543,12 @@ void GL_APIENTRY GetInteger64v(GLenum pname, GLint64 *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
-        {
-            context->handleError(InvalidOperation());
-            return;
-        }
-
-        GLenum nativeType;
-        unsigned int numParams = 0;
-        if (!ValidateStateQuery(context, pname, &nativeType, &numParams))
+        if (!context->skipValidation() && !ValidateGetInteger64v(context, pname, params))
         {
             return;
         }
 
-        if (nativeType == GL_INT_64_ANGLEX)
-        {
-            context->getInteger64v(pname, params);
-        }
-        else
-        {
-            CastStateValues(context, nativeType, pname, numParams, params);
-        }
+        context->getInteger64v(pname, params);
     }
 }
 
@@ -1680,6 +1585,7 @@ void GL_APIENTRY GetInteger64i_v(GLenum target, GLuint index, GLint64 *data)
         {
             return;
         }
+
         context->getInteger64i_v(target, index, data);
     }
 }

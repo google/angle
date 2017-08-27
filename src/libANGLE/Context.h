@@ -85,7 +85,6 @@ class Context final : public ValidationContext
     GLuint createTexture();
     GLuint createRenderbuffer();
     GLuint createSampler();
-    GLsync createFenceSync();
     GLuint createPaths(GLsizei range);
 
     void deleteBuffer(GLuint buffer);
@@ -94,7 +93,6 @@ class Context final : public ValidationContext
     void deleteTexture(GLuint texture);
     void deleteRenderbuffer(GLuint renderbuffer);
     void deleteSampler(GLuint sampler);
-    void deleteFenceSync(GLsync fenceSync);
     void deletePaths(GLuint first, GLsizei range);
 
     // CHROMIUM_path_rendering
@@ -253,7 +251,7 @@ class Context final : public ValidationContext
     void getFloatvImpl(GLenum pname, GLfloat *params);
     void getIntegerv(GLenum pname, GLint *params);
     void getIntegervImpl(GLenum pname, GLint *params);
-    void getInteger64v(GLenum pname, GLint64 *params);
+    void getInteger64vImpl(GLenum pname, GLint64 *params);
     void getPointerv(GLenum pname, void **params) const;
     void getBooleani_v(GLenum target, GLuint index, GLboolean *data);
     void getIntegeri_v(GLenum target, GLuint index, GLint *data);
@@ -860,6 +858,13 @@ class Context final : public ValidationContext
                                    GLsizei *length,
                                    GLchar *uniformBlockName);
     void uniformBlockBinding(GLuint program, GLuint uniformBlockIndex, GLuint uniformBlockBinding);
+
+    GLsync fenceSync(GLenum condition, GLbitfield flags);
+    GLboolean isSync(GLsync sync);
+    void deleteSync(GLsync sync);
+    GLenum clientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout);
+    void waitSync(GLsync sync, GLbitfield flags, GLuint64 timeout);
+    void getInteger64v(GLenum pname, GLint64 *params);
 
     // Returns the error.
     Error handleError(const Error &error) override;
