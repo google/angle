@@ -924,15 +924,8 @@ void GL_APIENTRY VertexAttribI4i(GLuint index, GLint x, GLint y, GLint z, GLint 
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
+        if (!context->skipValidation() && !ValidateVertexAttribI4i(context, index, x, y, z, w))
         {
-            context->handleError(InvalidOperation());
-            return;
-        }
-
-        if (index >= MAX_VERTEX_ATTRIBS)
-        {
-            context->handleError(InvalidValue());
             return;
         }
 
@@ -948,15 +941,8 @@ void GL_APIENTRY VertexAttribI4ui(GLuint index, GLuint x, GLuint y, GLuint z, GL
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
+        if (!context->skipValidation() && !ValidateVertexAttribI4ui(context, index, x, y, z, w))
         {
-            context->handleError(InvalidOperation());
-            return;
-        }
-
-        if (index >= MAX_VERTEX_ATTRIBS)
-        {
-            context->handleError(InvalidValue());
             return;
         }
 
@@ -971,15 +957,8 @@ void GL_APIENTRY VertexAttribI4iv(GLuint index, const GLint *v)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
+        if (!context->skipValidation() && !ValidateVertexAttribI4iv(context, index, v))
         {
-            context->handleError(InvalidOperation());
-            return;
-        }
-
-        if (index >= MAX_VERTEX_ATTRIBS)
-        {
-            context->handleError(InvalidValue());
             return;
         }
 
@@ -994,15 +973,8 @@ void GL_APIENTRY VertexAttribI4uiv(GLuint index, const GLuint *v)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
+        if (!context->skipValidation() && !ValidateVertexAttribI4uiv(context, index, v))
         {
-            context->handleError(InvalidOperation());
-            return;
-        }
-
-        if (index >= MAX_VERTEX_ATTRIBS)
-        {
-            context->handleError(InvalidValue());
             return;
         }
 
@@ -1018,15 +990,13 @@ void GL_APIENTRY GetUniformuiv(GLuint program, GLint location, GLuint *params)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!ValidateGetUniformuiv(context, program, location, params))
+        if (!context->skipValidation() &&
+            !ValidateGetUniformuiv(context, program, location, params))
         {
             return;
         }
 
-        Program *programObject = context->getProgram(program);
-        ASSERT(programObject);
-
-        programObject->getUniformuiv(location, params);
+        context->getUniformuiv(program, location, params);
     }
 }
 
@@ -1037,30 +1007,15 @@ GLint GL_APIENTRY GetFragDataLocation(GLuint program, const GLchar *name)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
+        if (!context->skipValidation() && !ValidateGetFragDataLocation(context, program, name))
         {
-            context->handleError(InvalidOperation());
             return -1;
         }
 
-        if (program == 0)
-        {
-            context->handleError(InvalidValue());
-            return -1;
-        }
-
-        Program *programObject = context->getProgram(program);
-
-        if (!programObject || !programObject->isLinked())
-        {
-            context->handleError(InvalidOperation());
-            return -1;
-        }
-
-        return programObject->getFragDataLocation(name);
+        return context->getFragDataLocation(program, name);
     }
 
-    return 0;
+    return -1;
 }
 
 void GL_APIENTRY Uniform1ui(GLint location, GLuint v0)
@@ -1324,39 +1279,13 @@ void GL_APIENTRY GetUniformIndices(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
-        {
-            context->handleError(InvalidOperation());
-            return;
-        }
-
-        if (uniformCount < 0)
-        {
-            context->handleError(InvalidValue());
-            return;
-        }
-
-        Program *programObject = GetValidProgram(context, program);
-
-        if (!programObject)
+        if (!context->skipValidation() && !ValidateGetUniformIndices(context, program, uniformCount,
+                                                                     uniformNames, uniformIndices))
         {
             return;
         }
 
-        if (!programObject->isLinked())
-        {
-            for (int uniformId = 0; uniformId < uniformCount; uniformId++)
-            {
-                uniformIndices[uniformId] = GL_INVALID_INDEX;
-            }
-        }
-        else
-        {
-            for (int uniformId = 0; uniformId < uniformCount; uniformId++)
-            {
-                uniformIndices[uniformId] = programObject->getUniformIndex(uniformNames[uniformId]);
-            }
-        }
+        context->getUniformIndices(program, uniformCount, uniformNames, uniformIndices);
     }
 }
 
@@ -1374,64 +1303,14 @@ void GL_APIENTRY GetActiveUniformsiv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
-        {
-            context->handleError(InvalidOperation());
-            return;
-        }
-
-        if (uniformCount < 0)
-        {
-            context->handleError(InvalidValue());
-            return;
-        }
-
-        Program *programObject = GetValidProgram(context, program);
-
-        if (!programObject)
+        if (!context->skipValidation() &&
+            !ValidateGetActiveUniformsiv(context, program, uniformCount, uniformIndices, pname,
+                                         params))
         {
             return;
         }
 
-        switch (pname)
-        {
-            case GL_UNIFORM_TYPE:
-            case GL_UNIFORM_SIZE:
-            case GL_UNIFORM_NAME_LENGTH:
-            case GL_UNIFORM_BLOCK_INDEX:
-            case GL_UNIFORM_OFFSET:
-            case GL_UNIFORM_ARRAY_STRIDE:
-            case GL_UNIFORM_MATRIX_STRIDE:
-            case GL_UNIFORM_IS_ROW_MAJOR:
-                break;
-
-            default:
-                context->handleError(InvalidEnum());
-                return;
-        }
-
-        if (uniformCount > programObject->getActiveUniformCount())
-        {
-            context->handleError(InvalidValue());
-            return;
-        }
-
-        for (int uniformId = 0; uniformId < uniformCount; uniformId++)
-        {
-            const GLuint index = uniformIndices[uniformId];
-
-            if (index >= static_cast<GLuint>(programObject->getActiveUniformCount()))
-            {
-                context->handleError(InvalidValue());
-                return;
-            }
-        }
-
-        for (int uniformId = 0; uniformId < uniformCount; uniformId++)
-        {
-            const GLuint index = uniformIndices[uniformId];
-            params[uniformId]  = programObject->getActiveUniformi(index, pname);
-        }
+        context->getActiveUniformsiv(program, uniformCount, uniformIndices, pname, params);
     }
 }
 
@@ -1443,22 +1322,16 @@ GLuint GL_APIENTRY GetUniformBlockIndex(GLuint program, const GLchar *uniformBlo
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
-        {
-            context->handleError(InvalidOperation());
-            return GL_INVALID_INDEX;
-        }
-
-        Program *programObject = GetValidProgram(context, program);
-        if (!programObject)
+        if (!context->skipValidation() &&
+            !ValidateGetUniformBlockIndex(context, program, uniformBlockName))
         {
             return GL_INVALID_INDEX;
         }
 
-        return programObject->getUniformBlockIndex(uniformBlockName);
+        return context->getUniformBlockIndex(program, uniformBlockName);
     }
 
-    return 0;
+    return GL_INVALID_INDEX;
 }
 
 void GL_APIENTRY GetActiveUniformBlockiv(GLuint program,
@@ -1480,8 +1353,7 @@ void GL_APIENTRY GetActiveUniformBlockiv(GLuint program,
             return;
         }
 
-        const Program *programObject = context->getProgram(program);
-        QueryActiveUniformBlockiv(programObject, uniformBlockIndex, pname, params);
+        context->getActiveUniformBlockiv(program, uniformBlockIndex, pname, params);
     }
 }
 
@@ -1499,27 +1371,15 @@ void GL_APIENTRY GetActiveUniformBlockName(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
-        {
-            context->handleError(InvalidOperation());
-            return;
-        }
-
-        Program *programObject = GetValidProgram(context, program);
-
-        if (!programObject)
+        if (!context->skipValidation() &&
+            !ValidateGetActiveUniformBlockName(context, program, uniformBlockIndex, bufSize, length,
+                                               uniformBlockName))
         {
             return;
         }
 
-        if (uniformBlockIndex >= programObject->getActiveUniformBlockCount())
-        {
-            context->handleError(InvalidValue());
-            return;
-        }
-
-        programObject->getActiveUniformBlockName(uniformBlockIndex, bufSize, length,
-                                                 uniformBlockName);
+        context->getActiveUniformBlockName(program, uniformBlockIndex, bufSize, length,
+                                           uniformBlockName);
     }
 }
 
@@ -1533,33 +1393,13 @@ void GL_APIENTRY UniformBlockBinding(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
-        {
-            context->handleError(InvalidOperation());
-            return;
-        }
-
-        if (uniformBlockBinding >= context->getCaps().maxUniformBufferBindings)
-        {
-            context->handleError(InvalidValue());
-            return;
-        }
-
-        Program *programObject = GetValidProgram(context, program);
-
-        if (!programObject)
+        if (!context->skipValidation() &&
+            !ValidateUniformBlockBinding(context, program, uniformBlockIndex, uniformBlockBinding))
         {
             return;
         }
 
-        // if never linked, there won't be any uniform blocks
-        if (uniformBlockIndex >= programObject->getActiveUniformBlockCount())
-        {
-            context->handleError(InvalidValue());
-            return;
-        }
-
-        programObject->bindUniformBlock(uniformBlockIndex, uniformBlockBinding);
+        context->uniformBlockBinding(program, uniformBlockIndex, uniformBlockBinding);
     }
 }
 
@@ -1571,13 +1411,8 @@ void GL_APIENTRY DrawArraysInstanced(GLenum mode, GLint first, GLsizei count, GL
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (context->getClientMajorVersion() < 3)
-        {
-            context->handleError(InvalidOperation());
-            return;
-        }
-
-        if (!ValidateDrawArraysInstanced(context, mode, first, count, instanceCount))
+        if (!context->skipValidation() &&
+            !ValidateDrawArraysInstanced(context, mode, first, count, instanceCount))
         {
             return;
         }

@@ -265,11 +265,11 @@ bool ValidateDrawArraysCommon(ValidationContext *context,
                               GLint first,
                               GLsizei count,
                               GLsizei primcount);
-bool ValidateDrawArraysInstanced(Context *context,
-                                 GLenum mode,
-                                 GLint first,
-                                 GLsizei count,
-                                 GLsizei primcount);
+bool ValidateDrawArraysInstancedBase(Context *context,
+                                     GLenum mode,
+                                     GLint first,
+                                     GLsizei count,
+                                     GLsizei primcount);
 bool ValidateDrawArraysInstancedANGLE(Context *context,
                                       GLenum mode,
                                       GLint first,
@@ -560,11 +560,6 @@ bool ValidateGetVertexAttribIuivRobustANGLE(Context *context,
                                             GLsizei *length,
                                             GLuint *params);
 
-bool ValidateGetActiveUniformBlockiv(Context *context,
-                                     GLuint program,
-                                     GLuint uniformBlockIndex,
-                                     GLenum pname,
-                                     GLint *params);
 bool ValidateGetActiveUniformBlockivRobustANGLE(Context *context,
                                                 GLuint program,
                                                 GLuint uniformBlockIndex,
@@ -602,6 +597,14 @@ bool ValidateWebGLFramebufferAttachmentClearType(ValidationContext *context,
 bool ValidateRobustCompressedTexImageBase(ValidationContext *context,
                                           GLsizei imageSize,
                                           GLsizei dataSize);
+
+bool ValidateVertexAttribIndex(ValidationContext *context, GLuint index);
+
+bool ValidateGetActiveUniformBlockivBase(Context *context,
+                                         GLuint program,
+                                         GLuint uniformBlockIndex,
+                                         GLenum pname,
+                                         GLsizei *length);
 
 }  // namespace gl
 

@@ -509,6 +509,48 @@ bool ValidateBindTransformFeedback(Context *context, GLenum target, GLuint id);
 bool ValidateIsTransformFeedback(Context *context, GLuint id);
 bool ValidatePauseTransformFeedback(Context *context);
 bool ValidateResumeTransformFeedback(Context *context);
+bool ValidateVertexAttribI4i(Context *context, GLuint index, GLint x, GLint y, GLint z, GLint w);
+bool ValidateVertexAttribI4ui(Context *context,
+                              GLuint index,
+                              GLuint x,
+                              GLuint y,
+                              GLuint z,
+                              GLuint w);
+bool ValidateVertexAttribI4iv(Context *context, GLuint index, const GLint *v);
+bool ValidateVertexAttribI4uiv(Context *context, GLuint index, const GLuint *v);
+bool ValidateGetFragDataLocation(Context *context, GLuint program, const GLchar *name);
+bool ValidateGetUniformIndices(Context *context,
+                               GLuint program,
+                               GLsizei uniformCount,
+                               const GLchar *const *uniformNames,
+                               GLuint *uniformIndices);
+bool ValidateGetActiveUniformsiv(Context *context,
+                                 GLuint program,
+                                 GLsizei uniformCount,
+                                 const GLuint *uniformIndices,
+                                 GLenum pname,
+                                 GLint *params);
+bool ValidateGetUniformBlockIndex(Context *context, GLuint program, const GLchar *uniformBlockName);
+bool ValidateGetActiveUniformBlockiv(Context *context,
+                                     GLuint program,
+                                     GLuint uniformBlockIndex,
+                                     GLenum pname,
+                                     GLint *params);
+bool ValidateGetActiveUniformBlockName(Context *context,
+                                       GLuint program,
+                                       GLuint uniformBlockIndex,
+                                       GLsizei bufSize,
+                                       GLsizei *length,
+                                       GLchar *uniformBlockName);
+bool ValidateUniformBlockBinding(Context *context,
+                                 GLuint program,
+                                 GLuint uniformBlockIndex,
+                                 GLuint uniformBlockBinding);
+bool ValidateDrawArraysInstanced(Context *context,
+                                 GLenum mode,
+                                 GLint first,
+                                 GLsizei count,
+                                 GLsizei primcount);
 
 }  // namespace gl
 

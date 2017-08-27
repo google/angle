@@ -5636,17 +5636,6 @@ bool ValidateValidateProgram(ValidationContext *context, GLuint program)
     return true;
 }
 
-bool ValidateVertexAttribIndex(ValidationContext *context, GLuint index)
-{
-    if (index >= MAX_VERTEX_ATTRIBS)
-    {
-        ANGLE_VALIDATION_ERR(context, InvalidValue(), IndexExceedsMaxVertexAttribute);
-        return false;
-    }
-
-    return true;
-}
-
 bool ValidateVertexAttrib1f(ValidationContext *context, GLuint index, GLfloat x)
 {
     return ValidateVertexAttribIndex(context, index);

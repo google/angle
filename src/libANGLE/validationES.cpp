@@ -530,69 +530,6 @@ bool ValidateGetSamplerParameterBase(Context *context,
     return true;
 }
 
-bool ValidateGetActiveUniformBlockivBase(Context *context,
-                                         GLuint program,
-                                         GLuint uniformBlockIndex,
-                                         GLenum pname,
-                                         GLsizei *length)
-{
-    if (length)
-    {
-        *length = 0;
-    }
-
-    if (context->getClientMajorVersion() < 3)
-    {
-        context->handleError(InvalidOperation() << "Context does not support OpenGL ES 3.0.");
-        return false;
-    }
-
-    Program *programObject = GetValidProgram(context, program);
-    if (!programObject)
-    {
-        return false;
-    }
-
-    if (uniformBlockIndex >= programObject->getActiveUniformBlockCount())
-    {
-        context->handleError(InvalidValue()
-                             << "uniformBlockIndex exceeds active uniform block count.");
-        return false;
-    }
-
-    switch (pname)
-    {
-        case GL_UNIFORM_BLOCK_BINDING:
-        case GL_UNIFORM_BLOCK_DATA_SIZE:
-        case GL_UNIFORM_BLOCK_NAME_LENGTH:
-        case GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS:
-        case GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES:
-        case GL_UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER:
-        case GL_UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER:
-            break;
-
-        default:
-            ANGLE_VALIDATION_ERR(context, InvalidEnum(), EnumNotSupported);
-            return false;
-    }
-
-    if (length)
-    {
-        if (pname == GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES)
-        {
-            const UniformBlock &uniformBlock =
-                programObject->getUniformBlockByIndex(uniformBlockIndex);
-            *length = static_cast<GLsizei>(uniformBlock.memberIndexes.size());
-        }
-        else
-        {
-            *length = 1;
-        }
-    }
-
-    return true;
-}
-
 bool ValidateGetInternalFormativBase(Context *context,
                                      GLenum target,
                                      GLenum internalformat,
@@ -3002,15 +2939,6 @@ bool ValidateDrawArraysCommon(ValidationContext *context,
     return true;
 }
 
-bool ValidateDrawArraysInstanced(Context *context,
-                                 GLenum mode,
-                                 GLint first,
-                                 GLsizei count,
-                                 GLsizei primcount)
-{
-    return ValidateDrawArraysInstancedBase(context, mode, first, count, primcount);
-}
-
 bool ValidateDrawArraysInstancedANGLE(Context *context,
                                       GLenum mode,
                                       GLint first,
@@ -4824,15 +4752,6 @@ bool ValidateGetVertexAttribIuivRobustANGLE(Context *context,
     return true;
 }
 
-bool ValidateGetActiveUniformBlockiv(Context *context,
-                                     GLuint program,
-                                     GLuint uniformBlockIndex,
-                                     GLenum pname,
-                                     GLint *params)
-{
-    return ValidateGetActiveUniformBlockivBase(context, program, uniformBlockIndex, pname, nullptr);
-}
-
 bool ValidateGetActiveUniformBlockivRobustANGLE(Context *context,
                                                 GLuint program,
                                                 GLuint uniformBlockIndex,
@@ -5860,5 +5779,79 @@ bool ValidateTexParameterBase(Context *context,
 
 template bool ValidateTexParameterBase(Context *, GLenum, GLenum, GLsizei, const GLfloat *);
 template bool ValidateTexParameterBase(Context *, GLenum, GLenum, GLsizei, const GLint *);
+
+bool ValidateVertexAttribIndex(ValidationContext *context, GLuint index)
+{
+    if (index >= MAX_VERTEX_ATTRIBS)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), IndexExceedsMaxVertexAttribute);
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetActiveUniformBlockivBase(Context *context,
+                                         GLuint program,
+                                         GLuint uniformBlockIndex,
+                                         GLenum pname,
+                                         GLsizei *length)
+{
+    if (length)
+    {
+        *length = 0;
+    }
+
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    Program *programObject = GetValidProgram(context, program);
+    if (!programObject)
+    {
+        return false;
+    }
+
+    if (uniformBlockIndex >= programObject->getActiveUniformBlockCount())
+    {
+        context->handleError(InvalidValue()
+                             << "uniformBlockIndex exceeds active uniform block count.");
+        return false;
+    }
+
+    switch (pname)
+    {
+        case GL_UNIFORM_BLOCK_BINDING:
+        case GL_UNIFORM_BLOCK_DATA_SIZE:
+        case GL_UNIFORM_BLOCK_NAME_LENGTH:
+        case GL_UNIFORM_BLOCK_ACTIVE_UNIFORMS:
+        case GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES:
+        case GL_UNIFORM_BLOCK_REFERENCED_BY_VERTEX_SHADER:
+        case GL_UNIFORM_BLOCK_REFERENCED_BY_FRAGMENT_SHADER:
+            break;
+
+        default:
+            ANGLE_VALIDATION_ERR(context, InvalidEnum(), EnumNotSupported);
+            return false;
+    }
+
+    if (length)
+    {
+        if (pname == GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES)
+        {
+            const UniformBlock &uniformBlock =
+                programObject->getUniformBlockByIndex(uniformBlockIndex);
+            *length = static_cast<GLsizei>(uniformBlock.memberIndexes.size());
+        }
+        else
+        {
+            *length = 1;
+        }
+    }
+
+    return true;
+}
 
 }  // namespace gl

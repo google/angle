@@ -5094,4 +5094,85 @@ void Context::resumeTransformFeedback()
     transformFeedback->resume();
 }
 
+void Context::getUniformuiv(GLuint program, GLint location, GLuint *params)
+{
+    const Program *programObject = getProgram(program);
+    programObject->getUniformuiv(location, params);
+}
+
+GLint Context::getFragDataLocation(GLuint program, const GLchar *name)
+{
+    const Program *programObject = getProgram(program);
+    return programObject->getFragDataLocation(name);
+}
+
+void Context::getUniformIndices(GLuint program,
+                                GLsizei uniformCount,
+                                const GLchar *const *uniformNames,
+                                GLuint *uniformIndices)
+{
+    const Program *programObject = getProgram(program);
+    if (!programObject->isLinked())
+    {
+        for (int uniformId = 0; uniformId < uniformCount; uniformId++)
+        {
+            uniformIndices[uniformId] = GL_INVALID_INDEX;
+        }
+    }
+    else
+    {
+        for (int uniformId = 0; uniformId < uniformCount; uniformId++)
+        {
+            uniformIndices[uniformId] = programObject->getUniformIndex(uniformNames[uniformId]);
+        }
+    }
+}
+
+void Context::getActiveUniformsiv(GLuint program,
+                                  GLsizei uniformCount,
+                                  const GLuint *uniformIndices,
+                                  GLenum pname,
+                                  GLint *params)
+{
+    const Program *programObject = getProgram(program);
+    for (int uniformId = 0; uniformId < uniformCount; uniformId++)
+    {
+        const GLuint index = uniformIndices[uniformId];
+        params[uniformId]  = programObject->getActiveUniformi(index, pname);
+    }
+}
+
+GLuint Context::getUniformBlockIndex(GLuint program, const GLchar *uniformBlockName)
+{
+    const Program *programObject = getProgram(program);
+    return programObject->getUniformBlockIndex(uniformBlockName);
+}
+
+void Context::getActiveUniformBlockiv(GLuint program,
+                                      GLuint uniformBlockIndex,
+                                      GLenum pname,
+                                      GLint *params)
+{
+    const Program *programObject = getProgram(program);
+    QueryActiveUniformBlockiv(programObject, uniformBlockIndex, pname, params);
+}
+
+void Context::getActiveUniformBlockName(GLuint program,
+                                        GLuint uniformBlockIndex,
+                                        GLsizei bufSize,
+                                        GLsizei *length,
+                                        GLchar *uniformBlockName)
+{
+    const Program *programObject = getProgram(program);
+    programObject->getActiveUniformBlockName(uniformBlockIndex, bufSize, length, uniformBlockName);
+}
+
+void Context::uniformBlockBinding(GLuint program,
+                                  GLuint uniformBlockIndex,
+                                  GLuint uniformBlockBinding)
+{
+    Program *programObject = getProgram(program);
+    programObject->bindUniformBlock(uniformBlockIndex, uniformBlockBinding);
+}
+
 }  // namespace gl

@@ -3110,4 +3110,267 @@ bool ValidateResumeTransformFeedback(Context *context)
     return true;
 }
 
+bool ValidateVertexAttribI4i(Context *context, GLuint index, GLint x, GLint y, GLint z, GLint w)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    return ValidateVertexAttribIndex(context, index);
+}
+
+bool ValidateVertexAttribI4ui(Context *context,
+                              GLuint index,
+                              GLuint x,
+                              GLuint y,
+                              GLuint z,
+                              GLuint w)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    return ValidateVertexAttribIndex(context, index);
+}
+
+bool ValidateVertexAttribI4iv(Context *context, GLuint index, const GLint *v)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    return ValidateVertexAttribIndex(context, index);
+}
+
+bool ValidateVertexAttribI4uiv(Context *context, GLuint index, const GLuint *v)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    return ValidateVertexAttribIndex(context, index);
+}
+
+bool ValidateGetFragDataLocation(Context *context, GLuint program, const GLchar *name)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    Program *programObject = GetValidProgram(context, program);
+    if (!programObject)
+    {
+        return false;
+    }
+
+    if (!programObject->isLinked())
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ProgramNotLinked);
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetUniformIndices(Context *context,
+                               GLuint program,
+                               GLsizei uniformCount,
+                               const GLchar *const *uniformNames,
+                               GLuint *uniformIndices)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    if (uniformCount < 0)
+    {
+        context->handleError(InvalidValue());
+        return false;
+    }
+
+    Program *programObject = GetValidProgram(context, program);
+    if (!programObject)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetActiveUniformsiv(Context *context,
+                                 GLuint program,
+                                 GLsizei uniformCount,
+                                 const GLuint *uniformIndices,
+                                 GLenum pname,
+                                 GLint *params)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    if (uniformCount < 0)
+    {
+        context->handleError(InvalidValue());
+        return false;
+    }
+
+    Program *programObject = GetValidProgram(context, program);
+    if (!programObject)
+    {
+        return false;
+    }
+
+    switch (pname)
+    {
+        case GL_UNIFORM_TYPE:
+        case GL_UNIFORM_SIZE:
+        case GL_UNIFORM_NAME_LENGTH:
+        case GL_UNIFORM_BLOCK_INDEX:
+        case GL_UNIFORM_OFFSET:
+        case GL_UNIFORM_ARRAY_STRIDE:
+        case GL_UNIFORM_MATRIX_STRIDE:
+        case GL_UNIFORM_IS_ROW_MAJOR:
+            break;
+
+        default:
+            context->handleError(InvalidEnum());
+            return false;
+    }
+
+    if (uniformCount > programObject->getActiveUniformCount())
+    {
+        context->handleError(InvalidValue());
+        return false;
+    }
+
+    for (int uniformId = 0; uniformId < uniformCount; uniformId++)
+    {
+        const GLuint index = uniformIndices[uniformId];
+
+        if (index >= static_cast<GLuint>(programObject->getActiveUniformCount()))
+        {
+            context->handleError(InvalidValue());
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool ValidateGetUniformBlockIndex(Context *context, GLuint program, const GLchar *uniformBlockName)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    Program *programObject = GetValidProgram(context, program);
+    if (!programObject)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateGetActiveUniformBlockiv(Context *context,
+                                     GLuint program,
+                                     GLuint uniformBlockIndex,
+                                     GLenum pname,
+                                     GLint *params)
+{
+    return ValidateGetActiveUniformBlockivBase(context, program, uniformBlockIndex, pname, nullptr);
+}
+
+bool ValidateGetActiveUniformBlockName(Context *context,
+                                       GLuint program,
+                                       GLuint uniformBlockIndex,
+                                       GLsizei bufSize,
+                                       GLsizei *length,
+                                       GLchar *uniformBlockName)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    Program *programObject = GetValidProgram(context, program);
+    if (!programObject)
+    {
+        return false;
+    }
+
+    if (uniformBlockIndex >= programObject->getActiveUniformBlockCount())
+    {
+        context->handleError(InvalidValue());
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateUniformBlockBinding(Context *context,
+                                 GLuint program,
+                                 GLuint uniformBlockIndex,
+                                 GLuint uniformBlockBinding)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    if (uniformBlockBinding >= context->getCaps().maxUniformBufferBindings)
+    {
+        context->handleError(InvalidValue());
+        return false;
+    }
+
+    Program *programObject = GetValidProgram(context, program);
+    if (!programObject)
+    {
+        return false;
+    }
+
+    // if never linked, there won't be any uniform blocks
+    if (uniformBlockIndex >= programObject->getActiveUniformBlockCount())
+    {
+        context->handleError(InvalidValue());
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateDrawArraysInstanced(Context *context,
+                                 GLenum mode,
+                                 GLint first,
+                                 GLsizei count,
+                                 GLsizei primcount)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+
+    return ValidateDrawArraysInstancedBase(context, mode, first, count, primcount);
+}
+
 }  // namespace gl

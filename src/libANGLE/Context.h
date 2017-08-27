@@ -838,6 +838,29 @@ class Context final : public ValidationContext
                           void *binary);
     void programBinary(GLuint program, GLenum binaryFormat, const void *binary, GLsizei length);
 
+    void getUniformuiv(GLuint program, GLint location, GLuint *params);
+    GLint getFragDataLocation(GLuint program, const GLchar *name);
+    void getUniformIndices(GLuint program,
+                           GLsizei uniformCount,
+                           const GLchar *const *uniformNames,
+                           GLuint *uniformIndices);
+    void getActiveUniformsiv(GLuint program,
+                             GLsizei uniformCount,
+                             const GLuint *uniformIndices,
+                             GLenum pname,
+                             GLint *params);
+    GLuint getUniformBlockIndex(GLuint program, const GLchar *uniformBlockName);
+    void getActiveUniformBlockiv(GLuint program,
+                                 GLuint uniformBlockIndex,
+                                 GLenum pname,
+                                 GLint *params);
+    void getActiveUniformBlockName(GLuint program,
+                                   GLuint uniformBlockIndex,
+                                   GLsizei bufSize,
+                                   GLsizei *length,
+                                   GLchar *uniformBlockName);
+    void uniformBlockBinding(GLuint program, GLuint uniformBlockIndex, GLuint uniformBlockBinding);
+
     // Returns the error.
     Error handleError(const Error &error) override;
 
