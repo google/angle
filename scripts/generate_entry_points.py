@@ -54,9 +54,6 @@ template_entry_point_source = """// GENERATED FILE - DO NOT EDIT.
 // entry_points_gles_{major_version}_{minor_version}_autogen.cpp:
 //   Defines the GLES {major_version}.{minor_version} entry points.
 
-#include "libGLESv2/entry_points_gles_{major_version}_{minor_version}_autogen.h"
-
-#include "common/debug.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/validationES2.h"
 #include "libGLESv2/global_state.h"

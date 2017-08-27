@@ -7,24 +7,10 @@
 // entry_points_gles_3_0.cpp : Implements the GLES 3.0 entry points.
 
 #include "libGLESv2/entry_points_gles_3_0.h"
-#include "libGLESv2/entry_points_gles_2_0_ext.h"
-#include "libGLESv2/global_state.h"
 
-#include "libANGLE/Buffer.h"
 #include "libANGLE/Context.h"
-#include "libANGLE/Error.h"
-#include "libANGLE/Fence.h"
-#include "libANGLE/Framebuffer.h"
-#include "libANGLE/Query.h"
-#include "libANGLE/VertexArray.h"
-#include "libANGLE/formatutils.h"
-
-#include "libANGLE/queryconversions.h"
-#include "libANGLE/queryutils.h"
-#include "libANGLE/validationES.h"
 #include "libANGLE/validationES3.h"
-
-#include "common/debug.h"
+#include "libGLESv2/global_state.h"
 
 namespace gl
 {
@@ -2070,7 +2056,7 @@ void GL_APIENTRY GetInternalformativ(GLenum target,
     if (context)
     {
         if (!context->skipValidation() &&
-            !ValidateGetInternalFormativ(context, target, internalformat, pname, bufSize, params))
+            !ValidateGetInternalformativ(context, target, internalformat, pname, bufSize, params))
         {
             return;
         }

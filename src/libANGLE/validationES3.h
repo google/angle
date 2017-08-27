@@ -585,6 +585,31 @@ bool ValidateTexStorage3D(Context *context,
                           GLsizei height,
                           GLsizei depth);
 
+bool ValidateGetVertexAttribIiv(Context *context, GLuint index, GLenum pname, GLint *params);
+bool ValidateGetVertexAttribIuiv(Context *context, GLuint index, GLenum pname, GLuint *params);
+bool ValidateGetBufferParameteri64v(ValidationContext *context,
+                                    GLenum target,
+                                    GLenum pname,
+                                    GLint64 *params);
+bool ValidateSamplerParameteri(Context *context, GLuint sampler, GLenum pname, GLint param);
+bool ValidateSamplerParameteriv(Context *context,
+                                GLuint sampler,
+                                GLenum pname,
+                                const GLint *params);
+bool ValidateSamplerParameterf(Context *context, GLuint sampler, GLenum pname, GLfloat param);
+bool ValidateSamplerParameterfv(Context *context,
+                                GLuint sampler,
+                                GLenum pname,
+                                const GLfloat *params);
+bool ValidateGetSamplerParameteriv(Context *context, GLuint sampler, GLenum pname, GLint *params);
+bool ValidateGetSamplerParameterfv(Context *context, GLuint sampler, GLenum pname, GLfloat *params);
+bool ValidateGetInternalformativ(Context *context,
+                                 GLenum target,
+                                 GLenum internalformat,
+                                 GLenum pname,
+                                 GLsizei bufSize,
+                                 GLint *params);
+
 }  // namespace gl
 
 #endif  // LIBANGLE_VALIDATION_ES3_H_

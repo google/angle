@@ -410,10 +410,6 @@ bool ValidateGetBufferParameterivRobustANGLE(ValidationContext *context,
                                              GLsizei *length,
                                              GLint *params);
 
-bool ValidateGetBufferParameteri64v(ValidationContext *context,
-                                    GLenum target,
-                                    GLenum pname,
-                                    GLint64 *params);
 bool ValidateGetBufferParameteri64vRobustANGLE(ValidationContext *context,
                                                GLenum target,
                                                GLenum pname,
@@ -481,14 +477,12 @@ bool ValidateTexParameterivRobustANGLE(Context *context,
                                        GLsizei bufSize,
                                        const GLint *params);
 
-bool ValidateGetSamplerParameterfv(Context *context, GLuint sampler, GLenum pname, GLfloat *params);
 bool ValidateGetSamplerParameterfvRobustANGLE(Context *context,
                                               GLuint sampler,
                                               GLenum pname,
                                               GLuint bufSize,
                                               GLsizei *length,
                                               GLfloat *params);
-bool ValidateGetSamplerParameteriv(Context *context, GLuint sampler, GLenum pname, GLint *params);
 bool ValidateGetSamplerParameterivRobustANGLE(Context *context,
                                               GLuint sampler,
                                               GLenum pname,
@@ -496,21 +490,11 @@ bool ValidateGetSamplerParameterivRobustANGLE(Context *context,
                                               GLsizei *length,
                                               GLint *params);
 
-bool ValidateSamplerParameterf(Context *context, GLuint sampler, GLenum pname, GLfloat param);
-bool ValidateSamplerParameterfv(Context *context,
-                                GLuint sampler,
-                                GLenum pname,
-                                const GLfloat *params);
 bool ValidateSamplerParameterfvRobustANGLE(Context *context,
                                            GLuint sampler,
                                            GLenum pname,
                                            GLsizei bufSize,
                                            const GLfloat *params);
-bool ValidateSamplerParameteri(Context *context, GLuint sampler, GLenum pname, GLint param);
-bool ValidateSamplerParameteriv(Context *context,
-                                GLuint sampler,
-                                GLenum pname,
-                                const GLint *params);
 bool ValidateSamplerParameterivRobustANGLE(Context *context,
                                            GLuint sampler,
                                            GLenum pname,
@@ -544,7 +528,6 @@ bool ValidateGetVertexAttribPointervRobustANGLE(Context *context,
                                                 GLsizei *length,
                                                 void **pointer);
 
-bool ValidateGetVertexAttribIiv(Context *context, GLuint index, GLenum pname, GLint *params);
 bool ValidateGetVertexAttribIivRobustANGLE(Context *context,
                                            GLuint index,
                                            GLenum pname,
@@ -552,7 +535,6 @@ bool ValidateGetVertexAttribIivRobustANGLE(Context *context,
                                            GLsizei *length,
                                            GLint *params);
 
-bool ValidateGetVertexAttribIuiv(Context *context, GLuint index, GLenum pname, GLuint *params);
 bool ValidateGetVertexAttribIuivRobustANGLE(Context *context,
                                             GLuint index,
                                             GLenum pname,
@@ -567,13 +549,6 @@ bool ValidateGetActiveUniformBlockivRobustANGLE(Context *context,
                                                 GLsizei bufSize,
                                                 GLsizei *length,
                                                 GLint *params);
-
-bool ValidateGetInternalFormativ(Context *context,
-                                 GLenum target,
-                                 GLenum internalformat,
-                                 GLenum pname,
-                                 GLsizei bufSize,
-                                 GLint *params);
 
 bool ValidateGetInternalFormativRobustANGLE(Context *context,
                                             GLenum target,
@@ -605,6 +580,25 @@ bool ValidateGetActiveUniformBlockivBase(Context *context,
                                          GLuint uniformBlockIndex,
                                          GLenum pname,
                                          GLsizei *length);
+
+bool ValidateGetSamplerParameterBase(Context *context,
+                                     GLuint sampler,
+                                     GLenum pname,
+                                     GLsizei *length);
+
+template <typename ParamType>
+bool ValidateSamplerParameterBase(Context *context,
+                                  GLuint sampler,
+                                  GLenum pname,
+                                  GLsizei bufSize,
+                                  ParamType *params);
+
+bool ValidateGetInternalFormativBase(Context *context,
+                                     GLenum target,
+                                     GLenum internalformat,
+                                     GLenum pname,
+                                     GLsizei bufSize,
+                                     GLsizei *numParams);
 
 }  // namespace gl
 
