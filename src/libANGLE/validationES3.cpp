@@ -2673,8 +2673,8 @@ bool ValidateGetSynciv(Context *context,
         return false;
     }
 
-    FenceSync *fenceSync = context->getFenceSync(sync);
-    if (!fenceSync)
+    Sync *syncObject = context->getSync(sync);
+    if (!syncObject)
     {
         context->handleError(InvalidValue() << "Invalid sync object.");
         return false;
@@ -3427,7 +3427,7 @@ bool ValidateDeleteSync(Context *context, GLsync sync)
         return false;
     }
 
-    if (sync != static_cast<GLsync>(0) && !context->getFenceSync(sync))
+    if (sync != static_cast<GLsync>(0) && !context->getSync(sync))
     {
         context->handleError(InvalidValue());
         return false;
@@ -3450,9 +3450,8 @@ bool ValidateClientWaitSync(Context *context, GLsync sync, GLbitfield flags, GLu
         return false;
     }
 
-    FenceSync *fenceSync = context->getFenceSync(sync);
-
-    if (!fenceSync)
+    Sync *clientWaitSync = context->getSync(sync);
+    if (!clientWaitSync)
     {
         context->handleError(InvalidValue());
         return false;
@@ -3481,8 +3480,8 @@ bool ValidateWaitSync(Context *context, GLsync sync, GLbitfield flags, GLuint64 
         return false;
     }
 
-    FenceSync *fenceSync = context->getFenceSync(sync);
-    if (!fenceSync)
+    Sync *waitSync = context->getSync(sync);
+    if (!waitSync)
     {
         context->handleError(InvalidValue());
         return false;

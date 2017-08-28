@@ -216,7 +216,7 @@ ANGLE_EXPORT void GL_APIENTRY DrawElementsInstanced(GLenum mode,
                                                     GLenum type,
                                                     const void *indices,
                                                     GLsizei instanceCount);
-ANGLE_EXPORT GLsync GL_APIENTRY FenceSync_(GLenum condition, GLbitfield flags);
+ANGLE_EXPORT GLsync GL_APIENTRY FenceSync(GLenum condition, GLbitfield flags);
 ANGLE_EXPORT GLboolean GL_APIENTRY IsSync(GLsync sync);
 ANGLE_EXPORT void GL_APIENTRY DeleteSync(GLsync sync);
 ANGLE_EXPORT GLenum GL_APIENTRY ClientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout);

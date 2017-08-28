@@ -176,7 +176,7 @@ class ContextNULL : public ContextImpl
     // Query and Fence creation
     QueryImpl *createQuery(GLenum type) override;
     FenceNVImpl *createFenceNV() override;
-    FenceSyncImpl *createFenceSync() override;
+    SyncImpl *createSync() override;
 
     // Transform Feedback creation
     TransformFeedbackImpl *createTransformFeedback(

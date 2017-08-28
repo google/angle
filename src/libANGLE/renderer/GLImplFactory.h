@@ -30,7 +30,7 @@ class BufferImpl;
 class CompilerImpl;
 class ContextImpl;
 class FenceNVImpl;
-class FenceSyncImpl;
+class SyncImpl;
 class FramebufferImpl;
 class PathImpl;
 class ProgramImpl;
@@ -71,7 +71,7 @@ class GLImplFactory : angle::NonCopyable
     // Query and Fence creation
     virtual QueryImpl *createQuery(GLenum type) = 0;
     virtual FenceNVImpl *createFenceNV() = 0;
-    virtual FenceSyncImpl *createFenceSync() = 0;
+    virtual SyncImpl *createSync()              = 0;
 
     // Transform Feedback creation
     virtual TransformFeedbackImpl *createTransformFeedback(

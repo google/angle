@@ -4,9 +4,9 @@
 // found in the LICENSE file.
 //
 
-// FenceSyncGL.cpp: Implements the class methods for FenceSyncGL.
+// SyncGL.cpp: Implements the class methods for SyncGL.
 
-#include "libANGLE/renderer/gl/FenceSyncGL.h"
+#include "libANGLE/renderer/gl/SyncGL.h"
 
 #include "common/debug.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
@@ -14,15 +14,12 @@
 namespace rx
 {
 
-FenceSyncGL::FenceSyncGL(const FunctionsGL *functions)
-    : FenceSyncImpl(),
-      mFunctions(functions),
-      mSyncObject(0)
+SyncGL::SyncGL(const FunctionsGL *functions) : SyncImpl(), mFunctions(functions), mSyncObject(0)
 {
     ASSERT(mFunctions);
 }
 
-FenceSyncGL::~FenceSyncGL()
+SyncGL::~SyncGL()
 {
     if (mSyncObject != 0)
     {
@@ -30,7 +27,7 @@ FenceSyncGL::~FenceSyncGL()
     }
 }
 
-gl::Error FenceSyncGL::set(GLenum condition, GLbitfield flags)
+gl::Error SyncGL::set(GLenum condition, GLbitfield flags)
 {
     ASSERT(condition == GL_SYNC_GPU_COMMANDS_COMPLETE && flags == 0);
     mSyncObject = mFunctions->fenceSync(condition, flags);
@@ -43,25 +40,24 @@ gl::Error FenceSyncGL::set(GLenum condition, GLbitfield flags)
     return gl::NoError();
 }
 
-gl::Error FenceSyncGL::clientWait(GLbitfield flags, GLuint64 timeout, GLenum *outResult)
+gl::Error SyncGL::clientWait(GLbitfield flags, GLuint64 timeout, GLenum *outResult)
 {
     ASSERT(mSyncObject != 0);
     *outResult = mFunctions->clientWaitSync(mSyncObject, flags, timeout);
     return gl::NoError();
 }
 
-gl::Error FenceSyncGL::serverWait(GLbitfield flags, GLuint64 timeout)
+gl::Error SyncGL::serverWait(GLbitfield flags, GLuint64 timeout)
 {
     ASSERT(mSyncObject != 0);
     mFunctions->waitSync(mSyncObject, flags, timeout);
     return gl::NoError();
 }
 
-gl::Error FenceSyncGL::getStatus(GLint *outResult)
+gl::Error SyncGL::getStatus(GLint *outResult)
 {
     ASSERT(mSyncObject != 0);
     mFunctions->getSynciv(mSyncObject, GL_SYNC_STATUS, 1, nullptr, outResult);
     return gl::NoError();
 }
-
 }

@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-// FenceSyncImpl.h: Defines the rx::FenceSyncImpl class.
+// SyncImpl.h: Defines the rx::SyncImpl class.
 
 #ifndef LIBANGLE_RENDERER_FENCESYNCIMPL_H_
 #define LIBANGLE_RENDERER_FENCESYNCIMPL_H_
@@ -18,18 +18,17 @@
 namespace rx
 {
 
-class FenceSyncImpl : angle::NonCopyable
+class SyncImpl : angle::NonCopyable
 {
   public:
-    FenceSyncImpl() { };
-    virtual ~FenceSyncImpl() { };
+    SyncImpl(){};
+    virtual ~SyncImpl(){};
 
     virtual gl::Error set(GLenum condition, GLbitfield flags) = 0;
     virtual gl::Error clientWait(GLbitfield flags, GLuint64 timeout, GLenum *outResult) = 0;
     virtual gl::Error serverWait(GLbitfield flags, GLuint64 timeout) = 0;
     virtual gl::Error getStatus(GLint *outResult) = 0;
 };
-
 }
 
-#endif // LIBANGLE_RENDERER_FENCESYNCIMPL_H_
+#endif  // LIBANGLE_RENDERER_FENCESYNCIMPL_H_

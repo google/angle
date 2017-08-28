@@ -1600,8 +1600,7 @@ __eglMustCastToProperFunctionPointerType EGLAPIENTRY GetProcAddress(const char *
         INSERT_PROC_ADDRESS(gl, UniformBlockBinding);
         INSERT_PROC_ADDRESS(gl, DrawArraysInstanced);
         INSERT_PROC_ADDRESS(gl, DrawElementsInstanced);
-        // FenceSync is the name of a class, the function has an added _ to prevent a name conflict.
-        INSERT_PROC_ADDRESS_NO_NS("glFenceSync", gl::FenceSync_);
+        INSERT_PROC_ADDRESS(gl, FenceSync);
         INSERT_PROC_ADDRESS(gl, IsSync);
         INSERT_PROC_ADDRESS(gl, DeleteSync);
         INSERT_PROC_ADDRESS(gl, ClientWaitSync);

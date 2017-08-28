@@ -27,7 +27,7 @@ namespace gl
 class Buffer;
 struct Caps;
 class Context;
-class FenceSync;
+class Sync;
 class Framebuffer;
 struct Limitations;
 class Path;
@@ -206,16 +206,16 @@ class SamplerManager : public TypedResourceManager<Sampler, HandleAllocator, Sam
     ~SamplerManager() override {}
 };
 
-class FenceSyncManager : public TypedResourceManager<FenceSync, HandleAllocator, FenceSyncManager>
+class SyncManager : public TypedResourceManager<Sync, HandleAllocator, SyncManager>
 {
   public:
-    GLuint createFenceSync(rx::GLImplFactory *factory);
-    FenceSync *getFenceSync(GLuint handle) const;
+    GLuint createSync(rx::GLImplFactory *factory);
+    Sync *getSync(GLuint handle) const;
 
-    static void DeleteObject(const Context *context, FenceSync *fenceSync);
+    static void DeleteObject(const Context *context, Sync *sync);
 
   protected:
-    ~FenceSyncManager() override {}
+    ~SyncManager() override {}
 };
 
 class PathManager : public ResourceManagerBase<HandleRangeAllocator>

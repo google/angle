@@ -12,7 +12,6 @@
 #include "libANGLE/renderer/gl/BufferGL.h"
 #include "libANGLE/renderer/gl/CompilerGL.h"
 #include "libANGLE/renderer/gl/FenceNVGL.h"
-#include "libANGLE/renderer/gl/FenceSyncGL.h"
 #include "libANGLE/renderer/gl/FramebufferGL.h"
 #include "libANGLE/renderer/gl/FunctionsGL.h"
 #include "libANGLE/renderer/gl/PathGL.h"
@@ -23,6 +22,7 @@
 #include "libANGLE/renderer/gl/SamplerGL.h"
 #include "libANGLE/renderer/gl/ShaderGL.h"
 #include "libANGLE/renderer/gl/StateManagerGL.h"
+#include "libANGLE/renderer/gl/SyncGL.h"
 #include "libANGLE/renderer/gl/TextureGL.h"
 #include "libANGLE/renderer/gl/TransformFeedbackGL.h"
 #include "libANGLE/renderer/gl/VertexArrayGL.h"
@@ -107,9 +107,9 @@ FenceNVImpl *ContextGL::createFenceNV()
     return new FenceNVGL(getFunctions());
 }
 
-FenceSyncImpl *ContextGL::createFenceSync()
+SyncImpl *ContextGL::createSync()
 {
-    return new FenceSyncGL(getFunctions());
+    return new SyncGL(getFunctions());
 }
 
 TransformFeedbackImpl *ContextGL::createTransformFeedback(const gl::TransformFeedbackState &state)

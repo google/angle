@@ -121,9 +121,9 @@ FenceNVImpl *Context11::createFenceNV()
     return new FenceNV11(mRenderer);
 }
 
-FenceSyncImpl *Context11::createFenceSync()
+SyncImpl *Context11::createSync()
 {
-    return new FenceSync11(mRenderer);
+    return new Sync11(mRenderer);
 }
 
 TransformFeedbackImpl *Context11::createTransformFeedback(const gl::TransformFeedbackState &state)

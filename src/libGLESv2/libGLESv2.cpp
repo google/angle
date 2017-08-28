@@ -1321,7 +1321,7 @@ void GL_APIENTRY glDrawElementsInstanced(GLenum mode,
 
 GLsync GL_APIENTRY glFenceSync(GLenum condition, GLbitfield flags)
 {
-    return gl::FenceSync_(condition, flags);
+    return gl::FenceSync(condition, flags);
 }
 
 GLboolean GL_APIENTRY glIsSync(GLsync sync)

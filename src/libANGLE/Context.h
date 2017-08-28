@@ -46,7 +46,7 @@ namespace gl
 class Buffer;
 class Compiler;
 class FenceNV;
-class FenceSync;
+class Sync;
 class Framebuffer;
 class MemoryProgramCache;
 class Program;
@@ -215,7 +215,7 @@ class Context final : public ValidationContext
 
     Buffer *getBuffer(GLuint handle) const;
     FenceNV *getFenceNV(GLuint handle);
-    FenceSync *getFenceSync(GLsync handle) const;
+    Sync *getSync(GLsync handle) const;
     Texture *getTexture(GLuint handle) const;
     Framebuffer *getFramebuffer(GLuint handle) const;
     Renderbuffer *getRenderbuffer(GLuint handle) const;

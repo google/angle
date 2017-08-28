@@ -52,7 +52,7 @@ class NullFactory : public GLImplFactory
     // Query and Fence creation
     QueryImpl *createQuery(GLenum type) override { return nullptr; }
     FenceNVImpl *createFenceNV() override { return nullptr; }
-    FenceSyncImpl *createFenceSync() override { return nullptr; }
+    SyncImpl *createSync() override { return nullptr; }
 
     // Transform Feedback creation
     TransformFeedbackImpl *createTransformFeedback(const gl::TransformFeedbackState &state) override
@@ -84,7 +84,7 @@ class MockGLFactory : public GLImplFactory
     MOCK_METHOD1(createVertexArray, VertexArrayImpl *(const gl::VertexArrayState &));
     MOCK_METHOD1(createQuery, QueryImpl *(GLenum type));
     MOCK_METHOD0(createFenceNV, FenceNVImpl *());
-    MOCK_METHOD0(createFenceSync, FenceSyncImpl *());
+    MOCK_METHOD0(createSync, SyncImpl *());
     MOCK_METHOD1(createTransformFeedback,
                  TransformFeedbackImpl *(const gl::TransformFeedbackState &));
     MOCK_METHOD0(createSampler, SamplerImpl *());

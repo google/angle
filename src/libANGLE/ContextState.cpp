@@ -86,8 +86,7 @@ ContextState::ContextState(ContextID contextIn,
       mRenderbuffers(
           AllocateOrGetSharedResourceManager(shareContextState, &ContextState::mRenderbuffers)),
       mSamplers(AllocateOrGetSharedResourceManager(shareContextState, &ContextState::mSamplers)),
-      mFenceSyncs(
-          AllocateOrGetSharedResourceManager(shareContextState, &ContextState::mFenceSyncs)),
+      mSyncs(AllocateOrGetSharedResourceManager(shareContextState, &ContextState::mSyncs)),
       mPaths(AllocateOrGetSharedResourceManager(shareContextState, &ContextState::mPaths)),
       mFramebuffers(new FramebufferManager())
 {

@@ -2251,7 +2251,7 @@ bool ValidateGetObjectLabelKHR(Context *context,
 
 static bool ValidateObjectPtrName(Context *context, const void *ptr)
 {
-    if (context->getFenceSync(reinterpret_cast<GLsync>(const_cast<void *>(ptr))) == nullptr)
+    if (context->getSync(reinterpret_cast<GLsync>(const_cast<void *>(ptr))) == nullptr)
     {
         context->handleError(InvalidValue() << "name is not a valid sync.");
         return false;

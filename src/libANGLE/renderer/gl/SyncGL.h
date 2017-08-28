@@ -4,22 +4,22 @@
 // found in the LICENSE file.
 //
 
-// FenceSyncGL.h: Defines the class interface for FenceSyncGL.
+// SyncGL.h: Defines the class interface for SyncGL.
 
 #ifndef LIBANGLE_RENDERER_GL_FENCESYNCGL_H_
 #define LIBANGLE_RENDERER_GL_FENCESYNCGL_H_
 
-#include "libANGLE/renderer/FenceSyncImpl.h"
+#include "libANGLE/renderer/SyncImpl.h"
 
 namespace rx
 {
 class FunctionsGL;
 
-class FenceSyncGL : public FenceSyncImpl
+class SyncGL : public SyncImpl
 {
   public:
-    explicit FenceSyncGL(const FunctionsGL *functions);
-    ~FenceSyncGL() override;
+    explicit SyncGL(const FunctionsGL *functions);
+    ~SyncGL() override;
 
     gl::Error set(GLenum condition, GLbitfield flags) override;
     gl::Error clientWait(GLbitfield flags, GLuint64 timeout, GLenum *outResult) override;
@@ -30,7 +30,6 @@ class FenceSyncGL : public FenceSyncImpl
     const FunctionsGL *mFunctions;
     GLsync mSyncObject;
 };
-
 }
 
-#endif // LIBANGLE_RENDERER_GL_FENCESYNCGL_H_
+#endif  // LIBANGLE_RENDERER_GL_FENCESYNCGL_H_

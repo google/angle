@@ -1448,7 +1448,7 @@ void GL_APIENTRY DrawElementsInstanced(GLenum mode,
     }
 }
 
-GLsync GL_APIENTRY FenceSync_(GLenum condition, GLbitfield flags)
+GLsync GL_APIENTRY FenceSync(GLenum condition, GLbitfield flags)
 {
     EVENT("(GLenum condition = 0x%X, GLbitfield flags = 0x%X)", condition, flags);
 

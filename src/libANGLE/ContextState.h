@@ -19,12 +19,12 @@ namespace gl
 {
 class BufferManager;
 class ContextState;
-class FenceSyncManager;
 class FramebufferManager;
 class PathManager;
 class RenderbufferManager;
 class SamplerManager;
 class ShaderProgramManager;
+class SyncManager;
 class TextureManager;
 class ValidationContext;
 
@@ -81,7 +81,7 @@ class ContextState final : angle::NonCopyable
     TextureManager *mTextures;
     RenderbufferManager *mRenderbuffers;
     SamplerManager *mSamplers;
-    FenceSyncManager *mFenceSyncs;
+    SyncManager *mSyncs;
     PathManager *mPaths;
     FramebufferManager *mFramebuffers;
 };

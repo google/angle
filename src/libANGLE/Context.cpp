@@ -473,7 +473,7 @@ egl::Error Context::onDestroy(const egl::Display *display)
     mState.mTextures->release(this);
     mState.mRenderbuffers->release(this);
     mState.mSamplers->release(this);
-    mState.mFenceSyncs->release(this);
+    mState.mSyncs->release(this);
     mState.mPaths->release(this);
     mState.mFramebuffers->release(this);
 
@@ -676,7 +676,7 @@ void Context::deleteSync(GLsync sync)
     // wait commands finish. However, since the name becomes invalid, we cannot query the fence,
     // and since our API is currently designed for being called from a single thread, we can delete
     // the fence immediately.
-    mState.mFenceSyncs->deleteObject(this, static_cast<GLuint>(reinterpret_cast<uintptr_t>(sync)));
+    mState.mSyncs->deleteObject(this, static_cast<GLuint>(reinterpret_cast<uintptr_t>(sync)));
 }
 
 void Context::deletePaths(GLuint first, GLsizei range)
@@ -804,10 +804,9 @@ Renderbuffer *Context::getRenderbuffer(GLuint handle) const
     return mState.mRenderbuffers->getRenderbuffer(handle);
 }
 
-FenceSync *Context::getFenceSync(GLsync handle) const
+Sync *Context::getSync(GLsync handle) const
 {
-    return mState.mFenceSyncs->getFenceSync(
-        static_cast<GLuint>(reinterpret_cast<uintptr_t>(handle)));
+    return mState.mSyncs->getSync(static_cast<GLuint>(reinterpret_cast<uintptr_t>(handle)));
 }
 
 VertexArray *Context::getVertexArray(GLuint handle) const
@@ -857,7 +856,7 @@ LabeledObject *Context::getLabeledObject(GLenum identifier, GLuint name) const
 
 LabeledObject *Context::getLabeledObjectFromPtr(const void *ptr) const
 {
-    return getFenceSync(reinterpret_cast<GLsync>(const_cast<void *>(ptr)));
+    return getSync(reinterpret_cast<GLsync>(const_cast<void *>(ptr)));
 }
 
 void Context::objectLabel(GLenum identifier, GLuint name, GLsizei length, const GLchar *label)
@@ -4149,7 +4148,7 @@ void Context::renderbufferStorageMultisample(GLenum target,
 
 void Context::getSynciv(GLsync sync, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *values)
 {
-    const FenceSync *syncObject = getFenceSync(sync);
+    const Sync *syncObject = getSync(sync);
     handleError(QuerySynciv(syncObject, pname, bufSize, length, values));
 }
 
@@ -5154,29 +5153,29 @@ void Context::uniformBlockBinding(GLuint program,
 
 GLsync Context::fenceSync(GLenum condition, GLbitfield flags)
 {
-    GLuint handle    = mState.mFenceSyncs->createFenceSync(mImplementation.get());
-    GLsync fenceSync = reinterpret_cast<GLsync>(static_cast<uintptr_t>(handle));
+    GLuint handle     = mState.mSyncs->createSync(mImplementation.get());
+    GLsync syncHandle = reinterpret_cast<GLsync>(static_cast<uintptr_t>(handle));
 
-    FenceSync *fenceSyncObject = getFenceSync(fenceSync);
-    Error error                = fenceSyncObject->set(condition, flags);
+    Sync *syncObject = getSync(syncHandle);
+    Error error      = syncObject->set(condition, flags);
     if (error.isError())
     {
-        deleteSync(fenceSync);
+        deleteSync(syncHandle);
         handleError(error);
         return nullptr;
     }
 
-    return fenceSync;
+    return syncHandle;
 }
 
 GLboolean Context::isSync(GLsync sync)
 {
-    return (getFenceSync(sync) != nullptr);
+    return (getSync(sync) != nullptr);
 }
 
 GLenum Context::clientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
 {
-    FenceSync *syncObject = getFenceSync(sync);
+    Sync *syncObject = getSync(sync);
 
     GLenum result = GL_WAIT_FAILED;
     handleError(syncObject->clientWait(flags, timeout, &result));
@@ -5185,7 +5184,7 @@ GLenum Context::clientWaitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
 
 void Context::waitSync(GLsync sync, GLbitfield flags, GLuint64 timeout)
 {
-    FenceSync *syncObject = getFenceSync(sync);
+    Sync *syncObject = getSync(sync);
     handleError(syncObject->serverWait(flags, timeout));
 }
 

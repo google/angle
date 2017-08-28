@@ -3,44 +3,44 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// FenceSyncVk.cpp:
-//    Implements the class methods for FenceSyncVk.
+// SyncVk.cpp:
+//    Implements the class methods for SyncVk.
 //
 
-#include "libANGLE/renderer/vulkan/FenceSyncVk.h"
+#include "libANGLE/renderer/vulkan/SyncVk.h"
 
 #include "common/debug.h"
 
 namespace rx
 {
 
-FenceSyncVk::FenceSyncVk() : FenceSyncImpl()
+SyncVk::SyncVk() : SyncImpl()
 {
 }
 
-FenceSyncVk::~FenceSyncVk()
+SyncVk::~SyncVk()
 {
 }
 
-gl::Error FenceSyncVk::set(GLenum condition, GLbitfield flags)
-{
-    UNIMPLEMENTED();
-    return gl::InternalError();
-}
-
-gl::Error FenceSyncVk::clientWait(GLbitfield flags, GLuint64 timeout, GLenum *outResult)
+gl::Error SyncVk::set(GLenum condition, GLbitfield flags)
 {
     UNIMPLEMENTED();
     return gl::InternalError();
 }
 
-gl::Error FenceSyncVk::serverWait(GLbitfield flags, GLuint64 timeout)
+gl::Error SyncVk::clientWait(GLbitfield flags, GLuint64 timeout, GLenum *outResult)
 {
     UNIMPLEMENTED();
     return gl::InternalError();
 }
 
-gl::Error FenceSyncVk::getStatus(GLint *outResult)
+gl::Error SyncVk::serverWait(GLbitfield flags, GLuint64 timeout)
+{
+    UNIMPLEMENTED();
+    return gl::InternalError();
+}
+
+gl::Error SyncVk::getStatus(GLint *outResult)
 {
     UNIMPLEMENTED();
     return gl::InternalError();

@@ -15,7 +15,6 @@
 #include "libANGLE/renderer/null/CompilerNULL.h"
 #include "libANGLE/renderer/null/DisplayNULL.h"
 #include "libANGLE/renderer/null/FenceNVNULL.h"
-#include "libANGLE/renderer/null/FenceSyncNULL.h"
 #include "libANGLE/renderer/null/FramebufferNULL.h"
 #include "libANGLE/renderer/null/ImageNULL.h"
 #include "libANGLE/renderer/null/PathNULL.h"
@@ -24,6 +23,7 @@
 #include "libANGLE/renderer/null/RenderbufferNULL.h"
 #include "libANGLE/renderer/null/SamplerNULL.h"
 #include "libANGLE/renderer/null/ShaderNULL.h"
+#include "libANGLE/renderer/null/SyncNULL.h"
 #include "libANGLE/renderer/null/TextureNULL.h"
 #include "libANGLE/renderer/null/TransformFeedbackNULL.h"
 #include "libANGLE/renderer/null/VertexArrayNULL.h"
@@ -347,9 +347,9 @@ FenceNVImpl *ContextNULL::createFenceNV()
     return new FenceNVNULL();
 }
 
-FenceSyncImpl *ContextNULL::createFenceSync()
+SyncImpl *ContextNULL::createSync()
 {
-    return new FenceSyncNULL();
+    return new SyncNULL();
 }
 
 TransformFeedbackImpl *ContextNULL::createTransformFeedback(const gl::TransformFeedbackState &state)
