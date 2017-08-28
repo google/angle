@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed091818_bfb8e21a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Fence11.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-28T16:15:58Z",
+      "side": 1,
+      "message": "Should we rename the FenceSync11 to Sync11? Likewise in other backends",
+      "revId": "d622056252e89f69d0bac25cc11b8cb5124808ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "42a16765_c8b722d7",
+        "filename": "src/libANGLE/renderer/null/FenceSyncNULL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-28T16:15:58Z",
+      "side": 1,
+      "message": "Also should the FenceSyncBACKEND files be renamed to SyncBACKEND?",
+      "revId": "d622056252e89f69d0bac25cc11b8cb5124808ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b560a5c5_0a9571e4",
+        "filename": "src/libGLESv2/entry_points_egl.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1603,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-28T16:15:58Z",
+      "side": 1,
+      "message": "This workaround isn\u0027t needed anymore.",
+      "revId": "d622056252e89f69d0bac25cc11b8cb5124808ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
