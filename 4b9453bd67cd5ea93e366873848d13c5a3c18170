@@ -128,6 +128,30 @@
       "revId": "4b9453bd67cd5ea93e366873848d13c5a3c18170",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7df6882d_60575878",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4456,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-28T08:11:43Z",
+      "side": 1,
+      "message": "No worries, this sort of thing happens sometimes.",
+      "parentUuid": "97a5705d_ea9f6a01",
+      "range": {
+        "startLine": 4456,
+        "startChar": 13,
+        "endLine": 4456,
+        "endChar": 18
+      },
+      "revId": "4b9453bd67cd5ea93e366873848d13c5a3c18170",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
