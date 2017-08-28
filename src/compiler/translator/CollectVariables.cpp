@@ -520,7 +520,8 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
                 else
                 {
                     ASSERT(mShaderType == GL_VERTEX_SHADER &&
-                           IsExtensionEnabled(mExtensionBehavior, "GL_OVR_multiview"));
+                           (IsExtensionEnabled(mExtensionBehavior, "GL_OVR_multiview") ||
+                            IsExtensionEnabled(mExtensionBehavior, "GL_OVR_multiview2")));
                 }
                 break;
             default:
