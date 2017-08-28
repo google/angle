@@ -176,6 +176,11 @@ class MultiviewRenderTestBase : public MultiviewDrawTest
         mViewHeight = height;
         mNumViews   = numViews;
 
+        mColorTexture.reset();
+        mDepthTexture.reset();
+        mDrawFramebuffer.reset();
+        mReadFramebuffer.clear();
+
         // Create color and depth textures.
         switch (mMultiviewLayout)
         {
@@ -890,7 +895,7 @@ TEST_P(MultiviewRenderTest, AttribDivisor)
         "void main()\n"
         "{\n"
         "       vec4 p = vec4(vPosition, 1.);\n"
-        "       p.xy = p.xy * 0.25 - 0.75 + vec2(offsetX, offsetY);\n"
+        "       p.xy = p.xy * 0.25 - vec2(0.75) + vec2(offsetX, offsetY);\n"
         "       gl_Position.x = (gl_ViewID_OVR == 0u ? p.x : p.x + 1.0);\n"
         "       gl_Position.yzw = p.yzw;\n"
         "}\n";
@@ -1618,6 +1623,140 @@ TEST_P(MultiviewSideBySideRenderTest, NoLeakingFragments)
         EXPECT_PIXEL_COLOR_EQ(1, 0, GLColor::red);
         EXPECT_PIXEL_COLOR_EQ(2, 0, GLColor::black);
         EXPECT_PIXEL_COLOR_EQ(3, 0, GLColor::green);
+    }
+}
+
+// Verify that re-linking a program adjusts the attribute divisor.
+// The test uses instacing to draw for each view a strips of two red quads and two blue quads next
+// to each other. The quads' position and color depend on the corresponding attribute divisors.
+TEST_P(MultiviewRenderTest, ProgramRelinkUpdatesAttribDivisor)
+{
+    if (!requestMultiviewExtension())
+    {
+        return;
+    }
+
+    const int kViewWidth  = 4;
+    const int kViewHeight = 1;
+    const int kNumViews   = 2;
+
+    const std::string &fsSource =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview2 : require\n"
+        "precision mediump float;\n"
+        "in vec4 oColor;\n"
+        "out vec4 col;\n"
+        "void main()\n"
+        "{\n"
+        "    col = oColor;\n"
+        "}\n";
+
+    auto generateVertexShaderSource = [](int numViews) -> std::string {
+        std::string source =
+            "#version 300 es\n"
+            "#extension GL_OVR_multiview2 : require\n"
+            "layout(num_views = " +
+            ToString(numViews) +
+            ") in;\n"
+            "in vec3 vPosition;\n"
+            "in float vOffsetX;\n"
+            "in vec4 vColor;\n"
+            "out vec4 oColor;\n"
+            "void main()\n"
+            "{\n"
+            "       vec4 p = vec4(vPosition, 1.);\n"
+            "       p.x = p.x * 0.25 - 0.75 + vOffsetX;\n"
+            "       oColor = vColor;\n"
+            "       gl_Position = p;\n"
+            "}\n";
+        return source;
+    };
+
+    std::string vsSource = generateVertexShaderSource(kNumViews);
+    ANGLE_GL_PROGRAM(program, vsSource, fsSource);
+    glUseProgram(program);
+
+    GLint positionLoc;
+    GLBuffer xOffsetVBO;
+    GLint xOffsetLoc;
+    GLBuffer colorVBO;
+    GLint colorLoc;
+
+    {
+        // Initialize buffers and setup attributes.
+        glBindBuffer(GL_ARRAY_BUFFER, xOffsetVBO);
+        const GLfloat kXOffsetData[4] = {0.0f, 0.5f, 1.0f, 1.5f};
+        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 4, kXOffsetData, GL_STATIC_DRAW);
+        xOffsetLoc = glGetAttribLocation(program, "vOffsetX");
+        glVertexAttribPointer(xOffsetLoc, 1, GL_FLOAT, GL_FALSE, 0, 0);
+        glVertexAttribDivisor(xOffsetLoc, 1);
+        glEnableVertexAttribArray(xOffsetLoc);
+
+        glBindBuffer(GL_ARRAY_BUFFER, colorVBO);
+        const GLColor kColors[2] = {GLColor::red, GLColor::blue};
+        glBufferData(GL_ARRAY_BUFFER, sizeof(GLColor) * 2, kColors, GL_STATIC_DRAW);
+        colorLoc = glGetAttribLocation(program, "vColor");
+        glVertexAttribDivisor(colorLoc, 2);
+        glVertexAttribPointer(colorLoc, 4, GL_UNSIGNED_BYTE, GL_FALSE, 0, 0);
+        glEnableVertexAttribArray(colorLoc);
+
+        positionLoc = glGetAttribLocation(program, "vPosition");
+    }
+
+    {
+        createFBO(kViewWidth, kViewHeight, kNumViews);
+
+        drawQuad(program, "vPosition", 0.0f, 1.0f, true, true, 4);
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_EQ(GLColor::red, GetViewColor(0, 0, 0));
+        EXPECT_EQ(GLColor::red, GetViewColor(1, 0, 0));
+        EXPECT_EQ(GLColor::blue, GetViewColor(2, 0, 0));
+        EXPECT_EQ(GLColor::blue, GetViewColor(3, 0, 0));
+    }
+
+    {
+        const int kNewNumViews = 3;
+        vsSource               = generateVertexShaderSource(kNewNumViews);
+        createFBO(kViewWidth, kViewHeight, kNewNumViews);
+
+        GLuint vs = CompileShader(GL_VERTEX_SHADER, vsSource);
+        ASSERT_NE(0u, vs);
+        GLuint fs = CompileShader(GL_FRAGMENT_SHADER, fsSource);
+        ASSERT_NE(0u, fs);
+
+        GLint numAttachedShaders = 0;
+        glGetProgramiv(program, GL_ATTACHED_SHADERS, &numAttachedShaders);
+
+        GLuint attachedShaders[2] = {0u};
+        glGetAttachedShaders(program, numAttachedShaders, nullptr, attachedShaders);
+        for (int i = 0; i < 2; ++i)
+        {
+            glDetachShader(program, attachedShaders[i]);
+        }
+
+        glAttachShader(program, vs);
+        glDeleteShader(vs);
+
+        glAttachShader(program, fs);
+        glDeleteShader(fs);
+
+        glBindAttribLocation(program, positionLoc, "vPosition");
+        glBindAttribLocation(program, xOffsetLoc, "vOffsetX");
+        glBindAttribLocation(program, colorLoc, "vColor");
+
+        glLinkProgram(program);
+
+        drawQuad(program, "vPosition", 0.0f, 1.0f, true, true, 4);
+        ASSERT_GL_NO_ERROR();
+
+        for (int i = 0; i < kNewNumViews; ++i)
+        {
+            EXPECT_EQ(GLColor::red, GetViewColor(0, 0, i));
+            EXPECT_EQ(GLColor::red, GetViewColor(1, 0, i));
+            EXPECT_EQ(GLColor::blue, GetViewColor(2, 0, i));
+            EXPECT_EQ(GLColor::blue, GetViewColor(3, 0, i));
+        }
     }
 }
 

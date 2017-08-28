@@ -1905,14 +1905,13 @@ void StateManagerGL::syncState(const gl::Context *context, const gl::State::Dirt
                 break;
             case gl::State::DIRTY_BIT_PROGRAM_BINDING:
                 // TODO(jmadill): implement this
+                break;
+            case gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE:
                 propagateNumViewsToVAO(state.getProgram(),
                                        GetImplAs<VertexArrayGL>(state.getVertexArray()));
                 updateMultiviewBaseViewLayerIndexUniform(
                     state.getProgram(),
                     state.getDrawFramebuffer()->getImplementation()->getState());
-                break;
-            case gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE:
-                // TODO(jmadill): implement this
                 break;
             case gl::State::DIRTY_BIT_MULTISAMPLING:
                 setMultisamplingStateEnabled(state.isMultisamplingEnabled());
