@@ -22,6 +22,30 @@
       "revId": "0962cac38338954abb796ceced662a5c1711bc41",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f8836def_2138c901",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-28T18:10:21Z",
+      "side": 1,
+      "message": "Good call. done.",
+      "parentUuid": "68b85cce_70757954",
+      "range": {
+        "startLine": 315,
+        "startChar": 29,
+        "endLine": 315,
+        "endChar": 70
+      },
+      "revId": "0962cac38338954abb796ceced662a5c1711bc41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
