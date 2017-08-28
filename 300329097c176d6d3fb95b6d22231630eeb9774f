@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7fe4bfed_3d4dced1",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4650,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-08-28T03:26:55Z",
+      "side": 1,
+      "message": "I have added a test to verify interface blocks using \u0027const\u0027 qualifier isn\u0027t allowed and won\u0027t make the compiler crash.",
+      "range": {
+        "startLine": 4630,
+        "startChar": 0,
+        "endLine": 4650,
+        "endChar": 0
+      },
+      "revId": "300329097c176d6d3fb95b6d22231630eeb9774f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
