@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "68b85cce_70757954",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/SwapChain11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-28T17:59:38Z",
+      "side": 1,
+      "message": "It\u0027s possible that the desc we got from the texture could have other incompatible flags.  We should reset the BindFlags, MiscFlags, CPUAccessFlags and Usage.",
+      "range": {
+        "startLine": 315,
+        "startChar": 29,
+        "endLine": 315,
+        "endChar": 70
+      },
+      "revId": "0962cac38338954abb796ceced662a5c1711bc41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
