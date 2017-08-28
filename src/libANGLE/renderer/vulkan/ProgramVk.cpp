@@ -312,4 +312,19 @@ gl::ErrorOrResult<vk::PipelineLayout *> ProgramVk::getPipelineLayout(VkDevice de
     return &mPipelineLayout;
 }
 
+void ProgramVk::getUniformfv(const gl::Context *context, GLint location, GLfloat *params) const
+{
+    UNIMPLEMENTED();
+}
+
+void ProgramVk::getUniformiv(const gl::Context *context, GLint location, GLint *params) const
+{
+    UNIMPLEMENTED();
+}
+
+void ProgramVk::getUniformuiv(const gl::Context *context, GLint location, GLuint *params) const
+{
+    UNIMPLEMENTED();
+}
+
 }  // namespace rx

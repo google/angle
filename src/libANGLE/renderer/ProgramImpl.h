@@ -72,6 +72,15 @@ class ProgramImpl : angle::NonCopyable
     virtual void setUniformMatrix3x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value) = 0;
     virtual void setUniformMatrix4x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value) = 0;
 
+    // Done in the back-end to avoid having to keep a system copy of uniform data.
+    virtual void getUniformfv(const gl::Context *context,
+                              GLint location,
+                              GLfloat *params) const = 0;
+    virtual void getUniformiv(const gl::Context *context, GLint location, GLint *params) const = 0;
+    virtual void getUniformuiv(const gl::Context *context,
+                               GLint location,
+                               GLuint *params) const = 0;
+
     // TODO: synchronize in syncState when dirty bits exist.
     virtual void setUniformBlockBinding(GLuint uniformBlockIndex, GLuint uniformBlockBinding) = 0;
 
@@ -89,6 +98,11 @@ class ProgramImpl : angle::NonCopyable
                                          GLenum genMode,
                                          GLint components,
                                          const GLfloat *coeffs) = 0;
+
+    // Implementation-specific method for ignoring unreferenced uniforms. Some implementations may
+    // perform more extensive analysis and ignore some locations that ANGLE doesn't detect as
+    // unreferenced. This method is not required to be overriden by a back-end.
+    virtual void markUnusedUniformLocations(std::vector<gl::VariableLocation> *uniformLocations) {}
 
   protected:
     const gl::ProgramState &mState;

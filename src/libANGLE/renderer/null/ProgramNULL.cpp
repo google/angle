@@ -164,6 +164,21 @@ void ProgramNULL::setUniformMatrix4x3fv(GLint location,
 {
 }
 
+void ProgramNULL::getUniformfv(const gl::Context *context, GLint location, GLfloat *params) const
+{
+    // TODO(jmadill): Write some values.
+}
+
+void ProgramNULL::getUniformiv(const gl::Context *context, GLint location, GLint *params) const
+{
+    // TODO(jmadill): Write some values.
+}
+
+void ProgramNULL::getUniformuiv(const gl::Context *context, GLint location, GLuint *params) const
+{
+    // TODO(jmadill): Write some values.
+}
+
 void ProgramNULL::setUniformBlockBinding(GLuint uniformBlockIndex, GLuint uniformBlockBinding)
 {
 }

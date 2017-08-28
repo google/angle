@@ -43,6 +43,9 @@ class UniformTest : public ANGLETest
             "  gl_FragColor = vec4(uniF + float(uniI));\n"
             "  gl_FragColor += vec4(uniB ? 1.0 : 0.0);\n"
             "  gl_FragColor += vec4(uniBArr[0] ? 1.0 : 0.0);\n"
+            "  gl_FragColor += vec4(uniBArr[1] ? 1.0 : 0.0);\n"
+            "  gl_FragColor += vec4(uniBArr[2] ? 1.0 : 0.0);\n"
+            "  gl_FragColor += vec4(uniBArr[3] ? 1.0 : 0.0);\n"
             "}";
 
         mProgram = CompileProgram(vertexShader, fragShader);
@@ -235,6 +238,11 @@ TEST_P(UniformTest, FloatUniformStateQuery)
 // Test that integer to float GetUniform rounds values correctly.
 TEST_P(UniformTest, IntUniformStateQuery)
 {
+    // Qualcomm seems to have a bug where integer uniforms are internally stored as float, and
+    // large values are rounded to the nearest float representation of an integer.
+    // TODO(jmadill): Lift this suppression when/if the bug is fixed.
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+
     std::vector<GLint> inValues;
     std::vector<GLint> expectedIValues;
     std::vector<GLfloat> expectedFValues;
@@ -266,10 +274,10 @@ TEST_P(UniformTest, IntUniformStateQuery)
         GLint expectedValue = expectedIValues[index];
 
         glUniform1i(mUniformILocation, inValue);
-        GLint testValue;
+        GLint testValue = 1234567;
         glGetUniformiv(mProgram, mUniformILocation, &testValue);
         ASSERT_GL_NO_ERROR();
-        EXPECT_EQ(expectedValue, testValue);
+        EXPECT_EQ(expectedValue, testValue) << " with glGetUniformiv";
     }
 
     for (size_t index = 0; index < inValues.size(); ++index)
@@ -278,10 +286,10 @@ TEST_P(UniformTest, IntUniformStateQuery)
         GLfloat expectedValue = expectedFValues[index];
 
         glUniform1i(mUniformILocation, inValue);
-        GLfloat testValue;
+        GLfloat testValue = 124567.0;
         glGetUniformfv(mProgram, mUniformILocation, &testValue);
         ASSERT_GL_NO_ERROR();
-        EXPECT_EQ(expectedValue, testValue);
+        EXPECT_EQ(expectedValue, testValue) << " with glGetUniformfv";
     }
 }
 
@@ -343,6 +351,11 @@ TEST_P(UniformTest, BooleanArrayUniformStateQuery)
         glGetUniformLocation(mProgram, "uniBArr[3]"),
     };
 
+    for (int i = 0; i < 4; ++i)
+    {
+        ASSERT_NE(-1, locations[i]) << " with i=" << i;
+    }
+
     // Calling Uniform1iv
     glUniform1iv(locations[0], 4, boolValuesi);
 
@@ -350,14 +363,14 @@ TEST_P(UniformTest, BooleanArrayUniformStateQuery)
     {
         int value = -1;
         glGetUniformiv(mProgram, locations[idx], &value);
-        EXPECT_EQ(boolValuesi[idx], value);
+        EXPECT_EQ(boolValuesi[idx], value) << " with Uniform1iv/GetUniformiv at " << idx;
     }
 
     for (unsigned int idx = 0; idx < 4; ++idx)
     {
         float value = -1.0f;
         glGetUniformfv(mProgram, locations[idx], &value);
-        EXPECT_EQ(boolValuesf[idx], value);
+        EXPECT_EQ(boolValuesf[idx], value) << " with Uniform1iv/GetUniformfv at " << idx;
     }
 
     // Calling Uniform1fv
@@ -367,14 +380,14 @@ TEST_P(UniformTest, BooleanArrayUniformStateQuery)
     {
         int value = -1;
         glGetUniformiv(mProgram, locations[idx], &value);
-        EXPECT_EQ(boolValuesi[idx], value);
+        EXPECT_EQ(boolValuesi[idx], value) << " with Uniform1fv/GetUniformiv at " << idx;
     }
 
     for (unsigned int idx = 0; idx < 4; ++idx)
     {
         float value = -1.0f;
         glGetUniformfv(mProgram, locations[idx], &value);
-        EXPECT_EQ(boolValuesf[idx], value);
+        EXPECT_EQ(boolValuesf[idx], value) << " with Uniform1fv/GetUniformfv at " << idx;
     }
 
     ASSERT_GL_NO_ERROR();
@@ -415,6 +428,10 @@ TEST_P(UniformTestES3, TranposedMatrixArrayUniformStateQuery)
         "out vec4 color;\n"
         "void main() {\n"
         "  color = vec4(uniMat3x2[0][0][0]);\n"
+        "  color += vec4(uniMat3x2[1][0][0]);\n"
+        "  color += vec4(uniMat3x2[2][0][0]);\n"
+        "  color += vec4(uniMat3x2[3][0][0]);\n"
+        "  color += vec4(uniMat3x2[4][0][0]);\n"
         "}";
 
     mProgram = CompileProgram(vertexShader, fragShader);
@@ -474,6 +491,10 @@ TEST_P(UniformTestES3, OverflowArray)
         "out vec4 color;\n"
         "void main() {\n"
         "  color = vec4(uniMat3x2[0][0][0] + uniF[0]);\n"
+        "  color = vec4(uniMat3x2[1][0][0] + uniF[1]);\n"
+        "  color = vec4(uniMat3x2[2][0][0] + uniF[2]);\n"
+        "  color = vec4(uniMat3x2[3][0][0] + uniF[3]);\n"
+        "  color = vec4(uniMat3x2[4][0][0] + uniF[4]);\n"
         "}";
 
     mProgram = CompileProgram(vertexShader, fragShader);

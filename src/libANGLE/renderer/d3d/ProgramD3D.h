@@ -247,6 +247,10 @@ class ProgramD3D : public ProgramImpl
                                GLboolean transpose,
                                const GLfloat *value);
 
+    void getUniformfv(const gl::Context *context, GLint location, GLfloat *params) const override;
+    void getUniformiv(const gl::Context *context, GLint location, GLint *params) const override;
+    void getUniformuiv(const gl::Context *context, GLint location, GLuint *params) const override;
+
     void setUniformBlockBinding(GLuint uniformBlockIndex, GLuint uniformBlockBinding) override;
 
     UniformStorageD3D &getVertexUniformStorage() const { return *mVertexUniformStorage.get(); }
@@ -359,6 +363,9 @@ class ProgramD3D : public ProgramImpl
                                unsigned int samplerCount,
                                std::vector<Sampler> &outSamplers,
                                GLuint *outUsedRange);
+
+    template <typename DestT>
+    void getUniformInternal(GLint location, DestT *dataOut) const;
 
     template <typename T>
     void setUniform(GLint location, GLsizei count, const T *v, GLenum targetUniformType);

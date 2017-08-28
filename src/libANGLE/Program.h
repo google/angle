@@ -171,8 +171,8 @@ struct BindingInfo
 // This small structure encapsulates binding sampler uniforms to active GL textures.
 struct SamplerBinding
 {
-    SamplerBinding(GLenum textureTypeIn, size_t elementCount)
-        : textureType(textureTypeIn), boundTextureUnits(elementCount, 0)
+    SamplerBinding(GLenum textureTypeIn, size_t elementCount, bool unreferenced)
+        : textureType(textureTypeIn), boundTextureUnits(elementCount, 0), unreferenced(unreferenced)
     {
     }
 
@@ -181,6 +181,9 @@ struct SamplerBinding
 
     // List of all textures bound to this sampler, of type textureType.
     std::vector<GLuint> boundTextureUnits;
+
+    // A note if this sampler is an unreferenced uniform.
+    bool unreferenced;
 };
 
 // A varying with tranform feedback enabled. If it's an array, either the whole array or one of its
@@ -457,9 +460,9 @@ class Program final : angle::NonCopyable, public LabeledObject
     void setUniformMatrix3x4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
     void setUniformMatrix4x3fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
 
-    void getUniformfv(GLint location, GLfloat *params) const;
-    void getUniformiv(GLint location, GLint *params) const;
-    void getUniformuiv(GLint location, GLuint *params) const;
+    void getUniformfv(const Context *context, GLint location, GLfloat *params) const;
+    void getUniformiv(const Context *context, GLint location, GLint *params) const;
+    void getUniformuiv(const Context *context, GLint location, GLuint *params) const;
 
     void getActiveUniformBlockName(GLuint uniformBlockIndex, GLsizei bufSize, GLsizei *length, GLchar *uniformBlockName) const;
     GLuint getActiveUniformBlockCount() const;
@@ -627,7 +630,11 @@ class Program final : angle::NonCopyable, public LabeledObject
                               const T *v);
 
     template <typename DestT>
-    void getUniformInternal(GLint location, DestT *dataOut) const;
+    void getUniformInternal(const Context *context,
+                            DestT *dataOut,
+                            GLint location,
+                            GLenum nativeType,
+                            int components) const;
 
     ProgramState mState;
     rx::ProgramImpl *mProgram;

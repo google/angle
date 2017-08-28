@@ -77,11 +77,13 @@ TEST_P(ComputeShaderTest, LinkComputeProgramWithUniforms)
 
     ANGLE_GL_COMPUTE_PROGRAM(program, csSource);
 
-    GLint uniformLoc = glGetUniformLocation(program.get(), "myUniformInt");
-    EXPECT_NE(-1, uniformLoc);
+    // It's not possible to validate uniforms are present since they are unreferenced.
+    // TODO(jmadill): Make uniforms referenced.
+    // GLint uniformLoc = glGetUniformLocation(program.get(), "myUniformInt");
+    // EXPECT_NE(-1, uniformLoc);
 
-    uniformLoc = glGetUniformLocation(program.get(), "myUniformSampler");
-    EXPECT_NE(-1, uniformLoc);
+    // uniformLoc = glGetUniformLocation(program.get(), "myUniformSampler");
+    // EXPECT_NE(-1, uniformLoc);
 
     EXPECT_GL_NO_ERROR();
 }

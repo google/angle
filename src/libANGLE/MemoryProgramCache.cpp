@@ -315,7 +315,9 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
     {
         GLenum textureType  = stream.readInt<GLenum>();
         size_t bindingCount = stream.readInt<size_t>();
-        state->mSamplerBindings.emplace_back(SamplerBinding(textureType, bindingCount));
+        bool unreferenced   = stream.readBool();
+        state->mSamplerBindings.emplace_back(
+            SamplerBinding(textureType, bindingCount, unreferenced));
     }
 
     unsigned int imageRangeLow  = stream.readInt<unsigned int>();
@@ -475,6 +477,7 @@ void MemoryProgramCache::Serialize(const Context *context,
     {
         stream.writeInt(samplerBinding.textureType);
         stream.writeInt(samplerBinding.boundTextureUnits.size());
+        stream.writeInt(samplerBinding.unreferenced);
     }
 
     stream.writeInt(state.getImageUniformRange().low());
