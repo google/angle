@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ea020392_bd43c9c9",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 671,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-28T17:28:21Z",
+      "side": 1,
+      "message": "nit: \"Attachments\"",
+      "range": {
+        "startLine": 671,
+        "startChar": 29,
+        "endLine": 671,
+        "endChar": 75
+      },
+      "revId": "511937d9a3c7959629169b71851f9265628f07f9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
