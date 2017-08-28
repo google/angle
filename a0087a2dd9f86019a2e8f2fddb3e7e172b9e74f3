@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b47bdac_f9bb20e3",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 444,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-28T04:13:11Z",
+      "side": 1,
+      "message": "I prefer you holding on this and modify the whole comment to quote the spec sentence when the spec change really happens.",
+      "revId": "a0087a2dd9f86019a2e8f2fddb3e7e172b9e74f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
