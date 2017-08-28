@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "459c9c8b_01dca461",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 898,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-28T14:17:04Z",
+      "side": 1,
+      "message": "Is this change needed or related?",
+      "revId": "093cf04fa83fb40a288acbe8fb4cbcb529c0a11a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec91ef2b_b2b71740",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1653,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-28T14:17:04Z",
+      "side": 1,
+      "message": "I don\u0027t think I recognize this syntax. Is this within the feature set recommended by the Google C++ style guide? Maybe a more straightforward way to write this would be better.",
+      "revId": "093cf04fa83fb40a288acbe8fb4cbcb529c0a11a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0087f44a_a5cfc810",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1702,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-28T14:17:04Z",
+      "side": 1,
+      "message": "Please add a comment describing what this is expected to draw.",
+      "revId": "093cf04fa83fb40a288acbe8fb4cbcb529c0a11a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3eb6a59e_1251491e",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1739,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-28T14:17:04Z",
+      "side": 1,
+      "message": "Same here.",
+      "revId": "093cf04fa83fb40a288acbe8fb4cbcb529c0a11a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
