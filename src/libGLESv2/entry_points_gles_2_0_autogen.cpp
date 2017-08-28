@@ -269,7 +269,7 @@ GLenum GL_APIENTRY CheckFramebufferStatus(GLenum target)
         }
     }
 
-    return 0;
+    return GetDefaultReturnValue<EntryPoint::CheckFramebufferStatus, GLenum>();
 }
 
 void GL_APIENTRY Clear(GLbitfield mask)
@@ -505,7 +505,7 @@ GLuint GL_APIENTRY CreateProgram()
         }
     }
 
-    return 0;
+    return GetDefaultReturnValue<EntryPoint::CreateProgram, GLuint>();
 }
 
 GLuint GL_APIENTRY CreateShader(GLenum type)
@@ -523,7 +523,7 @@ GLuint GL_APIENTRY CreateShader(GLenum type)
         }
     }
 
-    return 0;
+    return GetDefaultReturnValue<EntryPoint::CreateShader, GLuint>();
 }
 
 void GL_APIENTRY CullFace(GLenum mode)
@@ -1071,7 +1071,7 @@ GLint GL_APIENTRY GetAttribLocation(GLuint program, const GLchar *name)
         }
     }
 
-    return 0;
+    return GetDefaultReturnValue<EntryPoint::GetAttribLocation, GLint>();
 }
 
 void GL_APIENTRY GetBooleanv(GLenum pname, GLboolean *data)
@@ -1123,7 +1123,7 @@ GLenum GL_APIENTRY GetError()
         }
     }
 
-    return 0;
+    return GetDefaultReturnValue<EntryPoint::GetError, GLenum>();
 }
 
 void GL_APIENTRY GetFloatv(GLenum pname, GLfloat *data)
@@ -1336,7 +1336,7 @@ const GLubyte *GL_APIENTRY GetString(GLenum name)
         }
     }
 
-    return nullptr;
+    return GetDefaultReturnValue<EntryPoint::GetString, const GLubyte *>();
 }
 
 void GL_APIENTRY GetTexParameterfv(GLenum target, GLenum pname, GLfloat *params)
@@ -1422,7 +1422,7 @@ GLint GL_APIENTRY GetUniformLocation(GLuint program, const GLchar *name)
         }
     }
 
-    return 0;
+    return GetDefaultReturnValue<EntryPoint::GetUniformLocation, GLint>();
 }
 
 void GL_APIENTRY GetVertexAttribfv(GLuint index, GLenum pname, GLfloat *params)
@@ -1508,7 +1508,7 @@ GLboolean GL_APIENTRY IsBuffer(GLuint buffer)
         }
     }
 
-    return GL_FALSE;
+    return GetDefaultReturnValue<EntryPoint::IsBuffer, GLboolean>();
 }
 
 GLboolean GL_APIENTRY IsEnabled(GLenum cap)
@@ -1526,7 +1526,7 @@ GLboolean GL_APIENTRY IsEnabled(GLenum cap)
         }
     }
 
-    return GL_FALSE;
+    return GetDefaultReturnValue<EntryPoint::IsEnabled, GLboolean>();
 }
 
 GLboolean GL_APIENTRY IsFramebuffer(GLuint framebuffer)
@@ -1544,7 +1544,7 @@ GLboolean GL_APIENTRY IsFramebuffer(GLuint framebuffer)
         }
     }
 
-    return GL_FALSE;
+    return GetDefaultReturnValue<EntryPoint::IsFramebuffer, GLboolean>();
 }
 
 GLboolean GL_APIENTRY IsProgram(GLuint program)
@@ -1562,7 +1562,7 @@ GLboolean GL_APIENTRY IsProgram(GLuint program)
         }
     }
 
-    return GL_FALSE;
+    return GetDefaultReturnValue<EntryPoint::IsProgram, GLboolean>();
 }
 
 GLboolean GL_APIENTRY IsRenderbuffer(GLuint renderbuffer)
@@ -1580,7 +1580,7 @@ GLboolean GL_APIENTRY IsRenderbuffer(GLuint renderbuffer)
         }
     }
 
-    return GL_FALSE;
+    return GetDefaultReturnValue<EntryPoint::IsRenderbuffer, GLboolean>();
 }
 
 GLboolean GL_APIENTRY IsShader(GLuint shader)
@@ -1598,7 +1598,7 @@ GLboolean GL_APIENTRY IsShader(GLuint shader)
         }
     }
 
-    return GL_FALSE;
+    return GetDefaultReturnValue<EntryPoint::IsShader, GLboolean>();
 }
 
 GLboolean GL_APIENTRY IsTexture(GLuint texture)
@@ -1616,7 +1616,7 @@ GLboolean GL_APIENTRY IsTexture(GLuint texture)
         }
     }
 
-    return GL_FALSE;
+    return GetDefaultReturnValue<EntryPoint::IsTexture, GLboolean>();
 }
 
 void GL_APIENTRY LineWidth(GLfloat width)

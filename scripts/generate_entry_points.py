@@ -156,17 +156,10 @@ def param_format_string(param):
 
         return param + " = " + format_dict[type_only]
 
-def default_return_value(return_type):
+def default_return_value(cmd_name, return_type):
     if return_type == "void":
         return ""
-    elif return_type == "GLenum" or return_type == "GLint" or return_type == "GLuint":
-        return "0"
-    elif return_type == "GLboolean":
-        return "GL_FALSE"
-    elif "*" in return_type or return_type == "GLsync":
-        return "nullptr"
-    else:
-        raise Exception("Don't know default return type for " + return_type)
+    return "GetDefaultReturnValue<EntryPoint::" + cmd_name[2:] + ", " + return_type + ">()"
 
 def get_context_getter_function(cmd_name):
     if cmd_name == "glGetError":
@@ -178,7 +171,7 @@ def format_entry_point_def(cmd_name, proto, params):
     pass_params = [just_the_name(param) for param in params]
     format_params = [param_format_string(param) for param in params]
     return_type = proto[:-len(cmd_name)]
-    default_return = default_return_value(return_type.strip())
+    default_return = default_return_value(cmd_name, return_type.strip())
     return template_entry_point_def.format(
         name = cmd_name[2:],
         name_lower = cmd_name[2:3].lower() + cmd_name[3:],
