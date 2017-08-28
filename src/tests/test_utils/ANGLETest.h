@@ -278,6 +278,11 @@ class ANGLETestBase
                          bool useBufferObject,
                          bool restrictedRange);
 
+    void draw2DTexturedQuad(const std::string &positionAttribName,
+                            GLfloat positionAttribZ,
+                            GLfloat positionAttribXYScale,
+                            bool useVertexBuffer);
+
     static GLuint compileShader(GLenum type, const std::string &source);
     static bool extensionEnabled(const std::string &extName);
     static bool extensionRequestable(const std::string &extName);
@@ -328,6 +333,8 @@ class ANGLETestBase
 
     void checkD3D11SDKLayersMessages();
 
+    GLuint get2DTexturedQuadProgram();
+
     EGLWindow *mEGLWindow;
     int mWidth;
     int mHeight;
@@ -337,6 +344,9 @@ class ANGLETestBase
     // Used for indexed quad rendering
     GLuint mQuadVertexBuffer;
     GLuint mQuadIndexBuffer;
+
+    // Used for texture rendering.
+    GLuint m2DTexturedQuadProgram;
 
     TestPlatformContext mPlatformContext;
 

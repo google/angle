@@ -224,6 +224,14 @@ EGLint SwapChain11::resetOffscreenColorBuffer(const gl::Context *context,
         }
         ASSERT(mOffscreenTexture.valid());
         mOffscreenTexture.getDesc(&offscreenTextureDesc);
+
+        // Fail if the offscreen texture is not renderable.
+        if ((offscreenTextureDesc.BindFlags & D3D11_BIND_RENDER_TARGET) == 0)
+        {
+            ERR() << "Could not use provided offscreen texture, texture not renderable.";
+            release();
+            return EGL_BAD_SURFACE;
+        }
     }
     else
     {
@@ -303,6 +311,23 @@ EGLint SwapChain11::resetOffscreenColorBuffer(const gl::Context *context,
     if (offscreenTextureDesc.BindFlags & D3D11_BIND_SHADER_RESOURCE)
     {
         err = mRenderer->allocateResource(offscreenSRVDesc, mOffscreenTexture.get(),
+                                          &mOffscreenSRView);
+        ASSERT(!err.isError());
+        mOffscreenSRView.setDebugName("Offscreen back buffer shader resource");
+    }
+    else
+    {
+        // Special case for external textures that cannot support sampling. Since internally we
+        // assume our SwapChain is always readable, we make a copy texture that is compatible.
+        D3D11_TEXTURE2D_DESC offscreenCopyDesc = offscreenTextureDesc;
+        offscreenCopyDesc.BindFlags            = D3D11_BIND_SHADER_RESOURCE;
+        offscreenCopyDesc.MiscFlags            = 0;
+        offscreenCopyDesc.CPUAccessFlags       = 0;
+        err = mRenderer->allocateTexture(offscreenCopyDesc, backbufferFormatInfo,
+                                         &mOffscreenTextureCopyForSRV);
+        ASSERT(!err.isError());
+        mOffscreenTextureCopyForSRV.setDebugName("Offscreen back buffer copy for SRV");
+        err = mRenderer->allocateResource(offscreenSRVDesc, mOffscreenTextureCopyForSRV.get(),
                                           &mOffscreenSRView);
         ASSERT(!err.isError());
         mOffscreenSRView.setDebugName("Offscreen back buffer shader resource");
@@ -928,7 +953,24 @@ const d3d11::RenderTargetView &SwapChain11::getRenderTarget()
 
 const d3d11::SharedSRV &SwapChain11::getRenderTargetShaderResource()
 {
-    return mNeedsOffscreenTexture ? mOffscreenSRView : mBackBufferSRView;
+    if (!mNeedsOffscreenTexture)
+    {
+        ASSERT(mBackBufferSRView.valid());
+        return mBackBufferSRView;
+    }
+
+    if (!mOffscreenTextureCopyForSRV.valid())
+    {
+        ASSERT(mOffscreenSRView.valid());
+        return mOffscreenSRView;
+    }
+
+    // Need to copy the offscreen texture into the shader-readable copy, since it's external and
+    // we don't know if the copy is up-to-date. This works around the problem we have when the app
+    // passes in a texture that isn't shader-readable.
+    mRenderer->getDeviceContext()->CopyResource(mOffscreenTextureCopyForSRV.get(),
+                                                mOffscreenTexture.get());
+    return mOffscreenSRView;
 }
 
 const d3d11::DepthStencilView &SwapChain11::getDepthStencil()
