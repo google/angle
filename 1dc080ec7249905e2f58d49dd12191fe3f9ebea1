@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "04feff42_341344f3",
+        "filename": "src/compiler/translator/OutputGLSLBase.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1151,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-28T14:48:32Z",
+      "side": 1,
+      "message": "note: eventually we should have a helper function that does this as\n\n    uint32_t MAGIC \u003d (\u0027g\u0027 \u003c\u003c 24) | (\u0027l\u0027 \u003c\u003c 16) | (\u0027_\u0027 \u003c\u003c 8);\n\n    if (str.size() \u003c 3) return false;\n    return (*((const uint32_t*) str.c_str()) ^ MAGIC) \u0026 0xFFFFFF00 \u003d\u003d 0;",
+      "revId": "1dc080ec7249905e2f58d49dd12191fe3f9ebea1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "189cc71b_5351c097",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-28T14:48:32Z",
+      "side": 1,
+      "message": "nit: not used in this patch",
+      "revId": "1dc080ec7249905e2f58d49dd12191fe3f9ebea1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bef531d2_146b29b7",
+        "filename": "src/libANGLE/renderer/gl/ShaderGL.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-28T14:48:32Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "1dc080ec7249905e2f58d49dd12191fe3f9ebea1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
