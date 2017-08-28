@@ -231,13 +231,13 @@ TEST_P(ProgramInterfaceTestES31, GetResource)
                            &length, params.data());
     EXPECT_GL_NO_ERROR();
     EXPECT_EQ(kPropCount, length);
-    EXPECT_EQ(GL_FLOAT_VEC4, params[0]);
-    EXPECT_EQ(1, params[1]);
-    EXPECT_EQ(3, params[2]);
-    EXPECT_EQ(9, params[3]);
-    EXPECT_EQ(1, params[4]);
-    EXPECT_EQ(0, params[5]);
-    EXPECT_EQ(0, params[6]);
+    EXPECT_EQ(GL_FLOAT_VEC4, params[0]);  // type
+    EXPECT_EQ(1, params[1]);              // array_size
+    EXPECT_EQ(3, params[2]);              // location
+    EXPECT_EQ(9, params[3]);              // name_length
+    EXPECT_EQ(1, params[4]);              // referenced_by_vertex_shader
+    EXPECT_EQ(0, params[5]);              // referenced_by_fragment_shader
+    EXPECT_EQ(0, params[6]);              // referenced_by_compute_shader
 
     index = glGetProgramResourceIndex(program, GL_PROGRAM_OUTPUT, "oColor[0]");
     EXPECT_GL_NO_ERROR();
@@ -246,12 +246,12 @@ TEST_P(ProgramInterfaceTestES31, GetResource)
                            kPropCount - 1, &length, params.data());
     EXPECT_GL_NO_ERROR();
     EXPECT_EQ(kPropCount - 1, length);
-    EXPECT_EQ(GL_FLOAT_VEC4, params[0]);
-    EXPECT_EQ(4, params[1]);
-    EXPECT_EQ(2, params[2]);
-    EXPECT_EQ(10, params[3]);
-    EXPECT_EQ(0, params[4]);
-    EXPECT_EQ(1, params[5]);
+    EXPECT_EQ(GL_FLOAT_VEC4, params[0]);  // type
+    EXPECT_EQ(4, params[1]);              // array_size
+    EXPECT_EQ(2, params[2]);              // location
+    EXPECT_EQ(10, params[3]);             // name_length
+    EXPECT_EQ(0, params[4]);              // referenced_by_vertex_shader
+    EXPECT_EQ(1, params[5]);              // referenced_by_fragment_shader
 
     GLenum invalidOutputProp = GL_OFFSET;
     glGetProgramResourceiv(program, GL_PROGRAM_OUTPUT, index, 1, &invalidOutputProp, 1, &length,
@@ -334,5 +334,103 @@ TEST_P(ProgramInterfaceTestES31, GetProgramInterface)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
-ANGLE_INSTANTIATE_TEST(ProgramInterfaceTestES31, ES31_OPENGL(), ES31_D3D11(), ES31_OPENGLES());
+// Tests the resource property query for uniform can be done correctly.
+TEST_P(ProgramInterfaceTestES31, GetUniformProperties)
+{
+    const std::string &vertexShaderSource =
+        "#version 310 es\n"
+        "precision highp float;\n"
+        "uniform layout(location=12) vec4 color;\n"
+        "layout(binding = 2, offset = 4) uniform atomic_uint foo;\n"
+        "void main()\n"
+        "{\n"
+        "    atomicCounterIncrement(foo);\n"
+        "}";
+
+    const std::string &fragmentShaderSource =
+        "#version 310 es\n"
+        "precision highp float;\n"
+        "uniform vec4 color;\n"
+        "out vec4 oColor;\n"
+        "void main()\n"
+        "{\n"
+        "    oColor = color;\n"
+        "}";
+
+    ANGLE_GL_PROGRAM(program, vertexShaderSource, fragmentShaderSource);
+
+    GLuint index = glGetProgramResourceIndex(program, GL_UNIFORM, "color");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_NE(GL_INVALID_INDEX, index);
+
+    GLchar name[64];
+    GLsizei length;
+    glGetProgramResourceName(program, GL_UNIFORM, index, sizeof(name), &length, name);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(5, length);
+    EXPECT_EQ("color", std::string(name));
+
+    GLint location = glGetProgramResourceLocation(program, GL_UNIFORM, "color");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(12, location);
+
+    constexpr int kPropCount = 13;
+    std::array<GLint, kPropCount> params;
+    std::array<GLenum, kPropCount> props = {
+        {GL_TYPE, GL_ARRAY_SIZE, GL_LOCATION, GL_NAME_LENGTH, GL_REFERENCED_BY_VERTEX_SHADER,
+         GL_REFERENCED_BY_FRAGMENT_SHADER, GL_REFERENCED_BY_COMPUTE_SHADER, GL_ARRAY_STRIDE,
+         GL_BLOCK_INDEX, GL_IS_ROW_MAJOR, GL_MATRIX_STRIDE, GL_OFFSET,
+         GL_ATOMIC_COUNTER_BUFFER_INDEX}};
+    glGetProgramResourceiv(program, GL_UNIFORM, index, kPropCount, props.data(), kPropCount,
+                           &length, params.data());
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(kPropCount, length);
+    EXPECT_EQ(GL_FLOAT_VEC4, params[0]);  // type
+    EXPECT_EQ(1, params[1]);              // array_size
+    EXPECT_EQ(12, params[2]);             // location
+    EXPECT_EQ(6, params[3]);              // name_length
+    EXPECT_EQ(0, params[4]);              // referenced_by_vertex_shader
+    EXPECT_EQ(1, params[5]);              // referenced_by_fragment_shader
+    EXPECT_EQ(0, params[6]);              // referenced_by_compute_shader
+    EXPECT_EQ(-1, params[7]);             // array_stride
+    EXPECT_EQ(-1, params[8]);             // block_index
+    EXPECT_EQ(0, params[9]);              // is_row_major
+    EXPECT_EQ(-1, params[10]);            // matrix_stride
+    EXPECT_EQ(-1, params[11]);            // offset
+    EXPECT_EQ(-1, params[12]);            // atomic_counter_buffer_index
+
+    index = glGetProgramResourceIndex(program, GL_UNIFORM, "foo");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_NE(GL_INVALID_INDEX, index);
+
+    glGetProgramResourceName(program, GL_UNIFORM, index, sizeof(name), &length, name);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(3, length);
+    EXPECT_EQ("foo", std::string(name));
+
+    location = glGetProgramResourceLocation(program, GL_UNIFORM, "foo");
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(-1, location);
+
+    glGetProgramResourceiv(program, GL_UNIFORM, index, kPropCount, props.data(), kPropCount,
+                           &length, params.data());
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(kPropCount, length);
+    EXPECT_EQ(GL_UNSIGNED_INT_ATOMIC_COUNTER, params[0]);  // type
+    EXPECT_EQ(1, params[1]);                               // array_size
+    EXPECT_EQ(-1, params[2]);                              // location
+    EXPECT_EQ(4, params[3]);                               // name_length
+    EXPECT_EQ(1, params[4]);                               // referenced_by_vertex_shader
+    EXPECT_EQ(0, params[5]);                               // referenced_by_fragment_shader
+    EXPECT_EQ(0, params[6]);                               // referenced_by_compute_shader
+    EXPECT_EQ(0, params[7]);                               // array_stride
+    EXPECT_EQ(-1, params[8]);                              // block_index
+    EXPECT_EQ(0, params[9]);                               // is_row_major
+    EXPECT_EQ(0, params[10]);                              // matrix_stride
+    EXPECT_EQ(4, params[11]);                              // offset
+    EXPECT_NE(-1, params[12]);                             // atomic_counter_buffer_index
+}
+
+ANGLE_INSTANTIATE_TEST(ProgramInterfaceTestES31, ES31_OPENGL(), ES31_OPENGLES());
+
 }  // anonymous namespace

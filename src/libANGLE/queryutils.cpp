@@ -477,9 +477,11 @@ GLint GetInputResourceProperty(const Program *program, GLuint index, GLenum prop
     {
         case GL_TYPE:
         case GL_ARRAY_SIZE:
-        case GL_LOCATION:
         case GL_NAME_LENGTH:
             return GetLocationVariableProperty(attribute, prop);
+
+        case GL_LOCATION:
+            return program->getAttributeLocation(attribute.name);
 
         case GL_REFERENCED_BY_VERTEX_SHADER:
             return 1;
@@ -501,9 +503,11 @@ GLint GetOutputResourceProperty(const Program *program, GLuint index, const GLen
     {
         case GL_TYPE:
         case GL_ARRAY_SIZE:
-        case GL_LOCATION:
         case GL_NAME_LENGTH:
             return GetLocationVariableProperty(outputVariable, prop);
+
+        case GL_LOCATION:
+            return program->getFragDataLocation(outputVariable.name);
 
         case GL_REFERENCED_BY_VERTEX_SHADER:
             return 0;
@@ -616,6 +620,32 @@ GLint QueryProgramInterfaceMaxNumActiveVariables(const Program *program, GLenum 
         default:
             UNREACHABLE();
             return 0;
+    }
+}
+
+GLenum GetUniformPropertyEnum(GLenum prop)
+{
+    switch (prop)
+    {
+        case GL_UNIFORM_TYPE:
+            return GL_TYPE;
+        case GL_UNIFORM_SIZE:
+            return GL_ARRAY_SIZE;
+        case GL_UNIFORM_NAME_LENGTH:
+            return GL_NAME_LENGTH;
+        case GL_UNIFORM_BLOCK_INDEX:
+            return GL_BLOCK_INDEX;
+        case GL_UNIFORM_OFFSET:
+            return GL_OFFSET;
+        case GL_UNIFORM_ARRAY_STRIDE:
+            return GL_ARRAY_STRIDE;
+        case GL_UNIFORM_MATRIX_STRIDE:
+            return GL_MATRIX_STRIDE;
+        case GL_UNIFORM_IS_ROW_MAJOR:
+            return GL_IS_ROW_MAJOR;
+
+        default:
+            return prop;
     }
 }
 
@@ -1214,6 +1244,53 @@ void SetProgramParameteri(Program *program, GLenum pname, GLint value)
     }
 }
 
+GLint GetUniformResourceProperty(const Program *program, GLuint index, const GLenum prop)
+{
+    const auto &uniform = program->getUniformByIndex(index);
+    GLenum resourceProp = GetUniformPropertyEnum(prop);
+    switch (resourceProp)
+    {
+        case GL_TYPE:
+        case GL_ARRAY_SIZE:
+        case GL_NAME_LENGTH:
+            return GetLocationVariableProperty(uniform, resourceProp);
+
+        case GL_LOCATION:
+            return program->getUniformLocation(uniform.name);
+
+        case GL_BLOCK_INDEX:
+            return (uniform.isAtomicCounter() ? -1 : uniform.bufferIndex);
+
+        case GL_OFFSET:
+            return uniform.blockInfo.offset;
+
+        case GL_ARRAY_STRIDE:
+            return uniform.blockInfo.arrayStride;
+
+        case GL_MATRIX_STRIDE:
+            return uniform.blockInfo.matrixStride;
+
+        case GL_IS_ROW_MAJOR:
+            return static_cast<GLint>(uniform.blockInfo.isRowMajorMatrix);
+
+        case GL_REFERENCED_BY_VERTEX_SHADER:
+            return uniform.vertexStaticUse;
+
+        case GL_REFERENCED_BY_FRAGMENT_SHADER:
+            return uniform.fragmentStaticUse;
+
+        case GL_REFERENCED_BY_COMPUTE_SHADER:
+            return uniform.computeStaticUse;
+
+        case GL_ATOMIC_COUNTER_BUFFER_INDEX:
+            return (uniform.isAtomicCounter() ? uniform.bufferIndex : -1);
+
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
 GLuint QueryProgramResourceIndex(const Program *program,
                                  GLenum programInterface,
                                  const GLchar *name)
@@ -1226,8 +1303,10 @@ GLuint QueryProgramResourceIndex(const Program *program,
         case GL_PROGRAM_OUTPUT:
             return program->getOutputResourceIndex(name);
 
-        // TODO(jie.a.chen@intel.com): more interfaces.
         case GL_UNIFORM:
+            return program->getState().getUniformIndexFromName(name);
+
+        // TODO(jie.a.chen@intel.com): more interfaces.
         case GL_UNIFORM_BLOCK:
         case GL_TRANSFORM_FEEDBACK_VARYING:
         case GL_BUFFER_VARIABLE:
@@ -1258,8 +1337,11 @@ void QueryProgramResourceName(const Program *program,
             program->getOutputResourceName(index, bufSize, length, name);
             break;
 
-        // TODO(jie.a.chen@intel.com): more interfaces.
         case GL_UNIFORM:
+            program->getUniformResourceName(index, bufSize, length, name);
+            break;
+
+        // TODO(jie.a.chen@intel.com): more interfaces.
         case GL_UNIFORM_BLOCK:
         case GL_TRANSFORM_FEEDBACK_VARYING:
         case GL_BUFFER_VARIABLE:
@@ -1284,8 +1366,10 @@ GLint QueryProgramResourceLocation(const Program *program,
         case GL_PROGRAM_OUTPUT:
             return program->getFragDataLocation(name);
 
-        // TODO(jie.a.chen@intel.com): more interfaces.
         case GL_UNIFORM:
+            return program->getState().getUniformLocation(name);
+
+        // TODO(jie.a.chen@intel.com): more interfaces.
         case GL_UNIFORM_BLOCK:
         case GL_TRANSFORM_FEEDBACK_VARYING:
         case GL_BUFFER_VARIABLE:
@@ -1335,8 +1419,11 @@ void QueryProgramResourceiv(const Program *program,
                 params[i] = GetOutputResourceProperty(program, index, props[i]);
                 break;
 
-            // TODO(jie.a.chen@intel.com): more interfaces.
             case GL_UNIFORM:
+                params[i] = GetUniformResourceProperty(program, index, props[i]);
+                break;
+
+            // TODO(jie.a.chen@intel.com): more interfaces.
             case GL_UNIFORM_BLOCK:
             case GL_TRANSFORM_FEEDBACK_VARYING:
             case GL_BUFFER_VARIABLE:

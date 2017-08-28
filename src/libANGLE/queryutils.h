@@ -113,6 +113,8 @@ void SetFramebufferParameteri(Framebuffer *framebuffer, GLenum pname, GLint para
 
 void SetProgramParameteri(Program *program, GLenum pname, GLint value);
 
+GLint GetUniformResourceProperty(const Program *program, GLuint index, const GLenum prop);
+
 GLuint QueryProgramResourceIndex(const Program *program,
                                  GLenum programInterface,
                                  const GLchar *name);

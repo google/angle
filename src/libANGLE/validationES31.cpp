@@ -257,8 +257,10 @@ bool ValidateProgramResourceIndex(const Program *programObject,
         case GL_PROGRAM_OUTPUT:
             return (index < static_cast<GLuint>(programObject->getOutputResourceCount()));
 
-        // TODO(jie.a.chen@intel.com): more interfaces.
         case GL_UNIFORM:
+            return (index < static_cast<GLuint>(programObject->getActiveUniformCount()));
+
+        // TODO(jie.a.chen@intel.com): more interfaces.
         case GL_UNIFORM_BLOCK:
         case GL_TRANSFORM_FEEDBACK_VARYING:
         case GL_BUFFER_VARIABLE:
