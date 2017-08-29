@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "a6541933_29b482e5",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-29T14:35:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dc7066cd_20050e66",
+      "range": {
+        "startLine": 179,
+        "startChar": 8,
+        "endLine": 181,
+        "endChar": 43
+      },
+      "revId": "093cf04fa83fb40a288acbe8fb4cbcb529c0a11a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "459c9c8b_01dca461",
         "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
         "patchSetId": 1
@@ -131,6 +155,24 @@
       "side": 1,
       "message": "OK, I should probably read up on lambdas since they are part of the Google code style. I do think that the new revision that returns the string is clearer.",
       "parentUuid": "0829bbad_6bf7dd13",
+      "revId": "093cf04fa83fb40a288acbe8fb4cbcb529c0a11a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e9edea34_1c2a82c3",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1653,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-29T14:35:23Z",
+      "side": 1,
+      "message": "Ack.\nLambdas are used in some places of ANGLE\u0027s code base.",
+      "parentUuid": "5e4eb53c_87b759bc",
       "revId": "093cf04fa83fb40a288acbe8fb4cbcb529c0a11a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
