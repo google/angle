@@ -59,6 +59,30 @@
     },
     {
       "key": {
+        "uuid": "f91643f3_750daf51",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1693,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-29T06:59:36Z",
+      "side": 1,
+      "message": "I think it would be better to use bindAttribLocation. The test should be possible to run on ES 3.0, otherwise we lose coverage on platforms that don\u0027t support ES 3.1",
+      "parentUuid": "5dc9bf4f_8462c2c7",
+      "range": {
+        "startLine": 1693,
+        "startChar": 8,
+        "endLine": 1693,
+        "endChar": 64
+      },
+      "revId": "093cf04fa83fb40a288acbe8fb4cbcb529c0a11a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0087f44a_a5cfc810",
         "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
         "patchSetId": 1
