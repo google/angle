@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "dc7066cd_20050e66",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-29T13:31:22Z",
+      "side": 1,
+      "message": "Actually, we could just add a reset() operation on the GLWrapper that calls DeleteF and makes the handle zero, and use that instead of assignment. Then the next time the wrapper is used a new object id is allocated. The assignment operator should be deleted. I think we shouldn\u0027t leave the code in its current messy state.",
+      "parentUuid": "8aff763f_318c917f",
+      "range": {
+        "startLine": 179,
+        "startChar": 8,
+        "endLine": 181,
+        "endChar": 43
+      },
+      "revId": "093cf04fa83fb40a288acbe8fb4cbcb529c0a11a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "459c9c8b_01dca461",
         "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
         "patchSetId": 1
@@ -92,6 +116,24 @@
       "revId": "093cf04fa83fb40a288acbe8fb4cbcb529c0a11a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e4eb53c_87b759bc",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1653,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-29T13:31:22Z",
+      "side": 1,
+      "message": "OK, I should probably read up on lambdas since they are part of the Google code style. I do think that the new revision that returns the string is clearer.",
+      "parentUuid": "0829bbad_6bf7dd13",
+      "revId": "093cf04fa83fb40a288acbe8fb4cbcb529c0a11a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -233,6 +275,24 @@
       "revId": "093cf04fa83fb40a288acbe8fb4cbcb529c0a11a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a4fb9d6c_b0cbbbc1",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1739,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-29T13:31:22Z",
+      "side": 1,
+      "message": "OK, that works.",
+      "parentUuid": "3ead3913_b6289d3b",
+      "revId": "093cf04fa83fb40a288acbe8fb4cbcb529c0a11a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
