@@ -474,9 +474,10 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
             message = "can't modify an attribute";
             break;
         case EvqFragmentIn:
-            message = "can't modify an input";
-            break;
         case EvqVertexIn:
+        case EvqFlatIn:
+        case EvqSmoothIn:
+        case EvqCentroidIn:
             message = "can't modify an input";
             break;
         case EvqUniform:

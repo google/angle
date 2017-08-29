@@ -4691,3 +4691,63 @@ TEST_F(FragmentShaderValidationTest, IOBlockWithoutExtension)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test that a shader input with 'flat' qualifier cannot be used as l-value.
+TEST_F(FragmentShaderValidationTest, AssignValueToFlatIn)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "flat in float value;\n"
+        "out vec4 o_color;\n"
+        "void main()\n"
+        "{\n"
+        "    value = 1.0;\n"
+        "    o_color = vec4(1.0, 0.0, 0.0, 1.0);"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test that a shader input with 'smooth' qualifier cannot be used as l-value.
+TEST_F(FragmentShaderValidationTest, AssignValueToSmoothIn)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "smooth in float value;\n"
+        "out vec4 o_color;\n"
+        "void main()\n"
+        "{\n"
+        "    value = 1.0;\n"
+        "    o_color = vec4(1.0, 0.0, 0.0, 1.0);"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test that a shader input with 'centroid' qualifier cannot be used as l-value.
+TEST_F(FragmentShaderValidationTest, AssignValueToCentroidIn)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "centroid in float value;\n"
+        "out vec4 o_color;\n"
+        "void main()\n"
+        "{\n"
+        "    value = 1.0;\n"
+        "    o_color = vec4(1.0, 0.0, 0.0, 1.0);"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
