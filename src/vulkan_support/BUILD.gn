@@ -4,7 +4,14 @@
 
 # TODO(jmadill): Redo the file entirely when we have standalone GN ANGLE.
 
-third_party_dir = "../../../../third_party"
+import("../../gni/angle.gni")
+
+if (build_with_chromium) {
+  third_party_dir = "../../../../third_party"
+} else {
+  third_party_dir = "../../third_party"
+}
+
 glslang_dir = "$third_party_dir/glslang-angle/src"
 spirv_headers_dir = "$third_party_dir/spirv-headers/src"
 spirv_tools_dir = "$third_party_dir/spirv-tools-angle/src"
@@ -419,7 +426,7 @@ layers = [
 ]
 
 action("vulkan_gen_json_files") {
-  script = "$third_party_dir/angle/scripts/generate_vulkan_layers_json.py"
+  script = "$angle_root/scripts/generate_vulkan_layers_json.py"
   if (is_win) {
     sources =
         rebase_path(vulkan_gypi.vulkan_gen_json_files_sources_win, ".", "src")

@@ -2,8 +2,20 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 
+import("//build_overrides/build.gni")
 import("//build/config/ui.gni")  # import the use_x11 variable
-import("//ui/ozone/ozone.gni")
+
+if (build_with_chromium) {
+  angle_root = "//third_party/angle"
+
+  import("//ui/ozone/ozone.gni")
+} else {
+  angle_root = "//"
+
+  declare_args() {
+    ozone_platform_gbm = false
+  }
+}
 
 angle_enable_d3d9 = false
 angle_enable_d3d11 = false

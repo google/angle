@@ -5,8 +5,14 @@ vars = {
 
 deps = {
 
+  'build':
+    Var('chromium_git') + '/chromium/src/build.git' + '@' + 'cdd940cfcab2d20be1e6fd49e3580e531a5e7305',
+
   'buildtools':
-    Var('chromium_git') + '/chromium/buildtools.git' + '@' + '98f00fa10dbad2cdbb2e297a66c3d6d5bc3994f3',
+    Var('chromium_git') + '/chromium/buildtools.git' + '@' + 'e043d81e9185a2445fa3ec3fc34a4f69b58d4969',
+
+  'testing':
+    Var('chromium_git') + '/chromium/src/testing' + '@' + 'd57c35d68320b906c43ad3f0ea5d84da3d06f45d',
 
   # Cherry is a dEQP management GUI written in Go. We use it for viewing test results.
   'third_party/cherry':
@@ -38,6 +44,13 @@ deps = {
 
   'third_party/zlib':
     Var('chromium_git') + '/chromium/src/third_party/zlib' + '@' + '24ab14872e8e068ba08cc31cc3d43bcc6d5cb832',
+
+  'tools/clang':
+    Var('chromium_git') + '/chromium/src/tools/clang.git' + '@' + 'dce401419c4281e2aad72a9bafb885a9fb9aec59',
+
+  'tools/gyp':
+    Var('chromium_git') + '/external/gyp' + '@' + 'c6f471687407bf28ddfc63f1a8f47aeb7bf54edc',
+
 }
 
 hooks = [
@@ -108,6 +121,13 @@ hooks = [
                 '--bucket', 'chromium-gn',
                 '-s', 'buildtools/linux64/gn.sha1',
     ],
+  },
+  {
+    # Pull clang if needed or requested via GYP_DEFINES.
+    # Note: On Win, this should run after win_toolchain, as it may use it.
+    'name': 'clang',
+    'pattern': '.',
+    'action': ['python', 'tools/clang/scripts/update.py', '--if-needed'],
   },
   {
     # A change to a .gyp, .gypi, or to GYP itself should run the generator.

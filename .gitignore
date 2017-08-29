@@ -22,17 +22,20 @@
 .gclient
 .gclient_entries
 /src/tests/third_party/gles_conformance_tests
+/testing
 /third_party/cherry
 /third_party/deqp/src
 /third_party/glslang-angle/src
 /third_party/googletest/src
 /third_party/gyp
 /third_party/libpng/src
+/third_party/llvm-build
 /third_party/spirv-headers/src
 /third_party/spirv-tools-angle/src
 /third_party/vulkan-validation-layers/src
 /third_party/zlib
 angle_internal
+build
 buildtools/
 debug.txt
 Debug/
@@ -50,3 +53,5 @@ Release_ARM/
 Release_Win32/
 Release_x64/
 TestResults.qpa
+tools/clang
+tools/gyp

@@ -7,13 +7,24 @@ import("//build/config/dcheck_always_on.gni")
 import("//build/config/linux/pkg_config.gni")
 import("//build/config/ui.gni")
 import("//testing/libfuzzer/fuzzer_test.gni")
-import("//third_party/angle/gni/angle.gni")
-import("//ui/ozone/ozone.gni")
+import("gni/angle.gni")
 
 declare_args() {
   # Use the PCI lib to collect GPU information on Linux.
   use_libpci = is_linux && (!is_chromecast || is_cast_desktop_build) &&
                (use_x11 || use_ozone)
+}
+
+if (!build_with_chromium) {
+  group("all") {
+    testonly = true
+    deps = [
+      ":angle_shader_translator",
+      ":translator_fuzzer",
+      "//samples:all",
+      "//src/tests:all",
+    ]
+  }
 }
 
 if (ozone_platform_gbm) {
@@ -70,6 +81,7 @@ config("internal_config") {
 
 config("extra_warnings") {
   cflags = []
+
   # Enable more default warnings on Windows.
   if (is_win) {
     cflags += [
@@ -80,7 +92,7 @@ config("extra_warnings") {
   }
   if (is_clang) {
     # Remove when crbug.com/428099 is resolved.
-    cflags += ["-Winconsistent-missing-override"]
+    cflags += [ "-Winconsistent-missing-override" ]
   }
 }
 
@@ -487,7 +499,7 @@ static_library("libANGLE") {
     if (is_linux) {
       sources += rebase_path(gles_gypi.libangle_vulkan_xcb_sources, ".", "src")
     }
-    deps += [ "//third_party/angle/src/vulkan_support:angle_vulkan" ]
+    deps += [ "src/vulkan_support:angle_vulkan" ]
   }
 
   if (angle_enable_null) {
