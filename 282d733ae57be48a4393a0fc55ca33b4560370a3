@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "51ac7f6b_78723de1",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 645,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-29T13:56:59Z",
+      "side": 1,
+      "message": "I am not sure what should happen if there are no attachments in the active FBO. Do we keep the back-end state as it is or do we use an attachment\u0027s default multi-view state to update it?\n\nOn a somewhat similar note: do we have to update the spec in regards to ES31 to cover writing to memory from vertex/fragment shaders through images, SSBOs and atomic variables?",
+      "range": {
+        "startLine": 645,
+        "startChar": 4,
+        "endLine": 645,
+        "endChar": 19
+      },
+      "revId": "282d733ae57be48a4393a0fc55ca33b4560370a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

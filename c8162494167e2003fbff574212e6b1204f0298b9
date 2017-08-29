@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "cdc073de_74977893",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 600,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-29T13:56:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9eb7ea0c_3dcb8019",
+      "revId": "c8162494167e2003fbff574212e6b1204f0298b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fb3c1408_33fcd35c",
         "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2017-08-28T09:15:57Z",
       "side": 1,
       "message": "...and here:\n\nif (newAttachment)\n{\n    RetrieveMultiviewFieldsFromAttachment(newAttachment, ...);\n\n\nThis way RetrieveMultiviewFieldsFromAttachment is only called once, and you don\u0027t need the return value of RetrieveMultiviewFieldsFromAttachment. This also fixes the problem with the current code that if buffers are both attached and detached in the same call to this function, the fields are still set correctly.",
+      "revId": "c8162494167e2003fbff574212e6b1204f0298b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "083668db_710e780b",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 656,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-29T13:56:59Z",
+      "side": 1,
+      "message": "I refactored it in a similar manner.",
+      "parentUuid": "fb3c1408_33fcd35c",
       "revId": "c8162494167e2003fbff574212e6b1204f0298b9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
