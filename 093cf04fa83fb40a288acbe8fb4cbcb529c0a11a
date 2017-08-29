@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "8aff763f_318c917f",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-29T13:10:57Z",
+      "side": 1,
+      "message": "We\u0027re actually leaking resources here in case it gets called multiple times. We have to call the destructor explicitly or use (smart) pointers. Overloading the assignment operator (constructor, etc.) is too tricky.\nOn the other hand, it\u0027s probably not a big issue as the resources are free once the context is destroyed.",
+      "range": {
+        "startLine": 179,
+        "startChar": 8,
+        "endLine": 181,
+        "endChar": 43
+      },
+      "revId": "093cf04fa83fb40a288acbe8fb4cbcb529c0a11a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "459c9c8b_01dca461",
         "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
         "patchSetId": 1
@@ -19,6 +42,24 @@
     },
     {
       "key": {
+        "uuid": "fa6c1552_591743b7",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 898,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-29T13:10:57Z",
+      "side": 1,
+      "message": "No, but I thought it would have been nice to fix it since it\u0027s a very small change.",
+      "parentUuid": "459c9c8b_01dca461",
+      "revId": "093cf04fa83fb40a288acbe8fb4cbcb529c0a11a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ec91ef2b_b2b71740",
         "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
         "patchSetId": 1
@@ -30,6 +71,24 @@
       "writtenOn": "2017-08-28T14:17:04Z",
       "side": 1,
       "message": "I don\u0027t think I recognize this syntax. Is this within the feature set recommended by the Google C++ style guide? Maybe a more straightforward way to write this would be better.",
+      "revId": "093cf04fa83fb40a288acbe8fb4cbcb529c0a11a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0829bbad_6bf7dd13",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1653,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-29T13:10:57Z",
+      "side": 1,
+      "message": "I changed the lambda a bit so that the string is returned instead of modifying a value from an upper level. I prefer having a lambda here because the function generating the shaders will likely not be used in another place.",
+      "parentUuid": "ec91ef2b_b2b71740",
       "revId": "093cf04fa83fb40a288acbe8fb4cbcb529c0a11a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -83,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "9cc7201e_5cb42364",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1693,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-29T13:10:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f91643f3_750daf51",
+      "range": {
+        "startLine": 1693,
+        "startChar": 8,
+        "endLine": 1693,
+        "endChar": 64
+      },
+      "revId": "093cf04fa83fb40a288acbe8fb4cbcb529c0a11a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0087f44a_a5cfc810",
         "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
         "patchSetId": 1
@@ -100,6 +183,24 @@
     },
     {
       "key": {
+        "uuid": "4d6150f9_c312dc64",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1702,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-29T13:10:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0087f44a_a5cfc810",
+      "revId": "093cf04fa83fb40a288acbe8fb4cbcb529c0a11a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3eb6a59e_1251491e",
         "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
         "patchSetId": 1
@@ -111,6 +212,24 @@
       "writtenOn": "2017-08-28T14:17:04Z",
       "side": 1,
       "message": "Same here.",
+      "revId": "093cf04fa83fb40a288acbe8fb4cbcb529c0a11a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ead3913_b6289d3b",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1739,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-29T13:10:57Z",
+      "side": 1,
+      "message": "I added it to the beginning of the test.",
+      "parentUuid": "3eb6a59e_1251491e",
       "revId": "093cf04fa83fb40a288acbe8fb4cbcb529c0a11a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
