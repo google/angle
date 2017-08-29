@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "79410ad7_7b715c14",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1910,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-29T21:38:17Z",
+      "side": 1,
+      "message": "I will say though, you should probably only implement this work in the executable part, not the binding part.",
+      "range": {
+        "startLine": 1908,
+        "startChar": 16,
+        "endLine": 1910,
+        "endChar": 70
+      },
+      "revId": "3f586b2c509eb5e6b5a33caee59028d863b10e6a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "85b9ae6e_095a24ce",
         "filename": "src/tests/test_utils/gl_raii.h",
         "patchSetId": 3
