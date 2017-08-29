@@ -22,6 +22,30 @@
       "revId": "282d733ae57be48a4393a0fc55ca33b4560370a3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4b65e5af_953e1757",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 645,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-29T14:24:56Z",
+      "side": 1,
+      "message": "A framebuffer is incomplete in case there are no attachments, so I don\u0027t think we need to care about what multiview state is set on it on the backend in that case.\n\nYou could file a bug about speccing the behavior for images, SSBOs and atomics in multiview shaders. These all fall under shader execution side effects. We might want to disallow them in multiview shaders, but it isn\u0027t too urgent since ES 3.1 isn\u0027t exposed to production yet either way.",
+      "parentUuid": "51ac7f6b_78723de1",
+      "range": {
+        "startLine": 645,
+        "startChar": 4,
+        "endLine": 645,
+        "endChar": 19
+      },
+      "revId": "282d733ae57be48a4393a0fc55ca33b4560370a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
