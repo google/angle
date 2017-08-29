@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "12ed695e_f3d2b7d3",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3166,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-08-29T16:46:26Z",
+      "side": 1,
+      "message": "Yeah. Made a mistake here. Note I made a modification to a test in WebGLCompatibilityTest in order to pass this. The test was testing a different validation case, so I didn\u0027t see any harm there. \n\n+ added a test in DrawElementsTest to test the added case.",
+      "parentUuid": "30159462_07fc1c63",
+      "range": {
+        "startLine": 3166,
+        "startChar": 16,
+        "endLine": 3166,
+        "endChar": 59
+      },
+      "revId": "aa221252038bd85df6e5238024d87ba446e54bbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "18cc233c_b94fb651",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 2
@@ -45,6 +69,30 @@
       "revId": "aa221252038bd85df6e5238024d87ba446e54bbe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "efa78b3b_30f3d6e6",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4270,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-08-29T16:46:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "18cc233c_b94fb651",
+      "range": {
+        "startLine": 4270,
+        "startChar": 0,
+        "endLine": 4270,
+        "endChar": 7
+      },
+      "revId": "aa221252038bd85df6e5238024d87ba446e54bbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "050917b1_d3d2336b",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4276,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-08-29T16:46:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3a08ead2_c8a36092",
+      "range": {
+        "startLine": 4276,
+        "startChar": 32,
+        "endLine": 4276,
+        "endChar": 48
+      },
+      "revId": "aa221252038bd85df6e5238024d87ba446e54bbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "03622bb8_2ce1da65",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 2
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "603d29ac_354a4cb5",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4336,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-08-29T16:46:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "03622bb8_2ce1da65",
+      "range": {
+        "startLine": 4335,
+        "startChar": 4,
+        "endLine": 4336,
+        "endChar": 5
+      },
+      "revId": "aa221252038bd85df6e5238024d87ba446e54bbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e18bb85a_ae55c3b0",
         "filename": "src/libANGLE/validationES2.cpp",
         "patchSetId": 2
@@ -105,6 +201,30 @@
       "writtenOn": "2017-08-25T16:34:15Z",
       "side": 1,
       "message": "What about validating uniform names?",
+      "range": {
+        "startLine": 4337,
+        "startChar": 12,
+        "endLine": 4337,
+        "endChar": 94
+      },
+      "revId": "aa221252038bd85df6e5238024d87ba446e54bbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a6838b6f_ba08adbf",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4337,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-08-29T16:46:26Z",
+      "side": 1,
+      "message": "I tried merging this a few weeks back as part of another CL - we found though that Chrome was mangling the uniform names as some sort of security measure - and then not passing the buildbots. I don\u0027t think that was resolved.",
+      "parentUuid": "e18bb85a_ae55c3b0",
       "range": {
         "startLine": 4337,
         "startChar": 12,
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "e5c9c99f_391bb15e",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-08-29T16:46:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94cf55f5_b472dc69",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 41
+      },
+      "revId": "aa221252038bd85df6e5238024d87ba446e54bbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "65951cf0_518f7965",
         "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
         "patchSetId": 2
@@ -160,6 +304,30 @@
       "revId": "aa221252038bd85df6e5238024d87ba446e54bbe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "40d246bc_98e3b9f6",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1221469
+      },
+      "writtenOn": "2017-08-29T16:46:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "65951cf0_518f7965",
+      "range": {
+        "startLine": 75,
+        "startChar": 0,
+        "endLine": 85,
+        "endChar": 1
+      },
+      "revId": "aa221252038bd85df6e5238024d87ba446e54bbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
