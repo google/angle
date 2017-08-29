@@ -1207,6 +1207,37 @@ TEST_P(TransformFeedbackTestES31, DifferentArrayElementVaryings)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that nonexistent transform feedback varyings don't assert when linking.
+TEST_P(TransformFeedbackTest, NonExistentTransformFeedbackVarying)
+{
+    const std::string &vertexShaderSource =
+        "#version 300 es\n"
+        "in vec4 a_position;\n"
+        "out vec4 v_position;\n"
+        "void main()\n"
+        "{\n"
+        "    v_position = a_position;\n"
+        "    gl_Position = a_position;\n"
+        "}\n";
+
+    const std::string &fragmentShaderSource =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "in vec4 v_position;\n"
+        "out vec4 fragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    fragColor = v_position;\n"
+        "}\n";
+
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back("bogus");
+
+    mProgram = CompileProgramWithTransformFeedback(vertexShaderSource, fragmentShaderSource,
+                                                   tfVaryings, GL_INTERLEAVED_ATTRIBS);
+    ASSERT_EQ(0u, mProgram);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST(TransformFeedbackTest, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());

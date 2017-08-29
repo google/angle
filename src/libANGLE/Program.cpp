@@ -751,11 +751,6 @@ Error Program::link(const gl::Context *context)
 
         const auto &mergedVaryings = getMergedVaryings(context);
 
-        if (!linkValidateTransformFeedback(context, mInfoLog, mergedVaryings, caps))
-        {
-            return NoError();
-        }
-
         mState.mNumViews = vertexShader->getNumViews(context);
 
         linkOutputVariables(context);
@@ -770,6 +765,11 @@ Error Program::link(const gl::Context *context)
         VaryingPacking varyingPacking(data.getCaps().maxVaryingVectors, packMode);
         if (!varyingPacking.packUserVaryings(mInfoLog, packedVaryings,
                                              mState.getTransformFeedbackVaryingNames()))
+        {
+            return NoError();
+        }
+
+        if (!linkValidateTransformFeedback(context, mInfoLog, mergedVaryings, caps))
         {
             return NoError();
         }
@@ -2466,7 +2466,8 @@ bool Program::linkValidateTransformFeedback(const gl::Context *context,
             infoLog << "Capture of array elements is undefined and not supported.";
             return false;
         }
-        // All transform feedback varyings are expected to exist since packVaryings checks for them.
+        // All transform feedback varyings are expected to exist since packUserVaryings checks for
+        // them.
         ASSERT(found);
     }
 
