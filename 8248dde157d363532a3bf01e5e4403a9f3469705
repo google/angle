@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "29c5d9a6_80d403d2",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2874,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-29T16:51:28Z",
+      "side": 1,
+      "message": "nit: git cl format will fix the tabs.",
+      "range": {
+        "startLine": 2874,
+        "startChar": 1,
+        "endLine": 2874,
+        "endChar": 2
+      },
+      "revId": "8248dde157d363532a3bf01e5e4403a9f3469705",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aab2ec87_bdcffcaf",
+        "filename": "src/tests/angle_white_box_tests.gypi",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-29T16:51:28Z",
+      "side": 1,
+      "message": "this is not the right way to do this... the WebGL compat tests should be black box tests. You\u0027ll need to add a source file if you want a specific test for error strings.",
+      "range": {
+        "startLine": 33,
+        "startChar": 12,
+        "endLine": 33,
+        "endChar": 73
+      },
+      "revId": "8248dde157d363532a3bf01e5e4403a9f3469705",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bdf8e2b2_4f732d45",
+        "filename": "src/tests/gl_tests/DrawElementsTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-29T16:51:28Z",
+      "side": 1,
+      "message": "nit: you can omit the .get",
+      "range": {
+        "startLine": 287,
+        "startChar": 21,
+        "endLine": 287,
+        "endChar": 27
+      },
+      "revId": "8248dde157d363532a3bf01e5e4403a9f3469705",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
