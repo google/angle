@@ -664,8 +664,9 @@ void DynamicHLSL::generateShaderLinkHLSL(const gl::Context *context,
                     << "{\n";
     }
 
-    if (pixelBuiltins.glViewIDOVR.enabled)
+    if (fragmentShader->usesViewID())
     {
+        ASSERT(pixelBuiltins.glViewIDOVR.enabled);
         pixelStream << "    _ViewID_OVR = input.gl_ViewID_OVR;\n";
     }
 
@@ -1310,7 +1311,7 @@ void BuiltinVaryingsD3D::updateBuiltins(ShaderType shaderType,
         builtins->glViewIDOVR.enable(userSemantic, reservedSemanticIndex++);
     }
 
-    if (shaderType == SHADER_PIXEL && metadata.usesViewID())
+    if (shaderType == SHADER_PIXEL && metadata.hasANGLEMultiviewEnabled())
     {
         builtins->glViewIDOVR.enableSystem("SV_ViewportArrayIndex");
     }
