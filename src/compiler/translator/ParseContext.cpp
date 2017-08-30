@@ -5461,11 +5461,6 @@ TIntermTyped *TParseContext::addMethod(TFunction *fnCall,
     {
         error(loc, "missing input primitive declaration before calling length on gl_in", "length");
     }
-    else if (typedThis->hasSideEffects())
-    {
-        error(loc, "length method not supported on expressions with possible side effects",
-              "length");
-    }
     else
     {
         TIntermUnary *node = new TIntermUnary(EOpArrayLength, typedThis);

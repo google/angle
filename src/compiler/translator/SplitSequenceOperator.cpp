@@ -27,6 +27,7 @@ class SplitSequenceOperatorTraverser : public TLValueTrackingTraverser
                                    TSymbolTable *symbolTable,
                                    int shaderVersion);
 
+    bool visitUnary(Visit visit, TIntermUnary *node) override;
     bool visitBinary(Visit visit, TIntermBinary *node) override;
     bool visitAggregate(Visit visit, TIntermAggregate *node) override;
     bool visitTernary(Visit visit, TIntermTernary *node) override;
@@ -69,6 +70,21 @@ bool SplitSequenceOperatorTraverser::visitAggregate(Visit visit, TIntermAggregat
     {
         // Detect expressions that need to be simplified
         mFoundExpressionToSplit = mPatternToSplitMatcher.match(node, getParentNode());
+        return !mFoundExpressionToSplit;
+    }
+
+    return true;
+}
+
+bool SplitSequenceOperatorTraverser::visitUnary(Visit visit, TIntermUnary *node)
+{
+    if (mFoundExpressionToSplit)
+        return false;
+
+    if (mInsideSequenceOperator > 0 && visit == PreVisit)
+    {
+        // Detect expressions that need to be simplified
+        mFoundExpressionToSplit = mPatternToSplitMatcher.match(node);
         return !mFoundExpressionToSplit;
     }
 

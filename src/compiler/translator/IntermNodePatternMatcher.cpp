@@ -48,6 +48,18 @@ bool IntermNodePatternMatcher::matchInternal(TIntermBinary *node, TIntermNode *p
     return false;
 }
 
+bool IntermNodePatternMatcher::match(TIntermUnary *node)
+{
+    if ((mMask & kArrayLengthMethod) != 0)
+    {
+        if (node->getOp() == EOpArrayLength)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool IntermNodePatternMatcher::match(TIntermBinary *node, TIntermNode *parentNode)
 {
     // L-value tracking information is needed to check for dynamic indexing in L-value.

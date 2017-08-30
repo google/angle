@@ -29,6 +29,7 @@ class SimplifyLoopConditionsTraverser : public TLValueTrackingTraverser
 
     void traverseLoop(TIntermLoop *node) override;
 
+    bool visitUnary(Visit visit, TIntermUnary *node) override;
     bool visitBinary(Visit visit, TIntermBinary *node) override;
     bool visitAggregate(Visit visit, TIntermAggregate *node) override;
     bool visitTernary(Visit visit, TIntermTernary *node) override;
@@ -60,6 +61,18 @@ SimplifyLoopConditionsTraverser::SimplifyLoopConditionsTraverser(
 // transformed.
 // If we're not inside loop initialization, condition, or expression, we only need to traverse nodes
 // that may contain loops.
+
+bool SimplifyLoopConditionsTraverser::visitUnary(Visit visit, TIntermUnary *node)
+{
+    if (!mInsideLoopInitConditionOrExpression)
+        return false;
+
+    if (mFoundLoopToChange)
+        return false;  // Already decided to change this loop.
+
+    mFoundLoopToChange = mConditionsToSimplify.match(node);
+    return !mFoundLoopToChange;
+}
 
 bool SimplifyLoopConditionsTraverser::visitBinary(Visit visit, TIntermBinary *node)
 {

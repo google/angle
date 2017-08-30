@@ -27,12 +27,14 @@
 #include "compiler/translator/ParseContext.h"
 #include "compiler/translator/PruneEmptyDeclarations.h"
 #include "compiler/translator/RegenerateStructNames.h"
+#include "compiler/translator/RemoveArrayLengthMethod.h"
 #include "compiler/translator/RemoveInvariantDeclaration.h"
 #include "compiler/translator/RemovePow.h"
 #include "compiler/translator/RewriteDoWhile.h"
 #include "compiler/translator/ScalarizeVecAndMatConstructorArgs.h"
 #include "compiler/translator/SeparateDeclarations.h"
 #include "compiler/translator/SimplifyLoopConditions.h"
+#include "compiler/translator/SplitSequenceOperator.h"
 #include "compiler/translator/UnfoldShortCircuitAST.h"
 #include "compiler/translator/UseInterfaceBlockFields.h"
 #include "compiler/translator/ValidateLimitations.h"
@@ -526,26 +528,43 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
             DeferGlobalInitializers(root, needToInitializeGlobalsInAST(), &symbolTable);
         }
 
+        // Split multi declarations and remove calls to array length().
+        if (success)
+        {
+            // Note that SimplifyLoopConditions needs to be run before any other AST transformations
+            // that may need to generate new statements from loop conditions or loop expressions.
+            SimplifyLoopConditions(root,
+                                   IntermNodePatternMatcher::kMultiDeclaration |
+                                       IntermNodePatternMatcher::kArrayLengthMethod,
+                                   &getSymbolTable(), getShaderVersion());
+
+            // Note that separate declarations need to be run before other AST transformations that
+            // generate new statements from expressions.
+            SeparateDeclarations(root);
+
+            SplitSequenceOperator(root, IntermNodePatternMatcher::kArrayLengthMethod,
+                                  &getSymbolTable(), getShaderVersion());
+
+            RemoveArrayLengthMethod(root);
+        }
+
         if (success && (compileOptions & SH_INITIALIZE_UNINITIALIZED_LOCALS) && getOutputType())
         {
             // Initialize uninitialized local variables.
             // In some cases initializing can generate extra statements in the parent block, such as
             // when initializing nameless structs or initializing arrays in ESSL 1.00. In that case
-            // we need to first simplify loop conditions and separate declarations. If we don't
-            // follow the Appendix A limitations, loop init statements can declare arrays or
-            // nameless structs and have multiple declarations.
+            // we need to first simplify loop conditions. We've already separated declarations
+            // earlier, which is also required. If we don't follow the Appendix A limitations, loop
+            // init statements can declare arrays or nameless structs and have multiple
+            // declarations.
 
             if (!shouldRunLoopAndIndexingValidation(compileOptions))
             {
                 SimplifyLoopConditions(root,
-                                       IntermNodePatternMatcher::kMultiDeclaration |
                                            IntermNodePatternMatcher::kArrayDeclaration |
                                            IntermNodePatternMatcher::kNamelessStructDeclaration,
                                        &getSymbolTable(), getShaderVersion());
             }
-            // We only really need to separate array declarations and nameless struct declarations,
-            // but it's simpler to just use the regular SeparateDeclarations.
-            SeparateDeclarations(root);
             InitializeUninitializedLocals(root, getShaderVersion());
         }
 

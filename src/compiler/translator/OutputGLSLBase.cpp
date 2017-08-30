@@ -734,6 +734,10 @@ bool TOutputGLSLBase::visitUnary(Visit visit, TIntermUnary *node)
         case EOpPreDecrement:
             preString = "(--";
             break;
+        case EOpArrayLength:
+            preString  = "((";
+            postString = ").length())";
+            break;
 
         case EOpRadians:
         case EOpDegrees:
