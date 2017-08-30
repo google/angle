@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6f48d8ee_5cf23e60",
+        "filename": "src/compiler/translator/HashNames.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-30T15:45:34Z",
+      "side": 1,
+      "message": "is this constant defined somewhere? It feels like there\u0027s another magic value lurking somewhere that could be put in a shared place.",
+      "range": {
+        "startLine": 38,
+        "startChar": 40,
+        "endLine": 38,
+        "endChar": 45
+      },
+      "revId": "413ea6575cad5987efe16514526ef745297b15bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "adc24d17_d25ded6e",
+        "filename": "src/compiler/translator/HashNames.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-30T15:45:34Z",
+      "side": 1,
+      "message": "good comment",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 60
+      },
+      "revId": "413ea6575cad5987efe16514526ef745297b15bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eefb5f97_7e221f4c",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 2529,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-30T15:45:34Z",
+      "side": 1,
+      "message": "nit: if you\u0027re omitting the parameter name, place it in a comment instead of totally removing it. \n\nso const std::string \u0026 /* mappedName */,",
+      "range": {
+        "startLine": 2529,
+        "startChar": 55,
+        "endLine": 2529,
+        "endChar": 56
+      },
+      "revId": "413ea6575cad5987efe16514526ef745297b15bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1159e755_89d3f495",
+        "filename": "src/libANGLE/renderer/gl/ProgramGL.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 177,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-30T15:45:34Z",
+      "side": 1,
+      "message": "maybe you could make and use a helper method on Shader, like findVarying or getMappedVaryingName",
+      "range": {
+        "startLine": 152,
+        "startChar": 0,
+        "endLine": 177,
+        "endChar": 13
+      },
+      "revId": "413ea6575cad5987efe16514526ef745297b15bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
