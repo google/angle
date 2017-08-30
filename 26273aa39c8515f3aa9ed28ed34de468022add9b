@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "de682cd3_e300490d",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2849,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-30T08:25:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4f2e18af_b803f49a",
+      "range": {
+        "startLine": 2813,
+        "startChar": 0,
+        "endLine": 2849,
+        "endChar": 5
+      },
+      "revId": "26273aa39c8515f3aa9ed28ed34de468022add9b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a81ee0a_09002a94",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 5
@@ -59,6 +83,24 @@
       "writtenOn": "2017-08-25T06:25:09Z",
       "side": 1,
       "message": "No block members defined! Are you going to do that with another CL?",
+      "revId": "26273aa39c8515f3aa9ed28ed34de468022add9b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "998852f6_093b0350",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2990,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-30T08:25:56Z",
+      "side": 1,
+      "message": "Yes. I leaved it as TODO.",
+      "parentUuid": "9a81ee0a_09002a94",
       "revId": "26273aa39c8515f3aa9ed28ed34de468022add9b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -88,6 +130,30 @@
     },
     {
       "key": {
+        "uuid": "71fab32d_543695d1",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3024,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-30T08:25:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d2773478_56db83e7",
+      "range": {
+        "startLine": 3022,
+        "startChar": 0,
+        "endLine": 3024,
+        "endChar": 65
+      },
+      "revId": "26273aa39c8515f3aa9ed28ed34de468022add9b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48532732_45679ab6",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 5
@@ -99,6 +165,24 @@
       "writtenOn": "2017-08-25T06:25:09Z",
       "side": 1,
       "message": "Should there be a bindShaderStorageBlock(...) as well?",
+      "revId": "26273aa39c8515f3aa9ed28ed34de468022add9b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a95c505_44defb6a",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-30T08:25:56Z",
+      "side": 1,
+      "message": "I think it\u0027s not needed. And there is no similar UniformBlockBinding API for ShaderStorageBlock.",
+      "parentUuid": "48532732_45679ab6",
       "revId": "26273aa39c8515f3aa9ed28ed34de468022add9b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -119,6 +203,24 @@
       "revId": "26273aa39c8515f3aa9ed28ed34de468022add9b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd3550bc_f00d323e",
+        "filename": "src/tests/gl_tests/ShaderStorageBufferTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-30T08:25:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f6201c0e_46bfabbc",
+      "revId": "26273aa39c8515f3aa9ed28ed34de468022add9b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
