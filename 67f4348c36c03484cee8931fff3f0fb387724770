@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b3bc2c6_26032f3c",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-08-30T08:00:09Z",
+      "side": 1,
+      "message": "Seems no need to create pipeline one by one. This potentially increases backend GL calls.",
+      "range": {
+        "startLine": 320,
+        "startChar": 0,
+        "endLine": 323,
+        "endChar": 9
+      },
+      "revId": "67f4348c36c03484cee8931fff3f0fb387724770",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
