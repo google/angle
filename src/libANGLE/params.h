@@ -191,11 +191,31 @@ struct DefaultReturnValue<EP, GLboolean>
     static constexpr GLboolean kValue = GL_FALSE;
 };
 
-// Catch-all rule for pointer types.
+// Catch-all rules for pointer types.
 template <EntryPoint EP, typename PointerType>
 struct DefaultReturnValue<EP, const PointerType *>
 {
     static constexpr const PointerType *kValue = nullptr;
+};
+
+template <EntryPoint EP, typename PointerType>
+struct DefaultReturnValue<EP, PointerType *>
+{
+    static constexpr PointerType *kValue = nullptr;
+};
+
+// Overloaded to return invalid index
+template <>
+struct DefaultReturnValue<EntryPoint::GetUniformBlockIndex, GLuint>
+{
+    static constexpr GLuint kValue = GL_INVALID_INDEX;
+};
+
+// Specialized enum error value.
+template <>
+struct DefaultReturnValue<EntryPoint::ClientWaitSync, GLenum>
+{
+    static constexpr GLenum kValue = GL_WAIT_FAILED;
 };
 
 template <EntryPoint EP, typename ReturnType>

@@ -798,7 +798,7 @@
             'libGLESv2/entry_points_gles_2_0_autogen.h',
             'libGLESv2/entry_points_gles_2_0_ext.cpp',
             'libGLESv2/entry_points_gles_2_0_ext.h',
-            'libGLESv2/entry_points_gles_3_0.cpp',
+            'libGLESv2/entry_points_gles_3_0_autogen.cpp',
             'libGLESv2/entry_points_gles_3_0_autogen.h',
             'libGLESv2/entry_points_gles_3_1.cpp',
             'libGLESv2/entry_points_gles_3_1.h',

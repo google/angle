@@ -955,6 +955,14 @@ TEST_P(UniformBufferTest, BlockContainingNestedStructs)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+// Tests GetUniformBlockIndex return value on error.
+TEST_P(UniformBufferTest, GetUniformBlockIndexDefaultReturn)
+{
+    ASSERT_FALSE(glIsProgram(99));
+    EXPECT_EQ(GL_INVALID_INDEX, glGetUniformBlockIndex(99, "farts"));
+    EXPECT_GL_ERROR(GL_INVALID_VALUE);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(UniformBufferTest,
                        ES3_D3D11(),

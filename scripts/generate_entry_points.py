@@ -46,7 +46,7 @@ template_entry_point_source = """// GENERATED FILE - DO NOT EDIT.
 //   Defines the GLES {major_version}.{minor_version} entry points.
 
 #include "libANGLE/Context.h"
-#include "libANGLE/validationES2.h"
+#include "libANGLE/validationES{major_version}.h"
 #include "libGLESv2/global_state.h"
 
 namespace gl
@@ -92,6 +92,23 @@ template_entry_point_def = """{return_type}GL_APIENTRY {name}({params})
         {{
             {return_if_needed}context->{name_lower}({pass_params});
         }}
+    }}
+{default_return_if_needed}}}
+"""
+
+template_entry_point_def_oldstyle = """{return_type}GL_APIENTRY {name}({params})
+{{
+    EVENT("({format_params})"{comma_if_needed}{pass_params});
+
+    Context *context = {context_getter}();
+    if (context)
+    {{
+        if (!context->skipValidation() && !Validate{name}({validate_params}))
+        {{
+            return{default_value_if_needed};
+        }}
+
+        {return_if_needed}context->{name_lower}({pass_params});
     }}
 {default_return_if_needed}}}
 """
@@ -185,6 +202,25 @@ def format_entry_point_def(cmd_name, proto, params):
         default_return_if_needed = "" if default_return == "" else "\n    return " + default_return + ";\n",
         context_getter = get_context_getter_function(cmd_name))
 
+def format_entry_point_def_oldstyle(cmd_name, proto, params):
+    pass_params = [just_the_name(param) for param in params]
+    format_params = [param_format_string(param) for param in params]
+    return_type = proto[:-len(cmd_name)]
+    default_return = default_return_value(cmd_name, return_type.strip())
+    return template_entry_point_def_oldstyle.format(
+        name = cmd_name[2:],
+        name_lower = cmd_name[2:3].lower() + cmd_name[3:],
+        return_type = return_type,
+        params = ", ".join(params),
+        pass_params = ", ".join(pass_params),
+        comma_if_needed = ", " if len(params) > 0 else "",
+        validate_params = ", ".join(["context"] + pass_params),
+        format_params = ", ".join(format_params),
+        return_if_needed = "" if default_return == "" else "return ",
+        default_return_if_needed = "" if default_return == "" else "\n    return " + default_return + ";\n",
+        default_value_if_needed = "" if default_return == "" else (" " + default_return),
+        context_getter = get_context_getter_function(cmd_name))
+
 for cmd_name in gles2_commands:
     command_xpath = "command/proto[name='" + cmd_name + "']/.."
     command = commands.find(command_xpath)
@@ -201,7 +237,7 @@ for cmd_name in gles3_commands:
     proto = "".join(command.find("./proto").itertext())
     cmd_names += [cmd_name]
     entry_point_decls_gles_3_0 += [format_entry_point_decl(cmd_name, proto, params)]
-    entry_point_defs_gles_3_0 += [format_entry_point_def(cmd_name, proto, params)]
+    entry_point_defs_gles_3_0 += [format_entry_point_def_oldstyle(cmd_name, proto, params)]
 
 gles_2_0_header = template_entry_point_header.format(
     script_name = os.path.basename(sys.argv[0]),
@@ -226,6 +262,14 @@ gles_3_0_header = template_entry_point_header.format(
     major_version = 3,
     minor_version = 0,
     entry_points = "\n".join(entry_point_decls_gles_3_0))
+
+gles_3_0_source = template_entry_point_source.format(
+    script_name = os.path.basename(sys.argv[0]),
+    data_source_name = "gl.xml",
+    year = date.today().year,
+    major_version = 3,
+    minor_version = 0,
+    entry_points = "\n".join(entry_point_defs_gles_3_0))
 
 # TODO(jmadill): Remove manually added entry points once we auto-gen them.
 manual_cmd_names = ["Invalid"] + [cmd[2:] for cmd in cmd_names] + ["DrawElementsInstancedANGLE"]
@@ -254,6 +298,10 @@ with open(gles_2_0_source_path, "w") as out:
 
 with open(gles_3_0_header_path, "w") as out:
     out.write(gles_3_0_header)
+    out.close()
+
+with open(gles_3_0_source_path, "w") as out:
+    out.write(gles_3_0_source)
     out.close()
 
 with open(entry_points_enum_header_path, "w") as out:
