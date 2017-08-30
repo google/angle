@@ -33,6 +33,47 @@
       "revId": "138245c60ececb9f07b73518ba4536f9e12c0e89",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cfc6f4fa_3eb2a07d",
+        "filename": "src/libANGLE/ContextState.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-30T20:07:41Z",
+      "side": 1,
+      "message": "This should not be needed with the change below.  Just check getExtensions().robustBufferAccess",
+      "parentUuid": "bb5cc1ae_09ed5093",
+      "revId": "138245c60ececb9f07b73518ba4536f9e12c0e89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98cb2ca4_dacf8cbd",
+        "filename": "src/libANGLE/ContextState.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-30T20:07:41Z",
+      "side": 1,
+      "message": "Instead of storing it here, you need to add a bool to gl::Extensions for the KHR_robust_buffer_access_behavior extension and initialize it to true in gl::Context::initCaps iff the backend supports it and robustness is requested.  You will need to initialize it in the backends in the GenerateCaps functions in renderer9_utils.cpp, renderer11_utils.cpp and renderergl_utils.cpp.",
+      "range": {
+        "startLine": 142,
+        "startChar": 4,
+        "endLine": 142,
+        "endChar": 23
+      },
+      "revId": "138245c60ececb9f07b73518ba4536f9e12c0e89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
