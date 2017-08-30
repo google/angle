@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e43c8798_fc7e2936",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1115,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-30T14:08:51Z",
+      "side": 1,
+      "message": "Can it use the getResourceName template like others?",
+      "revId": "516cc448297a8f2833043ee230abcef56b00ceeb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9a6e562f_dabd2a0a",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-30T14:08:51Z",
+      "side": 1,
+      "message": "ShaderReferenced?",
+      "range": {
+        "startLine": 22,
+        "startChar": 7,
+        "endLine": 22,
+        "endChar": 16
+      },
+      "revId": "516cc448297a8f2833043ee230abcef56b00ceeb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec13582d_19b094ea",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-30T14:08:51Z",
+      "side": 1,
+      "message": "Where will use it?",
+      "range": {
+        "startLine": 27,
+        "startChar": 4,
+        "endLine": 28,
+        "endChar": 0
+      },
+      "revId": "516cc448297a8f2833043ee230abcef56b00ceeb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
