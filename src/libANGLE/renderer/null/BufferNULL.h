@@ -52,6 +52,9 @@ class BufferNULL : public BufferImpl
                             bool primitiveRestartEnabled,
                             gl::IndexRange *outRange) override;
 
+    uint8_t *getDataPtr();
+    const uint8_t *getDataPtr() const;
+
   private:
     std::vector<uint8_t> mData;
 

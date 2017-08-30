@@ -107,4 +107,14 @@ gl::Error BufferNULL::getIndexRange(GLenum type,
     return gl::NoError();
 }
 
+uint8_t *BufferNULL::getDataPtr()
+{
+    return mData.data();
+}
+
+const uint8_t *BufferNULL::getDataPtr() const
+{
+    return mData.data();
+}
+
 }  // namespace rx
