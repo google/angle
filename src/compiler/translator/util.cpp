@@ -23,6 +23,24 @@ bool atoi_clamp(const char *str, unsigned int *value)
 namespace sh
 {
 
+namespace
+{
+
+bool IsInterpolationIn(TQualifier qualifier)
+{
+    switch (qualifier)
+    {
+        case EvqSmoothIn:
+        case EvqFlatIn:
+        case EvqCentroidIn:
+            return true;
+        default:
+            return false;
+    }
+}
+
+}  // anonymous namespace
+
 float NumericLexFloat32OutOfRangeToInfinity(const std::string &str)
 {
     // Parses a decimal string using scientific notation into a floating point number.
@@ -442,7 +460,12 @@ TString ArrayString(const TType &type)
     for (auto arraySizeIter = arraySizes.rbegin(); arraySizeIter != arraySizes.rend();
          ++arraySizeIter)
     {
-        arrayString << "[" << (*arraySizeIter) << "]";
+        arrayString << "[";
+        if (*arraySizeIter > 0)
+        {
+            arrayString << (*arraySizeIter);
+        }
+        arrayString << "]";
     }
     return arrayString.str();
 }
@@ -464,6 +487,7 @@ bool IsVaryingOut(TQualifier qualifier)
         case EvqFlatOut:
         case EvqCentroidOut:
         case EvqVertexOut:
+        case EvqGeometryOut:
             return true;
 
         default:
@@ -482,6 +506,7 @@ bool IsVaryingIn(TQualifier qualifier)
         case EvqFlatIn:
         case EvqCentroidIn:
         case EvqFragmentIn:
+        case EvqGeometryIn:
             return true;
 
         default:
@@ -494,6 +519,12 @@ bool IsVaryingIn(TQualifier qualifier)
 bool IsVarying(TQualifier qualifier)
 {
     return IsVaryingIn(qualifier) || IsVaryingOut(qualifier);
+}
+
+bool IsGeometryShaderInput(GLenum shaderType, TQualifier qualifier)
+{
+    return (qualifier == EvqGeometryIn) ||
+           ((shaderType == GL_GEOMETRY_SHADER_OES) && IsInterpolationIn(qualifier));
 }
 
 InterpolationType GetInterpolationType(TQualifier qualifier)
@@ -510,6 +541,8 @@ InterpolationType GetInterpolationType(TQualifier qualifier)
         case EvqFragmentIn:
         case EvqVaryingIn:
         case EvqVaryingOut:
+        case EvqGeometryIn:
+        case EvqGeometryOut:
             return INTERPOLATION_SMOOTH;
 
         case EvqCentroidIn:

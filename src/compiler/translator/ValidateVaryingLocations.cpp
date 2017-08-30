@@ -24,7 +24,7 @@ void error(const TIntermSymbol &symbol, const char *reason, TDiagnostics *diagno
     diagnostics->error(symbol.getLine(), reason, symbol.getSymbol().c_str());
 }
 
-int GetLocationCount(const TIntermSymbol *varying)
+int GetLocationCount(const TIntermSymbol *varying, bool ignoreVaryingArraySize)
 {
     const auto &varyingType = varying->getType();
     if (varyingType.getStruct() != nullptr)
@@ -40,6 +40,18 @@ int GetLocationCount(const TIntermSymbol *varying)
         }
         return totalLocation;
     }
+    // [GL_OES_shader_io_blocks SPEC Chapter 4.4.1]
+    // Geometry shader inputs, tessellation control shader inputs and outputs, and tessellation
+    // evaluation inputs all have an additional level of arrayness relative to other shader inputs
+    // and outputs. This outer array level is removed from the type before considering how many
+    // locations the type consumes.
+    else if (ignoreVaryingArraySize)
+    {
+        // Array-of-arrays cannot be inputs or outputs of a geometry shader.
+        // (GL_OES_geometry_shader SPEC issues(5))
+        ASSERT(!varyingType.isArrayOfArrays());
+        return varyingType.getSecondarySize();
+    }
     else
     {
         return varyingType.getSecondarySize() * static_cast<int>(varyingType.getArraySizeProduct());
@@ -48,7 +60,9 @@ int GetLocationCount(const TIntermSymbol *varying)
 
 using VaryingVector = std::vector<const TIntermSymbol *>;
 
-void ValidateShaderInterface(TDiagnostics *diagnostics, VaryingVector &varyingVector)
+void ValidateShaderInterface(TDiagnostics *diagnostics,
+                             VaryingVector &varyingVector,
+                             bool ignoreVaryingArraySize)
 {
     // Location conflicts can only happen when there are two or more varyings in varyingVector.
     if (varyingVector.size() <= 1)
@@ -62,7 +76,7 @@ void ValidateShaderInterface(TDiagnostics *diagnostics, VaryingVector &varyingVe
         const int location = varying->getType().getLayoutQualifier().location;
         ASSERT(location >= 0);
 
-        const int elementCount = GetLocationCount(varying);
+        const int elementCount = GetLocationCount(varying, ignoreVaryingArraySize);
         for (int elementIndex = 0; elementIndex < elementCount; ++elementIndex)
         {
             const int offsetLocation = location + elementIndex;
@@ -85,7 +99,7 @@ void ValidateShaderInterface(TDiagnostics *diagnostics, VaryingVector &varyingVe
 class ValidateVaryingLocationsTraverser : public TIntermTraverser
 {
   public:
-    ValidateVaryingLocationsTraverser();
+    ValidateVaryingLocationsTraverser(GLenum shaderType);
     void validate(TDiagnostics *diagnostics);
 
   private:
@@ -94,10 +108,11 @@ class ValidateVaryingLocationsTraverser : public TIntermTraverser
 
     VaryingVector mInputVaryingsWithLocation;
     VaryingVector mOutputVaryingsWithLocation;
+    GLenum mShaderType;
 };
 
-ValidateVaryingLocationsTraverser::ValidateVaryingLocationsTraverser()
-    : TIntermTraverser(true, false, false)
+ValidateVaryingLocationsTraverser::ValidateVaryingLocationsTraverser(GLenum shaderType)
+    : TIntermTraverser(true, false, false), mShaderType(shaderType)
 {
 }
 
@@ -140,15 +155,16 @@ void ValidateVaryingLocationsTraverser::validate(TDiagnostics *diagnostics)
 {
     ASSERT(diagnostics);
 
-    ValidateShaderInterface(diagnostics, mInputVaryingsWithLocation);
-    ValidateShaderInterface(diagnostics, mOutputVaryingsWithLocation);
+    ValidateShaderInterface(diagnostics, mInputVaryingsWithLocation,
+                            mShaderType == GL_GEOMETRY_SHADER_OES);
+    ValidateShaderInterface(diagnostics, mOutputVaryingsWithLocation, false);
 }
 
 }  // anonymous namespace
 
-bool ValidateVaryingLocations(TIntermBlock *root, TDiagnostics *diagnostics)
+bool ValidateVaryingLocations(TIntermBlock *root, TDiagnostics *diagnostics, GLenum shaderType)
 {
-    ValidateVaryingLocationsTraverser varyingValidator;
+    ValidateVaryingLocationsTraverser varyingValidator(shaderType);
     root->traverse(&varyingValidator);
     int numErrorsBefore = diagnostics->numErrors();
     varyingValidator.validate(diagnostics);

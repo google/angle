@@ -308,9 +308,11 @@ bool JoinVariableStorageQualifier(TQualifier *joinedQualifier, TQualifier storag
                     *joinedQualifier = EvqCentroid;
                     break;
                 case EvqVertexOut:
+                case EvqGeometryOut:
                     *joinedQualifier = EvqSmoothOut;
                     break;
                 case EvqFragmentIn:
+                case EvqGeometryIn:
                     *joinedQualifier = EvqSmoothIn;
                     break;
                 default:
@@ -326,9 +328,11 @@ bool JoinVariableStorageQualifier(TQualifier *joinedQualifier, TQualifier storag
                     *joinedQualifier = EvqFlat;
                     break;
                 case EvqVertexOut:
+                case EvqGeometryOut:
                     *joinedQualifier = EvqFlatOut;
                     break;
                 case EvqFragmentIn:
+                case EvqGeometryIn:
                     *joinedQualifier = EvqFlatIn;
                     break;
                 default:
@@ -341,9 +345,11 @@ bool JoinVariableStorageQualifier(TQualifier *joinedQualifier, TQualifier storag
             switch (storageQualifier)
             {
                 case EvqVertexOut:
+                case EvqGeometryOut:
                     *joinedQualifier = EvqCentroidOut;
                     break;
                 case EvqFragmentIn:
+                case EvqGeometryIn:
                     *joinedQualifier = EvqCentroidIn;
                     break;
                 default:

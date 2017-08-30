@@ -182,17 +182,17 @@ class CollectGeometryVariablesTest : public CollectVariablesOESGeometryShaderTes
     }
 
   protected:
-    void compileGeometryShaderWithInputPrimitive(const std::string &inputPrimitive)
+    void compileGeometryShaderWithInputPrimitive(const std::string &inputPrimitive,
+                                                 const std::string &inputVarying,
+                                                 const std::string &functionBody)
     {
         std::ostringstream sstream;
         sstream << "#version 310 es\n"
                 << "#extension GL_OES_geometry_shader : require\n"
                 << "layout (" << inputPrimitive << ") in;\n"
                 << "layout (points, max_vertices = 2) out;\n"
-                << "void main()\n"
-                << "{\n"
-                << "    vec4 value = gl_in[0].gl_Position;\n"
-                << "}\n";
+                << inputVarying << functionBody;
+
         compile(sstream.str());
     }
 };
@@ -981,11 +981,18 @@ TEST_F(CollectGeometryVariablesTest, GLInArraySize)
 {
     const std::array<std::string, 5> kInputPrimitives = {
         {"points", "lines", "lines_adjacency", "triangles", "triangles_adjacency"}};
-    constexpr GLuint kArraySizeForInputPrimitives[] = {1u, 2u, 4u, 3u, 6u};
+
+    const GLuint kArraySizeForInputPrimitives[] = {1u, 2u, 4u, 3u, 6u};
+
+    const std::string &functionBody =
+        "void main()\n"
+        "{\n"
+        "    vec4 value = gl_in[0].gl_Position;\n"
+        "}\n";
 
     for (size_t i = 0; i < kInputPrimitives.size(); ++i)
     {
-        compileGeometryShaderWithInputPrimitive(kInputPrimitives[i]);
+        compileGeometryShaderWithInputPrimitive(kInputPrimitives[i], "", functionBody);
 
         const auto &inBlocks = mTranslator->getInBlocks();
         ASSERT_EQ(1u, inBlocks.size());
@@ -1287,4 +1294,173 @@ TEST_F(CollectFragmentVariablesES31Test, CollectInputWithLocation)
     const Varying *varying2 = &inputVaryings[1];
     EXPECT_EQ("f_input2", varying2->name);
     EXPECT_EQ(1, varying2->location);
+}
+
+// Test collecting the inputs of a geometry shader.
+TEST_F(CollectGeometryVariablesTest, CollectInputs)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "#extension GL_OES_geometry_shader : require\n"
+        "layout (points) in;\n"
+        "layout (points, max_vertices = 2) out;\n"
+        "in vec4 texcoord1[];\n"
+        "in vec4 texcoord2[1];\n"
+        "void main()\n"
+        "{\n"
+        "    vec4 coord1 = texcoord1[0];\n"
+        "    vec4 coord2 = texcoord2[0];\n"
+        "}\n";
+
+    compile(shaderString);
+
+    ASSERT_TRUE(mTranslator->getOutputVaryings().empty());
+
+    const auto &inputVaryings = mTranslator->getInputVaryings();
+    ASSERT_EQ(2u, inputVaryings.size());
+
+    const std::string kVaryingName[] = {"texcoord1", "texcoord2"};
+
+    for (size_t i = 0; i < inputVaryings.size(); ++i)
+    {
+        const Varying &varying = inputVaryings[i];
+
+        EXPECT_EQ(kVaryingName[i], varying.name);
+        EXPECT_TRUE(varying.isArray());
+        EXPECT_FALSE(varying.isStruct());
+        EXPECT_TRUE(varying.staticUse);
+        EXPECT_FALSE(varying.isBuiltIn());
+        EXPECT_GLENUM_EQ(GL_HIGH_FLOAT, varying.precision);
+        EXPECT_GLENUM_EQ(GL_FLOAT_VEC4, varying.type);
+        EXPECT_FALSE(varying.isInvariant);
+        EXPECT_EQ(1u, varying.arraySize);
+    }
+}
+
+// Test that the unsized input of a geometry shader can be correctly collected.
+TEST_F(CollectGeometryVariablesTest, CollectInputArraySizeForUnsizedInput)
+{
+    const std::array<std::string, 5> kInputPrimitives = {
+        {"points", "lines", "lines_adjacency", "triangles", "triangles_adjacency"}};
+
+    const GLuint kArraySizeForInputPrimitives[] = {1u, 2u, 4u, 3u, 6u};
+
+    const std::string &kVariableDeclaration = "in vec4 texcoord[];\n";
+    const std::string &kFunctionBody =
+        "void main()\n"
+        "{\n"
+        "    vec4 value = texcoord[0];\n"
+        "}\n";
+
+    for (size_t i = 0; i < kInputPrimitives.size(); ++i)
+    {
+        compileGeometryShaderWithInputPrimitive(kInputPrimitives[i], kVariableDeclaration,
+                                                kFunctionBody);
+
+        const auto &inputVaryings = mTranslator->getInputVaryings();
+        ASSERT_EQ(1u, inputVaryings.size());
+
+        const Varying *varying = &inputVaryings[0];
+        EXPECT_EQ("texcoord", varying->name);
+        EXPECT_EQ(kArraySizeForInputPrimitives[i], varying->arraySize);
+    }
+}
+
+// Test collecting inputs using interpolation qualifiers in a geometry shader.
+TEST_F(CollectGeometryVariablesTest, CollectInputsWithInterpolationQualifiers)
+{
+    const std::string &kHeader =
+        "#version 310 es\n"
+        "#extension GL_OES_geometry_shader : require\n";
+    const std::string &kLayout =
+        "layout (points) in;\n"
+        "layout (points, max_vertices = 2) out;\n";
+
+    const std::array<std::string, 3> kInterpolationQualifiers = {{"flat", "smooth", "centroid"}};
+
+    const std::array<InterpolationType, 3> kInterpolationType = {
+        {INTERPOLATION_FLAT, INTERPOLATION_SMOOTH, INTERPOLATION_CENTROID}};
+
+    const std::string &kFunctionBody =
+        "void main()\n"
+        "{\n"
+        "    vec4 value = texcoord[0];\n"
+        "}\n";
+
+    for (size_t i = 0; i < kInterpolationQualifiers.size(); ++i)
+    {
+        const std::string &qualifier = kInterpolationQualifiers[i];
+
+        std::ostringstream stream1;
+        stream1 << kHeader << kLayout << qualifier << " in vec4 texcoord[];\n" << kFunctionBody;
+        compile(stream1.str());
+
+        const auto &inputVaryings = mTranslator->getInputVaryings();
+        ASSERT_EQ(1u, inputVaryings.size());
+        const Varying *varying = &inputVaryings[0];
+        EXPECT_EQ("texcoord", varying->name);
+        EXPECT_EQ(kInterpolationType[i], varying->interpolation);
+    }
+}
+
+// Test collecting outputs using interpolation qualifiers in a geometry shader.
+TEST_F(CollectGeometryVariablesTest, CollectOutputsWithInterpolationQualifiers)
+{
+    const std::string &kHeader =
+        "#version 310 es\n"
+        "#extension GL_OES_geometry_shader : require\n"
+        "layout (points) in;\n"
+        "layout (points, max_vertices = 2) out;\n";
+
+    const std::array<std::string, 4> kInterpolationQualifiers = {
+        {"", "flat", "smooth", "centroid"}};
+
+    const std::array<InterpolationType, 4> kInterpolationType = {
+        {INTERPOLATION_SMOOTH, INTERPOLATION_FLAT, INTERPOLATION_SMOOTH, INTERPOLATION_CENTROID}};
+
+    const std::string &kFunctionBody =
+        "void main()\n"
+        "{\n"
+        "    texcoord = vec4(1.0, 0.0, 0.0, 1.0);\n"
+        "}\n";
+
+    for (size_t i = 0; i < kInterpolationQualifiers.size(); ++i)
+    {
+        const std::string &qualifier = kInterpolationQualifiers[i];
+        std::ostringstream stream;
+        stream << kHeader << qualifier << " out vec4 texcoord;\n" << kFunctionBody;
+
+        compile(stream.str());
+        const auto &outputVaryings = mTranslator->getOutputVaryings();
+        ASSERT_EQ(1u, outputVaryings.size());
+
+        const Varying *varying = &outputVaryings[0];
+        EXPECT_EQ("texcoord", varying->name);
+        EXPECT_EQ(kInterpolationType[i], varying->interpolation);
+        EXPECT_FALSE(varying->isInvariant);
+    }
+}
+
+// Test collecting outputs using 'invariant' qualifier in a geometry shader.
+TEST_F(CollectGeometryVariablesTest, CollectOutputsWithInvariant)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "#extension GL_OES_geometry_shader : require\n"
+        "layout (points) in;\n"
+        "layout (points, max_vertices = 2) out;\n"
+        "invariant out vec4 texcoord;\n"
+        "void main()\n"
+        "{\n"
+        "    texcoord = vec4(1.0, 0.0, 0.0, 1.0);\n"
+        "}\n";
+
+    compile(shaderString);
+
+    const auto &outputVaryings = mTranslator->getOutputVaryings();
+    ASSERT_EQ(1u, outputVaryings.size());
+
+    const Varying *varying = &outputVaryings[0];
+    EXPECT_EQ("texcoord", varying->name);
+    EXPECT_TRUE(varying->isInvariant);
 }

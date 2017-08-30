@@ -39,6 +39,7 @@ GLenum GLVariablePrecision(const TType &type);
 bool IsVaryingIn(TQualifier qualifier);
 bool IsVaryingOut(TQualifier qualifier);
 bool IsVarying(TQualifier qualifier);
+bool IsGeometryShaderInput(GLenum shaderType, TQualifier qualifier);
 InterpolationType GetInterpolationType(TQualifier qualifier);
 
 // Returns array brackets including size with outermost array size first, as specified in GLSL ES

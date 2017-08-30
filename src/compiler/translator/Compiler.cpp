@@ -409,7 +409,7 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
 
         if (success && shaderVersion >= 310)
         {
-            success = ValidateVaryingLocations(root, &mDiagnostics);
+            success = ValidateVaryingLocations(root, &mDiagnostics, shaderType);
         }
 
         if (success && shaderVersion >= 300 && shaderType == GL_FRAGMENT_SHADER)

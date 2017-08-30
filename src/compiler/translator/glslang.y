@@ -749,6 +749,11 @@ single_declaration
         $$.type = $1;
         $$.intermDeclaration = context->parseSingleDeclaration($$.type, @2, *$2.string);
     }
+    | fully_specified_type identifier LEFT_BRACKET RIGHT_BRACKET {
+        ES3_1_ONLY("[]", @3, "implicitly sized array declaration");
+        $$.type = $1;
+        $$.intermDeclaration = context->parseSingleArrayDeclaration($$.type, @2, *$2.string, @3, nullptr);
+    }
     | fully_specified_type identifier LEFT_BRACKET constant_expression RIGHT_BRACKET {
         $$.type = $1;
         $$.intermDeclaration = context->parseSingleArrayDeclaration($$.type, @2, *$2.string, @3, $4);

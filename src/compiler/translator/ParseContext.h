@@ -539,7 +539,7 @@ class TParseContext : angle::NonCopyable
     bool checkPrimitiveTypeMatchesTypeQualifier(const TTypeQualifier &typeQualifier);
     bool parseGeometryShaderInputLayoutQualifier(const TTypeQualifier &typeQualifier);
     bool parseGeometryShaderOutputLayoutQualifier(const TTypeQualifier &typeQualifier);
-    void setGeometryShaderInputArraySizes();
+    void setGeometryShaderInputArraySize(unsigned int inputArraySize, const TSourceLoc &line);
 
     // Set to true when the last/current declarator list was started with an empty declaration. The
     // non-empty declaration error check will need to be performed if the empty declaration is
@@ -606,8 +606,9 @@ class TParseContext : angle::NonCopyable
     int mGeometryShaderMaxVertices;
     int mMaxGeometryShaderInvocations;
     int mMaxGeometryShaderMaxVertices;
-    int mGeometryShaderInputArraySize;  // Track if all input array sizes are same and matches the
-                                        // latter input primitive declaration.
+
+    // Track if all input array sizes are same and matches the latter input primitive declaration.
+    unsigned int mGeometryShaderInputArraySize;
 };
 
 int PaParseStrings(size_t count,
