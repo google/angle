@@ -445,19 +445,19 @@ GLint GetLocationVariableProperty(const sh::VariableWithLocation &var, GLenum pr
     switch (prop)
     {
         case GL_TYPE:
-            return var.type;
+            return ConvertToGLint(var.type);
 
         case GL_ARRAY_SIZE:
             // TODO(jie.a.chen@intel.com): check array of array.
             if (var.isArray() && !var.isStruct())
             {
-                return static_cast<GLint>(var.elementCount());
+                return ConvertToGLint(var.elementCount());
             }
             return 1;
 
         case GL_NAME_LENGTH:
         {
-            GLint length = static_cast<GLint>(var.name.size());
+            size_t length = var.name.size();
             if (var.isArray())
             {
                 // Counts "[0]".
@@ -465,7 +465,7 @@ GLint GetLocationVariableProperty(const sh::VariableWithLocation &var, GLenum pr
             }
             // ES31 spec p84: This counts the terminating null char.
             ++length;
-            return length;
+            return ConvertToGLint(length);
         }
 
         case GL_LOCATION:
@@ -524,6 +524,105 @@ GLint GetOutputResourceProperty(const Program *program, GLuint index, const GLen
         default:
             UNREACHABLE();
             return GL_INVALID_VALUE;
+    }
+}
+
+GLint QueryProgramInterfaceActiveResources(const Program *program, GLenum programInterface)
+{
+    switch (programInterface)
+    {
+        case GL_PROGRAM_INPUT:
+            return ConvertToGLint(program->getAttributes().size());
+
+        case GL_PROGRAM_OUTPUT:
+            return ConvertToGLint(program->getState().getOutputVariables().size());
+
+        case GL_UNIFORM:
+            return ConvertToGLint(program->getState().getUniforms().size());
+
+        case GL_UNIFORM_BLOCK:
+            return ConvertToGLint(program->getState().getUniformBlocks().size());
+
+        // TODO(jie.a.chen@intel.com): more interfaces.
+        case GL_TRANSFORM_FEEDBACK_VARYING:
+        case GL_BUFFER_VARIABLE:
+        case GL_SHADER_STORAGE_BLOCK:
+        case GL_ATOMIC_COUNTER_BUFFER:
+            UNIMPLEMENTED();
+            return 0;
+
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+}
+
+template <typename T, typename M>
+GLint FindMaxSize(const std::vector<T> &resources, M member)
+{
+    GLint max = 0;
+    for (const T &resource : resources)
+    {
+        max = std::max(max, ConvertToGLint((resource.*member).size()));
+    }
+    return max;
+}
+
+GLint QueryProgramInterfaceMaxNameLength(const Program *program, GLenum programInterface)
+{
+    GLint maxNameLength = 0;
+    switch (programInterface)
+    {
+        case GL_PROGRAM_INPUT:
+            maxNameLength = FindMaxSize(program->getAttributes(), &sh::Attribute::name);
+            break;
+
+        case GL_PROGRAM_OUTPUT:
+            maxNameLength =
+                FindMaxSize(program->getState().getOutputVariables(), &sh::OutputVariable::name);
+            break;
+
+        case GL_UNIFORM:
+            maxNameLength = FindMaxSize(program->getState().getUniforms(), &LinkedUniform::name);
+            break;
+
+        case GL_UNIFORM_BLOCK:
+            maxNameLength =
+                FindMaxSize(program->getState().getUniformBlocks(), &UniformBlock::name);
+            break;
+
+        // TODO(jie.a.chen@intel.com): more interfaces.
+        case GL_TRANSFORM_FEEDBACK_VARYING:
+        case GL_BUFFER_VARIABLE:
+        case GL_SHADER_STORAGE_BLOCK:
+            UNIMPLEMENTED();
+            return 0;
+
+        default:
+            UNREACHABLE();
+            return 0;
+    }
+    // This length includes an extra character for the null terminator.
+    return (maxNameLength == 0 ? 0 : maxNameLength + 1);
+}
+
+GLint QueryProgramInterfaceMaxNumActiveVariables(const Program *program, GLenum programInterface)
+{
+    switch (programInterface)
+    {
+        case GL_UNIFORM_BLOCK:
+            return FindMaxSize(program->getState().getUniformBlocks(),
+                               &UniformBlock::memberIndexes);
+
+        // TODO(jie.a.chen@intel.com): more interfaces.
+        case GL_SHADER_STORAGE_BLOCK:
+        case GL_ATOMIC_COUNTER_BUFFER:
+            UNIMPLEMENTED();
+            return 0;
+
+        default:
+            UNREACHABLE();
+            return 0;
     }
 }
 
@@ -1258,6 +1357,30 @@ void QueryProgramResourceiv(const Program *program,
                 UNREACHABLE();
                 params[i] = GL_INVALID_VALUE;
         }
+    }
+}
+
+void QueryProgramInterfaceiv(const Program *program,
+                             GLenum programInterface,
+                             GLenum pname,
+                             GLint *params)
+{
+    switch (pname)
+    {
+        case GL_ACTIVE_RESOURCES:
+            *params = QueryProgramInterfaceActiveResources(program, programInterface);
+            break;
+
+        case GL_MAX_NAME_LENGTH:
+            *params = QueryProgramInterfaceMaxNameLength(program, programInterface);
+            break;
+
+        case GL_MAX_NUM_ACTIVE_VARIABLES:
+            *params = QueryProgramInterfaceMaxNumActiveVariables(program, programInterface);
+            break;
+
+        default:
+            UNREACHABLE();
     }
 }
 

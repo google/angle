@@ -1153,7 +1153,7 @@ bool ValidateGetProgramResourceiv(Context *context,
 {
     if (context->getClientVersion() < ES_3_1)
     {
-        context->handleError(InvalidOperation() << "Context does not support GLES3.1.");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);
         return false;
     }
 
@@ -1195,6 +1195,69 @@ bool ValidateGetProgramResourceiv(Context *context,
             return false;
         }
     }
+    return true;
+}
+
+bool ValidateGetProgramInterfaceiv(Context *context,
+                                   GLuint program,
+                                   GLenum programInterface,
+                                   GLenum pname,
+                                   GLint *params)
+{
+    if (context->getClientVersion() < ES_3_1)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);
+        return false;
+    }
+
+    Program *programObject = GetValidProgram(context, program);
+    if (programObject == nullptr)
+    {
+        return false;
+    }
+
+    if (!ValidateProgramInterface(programInterface))
+    {
+        context->handleError(InvalidEnum() << "Invalid program interface.");
+        return false;
+    }
+
+    switch (pname)
+    {
+        case GL_ACTIVE_RESOURCES:
+        case GL_MAX_NAME_LENGTH:
+        case GL_MAX_NUM_ACTIVE_VARIABLES:
+            break;
+
+        default:
+            context->handleError(InvalidEnum() << "Unknown property of program interface.");
+            return false;
+    }
+
+    if (pname == GL_MAX_NAME_LENGTH && programInterface == GL_ATOMIC_COUNTER_BUFFER)
+    {
+        context->handleError(InvalidOperation()
+                             << "Active atomic counter resources are not assigned name strings.");
+        return false;
+    }
+
+    if (pname == GL_MAX_NUM_ACTIVE_VARIABLES)
+    {
+        switch (programInterface)
+        {
+            case GL_ATOMIC_COUNTER_BUFFER:
+            case GL_SHADER_STORAGE_BLOCK:
+            case GL_UNIFORM_BLOCK:
+                break;
+
+            default:
+                context->handleError(
+                    InvalidOperation()
+                    << "MAX_NUM_ACTIVE_VARIABLES requires a buffer or block interface.");
+                return false;
+        }
+    }
+
     return true;
 }
 

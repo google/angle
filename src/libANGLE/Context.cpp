@@ -2097,6 +2097,15 @@ void Context::getProgramResourceiv(GLuint program,
                            length, params);
 }
 
+void Context::getProgramInterfaceiv(GLuint program,
+                                    GLenum programInterface,
+                                    GLenum pname,
+                                    GLint *params)
+{
+    const auto *programObject = getProgram(program);
+    QueryProgramInterfaceiv(programObject, programInterface, pname, params);
+}
+
 Error Context::handleError(const Error &error)
 {
     if (error.isError())

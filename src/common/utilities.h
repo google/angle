@@ -74,6 +74,11 @@ template <typename outT> outT iround(GLfloat value) { return static_cast<outT>(v
 template <typename outT> outT uiround(GLfloat value) { return static_cast<outT>(value + 0.5f); }
 
 // Helper for converting arbitrary GL types to other GL types used in queries and state setting
+
+// TODO(jie.a.chen@intel.com): Add the conversion rule for all helpers as the spec requires:
+// "If a value is so large in magnitude that it cannot be represented with the requested type,"
+// "then the nearest value representable using the requested type is returned."
+
 template <typename ParamType>
 GLuint ConvertToGLuint(ParamType param)
 {
@@ -87,6 +92,13 @@ GLint ConvertToGLint(ParamType param)
 {
     return static_cast<GLint>(param);
 }
+
+template <>
+GLint ConvertToGLint(uint32_t param);
+
+template <>
+GLint ConvertToGLint(uint64_t param);
+
 template <>
 GLint ConvertToGLint(GLfloat param);
 

@@ -213,6 +213,11 @@ class Context final : public ValidationContext
                               GLsizei *length,
                               GLint *params);
 
+    void getProgramInterfaceiv(GLuint program,
+                               GLenum programInterface,
+                               GLenum pname,
+                               GLint *params);
+
     Buffer *getBuffer(GLuint handle) const;
     FenceNV *getFenceNV(GLuint handle);
     Sync *getSync(GLsync handle) const;

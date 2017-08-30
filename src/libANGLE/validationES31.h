@@ -80,6 +80,12 @@ bool ValidateGetProgramResourceiv(Context *context,
                                   GLsizei *length,
                                   GLint *params);
 
+bool ValidateGetProgramInterfaceiv(Context *context,
+                                   GLuint program,
+                                   GLenum programInterface,
+                                   GLenum pname,
+                                   GLint *params);
+
 bool ValidateBindVertexBuffer(ValidationContext *context,
                               GLuint bindingIndex,
                               GLuint buffer,

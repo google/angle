@@ -259,5 +259,80 @@ TEST_P(ProgramInterfaceTestES31, GetResource)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Tests glGetProgramInterfaceiv.
+TEST_P(ProgramInterfaceTestES31, GetProgramInterface)
+{
+    const std::string &vertexShaderSource =
+        "#version 310 es\n"
+        "precision highp float;\n"
+        "in highp vec4 position;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = position;\n"
+        "}";
+
+    const std::string &fragmentShaderSource =
+        "#version 310 es\n"
+        "precision highp float;\n"
+        "uniform vec4 color;\n"
+        "out vec4 oColor;\n"
+        "uniform ub {\n"
+        "    vec4 mem0;\n"
+        "    vec4 mem1;\n"
+        "} instance;\n"
+        "void main()\n"
+        "{\n"
+        "    oColor = color;\n"
+        "}";
+
+    ANGLE_GL_PROGRAM(program, vertexShaderSource, fragmentShaderSource);
+
+    GLint num;
+    glGetProgramInterfaceiv(program, GL_PROGRAM_INPUT, GL_ACTIVE_RESOURCES, &num);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(1, num);
+
+    glGetProgramInterfaceiv(program, GL_PROGRAM_INPUT, GL_MAX_NAME_LENGTH, &num);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(9, num);
+
+    glGetProgramInterfaceiv(program, GL_PROGRAM_INPUT, GL_MAX_NUM_ACTIVE_VARIABLES, &num);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glGetProgramInterfaceiv(program, GL_PROGRAM_OUTPUT, GL_ACTIVE_RESOURCES, &num);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(1, num);
+
+    glGetProgramInterfaceiv(program, GL_PROGRAM_OUTPUT, GL_MAX_NAME_LENGTH, &num);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(7, num);
+
+    glGetProgramInterfaceiv(program, GL_PROGRAM_OUTPUT, GL_MAX_NUM_ACTIVE_VARIABLES, &num);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    glGetProgramInterfaceiv(program, GL_UNIFORM_BLOCK, GL_ACTIVE_RESOURCES, &num);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(1, num);
+
+    glGetProgramInterfaceiv(program, GL_UNIFORM_BLOCK, GL_MAX_NAME_LENGTH, &num);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(3, num);
+
+    glGetProgramInterfaceiv(program, GL_UNIFORM_BLOCK, GL_MAX_NUM_ACTIVE_VARIABLES, &num);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(2, num);  // mem0, mem1
+
+    glGetProgramInterfaceiv(program, GL_UNIFORM, GL_ACTIVE_RESOURCES, &num);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(3, num);
+
+    glGetProgramInterfaceiv(program, GL_UNIFORM, GL_MAX_NAME_LENGTH, &num);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(8, num);  // "ub.mem0"
+
+    glGetProgramInterfaceiv(program, GL_UNIFORM, GL_MAX_NUM_ACTIVE_VARIABLES, &num);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
 ANGLE_INSTANTIATE_TEST(ProgramInterfaceTestES31, ES31_OPENGL(), ES31_D3D11(), ES31_OPENGLES());
 }  // anonymous namespace

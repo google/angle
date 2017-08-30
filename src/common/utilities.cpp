@@ -773,6 +773,20 @@ GLuint ConvertToGLuint(GLfloat param)
 }
 
 template <>
+GLint ConvertToGLint(uint32_t param)
+{
+    uint32_t max = static_cast<uint32_t>(std::numeric_limits<GLint>::max());
+    return static_cast<GLint>(param >= max ? max : param);
+}
+
+template <>
+GLint ConvertToGLint(uint64_t param)
+{
+    uint64_t max = static_cast<uint64_t>(std::numeric_limits<GLint>::max());
+    return static_cast<GLint>(param >= max ? max : param);
+}
+
+template <>
 GLint ConvertToGLint(GLfloat param)
 {
     return iround<GLint>(param);

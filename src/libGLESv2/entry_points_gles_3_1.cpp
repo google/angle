@@ -130,11 +130,12 @@ void GL_APIENTRY GetProgramInterfaceiv(GLuint program,
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        if (!context->skipValidation())
+        if (!context->skipValidation() &&
+            !ValidateGetProgramInterfaceiv(context, program, programInterface, pname, params))
         {
-            context->handleError(InvalidOperation() << "Entry point not implemented");
+            return;
         }
-        UNIMPLEMENTED();
+        context->getProgramInterfaceiv(program, programInterface, pname, params);
     }
 }
 
