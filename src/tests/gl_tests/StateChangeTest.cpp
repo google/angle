@@ -601,6 +601,62 @@ TEST_P(StateChangeRenderTest, GenerateMipmap)
     EXPECT_GL_NO_ERROR();
 }
 
+// Tests that D3D11 dirty bit updates don't forget about BufferSubData attrib updates.
+TEST_P(StateChangeTest, VertexBufferUpdatedAfterDraw)
+{
+    const std::string vs =
+        "attribute vec2 position;\n"
+        "attribute vec4 color;\n"
+        "varying vec4 outcolor;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(position, 0, 1);\n"
+        "    outcolor = color;\n"
+        "}";
+    const std::string fs =
+        "varying mediump vec4 outcolor;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = outcolor;\n"
+        "}";
+
+    ANGLE_GL_PROGRAM(program, vs, fs);
+    glUseProgram(program);
+
+    GLint colorLoc = glGetAttribLocation(program, "color");
+    ASSERT_NE(-1, colorLoc);
+    GLint positionLoc = glGetAttribLocation(program, "position");
+    ASSERT_NE(-1, positionLoc);
+
+    setupQuadVertexBuffer(0.5f, 1.0f);
+    glEnableVertexAttribArray(positionLoc);
+    glVertexAttribPointer(positionLoc, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    GLBuffer colorBuf;
+    glBindBuffer(GL_ARRAY_BUFFER, colorBuf);
+    glVertexAttribPointer(colorLoc, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, nullptr);
+    glEnableVertexAttribArray(colorLoc);
+
+    // Fill with green.
+    std::vector<GLColor> colorData(6, GLColor::green);
+    glBufferData(GL_ARRAY_BUFFER, colorData.size() * sizeof(GLColor), colorData.data(),
+                 GL_STATIC_DRAW);
+
+    // Draw, expect green.
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+    ASSERT_GL_NO_ERROR();
+
+    // Update buffer with red.
+    std::fill(colorData.begin(), colorData.end(), GLColor::red);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, colorData.size() * sizeof(GLColor), colorData.data());
+
+    // Draw, expect red.
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+    ASSERT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST(StateChangeTest, ES2_D3D9(), ES2_D3D11(), ES2_OPENGL());
 ANGLE_INSTANTIATE_TEST(StateChangeRenderTest,
                        ES2_D3D9(),

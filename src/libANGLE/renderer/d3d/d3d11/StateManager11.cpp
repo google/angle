@@ -1920,12 +1920,10 @@ gl::Error StateManager11::applyVertexBuffer(const gl::Context *context,
         mInputLayoutIsDirty = true;
     }
 
-    // Currently buffer data updates sometimes won't get flushed if we short-circuit.
-    // TODO(jmadill): Re-enable once we fix updates.
-    //if (!mInputLayoutIsDirty)
-    //{
-    //    return gl::NoError();
-    //}
+    if (!mInputLayoutIsDirty)
+    {
+        return gl::NoError();
+    }
 
     GLsizei numIndicesPerInstance = 0;
     if (instances > 0)

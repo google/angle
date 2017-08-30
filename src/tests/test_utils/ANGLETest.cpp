@@ -428,13 +428,16 @@ void ANGLETestBase::drawQuad(GLuint program,
         glUseProgram(program);
     }
 
+    GLint previousBuffer = 0;
+    glGetIntegerv(GL_ARRAY_BUFFER_BINDING, &previousBuffer);
+
     GLint positionLocation = glGetAttribLocation(program, positionAttribName.c_str());
 
     if (useVertexBuffer)
     {
         setupQuadVertexBuffer(positionAttribZ, positionAttribXYScale);
         glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, 0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, previousBuffer);
     }
     else
     {
@@ -446,7 +449,15 @@ void ANGLETestBase::drawQuad(GLuint program,
             vertex.z() = positionAttribZ;
         }
 
+        if (previousBuffer != 0)
+        {
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+        }
         glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, quadVertices.data());
+        if (previousBuffer != 0)
+        {
+            glBindBuffer(GL_ARRAY_BUFFER, previousBuffer);
+        }
     }
     glEnableVertexAttribArray(positionLocation);
 

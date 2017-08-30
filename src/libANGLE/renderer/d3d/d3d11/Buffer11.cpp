@@ -393,6 +393,10 @@ gl::Error Buffer11::setSubData(const gl::Context * /*context*/,
 
         writeBuffer->setData(static_cast<const uint8_t *>(data), offset, size);
         writeBuffer->setDataRevision(writeBuffer->getDataRevision() + 1);
+
+        // Notify any vertex arrays that we have dirty data.
+        // TODO(jmadill): Use a more fine grained notification for data updates.
+        mDirectBroadcastChannel.signal();
     }
 
     mSize = std::max(mSize, requiredSize);
