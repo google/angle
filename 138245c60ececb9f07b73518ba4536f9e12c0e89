@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "91a48980_683434e6",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-30T15:40:16Z",
+      "side": 1,
+      "message": "Why || displayExtensions.createContextRobustness? It seems that only for context creates with RobustAccess we know for sure that we don\u0027t need the validation. This would also allow keeping the tests.",
+      "revId": "138245c60ececb9f07b73518ba4536f9e12c0e89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bb5cc1ae_09ed5093",
+        "filename": "src/libANGLE/ContextState.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-30T15:40:16Z",
+      "side": 1,
+      "message": "nit: hasRobustBufferAccess",
+      "revId": "138245c60ececb9f07b73518ba4536f9e12c0e89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
