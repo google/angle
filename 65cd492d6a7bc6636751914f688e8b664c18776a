@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fe492f9f_9fa5a0c0",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1215,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-30T13:20:38Z",
+      "side": 1,
+      "message": "{\n    return false;\n}",
+      "range": {
+        "startLine": 1215,
+        "startChar": 8,
+        "endLine": 1215,
+        "endChar": 21
+      },
+      "revId": "65cd492d6a7bc6636751914f688e8b664c18776a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
