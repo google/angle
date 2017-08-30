@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ba01472a_54819967",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 895,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-30T16:02:37Z",
+      "side": 1,
+      "message": "stack allocation is probably fine. Dynamic is the real devil.",
+      "parentUuid": "322aca64_28ae9fa6",
+      "revId": "1b978a431f7d9c093f46fd665d9cd6d17b979859",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "72102791_e98b7ab2",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 10
@@ -30,6 +48,24 @@
       "writtenOn": "2017-08-30T13:22:27Z",
       "side": 1,
       "message": "It\u0027s probably faster not to have this assignment. You could use D3D11_RECT \u0026rect \u003d rectangles[i]; and then assign to that reference.",
+      "revId": "1b978a431f7d9c093f46fd665d9cd6d17b979859",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9eba3bd4_d14edd59",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 906,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-30T16:02:37Z",
+      "side": 1,
+      "message": "good suggestion.",
+      "parentUuid": "72102791_e98b7ab2",
       "revId": "1b978a431f7d9c093f46fd665d9cd6d17b979859",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -64,6 +100,29 @@
       "writtenOn": "2017-08-30T13:22:27Z",
       "side": 1,
       "message": "Same here.",
+      "revId": "1b978a431f7d9c093f46fd665d9cd6d17b979859",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "39686196_c56f359c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-30T16:02:37Z",
+      "side": 1,
+      "message": "you can probably just use mAttribsToUpdate.set();",
+      "range": {
+        "startLine": 279,
+        "startChar": 0,
+        "endLine": 283,
+        "endChar": 9
+      },
       "revId": "1b978a431f7d9c093f46fd665d9cd6d17b979859",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
