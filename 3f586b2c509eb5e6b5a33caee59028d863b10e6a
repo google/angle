@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "cfe232b3_54a148c1",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1910,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-30T08:12:16Z",
+      "side": 1,
+      "message": "Are you sure? Let\u0027s say this happens:\n\nuseProgram(program1);\nframebufferTextureMultiviewLayeredANGLE(baseViewIndex \u003d 1);\nuseProgram(program2);\nframebufferTextureMultiviewLayeredANGLE(baseViewIndex \u003d 2);\nuseProgram(program1);\n\nIs this somehow handled correctly without this?",
+      "parentUuid": "2ca2c76e_040ea522",
+      "range": {
+        "startLine": 1908,
+        "startChar": 16,
+        "endLine": 1910,
+        "endChar": 70
+      },
+      "revId": "3f586b2c509eb5e6b5a33caee59028d863b10e6a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "85b9ae6e_095a24ce",
         "filename": "src/tests/test_utils/gl_raii.h",
         "patchSetId": 3
