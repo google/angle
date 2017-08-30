@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ad851b7d_8a55cbf7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 391,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-30T09:51:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a12563fd_59faf4ea",
+      "range": {
+        "startLine": 391,
+        "startChar": 28,
+        "endLine": 391,
+        "endChar": 61
+      },
+      "revId": "df455b2dd215ec1e41d0aa255901439ef6860f71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "754ca8c5_af5193f4",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 8
@@ -36,6 +60,30 @@
       "writtenOn": "2017-08-24T21:33:49Z",
       "side": 1,
       "message": "First question. what happens if a program is re-linked successfully when it is currently bound? Maybe use the program executable dirty bit.\n\nSecond question, can we do this without manually calling vao-\u003esyncState? This is not nice IMO, and isn\u0027t how things are supposed to work. I\u0027m not super familiar with the multiview stuff so I can try to look more in depth tomorrow.",
+      "range": {
+        "startLine": 691,
+        "startChar": 0,
+        "endLine": 700,
+        "endChar": 59
+      },
+      "revId": "df455b2dd215ec1e41d0aa255901439ef6860f71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f16c6726_467e5fc2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 700,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-30T09:51:23Z",
+      "side": 1,
+      "message": "Re-linking the program is now covered in GL in another patch, and in D3D11 in this patch.\nI added a separate function to mark the attribute bindings for update.",
+      "parentUuid": "754ca8c5_af5193f4",
       "range": {
         "startLine": 691,
         "startChar": 0,
