@@ -237,7 +237,7 @@ for cmd_name in gles3_commands:
     proto = "".join(command.find("./proto").itertext())
     cmd_names += [cmd_name]
     entry_point_decls_gles_3_0 += [format_entry_point_decl(cmd_name, proto, params)]
-    entry_point_defs_gles_3_0 += [format_entry_point_def_oldstyle(cmd_name, proto, params)]
+    entry_point_defs_gles_3_0 += [format_entry_point_def(cmd_name, proto, params)]
 
 gles_2_0_header = template_entry_point_header.format(
     script_name = os.path.basename(sys.argv[0]),
