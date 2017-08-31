@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "780edb4a_055e2f12",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 815,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-08-31T15:00:37Z",
+      "side": 1,
+      "message": "Maybe instead of using resultQualifier here, we could directly put EvqConst with a comment.",
+      "revId": "e12c46a5caae9f0c5aaac907d08528f7fae20d9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
