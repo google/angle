@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5001fdad_3f8e47eb",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-31T15:32:43Z",
+      "side": 1,
+      "message": "Can this be pre-computed?  I remember it showed up as a small hotspot on the GL side.",
+      "range": {
+        "startLine": 317,
+        "startChar": 31,
+        "endLine": 317,
+        "endChar": 63
+      },
+      "revId": "6ace878d8a0608a77701a0a39591b9082918af8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "375ae69a_a0fec9ed",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-31T15:32:43Z",
+      "side": 1,
+      "message": "Eww talk about formatting",
+      "range": {
+        "startLine": 343,
+        "startChar": 11,
+        "endLine": 347,
+        "endChar": 100
+      },
+      "revId": "6ace878d8a0608a77701a0a39591b9082918af8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "319c0ff0_e3826a34",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1759,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-31T15:32:43Z",
+      "side": 1,
+      "message": "nit: you shouldn\u0027t need the reference here.",
+      "range": {
+        "startLine": 1759,
+        "startChar": 20,
+        "endLine": 1759,
+        "endChar": 22
+      },
+      "revId": "6ace878d8a0608a77701a0a39591b9082918af8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
