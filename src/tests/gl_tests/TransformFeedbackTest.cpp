@@ -1213,25 +1213,51 @@ TEST_P(TransformFeedbackTest, NonExistentTransformFeedbackVarying)
     const std::string &vertexShaderSource =
         "#version 300 es\n"
         "in vec4 a_position;\n"
-        "out vec4 v_position;\n"
         "void main()\n"
         "{\n"
-        "    v_position = a_position;\n"
         "    gl_Position = a_position;\n"
         "}\n";
 
     const std::string &fragmentShaderSource =
         "#version 300 es\n"
         "precision mediump float;\n"
-        "in vec4 v_position;\n"
         "out vec4 fragColor;\n"
         "void main()\n"
         "{\n"
-        "    fragColor = v_position;\n"
+        "    fragColor = vec4(0);\n"
         "}\n";
 
     std::vector<std::string> tfVaryings;
     tfVaryings.push_back("bogus");
+
+    mProgram = CompileProgramWithTransformFeedback(vertexShaderSource, fragmentShaderSource,
+                                                   tfVaryings, GL_INTERLEAVED_ATTRIBS);
+    ASSERT_EQ(0u, mProgram);
+}
+
+// Test that nonexistent transform feedback varyings don't assert when linking. In this test the
+// nonexistent varying is prefixed with "gl_".
+TEST_P(TransformFeedbackTest, NonExistentTransformFeedbackVaryingWithGLPrefix)
+{
+    const std::string &vertexShaderSource =
+        "#version 300 es\n"
+        "in vec4 a_position;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = a_position;\n"
+        "}\n";
+
+    const std::string &fragmentShaderSource =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "out vec4 fragColor;\n"
+        "void main()\n"
+        "{\n"
+        "    fragColor = vec4(0);\n"
+        "}\n";
+
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back("gl_Bogus");
 
     mProgram = CompileProgramWithTransformFeedback(vertexShaderSource, fragmentShaderSource,
                                                    tfVaryings, GL_INTERLEAVED_ATTRIBS);

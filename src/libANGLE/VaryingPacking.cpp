@@ -259,39 +259,35 @@ bool VaryingPacking::packUserVaryings(gl::InfoLog &infoLog,
         }
     }
 
+    // Make sure transform feedback varyings aren't optimized out.
     for (const std::string &transformFeedbackVaryingName : transformFeedbackVaryings)
     {
-        if (transformFeedbackVaryingName.compare(0, 3, "gl_") == 0)
+        size_t subscript              = GL_INVALID_INDEX;
+        std::string tfVaryingBaseName = ParseResourceName(transformFeedbackVaryingName, &subscript);
+
+        bool found = (uniqueVaryingNames.count(transformFeedbackVaryingName) > 0 ||
+                      uniqueVaryingNames.count(tfVaryingBaseName) > 0);
+
+        if (!found)
         {
-            // do not pack builtin XFB varyings
-            continue;
-        }
-
-        bool found = false;
-        for (const PackedVarying &packedVarying : packedVaryings)
-        {
-            const auto &varying = *packedVarying.varying;
-            size_t subscript     = GL_INVALID_INDEX;
-            std::string baseName = ParseResourceName(transformFeedbackVaryingName, &subscript);
-
-            // Make sure transform feedback varyings aren't optimized out.
-            if (uniqueVaryingNames.count(transformFeedbackVaryingName) > 0 ||
-                uniqueVaryingNames.count(baseName) > 0)
+            for (const PackedVarying &packedVarying : packedVaryings)
             {
-                found = true;
-                break;
-            }
-
-            if (baseName == varying.name)
-            {
-                if (!packVarying(packedVarying))
+                const auto &varying = *packedVarying.varying;
+                if (tfVaryingBaseName == varying.name)
                 {
-                    infoLog << "Could not pack varying " << varying.name;
-                    return false;
+                    // only pack varyings that are not builtins.
+                    if (transformFeedbackVaryingName.compare(0, 3, "gl_") != 0)
+                    {
+                        if (!packVarying(packedVarying))
+                        {
+                            infoLog << "Could not pack varying " << varying.name;
+                            return false;
+                        }
+                        uniqueVaryingNames.insert(packedVarying.nameWithArrayIndex());
+                    }
+                    found = true;
+                    break;
                 }
-                uniqueVaryingNames.insert(packedVarying.nameWithArrayIndex());
-                found = true;
-                break;
             }
         }
 
