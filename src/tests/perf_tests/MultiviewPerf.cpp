@@ -49,7 +49,7 @@ struct Vertex
 enum class MultiviewOption
 {
     NoAcceleration,
-    SelectViewportInVertexShader,
+    InstancedMultiview,
 
     Unspecified
 };
@@ -62,7 +62,6 @@ struct MultiviewPerfParams final : public RenderTestParams
         minorVersion    = 0;
         windowWidth     = 64;
         windowHeight    = 64;
-        eglParameters   = egl_platform::OPENGL();
         multiviewOption = MultiviewOption::Unspecified;
         numViews        = 2;
     }
@@ -75,8 +74,8 @@ struct MultiviewPerfParams final : public RenderTestParams
             case MultiviewOption::NoAcceleration:
                 name += "_no_acc";
                 break;
-            case MultiviewOption::SelectViewportInVertexShader:
-                name += "_viewport_in_vs";
+            case MultiviewOption::InstancedMultiview:
+                name += "_instanced_multiview";
                 break;
             default:
                 UNREACHABLE();
@@ -183,7 +182,7 @@ void MultiviewBenchmark::initializeBenchmark()
             glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
                                    mDepthTexture, 0);
             break;
-        case MultiviewOption::SelectViewportInVertexShader:
+        case MultiviewOption::InstancedMultiview:
         {
             const int widthPerView = params->windowWidth / params->numViews;
             std::vector<GLint> viewportOffsets(2 * params->numViews);
@@ -228,7 +227,7 @@ void MultiviewBenchmark::drawBenchmark()
                 renderScene();
             }
             break;
-        case MultiviewOption::SelectViewportInVertexShader:
+        case MultiviewOption::InstancedMultiview:
             glViewport(0, 0, viewWidth, viewHeight);
             glScissor(0, 0, viewWidth, viewHeight);
             renderScene();
@@ -459,19 +458,23 @@ void MultiviewGPUBoundBenchmark::renderScene()
     glDrawArrays(GL_TRIANGLES, 0, viewWidth * viewHeight * 6);
 }
 
-MultiviewPerfParams SmallWorkload(MultiviewOption multiviewOption)
+MultiviewPerfParams SmallWorkload(MultiviewOption multiviewOption,
+                                  const EGLPlatformParameters &eglParameters)
 {
     MultiviewPerfParams params;
     params.multiviewOption = multiviewOption;
+    params.eglParameters   = eglParameters;
     params.windowWidth     = 64;
     params.windowHeight    = 64;
     return params;
 }
 
-MultiviewPerfParams BigWorkload(MultiviewOption multiviewOption)
+MultiviewPerfParams BigWorkload(MultiviewOption multiviewOption,
+                                const EGLPlatformParameters &eglParameters)
 {
     MultiviewPerfParams params;
     params.multiviewOption = multiviewOption;
+    params.eglParameters   = eglParameters;
     params.windowWidth     = 1024;
     params.windowHeight    = 768;
     return params;
@@ -483,8 +486,10 @@ TEST_P(MultiviewCPUBoundBenchmark, Run)
 }
 
 ANGLE_INSTANTIATE_TEST(MultiviewCPUBoundBenchmark,
-                       SmallWorkload(MultiviewOption::NoAcceleration),
-                       SmallWorkload(MultiviewOption::SelectViewportInVertexShader));
+                       SmallWorkload(MultiviewOption::NoAcceleration, egl_platform::OPENGL()),
+                       SmallWorkload(MultiviewOption::InstancedMultiview, egl_platform::OPENGL()),
+                       SmallWorkload(MultiviewOption::NoAcceleration, egl_platform::D3D11()),
+                       SmallWorkload(MultiviewOption::InstancedMultiview, egl_platform::D3D11()));
 
 TEST_P(MultiviewGPUBoundBenchmark, Run)
 {
@@ -492,7 +497,9 @@ TEST_P(MultiviewGPUBoundBenchmark, Run)
 }
 
 ANGLE_INSTANTIATE_TEST(MultiviewGPUBoundBenchmark,
-                       BigWorkload(MultiviewOption::NoAcceleration),
-                       BigWorkload(MultiviewOption::SelectViewportInVertexShader));
+                       BigWorkload(MultiviewOption::NoAcceleration, egl_platform::OPENGL()),
+                       BigWorkload(MultiviewOption::InstancedMultiview, egl_platform::OPENGL()),
+                       BigWorkload(MultiviewOption::NoAcceleration, egl_platform::D3D11()),
+                       BigWorkload(MultiviewOption::InstancedMultiview, egl_platform::D3D11()));
 
 }  // anonymous namespace
