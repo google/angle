@@ -2171,16 +2171,14 @@ gl::Error Renderer11::applyUniforms(const ProgramD3D &programD3D,
     const d3d11::Buffer *pixelConstantBuffer = nullptr;
     ANGLE_TRY(fragmentUniformStorage->getConstantBuffer(this, &pixelConstantBuffer));
 
-    float(*mapVS)[4] = nullptr;
-    float(*mapPS)[4] = nullptr;
-
     if (totalRegisterCountVS > 0 && vertexUniformsDirty)
     {
         D3D11_MAPPED_SUBRESOURCE map = {0};
         HRESULT result =
             mDeviceContext->Map(vertexConstantBuffer->get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
         ASSERT(SUCCEEDED(result));
-        mapVS = (float(*)[4])map.pData;
+        memcpy(map.pData, vertexUniformStorage->getDataPointer(0, 0), vertexUniformStorage->size());
+        mDeviceContext->Unmap(vertexConstantBuffer->get(), 0);
     }
 
     if (totalRegisterCountPS > 0 && pixelUniformsDirty)
@@ -2189,39 +2187,8 @@ gl::Error Renderer11::applyUniforms(const ProgramD3D &programD3D,
         HRESULT result =
             mDeviceContext->Map(pixelConstantBuffer->get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
         ASSERT(SUCCEEDED(result));
-        mapPS = (float(*)[4])map.pData;
-    }
-
-    for (const D3DUniform *uniform : uniformArray)
-    {
-        if (uniform->isSampler())
-            continue;
-
-        unsigned int componentCount = (4 - uniform->registerElement);
-
-        // we assume that uniforms from structs are arranged in struct order in our uniforms list.
-        // otherwise we would overwrite previously written regions of memory.
-
-        if (uniform->isReferencedByVertexShader() && mapVS)
-        {
-            memcpy(&mapVS[uniform->vsRegisterIndex][uniform->registerElement], uniform->data,
-                   uniform->registerCount * sizeof(float) * componentCount);
-        }
-
-        if (uniform->isReferencedByFragmentShader() && mapPS)
-        {
-            memcpy(&mapPS[uniform->psRegisterIndex][uniform->registerElement], uniform->data,
-                   uniform->registerCount * sizeof(float) * componentCount);
-        }
-    }
-
-    if (mapVS)
-    {
-        mDeviceContext->Unmap(vertexConstantBuffer->get(), 0);
-    }
-
-    if (mapPS)
-    {
+        memcpy(map.pData, fragmentUniformStorage->getDataPointer(0, 0),
+               fragmentUniformStorage->size());
         mDeviceContext->Unmap(pixelConstantBuffer->get(), 0);
     }
 
@@ -4369,23 +4336,8 @@ gl::Error Renderer11::applyComputeUniforms(const ProgramD3D &programD3D,
         HRESULT result =
             mDeviceContext->Map(computeConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
         ASSERT(SUCCEEDED(result));
-        auto *mapCS = static_cast<float(*)[4]>(map.pData);
-
-        ASSERT(mapCS);
-        for (const D3DUniform *uniform : uniformArray)
-        {
-            ASSERT(uniform->isReferencedByComputeShader());
-
-            if (uniform->isSampler())
-            {
-                continue;
-            }
-
-            unsigned int componentCount = (4 - uniform->registerCount);
-            memcpy(&mapCS[uniform->csRegisterIndex][uniform->registerElement], uniform->data,
-                   uniform->registerCount * sizeof(float) * componentCount);
-        }
-
+        memcpy(map.pData, computeUniformStorage->getDataPointer(0, 0),
+               computeUniformStorage->size());
         mDeviceContext->Unmap(computeConstantBuffer, 0);
     }
 

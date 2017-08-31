@@ -32,6 +32,8 @@ class ShaderExecutableD3D;
 #endif
 
 // Helper struct representing a single shader uniform
+// TODO(jmadill): Make uniform blocks shared between all programs, so we don't need separate
+// register indices.
 struct D3DUniform : private angle::NonCopyable
 {
     D3DUniform(GLenum typeIn,
@@ -46,14 +48,18 @@ struct D3DUniform : private angle::NonCopyable
     bool isReferencedByFragmentShader() const;
     bool isReferencedByComputeShader() const;
 
+    const uint8_t *firstNonNullData() const;
+    const uint8_t *getDataPtrToElement(size_t elementIndex) const;
+
     // Duplicated from the GL layer
     GLenum type;
     std::string name;
     unsigned int arraySize;
 
-    // Pointer to a system copy of the data.
-    // TODO(jmadill): remove this in favor of gl::LinkedUniform::data().
-    uint8_t *data;
+    // Pointer to a system copies of the data. Separate pointers for each uniform storage type.
+    uint8_t *vsData;
+    uint8_t *psData;
+    uint8_t *csData;
 
     // Has the data been updated since the last sync?
     bool dirty;
@@ -68,6 +74,9 @@ struct D3DUniform : private angle::NonCopyable
     // uniforms
     // inside aggregate types, which are packed according C-like structure rules.
     unsigned int registerElement;
+
+    // Special buffer for sampler values.
+    std::vector<GLint> mSamplerData;
 };
 
 struct D3DUniformBlock
@@ -371,14 +380,29 @@ class ProgramD3D : public ProgramImpl
     void getUniformInternal(GLint location, DestT *dataOut) const;
 
     template <typename T>
-    void setUniform(GLint location, GLsizei count, const T *v, GLenum targetUniformType);
+    void setUniformImpl(const gl::VariableLocation &locationInfo,
+                        GLsizei count,
+                        const T *v,
+                        uint8_t *targetData,
+                        GLenum targetUniformType);
+
+    template <typename T>
+    void setUniformInternal(GLint location, GLsizei count, const T *v, GLenum targetUniformType);
 
     template <int cols, int rows>
-    void setUniformMatrixfv(GLint location,
-                            GLsizei count,
-                            GLboolean transpose,
-                            const GLfloat *value,
-                            GLenum targetUniformType);
+    void setUniformMatrixfvImpl(GLint location,
+                                GLsizei count,
+                                GLboolean transpose,
+                                const GLfloat *value,
+                                uint8_t *targetData,
+                                GLenum targetUniformType);
+
+    template <int cols, int rows>
+    void setUniformMatrixfvInternal(GLint location,
+                                    GLsizei count,
+                                    GLboolean transpose,
+                                    const GLfloat *value,
+                                    GLenum targetUniformType);
 
     gl::LinkResult compileProgramExecutables(const gl::Context *context, gl::InfoLog &infoLog);
     gl::LinkResult compileComputeExecutable(const gl::Context *context, gl::InfoLog &infoLog);
@@ -387,6 +411,7 @@ class ProgramD3D : public ProgramImpl
                                          const BuiltinInfo &builtins);
     D3DUniform *getD3DUniformByName(const std::string &name);
     D3DUniform *getD3DUniformFromLocation(GLint location);
+    const D3DUniform *getD3DUniformFromLocation(GLint location) const;
 
     void initAttribLocationsToD3DSemantic(const gl::Context *context);
 

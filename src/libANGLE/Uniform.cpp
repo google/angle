@@ -46,15 +46,10 @@ LinkedUniform::LinkedUniform(const sh::Uniform &uniform)
 LinkedUniform::LinkedUniform(const LinkedUniform &uniform)
     : sh::Uniform(uniform), bufferIndex(uniform.bufferIndex), blockInfo(uniform.blockInfo)
 {
-    // This function is not intended to be called during runtime.
-    ASSERT(uniform.mLazyData.empty());
 }
 
 LinkedUniform &LinkedUniform::operator=(const LinkedUniform &uniform)
 {
-    // This function is not intended to be called during runtime.
-    ASSERT(uniform.mLazyData.empty());
-
     sh::Uniform::operator=(uniform);
     bufferIndex          = uniform.bufferIndex;
     blockInfo            = uniform.blockInfo;
@@ -69,23 +64,6 @@ LinkedUniform::~LinkedUniform()
 bool LinkedUniform::isInDefaultBlock() const
 {
     return bufferIndex == -1;
-}
-
-size_t LinkedUniform::dataSize() const
-{
-    ASSERT(type != GL_STRUCT_ANGLEX);
-    if (mLazyData.empty())
-    {
-        mLazyData.resize(VariableExternalSize(type) * elementCount());
-        ASSERT(!mLazyData.empty());
-    }
-
-    return mLazyData.size();
-}
-
-const uint8_t *LinkedUniform::data() const
-{
-    return const_cast<LinkedUniform *>(this)->data();
 }
 
 bool LinkedUniform::isSampler() const
@@ -116,17 +94,6 @@ size_t LinkedUniform::getElementSize() const
 size_t LinkedUniform::getElementComponents() const
 {
     return VariableComponentCount(type);
-}
-
-uint8_t *LinkedUniform::getDataPtrToElement(size_t elementIndex)
-{
-    ASSERT((!isArray() && elementIndex == 0) || (isArray() && elementIndex < arraySize));
-    return data() + (elementIndex > 0 ? (getElementSize() * elementIndex) : 0u);
-}
-
-const uint8_t *LinkedUniform::getDataPtrToElement(size_t elementIndex) const
-{
-    return const_cast<LinkedUniform *>(this)->getDataPtrToElement(elementIndex);
 }
 
 ShaderVariableBuffer::ShaderVariableBuffer()

@@ -416,7 +416,7 @@ class UniformTestES3 : public ANGLETest
 };
 
 // Test queries for transposed arrays of non-square matrix uniforms.
-TEST_P(UniformTestES3, TranposedMatrixArrayUniformStateQuery)
+TEST_P(UniformTestES3, TransposedMatrixArrayUniformStateQuery)
 {
     const std::string &vertexShader =
         "#version 300 es\n"

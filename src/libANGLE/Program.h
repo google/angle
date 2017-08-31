@@ -618,17 +618,16 @@ class Program final : angle::NonCopyable, public LabeledObject
     // Both these function update the cached uniform values and return a modified "count"
     // so that the uniform update doesn't overflow the uniform.
     template <typename T>
-    GLsizei setUniformInternal(GLint location, GLsizei count, int vectorSize, const T *v);
-    template <size_t cols, size_t rows, typename T>
-    GLsizei setMatrixUniformInternal(GLint location,
-                                     GLsizei count,
-                                     GLboolean transpose,
-                                     const T *v);
-    template <typename T>
-    void updateSamplerUniform(const VariableLocation &locationInfo,
-                              const uint8_t *destPointer,
-                              GLsizei clampedCount,
+    GLsizei clampUniformCount(const VariableLocation &locationInfo,
+                              GLsizei count,
+                              int vectorSize,
                               const T *v);
+    template <size_t cols, size_t rows, typename T>
+    GLsizei clampMatrixUniformCount(GLint location, GLsizei count, GLboolean transpose, const T *v);
+
+    void updateSamplerUniform(const VariableLocation &locationInfo,
+                              GLsizei clampedCount,
+                              const GLint *v);
 
     template <typename DestT>
     void getUniformInternal(const Context *context,

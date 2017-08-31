@@ -146,16 +146,6 @@ void GetUniformBlockInfo(const std::vector<VarT> &fields,
     }
 }
 
-template <typename T>
-static inline void SetIfDirty(T *dest, const T &source, bool *dirtyFlag)
-{
-    ASSERT(dest != nullptr);
-    ASSERT(dirtyFlag != nullptr);
-
-    *dirtyFlag = *dirtyFlag || (memcmp(dest, &source, sizeof(T)) != 0);
-    *dest      = source;
-}
-
 template <typename T, int cols, int rows>
 bool TransposeExpandMatrix(T *target, const GLfloat *value)
 {
@@ -259,6 +249,26 @@ bool FindFlatInterpolationVarying(const std::vector<sh::Varying> &varyings)
     return false;
 }
 
+// Helper method to de-tranpose a matrix uniform for an API query.
+void GetMatrixUniform(GLint columns, GLint rows, GLfloat *dataOut, const GLfloat *source)
+{
+    for (GLint col = 0; col < columns; ++col)
+    {
+        for (GLint row = 0; row < rows; ++row)
+        {
+            GLfloat *outptr      = dataOut + ((col * rows) + row);
+            const GLfloat *inptr = source + ((row * 4) + col);
+            *outptr              = *inptr;
+        }
+    }
+}
+
+template <typename NonFloatT>
+void GetMatrixUniform(GLint columns, GLint rows, NonFloatT *dataOut, const NonFloatT *source)
+{
+    UNREACHABLE();
+}
+
 }  // anonymous namespace
 
 // D3DUniform Implementation
@@ -270,7 +280,9 @@ D3DUniform::D3DUniform(GLenum typeIn,
     : type(typeIn),
       name(nameIn),
       arraySize(arraySizeIn),
-      data(nullptr),
+      vsData(nullptr),
+      psData(nullptr),
+      csData(nullptr),
       dirty(true),
       vsRegisterIndex(GL_INVALID_INDEX),
       psRegisterIndex(GL_INVALID_INDEX),
@@ -283,10 +295,6 @@ D3DUniform::D3DUniform(GLenum typeIn,
     // Uniform blocks/buffers are treated separately by the Renderer (ES3 path only)
     if (defaultBlock)
     {
-        size_t bytes = gl::VariableInternalSize(type) * elementCount();
-        data = new uint8_t[bytes];
-        memset(data, 0, bytes);
-
         // Use the row count as register count, will work for non-square matrices.
         registerCount = gl::VariableRowCount(type) * elementCount();
     }
@@ -294,7 +302,19 @@ D3DUniform::D3DUniform(GLenum typeIn,
 
 D3DUniform::~D3DUniform()
 {
-    SafeDeleteArray(data);
+}
+
+const uint8_t *D3DUniform::getDataPtrToElement(size_t elementIndex) const
+{
+    ASSERT((arraySize == 0 && elementIndex == 0) || (arraySize > 0 && elementIndex < arraySize));
+
+    if (isSampler())
+    {
+        return reinterpret_cast<const uint8_t *>(&mSamplerData[elementIndex]);
+    }
+
+    return firstNonNullData() +
+           (elementIndex > 0 ? (gl::VariableInternalSize(type) * elementIndex) : 0u);
 }
 
 bool D3DUniform::isSampler() const
@@ -315,6 +335,18 @@ bool D3DUniform::isReferencedByFragmentShader() const
 bool D3DUniform::isReferencedByComputeShader() const
 {
     return csRegisterIndex != GL_INVALID_INDEX;
+}
+
+const uint8_t *D3DUniform::firstNonNullData() const
+{
+    ASSERT(vsData || psData || csData || !mSamplerData.empty());
+
+    if (!mSamplerData.empty())
+    {
+        return reinterpret_cast<const uint8_t *>(mSamplerData.data());
+    }
+
+    return vsData ? vsData : (psData ? psData : csData);
 }
 
 // D3DVarying Implementation
@@ -687,7 +719,6 @@ void ProgramD3D::updateSamplerMapping()
             continue;
 
         int count = d3dUniform->elementCount();
-        const GLint(*v)[4] = reinterpret_cast<const GLint(*)[4]>(d3dUniform->data);
 
         if (d3dUniform->isReferencedByFragmentShader())
         {
@@ -700,7 +731,7 @@ void ProgramD3D::updateSamplerMapping()
                 if (samplerIndex < mSamplersPS.size())
                 {
                     ASSERT(mSamplersPS[samplerIndex].active);
-                    mSamplersPS[samplerIndex].logicalTextureUnit = v[i][0];
+                    mSamplersPS[samplerIndex].logicalTextureUnit = d3dUniform->mSamplerData[i];
                 }
             }
         }
@@ -716,7 +747,7 @@ void ProgramD3D::updateSamplerMapping()
                 if (samplerIndex < mSamplersVS.size())
                 {
                     ASSERT(mSamplersVS[samplerIndex].active);
-                    mSamplersVS[samplerIndex].logicalTextureUnit = v[i][0];
+                    mSamplersVS[samplerIndex].logicalTextureUnit = d3dUniform->mSamplerData[i];
                 }
             }
         }
@@ -732,7 +763,7 @@ void ProgramD3D::updateSamplerMapping()
                 if (samplerIndex < mSamplersCS.size())
                 {
                     ASSERT(mSamplersCS[samplerIndex].active);
-                    mSamplersCS[samplerIndex].logicalTextureUnit = v[i][0];
+                    mSamplersCS[samplerIndex].logicalTextureUnit = d3dUniform->mSamplerData[i];
                 }
             }
         }
@@ -1725,6 +1756,34 @@ void ProgramD3D::initializeUniformStorage()
         mRenderer->createUniformStorage(fragmentRegisters * 16u));
     mComputeUniformStorage =
         std::unique_ptr<UniformStorageD3D>(mRenderer->createUniformStorage(computeRegisters * 16u));
+
+    // Iterate the uniforms again to assign data pointers to default block uniforms.
+    for (D3DUniform *d3dUniform : mD3DUniforms)
+    {
+        if (d3dUniform->isSampler())
+        {
+            d3dUniform->mSamplerData.resize(d3dUniform->elementCount(), 0);
+            continue;
+        }
+
+        if (d3dUniform->isReferencedByVertexShader())
+        {
+            d3dUniform->vsData = mVertexUniformStorage->getDataPointer(d3dUniform->vsRegisterIndex,
+                                                                       d3dUniform->registerElement);
+        }
+
+        if (d3dUniform->isReferencedByFragmentShader())
+        {
+            d3dUniform->psData = mFragmentUniformStorage->getDataPointer(
+                d3dUniform->psRegisterIndex, d3dUniform->registerElement);
+        }
+
+        if (d3dUniform->isReferencedByComputeShader())
+        {
+            d3dUniform->csData = mComputeUniformStorage->getDataPointer(
+                d3dUniform->csRegisterIndex, d3dUniform->registerElement);
+        }
+    }
 }
 
 gl::Error ProgramD3D::applyUniforms(GLenum drawMode)
@@ -1823,22 +1882,22 @@ void ProgramD3D::dirtyAllUniforms()
 
 void ProgramD3D::setUniform1fv(GLint location, GLsizei count, const GLfloat *v)
 {
-    setUniform(location, count, v, GL_FLOAT);
+    setUniformInternal(location, count, v, GL_FLOAT);
 }
 
 void ProgramD3D::setUniform2fv(GLint location, GLsizei count, const GLfloat *v)
 {
-    setUniform(location, count, v, GL_FLOAT_VEC2);
+    setUniformInternal(location, count, v, GL_FLOAT_VEC2);
 }
 
 void ProgramD3D::setUniform3fv(GLint location, GLsizei count, const GLfloat *v)
 {
-    setUniform(location, count, v, GL_FLOAT_VEC3);
+    setUniformInternal(location, count, v, GL_FLOAT_VEC3);
 }
 
 void ProgramD3D::setUniform4fv(GLint location, GLsizei count, const GLfloat *v)
 {
-    setUniform(location, count, v, GL_FLOAT_VEC4);
+    setUniformInternal(location, count, v, GL_FLOAT_VEC4);
 }
 
 void ProgramD3D::setUniformMatrix2fv(GLint location,
@@ -1846,7 +1905,7 @@ void ProgramD3D::setUniformMatrix2fv(GLint location,
                                      GLboolean transpose,
                                      const GLfloat *value)
 {
-    setUniformMatrixfv<2, 2>(location, count, transpose, value, GL_FLOAT_MAT2);
+    setUniformMatrixfvInternal<2, 2>(location, count, transpose, value, GL_FLOAT_MAT2);
 }
 
 void ProgramD3D::setUniformMatrix3fv(GLint location,
@@ -1854,7 +1913,7 @@ void ProgramD3D::setUniformMatrix3fv(GLint location,
                                      GLboolean transpose,
                                      const GLfloat *value)
 {
-    setUniformMatrixfv<3, 3>(location, count, transpose, value, GL_FLOAT_MAT3);
+    setUniformMatrixfvInternal<3, 3>(location, count, transpose, value, GL_FLOAT_MAT3);
 }
 
 void ProgramD3D::setUniformMatrix4fv(GLint location,
@@ -1862,7 +1921,7 @@ void ProgramD3D::setUniformMatrix4fv(GLint location,
                                      GLboolean transpose,
                                      const GLfloat *value)
 {
-    setUniformMatrixfv<4, 4>(location, count, transpose, value, GL_FLOAT_MAT4);
+    setUniformMatrixfvInternal<4, 4>(location, count, transpose, value, GL_FLOAT_MAT4);
 }
 
 void ProgramD3D::setUniformMatrix2x3fv(GLint location,
@@ -1870,7 +1929,7 @@ void ProgramD3D::setUniformMatrix2x3fv(GLint location,
                                        GLboolean transpose,
                                        const GLfloat *value)
 {
-    setUniformMatrixfv<2, 3>(location, count, transpose, value, GL_FLOAT_MAT2x3);
+    setUniformMatrixfvInternal<2, 3>(location, count, transpose, value, GL_FLOAT_MAT2x3);
 }
 
 void ProgramD3D::setUniformMatrix3x2fv(GLint location,
@@ -1878,7 +1937,7 @@ void ProgramD3D::setUniformMatrix3x2fv(GLint location,
                                        GLboolean transpose,
                                        const GLfloat *value)
 {
-    setUniformMatrixfv<3, 2>(location, count, transpose, value, GL_FLOAT_MAT3x2);
+    setUniformMatrixfvInternal<3, 2>(location, count, transpose, value, GL_FLOAT_MAT3x2);
 }
 
 void ProgramD3D::setUniformMatrix2x4fv(GLint location,
@@ -1886,7 +1945,7 @@ void ProgramD3D::setUniformMatrix2x4fv(GLint location,
                                        GLboolean transpose,
                                        const GLfloat *value)
 {
-    setUniformMatrixfv<2, 4>(location, count, transpose, value, GL_FLOAT_MAT2x4);
+    setUniformMatrixfvInternal<2, 4>(location, count, transpose, value, GL_FLOAT_MAT2x4);
 }
 
 void ProgramD3D::setUniformMatrix4x2fv(GLint location,
@@ -1894,7 +1953,7 @@ void ProgramD3D::setUniformMatrix4x2fv(GLint location,
                                        GLboolean transpose,
                                        const GLfloat *value)
 {
-    setUniformMatrixfv<4, 2>(location, count, transpose, value, GL_FLOAT_MAT4x2);
+    setUniformMatrixfvInternal<4, 2>(location, count, transpose, value, GL_FLOAT_MAT4x2);
 }
 
 void ProgramD3D::setUniformMatrix3x4fv(GLint location,
@@ -1902,7 +1961,7 @@ void ProgramD3D::setUniformMatrix3x4fv(GLint location,
                                        GLboolean transpose,
                                        const GLfloat *value)
 {
-    setUniformMatrixfv<3, 4>(location, count, transpose, value, GL_FLOAT_MAT3x4);
+    setUniformMatrixfvInternal<3, 4>(location, count, transpose, value, GL_FLOAT_MAT3x4);
 }
 
 void ProgramD3D::setUniformMatrix4x3fv(GLint location,
@@ -1910,47 +1969,47 @@ void ProgramD3D::setUniformMatrix4x3fv(GLint location,
                                        GLboolean transpose,
                                        const GLfloat *value)
 {
-    setUniformMatrixfv<4, 3>(location, count, transpose, value, GL_FLOAT_MAT4x3);
+    setUniformMatrixfvInternal<4, 3>(location, count, transpose, value, GL_FLOAT_MAT4x3);
 }
 
 void ProgramD3D::setUniform1iv(GLint location, GLsizei count, const GLint *v)
 {
-    setUniform(location, count, v, GL_INT);
+    setUniformInternal(location, count, v, GL_INT);
 }
 
 void ProgramD3D::setUniform2iv(GLint location, GLsizei count, const GLint *v)
 {
-    setUniform(location, count, v, GL_INT_VEC2);
+    setUniformInternal(location, count, v, GL_INT_VEC2);
 }
 
 void ProgramD3D::setUniform3iv(GLint location, GLsizei count, const GLint *v)
 {
-    setUniform(location, count, v, GL_INT_VEC3);
+    setUniformInternal(location, count, v, GL_INT_VEC3);
 }
 
 void ProgramD3D::setUniform4iv(GLint location, GLsizei count, const GLint *v)
 {
-    setUniform(location, count, v, GL_INT_VEC4);
+    setUniformInternal(location, count, v, GL_INT_VEC4);
 }
 
 void ProgramD3D::setUniform1uiv(GLint location, GLsizei count, const GLuint *v)
 {
-    setUniform(location, count, v, GL_UNSIGNED_INT);
+    setUniformInternal(location, count, v, GL_UNSIGNED_INT);
 }
 
 void ProgramD3D::setUniform2uiv(GLint location, GLsizei count, const GLuint *v)
 {
-    setUniform(location, count, v, GL_UNSIGNED_INT_VEC2);
+    setUniformInternal(location, count, v, GL_UNSIGNED_INT_VEC2);
 }
 
 void ProgramD3D::setUniform3uiv(GLint location, GLsizei count, const GLuint *v)
 {
-    setUniform(location, count, v, GL_UNSIGNED_INT_VEC3);
+    setUniformInternal(location, count, v, GL_UNSIGNED_INT_VEC3);
 }
 
 void ProgramD3D::setUniform4uiv(GLint location, GLsizei count, const GLuint *v)
 {
-    setUniform(location, count, v, GL_UNSIGNED_INT_VEC4);
+    setUniformInternal(location, count, v, GL_UNSIGNED_INT_VEC4);
 }
 
 void ProgramD3D::setUniformBlockBinding(GLuint /*uniformBlockIndex*/,
@@ -2114,15 +2173,18 @@ void ProgramD3D::defineUniform(GLenum shaderType,
         if (shaderType == GL_FRAGMENT_SHADER)
         {
             d3dUniform->psRegisterIndex = reg;
+            d3dUniform->dirty           = true;
         }
         else if (shaderType == GL_VERTEX_SHADER)
         {
             d3dUniform->vsRegisterIndex = reg;
+            d3dUniform->dirty           = true;
         }
         else
         {
             ASSERT(shaderType == GL_COMPUTE_SHADER);
             d3dUniform->csRegisterIndex = reg;
+            d3dUniform->dirty           = true;
         }
 
         // Arrays are treated as aggregate types
@@ -2134,39 +2196,36 @@ void ProgramD3D::defineUniform(GLenum shaderType,
 }
 
 template <typename T>
-void ProgramD3D::setUniform(GLint location, GLsizei countIn, const T *v, GLenum targetUniformType)
+void ProgramD3D::setUniformImpl(const gl::VariableLocation &locationInfo,
+                                GLsizei countIn,
+                                const T *v,
+                                uint8_t *targetData,
+                                GLenum targetUniformType)
 {
     const int components        = gl::VariableComponentCount(targetUniformType);
     const GLenum targetBoolType = gl::VariableBoolVectorType(targetUniformType);
 
-    D3DUniform *targetUniform = getD3DUniformFromLocation(location);
+    D3DUniform *targetUniform = mD3DUniforms[locationInfo.index];
 
     unsigned int elementCount = targetUniform->elementCount();
-    unsigned int arrayElement = mState.getUniformLocations()[location].element;
+    unsigned int arrayElement = locationInfo.element;
     unsigned int count        = std::min(elementCount - arrayElement, static_cast<unsigned int>(countIn));
 
     if (targetUniform->type == targetUniformType)
     {
-        T *target = reinterpret_cast<T *>(targetUniform->data) + arrayElement * 4;
+        T *target = reinterpret_cast<T *>(targetData) + arrayElement * 4;
 
         for (unsigned int i = 0; i < count; i++)
         {
             T *dest         = target + (i * 4);
             const T *source = v + (i * components);
-
-            for (int c = 0; c < components; c++)
-            {
-                SetIfDirty(dest + c, source[c], &targetUniform->dirty);
-            }
-            for (int c = components; c < 4; c++)
-            {
-                SetIfDirty(dest + c, T(0), &targetUniform->dirty);
-            }
+            memcpy(dest, source, components * sizeof(T));
+            targetUniform->dirty = true;
         }
     }
     else if (targetUniform->type == targetBoolType)
     {
-        GLint *boolParams = reinterpret_cast<GLint *>(targetUniform->data) + arrayElement * 4;
+        GLint *boolParams = reinterpret_cast<GLint *>(targetData) + arrayElement * 4;
 
         for (unsigned int i = 0; i < count; i++)
         {
@@ -2175,49 +2234,56 @@ void ProgramD3D::setUniform(GLint location, GLsizei countIn, const T *v, GLenum 
 
             for (int c = 0; c < components; c++)
             {
-                SetIfDirty(dest + c, (source[c] == static_cast<T>(0)) ? GL_FALSE : GL_TRUE,
-                           &targetUniform->dirty);
+                dest[c] = (source[c] == static_cast<T>(0)) ? GL_FALSE : GL_TRUE;
             }
-            for (int c = components; c < 4; c++)
-            {
-                SetIfDirty(dest + c, GL_FALSE, &targetUniform->dirty);
-            }
-        }
-    }
-    else if (targetUniform->isSampler())
-    {
-        ASSERT(targetUniformType == GL_INT);
-
-        GLint *target = reinterpret_cast<GLint *>(targetUniform->data) + arrayElement * 4;
-
-        bool wasDirty = targetUniform->dirty;
-
-        for (unsigned int i = 0; i < count; i++)
-        {
-            GLint *dest         = target + (i * 4);
-            const GLint *source = reinterpret_cast<const GLint *>(v) + (i * components);
-
-            SetIfDirty(dest + 0, source[0], &targetUniform->dirty);
-            SetIfDirty(dest + 1, 0, &targetUniform->dirty);
-            SetIfDirty(dest + 2, 0, &targetUniform->dirty);
-            SetIfDirty(dest + 3, 0, &targetUniform->dirty);
-        }
-
-        if (!wasDirty && targetUniform->dirty)
-        {
-            mDirtySamplerMapping = true;
+            targetUniform->dirty = true;
         }
     }
     else
         UNREACHABLE();
 }
 
-template <int cols, int rows>
-void ProgramD3D::setUniformMatrixfv(GLint location,
-                                    GLsizei countIn,
-                                    GLboolean transpose,
-                                    const GLfloat *value,
+template <typename T>
+void ProgramD3D::setUniformInternal(GLint location,
+                                    GLsizei count,
+                                    const T *v,
                                     GLenum targetUniformType)
+{
+    const gl::VariableLocation &locationInfo = mState.getUniformLocations()[location];
+    D3DUniform *targetUniform                = mD3DUniforms[locationInfo.index];
+
+    if (!targetUniform->mSamplerData.empty())
+    {
+        ASSERT(targetUniformType == GL_INT);
+        memcpy(&targetUniform->mSamplerData[locationInfo.element], v, count * sizeof(T));
+        mDirtySamplerMapping = true;
+        targetUniform->dirty = true;
+        return;
+    }
+
+    if (targetUniform->vsData)
+    {
+        setUniformImpl(locationInfo, count, v, targetUniform->vsData, targetUniformType);
+    }
+
+    if (targetUniform->psData)
+    {
+        setUniformImpl(locationInfo, count, v, targetUniform->psData, targetUniformType);
+    }
+
+    if (targetUniform->csData)
+    {
+        setUniformImpl(locationInfo, count, v, targetUniform->csData, targetUniformType);
+    }
+}
+
+template <int cols, int rows>
+void ProgramD3D::setUniformMatrixfvImpl(GLint location,
+                                        GLsizei countIn,
+                                        GLboolean transpose,
+                                        const GLfloat *value,
+                                        uint8_t *targetData,
+                                        GLenum targetUniformType)
 {
     D3DUniform *targetUniform = getD3DUniformFromLocation(location);
 
@@ -2226,8 +2292,8 @@ void ProgramD3D::setUniformMatrixfv(GLint location,
     unsigned int count        = std::min(elementCount - arrayElement, static_cast<unsigned int>(countIn));
 
     const unsigned int targetMatrixStride = (4 * rows);
-    GLfloat *target =
-        (GLfloat *)(targetUniform->data + arrayElement * sizeof(GLfloat) * targetMatrixStride);
+    GLfloat *target = reinterpret_cast<GLfloat *>(targetData + arrayElement * sizeof(GLfloat) *
+                                                                   targetMatrixStride);
 
     for (unsigned int i = 0; i < count; i++)
     {
@@ -2244,6 +2310,34 @@ void ProgramD3D::setUniformMatrixfv(GLint location,
         }
         target += targetMatrixStride;
         value += cols * rows;
+    }
+}
+
+template <int cols, int rows>
+void ProgramD3D::setUniformMatrixfvInternal(GLint location,
+                                            GLsizei countIn,
+                                            GLboolean transpose,
+                                            const GLfloat *value,
+                                            GLenum targetUniformType)
+{
+    D3DUniform *targetUniform = getD3DUniformFromLocation(location);
+
+    if (targetUniform->vsData)
+    {
+        setUniformMatrixfvImpl<cols, rows>(location, countIn, transpose, value,
+                                           targetUniform->vsData, targetUniformType);
+    }
+
+    if (targetUniform->psData)
+    {
+        setUniformMatrixfvImpl<cols, rows>(location, countIn, transpose, value,
+                                           targetUniform->psData, targetUniformType);
+    }
+
+    if (targetUniform->csData)
+    {
+        setUniformMatrixfvImpl<cols, rows>(location, countIn, transpose, value,
+                                           targetUniform->csData, targetUniformType);
     }
 }
 
@@ -2525,6 +2619,11 @@ D3DUniform *ProgramD3D::getD3DUniformFromLocation(GLint location)
     return mD3DUniforms[mState.getUniformLocations()[location].index];
 }
 
+const D3DUniform *ProgramD3D::getD3DUniformFromLocation(GLint location) const
+{
+    return mD3DUniforms[mState.getUniformLocations()[location].index];
+}
+
 bool ProgramD3D::getUniformBlockSize(const std::string &blockName,
                                      const std::string & /* blockMappedName */,
                                      size_t *sizeOut) const
@@ -2612,8 +2711,18 @@ void ProgramD3D::getUniformInternal(GLint location, DestT *dataOut) const
     const gl::VariableLocation &locationInfo = mState.getUniformLocations()[location];
     const gl::LinkedUniform &uniform         = mState.getUniforms()[locationInfo.index];
 
-    const uint8_t *srcPointer = uniform.getDataPtrToElement(locationInfo.element);
-    memcpy(dataOut, srcPointer, uniform.getElementSize());
+    const D3DUniform *targetUniform = getD3DUniformFromLocation(location);
+    const uint8_t *srcPointer       = targetUniform->getDataPtrToElement(locationInfo.element);
+
+    if (gl::IsMatrixType(uniform.type))
+    {
+        GetMatrixUniform(gl::VariableColumnCount(uniform.type), gl::VariableRowCount(uniform.type),
+                         dataOut, reinterpret_cast<const DestT *>(srcPointer));
+    }
+    else
+    {
+        memcpy(dataOut, srcPointer, uniform.getElementSize());
+    }
 }
 
 void ProgramD3D::getUniformfv(const gl::Context *context, GLint location, GLfloat *params) const
