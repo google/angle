@@ -142,9 +142,11 @@ class Renderer11 : public RendererD3D
                                 const std::vector<GLint> &fragmentUniformBuffers) override;
 
     bool applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSize);
+
     gl::Error applyUniforms(const ProgramD3D &programD3D,
-                            GLenum drawMode,
                             const std::vector<D3DUniform *> &uniformArray) override;
+
+    gl::Error applyDriverUniforms(const ProgramD3D &programD3D, GLenum drawMode);
     gl::Error applyTransformFeedbackBuffers(const gl::ContextState &data);
 
     // lost device

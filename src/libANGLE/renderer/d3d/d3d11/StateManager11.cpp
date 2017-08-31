@@ -1621,7 +1621,8 @@ gl::Error StateManager11::updateState(const gl::Context *context, GLenum drawMod
     // This must happen after viewport sync, because the viewport affects builtin uniforms.
     // TODO(jmadill): Use dirty bits.
     auto *programD3D = GetImplAs<ProgramD3D>(glState.getProgram());
-    ANGLE_TRY(programD3D->applyUniforms(drawMode));
+    ANGLE_TRY(programD3D->applyUniforms());
+    ANGLE_TRY(mRenderer->applyDriverUniforms(*programD3D, drawMode));
 
     // Check that we haven't set any dirty bits in the flushing of the dirty bits loop.
     ASSERT(mInternalDirtyBits.none());

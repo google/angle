@@ -155,7 +155,6 @@ class RendererD3D : public BufferFactoryD3D
                                         const std::vector<GLint> &fragmentUniformBuffers) = 0;
 
     virtual gl::Error applyUniforms(const ProgramD3D &programD3D,
-                                    GLenum drawMode,
                                     const std::vector<D3DUniform *> &uniformArray) = 0;
 
     virtual unsigned int getReservedVertexUniformBuffers() const = 0;

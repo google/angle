@@ -148,7 +148,6 @@ class Renderer9 : public RendererD3D
                                 const gl::FramebufferAttachment *colorAttachment,
                                 const gl::FramebufferAttachment *depthStencilAttachment);
     gl::Error applyUniforms(const ProgramD3D &programD3D,
-                            GLenum drawMode,
                             const std::vector<D3DUniform *> &uniformArray) override;
     bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount, bool usesPointSize);
     gl::Error applyVertexBuffer(const gl::State &state,

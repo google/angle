@@ -61,9 +61,6 @@ struct D3DUniform : private angle::NonCopyable
     uint8_t *psData;
     uint8_t *csData;
 
-    // Has the data been updated since the last sync?
-    bool dirty;
-
     // Register information.
     unsigned int vsRegisterIndex;
     unsigned int psRegisterIndex;
@@ -205,7 +202,7 @@ class ProgramD3D : public ProgramImpl
                                  const GLfloat *coeffs) override;
 
     void initializeUniformStorage();
-    gl::Error applyUniforms(GLenum drawMode);
+    gl::Error applyUniforms();
     gl::Error applyComputeUniforms();
     gl::Error applyUniformBuffers(const gl::ContextState &data);
     void dirtyAllUniforms();
@@ -285,6 +282,8 @@ class ProgramD3D : public ProgramImpl
     bool hasVertexExecutableForCachedInputLayout();
     bool hasGeometryExecutableForPrimitiveType(GLenum drawMode);
     bool hasPixelExecutableForCachedOutputLayout();
+
+    bool areUniformsDirty() const { return mUniformsDirty; }
 
   private:
     // These forward-declared tasks are used for multi-thread shader compiles.
@@ -477,6 +476,8 @@ class ProgramD3D : public ProgramImpl
     std::vector<D3DVarying> mStreamOutVaryings;
     std::vector<D3DUniform *> mD3DUniforms;
     std::vector<D3DUniformBlock> mD3DUniformBlocks;
+
+    bool mUniformsDirty;
 
     std::map<std::string, sh::BlockMemberInfo> mBlockInfo;
     std::map<std::string, size_t> mBlockDataSizes;
