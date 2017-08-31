@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5f713acd_eee75ac3",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-31T17:39:22Z",
+      "side": 1,
+      "message": "Only currently called in GetUniform, so not a perf-critical path. Can look at using the type info once that lands in https://chromium-review.googlesource.com/c/angle/angle/+/643791",
+      "parentUuid": "5001fdad_3f8e47eb",
+      "range": {
+        "startLine": 317,
+        "startChar": 31,
+        "endLine": 317,
+        "endChar": 63
+      },
+      "revId": "6ace878d8a0608a77701a0a39591b9082918af8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "375ae69a_a0fec9ed",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 8
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "4ad69933_545f0273",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-31T17:39:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "375ae69a_a0fec9ed",
+      "range": {
+        "startLine": 343,
+        "startChar": 11,
+        "endLine": 347,
+        "endChar": 100
+      },
+      "revId": "6ace878d8a0608a77701a0a39591b9082918af8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "319c0ff0_e3826a34",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
         "patchSetId": 8
@@ -68,6 +116,30 @@
       "revId": "6ace878d8a0608a77701a0a39591b9082918af8d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e67f427_cdd7740b",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1759,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-31T17:39:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "319c0ff0_e3826a34",
+      "range": {
+        "startLine": 1759,
+        "startChar": 20,
+        "endLine": 1759,
+        "endChar": 22
+      },
+      "revId": "6ace878d8a0608a77701a0a39591b9082918af8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
