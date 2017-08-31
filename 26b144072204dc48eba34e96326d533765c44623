@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d9e18465_f0260769",
+        "filename": "src/libANGLE/ProgramPipeline.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-31T08:04:28Z",
+      "side": 1,
+      "message": "Missed definition? const std::string \u0026getLabel() const;",
+      "range": {
+        "startLine": 40,
+        "startChar": 4,
+        "endLine": 41,
+        "endChar": 0
+      },
+      "revId": "26b144072204dc48eba34e96326d533765c44623",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c737047_dfe48cbf",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1216,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-31T08:04:28Z",
+      "side": 1,
+      "message": "Use \u0027ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES31Required);\u0027 in all possible places",
+      "range": {
+        "startLine": 1216,
+        "startChar": 6,
+        "endLine": 1216,
+        "endChar": 89
+      },
+      "revId": "26b144072204dc48eba34e96326d533765c44623",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ca1bd64_c8d77aba",
+        "filename": "src/libANGLE/validationES31.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-31T08:04:28Z",
+      "side": 1,
+      "message": "How about moving it to cpp and as a static method?",
+      "range": {
+        "startLine": 113,
+        "startChar": 5,
+        "endLine": 113,
+        "endChar": 28
+      },
+      "revId": "26b144072204dc48eba34e96326d533765c44623",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
