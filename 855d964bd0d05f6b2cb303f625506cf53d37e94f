@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "707ba361_ee7003b4",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 1007,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-31T15:03:47Z",
+      "side": 0,
+      "message": "I think this should be kept as is,  the query is part of the GL_KHR_robustness extension and is only there to indicate if the context was created with the EGL_CONTEXT_OPENGL_ROBUST_ACCESS flag.",
+      "range": {
+        "startLine": 1007,
+        "startChar": 4,
+        "endLine": 1007,
+        "endChar": 23
+      },
+      "revId": "855d964bd0d05f6b2cb303f625506cf53d37e94f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

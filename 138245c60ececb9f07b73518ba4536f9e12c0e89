@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "9efe3c17_97423b5b",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-31T15:03:47Z",
+      "side": 1,
+      "message": "This is only the creation of a dummy context, real contexts are created here: https://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/Display.cpp?q\u003ddisplay.cpp\u0026dr\u003dC\u0026l\u003d758\n\ndisplayExtensions.createContextRobustness only indicates that the robustness extension is exposed, not that the context is created with the robust flags.  You should only check that the flag to create the context is present (it\u0027s validated here: https://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/validationEGL.cpp?q\u003dvalidationegl.cpp\u0026dr\u003dC\u0026l\u003d611)",
+      "parentUuid": "80923d64_f8d8a36d",
+      "revId": "138245c60ececb9f07b73518ba4536f9e12c0e89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bb5cc1ae_09ed5093",
         "filename": "src/libANGLE/ContextState.h",
         "patchSetId": 4
