@@ -96,7 +96,8 @@ struct ShaderVariable
 
   protected:
     bool isSameVariableAtLinkTime(const ShaderVariable &other,
-                                  bool matchPrecision) const;
+                                  bool matchPrecision,
+                                  bool matchName) const;
 
     bool operator==(const ShaderVariable &other) const;
     bool operator!=(const ShaderVariable &other) const
@@ -183,7 +184,7 @@ struct InterfaceBlockField : public ShaderVariable
     bool isRowMajorLayout;
 };
 
-struct Varying : public ShaderVariable
+struct Varying : public VariableWithLocation
 {
     Varying();
     ~Varying();

@@ -154,6 +154,8 @@
             'compiler/translator/ValidateOutputs.h',
             'compiler/translator/ValidateSwitch.cpp',
             'compiler/translator/ValidateSwitch.h',
+            'compiler/translator/ValidateVaryingLocations.cpp',
+            'compiler/translator/ValidateVaryingLocations.h',
             'compiler/translator/VariablePacker.cpp',
             'compiler/translator/VariablePacker.h',
             'compiler/translator/blocklayout.cpp',

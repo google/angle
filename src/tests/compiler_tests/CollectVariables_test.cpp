@@ -44,7 +44,7 @@ class CollectVariablesTest : public testing::Test
         initTranslator(resources);
     }
 
-    void initTranslator(const ShBuiltInResources &resources)
+    virtual void initTranslator(const ShBuiltInResources &resources)
     {
         mTranslator.reset(
             new TranslatorGLSL(mShaderType, SH_GLES3_SPEC, SH_GLSL_COMPATIBILITY_OUTPUT));
@@ -141,10 +141,25 @@ class CollectFragmentVariablesTest : public CollectVariablesTest
       CollectFragmentVariablesTest() : CollectVariablesTest(GL_FRAGMENT_SHADER) {}
 };
 
-class CollectVariablesOESGeometryShaderTest : public CollectVariablesTest
+class CollectVariablesTestES31 : public CollectVariablesTest
 {
   public:
-    CollectVariablesOESGeometryShaderTest(sh::GLenum shaderType) : CollectVariablesTest(shaderType)
+    CollectVariablesTestES31(sh::GLenum shaderType) : CollectVariablesTest(shaderType) {}
+
+  protected:
+    void initTranslator(const ShBuiltInResources &resources) override
+    {
+        mTranslator.reset(
+            new TranslatorGLSL(mShaderType, SH_GLES3_1_SPEC, SH_GLSL_COMPATIBILITY_OUTPUT));
+        ASSERT_TRUE(mTranslator->Init(resources));
+    }
+};
+
+class CollectVariablesOESGeometryShaderTest : public CollectVariablesTestES31
+{
+  public:
+    CollectVariablesOESGeometryShaderTest(sh::GLenum shaderType)
+        : CollectVariablesTestES31(shaderType)
     {
     }
 
@@ -156,13 +171,6 @@ class CollectVariablesOESGeometryShaderTest : public CollectVariablesTest
         resources.OES_geometry_shader = 1;
 
         initTranslator(resources);
-    }
-
-    void initTranslator(const ShBuiltInResources &resources)
-    {
-        mTranslator.reset(
-            new TranslatorGLSL(mShaderType, SH_GLES3_1_SPEC, SH_GLSL_COMPATIBILITY_OUTPUT));
-        ASSERT_TRUE(mTranslator->Init(resources));
     }
 };
 
@@ -196,6 +204,26 @@ class CollectFragmentVariablesOESGeometryShaderTest : public CollectVariablesOES
         : CollectVariablesOESGeometryShaderTest(GL_FRAGMENT_SHADER)
     {
     }
+
+  protected:
+    void initTranslator(const ShBuiltInResources &resources)
+    {
+        mTranslator.reset(
+            new TranslatorGLSL(mShaderType, SH_GLES3_1_SPEC, SH_GLSL_COMPATIBILITY_OUTPUT));
+        ASSERT_TRUE(mTranslator->Init(resources));
+    }
+};
+
+class CollectVertexVariablesES31Test : public CollectVariablesTestES31
+{
+  public:
+    CollectVertexVariablesES31Test() : CollectVariablesTestES31(GL_VERTEX_SHADER) {}
+};
+
+class CollectFragmentVariablesES31Test : public CollectVariablesTestES31
+{
+  public:
+    CollectFragmentVariablesES31Test() : CollectVariablesTestES31(GL_FRAGMENT_SHADER) {}
 };
 
 TEST_F(CollectFragmentVariablesTest, SimpleOutputVar)
@@ -1206,4 +1234,57 @@ TEST_F(CollectFragmentVariablesOESGeometryShaderTest, CollectLayer)
     EXPECT_TRUE(varying->isBuiltIn());
     EXPECT_GLENUM_EQ(GL_HIGH_INT, varying->precision);
     EXPECT_GLENUM_EQ(GL_INT, varying->type);
+}
+
+// Test collecting the location of vertex shader outputs.
+TEST_F(CollectVertexVariablesES31Test, CollectOutputWithLocation)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "out vec4 v_output1;\n"
+        "layout (location = 1) out vec4 v_output2;\n"
+        "void main()\n"
+        "{\n"
+        "}\n";
+
+    compile(shaderString);
+
+    const auto &outputVaryings = mTranslator->getOutputVaryings();
+    ASSERT_EQ(2u, outputVaryings.size());
+
+    const Varying *varying1 = &outputVaryings[0];
+    EXPECT_EQ("v_output1", varying1->name);
+    EXPECT_EQ(-1, varying1->location);
+
+    const Varying *varying2 = &outputVaryings[1];
+    EXPECT_EQ("v_output2", varying2->name);
+    EXPECT_EQ(1, varying2->location);
+}
+
+// Test collecting the location of fragment shader inputs.
+TEST_F(CollectFragmentVariablesES31Test, CollectInputWithLocation)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "in vec4 f_input1;\n"
+        "layout (location = 1) in vec4 f_input2;\n"
+        "layout (location = 0) out vec4 o_color;\n"
+        "void main()\n"
+        "{\n"
+        "    o_color = f_input2;\n"
+        "}\n";
+
+    compile(shaderString);
+
+    const auto &inputVaryings = mTranslator->getInputVaryings();
+    ASSERT_EQ(2u, inputVaryings.size());
+
+    const Varying *varying1 = &inputVaryings[0];
+    EXPECT_EQ("f_input1", varying1->name);
+    EXPECT_EQ(-1, varying1->location);
+
+    const Varying *varying2 = &inputVaryings[1];
+    EXPECT_EQ("f_input2", varying2->name);
+    EXPECT_EQ(1, varying2->location);
 }

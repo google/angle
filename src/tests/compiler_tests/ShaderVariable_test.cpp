@@ -422,4 +422,53 @@ TEST(ShaderVariableTest, BuiltinInvariantVarying)
     sh::Destruct(compiler);
 }
 
+// Verify in ES3.1 two varyings with either same name or same declared location can match.
+TEST(ShaderVariableTest, IsSameVaryingWithDifferentName)
+{
+    // Varying float vary1;
+    Varying vx;
+    vx.type        = GL_FLOAT;
+    vx.arraySize   = 0;
+    vx.precision   = GL_MEDIUM_FLOAT;
+    vx.name        = "vary1";
+    vx.mappedName  = "m_vary1";
+    vx.staticUse   = true;
+    vx.isInvariant = false;
+
+    // Varying float vary2;
+    Varying fx;
+    fx.type        = GL_FLOAT;
+    fx.arraySize   = 0;
+    fx.precision   = GL_MEDIUM_FLOAT;
+    fx.name        = "vary2";
+    fx.mappedName  = "m_vary2";
+    fx.staticUse   = true;
+    fx.isInvariant = false;
+
+    // ESSL3 behavior: name must match
+    EXPECT_FALSE(vx.isSameVaryingAtLinkTime(fx, 300));
+
+    // ESSL3.1 behavior:
+    // [OpenGL ES 3.1 SPEC Chapter 7.4.1]
+    // An output variable is considered to match an input variable in the subsequent shader if:
+    // - the two variables match in name, type, and qualification; or
+    // - the two variables are declared with the same location qualifier and match in type and
+    //   qualification.
+    vx.location = 0;
+    fx.location = 0;
+    EXPECT_TRUE(vx.isSameVaryingAtLinkTime(fx, 310));
+
+    fx.name       = vx.name;
+    fx.mappedName = vx.mappedName;
+
+    fx.location = -1;
+    EXPECT_FALSE(vx.isSameVaryingAtLinkTime(fx, 310));
+
+    fx.location = 1;
+    EXPECT_FALSE(vx.isSameVaryingAtLinkTime(fx, 310));
+
+    fx.location = 0;
+    EXPECT_TRUE(vx.isSameVaryingAtLinkTime(fx, 310));
+}
+
 }  // namespace sh

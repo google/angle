@@ -40,6 +40,7 @@
 #include "compiler/translator/ValidateLimitations.h"
 #include "compiler/translator/ValidateMaxParameters.h"
 #include "compiler/translator/ValidateOutputs.h"
+#include "compiler/translator/ValidateVaryingLocations.h"
 #include "compiler/translator/VariablePacker.h"
 #include "third_party/compiler/ArrayBoundsClamper.h"
 
@@ -395,6 +396,11 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
         // simple.
         if (success)
             PruneEmptyDeclarations(root);
+
+        if (success && shaderVersion >= 310)
+        {
+            success = ValidateVaryingLocations(root, &mDiagnostics);
+        }
 
         if (success && shaderVersion >= 300 && shaderType == GL_FRAGMENT_SHADER)
         {

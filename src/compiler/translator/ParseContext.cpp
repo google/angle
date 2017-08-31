@@ -901,7 +901,7 @@ void TParseContext::checkLocationIsNotSpecified(const TSourceLoc &location,
         if (mShaderVersion >= 310)
         {
             errorMsg =
-                "invalid layout qualifier: only valid on program inputs, outputs, and uniforms";
+                "invalid layout qualifier: only valid on shader inputs, outputs, and uniforms";
         }
         error(location, errorMsg, "location");
     }
@@ -1221,9 +1221,9 @@ void TParseContext::declarationQualifierErrorCheck(const sh::TQualifier qualifie
     }
 
     bool canHaveLocation = qualifier == EvqVertexIn || qualifier == EvqFragmentOut;
-    if (mShaderVersion >= 310 && qualifier == EvqUniform)
+    if (mShaderVersion >= 310)
     {
-        canHaveLocation = true;
+        canHaveLocation = canHaveLocation || qualifier == EvqUniform || IsVarying(qualifier);
         // We're not checking whether the uniform location is in range here since that depends on
         // the type of the variable.
         // The type can only be fully determined for non-empty declarations.

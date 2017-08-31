@@ -4834,3 +4834,181 @@ TEST_F(FragmentShaderValidationTest, TextureGatherTooGreatOffset)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test that it isn't allowed to use 'location' layout qualifier on GLSL ES 3.0 vertex shader
+// outputs.
+TEST_F(VertexShaderValidationTest, UseLocationOnVertexOutES30)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "in vec4 v1;\n"
+        "layout (location = 1) out vec4 o_color;\n"
+        "void main()\n"
+        "{\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test that using 'location' layout qualifier on vertex shader outputs is legal in GLSL ES 3.1
+// shaders.
+TEST_F(VertexShaderValidationTest, UseLocationOnVertexOutES31)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "in vec4 v1;\n"
+        "layout (location = 1) out vec4 o_color1;\n"
+        "layout (location = 2) out vec4 o_color2;\n"
+        "out vec3 v3;\n"
+        "void main()\n"
+        "{\n"
+        "}\n";
+
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+    }
+}
+
+// Test that it isn't allowed to use 'location' layout qualifier on GLSL ES 3.0 fragment shader
+// inputs.
+TEST_F(FragmentShaderValidationTest, UseLocationOnFragmentInES30)
+{
+    const std::string &shaderString =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "layout (location = 0) in vec4 v_color1;\n"
+        "layout (location = 0) out vec4 o_color;\n"
+        "void main()\n"
+        "{\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test that using 'location' layout qualifier on fragment shader inputs is legal in GLSL ES 3.1
+// shaders.
+TEST_F(FragmentShaderValidationTest, UseLocationOnFragmentInES31)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "layout (location = 0) in mat4 v_mat;\n"
+        "layout (location = 4) in vec4 v_color1;\n"
+        "in vec2 v_color2;\n"
+        "layout (location = 0) out vec4 o_color;\n"
+        "void main()\n"
+        "{\n"
+        "}\n";
+
+    if (!compile(shaderString))
+    {
+        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+    }
+}
+
+// Test that declaring outputs of a vertex shader with same location causes a compile error.
+TEST_F(VertexShaderValidationTest, DeclareSameLocationOnVertexOut)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "in float i_value;\n"
+        "layout (location = 1) out vec4 o_color1;\n"
+        "layout (location = 1) out vec4 o_color2;\n"
+        "void main()\n"
+        "{\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test that declaring inputs of a fragment shader with same location causes a compile error.
+TEST_F(FragmentShaderValidationTest, DeclareSameLocationOnFragmentIn)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "in float i_value;\n"
+        "layout (location = 1) in vec4 i_color1;\n"
+        "layout (location = 1) in vec4 i_color2;\n"
+        "layout (location = 0) out vec4 o_color;\n"
+        "void main()\n"
+        "{\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test that the location of an element of an array conflicting with other output varyings in a
+// vertex shader causes a compile error.
+TEST_F(VertexShaderValidationTest, LocationConflictsnOnArrayElement)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "in float i_value;\n"
+        "layout (location = 0) out vec4 o_color1[3];\n"
+        "layout (location = 1) out vec4 o_color2;\n"
+        "void main()\n"
+        "{\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test that the location of an element of a matrix conflicting with other output varyings in a
+// vertex shader causes a compile error.
+TEST_F(VertexShaderValidationTest, LocationConflictsOnMatrixElement)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "in float i_value;\n"
+        "layout (location = 0) out mat4 o_mvp;\n"
+        "layout (location = 2) out vec4 o_color;\n"
+        "void main()\n"
+        "{\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test that the location of an element of a struct conflicting with other output varyings in a
+// vertex shader causes a compile error.
+TEST_F(VertexShaderValidationTest, LocationConflictsOnStructElement)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "in float i_value;\n"
+        "struct S\n"
+        "{\n"
+        "    float value1;\n"
+        "    vec3 value2;\n"
+        "};\n"
+        "layout (location = 0) out S s_in;"
+        "layout (location = 1) out vec4 o_color;\n"
+        "void main()\n"
+        "{\n"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
