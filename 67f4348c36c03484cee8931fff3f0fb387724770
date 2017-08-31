@@ -46,6 +46,30 @@
       "revId": "67f4348c36c03484cee8931fff3f0fb387724770",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "879b3347_b2956246",
+        "filename": "src/libGLESv2/entry_points_gles_3_1.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-08-31T02:01:06Z",
+      "side": 1,
+      "message": "Done\n\nWe need to create object one by one to trace and manage them in ANGLE. \n\nWell, I also hesitate to pass over this code snippet to Context::genProgramPipelines. Before gles 2.0/3.0 entries are auto-generated, it follows this way. When the .h entry file refactored to auto-gen file. It put this code snippet to Context as you suggested. \n\nRight now, the es3.1 .h entry file is also become auto-gen file. So it is reasonable to put them into Context now.",
+      "parentUuid": "ed2f9a71_42cd4e45",
+      "range": {
+        "startLine": 320,
+        "startChar": 0,
+        "endLine": 323,
+        "endChar": 9
+      },
+      "revId": "67f4348c36c03484cee8931fff3f0fb387724770",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
