@@ -16,6 +16,24 @@
       "revId": "25697ac9ef774ddeb79e638554ab1fbfe6051f49",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4eb15618_674cd8de",
+        "filename": "src/compiler/translator/HashNames.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-31T08:20:19Z",
+      "side": 1,
+      "message": "It\u0027s from GLSL ES 3.00.6 spec. I added a comment.",
+      "parentUuid": "ddbd3a8c_2fa5e0d2",
+      "revId": "25697ac9ef774ddeb79e638554ab1fbfe6051f49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
