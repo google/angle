@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "8fc8e67f_6ec5eaca",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-31T15:43:42Z",
+      "side": 1,
+      "message": "Yes, I agree that there is a limited number of cbuffers available. Maybe I can try putting into the already available driver constant buffer. My concern was that the updates would be with different frequency requiring the multi-view state change less frequent.\nCan the Google team give an advice?",
+      "parentUuid": "ee0cb6ce_9259d8f2",
+      "revId": "d12496557c40b12aac4b6f7a230c164586957456",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ab561540_6e5bc85d",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2017-08-31T13:42:40Z",
       "side": 1,
       "message": "Shouldn\u0027t this set the base layer index, instead of always using zero? We should also make sure that there are tests for base layer index !\u003d 0.",
+      "revId": "d12496557c40b12aac4b6f7a230c164586957456",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6df5008c_bb46fab8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2124,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-31T15:43:42Z",
+      "side": 1,
+      "message": "The base view index is applied whenever the RTV is created. I refactored the code so that a boolean is passed.",
+      "parentUuid": "ab561540_6e5bc85d",
       "revId": "d12496557c40b12aac4b6f7a230c164586957456",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
