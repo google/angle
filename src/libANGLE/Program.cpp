@@ -2982,6 +2982,9 @@ GLsizei Program::clampUniformCount(const VariableLocation &locationInfo,
                                    int vectorSize,
                                    const T *v)
 {
+    if (count == 1)
+        return 1;
+
     const LinkedUniform &linkedUniform = mState.mUniforms[locationInfo.index];
 
     // OpenGL ES 3.0.4 spec pg 67: "Values for any array element that exceeds the highest array

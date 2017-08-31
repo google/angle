@@ -1865,22 +1865,22 @@ void ProgramD3D::dirtyAllUniforms()
 
 void ProgramD3D::setUniform1fv(GLint location, GLsizei count, const GLfloat *v)
 {
-    setUniformInternal(location, count, v, GL_FLOAT);
+    setUniformInternal(location, count, v, gl::GetUniformTypeInfo(GL_FLOAT));
 }
 
 void ProgramD3D::setUniform2fv(GLint location, GLsizei count, const GLfloat *v)
 {
-    setUniformInternal(location, count, v, GL_FLOAT_VEC2);
+    setUniformInternal(location, count, v, gl::GetUniformTypeInfo(GL_FLOAT_VEC2));
 }
 
 void ProgramD3D::setUniform3fv(GLint location, GLsizei count, const GLfloat *v)
 {
-    setUniformInternal(location, count, v, GL_FLOAT_VEC3);
+    setUniformInternal(location, count, v, gl::GetUniformTypeInfo(GL_FLOAT_VEC3));
 }
 
 void ProgramD3D::setUniform4fv(GLint location, GLsizei count, const GLfloat *v)
 {
-    setUniformInternal(location, count, v, GL_FLOAT_VEC4);
+    setUniformInternal(location, count, v, gl::GetUniformTypeInfo(GL_FLOAT_VEC4));
 }
 
 void ProgramD3D::setUniformMatrix2fv(GLint location,
@@ -1957,42 +1957,42 @@ void ProgramD3D::setUniformMatrix4x3fv(GLint location,
 
 void ProgramD3D::setUniform1iv(GLint location, GLsizei count, const GLint *v)
 {
-    setUniformInternal(location, count, v, GL_INT);
+    setUniformInternal(location, count, v, gl::GetUniformTypeInfo(GL_INT));
 }
 
 void ProgramD3D::setUniform2iv(GLint location, GLsizei count, const GLint *v)
 {
-    setUniformInternal(location, count, v, GL_INT_VEC2);
+    setUniformInternal(location, count, v, gl::GetUniformTypeInfo(GL_INT_VEC2));
 }
 
 void ProgramD3D::setUniform3iv(GLint location, GLsizei count, const GLint *v)
 {
-    setUniformInternal(location, count, v, GL_INT_VEC3);
+    setUniformInternal(location, count, v, gl::GetUniformTypeInfo(GL_INT_VEC3));
 }
 
 void ProgramD3D::setUniform4iv(GLint location, GLsizei count, const GLint *v)
 {
-    setUniformInternal(location, count, v, GL_INT_VEC4);
+    setUniformInternal(location, count, v, gl::GetUniformTypeInfo(GL_INT_VEC4));
 }
 
 void ProgramD3D::setUniform1uiv(GLint location, GLsizei count, const GLuint *v)
 {
-    setUniformInternal(location, count, v, GL_UNSIGNED_INT);
+    setUniformInternal(location, count, v, gl::GetUniformTypeInfo(GL_UNSIGNED_INT));
 }
 
 void ProgramD3D::setUniform2uiv(GLint location, GLsizei count, const GLuint *v)
 {
-    setUniformInternal(location, count, v, GL_UNSIGNED_INT_VEC2);
+    setUniformInternal(location, count, v, gl::GetUniformTypeInfo(GL_UNSIGNED_INT_VEC2));
 }
 
 void ProgramD3D::setUniform3uiv(GLint location, GLsizei count, const GLuint *v)
 {
-    setUniformInternal(location, count, v, GL_UNSIGNED_INT_VEC3);
+    setUniformInternal(location, count, v, gl::GetUniformTypeInfo(GL_UNSIGNED_INT_VEC3));
 }
 
 void ProgramD3D::setUniform4uiv(GLint location, GLsizei count, const GLuint *v)
 {
-    setUniformInternal(location, count, v, GL_UNSIGNED_INT_VEC4);
+    setUniformInternal(location, count, v, gl::GetUniformTypeInfo(GL_UNSIGNED_INT_VEC4));
 }
 
 void ProgramD3D::setUniformBlockBinding(GLuint /*uniformBlockIndex*/,
@@ -2175,38 +2175,34 @@ void ProgramD3D::defineUniform(GLenum shaderType,
     }
 }
 
+// Assume count is already clamped.
 template <typename T>
 void ProgramD3D::setUniformImpl(const gl::VariableLocation &locationInfo,
-                                GLsizei countIn,
+                                GLsizei count,
                                 const T *v,
                                 uint8_t *targetData,
-                                GLenum targetUniformType)
+                                const gl::UniformTypeInfo &uniformTypeInfo)
 {
-    const int components        = gl::VariableComponentCount(targetUniformType);
-    const GLenum targetBoolType = gl::VariableBoolVectorType(targetUniformType);
-
     D3DUniform *targetUniform = mD3DUniforms[locationInfo.index];
-
-    unsigned int elementCount = targetUniform->elementCount();
+    const int components      = uniformTypeInfo.componentCount;
     unsigned int arrayElement = locationInfo.element;
-    unsigned int count        = std::min(elementCount - arrayElement, static_cast<unsigned int>(countIn));
 
-    if (targetUniform->type == targetUniformType)
+    if (targetUniform->type == uniformTypeInfo.type)
     {
         T *target = reinterpret_cast<T *>(targetData) + arrayElement * 4;
 
-        for (unsigned int i = 0; i < count; i++)
+        for (GLint i = 0; i < count; i++)
         {
             T *dest         = target + (i * 4);
             const T *source = v + (i * components);
             memcpy(dest, source, components * sizeof(T));
         }
     }
-    else if (targetUniform->type == targetBoolType)
+    else if (targetUniform->type == uniformTypeInfo.boolVectorType)
     {
         GLint *boolParams = reinterpret_cast<GLint *>(targetData) + arrayElement * 4;
 
-        for (unsigned int i = 0; i < count; i++)
+        for (GLint i = 0; i < count; i++)
         {
             GLint *dest     = boolParams + (i * 4);
             const T *source = v + (i * components);
@@ -2225,7 +2221,7 @@ template <typename T>
 void ProgramD3D::setUniformInternal(GLint location,
                                     GLsizei count,
                                     const T *v,
-                                    GLenum targetUniformType)
+                                    const gl::UniformTypeInfo &uniformTypeInfo)
 {
     const gl::VariableLocation &locationInfo = mState.getUniformLocations()[location];
     D3DUniform *targetUniform                = mD3DUniforms[locationInfo.index];
@@ -2234,7 +2230,7 @@ void ProgramD3D::setUniformInternal(GLint location,
 
     if (!targetUniform->mSamplerData.empty())
     {
-        ASSERT(targetUniformType == GL_INT);
+        ASSERT(uniformTypeInfo.type == GL_INT);
         memcpy(&targetUniform->mSamplerData[locationInfo.element], v, count * sizeof(T));
         mDirtySamplerMapping = true;
         return;
@@ -2242,17 +2238,17 @@ void ProgramD3D::setUniformInternal(GLint location,
 
     if (targetUniform->vsData)
     {
-        setUniformImpl(locationInfo, count, v, targetUniform->vsData, targetUniformType);
+        setUniformImpl(locationInfo, count, v, targetUniform->vsData, uniformTypeInfo);
     }
 
     if (targetUniform->psData)
     {
-        setUniformImpl(locationInfo, count, v, targetUniform->psData, targetUniformType);
+        setUniformImpl(locationInfo, count, v, targetUniform->psData, uniformTypeInfo);
     }
 
     if (targetUniform->csData)
     {
-        setUniformImpl(locationInfo, count, v, targetUniform->csData, targetUniformType);
+        setUniformImpl(locationInfo, count, v, targetUniform->csData, uniformTypeInfo);
     }
 }
 
