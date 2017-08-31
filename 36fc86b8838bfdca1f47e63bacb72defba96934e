@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e7225eb6_5f6b9a17",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1981,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-08-31T15:44:33Z",
+      "side": 1,
+      "message": "Somehow this was not enabled previously.",
+      "range": {
+        "startLine": 1981,
+        "startChar": 0,
+        "endLine": 1981,
+        "endChar": 80
+      },
+      "revId": "36fc86b8838bfdca1f47e63bacb72defba96934e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
