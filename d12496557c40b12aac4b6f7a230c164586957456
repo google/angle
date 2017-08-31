@@ -37,6 +37,47 @@
     },
     {
       "key": {
+        "uuid": "374f11fd_2b08fd91",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-31T19:54:35Z",
+      "side": 1,
+      "message": "Yes, put them into a driver block. How often do you expect to be updating these constants? In any case I don\u0027t think it\u0027ll be a big deal - you\u0027ll end up updating one 100 byte block instead of a 16-byte block or something in the worst case.",
+      "parentUuid": "8fc8e67f_6ec5eaca",
+      "revId": "d12496557c40b12aac4b6f7a230c164586957456",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1d9ee5b7_c61a1c39",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 619,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-08-31T19:54:35Z",
+      "side": 1,
+      "message": "this should likely just be in StateManager11... seems pretty stateful.",
+      "range": {
+        "startLine": 617,
+        "startChar": 0,
+        "endLine": 619,
+        "endChar": 30
+      },
+      "revId": "d12496557c40b12aac4b6f7a230c164586957456",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ab561540_6e5bc85d",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 4
