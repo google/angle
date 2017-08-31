@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "15e68364_fdf4e78f",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1115,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-08-31T02:29:06Z",
+      "side": 1,
+      "message": "Nice!",
+      "parentUuid": "e43c8798_fc7e2936",
+      "revId": "516cc448297a8f2833043ee230abcef56b00ceeb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9a6e562f_dabd2a0a",
         "filename": "src/libANGLE/Uniform.h",
         "patchSetId": 4
@@ -30,6 +48,30 @@
       "writtenOn": "2017-08-30T14:08:51Z",
       "side": 1,
       "message": "ShaderReferenced?",
+      "range": {
+        "startLine": 22,
+        "startChar": 7,
+        "endLine": 22,
+        "endChar": 16
+      },
+      "revId": "516cc448297a8f2833043ee230abcef56b00ceeb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aaab97d2_f444a55e",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-08-31T02:29:06Z",
+      "side": 1,
+      "message": "Maybe. ShaderRef seems plain and straightforward as well.",
+      "parentUuid": "9a6e562f_dabd2a0a",
       "range": {
         "startLine": 22,
         "startChar": 7,
@@ -59,6 +101,47 @@
         "endLine": 28,
         "endChar": 0
       },
+      "revId": "516cc448297a8f2833043ee230abcef56b00ceeb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e84a595a_e98b6833",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-08-31T02:29:06Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "ec13582d_19b094ea",
+      "range": {
+        "startLine": 27,
+        "startChar": 4,
+        "endLine": 28,
+        "endChar": 0
+      },
+      "revId": "516cc448297a8f2833043ee230abcef56b00ceeb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b4c5f05b_1e0ef496",
+        "filename": "src/libANGLE/UniformLinker.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-08-31T02:29:06Z",
+      "side": 1,
+      "message": "Used here.",
       "revId": "516cc448297a8f2833043ee230abcef56b00ceeb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
