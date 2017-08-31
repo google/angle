@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "70beceb8_5fbae292",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-08-31T21:48:23Z",
+      "side": 1,
+      "message": "Nit: and ChromeOS",
+      "range": {
+        "startLine": 7,
+        "startChar": 38,
+        "endLine": 7,
+        "endChar": 45
+      },
+      "revId": "2cee84ee64bd1aa85645751137752d084a7235af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
