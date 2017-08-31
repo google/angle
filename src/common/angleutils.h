@@ -248,7 +248,6 @@ std::string ToString(const T &value)
 #define GL_BGRA4_ANGLEX 0x6ABC
 #define GL_BGR5_A1_ANGLEX 0x6ABD
 #define GL_INT_64_ANGLEX 0x6ABE
-#define GL_STRUCT_ANGLEX 0x6ABF
 
 // Hidden enum for the NULL D3D device type.
 #define EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE 0x6AC0

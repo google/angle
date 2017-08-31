@@ -23,11 +23,9 @@ namespace gl
 
 int VariableComponentCount(GLenum type);
 GLenum VariableComponentType(GLenum type);
-bool IsVariableComponentTypeBool(GLenum type);
 size_t VariableComponentSize(GLenum type);
 size_t VariableInternalSize(GLenum type);
 size_t VariableExternalSize(GLenum type);
-GLenum VariableBoolVectorType(GLenum type);
 int VariableRowCount(GLenum type);
 int VariableColumnCount(GLenum type);
 bool IsSamplerType(GLenum type);
@@ -41,17 +39,7 @@ int VariableRegisterCount(GLenum type);
 int MatrixRegisterCount(GLenum type, bool isRowMajorMatrix);
 int MatrixComponentCount(GLenum type, bool isRowMajorMatrix);
 int VariableSortOrder(GLenum type);
-
-// Inlined for speed
-ANGLE_INLINE bool IsVariableComponentTypeBool(GLenum type)
-{
-    static_assert((GL_BOOL_VEC2 == GL_BOOL + 1) && (GL_BOOL_VEC3 == GL_BOOL + 2) &&
-                      (GL_BOOL_VEC4 == GL_BOOL + 3),
-                  "GL_BOOL and GL_BOOL_VEC2-4 are contiguous");
-    ASSERT((static_cast<uint32_t>(type - GL_BOOL) <= 3) ==
-           (VariableComponentType(type) == GL_BOOL));
-    return (static_cast<uint32_t>(type - GL_BOOL) <= 3);
-}
+GLenum VariableBoolVectorType(GLenum type);
 
 int AllocateFirstFreeBits(unsigned int *bits, unsigned int allocationSize, unsigned int bitsSize);
 
@@ -156,6 +144,57 @@ ParamType ConvertFromGLint64(GLint64 param)
 }
 
 unsigned int ParseAndStripArrayIndex(std::string *name);
+
+struct UniformTypeInfo final : angle::NonCopyable
+{
+    constexpr UniformTypeInfo(GLenum type,
+                              GLenum componentType,
+                              GLenum samplerTextureType,
+                              GLenum transposedMatrixType,
+                              GLenum boolVectorType,
+                              int rowCount,
+                              int columnCount,
+                              int componentCount,
+                              size_t componentSize,
+                              size_t internalSize,
+                              size_t externalSize,
+                              bool isSampler,
+                              bool isMatrixType,
+                              bool isImageType)
+        : type(type),
+          componentType(componentType),
+          samplerTextureType(samplerTextureType),
+          transposedMatrixType(transposedMatrixType),
+          boolVectorType(boolVectorType),
+          rowCount(rowCount),
+          columnCount(columnCount),
+          componentCount(componentCount),
+          componentSize(componentSize),
+          internalSize(internalSize),
+          externalSize(externalSize),
+          isSampler(isSampler),
+          isMatrixType(isMatrixType),
+          isImageType(isImageType)
+    {
+    }
+
+    GLenum type;
+    GLenum componentType;
+    GLenum samplerTextureType;
+    GLenum transposedMatrixType;
+    GLenum boolVectorType;
+    int rowCount;
+    int columnCount;
+    int componentCount;
+    size_t componentSize;
+    size_t internalSize;
+    size_t externalSize;
+    bool isSampler;
+    bool isMatrixType;
+    bool isImageType;
+};
+
+const UniformTypeInfo &GetUniformTypeInfo(GLenum uniformType);
 
 }  // namespace gl
 

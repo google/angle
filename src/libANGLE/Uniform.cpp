@@ -14,7 +14,7 @@ namespace gl
 {
 
 LinkedUniform::LinkedUniform()
-    : bufferIndex(-1), blockInfo(sh::BlockMemberInfo::getDefaultBlockInfo())
+    : typeInfo(nullptr), bufferIndex(-1), blockInfo(sh::BlockMemberInfo::getDefaultBlockInfo())
 {
 }
 
@@ -27,7 +27,7 @@ LinkedUniform::LinkedUniform(GLenum typeIn,
                              const int locationIn,
                              const int bufferIndexIn,
                              const sh::BlockMemberInfo &blockInfoIn)
-    : bufferIndex(bufferIndexIn), blockInfo(blockInfoIn)
+    : typeInfo(&GetUniformTypeInfo(typeIn)), bufferIndex(bufferIndexIn), blockInfo(blockInfoIn)
 {
     type      = typeIn;
     precision = precisionIn;
@@ -39,18 +39,25 @@ LinkedUniform::LinkedUniform(GLenum typeIn,
 }
 
 LinkedUniform::LinkedUniform(const sh::Uniform &uniform)
-    : sh::Uniform(uniform), bufferIndex(-1), blockInfo(sh::BlockMemberInfo::getDefaultBlockInfo())
+    : sh::Uniform(uniform),
+      typeInfo(&GetUniformTypeInfo(type)),
+      bufferIndex(-1),
+      blockInfo(sh::BlockMemberInfo::getDefaultBlockInfo())
 {
 }
 
 LinkedUniform::LinkedUniform(const LinkedUniform &uniform)
-    : sh::Uniform(uniform), bufferIndex(uniform.bufferIndex), blockInfo(uniform.blockInfo)
+    : sh::Uniform(uniform),
+      typeInfo(uniform.typeInfo),
+      bufferIndex(uniform.bufferIndex),
+      blockInfo(uniform.blockInfo)
 {
 }
 
 LinkedUniform &LinkedUniform::operator=(const LinkedUniform &uniform)
 {
     sh::Uniform::operator=(uniform);
+    typeInfo             = uniform.typeInfo;
     bufferIndex          = uniform.bufferIndex;
     blockInfo            = uniform.blockInfo;
 
@@ -68,12 +75,12 @@ bool LinkedUniform::isInDefaultBlock() const
 
 bool LinkedUniform::isSampler() const
 {
-    return IsSamplerType(type);
+    return typeInfo->isSampler;
 }
 
 bool LinkedUniform::isImage() const
 {
-    return IsImageType(type);
+    return typeInfo->isImageType;
 }
 
 bool LinkedUniform::isAtomicCounter() const
@@ -88,12 +95,12 @@ bool LinkedUniform::isField() const
 
 size_t LinkedUniform::getElementSize() const
 {
-    return VariableExternalSize(type);
+    return typeInfo->externalSize;
 }
 
 size_t LinkedUniform::getElementComponents() const
 {
-    return VariableComponentCount(type);
+    return typeInfo->componentCount;
 }
 
 ShaderVariableBuffer::ShaderVariableBuffer()

@@ -61,12 +61,12 @@ bool CompareShaderVar(const sh::ShaderVariable &x, const sh::ShaderVariable &y)
     }
 
     // Special case for handling structs: we sort these to the end of the list
-    if (x.type == GL_STRUCT_ANGLEX)
+    if (x.type == GL_NONE)
     {
         return false;
     }
 
-    if (y.type == GL_STRUCT_ANGLEX)
+    if (y.type == GL_NONE)
     {
         return true;
     }

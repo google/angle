@@ -218,13 +218,13 @@ TEST(VariablePacking, Struct)
 
     // Test example from GLSL ES 3.0 spec chapter 11, but with structs
     std::vector<sh::ShaderVariable> vars;
-    vars.push_back(sh::ShaderVariable(GL_STRUCT_ANGLEX, 0));
+    vars.push_back(sh::ShaderVariable(GL_NONE, 0));
 
     sh::ShaderVariable &parentStruct = vars[0];
     parentStruct.fields.push_back(sh::ShaderVariable(GL_FLOAT_VEC4, 0));
     parentStruct.fields.push_back(sh::ShaderVariable(GL_FLOAT_MAT3, 0));
 
-    parentStruct.fields.push_back(sh::ShaderVariable(GL_STRUCT_ANGLEX, 0));
+    parentStruct.fields.push_back(sh::ShaderVariable(GL_NONE, 0));
     sh::ShaderVariable &innerStruct = parentStruct.fields.back();
     innerStruct.fields.push_back(sh::ShaderVariable(GL_FLOAT_MAT3, 0));
     innerStruct.fields.push_back(sh::ShaderVariable(GL_FLOAT_VEC2, 6));

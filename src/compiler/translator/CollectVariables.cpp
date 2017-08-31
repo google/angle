@@ -352,7 +352,7 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
             const char kName[] = "gl_DepthRange";
             info.name          = kName;
             info.mappedName    = kName;
-            info.type          = GL_STRUCT_ANGLEX;
+            info.type          = GL_NONE;
             info.arraySize     = 0;
             info.precision     = GL_NONE;
             info.staticUse     = true;
@@ -556,8 +556,8 @@ void CollectVariablesTraverser::setCommonVariableProperties(const TType &type,
     }
     else
     {
-        // Note: this enum value is not exposed outside ANGLE
-        variableOut->type       = GL_STRUCT_ANGLEX;
+        // Structures use a NONE type that isn't exposed outside ANGLE.
+        variableOut->type       = GL_NONE;
         variableOut->structName = structure->name().c_str();
 
         const TFieldList &fields = structure->fields();

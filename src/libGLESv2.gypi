@@ -40,6 +40,7 @@
             'common/third_party/murmurhash/MurmurHash3.h',
             'common/tls.cpp',
             'common/tls.h',
+            'common/uniform_type_info_autogen.cpp',
             'common/utilities.cpp',
             'common/utilities.h',
             'common/vector_utils.h',

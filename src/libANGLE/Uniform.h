@@ -18,6 +18,7 @@
 
 namespace gl
 {
+struct UniformTypeInfo;
 
 // Helper struct representing a single shader uniform
 struct LinkedUniform : public sh::Uniform
@@ -44,6 +45,8 @@ struct LinkedUniform : public sh::Uniform
     bool isField() const;
     size_t getElementSize() const;
     size_t getElementComponents() const;
+
+    const UniformTypeInfo *typeInfo;
 
     // Identifies the containing buffer backed resource -- interface block or atomic counter buffer.
     int bufferIndex;

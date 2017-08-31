@@ -12,6 +12,7 @@
 #include <GLSLANG/ShaderVars.h>
 #include <anglebase/sha1.h>
 
+#include "common/utilities.h"
 #include "common/version.h"
 #include "libANGLE/BinaryStream.h"
 #include "libANGLE/Context.h"
@@ -205,6 +206,8 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
         uniform.blockInfo.arrayStride      = stream.readInt<int>();
         uniform.blockInfo.matrixStride     = stream.readInt<int>();
         uniform.blockInfo.isRowMajorMatrix = stream.readBool();
+
+        uniform.typeInfo = &GetUniformTypeInfo(uniform.type);
 
         state->mUniforms.push_back(uniform);
     }
