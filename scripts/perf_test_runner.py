@@ -100,7 +100,8 @@ print('Test name: ' + test_name)
 
 # Infinite loop of running the tests.
 while True:
-    output = subprocess.getoutput([perftests_path, '--gtest_filter=' + test_name])
+    process = subprocess.Popen([perftests_path, '--gtest_filter=' + test_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    output, err = process.communicate()
 
     start_index = output.find(metric + "=")
     if start_index == -1:
