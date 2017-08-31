@@ -16,6 +16,24 @@
       "revId": "e12c46a5caae9f0c5aaac907d08528f7fae20d9d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "73bf9bc9_8a33b9ef",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 815,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-08-31T18:35:42Z",
+      "side": 1,
+      "message": "Done, changed to early return.",
+      "parentUuid": "780edb4a_055e2f12",
+      "revId": "e12c46a5caae9f0c5aaac907d08528f7fae20d9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
