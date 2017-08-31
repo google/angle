@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "80923d64_f8d8a36d",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-31T12:00:59Z",
+      "side": 1,
+      "message": "From https://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/Display.cpp?q\u003dDisplay.cpp\u0026dr\u003dC\u0026l\u003d495, we can see that attribs is always empty. So I think passing the actual attribs should be in the TODO list? Here createContextRobustness will indicate whether it has extension \u0027GLX_ARB_create_context_robustness\u0027 which includes the robust buffer access.",
+      "parentUuid": "91a48980_683434e6",
+      "revId": "138245c60ececb9f07b73518ba4536f9e12c0e89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bb5cc1ae_09ed5093",
         "filename": "src/libANGLE/ContextState.h",
         "patchSetId": 4
@@ -54,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "6fc31ee4_da7dfae0",
+        "filename": "src/libANGLE/ContextState.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-31T12:00:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cfc6f4fa_3eb2a07d",
+      "revId": "138245c60ececb9f07b73518ba4536f9e12c0e89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "98cb2ca4_dacf8cbd",
         "filename": "src/libANGLE/ContextState.h",
         "patchSetId": 4
@@ -74,6 +110,30 @@
       "revId": "138245c60ececb9f07b73518ba4536f9e12c0e89",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1321f4c6_61fdb449",
+        "filename": "src/libANGLE/ContextState.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-08-31T12:00:59Z",
+      "side": 1,
+      "message": "Done. Thanks for your suggestion.",
+      "parentUuid": "98cb2ca4_dacf8cbd",
+      "range": {
+        "startLine": 142,
+        "startChar": 4,
+        "endLine": 142,
+        "endChar": 23
+      },
+      "revId": "138245c60ececb9f07b73518ba4536f9e12c0e89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
