@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "abe45f84_4bffa01d",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 599,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-31T15:14:13Z",
+      "side": 1,
+      "message": "This is the GL error, did you mean GL_INVALID_INDEX?  Either way, we should return 0 so that dEQP does not allocate giant buffers.",
+      "range": {
+        "startLine": 599,
+        "startChar": 19,
+        "endLine": 599,
+        "endChar": 35
+      },
+      "revId": "d302eb85cf287454e11d8eefa132b065d7e316fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "17d2d033_4591c55e",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 603,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-31T15:14:13Z",
+      "side": 1,
+      "message": "Same comment.",
+      "range": {
+        "startLine": 603,
+        "startChar": 19,
+        "endLine": 603,
+        "endChar": 35
+      },
+      "revId": "d302eb85cf287454e11d8eefa132b065d7e316fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79dbd4df_1fdaca8f",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 621,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-31T15:14:13Z",
+      "side": 1,
+      "message": "Same comment.",
+      "range": {
+        "startLine": 621,
+        "startChar": 19,
+        "endLine": 621,
+        "endChar": 35
+      },
+      "revId": "d302eb85cf287454e11d8eefa132b065d7e316fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "887b0027_693e3e28",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 625,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-08-31T15:14:13Z",
+      "side": 1,
+      "message": "Same comment.",
+      "range": {
+        "startLine": 625,
+        "startChar": 19,
+        "endLine": 625,
+        "endChar": 35
+      },
+      "revId": "d302eb85cf287454e11d8eefa132b065d7e316fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
