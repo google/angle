@@ -743,6 +743,24 @@ void StateManager11::handleMultiviewDrawFramebufferChange(const gl::Context *con
         mInternalDirtyBits.set(DIRTY_BIT_VIEWPORT_STATE);
         mInternalDirtyBits.set(DIRTY_BIT_SCISSOR_STATE);
     }
+    switch (drawFramebuffer->getMultiviewLayout())
+    {
+        case GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE:
+            mVertexConstants.multiviewWriteToViewportIndex = 1.0f;
+            mPixelConstants.multiviewWriteToViewportIndex  = 1.0f;
+            break;
+        case GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE:
+            // Because the base view index is applied as an offset to the 2D texture array when the
+            // RTV is created, we just have to pass a boolean to select which code path is to be
+            // used.
+            mVertexConstants.multiviewWriteToViewportIndex = 0.0f;
+            mPixelConstants.multiviewWriteToViewportIndex  = 0.0f;
+            break;
+        default:
+            // There is no need to update the value in the constant buffer if the active framebuffer
+            // object does not have a multiview layout.
+            break;
+    }
 }
 
 gl::Error StateManager11::syncBlendState(const gl::Context *context,
@@ -1038,13 +1056,11 @@ void StateManager11::syncViewport(const gl::Context *context)
 
     mPixelConstants.viewScale[0] = 1.0f;
     mPixelConstants.viewScale[1] = mCurPresentPathFastEnabled ? 1.0f : -1.0f;
-    mPixelConstants.viewScale[2] = 1.0f;
-    mPixelConstants.viewScale[3] = 1.0f;
+    // Updates to the multiviewWriteToViewportIndex member are to be handled whenever the draw
+    // framebuffer's layout is changed.
 
     mVertexConstants.viewScale[0] = mPixelConstants.viewScale[0];
     mVertexConstants.viewScale[1] = mPixelConstants.viewScale[1];
-    mVertexConstants.viewScale[2] = mPixelConstants.viewScale[2];
-    mVertexConstants.viewScale[3] = mPixelConstants.viewScale[3];
 }
 
 void StateManager11::invalidateRenderTarget(const gl::Context *context)

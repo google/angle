@@ -78,6 +78,7 @@ struct BuiltinInfo
     BuiltinVarying glPointSize;
     BuiltinVarying glViewIDOVR;
     BuiltinVarying glViewportIndex;
+    BuiltinVarying glLayer;
 };
 
 inline std::string GetVaryingSemantic(int majorShaderModel, bool programUsesPointSize)

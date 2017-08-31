@@ -173,8 +173,10 @@ class MultiviewRenderTestBase : public MultiviewDrawTest
     {
     }
     void RenderTestSetUp() { MultiviewDrawTest::DrawTestSetUp(); }
-    void createFBO(int viewWidth, int height, int numViews)
+    void createFBO(int viewWidth, int height, int numViews, int numLayers, int baseViewIndex)
     {
+        ASSERT(numViews + baseViewIndex <= numLayers);
+
         mViewWidth  = viewWidth;
         mViewHeight = height;
         mNumViews   = numViews;
@@ -204,14 +206,14 @@ class MultiviewRenderTestBase : public MultiviewDrawTest
             }
             case GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE:
                 glBindTexture(GL_TEXTURE_2D_ARRAY, mColorTexture);
-                glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, viewWidth, height, numViews, 0,
+                glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, viewWidth, height, numLayers, 0,
                              GL_RGBA, GL_UNSIGNED_BYTE, NULL);
                 glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
                 glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
                 glBindTexture(GL_TEXTURE_2D_ARRAY, mDepthTexture);
                 glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_DEPTH_COMPONENT32F, viewWidth, height,
-                             numViews, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+                             numLayers, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
                 glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
                 break;
             default:
@@ -241,9 +243,11 @@ class MultiviewRenderTestBase : public MultiviewDrawTest
             }
             case GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE:
                 glFramebufferTextureMultiviewLayeredANGLE(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                                                          mColorTexture, 0, 0, numViews);
+                                                          mColorTexture, 0, baseViewIndex,
+                                                          numViews);
                 glFramebufferTextureMultiviewLayeredANGLE(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-                                                          mDepthTexture, 0, 0, numViews);
+                                                          mDepthTexture, 0, baseViewIndex,
+                                                          numViews);
                 break;
             default:
                 UNREACHABLE();
@@ -263,20 +267,26 @@ class MultiviewRenderTestBase : public MultiviewDrawTest
                 glBindFramebuffer(GL_READ_FRAMEBUFFER, mReadFramebuffer[0]);
                 glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
                                        mColorTexture, 0);
+                ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE,
+                                 glCheckFramebufferStatus(GL_READ_FRAMEBUFFER));
                 break;
             case GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE:
-                mReadFramebuffer.resize(numViews);
-                for (int i = 0; i < numViews; ++i)
+                mReadFramebuffer.resize(numLayers);
+                for (int i = 0; i < numLayers; ++i)
                 {
-                    glBindFramebuffer(GL_READ_FRAMEBUFFER, mReadFramebuffer[i]);
-                    glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                                              mColorTexture, 0, i);
+                    glBindFramebuffer(GL_FRAMEBUFFER, mReadFramebuffer[i]);
+                    glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, mColorTexture,
+                                              0, i);
+                    glClearColor(0, 0, 0, 0);
+                    glClear(GL_COLOR_BUFFER_BIT);
+                    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE,
+                                     glCheckFramebufferStatus(GL_READ_FRAMEBUFFER));
                 }
+                glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mDrawFramebuffer);
                 break;
             default:
                 UNREACHABLE();
         }
-        ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_READ_FRAMEBUFFER));
 
         // Clear the buffers.
         glViewport(0, 0, viewWidth, height);
@@ -288,6 +298,11 @@ class MultiviewRenderTestBase : public MultiviewDrawTest
         }
         glClearColor(0, 0, 0, 1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
+
+    void createFBO(int viewWidth, int height, int numViews)
+    {
+        createFBO(viewWidth, height, numViews, numViews, 0);
     }
 
     GLColor GetViewColor(int x, int y, int view)
@@ -448,6 +463,17 @@ class MultiviewSideBySideRenderTest : public MultiviewRenderTestBase,
   protected:
     MultiviewSideBySideRenderTest()
         : MultiviewRenderTestBase(GetParam(), GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE)
+    {
+    }
+    void SetUp() override { MultiviewRenderTestBase::RenderTestSetUp(); }
+};
+
+class MultiviewLayeredRenderTest : public MultiviewRenderTestBase,
+                                   public ::testing::TestWithParam<PlatformParameters>
+{
+  protected:
+    MultiviewLayeredRenderTest()
+        : MultiviewRenderTestBase(GetParam(), GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE)
     {
     }
     void SetUp() override { MultiviewRenderTestBase::RenderTestSetUp(); }
@@ -1817,6 +1843,96 @@ TEST_P(MultiviewRenderTest, DivisorUpdatedOnProgramChange)
     }
 }
 
+// The test checks that gl_ViewID_OVR is correctly propagated to the fragment shader.
+TEST_P(MultiviewRenderTest, SelectColorBasedOnViewIDOVR)
+{
+    if (!requestMultiviewExtension())
+    {
+        return;
+    }
+
+    const std::string vsSource =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview2 : require\n"
+        "layout(num_views = 3) in;\n"
+        "in vec3 vPosition;\n"
+        "void main()\n"
+        "{\n"
+        "   gl_Position = vec4(vPosition, 1.);\n"
+        "}\n";
+
+    const std::string fsSource =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview2 : require\n"
+        "precision mediump float;\n"
+        "out vec4 col;\n"
+        "void main()\n"
+        "{\n"
+        "    if (gl_ViewID_OVR == 0u) {\n"
+        "       col = vec4(1,0,0,1);\n"
+        "    } else if (gl_ViewID_OVR == 1u) {\n"
+        "       col = vec4(0,1,0,1);\n"
+        "    } else if (gl_ViewID_OVR == 2u) {\n"
+        "       col = vec4(0,0,1,1);\n"
+        "    } else {\n"
+        "       col = vec4(0,0,0,0);\n"
+        "    }\n"
+        "}\n";
+
+    createFBO(1, 1, 3);
+    ANGLE_GL_PROGRAM(program, vsSource, fsSource);
+    glUseProgram(program);
+
+    drawQuad(program, "vPosition", 0.0f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_EQ(GLColor::red, GetViewColor(0, 0, 0));
+    EXPECT_EQ(GLColor::green, GetViewColor(0, 0, 1));
+    EXPECT_EQ(GLColor::blue, GetViewColor(0, 0, 2));
+}
+
+// The test checks that the inactive layers of a 2D texture array are not written to by a
+// multi-view program.
+TEST_P(MultiviewLayeredRenderTest, RenderToSubrageOfLayers)
+{
+    if (!requestMultiviewExtension())
+    {
+        return;
+    }
+
+    const std::string vsSource =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview : require\n"
+        "layout(num_views = 2) in;\n"
+        "in vec3 vPosition;\n"
+        "void main()\n"
+        "{\n"
+        "   gl_Position = vec4(vPosition, 1.);\n"
+        "}\n";
+
+    const std::string fsSource =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview : require\n"
+        "precision mediump float;\n"
+        "out vec4 col;\n"
+        "void main()\n"
+        "{\n"
+        "     col = vec4(1,0,0,1);\n"
+        "}\n";
+
+    createFBO(1, 1, 2, 4, 1);
+    ANGLE_GL_PROGRAM(program, vsSource, fsSource);
+    glUseProgram(program);
+
+    drawQuad(program, "vPosition", 0.0f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_EQ(GLColor::transparentBlack, GetViewColor(0, 0, 0));
+    EXPECT_EQ(GLColor::red, GetViewColor(0, 0, 1));
+    EXPECT_EQ(GLColor::red, GetViewColor(0, 0, 2));
+    EXPECT_EQ(GLColor::transparentBlack, GetViewColor(0, 0, 3));
+}
+
 MultiviewTestParams SideBySideOpenGL()
 {
     return MultiviewTestParams(GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE, egl_platform::OPENGL());
@@ -1832,18 +1948,35 @@ MultiviewTestParams SideBySideD3D11()
     return MultiviewTestParams(GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE, egl_platform::D3D11());
 }
 
+MultiviewTestParams LayeredD3D11()
+{
+    return MultiviewTestParams(GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE, egl_platform::D3D11());
+}
+
 ANGLE_INSTANTIATE_TEST(MultiviewDrawValidationTest, ES31_OPENGL());
 ANGLE_INSTANTIATE_TEST(MultiviewRenderDualViewTest,
                        SideBySideOpenGL(),
                        LayeredOpenGL(),
-                       SideBySideD3D11());
-ANGLE_INSTANTIATE_TEST(MultiviewRenderTest, SideBySideOpenGL(), LayeredOpenGL(), SideBySideD3D11());
+                       SideBySideD3D11(),
+                       LayeredD3D11());
+ANGLE_INSTANTIATE_TEST(MultiviewRenderTest,
+                       SideBySideOpenGL(),
+                       LayeredOpenGL(),
+                       SideBySideD3D11(),
+                       LayeredD3D11());
 ANGLE_INSTANTIATE_TEST(MultiviewOcclusionQueryTest,
                        SideBySideOpenGL(),
                        LayeredOpenGL(),
-                       SideBySideD3D11());
-ANGLE_INSTANTIATE_TEST(MultiviewProgramGenerationTest, SideBySideOpenGL(), SideBySideD3D11());
+                       SideBySideD3D11(),
+                       LayeredD3D11());
+ANGLE_INSTANTIATE_TEST(MultiviewProgramGenerationTest,
+                       SideBySideOpenGL(),
+                       SideBySideD3D11(),
+                       LayeredD3D11());
 ANGLE_INSTANTIATE_TEST(MultiviewRenderPrimitiveTest,
                        SideBySideOpenGL(),
                        LayeredOpenGL(),
-                       SideBySideD3D11());
+                       SideBySideD3D11(),
+                       LayeredD3D11());
+ANGLE_INSTANTIATE_TEST(MultiviewSideBySideRenderTest, ES3_OPENGL(), ES3_D3D11());
+ANGLE_INSTANTIATE_TEST(MultiviewLayeredRenderTest, ES3_OPENGL(), ES3_D3D11());

@@ -518,6 +518,13 @@ void OutputHLSL::header(TInfoSinkBase &out, const BuiltInFunctionEmulator *built
                 out << "    float2 dx_ViewScale : packoffset(c3);\n";
             }
 
+            if (mHasMultiviewExtensionEnabled)
+            {
+                // We have to add a value which we can use to keep track of which multi-view code
+                // path is to be selected in the GS.
+                out << "    float multiviewSelectViewportIndex : packoffset(c3.z);\n";
+            }
+
             if (mOutputType == SH_HLSL_4_1_OUTPUT)
             {
                 mUniformHLSL->samplerMetadataUniforms(out, "c4");
@@ -630,6 +637,13 @@ void OutputHLSL::header(TInfoSinkBase &out, const BuiltInFunctionEmulator *built
             out << "    float4 dx_ViewAdjust : packoffset(c1);\n";
             out << "    float2 dx_ViewCoords : packoffset(c2);\n";
             out << "    float2 dx_ViewScale  : packoffset(c3);\n";
+
+            if (mHasMultiviewExtensionEnabled)
+            {
+                // We have to add a value which we can use to keep track of which multi-view code
+                // path is to be selected in the GS.
+                out << "    float multiviewSelectViewportIndex : packoffset(c3.z);\n";
+            }
 
             if (mOutputType == SH_HLSL_4_1_OUTPUT)
             {

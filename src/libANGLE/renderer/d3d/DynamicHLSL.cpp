@@ -396,6 +396,11 @@ void DynamicHLSL::generateVaryingLinkHLSL(const VaryingPacking &varyingPacking,
                    << builtins.glViewportIndex.str() << ";\n";
     }
 
+    if (builtins.glLayer.enabled)
+    {
+        hlslStream << "    nointerpolation uint gl_Layer : " << builtins.glLayer.str() << ";\n";
+    }
+
     std::string varyingSemantic =
         GetVaryingSemantic(mRenderer->getMajorShaderModel(), programUsesPointSize);
 
@@ -948,12 +953,27 @@ std::string DynamicHLSL::generateGeometryShaderPreamble(const VaryingPacking &va
                    << "#endif  // ANGLE_POINT_SPRITE_SHADER\n"
                    << "}\n";
 
-    if (builtinsD3D[SHADER_GEOMETRY].glViewportIndex.enabled && hasANGLEMultiviewEnabled)
+    if (hasANGLEMultiviewEnabled)
     {
+        ASSERT(builtinsD3D[SHADER_GEOMETRY].glViewportIndex.enabled &&
+               builtinsD3D[SHADER_GEOMETRY].glLayer.enabled);
+
+        // According to the HLSL reference, using SV_RenderTargetArrayIndex is only valid if the
+        // render target is an array resource. Because of this we do not write to gl_Layer if we are
+        // taking the side-by-side code path. We still select the viewport index in the layered code
+        // path as that is always valid. See:
+        // https://msdn.microsoft.com/en-us/library/windows/desktop/bb509647(v=vs.85).aspx
         preambleStream << "\n"
                        << "void selectView(inout GS_OUTPUT output, GS_INPUT input)\n"
                        << "{\n"
-                       << "    output.gl_ViewportIndex = input.gl_ViewID_OVR;\n"
+                       << "    output.gl_ViewID_OVR = input.gl_ViewID_OVR;\n"
+                       << "    if (multiviewSelectViewportIndex)\n"
+                       << "    {\n"
+                       << "        output.gl_ViewportIndex = input.gl_ViewID_OVR;\n"
+                       << "    } else {\n"
+                       << "        output.gl_ViewportIndex = 0;\n"
+                       << "        output.gl_Layer = input.gl_ViewID_OVR;\n"
+                       << "    }\n"
                        << "}\n";
     }
 
@@ -1022,18 +1042,34 @@ std::string DynamicHLSL::generateGeometryShaderHLSL(gl::PrimitiveType primitiveT
             break;
     }
 
+    if (pointSprites || hasANGLEMultiviewEnabled)
+    {
+        shaderStream << "cbuffer DriverConstants : register(b0)\n"
+                        "{\n";
+
+        if (pointSprites)
+        {
+            shaderStream << "    float4 dx_ViewCoords : packoffset(c1);\n";
+            if (useViewScale)
+            {
+                shaderStream << "    float2 dx_ViewScale : packoffset(c3);\n";
+            }
+        }
+
+        if (hasANGLEMultiviewEnabled)
+        {
+            // We have to add a value which we can use to keep track of which multi-view code path
+            // is to be selected in the GS.
+            shaderStream << "    float multiviewSelectViewportIndex : packoffset(c3.z);\n";
+        }
+
+        shaderStream << "};\n\n";
+    }
+
     if (pointSprites)
     {
         shaderStream << "#define ANGLE_POINT_SPRITE_SHADER\n"
                         "\n"
-                        "uniform float4 dx_ViewCoords : register(c1);\n";
-
-        if (useViewScale)
-        {
-            shaderStream << "uniform float2 dx_ViewScale : register(c3);\n";
-        }
-
-        shaderStream << "\n"
                         "static float2 pointSpriteCorners[] = \n"
                         "{\n"
                         "    float2( 0.5f, -0.5f),\n"
@@ -1313,12 +1349,20 @@ void BuiltinVaryingsD3D::updateBuiltins(ShaderType shaderType,
 
     if (shaderType == SHADER_PIXEL && metadata.hasANGLEMultiviewEnabled())
     {
-        builtins->glViewIDOVR.enableSystem("SV_ViewportArrayIndex");
+        builtins->glViewIDOVR.enable(userSemantic, reservedSemanticIndex++);
     }
 
     if (shaderType == SHADER_GEOMETRY && metadata.hasANGLEMultiviewEnabled())
     {
+        // Although it is possible to retrieve gl_ViewID_OVR from the value of
+        // SV_ViewportArrayIndex or SV_RenderTargetArrayIndex based on the multi-view state in the
+        // driver constant buffer, it is easier and cleaner to pass it as a varying.
+        builtins->glViewIDOVR.enable(userSemantic, reservedSemanticIndex++);
+
+        // gl_Layer and gl_ViewportIndex are necessary so that we can write to either based on the
+        // multiview state in the driver constant buffer.
         builtins->glViewportIndex.enableSystem("SV_ViewportArrayIndex");
+        builtins->glLayer.enableSystem("SV_RenderTargetArrayIndex");
     }
 
     // Special case: do not include PSIZE semantic in HLSL 3 pixel shaders

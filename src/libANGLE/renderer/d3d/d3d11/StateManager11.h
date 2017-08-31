@@ -29,22 +29,56 @@ struct Renderer11DeviceCaps;
 
 struct dx_VertexConstants11
 {
+    dx_VertexConstants11()
+        : depthRange{.0f},
+          viewAdjust{.0f},
+          viewCoords{.0f},
+          viewScale{.0f},
+          multiviewWriteToViewportIndex{.0f},
+          padding{.0f}
+    {
+    }
     float depthRange[4];
     float viewAdjust[4];
     float viewCoords[4];
-    float viewScale[4];
+    float viewScale[2];
+    // multiviewWriteToViewportIndex is used to select either the side-by-side or layered code-path
+    // in the GS. It's value, if set, is either 0.0f or 1.0f. The value is updated whenever a
+    // multi-view draw framebuffer is made active.
+    float multiviewWriteToViewportIndex;
+
+    // Added here to manually pad the struct.
+    float padding;
 };
 
 struct dx_PixelConstants11
 {
+    dx_PixelConstants11()
+        : depthRange{.0f},
+          viewCoords{.0f},
+          depthFront{.0f},
+          viewScale{.0f},
+          multiviewWriteToViewportIndex{.0f},
+          padding{.0f}
+    {
+    }
+
     float depthRange[4];
     float viewCoords[4];
     float depthFront[4];
-    float viewScale[4];
+    float viewScale[2];
+    // multiviewWriteToViewportIndex is used to select either the side-by-side or layered code-path
+    // in the GS. It's value, if set, is either 0.0f or 1.0f. The value is updated whenever a
+    // multi-view draw framebuffer is made active.
+    float multiviewWriteToViewportIndex;
+
+    // Added here to manually pad the struct.
+    float padding;
 };
 
 struct dx_ComputeConstants11
 {
+    dx_ComputeConstants11() : numWorkGroups{0u}, padding{0u} {}
     unsigned int numWorkGroups[3];
     unsigned int padding;  // This just pads the struct to 16 bytes
 };
