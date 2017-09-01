@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7ab90d47_757b657e",
+        "filename": "src/libANGLE/renderer/d3d/FramebufferD3D.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-01T16:06:40Z",
+      "side": 1,
+      "message": "This line can be removed.",
+      "range": {
+        "startLine": 101,
+        "startChar": 0,
+        "endLine": 102,
+        "endChar": 86
+      },
+      "revId": "cbfcf43aee015e7751c7f0c6a8fa1ecbc3aa1d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "85fb2542_d831a1cb",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 478,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-01T16:06:40Z",
+      "side": 1,
+      "message": "This is un-used except for the validation below.  I don\u0027t think this validation is needed.",
+      "range": {
+        "startLine": 478,
+        "startChar": 11,
+        "endLine": 478,
+        "endChar": 27
+      },
+      "revId": "cbfcf43aee015e7751c7f0c6a8fa1ecbc3aa1d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "497c269d_266b2b91",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 1466,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-01T16:06:40Z",
+      "side": 1,
+      "message": "These can overflow.  Currently the validation in ValidateGetMultisamplefv compares the index against GL_MAX_SAMPLES but the spec says it should compare against SAMPLES.  You need to get the current framebuffer\u0027s samples with Framebuffer::getSamples to validate.",
+      "range": {
+        "startLine": 1466,
+        "startChar": 50,
+        "endLine": 1466,
+        "endChar": 61
+      },
+      "revId": "cbfcf43aee015e7751c7f0c6a8fa1ecbc3aa1d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "563e2be4_670690e4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.h",
+        "patchSetId": 23
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-01T16:06:40Z",
+      "side": 1,
+      "message": "We\u0027re trying to avoid statics now, they are disallowed by Chromium\u0027s style guide.  This can be a constexpr array in the cpp file I think.  Something like:\n\n    // Standard D3D sample positions from [[[msdn link]]]\n    using SamplePositionsArray \u003d std::array\u003cfloat, 32\u003e;\n    constexpr std::array\u003c5, SamplePositionsArray\u003e  \u003d {\n        { 0.5f, 0.5f },\n        {0.75f, 0.75f, 0.25f, 0.25f},\n        ...\n    };\n\nIf this is not possible, we should make a function that generates the unordered_map and store it in Renderer11.",
+      "range": {
+        "startLine": 80,
+        "startChar": 4,
+        "endLine": 80,
+        "endChar": 10
+      },
+      "revId": "cbfcf43aee015e7751c7f0c6a8fa1ecbc3aa1d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
