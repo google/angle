@@ -2871,8 +2871,8 @@ bool ValidateDrawElementsCommon(ValidationContext *context,
                 return false;
             }
 
-            ASSERT(typeSize > 0);
-            if (elementArrayBuffer->getSize() % typeSize != 0)
+            ASSERT(isPow2(typeSize) && typeSize > 0);
+            if ((elementArrayBuffer->getSize() & (typeSize - 1)) != 0)
             {
                 ANGLE_VALIDATION_ERR(context, InvalidOperation(), MismatchedByteCountType);
                 return false;
