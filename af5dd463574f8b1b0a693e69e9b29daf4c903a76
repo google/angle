@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "85369074_9bfb4658",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-01T12:14:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ce19888a_033b49b1",
+      "range": {
+        "startLine": 222,
+        "startChar": 9,
+        "endLine": 222,
+        "endChar": 27
+      },
+      "revId": "af5dd463574f8b1b0a693e69e9b29daf4c903a76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "662c33ac_76c61820",
         "filename": "src/libANGLE/Caps.h",
         "patchSetId": 5
@@ -36,6 +60,24 @@
       "writtenOn": "2017-08-31T15:03:47Z",
       "side": 1,
       "message": "You also need to initialize this and set the extension string in Caps.cpp",
+      "revId": "af5dd463574f8b1b0a693e69e9b29daf4c903a76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0052ee07_4af26ad8",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-01T12:14:03Z",
+      "side": 1,
+      "message": "Done. Sorry, I should be more careful.",
+      "parentUuid": "662c33ac_76c61820",
       "revId": "af5dd463574f8b1b0a693e69e9b29daf4c903a76",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "922bbe6a_678bac4c",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1219,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-01T12:14:03Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "88dea187_2a69b762",
+      "range": {
+        "startLine": 1219,
+        "startChar": 22,
+        "endLine": 1219,
+        "endChar": 52
+      },
+      "revId": "af5dd463574f8b1b0a693e69e9b29daf4c903a76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bed181cf_7146053b",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 5
@@ -76,6 +142,30 @@
       "writtenOn": "2017-08-31T15:03:47Z",
       "side": 1,
       "message": "This should be:\n\n   mRobustAccess \u0026\u0026 mExtensions.robustBufferAccessBehavior;\n\nWhich will make sure that we only expose the KHR_robust_buffer_access_behavior extension when robust buffer access is requested and the backend supports it.",
+      "range": {
+        "startLine": 2601,
+        "startChar": 37,
+        "endLine": 2601,
+        "endChar": 78
+      },
+      "revId": "af5dd463574f8b1b0a693e69e9b29daf4c903a76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88a4b786_1b2a227b",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2601,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-01T12:14:03Z",
+      "side": 1,
+      "message": "Sorry, do you mean \u0027mExtensions.robustBufferAccessBehavior \u003d mRobustAccess \u0026\u0026 mExtensions.robustBufferAccessBehavior\u0027? I think mExtensions.robustBufferAccessBehavior is false here. Maybe only mExtensions.robustBufferAccessBehavior \u003d mRobustAccess is needed?",
+      "parentUuid": "bed181cf_7146053b",
       "range": {
         "startLine": 2601,
         "startChar": 37,
@@ -108,6 +198,30 @@
       "revId": "af5dd463574f8b1b0a693e69e9b29daf4c903a76",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c2de8c7_7668d18f",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2927,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-01T12:14:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8445f427_37998910",
+      "range": {
+        "startLine": 2902,
+        "startChar": 4,
+        "endLine": 2927,
+        "endChar": 56
+      },
+      "revId": "af5dd463574f8b1b0a693e69e9b29daf4c903a76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
