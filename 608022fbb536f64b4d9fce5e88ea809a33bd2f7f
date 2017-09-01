@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "695f558e_3a21ed29",
+        "filename": "src/common/uniform_type_info_autogen.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-01T16:07:36Z",
+      "side": 1,
+      "message": "Marking variable as static const makes sure they are put in the read-only section of the executable, constexpr doesn\u0027t offer such guarantee.",
+      "parentUuid": "45ad1c85_38f4832a",
+      "revId": "608022fbb536f64b4d9fce5e88ea809a33bd2f7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9a56af3f_f7dce61c",
         "filename": "src/common/utilities.h",
         "patchSetId": 8
