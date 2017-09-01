@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a55eeaf4_ab6c13bb",
+        "filename": "src/libANGLE/ProgramPipeline.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-09-01T04:45:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9e18465_f0260769",
+      "range": {
+        "startLine": 40,
+        "startChar": 4,
+        "endLine": 41,
+        "endChar": 0
+      },
+      "revId": "26b144072204dc48eba34e96326d533765c44623",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8c737047_dfe48cbf",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 8
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "48bc4e2d_ac312d0c",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1216,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-09-01T04:45:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8c737047_dfe48cbf",
+      "range": {
+        "startLine": 1216,
+        "startChar": 6,
+        "endLine": 1216,
+        "endChar": 89
+      },
+      "revId": "26b144072204dc48eba34e96326d533765c44623",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1ca1bd64_c8d77aba",
         "filename": "src/libANGLE/validationES31.h",
         "patchSetId": 8
@@ -68,6 +116,30 @@
       "revId": "26b144072204dc48eba34e96326d533765c44623",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ac357a0_6089b0a8",
+        "filename": "src/libANGLE/validationES31.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-09-01T04:45:01Z",
+      "side": 1,
+      "message": "The other similar functions are all defined in .h file. So I would like to keep consistent with the previous design. Although it is OK to move it into .cpp file as a static method.\n\nWe can do a code refactoring for this one and the others if it is really necessary in future.",
+      "parentUuid": "1ca1bd64_c8d77aba",
+      "range": {
+        "startLine": 113,
+        "startChar": 5,
+        "endLine": 113,
+        "endChar": 28
+      },
+      "revId": "26b144072204dc48eba34e96326d533765c44623",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
