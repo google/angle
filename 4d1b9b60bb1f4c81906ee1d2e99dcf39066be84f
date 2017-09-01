@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fe4f704c_ddcde959",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-01T15:46:42Z",
+      "side": 0,
+      "message": "Why not add this type to the generator instead of removing it? It makes things more clear and shouldn\u0027t cause perf or maintenance overhead.",
+      "revId": "4d1b9b60bb1f4c81906ee1d2e99dcf39066be84f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
