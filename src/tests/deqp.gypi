@@ -229,7 +229,6 @@
             '<(deqp_path)/modules/gles2/functional/es2fShaderInvarianceTests.hpp',
             '<(deqp_path)/modules/gles2/functional/es2fShaderLoopTests.cpp',
             '<(deqp_path)/modules/gles2/functional/es2fShaderLoopTests.hpp',
-            '<(deqp_path)/modules/gles2/functional/es2fShaderMatrixTests.cpp',
             '<(deqp_path)/modules/gles2/functional/es2fShaderMatrixTests.hpp',
             '<(deqp_path)/modules/gles2/functional/es2fShaderOperatorTests.cpp',
             '<(deqp_path)/modules/gles2/functional/es2fShaderOperatorTests.hpp',
@@ -324,6 +323,10 @@
             '<(deqp_path)/modules/gles2/tes2TestPackage.cpp',
             '<(deqp_path)/modules/gles2/tes2TestPackage.hpp',
             '<(deqp_path)/modules/gles2/tes2TestPackageEntry.cpp',
+            # TODO(geofflang): Remove this once the test is updated in dEQP or the VC++2017
+            # compiler is fixed (crbug.com/759402)
+            #'<(deqp_path)/modules/gles2/functional/es2fShaderMatrixTests.cpp',
+            '<(angle_path)/src/tests/deqp_support/es2fShaderMatrixTests.cpp',
         ],
         'deqp_gles3_sources':
         [
@@ -1628,6 +1631,12 @@
                         'deqp_support/angle_deqp_libtester_main.cpp',
                         'deqp_support/tcuANGLEPlatform.cpp',
                         'deqp_support/tcuANGLEPlatform.h',
+                    ],
+                    # TODO(geofflang): Remove once es2fShaderMatrixTests.cpp no longer requires
+                    # a local copy (crbug.com/759402)
+                    'include_dirs':
+                    [
+                        '<(deqp_path)/modules/gles2/functional',
                     ],
                 },
 
