@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "45ad1c85_38f4832a",
+        "filename": "src/common/uniform_type_info_autogen.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-01T16:03:43Z",
+      "side": 1,
+      "message": "I\u0027m not sure there is a difference between static and putting stuff in an anonymous namespace. constexpr AFAIK is the preferred way of marking objects as read only data.",
+      "parentUuid": "54a5925e_0a907532",
+      "revId": "608022fbb536f64b4d9fce5e88ea809a33bd2f7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9a56af3f_f7dce61c",
         "filename": "src/common/utilities.h",
         "patchSetId": 8
@@ -30,6 +48,30 @@
       "writtenOn": "2017-09-01T15:46:42Z",
       "side": 1,
       "message": "[1]",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 40
+      },
+      "revId": "608022fbb536f64b4d9fce5e88ea809a33bd2f7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ec5ed8b_b560cc10",
+        "filename": "src/common/utilities.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-01T16:03:43Z",
+      "side": 1,
+      "message": "Can look at doing this as follow up work at some point.",
+      "parentUuid": "9a56af3f_f7dce61c",
       "range": {
         "startLine": 24,
         "startChar": 0,

@@ -16,6 +16,24 @@
       "revId": "4d1b9b60bb1f4c81906ee1d2e99dcf39066be84f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "904a3452_85748688",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-01T16:03:43Z",
+      "side": 0,
+      "message": "I found it was basically a duplicate of NONE. Kinda feel like it does cause maintenance overhead.",
+      "parentUuid": "fe4f704c_ddcde959",
+      "revId": "4d1b9b60bb1f4c81906ee1d2e99dcf39066be84f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
