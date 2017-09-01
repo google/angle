@@ -131,6 +131,23 @@
     },
     {
       "key": {
+        "uuid": "b2daae0a_e3baf09f",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2553,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-01T14:55:48Z",
+      "side": 1,
+      "message": "ref",
+      "revId": "af5dd463574f8b1b0a693e69e9b29daf4c903a76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bed181cf_7146053b",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 5
@@ -166,6 +183,30 @@
       "side": 1,
       "message": "Sorry, do you mean \u0027mExtensions.robustBufferAccessBehavior \u003d mRobustAccess \u0026\u0026 mExtensions.robustBufferAccessBehavior\u0027? I think mExtensions.robustBufferAccessBehavior is false here. Maybe only mExtensions.robustBufferAccessBehavior \u003d mRobustAccess is needed?",
       "parentUuid": "bed181cf_7146053b",
+      "range": {
+        "startLine": 2601,
+        "startChar": 37,
+        "endLine": 2601,
+        "endChar": 78
+      },
+      "revId": "af5dd463574f8b1b0a693e69e9b29daf4c903a76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bb1bb95f_1c5ccc9f",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2601,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-01T14:55:48Z",
+      "side": 1,
+      "message": "No, at this point mExtensions is set to the extensions returned by the backends (see ref).  This logic will make sure that mExtensions.robustBufferAccessBehavior is true only if it is requested and the backend supports it.  You will have to make sure that the tests are requesting robust buffer access to see it enabled.",
+      "parentUuid": "88a4b786_1b2a227b",
       "range": {
         "startLine": 2601,
         "startChar": 37,
