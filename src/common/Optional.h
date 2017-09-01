@@ -56,6 +56,10 @@ struct Optional
 
     bool operator!=(const Optional &other) const { return !(*this == other); }
 
+    bool operator==(const T &value) const { return mValid && (mValue == value); }
+
+    bool operator!=(const T &value) const { return !(*this == value); }
+
   private:
     bool mValid;
     T mValue;
