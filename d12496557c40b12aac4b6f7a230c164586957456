@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "0a259291_182a6dc0",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-09-01T11:50:16Z",
+      "side": 1,
+      "message": "There was some available space to store the information for the path to take, so it ends up being the same size. Thinking about the updates now, the ones based on the layout will be very infrequent.",
+      "parentUuid": "374f11fd_2b08fd91",
+      "revId": "d12496557c40b12aac4b6f7a230c164586957456",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1d9ee5b7_c61a1c39",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
         "patchSetId": 4
@@ -66,6 +84,30 @@
       "writtenOn": "2017-08-31T19:54:35Z",
       "side": 1,
       "message": "this should likely just be in StateManager11... seems pretty stateful.",
+      "range": {
+        "startLine": 617,
+        "startChar": 0,
+        "endLine": 619,
+        "endChar": 30
+      },
+      "revId": "d12496557c40b12aac4b6f7a230c164586957456",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "effb5220_a309ccba",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 619,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-09-01T11:50:16Z",
+      "side": 1,
+      "message": "After refactoring these naturally disappeared.",
+      "parentUuid": "1d9ee5b7_c61a1c39",
       "range": {
         "startLine": 617,
         "startChar": 0,
