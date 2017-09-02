@@ -2765,19 +2765,19 @@ Error Context::prepareForDraw(GLenum drawMode)
 
 void Context::syncRendererState()
 {
+    mGLState.syncDirtyObjects(this);
     const State::DirtyBits &dirtyBits = mGLState.getDirtyBits();
     mImplementation->syncState(this, dirtyBits);
     mGLState.clearDirtyBits();
-    mGLState.syncDirtyObjects(this);
 }
 
 void Context::syncRendererState(const State::DirtyBits &bitMask,
                                 const State::DirtyObjects &objectMask)
 {
+    mGLState.syncDirtyObjects(this, objectMask);
     const State::DirtyBits &dirtyBits = (mGLState.getDirtyBits() & bitMask);
     mImplementation->syncState(this, dirtyBits);
     mGLState.clearDirtyBits(dirtyBits);
-    mGLState.syncDirtyObjects(this, objectMask);
 }
 
 void Context::blitFramebuffer(GLint srcX0,
