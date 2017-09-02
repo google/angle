@@ -445,6 +445,6 @@ inline bool operator!=(const TextureState &a, const TextureState &b)
 {
     return !(a == b);
 }
-}
+}  // namespace gl
 
 #endif  // LIBANGLE_TEXTURE_H_

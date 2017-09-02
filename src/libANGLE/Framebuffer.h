@@ -169,8 +169,8 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
                                           const GLint *viewportOffsets);
     void resetAttachment(const Context *context, GLenum binding);
 
-    void detachTexture(const Context *context, GLuint texture);
-    void detachRenderbuffer(const Context *context, GLuint renderbuffer);
+    bool detachTexture(const Context *context, GLuint texture);
+    bool detachRenderbuffer(const Context *context, GLuint renderbuffer);
 
     const FramebufferAttachment *getColorbuffer(size_t colorAttachment) const;
     const FramebufferAttachment *getDepthbuffer() const;
@@ -308,8 +308,8 @@ class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
                                       GLint copyTextureLayer) const;
 
   private:
-    void detachResourceById(const Context *context, GLenum resourceType, GLuint resourceId);
-    void detachMatchingAttachment(const Context *context,
+    bool detachResourceById(const Context *context, GLenum resourceType, GLuint resourceId);
+    bool detachMatchingAttachment(const Context *context,
                                   FramebufferAttachment *attachment,
                                   GLenum matchType,
                                   GLuint matchId,

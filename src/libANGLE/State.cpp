@@ -197,9 +197,9 @@ void State::initialize(const Context *context,
 
 void State::reset(const Context *context)
 {
-    for (TextureBindingMap::iterator bindingVec = mSamplerTextures.begin(); bindingVec != mSamplerTextures.end(); bindingVec++)
+    for (auto &bindingVec : mSamplerTextures)
     {
-        TextureBindingVector &textureVector = bindingVec->second;
+        TextureBindingVector &textureVector = bindingVec.second;
         for (size_t textureIdx = 0; textureIdx < textureVector.size(); textureIdx++)
         {
             textureVector[textureIdx].set(context, nullptr);
@@ -834,14 +834,14 @@ void State::detachTexture(const Context *context, const TextureMap &zeroTextures
     // as if Texture2DAttachment had been called, with a texture of 0, for each attachment point to which this
     // image was attached in the currently bound framebuffer.
 
-    if (mReadFramebuffer)
+    if (mReadFramebuffer && mReadFramebuffer->detachTexture(context, texture))
     {
-        mReadFramebuffer->detachTexture(context, texture);
+        mDirtyObjects.set(DIRTY_OBJECT_READ_FRAMEBUFFER);
     }
 
-    if (mDrawFramebuffer)
+    if (mDrawFramebuffer && mDrawFramebuffer->detachTexture(context, texture))
     {
-        mDrawFramebuffer->detachTexture(context, texture);
+        mDirtyObjects.set(DIRTY_OBJECT_DRAW_FRAMEBUFFER);
     }
 }
 
@@ -893,6 +893,7 @@ void State::detachSampler(const Context *context, GLuint sampler)
 void State::setRenderbufferBinding(const Context *context, Renderbuffer *renderbuffer)
 {
     mRenderbuffer.set(context, renderbuffer);
+    mDirtyBits.set(DIRTY_BIT_RENDERBUFFER_BINDING);
 }
 
 GLuint State::getRenderbufferId() const
@@ -913,7 +914,7 @@ void State::detachRenderbuffer(const Context *context, GLuint renderbuffer)
 
     if (mRenderbuffer.id() == renderbuffer)
     {
-        mRenderbuffer.set(context, nullptr);
+        setRenderbufferBinding(context, nullptr);
     }
 
     // [OpenGL ES 2.0.24] section 4.4 page 111:
@@ -924,14 +925,17 @@ void State::detachRenderbuffer(const Context *context, GLuint renderbuffer)
     Framebuffer *readFramebuffer = mReadFramebuffer;
     Framebuffer *drawFramebuffer = mDrawFramebuffer;
 
-    if (readFramebuffer)
+    if (readFramebuffer && readFramebuffer->detachRenderbuffer(context, renderbuffer))
     {
-        readFramebuffer->detachRenderbuffer(context, renderbuffer);
+        mDirtyObjects.set(DIRTY_OBJECT_READ_FRAMEBUFFER);
     }
 
     if (drawFramebuffer && drawFramebuffer != readFramebuffer)
     {
-        drawFramebuffer->detachRenderbuffer(context, renderbuffer);
+        if (drawFramebuffer->detachRenderbuffer(context, renderbuffer))
+        {
+            mDirtyObjects.set(DIRTY_OBJECT_DRAW_FRAMEBUFFER);
+        }
     }
 
 }

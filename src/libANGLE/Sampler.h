@@ -79,6 +79,6 @@ class Sampler final : public RefCountObject, public LabeledObject
     SamplerState mSamplerState;
 };
 
-}
+}  // namespace gl
 
 #endif // LIBANGLE_SAMPLER_H_

@@ -597,22 +597,27 @@ const std::string &Framebuffer::getLabel() const
     return mState.mLabel;
 }
 
-void Framebuffer::detachTexture(const Context *context, GLuint textureId)
+bool Framebuffer::detachTexture(const Context *context, GLuint textureId)
 {
-    detachResourceById(context, GL_TEXTURE, textureId);
+    return detachResourceById(context, GL_TEXTURE, textureId);
 }
 
-void Framebuffer::detachRenderbuffer(const Context *context, GLuint renderbufferId)
+bool Framebuffer::detachRenderbuffer(const Context *context, GLuint renderbufferId)
 {
-    detachResourceById(context, GL_RENDERBUFFER, renderbufferId);
+    return detachResourceById(context, GL_RENDERBUFFER, renderbufferId);
 }
 
-void Framebuffer::detachResourceById(const Context *context, GLenum resourceType, GLuint resourceId)
+bool Framebuffer::detachResourceById(const Context *context, GLenum resourceType, GLuint resourceId)
 {
+    bool found = false;
+
     for (size_t colorIndex = 0; colorIndex < mState.mColorAttachments.size(); ++colorIndex)
     {
-        detachMatchingAttachment(context, &mState.mColorAttachments[colorIndex], resourceType,
-                                 resourceId, DIRTY_BIT_COLOR_ATTACHMENT_0 + colorIndex);
+        if (detachMatchingAttachment(context, &mState.mColorAttachments[colorIndex], resourceType,
+                                     resourceId, DIRTY_BIT_COLOR_ATTACHMENT_0 + colorIndex))
+        {
+            found = true;
+        }
     }
 
     if (context->isWebGL1())
@@ -626,19 +631,28 @@ void Framebuffer::detachResourceById(const Context *context, GLenum resourceType
                 attachment->id() == resourceId)
             {
                 resetAttachment(context, attachment->getBinding());
+                found = true;
             }
         }
     }
     else
     {
-        detachMatchingAttachment(context, &mState.mDepthAttachment, resourceType, resourceId,
-                                 DIRTY_BIT_DEPTH_ATTACHMENT);
-        detachMatchingAttachment(context, &mState.mStencilAttachment, resourceType, resourceId,
-                                 DIRTY_BIT_STENCIL_ATTACHMENT);
+        if (detachMatchingAttachment(context, &mState.mDepthAttachment, resourceType, resourceId,
+                                     DIRTY_BIT_DEPTH_ATTACHMENT))
+        {
+            found = true;
+        }
+        if (detachMatchingAttachment(context, &mState.mStencilAttachment, resourceType, resourceId,
+                                     DIRTY_BIT_STENCIL_ATTACHMENT))
+        {
+            found = true;
+        }
     }
+
+    return found;
 }
 
-void Framebuffer::detachMatchingAttachment(const Context *context,
+bool Framebuffer::detachMatchingAttachment(const Context *context,
                                            FramebufferAttachment *attachment,
                                            GLenum matchType,
                                            GLuint matchId,
@@ -648,7 +662,10 @@ void Framebuffer::detachMatchingAttachment(const Context *context,
     {
         attachment->detach(context);
         mDirtyBits.set(dirtyBit);
+        return true;
     }
+
+    return false;
 }
 
 const FramebufferAttachment *Framebuffer::getColorbuffer(size_t colorAttachment) const
