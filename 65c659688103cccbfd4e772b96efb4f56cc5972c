@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c04d0fab_3afae5b7",
+        "filename": "src/libGLESv2/global_state.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-09-02T00:01:10Z",
+      "side": 1,
+      "message": "nit: this doesn\u0027t compile because unused",
+      "range": {
+        "startLine": 42,
+        "startChar": 8,
+        "endLine": 42,
+        "endChar": 29
+      },
+      "revId": "65c659688103cccbfd4e772b96efb4f56cc5972c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
