@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "0292fe02_1cd248ce",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 556,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-09-03T11:55:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b66a85db_e55a9c19",
+      "range": {
+        "startLine": 556,
+        "startChar": 19,
+        "endLine": 556,
+        "endChar": 35
+      },
+      "revId": "a47ffefcb512012bc03129837f583a953b23f203",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0ded6ec1_0447b33f",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2017-09-01T16:23:49Z",
       "side": 1,
       "message": "nit: maybe you should use clampCast instead of static_cast? The spec says that if a value is too large, it should be rounded down to the nearest representable value. This might be hard to reproduce but it can\u0027t hurt to be safe.",
+      "range": {
+        "startLine": 566,
+        "startChar": 28,
+        "endLine": 566,
+        "endChar": 39
+      },
+      "revId": "a47ffefcb512012bc03129837f583a953b23f203",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee456af4_634a88e9",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 566,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-09-03T11:55:32Z",
+      "side": 1,
+      "message": "The current implementation of clampCast is not a sound one for all types. It assumes SrcT can properly represent DestT::min/max. That is to say it can only convert float to int, int to short, double to float, and etc. But not vice versa。 Neither unsigned to singed or singed to unsigned can work as their ranges intersect.",
+      "parentUuid": "0ded6ec1_0447b33f",
       "range": {
         "startLine": 566,
         "startChar": 28,
@@ -68,6 +116,30 @@
       "revId": "a47ffefcb512012bc03129837f583a953b23f203",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ea559683_f15dfed5",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 573,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-09-03T11:55:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c8261802_04fb5c96",
+      "range": {
+        "startLine": 573,
+        "startChar": 10,
+        "endLine": 573,
+        "endChar": 23
+      },
+      "revId": "a47ffefcb512012bc03129837f583a953b23f203",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
