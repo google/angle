@@ -381,7 +381,10 @@ void TextureStorage11::markLevelDirty(int mipLevel)
         mSwizzleCache[mipLevel] = gl::SwizzleState();
     }
 
-    mDropStencilTexture.reset();
+    if (mDropStencilTexture.valid())
+    {
+        mDropStencilTexture.reset();
+    }
 }
 
 void TextureStorage11::markDirty()
