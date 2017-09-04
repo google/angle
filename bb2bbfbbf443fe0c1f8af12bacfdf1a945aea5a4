@@ -16,6 +16,24 @@
       "revId": "bb2bbfbbf443fe0c1f8af12bacfdf1a945aea5a4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "54660103_e824985a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/shaders/generate_shaders.bat",
+        "patchSetId": 23
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-09-04T05:28:37Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "ab0b461a_693fadf0",
+      "revId": "bb2bbfbbf443fe0c1f8af12bacfdf1a945aea5a4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
