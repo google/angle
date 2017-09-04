@@ -46,6 +46,30 @@
       "revId": "2e11d477a99fb2480c40fd02fa3f428224fac4c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "03fe1a5e_0b1eea70",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/dxgi_support_table.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-04T15:36:03Z",
+      "side": 1,
+      "message": "You\u0027re right, this script has bugs in it for the creation of neverSupported. If the always and optional bits are correct, then I think we\u0027re fine, since we don\u0027t ever check neverSupported within ANGLE, but could you at least leave a comment documenting this as a known bug?",
+      "parentUuid": "8888e39d_39be4d22",
+      "range": {
+        "startLine": 50,
+        "startChar": 13,
+        "endLine": 50,
+        "endChar": 35
+      },
+      "revId": "2e11d477a99fb2480c40fd02fa3f428224fac4c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
