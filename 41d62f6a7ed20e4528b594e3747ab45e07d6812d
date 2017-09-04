@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5107bdfb_83fa49d1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-09-04T09:08:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b4774ec0_efa80b54",
+      "revId": "41d62f6a7ed20e4528b594e3747ab45e07d6812d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "284e5c87_cf69a4ff",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
         "patchSetId": 8
@@ -30,6 +48,24 @@
       "writtenOn": "2017-09-04T08:31:22Z",
       "side": 1,
       "message": "I wonder if we might run into any sort of issues because this value is not initialized. Would be safer to initialize it in the StateManager11 constructor. Same for the pixel constant of course.",
+      "revId": "41d62f6a7ed20e4528b594e3747ab45e07d6812d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af4718d0_9bb2e844",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-09-04T09:08:38Z",
+      "side": 1,
+      "message": "Better to initialize them just in case for whatever reason the value gets read in the shader and used in some computation. Then we can guarantee that a possible bug is reproducible.\nDone.",
+      "parentUuid": "284e5c87_cf69a4ff",
       "revId": "41d62f6a7ed20e4528b594e3747ab45e07d6812d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
