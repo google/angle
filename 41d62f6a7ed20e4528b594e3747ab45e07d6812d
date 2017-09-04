@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b4774ec0_efa80b54",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-04T08:31:22Z",
+      "side": 1,
+      "message": "nit: Clean up the whitespace change.",
+      "revId": "41d62f6a7ed20e4528b594e3747ab45e07d6812d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "284e5c87_cf69a4ff",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-04T08:31:22Z",
+      "side": 1,
+      "message": "I wonder if we might run into any sort of issues because this value is not initialized. Would be safer to initialize it in the StateManager11 constructor. Same for the pixel constant of course.",
+      "revId": "41d62f6a7ed20e4528b594e3747ab45e07d6812d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
