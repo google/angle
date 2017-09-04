@@ -22,6 +22,30 @@
       "revId": "2e11d477a99fb2480c40fd02fa3f428224fac4c5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8888e39d_39be4d22",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/dxgi_support_table.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-09-04T08:32:56Z",
+      "side": 1,
+      "message": "I am not sure of the logic behind the .py script, but the when it generates these lists of formats it combines \"supported\", \"never supported\" and \"optional\". I am not sure why the script is written that way and whether this is a pre-existing bug.\nThe formats disappear because they go into the 11_1 list instead of the \"never supported\" list and never get outputted for the other feature levels.",
+      "parentUuid": "a63e2293_200734ae",
+      "range": {
+        "startLine": 50,
+        "startChar": 13,
+        "endLine": 50,
+        "endChar": 35
+      },
+      "revId": "2e11d477a99fb2480c40fd02fa3f428224fac4c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
