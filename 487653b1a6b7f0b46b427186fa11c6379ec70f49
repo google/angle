@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0722097_715c8a9f",
+        "filename": "infra/config/cq.cfg",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-09-05T00:04:08Z",
+      "side": 0,
+      "message": "Was this the guy that compiled ANGLE\u0027s ozone gbm back end?  We don\u0027t seem to have that anymore...",
+      "range": {
+        "startLine": 34,
+        "startChar": 24,
+        "endLine": 34,
+        "endChar": 60
+      },
+      "revId": "487653b1a6b7f0b46b427186fa11c6379ec70f49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
