@@ -104,8 +104,61 @@ void BindFramebufferAttachment(const FunctionsGL *functions,
     }
 }
 
-bool RequiresMultiviewClear(const FramebufferAttachment *attachment, bool scissorTestEnabled)
+bool AreAllLayersActive(const FramebufferAttachment &attachment)
 {
+    int baseViewIndex = attachment.getBaseViewIndex();
+    if (baseViewIndex != 0)
+    {
+        return false;
+    }
+    const ImageIndex &imageIndex = attachment.getTextureImageIndex();
+    int numLayers =
+        static_cast<int>(attachment.getTexture()->getDepth(imageIndex.type, imageIndex.mipIndex));
+    return (attachment.getNumViews() == numLayers);
+}
+
+bool RequiresMultiviewClear(const FramebufferState &state, bool scissorTestEnabled)
+{
+    // Get one attachment and check whether all layers are attached.
+    const FramebufferAttachment *attachment = nullptr;
+    bool allTextureArraysAreFullyAttached   = true;
+    for (const FramebufferAttachment &colorAttachment : state.getColorAttachments())
+    {
+        if (colorAttachment.isAttached())
+        {
+            if (colorAttachment.getMultiviewLayout() == GL_NONE)
+            {
+                return false;
+            }
+            attachment = &colorAttachment;
+            allTextureArraysAreFullyAttached =
+                allTextureArraysAreFullyAttached && AreAllLayersActive(*attachment);
+        }
+    }
+
+    const FramebufferAttachment *depthAttachment = state.getDepthAttachment();
+    if (depthAttachment)
+    {
+        if (depthAttachment->getMultiviewLayout() == GL_NONE)
+        {
+            return false;
+        }
+        attachment = depthAttachment;
+        allTextureArraysAreFullyAttached =
+            allTextureArraysAreFullyAttached && AreAllLayersActive(*attachment);
+    }
+    const FramebufferAttachment *stencilAttachment = state.getStencilAttachment();
+    if (stencilAttachment)
+    {
+        if (stencilAttachment->getMultiviewLayout() == GL_NONE)
+        {
+            return false;
+        }
+        attachment = stencilAttachment;
+        allTextureArraysAreFullyAttached =
+            allTextureArraysAreFullyAttached && AreAllLayersActive(*attachment);
+    }
+
     if (attachment == nullptr)
     {
         return false;
@@ -113,13 +166,11 @@ bool RequiresMultiviewClear(const FramebufferAttachment *attachment, bool scisso
     switch (attachment->getMultiviewLayout())
     {
         case GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE:
-            // TODO(mradev): Optimize this for layered FBOs in which all of the layers in each
-            // attachment are active.
-            return true;
+            // If all layers of each texture array are active, then there is no need to issue a
+            // special multiview clear.
+            return !allTextureArraysAreFullyAttached;
         case GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE:
             return (scissorTestEnabled == true);
-        case GL_NONE:
-            return false;
         default:
             UNREACHABLE();
     }
@@ -241,8 +292,7 @@ Error FramebufferGL::clear(const gl::Context *context, GLbitfield mask)
     syncClearState(context, mask);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
 
-    const auto &firstAttachment = mState.getFirstNonNullAttachment();
-    if (!RequiresMultiviewClear(firstAttachment, context->getGLState().isScissorTestEnabled()))
+    if (!RequiresMultiviewClear(mState, context->getGLState().isScissorTestEnabled()))
     {
         mFunctions->clear(mask);
     }
@@ -264,8 +314,7 @@ Error FramebufferGL::clearBufferfv(const gl::Context *context,
     syncClearBufferState(context, buffer, drawbuffer);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
 
-    const auto &firstAttachment = mState.getFirstNonNullAttachment();
-    if (!RequiresMultiviewClear(firstAttachment, context->getGLState().isScissorTestEnabled()))
+    if (!RequiresMultiviewClear(mState, context->getGLState().isScissorTestEnabled()))
     {
         mFunctions->clearBufferfv(buffer, drawbuffer, values);
     }
@@ -288,8 +337,7 @@ Error FramebufferGL::clearBufferuiv(const gl::Context *context,
     syncClearBufferState(context, buffer, drawbuffer);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
 
-    const auto &firstAttachment = mState.getFirstNonNullAttachment();
-    if (!RequiresMultiviewClear(firstAttachment, context->getGLState().isScissorTestEnabled()))
+    if (!RequiresMultiviewClear(mState, context->getGLState().isScissorTestEnabled()))
     {
         mFunctions->clearBufferuiv(buffer, drawbuffer, values);
     }
@@ -312,8 +360,7 @@ Error FramebufferGL::clearBufferiv(const gl::Context *context,
     syncClearBufferState(context, buffer, drawbuffer);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
 
-    const auto &firstAttachment = mState.getFirstNonNullAttachment();
-    if (!RequiresMultiviewClear(firstAttachment, context->getGLState().isScissorTestEnabled()))
+    if (!RequiresMultiviewClear(mState, context->getGLState().isScissorTestEnabled()))
     {
         mFunctions->clearBufferiv(buffer, drawbuffer, values);
     }
@@ -337,8 +384,7 @@ Error FramebufferGL::clearBufferfi(const gl::Context *context,
     syncClearBufferState(context, buffer, drawbuffer);
     mStateManager->bindFramebuffer(GL_FRAMEBUFFER, mFramebufferID);
 
-    const auto &firstAttachment = mState.getFirstNonNullAttachment();
-    if (!RequiresMultiviewClear(firstAttachment, context->getGLState().isScissorTestEnabled()))
+    if (!RequiresMultiviewClear(mState, context->getGLState().isScissorTestEnabled()))
     {
         mFunctions->clearBufferfi(buffer, drawbuffer, depth, stencil);
     }

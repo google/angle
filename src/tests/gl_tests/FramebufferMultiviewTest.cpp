@@ -1327,6 +1327,25 @@ TEST_P(FramebufferMultiviewTest, InvalidMultiviewArgumentsOnDetach)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test that glClear clears the contents of the color buffer whenever all layers of a 2D texture
+// array are attached. The test is added because a special fast code path is used for this case.
+TEST_P(FramebufferMultiviewLayeredClearTest, ColorBufferClearAllLayersAttached)
+{
+    if (!requestMultiviewExtension())
+    {
+        return;
+    }
+
+    initializeFBOs(1, 1, 2, 0, 2, 1, false, false);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, mMultiviewFBO);
+    glClearColor(0, 1, 0, 1);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    EXPECT_EQ(GLColor::green, getLayerColor(0, GL_COLOR_ATTACHMENT0));
+    EXPECT_EQ(GLColor::green, getLayerColor(1, GL_COLOR_ATTACHMENT0));
+}
+
 ANGLE_INSTANTIATE_TEST(FramebufferMultiviewTest, ES3_OPENGL());
 ANGLE_INSTANTIATE_TEST(FramebufferMultiviewSideBySideClearTest, ES3_OPENGL(), ES3_D3D11());
 ANGLE_INSTANTIATE_TEST(FramebufferMultiviewLayeredClearTest, ES3_OPENGL(), ES3_D3D11());
