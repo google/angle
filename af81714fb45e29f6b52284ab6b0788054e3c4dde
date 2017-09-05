@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "703898dd_bf1cf838",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2890,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-05T16:28:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "12ce2fd3_f95cf98d",
+      "revId": "af81714fb45e29f6b52284ab6b0788054e3c4dde",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4580c650_4b689617",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 4
@@ -30,6 +48,24 @@
       "writtenOn": "2017-09-05T15:33:17Z",
       "side": 1,
       "message": "nit: changes the storage.",
+      "revId": "af81714fb45e29f6b52284ab6b0788054e3c4dde",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4e59cbc_0cc98eb4",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3348,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-05T16:28:28Z",
+      "side": 1,
+      "message": "No, its related to completeness.",
+      "parentUuid": "4580c650_4b689617",
       "revId": "af81714fb45e29f6b52284ab6b0788054e3c4dde",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "8d691795_25f269cc",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3482,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-05T16:28:28Z",
+      "side": 1,
+      "message": "Agree, renamed to prepare.",
+      "parentUuid": "7ddb5cc3_11b85bde",
+      "revId": "af81714fb45e29f6b52284ab6b0788054e3c4dde",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "77308e3c_09626ef2",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 4
@@ -64,6 +118,24 @@
       "writtenOn": "2017-09-05T15:33:17Z",
       "side": 1,
       "message": "nit: Storage sets the storage but doesn\u0027t really change it. Here and in Storage3D and Storage2DMultisample.",
+      "revId": "af81714fb45e29f6b52284ab6b0788054e3c4dde",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5b16f2ef_35befe61",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4227,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-05T16:28:28Z",
+      "side": 1,
+      "message": "It changes the number of mips in the texture, which can affect mip completeness. Does that clarify what\u0027s happening? Feel free to elaborate. I added a comment to parepareForTexImage.",
+      "parentUuid": "77308e3c_09626ef2",
       "revId": "af81714fb45e29f6b52284ab6b0788054e3c4dde",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "6ebab8ae_afcc0e90",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4692,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-05T16:28:28Z",
+      "side": 1,
+      "message": "Because it changes the texture bindings. I moved a bit from a later patch (State::setObjectDirty). Not all of the objects are treated the same - in the future it might be more so when things are refined.\n\nGood catch with ProgramUniform1iv, I added a method for that.",
+      "parentUuid": "159d3d33_2b9441c8",
+      "revId": "af81714fb45e29f6b52284ab6b0788054e3c4dde",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5fe6fcad_a899f994",
         "filename": "src/libANGLE/State.cpp",
         "patchSetId": 4
@@ -98,6 +188,24 @@
       "writtenOn": "2017-09-05T15:33:17Z",
       "side": 1,
       "message": "Shouldn\u0027t this mDirtyObjects.set(DIRTY_OBJECT_PROGRAM_TEXTURES); so we can apply a black texture on D3D11 for example?",
+      "revId": "af81714fb45e29f6b52284ab6b0788054e3c4dde",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "24b5bd8c_cf4d91f5",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 815,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-05T16:28:28Z",
+      "side": 1,
+      "message": "Dirty objects mean that particular object is dirty - so a texture might have some parameters to update Impl-side. The bindings here trigger GL/D3D to bind a different texture to the pipeline. (ie the Context is dirty)",
+      "parentUuid": "5fe6fcad_a899f994",
       "revId": "af81714fb45e29f6b52284ab6b0788054e3c4dde",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
