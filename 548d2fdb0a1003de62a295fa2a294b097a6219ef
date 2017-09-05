@@ -69,6 +69,24 @@
       "revId": "548d2fdb0a1003de62a295fa2a294b097a6219ef",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "029f29c1_55697967",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 938,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-05T17:07:30Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "7e503125_2e3daaf8",
+      "revId": "548d2fdb0a1003de62a295fa2a294b097a6219ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
