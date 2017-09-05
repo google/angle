@@ -1088,6 +1088,22 @@ void ANGLETestBase::ignoreD3D11SDKLayersWarnings()
     mIgnoreD3D11SDKLayersWarnings = true;
 }
 
+ANGLETestBase::ScopedIgnorePlatformMessages ANGLETestBase::ignorePlatformMessagesInScope()
+{
+    return {this};
+}
+
+ANGLETestBase::ScopedIgnorePlatformMessages::ScopedIgnorePlatformMessages(ANGLETestBase *test)
+    : mTest(test)
+{
+    mTest->mPlatformContext.ignoreMessages = true;
+}
+
+ANGLETestBase::ScopedIgnorePlatformMessages::~ScopedIgnorePlatformMessages()
+{
+    mTest->mPlatformContext.ignoreMessages = false;
+}
+
 OSWindow *ANGLETestBase::mOSWindow = nullptr;
 Optional<EGLint> ANGLETestBase::mLastRendererType;
 std::unique_ptr<angle::Library> ANGLETestBase::mGLESLibrary;

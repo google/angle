@@ -330,6 +330,20 @@ class ANGLETestBase
     angle::PlatformMethods mPlatformMethods;
 
   private:
+    class ScopedIgnorePlatformMessages : angle::NonCopyable
+    {
+      public:
+        ScopedIgnorePlatformMessages(ANGLETestBase *test);
+        ~ScopedIgnorePlatformMessages();
+
+      private:
+        ANGLETestBase *mTest;
+    };
+
+  protected:
+    ScopedIgnorePlatformMessages ignorePlatformMessagesInScope();
+
+  private:
     bool destroyEGLContext();
 
     void checkD3D11SDKLayersMessages();

@@ -69,10 +69,14 @@ TEST_P(TextureRectangleTest, TexImage2D)
     glGetIntegerv(GL_MAX_RECTANGLE_TEXTURE_SIZE_ANGLE, &maxSize);
 
     // Defining a texture of the max size is allowed
-    glTexImage2D(GL_TEXTURE_RECTANGLE_ANGLE, 0, GL_RGBA, maxSize, maxSize, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, nullptr);
-    GLenum error = glGetError();
-    ASSERT_TRUE(error == GL_NO_ERROR || error == GL_OUT_OF_MEMORY);
+    {
+        ignorePlatformMessagesInScope();
+
+        glTexImage2D(GL_TEXTURE_RECTANGLE_ANGLE, 0, GL_RGBA, maxSize, maxSize, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, nullptr);
+        GLenum error = glGetError();
+        ASSERT_TRUE(error == GL_NO_ERROR || error == GL_OUT_OF_MEMORY);
+    }
 
     // Defining a texture of the max size is allowed
     glTexImage2D(GL_TEXTURE_RECTANGLE_ANGLE, 0, GL_RGBA, maxSize + 1, maxSize, 0, GL_RGBA,
@@ -152,6 +156,8 @@ TEST_P(TextureRectangleTest, TexStorage2D)
 
     // Defining a texture of the max size is allowed but still allow for OOM
     {
+        ignorePlatformMessagesInScope();
+
         GLTexture tex;
         glBindTexture(GL_TEXTURE_RECTANGLE_ANGLE, tex);
         TexStorage2D(GL_TEXTURE_RECTANGLE_ANGLE, 1, GL_RGBA8UI, maxSize, maxSize);
