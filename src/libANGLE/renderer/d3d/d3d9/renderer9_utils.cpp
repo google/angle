@@ -579,9 +579,10 @@ void GenerateCaps(IDirect3D9 *d3d9,
     extensions->timerQuery = false; // Unimplemented
     extensions->disjointTimerQuery     = false;
     extensions->robustness = true;
-    // Direct3D guarantees to return zero for any resource that is accessed out of bounds.
-    // See https://msdn.microsoft.com/en-us/library/windows/desktop/ff476332(v=vs.85).aspx
-    extensions->robustBufferAccessBehavior = true;
+    // It seems that only DirectX 10 and higher enforce the well-defined behavior of always
+    // returning zero values when out-of-bounds reads. See
+    // https://www.khronos.org/registry/OpenGL/extensions/ARB/ARB_robustness.txt
+    extensions->robustBufferAccessBehavior = false;
     extensions->blendMinMax = true;
     extensions->framebufferBlit = true;
     extensions->framebufferMultisample = true;
