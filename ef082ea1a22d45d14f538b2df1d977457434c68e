@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5604d2a6_6447d426",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3483,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-05T20:52:22Z",
+      "side": 1,
+      "message": "Can this be split into a separate method called after the tex image?  As is, sometimes it is set directly in the method above and sometimes by this method.",
+      "range": {
+        "startLine": 3481,
+        "startChar": 4,
+        "endLine": 3483,
+        "endChar": 40
+      },
+      "revId": "ef082ea1a22d45d14f538b2df1d977457434c68e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98b99f06_7897d78b",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 451,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-05T20:52:22Z",
+      "side": 1,
+      "message": "nit: Can this just be a bool pointer parameter instead? IMO a bit cleaner than the enum that may need to be updated to encode more cases.",
+      "range": {
+        "startLine": 451,
+        "startChar": 4,
+        "endLine": 451,
+        "endChar": 21
+      },
+      "revId": "ef082ea1a22d45d14f538b2df1d977457434c68e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d8de725d_d19dd76d",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-05T20:52:22Z",
+      "side": 1,
+      "message": "The cache should always be valid by the time it gets to the backend for texture application unless there is a bug in the frontend.  Can we assert that it is valid?",
+      "range": {
+        "startLine": 202,
+        "startChar": 11,
+        "endLine": 202,
+        "endChar": 37
+      },
+      "revId": "ef082ea1a22d45d14f538b2df1d977457434c68e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a75ca4a5_872a9766",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1294,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-05T20:52:22Z",
+      "side": 1,
+      "message": "I think that caching the texture completeness without any key may not cover all the cases such as when the same texture is bound to multiple points.  It would cause the completeness to be re-computed multiple times in the draw call with only the first call returning Completeness::CHANGED and if there are different samplers bound for each texture, it would cause the backends to bind the wrong thing (always bind or always incomplete).\n\nIt also feels fragile to have no way of asserting that the getCachedCompleteness call used the same context/sampler.  If we continued to store the context id/sampler state used for the cache we could be more sure that getting the cached value is valid.",
+      "revId": "ef082ea1a22d45d14f538b2df1d977457434c68e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "13c9d6e7_db970066",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-05T20:52:22Z",
+      "side": 1,
+      "message": "Same comment about Program::setUniform, would rather see this as a bool output parameter.",
+      "range": {
+        "startLine": 356,
+        "startChar": 4,
+        "endLine": 356,
+        "endChar": 17
+      },
+      "revId": "ef082ea1a22d45d14f538b2df1d977457434c68e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
