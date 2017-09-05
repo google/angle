@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2b065115_9d3249ce",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1912,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-05T15:39:06Z",
+      "side": 1,
+      "message": "This caching will break thinks like BlitGL that call stateManager-\u003euseProgram() or bindTexture or bindSampler etc. There should be two version of these methods an external one that sets local dirty bits, and an internal one that doesn\u0027t.",
+      "revId": "d6c696a30ee995d99dd7d1b346b1a2f65e6cc903",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
