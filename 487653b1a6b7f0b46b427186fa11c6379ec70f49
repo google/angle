@@ -94,6 +94,30 @@
       "revId": "487653b1a6b7f0b46b427186fa11c6379ec70f49",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2b64463d_3dca3dd6",
+        "filename": "infra/config/cq.cfg",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2017-09-05T17:05:25Z",
+      "side": 0,
+      "message": "I was asking Frank to do it, as the owner of the ANGLE ChromiumOS bots. But if you agree it should be done and have a minute or two to do it, would be appreciated.",
+      "parentUuid": "67c706e8_468e2d5c",
+      "range": {
+        "startLine": 34,
+        "startChar": 24,
+        "endLine": 34,
+        "endChar": 60
+      },
+      "revId": "487653b1a6b7f0b46b427186fa11c6379ec70f49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
