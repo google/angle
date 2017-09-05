@@ -618,7 +618,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_packed_depth_stencil"] = esOnlyExtension(&Extensions::packedDepthStencil);
         map["GL_OES_get_program_binary"] = esOnlyExtension(&Extensions::getProgramBinary);
         map["GL_OES_rgb8_rgba8"] = esOnlyExtension(&Extensions::rgb8rgba8);
-        map["GL_EXT_texture_format_BGRA8888"] = esOnlyExtension(&Extensions::textureFormatBGRA8888);
+        map["GL_EXT_texture_format_BGRA8888"] = enableableExtension(&Extensions::textureFormatBGRA8888);
         map["GL_EXT_read_format_bgra"] = esOnlyExtension(&Extensions::readFormatBGRA);
         map["GL_NV_pixel_buffer_object"] = enableableExtension(&Extensions::pixelBufferObject);
         map["GL_OES_mapbuffer"] = enableableExtension(&Extensions::mapBuffer);
@@ -628,7 +628,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_OES_texture_half_float_linear"] = enableableExtension(&Extensions::textureHalfFloatLinear);
         map["GL_OES_texture_float"] = enableableExtension(&Extensions::textureFloat);
         map["GL_OES_texture_float_linear"] = enableableExtension(&Extensions::textureFloatLinear);
-        map["GL_EXT_texture_rg"] = esOnlyExtension(&Extensions::textureRG);
+        map["GL_EXT_texture_rg"] = enableableExtension(&Extensions::textureRG);
         map["GL_EXT_texture_compression_dxt1"] = esOnlyExtension(&Extensions::textureCompressionDXT1);
         map["GL_ANGLE_texture_compression_dxt3"] = esOnlyExtension(&Extensions::textureCompressionDXT3);
         map["GL_ANGLE_texture_compression_dxt5"] = esOnlyExtension(&Extensions::textureCompressionDXT5);
@@ -636,7 +636,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_KHR_texture_compression_astc_hdr"] = esOnlyExtension(&Extensions::textureCompressionASTCHDR);
         map["GL_KHR_texture_compression_astc_ldr"] = esOnlyExtension(&Extensions::textureCompressionASTCLDR);
         map["GL_OES_compressed_ETC1_RGB8_texture"] = esOnlyExtension(&Extensions::compressedETC1RGB8Texture);
-        map["GL_EXT_sRGB"] = esOnlyExtension(&Extensions::sRGB);
+        map["GL_EXT_sRGB"] = enableableExtension(&Extensions::sRGB);
         map["GL_ANGLE_depth_texture"] = esOnlyExtension(&Extensions::depthTextures);
         map["GL_OES_depth32"] = esOnlyExtension(&Extensions::depth32);
         map["GL_EXT_texture_storage"] = esOnlyExtension(&Extensions::textureStorage);

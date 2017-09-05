@@ -256,10 +256,8 @@ TEST_P(CopyTextureTest, InternalFormat)
 // Test to ensure that the destination texture is redefined if the properties are different.
 TEST_P(CopyTextureTest, RedefineDestinationTexture)
 {
-    if (!checkExtensions())
-    {
-        return;
-    }
+    ANGLE_SKIP_TEST_IF(!checkExtensions());
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_format_BGRA8888"));
 
     GLColor pixels[4] = {GLColor::red, GLColor::red, GLColor::red, GLColor::red};
 

@@ -1010,6 +1010,10 @@ void GenerateCaps(const FunctionsGL *functions,
     // framebuffer with GL_FRAMEBUFFER_SRGB enabled and then reading back returns the same value.
     // Disabling GL_FRAMEBUFFER_SRGB will then convert in the wrong direction.
     extensions->sRGBWriteControl = false;
+
+    // BGRA formats do not appear to be accepted by the Nexus 5X driver dispite the extension being
+    // exposed.
+    extensions->textureFormatBGRA8888 = false;
 #endif
 
     // EXT_discard_framebuffer can be implemented as long as glDiscardFramebufferEXT or

@@ -227,6 +227,9 @@ class WebGLCompatibilityTest : public ANGLETest
                                  const std::array<GLenum, 2> &drawBuffers,
                                  GLenum expectedError);
 
+    // Called from InvalidTextureFormat
+    void validateTexImageExtensionFormat(GLenum format, const std::string &extName);
+
     PFNGLREQUESTEXTENSIONANGLEPROC glRequestExtensionANGLE = nullptr;
 };
 
@@ -3551,6 +3554,51 @@ TEST_P(WebGLCompatibilityTest, GenerateMipmapSizedFloatingPointTexture)
             EXPECT_GL_ERROR(GL_INVALID_OPERATION);
         }
     }
+}
+
+// Verify that a texture format is only allowed with extension enabled.
+void WebGLCompatibilityTest::validateTexImageExtensionFormat(GLenum format,
+                                                             const std::string &extName)
+{
+    // Verify texture format fails by default.
+    glTexImage2D(GL_TEXTURE_2D, 0, format, 1, 1, 0, format, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    if (extensionRequestable(extName))
+    {
+        // Verify texture format is allowed once extension is enabled.
+        glRequestExtensionANGLE(extName.c_str());
+        EXPECT_TRUE(extensionEnabled(extName));
+
+        glTexImage2D(GL_TEXTURE_2D, 0, format, 1, 1, 0, format, GL_UNSIGNED_BYTE, nullptr);
+        ASSERT_GL_NO_ERROR();
+    }
+}
+
+// Verify that only valid texture formats are allowed.
+TEST_P(WebGLCompatibilityTest, InvalidTextureFormat)
+{
+    ANGLE_SKIP_TEST_IF(getClientMajorVersion() != 2);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture.get());
+
+    // Verify valid format is allowed.
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify invalid format fails.
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, 1, 1, 0, GL_RGBA32F, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_GL_ERROR(GL_INVALID_ENUM);
+
+    // Verify formats from enableable extensions.
+    if (!IsAndroid())
+    {
+        validateTexImageExtensionFormat(GL_RED_EXT, "GL_EXT_texture_rg");
+    }
+
+    validateTexImageExtensionFormat(GL_SRGB_EXT, "GL_EXT_texture_sRGB");
+    validateTexImageExtensionFormat(GL_BGRA_EXT, "GL_EXT_texture_format_BGRA8888");
 }
 
 // Linking should fail when corresponding vertex/fragment uniform blocks have different precision
