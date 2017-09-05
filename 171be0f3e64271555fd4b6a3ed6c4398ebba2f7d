@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b6759cf8_220428f2",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-05T15:44:36Z",
+      "side": 1,
+      "message": "Can we early out if the framebuffer isn\u0027t multiview, this adds a lot of branch for the non-multiview clear case.",
+      "revId": "171be0f3e64271555fd4b6a3ed6c4398ebba2f7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cdfa40f6_dcce07f3",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-05T15:44:36Z",
+      "side": 1,
+      "message": "This is equivalent to allTextures \u003d allTextures \u0026\u0026 AreAllLayersActive()",
+      "revId": "171be0f3e64271555fd4b6a3ed6c4398ebba2f7d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
