@@ -16,6 +16,24 @@
       "revId": "d6c696a30ee995d99dd7d1b346b1a2f65e6cc903",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c8e4f850_0e95e403",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1912,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-05T16:29:00Z",
+      "side": 1,
+      "message": "Added the dirty tracking to bindTexture and bindSampler. We don\u0027t use this internal call thing in StateManagerGL - we clear the dirty bits after the state sync so that the internal calls don\u0027t leave state marked as dirty.",
+      "parentUuid": "2b065115_9d3249ce",
+      "revId": "d6c696a30ee995d99dd7d1b346b1a2f65e6cc903",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
