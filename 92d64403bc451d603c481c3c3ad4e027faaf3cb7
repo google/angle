@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f1b3362a_ea32e085",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-05T13:54:01Z",
+      "side": 1,
+      "message": "nit: put this righ in to GetSamplePosition and remove the \u0027m\u0027 prefix.",
+      "range": {
+        "startLine": 38,
+        "startChar": 46,
+        "endLine": 38,
+        "endChar": 48
+      },
+      "revId": "92d64403bc451d603c481c3c3ad4e027faaf3cb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8c7cd942_c6cfbbd2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 1459,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-05T13:54:01Z",
+      "side": 1,
+      "message": "nit: pre-compute this, cast to size_t and add assertions that it is within the array for both array indices.",
+      "range": {
+        "startLine": 1459,
+        "startChar": 29,
+        "endLine": 1459,
+        "endChar": 73
+      },
+      "revId": "92d64403bc451d603c481c3c3ad4e027faaf3cb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
