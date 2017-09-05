@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5327502d_268d1aa8",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 844,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-05T16:26:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "75381c10_0f7ea3e8",
+      "revId": "548d2fdb0a1003de62a295fa2a294b097a6219ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed26123f_7b7cdbfd",
         "filename": "src/libANGLE/State.cpp",
         "patchSetId": 3
@@ -30,6 +48,24 @@
       "writtenOn": "2017-09-05T14:52:57Z",
       "side": 1,
       "message": "ditto.",
+      "revId": "548d2fdb0a1003de62a295fa2a294b097a6219ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e503125_2e3daaf8",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 938,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-05T16:26:02Z",
+      "side": 1,
+      "message": "This does a second check, and I found it ugly to combine.",
+      "parentUuid": "ed26123f_7b7cdbfd",
       "revId": "548d2fdb0a1003de62a295fa2a294b097a6219ef",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
