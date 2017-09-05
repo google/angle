@@ -88,6 +88,11 @@ TEST(PrintSystemInfoTest, Print)
         std::cout << "Machine Model: " << info.machineModelName << " version "
                   << info.machineModelVersion << "\n";
     }
+
+    if (!info.primaryDisplayDeviceId.empty())
+    {
+        std::cout << "Primary Display Device: " << info.primaryDisplayDeviceId << "\n";
+    }
     std::cout << std::endl;
 #else
     std::cerr << "GetSystemInfo not implemented, skipping" << std::endl;

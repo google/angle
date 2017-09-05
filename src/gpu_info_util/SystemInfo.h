@@ -43,8 +43,12 @@ struct SystemInfo
     bool isOptimus       = false;
     bool isAMDSwitchable = false;
 
+    // Only available on macOS
     std::string machineModelName;
     std::string machineModelVersion;
+
+    // Only available on Windows, set even on failure.
+    std::string primaryDisplayDeviceId;
 };
 
 bool GetSystemInfo(SystemInfo *info);
