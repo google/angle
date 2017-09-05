@@ -22,6 +22,30 @@
       "revId": "4a5f836ec4260842367b3fee5f1517267315007f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9b33af40_3735dd52",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2611,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-05T15:24:19Z",
+      "side": 1,
+      "message": "Chrome needs to be updated to request it.  The specs imply that it shouldn\u0027t be exposed unless robust access is requested: \n\n    \"These additional robustness\n    guarantees apply to contexts created with the robust access flag\n    set.\"\n\nWe could skip the index validation if the backend supports it but the tests wouldn\u0027t know if an error or the index clamping will take place.  This might be fine with some updated tests.",
+      "parentUuid": "35851eee_ddc9af54",
+      "range": {
+        "startLine": 2610,
+        "startChar": 2,
+        "endLine": 2611,
+        "endChar": 64
+      },
+      "revId": "4a5f836ec4260842367b3fee5f1517267315007f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
