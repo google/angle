@@ -46,6 +46,30 @@
       "revId": "487653b1a6b7f0b46b427186fa11c6379ec70f49",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e29a696d_fd200490",
+        "filename": "infra/config/cq.cfg",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2017-09-05T16:47:18Z",
+      "side": 0,
+      "message": "Per https://bugs.chromium.org/p/chromium/issues/detail?id\u003d743212#c20 -- if we just lost CQ coverage then please feel free to reinstate this, pointing to linux_chromium_chromeos_rel_ng instead.",
+      "parentUuid": "9cc2584b_6a329716",
+      "range": {
+        "startLine": 34,
+        "startChar": 24,
+        "endLine": 34,
+        "endChar": 60
+      },
+      "revId": "487653b1a6b7f0b46b427186fa11c6379ec70f49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
