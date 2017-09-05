@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "35851eee_ddc9af54",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2611,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-05T14:28:04Z",
+      "side": 1,
+      "message": "one question, why does this check for mRobustAccess? I don\u0027t think Chrome currently asks for this. This CL seems to work fine if I remove the first part of the \u0026\u0026.",
+      "range": {
+        "startLine": 2610,
+        "startChar": 2,
+        "endLine": 2611,
+        "endChar": 64
+      },
+      "revId": "4a5f836ec4260842367b3fee5f1517267315007f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
