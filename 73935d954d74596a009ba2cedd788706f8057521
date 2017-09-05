@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "17beb783_06fc08a1",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-05T08:55:12Z",
+      "side": 1,
+      "message": "nit: Uppercase. I guess this was a find/replace accident?",
+      "range": {
+        "startLine": 148,
+        "startChar": 16,
+        "endLine": 148,
+        "endChar": 17
+      },
+      "revId": "73935d954d74596a009ba2cedd788706f8057521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94be984f_ddeed25a",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-05T08:55:12Z",
+      "side": 1,
+      "message": "I meant that this parameter name should be changed as well.",
+      "range": {
+        "startLine": 65,
+        "startChar": 55,
+        "endLine": 65,
+        "endChar": 65
+      },
+      "revId": "73935d954d74596a009ba2cedd788706f8057521",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
