@@ -22,6 +22,30 @@
       "revId": "487653b1a6b7f0b46b427186fa11c6379ec70f49",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9cc2584b_6a329716",
+        "filename": "infra/config/cq.cfg",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-05T00:38:42Z",
+      "side": 0,
+      "message": "Yeah probably, we should get something doing that again. Maybe the bot Dirk suggested, using a custom set of build options to build more targets.. or we could request some Linux machines with GPUs to for the ANGLE CQ to do actual Ozone GPU tests.",
+      "parentUuid": "b0722097_715c8a9f",
+      "range": {
+        "startLine": 34,
+        "startChar": 24,
+        "endLine": 34,
+        "endChar": 60
+      },
+      "revId": "487653b1a6b7f0b46b427186fa11c6379ec70f49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
