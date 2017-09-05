@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a69ed21b_9e73671a",
+        "filename": "include/platform/WorkaroundsD3D.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-09-05T08:17:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "88185639_1a6cde87",
+      "range": {
+        "startLine": 111,
+        "startChar": 42,
+        "endLine": 111,
+        "endChar": 45
+      },
+      "revId": "bb235489b0b0170060826bc123434cbad4efa01c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c30a75ad_3ad528ee",
         "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
         "patchSetId": 5
@@ -39,6 +63,24 @@
       "revId": "bb235489b0b0170060826bc123434cbad4efa01c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d1f14073_4d227db8",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-09-05T08:17:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c30a75ad_3ad528ee",
+      "revId": "bb235489b0b0170060826bc123434cbad4efa01c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "f3a1d9e1_3b735792",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 429,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-09-05T08:17:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9b6c1c65_d5fc3844",
+      "range": {
+        "startLine": 429,
+        "startChar": 26,
+        "endLine": 429,
+        "endChar": 54
+      },
+      "revId": "bb235489b0b0170060826bc123434cbad4efa01c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6a589344_8041ca42",
         "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
         "patchSetId": 5
@@ -88,6 +154,30 @@
     },
     {
       "key": {
+        "uuid": "9ebfd788_6bc62b06",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-09-05T08:17:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a589344_8041ca42",
+      "range": {
+        "startLine": 68,
+        "startChar": 10,
+        "endLine": 68,
+        "endChar": 37
+      },
+      "revId": "bb235489b0b0170060826bc123434cbad4efa01c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6e7b3ff4_b2839677",
         "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
         "patchSetId": 5
@@ -99,6 +189,24 @@
       "writtenOn": "2017-09-04T18:54:30Z",
       "side": 1,
       "message": "These names should have consistent capitalization as well.",
+      "revId": "bb235489b0b0170060826bc123434cbad4efa01c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d3497324_43484e41",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-09-05T08:17:13Z",
+      "side": 1,
+      "message": "I think I used the replace feature in the editor which resulted into this.\nDone.",
+      "parentUuid": "6e7b3ff4_b2839677",
       "revId": "bb235489b0b0170060826bc123434cbad4efa01c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -128,6 +236,30 @@
     },
     {
       "key": {
+        "uuid": "40ef1b5f_ff69bb32",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 506,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-09-05T08:17:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "421a80dd_7f200922",
+      "range": {
+        "startLine": 506,
+        "startChar": 8,
+        "endLine": 506,
+        "endChar": 9
+      },
+      "revId": "bb235489b0b0170060826bc123434cbad4efa01c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "914361db_f169ca99",
         "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
         "patchSetId": 5
@@ -151,6 +283,30 @@
     },
     {
       "key": {
+        "uuid": "7d658f72_bb8c736c",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 522,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-09-05T08:17:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "914361db_f169ca99",
+      "range": {
+        "startLine": 522,
+        "startChar": 8,
+        "endLine": 522,
+        "endChar": 9
+      },
+      "revId": "bb235489b0b0170060826bc123434cbad4efa01c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ce4e0a9e_19fb41c8",
         "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
         "patchSetId": 5
@@ -162,6 +318,24 @@
       "writtenOn": "2017-09-04T18:54:30Z",
       "side": 1,
       "message": "I don\u0027t think you need to call useProgram here if you pass the program to drawQuad. Other tests do this too but I noticed this just now.",
+      "revId": "bb235489b0b0170060826bc123434cbad4efa01c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d9b0363a_db0fd112",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2025,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-09-05T08:17:13Z",
+      "side": 1,
+      "message": "Done.\nI made a note for myself to clean those other ones later.",
+      "parentUuid": "ce4e0a9e_19fb41c8",
       "revId": "bb235489b0b0170060826bc123434cbad4efa01c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
