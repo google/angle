@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "14bd310d_4d95d696",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-05T12:35:24Z",
+      "side": 1,
+      "message": "This is unnecessary since baseViewIndex \u003d\u003d 0 is checked as well. In fact I\u0027d maybe restructure this function like this:\n\nif (attachment.getBaseViewIndex() !\u003d 0) { return false; }\n... query numLayers from texture ...\nreturn (attachment.getNumViews() \u003d\u003d numLayers);",
+      "range": {
+        "startLine": 114,
+        "startChar": 34,
+        "endLine": 114,
+        "endChar": 50
+      },
+      "revId": "3311c84d65eb87ccc3fdcd1a1d720411409a4c08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
