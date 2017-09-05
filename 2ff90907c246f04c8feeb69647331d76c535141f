@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "803deaad_3501118b",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-05T15:33:17Z",
+      "side": 0,
+      "message": "Do we have a test for completeness over multiple contexts? It seems like this CL might break it.",
+      "revId": "2ff90907c246f04c8feeb69647331d76c535141f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

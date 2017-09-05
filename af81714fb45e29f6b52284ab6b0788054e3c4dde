@@ -1,0 +1,123 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "12ce2fd3_f95cf98d",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2890,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-05T15:33:17Z",
+      "side": 1,
+      "message": "nit: comments below mention the storage maybe it could be mentioned here too.",
+      "revId": "af81714fb45e29f6b52284ab6b0788054e3c4dde",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4580c650_4b689617",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3348,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-05T15:33:17Z",
+      "side": 1,
+      "message": "nit: changes the storage.",
+      "revId": "af81714fb45e29f6b52284ab6b0788054e3c4dde",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7ddb5cc3_11b85bde",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3482,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-05T15:33:17Z",
+      "side": 1,
+      "message": "This looks weird in a \"sync\" method. I wouldn\u0027t be opposed to having this redundantly happen in all texImage methods.",
+      "revId": "af81714fb45e29f6b52284ab6b0788054e3c4dde",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "77308e3c_09626ef2",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4227,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-05T15:33:17Z",
+      "side": 1,
+      "message": "nit: Storage sets the storage but doesn\u0027t really change it. Here and in Storage3D and Storage2DMultisample.",
+      "revId": "af81714fb45e29f6b52284ab6b0788054e3c4dde",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "159d3d33_2b9441c8",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4692,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-05T15:33:17Z",
+      "side": 1,
+      "message": "Using GL_PROGRAM as a way to signal the PROGRAM_TEXTURES bit should be dirtied is a bit confusing. Can we have a way to directly tell State it is this exact bit that is set? How will it work with glProgramUniform?\n\nAlso why does this dirty the global PROGRAM_TEXTURE when only the program state is modified?",
+      "revId": "af81714fb45e29f6b52284ab6b0788054e3c4dde",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5fe6fcad_a899f994",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 815,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-05T15:33:17Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this mDirtyObjects.set(DIRTY_OBJECT_PROGRAM_TEXTURES); so we can apply a black texture on D3D11 for example?",
+      "revId": "af81714fb45e29f6b52284ab6b0788054e3c4dde",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c97e3725_90265b6f",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 895,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-05T15:33:17Z",
+      "side": 1,
+      "message": "ditto.",
+      "revId": "af81714fb45e29f6b52284ab6b0788054e3c4dde",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
