@@ -118,6 +118,30 @@
       "revId": "487653b1a6b7f0b46b427186fa11c6379ec70f49",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "77f1a6d7_c10c9139",
+        "filename": "infra/config/cq.cfg",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1003232
+      },
+      "writtenOn": "2017-09-06T04:24:04Z",
+      "side": 0,
+      "message": "Ok, I\u0027m not entirely sure I know what we\u0027re trying to do, so I\u0027ve filed a new bug: crbug.com/762377. Let\u0027s take up the conversation there",
+      "parentUuid": "2b64463d_3dca3dd6",
+      "range": {
+        "startLine": 34,
+        "startChar": 24,
+        "endLine": 34,
+        "endChar": 60
+      },
+      "revId": "487653b1a6b7f0b46b427186fa11c6379ec70f49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
