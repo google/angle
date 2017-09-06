@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "592e1810_e928a972",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 928,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-06T16:37:02Z",
+      "side": 1,
+      "message": "Would it be better to call this from the Texture class itself when it\u0027s redefined?  Right now I don\u0027t think the EGL image functions or deletion of a surface bound to a texture end up calling this.",
+      "range": {
+        "startLine": 928,
+        "startChar": 9,
+        "endLine": 928,
+        "endChar": 24
+      },
+      "revId": "90047654decc19a3fe390bf0c78e9107990a97af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "84ea986e_693e0896",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-06T16:37:02Z",
+      "side": 1,
+      "message": "nit again: Would rather that this is an output parameter than a return value.",
+      "range": {
+        "startLine": 171,
+        "startChar": 4,
+        "endLine": 171,
+        "endChar": 19
+      },
+      "revId": "90047654decc19a3fe390bf0c78e9107990a97af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
