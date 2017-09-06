@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "b202345d_c9bd7af7",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 566,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-06T16:30:53Z",
+      "side": 1,
+      "message": "See ES 3 spec 6.1.2 Data Conversions\n\n\"If a value is so large in magnitude that it cannot be represented with the requested\ntype, then the nearest value representable using the requested type is returned\"\n\nclampCast is probably not perfect, I think you\u0027re right. But it\u0027s probably good enough for now.",
+      "parentUuid": "d5ebcb63_7198ccb7",
+      "range": {
+        "startLine": 566,
+        "startChar": 28,
+        "endLine": 566,
+        "endChar": 39
+      },
+      "revId": "a47ffefcb512012bc03129837f583a953b23f203",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c8261802_04fb5c96",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 3
