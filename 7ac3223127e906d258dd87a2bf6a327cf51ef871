@@ -22,6 +22,29 @@
       "revId": "7ac3223127e906d258dd87a2bf6a327cf51ef871",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "922dce7f_cef028d4",
+        "filename": "src/gpu_info_util/SystemInfo_win.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-06T14:10:06Z",
+      "side": 1,
+      "message": "nit: our assert should mark the variable as referenced or is this a different macro?",
+      "range": {
+        "startLine": 242,
+        "startChar": 4,
+        "endLine": 242,
+        "endChar": 34
+      },
+      "revId": "7ac3223127e906d258dd87a2bf6a327cf51ef871",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
