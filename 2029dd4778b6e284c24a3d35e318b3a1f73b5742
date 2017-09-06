@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b348697b_b287b152",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-09-06T06:18:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "65f664ee_399650d2",
+      "range": {
+        "startLine": 466,
+        "startChar": 25,
+        "endLine": 466,
+        "endChar": 35
+      },
+      "revId": "2029dd4778b6e284c24a3d35e318b3a1f73b5742",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "29fa0a66_c558b39e",
         "filename": "src/libANGLE/renderer/d3d/d3d11/gen_dxgi_support_tables.py",
         "patchSetId": 8
@@ -45,6 +69,30 @@
       "revId": "2029dd4778b6e284c24a3d35e318b3a1f73b5742",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "48b605af_33b3443b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/gen_dxgi_support_tables.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-09-06T06:18:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "29fa0a66_c558b39e",
+      "range": {
+        "startLine": 12,
+        "startChar": 23,
+        "endLine": 12,
+        "endChar": 70
+      },
+      "revId": "2029dd4778b6e284c24a3d35e318b3a1f73b5742",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
