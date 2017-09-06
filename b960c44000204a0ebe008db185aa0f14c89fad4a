@@ -1,0 +1,208 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6eea4669_623dbfde",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1116,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-06T15:10:02Z",
+      "side": 1,
+      "message": "This \"checkFooAllocation\" method is to support the \"bind to create\" semantics of OpenGL. Program pipelines have no such semantics so it could be replaced with getProgramPipeline here. CheckProgramPipelineAllocation becomes unused and you could simplify code too.",
+      "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7af8f96b_72a08b61",
+        "filename": "src/libANGLE/ProgramPipeline.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-06T15:10:02Z",
+      "side": 1,
+      "message": "nit: Context isn\u0027t needed.",
+      "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd16f57c_1dd2e1c6",
+        "filename": "src/libANGLE/ProgramPipeline.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-06T15:10:02Z",
+      "side": 1,
+      "message": "nit: only angleutils and RefCountObject are needed.",
+      "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a9932193_05ac72da",
+        "filename": "src/libANGLE/ProgramPipeline.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-06T15:10:02Z",
+      "side": 1,
+      "message": "nit: Caps, State and ContextState aren\u0027t used.",
+      "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b9c349ab_49d8a080",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/ProgramPipeline11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-06T15:10:02Z",
+      "side": 1,
+      "message": "nit: unused.",
+      "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5f615140_200e72bf",
+        "filename": "src/libANGLE/renderer/gl/ProgramPipelineGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-06T15:10:02Z",
+      "side": 1,
+      "message": "The destructor should delete the GL id generated in the constructor.",
+      "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3edc9343_4c73791d",
+        "filename": "src/libANGLE/renderer/null/ProgramPipelineNULL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-06T15:10:02Z",
+      "side": 1,
+      "message": "nit: unused.",
+      "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e03c6edf_5afaca16",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramPipelineVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-06T15:10:02Z",
+      "side": 1,
+      "message": "nit: unused.",
+      "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4db7e91c_a298ae20",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1233,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-06T15:10:02Z",
+      "side": 1,
+      "message": "You can use the ObjectNotGenerated message from ErrorStrings.h and use ANGLE_VALIDATION_ERR.",
+      "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec8c159e_ca7439e8",
+        "filename": "src/libANGLE/validationES31.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-06T15:10:02Z",
+      "side": 1,
+      "message": "This doesn\u0027t need to be in the header, it just need to be defined above ValidateGen/DeleteProgramPipelines in the cpp file.",
+      "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f394a7e0_b0a7a3b0",
+        "filename": "src/tests/gl_tests/ProgramPipelineTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-06T15:10:02Z",
+      "side": 1,
+      "message": "nit: add a ProgramPipeline type to gl_raii.h and use it everywhere in this file.",
+      "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bfd6f0de_0d517f63",
+        "filename": "src/tests/gl_tests/ProgramPipelineTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-06T15:10:02Z",
+      "side": 1,
+      "message": "nit: you can also test 0 for Gen and -1 for Delete.",
+      "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
