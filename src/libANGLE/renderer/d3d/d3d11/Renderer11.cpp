@@ -401,6 +401,30 @@ int GetAdjustedInstanceCount(const gl::Program *program, int instanceCount)
 
 const uint32_t ScratchMemoryBufferLifetime = 1000;
 
+void PopulateFormatDeviceCaps(ID3D11Device *device,
+                              DXGI_FORMAT format,
+                              UINT *outSupport,
+                              UINT *outMaxSamples)
+{
+    if (FAILED(device->CheckFormatSupport(format, outSupport)))
+    {
+        *outSupport = 0;
+    }
+
+    *outMaxSamples = 0;
+    for (UINT sampleCount = 2; sampleCount <= D3D11_MAX_MULTISAMPLE_SAMPLE_COUNT; sampleCount *= 2)
+    {
+        UINT qualityCount = 0;
+        if (FAILED(device->CheckMultisampleQualityLevels(format, sampleCount, &qualityCount)) ||
+            qualityCount == 0)
+        {
+            break;
+        }
+
+        *outMaxSamples = sampleCount;
+    }
+}
+
 }  // anonymous namespace
 
 Renderer11::Renderer11(egl::Display *display)
@@ -900,30 +924,21 @@ void Renderer11::populateRenderer11DeviceCaps()
     if (getWorkarounds().disableB5G6R5Support)
     {
         mRenderer11DeviceCaps.B5G6R5support = 0;
+        mRenderer11DeviceCaps.B5G6R5maxSamples = 0;
     }
     else
     {
-        hr = mDevice->CheckFormatSupport(DXGI_FORMAT_B5G6R5_UNORM,
-                                         &(mRenderer11DeviceCaps.B5G6R5support));
-        if (FAILED(hr))
-        {
-            mRenderer11DeviceCaps.B5G6R5support = 0;
-        }
+        PopulateFormatDeviceCaps(mDevice, DXGI_FORMAT_B5G6R5_UNORM,
+                                 &mRenderer11DeviceCaps.B5G6R5support,
+                                 &mRenderer11DeviceCaps.B5G6R5maxSamples);
     }
 
-    hr = mDevice->CheckFormatSupport(DXGI_FORMAT_B4G4R4A4_UNORM,
-                                     &(mRenderer11DeviceCaps.B4G4R4A4support));
-    if (FAILED(hr))
-    {
-        mRenderer11DeviceCaps.B4G4R4A4support = 0;
-    }
-
-    hr = mDevice->CheckFormatSupport(DXGI_FORMAT_B5G5R5A1_UNORM,
-                                     &(mRenderer11DeviceCaps.B5G5R5A1support));
-    if (FAILED(hr))
-    {
-        mRenderer11DeviceCaps.B5G5R5A1support = 0;
-    }
+    PopulateFormatDeviceCaps(mDevice, DXGI_FORMAT_B4G4R4A4_UNORM,
+                             &mRenderer11DeviceCaps.B4G4R4A4support,
+                             &mRenderer11DeviceCaps.B4G4R4A4maxSamples);
+    PopulateFormatDeviceCaps(mDevice, DXGI_FORMAT_B5G5R5A1_UNORM,
+                             &mRenderer11DeviceCaps.B5G5R5A1support,
+                             &mRenderer11DeviceCaps.B5G5R5A1maxSamples);
 
     IDXGIAdapter2 *dxgiAdapter2 = d3d11::DynamicCastComObject<IDXGIAdapter2>(mDxgiAdapter);
     mRenderer11DeviceCaps.supportsDXGI1_2 = (dxgiAdapter2 != nullptr);

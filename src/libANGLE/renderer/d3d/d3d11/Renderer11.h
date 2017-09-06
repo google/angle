@@ -50,8 +50,11 @@ struct Renderer11DeviceCaps
     bool supportsClearView;              // Support for ID3D11DeviceContext1::ClearView
     bool supportsConstantBufferOffsets;  // Support for Constant buffer offset
     UINT B5G6R5support;    // Bitfield of D3D11_FORMAT_SUPPORT values for DXGI_FORMAT_B5G6R5_UNORM
+    UINT B5G6R5maxSamples;  // Maximum number of samples supported by DXGI_FORMAT_B5G6R5_UNORM
     UINT B4G4R4A4support;  // Bitfield of D3D11_FORMAT_SUPPORT values for DXGI_FORMAT_B4G4R4A4_UNORM
+    UINT B4G4R4A4maxSamples;  // Maximum number of samples supported by DXGI_FORMAT_B4G4R4A4_UNORM
     UINT B5G5R5A1support;  // Bitfield of D3D11_FORMAT_SUPPORT values for DXGI_FORMAT_B5G5R5A1_UNORM
+    UINT B5G5R5A1maxSamples;  // Maximum number of samples supported by DXGI_FORMAT_B5G5R5A1_UNORM
     Optional<LARGE_INTEGER> driverVersion;  // Four-part driver version number.
 };
 
