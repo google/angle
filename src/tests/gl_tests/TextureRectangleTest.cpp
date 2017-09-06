@@ -70,7 +70,7 @@ TEST_P(TextureRectangleTest, TexImage2D)
 
     // Defining a texture of the max size is allowed
     {
-        ignorePlatformMessagesInScope();
+        ScopedIgnorePlatformMessages(this);
 
         glTexImage2D(GL_TEXTURE_RECTANGLE_ANGLE, 0, GL_RGBA, maxSize, maxSize, 0, GL_RGBA,
                      GL_UNSIGNED_BYTE, nullptr);
@@ -156,7 +156,7 @@ TEST_P(TextureRectangleTest, TexStorage2D)
 
     // Defining a texture of the max size is allowed but still allow for OOM
     {
-        ignorePlatformMessagesInScope();
+        ScopedIgnorePlatformMessages(this);
 
         GLTexture tex;
         glBindTexture(GL_TEXTURE_RECTANGLE_ANGLE, tex);

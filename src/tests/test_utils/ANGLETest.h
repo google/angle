@@ -329,7 +329,6 @@ class ANGLETestBase
 
     angle::PlatformMethods mPlatformMethods;
 
-  private:
     class ScopedIgnorePlatformMessages : angle::NonCopyable
     {
       public:
@@ -339,9 +338,6 @@ class ANGLETestBase
       private:
         ANGLETestBase *mTest;
     };
-
-  protected:
-    ScopedIgnorePlatformMessages ignorePlatformMessagesInScope();
 
   private:
     bool destroyEGLContext();

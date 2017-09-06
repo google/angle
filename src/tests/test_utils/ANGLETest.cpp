@@ -1088,11 +1088,6 @@ void ANGLETestBase::ignoreD3D11SDKLayersWarnings()
     mIgnoreD3D11SDKLayersWarnings = true;
 }
 
-ANGLETestBase::ScopedIgnorePlatformMessages ANGLETestBase::ignorePlatformMessagesInScope()
-{
-    return {this};
-}
-
 ANGLETestBase::ScopedIgnorePlatformMessages::ScopedIgnorePlatformMessages(ANGLETestBase *test)
     : mTest(test)
 {
