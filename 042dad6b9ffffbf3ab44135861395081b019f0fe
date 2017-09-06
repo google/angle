@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5b8b375c_e93a00e9",
+        "filename": "include/platform/WorkaroundsD3D.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-06T18:21:39Z",
+      "side": 1,
+      "message": "nit: you can be more specific - perf tests/etc.",
+      "range": {
+        "startLine": 113,
+        "startChar": 48,
+        "endLine": 113,
+        "endChar": 72
+      },
+      "revId": "042dad6b9ffffbf3ab44135861395081b019f0fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
