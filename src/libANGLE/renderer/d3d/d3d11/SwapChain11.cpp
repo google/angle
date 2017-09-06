@@ -389,7 +389,12 @@ EGLint SwapChain11::resetOffscreenDepthBuffer(int backbufferWidth, int backbuffe
             depthStencilTextureDesc.SampleDesc.Quality = 0;
         }
 
-        if (depthBufferFormatInfo.srvFormat != DXGI_FORMAT_UNKNOWN)
+        // Only create an SRV if it is supported
+        bool depthStencilSRV =
+            depthBufferFormatInfo.srvFormat != DXGI_FORMAT_UNKNOWN &&
+            (mRenderer->getRenderer11DeviceCaps().supportsMultisampledDepthStencilSRVs ||
+             depthStencilTextureDesc.SampleDesc.Count <= 1);
+        if (depthStencilSRV)
         {
             depthStencilTextureDesc.BindFlags |= D3D11_BIND_SHADER_RESOURCE;
         }
@@ -419,7 +424,7 @@ EGLint SwapChain11::resetOffscreenDepthBuffer(int backbufferWidth, int backbuffe
         ASSERT(!err.isError());
         mDepthStencilDSView.setDebugName("Offscreen depth stencil view");
 
-        if (depthBufferFormatInfo.srvFormat != DXGI_FORMAT_UNKNOWN)
+        if (depthStencilSRV)
         {
             D3D11_SHADER_RESOURCE_VIEW_DESC depthStencilSRVDesc;
             depthStencilSRVDesc.Format                    = depthBufferFormatInfo.srvFormat;

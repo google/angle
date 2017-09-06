@@ -934,6 +934,9 @@ void Renderer11::populateRenderer11DeviceCaps()
         }
     }
 
+    mRenderer11DeviceCaps.supportsMultisampledDepthStencilSRVs =
+        mRenderer11DeviceCaps.featureLevel > D3D_FEATURE_LEVEL_10_0;
+
     if (getWorkarounds().disableB5G6R5Support)
     {
         mRenderer11DeviceCaps.B5G6R5support = 0;
@@ -3037,12 +3040,9 @@ gl::Error Renderer11::createRenderTarget(int width,
         bindDSV = (formatInfo.dsvFormat != DXGI_FORMAT_UNKNOWN);
         bindSRV = (formatInfo.srvFormat != DXGI_FORMAT_UNKNOWN);
 
-        // D3D feature level 10.0 no longer allows creation of textures with both the bind SRV and
-        // DSV flags when multisampled.  crbug.com/656989
-        bool supportsMultisampledDepthStencilSRVs =
-            mRenderer11DeviceCaps.featureLevel > D3D_FEATURE_LEVEL_10_0;
         bool isMultisampledDepthStencil = bindDSV && desc.SampleDesc.Count > 1;
-        if (isMultisampledDepthStencil && !supportsMultisampledDepthStencilSRVs)
+        if (isMultisampledDepthStencil &&
+            !mRenderer11DeviceCaps.supportsMultisampledDepthStencilSRVs)
         {
             bindSRV = false;
         }

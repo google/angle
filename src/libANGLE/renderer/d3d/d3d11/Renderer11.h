@@ -51,6 +51,10 @@ struct Renderer11DeviceCaps
     bool supportsConstantBufferOffsets;  // Support for Constant buffer offset
     bool supportsVpRtIndexWriteFromVertexShader;  // VP/RT can be selected in the Vertex Shader
                                                   // stage.
+    bool supportsMultisampledDepthStencilSRVs;  // D3D feature level 10.0 no longer allows creation
+                                                // of textures with both the bind SRV and DSV flags
+                                                // when multisampled.  Textures will need to be
+                                                // resolved before reading. crbug.com/656989
     UINT B5G6R5support;    // Bitfield of D3D11_FORMAT_SUPPORT values for DXGI_FORMAT_B5G6R5_UNORM
     UINT B5G6R5maxSamples;  // Maximum number of samples supported by DXGI_FORMAT_B5G6R5_UNORM
     UINT B4G4R4A4support;  // Bitfield of D3D11_FORMAT_SUPPORT values for DXGI_FORMAT_B4G4R4A4_UNORM
