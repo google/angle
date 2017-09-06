@@ -17,13 +17,14 @@
 #include <EGL/egl.h>
 #include <EGL/eglext.h>
 
-#include "common/angleutils.h"
-#include "common/debug.h"
 #include "EGLWindow.h"
 #include "OSWindow.h"
+#include "Timer.h"
+#include "common/angleutils.h"
+#include "common/debug.h"
+#include "platform/Platform.h"
 #include "test_utils/angle_test_configs.h"
 #include "test_utils/angle_test_instantiate.h"
-#include "Timer.h"
 
 class Event;
 
@@ -99,6 +100,8 @@ class ANGLERenderTest : public ANGLEPerfTest
 
     OSWindow *getWindow();
 
+    virtual void overrideWorkaroundsD3D(angle::WorkaroundsD3D *workaroundsD3D) {}
+
   protected:
     const RenderTestParams &mTestParams;
 
@@ -114,6 +117,7 @@ class ANGLERenderTest : public ANGLEPerfTest
     EGLWindow *mEGLWindow;
     OSWindow *mOSWindow;
     std::vector<std::string> mExtensionPrerequisites;
+    angle::PlatformMethods mPlatformMethods;
 };
 
 #endif // PERF_TESTS_ANGLE_PERF_TEST_H_
