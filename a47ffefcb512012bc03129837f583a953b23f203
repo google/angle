@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "d5ebcb63_7198ccb7",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 566,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-09-06T07:35:17Z",
+      "side": 1,
+      "message": "Jamie,\n\u003e\u003e \"The spec says that if a value is too large, it should be rounded down to the nearest representable value.\"\n\nDid you mean the ES3.10 Spec? I can\u0027t find such statement.\nGenerally clamping an overflowed value still can\u0027t make things right. It just relieves the hurt presumably. For this purpose, we need to make the current clampCast full-fledged as Boost.NumericConversion does. Then we should use clampCast instead of static_cast as best as we can. If so, we\u0027d better do this with a new CL.",
+      "parentUuid": "ee456af4_634a88e9",
+      "range": {
+        "startLine": 566,
+        "startChar": 28,
+        "endLine": 566,
+        "endChar": 39
+      },
+      "revId": "a47ffefcb512012bc03129837f583a953b23f203",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c8261802_04fb5c96",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 3
