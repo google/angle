@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "aa7c328d_c45a6c5d",
+        "filename": "src/compiler/translator/ExtensionBehavior.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-07T17:11:50Z",
+      "side": 1,
+      "message": "nit: To avoid duplication here and below, we could use an X macro: https://en.wikipedia.org/wiki/X_Macro",
+      "revId": "8ff346a991c02244e0aadbdc185543fed3d55617",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "278f26ff_222ede40",
         "filename": "src/compiler/translator/ExtensionBehavior.h",
         "patchSetId": 8
@@ -13,6 +30,109 @@
       "writtenOn": "2017-09-07T15:29:09Z",
       "side": 1,
       "message": "Do you think it\u0027s reasonable to have these enum values named differently from the usual convention? It makes things a bit simpler.",
+      "revId": "8ff346a991c02244e0aadbdc185543fed3d55617",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98ec59cb_7bae66ad",
+        "filename": "src/compiler/translator/ExtensionBehavior.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-07T17:11:50Z",
+      "side": 1,
+      "message": "I\u0027m not sure what you mean by named differently. If it is like it is in this CL, it looks great. The GL_ prefix doesn\u0027t add anything imho.",
+      "parentUuid": "278f26ff_222ede40",
+      "revId": "8ff346a991c02244e0aadbdc185543fed3d55617",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "68d9eafd_f5e9d61c",
+        "filename": "src/compiler/translator/ExtensionBehavior.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-07T17:11:50Z",
+      "side": 1,
+      "message": "nit: Implementation of this can be moved to the .cpp",
+      "revId": "8ff346a991c02244e0aadbdc185543fed3d55617",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8904d0e_49e4677a",
+        "filename": "src/compiler/translator/ExtensionBehavior.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-07T17:11:50Z",
+      "side": 1,
+      "message": "No need to address this now, but I have in the plans to add an \"enum class indexed version of std::array\" which could also be used here.",
+      "revId": "8ff346a991c02244e0aadbdc185543fed3d55617",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3de9f1c7_be8b905d",
+        "filename": "src/compiler/translator/ExtensionBehavior.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-07T17:11:50Z",
+      "side": 1,
+      "message": "nit: no need for inline anymore.",
+      "revId": "8ff346a991c02244e0aadbdc185543fed3d55617",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1560ce43_e7db2f89",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-07T17:11:50Z",
+      "side": 1,
+      "message": "nit: no need for the sh namespace.",
+      "revId": "8ff346a991c02244e0aadbdc185543fed3d55617",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90589c3a_1536992e",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1639,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-07T17:11:50Z",
+      "side": 1,
+      "message": "nit: Why the namespace here? The functions don\u0027t conflict thanks to a case difference.",
       "revId": "8ff346a991c02244e0aadbdc185543fed3d55617",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
