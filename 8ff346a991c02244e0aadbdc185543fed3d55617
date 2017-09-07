@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "278f26ff_222ede40",
+        "filename": "src/compiler/translator/ExtensionBehavior.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-07T15:29:09Z",
+      "side": 1,
+      "message": "Do you think it\u0027s reasonable to have these enum values named differently from the usual convention? It makes things a bit simpler.",
+      "revId": "8ff346a991c02244e0aadbdc185543fed3d55617",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
