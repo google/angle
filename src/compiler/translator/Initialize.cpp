@@ -1021,8 +1021,7 @@ void InitExtensionBehavior(const ShBuiltInResources &resources, TExtensionBehavi
         extBehavior["GL_ARM_shader_framebuffer_fetch"] = EBhUndefined;
     if (resources.OVR_multiview)
     {
-        extBehavior["GL_OVR_multiview"]  = EBhUndefined;
-        extBehavior["GL_OVR_multiview2"] = EBhUndefined;
+        extBehavior["GL_OVR_multiview"] = EBhUndefined;
     }
     if (resources.EXT_YUV_target)
     {

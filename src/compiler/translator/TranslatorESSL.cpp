@@ -136,8 +136,7 @@ void TranslatorESSL::writeExtensionBehavior(ShCompileOptions compileOptions)
     {
         if (iter->second != EBhUndefined)
         {
-            const bool isMultiview =
-                iter->first == "GL_OVR_multiview" || iter->first == "GL_OVR_multiview2";
+            const bool isMultiview = (iter->first == "GL_OVR_multiview");
             if (getResources().NV_shader_framebuffer_fetch &&
                 iter->first == "GL_EXT_shader_framebuffer_fetch")
             {

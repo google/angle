@@ -830,7 +830,7 @@ TEST_P(MultiviewRenderTest, DrawArraysFourViews)
 
     const std::string vsSource =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension GL_OVR_multiview : require\n"
         "layout(num_views = 4) in;\n"
         "in vec4 vPosition;\n"
         "void main()\n"
@@ -849,7 +849,7 @@ TEST_P(MultiviewRenderTest, DrawArraysFourViews)
 
     const std::string fsSource =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension GL_OVR_multiview : require\n"
         "precision mediump float;\n"
         "out vec4 col;\n"
         "void main()\n"
@@ -958,7 +958,7 @@ TEST_P(MultiviewRenderTest, AttribDivisor)
 
     const std::string &vsSource =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension GL_OVR_multiview : require\n"
         "layout(num_views = 2) in;\n"
         "in vec3 vPosition;\n"
         "in float offsetX;\n"
@@ -973,7 +973,7 @@ TEST_P(MultiviewRenderTest, AttribDivisor)
 
     const std::string &fsSource =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension GL_OVR_multiview : require\n"
         "precision mediump float;\n"
         "out vec4 col;\n"
         "void main()\n"
@@ -1039,7 +1039,7 @@ TEST_P(MultiviewRenderTest, DivisorOrderOfOperation)
     // Create multiview program.
     const std::string &vs =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension GL_OVR_multiview : require\n"
         "layout(num_views = 2) in;\n"
         "layout(location = 0) in vec2 vPosition;\n"
         "layout(location = 1) in float offsetX;\n"
@@ -1052,7 +1052,7 @@ TEST_P(MultiviewRenderTest, DivisorOrderOfOperation)
 
     const std::string &fs =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension GL_OVR_multiview : require\n"
         "precision mediump float;\n"
         "out vec4 col;\n"
         "void main()\n"
@@ -1331,7 +1331,7 @@ TEST_P(MultiviewProgramGenerationTest, UseViewIDInVertexShader)
 
     const std::string vsSource =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension GL_OVR_multiview : require\n"
         "layout(num_views = 2) in;\n"
         "void main()\n"
         "{\n"
@@ -1344,7 +1344,7 @@ TEST_P(MultiviewProgramGenerationTest, UseViewIDInVertexShader)
 
     const std::string fsSource =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension GL_OVR_multiview : require\n"
         "precision mediump float;\n"
         "void main()\n"
         "{\n"
@@ -1367,7 +1367,7 @@ TEST_P(MultiviewProgramGenerationTest, UseViewIDInFragmentShader)
 
     const std::string vsSource =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension GL_OVR_multiview : require\n"
         "layout(num_views = 2) in;\n"
         "void main()\n"
         "{\n"
@@ -1375,7 +1375,7 @@ TEST_P(MultiviewProgramGenerationTest, UseViewIDInFragmentShader)
 
     const std::string fsSource =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension GL_OVR_multiview : require\n"
         "precision mediump float;\n"
         "out vec4 col;\n"
         "void main()\n"
@@ -1639,7 +1639,7 @@ TEST_P(MultiviewSideBySideRenderTest, NoLeakingFragments)
 
     const std::string vsSource =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension GL_OVR_multiview : require\n"
         "layout(num_views = 2) in;\n"
         "layout(location=0) in vec2 vPosition;\n"
         "void main()\n"
@@ -1650,7 +1650,7 @@ TEST_P(MultiviewSideBySideRenderTest, NoLeakingFragments)
 
     const std::string fsSource =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension GL_OVR_multiview : require\n"
         "precision mediump float;\n"
         "out vec4 col;\n"
         "void main()\n"
@@ -1713,7 +1713,7 @@ TEST_P(MultiviewRenderTest, ProgramRelinkUpdatesAttribDivisor)
 
     const std::string &fsSource =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension GL_OVR_multiview : require\n"
         "precision mediump float;\n"
         "in vec4 oColor;\n"
         "out vec4 col;\n"
@@ -1725,7 +1725,7 @@ TEST_P(MultiviewRenderTest, ProgramRelinkUpdatesAttribDivisor)
     auto generateVertexShaderSource = [](int numViews) -> std::string {
         std::string source =
             "#version 300 es\n"
-            "#extension GL_OVR_multiview2 : require\n"
+            "#extension GL_OVR_multiview : require\n"
             "layout(num_views = " +
             ToString(numViews) +
             ") in;\n"
@@ -1895,7 +1895,7 @@ TEST_P(MultiviewRenderTest, SelectColorBasedOnViewIDOVR)
 
     const std::string vsSource =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension GL_OVR_multiview : require\n"
         "layout(num_views = 3) in;\n"
         "in vec3 vPosition;\n"
         "void main()\n"
@@ -1905,7 +1905,7 @@ TEST_P(MultiviewRenderTest, SelectColorBasedOnViewIDOVR)
 
     const std::string fsSource =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension GL_OVR_multiview : require\n"
         "precision mediump float;\n"
         "out vec4 col;\n"
         "void main()\n"
@@ -1994,7 +1994,7 @@ TEST_P(MultiviewRenderTest, FlatInterpolation)
 
     const std::string vsSource =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension GL_OVR_multiview : require\n"
         "layout(num_views = 2) in;\n"
         "in vec3 vPosition;\n"
         "flat out int oInstanceID;\n"
@@ -2006,7 +2006,7 @@ TEST_P(MultiviewRenderTest, FlatInterpolation)
 
     const std::string fsSource =
         "#version 300 es\n"
-        "#extension GL_OVR_multiview2 : require\n"
+        "#extension GL_OVR_multiview : require\n"
         "precision mediump float;\n"
         "flat in int oInstanceID;\n"
         "out vec4 col;\n"

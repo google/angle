@@ -1158,12 +1158,6 @@ bool TParseContext::checkCanUseExtension(const TSourceLoc &line, const TString &
     // In GLSL ES, an extension's default behavior is "disable".
     if (iter->second == EBhDisable || iter->second == EBhUndefined)
     {
-        // TODO(oetuaho@nvidia.com): This is slightly hacky. Might be better if symbols could be
-        // associated with more than one extension.
-        if (extension == "GL_OVR_multiview")
-        {
-            return checkCanUseExtension(line, "GL_OVR_multiview2");
-        }
         error(line, "extension is disabled", extension.c_str());
         return false;
     }
@@ -1774,14 +1768,6 @@ TIntermTyped *TParseContext::parseVariableIdentifier(const TSourceLoc &location,
         TIntermTyped *node = CreateZeroNode(TType(EbtFloat, EbpHigh, EvqConst));
         node->setLine(location);
         return node;
-    }
-
-    if (variable->getType().getQualifier() == EvqViewIDOVR && IsWebGLBasedSpec(mShaderSpec) &&
-        mShaderType == GL_FRAGMENT_SHADER && !isExtensionEnabled("GL_OVR_multiview2"))
-    {
-        // WEBGL_multiview spec
-        error(location, "Need to enable OVR_multiview2 to use gl_ViewID_OVR in fragment shader",
-              "gl_ViewID_OVR");
     }
 
     TIntermTyped *node = nullptr;

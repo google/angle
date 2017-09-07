@@ -145,8 +145,6 @@
             'compiler/translator/ValidateLimitations.h',
             'compiler/translator/ValidateMaxParameters.h',
             'compiler/translator/ValidateMaxParameters.cpp',
-            'compiler/translator/ValidateMultiviewWebGL.cpp',
-            'compiler/translator/ValidateMultiviewWebGL.h',
             'compiler/translator/ValidateOutputs.cpp',
             'compiler/translator/ValidateOutputs.h',
             'compiler/translator/ValidateSwitch.cpp',
