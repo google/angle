@@ -625,6 +625,8 @@ class Renderer11 : public RendererD3D
 
     mutable Optional<bool> mSupportsShareHandles;
     ResourceManager11 mResourceManager11;
+
+    TextureHelper11 mCachedResolveTexture;
 };
 
 }  // namespace rx

@@ -2380,6 +2380,8 @@ void Renderer11::releaseDeviceResources()
     mDriverConstantBufferPS.reset();
     mDriverConstantBufferCS.reset();
     mSyncQuery.reset();
+
+    mCachedResolveTexture.reset();
 }
 
 // set notify to true to broadcast a message to all contexts of the device loss
@@ -4024,25 +4026,31 @@ gl::ErrorOrResult<TextureHelper11> Renderer11::resolveMultisampledTexture(
     sourceSRV.get()->GetDesc(&sourceSRVDesc);
     ASSERT(sourceSRVDesc.ViewDimension == D3D_SRV_DIMENSION_TEXTURE2DMS);
 
-    D3D11_TEXTURE2D_DESC resolveDesc;
-    resolveDesc.Width              = renderTarget->getWidth();
-    resolveDesc.Height             = renderTarget->getHeight();
-    resolveDesc.MipLevels          = 1;
-    resolveDesc.ArraySize          = 1;
-    resolveDesc.Format             = formatSet.texFormat;
-    resolveDesc.SampleDesc.Count   = 1;
-    resolveDesc.SampleDesc.Quality = 0;
-    resolveDesc.Usage              = D3D11_USAGE_DEFAULT;
-    resolveDesc.BindFlags          = D3D11_BIND_SHADER_RESOURCE;
-    resolveDesc.CPUAccessFlags     = 0;
-    resolveDesc.MiscFlags          = 0;
+    if (!mCachedResolveTexture.valid() ||
+        mCachedResolveTexture.getExtents().width != renderTarget->getWidth() ||
+        mCachedResolveTexture.getExtents().height != renderTarget->getHeight() ||
+        mCachedResolveTexture.getFormat() != formatSet.texFormat)
+    {
+        D3D11_TEXTURE2D_DESC resolveDesc;
+        resolveDesc.Width              = renderTarget->getWidth();
+        resolveDesc.Height             = renderTarget->getHeight();
+        resolveDesc.MipLevels          = 1;
+        resolveDesc.ArraySize          = 1;
+        resolveDesc.Format             = formatSet.texFormat;
+        resolveDesc.SampleDesc.Count   = 1;
+        resolveDesc.SampleDesc.Quality = 0;
+        resolveDesc.Usage              = D3D11_USAGE_DEFAULT;
+        resolveDesc.BindFlags          = D3D11_BIND_SHADER_RESOURCE;
+        resolveDesc.CPUAccessFlags     = 0;
+        resolveDesc.MiscFlags          = 0;
 
-    TextureHelper11 resolveTexture;
-    ANGLE_TRY(allocateTexture(resolveDesc, formatSet, &resolveTexture));
+        ANGLE_TRY(allocateTexture(resolveDesc, formatSet, &mCachedResolveTexture));
+    }
 
-    mDeviceContext->ResolveSubresource(resolveTexture.get(), 0, renderTarget->getTexture().get(),
+    mDeviceContext->ResolveSubresource(mCachedResolveTexture.get(), 0,
+                                       renderTarget->getTexture().get(),
                                        renderTarget->getSubresourceIndex(), formatSet.texFormat);
-    return resolveTexture;
+    return mCachedResolveTexture;
 }
 
 bool Renderer11::getLUID(LUID *adapterLuid) const
