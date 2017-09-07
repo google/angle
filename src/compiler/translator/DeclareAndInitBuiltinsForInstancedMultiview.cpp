@@ -56,20 +56,11 @@ void InitializeViewIDAndInstanceID(TIntermTyped *viewIDSymbol,
                                    const TSymbolTable &symbolTable,
                                    TIntermSequence *initializers)
 {
-    // Create a signed numberOfViews node.
-    TConstantUnion *numberOfViewsConstant = new TConstantUnion();
-    numberOfViewsConstant->setIConst(static_cast<int>(numberOfViews));
-    TIntermConstantUnion *numberOfViewsIntSymbol =
-        new TIntermConstantUnion(numberOfViewsConstant, TType(EbtInt, EbpHigh, EvqConst));
-
-    // Create a gl_InstanceID / numberOfViews node.
-    TIntermBinary *normalizedInstanceID =
-        new TIntermBinary(EOpDiv, CreateGLInstanceIDSymbol(symbolTable), numberOfViewsIntSymbol);
-
-    // Create a InstanceID = gl_InstanceID / numberOfViews node.
-    TIntermBinary *instanceIDInitializer =
-        new TIntermBinary(EOpAssign, instanceIDSymbol->deepCopy(), normalizedInstanceID);
-    initializers->push_back(instanceIDInitializer);
+    // Create an unsigned numberOfViews node.
+    TConstantUnion *numberOfViewsUnsignedConstant = new TConstantUnion();
+    numberOfViewsUnsignedConstant->setUConst(numberOfViews);
+    TIntermConstantUnion *numberOfViewsUint =
+        new TIntermConstantUnion(numberOfViewsUnsignedConstant, TType(EbtUInt, EbpHigh, EvqConst));
 
     // Create a uint(gl_InstanceID) node.
     TIntermSequence *glInstanceIDSymbolCastArguments = new TIntermSequence();
@@ -77,15 +68,24 @@ void InitializeViewIDAndInstanceID(TIntermTyped *viewIDSymbol,
     TIntermAggregate *glInstanceIDAsUint = TIntermAggregate::CreateConstructor(
         TType(EbtUInt, EbpHigh, EvqTemporary), glInstanceIDSymbolCastArguments);
 
-    // Create an unsigned numberOfViews node.
-    TConstantUnion *numberOfViewsUnsignedConstant = new TConstantUnion();
-    numberOfViewsUnsignedConstant->setUConst(numberOfViews);
-    TIntermConstantUnion *numberOfViewsUintSymbol =
-        new TIntermConstantUnion(numberOfViewsUnsignedConstant, TType(EbtUInt, EbpHigh, EvqConst));
+    // Create a uint(gl_InstanceID) / numberOfViews node.
+    TIntermBinary *normalizedInstanceID =
+        new TIntermBinary(EOpDiv, glInstanceIDAsUint, numberOfViewsUint);
+
+    // Create an int(uint(gl_InstanceID) / numberOfViews) node.
+    TIntermSequence *normalizedInstanceIDCastArguments = new TIntermSequence();
+    normalizedInstanceIDCastArguments->push_back(normalizedInstanceID);
+    TIntermAggregate *normalizedInstanceIDAsInt = TIntermAggregate::CreateConstructor(
+        TType(EbtInt, EbpHigh, EvqTemporary), normalizedInstanceIDCastArguments);
+
+    // Create an InstanceID = int(uint(gl_InstanceID) / numberOfViews) node.
+    TIntermBinary *instanceIDInitializer =
+        new TIntermBinary(EOpAssign, instanceIDSymbol->deepCopy(), normalizedInstanceIDAsInt);
+    initializers->push_back(instanceIDInitializer);
 
     // Create a uint(gl_InstanceID) % numberOfViews node.
     TIntermBinary *normalizedViewID =
-        new TIntermBinary(EOpIMod, glInstanceIDAsUint, numberOfViewsUintSymbol);
+        new TIntermBinary(EOpIMod, glInstanceIDAsUint->deepCopy(), numberOfViewsUint->deepCopy());
 
     // Create a ViewID_OVR = uint(gl_InstanceID) % numberOfViews node.
     TIntermBinary *viewIDInitializer =

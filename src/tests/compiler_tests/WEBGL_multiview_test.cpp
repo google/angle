@@ -753,10 +753,10 @@ TEST_F(WEBGLMultiviewVertexShaderOutputCodeTest, ViewIDAndInstanceIDHaveCorrectV
     compile(shaderString, SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW);
 
     EXPECT_TRUE(foundInAllGLSLCode("ViewID_OVR = (uint(gl_InstanceID) % 3u)"));
-    EXPECT_TRUE(foundInAllGLSLCode("InstanceID = (gl_InstanceID / 3)"));
+    EXPECT_TRUE(foundInAllGLSLCode("InstanceID = int((uint(gl_InstanceID) / 3u))"));
 
     EXPECT_TRUE(foundInHLSLCode("ViewID_OVR = (uvec1(gl_InstanceID) % 3)"));
-    EXPECT_TRUE(foundInHLSLCode("InstanceID = (gl_InstanceID / 3)"));
+    EXPECT_TRUE(foundInHLSLCode("InstanceID = ivec1((uvec1(gl_InstanceID) / 3))"));
 }
 
 // The test checks that the directive enabling GL_OVR_multiview is not outputted if the extension is
