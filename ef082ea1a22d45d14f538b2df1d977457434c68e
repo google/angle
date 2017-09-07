@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "20ea5370_27add77c",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 507,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-07T22:24:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d832e43b_10ac9aa4",
+      "range": {
+        "startLine": 507,
+        "startChar": 4,
+        "endLine": 507,
+        "endChar": 31
+      },
+      "revId": "ef082ea1a22d45d14f538b2df1d977457434c68e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5604d2a6_6447d426",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2017-09-05T20:52:22Z",
       "side": 1,
       "message": "Can this be split into a separate method called after the tex image?  As is, sometimes it is set directly in the method above and sometimes by this method.",
+      "range": {
+        "startLine": 3481,
+        "startChar": 4,
+        "endLine": 3483,
+        "endChar": 40
+      },
+      "revId": "ef082ea1a22d45d14f538b2df1d977457434c68e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bccd570d_05854b8d",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3483,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-07T22:24:01Z",
+      "side": 1,
+      "message": "I redid this entirely. Now the State holds a vector of callback bindings, using the same mechanism as Framebuffer. I kept the explicit dirtying in the SetParameter methods since they don\u0027t interact with Framebuffer dirtiness.",
+      "parentUuid": "5604d2a6_6447d426",
       "range": {
         "startLine": 3481,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "b1447b9e_70beaadc",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 451,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-07T22:24:01Z",
+      "side": 1,
+      "message": "Regarding enum vs bool, I feel more comfortable with checking a value with a bit more verbosity than using a parity value without a literal meaning. enum also is a good solution for encoding more cases.",
+      "parentUuid": "98b99f06_7897d78b",
+      "range": {
+        "startLine": 451,
+        "startChar": 4,
+        "endLine": 451,
+        "endChar": 21
+      },
+      "revId": "ef082ea1a22d45d14f538b2df1d977457434c68e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d8de725d_d19dd76d",
         "filename": "src/libANGLE/Texture.cpp",
         "patchSetId": 5
@@ -82,6 +154,30 @@
       "writtenOn": "2017-09-05T20:52:22Z",
       "side": 1,
       "message": "The cache should always be valid by the time it gets to the backend for texture application unless there is a bug in the frontend.  Can we assert that it is valid?",
+      "range": {
+        "startLine": 202,
+        "startChar": 11,
+        "endLine": 202,
+        "endChar": 37
+      },
+      "revId": "ef082ea1a22d45d14f538b2df1d977457434c68e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "538fffdc_c6277c80",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-07T22:24:01Z",
+      "side": 1,
+      "message": "Redid this, no longer relevant.",
+      "parentUuid": "d8de725d_d19dd76d",
       "range": {
         "startLine": 202,
         "startChar": 11,
@@ -111,6 +207,24 @@
     },
     {
       "key": {
+        "uuid": "99a877f9_6d5c299a",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1294,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-07T22:24:01Z",
+      "side": 1,
+      "message": "Good point. I added a test for this in a prior patch, the test was indeed broken. Fixed this by instead caching an array of complete samplers. In the future we can could potentially use this to do more incremental updates, and accelerate it via a bitset mask.",
+      "parentUuid": "a75ca4a5_872a9766",
+      "revId": "ef082ea1a22d45d14f538b2df1d977457434c68e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "13c9d6e7_db970066",
         "filename": "src/libANGLE/Texture.h",
         "patchSetId": 5
@@ -131,6 +245,30 @@
       "revId": "ef082ea1a22d45d14f538b2df1d977457434c68e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3de56dc6_345a8fc0",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-07T22:24:01Z",
+      "side": 1,
+      "message": "This method is removed.",
+      "parentUuid": "13c9d6e7_db970066",
+      "range": {
+        "startLine": 356,
+        "startChar": 4,
+        "endLine": 356,
+        "endChar": 17
+      },
+      "revId": "ef082ea1a22d45d14f538b2df1d977457434c68e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
