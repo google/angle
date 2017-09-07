@@ -1988,6 +1988,10 @@ TEST_P(MultiviewRenderTest, FlatInterpolation)
         return;
     }
 
+    // TODO(mradev): Find out why this fails on Win10 Intel HD 630 D3D11
+    // (http://anglebug.com/2062)
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsD3D11());
+
     const std::string vsSource =
         "#version 300 es\n"
         "#extension GL_OVR_multiview2 : require\n"
