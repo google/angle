@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a0f5c529_c21e8f2d",
+        "filename": "src/compiler/translator/DeclareAndInitBuiltinsForInstancedMultiview.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-07T14:28:33Z",
+      "side": 1,
+      "message": "Could clean this up drop \"Symbol\" from this name while we\u0027re at it, since this is not a symbol node. Or replace \"Symbol\" with \"Node\".",
+      "range": {
+        "startLine": 62,
+        "startChar": 26,
+        "endLine": 62,
+        "endChar": 49
+      },
+      "revId": "fec2ca398ae21f4d724375728f2a69315ed1bb0d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
