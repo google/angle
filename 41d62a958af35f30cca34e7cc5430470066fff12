@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1e9e54a4_9b022724",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 835,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-07T16:45:28Z",
+      "side": 1,
+      "message": "can we call this IsValidWebGLTexImageFormat? And do the webgl extension check outside the function?",
+      "range": {
+        "startLine": 834,
+        "startChar": 1,
+        "endLine": 835,
+        "endChar": 5
+      },
+      "revId": "41d62a958af35f30cca34e7cc5430470066fff12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "17c5f10c_08f0a223",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 845,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-07T16:45:28Z",
+      "side": 1,
+      "message": "I would just return true in these cases.",
+      "range": {
+        "startLine": 844,
+        "startChar": 16,
+        "endLine": 845,
+        "endChar": 0
+      },
+      "revId": "41d62a958af35f30cca34e7cc5430470066fff12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a8e02e6c_a9e3a793",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 857,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-07T16:45:28Z",
+      "side": 1,
+      "message": "can you refactor these to not use fall-through to default?",
+      "range": {
+        "startLine": 854,
+        "startChar": 0,
+        "endLine": 857,
+        "endChar": 0
+      },
+      "revId": "41d62a958af35f30cca34e7cc5430470066fff12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8fd7bad0_20cc4c65",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2953,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-07T16:45:28Z",
+      "side": 1,
+      "message": "you can use ANGLE_SKIP_TEST_IF (basically the same but prints a skipped message)",
+      "range": {
+        "startLine": 2949,
+        "startChar": 0,
+        "endLine": 2953,
+        "endChar": 0
+      },
+      "revId": "41d62a958af35f30cca34e7cc5430470066fff12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
