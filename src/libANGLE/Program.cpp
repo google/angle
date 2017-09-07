@@ -266,7 +266,8 @@ void InfoLog::reset()
 {
 }
 
-VariableLocation::VariableLocation() : name(), element(0), index(0), used(false), ignored(false)
+VariableLocation::VariableLocation()
+    : name(), element(0), index(GL_INVALID_INDEX), used(false), ignored(false)
 {
 }
 

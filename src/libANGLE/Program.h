@@ -142,7 +142,9 @@ struct VariableLocation
     unsigned int element;
     unsigned int index;
 
-    // If this is a valid uniform location
+    // If used is false, it means this location is only used to fill an empty space in an array,
+    // and there is no corresponding uniform variable for this location. It can also mean the
+    // uniform was optimized out by the implementation.
     bool used;
 
     // If this location was bound to an unreferenced uniform.  Setting data on this uniform is a
