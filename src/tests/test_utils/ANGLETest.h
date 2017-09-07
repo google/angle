@@ -278,8 +278,7 @@ class ANGLETestBase
                          bool useBufferObject,
                          bool restrictedRange);
 
-    void draw2DTexturedQuad(const std::string &positionAttribName,
-                            GLfloat positionAttribZ,
+    void draw2DTexturedQuad(GLfloat positionAttribZ,
                             GLfloat positionAttribXYScale,
                             bool useVertexBuffer);
 

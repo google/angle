@@ -492,7 +492,7 @@ TEST_P(D3DTextureTest, NonReadablePBuffer)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 
     // Draw with the texture and expect green.
-    draw2DTexturedQuad("position", 0.5f, 1.0f, false);
+    draw2DTexturedQuad(0.5f, 1.0f, false);
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 
     // Make current with fixture EGL to ensure the Surface can be released immediately.

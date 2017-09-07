@@ -595,14 +595,13 @@ GLuint ANGLETestBase::get2DTexturedQuadProgram()
     return m2DTexturedQuadProgram;
 }
 
-void ANGLETestBase::draw2DTexturedQuad(const std::string &positionAttribName,
-                                       GLfloat positionAttribZ,
+void ANGLETestBase::draw2DTexturedQuad(GLfloat positionAttribZ,
                                        GLfloat positionAttribXYScale,
                                        bool useVertexBuffer)
 {
     ASSERT_NE(0u, get2DTexturedQuadProgram());
-    return drawQuad(get2DTexturedQuadProgram(), positionAttribName, positionAttribZ,
-                    positionAttribXYScale, useVertexBuffer);
+    return drawQuad(get2DTexturedQuadProgram(), "position", positionAttribZ, positionAttribXYScale,
+                    useVertexBuffer);
 }
 
 GLuint ANGLETestBase::compileShader(GLenum type, const std::string &source)

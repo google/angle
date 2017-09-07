@@ -3777,6 +3777,144 @@ TEST_P(Texture3DTestES3, BasicUnpackBufferOOB)
     }
 }
 
+// Tests behaviour with a single texture and multiple sampler objects.
+TEST_P(Texture2DTestES3, SingleTextureMultipleSamplers)
+{
+    GLint maxTextureUnits = 0;
+    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextureUnits);
+    ANGLE_SKIP_TEST_IF(maxTextureUnits < 4);
+
+    constexpr int kSize = 16;
+
+    // Make a single-level texture, fill it with red.
+    std::vector<GLColor> redColors(kSize * kSize, GLColor::red);
+    GLTexture tex;
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 redColors.data());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Simple sanity check.
+    draw2DTexturedQuad(0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Bind texture to unit 1 with a sampler object making it incomplete.
+    GLSampler sampler;
+    glBindSampler(0, sampler);
+    glSamplerParameteri(sampler, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glSamplerParameteri(sampler, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Make a mipmap texture, fill it with blue.
+    std::vector<GLColor> blueColors(kSize * kSize, GLColor::blue);
+    GLTexture mipmapTex;
+    glBindTexture(GL_TEXTURE_2D, mipmapTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kSize, kSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 blueColors.data());
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    // Draw with the sampler, expect blue.
+    draw2DTexturedQuad(0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    // Simple multitexturing program.
+    const std::string vs =
+        "#version 300 es\n"
+        "in vec2 position;\n"
+        "out vec2 texCoord;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_Position = vec4(position, 0, 1);\n"
+        "    texCoord = position * 0.5 + vec2(0.5);\n"
+        "}";
+    const std::string fs =
+        "#version 300 es\n"
+        "precision mediump float;\n"
+        "in vec2 texCoord;\n"
+        "uniform sampler2D tex1;\n"
+        "uniform sampler2D tex2;\n"
+        "uniform sampler2D tex3;\n"
+        "uniform sampler2D tex4;\n"
+        "out vec4 color;\n"
+        "void main()\n"
+        "{\n"
+        "    color = (texture(tex1, texCoord) + texture(tex2, texCoord) \n"
+        "          +  texture(tex3, texCoord) + texture(tex4, texCoord)) * 0.25;\n"
+        "}";
+
+    ANGLE_GL_PROGRAM(program, vs, fs);
+
+    std::array<GLint, 4> texLocations = {
+        {glGetUniformLocation(program, "tex1"), glGetUniformLocation(program, "tex2"),
+         glGetUniformLocation(program, "tex3"), glGetUniformLocation(program, "tex4")}};
+    for (GLint location : texLocations)
+    {
+        ASSERT_NE(-1, location);
+    }
+
+    // Init the uniform data.
+    glUseProgram(program);
+    for (GLint location = 0; location < 4; ++location)
+    {
+        glUniform1i(texLocations[location], location);
+    }
+
+    // Initialize four samplers
+    GLSampler samplers[4];
+
+    // 0: non-mipped.
+    glBindSampler(0, samplers[0]);
+    glSamplerParameteri(samplers[0], GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glSamplerParameteri(samplers[0], GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // 1: mipped.
+    glBindSampler(1, samplers[1]);
+    glSamplerParameteri(samplers[1], GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glSamplerParameteri(samplers[1], GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // 2: non-mipped.
+    glBindSampler(2, samplers[2]);
+    glSamplerParameteri(samplers[2], GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glSamplerParameteri(samplers[2], GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // 3: mipped.
+    glBindSampler(3, samplers[3]);
+    glSamplerParameteri(samplers[3], GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glSamplerParameteri(samplers[3], GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // Bind two blue mipped textures and two single layer textures, should all draw.
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, mipmapTex);
+
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, tex);
+
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, mipmapTex);
+
+    ASSERT_GL_NO_ERROR();
+
+    drawQuad(program, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_NEAR(0, 0, 128, 0, 128, 255, 2);
+
+    // Bind four single layer textures, two should be incomplete.
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, tex);
+
+    glActiveTexture(GL_TEXTURE3);
+    glBindTexture(GL_TEXTURE_2D, tex);
+
+    drawQuad(program, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_NEAR(0, 0, 128, 0, 0, 255, 2);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 // TODO(oetuaho): Enable all below tests on OpenGL. Requires a fix for ANGLE bug 1278.
 ANGLE_INSTANTIATE_TEST(Texture2DTest,
