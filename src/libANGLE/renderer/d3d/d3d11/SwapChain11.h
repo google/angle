@@ -110,6 +110,7 @@ class SwapChain11 final : public SwapChainD3D
     TextureHelper11 mOffscreenTexture;
     d3d11::RenderTargetView mOffscreenRTView;
     d3d11::SharedSRV mOffscreenSRView;
+    bool mNeedsOffscreenTextureCopy;
     TextureHelper11 mOffscreenTextureCopyForSRV;
 
     TextureHelper11 mDepthStencilTexture;
