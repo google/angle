@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6b9758bf_0ebb346e",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-07T15:49:28Z",
+      "side": 0,
+      "message": "nit: Why factor this out of only this function?",
+      "range": {
+        "startLine": 281,
+        "startChar": 28,
+        "endLine": 281,
+        "endChar": 66
+      },
+      "revId": "fca781309b6acda83d3266a7291c9ffb6dcc331c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
