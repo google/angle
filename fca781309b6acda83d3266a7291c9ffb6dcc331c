@@ -22,6 +22,30 @@
       "revId": "fca781309b6acda83d3266a7291c9ffb6dcc331c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98e17af1_c69fd25f",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-07T15:50:47Z",
+      "side": 0,
+      "message": "It is an unrelated cleanup -- it only applies to \"draw2DTexturedQuad\" since the textured program has a name for the position attribute hard-coded. The other drawXXXQuad methods still take a program as input.",
+      "parentUuid": "6b9758bf_0ebb346e",
+      "range": {
+        "startLine": 281,
+        "startChar": 28,
+        "endLine": 281,
+        "endChar": 66
+      },
+      "revId": "fca781309b6acda83d3266a7291c9ffb6dcc331c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
