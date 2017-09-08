@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6fb5c8a8_8d35291c",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 928,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-08T00:05:21Z",
+      "side": 1,
+      "message": "Good point. Done in a prior patch.",
+      "parentUuid": "592e1810_e928a972",
+      "range": {
+        "startLine": 928,
+        "startChar": 9,
+        "endLine": 928,
+        "endChar": 24
+      },
+      "revId": "90047654decc19a3fe390bf0c78e9107990a97af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "84ea986e_693e0896",
         "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
         "patchSetId": 6
@@ -36,6 +60,30 @@
       "writtenOn": "2017-09-06T16:37:02Z",
       "side": 1,
       "message": "nit again: Would rather that this is an output parameter than a return value.",
+      "range": {
+        "startLine": 171,
+        "startChar": 4,
+        "endLine": 171,
+        "endChar": 19
+      },
+      "revId": "90047654decc19a3fe390bf0c78e9107990a97af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f3a81d23_2b9e5914",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-08T00:05:21Z",
+      "side": 1,
+      "message": "Understood, but did not change in this revision.",
+      "parentUuid": "84ea986e_693e0896",
       "range": {
         "startLine": 171,
         "startChar": 4,
