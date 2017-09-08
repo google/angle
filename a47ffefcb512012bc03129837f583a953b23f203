@@ -168,6 +168,30 @@
     },
     {
       "key": {
+        "uuid": "9900ffb0_e804c37c",
+        "filename": "src/libANGLE/queryutils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 566,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2017-09-08T11:49:18Z",
+      "side": 1,
+      "message": "Having examining the spec over for the sentence, I think a clarification is needed here.\nIn ES 3.10 section 20:\n\"The tables on the following pages indicate which state variables are obtained with what commands. State variables that can be obtained using any of GetBooleanv, GetIntegerv, \n GetInteger64v, or GetFloatv are listed with just one of these commands – the one that is most appropriate given the type of the data to be returned.These state variables cannot be obtained using IsEnabled. However, state variables for which IsEnabled is listed as the query command can also be obtained using GetBooleanv, GetIntegerv, GetInteger64v, and GetFloatv. State variables for which any other command is listed as the query command can be obtained by using that command or any of its typed variants, although information may be lost when not using the listed command. Unless otherwise specified, when floatingpoint state is returned as integer values or integer state is returned as floating-point values it is converted in the fashion described in section 2.2.2.\"\n\nTake MAX_DRAW_BUFFERS for example:\n\"MAX_DRAW_BUFFERS, Z+ ,GetIntegerv ,4,  Max. no. of active draw buffers 15.2.1\"\nThe internal storage for this state is integer, and you should use GetIntegerv to query its value. Besides you can use GetFloatv to access it too. And only in such cases data conversion actually takes place.\n\nSimilarly for \n\"TEXTURE_MAX_LOD, R, GetTexParameterfv, 1000, Max. level of detail 8 \"\nyou should use GetTexParameterfv, and there is no data conversion. But you can also use GetTexParameteriv, and there must be a float to integer conversion.\n\nFor program interface state queries, on which this CL is working, there are only integer query APIs such as GetProgramResourceiv, but no GetProgramResourcefv. So the conversion never happens for program interface state queries.",
+      "parentUuid": "fd6237b1_a088d095",
+      "range": {
+        "startLine": 566,
+        "startChar": 28,
+        "endLine": 566,
+        "endChar": 39
+      },
+      "revId": "a47ffefcb512012bc03129837f583a953b23f203",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c8261802_04fb5c96",
         "filename": "src/libANGLE/queryutils.cpp",
         "patchSetId": 3
