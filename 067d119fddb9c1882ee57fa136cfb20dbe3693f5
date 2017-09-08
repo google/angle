@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "339ec321_6285c257",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1613,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-08T21:07:01Z",
+      "side": 1,
+      "message": "nit: put it after the generateSwizzles call so that it won\u0027t be updated in case of an error.",
+      "range": {
+        "startLine": 1613,
+        "startChar": 8,
+        "endLine": 1613,
+        "endChar": 31
+      },
+      "revId": "067d119fddb9c1882ee57fa136cfb20dbe3693f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
