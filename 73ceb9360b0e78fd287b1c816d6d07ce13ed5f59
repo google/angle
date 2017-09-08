@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "13275c3f_4e849511",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-08T21:05:02Z",
+      "side": 0,
+      "message": "Does this cache not matter at all anymore?  I would assume it would still be hit pretty often because we invalidate all textures and re-compute their completeness when any of them change right now.",
+      "range": {
+        "startLine": 174,
+        "startChar": 4,
+        "endLine": 174,
+        "endChar": 56
+      },
+      "revId": "73ceb9360b0e78fd287b1c816d6d07ce13ed5f59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

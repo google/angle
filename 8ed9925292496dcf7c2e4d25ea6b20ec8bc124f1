@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "82baee18_4db6929c",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2220,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-08T21:05:02Z",
+      "side": 1,
+      "message": "nit: no need",
+      "range": {
+        "startLine": 2220,
+        "startChar": 12,
+        "endLine": 2220,
+        "endChar": 16
+      },
+      "revId": "8ed9925292496dcf7c2e4d25ea6b20ec8bc124f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e93415c0_44cb82c8",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 2224,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-08T21:05:02Z",
+      "side": 1,
+      "message": "same nit",
+      "range": {
+        "startLine": 2224,
+        "startChar": 22,
+        "endLine": 2224,
+        "endChar": 26
+      },
+      "revId": "8ed9925292496dcf7c2e4d25ea6b20ec8bc124f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f5fef433_c43c0c45",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-08T21:05:02Z",
+      "side": 1,
+      "message": "nit: unneeded",
+      "range": {
+        "startLine": 479,
+        "startChar": 22,
+        "endLine": 479,
+        "endChar": 26
+      },
+      "revId": "8ed9925292496dcf7c2e4d25ea6b20ec8bc124f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "23e72861_fcbb4758",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 542,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-08T21:05:02Z",
+      "side": 1,
+      "message": "These should maybe be BindingPointers.  This vector isn\u0027t updated when textures are deleted so it\u0027s possible that this vector could have invalid pointers in it.",
+      "range": {
+        "startLine": 542,
+        "startChar": 16,
+        "endLine": 542,
+        "endChar": 25
+      },
+      "revId": "8ed9925292496dcf7c2e4d25ea6b20ec8bc124f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
