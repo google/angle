@@ -17,8 +17,8 @@ On Windows:
 
  * [Visual Studio Community 2015 Update 3](https://www.visualstudio.com/en-us/news/releasenotes/vs2015-update3-vs)
    * Required to build ANGLE on Windows and for the packaged Windows 10 SDK. Note: Chrome is in the process of upgrading to Visual Studio 2017. ANGLE will switch over once Chrome does.
- * [Windows 10 Standalone SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk) (recommended)
-    * Not required to build, but comes with additional features that aid ANGLE development, such as the Debug runtime for D3D11.
+ * [Windows 10 Standalone SDK](https://developer.microsoft.com/en-us/windows/downloads/windows-10-sdk)
+    * Comes with additional features that aid development, such as the Debug runtime for D3D11. Required for the D3D Compiler DLL.
  * [Cygwin's Bison, flex, and patch](https://cygwin.com/setup-x86_64.exe) (optional)
     * This is only required if you need to modify GLSL ES grammar files (`glslang.l` and `glslang.y` under `src/compiler/translator`, or `ExpressionParser.y` and `Tokenizer.l` in `src/compiler/preprocessor`).
      Use the latest versions of bison, flex and patch from the 64-bit cygwin distribution.
