@@ -16,6 +16,24 @@
       "revId": "e4f50e7492ad1aa9777ba5e304e9d8d57d793aa3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "39389e4a_6bca186b",
+        "filename": "src/compiler/translator/ParseContext.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-08T09:23:38Z",
+      "side": 1,
+      "message": "I\u0027ll change this in the other patch.",
+      "parentUuid": "1e7f2af6_6eb15e11",
+      "revId": "e4f50e7492ad1aa9777ba5e304e9d8d57d793aa3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
