@@ -22,6 +22,30 @@
       "revId": "2e6fa5e5e609dc296593804cc93aeb9d9863f2bd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dba68e5d_dd1aff04",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 832,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-09-08T22:04:21Z",
+      "side": 1,
+      "message": "Wouldn\u0027t that make the extension \"enableable\" for either WebGL or ES context? Several ES tests expect these extensions to be on by default and would require treatment to maintain equal test coverage. I\u0027m a bit more cautious about making such a change there, please confirm if this is correct.",
+      "parentUuid": "aa20719c_4a237127",
+      "range": {
+        "startLine": 832,
+        "startChar": 5,
+        "endLine": 832,
+        "endChar": 30
+      },
+      "revId": "2e6fa5e5e609dc296593804cc93aeb9d9863f2bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
