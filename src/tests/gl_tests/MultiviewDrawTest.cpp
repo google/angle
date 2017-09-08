@@ -37,7 +37,7 @@ GLuint CreateSimplePassthroughProgram(int numViews)
         "out vec4 col;\n"
         "void main()\n"
         "{\n"
-        "   col = vec4(1,0,0,1);\n"
+        "   col = vec4(0,1,0,1);\n"
         "}\n";
     return CompileProgram(vsSource, fsSource);
 }
@@ -412,7 +412,7 @@ class MultiviewRenderDualViewTest : public MultiviewRenderTest
             "out vec4 col;\n"
             "void main()\n"
             "{\n"
-            "   col = vec4(1,0,0,1);\n"
+            "   col = vec4(0,1,0,1);\n"
             "}\n";
 
         createFBO(2, 1, 2);
@@ -425,8 +425,8 @@ class MultiviewRenderDualViewTest : public MultiviewRenderTest
     void checkOutput()
     {
         EXPECT_EQ(GLColor::black, GetViewColor(0, 0, 0));
-        EXPECT_EQ(GLColor::red, GetViewColor(1, 0, 0));
-        EXPECT_EQ(GLColor::red, GetViewColor(0, 0, 1));
+        EXPECT_EQ(GLColor::green, GetViewColor(1, 0, 0));
+        EXPECT_EQ(GLColor::green, GetViewColor(0, 0, 1));
         EXPECT_EQ(GLColor::black, GetViewColor(1, 0, 1));
     }
 
@@ -472,7 +472,7 @@ class MultiviewRenderPrimitiveTest : public MultiviewRenderTest
         glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, NULL);
     }
 
-    void checkRedChannel(const GLubyte expectedRedChannelData[])
+    void checkGreenChannel(const GLubyte expectedGreenChannelData[])
     {
         for (int view = 0; view < mNumViews; ++view)
         {
@@ -482,7 +482,7 @@ class MultiviewRenderPrimitiveTest : public MultiviewRenderTest
                 {
                     size_t flatIndex =
                         static_cast<size_t>(view * mViewWidth * mViewHeight + mViewWidth * h + w);
-                    EXPECT_EQ(GLColor(expectedRedChannelData[flatIndex], 0, 0, 255),
+                    EXPECT_EQ(GLColor(0, expectedGreenChannelData[flatIndex], 0, 255),
                               GetViewColor(w, h, view));
                 }
             }
@@ -861,12 +861,11 @@ TEST_P(MultiviewRenderTest, DrawArraysFourViews)
         "out vec4 col;\n"
         "void main()\n"
         "{\n"
-        "    col = vec4(1,0,0,1);\n"
+        "    col = vec4(0,1,0,1);\n"
         "}\n";
 
     createFBO(4, 1, 4);
     ANGLE_GL_PROGRAM(program, vsSource, fsSource);
-    glUseProgram(program);
 
     drawQuad(program, "vPosition", 0.0f, 1.0f, true);
     ASSERT_GL_NO_ERROR();
@@ -877,7 +876,7 @@ TEST_P(MultiviewRenderTest, DrawArraysFourViews)
         {
             if (i == j)
             {
-                EXPECT_EQ(GLColor::red, GetViewColor(j, 0, i));
+                EXPECT_EQ(GLColor::green, GetViewColor(j, 0, i));
             }
             else
             {
@@ -920,7 +919,7 @@ TEST_P(MultiviewRenderTest, DrawArraysInstanced)
         "out vec4 col;\n"
         "void main()\n"
         "{\n"
-        "    col = vec4(1,0,0,1);\n"
+        "    col = vec4(0,1,0,1);\n"
         "}\n";
 
     const int kViewWidth  = 2;
@@ -928,13 +927,12 @@ TEST_P(MultiviewRenderTest, DrawArraysInstanced)
     const int kNumViews   = 2;
     createFBO(kViewWidth, kViewHeight, kNumViews);
     ANGLE_GL_PROGRAM(program, vsSource, fsSource);
-    glUseProgram(program);
 
-    drawQuad(program, "vPosition", 0.0f, 1.0f, true, true, 2);
+    drawQuadInstanced(program, "vPosition", 0.0f, 1.0f, true, 2u);
     ASSERT_GL_NO_ERROR();
 
-    const GLubyte expectedRedChannel[kNumViews][kViewHeight][kViewWidth] = {{{0, 255}, {0, 255}},
-                                                                            {{255, 0}, {255, 0}}};
+    const GLubyte expectedGreenChannel[kNumViews][kViewHeight][kViewWidth] = {{{0, 255}, {0, 255}},
+                                                                              {{255, 0}, {255, 0}}};
 
     for (int view = 0; view < 2; ++view)
     {
@@ -942,7 +940,7 @@ TEST_P(MultiviewRenderTest, DrawArraysInstanced)
         {
             for (int x = 0; x < 2; ++x)
             {
-                EXPECT_EQ(GLColor(expectedRedChannel[view][y][x], 0, 0, 255),
+                EXPECT_EQ(GLColor(0, expectedGreenChannel[view][y][x], 0, 255),
                           GetViewColor(x, y, view));
             }
         }
@@ -985,7 +983,7 @@ TEST_P(MultiviewRenderTest, AttribDivisor)
         "out vec4 col;\n"
         "void main()\n"
         "{\n"
-        "    col = vec4(1,0,0,1);\n"
+        "    col = vec4(0,1,0,1);\n"
         "}\n";
 
     const int kViewWidth  = 4;
@@ -993,7 +991,6 @@ TEST_P(MultiviewRenderTest, AttribDivisor)
     const int kNumViews   = 2;
     createFBO(kViewWidth, kViewHeight, kNumViews);
     ANGLE_GL_PROGRAM(program, vsSource, fsSource);
-    glUseProgram(program);
 
     GLBuffer xOffsetVBO;
     glBindBuffer(GL_ARRAY_BUFFER, xOffsetVBO);
@@ -1013,10 +1010,10 @@ TEST_P(MultiviewRenderTest, AttribDivisor)
     glVertexAttribPointer(yOffsetLoc, 1, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(yOffsetLoc);
 
-    drawQuad(program, "vPosition", 0.0f, 1.0f, true, true, 4);
+    drawQuadInstanced(program, "vPosition", 0.0f, 1.0f, true, 4u);
     ASSERT_GL_NO_ERROR();
 
-    const GLubyte expectedRedChannel[kNumViews][kViewHeight][kViewWidth] = {
+    const GLubyte expectedGreenChannel[kNumViews][kViewHeight][kViewWidth] = {
         {{255, 0, 0, 0}, {255, 0, 0, 0}, {255, 0, 0, 0}, {0, 255, 0, 0}},
         {{0, 0, 255, 0}, {0, 0, 255, 0}, {0, 0, 255, 0}, {0, 0, 0, 255}}};
     for (int view = 0; view < 2; ++view)
@@ -1025,7 +1022,7 @@ TEST_P(MultiviewRenderTest, AttribDivisor)
         {
             for (int col = 0; col < 4; ++col)
             {
-                EXPECT_EQ(GLColor(expectedRedChannel[view][row][col], 0, 0, 255),
+                EXPECT_EQ(GLColor(0, expectedGreenChannel[view][row][col], 0, 255),
                           GetViewColor(col, row, view));
             }
         }
@@ -1064,7 +1061,7 @@ TEST_P(MultiviewRenderTest, DivisorOrderOfOperation)
         "out vec4 col;\n"
         "void main()\n"
         "{\n"
-        "    col = vec4(1,0,0,1);\n"
+        "    col = vec4(0,1,0,1);\n"
         "}\n";
 
     ANGLE_GL_PROGRAM(program, vs, fs);
@@ -1139,8 +1136,8 @@ TEST_P(MultiviewRenderTest, DivisorOrderOfOperation)
     glUseProgram(program);
     glVertexAttribDivisor(1, 1);
     glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 1);
-    EXPECT_EQ(GLColor::red, GetViewColor(0, 0, 0));
-    EXPECT_EQ(GLColor::red, GetViewColor(0, 0, 1));
+    EXPECT_EQ(GLColor::green, GetViewColor(0, 0, 0));
+    EXPECT_EQ(GLColor::green, GetViewColor(0, 0, 1));
 
     // Clear the buffers and propagate divisor to the driver.
     // We keep the vao active and propagate the divisor to guarantee that there are no unresolved
@@ -1158,8 +1155,8 @@ TEST_P(MultiviewRenderTest, DivisorOrderOfOperation)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glUseProgram(program);
     glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 1);
-    EXPECT_EQ(GLColor::red, GetViewColor(0, 0, 0));
-    EXPECT_EQ(GLColor::red, GetViewColor(0, 0, 1));
+    EXPECT_EQ(GLColor::green, GetViewColor(0, 0, 0));
+    EXPECT_EQ(GLColor::green, GetViewColor(0, 0, 1));
 
     // We go through similar steps as before.
     glUseProgram(dummyProgram);
@@ -1187,8 +1184,8 @@ TEST_P(MultiviewRenderTest, DivisorOrderOfOperation)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glBindVertexArray(vao[0]);
     glDrawArraysInstanced(GL_TRIANGLES, 0, 6, 1);
-    EXPECT_EQ(GLColor::red, GetViewColor(0, 0, 0));
-    EXPECT_EQ(GLColor::red, GetViewColor(0, 0, 1));
+    EXPECT_EQ(GLColor::green, GetViewColor(0, 0, 0));
+    EXPECT_EQ(GLColor::green, GetViewColor(0, 0, 1));
 }
 
 // Test that no fragments pass the occlusion query for a multi-view vertex shader which always
@@ -1221,7 +1218,6 @@ TEST_P(MultiviewOcclusionQueryTest, OcclusionQueryNothingVisible)
         "    col = vec4(1,0,0,0);\n"
         "}\n";
     ANGLE_GL_PROGRAM(program, vsSource, fsSource);
-    glUseProgram(program);
     createFBO(1, 1, 2);
 
     GLuint result = drawAndRetrieveOcclusionQueryResult(program);
@@ -1259,7 +1255,6 @@ TEST_P(MultiviewOcclusionQueryTest, OcclusionQueryOnlyLeftVisible)
         "    col = vec4(1,0,0,0);\n"
         "}\n";
     ANGLE_GL_PROGRAM(program, vsSource, fsSource);
-    glUseProgram(program);
     createFBO(1, 1, 2);
 
     GLuint result = drawAndRetrieveOcclusionQueryResult(program);
@@ -1297,7 +1292,6 @@ TEST_P(MultiviewOcclusionQueryTest, OcclusionQueryOnlyRightVisible)
         "    col = vec4(1,0,0,0);\n"
         "}\n";
     ANGLE_GL_PROGRAM(program, vsSource, fsSource);
-    glUseProgram(program);
     createFBO(1, 1, 2);
 
     GLuint result = drawAndRetrieveOcclusionQueryResult(program);
@@ -1435,7 +1429,7 @@ TEST_P(MultiviewRenderPrimitiveTest, Points)
         "out vec4 col;\n"
         "void main()\n"
         "{\n"
-        "   col = vec4(1,0,0,1);\n"
+        "   col = vec4(0,1,0,1);\n"
         "}\n";
     ANGLE_GL_PROGRAM(program, vsSource, fsSource);
     glUseProgram(program);
@@ -1452,9 +1446,9 @@ TEST_P(MultiviewRenderPrimitiveTest, Points)
 
     glDrawArrays(GL_POINTS, 0, 2);
 
-    const GLubyte expectedRedChannelData[kNumViews][kViewHeight][kViewWidth] = {
+    const GLubyte expectedGreenChannelData[kNumViews][kViewHeight][kViewWidth] = {
         {{255, 0, 0, 0}, {0, 0, 0, 255}}, {{255, 0, 0, 0}, {0, 0, 0, 255}}};
-    checkRedChannel(expectedRedChannelData[0][0]);
+    checkGreenChannel(expectedGreenChannelData[0][0]);
 }
 
 // The test checks that GL_LINES is correctly rendered.
@@ -1487,9 +1481,9 @@ TEST_P(MultiviewRenderPrimitiveTest, Lines)
 
     glDrawArrays(GL_LINES, 0, 2);
 
-    const GLubyte expectedRedChannelData[kNumViews][kViewHeight][kViewWidth] = {
+    const GLubyte expectedGreenChannelData[kNumViews][kViewHeight][kViewWidth] = {
         {{255, 255, 255, 255}, {0, 0, 0, 0}}, {{255, 255, 255, 255}, {0, 0, 0, 0}}};
-    checkRedChannel(expectedRedChannelData[0][0]);
+    checkGreenChannel(expectedGreenChannelData[0][0]);
 
     glDeleteProgram(program);
 }
@@ -1524,9 +1518,9 @@ TEST_P(MultiviewRenderPrimitiveTest, LineStrip)
 
     glDrawArrays(GL_LINE_STRIP, 0, 3);
 
-    const GLubyte expectedRedChannelData[kNumViews][kViewHeight][kViewWidth] = {
+    const GLubyte expectedGreenChannelData[kNumViews][kViewHeight][kViewWidth] = {
         {{255, 255, 255, 255}, {0, 0, 0, 255}}, {{255, 255, 255, 255}, {0, 0, 0, 255}}};
-    checkRedChannel(expectedRedChannelData[0][0]);
+    checkGreenChannel(expectedGreenChannelData[0][0]);
 
     glDeleteProgram(program);
 }
@@ -1562,10 +1556,10 @@ TEST_P(MultiviewRenderPrimitiveTest, LineLoop)
 
     glDrawArrays(GL_LINE_LOOP, 0, 4);
 
-    const GLubyte expectedRedChannelData[kNumViews][kViewHeight][kViewWidth] = {
+    const GLubyte expectedGreenChannelData[kNumViews][kViewHeight][kViewWidth] = {
         {{255, 255, 255, 255}, {255, 0, 0, 255}, {255, 0, 0, 255}, {255, 255, 255, 255}},
         {{255, 255, 255, 255}, {255, 0, 0, 255}, {255, 0, 0, 255}, {255, 255, 255, 255}}};
-    checkRedChannel(expectedRedChannelData[0][0]);
+    checkGreenChannel(expectedGreenChannelData[0][0]);
 
     glDeleteProgram(program);
 }
@@ -1594,9 +1588,9 @@ TEST_P(MultiviewRenderPrimitiveTest, TriangleStrip)
 
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
-    const GLubyte expectedRedChannelData[kNumViews][kViewHeight][kViewWidth] = {{{0, 0}, {0, 255}},
-                                                                                {{0, 0}, {0, 255}}};
-    checkRedChannel(expectedRedChannelData[0][0]);
+    const GLubyte expectedGreenChannelData[kNumViews][kViewHeight][kViewWidth] = {
+        {{0, 0}, {0, 255}}, {{0, 0}, {0, 255}}};
+    checkGreenChannel(expectedGreenChannelData[0][0]);
 
     glDeleteProgram(program);
 }
@@ -1625,9 +1619,9 @@ TEST_P(MultiviewRenderPrimitiveTest, TriangleFan)
 
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
-    const GLubyte expectedRedChannelData[kNumViews][kViewHeight][kViewWidth] = {{{0, 0}, {0, 255}},
-                                                                                {{0, 0}, {0, 255}}};
-    checkRedChannel(expectedRedChannelData[0][0]);
+    const GLubyte expectedGreenChannelData[kNumViews][kViewHeight][kViewWidth] = {
+        {{0, 0}, {0, 255}}, {{0, 0}, {0, 255}}};
+    checkGreenChannel(expectedGreenChannelData[0][0]);
 
     glDeleteProgram(program);
 }
@@ -1793,7 +1787,7 @@ TEST_P(MultiviewRenderTest, ProgramRelinkUpdatesAttribDivisor)
     {
         createFBO(kViewWidth, kViewHeight, kNumViews);
 
-        drawQuad(program, "vPosition", 0.0f, 1.0f, true, true, 4);
+        drawQuadInstanced(program, "vPosition", 0.0f, 1.0f, true, 4u);
         ASSERT_GL_NO_ERROR();
 
         EXPECT_EQ(GLColor::red, GetViewColor(0, 0, 0));
@@ -1834,7 +1828,7 @@ TEST_P(MultiviewRenderTest, ProgramRelinkUpdatesAttribDivisor)
 
         glLinkProgram(program);
 
-        drawQuad(program, "vPosition", 0.0f, 1.0f, true, true, 4);
+        drawQuadInstanced(program, "vPosition", 0.0f, 1.0f, true, 4u);
         ASSERT_GL_NO_ERROR();
 
         for (int i = 0; i < kNewNumViews; ++i)
@@ -1889,7 +1883,7 @@ TEST_P(MultiviewRenderTest, DivisorUpdatedOnProgramChange)
         {
             for (int j = 0; j < numViews; ++j)
             {
-                EXPECT_EQ(GLColor::red, GetViewColor(j, 0, view));
+                EXPECT_EQ(GLColor::green, GetViewColor(j, 0, view));
             }
             for (int j = numViews; j < 4; ++j)
             {
@@ -1939,7 +1933,6 @@ TEST_P(MultiviewRenderTest, SelectColorBasedOnViewIDOVR)
 
     createFBO(1, 1, 3);
     ANGLE_GL_PROGRAM(program, vsSource, fsSource);
-    glUseProgram(program);
 
     drawQuad(program, "vPosition", 0.0f, 1.0f, true);
     ASSERT_GL_NO_ERROR();
@@ -1975,19 +1968,18 @@ TEST_P(MultiviewLayeredRenderTest, RenderToSubrageOfLayers)
         "out vec4 col;\n"
         "void main()\n"
         "{\n"
-        "     col = vec4(1,0,0,1);\n"
+        "     col = vec4(0,1,0,1);\n"
         "}\n";
 
     createFBO(1, 1, 2, 4, 1);
     ANGLE_GL_PROGRAM(program, vsSource, fsSource);
-    glUseProgram(program);
 
     drawQuad(program, "vPosition", 0.0f, 1.0f, true);
     ASSERT_GL_NO_ERROR();
 
     EXPECT_EQ(GLColor::transparentBlack, GetViewColor(0, 0, 0));
-    EXPECT_EQ(GLColor::red, GetViewColor(0, 0, 1));
-    EXPECT_EQ(GLColor::red, GetViewColor(0, 0, 2));
+    EXPECT_EQ(GLColor::green, GetViewColor(0, 0, 1));
+    EXPECT_EQ(GLColor::green, GetViewColor(0, 0, 2));
     EXPECT_EQ(GLColor::transparentBlack, GetViewColor(0, 0, 3));
 }
 
@@ -2077,7 +2069,7 @@ TEST_P(MultiviewSideBySideRenderTest, ViewportOffsetsAppliedBugCoverage)
         "out vec4 col;\n"
         "void main()\n"
         "{\n"
-        "    col = vec4(1,0,0,1);\n"
+        "    col = vec4(0,1,0,1);\n"
         "}\n";
 
     ANGLE_GL_PROGRAM(program, vs, fs);
@@ -2095,10 +2087,10 @@ TEST_P(MultiviewSideBySideRenderTest, ViewportOffsetsAppliedBugCoverage)
     // Draw and check that both views are rendered to.
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mDrawFramebuffer);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glUseProgram(program);
+
     drawQuad(program, "vPosition", 0.0f, 1.0f, true);
-    EXPECT_EQ(GLColor::red, GetViewColor(0, 0, 0));
-    EXPECT_EQ(GLColor::red, GetViewColor(0, 0, 1));
+    EXPECT_EQ(GLColor::green, GetViewColor(0, 0, 0));
+    EXPECT_EQ(GLColor::green, GetViewColor(0, 0, 1));
 }
 
 MultiviewImplementationParams VertexShaderOpenGL()

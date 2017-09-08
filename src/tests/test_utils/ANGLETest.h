@@ -250,13 +250,13 @@ class ANGLETestBase
                   GLfloat positionAttribZ,
                   GLfloat positionAttribXYScale,
                   bool useVertexBuffer);
-    void drawQuad(GLuint program,
-                  const std::string &positionAttribName,
-                  GLfloat positionAttribZ,
-                  GLfloat positionAttribXYScale,
-                  bool useVertexBuffer,
-                  bool useInstancedDrawCalls,
-                  GLuint numInstances);
+    void drawQuadInstanced(GLuint program,
+                           const std::string &positionAttribName,
+                           GLfloat positionAttribZ,
+                           GLfloat positionAttribXYScale,
+                           bool useVertexBuffer,
+                           GLuint numInstances);
+
     static std::array<angle::Vector3, 6> GetQuadVertices();
     void drawIndexedQuad(GLuint program,
                          const std::string &positionAttribName,
@@ -344,6 +344,14 @@ class ANGLETestBase
     void checkD3D11SDKLayersMessages();
 
     GLuint get2DTexturedQuadProgram();
+
+    void drawQuad(GLuint program,
+                  const std::string &positionAttribName,
+                  GLfloat positionAttribZ,
+                  GLfloat positionAttribXYScale,
+                  bool useVertexBuffer,
+                  bool useInstancedDrawCalls,
+                  GLuint numInstances);
 
     EGLWindow *mEGLWindow;
     int mWidth;

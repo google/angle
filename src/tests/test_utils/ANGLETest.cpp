@@ -413,6 +413,17 @@ void ANGLETestBase::drawQuad(GLuint program,
              false, 0u);
 }
 
+void ANGLETestBase::drawQuadInstanced(GLuint program,
+                                      const std::string &positionAttribName,
+                                      GLfloat positionAttribZ,
+                                      GLfloat positionAttribXYScale,
+                                      bool useVertexBuffer,
+                                      GLuint numInstances)
+{
+    drawQuad(program, positionAttribName, positionAttribZ, positionAttribXYScale, useVertexBuffer,
+             true, numInstances);
+}
+
 void ANGLETestBase::drawQuad(GLuint program,
                              const std::string &positionAttribName,
                              GLfloat positionAttribZ,
