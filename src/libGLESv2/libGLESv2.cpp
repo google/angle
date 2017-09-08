@@ -2567,4 +2567,9 @@ void GL_APIENTRY glFramebufferTextureMultiviewSideBySideANGLE(GLenum target,
                                                    viewportOffsets);
 }
 
+void GL_APIENTRY glRequestExtensionANGLE(const GLchar *name)
+{
+    gl::RequestExtensionANGLE(name);
+}
+
 }  // extern "C"
