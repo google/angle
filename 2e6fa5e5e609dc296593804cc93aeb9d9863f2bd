@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "aa20719c_4a237127",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 832,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-08T20:31:21Z",
+      "side": 1,
+      "message": "I don\u0027t think this is the right approach, we should attempt to share as much validation as possible between the webgl and non-webgl code.  The best solution would be to take the extensions that add new texture formats in this list (https://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/Caps.cpp?q\u003dcaps.cpp\u0026dr\u0026l\u003d621) and make them enableable so that they arn\u0027t on by default in WebGL contexts and the validation returns errors for those cases.\n\nThese extensions will need to be enabled always within Chrome, but I can take care of that once we have an ANGLE CL.",
+      "range": {
+        "startLine": 832,
+        "startChar": 5,
+        "endLine": 832,
+        "endChar": 30
+      },
+      "revId": "2e6fa5e5e609dc296593804cc93aeb9d9863f2bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
