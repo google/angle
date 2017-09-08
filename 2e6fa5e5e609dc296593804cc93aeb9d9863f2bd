@@ -46,6 +46,30 @@
       "revId": "2e6fa5e5e609dc296593804cc93aeb9d9863f2bd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5fce2db8_6e894ef2",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 832,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-08T22:53:59Z",
+      "side": 1,
+      "message": "We only disable the extensions by default for webgl contexts (https://cs.chromium.org/chromium/src/third_party/angle/src/libANGLE/Context.cpp?type\u003dcs\u0026sq\u003dpackage:chromium\u0026l\u003d2639).  If you make an extension enableable, please add a small test in the webgl compatibility tests that verifies the format doesn\u0027t work, enables the extension and then verifies that it does work (there are a bunch already: https://cs.chromium.org/chromium/src/third_party/angle/src/tests/gl_tests/WebGLCompatibilityTest.cpp?q\u003dWebGLCompatibilityTest.cpp\u0026dr\u003dC\u0026l\u003d312)\n\nChrome emulates the availability of a bunch of these extensions for WebGL so we will either end up failing some tests there or lose coverage but we can fix it by always enabling them in Chrome.",
+      "parentUuid": "dba68e5d_dd1aff04",
+      "range": {
+        "startLine": 832,
+        "startChar": 5,
+        "endLine": 832,
+        "endChar": 30
+      },
+      "revId": "2e6fa5e5e609dc296593804cc93aeb9d9863f2bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
