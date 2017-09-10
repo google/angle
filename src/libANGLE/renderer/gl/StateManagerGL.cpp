@@ -165,7 +165,8 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
       mIsSideBySideDrawFramebuffer(false),
       mIsMultiviewEnabled(extensions.multiview),
       mLocalDirtyBits(),
-      mMultiviewDirtyBits()
+      mMultiviewDirtyBits(),
+      mProgramTexturesAndSamplersDirty(true)
 {
     ASSERT(mFunctions);
     ASSERT(extensions.maxViews >= 1u);
@@ -380,6 +381,7 @@ void StateManagerGL::forceUseProgram(GLuint program)
 {
     mProgram = program;
     mFunctions->useProgram(mProgram);
+    mLocalDirtyBits.set(gl::State::DIRTY_BIT_PROGRAM_BINDING);
 }
 
 void StateManagerGL::bindVertexArray(GLuint vao, GLuint elementArrayBuffer)
@@ -447,6 +449,7 @@ void StateManagerGL::bindTexture(GLenum type, GLuint texture)
     {
         mTextures[type][mTextureUnitIndex] = texture;
         mFunctions->bindTexture(type, texture);
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_TEXTURE_BINDINGS);
     }
 }
 
@@ -456,6 +459,7 @@ void StateManagerGL::bindSampler(size_t unit, GLuint sampler)
     {
         mSamplers[unit] = sampler;
         mFunctions->bindSampler(static_cast<GLuint>(unit), sampler);
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_SAMPLER_BINDINGS);
     }
 }
 
@@ -871,50 +875,10 @@ void StateManagerGL::setGenericShaderState(const gl::Context *context)
         }
     }
 
-    const auto &completeTextures = glState.getCompleteTextureCache();
-    for (const gl::SamplerBinding &samplerBinding : program->getSamplerBindings())
+    if (mProgramTexturesAndSamplersDirty)
     {
-        if (samplerBinding.unreferenced)
-            continue;
-
-        GLenum textureType = samplerBinding.textureType;
-        for (GLuint textureUnitIndex : samplerBinding.boundTextureUnits)
-        {
-            gl::Texture *texture = completeTextures[textureUnitIndex];
-
-            // A nullptr texture indicates incomplete.
-            if (texture != nullptr)
-            {
-                const TextureGL *textureGL = GetImplAs<TextureGL>(texture);
-                ASSERT(!texture->hasAnyDirtyBit());
-                ASSERT(!textureGL->hasAnyDirtyBit());
-
-                if (mTextures.at(textureType)[textureUnitIndex] != textureGL->getTextureID())
-                {
-                    activeTexture(textureUnitIndex);
-                    bindTexture(textureType, textureGL->getTextureID());
-                }
-            }
-            else
-            {
-                if (mTextures.at(textureType)[textureUnitIndex] != 0)
-                {
-                    activeTexture(textureUnitIndex);
-                    bindTexture(textureType, 0);
-                }
-            }
-
-            const gl::Sampler *sampler = glState.getSampler(textureUnitIndex);
-            if (sampler != nullptr)
-            {
-                SamplerGL *samplerGL = GetImplAs<SamplerGL>(sampler);
-                bindSampler(textureUnitIndex, samplerGL->getSamplerID());
-            }
-            else
-            {
-                bindSampler(textureUnitIndex, 0);
-            }
-        }
+        updateProgramTextureAndSamplerBindings(context);
+        mProgramTexturesAndSamplersDirty = false;
     }
 
     // TODO(xinghua.cao@intel.com): Track image units state with dirty bits to
@@ -957,6 +921,58 @@ void StateManagerGL::setGenericShaderState(const gl::Context *context)
             {
                 bindBufferRange(GL_ATOMIC_COUNTER_BUFFER, binding, bufferGL->getBufferID(),
                                 buffer.getOffset(), buffer.getSize());
+            }
+        }
+    }
+}
+
+void StateManagerGL::updateProgramTextureAndSamplerBindings(const gl::Context *context)
+{
+    const gl::State &glState   = context->getGLState();
+    const gl::Program *program = glState.getProgram();
+
+    const auto &completeTextures = glState.getCompleteTextureCache();
+    for (const gl::SamplerBinding &samplerBinding : program->getSamplerBindings())
+    {
+        if (samplerBinding.unreferenced)
+            continue;
+
+        GLenum textureType = samplerBinding.textureType;
+        for (GLuint textureUnitIndex : samplerBinding.boundTextureUnits)
+        {
+            gl::Texture *texture = completeTextures[textureUnitIndex];
+
+            // A nullptr texture indicates incomplete.
+            if (texture != nullptr)
+            {
+                const TextureGL *textureGL = GetImplAs<TextureGL>(texture);
+                ASSERT(!texture->hasAnyDirtyBit());
+                ASSERT(!textureGL->hasAnyDirtyBit());
+
+                if (mTextures.at(textureType)[textureUnitIndex] != textureGL->getTextureID())
+                {
+                    activeTexture(textureUnitIndex);
+                    bindTexture(textureType, textureGL->getTextureID());
+                }
+            }
+            else
+            {
+                if (mTextures.at(textureType)[textureUnitIndex] != 0)
+                {
+                    activeTexture(textureUnitIndex);
+                    bindTexture(textureType, 0);
+                }
+            }
+
+            const gl::Sampler *sampler = glState.getSampler(textureUnitIndex);
+            if (sampler != nullptr)
+            {
+                SamplerGL *samplerGL = GetImplAs<SamplerGL>(sampler);
+                bindSampler(textureUnitIndex, samplerGL->getSamplerID());
+            }
+            else
+            {
+                bindSampler(textureUnitIndex, 0);
             }
         }
     }
@@ -1901,15 +1917,16 @@ void StateManagerGL::syncState(const gl::Context *context, const gl::State::Dirt
                 // TODO: implement this
                 break;
             case gl::State::DIRTY_BIT_PROGRAM_BINDING:
-                // TODO(jmadill): implement this
+                mProgramTexturesAndSamplersDirty = true;
                 break;
             case gl::State::DIRTY_BIT_TEXTURE_BINDINGS:
-                // TODO(jmadill): implement this
+                mProgramTexturesAndSamplersDirty = true;
                 break;
             case gl::State::DIRTY_BIT_SAMPLER_BINDINGS:
-                // TODO(jmadill): implement this
+                mProgramTexturesAndSamplersDirty = true;
                 break;
             case gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE:
+                mProgramTexturesAndSamplersDirty = true;
                 propagateNumViewsToVAO(state.getProgram(),
                                        GetImplAs<VertexArrayGL>(state.getVertexArray()));
                 updateMultiviewBaseViewLayerIndexUniform(
