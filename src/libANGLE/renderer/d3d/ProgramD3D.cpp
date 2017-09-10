@@ -248,11 +248,11 @@ void GetMatrixUniform(GLint columns, GLint rows, NonFloatT *dataOut, const NonFl
 
 // D3DUniform Implementation
 
-D3DUniform::D3DUniform(GLenum typeIn,
+D3DUniform::D3DUniform(GLenum type,
                        const std::string &nameIn,
                        unsigned int arraySizeIn,
                        bool defaultBlock)
-    : type(typeIn),
+    : typeInfo(gl::GetUniformTypeInfo(type)),
       name(nameIn),
       arraySize(arraySizeIn),
       vsData(nullptr),
@@ -270,7 +270,7 @@ D3DUniform::D3DUniform(GLenum typeIn,
     if (defaultBlock)
     {
         // Use the row count as register count, will work for non-square matrices.
-        registerCount = gl::VariableRowCount(type) * elementCount();
+        registerCount = typeInfo.rowCount * elementCount();
     }
 }
 
@@ -287,13 +287,12 @@ const uint8_t *D3DUniform::getDataPtrToElement(size_t elementIndex) const
         return reinterpret_cast<const uint8_t *>(&mSamplerData[elementIndex]);
     }
 
-    return firstNonNullData() +
-           (elementIndex > 0 ? (gl::VariableInternalSize(type) * elementIndex) : 0u);
+    return firstNonNullData() + (elementIndex > 0 ? (typeInfo.internalSize * elementIndex) : 0u);
 }
 
 bool D3DUniform::isSampler() const
 {
-    return gl::IsSamplerType(type);
+    return typeInfo.isSampler;
 }
 
 bool D3DUniform::isReferencedByVertexShader() const
@@ -1848,22 +1847,22 @@ void ProgramD3D::dirtyAllUniforms()
 
 void ProgramD3D::setUniform1fv(GLint location, GLsizei count, const GLfloat *v)
 {
-    setUniformInternal(location, count, v, gl::GetUniformTypeInfo(GL_FLOAT));
+    setUniformInternal(location, count, v, GL_FLOAT);
 }
 
 void ProgramD3D::setUniform2fv(GLint location, GLsizei count, const GLfloat *v)
 {
-    setUniformInternal(location, count, v, gl::GetUniformTypeInfo(GL_FLOAT_VEC2));
+    setUniformInternal(location, count, v, GL_FLOAT_VEC2);
 }
 
 void ProgramD3D::setUniform3fv(GLint location, GLsizei count, const GLfloat *v)
 {
-    setUniformInternal(location, count, v, gl::GetUniformTypeInfo(GL_FLOAT_VEC3));
+    setUniformInternal(location, count, v, GL_FLOAT_VEC3);
 }
 
 void ProgramD3D::setUniform4fv(GLint location, GLsizei count, const GLfloat *v)
 {
-    setUniformInternal(location, count, v, gl::GetUniformTypeInfo(GL_FLOAT_VEC4));
+    setUniformInternal(location, count, v, GL_FLOAT_VEC4);
 }
 
 void ProgramD3D::setUniformMatrix2fv(GLint location,
@@ -1940,42 +1939,42 @@ void ProgramD3D::setUniformMatrix4x3fv(GLint location,
 
 void ProgramD3D::setUniform1iv(GLint location, GLsizei count, const GLint *v)
 {
-    setUniformInternal(location, count, v, gl::GetUniformTypeInfo(GL_INT));
+    setUniformInternal(location, count, v, GL_INT);
 }
 
 void ProgramD3D::setUniform2iv(GLint location, GLsizei count, const GLint *v)
 {
-    setUniformInternal(location, count, v, gl::GetUniformTypeInfo(GL_INT_VEC2));
+    setUniformInternal(location, count, v, GL_INT_VEC2);
 }
 
 void ProgramD3D::setUniform3iv(GLint location, GLsizei count, const GLint *v)
 {
-    setUniformInternal(location, count, v, gl::GetUniformTypeInfo(GL_INT_VEC3));
+    setUniformInternal(location, count, v, GL_INT_VEC3);
 }
 
 void ProgramD3D::setUniform4iv(GLint location, GLsizei count, const GLint *v)
 {
-    setUniformInternal(location, count, v, gl::GetUniformTypeInfo(GL_INT_VEC4));
+    setUniformInternal(location, count, v, GL_INT_VEC4);
 }
 
 void ProgramD3D::setUniform1uiv(GLint location, GLsizei count, const GLuint *v)
 {
-    setUniformInternal(location, count, v, gl::GetUniformTypeInfo(GL_UNSIGNED_INT));
+    setUniformInternal(location, count, v, GL_UNSIGNED_INT);
 }
 
 void ProgramD3D::setUniform2uiv(GLint location, GLsizei count, const GLuint *v)
 {
-    setUniformInternal(location, count, v, gl::GetUniformTypeInfo(GL_UNSIGNED_INT_VEC2));
+    setUniformInternal(location, count, v, GL_UNSIGNED_INT_VEC2);
 }
 
 void ProgramD3D::setUniform3uiv(GLint location, GLsizei count, const GLuint *v)
 {
-    setUniformInternal(location, count, v, gl::GetUniformTypeInfo(GL_UNSIGNED_INT_VEC3));
+    setUniformInternal(location, count, v, GL_UNSIGNED_INT_VEC3);
 }
 
 void ProgramD3D::setUniform4uiv(GLint location, GLsizei count, const GLuint *v)
 {
-    setUniformInternal(location, count, v, gl::GetUniformTypeInfo(GL_UNSIGNED_INT_VEC4));
+    setUniformInternal(location, count, v, GL_UNSIGNED_INT_VEC4);
 }
 
 void ProgramD3D::setUniformBlockBinding(GLuint /*uniformBlockIndex*/,
@@ -2164,25 +2163,25 @@ void ProgramD3D::setUniformImpl(const gl::VariableLocation &locationInfo,
                                 GLsizei count,
                                 const T *v,
                                 uint8_t *targetData,
-                                const gl::UniformTypeInfo &uniformTypeInfo)
+                                GLenum uniformType)
 {
     D3DUniform *targetUniform = mD3DUniforms[locationInfo.index];
-    const int components      = uniformTypeInfo.componentCount;
+    const int components      = targetUniform->typeInfo.componentCount;
     unsigned int arrayElement = locationInfo.element;
 
-    if (targetUniform->type == uniformTypeInfo.type)
+    if (targetUniform->typeInfo.type == uniformType)
     {
-        T *target = reinterpret_cast<T *>(targetData) + arrayElement * 4;
+        T *dest         = reinterpret_cast<T *>(targetData) + arrayElement * 4;
+        const T *source = v;
 
-        for (GLint i = 0; i < count; i++)
+        for (GLint i = 0; i < count; i++, dest += 4, source += components)
         {
-            T *dest         = target + (i * 4);
-            const T *source = v + (i * components);
             memcpy(dest, source, components * sizeof(T));
         }
     }
-    else if (targetUniform->type == uniformTypeInfo.boolVectorType)
+    else
     {
+        ASSERT(targetUniform->typeInfo.type == gl::VariableBoolVectorType(uniformType));
         GLint *boolParams = reinterpret_cast<GLint *>(targetData) + arrayElement * 4;
 
         for (GLint i = 0; i < count; i++)
@@ -2196,24 +2195,19 @@ void ProgramD3D::setUniformImpl(const gl::VariableLocation &locationInfo,
             }
         }
     }
-    else
-        UNREACHABLE();
 }
 
 template <typename T>
-void ProgramD3D::setUniformInternal(GLint location,
-                                    GLsizei count,
-                                    const T *v,
-                                    const gl::UniformTypeInfo &uniformTypeInfo)
+void ProgramD3D::setUniformInternal(GLint location, GLsizei count, const T *v, GLenum uniformType)
 {
     const gl::VariableLocation &locationInfo = mState.getUniformLocations()[location];
     D3DUniform *targetUniform                = mD3DUniforms[locationInfo.index];
 
     mUniformsDirty = true;
 
-    if (!targetUniform->mSamplerData.empty())
+    if (targetUniform->typeInfo.isSampler)
     {
-        ASSERT(uniformTypeInfo.type == GL_INT);
+        ASSERT(uniformType == GL_INT);
         memcpy(&targetUniform->mSamplerData[locationInfo.element], v, count * sizeof(T));
         mDirtySamplerMapping = true;
         return;
@@ -2221,17 +2215,17 @@ void ProgramD3D::setUniformInternal(GLint location,
 
     if (targetUniform->vsData)
     {
-        setUniformImpl(locationInfo, count, v, targetUniform->vsData, uniformTypeInfo);
+        setUniformImpl(locationInfo, count, v, targetUniform->vsData, uniformType);
     }
 
     if (targetUniform->psData)
     {
-        setUniformImpl(locationInfo, count, v, targetUniform->psData, uniformTypeInfo);
+        setUniformImpl(locationInfo, count, v, targetUniform->psData, uniformType);
     }
 
     if (targetUniform->csData)
     {
-        setUniformImpl(locationInfo, count, v, targetUniform->csData, uniformTypeInfo);
+        setUniformImpl(locationInfo, count, v, targetUniform->csData, uniformType);
     }
 }
 
@@ -2344,7 +2338,7 @@ void ProgramD3D::assignSamplerRegisters(D3DUniform *d3dUniform)
         ASSERT(computeShaderD3D->hasUniform(d3dUniform));
         d3dUniform->csRegisterIndex = computeShaderD3D->getUniformRegister(d3dUniform->name);
         ASSERT(d3dUniform->csRegisterIndex != GL_INVALID_INDEX);
-        AssignSamplers(d3dUniform->csRegisterIndex, d3dUniform->type, d3dUniform->arraySize,
+        AssignSamplers(d3dUniform->csRegisterIndex, d3dUniform->typeInfo, d3dUniform->arraySize,
                        mSamplersCS, &mUsedComputeSamplerRange);
     }
     else
@@ -2358,14 +2352,14 @@ void ProgramD3D::assignSamplerRegisters(D3DUniform *d3dUniform)
         {
             d3dUniform->vsRegisterIndex = vertexShaderD3D->getUniformRegister(d3dUniform->name);
             ASSERT(d3dUniform->vsRegisterIndex != GL_INVALID_INDEX);
-            AssignSamplers(d3dUniform->vsRegisterIndex, d3dUniform->type, d3dUniform->arraySize,
+            AssignSamplers(d3dUniform->vsRegisterIndex, d3dUniform->typeInfo, d3dUniform->arraySize,
                            mSamplersVS, &mUsedVertexSamplerRange);
         }
         if (fragmentShaderD3D->hasUniform(d3dUniform))
         {
             d3dUniform->psRegisterIndex = fragmentShaderD3D->getUniformRegister(d3dUniform->name);
             ASSERT(d3dUniform->psRegisterIndex != GL_INVALID_INDEX);
-            AssignSamplers(d3dUniform->psRegisterIndex, d3dUniform->type, d3dUniform->arraySize,
+            AssignSamplers(d3dUniform->psRegisterIndex, d3dUniform->typeInfo, d3dUniform->arraySize,
                            mSamplersPS, &mUsedPixelSamplerRange);
         }
     }
@@ -2373,7 +2367,7 @@ void ProgramD3D::assignSamplerRegisters(D3DUniform *d3dUniform)
 
 // static
 void ProgramD3D::AssignSamplers(unsigned int startSamplerIndex,
-                                GLenum samplerType,
+                                const gl::UniformTypeInfo &typeInfo,
                                 unsigned int samplerCount,
                                 std::vector<Sampler> &outSamplers,
                                 GLuint *outUsedRange)
@@ -2385,7 +2379,7 @@ void ProgramD3D::AssignSamplers(unsigned int startSamplerIndex,
         ASSERT(samplerIndex < outSamplers.size());
         Sampler *sampler            = &outSamplers[samplerIndex];
         sampler->active             = true;
-        sampler->textureType        = gl::SamplerTypeToTextureType(samplerType);
+        sampler->textureType        = typeInfo.samplerTextureType;
         sampler->logicalTextureUnit = 0;
         *outUsedRange               = std::max(samplerIndex + 1, *outUsedRange);
         samplerIndex++;

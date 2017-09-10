@@ -1868,7 +1868,7 @@ gl::Error Renderer9::applyUniforms(const ProgramD3D &programD3D,
         const GLfloat *f = reinterpret_cast<const GLfloat *>(targetUniform->firstNonNullData());
         const GLint *i   = reinterpret_cast<const GLint *>(targetUniform->firstNonNullData());
 
-        switch (targetUniform->type)
+        switch (targetUniform->typeInfo.type)
         {
             case GL_SAMPLER_2D:
             case GL_SAMPLER_CUBE:

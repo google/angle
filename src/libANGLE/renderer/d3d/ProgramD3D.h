@@ -36,10 +36,7 @@ class ShaderExecutableD3D;
 // register indices.
 struct D3DUniform : private angle::NonCopyable
 {
-    D3DUniform(GLenum typeIn,
-               const std::string &nameIn,
-               unsigned int arraySizeIn,
-               bool defaultBlock);
+    D3DUniform(GLenum type, const std::string &nameIn, unsigned int arraySizeIn, bool defaultBlock);
     ~D3DUniform();
 
     bool isSampler() const;
@@ -52,7 +49,7 @@ struct D3DUniform : private angle::NonCopyable
     const uint8_t *getDataPtrToElement(size_t elementIndex) const;
 
     // Duplicated from the GL layer
-    GLenum type;
+    const gl::UniformTypeInfo &typeInfo;
     std::string name;
     unsigned int arraySize;
 
@@ -379,7 +376,7 @@ class ProgramD3D : public ProgramImpl
     void assignSamplerRegisters(D3DUniform *d3dUniform);
 
     static void AssignSamplers(unsigned int startSamplerIndex,
-                               GLenum samplerType,
+                               const gl::UniformTypeInfo &typeInfo,
                                unsigned int samplerCount,
                                std::vector<Sampler> &outSamplers,
                                GLuint *outUsedRange);
@@ -392,13 +389,10 @@ class ProgramD3D : public ProgramImpl
                         GLsizei count,
                         const T *v,
                         uint8_t *targetData,
-                        const gl::UniformTypeInfo &uniformTypeInfo);
+                        GLenum uniformType);
 
     template <typename T>
-    void setUniformInternal(GLint location,
-                            GLsizei count,
-                            const T *v,
-                            const gl::UniformTypeInfo &uniformTypeInfo);
+    void setUniformInternal(GLint location, GLsizei count, const T *v, GLenum uniformType);
 
     template <int cols, int rows>
     void setUniformMatrixfvImpl(GLint location,
