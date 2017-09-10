@@ -378,7 +378,12 @@ void TextureStorage11::markLevelDirty(int mipLevel)
     {
         // The default constructor of SwizzleState has GL_INVALID_INDEX for all channels which is
         // not a valid swizzle combination
-        mSwizzleCache[mipLevel] = gl::SwizzleState();
+        if (mSwizzleCache[mipLevel] != gl::SwizzleState())
+        {
+            // TODO(jmadill): Invalidate specific swizzle.
+            mRenderer->getStateManager()->invalidateSwizzles();
+            mSwizzleCache[mipLevel] = gl::SwizzleState();
+        }
     }
 
     if (mDropStencilTexture.valid())

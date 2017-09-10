@@ -151,6 +151,7 @@ class StateManager11 final : angle::NonCopyable
     void invalidateEverything(const gl::Context *context);
     void invalidateViewport(const gl::Context *context);
     void invalidateTexturesAndSamplers();
+    void invalidateSwizzles();
 
     // Called from VertexArray11::updateVertexAttribStorage.
     void invalidateCurrentValueAttrib(size_t attribIndex);
@@ -408,6 +409,9 @@ class StateManager11 final : angle::NonCopyable
     SamplerMetadata11 mSamplerMetadataVS;
     SamplerMetadata11 mSamplerMetadataPS;
     SamplerMetadata11 mSamplerMetadataCS;
+
+    // Special dirty bit for swizzles. Since they use internal shaders, must be done in a pre-pass.
+    bool mDirtySwizzles;
 
     // Currently applied index buffer
     ID3D11Buffer *mAppliedIB;

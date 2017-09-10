@@ -338,6 +338,7 @@ StateManager11::StateManager11(Renderer11 *renderer)
       mInputLayoutIsDirty(false),
       mDirtyVertexBufferRange(gl::MAX_VERTEX_ATTRIBS, 0),
       mCurrentPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_UNDEFINED),
+      mDirtySwizzles(false),
       mAppliedIB(nullptr),
       mAppliedIBFormat(DXGI_FORMAT_UNKNOWN),
       mAppliedIBOffset(0),
@@ -1195,6 +1196,12 @@ void StateManager11::invalidateViewport(const gl::Context *context)
 void StateManager11::invalidateTexturesAndSamplers()
 {
     mInternalDirtyBits.set(DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE);
+    mDirtySwizzles = true;
+}
+
+void StateManager11::invalidateSwizzles()
+{
+    mDirtySwizzles = true;
 }
 
 void StateManager11::setOneTimeRenderTarget(const gl::Context *context,
@@ -1600,8 +1607,12 @@ gl::Error StateManager11::updateState(const gl::Context *context, GLenum drawMod
         invalidateTexturesAndSamplers();
     }
 
-    // TODO(jmadill): Use dirty bits.
-    ANGLE_TRY(generateSwizzles(context));
+    // Swizzling can cause internal state changes with blit shaders.
+    if (mDirtySwizzles)
+    {
+        ANGLE_TRY(generateSwizzles(context));
+        mDirtySwizzles = false;
+    }
 
     // TODO(jmadill): Use dirty bits.
     ANGLE_TRY(syncProgram(context, drawMode));
@@ -1658,6 +1669,7 @@ gl::Error StateManager11::updateState(const gl::Context *context, GLenum drawMod
                 ANGLE_TRY(syncDepthStencilState(glState));
                 break;
             case DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE:
+                // TODO(jmadill): More fine-grained update.
                 ANGLE_TRY(syncTextures(context));
                 break;
             default:
