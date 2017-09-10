@@ -240,13 +240,13 @@ Texture *TextureManager::getTexture(GLuint handle) const
     return mObjectMap.query(handle);
 }
 
-void TextureManager::invalidateTextureComplenessCache() const
+void TextureManager::signalAllTexturesDirty() const
 {
     for (const auto &texture : mObjectMap)
     {
         if (texture.second)
         {
-            texture.second->invalidateCompletenessCache();
+            texture.second->signalDirty();
         }
     }
 }

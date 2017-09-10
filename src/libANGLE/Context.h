@@ -873,6 +873,8 @@ class Context final : public ValidationContext
                              GLsizei bufSize,
                              GLint *params);
 
+    void programUniform1iv(GLuint program, GLint location, GLsizei count, const GLint *value);
+
     // Returns the error.
     Error handleError(const Error &error) override;
 
@@ -921,6 +923,9 @@ class Context final : public ValidationContext
                       GLsizei width,
                       GLsizei height,
                       GLsizei depth);
+
+    // Notification for a state change in a Texture.
+    void onTextureChange(const Texture *texture);
 
     egl::Display *getCurrentDisplay() const { return mCurrentDisplay; }
     egl::Surface *getCurrentDrawSurface() const { return mCurrentSurface; }

@@ -43,6 +43,10 @@ struct Format;
 class Renderbuffer;
 class Texture;
 
+using OnAttachmentDirtyBinding  = angle::ChannelBinding<>;
+using OnAttachmentDirtyChannel  = angle::BroadcastChannel<>;
+using OnAttachmentDirtyReceiver = angle::SignalReceiver<>;
+
 // FramebufferAttachment implements a GL framebuffer attachment.
 // Attachments are "light" containers, which store pointers to ref-counted GL objects.
 // We support GL texture (2D/3D/Cube/2D array) and renderbuffer object attachments.
@@ -191,12 +195,12 @@ class FramebufferAttachmentObject
                                     const ImageIndex &imageIndex,
                                     rx::FramebufferAttachmentRenderTarget **rtOut) const;
 
-    angle::BroadcastChannel<> *getDirtyChannel();
+    OnAttachmentDirtyChannel *getDirtyChannel();
 
   protected:
     virtual rx::FramebufferAttachmentObjectImpl *getAttachmentImpl() const = 0;
 
-    angle::BroadcastChannel<> mDirtyChannel;
+    OnAttachmentDirtyChannel mDirtyChannel;
 };
 
 inline Extents FramebufferAttachment::getSize() const

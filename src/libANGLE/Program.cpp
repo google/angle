@@ -1360,17 +1360,20 @@ void Program::setUniform4fv(GLint location, GLsizei count, const GLfloat *v)
     mProgram->setUniform4fv(location, clampedCount, v);
 }
 
-void Program::setUniform1iv(GLint location, GLsizei count, const GLint *v)
+Program::SetUniformResult Program::setUniform1iv(GLint location, GLsizei count, const GLint *v)
 {
     const VariableLocation &locationInfo = mState.mUniformLocations[location];
     GLsizei clampedCount                 = clampUniformCount(locationInfo, count, 1, v);
 
+    mProgram->setUniform1iv(location, clampedCount, v);
+
     if (mState.isSamplerUniformIndex(locationInfo.index))
     {
         updateSamplerUniform(locationInfo, clampedCount, v);
+        return SetUniformResult::SamplerChanged;
     }
 
-    mProgram->setUniform1iv(location, clampedCount, v);
+    return SetUniformResult::NoSamplerChange;
 }
 
 void Program::setUniform2iv(GLint location, GLsizei count, const GLint *v)
@@ -2966,15 +2969,13 @@ void Program::updateSamplerUniform(const VariableLocation &locationInfo,
                                    const GLint *v)
 {
     // Invalidate the validation cache only if we modify the sampler data.
-    if (mState.isSamplerUniformIndex(locationInfo.index))
-    {
-        GLuint samplerIndex = mState.getSamplerIndexFromUniformIndex(locationInfo.index);
-        std::vector<GLuint> *boundTextureUnits =
-            &mState.mSamplerBindings[samplerIndex].boundTextureUnits;
+    ASSERT(mState.isSamplerUniformIndex(locationInfo.index));
+    GLuint samplerIndex = mState.getSamplerIndexFromUniformIndex(locationInfo.index);
+    std::vector<GLuint> *boundTextureUnits =
+        &mState.mSamplerBindings[samplerIndex].boundTextureUnits;
 
-        std::copy(v, v + clampedCount, boundTextureUnits->begin() + locationInfo.element);
-        mCachedValidateSamplersResult.reset();
-    }
+    std::copy(v, v + clampedCount, boundTextureUnits->begin() + locationInfo.element);
+    mCachedValidateSamplersResult.reset();
 }
 
 template <typename T>

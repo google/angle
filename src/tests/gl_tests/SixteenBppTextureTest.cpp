@@ -305,15 +305,13 @@ TEST_P(SixteenBppTextureTest, RGBA4444Validation)
 // Test uploading RGBA8 data to RGBA4 textures.
 TEST_P(SixteenBppTextureTestES3, RGBA4UploadRGBA8)
 {
-    std::vector<GLColor> fourColors;
-    fourColors.push_back(GLColor::red);
-    fourColors.push_back(GLColor::green);
-    fourColors.push_back(GLColor::blue);
-    fourColors.push_back(GLColor::yellow);
+    const std::array<GLColor, 4> kFourColors = {
+        {GLColor::red, GLColor::green, GLColor::blue, GLColor::yellow}};
 
     GLTexture tex;
     glBindTexture(GL_TEXTURE_2D, tex.get());
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA4, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, fourColors.data());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA4, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 kFourColors.data());
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     ASSERT_GL_NO_ERROR();

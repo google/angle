@@ -35,7 +35,7 @@ struct Caps;
 
 typedef std::map<GLenum, BindingPointer<Texture>> TextureMap;
 
-class State : angle::NonCopyable
+class State : public OnAttachmentDirtyReceiver, angle::NonCopyable
 {
   public:
     State();
@@ -423,6 +423,9 @@ class State : angle::NonCopyable
         DIRTY_BIT_DRAW_INDIRECT_BUFFER_BINDING,
         DIRTY_BIT_PROGRAM_BINDING,
         DIRTY_BIT_PROGRAM_EXECUTABLE,
+        // TODO(jmadill): Fine-grained dirty bits for each texture/sampler.
+        DIRTY_BIT_TEXTURE_BINDINGS,
+        DIRTY_BIT_SAMPLER_BINDINGS,
         DIRTY_BIT_MULTISAMPLING,
         DIRTY_BIT_SAMPLE_ALPHA_TO_ONE,
         DIRTY_BIT_COVERAGE_MODULATION,         // CHROMIUM_framebuffer_mixed_samples
@@ -442,6 +445,9 @@ class State : angle::NonCopyable
         DIRTY_OBJECT_READ_FRAMEBUFFER,
         DIRTY_OBJECT_DRAW_FRAMEBUFFER,
         DIRTY_OBJECT_VERTEX_ARRAY,
+        // Use a very coarse bit for any program or texture change.
+        // TODO(jmadill): Fine-grained dirty bits for each texture/sampler.
+        DIRTY_OBJECT_PROGRAM_TEXTURES,
         DIRTY_OBJECT_UNKNOWN,
         DIRTY_OBJECT_MAX = DIRTY_OBJECT_UNKNOWN,
     };
@@ -470,8 +476,14 @@ class State : angle::NonCopyable
                       GLenum format);
 
     const ImageUnit &getImageUnit(GLuint unit) const;
+    const std::vector<Texture *> &getCompleteTextureCache() const { return mCompleteTextureCache; }
+
+    // Handle a dirty texture event.
+    void signal(uint32_t textureIndex) override;
 
   private:
+    void syncProgramTextures(const Context *context);
+
     // Cached values from Context's caps
     GLuint mMaxDrawBuffers;
     GLuint mMaxCombinedTextureImageUnits;
@@ -523,6 +535,12 @@ class State : angle::NonCopyable
     typedef std::vector<BindingPointer<Texture>> TextureBindingVector;
     typedef std::map<GLenum, TextureBindingVector> TextureBindingMap;
     TextureBindingMap mSamplerTextures;
+
+    // A cache of complete textures. nullptr indicates unbound or incomplete.
+    // Don't use BindingPointer because this cache is only valid within a draw call.
+    // Also stores a notification channel to the texture itself to handle texture change events.
+    std::vector<Texture *> mCompleteTextureCache;
+    std::vector<OnAttachmentDirtyBinding> mCompleteTextureBindings;
 
     typedef std::vector<BindingPointer<Sampler>> SamplerBindingVector;
     SamplerBindingVector mSamplers;

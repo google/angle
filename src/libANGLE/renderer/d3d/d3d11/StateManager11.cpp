@@ -1729,6 +1729,8 @@ gl::Error StateManager11::applyTextures(const gl::Context *context,
 
     // TODO(jmadill): Use the Program's sampler bindings.
 
+    const auto &completeTextures = glState.getCompleteTextureCache();
+
     unsigned int samplerRange = programD3D->getUsedSamplerRange(shaderType);
     for (unsigned int samplerIndex = 0; samplerIndex < samplerRange; samplerIndex++)
     {
@@ -1736,20 +1738,18 @@ gl::Error StateManager11::applyTextures(const gl::Context *context,
         GLint textureUnit  = programD3D->getSamplerMapping(shaderType, samplerIndex, caps);
         if (textureUnit != -1)
         {
-            gl::Texture *texture = glState.getSamplerTexture(textureUnit, textureType);
-            ASSERT(texture);
+            gl::Texture *texture = completeTextures[textureUnit];
 
-            gl::Sampler *samplerObject = glState.getSampler(textureUnit);
-
-            const gl::SamplerState &samplerState =
-                samplerObject ? samplerObject->getSamplerState() : texture->getSamplerState();
-
-            // TODO: std::binary_search may become unavailable using older versions of GCC
-            if (texture->getTextureState().isSamplerComplete(samplerState,
-                                                             context->getContextState()) &&
+            // A nullptr texture indicates incomplete.
+            if (texture &&
                 !std::binary_search(framebufferTextures.begin(),
                                     framebufferTextures.begin() + framebufferTextureCount, texture))
             {
+                gl::Sampler *samplerObject = glState.getSampler(textureUnit);
+
+                const gl::SamplerState &samplerState =
+                    samplerObject ? samplerObject->getSamplerState() : texture->getSamplerState();
+
                 ANGLE_TRY(
                     setSamplerState(context, shaderType, samplerIndex, texture, samplerState));
                 ANGLE_TRY(setTexture(context, shaderType, samplerIndex, texture));

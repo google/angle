@@ -13,10 +13,11 @@
 #include <map>
 
 #include "angle_gl.h"
+#include "common/Optional.h"
 #include "common/debug.h"
 #include "libANGLE/Caps.h"
-#include "libANGLE/Debug.h"
 #include "libANGLE/Constants.h"
+#include "libANGLE/Debug.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/Image.h"
@@ -41,6 +42,7 @@ namespace gl
 {
 class ContextState;
 class Framebuffer;
+class Sampler;
 class Texture;
 
 bool IsMipmapFiltered(const SamplerState &samplerState);
@@ -95,12 +97,9 @@ struct TextureState final : private angle::NonCopyable
 
     // Returns true if base level changed.
     bool setBaseLevel(GLuint baseLevel);
-    void setMaxLevel(GLuint maxLevel);
+    bool setMaxLevel(GLuint maxLevel);
 
     bool isCubeComplete() const;
-    bool isSamplerComplete(const SamplerState &samplerState, const ContextState &data) const;
-
-    void invalidateCompletenessCache() const;
 
     const ImageDesc &getImageDesc(GLenum target, size_t level) const;
     const ImageDesc &getImageDesc(const ImageIndex &imageIndex) const;
@@ -156,22 +155,6 @@ struct TextureState final : private angle::NonCopyable
 
     std::vector<ImageDesc> mImageDescs;
 
-    struct SamplerCompletenessCache
-    {
-        SamplerCompletenessCache();
-
-        // Context used to generate this cache entry
-        ContextID context;
-
-        // All values that affect sampler completeness that are not stored within
-        // the texture itself
-        SamplerState samplerState;
-
-        // Result of the sampler completeness with the above parameters
-        bool samplerComplete;
-    };
-
-    mutable SamplerCompletenessCache mCompletenessCache;
 };
 
 bool operator==(const TextureState &a, const TextureState &b);
@@ -358,7 +341,9 @@ class Texture final : public egl::ImageSibling,
     egl::Surface *getBoundSurface() const;
     egl::Stream *getBoundStream() const;
 
-    void invalidateCompletenessCache() const;
+    void signalDirty() const;
+
+    bool isSamplerComplete(const Context *context, const Sampler *optionalSampler);
 
     rx::TextureImpl *getImplementation() const { return mTexture; }
 
@@ -421,6 +406,8 @@ class Texture final : public egl::ImageSibling,
                                  const egl::Stream::GLTextureDescription &desc);
     Error releaseImageFromStream(const Context *context);
 
+    void invalidateCompletenessCache() const;
+
     TextureState mState;
     DirtyBits mDirtyBits;
     rx::TextureImpl *mTexture;
@@ -431,6 +418,23 @@ class Texture final : public egl::ImageSibling,
 
     egl::Surface *mBoundSurface;
     egl::Stream *mBoundStream;
+
+    struct SamplerCompletenessCache
+    {
+        SamplerCompletenessCache();
+
+        // Context used to generate this cache entry
+        ContextID context;
+
+        // All values that affect sampler completeness that are not stored within
+        // the texture itself
+        SamplerState samplerState;
+
+        // Result of the sampler completeness with the above parameters
+        bool samplerComplete;
+    };
+
+    mutable SamplerCompletenessCache mCompletenessCache;
 };
 
 inline bool operator==(const TextureState &a, const TextureState &b)

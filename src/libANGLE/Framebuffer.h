@@ -123,10 +123,6 @@ class FramebufferState final : angle::NonCopyable
     bool mWebGLDepthStencilConsistent;
 };
 
-using OnAttachmentDirtyBinding  = angle::ChannelBinding<>;
-using OnAttachmentDirtyChannel  = angle::BroadcastChannel<>;
-using OnAttachmentDirtyReceiver = angle::SignalReceiver<>;
-
 class Framebuffer final : public LabeledObject, public OnAttachmentDirtyReceiver
 {
   public:

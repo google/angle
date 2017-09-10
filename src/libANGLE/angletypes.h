@@ -427,6 +427,7 @@ inline GLenum FramebufferBindingToEnum(FramebufferBinding binding)
 namespace gl
 {
 class ContextState;
+
 }  // namespace gl
 
 #endif // LIBANGLE_ANGLETYPES_H_

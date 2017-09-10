@@ -438,13 +438,19 @@ class Program final : angle::NonCopyable, public LabeledObject
     const std::vector<VariableLocation> &getUniformLocations() const;
     const LinkedUniform &getUniformByIndex(GLuint index) const;
 
+    enum SetUniformResult
+    {
+        SamplerChanged,
+        NoSamplerChange,
+    };
+
     GLint getUniformLocation(const std::string &name) const;
     GLuint getUniformIndex(const std::string &name) const;
     void setUniform1fv(GLint location, GLsizei count, const GLfloat *v);
     void setUniform2fv(GLint location, GLsizei count, const GLfloat *v);
     void setUniform3fv(GLint location, GLsizei count, const GLfloat *v);
     void setUniform4fv(GLint location, GLsizei count, const GLfloat *v);
-    void setUniform1iv(GLint location, GLsizei count, const GLint *v);
+    SetUniformResult setUniform1iv(GLint location, GLsizei count, const GLint *v);
     void setUniform2iv(GLint location, GLsizei count, const GLint *v);
     void setUniform3iv(GLint location, GLsizei count, const GLint *v);
     void setUniform4iv(GLint location, GLsizei count, const GLint *v);

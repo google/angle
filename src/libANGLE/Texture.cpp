@@ -96,9 +96,7 @@ TextureState::TextureState(GLenum target)
       mImmutableFormat(false),
       mImmutableLevels(0),
       mUsage(GL_NONE),
-      mImageDescs((IMPLEMENTATION_MAX_TEXTURE_LEVELS + 1) *
-                  (target == GL_TEXTURE_CUBE_MAP ? 6 : 1)),
-      mCompletenessCache()
+      mImageDescs((IMPLEMENTATION_MAX_TEXTURE_LEVELS + 1) * (target == GL_TEXTURE_CUBE_MAP ? 6 : 1))
 {
 }
 
@@ -157,19 +155,20 @@ bool TextureState::setBaseLevel(GLuint baseLevel)
     if (mBaseLevel != baseLevel)
     {
         mBaseLevel = baseLevel;
-        invalidateCompletenessCache();
         return true;
     }
     return false;
 }
 
-void TextureState::setMaxLevel(GLuint maxLevel)
+bool TextureState::setMaxLevel(GLuint maxLevel)
 {
     if (mMaxLevel != maxLevel)
     {
         mMaxLevel = maxLevel;
-        invalidateCompletenessCache();
+        return true;
     }
+
+    return false;
 }
 
 // Tests for cube texture completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
@@ -195,25 +194,6 @@ bool TextureState::isCubeComplete() const
     }
 
     return true;
-}
-
-bool TextureState::isSamplerComplete(const SamplerState &samplerState,
-                                     const ContextState &data) const
-{
-    if (data.getContextID() != mCompletenessCache.context ||
-        mCompletenessCache.samplerState != samplerState)
-    {
-        mCompletenessCache.context         = data.getContextID();
-        mCompletenessCache.samplerState    = samplerState;
-        mCompletenessCache.samplerComplete = computeSamplerCompleteness(samplerState, data);
-    }
-
-    return mCompletenessCache.samplerComplete;
-}
-
-void TextureState::invalidateCompletenessCache() const
-{
-    mCompletenessCache.context = 0;
 }
 
 bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
@@ -442,7 +422,6 @@ void TextureState::setImageDesc(GLenum target, size_t level, const ImageDesc &de
     size_t descIndex = GetImageDescIndex(target, level);
     ASSERT(descIndex < mImageDescs.size());
     mImageDescs[descIndex] = desc;
-    invalidateCompletenessCache();
 }
 
 const ImageDesc &TextureState::getImageDesc(const ImageIndex &imageIndex) const
@@ -500,12 +479,6 @@ void TextureState::clearImageDescs()
     {
         mImageDescs[descIndex] = ImageDesc();
     }
-    invalidateCompletenessCache();
-}
-
-TextureState::SamplerCompletenessCache::SamplerCompletenessCache()
-    : context(0), samplerState(), samplerComplete(false)
-{
 }
 
 Texture::Texture(rx::GLImplFactory *factory, GLuint id, GLenum target)
@@ -742,6 +715,7 @@ Error Texture::setBaseLevel(const Context *context, GLuint baseLevel)
     {
         ANGLE_TRY(mTexture->setBaseLevel(context, mState.getEffectiveBaseLevel()));
         mDirtyBits.set(DIRTY_BIT_BASE_LEVEL);
+        invalidateCompletenessCache();
     }
 
     return NoError();
@@ -754,8 +728,11 @@ GLuint Texture::getBaseLevel() const
 
 void Texture::setMaxLevel(GLuint maxLevel)
 {
-    mState.setMaxLevel(maxLevel);
-    mDirtyBits.set(DIRTY_BIT_MAX_LEVEL);
+    if (mState.setMaxLevel(maxLevel))
+    {
+        mDirtyBits.set(DIRTY_BIT_MAX_LEVEL);
+        invalidateCompletenessCache();
+    }
 }
 
 GLuint Texture::getMaxLevel() const
@@ -868,10 +845,10 @@ egl::Stream *Texture::getBoundStream() const
     return mBoundStream;
 }
 
-void Texture::invalidateCompletenessCache() const
+void Texture::signalDirty() const
 {
-    mState.invalidateCompletenessCache();
     mDirtyChannel.signal();
+    invalidateCompletenessCache();
 }
 
 Error Texture::setImage(const Context *context,
@@ -895,7 +872,7 @@ Error Texture::setImage(const Context *context,
                                  unpackState, pixels));
 
     mState.setImageDesc(target, level, ImageDesc(size, Format(internalFormat, type)));
-    mDirtyChannel.signal();
+    signalDirty();
 
     return NoError();
 }
@@ -934,7 +911,7 @@ Error Texture::setCompressedImage(const Context *context,
                                            unpackState, imageSize, pixels));
 
     mState.setImageDesc(target, level, ImageDesc(size, Format(internalFormat)));
-    mDirtyChannel.signal();
+    signalDirty();
 
     return NoError();
 }
@@ -975,7 +952,7 @@ Error Texture::copyImage(const Context *context,
         GetInternalFormatInfo(internalFormat, GL_UNSIGNED_BYTE);
     mState.setImageDesc(target, level, ImageDesc(Extents(sourceArea.width, sourceArea.height, 1),
                                                  Format(internalFormatInfo)));
-    mDirtyChannel.signal();
+    signalDirty();
 
     return NoError();
 }
@@ -1018,7 +995,7 @@ Error Texture::copyTexture(const Context *context,
     const auto &sourceDesc   = source->mState.getImageDesc(source->getTarget(), 0);
     const InternalFormat &internalFormatInfo = GetInternalFormatInfo(internalFormat, type);
     mState.setImageDesc(target, level, ImageDesc(sourceDesc.size, Format(internalFormatInfo)));
-    mDirtyChannel.signal();
+    signalDirty();
 
     return NoError();
 }
@@ -1083,7 +1060,7 @@ Error Texture::setStorage(const Context *context,
     mDirtyBits.set(DIRTY_BIT_BASE_LEVEL);
     mDirtyBits.set(DIRTY_BIT_MAX_LEVEL);
 
-    mDirtyChannel.signal();
+    signalDirty();
 
     return NoError();
 }
@@ -1110,7 +1087,7 @@ Error Texture::setStorageMultisample(const Context *context,
     mState.setImageDescChainMultisample(size, Format(internalFormat), samples,
                                         fixedSampleLocations);
 
-    mDirtyChannel.signal();
+    signalDirty();
 
     return NoError();
 }
@@ -1140,7 +1117,7 @@ Error Texture::generateMipmap(const Context *context)
         mState.setImageDescChain(baseLevel, maxLevel, baseImageInfo.size, baseImageInfo.format);
     }
 
-    mDirtyChannel.signal();
+    signalDirty();
 
     return NoError();
 }
@@ -1162,7 +1139,7 @@ Error Texture::bindTexImageFromSurface(const Context *context, egl::Surface *sur
     Extents size(surface->getWidth(), surface->getHeight(), 1);
     ImageDesc desc(size, Format(surface->getConfig()->renderTargetFormat));
     mState.setImageDesc(mState.mTarget, 0, desc);
-    mDirtyChannel.signal();
+    signalDirty();
     return NoError();
 }
 
@@ -1175,7 +1152,7 @@ Error Texture::releaseTexImageFromSurface(const Context *context)
     // Erase the image info for level 0
     ASSERT(mState.mTarget == GL_TEXTURE_2D || mState.mTarget == GL_TEXTURE_RECTANGLE_ANGLE);
     mState.clearImageDesc(mState.mTarget, 0);
-    mDirtyChannel.signal();
+    signalDirty();
     return NoError();
 }
 
@@ -1205,7 +1182,7 @@ Error Texture::acquireImageFromStream(const Context *context,
 
     Extents size(desc.width, desc.height, 1);
     mState.setImageDesc(mState.mTarget, 0, ImageDesc(size, Format(desc.internalFormat)));
-    mDirtyChannel.signal();
+    signalDirty();
     return NoError();
 }
 
@@ -1217,7 +1194,7 @@ Error Texture::releaseImageFromStream(const Context *context)
 
     // Set to incomplete
     mState.clearImageDesc(mState.mTarget, 0);
-    mDirtyChannel.signal();
+    signalDirty();
     return NoError();
 }
 
@@ -1252,7 +1229,7 @@ Error Texture::setEGLImageTarget(const Context *context, GLenum target, egl::Ima
 
     mState.clearImageDescs();
     mState.setImageDesc(target, 0, ImageDesc(size, imageTarget->getFormat()));
-    mDirtyChannel.signal();
+    signalDirty();
 
     return NoError();
 }
@@ -1297,4 +1274,33 @@ rx::FramebufferAttachmentObjectImpl *Texture::getAttachmentImpl() const
 {
     return mTexture;
 }
+
+bool Texture::isSamplerComplete(const Context *context, const Sampler *optionalSampler)
+{
+    const auto &samplerState =
+        optionalSampler ? optionalSampler->getSamplerState() : mState.mSamplerState;
+    const auto &contextState = context->getContextState();
+
+    if (contextState.getContextID() != mCompletenessCache.context ||
+        mCompletenessCache.samplerState != samplerState)
+    {
+        mCompletenessCache.context      = context->getContextState().getContextID();
+        mCompletenessCache.samplerState = samplerState;
+        mCompletenessCache.samplerComplete =
+            mState.computeSamplerCompleteness(samplerState, contextState);
+    }
+
+    return mCompletenessCache.samplerComplete;
+}
+
+Texture::SamplerCompletenessCache::SamplerCompletenessCache()
+    : context(0), samplerState(), samplerComplete(false)
+{
+}
+
+void Texture::invalidateCompletenessCache() const
+{
+    mCompletenessCache.context = 0;
+}
+
 }  // namespace gl

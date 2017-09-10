@@ -505,6 +505,7 @@ egl::Error Context::makeCurrent(egl::Display *display, egl::Surface *surface)
 
     // TODO(jmadill): Rework this when we support ContextImpl
     mGLState.setAllDirtyBits();
+    mGLState.setAllDirtyObjects();
 
     ANGLE_TRY(releaseSurface(display));
 
@@ -1723,24 +1724,28 @@ void Context::texParameterf(GLenum target, GLenum pname, GLfloat param)
 {
     Texture *texture = getTargetTexture(target);
     SetTexParameterf(this, texture, pname, param);
+    onTextureChange(texture);
 }
 
 void Context::texParameterfv(GLenum target, GLenum pname, const GLfloat *params)
 {
     Texture *texture = getTargetTexture(target);
     SetTexParameterfv(this, texture, pname, params);
+    onTextureChange(texture);
 }
 
 void Context::texParameteri(GLenum target, GLenum pname, GLint param)
 {
     Texture *texture = getTargetTexture(target);
     SetTexParameteri(this, texture, pname, param);
+    onTextureChange(texture);
 }
 
 void Context::texParameteriv(GLenum target, GLenum pname, const GLint *params)
 {
     Texture *texture = getTargetTexture(target);
     SetTexParameteriv(this, texture, pname, params);
+    onTextureChange(texture);
 }
 
 void Context::drawArrays(GLenum mode, GLint first, GLsizei count)
@@ -2521,12 +2526,12 @@ void Context::requestExtension(const char *name)
     // Release the shader compiler so it will be re-created with the requested extensions enabled.
     releaseShaderCompiler();
 
-    // Invalidate all cached completenesses for textures and framebuffer. Some extensions make new
-    // formats renderable or sampleable.
-    mState.mTextures->invalidateTextureComplenessCache();
+    // Invalidate all textures and framebuffer. Some extensions make new formats renderable or
+    // sampleable.
+    mState.mTextures->signalAllTexturesDirty();
     for (auto &zeroTexture : mZeroTextures)
     {
-        zeroTexture.second->invalidateCompletenessCache();
+        zeroTexture.second->signalDirty();
     }
 
     mState.mFramebuffers->invalidateFramebufferComplenessCache();
@@ -4665,13 +4670,19 @@ void Context::uniform1fv(GLint location, GLsizei count, const GLfloat *v)
 void Context::uniform1i(GLint location, GLint x)
 {
     Program *program = mGLState.getProgram();
-    program->setUniform1iv(location, 1, &x);
+    if (program->setUniform1iv(location, 1, &x) == Program::SetUniformResult::SamplerChanged)
+    {
+        mGLState.setObjectDirty(GL_PROGRAM);
+    }
 }
 
 void Context::uniform1iv(GLint location, GLsizei count, const GLint *v)
 {
     Program *program = mGLState.getProgram();
-    program->setUniform1iv(location, count, v);
+    if (program->setUniform1iv(location, count, v) == Program::SetUniformResult::SamplerChanged)
+    {
+        mGLState.setObjectDirty(GL_PROGRAM);
+    }
 }
 
 void Context::uniform2f(GLint location, GLfloat x, GLfloat y)
@@ -5246,6 +5257,24 @@ void Context::getInternalformativ(GLenum target,
 {
     const TextureCaps &formatCaps = mTextureCaps.get(internalformat);
     QueryInternalFormativ(formatCaps, pname, bufSize, params);
+}
+
+void Context::programUniform1iv(GLuint program, GLint location, GLsizei count, const GLint *value)
+{
+    Program *programObject = getProgram(program);
+    ASSERT(programObject);
+    if (programObject->setUniform1iv(location, count, value) ==
+        Program::SetUniformResult::SamplerChanged)
+    {
+        mGLState.setObjectDirty(GL_PROGRAM);
+    }
+}
+
+void Context::onTextureChange(const Texture *texture)
+{
+    // Conservatively assume all textures are dirty.
+    // TODO(jmadill): More fine-grained update.
+    mGLState.setObjectDirty(GL_TEXTURE);
 }
 
 }  // namespace gl

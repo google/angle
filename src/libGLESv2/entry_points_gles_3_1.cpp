@@ -435,9 +435,7 @@ void GL_APIENTRY ProgramUniform1iv(GLuint program,
             return;
         }
 
-        Program *programObject = context->getProgram(program);
-        ASSERT(programObject);
-        programObject->setUniform1iv(location, count, value);
+        context->programUniform1iv(program, location, count, value);
     }
 }
 
