@@ -208,8 +208,6 @@ class ProgramD3D : public ProgramImpl
                                  const GLfloat *coeffs) override;
 
     void initializeUniformStorage();
-    gl::Error applyUniforms();
-    gl::Error applyComputeUniforms();
     gl::Error applyUniformBuffers(const gl::ContextState &data);
     void dirtyAllUniforms();
 
@@ -290,6 +288,8 @@ class ProgramD3D : public ProgramImpl
     bool hasPixelExecutableForCachedOutputLayout();
 
     bool areUniformsDirty() const { return mUniformsDirty; }
+    const std::vector<D3DUniform *> &getD3DUniforms() const { return mD3DUniforms; }
+    void markUniformsClean() { mUniformsDirty = false; }
 
   private:
     // These forward-declared tasks are used for multi-thread shader compiles.

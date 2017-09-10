@@ -208,30 +208,61 @@ void StateManager11::SRVCache::clear()
     mHighestUsedSRV = 0;
 }
 
-// SamplerMetadataD3D11 implementation
+// ShaderConstants11 implementation
 
-SamplerMetadata11::SamplerMetadata11() : mDirty(true)
+ShaderConstants11::ShaderConstants11()
+    : mVertexDirty(true),
+      mPixelDirty(true),
+      mComputeDirty(true),
+      mSamplerMetadataVSDirty(true),
+      mSamplerMetadataPSDirty(true),
+      mSamplerMetadataCSDirty(true)
 {
 }
 
-SamplerMetadata11::~SamplerMetadata11()
+void ShaderConstants11::init(const gl::Caps &caps)
 {
+    mSamplerMetadataVS.resize(caps.maxVertexTextureImageUnits);
+    mSamplerMetadataPS.resize(caps.maxTextureImageUnits);
+    mSamplerMetadataCS.resize(caps.maxComputeTextureImageUnits);
 }
 
-void SamplerMetadata11::initData(unsigned int samplerCount)
+size_t ShaderConstants11::getRequiredBufferSize(gl::SamplerType samplerType) const
 {
-    mSamplerMetadata.resize(samplerCount);
+    switch (samplerType)
+    {
+        case gl::SAMPLER_VERTEX:
+            return sizeof(Vertex) + mSamplerMetadataVS.size() * sizeof(SamplerMetadata);
+        case gl::SAMPLER_PIXEL:
+            return sizeof(Pixel) + mSamplerMetadataPS.size() * sizeof(SamplerMetadata);
+        case gl::SAMPLER_COMPUTE:
+            return sizeof(Compute) + mSamplerMetadataCS.size() * sizeof(SamplerMetadata);
+        default:
+            UNREACHABLE();
+            return 0;
+    }
 }
 
-void SamplerMetadata11::update(unsigned int samplerIndex, const gl::Texture &texture)
+void ShaderConstants11::markDirty()
 {
+    mVertexDirty            = true;
+    mPixelDirty             = true;
+    mComputeDirty           = true;
+    mSamplerMetadataVSDirty = true;
+    mSamplerMetadataPSDirty = true;
+    mSamplerMetadataCSDirty = true;
+}
+
+bool ShaderConstants11::updateSamplerMetadata(SamplerMetadata *data, const gl::Texture &texture)
+{
+    bool dirty             = false;
     unsigned int baseLevel = texture.getTextureState().getEffectiveBaseLevel();
     GLenum sizedFormat =
         texture.getFormat(texture.getTarget(), baseLevel).info->sizedInternalFormat;
-    if (mSamplerMetadata[samplerIndex].baseLevel != static_cast<int>(baseLevel))
+    if (data->baseLevel != static_cast<int>(baseLevel))
     {
-        mSamplerMetadata[samplerIndex].baseLevel = static_cast<int>(baseLevel);
-        mDirty                                   = true;
+        data->baseLevel = static_cast<int>(baseLevel);
+        dirty           = true;
     }
 
     // Some metadata is needed only for integer textures. We avoid updating the constant buffer
@@ -283,10 +314,10 @@ void SamplerMetadata11::update(unsigned int samplerIndex, const gl::Texture &tex
     }
     if (needIntegerTextureMetadata)
     {
-        if (mSamplerMetadata[samplerIndex].internalFormatBits != internalFormatBits)
+        if (data->internalFormatBits != internalFormatBits)
         {
-            mSamplerMetadata[samplerIndex].internalFormatBits = internalFormatBits;
-            mDirty                                            = true;
+            data->internalFormatBits = internalFormatBits;
+            dirty                    = true;
         }
         // Pack the wrap values into one integer so we can fit all the metadata in one 4-integer
         // vector.
@@ -294,22 +325,187 @@ void SamplerMetadata11::update(unsigned int samplerIndex, const gl::Texture &tex
         GLenum wrapT  = texture.getWrapT();
         GLenum wrapR  = texture.getWrapR();
         int wrapModes = GetWrapBits(wrapS) | (GetWrapBits(wrapT) << 2) | (GetWrapBits(wrapR) << 4);
-        if (mSamplerMetadata[samplerIndex].wrapModes != wrapModes)
+        if (data->wrapModes != wrapModes)
         {
-            mSamplerMetadata[samplerIndex].wrapModes = wrapModes;
-            mDirty                                   = true;
+            data->wrapModes = wrapModes;
+            dirty           = true;
         }
+    }
+
+    return dirty;
+}
+
+void ShaderConstants11::setComputeWorkGroups(GLuint numGroupsX,
+                                             GLuint numGroupsY,
+                                             GLuint numGroupsZ)
+{
+    mCompute.numWorkGroups[0] = numGroupsX;
+    mCompute.numWorkGroups[1] = numGroupsY;
+    mCompute.numWorkGroups[2] = numGroupsZ;
+    mComputeDirty             = true;
+}
+
+void ShaderConstants11::setMultiviewWriteToViewportIndex(GLfloat index)
+{
+    mVertex.multiviewWriteToViewportIndex = index;
+    mVertexDirty                          = true;
+    mPixel.multiviewWriteToViewportIndex  = index;
+    mPixelDirty                           = true;
+}
+
+void ShaderConstants11::onViewportChange(const gl::Rectangle &glViewport,
+                                         const D3D11_VIEWPORT &dxViewport,
+                                         bool is9_3,
+                                         bool presentPathFast)
+{
+    mVertexDirty = true;
+    mPixelDirty  = true;
+
+    // On Feature Level 9_*, we must emulate large and/or negative viewports in the shaders
+    // using viewAdjust (like the D3D9 renderer).
+    if (is9_3)
+    {
+        mVertex.viewAdjust[0] = static_cast<float>((glViewport.width - dxViewport.Width) +
+                                                   2 * (glViewport.x - dxViewport.TopLeftX)) /
+                                dxViewport.Width;
+        mVertex.viewAdjust[1] = static_cast<float>((glViewport.height - dxViewport.Height) +
+                                                   2 * (glViewport.y - dxViewport.TopLeftY)) /
+                                dxViewport.Height;
+        mVertex.viewAdjust[2] = static_cast<float>(glViewport.width) / dxViewport.Width;
+        mVertex.viewAdjust[3] = static_cast<float>(glViewport.height) / dxViewport.Height;
+    }
+
+    mPixel.viewCoords[0] = glViewport.width * 0.5f;
+    mPixel.viewCoords[1] = glViewport.height * 0.5f;
+    mPixel.viewCoords[2] = glViewport.x + (glViewport.width * 0.5f);
+    mPixel.viewCoords[3] = glViewport.y + (glViewport.height * 0.5f);
+
+    // Instanced pointsprite emulation requires ViewCoords to be defined in the
+    // the vertex shader.
+    mVertex.viewCoords[0] = mPixel.viewCoords[0];
+    mVertex.viewCoords[1] = mPixel.viewCoords[1];
+    mVertex.viewCoords[2] = mPixel.viewCoords[2];
+    mVertex.viewCoords[3] = mPixel.viewCoords[3];
+
+    const float zNear = dxViewport.MinDepth;
+    const float zFar  = dxViewport.MaxDepth;
+
+    mPixel.depthFront[0] = (zFar - zNear) * 0.5f;
+    mPixel.depthFront[1] = (zNear + zFar) * 0.5f;
+
+    mVertex.depthRange[0] = zNear;
+    mVertex.depthRange[1] = zFar;
+    mVertex.depthRange[2] = zFar - zNear;
+
+    mPixel.depthRange[0] = zNear;
+    mPixel.depthRange[1] = zFar;
+    mPixel.depthRange[2] = zFar - zNear;
+
+    mPixel.viewScale[0] = 1.0f;
+    mPixel.viewScale[1] = presentPathFast ? 1.0f : -1.0f;
+    // Updates to the multiviewWriteToViewportIndex member are to be handled whenever the draw
+    // framebuffer's layout is changed.
+
+    mVertex.viewScale[0] = mPixel.viewScale[0];
+    mVertex.viewScale[1] = mPixel.viewScale[1];
+}
+
+void ShaderConstants11::onSamplerChange(gl::SamplerType samplerType,
+                                        unsigned int samplerIndex,
+                                        const gl::Texture &texture)
+{
+    switch (samplerType)
+    {
+        case gl::SAMPLER_VERTEX:
+            if (updateSamplerMetadata(&mSamplerMetadataVS[samplerIndex], texture))
+            {
+                mSamplerMetadataVSDirty = true;
+            }
+            break;
+        case gl::SAMPLER_PIXEL:
+            if (updateSamplerMetadata(&mSamplerMetadataPS[samplerIndex], texture))
+            {
+                mSamplerMetadataPSDirty = true;
+            }
+            break;
+        case gl::SAMPLER_COMPUTE:
+            if (updateSamplerMetadata(&mSamplerMetadataCS[samplerIndex], texture))
+            {
+                mSamplerMetadataCSDirty = true;
+            }
+            break;
+        default:
+            UNREACHABLE();
+            break;
     }
 }
 
-const SamplerMetadata11::dx_SamplerMetadata *SamplerMetadata11::getData() const
+gl::Error ShaderConstants11::updateBuffer(ID3D11DeviceContext *deviceContext,
+                                          gl::SamplerType samplerType,
+                                          const ProgramD3D &programD3D,
+                                          const d3d11::Buffer &driverConstantBuffer)
 {
-    return mSamplerMetadata.data();
-}
+    bool dirty                 = false;
+    size_t dataSize            = 0;
+    const uint8_t *data        = nullptr;
+    const uint8_t *samplerData = nullptr;
 
-size_t SamplerMetadata11::sizeBytes() const
-{
-    return sizeof(dx_SamplerMetadata) * mSamplerMetadata.size();
+    switch (samplerType)
+    {
+        case gl::SAMPLER_VERTEX:
+            dirty                   = mVertexDirty || mSamplerMetadataVSDirty;
+            dataSize                = sizeof(Vertex);
+            data                    = reinterpret_cast<const uint8_t *>(&mVertex);
+            samplerData             = reinterpret_cast<const uint8_t *>(mSamplerMetadataVS.data());
+            mVertexDirty            = false;
+            mSamplerMetadataVSDirty = false;
+            break;
+        case gl::SAMPLER_PIXEL:
+            dirty                   = mPixelDirty || mSamplerMetadataPSDirty;
+            dataSize                = sizeof(Pixel);
+            data                    = reinterpret_cast<const uint8_t *>(&mPixel);
+            samplerData             = reinterpret_cast<const uint8_t *>(mSamplerMetadataPS.data());
+            mPixelDirty             = false;
+            mSamplerMetadataPSDirty = false;
+            break;
+        case gl::SAMPLER_COMPUTE:
+            dirty                   = mComputeDirty || mSamplerMetadataCSDirty;
+            dataSize                = sizeof(Compute);
+            data                    = reinterpret_cast<const uint8_t *>(&mCompute);
+            samplerData             = reinterpret_cast<const uint8_t *>(mSamplerMetadataCS.data());
+            mComputeDirty           = false;
+            mSamplerMetadataCSDirty = false;
+            break;
+        default:
+            UNREACHABLE();
+            break;
+    }
+
+    ASSERT(driverConstantBuffer.valid());
+
+    if (!dirty)
+    {
+        return gl::NoError();
+    }
+
+    // Previous buffer contents are discarded, so we need to refresh the whole buffer.
+    D3D11_MAPPED_SUBRESOURCE mapping = {0};
+    HRESULT result =
+        deviceContext->Map(driverConstantBuffer.get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &mapping);
+
+    if (FAILED(result))
+    {
+        return gl::OutOfMemory() << "Internal error mapping constant buffer: " << gl::FmtHR(result);
+    }
+
+    size_t samplerDataBytes = sizeof(SamplerMetadata) * programD3D.getUsedSamplerRange(samplerType);
+
+    memcpy(mapping.pData, data, dataSize);
+    memcpy(reinterpret_cast<uint8_t *>(mapping.pData) + dataSize, samplerData, samplerDataBytes);
+
+    deviceContext->Unmap(driverConstantBuffer.get(), 0);
+
+    return gl::NoError();
 }
 
 static const GLenum QueryTypes[] = {GL_ANY_SAMPLES_PASSED, GL_ANY_SAMPLES_PASSED_CONSERVATIVE,
@@ -442,9 +638,7 @@ gl::Error StateManager11::updateStateForCompute(const gl::Context *context,
                                                 GLuint numGroupsY,
                                                 GLuint numGroupsZ)
 {
-    mComputeConstants.numWorkGroups[0] = numGroupsX;
-    mComputeConstants.numWorkGroups[1] = numGroupsY;
-    mComputeConstants.numWorkGroups[2] = numGroupsZ;
+    mShaderConstants.setComputeWorkGroups(numGroupsX, numGroupsY, numGroupsZ);
 
     // TODO(jmadill): Use dirty bits.
     const auto &glState = context->getGLState();
@@ -762,15 +956,13 @@ void StateManager11::handleMultiviewDrawFramebufferChange(const gl::Context *con
     switch (drawFramebuffer->getMultiviewLayout())
     {
         case GL_FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE:
-            mVertexConstants.multiviewWriteToViewportIndex = 1.0f;
-            mPixelConstants.multiviewWriteToViewportIndex  = 1.0f;
+            mShaderConstants.setMultiviewWriteToViewportIndex(1.0f);
             break;
         case GL_FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE:
             // Because the base view index is applied as an offset to the 2D texture array when the
             // RTV is created, we just have to pass a boolean to select which code path is to be
             // used.
-            mVertexConstants.multiviewWriteToViewportIndex = 0.0f;
-            mPixelConstants.multiviewWriteToViewportIndex  = 0.0f;
+            mShaderConstants.setMultiviewWriteToViewportIndex(0.0f);
             break;
         default:
             // There is no need to update the value in the constant buffer if the active framebuffer
@@ -958,7 +1150,9 @@ void StateManager11::syncViewport(const gl::Context *context)
     int dxMinViewportBoundsX = -dxMaxViewportBoundsX;
     int dxMinViewportBoundsY = -dxMaxViewportBoundsY;
 
-    if (mRenderer->getRenderer11DeviceCaps().featureLevel <= D3D_FEATURE_LEVEL_9_3)
+    bool is9_3 = mRenderer->getRenderer11DeviceCaps().featureLevel <= D3D_FEATURE_LEVEL_9_3;
+
+    if (is9_3)
     {
         // Feature Level 9 viewports shouldn't exceed the dimensions of the rendertarget.
         dxMaxViewportBoundsX = static_cast<int>(mViewportBounds.width);
@@ -1032,51 +1226,13 @@ void StateManager11::syncViewport(const gl::Context *context)
     mCurNear     = actualZNear;
     mCurFar      = actualZFar;
 
-    // On Feature Level 9_*, we must emulate large and/or negative viewports in the shaders
-    // using viewAdjust (like the D3D9 renderer).
-    if (mRenderer->getRenderer11DeviceCaps().featureLevel <= D3D_FEATURE_LEVEL_9_3)
-    {
-        const auto &dxViewport         = dxViewports[0];
-        mVertexConstants.viewAdjust[0] = static_cast<float>((viewport.width - dxViewportWidth) +
-                                                            2 * (viewport.x - dxViewportTopLeftX)) /
-                                         dxViewport.Width;
-        mVertexConstants.viewAdjust[1] = static_cast<float>((viewport.height - dxViewportHeight) +
-                                                            2 * (viewport.y - dxViewportTopLeftY)) /
-                                         dxViewport.Height;
-        mVertexConstants.viewAdjust[2] = static_cast<float>(viewport.width) / dxViewport.Width;
-        mVertexConstants.viewAdjust[3] = static_cast<float>(viewport.height) / dxViewport.Height;
-    }
-
-    mPixelConstants.viewCoords[0] = viewport.width * 0.5f;
-    mPixelConstants.viewCoords[1] = viewport.height * 0.5f;
-    mPixelConstants.viewCoords[2] = viewport.x + (viewport.width * 0.5f);
-    mPixelConstants.viewCoords[3] = viewport.y + (viewport.height * 0.5f);
-
-    // Instanced pointsprite emulation requires ViewCoords to be defined in the
-    // the vertex shader.
-    mVertexConstants.viewCoords[0] = mPixelConstants.viewCoords[0];
-    mVertexConstants.viewCoords[1] = mPixelConstants.viewCoords[1];
-    mVertexConstants.viewCoords[2] = mPixelConstants.viewCoords[2];
-    mVertexConstants.viewCoords[3] = mPixelConstants.viewCoords[3];
-
-    mPixelConstants.depthFront[0] = (actualZFar - actualZNear) * 0.5f;
-    mPixelConstants.depthFront[1] = (actualZNear + actualZFar) * 0.5f;
-
-    mVertexConstants.depthRange[0] = actualZNear;
-    mVertexConstants.depthRange[1] = actualZFar;
-    mVertexConstants.depthRange[2] = actualZFar - actualZNear;
-
-    mPixelConstants.depthRange[0] = actualZNear;
-    mPixelConstants.depthRange[1] = actualZFar;
-    mPixelConstants.depthRange[2] = actualZFar - actualZNear;
-
-    mPixelConstants.viewScale[0] = 1.0f;
-    mPixelConstants.viewScale[1] = mCurPresentPathFastEnabled ? 1.0f : -1.0f;
-    // Updates to the multiviewWriteToViewportIndex member are to be handled whenever the draw
-    // framebuffer's layout is changed.
-
-    mVertexConstants.viewScale[0] = mPixelConstants.viewScale[0];
-    mVertexConstants.viewScale[1] = mPixelConstants.viewScale[1];
+    const D3D11_VIEWPORT adjustViewport = {static_cast<FLOAT>(dxViewportTopLeftX),
+                                           static_cast<FLOAT>(dxViewportTopLeftY),
+                                           static_cast<FLOAT>(dxViewportWidth),
+                                           static_cast<FLOAT>(dxViewportHeight),
+                                           actualZNear,
+                                           actualZFar};
+    mShaderConstants.onViewportChange(viewport, adjustViewport, is9_3, mCurPresentPathFastEnabled);
 }
 
 void StateManager11::invalidateRenderTarget(const gl::Context *context)
@@ -1178,6 +1334,13 @@ void StateManager11::invalidateEverything(const gl::Context *context)
     mLastFirstVertex.reset();
 
     invalidateTexturesAndSamplers();
+
+    invalidateDriverUniforms();
+
+    mCurrentVertexConstantBuffer.dirty();
+    mCurrentPixelConstantBuffer.dirty();
+    mCurrentGeometryConstantBuffer.dirty();
+    mCurrentComputeConstantBuffer.dirty();
 }
 
 void StateManager11::invalidateVertexBuffer()
@@ -1202,6 +1365,10 @@ void StateManager11::invalidateTexturesAndSamplers()
 void StateManager11::invalidateSwizzles()
 {
     mDirtySwizzles = true;
+}
+
+void StateManager11::invalidateDriverUniforms()
+{
 }
 
 void StateManager11::setOneTimeRenderTarget(const gl::Context *context,
@@ -1371,9 +1538,7 @@ gl::Error StateManager11::initialize(const gl::Caps &caps, const gl::Extensions 
     mCurPixelSamplerStates.resize(caps.maxTextureImageUnits);
     mCurComputeSamplerStates.resize(caps.maxComputeTextureImageUnits);
 
-    mSamplerMetadataVS.initData(caps.maxVertexTextureImageUnits);
-    mSamplerMetadataPS.initData(caps.maxTextureImageUnits);
-    mSamplerMetadataCS.initData(caps.maxComputeTextureImageUnits);
+    mShaderConstants.init(caps);
 
     mIsMultiviewEnabled = extensions.multiview;
     mViewportOffsets.resize(1u);
@@ -1391,6 +1556,10 @@ void StateManager11::deinitialize()
     mInputLayoutCache.clear();
     mVertexDataManager.deinitialize();
     mIndexDataManager.deinitialize();
+
+    mDriverConstantBufferVS.reset();
+    mDriverConstantBufferPS.reset();
+    mDriverConstantBufferCS.reset();
 }
 
 gl::Error StateManager11::syncFramebuffer(const gl::Context *context, gl::Framebuffer *framebuffer)
@@ -1680,8 +1849,8 @@ gl::Error StateManager11::updateState(const gl::Context *context, GLenum drawMod
 
     // This must happen after viewport sync, because the viewport affects builtin uniforms.
     // TODO(jmadill): Use dirty bits.
-    ANGLE_TRY(programD3D->applyUniforms());
-    ANGLE_TRY(mRenderer->applyDriverUniforms(*programD3D, drawMode));
+    ANGLE_TRY(applyUniforms(programD3D));
+    ANGLE_TRY(applyDriverUniforms(*programD3D, drawMode));
 
     // Check that we haven't set any dirty bits in the flushing of the dirty bits loop.
     ASSERT(mInternalDirtyBits.none());
@@ -1852,11 +2021,6 @@ gl::Error StateManager11::setSamplerState(const gl::Context *context,
     ASSERT(storage);
 #endif  // !defined(NDEBUG)
 
-    // Sampler metadata that's passed to shaders in uniforms is stored separately from rest of the
-    // sampler state since having it in contiguous memory makes it possible to memcpy to a constant
-    // buffer, and it doesn't affect the state set by PSSetSamplers/VSSetSamplers.
-    SamplerMetadata11 *metadata = nullptr;
-
     auto *deviceContext = mRenderer->getDeviceContext();
 
     if (type == gl::SAMPLER_PIXEL)
@@ -1876,8 +2040,6 @@ gl::Error StateManager11::setSamplerState(const gl::Context *context,
         }
 
         mForceSetPixelSamplerStates[index] = false;
-
-        metadata = &mSamplerMetadataPS;
     }
     else if (type == gl::SAMPLER_VERTEX)
     {
@@ -1897,8 +2059,6 @@ gl::Error StateManager11::setSamplerState(const gl::Context *context,
         }
 
         mForceSetVertexSamplerStates[index] = false;
-
-        metadata = &mSamplerMetadataVS;
     }
     else if (type == gl::SAMPLER_COMPUTE)
     {
@@ -1918,14 +2078,14 @@ gl::Error StateManager11::setSamplerState(const gl::Context *context,
         }
 
         mForceSetComputeSamplerStates[index] = false;
-
-        metadata = &mSamplerMetadataCS;
     }
     else
         UNREACHABLE();
 
-    ASSERT(metadata != nullptr);
-    metadata->update(index, *texture);
+    // Sampler metadata that's passed to shaders in uniforms is stored separately from rest of the
+    // sampler state since having it in contiguous memory makes it possible to memcpy to a constant
+    // buffer, and it doesn't affect the state set by PSSetSamplers/VSSetSamplers.
+    mShaderConstants.onSamplerChange(type, index, *texture);
 
     return gl::NoError();
 }
@@ -2220,6 +2380,170 @@ gl::Error StateManager11::generateSwizzles(const gl::Context *context)
 {
     ANGLE_TRY(generateSwizzlesForShader(context, gl::SAMPLER_VERTEX));
     ANGLE_TRY(generateSwizzlesForShader(context, gl::SAMPLER_PIXEL));
+    return gl::NoError();
+}
+
+gl::Error StateManager11::applyUniforms(ProgramD3D *programD3D)
+{
+    UniformStorage11 *vertexUniformStorage =
+        GetAs<UniformStorage11>(&programD3D->getVertexUniformStorage());
+    UniformStorage11 *fragmentUniformStorage =
+        GetAs<UniformStorage11>(&programD3D->getFragmentUniformStorage());
+    ASSERT(vertexUniformStorage);
+    ASSERT(fragmentUniformStorage);
+
+    ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
+
+    const d3d11::Buffer *vertexConstantBuffer = nullptr;
+    ANGLE_TRY(vertexUniformStorage->getConstantBuffer(mRenderer, &vertexConstantBuffer));
+    const d3d11::Buffer *pixelConstantBuffer = nullptr;
+    ANGLE_TRY(fragmentUniformStorage->getConstantBuffer(mRenderer, &pixelConstantBuffer));
+
+    bool uniformsDirty = programD3D->areUniformsDirty();
+
+    if (vertexUniformStorage->size() > 0 && uniformsDirty)
+    {
+        D3D11_MAPPED_SUBRESOURCE map = {0};
+        HRESULT result =
+            deviceContext->Map(vertexConstantBuffer->get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+        ASSERT(SUCCEEDED(result));
+        memcpy(map.pData, vertexUniformStorage->getDataPointer(0, 0), vertexUniformStorage->size());
+        deviceContext->Unmap(vertexConstantBuffer->get(), 0);
+    }
+
+    if (fragmentUniformStorage->size() > 0 && uniformsDirty)
+    {
+        D3D11_MAPPED_SUBRESOURCE map = {0};
+        HRESULT result =
+            deviceContext->Map(pixelConstantBuffer->get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+        ASSERT(SUCCEEDED(result));
+        memcpy(map.pData, fragmentUniformStorage->getDataPointer(0, 0),
+               fragmentUniformStorage->size());
+        deviceContext->Unmap(pixelConstantBuffer->get(), 0);
+    }
+
+    ID3D11Buffer *appliedVertexConstants = vertexConstantBuffer->get();
+    if (mCurrentVertexConstantBuffer != reinterpret_cast<uintptr_t>(appliedVertexConstants))
+    {
+        deviceContext->VSSetConstantBuffers(
+            d3d11::RESERVED_CONSTANT_BUFFER_SLOT_DEFAULT_UNIFORM_BLOCK, 1, &appliedVertexConstants);
+        mCurrentVertexConstantBuffer = reinterpret_cast<uintptr_t>(appliedVertexConstants);
+    }
+
+    ID3D11Buffer *appliedPixelConstants = pixelConstantBuffer->get();
+    if (mCurrentPixelConstantBuffer != reinterpret_cast<uintptr_t>(appliedPixelConstants))
+    {
+        deviceContext->PSSetConstantBuffers(
+            d3d11::RESERVED_CONSTANT_BUFFER_SLOT_DEFAULT_UNIFORM_BLOCK, 1, &appliedPixelConstants);
+        mCurrentPixelConstantBuffer = reinterpret_cast<uintptr_t>(appliedPixelConstants);
+    }
+
+    programD3D->markUniformsClean();
+
+    return gl::NoError();
+}
+
+gl::Error StateManager11::applyDriverUniforms(const ProgramD3D &programD3D, GLenum drawMode)
+{
+    ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
+
+    if (!mDriverConstantBufferVS.valid())
+    {
+        size_t requiredSize = mShaderConstants.getRequiredBufferSize(gl::SAMPLER_VERTEX);
+
+        D3D11_BUFFER_DESC constantBufferDescription = {0};
+        d3d11::InitConstantBufferDesc(&constantBufferDescription, requiredSize);
+        ANGLE_TRY(mRenderer->allocateResource(constantBufferDescription, &mDriverConstantBufferVS));
+
+        ID3D11Buffer *driverVSConstants = mDriverConstantBufferVS.get();
+        deviceContext->VSSetConstantBuffers(d3d11::RESERVED_CONSTANT_BUFFER_SLOT_DRIVER, 1,
+                                            &driverVSConstants);
+    }
+
+    if (!mDriverConstantBufferPS.valid())
+    {
+        size_t requiredSize = mShaderConstants.getRequiredBufferSize(gl::SAMPLER_PIXEL);
+
+        D3D11_BUFFER_DESC constantBufferDescription = {0};
+        d3d11::InitConstantBufferDesc(&constantBufferDescription, requiredSize);
+        ANGLE_TRY(mRenderer->allocateResource(constantBufferDescription, &mDriverConstantBufferPS));
+
+        ID3D11Buffer *driverVSConstants = mDriverConstantBufferPS.get();
+        deviceContext->PSSetConstantBuffers(d3d11::RESERVED_CONSTANT_BUFFER_SLOT_DRIVER, 1,
+                                            &driverVSConstants);
+    }
+
+    // Sampler metadata and driver constants need to coexist in the same constant buffer to conserve
+    // constant buffer slots. We update both in the constant buffer if needed.
+    ANGLE_TRY(mShaderConstants.updateBuffer(deviceContext, gl::SAMPLER_VERTEX, programD3D,
+                                            mDriverConstantBufferVS));
+    ANGLE_TRY(mShaderConstants.updateBuffer(deviceContext, gl::SAMPLER_PIXEL, programD3D,
+                                            mDriverConstantBufferPS));
+
+    // GSSetConstantBuffers triggers device removal on 9_3, so we should only call it if necessary
+    if (programD3D.usesGeometryShader(drawMode))
+    {
+        // needed for the point sprite geometry shader
+        ID3D11Buffer *appliedGeometryConstants = mDriverConstantBufferPS.get();
+        if (mCurrentGeometryConstantBuffer != reinterpret_cast<uintptr_t>(appliedGeometryConstants))
+        {
+            ASSERT(mDriverConstantBufferPS.valid());
+            deviceContext->GSSetConstantBuffers(0, 1, &appliedGeometryConstants);
+            mCurrentGeometryConstantBuffer = reinterpret_cast<uintptr_t>(appliedGeometryConstants);
+        }
+    }
+
+    return gl::NoError();
+}
+
+gl::Error StateManager11::applyComputeUniforms(ProgramD3D *programD3D)
+{
+    UniformStorage11 *computeUniformStorage =
+        GetAs<UniformStorage11>(&programD3D->getComputeUniformStorage());
+    ASSERT(computeUniformStorage);
+
+    const d3d11::Buffer *computeConstantBufferObj = nullptr;
+    ANGLE_TRY(computeUniformStorage->getConstantBuffer(mRenderer, &computeConstantBufferObj));
+
+    ID3D11Buffer *computeConstantBuffer = computeConstantBufferObj->get();
+
+    ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
+
+    if (computeUniformStorage->size() > 0)
+    {
+        D3D11_MAPPED_SUBRESOURCE map = {0};
+        HRESULT result =
+            deviceContext->Map(computeConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+        ASSERT(SUCCEEDED(result));
+        memcpy(map.pData, computeUniformStorage->getDataPointer(0, 0),
+               computeUniformStorage->size());
+        deviceContext->Unmap(computeConstantBuffer, 0);
+    }
+
+    if (mCurrentComputeConstantBuffer != reinterpret_cast<uintptr_t>(computeConstantBuffer))
+    {
+        deviceContext->CSSetConstantBuffers(
+            d3d11::RESERVED_CONSTANT_BUFFER_SLOT_DEFAULT_UNIFORM_BLOCK, 1, &computeConstantBuffer);
+        mCurrentComputeConstantBuffer = reinterpret_cast<uintptr_t>(computeConstantBuffer);
+    }
+
+    if (!mDriverConstantBufferCS.valid())
+    {
+        size_t requiredSize = mShaderConstants.getRequiredBufferSize(gl::SAMPLER_COMPUTE);
+
+        D3D11_BUFFER_DESC constantBufferDescription = {0};
+        d3d11::InitConstantBufferDesc(&constantBufferDescription, requiredSize);
+        ANGLE_TRY(mRenderer->allocateResource(constantBufferDescription, &mDriverConstantBufferCS));
+        ID3D11Buffer *buffer = mDriverConstantBufferCS.get();
+        deviceContext->CSSetConstantBuffers(d3d11::RESERVED_CONSTANT_BUFFER_SLOT_DRIVER, 1,
+                                            &buffer);
+    }
+
+    ANGLE_TRY(mShaderConstants.updateBuffer(deviceContext, gl::SAMPLER_COMPUTE, *programD3D,
+                                            mDriverConstantBufferCS));
+
+    programD3D->markUniformsClean();
+
     return gl::NoError();
 }
 

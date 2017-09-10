@@ -1765,22 +1765,6 @@ void ProgramD3D::initializeUniformStorage()
     }
 }
 
-gl::Error ProgramD3D::applyUniforms()
-{
-    ASSERT(!mDirtySamplerMapping);
-    ANGLE_TRY(mRenderer->applyUniforms(*this, mD3DUniforms));
-    mUniformsDirty = false;
-    return gl::NoError();
-}
-
-gl::Error ProgramD3D::applyComputeUniforms()
-{
-    ASSERT(!mDirtySamplerMapping);
-    ANGLE_TRY(mRenderer->applyComputeUniforms(*this, mD3DUniforms));
-    mUniformsDirty = false;
-    return gl::NoError();
-}
-
 gl::Error ProgramD3D::applyUniformBuffers(const gl::ContextState &data)
 {
     if (mState.getUniformBlocks().empty())

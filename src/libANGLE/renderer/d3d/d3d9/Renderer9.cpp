@@ -1842,7 +1842,7 @@ gl::Error Renderer9::applyShaders(const gl::Context *context, GLenum drawMode)
         mAppliedProgramSerial = programSerial;
     }
 
-    ANGLE_TRY(programD3D->applyUniforms());
+    ANGLE_TRY(applyUniforms(programD3D));
 
     // Driver uniforms
     mStateManager.setShaderConstants();
@@ -1850,16 +1850,18 @@ gl::Error Renderer9::applyShaders(const gl::Context *context, GLenum drawMode)
     return gl::NoError();
 }
 
-gl::Error Renderer9::applyUniforms(const ProgramD3D &programD3D,
-                                   const std::vector<D3DUniform *> &uniformArray)
+gl::Error Renderer9::applyUniforms(ProgramD3D *programD3D)
 {
+    // Skip updates if we're not dirty.
+    if (!programD3D->areUniformsDirty())
+    {
+        return gl::NoError();
+    }
+
+    const auto &uniformArray = programD3D->getD3DUniforms();
+
     for (const D3DUniform *targetUniform : uniformArray)
     {
-        // Built-in uniforms must be skipped.
-        if (!targetUniform->isReferencedByFragmentShader() &&
-            !targetUniform->isReferencedByVertexShader())
-            continue;
-
         // Built-in uniforms must be skipped.
         if (!targetUniform->isReferencedByFragmentShader() &&
             !targetUniform->isReferencedByVertexShader())
@@ -1900,6 +1902,7 @@ gl::Error Renderer9::applyUniforms(const ProgramD3D &programD3D,
         }
     }
 
+    programD3D->markUniformsClean();
     return gl::NoError();
 }
 
@@ -3223,13 +3226,6 @@ FramebufferImpl *Renderer9::createDefaultFramebuffer(const gl::FramebufferState 
 gl::Version Renderer9::getMaxSupportedESVersion() const
 {
     return gl::Version(2, 0);
-}
-
-gl::Error Renderer9::applyComputeUniforms(const ProgramD3D &programD3D,
-                                          const std::vector<D3DUniform *> &uniformArray)
-{
-    UNIMPLEMENTED();
-    return gl::InternalError() << "Compute shader is not implemented on D3D9";
 }
 
 gl::Error Renderer9::clearRenderTarget(RenderTargetD3D *renderTarget,

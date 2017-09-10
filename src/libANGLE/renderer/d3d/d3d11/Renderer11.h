@@ -151,11 +151,6 @@ class Renderer11 : public RendererD3D
                                 const std::vector<GLint> &fragmentUniformBuffers) override;
 
     bool applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSize);
-
-    gl::Error applyUniforms(const ProgramD3D &programD3D,
-                            const std::vector<D3DUniform *> &uniformArray) override;
-
-    gl::Error applyDriverUniforms(const ProgramD3D &programD3D, GLenum drawMode);
     gl::Error applyTransformFeedbackBuffers(const gl::ContextState &data);
 
     // lost device
@@ -419,8 +414,6 @@ class Renderer11 : public RendererD3D
                               GLuint numGroupsX,
                               GLuint numGroupsY,
                               GLuint numGroupsZ);
-    gl::Error applyComputeUniforms(const ProgramD3D &programD3D,
-                                   const std::vector<D3DUniform *> &uniformArray) override;
     gl::Error applyComputeShader(const gl::Context *context);
 
     gl::ErrorOrResult<TextureHelper11> createStagingTexture(ResourceType textureType,
@@ -518,13 +511,6 @@ class Renderer11 : public RendererD3D
 
     void updateHistograms();
 
-    template <class TShaderConstants>
-    void applyDriverConstantsIfNeeded(TShaderConstants *appliedConstants,
-                                      const TShaderConstants &constants,
-                                      SamplerMetadata11 *samplerMetadata,
-                                      size_t samplerMetadataReferencedBytes,
-                                      const d3d11::Buffer &driverConstantBuffer);
-
     gl::Error copyImageInternal(const gl::Context *context,
                                 const gl::Framebuffer *framebuffer,
                                 const gl::Rectangle &sourceRect,
@@ -561,25 +547,12 @@ class Renderer11 : public RendererD3D
     // Currently applied transform feedback buffers
     uintptr_t mAppliedTFObject;
 
-    dx_VertexConstants11 mAppliedVertexConstants;
-    d3d11::Buffer mDriverConstantBufferVS;
-    uintptr_t mCurrentVertexConstantBuffer;
     unsigned int mCurrentConstantBufferVS[gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS];
     GLintptr mCurrentConstantBufferVSOffset[gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS];
     GLsizeiptr mCurrentConstantBufferVSSize[gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS];
-
-    dx_PixelConstants11 mAppliedPixelConstants;
-    d3d11::Buffer mDriverConstantBufferPS;
-    uintptr_t mCurrentPixelConstantBuffer;
     unsigned int mCurrentConstantBufferPS[gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS];
     GLintptr mCurrentConstantBufferPSOffset[gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS];
     GLsizeiptr mCurrentConstantBufferPSSize[gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS];
-
-    dx_ComputeConstants11 mAppliedComputeConstants;
-    d3d11::Buffer mDriverConstantBufferCS;
-    uintptr_t mCurrentComputeConstantBuffer;
-
-    uintptr_t mCurrentGeometryConstantBuffer;
 
     StreamingIndexBufferInterface *mLineLoopIB;
     StreamingIndexBufferInterface *mTriangleFanIB;

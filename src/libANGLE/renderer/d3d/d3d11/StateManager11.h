@@ -27,89 +27,117 @@ namespace rx
 struct RenderTargetDesc;
 struct Renderer11DeviceCaps;
 
-struct dx_VertexConstants11
-{
-    dx_VertexConstants11()
-        : depthRange{.0f},
-          viewAdjust{.0f},
-          viewCoords{.0f},
-          viewScale{.0f},
-          multiviewWriteToViewportIndex{.0f},
-          padding{.0f}
-    {
-    }
-    float depthRange[4];
-    float viewAdjust[4];
-    float viewCoords[4];
-    float viewScale[2];
-    // multiviewWriteToViewportIndex is used to select either the side-by-side or layered code-path
-    // in the GS. It's value, if set, is either 0.0f or 1.0f. The value is updated whenever a
-    // multi-view draw framebuffer is made active.
-    float multiviewWriteToViewportIndex;
-
-    // Added here to manually pad the struct.
-    float padding;
-};
-
-struct dx_PixelConstants11
-{
-    dx_PixelConstants11()
-        : depthRange{.0f},
-          viewCoords{.0f},
-          depthFront{.0f},
-          viewScale{.0f},
-          multiviewWriteToViewportIndex{.0f},
-          padding{.0f}
-    {
-    }
-
-    float depthRange[4];
-    float viewCoords[4];
-    float depthFront[4];
-    float viewScale[2];
-    // multiviewWriteToViewportIndex is used to select either the side-by-side or layered code-path
-    // in the GS. It's value, if set, is either 0.0f or 1.0f. The value is updated whenever a
-    // multi-view draw framebuffer is made active.
-    float multiviewWriteToViewportIndex;
-
-    // Added here to manually pad the struct.
-    float padding;
-};
-
-struct dx_ComputeConstants11
-{
-    dx_ComputeConstants11() : numWorkGroups{0u}, padding{0u} {}
-    unsigned int numWorkGroups[3];
-    unsigned int padding;  // This just pads the struct to 16 bytes
-};
-
-class SamplerMetadata11 final : angle::NonCopyable
+class ShaderConstants11 : angle::NonCopyable
 {
   public:
-    SamplerMetadata11();
-    ~SamplerMetadata11();
+    ShaderConstants11();
 
-    struct dx_SamplerMetadata
+    void init(const gl::Caps &caps);
+    size_t getRequiredBufferSize(gl::SamplerType samplerType) const;
+    void markDirty();
+
+    void setComputeWorkGroups(GLuint numGroupsX, GLuint numGroupsY, GLuint numGroupsZ);
+    void setMultiviewWriteToViewportIndex(GLfloat index);
+    void onViewportChange(const gl::Rectangle &glViewport,
+                          const D3D11_VIEWPORT &dxViewport,
+                          bool is9_3,
+                          bool presentPathFast);
+    void onSamplerChange(gl::SamplerType samplerType,
+                         unsigned int samplerIndex,
+                         const gl::Texture &texture);
+
+    gl::Error updateBuffer(ID3D11DeviceContext *deviceContext,
+                           gl::SamplerType samplerType,
+                           const ProgramD3D &programD3D,
+                           const d3d11::Buffer &driverConstantBuffer);
+
+  private:
+    struct Vertex
     {
+        Vertex()
+            : depthRange{.0f},
+              viewAdjust{.0f},
+              viewCoords{.0f},
+              viewScale{.0f},
+              multiviewWriteToViewportIndex{.0f},
+              padding{.0f}
+        {
+        }
+
+        float depthRange[4];
+        float viewAdjust[4];
+        float viewCoords[4];
+        float viewScale[2];
+        // multiviewWriteToViewportIndex is used to select either the side-by-side or layered
+        // code-path in the GS. It's value, if set, is either 0.0f or 1.0f. The value is updated
+        // whenever a multi-view draw framebuffer is made active.
+        float multiviewWriteToViewportIndex;
+
+        // Added here to manually pad the struct.
+        float padding;
+    };
+
+    struct Pixel
+    {
+        Pixel()
+            : depthRange{.0f},
+              viewCoords{.0f},
+              depthFront{.0f},
+              viewScale{.0f},
+              multiviewWriteToViewportIndex(0),
+              padding(0)
+        {
+        }
+
+        float depthRange[4];
+        float viewCoords[4];
+        float depthFront[4];
+        float viewScale[2];
+        // multiviewWriteToViewportIndex is used to select either the side-by-side or layered
+        // code-path in the GS. It's value, if set, is either 0.0f or 1.0f. The value is updated
+        // whenever a multi-view draw framebuffer is made active.
+        float multiviewWriteToViewportIndex;
+
+        // Added here to manually pad the struct.
+        float padding;
+    };
+
+    struct Compute
+    {
+        Compute() : numWorkGroups{0u}, padding(0u) {}
+        unsigned int numWorkGroups[3];
+        unsigned int padding;  // This just pads the struct to 16 bytes
+    };
+
+    struct SamplerMetadata
+    {
+        SamplerMetadata() : baseLevel(0), internalFormatBits(0), wrapModes(0), padding(0) {}
+
         int baseLevel;
         int internalFormatBits;
         int wrapModes;
         int padding;  // This just pads the struct to 16 bytes
     };
-    static_assert(sizeof(dx_SamplerMetadata) == 16u,
+
+    static_assert(sizeof(SamplerMetadata) == 16u,
                   "Sampler metadata struct must be one 4-vec / 16 bytes.");
 
-    void initData(unsigned int samplerCount);
-    void update(unsigned int samplerIndex, const gl::Texture &texture);
+    // Return true if dirty.
+    bool updateSamplerMetadata(SamplerMetadata *data, const gl::Texture &texture);
 
-    const dx_SamplerMetadata *getData() const;
-    size_t sizeBytes() const;
-    bool isDirty() const { return mDirty; }
-    void markClean() { mDirty = false; }
+    Vertex mVertex;
+    bool mVertexDirty;
+    Pixel mPixel;
+    bool mPixelDirty;
+    Compute mCompute;
+    bool mComputeDirty;
 
-  private:
-    std::vector<dx_SamplerMetadata> mSamplerMetadata;
-    bool mDirty;
+    std::vector<SamplerMetadata> mSamplerMetadataVS;
+    bool mSamplerMetadataVSDirty;
+    std::vector<SamplerMetadata> mSamplerMetadataPS;
+    bool mSamplerMetadataPSDirty;
+    std::vector<SamplerMetadata> mSamplerMetadataCS;
+    bool mSamplerMetadataCSDirty;
 };
 
 class StateManager11 final : angle::NonCopyable
@@ -122,15 +150,6 @@ class StateManager11 final : angle::NonCopyable
     void deinitialize();
 
     void syncState(const gl::Context *context, const gl::State::DirtyBits &dirtyBits);
-
-    // TODO(jmadill): Don't expose these.
-    const dx_VertexConstants11 &getVertexConstants() const { return mVertexConstants; }
-    const dx_PixelConstants11 &getPixelConstants() const { return mPixelConstants; }
-    const dx_ComputeConstants11 &getComputeConstants() const { return mComputeConstants; }
-
-    SamplerMetadata11 *getVertexSamplerMetadata() { return &mSamplerMetadataVS; }
-    SamplerMetadata11 *getPixelSamplerMetadata() { return &mSamplerMetadataPS; }
-    SamplerMetadata11 *getComputeSamplerMetadata() { return &mSamplerMetadataCS; }
 
     gl::Error updateStateForCompute(const gl::Context *context,
                                     GLuint numGroupsX,
@@ -152,6 +171,7 @@ class StateManager11 final : angle::NonCopyable
     void invalidateViewport(const gl::Context *context);
     void invalidateTexturesAndSamplers();
     void invalidateSwizzles();
+    void invalidateDriverUniforms();
 
     // Called from VertexArray11::updateVertexAttribStorage.
     void invalidateCurrentValueAttrib(size_t attribIndex);
@@ -214,6 +234,9 @@ class StateManager11 final : angle::NonCopyable
     gl::Error updateVertexOffsetsForPointSpritesEmulation(GLint startVertex,
                                                           GLsizei emulatedInstanceId);
 
+    // TODO(jmadill): Should be private.
+    gl::Error applyComputeUniforms(ProgramD3D *programD3D);
+
     // Only used in testing.
     InputLayoutCache *getInputLayoutCache() { return &mInputLayoutCache; }
 
@@ -269,6 +292,9 @@ class StateManager11 final : angle::NonCopyable
     gl::Error generateSwizzlesForShader(const gl::Context *context, gl::SamplerType type);
     gl::Error generateSwizzles(const gl::Context *context);
 
+    gl::Error applyDriverUniforms(const ProgramD3D &programD3D, GLenum drawMode);
+    gl::Error applyUniforms(ProgramD3D *programD3D);
+
     enum DirtyBitType
     {
         DIRTY_BIT_RENDER_TARGET,
@@ -320,10 +346,7 @@ class StateManager11 final : angle::NonCopyable
     std::vector<gl::Offset> mViewportOffsets;
 
     // Things needed in viewport state
-    dx_VertexConstants11 mVertexConstants;
-    dx_PixelConstants11 mPixelConstants;
-
-    dx_ComputeConstants11 mComputeConstants;
+    ShaderConstants11 mShaderConstants;
 
     // Render target variables
     gl::Extents mViewportBounds;
@@ -406,10 +429,6 @@ class StateManager11 final : angle::NonCopyable
     std::vector<bool> mForceSetComputeSamplerStates;
     std::vector<gl::SamplerState> mCurComputeSamplerStates;
 
-    SamplerMetadata11 mSamplerMetadataVS;
-    SamplerMetadata11 mSamplerMetadataPS;
-    SamplerMetadata11 mSamplerMetadataCS;
-
     // Special dirty bit for swizzles. Since they use internal shaders, must be done in a pre-pass.
     bool mDirtySwizzles;
 
@@ -428,6 +447,16 @@ class StateManager11 final : angle::NonCopyable
 
     // ANGLE_multiview.
     bool mIsMultiviewEnabled;
+
+    // Driver Constants.
+    d3d11::Buffer mDriverConstantBufferVS;
+    d3d11::Buffer mDriverConstantBufferPS;
+    d3d11::Buffer mDriverConstantBufferCS;
+
+    ResourceSerial mCurrentVertexConstantBuffer;
+    ResourceSerial mCurrentPixelConstantBuffer;
+    ResourceSerial mCurrentComputeConstantBuffer;
+    ResourceSerial mCurrentGeometryConstantBuffer;
 };
 
 }  // namespace rx
