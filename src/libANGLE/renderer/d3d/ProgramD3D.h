@@ -434,6 +434,8 @@ class ProgramD3D : public ProgramImpl
 
     void updateCachedInputLayoutFromShader(const gl::Context *context);
     void updateCachedOutputLayoutFromShader();
+    void updateCachedVertexExecutableIndex();
+    void updateCachedPixelExecutableIndex();
 
     RendererD3D *mRenderer;
     DynamicHLSL *mDynamicHLSL;
@@ -475,6 +477,7 @@ class ProgramD3D : public ProgramImpl
 
     // Cache for pixel shader output layout to save reallocations.
     std::vector<GLenum> mPixelShaderOutputLayoutCache;
+    Optional<size_t> mCachedPixelExecutableIndex;
 
     AttribIndexArray mAttribLocationToD3DSemantic;
 
@@ -484,6 +487,7 @@ class ProgramD3D : public ProgramImpl
     std::vector<GLint> mFragmentUBOCache;
     VertexExecutable::Signature mCachedVertexSignature;
     gl::InputLayout mCachedInputLayout;
+    Optional<size_t> mCachedVertexExecutableIndex;
 
     std::vector<D3DVarying> mStreamOutVaryings;
     std::vector<D3DUniform *> mD3DUniforms;

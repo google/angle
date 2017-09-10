@@ -75,31 +75,6 @@ void GetDefaultOutputLayoutFromShader(
     }
 }
 
-void GetPixelOutputLayoutFromFramebuffer(const gl::Context *context,
-                                         const gl::Framebuffer *framebuffer,
-                                         std::vector<GLenum> *signature)
-{
-    signature->clear();
-
-    FramebufferD3D *fboD3D   = GetImplAs<FramebufferD3D>(framebuffer);
-    const auto &colorbuffers = fboD3D->getColorAttachmentsForRender(context);
-
-    for (size_t colorAttachment = 0; colorAttachment < colorbuffers.size(); ++colorAttachment)
-    {
-        const gl::FramebufferAttachment *colorbuffer = colorbuffers[colorAttachment];
-
-        if (colorbuffer)
-        {
-            signature->push_back(colorbuffer->getBinding() == GL_BACK ? GL_COLOR_ATTACHMENT0
-                                                                      : colorbuffer->getBinding());
-        }
-        else
-        {
-            signature->push_back(GL_NONE);
-        }
-    }
-}
-
 bool IsRowMajorLayout(const sh::InterfaceBlockField &var)
 {
     return var.isRowMajorLayout;
@@ -1221,13 +1196,10 @@ void ProgramD3D::setSeparable(bool /* separable */)
 gl::Error ProgramD3D::getPixelExecutableForCachedOutputLayout(ShaderExecutableD3D **outExecutable,
                                                               gl::InfoLog *infoLog)
 {
-    for (size_t executableIndex = 0; executableIndex < mPixelExecutables.size(); executableIndex++)
+    if (mCachedPixelExecutableIndex.valid())
     {
-        if (mPixelExecutables[executableIndex]->matchesSignature(mPixelShaderOutputLayoutCache))
-        {
-            *outExecutable = mPixelExecutables[executableIndex]->shaderExecutable();
-            return gl::NoError();
-        }
+        *outExecutable = mPixelExecutables[mCachedPixelExecutableIndex.value()]->shaderExecutable();
+        return gl::NoError();
     }
 
     std::string finalPixelHLSL = mDynamicHLSL->generatePixelShaderForOutputSignature(
@@ -1248,6 +1220,7 @@ gl::Error ProgramD3D::getPixelExecutableForCachedOutputLayout(ShaderExecutableD3
     {
         mPixelExecutables.push_back(std::unique_ptr<PixelExecutable>(
             new PixelExecutable(mPixelShaderOutputLayoutCache, pixelExecutable)));
+        mCachedPixelExecutableIndex = mPixelExecutables.size() - 1;
     }
     else if (!infoLog)
     {
@@ -1262,13 +1235,11 @@ gl::Error ProgramD3D::getPixelExecutableForCachedOutputLayout(ShaderExecutableD3
 gl::Error ProgramD3D::getVertexExecutableForCachedInputLayout(ShaderExecutableD3D **outExectuable,
                                                               gl::InfoLog *infoLog)
 {
-    for (size_t executableIndex = 0; executableIndex < mVertexExecutables.size(); executableIndex++)
+    if (mCachedVertexExecutableIndex.valid())
     {
-        if (mVertexExecutables[executableIndex]->matchesSignature(mCachedVertexSignature))
-        {
-            *outExectuable = mVertexExecutables[executableIndex]->shaderExecutable();
-            return gl::NoError();
-        }
+        *outExectuable =
+            mVertexExecutables[mCachedVertexExecutableIndex.value()]->shaderExecutable();
+        return gl::NoError();
     }
 
     // Generate new dynamic layout with attribute conversions
@@ -1290,6 +1261,7 @@ gl::Error ProgramD3D::getVertexExecutableForCachedInputLayout(ShaderExecutableD3
     {
         mVertexExecutables.push_back(std::unique_ptr<VertexExecutable>(
             new VertexExecutable(mCachedInputLayout, mCachedVertexSignature, vertexExecutable)));
+        mCachedVertexExecutableIndex = mVertexExecutables.size() - 1;
     }
     else if (!infoLog)
     {
@@ -1407,6 +1379,7 @@ void ProgramD3D::updateCachedInputLayoutFromShader(const gl::Context *context)
 {
     GetDefaultInputLayoutFromShader(context, mState.getAttachedVertexShader(), &mCachedInputLayout);
     VertexExecutable::getSignature(mRenderer, mCachedInputLayout, &mCachedVertexSignature);
+    updateCachedVertexExecutableIndex();
 }
 
 class ProgramD3D::GetPixelExecutableTask : public ProgramD3D::GetExecutableTask
@@ -1426,6 +1399,7 @@ class ProgramD3D::GetPixelExecutableTask : public ProgramD3D::GetExecutableTask
 void ProgramD3D::updateCachedOutputLayoutFromShader()
 {
     GetDefaultOutputLayoutFromShader(mPixelShaderKey, &mPixelShaderOutputLayoutCache);
+    updateCachedPixelExecutableIndex();
 }
 
 class ProgramD3D::GetGeometryExecutableTask : public ProgramD3D::GetExecutableTask
@@ -2465,6 +2439,9 @@ void ProgramD3D::reset()
     mGeometryShaderPreamble.clear();
 
     mUniformsDirty = true;
+
+    mCachedPixelExecutableIndex.reset();
+    mCachedVertexExecutableIndex.reset();
 }
 
 unsigned int ProgramD3D::getSerial() const
@@ -2506,6 +2483,7 @@ void ProgramD3D::updateCachedInputLayout(Serial associatedSerial, const gl::Stat
 
     mCurrentVertexArrayStateSerial = associatedSerial;
     mCachedInputLayout.clear();
+
     const auto &vertexAttributes = state.getVertexArray()->getVertexAttributes();
 
     for (size_t locationIndex : mState.getActiveAttribLocationsMask())
@@ -2525,12 +2503,35 @@ void ProgramD3D::updateCachedInputLayout(Serial associatedSerial, const gl::Stat
     }
 
     VertexExecutable::getSignature(mRenderer, mCachedInputLayout, &mCachedVertexSignature);
+
+    updateCachedVertexExecutableIndex();
 }
 
 void ProgramD3D::updateCachedOutputLayout(const gl::Context *context,
                                           const gl::Framebuffer *framebuffer)
 {
-    GetPixelOutputLayoutFromFramebuffer(context, framebuffer, &mPixelShaderOutputLayoutCache);
+    mPixelShaderOutputLayoutCache.clear();
+
+    FramebufferD3D *fboD3D   = GetImplAs<FramebufferD3D>(framebuffer);
+    const auto &colorbuffers = fboD3D->getColorAttachmentsForRender(context);
+
+    for (size_t colorAttachment = 0; colorAttachment < colorbuffers.size(); ++colorAttachment)
+    {
+        const gl::FramebufferAttachment *colorbuffer = colorbuffers[colorAttachment];
+
+        if (colorbuffer)
+        {
+            auto binding = colorbuffer->getBinding() == GL_BACK ? GL_COLOR_ATTACHMENT0
+                                                                : colorbuffer->getBinding();
+            mPixelShaderOutputLayoutCache.push_back(binding);
+        }
+        else
+        {
+            mPixelShaderOutputLayoutCache.push_back(GL_NONE);
+        }
+    }
+
+    updateCachedPixelExecutableIndex();
 }
 
 void ProgramD3D::gatherTransformFeedbackVaryings(const gl::VaryingPacking &varyingPacking,
@@ -2653,17 +2654,7 @@ void ProgramD3D::setPathFragmentInputGen(const std::string &inputName,
 
 bool ProgramD3D::hasVertexExecutableForCachedInputLayout()
 {
-    VertexExecutable::getSignature(mRenderer, mCachedInputLayout, &mCachedVertexSignature);
-
-    for (size_t executableIndex = 0; executableIndex < mVertexExecutables.size(); executableIndex++)
-    {
-        if (mVertexExecutables[executableIndex]->matchesSignature(mCachedVertexSignature))
-        {
-            return true;
-        }
-    }
-
-    return false;
+    return mCachedVertexExecutableIndex.valid();
 }
 
 bool ProgramD3D::hasGeometryExecutableForPrimitiveType(GLenum drawMode)
@@ -2680,15 +2671,7 @@ bool ProgramD3D::hasGeometryExecutableForPrimitiveType(GLenum drawMode)
 
 bool ProgramD3D::hasPixelExecutableForCachedOutputLayout()
 {
-    for (size_t executableIndex = 0; executableIndex < mPixelExecutables.size(); executableIndex++)
-    {
-        if (mPixelExecutables[executableIndex]->matchesSignature(mPixelShaderOutputLayoutCache))
-        {
-            return true;
-        }
-    }
-
-    return false;
+    return mCachedPixelExecutableIndex.valid();
 }
 
 template <typename DestT>
@@ -2724,6 +2707,32 @@ void ProgramD3D::getUniformiv(const gl::Context *context, GLint location, GLint 
 void ProgramD3D::getUniformuiv(const gl::Context *context, GLint location, GLuint *params) const
 {
     getUniformInternal(location, params);
+}
+
+void ProgramD3D::updateCachedVertexExecutableIndex()
+{
+    mCachedVertexExecutableIndex.reset();
+    for (size_t executableIndex = 0; executableIndex < mVertexExecutables.size(); executableIndex++)
+    {
+        if (mVertexExecutables[executableIndex]->matchesSignature(mCachedVertexSignature))
+        {
+            mCachedVertexExecutableIndex = executableIndex;
+            break;
+        }
+    }
+}
+
+void ProgramD3D::updateCachedPixelExecutableIndex()
+{
+    mCachedPixelExecutableIndex.reset();
+    for (size_t executableIndex = 0; executableIndex < mPixelExecutables.size(); executableIndex++)
+    {
+        if (mPixelExecutables[executableIndex]->matchesSignature(mPixelShaderOutputLayoutCache))
+        {
+            mCachedPixelExecutableIndex = executableIndex;
+            break;
+        }
+    }
 }
 
 }  // namespace rx
