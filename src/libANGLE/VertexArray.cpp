@@ -255,7 +255,7 @@ void VertexArray::setElementArrayBuffer(const Context *context, Buffer *buffer)
     mDirtyBits.set(DIRTY_BIT_ELEMENT_ARRAY_BUFFER);
 }
 
-void VertexArray::syncImplState(const Context *context)
+void VertexArray::syncState(const Context *context)
 {
     if (mDirtyBits.any())
     {

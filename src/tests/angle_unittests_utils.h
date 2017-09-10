@@ -61,7 +61,7 @@ class NullFactory : public GLImplFactory
     }
 
     // Sampler object creation
-    SamplerImpl *createSampler() override { return nullptr; }
+    SamplerImpl *createSampler(const gl::SamplerState &state) override { return nullptr; }
 
     std::vector<PathImpl *> createPaths(GLsizei range) override
     {
@@ -87,7 +87,7 @@ class MockGLFactory : public GLImplFactory
     MOCK_METHOD0(createSync, SyncImpl *());
     MOCK_METHOD1(createTransformFeedback,
                  TransformFeedbackImpl *(const gl::TransformFeedbackState &));
-    MOCK_METHOD0(createSampler, SamplerImpl *());
+    MOCK_METHOD1(createSampler, SamplerImpl *(const gl::SamplerState &));
     MOCK_METHOD1(createPaths, std::vector<PathImpl *>(GLsizei));
 };
 

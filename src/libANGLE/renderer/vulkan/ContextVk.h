@@ -126,7 +126,7 @@ class ContextVk : public ContextImpl, public ResourceVk
         const gl::TransformFeedbackState &state) override;
 
     // Sampler object creation
-    SamplerImpl *createSampler() override;
+    SamplerImpl *createSampler(const gl::SamplerState &state) override;
 
     // Path object creation
     std::vector<PathImpl *> createPaths(GLsizei) override;

@@ -907,8 +907,7 @@ void StateManagerGL::setGenericShaderState(const gl::Context *context)
             const gl::Sampler *sampler = glState.getSampler(textureUnitIndex);
             if (sampler != nullptr)
             {
-                const SamplerGL *samplerGL = GetImplAs<SamplerGL>(sampler);
-                samplerGL->syncState(sampler->getSamplerState());
+                SamplerGL *samplerGL = GetImplAs<SamplerGL>(sampler);
                 bindSampler(textureUnitIndex, samplerGL->getSamplerID());
             }
             else

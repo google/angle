@@ -131,9 +131,9 @@ TransformFeedbackImpl *Context11::createTransformFeedback(const gl::TransformFee
     return new TransformFeedback11(state, mRenderer);
 }
 
-SamplerImpl *Context11::createSampler()
+SamplerImpl *Context11::createSampler(const gl::SamplerState &state)
 {
-    return new SamplerD3D();
+    return new SamplerD3D(state);
 }
 
 std::vector<PathImpl *> Context11::createPaths(GLsizei)

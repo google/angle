@@ -117,9 +117,9 @@ TransformFeedbackImpl *ContextGL::createTransformFeedback(const gl::TransformFee
     return new TransformFeedbackGL(state, getFunctions(), getStateManager());
 }
 
-SamplerImpl *ContextGL::createSampler()
+SamplerImpl *ContextGL::createSampler(const gl::SamplerState &state)
 {
-    return new SamplerGL(getFunctions(), getStateManager());
+    return new SamplerGL(state, getFunctions(), getStateManager());
 }
 
 std::vector<PathImpl *> ContextGL::createPaths(GLsizei range)

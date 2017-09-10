@@ -540,9 +540,9 @@ TransformFeedbackImpl *ContextVk::createTransformFeedback(const gl::TransformFee
     return new TransformFeedbackVk(state);
 }
 
-SamplerImpl *ContextVk::createSampler()
+SamplerImpl *ContextVk::createSampler(const gl::SamplerState &state)
 {
-    return new SamplerVk();
+    return new SamplerVk(state);
 }
 
 std::vector<PathImpl *> ContextVk::createPaths(GLsizei)

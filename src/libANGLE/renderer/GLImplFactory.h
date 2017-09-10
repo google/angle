@@ -78,7 +78,7 @@ class GLImplFactory : angle::NonCopyable
         const gl::TransformFeedbackState &state) = 0;
 
     // Sampler object creation
-    virtual SamplerImpl *createSampler() = 0;
+    virtual SamplerImpl *createSampler(const gl::SamplerState &state) = 0;
 
     virtual std::vector<PathImpl *> createPaths(GLsizei range) = 0;
 };

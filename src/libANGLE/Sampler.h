@@ -71,12 +71,13 @@ class Sampler final : public RefCountObject, public LabeledObject
 
     rx::SamplerImpl *getImplementation() const;
 
+    void syncState(const Context *context);
+
   private:
+    SamplerState mState;
     rx::SamplerImpl *mImpl;
 
     std::string mLabel;
-
-    SamplerState mSamplerState;
 };
 
 }  // namespace gl

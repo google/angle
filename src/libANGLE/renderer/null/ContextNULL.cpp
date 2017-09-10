@@ -357,9 +357,9 @@ TransformFeedbackImpl *ContextNULL::createTransformFeedback(const gl::TransformF
     return new TransformFeedbackNULL(state);
 }
 
-SamplerImpl *ContextNULL::createSampler()
+SamplerImpl *ContextNULL::createSampler(const gl::SamplerState &state)
 {
-    return new SamplerNULL();
+    return new SamplerNULL(state);
 }
 
 std::vector<PathImpl *> ContextNULL::createPaths(GLsizei range)

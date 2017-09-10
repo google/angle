@@ -2177,7 +2177,7 @@ void State::syncDirtyObjects(const Context *context, const DirtyObjects &bitset)
                 break;
             case DIRTY_OBJECT_VERTEX_ARRAY:
                 ASSERT(mVertexArray);
-                mVertexArray->syncImplState(context);
+                mVertexArray->syncState(context);
                 break;
             case DIRTY_OBJECT_PROGRAM_TEXTURES:
                 syncProgramTextures(context);
@@ -2218,16 +2218,15 @@ void State::syncProgramTextures(const Context *context)
         for (GLuint textureUnitIndex : samplerBinding.boundTextureUnits)
         {
             Texture *texture = getSamplerTexture(textureUnitIndex, textureType);
+            Sampler *sampler = getSampler(textureUnitIndex);
 
             if (texture != nullptr)
             {
-                const Sampler *sampler = getSampler(textureUnitIndex);
-
                 // Mark the texture binding bit as dirty if the texture completeness changes.
                 // TODO(jmadill): Use specific dirty bit for completeness change.
                 if (texture->isSamplerComplete(context, sampler))
                 {
-                    texture->syncImplState();
+                    texture->syncState();
                     ASSERT(static_cast<size_t>(textureUnitIndex) < mCompleteTextureCache.size());
                     ASSERT(mCompleteTextureCache[textureUnitIndex] == nullptr ||
                            mCompleteTextureCache[textureUnitIndex] == texture);
@@ -2238,7 +2237,10 @@ void State::syncProgramTextures(const Context *context)
                 mCompleteTextureBindings[textureUnitIndex].bind(texture->getDirtyChannel());
             }
 
-            // TODO(jmadill): Sync sampler state.
+            if (sampler != nullptr)
+            {
+                sampler->syncState(context);
+            }
         }
     }
 }
