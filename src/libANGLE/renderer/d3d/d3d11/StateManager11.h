@@ -263,6 +263,10 @@ class StateManager11 final : angle::NonCopyable
 
     gl::Error syncCurrentValueAttribs(const gl::State &state);
 
+    gl::Error generateSwizzle(const gl::Context *context, gl::Texture *texture);
+    gl::Error generateSwizzlesForShader(const gl::Context *context, gl::SamplerType type);
+    gl::Error generateSwizzles(const gl::Context *context);
+
     enum DirtyBitType
     {
         DIRTY_BIT_RENDER_TARGET,

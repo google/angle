@@ -509,10 +509,6 @@ class Renderer11 : public RendererD3D
                               int baseVertex,
                               int instances);
 
-    gl::Error generateSwizzle(const gl::Context *context, gl::Texture *texture);
-    gl::Error generateSwizzles(const gl::Context *context, gl::SamplerType type);
-    gl::Error generateSwizzles(const gl::Context *context);
-
     gl::ErrorOrResult<TextureHelper11> resolveMultisampledTexture(const gl::Context *context,
                                                                   RenderTarget11 *renderTarget,
                                                                   bool depth,

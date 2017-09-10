@@ -1399,59 +1399,6 @@ void *Renderer11::getD3DDevice()
     return reinterpret_cast<void *>(mDevice);
 }
 
-gl::Error Renderer11::generateSwizzle(const gl::Context *context, gl::Texture *texture)
-{
-    if (texture)
-    {
-        TextureD3D *textureD3D = GetImplAs<TextureD3D>(texture);
-        ASSERT(textureD3D);
-
-        TextureStorage *texStorage = nullptr;
-        ANGLE_TRY(textureD3D->getNativeTexture(context, &texStorage));
-
-        if (texStorage)
-        {
-            TextureStorage11 *storage11          = GetAs<TextureStorage11>(texStorage);
-            const gl::TextureState &textureState = texture->getTextureState();
-            ANGLE_TRY(storage11->generateSwizzles(context, textureState.getSwizzleState()));
-        }
-    }
-
-    return gl::NoError();
-}
-
-gl::Error Renderer11::generateSwizzles(const gl::Context *context, gl::SamplerType type)
-{
-    const auto &glState    = context->getGLState();
-    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(glState.getProgram());
-
-    unsigned int samplerRange = programD3D->getUsedSamplerRange(type);
-
-    for (unsigned int i = 0; i < samplerRange; i++)
-    {
-        GLenum textureType = programD3D->getSamplerTextureType(type, i);
-        GLint textureUnit  = programD3D->getSamplerMapping(type, i, context->getCaps());
-        if (textureUnit != -1)
-        {
-            gl::Texture *texture = glState.getSamplerTexture(textureUnit, textureType);
-            ASSERT(texture);
-            if (texture->getTextureState().swizzleRequired())
-            {
-                ANGLE_TRY(generateSwizzle(context, texture));
-            }
-        }
-    }
-
-    return gl::NoError();
-}
-
-gl::Error Renderer11::generateSwizzles(const gl::Context *context)
-{
-    ANGLE_TRY(generateSwizzles(context, gl::SAMPLER_VERTEX));
-    ANGLE_TRY(generateSwizzles(context, gl::SAMPLER_PIXEL));
-    return gl::NoError();
-}
-
 gl::Error Renderer11::setUniformBuffers(const gl::ContextState &data,
                                         const std::vector<GLint> &vertexUniformBuffers,
                                         const std::vector<GLint> &fragmentUniformBuffers)
@@ -4178,10 +4125,6 @@ gl::Error Renderer11::genericDrawElements(const gl::Context *context,
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
     bool usesPointSize     = programD3D->usesPointSize();
 
-    programD3D->updateSamplerMapping();
-
-    ANGLE_TRY(generateSwizzles(context));
-
     if (!applyPrimitiveType(mode, count, usesPointSize))
     {
         return gl::NoError();
@@ -4217,9 +4160,6 @@ gl::Error Renderer11::genericDrawArrays(const gl::Context *context,
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
     bool usesPointSize     = programD3D->usesPointSize();
 
-    programD3D->updateSamplerMapping();
-
-    ANGLE_TRY(generateSwizzles(context));
     if (!applyPrimitiveType(mode, count, usesPointSize))
     {
         return gl::NoError();
@@ -4254,9 +4194,7 @@ gl::Error Renderer11::genericDrawIndirect(const gl::Context *context,
     ASSERT(program != nullptr);
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
     bool usesPointSize     = programD3D->usesPointSize();
-    programD3D->updateSamplerMapping();
 
-    ANGLE_TRY(generateSwizzles(context));
     applyPrimitiveType(mode, 0, usesPointSize);
     ANGLE_TRY(mStateManager.updateState(context, mode));
     ANGLE_TRY(applyTransformFeedbackBuffers(contextState));
@@ -4320,16 +4258,9 @@ gl::Error Renderer11::dispatchCompute(const gl::Context *context,
                                       GLuint numGroupsY,
                                       GLuint numGroupsZ)
 {
-    gl::Program *program = context->getGLState().getProgram();
-    ASSERT(program != nullptr);
-    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
-
-    programD3D->updateSamplerMapping();
-    ANGLE_TRY(generateSwizzles(context, gl::SAMPLER_COMPUTE));
-
     ANGLE_TRY(mStateManager.updateStateForCompute(context, numGroupsX, numGroupsY, numGroupsZ));
-
     ANGLE_TRY(applyComputeShader(context));
+
     // TODO(Xinghua): applyUniformBuffers for compute shader.
     mDeviceContext->Dispatch(numGroupsX, numGroupsY, numGroupsZ);
 

@@ -445,6 +445,14 @@ gl::Error StateManager11::updateStateForCompute(const gl::Context *context,
     mComputeConstants.numWorkGroups[1] = numGroupsY;
     mComputeConstants.numWorkGroups[2] = numGroupsZ;
 
+    // TODO(jmadill): Use dirty bits.
+    const auto &glState = context->getGLState();
+    auto *programD3D    = GetImplAs<ProgramD3D>(glState.getProgram());
+    programD3D->updateSamplerMapping();
+
+    // TODO(jmadill): Use dirty bits.
+    ANGLE_TRY(generateSwizzlesForShader(context, gl::SAMPLER_COMPUTE));
+
     // TODO(jmadill): More complete implementation.
     ANGLE_TRY(syncTextures(context));
 
@@ -1570,6 +1578,13 @@ void StateManager11::setSingleVertexBuffer(const d3d11::Buffer *buffer, UINT str
 gl::Error StateManager11::updateState(const gl::Context *context, GLenum drawMode)
 {
     const auto &glState = context->getGLState();
+    auto *programD3D    = GetImplAs<ProgramD3D>(glState.getProgram());
+
+    // TODO(jmadill): Use dirty bits.
+    programD3D->updateSamplerMapping();
+
+    // TODO(jmadill): Use dirty bits.
+    ANGLE_TRY(generateSwizzles(context));
 
     // TODO(jmadill): Use dirty bits.
     ANGLE_TRY(syncProgram(context, drawMode));
@@ -1636,7 +1651,6 @@ gl::Error StateManager11::updateState(const gl::Context *context, GLenum drawMod
 
     // This must happen after viewport sync, because the viewport affects builtin uniforms.
     // TODO(jmadill): Use dirty bits.
-    auto *programD3D = GetImplAs<ProgramD3D>(glState.getProgram());
     ANGLE_TRY(programD3D->applyUniforms());
     ANGLE_TRY(mRenderer->applyDriverUniforms(*programD3D, drawMode));
 
@@ -2122,6 +2136,62 @@ gl::Error StateManager11::updateVertexOffsetsForPointSpritesEmulation(GLint star
 {
     return mInputLayoutCache.updateVertexOffsetsForPointSpritesEmulation(
         mRenderer, mCurrentAttributes, startVertex, emulatedInstanceId);
+}
+
+gl::Error StateManager11::generateSwizzle(const gl::Context *context, gl::Texture *texture)
+{
+    if (!texture)
+    {
+        return gl::NoError();
+    }
+
+    TextureD3D *textureD3D = GetImplAs<TextureD3D>(texture);
+    ASSERT(textureD3D);
+
+    TextureStorage *texStorage = nullptr;
+    ANGLE_TRY(textureD3D->getNativeTexture(context, &texStorage));
+
+    if (texStorage)
+    {
+        TextureStorage11 *storage11          = GetAs<TextureStorage11>(texStorage);
+        const gl::TextureState &textureState = texture->getTextureState();
+        ANGLE_TRY(storage11->generateSwizzles(context, textureState.getSwizzleState()));
+    }
+
+    return gl::NoError();
+}
+
+gl::Error StateManager11::generateSwizzlesForShader(const gl::Context *context,
+                                                    gl::SamplerType type)
+{
+    const auto &glState    = context->getGLState();
+    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(glState.getProgram());
+
+    unsigned int samplerRange = programD3D->getUsedSamplerRange(type);
+
+    for (unsigned int i = 0; i < samplerRange; i++)
+    {
+        GLenum textureType = programD3D->getSamplerTextureType(type, i);
+        GLint textureUnit  = programD3D->getSamplerMapping(type, i, context->getCaps());
+        if (textureUnit != -1)
+        {
+            gl::Texture *texture = glState.getSamplerTexture(textureUnit, textureType);
+            ASSERT(texture);
+            if (texture->getTextureState().swizzleRequired())
+            {
+                ANGLE_TRY(generateSwizzle(context, texture));
+            }
+        }
+    }
+
+    return gl::NoError();
+}
+
+gl::Error StateManager11::generateSwizzles(const gl::Context *context)
+{
+    ANGLE_TRY(generateSwizzlesForShader(context, gl::SAMPLER_VERTEX));
+    ANGLE_TRY(generateSwizzlesForShader(context, gl::SAMPLER_PIXEL));
+    return gl::NoError();
 }
 
 }  // namespace rx
