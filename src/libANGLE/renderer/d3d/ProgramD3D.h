@@ -163,7 +163,14 @@ class ProgramD3D : public ProgramImpl
                             const gl::Caps &caps) const;
     GLenum getSamplerTextureType(gl::SamplerType type, unsigned int samplerIndex) const;
     GLuint getUsedSamplerRange(gl::SamplerType type) const;
-    void updateSamplerMapping();
+
+    enum SamplerMapping
+    {
+        WasDirty,
+        WasClean,
+    };
+
+    SamplerMapping updateSamplerMapping();
 
     bool usesPointSize() const { return mUsesPointSize; }
     bool usesPointSpriteEmulation() const;

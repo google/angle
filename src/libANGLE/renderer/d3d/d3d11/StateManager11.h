@@ -150,6 +150,7 @@ class StateManager11 final : angle::NonCopyable
     void invalidateVertexBuffer();
     void invalidateEverything(const gl::Context *context);
     void invalidateViewport(const gl::Context *context);
+    void invalidateTexturesAndSamplers();
 
     // Called from VertexArray11::updateVertexAttribStorage.
     void invalidateCurrentValueAttrib(size_t attribIndex);
@@ -275,6 +276,7 @@ class StateManager11 final : angle::NonCopyable
         DIRTY_BIT_RASTERIZER_STATE,
         DIRTY_BIT_BLEND_STATE,
         DIRTY_BIT_DEPTH_STENCIL_STATE,
+        DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE,
         DIRTY_BIT_INVALID,
         DIRTY_BIT_MAX = DIRTY_BIT_INVALID,
     };

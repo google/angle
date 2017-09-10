@@ -2293,8 +2293,6 @@ void State::setObjectDirty(GLenum target)
             break;
         case GL_TEXTURE:
         case GL_SAMPLER:
-            mDirtyObjects.set(DIRTY_OBJECT_PROGRAM_TEXTURES);
-            break;
         case GL_PROGRAM:
             mDirtyObjects.set(DIRTY_OBJECT_PROGRAM_TEXTURES);
             mDirtyBits.set(DIRTY_BIT_TEXTURE_BINDINGS);

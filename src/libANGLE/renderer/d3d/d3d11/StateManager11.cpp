@@ -694,10 +694,17 @@ void StateManager11::syncState(const gl::Context *context, const gl::State::Dirt
             case gl::State::DIRTY_BIT_VERTEX_ARRAY_BINDING:
                 invalidateVertexBuffer();
                 break;
+            case gl::State::DIRTY_BIT_TEXTURE_BINDINGS:
+                invalidateTexturesAndSamplers();
+                break;
+            case gl::State::DIRTY_BIT_SAMPLER_BINDINGS:
+                invalidateTexturesAndSamplers();
+                break;
             case gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE:
             {
                 invalidateVertexBuffer();
                 invalidateRenderTarget(context);
+                invalidateTexturesAndSamplers();
                 gl::VertexArray *vao = state.getVertexArray();
                 if (mIsMultiviewEnabled && vao != nullptr)
                 {
@@ -1168,6 +1175,8 @@ void StateManager11::invalidateEverything(const gl::Context *context)
     mAppliedIBOffset = 0;
 
     mLastFirstVertex.reset();
+
+    invalidateTexturesAndSamplers();
 }
 
 void StateManager11::invalidateVertexBuffer()
@@ -1181,6 +1190,11 @@ void StateManager11::invalidateVertexBuffer()
 void StateManager11::invalidateViewport(const gl::Context *context)
 {
     mInternalDirtyBits.set(DIRTY_BIT_VIEWPORT_STATE);
+}
+
+void StateManager11::invalidateTexturesAndSamplers()
+{
+    mInternalDirtyBits.set(DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE);
 }
 
 void StateManager11::setOneTimeRenderTarget(const gl::Context *context,
@@ -1581,7 +1595,10 @@ gl::Error StateManager11::updateState(const gl::Context *context, GLenum drawMod
     auto *programD3D    = GetImplAs<ProgramD3D>(glState.getProgram());
 
     // TODO(jmadill): Use dirty bits.
-    programD3D->updateSamplerMapping();
+    if (programD3D->updateSamplerMapping() == ProgramD3D::SamplerMapping::WasDirty)
+    {
+        invalidateTexturesAndSamplers();
+    }
 
     // TODO(jmadill): Use dirty bits.
     ANGLE_TRY(generateSwizzles(context));
@@ -1640,14 +1657,14 @@ gl::Error StateManager11::updateState(const gl::Context *context, GLenum drawMod
             case DIRTY_BIT_DEPTH_STENCIL_STATE:
                 ANGLE_TRY(syncDepthStencilState(glState));
                 break;
+            case DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE:
+                ANGLE_TRY(syncTextures(context));
+                break;
             default:
                 UNREACHABLE();
                 break;
         }
     }
-
-    // TODO(jmadill): Use dirty bits.
-    ANGLE_TRY(syncTextures(context));
 
     // This must happen after viewport sync, because the viewport affects builtin uniforms.
     // TODO(jmadill): Use dirty bits.

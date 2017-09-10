@@ -160,7 +160,7 @@ class Display final : angle::NonCopyable
 
     bool isRobustResourceInitEnabled() const;
 
-    const gl::Context *getProxyContext() const { return mProxyContext.get(); }
+    gl::Context *getProxyContext() const { return mProxyContext.get(); }
 
   private:
     Display(EGLenum platform, EGLNativeDisplayType displayId, Device *eglDevice);
