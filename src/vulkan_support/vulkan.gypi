@@ -355,6 +355,7 @@
                             'AdditionalOptions':
                             [
                                 '/wd4100', # Unreferenced formal parameter
+                                '/wd4244', # Conversion from 'int' to 'char', possible loss of data
                                 '/wd4456', # Declaration hides previous local declaration
                                 '/wd4457', # Declaration hides function parameter
                                 '/wd4458', # Declaration hides class member

@@ -10,6 +10,8 @@
 
 #include "test_utils/ANGLETest.h"
 
+#include "common/string_utils.h"
+
 using namespace angle;
 
 namespace
@@ -28,10 +30,10 @@ class RendererTest : public ANGLETest
 TEST_P(RendererTest, RequestedRendererCreated)
 {
     std::string rendererString = std::string(reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
-    std::transform(rendererString.begin(), rendererString.end(), rendererString.begin(), ::tolower);
+    angle::ToLower(&rendererString);
 
     std::string versionString = std::string(reinterpret_cast<const char*>(glGetString(GL_VERSION)));
-    std::transform(versionString.begin(), versionString.end(), versionString.begin(), ::tolower);
+    angle::ToLower(&versionString);
 
     const EGLPlatformParameters &platform = GetParam().eglParameters;
 

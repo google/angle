@@ -11,6 +11,7 @@
 
 #include "EGLWindow.h"
 #include "OSWindow.h"
+#include "common/string_utils.h"
 #include "test_utils/angle_test_configs.h"
 #include "test_utils/gl_raii.h"
 
@@ -761,7 +762,7 @@ TEST_P(ProgramBinariesAcrossPlatforms, CreateAndReloadBinary)
         secondRenderer.eglParameters.deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_WARP_ANGLE)
     {
         std::string rendererString = std::string(reinterpret_cast<const char*>(glGetString(GL_RENDERER)));
-        std::transform(rendererString.begin(), rendererString.end(), rendererString.begin(), ::tolower);
+        angle::ToLower(&rendererString);
 
         auto basicRenderPos = rendererString.find(std::string("microsoft basic render"));
         auto softwareAdapterPos = rendererString.find(std::string("software adapter"));
