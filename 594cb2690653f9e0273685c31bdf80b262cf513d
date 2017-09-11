@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "76aa7494_57f65079",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2971,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-11T17:17:46Z",
+      "side": 1,
+      "message": "Thanks I\u0027ll fix that in a follow-up.",
+      "parentUuid": "4b394bb4_55784b15",
+      "revId": "594cb2690653f9e0273685c31bdf80b262cf513d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0bbda2bc_b72f6eb2",
         "filename": "src/libANGLE/State.cpp",
         "patchSetId": 17
@@ -30,6 +48,24 @@
       "writtenOn": "2017-09-11T16:05:03Z",
       "side": 1,
       "message": "On top lovel comment I think you missed in my previous review:\n\n\u003e On other thing is that the setObjectDirty abstraction seems like it will grow too coarse for the use case of setting the sampler / textures table dirty.\n\nAfter looking at this patch for a long time, multiple times I still can\u0027t seem to wrap my head around what\u0027s happening exactly. While the logic might be correct I\u0027m worried about future maintenance. Is there a design doc for this? We should have a consistent and extremely well documented mechanism for dirty bits otherwise this code will fall part quickly.",
+      "revId": "594cb2690653f9e0273685c31bdf80b262cf513d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ccfbacaa_eacf3a17",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2275,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-11T17:17:46Z",
+      "side": 1,
+      "message": "I did have a design doc here: go/angle-extended-dirty-bits, but it needs to be updated. I\u0027ll make an action item to do that.\n\nI agree the design is a bit hard to follow. I\u0027ll make a follow-up CL which adds a medium-long explanation in a comment in State.h.",
+      "parentUuid": "0bbda2bc_b72f6eb2",
       "revId": "594cb2690653f9e0273685c31bdf80b262cf513d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "6ec67506_d3f8b17a",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-11T17:17:46Z",
+      "side": 1,
+      "message": "No, they\u0027re defined by the callback class, which is agnostic as to the intended use. The classes themselves just handle message passing, but maybe we could rename them to be more clear. I\u0027ll leave that as future work.",
+      "parentUuid": "e4947c5b_c9d500d4",
+      "revId": "594cb2690653f9e0273685c31bdf80b262cf513d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b9721f00_9cff4db9",
         "filename": "src/libANGLE/State.h",
         "patchSetId": 17
@@ -64,6 +118,24 @@
       "writtenOn": "2017-09-11T16:05:03Z",
       "side": 1,
       "message": "I\u0027m not sure what\u0027s the added value of this cache: the texture already has a completeness cache, so all we need to do is getSampler(type, unit) and ask isComplete.",
+      "revId": "594cb2690653f9e0273685c31bdf80b262cf513d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "18794461_ac0df3da",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 542,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-11T17:17:46Z",
+      "side": 1,
+      "message": "This is actually a good question - it relates back to Geoff\u0027s original observation about having the same texture using multiple samplers. If you had a single texture bound to two units, with two samplers (or one with a sampler and one without) the cache would never be hit for completeness. But with this design, the cache is hit.",
+      "parentUuid": "b9721f00_9cff4db9",
       "revId": "594cb2690653f9e0273685c31bdf80b262cf513d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
