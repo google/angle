@@ -16,6 +16,24 @@
       "revId": "d13363951e31749479244065bd938d78b77941f6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d6a79dd_40520ac9",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 383,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-11T17:27:34Z",
+      "side": 1,
+      "message": "Done. Sorry, I missed the \"local\" before, was looking for \"internal\".",
+      "parentUuid": "ca5f840e_690fa9d9",
+      "revId": "d13363951e31749479244065bd938d78b77941f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
