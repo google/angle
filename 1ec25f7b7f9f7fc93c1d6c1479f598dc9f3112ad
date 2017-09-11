@@ -95,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "1c53b075_9a60867c",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 1459,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-11T17:21:35Z",
+      "side": 1,
+      "message": "AFAIK it should be in the data section -- but I think he would need to mark this as static. To be honest I think it\u0027s compiler-dependent what happens in some cases, so you would need to check the dissassembly to know what really happens. I somehow feel more confident if it\u0027s marked static in some way.",
+      "parentUuid": "25313b77_06ebeda4",
+      "range": {
+        "startLine": 1449,
+        "startChar": 0,
+        "endLine": 1459,
+        "endChar": 0
+      },
+      "revId": "1ec25f7b7f9f7fc93c1d6c1479f598dc9f3112ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6418d729_a41b405a",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 28
