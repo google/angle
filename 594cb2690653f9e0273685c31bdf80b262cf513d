@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4b394bb4_55784b15",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2971,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-11T16:05:03Z",
+      "side": 1,
+      "message": "nit: this comment is now out of date.",
+      "revId": "594cb2690653f9e0273685c31bdf80b262cf513d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0bbda2bc_b72f6eb2",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2275,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-11T16:05:03Z",
+      "side": 1,
+      "message": "On top lovel comment I think you missed in my previous review:\n\n\u003e On other thing is that the setObjectDirty abstraction seems like it will grow too coarse for the use case of setting the sampler / textures table dirty.\n\nAfter looking at this patch for a long time, multiple times I still can\u0027t seem to wrap my head around what\u0027s happening exactly. While the logic might be correct I\u0027m worried about future maintenance. Is there a design doc for this? We should have a consistent and extremely well documented mechanism for dirty bits otherwise this code will fall part quickly.",
+      "revId": "594cb2690653f9e0273685c31bdf80b262cf513d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e4947c5b_c9d500d4",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-11T16:05:03Z",
+      "side": 1,
+      "message": "Should we consider renaming these to signalTextureDirty?",
+      "revId": "594cb2690653f9e0273685c31bdf80b262cf513d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b9721f00_9cff4db9",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 542,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-11T16:05:03Z",
+      "side": 1,
+      "message": "I\u0027m not sure what\u0027s the added value of this cache: the texture already has a completeness cache, so all we need to do is getSampler(type, unit) and ask isComplete.",
+      "revId": "594cb2690653f9e0273685c31bdf80b262cf513d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
