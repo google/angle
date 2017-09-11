@@ -22,6 +22,30 @@
       "revId": "73ceb9360b0e78fd287b1c816d6d07ce13ed5f59",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ba4992c_28aca286",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-11T01:51:15Z",
+      "side": 0,
+      "message": "It didn\u0027t seem to make a difference in the aquarium demo, but I can see it having benefits for applications that mix changing textures with unchanging ones. I re-added all the cache code, but made it a part of the gl::Texture object instead of the TextureState.",
+      "parentUuid": "13275c3f_4e849511",
+      "range": {
+        "startLine": 174,
+        "startChar": 4,
+        "endLine": 174,
+        "endChar": 56
+      },
+      "revId": "73ceb9360b0e78fd287b1c816d6d07ce13ed5f59",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
