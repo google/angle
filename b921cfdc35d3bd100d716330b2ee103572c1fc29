@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e39bd353_6e19b8ba",
+        "filename": "src/tests/gl_tests/RobustBufferAccessBehaviorTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-11T04:41:55Z",
+      "side": 1,
+      "message": "Add comment for it. Thanks.",
+      "parentUuid": "c6c37143_dcd64870",
+      "range": {
+        "startLine": 103,
+        "startChar": 0,
+        "endLine": 103,
+        "endChar": 60
+      },
+      "revId": "b921cfdc35d3bd100d716330b2ee103572c1fc29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "f1af8684_21fd4a84",
         "filename": "src/tests/gl_tests/RobustBufferAccessBehaviorTest.cpp",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2017-09-07T01:01:23Z",
       "side": 1,
       "message": "This seems useless, as the above glGetError() has cleared the error state.",
+      "range": {
+        "startLine": 109,
+        "startChar": 12,
+        "endLine": 109,
+        "endChar": 33
+      },
+      "revId": "b921cfdc35d3bd100d716330b2ee103572c1fc29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "438cbddb_e909a6ac",
+        "filename": "src/tests/gl_tests/RobustBufferAccessBehaviorTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-11T04:41:55Z",
+      "side": 1,
+      "message": "Use EXPECT_GLENUM_EQ(GL_NO_ERROR, result) to replace it.",
+      "parentUuid": "f1af8684_21fd4a84",
       "range": {
         "startLine": 109,
         "startChar": 12,
@@ -68,6 +116,30 @@
       "revId": "b921cfdc35d3bd100d716330b2ee103572c1fc29",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b85a70c8_c1f46302",
+        "filename": "src/tests/gl_tests/RobustBufferAccessBehaviorTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-11T04:41:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d7e77f6e_cb041f9e",
+      "range": {
+        "startLine": 129,
+        "startChar": 0,
+        "endLine": 134,
+        "endChar": 1
+      },
+      "revId": "b921cfdc35d3bd100d716330b2ee103572c1fc29",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
