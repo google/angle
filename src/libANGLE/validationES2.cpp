@@ -4101,7 +4101,7 @@ bool ValidateCreateShader(Context *context, GLenum type)
         case GL_COMPUTE_SHADER:
             if (context->getClientVersion() < Version(3, 1))
             {
-                context->handleError(InvalidEnum() << "GL_COMPUTE_SHADER requires OpenGL ES 3.1.");
+                ANGLE_VALIDATION_ERR(context, InvalidEnum(), ES31Required);
                 return false;
             }
             break;

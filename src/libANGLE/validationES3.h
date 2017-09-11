@@ -355,9 +355,6 @@ bool ValidateDeleteTransformFeedbacks(Context *context, GLint n, const GLuint *i
 bool ValidateGenVertexArrays(Context *context, GLint n, GLuint *arrays);
 bool ValidateDeleteVertexArrays(Context *context, GLint n, const GLuint *arrays);
 
-bool ValidateGenOrDeleteES3(Context *context, GLint n);
-bool ValidateGenOrDeleteCountES3(Context *context, GLint count);
-
 bool ValidateBeginTransformFeedback(Context *context, GLenum primitiveMode);
 
 bool ValidateGetBufferPointerv(Context *context, GLenum target, GLenum pname, void **params);

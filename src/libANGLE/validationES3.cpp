@@ -109,6 +109,31 @@ bool ValidateUniformMatrixES3(Context *context,
     return ValidateUniformMatrix(context, valueType, location, count, transpose);
 }
 
+bool ValidateGenOrDeleteES3(Context *context, GLint n)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+    return ValidateGenOrDelete(context, n);
+}
+
+bool ValidateGenOrDeleteCountES3(Context *context, GLint count)
+{
+    if (context->getClientMajorVersion() < 3)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
+        return false;
+    }
+    if (count < 0)
+    {
+        ANGLE_VALIDATION_ERR(context, InvalidValue(), NegativeCount);
+        return false;
+    }
+    return true;
+}
+
 }  // anonymous namespace
 
 static bool ValidateTexImageFormatCombination(gl::Context *context,
@@ -1025,7 +1050,7 @@ bool ValidateBeginQuery(gl::Context *context, GLenum target, GLuint id)
 {
     if (context->getClientMajorVersion() < 3)
     {
-        context->handleError(InvalidOperation() << "GLES version < 3.0");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
         return false;
     }
 
@@ -1036,7 +1061,7 @@ bool ValidateEndQuery(gl::Context *context, GLenum target)
 {
     if (context->getClientMajorVersion() < 3)
     {
-        context->handleError(InvalidOperation() << "GLES version < 3.0");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
         return false;
     }
 
@@ -1047,7 +1072,7 @@ bool ValidateGetQueryiv(Context *context, GLenum target, GLenum pname, GLint *pa
 {
     if (context->getClientMajorVersion() < 3)
     {
-        context->handleError(InvalidOperation() << "GLES version < 3.0");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
         return false;
     }
 
@@ -1058,7 +1083,7 @@ bool ValidateGetQueryObjectuiv(Context *context, GLuint id, GLenum pname, GLuint
 {
     if (context->getClientMajorVersion() < 3)
     {
-        context->handleError(InvalidOperation() << "GLES version < 3.0");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
         return false;
     }
 
@@ -1074,7 +1099,7 @@ bool ValidateFramebufferTextureLayer(Context *context,
 {
     if (context->getClientMajorVersion() < 3)
     {
-        context->handleError(InvalidOperation());
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
         return false;
     }
 
@@ -1192,7 +1217,7 @@ bool ValidateClearBuffer(ValidationContext *context)
 {
     if (context->getClientMajorVersion() < 3)
     {
-        context->handleError(InvalidOperation());
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
         return false;
     }
 
@@ -1252,7 +1277,7 @@ bool ValidateGetUniformuiv(Context *context, GLuint program, GLint location, GLu
 {
     if (context->getClientMajorVersion() < 3)
     {
-        context->handleError(InvalidOperation());
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
         return false;
     }
 
@@ -1263,7 +1288,7 @@ bool ValidateReadBuffer(Context *context, GLenum src)
 {
     if (context->getClientMajorVersion() < 3)
     {
-        context->handleError(InvalidOperation());
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
         return false;
     }
 
@@ -1323,7 +1348,7 @@ bool ValidateCompressedTexImage3D(Context *context,
 {
     if (context->getClientMajorVersion() < 3)
     {
-        context->handleError(InvalidOperation());
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
         return false;
     }
 
@@ -1403,7 +1428,7 @@ bool ValidateBindVertexArray(Context *context, GLuint array)
 {
     if (context->getClientMajorVersion() < 3)
     {
-        context->handleError(InvalidOperation());
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
         return false;
     }
 
@@ -1430,7 +1455,7 @@ static bool ValidateBindBufferCommon(Context *context,
 {
     if (context->getClientMajorVersion() < 3)
     {
-        context->handleError(InvalidOperation());
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
         return false;
     }
 
@@ -1578,7 +1603,7 @@ bool ValidateProgramBinary(Context *context,
 {
     if (context->getClientMajorVersion() < 3)
     {
-        context->handleError(InvalidOperation());
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
         return false;
     }
 
@@ -1594,7 +1619,7 @@ bool ValidateGetProgramBinary(Context *context,
 {
     if (context->getClientMajorVersion() < 3)
     {
-        context->handleError(InvalidOperation());
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
         return false;
     }
 
@@ -1664,7 +1689,7 @@ bool ValidateBlitFramebuffer(Context *context,
 {
     if (context->getClientMajorVersion() < 3)
     {
-        context->handleError(InvalidOperation());
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
         return false;
     }
 
@@ -1836,7 +1861,7 @@ bool ValidateCopyTexSubImage3D(Context *context,
 {
     if (context->getClientMajorVersion() < 3)
     {
-        context->handleError(InvalidOperation());
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
         return false;
     }
 
@@ -1858,7 +1883,7 @@ bool ValidateTexImage3D(Context *context,
 {
     if (context->getClientMajorVersion() < 3)
     {
-        context->handleError(InvalidOperation());
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
         return false;
     }
 
@@ -1882,7 +1907,7 @@ bool ValidateTexImage3DRobustANGLE(Context *context,
 {
     if (context->getClientMajorVersion() < 3)
     {
-        context->handleError(InvalidOperation());
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
         return false;
     }
 
@@ -1911,7 +1936,7 @@ bool ValidateTexSubImage3D(Context *context,
 {
     if (context->getClientMajorVersion() < 3)
     {
-        context->handleError(InvalidOperation());
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
         return false;
     }
 
@@ -1936,7 +1961,7 @@ bool ValidateTexSubImage3DRobustANGLE(Context *context,
 {
     if (context->getClientMajorVersion() < 3)
     {
-        context->handleError(InvalidOperation());
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
         return false;
     }
 
@@ -1965,7 +1990,7 @@ bool ValidateCompressedTexSubImage3D(Context *context,
 {
     if (context->getClientMajorVersion() < 3)
     {
-        context->handleError(InvalidOperation());
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
         return false;
     }
 
@@ -2076,31 +2101,6 @@ bool ValidateDeleteVertexArrays(Context *context, GLint n, const GLuint *)
     return ValidateGenOrDeleteES3(context, n);
 }
 
-bool ValidateGenOrDeleteES3(Context *context, GLint n)
-{
-    if (context->getClientMajorVersion() < 3)
-    {
-        context->handleError(InvalidOperation() << "Context does not support GLES3.");
-        return false;
-    }
-    return ValidateGenOrDelete(context, n);
-}
-
-bool ValidateGenOrDeleteCountES3(Context *context, GLint count)
-{
-    if (context->getClientMajorVersion() < 3)
-    {
-        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
-        return false;
-    }
-    if (count < 0)
-    {
-        context->handleError(InvalidValue() << "count < 0");
-        return false;
-    }
-    return true;
-}
-
 bool ValidateBeginTransformFeedback(Context *context, GLenum primitiveMode)
 {
     if (context->getClientMajorVersion() < 3)
@@ -2176,7 +2176,7 @@ bool ValidateUnmapBuffer(Context *context, GLenum target)
 {
     if (context->getClientMajorVersion() < 3)
     {
-        context->handleError(InvalidOperation());
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
         return false;
     }
 
@@ -2552,7 +2552,7 @@ bool ValidateRenderbufferStorageMultisample(ValidationContext *context,
 {
     if (context->getClientMajorVersion() < 3)
     {
-        context->handleError(InvalidOperation());
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
         return false;
     }
 
@@ -2705,7 +2705,7 @@ bool ValidateDrawElementsInstanced(ValidationContext *context,
 {
     if (context->getClientMajorVersion() < 3)
     {
-        context->handleError(InvalidOperation() << "Requires a GLES 3.0 or higher context.");
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
         return false;
     }
 
@@ -3512,7 +3512,7 @@ bool ValidateIsSampler(Context *context, GLuint sampler)
 {
     if (context->getClientMajorVersion() < 3)
     {
-        context->handleError(InvalidOperation());
+        ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required);
         return false;
     }
 
