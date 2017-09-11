@@ -235,7 +235,7 @@ if (build_angle_deqp_tests) {
       # This has to be GNU_SOURCE as on Linux dEQP uses syscall()
       defines += [ "_GNU_SOURCE" ]
     }
-    if (is_android) {
+    if (is_android || is_mac) {
       # _XOPEN_SOURCE=600 is what is used in deqp/src/Android.mk
       defines += [ "_XOPEN_SOURCE=600" ]
     }
@@ -254,7 +254,7 @@ if (build_angle_deqp_tests) {
     ]
   }
 
-  if (is_linux || is_android) {
+  if (is_linux || is_android || is_mac) {
     deqp_undefine_configs += [ "//build/config/gcc:no_exceptions" ]
   }
 
@@ -291,7 +291,7 @@ if (build_angle_deqp_tests) {
     if (is_win) {
       sources += rebase_path(deqp_gypi.deqp_libtester_sources_win, ".", "../..")
     }
-    if (is_linux || is_android) {
+    if (is_linux || is_android || is_mac) {
       sources +=
           rebase_path(deqp_gypi.deqp_libtester_sources_unix, ".", "../..")
     }
