@@ -71,6 +71,30 @@
     },
     {
       "key": {
+        "uuid": "25313b77_06ebeda4",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 1459,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-11T16:52:05Z",
+      "side": 1,
+      "message": "My mistake for suggesting that the array should live here.  Would a static constexpr not be put in the data section?",
+      "parentUuid": "1209714f_4401dcf3",
+      "range": {
+        "startLine": 1449,
+        "startChar": 0,
+        "endLine": 1459,
+        "endChar": 0
+      },
+      "revId": "1ec25f7b7f9f7fc93c1d6c1479f598dc9f3112ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6418d729_a41b405a",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 28
