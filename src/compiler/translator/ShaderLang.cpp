@@ -202,6 +202,14 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     resources->MaxFunctionParameters   = 1024;
 
     // ES 3.1 Revision 4, 7.2 Built-in Constants
+
+    // ES 3.1, Revision 4, 8.13 Texture minification
+    // "The value of MIN_PROGRAM_TEXTURE_GATHER_OFFSET must be less than or equal to the value of
+    // MIN_PROGRAM_TEXEL_OFFSET. The value of MAX_PROGRAM_TEXTURE_GATHER_OFFSET must be greater than
+    // or equal to the value of MAX_PROGRAM_TEXEL_OFFSET"
+    resources->MinProgramTextureGatherOffset = -8;
+    resources->MaxProgramTextureGatherOffset = 7;
+
     resources->MaxImageUnits            = 4;
     resources->MaxVertexImageUniforms   = 0;
     resources->MaxFragmentImageUniforms = 0;

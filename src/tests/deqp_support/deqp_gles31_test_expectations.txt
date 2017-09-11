@@ -35,6 +35,7 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.program_interface_query.transform_feedback_varying.type.vertex_fragment.struct.* = SKIP
 1442 D3D11 : dEQP-GLES31.functional.vertex_attribute_binding.* = SKIP
 1442 D3D11 : dEQP-GLES31.functional.stencil_texturing.* = SKIP
+1442 D3D11 : dEQP-GLES31.functional.texture.gather.* = SKIP
 
 // OpenGL Failing Tests
 1442 OPENGL : dEQP-GLES31.functional.shaders.builtin_functions.texture_size.samples_1_texture_2d_array = FAIL
@@ -1237,7 +1238,6 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.stencil_texturing.render.depth24_stencil8_draw = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.stencil_texturing.misc.compare_mode_effect = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.stencil_texturing.misc.base_level = FAIL
-1442 OPENGL D3D11 : dEQP-GLES31.functional.texture.gather.* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.boolean.sample_mask_* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.integer.dispatch_indirect_buffer_binding_* = FAIL
 1442 OPENGL D3D11 : dEQP-GLES31.functional.state_query.integer.program_pipeline_binding_* = FAIL

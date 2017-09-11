@@ -666,6 +666,39 @@ void InsertBuiltInFunctions(sh::GLenum type,
 
     symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, gvec4, "texelFetch", gsampler2DMS, int2, int1);
 
+    // Insert all variations of textureGather.
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, gvec4, "textureGather", gsampler2D, float2);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, gvec4, "textureGather", gsampler2D, float2, int1);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, gvec4, "textureGather", gsampler2DArray, float3);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, gvec4, "textureGather", gsampler2DArray, float3,
+                              int1);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, gvec4, "textureGather", gsamplerCube, float3);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, gvec4, "textureGather", gsamplerCube, float3, int1);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, float4, "textureGather", sampler2DShadow, float2);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, float4, "textureGather", sampler2DShadow, float2,
+                              float1);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, float4, "textureGather", sampler2DArrayShadow,
+                              float3);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, float4, "textureGather", sampler2DArrayShadow,
+                              float3, float1);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, float4, "textureGather", samplerCubeShadow, float3);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, float4, "textureGather", samplerCubeShadow, float3,
+                              float1);
+
+    // Insert all variations of textureGatherOffset.
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, gvec4, "textureGatherOffset", gsampler2D, float2,
+                              int2);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, gvec4, "textureGatherOffset", gsampler2D, float2,
+                              int2, int1);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, gvec4, "textureGatherOffset", gsampler2DArray,
+                              float3, int2);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, gvec4, "textureGatherOffset", gsampler2DArray,
+                              float3, int2, int1);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, float4, "textureGatherOffset", sampler2DShadow,
+                              float2, float1, int2);
+    symbolTable.insertBuiltIn(ESSL3_1_BUILTINS, float4, "textureGatherOffset", sampler2DArrayShadow,
+                              float3, float1, int2);
+
     if (type == GL_COMPUTE_SHADER)
     {
         symbolTable.insertBuiltInFunctionNoParameters(ESSL3_1_BUILTINS, EOpBarrier, voidType,

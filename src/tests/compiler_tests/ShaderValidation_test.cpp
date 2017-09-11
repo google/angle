@@ -4751,3 +4751,86 @@ TEST_F(FragmentShaderValidationTest, AssignValueToCentroidIn)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test that shader compilation fails if the component argument is dynamic.
+TEST_F(FragmentShaderValidationTest, DynamicComponentTextureGather)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "precision mediump sampler2D;\n"
+        "uniform sampler2D tex;\n"
+        "out vec4 o_color;\n"
+        "uniform int uComp;\n"
+        "void main()\n"
+        "{\n"
+        "    o_color = textureGather(tex, vec2(0), uComp);"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test that shader compilation fails if the component argument to textureGather has a negative
+// value.
+TEST_F(FragmentShaderValidationTest, TextureGatherNegativeComponent)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "precision mediump sampler2D;\n"
+        "uniform sampler2D tex;\n"
+        "out vec4 o_color;\n"
+        "void main()\n"
+        "{\n"
+        "    o_color = textureGather(tex, vec2(0), -1);"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test that shader compilation fails if the component argument to textureGather has a value greater
+// than 3.
+TEST_F(FragmentShaderValidationTest, TextureGatherTooGreatComponent)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "precision mediump sampler2D;\n"
+        "uniform sampler2D tex;\n"
+        "out vec4 o_color;\n"
+        "void main()\n"
+        "{\n"
+        "    o_color = textureGather(tex, vec2(0), 4);"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}
+
+// Test that shader compilation fails if the offset is less than the minimum value.
+TEST_F(FragmentShaderValidationTest, TextureGatherTooGreatOffset)
+{
+    const std::string &shaderString =
+        "#version 310 es\n"
+        "precision mediump float;\n"
+        "precision mediump sampler2D;\n"
+        "uniform sampler2D tex;\n"
+        "out vec4 o_color;\n"
+        "void main()\n"
+        "{\n"
+        "    o_color = textureGatherOffset(tex, vec2(0), ivec2(-100), 2);"
+        "}\n";
+
+    if (compile(shaderString))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}

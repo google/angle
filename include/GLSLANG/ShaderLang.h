@@ -25,7 +25,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 181
+#define ANGLE_SH_VERSION 182
 
 enum ShShaderSpec
 {
@@ -342,6 +342,10 @@ struct ShBuiltInResources
     int MaxFunctionParameters;
 
     // GLES 3.1 constants
+
+    // texture gather offset constraints.
+    int MinProgramTextureGatherOffset;
+    int MaxProgramTextureGatherOffset;
 
     // maximum number of available image units
     int MaxImageUnits;

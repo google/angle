@@ -189,6 +189,8 @@ TParseContext::TParseContext(TSymbolTable &symt,
       mUsesSecondaryOutputs(false),
       mMinProgramTexelOffset(resources.MinProgramTexelOffset),
       mMaxProgramTexelOffset(resources.MaxProgramTexelOffset),
+      mMinProgramTextureGatherOffset(resources.MinProgramTextureGatherOffset),
+      mMaxProgramTextureGatherOffset(resources.MaxProgramTextureGatherOffset),
       mComputeShaderLocalSizeDeclared(false),
       mNumViews(-1),
       mMaxNumViews(resources.MaxViewsOVR),
@@ -5267,12 +5269,79 @@ TIntermBranch *TParseContext::addBranch(TOperator op,
     return node;
 }
 
+void TParseContext::checkTextureGather(TIntermAggregate *functionCall)
+{
+    ASSERT(functionCall->getOp() == EOpCallBuiltInFunction);
+    const TString &name        = functionCall->getFunctionSymbolInfo()->getName();
+    bool isTextureGather       = (name == "textureGather");
+    bool isTextureGatherOffset = (name == "textureGatherOffset");
+    if (isTextureGather || isTextureGatherOffset)
+    {
+        TIntermNode *componentNode = nullptr;
+        TIntermSequence *arguments = functionCall->getSequence();
+        ASSERT(arguments->size() >= 2u && arguments->size() <= 4u);
+        const TIntermTyped *sampler = arguments->front()->getAsTyped();
+        ASSERT(sampler != nullptr);
+        switch (sampler->getBasicType())
+        {
+            case EbtSampler2D:
+            case EbtISampler2D:
+            case EbtUSampler2D:
+            case EbtSampler2DArray:
+            case EbtISampler2DArray:
+            case EbtUSampler2DArray:
+                if ((isTextureGather && arguments->size() == 3u) ||
+                    (isTextureGatherOffset && arguments->size() == 4u))
+                {
+                    componentNode = arguments->back();
+                }
+                break;
+            case EbtSamplerCube:
+            case EbtISamplerCube:
+            case EbtUSamplerCube:
+                ASSERT(!isTextureGatherOffset);
+                if (arguments->size() == 3u)
+                {
+                    componentNode = arguments->back();
+                }
+                break;
+            case EbtSampler2DShadow:
+            case EbtSampler2DArrayShadow:
+            case EbtSamplerCubeShadow:
+                break;
+            default:
+                UNREACHABLE();
+                break;
+        }
+        if (componentNode)
+        {
+            const TIntermConstantUnion *componentConstantUnion =
+                componentNode->getAsConstantUnion();
+            if (componentNode->getAsTyped()->getQualifier() != EvqConst || !componentConstantUnion)
+            {
+                error(functionCall->getLine(), "Texture component must be a constant expression",
+                      name.c_str());
+            }
+            else
+            {
+                int component = componentConstantUnion->getIConst(0);
+                if (component < 0 || component > 3)
+                {
+                    error(functionCall->getLine(), "Component must be in the range [0;3]",
+                          name.c_str());
+                }
+            }
+        }
+    }
+}
+
 void TParseContext::checkTextureOffsetConst(TIntermAggregate *functionCall)
 {
     ASSERT(functionCall->getOp() == EOpCallBuiltInFunction);
     const TString &name        = functionCall->getFunctionSymbolInfo()->getName();
     TIntermNode *offset        = nullptr;
     TIntermSequence *arguments = functionCall->getSequence();
+    bool useTextureGatherOffsetConstraints = false;
     if (name == "texelFetchOffset" || name == "textureLodOffset" ||
         name == "textureProjLodOffset" || name == "textureGradOffset" ||
         name == "textureProjGradOffset")
@@ -5284,6 +5353,31 @@ void TParseContext::checkTextureOffsetConst(TIntermAggregate *functionCall)
         // A bias parameter might follow the offset parameter.
         ASSERT(arguments->size() >= 3);
         offset = (*arguments)[2];
+    }
+    else if (name == "textureGatherOffset")
+    {
+        ASSERT(arguments->size() >= 3u);
+        const TIntermTyped *sampler = arguments->front()->getAsTyped();
+        ASSERT(sampler != nullptr);
+        switch (sampler->getBasicType())
+        {
+            case EbtSampler2D:
+            case EbtISampler2D:
+            case EbtUSampler2D:
+            case EbtSampler2DArray:
+            case EbtISampler2DArray:
+            case EbtUSampler2DArray:
+                offset = (*arguments)[2];
+                break;
+            case EbtSampler2DShadow:
+            case EbtSampler2DArrayShadow:
+                offset = (*arguments)[3];
+                break;
+            default:
+                UNREACHABLE();
+                break;
+        }
+        useTextureGatherOffsetConstraints = true;
     }
     if (offset != nullptr)
     {
@@ -5298,10 +5392,14 @@ void TParseContext::checkTextureOffsetConst(TIntermAggregate *functionCall)
             ASSERT(offsetConstantUnion->getBasicType() == EbtInt);
             size_t size                  = offsetConstantUnion->getType().getObjectSize();
             const TConstantUnion *values = offsetConstantUnion->getUnionArrayPointer();
+            int minOffsetValue = useTextureGatherOffsetConstraints ? mMinProgramTextureGatherOffset
+                                                                   : mMinProgramTexelOffset;
+            int maxOffsetValue = useTextureGatherOffsetConstraints ? mMaxProgramTextureGatherOffset
+                                                                   : mMaxProgramTexelOffset;
             for (size_t i = 0u; i < size; ++i)
             {
                 int offsetValue = values[i].getIConst();
-                if (offsetValue > mMaxProgramTexelOffset || offsetValue < mMinProgramTexelOffset)
+                if (offsetValue > maxOffsetValue || offsetValue < minOffsetValue)
                 {
                     std::stringstream tokenStream;
                     tokenStream << offsetValue;
@@ -5547,6 +5645,7 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(TFunction *fnCall,
                 {
                     callNode = TIntermAggregate::CreateBuiltInFunctionCall(*fnCandidate, arguments);
                     checkTextureOffsetConst(callNode);
+                    checkTextureGather(callNode);
                     checkImageMemoryAccessForBuiltinFunctions(callNode);
                 }
                 else

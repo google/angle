@@ -721,6 +721,8 @@ void TCompiler::setResourceString()
         << ":MaxViewsOVR:" << compileResources.MaxViewsOVR
         << ":NV_draw_buffers:" << compileResources.NV_draw_buffers
         << ":WEBGL_debug_shader_precision:" << compileResources.WEBGL_debug_shader_precision
+        << ":MinProgramTextureGatherOffset:" << compileResources.MinProgramTextureGatherOffset
+        << ":MaxProgramTextureGatherOffset:" << compileResources.MaxProgramTextureGatherOffset
         << ":MaxImageUnits:" << compileResources.MaxImageUnits
         << ":MaxVertexImageUniforms:" << compileResources.MaxVertexImageUniforms
         << ":MaxFragmentImageUniforms:" << compileResources.MaxFragmentImageUniforms

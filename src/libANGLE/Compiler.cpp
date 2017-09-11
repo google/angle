@@ -88,6 +88,8 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const ContextState &state)
     mResources.MaxProgramTexelOffset   = caps.maxProgramTexelOffset;
 
     // GLSL ES 3.1 constants
+    mResources.MaxProgramTextureGatherOffset    = caps.maxProgramTextureGatherOffset;
+    mResources.MinProgramTextureGatherOffset    = caps.minProgramTextureGatherOffset;
     mResources.MaxImageUnits                    = caps.maxImageUnits;
     mResources.MaxVertexImageUniforms           = caps.maxVertexImageUniforms;
     mResources.MaxFragmentImageUniforms         = caps.maxFragmentImageUniforms;
