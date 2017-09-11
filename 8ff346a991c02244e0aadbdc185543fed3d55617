@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "54fe8b77_f406ca46",
+        "filename": "src/compiler/translator/ExtensionBehavior.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-11T09:49:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa7c328d_c45a6c5d",
+      "revId": "8ff346a991c02244e0aadbdc185543fed3d55617",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "278f26ff_222ede40",
         "filename": "src/compiler/translator/ExtensionBehavior.h",
         "patchSetId": 8
@@ -54,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "d1732c00_f34a853b",
+        "filename": "src/compiler/translator/ExtensionBehavior.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-11T09:49:30Z",
+      "side": 1,
+      "message": "Named differently from the usual convention for naming enums in the code style. If we can make an exception for practicality, that\u0027s good.",
+      "parentUuid": "98ec59cb_7bae66ad",
+      "revId": "8ff346a991c02244e0aadbdc185543fed3d55617",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "68d9eafd_f5e9d61c",
         "filename": "src/compiler/translator/ExtensionBehavior.h",
         "patchSetId": 8
@@ -68,6 +104,24 @@
       "revId": "8ff346a991c02244e0aadbdc185543fed3d55617",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b2cdc51_98780299",
+        "filename": "src/compiler/translator/ExtensionBehavior.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-11T09:49:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "68d9eafd_f5e9d61c",
+      "revId": "8ff346a991c02244e0aadbdc185543fed3d55617",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -88,6 +142,24 @@
     },
     {
       "key": {
+        "uuid": "d9740abc_07c04a5d",
+        "filename": "src/compiler/translator/ExtensionBehavior.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-11T09:49:30Z",
+      "side": 1,
+      "message": "That would be cool, could probably make lots of things faster.",
+      "parentUuid": "e8904d0e_49e4677a",
+      "revId": "8ff346a991c02244e0aadbdc185543fed3d55617",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3de9f1c7_be8b905d",
         "filename": "src/compiler/translator/ExtensionBehavior.h",
         "patchSetId": 8
@@ -102,6 +174,24 @@
       "revId": "8ff346a991c02244e0aadbdc185543fed3d55617",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8bb091b_6cd48ce9",
+        "filename": "src/compiler/translator/ExtensionBehavior.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-11T09:49:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3de9f1c7_be8b905d",
+      "revId": "8ff346a991c02244e0aadbdc185543fed3d55617",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -122,6 +212,24 @@
     },
     {
       "key": {
+        "uuid": "5e10b2f8_7951dad7",
+        "filename": "src/compiler/translator/OutputHLSL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-11T09:49:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1560ce43_e7db2f89",
+      "revId": "8ff346a991c02244e0aadbdc185543fed3d55617",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "90589c3a_1536992e",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 8
@@ -136,6 +244,24 @@
       "revId": "8ff346a991c02244e0aadbdc185543fed3d55617",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef64a58d_ad89b768",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1639,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-11T09:49:30Z",
+      "side": 1,
+      "message": "Not needed as you say, fixed it.",
+      "parentUuid": "90589c3a_1536992e",
+      "revId": "8ff346a991c02244e0aadbdc185543fed3d55617",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
