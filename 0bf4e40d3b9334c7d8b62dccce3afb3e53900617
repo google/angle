@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8dbfba2b_d10e0495",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 778,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-11T14:37:02Z",
+      "side": 1,
+      "message": "use std::numeric_limits\u003cT\u003e::max()",
+      "range": {
+        "startLine": 778,
+        "startChar": 37,
+        "endLine": 778,
+        "endChar": 44
+      },
+      "revId": "0bf4e40d3b9334c7d8b62dccce3afb3e53900617",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7f1d56e_98e4348c",
+        "filename": "src/common/utilities.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-11T14:37:02Z",
+      "side": 1,
+      "message": "instead of making a size_t param, maybe try uint32_t and uint64_t versions? I don\u0027t think you\u0027ll need a static cast in queryutils then.",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 98,
+        "endChar": 0
+      },
+      "revId": "0bf4e40d3b9334c7d8b62dccce3afb3e53900617",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
