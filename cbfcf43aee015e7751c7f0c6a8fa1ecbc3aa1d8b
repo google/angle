@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "21e0651f_52f597aa",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 23
+      },
+      "lineNbr": 478,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-11T14:44:42Z",
+      "side": 1,
+      "message": "Optionally, make this an ASSERT.",
+      "parentUuid": "85fb2542_d831a1cb",
+      "range": {
+        "startLine": 478,
+        "startChar": 11,
+        "endLine": 478,
+        "endChar": 27
+      },
+      "revId": "cbfcf43aee015e7751c7f0c6a8fa1ecbc3aa1d8b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "497c269d_266b2b91",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 23

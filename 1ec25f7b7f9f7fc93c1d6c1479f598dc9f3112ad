@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "97be32f6_9c18864e",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 4111,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-11T14:44:42Z",
+      "side": 1,
+      "message": "nit: \"queried\"",
+      "range": {
+        "startLine": 4111,
+        "startChar": 37,
+        "endLine": 4111,
+        "endChar": 44
+      },
+      "revId": "1ec25f7b7f9f7fc93c1d6c1479f598dc9f3112ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8931c2a1_a052d24f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-11T14:44:42Z",
+      "side": 1,
+      "message": "can you ASSERT this is a non-null return value?",
+      "range": {
+        "startLine": 466,
+        "startChar": 37,
+        "endLine": 466,
+        "endChar": 48
+      },
+      "revId": "1ec25f7b7f9f7fc93c1d6c1479f598dc9f3112ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1209714f_4401dcf3",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 1459,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-11T14:44:42Z",
+      "side": 1,
+      "message": "I think you can put this in the static scope. It should be stored entirely in the data part of the program and not use any static initializers. Please put it at the top of the file in an anonymous namespace block and prefix it \"kSamplePositions\"",
+      "range": {
+        "startLine": 1449,
+        "startChar": 0,
+        "endLine": 1459,
+        "endChar": 0
+      },
+      "revId": "1ec25f7b7f9f7fc93c1d6c1479f598dc9f3112ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6418d729_a41b405a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 1460,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-11T14:44:42Z",
+      "side": 1,
+      "message": "nit: \"index\". \"indices\" is only for plural",
+      "range": {
+        "startLine": 1460,
+        "startChar": 11,
+        "endLine": 1460,
+        "endChar": 18
+      },
+      "revId": "1ec25f7b7f9f7fc93c1d6c1479f598dc9f3112ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96007bcd_c5cc68fc",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 645,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-11T14:44:42Z",
+      "side": 1,
+      "message": "The validation here has changed and the error message is no longer correct. do we want to update the error message? Or is the validation incorrect now.",
+      "range": {
+        "startLine": 645,
+        "startChar": 48,
+        "endLine": 645,
+        "endChar": 92
+      },
+      "revId": "1ec25f7b7f9f7fc93c1d6c1479f598dc9f3112ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a2be2d30_85dc1451",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 28
+      },
+      "lineNbr": 1348,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-11T14:44:42Z",
+      "side": 1,
+      "message": "nit: if you know why these tests are failing, can you leave a comment?",
+      "range": {
+        "startLine": 1331,
+        "startChar": 0,
+        "endLine": 1348,
+        "endChar": 94
+      },
+      "revId": "1ec25f7b7f9f7fc93c1d6c1479f598dc9f3112ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
