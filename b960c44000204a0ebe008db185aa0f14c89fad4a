@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "1d4e9869_03c2c47a",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1116,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-11T18:01:12Z",
+      "side": 1,
+      "message": "\"bind to create\" is the OpenGL mechanism allowing, for example, to call glBindTexture(GL_TEXTURE_2D, 6) without having called glGenTextures before. It will be equivalent to \"glGenTextures(1, \u0026n)\" returning 6, then \"glBintTexture(GL_TEXTURE_2D, 6)\". The checkFooAllocation method implements these semantics by generating the ID if it didn\u0027t exist before. I was suggesting using a simpler variant that doesn\u0027t generate an ID if needed, but TypedResourceManager doesn\u0027t seem to have anything like that. So the code LGTM as is.",
+      "parentUuid": "66262b49_60691f81",
+      "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7af8f96b_72a08b61",
         "filename": "src/libANGLE/ProgramPipeline.cpp",
         "patchSetId": 9
@@ -381,6 +399,24 @@
       "side": 1,
       "message": "Ack.\n\nThe current tests verifies object generation and deletion, so I think it is better to explicitly call GenProgramPipelines and DeleteProgramPipelines, so I prefer to use GLuint, instead of GLProgramPipeline. \n\nHowever, I would like to use it in later tests for useProgramStages and activeShaderProgram and so on.",
       "parentUuid": "f394a7e0_b0a7a3b0",
+      "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "851271d2_422dad0e",
+        "filename": "src/tests/gl_tests/ProgramPipelineTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-11T18:01:12Z",
+      "side": 1,
+      "message": "Sounds good, thanks!",
+      "parentUuid": "ac1b28cd_c1871990",
       "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
