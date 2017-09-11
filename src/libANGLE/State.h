@@ -536,6 +536,18 @@ class State : public OnAttachmentDirtyReceiver, angle::NonCopyable
     typedef std::map<GLenum, TextureBindingVector> TextureBindingMap;
     TextureBindingMap mSamplerTextures;
 
+    // Texture Completeness Caching
+    // ----------------------------
+    // The texture completeness cache uses dirty bits to avoid having to scan the list
+    // of textures each draw call. This gl::State class implements OnAttachmentDirtyReceiver,
+    // and keeps an array of bindings to the Texture class. When the Textures are marked dirty,
+    // they send messages to the State class (and any Framebuffers they're attached to) via the
+    // State::signal method (see above). Internally this then invalidates the completeness cache.
+    //
+    // Note this requires that we also invalidate the completeness cache manually on events like
+    // re-binding textures/samplers or a change in the program. For more information see the
+    // signal_utils.h header and the design doc linked there.
+
     // A cache of complete textures. nullptr indicates unbound or incomplete.
     // Don't use BindingPointer because this cache is only valid within a draw call.
     // Also stores a notification channel to the texture itself to handle texture change events.
