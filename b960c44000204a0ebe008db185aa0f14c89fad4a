@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "66262b49_60691f81",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1116,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-09-11T17:50:43Z",
+      "side": 1,
+      "message": "checkFooAllocation will create the object (say ProgramPipeline created by its constructor), otherwise, it only get an id but bind nullptr to that id in ObjectMap in ResourceManager. So I think it should call checkProgramPipelineAllocation. \nIn addition, what do you mean that program pipeline has no semantic to support \"bind to create\" ? Thanks a lot!",
+      "parentUuid": "6eea4669_623dbfde",
+      "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7af8f96b_72a08b61",
         "filename": "src/libANGLE/ProgramPipeline.cpp",
         "patchSetId": 9
@@ -33,6 +51,24 @@
       "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fc11581e_25138cbb",
+        "filename": "src/libANGLE/ProgramPipeline.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-09-11T17:50:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7af8f96b_72a08b61",
+      "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "c71a232d_191e2b1e",
+        "filename": "src/libANGLE/ProgramPipeline.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-09-11T17:50:43Z",
+      "side": 1,
+      "message": "Thanks for pointing out this. Debug.h is required by LabeledObject. The others are really unnecessary.",
+      "parentUuid": "cd16f57c_1dd2e1c6",
+      "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a9932193_05ac72da",
         "filename": "src/libANGLE/ProgramPipeline.h",
         "patchSetId": 9
@@ -67,6 +121,24 @@
       "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "72ce730a_edc3b8e9",
+        "filename": "src/libANGLE/ProgramPipeline.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-09-11T17:50:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a9932193_05ac72da",
+      "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "5b4af397_243703b8",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/ProgramPipeline11.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-09-11T17:50:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b9c349ab_49d8a080",
+      "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f615140_200e72bf",
         "filename": "src/libANGLE/renderer/gl/ProgramPipelineGL.cpp",
         "patchSetId": 9
@@ -101,6 +191,24 @@
       "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ffe32c23_f869b600",
+        "filename": "src/libANGLE/renderer/gl/ProgramPipelineGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-09-11T17:50:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5f615140_200e72bf",
+      "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -121,6 +229,24 @@
     },
     {
       "key": {
+        "uuid": "7ee92c7a_f8b510d2",
+        "filename": "src/libANGLE/renderer/null/ProgramPipelineNULL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-09-11T17:50:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3edc9343_4c73791d",
+      "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e03c6edf_5afaca16",
         "filename": "src/libANGLE/renderer/vulkan/ProgramPipelineVk.cpp",
         "patchSetId": 9
@@ -135,6 +261,24 @@
       "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "88f9e624_fd28d59b",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramPipelineVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-09-11T17:50:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e03c6edf_5afaca16",
+      "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -155,6 +299,24 @@
     },
     {
       "key": {
+        "uuid": "69c34903_54a111f6",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1233,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-09-11T17:50:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4db7e91c_a298ae20",
+      "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ec8c159e_ca7439e8",
         "filename": "src/libANGLE/validationES31.h",
         "patchSetId": 9
@@ -169,6 +331,24 @@
       "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "31f3c5e0_6bddfcbd",
+        "filename": "src/libANGLE/validationES31.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-09-11T17:50:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ec8c159e_ca7439e8",
+      "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -189,6 +369,24 @@
     },
     {
       "key": {
+        "uuid": "ac1b28cd_c1871990",
+        "filename": "src/tests/gl_tests/ProgramPipelineTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-09-11T17:50:43Z",
+      "side": 1,
+      "message": "Ack.\n\nThe current tests verifies object generation and deletion, so I think it is better to explicitly call GenProgramPipelines and DeleteProgramPipelines, so I prefer to use GLuint, instead of GLProgramPipeline. \n\nHowever, I would like to use it in later tests for useProgramStages and activeShaderProgram and so on.",
+      "parentUuid": "f394a7e0_b0a7a3b0",
+      "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bfd6f0de_0d517f63",
         "filename": "src/tests/gl_tests/ProgramPipelineTest.cpp",
         "patchSetId": 9
@@ -203,6 +401,24 @@
       "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8481cbcd_2a197c8b",
+        "filename": "src/tests/gl_tests/ProgramPipelineTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-09-11T17:50:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bfd6f0de_0d517f63",
+      "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
