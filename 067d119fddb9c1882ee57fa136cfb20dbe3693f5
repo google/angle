@@ -22,6 +22,30 @@
       "revId": "067d119fddb9c1882ee57fa136cfb20dbe3693f5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c4ef4787_4960e492",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1613,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-11T17:30:02Z",
+      "side": 1,
+      "message": "Done. Maybe after an internal error we should flag all dirty bits.\n\n(Originally I wanted it before so I could ASSERT that it was not true after the function call, but I left that out because it seemed a bit pedantic)",
+      "parentUuid": "339ec321_6285c257",
+      "range": {
+        "startLine": 1613,
+        "startChar": 8,
+        "endLine": 1613,
+        "endChar": 31
+      },
+      "revId": "067d119fddb9c1882ee57fa136cfb20dbe3693f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
