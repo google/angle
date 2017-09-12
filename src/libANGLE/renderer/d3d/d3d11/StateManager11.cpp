@@ -1689,10 +1689,10 @@ void StateManager11::setInputLayout(const d3d11::InputLayout *inputLayout)
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
     if (inputLayout == nullptr)
     {
-        if (mCurrentInputLayout != 0)
+        if (!mCurrentInputLayout.empty())
         {
             deviceContext->IASetInputLayout(nullptr);
-            mCurrentInputLayout = 0;
+            mCurrentInputLayout.clear();
             mInputLayoutIsDirty = true;
         }
     }
@@ -1878,7 +1878,7 @@ void StateManager11::setDrawShaders(const d3d11::VertexShader *vertexShader,
 
 void StateManager11::setVertexShader(const d3d11::VertexShader *shader)
 {
-    ResourceSerial serial = shader ? shader->getSerial() : 0;
+    ResourceSerial serial = shader ? shader->getSerial() : ResourceSerial(0);
 
     if (serial != mAppliedVertexShader)
     {
@@ -1890,7 +1890,7 @@ void StateManager11::setVertexShader(const d3d11::VertexShader *shader)
 
 void StateManager11::setGeometryShader(const d3d11::GeometryShader *shader)
 {
-    ResourceSerial serial = shader ? shader->getSerial() : 0;
+    ResourceSerial serial = shader ? shader->getSerial() : ResourceSerial(0);
 
     if (serial != mAppliedGeometryShader)
     {
@@ -1902,7 +1902,7 @@ void StateManager11::setGeometryShader(const d3d11::GeometryShader *shader)
 
 void StateManager11::setPixelShader(const d3d11::PixelShader *shader)
 {
-    ResourceSerial serial = shader ? shader->getSerial() : 0;
+    ResourceSerial serial = shader ? shader->getSerial() : ResourceSerial(0);
 
     if (serial != mAppliedPixelShader)
     {
@@ -1914,7 +1914,7 @@ void StateManager11::setPixelShader(const d3d11::PixelShader *shader)
 
 void StateManager11::setComputeShader(const d3d11::ComputeShader *shader)
 {
-    ResourceSerial serial = shader ? shader->getSerial() : 0;
+    ResourceSerial serial = shader ? shader->getSerial() : ResourceSerial(0);
 
     if (serial != mAppliedComputeShader)
     {
@@ -2422,20 +2422,20 @@ gl::Error StateManager11::applyUniforms(ProgramD3D *programD3D)
         deviceContext->Unmap(pixelConstantBuffer->get(), 0);
     }
 
-    ID3D11Buffer *appliedVertexConstants = vertexConstantBuffer->get();
-    if (mCurrentVertexConstantBuffer != reinterpret_cast<uintptr_t>(appliedVertexConstants))
+    if (mCurrentVertexConstantBuffer != vertexConstantBuffer->getSerial())
     {
         deviceContext->VSSetConstantBuffers(
-            d3d11::RESERVED_CONSTANT_BUFFER_SLOT_DEFAULT_UNIFORM_BLOCK, 1, &appliedVertexConstants);
-        mCurrentVertexConstantBuffer = reinterpret_cast<uintptr_t>(appliedVertexConstants);
+            d3d11::RESERVED_CONSTANT_BUFFER_SLOT_DEFAULT_UNIFORM_BLOCK, 1,
+            vertexConstantBuffer->getPointer());
+        mCurrentVertexConstantBuffer = vertexConstantBuffer->getSerial();
     }
 
-    ID3D11Buffer *appliedPixelConstants = pixelConstantBuffer->get();
-    if (mCurrentPixelConstantBuffer != reinterpret_cast<uintptr_t>(appliedPixelConstants))
+    if (mCurrentPixelConstantBuffer != pixelConstantBuffer->getSerial())
     {
         deviceContext->PSSetConstantBuffers(
-            d3d11::RESERVED_CONSTANT_BUFFER_SLOT_DEFAULT_UNIFORM_BLOCK, 1, &appliedPixelConstants);
-        mCurrentPixelConstantBuffer = reinterpret_cast<uintptr_t>(appliedPixelConstants);
+            d3d11::RESERVED_CONSTANT_BUFFER_SLOT_DEFAULT_UNIFORM_BLOCK, 1,
+            pixelConstantBuffer->getPointer());
+        mCurrentPixelConstantBuffer = pixelConstantBuffer->getSerial();
     }
 
     programD3D->markUniformsClean();
@@ -2484,12 +2484,11 @@ gl::Error StateManager11::applyDriverUniforms(const ProgramD3D &programD3D, GLen
     if (programD3D.usesGeometryShader(drawMode))
     {
         // needed for the point sprite geometry shader
-        ID3D11Buffer *appliedGeometryConstants = mDriverConstantBufferPS.get();
-        if (mCurrentGeometryConstantBuffer != reinterpret_cast<uintptr_t>(appliedGeometryConstants))
+        if (mCurrentGeometryConstantBuffer != mDriverConstantBufferPS.getSerial())
         {
             ASSERT(mDriverConstantBufferPS.valid());
-            deviceContext->GSSetConstantBuffers(0, 1, &appliedGeometryConstants);
-            mCurrentGeometryConstantBuffer = reinterpret_cast<uintptr_t>(appliedGeometryConstants);
+            deviceContext->GSSetConstantBuffers(0, 1, mDriverConstantBufferPS.getPointer());
+            mCurrentGeometryConstantBuffer = mDriverConstantBufferPS.getSerial();
         }
     }
 
@@ -2502,10 +2501,8 @@ gl::Error StateManager11::applyComputeUniforms(ProgramD3D *programD3D)
         GetAs<UniformStorage11>(&programD3D->getComputeUniformStorage());
     ASSERT(computeUniformStorage);
 
-    const d3d11::Buffer *computeConstantBufferObj = nullptr;
-    ANGLE_TRY(computeUniformStorage->getConstantBuffer(mRenderer, &computeConstantBufferObj));
-
-    ID3D11Buffer *computeConstantBuffer = computeConstantBufferObj->get();
+    const d3d11::Buffer *constantBuffer = nullptr;
+    ANGLE_TRY(computeUniformStorage->getConstantBuffer(mRenderer, &constantBuffer));
 
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
 
@@ -2513,18 +2510,19 @@ gl::Error StateManager11::applyComputeUniforms(ProgramD3D *programD3D)
     {
         D3D11_MAPPED_SUBRESOURCE map = {0};
         HRESULT result =
-            deviceContext->Map(computeConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
+            deviceContext->Map(constantBuffer->get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
         ASSERT(SUCCEEDED(result));
         memcpy(map.pData, computeUniformStorage->getDataPointer(0, 0),
                computeUniformStorage->size());
-        deviceContext->Unmap(computeConstantBuffer, 0);
+        deviceContext->Unmap(constantBuffer->get(), 0);
     }
 
-    if (mCurrentComputeConstantBuffer != reinterpret_cast<uintptr_t>(computeConstantBuffer))
+    if (mCurrentComputeConstantBuffer != constantBuffer->getSerial())
     {
         deviceContext->CSSetConstantBuffers(
-            d3d11::RESERVED_CONSTANT_BUFFER_SLOT_DEFAULT_UNIFORM_BLOCK, 1, &computeConstantBuffer);
-        mCurrentComputeConstantBuffer = reinterpret_cast<uintptr_t>(computeConstantBuffer);
+            d3d11::RESERVED_CONSTANT_BUFFER_SLOT_DEFAULT_UNIFORM_BLOCK, 1,
+            constantBuffer->getPointer());
+        mCurrentComputeConstantBuffer = constantBuffer->getSerial();
     }
 
     if (!mDriverConstantBufferCS.valid())

@@ -41,14 +41,19 @@ class ResourceSerial
 {
   public:
     constexpr ResourceSerial() : mValue(kDirty) {}
-    constexpr ResourceSerial(uintptr_t value) : mValue(value) {}
+    explicit constexpr ResourceSerial(uintptr_t value) : mValue(value) {}
     constexpr bool operator==(ResourceSerial other) const { return mValue == other.mValue; }
     constexpr bool operator!=(ResourceSerial other) const { return mValue != other.mValue; }
 
     void dirty() { mValue = kDirty; }
+    void clear() { mValue = kEmpty; }
+
+    constexpr bool valid() const { return mValue != kEmpty && mValue != kDirty; }
+    constexpr bool empty() const { return mValue == kEmpty; }
 
   private:
     constexpr static uintptr_t kDirty = std::numeric_limits<uintptr_t>::max();
+    constexpr static uintptr_t kEmpty = 0;
 
     uintptr_t mValue;
 };

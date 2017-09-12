@@ -175,6 +175,7 @@ class Resource11Base : angle::NonCopyable
 {
   public:
     T *get() const { return mData->object; }
+    T *const *getPointer() const { return &mData->object; }
 
     void setDebugName(const char *name) { d3d11::SetDebugName(mData->object, name); }
 
