@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2a0c2173_75ce789d",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 30
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-09-12T04:57:07Z",
+      "side": 0,
+      "message": "I revised the code in TextureFunctionHLSL.cpp. This test case can pass now.",
+      "revId": "ad17d2a07d9a7022ab09a3671057d71242eda14e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
