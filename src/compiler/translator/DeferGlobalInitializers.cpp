@@ -3,11 +3,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// DeferGlobalInitializers is an AST traverser that moves global initializers into a block in the
-// beginning of main(). This enables initialization of globals with uniforms or non-constant
-// globals, as allowed by the WebGL spec. Some initializers referencing non-constants may need to be
-// unfolded into if statements in HLSL - this kind of steps should be done after
-// DeferGlobalInitializers is run.
+// DeferGlobalInitializers is an AST traverser that moves global initializers into a separate
+// function that is called in the beginning of main(). This enables initialization of globals with
+// uniforms or non-constant globals, as allowed by the WebGL spec. Some initializers referencing
+// non-constants may need to be unfolded into if statements in HLSL - this kind of steps should be
+// done after DeferGlobalInitializers is run. Note that it's important that the function definition
+// is at the end of the shader, as some globals may be declared after main().
 //
 // It can also initialize all uninitialized globals.
 //
@@ -17,6 +18,7 @@
 #include "compiler/translator/FindMain.h"
 #include "compiler/translator/InitializeVariables.h"
 #include "compiler/translator/IntermNode.h"
+#include "compiler/translator/IntermNode_util.h"
 #include "compiler/translator/SymbolTable.h"
 
 namespace sh
@@ -100,19 +102,36 @@ void GetDeferredInitializers(TIntermDeclaration *declaration,
     }
 }
 
-void InsertInitCodeToMain(TIntermBlock *root, TIntermSequence *deferredInitializers)
+void InsertInitCallToMain(TIntermBlock *root,
+                          TIntermSequence *deferredInitializers,
+                          TSymbolTable *symbolTable)
 {
-    // Insert init code as a block to the beginning of the main() function.
     TIntermBlock *initGlobalsBlock = new TIntermBlock();
     initGlobalsBlock->getSequence()->swap(*deferredInitializers);
 
+    TSymbolUniqueId initGlobalsFunctionId(symbolTable);
+
+    const char *kInitGlobalsFunctionName = "initGlobals";
+
+    TIntermFunctionPrototype *initGlobalsFunctionPrototype =
+        CreateInternalFunctionPrototypeNode(TType(), kInitGlobalsFunctionName, initGlobalsFunctionId);
+    root->getSequence()->insert(root->getSequence()->begin(), initGlobalsFunctionPrototype);
+    TIntermFunctionDefinition *initGlobalsFunctionDefinition = CreateInternalFunctionDefinitionNode(
+        TType(), kInitGlobalsFunctionName, initGlobalsBlock, initGlobalsFunctionId);
+    root->appendStatement(initGlobalsFunctionDefinition);
+
+    TIntermAggregate *initGlobalsCall = CreateInternalFunctionCallNode(
+        TType(), kInitGlobalsFunctionName, initGlobalsFunctionId, new TIntermSequence());
+
     TIntermBlock *mainBody = FindMainBody(root);
-    mainBody->getSequence()->insert(mainBody->getSequence()->begin(), initGlobalsBlock);
+    mainBody->getSequence()->insert(mainBody->getSequence()->begin(), initGlobalsCall);
 }
 
 }  // namespace
 
-void DeferGlobalInitializers(TIntermBlock *root, bool initializeUninitializedGlobals)
+void DeferGlobalInitializers(TIntermBlock *root,
+                             bool initializeUninitializedGlobals,
+                             TSymbolTable *symbolTable)
 {
     TIntermSequence *deferredInitializers = new TIntermSequence();
 
@@ -131,7 +150,7 @@ void DeferGlobalInitializers(TIntermBlock *root, bool initializeUninitializedGlo
     // Add the function with initialization and the call to that.
     if (!deferredInitializers->empty())
     {
-        InsertInitCodeToMain(root, deferredInitializers);
+        InsertInitCallToMain(root, deferredInitializers, symbolTable);
     }
 }
 

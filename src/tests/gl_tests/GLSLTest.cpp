@@ -3375,6 +3375,34 @@ TEST_P(GLSLTest, StructWithSamplerArrayAsFunctionArg)
     EXPECT_PIXEL_COLOR_EQ(1, 1, GLColor::green);
 }
 
+// Test that a global variable declared after main() works. This is a regression test for an issue
+// in global variable initialization.
+TEST_P(WebGLGLSLTest, GlobalVariableDeclaredAfterMain)
+{
+    const std::string &fragmentShader =
+        "precision mediump float;\n"
+        "int getFoo();\n"
+        "uniform int u_zero;\n"
+        "void main()\n"
+        "{\n"
+        "    gl_FragColor = vec4(1, 0, 0, 1);\n"
+        "    if (getFoo() == 0)\n"
+        "    {\n"
+        "        gl_FragColor = vec4(0, 1, 0, 1);\n"
+        "    }\n"
+        "}\n"
+        "int foo;\n"
+        "int getFoo()\n"
+        "{\n"
+        "    foo = u_zero;\n"
+        "    return foo;\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShader);
+    drawQuad(program.get(), "inputAttribute", 0.5f, 1.0f, true);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 ANGLE_INSTANTIATE_TEST(GLSLTest,
                        ES2_D3D9(),

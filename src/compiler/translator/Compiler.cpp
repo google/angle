@@ -523,7 +523,7 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
 
         if (success)
         {
-            DeferGlobalInitializers(root, needToInitializeGlobalsInAST());
+            DeferGlobalInitializers(root, needToInitializeGlobalsInAST(), &symbolTable);
         }
 
         if (success && (compileOptions & SH_INITIALIZE_UNINITIALIZED_LOCALS) && getOutputType())
