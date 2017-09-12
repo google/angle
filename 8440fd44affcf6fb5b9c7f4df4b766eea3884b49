@@ -1,0 +1,107 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "177085fd_c78061a9",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 677,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-12T12:35:16Z",
+      "side": 1,
+      "message": "In the spec calling textureGather on shadow samplers always return vec4 - seems like it should be possible to use that here too?",
+      "range": {
+        "startLine": 677,
+        "startChar": 48,
+        "endLine": 677,
+        "endChar": 53
+      },
+      "revId": "8440fd44affcf6fb5b9c7f4df4b766eea3884b49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0299c023_d3a134c3",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 5348,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-12T12:35:16Z",
+      "side": 1,
+      "message": "I don\u0027t think that this assert is relevant here.",
+      "range": {
+        "startLine": 5348,
+        "startChar": 42,
+        "endLine": 5348,
+        "endChar": 65
+      },
+      "revId": "8440fd44affcf6fb5b9c7f4df4b766eea3884b49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "faac9984_3395bb0c",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 5364,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-12T12:35:16Z",
+      "side": 1,
+      "message": "Should add UNREACHABLE(); here",
+      "revId": "8440fd44affcf6fb5b9c7f4df4b766eea3884b49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7d4b4b3_04036d11",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-12T12:35:16Z",
+      "side": 1,
+      "message": "typo: minification",
+      "range": {
+        "startLine": 206,
+        "startChar": 40,
+        "endLine": 206,
+        "endChar": 50
+      },
+      "revId": "8440fd44affcf6fb5b9c7f4df4b766eea3884b49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "521abc3b_3f928128",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 4755,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-12T12:35:16Z",
+      "side": 1,
+      "message": "I\u0027d imagine the correct cases here are already covered in dEQP and an ANGLE test is quite redundant - is this not so?",
+      "revId": "8440fd44affcf6fb5b9c7f4df4b766eea3884b49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
