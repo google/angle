@@ -172,6 +172,9 @@ class StateManager11 final : angle::NonCopyable
     void invalidateTexturesAndSamplers();
     void invalidateSwizzles();
     void invalidateDriverUniforms();
+    void invalidateProgramUniforms();
+    void invalidateProgramUniformBuffers();
+    void invalidateConstantBuffer(unsigned int slot);
 
     // Called from VertexArray11::updateVertexAttribStorage.
     void invalidateCurrentValueAttrib(size_t attribIndex);
@@ -294,7 +297,7 @@ class StateManager11 final : angle::NonCopyable
     gl::Error generateSwizzlesForShader(const gl::Context *context, gl::SamplerType type);
     gl::Error generateSwizzles(const gl::Context *context);
 
-    gl::Error applyDriverUniforms(const ProgramD3D &programD3D, GLenum drawMode);
+    gl::Error applyDriverUniforms(const ProgramD3D &programD3D);
     gl::Error applyUniforms(ProgramD3D *programD3D);
 
     gl::Error syncUniformBuffers(const gl::Context *context, ProgramD3D *programD3D);
@@ -308,6 +311,9 @@ class StateManager11 final : angle::NonCopyable
         DIRTY_BIT_BLEND_STATE,
         DIRTY_BIT_DEPTH_STENCIL_STATE,
         DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE,
+        DIRTY_BIT_PROGRAM_UNIFORMS,
+        DIRTY_BIT_DRIVER_UNIFORMS,
+        DIRTY_BIT_PROGRAM_UNIFORM_BUFFERS,
         DIRTY_BIT_INVALID,
         DIRTY_BIT_MAX = DIRTY_BIT_INVALID,
     };

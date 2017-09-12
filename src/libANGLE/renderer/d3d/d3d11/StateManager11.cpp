@@ -629,7 +629,7 @@ void StateManager11::checkPresentPath(const gl::Context *context)
         mInternalDirtyBits.set(DIRTY_BIT_RASTERIZER_STATE);
 
         // Viewport may need to be vertically inverted
-        mInternalDirtyBits.set(DIRTY_BIT_VIEWPORT_STATE);
+        invalidateViewport(context);
     }
 }
 
@@ -872,13 +872,13 @@ void StateManager11::syncState(const gl::Context *context, const gl::State::Dirt
             case gl::State::DIRTY_BIT_DEPTH_RANGE:
                 if (state.getNearPlane() != mCurNear || state.getFarPlane() != mCurFar)
                 {
-                    mInternalDirtyBits.set(DIRTY_BIT_VIEWPORT_STATE);
+                    invalidateViewport(context);
                 }
                 break;
             case gl::State::DIRTY_BIT_VIEWPORT:
                 if (state.getViewport() != mCurViewport)
                 {
-                    mInternalDirtyBits.set(DIRTY_BIT_VIEWPORT_STATE);
+                    invalidateViewport(context);
                 }
                 break;
             case gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING:
@@ -902,6 +902,8 @@ void StateManager11::syncState(const gl::Context *context, const gl::State::Dirt
                 invalidateVertexBuffer();
                 invalidateRenderTarget(context);
                 invalidateTexturesAndSamplers();
+                invalidateProgramUniforms();
+                invalidateProgramUniformBuffers();
                 gl::VertexArray *vao = state.getVertexArray();
                 if (mIsMultiviewEnabled && vao != nullptr)
                 {
@@ -952,7 +954,7 @@ void StateManager11::handleMultiviewDrawFramebufferChange(const gl::Context *con
 
         // Because new viewport offsets are to be applied, we have to mark the internal viewport and
         // scissor state as dirty.
-        mInternalDirtyBits.set(DIRTY_BIT_VIEWPORT_STATE);
+        invalidateViewport(context);
         mInternalDirtyBits.set(DIRTY_BIT_SCISSOR_STATE);
     }
     switch (drawFramebuffer->getMultiviewLayout())
@@ -1290,7 +1292,7 @@ void StateManager11::invalidateRenderTarget(const gl::Context *context)
         if (mViewportBounds.width != size.width || mViewportBounds.height != size.height)
         {
             mViewportBounds = gl::Extents(size.width, size.height, 1);
-            mInternalDirtyBits.set(DIRTY_BIT_VIEWPORT_STATE);
+            invalidateViewport(context);
         }
     }
 }
@@ -1339,21 +1341,8 @@ void StateManager11::invalidateEverything(const gl::Context *context)
 
     invalidateDriverUniforms();
 
-    mCurrentGeometryConstantBuffer.dirty();
-    mCurrentComputeConstantBuffer.dirty();
-
-    static_assert(gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS ==
-                      gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS,
-                  "Same size required");
-    for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS; i++)
-    {
-        mCurrentConstantBufferVS[i].dirty();
-        mCurrentConstantBufferVSOffset[i] = 0;
-        mCurrentConstantBufferVSSize[i]   = 0;
-        mCurrentConstantBufferPS[i].dirty();
-        mCurrentConstantBufferPSOffset[i] = 0;
-        mCurrentConstantBufferPSSize[i]   = 0;
-    }
+    // As long as all calls to *SSetConstantBuffes go through the StateManager11, it should not be
+    // necessary to invalidate constant buffer state.
 }
 
 void StateManager11::invalidateVertexBuffer()
@@ -1367,12 +1356,18 @@ void StateManager11::invalidateVertexBuffer()
 void StateManager11::invalidateViewport(const gl::Context *context)
 {
     mInternalDirtyBits.set(DIRTY_BIT_VIEWPORT_STATE);
+
+    // Viewport affects the driver constants.
+    invalidateDriverUniforms();
 }
 
 void StateManager11::invalidateTexturesAndSamplers()
 {
     mInternalDirtyBits.set(DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE);
-    mDirtySwizzles = true;
+    invalidateSwizzles();
+
+    // Texture state affects the driver uniforms (base level, etc).
+    invalidateDriverUniforms();
 }
 
 void StateManager11::invalidateSwizzles()
@@ -1380,8 +1375,35 @@ void StateManager11::invalidateSwizzles()
     mDirtySwizzles = true;
 }
 
+void StateManager11::invalidateProgramUniforms()
+{
+    mInternalDirtyBits.set(DIRTY_BIT_PROGRAM_UNIFORMS);
+}
+
 void StateManager11::invalidateDriverUniforms()
 {
+    mInternalDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
+}
+
+void StateManager11::invalidateProgramUniformBuffers()
+{
+    mInternalDirtyBits.set(DIRTY_BIT_PROGRAM_UNIFORM_BUFFERS);
+}
+
+void StateManager11::invalidateConstantBuffer(unsigned int slot)
+{
+    if (slot == d3d11::RESERVED_CONSTANT_BUFFER_SLOT_DRIVER)
+    {
+        invalidateDriverUniforms();
+    }
+    else if (slot == d3d11::RESERVED_CONSTANT_BUFFER_SLOT_DEFAULT_UNIFORM_BLOCK)
+    {
+        invalidateProgramUniforms();
+    }
+    else
+    {
+        invalidateProgramUniformBuffers();
+    }
 }
 
 void StateManager11::setOneTimeRenderTarget(const gl::Context *context,
@@ -1789,6 +1811,12 @@ gl::Error StateManager11::updateState(const gl::Context *context, GLenum drawMod
         invalidateTexturesAndSamplers();
     }
 
+    // TODO(jmadill): Use dirty bits.
+    if (programD3D->areUniformsDirty())
+    {
+        mInternalDirtyBits.set(DIRTY_BIT_PROGRAM_UNIFORMS);
+    }
+
     // Swizzling can cause internal state changes with blit shaders.
     if (mDirtySwizzles)
     {
@@ -1854,19 +1882,22 @@ gl::Error StateManager11::updateState(const gl::Context *context, GLenum drawMod
                 // TODO(jmadill): More fine-grained update.
                 ANGLE_TRY(syncTextures(context));
                 break;
+            case DIRTY_BIT_PROGRAM_UNIFORMS:
+                ANGLE_TRY(applyUniforms(programD3D));
+                break;
+            case DIRTY_BIT_DRIVER_UNIFORMS:
+                // This must happen after viewport sync; the viewport affects builtin uniforms.
+                ANGLE_TRY(applyDriverUniforms(*programD3D));
+                break;
+            case DIRTY_BIT_PROGRAM_UNIFORM_BUFFERS:
+                // TOOD(jmadill): Use dirty bits.
+                ANGLE_TRY(syncUniformBuffers(context, programD3D));
+                break;
             default:
                 UNREACHABLE();
                 break;
         }
     }
-
-    // This must happen after viewport sync, because the viewport affects builtin uniforms.
-    // TODO(jmadill): Use dirty bits.
-    ANGLE_TRY(applyUniforms(programD3D));
-    ANGLE_TRY(applyDriverUniforms(*programD3D, drawMode));
-
-    // TOOD(jmadill): Use dirty bits.
-    ANGLE_TRY(syncUniformBuffers(context, programD3D));
 
     // Check that we haven't set any dirty bits in the flushing of the dirty bits loop.
     ASSERT(mInternalDirtyBits.none());
@@ -1945,12 +1976,16 @@ void StateManager11::setVertexConstantBuffer(unsigned int slot, const d3d11::Buf
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
     auto &currentSerial                = mCurrentConstantBufferVS[slot];
 
+    mCurrentConstantBufferVSOffset[slot] = 0;
+    mCurrentConstantBufferVSSize[slot]   = 0;
+
     if (buffer)
     {
         if (currentSerial != buffer->getSerial())
         {
             deviceContext->VSSetConstantBuffers(slot, 1, buffer->getPointer());
             currentSerial = buffer->getSerial();
+            invalidateConstantBuffer(slot);
         }
     }
     else
@@ -1960,6 +1995,7 @@ void StateManager11::setVertexConstantBuffer(unsigned int slot, const d3d11::Buf
             ID3D11Buffer *nullBuffer = nullptr;
             deviceContext->VSSetConstantBuffers(slot, 1, &nullBuffer);
             currentSerial.clear();
+            invalidateConstantBuffer(slot);
         }
     }
 }
@@ -1969,12 +2005,16 @@ void StateManager11::setPixelConstantBuffer(unsigned int slot, const d3d11::Buff
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
     auto &currentSerial                = mCurrentConstantBufferPS[slot];
 
+    mCurrentConstantBufferPSOffset[slot] = 0;
+    mCurrentConstantBufferPSSize[slot]   = 0;
+
     if (buffer)
     {
         if (currentSerial != buffer->getSerial())
         {
             deviceContext->PSSetConstantBuffers(slot, 1, buffer->getPointer());
             currentSerial = buffer->getSerial();
+            invalidateConstantBuffer(slot);
         }
     }
     else
@@ -1984,6 +2024,7 @@ void StateManager11::setPixelConstantBuffer(unsigned int slot, const d3d11::Buff
             ID3D11Buffer *nullBuffer = nullptr;
             deviceContext->PSSetConstantBuffers(slot, 1, &nullBuffer);
             currentSerial.clear();
+            invalidateConstantBuffer(slot);
         }
     }
 }
@@ -2470,7 +2511,12 @@ gl::Error StateManager11::applyUniforms(ProgramD3D *programD3D)
         D3D11_MAPPED_SUBRESOURCE map = {0};
         HRESULT result =
             deviceContext->Map(vertexConstantBuffer->get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-        ASSERT(SUCCEEDED(result));
+
+        if (FAILED(result))
+        {
+            return gl::OutOfMemory() << "Failed to Map vertex constants: " << gl::FmtHR(result);
+        }
+
         memcpy(map.pData, vertexUniformStorage->getDataPointer(0, 0), vertexUniformStorage->size());
         deviceContext->Unmap(vertexConstantBuffer->get(), 0);
     }
@@ -2480,7 +2526,12 @@ gl::Error StateManager11::applyUniforms(ProgramD3D *programD3D)
         D3D11_MAPPED_SUBRESOURCE map = {0};
         HRESULT result =
             deviceContext->Map(pixelConstantBuffer->get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-        ASSERT(SUCCEEDED(result));
+
+        if (FAILED(result))
+        {
+            return gl::OutOfMemory() << "Failed to Map fragment constants: " << gl::FmtHR(result);
+        }
+
         memcpy(map.pData, fragmentUniformStorage->getDataPointer(0, 0),
                fragmentUniformStorage->size());
         deviceContext->Unmap(pixelConstantBuffer->get(), 0);
@@ -2509,7 +2560,7 @@ gl::Error StateManager11::applyUniforms(ProgramD3D *programD3D)
     return gl::NoError();
 }
 
-gl::Error StateManager11::applyDriverUniforms(const ProgramD3D &programD3D, GLenum drawMode)
+gl::Error StateManager11::applyDriverUniforms(const ProgramD3D &programD3D)
 {
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
 
@@ -2546,10 +2597,10 @@ gl::Error StateManager11::applyDriverUniforms(const ProgramD3D &programD3D, GLen
     ANGLE_TRY(mShaderConstants.updateBuffer(deviceContext, gl::SAMPLER_PIXEL, programD3D,
                                             mDriverConstantBufferPS));
 
-    // GSSetConstantBuffers triggers device removal on 9_3, so we should only call it if necessary
-    if (programD3D.usesGeometryShader(drawMode))
+    // needed for the point sprite geometry shader
+    // GSSetConstantBuffers triggers device removal on 9_3, so we should only call it for ES3.
+    if (mRenderer->isES3Capable())
     {
-        // needed for the point sprite geometry shader
         if (mCurrentGeometryConstantBuffer != mDriverConstantBufferPS.getSerial())
         {
             ASSERT(mDriverConstantBufferPS.valid());
@@ -2572,15 +2623,24 @@ gl::Error StateManager11::applyComputeUniforms(ProgramD3D *programD3D)
 
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
 
-    if (computeUniformStorage->size() > 0)
+    bool uniformsDirty = programD3D->areUniformsDirty();
+
+    if (computeUniformStorage->size() > 0 && uniformsDirty)
     {
         D3D11_MAPPED_SUBRESOURCE map = {0};
         HRESULT result =
             deviceContext->Map(constantBuffer->get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-        ASSERT(SUCCEEDED(result));
+
+        if (FAILED(result))
+        {
+            return gl::OutOfMemory() << "Failed to Map compute constants: " << gl::FmtHR(result);
+        }
+
         memcpy(map.pData, computeUniformStorage->getDataPointer(0, 0),
                computeUniformStorage->size());
         deviceContext->Unmap(constantBuffer->get(), 0);
+
+        programD3D->markUniformsClean();
     }
 
     if (mCurrentComputeConstantBuffer != constantBuffer->getSerial())
@@ -2605,8 +2665,6 @@ gl::Error StateManager11::applyComputeUniforms(ProgramD3D *programD3D)
 
     ANGLE_TRY(mShaderConstants.updateBuffer(deviceContext, gl::SAMPLER_COMPUTE, *programD3D,
                                             mDriverConstantBufferCS));
-
-    programD3D->markUniformsClean();
 
     return gl::NoError();
 }
