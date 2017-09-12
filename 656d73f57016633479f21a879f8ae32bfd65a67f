@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "204f943a_7ef902f8",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2028,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-12T01:31:23Z",
+      "side": 1,
+      "message": "use ANGLE_VALIDATION_ERR(context, InvalidOperation(), ES3Required) like below ?",
+      "range": {
+        "startLine": 2028,
+        "startChar": 8,
+        "endLine": 2028,
+        "endChar": 86
+      },
+      "revId": "656d73f57016633479f21a879f8ae32bfd65a67f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95f6d535_5348b5d4",
+        "filename": "src/libANGLE/validationES3.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2043,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-12T01:31:23Z",
+      "side": 1,
+      "message": "ANGLE_VALIDATION_ERR(context, InvalidValue(), NegativeCount) ?",
+      "range": {
+        "startLine": 2043,
+        "startChar": 8,
+        "endLine": 2043,
+        "endChar": 60
+      },
+      "revId": "656d73f57016633479f21a879f8ae32bfd65a67f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
