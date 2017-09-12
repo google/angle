@@ -195,12 +195,12 @@ gl::Error RenderStateCache::getRasterizerState(Renderer11 *renderer,
 
 gl::Error RenderStateCache::getDepthStencilState(Renderer11 *renderer,
                                                  const gl::DepthStencilState &glState,
-                                                 ID3D11DepthStencilState **outDSState)
+                                                 const d3d11::DepthStencilState **outDSState)
 {
     auto keyIter = mDepthStencilStateCache.Get(glState);
     if (keyIter != mDepthStencilStateCache.end())
     {
-        *outDSState = keyIter->second.get();
+        *outDSState = &keyIter->second;
         return gl::NoError();
     }
 
@@ -224,8 +224,9 @@ gl::Error RenderStateCache::getDepthStencilState(Renderer11 *renderer,
 
     d3d11::DepthStencilState dx11DepthStencilState;
     ANGLE_TRY(renderer->allocateResource(dsDesc, &dx11DepthStencilState));
-    *outDSState = dx11DepthStencilState.get();
-    mDepthStencilStateCache.Put(glState, std::move(dx11DepthStencilState));
+    const auto &iter = mDepthStencilStateCache.Put(glState, std::move(dx11DepthStencilState));
+
+    *outDSState = &iter->second;
 
     return gl::NoError();
 }

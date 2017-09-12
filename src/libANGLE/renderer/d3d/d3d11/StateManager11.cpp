@@ -1054,7 +1054,7 @@ gl::Error StateManager11::syncDepthStencilState(const gl::State &glState)
         modifiedGLState.stencilTest          = false;
     }
 
-    ID3D11DepthStencilState *d3dState = nullptr;
+    const d3d11::DepthStencilState *d3dState = nullptr;
     ANGLE_TRY(mRenderer->getDepthStencilState(modifiedGLState, &d3dState));
     ASSERT(d3dState);
 
@@ -1068,7 +1068,7 @@ gl::Error StateManager11::syncDepthStencilState(const gl::State &glState)
                   "Unexpected value of D3D11_DEFAULT_STENCIL_WRITE_MASK");
     UINT dxStencilRef = std::min<UINT>(mCurStencilRef, 0xFFu);
 
-    mRenderer->getDeviceContext()->OMSetDepthStencilState(d3dState, dxStencilRef);
+    mRenderer->getDeviceContext()->OMSetDepthStencilState(d3dState->get(), dxStencilRef);
 
     return gl::NoError();
 }
@@ -2030,6 +2030,23 @@ void StateManager11::setPixelConstantBuffer(unsigned int slot, const d3d11::Buff
             invalidateConstantBuffer(slot);
         }
     }
+}
+
+void StateManager11::setDepthStencilState(const d3d11::DepthStencilState *depthStencilState,
+                                          UINT stencilRef)
+{
+    ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
+
+    if (depthStencilState)
+    {
+        deviceContext->OMSetDepthStencilState(depthStencilState->get(), stencilRef);
+    }
+    else
+    {
+        deviceContext->OMSetDepthStencilState(nullptr, stencilRef);
+    }
+
+    mInternalDirtyBits.set(DIRTY_BIT_DEPTH_STENCIL_STATE);
 }
 
 // For each Direct3D sampler of either the pixel or vertex stage,

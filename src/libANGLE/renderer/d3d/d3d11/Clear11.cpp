@@ -705,7 +705,7 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
     ID3D11BlendState *blendState = nullptr;
     ANGLE_TRY(mRenderer->getBlendState(mBlendStateKey, &blendState));
 
-    ID3D11DepthStencilState *dsState = nullptr;
+    const d3d11::DepthStencilState *dsState = nullptr;
     const float *zValue              = nullptr;
 
     if (dsv)
@@ -761,6 +761,8 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
         deviceContext->Unmap(mConstantBuffer.get(), 0);
     }
 
+    auto *stateManager = mRenderer->getStateManager();
+
     // Set the viewport to be the same size as the framebuffer.
     D3D11_VIEWPORT viewport;
     viewport.TopLeftX = 0;
@@ -775,7 +777,7 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
     deviceContext->OMSetBlendState(blendState, nullptr, 0xFFFFFFFF);
 
     const UINT stencilValue = clearParams.stencilValue & 0xFF;
-    deviceContext->OMSetDepthStencilState(dsState, stencilValue);
+    stateManager->setDepthStencilState(dsState, stencilValue);
 
     if (needScissoredClear)
     {
@@ -785,8 +787,6 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
     {
         deviceContext->RSSetState(mScissorDisabledRasterizerState.get());
     }
-
-    auto *stateManager = mRenderer->getStateManager();
 
     // Get Shaders
     const d3d11::VertexShader *vs = nullptr;

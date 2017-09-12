@@ -1088,7 +1088,7 @@ gl::Error Blit11::swizzleTexture(const gl::Context *context,
 
     // Apply state
     deviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);
-    deviceContext->OMSetDepthStencilState(nullptr, 0xFFFFFFFF);
+    stateManager->setDepthStencilState(nullptr, 0xFFFFFFFF);
     deviceContext->RSSetState(mScissorDisabledRasterizerState.get());
 
     // Apply shaders
@@ -1207,7 +1207,7 @@ gl::Error Blit11::copyTexture(const gl::Context *context,
     {
         deviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);
     }
-    deviceContext->OMSetDepthStencilState(nullptr, 0xFFFFFFFF);
+    stateManager->setDepthStencilState(nullptr, 0xFFFFFFFF);
 
     if (scissor)
     {
@@ -1334,7 +1334,7 @@ gl::Error Blit11::copyDepth(const gl::Context *context,
 
     // Apply state
     deviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);
-    deviceContext->OMSetDepthStencilState(mDepthStencilState.get(), 0xFFFFFFFF);
+    stateManager->setDepthStencilState(&mDepthStencilState, 0xFFFFFFFF);
 
     if (scissor)
     {
@@ -2019,7 +2019,7 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveDepth(const gl::Context *conte
     stateManager->setDrawShaders(&mResolveDepthStencilVS.getObj(), nullptr,
                                  &mResolveDepthPS.getObj());
     deviceContext->RSSetState(nullptr);
-    deviceContext->OMSetDepthStencilState(mDepthStencilState.get(), 0xFFFFFFFF);
+    stateManager->setDepthStencilState(&mDepthStencilState, 0xFFFFFFFF);
     stateManager->setRenderTargets(nullptr, 0, mResolvedDepthDSView.get());
     deviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);
 
@@ -2189,7 +2189,7 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(const gl::Context *con
     stateManager->setPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     stateManager->setDrawShaders(&mResolveDepthStencilVS.getObj(), nullptr, pixelShader);
     deviceContext->RSSetState(nullptr);
-    deviceContext->OMSetDepthStencilState(nullptr, 0xFFFFFFFF);
+    stateManager->setDepthStencilState(nullptr, 0xFFFFFFFF);
     stateManager->setRenderTarget(mResolvedDepthStencilRTView.get(), nullptr);
     deviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);
 

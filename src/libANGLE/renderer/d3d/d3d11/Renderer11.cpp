@@ -4018,7 +4018,7 @@ gl::Error Renderer11::getRasterizerState(const gl::RasterizerState &rasterState,
 }
 
 gl::Error Renderer11::getDepthStencilState(const gl::DepthStencilState &dsState,
-                                           ID3D11DepthStencilState **outDSState)
+                                           const d3d11::DepthStencilState **outDSState)
 {
     return mStateCache.getDepthStencilState(this, dsState, outDSState);
 }

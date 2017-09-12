@@ -313,7 +313,7 @@ class Renderer11 : public RendererD3D
                                  bool scissorEnabled,
                                  ID3D11RasterizerState **outRasterizerState);
     gl::Error getDepthStencilState(const gl::DepthStencilState &dsState,
-                                   ID3D11DepthStencilState **outDSState);
+                                   const d3d11::DepthStencilState **outDSState);
     gl::Error getSamplerState(const gl::SamplerState &samplerState,
                               ID3D11SamplerState **outSamplerState);
 
