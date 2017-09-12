@@ -187,7 +187,11 @@ class Resource11Base : angle::NonCopyable
 
     bool valid() const { return (mData->object != nullptr); }
 
-    void reset() { mData.reset(new DataT()); }
+    void reset()
+    {
+        if (valid())
+            mData.reset(new DataT());
+    }
 
     ResourceSerial getSerial() const
     {
