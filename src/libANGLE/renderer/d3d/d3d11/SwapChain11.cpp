@@ -840,7 +840,7 @@ EGLint SwapChain11::copyOffscreenToBackbuffer(const gl::Context *context,
     stateManager->setDrawShaders(&mPassThroughVS, nullptr, &mPassThroughPS);
 
     // Apply render targets. Use the proxy context in display.
-    stateManager->setOneTimeRenderTarget(context, mBackBufferRTView.get(), nullptr);
+    stateManager->setRenderTarget(mBackBufferRTView.get(), nullptr);
 
     // Set the viewport
     D3D11_VIEWPORT viewport;

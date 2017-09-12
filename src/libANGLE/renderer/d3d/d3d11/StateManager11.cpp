@@ -1410,21 +1410,18 @@ void StateManager11::invalidateConstantBuffer(unsigned int slot)
     }
 }
 
-void StateManager11::setOneTimeRenderTarget(const gl::Context *context,
-                                            ID3D11RenderTargetView *rtv,
-                                            ID3D11DepthStencilView *dsv)
+void StateManager11::setRenderTarget(ID3D11RenderTargetView *rtv, ID3D11DepthStencilView *dsv)
 {
     mRenderer->getDeviceContext()->OMSetRenderTargets(1, &rtv, dsv);
-    invalidateRenderTarget(context);
+    mInternalDirtyBits.set(DIRTY_BIT_RENDER_TARGET);
 }
 
-void StateManager11::setOneTimeRenderTargets(const gl::Context *context,
-                                             ID3D11RenderTargetView **rtvs,
-                                             UINT numRtvs,
-                                             ID3D11DepthStencilView *dsv)
+void StateManager11::setRenderTargets(ID3D11RenderTargetView **rtvs,
+                                      UINT numRtvs,
+                                      ID3D11DepthStencilView *dsv)
 {
     mRenderer->getDeviceContext()->OMSetRenderTargets(numRtvs, (numRtvs > 0) ? rtvs : nullptr, dsv);
-    invalidateRenderTarget(context);
+    mInternalDirtyBits.set(DIRTY_BIT_RENDER_TARGET);
 }
 
 void StateManager11::onBeginQuery(Query11 *query)

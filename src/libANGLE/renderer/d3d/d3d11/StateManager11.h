@@ -179,13 +179,8 @@ class StateManager11 final : angle::NonCopyable
     // Called from VertexArray11::updateVertexAttribStorage.
     void invalidateCurrentValueAttrib(size_t attribIndex);
 
-    void setOneTimeRenderTarget(const gl::Context *context,
-                                ID3D11RenderTargetView *rtv,
-                                ID3D11DepthStencilView *dsv);
-    void setOneTimeRenderTargets(const gl::Context *context,
-                                 ID3D11RenderTargetView **rtvs,
-                                 UINT numRtvs,
-                                 ID3D11DepthStencilView *dsv);
+    void setRenderTarget(ID3D11RenderTargetView *rtv, ID3D11DepthStencilView *dsv);
+    void setRenderTargets(ID3D11RenderTargetView **rtvs, UINT numRtvs, ID3D11DepthStencilView *dsv);
 
     void onBeginQuery(Query11 *query);
     void onDeleteQueryObject(Query11 *query);

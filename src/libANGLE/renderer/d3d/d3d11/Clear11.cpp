@@ -819,7 +819,7 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
     stateManager->setPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     // Apply render targets
-    stateManager->setOneTimeRenderTargets(context, &rtvs[0], numRtvs, dsv);
+    stateManager->setRenderTargets(&rtvs[0], numRtvs, dsv);
 
     // If scissors are necessary to be applied, then the number of clears is the number of scissor
     // rects. If no scissors are necessary, then a single full-size clear is enough.

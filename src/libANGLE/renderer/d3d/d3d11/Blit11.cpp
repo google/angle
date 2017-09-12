@@ -1102,7 +1102,7 @@ gl::Error Blit11::swizzleTexture(const gl::Context *context,
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
 
     // Apply render target
-    stateManager->setOneTimeRenderTarget(context, dest.get(), nullptr);
+    stateManager->setRenderTarget(dest.get(), nullptr);
 
     // Set the viewport
     D3D11_VIEWPORT viewport;
@@ -1236,7 +1236,7 @@ gl::Error Blit11::copyTexture(const gl::Context *context,
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
 
     // Apply render target
-    stateManager->setOneTimeRenderTarget(context, dest.get(), nullptr);
+    stateManager->setRenderTarget(dest.get(), nullptr);
 
     // Set the viewport
     D3D11_VIEWPORT viewport;
@@ -1366,7 +1366,7 @@ gl::Error Blit11::copyDepth(const gl::Context *context,
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
 
     // Apply render target
-    stateManager->setOneTimeRenderTarget(context, nullptr, dest.get());
+    stateManager->setRenderTarget(nullptr, dest.get());
 
     // Set the viewport
     D3D11_VIEWPORT viewport;
@@ -2020,7 +2020,7 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveDepth(const gl::Context *conte
                                  &mResolveDepthPS.getObj());
     deviceContext->RSSetState(nullptr);
     deviceContext->OMSetDepthStencilState(mDepthStencilState.get(), 0xFFFFFFFF);
-    deviceContext->OMSetRenderTargets(0, nullptr, mResolvedDepthDSView.get());
+    stateManager->setRenderTargets(nullptr, 0, mResolvedDepthDSView.get());
     deviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);
 
     // Set the viewport
@@ -2167,8 +2167,6 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(const gl::Context *con
     // Notify the Renderer that all state should be invalidated.
     mRenderer->markAllStateDirty(context);
 
-    ID3D11RenderTargetView *rtvs[] = {mResolvedDepthStencilRTView.get()};
-
     ANGLE_TRY(mResolveDepthStencilVS.resolve(mRenderer));
 
     // Resolving the depth buffer works by sampling the depth in the shader using a SRV, then
@@ -2192,7 +2190,7 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(const gl::Context *con
     stateManager->setDrawShaders(&mResolveDepthStencilVS.getObj(), nullptr, pixelShader);
     deviceContext->RSSetState(nullptr);
     deviceContext->OMSetDepthStencilState(nullptr, 0xFFFFFFFF);
-    deviceContext->OMSetRenderTargets(1, rtvs, nullptr);
+    stateManager->setRenderTarget(mResolvedDepthStencilRTView.get(), nullptr);
     deviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);
 
     // Set the viewport
