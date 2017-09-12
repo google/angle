@@ -147,7 +147,6 @@ class Renderer11 : public RendererD3D
                                    const egl::AttributeMap &attribs) const override;
 
     bool applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSize);
-    gl::Error applyTransformFeedbackBuffers(const gl::ContextState &data);
 
     // lost device
     bool testDeviceLost() override;
@@ -485,13 +484,13 @@ class Renderer11 : public RendererD3D
 
     angle::WorkaroundsD3D generateWorkarounds() const override;
 
-    gl::Error drawLineLoop(const gl::ContextState &data,
+    gl::Error drawLineLoop(const gl::State &glState,
                            GLsizei count,
                            GLenum type,
                            const void *indices,
                            int baseVertex,
                            int instances);
-    gl::Error drawTriangleFan(const gl::ContextState &data,
+    gl::Error drawTriangleFan(const gl::State &glState,
                               GLsizei count,
                               GLenum type,
                               const void *indices,
@@ -525,6 +524,8 @@ class Renderer11 : public RendererD3D
 
     d3d11::ANGLED3D11DeviceType getDeviceType() const;
 
+    gl::Error markTransformFeedbackUsage(const gl::State &glState);
+
     HMODULE mD3d11Module;
     HMODULE mDxgiModule;
     HMODULE mDCompModule;
@@ -539,9 +540,6 @@ class Renderer11 : public RendererD3D
     RenderStateCache mStateCache;
 
     StateManager11 mStateManager;
-
-    // Currently applied transform feedback buffers
-    uintptr_t mAppliedTFObject;
 
     StreamingIndexBufferInterface *mLineLoopIB;
     StreamingIndexBufferInterface *mTriangleFanIB;

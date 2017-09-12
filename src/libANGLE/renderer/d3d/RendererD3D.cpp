@@ -59,18 +59,16 @@ void RendererD3D::cleanup()
     mIncompleteTextures.clear();
 }
 
-bool RendererD3D::skipDraw(const gl::ContextState &data, GLenum drawMode)
+bool RendererD3D::skipDraw(const gl::State &glState, GLenum drawMode)
 {
-    const gl::State &state = data.getState();
-
     if (drawMode == GL_POINTS)
     {
-        bool usesPointSize = GetImplAs<ProgramD3D>(state.getProgram())->usesPointSize();
+        bool usesPointSize = GetImplAs<ProgramD3D>(glState.getProgram())->usesPointSize();
 
         // ProgramBinary assumes non-point rendering if gl_PointSize isn't written,
         // which affects varying interpolation. Since the value of gl_PointSize is
         // undefined when not written, just skip drawing to avoid unexpected results.
-        if (!usesPointSize && !state.isTransformFeedbackActiveUnpaused())
+        if (!usesPointSize && !glState.isTransformFeedbackActiveUnpaused())
         {
             // Notify developers of risking undefined behavior.
             WARN() << "Point rendering without writing to gl_PointSize.";
@@ -79,31 +77,14 @@ bool RendererD3D::skipDraw(const gl::ContextState &data, GLenum drawMode)
     }
     else if (gl::IsTriangleMode(drawMode))
     {
-        if (state.getRasterizerState().cullFace &&
-            state.getRasterizerState().cullMode == GL_FRONT_AND_BACK)
+        if (glState.getRasterizerState().cullFace &&
+            glState.getRasterizerState().cullMode == GL_FRONT_AND_BACK)
         {
             return true;
         }
     }
 
     return false;
-}
-
-gl::Error RendererD3D::markTransformFeedbackUsage(const gl::ContextState &data)
-{
-    const gl::TransformFeedback *transformFeedback = data.getState().getCurrentTransformFeedback();
-    for (size_t i = 0; i < transformFeedback->getIndexedBufferCount(); i++)
-    {
-        const gl::OffsetBindingPointer<gl::Buffer> &binding =
-            transformFeedback->getIndexedBuffer(i);
-        if (binding.get() != nullptr)
-        {
-            BufferD3D *bufferD3D = GetImplAs<BufferD3D>(binding.get());
-            ANGLE_TRY(bufferD3D->markTransformFeedbackUsage());
-        }
-    }
-
-    return gl::NoError();
 }
 
 size_t RendererD3D::getBoundFramebufferTextures(const gl::ContextState &data,

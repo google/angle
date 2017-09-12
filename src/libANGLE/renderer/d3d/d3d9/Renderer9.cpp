@@ -1360,12 +1360,6 @@ gl::Error Renderer9::applyIndexBuffer(const gl::ContextState &data,
     return gl::NoError();
 }
 
-gl::Error Renderer9::applyTransformFeedbackBuffers(const gl::State &state)
-{
-    ASSERT(!state.isTransformFeedbackActiveUnpaused());
-    return gl::NoError();
-}
-
 gl::Error Renderer9::drawArraysImpl(const gl::ContextState &data,
                                     GLenum mode,
                                     GLint startVertex,
@@ -3140,19 +3134,10 @@ gl::Error Renderer9::genericDrawElements(const gl::Context *context,
     }
 
     ANGLE_TRY(updateState(context, mode));
-
-
-
-    applyTransformFeedbackBuffers(data.getState());
-    // Transform feedback is not allowed for DrawElements, this error should have been caught at the
-    // API validation
-    // layer.
-    ASSERT(!data.getState().isTransformFeedbackActiveUnpaused());
-
     ANGLE_TRY(applyTextures(context));
     ANGLE_TRY(applyShaders(context, mode));
 
-    if (!skipDraw(data, mode))
+    if (!skipDraw(data.getState(), mode))
     {
         ANGLE_TRY(drawElementsImpl(context, mode, count, type, indices, instances));
     }
@@ -3180,19 +3165,13 @@ gl::Error Renderer9::genericDrawArrays(const gl::Context *context,
     }
 
     ANGLE_TRY(updateState(context, mode));
-    ANGLE_TRY(applyTransformFeedbackBuffers(data.getState()));
     ANGLE_TRY(applyVertexBuffer(data.getState(), mode, first, count, instances, nullptr));
     ANGLE_TRY(applyTextures(context));
     ANGLE_TRY(applyShaders(context, mode));
 
-    if (!skipDraw(data, mode))
+    if (!skipDraw(data.getState(), mode))
     {
         ANGLE_TRY(drawArraysImpl(data, mode, first, count, instances));
-
-        if (data.getState().isTransformFeedbackActiveUnpaused())
-        {
-            ANGLE_TRY(markTransformFeedbackUsage(data));
-        }
     }
 
     return gl::NoError();

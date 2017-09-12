@@ -11,9 +11,10 @@
 
 #include "common/platform.h"
 
-#include "libANGLE/angletypes.h"
 #include "libANGLE/Error.h"
+#include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/TransformFeedbackImpl.h"
+#include "libANGLE/renderer/renderer_utils.h"
 
 namespace rx
 {
@@ -43,12 +44,16 @@ class TransformFeedback11 : public TransformFeedbackImpl
     gl::ErrorOrResult<const std::vector<ID3D11Buffer *> *> getSOBuffers();
     const std::vector<UINT> &getSOBufferOffsets() const;
 
+    Serial getSerial() const;
+
   private:
     Renderer11 *mRenderer;
 
     bool mIsDirty;
     std::vector<ID3D11Buffer *> mBuffers;
     std::vector<UINT> mBufferOffsets;
+
+    Serial mSerial;
 };
 }  // namespace rx
 

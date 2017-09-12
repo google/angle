@@ -21,6 +21,7 @@
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/ShaderExecutable11.h"
 #include "libANGLE/renderer/d3d/d3d11/TextureStorage11.h"
+#include "libANGLE/renderer/d3d/d3d11/TransformFeedback11.h"
 #include "libANGLE/renderer/d3d/d3d11/VertexArray11.h"
 
 namespace rx
@@ -541,7 +542,8 @@ StateManager11::StateManager11(Renderer11 *renderer)
       mAppliedIBChanged(false),
       mVertexDataManager(renderer),
       mIndexDataManager(renderer, RENDERER_D3D11),
-      mIsMultiviewEnabled(false)
+      mIsMultiviewEnabled(false),
+      mEmptySerial(mRenderer->generateSerial())
 {
     mCurBlendState.blend                 = false;
     mCurBlendState.sourceBlendRGB        = GL_ONE;
@@ -1343,6 +1345,8 @@ void StateManager11::invalidateEverything(const gl::Context *context)
 
     // As long as all calls to *SSetConstantBuffes go through the StateManager11, it should not be
     // necessary to invalidate constant buffer state.
+
+    mAppliedTFSerial = Serial();
 }
 
 void StateManager11::invalidateVertexBuffer()
@@ -1899,6 +1903,8 @@ gl::Error StateManager11::updateState(const gl::Context *context, GLenum drawMod
         }
     }
 
+    ANGLE_TRY(syncTransformFeedbackBuffers(context));
+
     // Check that we haven't set any dirty bits in the flushing of the dirty bits loop.
     ASSERT(mInternalDirtyBits.none());
 
@@ -2253,8 +2259,8 @@ gl::Error StateManager11::syncProgram(const gl::Context *context, GLenum drawMod
     ANGLE_TRY(programD3D->getPixelExecutableForCachedOutputLayout(&pixelExe, nullptr));
 
     ShaderExecutableD3D *geometryExe = nullptr;
-    ANGLE_TRY(programD3D->getGeometryExecutableForPrimitiveType(context->getContextState(),
-                                                                drawMode, &geometryExe, nullptr));
+    ANGLE_TRY(programD3D->getGeometryExecutableForPrimitiveType(context, drawMode, &geometryExe,
+                                                                nullptr));
 
     const d3d11::VertexShader *vertexShader =
         (vertexExe ? &GetAs<ShaderExecutable11>(vertexExe)->getVertexShader() : nullptr);
@@ -2371,13 +2377,13 @@ gl::Error StateManager11::applyVertexBuffer(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::Error StateManager11::applyIndexBuffer(const gl::ContextState &data,
+gl::Error StateManager11::applyIndexBuffer(const gl::Context *context,
                                            const void *indices,
                                            GLsizei count,
                                            GLenum type,
                                            TranslatedIndexData *indexInfo)
 {
-    const auto &glState            = data.getState();
+    const auto &glState            = context->getGLState();
     gl::VertexArray *vao           = glState.getVertexArray();
     gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
     ANGLE_TRY(mIndexDataManager.prepareIndexData(type, count, elementArrayBuffer, indices,
@@ -2788,6 +2794,42 @@ gl::Error StateManager11::syncUniformBuffers(const gl::Context *context, Program
         mCurrentConstantBufferPSOffset[appliedIndex] = uniformBufferOffset;
         mCurrentConstantBufferPSSize[appliedIndex]   = uniformBufferSize;
     }
+
+    return gl::NoError();
+}
+
+gl::Error StateManager11::syncTransformFeedbackBuffers(const gl::Context *context)
+{
+    const auto &glState = context->getGLState();
+
+    ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
+
+    // If transform feedback is not active, unbind all buffers
+    if (!glState.isTransformFeedbackActiveUnpaused())
+    {
+        if (mAppliedTFSerial != mEmptySerial)
+        {
+            deviceContext->SOSetTargets(0, nullptr, nullptr);
+            mAppliedTFSerial = mEmptySerial;
+        }
+        return gl::NoError();
+    }
+
+    gl::TransformFeedback *transformFeedback = glState.getCurrentTransformFeedback();
+    TransformFeedback11 *tf11                = GetImplAs<TransformFeedback11>(transformFeedback);
+    if (mAppliedTFSerial == tf11->getSerial() && !tf11->isDirty())
+    {
+        return gl::NoError();
+    }
+
+    const std::vector<ID3D11Buffer *> *soBuffers = nullptr;
+    ANGLE_TRY_RESULT(tf11->getSOBuffers(), soBuffers);
+    const std::vector<UINT> &soOffsets = tf11->getSOBufferOffsets();
+
+    deviceContext->SOSetTargets(tf11->getNumSOBuffers(), soBuffers->data(), soOffsets.data());
+
+    mAppliedTFSerial = tf11->getSerial();
+    tf11->onApply();
 
     return gl::NoError();
 }

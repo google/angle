@@ -1006,8 +1006,8 @@ std::string DynamicHLSL::generateGeometryShaderPreamble(const VaryingPacking &va
     return preambleStream.str();
 }
 
-std::string DynamicHLSL::generateGeometryShaderHLSL(gl::PrimitiveType primitiveType,
-                                                    const gl::ContextState &data,
+std::string DynamicHLSL::generateGeometryShaderHLSL(const gl::Context *context,
+                                                    gl::PrimitiveType primitiveType,
                                                     const gl::ProgramState &programData,
                                                     const bool useViewScale,
                                                     const bool hasANGLEMultiviewEnabled,
@@ -1114,10 +1114,10 @@ std::string DynamicHLSL::generateGeometryShaderHLSL(gl::PrimitiveType primitiveT
                         "};\n"
                         "\n"
                         "static float minPointSize = "
-                     << static_cast<int>(data.getCaps().minAliasedPointSize)
+                     << static_cast<int>(context->getCaps().minAliasedPointSize)
                      << ".0f;\n"
                         "static float maxPointSize = "
-                     << static_cast<int>(data.getCaps().maxAliasedPointSize) << ".0f;\n"
+                     << static_cast<int>(context->getCaps().maxAliasedPointSize) << ".0f;\n"
                      << "\n";
     }
 

@@ -158,8 +158,6 @@ class Renderer9 : public RendererD3D
                                GLenum type,
                                TranslatedIndexData *indexInfo);
 
-    gl::Error applyTransformFeedbackBuffers(const gl::State &state);
-
     gl::Error clear(const gl::Context *context,
                     const ClearParameters &clearParams,
                     const gl::FramebufferAttachment *colorBuffer,

@@ -1272,7 +1272,7 @@ gl::Error ProgramD3D::getVertexExecutableForCachedInputLayout(ShaderExecutableD3
     return gl::NoError();
 }
 
-gl::Error ProgramD3D::getGeometryExecutableForPrimitiveType(const gl::ContextState &data,
+gl::Error ProgramD3D::getGeometryExecutableForPrimitiveType(const gl::Context *context,
                                                             GLenum drawMode,
                                                             ShaderExecutableD3D **outExecutable,
                                                             gl::InfoLog *infoLog)
@@ -1300,7 +1300,7 @@ gl::Error ProgramD3D::getGeometryExecutableForPrimitiveType(const gl::ContextSta
     }
 
     std::string geometryHLSL = mDynamicHLSL->generateGeometryShaderHLSL(
-        geometryShaderType, data, mState, mRenderer->presentPathFastEnabled(),
+        context, geometryShaderType, mState, mRenderer->presentPathFastEnabled(),
         mHasANGLEMultiviewEnabled, mRenderer->canSelectViewInVertexShader(),
         usesGeometryShaderForPointSpriteEmulation(), mGeometryShaderPreamble);
 
@@ -1404,8 +1404,8 @@ void ProgramD3D::updateCachedOutputLayoutFromShader()
 class ProgramD3D::GetGeometryExecutableTask : public ProgramD3D::GetExecutableTask
 {
   public:
-    GetGeometryExecutableTask(ProgramD3D *program, const gl::ContextState &contextState)
-        : GetExecutableTask(program), mContextState(contextState)
+    GetGeometryExecutableTask(ProgramD3D *program, const gl::Context *context)
+        : GetExecutableTask(program), mContext(context)
     {
     }
 
@@ -1415,15 +1415,15 @@ class ProgramD3D::GetGeometryExecutableTask : public ProgramD3D::GetExecutableTa
         // D3D11.
         if (mProgram->usesGeometryShader(GL_POINTS))
         {
-            ANGLE_TRY(mProgram->getGeometryExecutableForPrimitiveType(mContextState, GL_POINTS,
-                                                                      &mResult, &mInfoLog));
+            ANGLE_TRY(mProgram->getGeometryExecutableForPrimitiveType(mContext, GL_POINTS, &mResult,
+                                                                      &mInfoLog));
         }
 
         return gl::NoError();
     }
 
   private:
-    const gl::ContextState &mContextState;
+    const gl::Context *mContext;
 };
 
 gl::Error ProgramD3D::getComputeExecutable(ShaderExecutableD3D **outExecutable)
@@ -1446,7 +1446,7 @@ gl::LinkResult ProgramD3D::compileProgramExecutables(const gl::Context *context,
 
     GetVertexExecutableTask vertexTask(this, context);
     GetPixelExecutableTask pixelTask(this);
-    GetGeometryExecutableTask geometryTask(this, context->getContextState());
+    GetGeometryExecutableTask geometryTask(this, context);
 
     std::array<WaitableEvent, 3> waitEvents = {{workerPool->postWorkerTask(&vertexTask),
                                                 workerPool->postWorkerTask(&pixelTask),

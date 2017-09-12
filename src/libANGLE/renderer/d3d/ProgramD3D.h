@@ -184,7 +184,7 @@ class ProgramD3D : public ProgramImpl
 
     gl::Error getVertexExecutableForCachedInputLayout(ShaderExecutableD3D **outExectuable,
                                                       gl::InfoLog *infoLog);
-    gl::Error getGeometryExecutableForPrimitiveType(const gl::ContextState &data,
+    gl::Error getGeometryExecutableForPrimitiveType(const gl::Context *context,
                                                     GLenum drawMode,
                                                     ShaderExecutableD3D **outExecutable,
                                                     gl::InfoLog *infoLog);

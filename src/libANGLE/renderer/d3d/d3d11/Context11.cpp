@@ -153,6 +153,9 @@ gl::Error Context11::finish()
 
 gl::Error Context11::drawArrays(const gl::Context *context, GLenum mode, GLint first, GLsizei count)
 {
+    // TODO(jmadill): Update state in syncState before the draw call.
+    ANGLE_TRY(mRenderer->getStateManager()->updateState(context, mode));
+
     return mRenderer->genericDrawArrays(context, mode, first, count, 0);
 }
 
@@ -162,6 +165,9 @@ gl::Error Context11::drawArraysInstanced(const gl::Context *context,
                                          GLsizei count,
                                          GLsizei instanceCount)
 {
+    // TODO(jmadill): Update state in syncState before the draw call.
+    ANGLE_TRY(mRenderer->getStateManager()->updateState(context, mode));
+
     return mRenderer->genericDrawArrays(context, mode, first, count, instanceCount);
 }
 
@@ -171,6 +177,9 @@ gl::Error Context11::drawElements(const gl::Context *context,
                                   GLenum type,
                                   const void *indices)
 {
+    // TODO(jmadill): Update state in syncState before the draw call.
+    ANGLE_TRY(mRenderer->getStateManager()->updateState(context, mode));
+
     return mRenderer->genericDrawElements(context, mode, count, type, indices, 0);
 }
 
@@ -181,6 +190,9 @@ gl::Error Context11::drawElementsInstanced(const gl::Context *context,
                                            const void *indices,
                                            GLsizei instances)
 {
+    // TODO(jmadill): Update state in syncState before the draw call.
+    ANGLE_TRY(mRenderer->getStateManager()->updateState(context, mode));
+
     return mRenderer->genericDrawElements(context, mode, count, type, indices, instances);
 }
 
@@ -192,6 +204,9 @@ gl::Error Context11::drawRangeElements(const gl::Context *context,
                                        GLenum type,
                                        const void *indices)
 {
+    // TODO(jmadill): Update state in syncState before the draw call.
+    ANGLE_TRY(mRenderer->getStateManager()->updateState(context, mode));
+
     return mRenderer->genericDrawElements(context, mode, count, type, indices, 0);
 }
 
@@ -199,6 +214,9 @@ gl::Error Context11::drawArraysIndirect(const gl::Context *context,
                                         GLenum mode,
                                         const void *indirect)
 {
+    // TODO(jmadill): Update state in syncState before the draw call.
+    ANGLE_TRY(mRenderer->getStateManager()->updateState(context, mode));
+
     return mRenderer->genericDrawIndirect(context, mode, GL_NONE, indirect);
 }
 
@@ -207,6 +225,9 @@ gl::Error Context11::drawElementsIndirect(const gl::Context *context,
                                           GLenum type,
                                           const void *indirect)
 {
+    // TODO(jmadill): Update state in syncState before the draw call.
+    ANGLE_TRY(mRenderer->getStateManager()->updateState(context, mode));
+
     return mRenderer->genericDrawIndirect(context, mode, type, indirect);
 }
 
@@ -335,8 +356,8 @@ gl::Error Context11::triggerDrawCallProgramRecompilation(const gl::Context *cont
     if (recompileGS)
     {
         ShaderExecutableD3D *geometryExe = nullptr;
-        ANGLE_TRY(programD3D->getGeometryExecutableForPrimitiveType(
-            context->getContextState(), drawMode, &geometryExe, infoLog));
+        ANGLE_TRY(programD3D->getGeometryExecutableForPrimitiveType(context, drawMode, &geometryExe,
+                                                                    infoLog));
         if (!programD3D->hasGeometryExecutableForPrimitiveType(drawMode))
         {
             return gl::InternalError() << "Error compiling dynamic geometry executable.";

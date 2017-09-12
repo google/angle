@@ -469,8 +469,6 @@ Renderer11::Renderer11(egl::Display *display)
     mDxgiAdapter    = nullptr;
     mDxgiFactory    = nullptr;
 
-    mAppliedTFObject = angle::DirtyPointer;
-
     ZeroMemory(&mAdapterDescription, sizeof(mAdapterDescription));
 
     if (mDisplay->getPlatform() == EGL_PLATFORM_ANGLE_ANGLE)
@@ -1455,50 +1453,13 @@ bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSi
     return count >= minCount;
 }
 
-gl::Error Renderer11::applyTransformFeedbackBuffers(const gl::ContextState &data)
-{
-    const auto &state = data.getState();
-
-    // If transform feedback is not active, unbind all buffers
-    if (!state.isTransformFeedbackActiveUnpaused())
-    {
-        if (mAppliedTFObject != 0)
-        {
-            mDeviceContext->SOSetTargets(0, nullptr, nullptr);
-            mAppliedTFObject = 0;
-        }
-        return gl::NoError();
-    }
-
-    gl::TransformFeedback *transformFeedback = state.getCurrentTransformFeedback();
-    TransformFeedback11 *transformFeedback11 = GetImplAs<TransformFeedback11>(transformFeedback);
-    uintptr_t transformFeedbackId            = reinterpret_cast<uintptr_t>(transformFeedback11);
-    if (mAppliedTFObject == transformFeedbackId && !transformFeedback11->isDirty())
-    {
-        return gl::NoError();
-    }
-
-    const std::vector<ID3D11Buffer *> *soBuffers = nullptr;
-    ANGLE_TRY_RESULT(transformFeedback11->getSOBuffers(), soBuffers);
-    const std::vector<UINT> &soOffsets = transformFeedback11->getSOBufferOffsets();
-
-    mDeviceContext->SOSetTargets(transformFeedback11->getNumSOBuffers(), soBuffers->data(),
-                                 soOffsets.data());
-
-    mAppliedTFObject = transformFeedbackId;
-    transformFeedback11->onApply();
-
-    return gl::NoError();
-}
-
 gl::Error Renderer11::drawArraysImpl(const gl::Context *context,
                                      GLenum mode,
                                      GLint startVertex,
                                      GLsizei count,
                                      GLsizei instances)
 {
-    const auto &data       = context->getContextState();
-    const auto &glState    = data.getState();
+    const auto &glState           = context->getGLState();
     gl::Program *program          = glState.getProgram();
     ProgramD3D *programD3D        = GetImplAs<ProgramD3D>(program);
     GLsizei adjustedInstanceCount = GetAdjustedInstanceCount(program, instances);
@@ -1533,8 +1494,8 @@ gl::Error Renderer11::drawArraysImpl(const gl::Context *context,
 
         // Retrieve the geometry shader.
         rx::ShaderExecutableD3D *geometryExe = nullptr;
-        ANGLE_TRY(
-            programD3D->getGeometryExecutableForPrimitiveType(data, mode, &geometryExe, nullptr));
+        ANGLE_TRY(programD3D->getGeometryExecutableForPrimitiveType(context, mode, &geometryExe,
+                                                                    nullptr));
 
         mStateManager.setGeometryShader(
             &GetAs<ShaderExecutable11>(geometryExe)->getGeometryShader());
@@ -1552,12 +1513,12 @@ gl::Error Renderer11::drawArraysImpl(const gl::Context *context,
 
     if (mode == GL_LINE_LOOP)
     {
-        return drawLineLoop(data, count, GL_NONE, nullptr, 0, adjustedInstanceCount);
+        return drawLineLoop(glState, count, GL_NONE, nullptr, 0, adjustedInstanceCount);
     }
 
     if (mode == GL_TRIANGLE_FAN)
     {
-        return drawTriangleFan(data, count, GL_NONE, nullptr, 0, adjustedInstanceCount);
+        return drawTriangleFan(glState, count, GL_NONE, nullptr, 0, adjustedInstanceCount);
     }
 
     bool useInstancedPointSpriteEmulation =
@@ -1611,14 +1572,14 @@ gl::Error Renderer11::drawElementsImpl(const gl::Context *context,
                                        const void *indices,
                                        GLsizei instances)
 {
-    const auto &data = context->getContextState();
+    const auto &glState = context->getGLState();
     TranslatedIndexData indexInfo;
-    const gl::Program *program    = data.getState().getProgram();
+    const gl::Program *program    = glState.getProgram();
     GLsizei adjustedInstanceCount = GetAdjustedInstanceCount(program, instances);
 
     if (!DrawCallNeedsTranslation(context, mode, type))
     {
-        ANGLE_TRY(mStateManager.applyIndexBuffer(data, nullptr, 0, type, &indexInfo));
+        ANGLE_TRY(mStateManager.applyIndexBuffer(context, nullptr, 0, type, &indexInfo));
         ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, 0, 0, 0, &indexInfo));
         const gl::Type &typeInfo = gl::GetTypeInfo(type);
         unsigned int startIndexLocation =
@@ -1639,7 +1600,7 @@ gl::Error Renderer11::drawElementsImpl(const gl::Context *context,
         context->getParams<gl::HasIndexRange>().getIndexRange().value();
     indexInfo.indexRange = indexRange;
 
-    ANGLE_TRY(mStateManager.applyIndexBuffer(data, indices, count, type, &indexInfo));
+    ANGLE_TRY(mStateManager.applyIndexBuffer(context, indices, count, type, &indexInfo));
     size_t vertexCount = indexInfo.indexRange.vertexCount();
     ANGLE_TRY(mStateManager.applyVertexBuffer(
         context, mode, static_cast<GLsizei>(indexInfo.indexRange.start),
@@ -1650,15 +1611,15 @@ gl::Error Renderer11::drawElementsImpl(const gl::Context *context,
 
     if (mode == GL_LINE_LOOP)
     {
-        return drawLineLoop(data, count, type, indices, baseVertex, adjustedInstanceCount);
+        return drawLineLoop(glState, count, type, indices, baseVertex, adjustedInstanceCount);
     }
 
     if (mode == GL_TRIANGLE_FAN)
     {
-        return drawTriangleFan(data, count, type, indices, baseVertex, adjustedInstanceCount);
+        return drawTriangleFan(glState, count, type, indices, baseVertex, adjustedInstanceCount);
     }
 
-    const ProgramD3D *programD3D = GetImplAs<ProgramD3D>(data.getState().getProgram());
+    const ProgramD3D *programD3D = GetImplAs<ProgramD3D>(glState.getProgram());
 
     if (mode != GL_POINTS || !programD3D->usesInstancedPointSpriteEmulation())
     {
@@ -1712,13 +1673,12 @@ gl::Error Renderer11::drawArraysIndirectImpl(const gl::Context *context,
                                              GLenum mode,
                                              const void *indirect)
 {
-    const auto &contextState = context->getContextState();
-    if (skipDraw(contextState, mode))
+    const auto &glState = context->getGLState();
+    if (skipDraw(glState, mode))
     {
         return gl::NoError();
     }
 
-    const auto &glState            = context->getGLState();
     gl::Buffer *drawIndirectBuffer = glState.getDrawIndirectBuffer();
     ASSERT(drawIndirectBuffer);
     Buffer11 *storage = GetImplAs<Buffer11>(drawIndirectBuffer);
@@ -1746,11 +1706,11 @@ gl::Error Renderer11::drawArraysIndirectImpl(const gl::Context *context,
 
     if (mode == GL_LINE_LOOP)
     {
-        return drawLineLoop(contextState, count, GL_NONE, nullptr, 0, instances);
+        return drawLineLoop(glState, count, GL_NONE, nullptr, 0, instances);
     }
     if (mode == GL_TRIANGLE_FAN)
     {
-        return drawTriangleFan(contextState, count, GL_NONE, nullptr, 0, instances);
+        return drawTriangleFan(glState, count, GL_NONE, nullptr, 0, instances);
     }
 
     mDeviceContext->DrawInstanced(count, instances, 0, 0);
@@ -1762,13 +1722,12 @@ gl::Error Renderer11::drawElementsIndirectImpl(const gl::Context *context,
                                                GLenum type,
                                                const void *indirect)
 {
-    const auto &contextState = context->getContextState();
-    if (skipDraw(contextState, mode))
+    const auto &glState = context->getGLState();
+    if (skipDraw(glState, mode))
     {
         return gl::NoError();
     }
 
-    const auto &glState            = context->getGLState();
     gl::Buffer *drawIndirectBuffer = glState.getDrawIndirectBuffer();
     ASSERT(drawIndirectBuffer);
     Buffer11 *storage = GetImplAs<Buffer11>(drawIndirectBuffer);
@@ -1777,7 +1736,7 @@ gl::Error Renderer11::drawElementsIndirectImpl(const gl::Context *context,
     TranslatedIndexData indexInfo;
     if (!DrawCallNeedsTranslation(context, mode, type))
     {
-        ANGLE_TRY(mStateManager.applyIndexBuffer(contextState, nullptr, 0, type, &indexInfo));
+        ANGLE_TRY(mStateManager.applyIndexBuffer(context, nullptr, 0, type, &indexInfo));
         ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, 0, 0, 0, &indexInfo));
         ID3D11Buffer *buffer = nullptr;
         ANGLE_TRY_RESULT(storage->getBuffer(BUFFER_USAGE_INDIRECT), buffer);
@@ -1806,7 +1765,7 @@ gl::Error Renderer11::drawElementsIndirectImpl(const gl::Context *context,
                                                 glState.isPrimitiveRestartEnabled(), &indexRange));
 
     indexInfo.indexRange = indexRange;
-    ANGLE_TRY(mStateManager.applyIndexBuffer(contextState, indices, count, type, &indexInfo));
+    ANGLE_TRY(mStateManager.applyIndexBuffer(context, indices, count, type, &indexInfo));
     size_t vertexCount = indexRange.vertexCount();
     ANGLE_TRY(mStateManager.applyVertexBuffer(
         context, mode, static_cast<GLsizei>(indexRange.start) + baseVertex,
@@ -1815,26 +1774,25 @@ gl::Error Renderer11::drawElementsIndirectImpl(const gl::Context *context,
     int baseVertexLocation = -static_cast<int>(indexRange.start);
     if (mode == GL_LINE_LOOP)
     {
-        return drawLineLoop(contextState, count, type, indices, baseVertexLocation, instances);
+        return drawLineLoop(glState, count, type, indices, baseVertexLocation, instances);
     }
 
     if (mode == GL_TRIANGLE_FAN)
     {
-        return drawTriangleFan(contextState, count, type, indices, baseVertexLocation, instances);
+        return drawTriangleFan(glState, count, type, indices, baseVertexLocation, instances);
     }
 
     mDeviceContext->DrawIndexedInstanced(count, instances, 0, baseVertexLocation, 0);
     return gl::NoError();
 }
 
-gl::Error Renderer11::drawLineLoop(const gl::ContextState &data,
+gl::Error Renderer11::drawLineLoop(const gl::State &glState,
                                    GLsizei count,
                                    GLenum type,
                                    const void *indexPointer,
                                    int baseVertex,
                                    int instances)
 {
-    const auto &glState            = data.getState();
     gl::VertexArray *vao           = glState.getVertexArray();
     gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
 
@@ -1911,14 +1869,14 @@ gl::Error Renderer11::drawLineLoop(const gl::ContextState &data,
     return gl::NoError();
 }
 
-gl::Error Renderer11::drawTriangleFan(const gl::ContextState &data,
+gl::Error Renderer11::drawTriangleFan(const gl::State &glState,
                                       GLsizei count,
                                       GLenum type,
                                       const void *indices,
                                       int baseVertex,
                                       int instances)
 {
-    gl::VertexArray *vao           = data.getState().getVertexArray();
+    gl::VertexArray *vao           = glState.getVertexArray();
     gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
 
     const void *indexPointer = indices;
@@ -1958,7 +1916,7 @@ gl::Error Renderer11::drawTriangleFan(const gl::ContextState &data,
                                     "too many indices required.";
     }
 
-    GetTriFanIndices(indexPointer, type, count, data.getState().isPrimitiveRestartEnabled(),
+    GetTriFanIndices(indexPointer, type, count, glState.isPrimitiveRestartEnabled(),
                      &mScratchIndexDataBuffer);
 
     const unsigned int spaceNeeded =
@@ -1998,8 +1956,6 @@ void Renderer11::markAllStateDirty(const gl::Context *context)
     TRACE_EVENT0("gpu.angle", "Renderer11::markAllStateDirty");
 
     mStateManager.invalidateEverything(context);
-
-    mAppliedTFObject = angle::DirtyPointer;
 }
 
 void Renderer11::releaseDeviceResources()
@@ -3806,8 +3762,7 @@ gl::Error Renderer11::genericDrawElements(const gl::Context *context,
                                           const void *indices,
                                           GLsizei instances)
 {
-    const auto &data     = context->getContextState();
-    const auto &glState  = data.getState();
+    const auto &glState  = context->getGLState();
     gl::Program *program = glState.getProgram();
     ASSERT(program != nullptr);
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
@@ -3818,14 +3773,11 @@ gl::Error Renderer11::genericDrawElements(const gl::Context *context,
         return gl::NoError();
     }
 
-    ANGLE_TRY(mStateManager.updateState(context, mode));
-
-    applyTransformFeedbackBuffers(data);
     // Transform feedback is not allowed for DrawElements, this error should have been caught at the
     // API validation layer.
     ASSERT(!glState.isTransformFeedbackActiveUnpaused());
 
-    if (!skipDraw(data, mode))
+    if (!skipDraw(glState, mode))
     {
         ANGLE_TRY(drawElementsImpl(context, mode, count, type, indices, instances));
     }
@@ -3839,29 +3791,25 @@ gl::Error Renderer11::genericDrawArrays(const gl::Context *context,
                                         GLsizei count,
                                         GLsizei instances)
 {
-    const auto &data     = context->getContextState();
-    const auto &glState  = data.getState();
+    const auto &glState  = context->getGLState();
     gl::Program *program = glState.getProgram();
     ASSERT(program != nullptr);
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
-    bool usesPointSize     = programD3D->usesPointSize();
 
-    if (!applyPrimitiveType(mode, count, usesPointSize))
+    if (!applyPrimitiveType(mode, count, programD3D->usesPointSize()))
     {
         return gl::NoError();
     }
 
-    ANGLE_TRY(mStateManager.updateState(context, mode));
-    ANGLE_TRY(applyTransformFeedbackBuffers(data));
     ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, first, count, instances, nullptr));
 
-    if (!skipDraw(data, mode))
+    if (!skipDraw(glState, mode))
     {
         ANGLE_TRY(drawArraysImpl(context, mode, first, count, instances));
 
         if (glState.isTransformFeedbackActiveUnpaused())
         {
-            ANGLE_TRY(markTransformFeedbackUsage(data));
+            ANGLE_TRY(markTransformFeedbackUsage(glState));
         }
     }
 
@@ -3873,17 +3821,13 @@ gl::Error Renderer11::genericDrawIndirect(const gl::Context *context,
                                           GLenum type,
                                           const void *indirect)
 {
-    const auto &contextState = context->getContextState();
-    const auto &glState      = context->getGLState();
+    const auto &glState = context->getGLState();
+    ASSERT(!glState.isTransformFeedbackActiveUnpaused());
+
     gl::Program *program = glState.getProgram();
     ASSERT(program != nullptr);
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
-    bool usesPointSize     = programD3D->usesPointSize();
-
-    applyPrimitiveType(mode, 0, usesPointSize);
-    ANGLE_TRY(mStateManager.updateState(context, mode));
-    ANGLE_TRY(applyTransformFeedbackBuffers(contextState));
-    ASSERT(!glState.isTransformFeedbackActiveUnpaused());
+    applyPrimitiveType(mode, 0, programD3D->usesPointSize());
 
     if (type == GL_NONE)
     {
@@ -4064,6 +4008,23 @@ bool Renderer11::canSelectViewInVertexShader() const
 {
     return !getWorkarounds().selectViewInGeometryShader &&
            getRenderer11DeviceCaps().supportsVpRtIndexWriteFromVertexShader;
+}
+
+gl::Error Renderer11::markTransformFeedbackUsage(const gl::State &glState)
+{
+    const gl::TransformFeedback *transformFeedback = glState.getCurrentTransformFeedback();
+    for (size_t i = 0; i < transformFeedback->getIndexedBufferCount(); i++)
+    {
+        const gl::OffsetBindingPointer<gl::Buffer> &binding =
+            transformFeedback->getIndexedBuffer(i);
+        if (binding.get() != nullptr)
+        {
+            BufferD3D *bufferD3D = GetImplAs<BufferD3D>(binding.get());
+            ANGLE_TRY(bufferD3D->markTransformFeedbackUsage());
+        }
+    }
+
+    return gl::NoError();
 }
 
 }  // namespace rx

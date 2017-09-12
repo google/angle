@@ -135,8 +135,8 @@ class DynamicHLSL : angle::NonCopyable
                                                const bool hasANGLEMultiviewEnabled,
                                                const bool selectViewInVS) const;
 
-    std::string generateGeometryShaderHLSL(gl::PrimitiveType primitiveType,
-                                           const gl::ContextState &data,
+    std::string generateGeometryShaderHLSL(const gl::Context *context,
+                                           gl::PrimitiveType primitiveType,
                                            const gl::ProgramState &programData,
                                            const bool useViewScale,
                                            const bool hasANGLEMultiviewEnabled,
