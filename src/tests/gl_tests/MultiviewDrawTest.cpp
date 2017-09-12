@@ -2032,6 +2032,59 @@ TEST_P(MultiviewRenderTest, FlatInterpolation)
     EXPECT_EQ(GLColor::green, GetViewColor(0, 0, 1));
 }
 
+// The test is added to cover a bug which resulted in the viewport/scissor and viewport offsets not
+// being correctly applied.
+TEST_P(MultiviewSideBySideRenderTest, ViewportOffsetsAppliedBugCoverage)
+{
+    if (!requestMultiviewExtension())
+    {
+        return;
+    }
+
+    createFBO(1, 1, 2);
+
+    // Create multiview program.
+    const std::string &vs =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview : require\n"
+        "layout(num_views = 2) in;\n"
+        "layout(location = 0) in vec3 vPosition;\n"
+        "void main()\n"
+        "{\n"
+        "       gl_Position = vec4(vPosition, 1.0);\n"
+        "}\n";
+
+    const std::string &fs =
+        "#version 300 es\n"
+        "#extension GL_OVR_multiview : require\n"
+        "precision mediump float;\n"
+        "out vec4 col;\n"
+        "void main()\n"
+        "{\n"
+        "    col = vec4(1,0,0,1);\n"
+        "}\n";
+
+    ANGLE_GL_PROGRAM(program, vs, fs);
+
+    glViewport(0, 0, 1, 1);
+    glScissor(0, 0, 1, 1);
+    glEnable(GL_SCISSOR_TEST);
+    glClearColor(0, 0, 0, 1);
+
+    // Bind the default FBO and make sure that the state is synchronized.
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    // Draw and check that both views are rendered to.
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, mDrawFramebuffer);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glUseProgram(program);
+    drawQuad(program, "vPosition", 0.0f, 1.0f, true);
+    EXPECT_EQ(GLColor::red, GetViewColor(0, 0, 0));
+    EXPECT_EQ(GLColor::red, GetViewColor(0, 0, 1));
+}
+
 MultiviewImplementationParams VertexShaderOpenGL()
 {
     return MultiviewImplementationParams(false, egl_platform::OPENGL());

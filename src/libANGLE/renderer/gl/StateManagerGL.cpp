@@ -2146,14 +2146,8 @@ void StateManagerGL::applyViewportOffsetsAndSetScissors(const gl::Rectangle &sci
         attachmentViewportOffsets != nullptr
             ? *attachmentViewportOffsets
             : gl::FramebufferAttachment::GetDefaultViewportOffsetVector();
-    if (!AllRectanglesMatch(scissor, mScissors) ||
-        !std::equal(viewportOffsets.cbegin(), viewportOffsets.cend(), mViewportOffsets.cbegin()))
-    {
-        const std::vector<gl::Rectangle> &scissorArray = ApplyOffsets(scissor, viewportOffsets);
-        std::copy(viewportOffsets.begin(), viewportOffsets.end(), mViewportOffsets.begin());
-        setScissorArrayv(0u, scissorArray);
-        mMultiviewDirtyBits.set(MULTIVIEW_DIRTY_BIT_VIEWPORT_OFFSETS);
-    }
+    const std::vector<gl::Rectangle> &scissorArray = ApplyOffsets(scissor, viewportOffsets);
+    setScissorArrayv(0u, scissorArray);
 }
 
 void StateManagerGL::applyViewportOffsetsAndSetViewports(const gl::Rectangle &viewport,
@@ -2164,14 +2158,8 @@ void StateManagerGL::applyViewportOffsetsAndSetViewports(const gl::Rectangle &vi
         attachmentViewportOffsets != nullptr
             ? *attachmentViewportOffsets
             : gl::FramebufferAttachment::GetDefaultViewportOffsetVector();
-    if (!AllRectanglesMatch(viewport, mViewports) ||
-        !std::equal(viewportOffsets.cbegin(), viewportOffsets.cend(), mViewportOffsets.cbegin()))
-    {
-        const std::vector<gl::Rectangle> &viewportArray = ApplyOffsets(viewport, viewportOffsets);
-        std::copy(viewportOffsets.begin(), viewportOffsets.end(), mViewportOffsets.begin());
-        setViewportArrayv(0u, viewportArray);
-        mMultiviewDirtyBits.set(MULTIVIEW_DIRTY_BIT_VIEWPORT_OFFSETS);
-    }
+    const std::vector<gl::Rectangle> &viewportArray = ApplyOffsets(viewport, viewportOffsets);
+    setViewportArrayv(0u, viewportArray);
 }
 
 void StateManagerGL::propagateNumViewsToVAO(const gl::Program *program, VertexArrayGL *vao)
