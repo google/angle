@@ -158,10 +158,6 @@ class StateManager11 final : angle::NonCopyable
 
     void updateStencilSizeIfChanged(bool depthStencilInitialized, unsigned int stencilSize);
 
-    void setShaderResource(gl::SamplerType shaderType,
-                           UINT resourceSlot,
-                           ID3D11ShaderResourceView *srv);
-
     // Checks are done on a framebuffer state change to trigger other state changes.
     // The Context is allowed to be nullptr for these methods, when called in EGL init code.
     void invalidateRenderTarget(const gl::Context *context);
@@ -200,6 +196,12 @@ class StateManager11 final : angle::NonCopyable
 
     gl::Error updateState(const gl::Context *context, GLenum drawMode);
 
+    void setShaderResourceShared(gl::SamplerType shaderType,
+                                 UINT resourceSlot,
+                                 const d3d11::SharedSRV *srv);
+    void setShaderResource(gl::SamplerType shaderType,
+                           UINT resourceSlot,
+                           const d3d11::ShaderResourceView *srv);
     void setPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY primitiveTopology);
 
     void setDrawShaders(const d3d11::VertexShader *vertexShader,
@@ -216,6 +218,8 @@ class StateManager11 final : angle::NonCopyable
     void setRasterizerState(const d3d11::RasterizerState *rasterizerState);
     void setSimpleViewport(const gl::Extents &viewportExtents);
     void setSimpleViewport(int width, int height);
+    void setSimplePixelTextureAndSampler(const d3d11::SharedSRV &srv,
+                                         const d3d11::SamplerState &samplerState);
 
     // Not handled by an internal dirty bit because of the extra draw parameters.
     gl::Error applyVertexBuffer(const gl::Context *context,
@@ -246,6 +250,11 @@ class StateManager11 final : angle::NonCopyable
     InputLayoutCache *getInputLayoutCache() { return &mInputLayoutCache; }
 
   private:
+    template <typename SRVType>
+    void setShaderResourceInternal(gl::SamplerType shaderType,
+                                   UINT resourceSlot,
+                                   const SRVType *srv);
+
     void unsetConflictingSRVs(gl::SamplerType shaderType,
                               uintptr_t resource,
                               const gl::ImageIndex &index);

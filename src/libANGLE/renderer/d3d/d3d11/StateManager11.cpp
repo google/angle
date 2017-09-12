@@ -585,8 +585,11 @@ StateManager11::StateManager11(Renderer11 *renderer)
     mCurRasterState.pointDrawMode       = false;
     mCurRasterState.multiSample         = false;
 
+    // Start with all internal dirty bits set.
+    mInternalDirtyBits.set();
+
     // Initially all current value attributes must be updated on first use.
-    mDirtyCurrentValueAttribs.flip();
+    mDirtyCurrentValueAttribs.set();
 
     mCurrentVertexBuffers.fill(nullptr);
     mCurrentVertexStrides.fill(std::numeric_limits<UINT>::max());
@@ -595,6 +598,33 @@ StateManager11::StateManager11(Renderer11 *renderer)
 
 StateManager11::~StateManager11()
 {
+}
+
+template <typename SRVType>
+void StateManager11::setShaderResourceInternal(gl::SamplerType shaderType,
+                                               UINT resourceSlot,
+                                               const SRVType *srv)
+{
+    auto &currentSRVs = (shaderType == gl::SAMPLER_VERTEX ? mCurVertexSRVs : mCurPixelSRVs);
+
+    ASSERT(static_cast<size_t>(resourceSlot) < currentSRVs.size());
+    const SRVRecord &record = currentSRVs[resourceSlot];
+
+    if (record.srv != reinterpret_cast<uintptr_t>(srv))
+    {
+        auto deviceContext               = mRenderer->getDeviceContext();
+        ID3D11ShaderResourceView *srvPtr = srv ? srv->get() : nullptr;
+        if (shaderType == gl::SAMPLER_VERTEX)
+        {
+            deviceContext->VSSetShaderResources(resourceSlot, 1, &srvPtr);
+        }
+        else
+        {
+            deviceContext->PSSetShaderResources(resourceSlot, 1, &srvPtr);
+        }
+
+        currentSRVs.update(resourceSlot, srvPtr);
+    }
 }
 
 void StateManager11::updateStencilSizeIfChanged(bool depthStencilInitialized,
@@ -1458,31 +1488,6 @@ gl::Error StateManager11::onMakeCurrent(const gl::Context *context)
     return gl::NoError();
 }
 
-void StateManager11::setShaderResource(gl::SamplerType shaderType,
-                                       UINT resourceSlot,
-                                       ID3D11ShaderResourceView *srv)
-{
-    auto &currentSRVs = (shaderType == gl::SAMPLER_VERTEX ? mCurVertexSRVs : mCurPixelSRVs);
-
-    ASSERT(static_cast<size_t>(resourceSlot) < currentSRVs.size());
-    const SRVRecord &record = currentSRVs[resourceSlot];
-
-    if (record.srv != reinterpret_cast<uintptr_t>(srv))
-    {
-        auto deviceContext = mRenderer->getDeviceContext();
-        if (shaderType == gl::SAMPLER_VERTEX)
-        {
-            deviceContext->VSSetShaderResources(resourceSlot, 1, &srv);
-        }
-        else
-        {
-            deviceContext->PSSetShaderResources(resourceSlot, 1, &srv);
-        }
-
-        currentSRVs.update(resourceSlot, srv);
-    }
-}
-
 gl::Error StateManager11::clearTextures(gl::SamplerType samplerType,
                                         size_t rangeStart,
                                         size_t rangeEnd)
@@ -1535,7 +1540,8 @@ void StateManager11::unsetConflictingSRVs(gl::SamplerType samplerType,
         if (record.srv && record.resource == resource &&
             ImageIndexConflictsWithSRV(index, record.desc))
         {
-            setShaderResource(samplerType, static_cast<UINT>(resourceIndex), nullptr);
+            setShaderResourceInternal<d3d11::ShaderResourceView>(
+                samplerType, static_cast<UINT>(resourceIndex), nullptr);
         }
     }
 }
@@ -1553,6 +1559,12 @@ void StateManager11::unsetConflictingAttachmentResources(
         // because a rendertarget is never compressed.
         unsetConflictingSRVs(gl::SAMPLER_VERTEX, resourcePtr, index);
         unsetConflictingSRVs(gl::SAMPLER_PIXEL, resourcePtr, index);
+    }
+    else if (attachment->type() == GL_FRAMEBUFFER_DEFAULT)
+    {
+        uintptr_t resourcePtr = reinterpret_cast<uintptr_t>(resource);
+        unsetConflictingSRVs(gl::SAMPLER_VERTEX, resourcePtr, gl::ImageIndex::Make2D(0));
+        unsetConflictingSRVs(gl::SAMPLER_PIXEL, resourcePtr, gl::ImageIndex::Make2D(0));
     }
 }
 
@@ -1908,6 +1920,26 @@ gl::Error StateManager11::updateState(const gl::Context *context, GLenum drawMod
     return gl::NoError();
 }
 
+void StateManager11::setShaderResourceShared(gl::SamplerType shaderType,
+                                             UINT resourceSlot,
+                                             const d3d11::SharedSRV *srv)
+{
+    setShaderResourceInternal(shaderType, resourceSlot, srv);
+
+    // TODO(jmadill): Narrower dirty region.
+    mInternalDirtyBits.set(DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE);
+}
+
+void StateManager11::setShaderResource(gl::SamplerType shaderType,
+                                       UINT resourceSlot,
+                                       const d3d11::ShaderResourceView *srv)
+{
+    setShaderResourceInternal(shaderType, resourceSlot, srv);
+
+    // TODO(jmadill): Narrower dirty region.
+    mInternalDirtyBits.set(DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE);
+}
+
 void StateManager11::setPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY primitiveTopology)
 {
     if (primitiveTopology != mCurrentPrimitiveTopology)
@@ -2091,13 +2123,25 @@ void StateManager11::setSimpleViewport(int width, int height)
     D3D11_VIEWPORT viewport;
     viewport.TopLeftX = 0;
     viewport.TopLeftY = 0;
-    viewport.Width = static_cast<FLOAT>(width);
-    viewport.Height = static_cast<FLOAT>(height);
+    viewport.Width    = static_cast<FLOAT>(width);
+    viewport.Height   = static_cast<FLOAT>(height);
     viewport.MinDepth = 0.0f;
     viewport.MaxDepth = 1.0f;
 
     mRenderer->getDeviceContext()->RSSetViewports(1, &viewport);
     mInternalDirtyBits.set(DIRTY_BIT_VIEWPORT_STATE);
+}
+
+void StateManager11::setSimplePixelTextureAndSampler(const d3d11::SharedSRV &srv,
+                                                     const d3d11::SamplerState &samplerState)
+{
+    ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
+
+    setShaderResourceInternal(gl::SAMPLER_PIXEL, 0, &srv);
+    deviceContext->PSSetSamplers(0, 1, samplerState.getPointer());
+
+    // TODO(jmadill): Narrower dirty region.
+    mInternalDirtyBits.set(DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE);
 }
 
 // For each Direct3D sampler of either the pixel or vertex stage,
@@ -2300,7 +2344,7 @@ gl::Error StateManager11::setTexture(const gl::Context *context,
         (type == gl::SAMPLER_VERTEX &&
          static_cast<unsigned int>(index) < mRenderer->getNativeCaps().maxVertexTextureImageUnits));
 
-    setShaderResource(type, index, textureSRV->get());
+    setShaderResourceInternal(type, index, textureSRV);
     return gl::NoError();
 }
 

@@ -1107,18 +1107,13 @@ gl::Error Blit11::swizzleTexture(const gl::Context *context,
     // Set the viewport
     stateManager->setSimpleViewport(size);
 
-    // Apply textures
-    stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, source.get());
-
-    // Apply samplers
-    ID3D11SamplerState *samplerState = mPointSampler.get();
-    deviceContext->PSSetSamplers(0, 1, &samplerState);
+    // Apply textures and sampler
+    stateManager->setSimplePixelTextureAndSampler(source, mPointSampler);
 
     // Draw the quad
     deviceContext->Draw(drawCount, 0);
 
-    // Unbind shader resources and dirty state.
-    stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
+    // Dirty state.
     mRenderer->markAllStateDirty(context);
 
     return gl::NoError();
@@ -1233,32 +1228,25 @@ gl::Error Blit11::copyTexture(const gl::Context *context,
     // Set the viewport
     stateManager->setSimpleViewport(destSize);
 
-    // Apply textures
-    stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, source.get());
-
-    // Apply samplers
-    ID3D11SamplerState *sampler = nullptr;
+    // Apply texture and sampler
     switch (filter)
     {
         case GL_NEAREST:
-            sampler = mPointSampler.get();
+            stateManager->setSimplePixelTextureAndSampler(source, mPointSampler);
             break;
         case GL_LINEAR:
-            sampler = mLinearSampler.get();
+            stateManager->setSimplePixelTextureAndSampler(source, mLinearSampler);
             break;
 
         default:
             UNREACHABLE();
             return gl::InternalError() << "Internal error, unknown blit filter mode.";
     }
-    deviceContext->PSSetSamplers(0, 1, &sampler);
 
     // Draw the quad
     deviceContext->Draw(drawCount, 0);
 
-    // Unbind shader resource and invalidate state.
-    stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
-
+    // Invalidate state.
     mRenderer->markAllStateDirty(context);
 
     return gl::NoError();
@@ -1356,19 +1344,13 @@ gl::Error Blit11::copyDepth(const gl::Context *context,
     // Set the viewport
     stateManager->setSimpleViewport(destSize);
 
-    // Apply textures
-    stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, source.get());
-
-    // Apply samplers
-    ID3D11SamplerState *samplerState = mPointSampler.get();
-    deviceContext->PSSetSamplers(0, 1, &samplerState);
+    // Apply texture and sampler
+    stateManager->setSimplePixelTextureAndSampler(source, mPointSampler);
 
     // Draw the quad
     deviceContext->Draw(drawCount, 0);
 
-    // Unbind shader resources and invalidate all state.
-    stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
-
+    // Invalidate all state.
     mRenderer->markAllStateDirty(context);
 
     return gl::NoError();
@@ -2000,13 +1982,10 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveDepth(const gl::Context *conte
     stateManager->setDepthStencilState(&mDepthStencilState, 0xFFFFFFFF);
     stateManager->setRenderTargets(nullptr, 0, mResolvedDepthDSView.get());
     stateManager->setSimpleBlendState(nullptr);
-
-    // Set the viewport
     stateManager->setSimpleViewport(extents);
 
-    ID3D11ShaderResourceView *pixelViews[] = {depth->getShaderResourceView().get()};
-
-    deviceContext->PSSetShaderResources(0, 1, pixelViews);
+    // Set the viewport
+    stateManager->setShaderResourceShared(gl::SAMPLER_PIXEL, 0, &depth->getShaderResourceView());
 
     // Trigger the blit on the GPU.
     deviceContext->Draw(6, 0);
@@ -2166,12 +2145,9 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(const gl::Context *con
 
     // Set the viewport
     stateManager->setSimpleViewport(extents);
-
-    ID3D11ShaderResourceView *pixelViews[] = {
-        depthStencil->getShaderResourceView().get(), mStencilSRV.get(),
-    };
-
-    deviceContext->PSSetShaderResources(0, 2, pixelViews);
+    stateManager->setShaderResourceShared(gl::SAMPLER_PIXEL, 0,
+                                          &depthStencil->getShaderResourceView());
+    stateManager->setShaderResource(gl::SAMPLER_PIXEL, 1, &mStencilSRV);
 
     // Trigger the blit on the GPU.
     deviceContext->Draw(6, 0);

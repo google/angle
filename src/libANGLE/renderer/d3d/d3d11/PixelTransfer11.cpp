@@ -171,7 +171,7 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::Context *context,
     DXGI_FORMAT srvFormat = sourceFormatInfo.srvFormat;
     ASSERT(srvFormat != DXGI_FORMAT_UNKNOWN);
     Buffer11 *bufferStorage11 = GetAs<Buffer11>(sourceBuffer.getImplementation());
-    ID3D11ShaderResourceView *bufferSRV = nullptr;
+    const d3d11::ShaderResourceView *bufferSRV = nullptr;
     ANGLE_TRY_RESULT(bufferStorage11->getSRV(srvFormat), bufferSRV);
     ASSERT(bufferSRV != nullptr);
 

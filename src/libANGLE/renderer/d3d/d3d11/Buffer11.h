@@ -62,7 +62,7 @@ class Buffer11 : public BufferD3D
                                      const d3d11::Buffer **bufferOut,
                                      UINT *firstConstantOut,
                                      UINT *numConstantsOut);
-    gl::ErrorOrResult<ID3D11ShaderResourceView *> getSRV(DXGI_FORMAT srvFormat);
+    gl::ErrorOrResult<const d3d11::ShaderResourceView *> getSRV(DXGI_FORMAT srvFormat);
     bool isMapped() const { return mMappedStorage != nullptr; }
     gl::Error packPixels(const gl::Context *context,
                          const gl::FramebufferAttachment &readAttachment,

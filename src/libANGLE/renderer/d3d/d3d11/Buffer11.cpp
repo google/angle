@@ -165,7 +165,7 @@ class Buffer11::NativeStorage : public Buffer11::BufferStorage
                   uint8_t **mapPointerOut) override;
     void unmap() override;
 
-    gl::ErrorOrResult<ID3D11ShaderResourceView *> getSRVForFormat(DXGI_FORMAT srvFormat);
+    gl::ErrorOrResult<const d3d11::ShaderResourceView *> getSRVForFormat(DXGI_FORMAT srvFormat);
 
   private:
     static void FillBufferDesc(D3D11_BUFFER_DESC *bufferDesc,
@@ -669,7 +669,7 @@ gl::Error Buffer11::getConstantBufferRange(GLintptr offset,
     return gl::NoError();
 }
 
-gl::ErrorOrResult<ID3D11ShaderResourceView *> Buffer11::getSRV(DXGI_FORMAT srvFormat)
+gl::ErrorOrResult<const d3d11::ShaderResourceView *> Buffer11::getSRV(DXGI_FORMAT srvFormat)
 {
     BufferStorage *storage = nullptr;
     ANGLE_TRY_RESULT(getBufferStorage(BUFFER_USAGE_PIXEL_UNPACK), storage);
@@ -1179,14 +1179,14 @@ void Buffer11::NativeStorage::unmap()
     context->Unmap(mBuffer.get(), 0);
 }
 
-gl::ErrorOrResult<ID3D11ShaderResourceView *> Buffer11::NativeStorage::getSRVForFormat(
+gl::ErrorOrResult<const d3d11::ShaderResourceView *> Buffer11::NativeStorage::getSRVForFormat(
     DXGI_FORMAT srvFormat)
 {
     auto bufferSRVIt = mBufferResourceViews.find(srvFormat);
 
     if (bufferSRVIt != mBufferResourceViews.end())
     {
-        return bufferSRVIt->second.get();
+        return &bufferSRVIt->second;
     }
 
     const d3d11::DXGIFormatSize &dxgiFormatInfo = d3d11::GetDXGIFormatSizeInfo(srvFormat);
@@ -1200,7 +1200,7 @@ gl::ErrorOrResult<ID3D11ShaderResourceView *> Buffer11::NativeStorage::getSRVFor
     ANGLE_TRY(mRenderer->allocateResource(bufferSRVDesc, mBuffer.get(),
                                           &mBufferResourceViews[srvFormat]));
 
-    return mBufferResourceViews[srvFormat].get();
+    return &mBufferResourceViews[srvFormat];
 }
 
 void Buffer11::NativeStorage::clearSRVs()

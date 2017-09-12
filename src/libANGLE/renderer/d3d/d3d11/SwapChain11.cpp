@@ -843,19 +843,12 @@ EGLint SwapChain11::copyOffscreenToBackbuffer(const gl::Context *context,
     stateManager->setSimpleViewport(mWidth, mHeight);
 
     // Apply textures
-    stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, mOffscreenSRView.get());
-
-    ID3D11SamplerState *samplerState = mPassThroughSampler.get();
-    deviceContext->PSSetSamplers(0, 1, &samplerState);
+    stateManager->setSimplePixelTextureAndSampler(mOffscreenSRView, mPassThroughSampler);
 
     // Draw
     deviceContext->Draw(4, 0);
 
     // Rendering to the swapchain is now complete. Now we can call Present().
-    // Before that, we perform any cleanup on the D3D device. We do this before Present() to make sure the
-    // cleanup is caught under the current eglSwapBuffers() PIX/Graphics Diagnostics call rather than the next one.
-    stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
-
     mRenderer->markAllStateDirty(context);
 
     return EGL_SUCCESS;
