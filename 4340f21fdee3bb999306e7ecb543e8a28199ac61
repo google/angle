@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d6487cee_fc8128ed",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 649,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-12T08:07:10Z",
+      "side": 1,
+      "message": "I thought that we decided to make this an error? This shouldn\u0027t work since the program doesn\u0027t specify a number of views.",
+      "revId": "4340f21fdee3bb999306e7ecb543e8a28199ac61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dfb427ef_a2de6ec5",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1006,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-12T08:07:10Z",
+      "side": 1,
+      "message": "I\u0027d prefer making this function private in ANGLETestBase, and adding a new public function drawQuadInstanced() for drawing instanced quads. That makes the call sites easier to read.",
+      "revId": "4340f21fdee3bb999306e7ecb543e8a28199ac61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "49b9d442_fdce6f68",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1129,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-12T08:07:10Z",
+      "side": 1,
+      "message": "You could change these test cases that only use one color to expect green. That\u0027s the more usual convention.\n\nIn tests that use two different colors, it\u0027s fine to use red.",
+      "revId": "4340f21fdee3bb999306e7ecb543e8a28199ac61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
