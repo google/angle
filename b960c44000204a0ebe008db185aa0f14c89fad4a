@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "044a49c7_9ec19440",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1116,
+      "author": {
+        "id": 1138134
+      },
+      "writtenOn": "2017-09-12T01:27:16Z",
+      "side": 1,
+      "message": "Thanks for your explanation, Corentin. That\u0027s true, most GL objects can \"bind to create\" without GenFoos to generates the ids, with some exceptions like program pipeline, VAO and transform feedback.",
+      "parentUuid": "1d4e9869_03c2c47a",
+      "revId": "b960c44000204a0ebe008db185aa0f14c89fad4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7af8f96b_72a08b61",
         "filename": "src/libANGLE/ProgramPipeline.cpp",
         "patchSetId": 9
