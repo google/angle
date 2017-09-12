@@ -2582,9 +2582,9 @@ bool ValidateDrawBase(ValidationContext *context, GLenum mode, GLsizei count)
 
     if (extensions.multiview)
     {
-        const int programNumViews     = program->getNumViews();
+        const int programNumViews     = program->usesMultiview() ? program->getNumViews() : 1;
         const int framebufferNumViews = framebuffer->getNumViews();
-        if (programNumViews != -1 && framebufferNumViews != programNumViews)
+        if (framebufferNumViews != programNumViews)
         {
             context->handleError(InvalidOperation() << "The number of views in the active program "
                                                        "and draw framebuffer does not match.");

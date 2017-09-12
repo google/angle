@@ -12,10 +12,11 @@ Contributors
     Olli Etuaho, NVIDIA Corporation
     Corentin Wallez, Google
     Geoff Lang, Google
+    Jamie Madill, Google
 
 Contact
 
-    TODO
+    Olli Etuaho (oetuaho 'at' nvidia.com)
 
 Status
 
@@ -58,14 +59,14 @@ New Tokens
     Accepted by the <pname> parameter of GetFramebufferAttachmentParameteriv:
 
         FRAMEBUFFER_ATTACHMENT_TEXTURE_NUM_VIEWS_ANGLE             0x9630
-        FRAMEBUFFER_ATTACHMENT_TEXTURE_VIEWPORT_OFFSETS_ANGLE      0xXXXX
+        FRAMEBUFFER_ATTACHMENT_TEXTURE_VIEWPORT_OFFSETS_ANGLE      0x969B
         FRAMEBUFFER_ATTACHMENT_TEXTURE_BASE_VIEW_INDEX_ANGLE       0x9632
-        FRAMEBUFFER_ATTACHMENT_TEXTURE_MULTIVIEW_LAYOUT_ANGLE      0xXXXX
+        FRAMEBUFFER_ATTACHMENT_TEXTURE_MULTIVIEW_LAYOUT_ANGLE      0x969C
 
     Returned in <params> by GetFramebufferAttachmentParameteriv:
 
-        FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE                   0xXXXX
-        FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE                        0xXXXX
+        FRAMEBUFFER_MULTIVIEW_SIDE_BY_SIDE_ANGLE                   0x969D
+        FRAMEBUFFER_MULTIVIEW_LAYERED_ANGLE                        0x969E
 
     Accepted by the <pname> parameter of GetIntegerv:
 
@@ -97,8 +98,7 @@ Additions to Chapter 2 of the OpenGL ES 3.0 Specification (OpenGL ES Operation)
     Append to the end of the section:
 
     "
-    If any drawing command is called while the current program object
-    uses the multi-view extension, the number of views specified in the
+    If any drawing command is called the number of views specified in the
     program must match the number of views in the draw framebuffer. If
     there is a mismatch, an INVALID_OPERATION error is generated.
 
