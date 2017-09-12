@@ -3363,6 +3363,31 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Context *context,
     // by internally scaling the read and draw rectangles.
     gl::Rectangle readRect = readRectIn;
     gl::Rectangle drawRect = drawRectIn;
+
+    auto flip = [](int val) { return val >= 0 ? 1 : -1; };
+
+    if (readRect.x > readSize.width && readRect.width < 0)
+    {
+        int delta = readRect.x - readSize.width;
+        readRect.x -= delta;
+        readRect.width += delta;
+
+        int drawDelta = delta * flip(drawRect.width);
+        drawRect.x += drawDelta;
+        drawRect.width -= drawDelta;
+    }
+
+    if (readRect.y > readSize.height && readRect.height < 0)
+    {
+        int delta = readRect.y - readSize.height;
+        readRect.y -= delta;
+        readRect.height += delta;
+
+        int drawDelta = delta * flip(drawRect.height);
+        drawRect.y += drawDelta;
+        drawRect.height -= drawDelta;
+    }
+
     auto readToDrawX       = [&drawRectIn, &readRectIn](int readOffset) {
         double readToDrawScale =
             static_cast<double>(drawRectIn.width) / static_cast<double>(readRectIn.width);
@@ -3411,6 +3436,20 @@ gl::Error Renderer11::blitRenderbufferRect(const gl::Context *context,
 
         int drawOffset = readToDrawY(readOffset);
         drawRect.height += drawOffset;
+    }
+
+    if (readRect.x1() > readSize.width)
+    {
+        int delta = readRect.x1() - readSize.width;
+        readRect.width -= delta;
+        drawRect.width -= delta * flip(drawRect.width);
+    }
+
+    if (readRect.y1() > readSize.height)
+    {
+        int delta = readRect.y1() - readSize.height;
+        readRect.height -= delta;
+        drawRect.height -= delta * flip(drawRect.height);
     }
 
     bool scissorNeeded = scissor && gl::ClipRectangle(drawRect, *scissor, nullptr);
