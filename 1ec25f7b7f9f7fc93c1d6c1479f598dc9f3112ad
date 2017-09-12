@@ -329,6 +329,30 @@
       "revId": "1ec25f7b7f9f7fc93c1d6c1479f598dc9f3112ad",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5ca085dc_c9e3ca88",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 28
+      },
+      "lineNbr": 1348,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-12T13:34:12Z",
+      "side": 1,
+      "message": "OK, thank you for explaining.",
+      "parentUuid": "3abd5f88_de1095f8",
+      "range": {
+        "startLine": 1331,
+        "startChar": 0,
+        "endLine": 1348,
+        "endChar": 94
+      },
+      "revId": "1ec25f7b7f9f7fc93c1d6c1479f598dc9f3112ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
