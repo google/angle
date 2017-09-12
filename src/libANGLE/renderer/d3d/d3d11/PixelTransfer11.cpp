@@ -210,14 +210,7 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::Context *context,
     stateManager->setVertexConstantBuffer(0, &mParamsConstantBuffer);
 
     // Set the viewport
-    D3D11_VIEWPORT viewport;
-    viewport.TopLeftX = 0;
-    viewport.TopLeftY = 0;
-    viewport.Width = static_cast<FLOAT>(destSize.width);
-    viewport.Height = static_cast<FLOAT>(destSize.height);
-    viewport.MinDepth = 0.0f;
-    viewport.MaxDepth = 1.0f;
-    deviceContext->RSSetViewports(1, &viewport);
+    stateManager->setSimpleViewport(destSize);
 
     UINT numPixels = (destArea.width * destArea.height * destArea.depth);
     deviceContext->Draw(numPixels, 0);

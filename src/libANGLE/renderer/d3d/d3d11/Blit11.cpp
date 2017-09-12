@@ -1105,14 +1105,7 @@ gl::Error Blit11::swizzleTexture(const gl::Context *context,
     stateManager->setRenderTarget(dest.get(), nullptr);
 
     // Set the viewport
-    D3D11_VIEWPORT viewport;
-    viewport.TopLeftX = 0;
-    viewport.TopLeftY = 0;
-    viewport.Width    = static_cast<FLOAT>(size.width);
-    viewport.Height   = static_cast<FLOAT>(size.height);
-    viewport.MinDepth = 0.0f;
-    viewport.MaxDepth = 1.0f;
-    deviceContext->RSSetViewports(1, &viewport);
+    stateManager->setSimpleViewport(size);
 
     // Apply textures
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, source.get());
@@ -1238,14 +1231,7 @@ gl::Error Blit11::copyTexture(const gl::Context *context,
     stateManager->setRenderTarget(dest.get(), nullptr);
 
     // Set the viewport
-    D3D11_VIEWPORT viewport;
-    viewport.TopLeftX = 0;
-    viewport.TopLeftY = 0;
-    viewport.Width    = static_cast<FLOAT>(destSize.width);
-    viewport.Height   = static_cast<FLOAT>(destSize.height);
-    viewport.MinDepth = 0.0f;
-    viewport.MaxDepth = 1.0f;
-    deviceContext->RSSetViewports(1, &viewport);
+    stateManager->setSimpleViewport(destSize);
 
     // Apply textures
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, source.get());
@@ -1368,14 +1354,7 @@ gl::Error Blit11::copyDepth(const gl::Context *context,
     stateManager->setRenderTarget(nullptr, dest.get());
 
     // Set the viewport
-    D3D11_VIEWPORT viewport;
-    viewport.TopLeftX = 0;
-    viewport.TopLeftY = 0;
-    viewport.Width    = static_cast<FLOAT>(destSize.width);
-    viewport.Height   = static_cast<FLOAT>(destSize.height);
-    viewport.MinDepth = 0.0f;
-    viewport.MaxDepth = 1.0f;
-    deviceContext->RSSetViewports(1, &viewport);
+    stateManager->setSimpleViewport(destSize);
 
     // Apply textures
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, source.get());
@@ -2023,14 +2002,7 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveDepth(const gl::Context *conte
     stateManager->setSimpleBlendState(nullptr);
 
     // Set the viewport
-    D3D11_VIEWPORT viewport;
-    viewport.TopLeftX = 0;
-    viewport.TopLeftY = 0;
-    viewport.Width    = static_cast<FLOAT>(extents.width);
-    viewport.Height   = static_cast<FLOAT>(extents.height);
-    viewport.MinDepth = 0.0f;
-    viewport.MaxDepth = 1.0f;
-    deviceContext->RSSetViewports(1, &viewport);
+    stateManager->setSimpleViewport(extents);
 
     ID3D11ShaderResourceView *pixelViews[] = {depth->getShaderResourceView().get()};
 
@@ -2193,14 +2165,7 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(const gl::Context *con
     stateManager->setSimpleBlendState(nullptr);
 
     // Set the viewport
-    D3D11_VIEWPORT viewport;
-    viewport.TopLeftX = 0;
-    viewport.TopLeftY = 0;
-    viewport.Width    = static_cast<FLOAT>(extents.width);
-    viewport.Height   = static_cast<FLOAT>(extents.height);
-    viewport.MinDepth = 0.0f;
-    viewport.MaxDepth = 1.0f;
-    deviceContext->RSSetViewports(1, &viewport);
+    stateManager->setSimpleViewport(extents);
 
     ID3D11ShaderResourceView *pixelViews[] = {
         depthStencil->getShaderResourceView().get(), mStencilSRV.get(),

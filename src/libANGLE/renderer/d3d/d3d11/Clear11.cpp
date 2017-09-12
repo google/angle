@@ -764,14 +764,7 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
     auto *stateManager = mRenderer->getStateManager();
 
     // Set the viewport to be the same size as the framebuffer.
-    D3D11_VIEWPORT viewport;
-    viewport.TopLeftX = 0;
-    viewport.TopLeftY = 0;
-    viewport.Width    = static_cast<FLOAT>(framebufferSize.width);
-    viewport.Height   = static_cast<FLOAT>(framebufferSize.height);
-    viewport.MinDepth = 0;
-    viewport.MaxDepth = 1;
-    deviceContext->RSSetViewports(1, &viewport);
+    stateManager->setSimpleViewport(framebufferSize);
 
     // Apply state
     stateManager->setSimpleBlendState(blendState);

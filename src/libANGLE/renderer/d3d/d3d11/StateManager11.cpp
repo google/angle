@@ -2081,6 +2081,25 @@ void StateManager11::setRasterizerState(const d3d11::RasterizerState *rasterizer
     mInternalDirtyBits.set(DIRTY_BIT_RASTERIZER_STATE);
 }
 
+void StateManager11::setSimpleViewport(const gl::Extents &extents)
+{
+    setSimpleViewport(extents.width, extents.height);
+}
+
+void StateManager11::setSimpleViewport(int width, int height)
+{
+    D3D11_VIEWPORT viewport;
+    viewport.TopLeftX = 0;
+    viewport.TopLeftY = 0;
+    viewport.Width = static_cast<FLOAT>(width);
+    viewport.Height = static_cast<FLOAT>(height);
+    viewport.MinDepth = 0.0f;
+    viewport.MaxDepth = 1.0f;
+
+    mRenderer->getDeviceContext()->RSSetViewports(1, &viewport);
+    mInternalDirtyBits.set(DIRTY_BIT_VIEWPORT_STATE);
+}
+
 // For each Direct3D sampler of either the pixel or vertex stage,
 // looks up the corresponding OpenGL texture image unit and texture type,
 // and sets the texture and its addressing/filtering state (or NULL when inactive).
