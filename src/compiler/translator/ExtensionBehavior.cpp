@@ -10,6 +10,8 @@
 
 #include "common/debug.h"
 
+#include <string.h>
+
 #define LIST_EXTENSIONS(OP)             \
     OP(ARB_texture_rectangle)           \
     OP(ARM_shader_framebuffer_fetch)    \
