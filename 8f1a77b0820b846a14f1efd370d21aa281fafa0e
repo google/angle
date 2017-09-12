@@ -22,6 +22,30 @@
       "revId": "8f1a77b0820b846a14f1efd370d21aa281fafa0e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "63b508f2_0bb66253",
+        "filename": "src/compiler/translator/ExtensionBehavior.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-12T08:27:48Z",
+      "side": 1,
+      "message": "Yep, that\u0027s cleaner. Done.",
+      "parentUuid": "9810fad9_613c1bde",
+      "range": {
+        "startLine": 13,
+        "startChar": 8,
+        "endLine": 13,
+        "endChar": 39
+      },
+      "revId": "8f1a77b0820b846a14f1efd370d21aa281fafa0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
