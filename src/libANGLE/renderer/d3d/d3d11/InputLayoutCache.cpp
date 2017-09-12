@@ -126,9 +126,7 @@ gl::Error InputLayoutCache::applyVertexBuffers(
     GLint start,
     TranslatedIndexData *indexInfo)
 {
-    ID3D11DeviceContext *deviceContext = renderer->getDeviceContext();
-    auto *stateManager                 = renderer->getStateManager();
-
+    auto *stateManager     = renderer->getStateManager();
     gl::Program *program   = state.getProgram();
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
 
@@ -261,7 +259,8 @@ gl::Error InputLayoutCache::applyVertexBuffers(
             // non-indexed rendering path in ANGLE (DrawArrays). This means that applyIndexBuffer()
             // on the renderer will not be called and setting this buffer here ensures that the
             // rendering path will contain the correct index buffers.
-            deviceContext->IASetIndexBuffer(mPointSpriteIndexBuffer.get(), DXGI_FORMAT_R16_UINT, 0);
+            stateManager->setIndexBuffer(mPointSpriteIndexBuffer.get(), DXGI_FORMAT_R16_UINT, 0,
+                                         false);
         }
     }
 
