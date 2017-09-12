@@ -702,7 +702,7 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
     memcpy(mBlendStateKey.rtvMasks, &rtvMasks[0], sizeof(mBlendStateKey.rtvMasks));
 
     // Get BlendState
-    ID3D11BlendState *blendState = nullptr;
+    const d3d11::BlendState *blendState = nullptr;
     ANGLE_TRY(mRenderer->getBlendState(mBlendStateKey, &blendState));
 
     const d3d11::DepthStencilState *dsState = nullptr;
@@ -774,7 +774,7 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
     deviceContext->RSSetViewports(1, &viewport);
 
     // Apply state
-    deviceContext->OMSetBlendState(blendState, nullptr, 0xFFFFFFFF);
+    stateManager->setSimpleBlendState(blendState);
 
     const UINT stencilValue = clearParams.stencilValue & 0xFF;
     stateManager->setDepthStencilState(dsState, stencilValue);

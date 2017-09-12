@@ -4005,7 +4005,7 @@ gl::Error Renderer11::allocateTexture(const D3D11_TEXTURE3D_DESC &desc,
 }
 
 gl::Error Renderer11::getBlendState(const d3d11::BlendStateKey &key,
-                                    ID3D11BlendState **outBlendState)
+                                    const d3d11::BlendState **outBlendState)
 {
     return mStateCache.getBlendState(this, key, outBlendState);
 }

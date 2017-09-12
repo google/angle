@@ -88,12 +88,12 @@ d3d11::BlendStateKey RenderStateCache::GetBlendStateKey(const gl::Context *conte
 
 gl::Error RenderStateCache::getBlendState(Renderer11 *renderer,
                                           const d3d11::BlendStateKey &key,
-                                          ID3D11BlendState **outBlendState)
+                                          const d3d11::BlendState **outBlendState)
 {
     auto keyIter = mBlendStateCache.Get(key);
     if (keyIter != mBlendStateCache.end())
     {
-        *outBlendState = keyIter->second.get();
+        *outBlendState = &keyIter->second;
         return gl::NoError();
     }
 
@@ -130,8 +130,9 @@ gl::Error RenderStateCache::getBlendState(Renderer11 *renderer,
 
     d3d11::BlendState d3dBlendState;
     ANGLE_TRY(renderer->allocateResource(blendDesc, &d3dBlendState));
-    *outBlendState = d3dBlendState.get();
-    mBlendStateCache.Put(key, std::move(d3dBlendState));
+    const auto &iter = mBlendStateCache.Put(key, std::move(d3dBlendState));
+
+    *outBlendState = &iter->second;
 
     return gl::NoError();
 }

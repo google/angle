@@ -828,10 +828,7 @@ EGLint SwapChain11::copyOffscreenToBackbuffer(const gl::Context *context,
 
     // Apply state
     stateManager->setDepthStencilState(nullptr, 0xFFFFFFFF);
-
-    static const float blendFactor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-    deviceContext->OMSetBlendState(nullptr, blendFactor, 0xFFFFFFF);
-
+    stateManager->setSimpleBlendState(nullptr);
     deviceContext->RSSetState(mPassThroughRS.get());
 
     // Apply shaders

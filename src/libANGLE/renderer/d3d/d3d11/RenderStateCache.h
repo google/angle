@@ -76,7 +76,7 @@ class RenderStateCache : angle::NonCopyable
                                                  const gl::BlendState &blendState);
     gl::Error getBlendState(Renderer11 *renderer,
                             const d3d11::BlendStateKey &key,
-                            ID3D11BlendState **outBlendState);
+                            const d3d11::BlendState **outBlendState);
     gl::Error getRasterizerState(Renderer11 *renderer,
                                  const gl::RasterizerState &rasterState,
                                  bool scissorEnabled,

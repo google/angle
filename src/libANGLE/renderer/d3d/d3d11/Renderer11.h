@@ -308,7 +308,8 @@ class Renderer11 : public RendererD3D
     ID3D11DeviceContext1 *getDeviceContext1IfSupported() { return mDeviceContext1; };
     IDXGIFactory *getDxgiFactory() { return mDxgiFactory; };
 
-    gl::Error getBlendState(const d3d11::BlendStateKey &key, ID3D11BlendState **outBlendState);
+    gl::Error getBlendState(const d3d11::BlendStateKey &key,
+                            const d3d11::BlendState **outBlendState);
     gl::Error getRasterizerState(const gl::RasterizerState &rasterState,
                                  bool scissorEnabled,
                                  ID3D11RasterizerState **outRasterizerState);

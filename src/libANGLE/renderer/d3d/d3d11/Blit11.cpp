@@ -1087,7 +1087,7 @@ gl::Error Blit11::swizzleTexture(const gl::Context *context,
     stateManager->setPixelConstantBuffer(0, &mSwizzleCB);
 
     // Apply state
-    deviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);
+    stateManager->setSimpleBlendState(nullptr);
     stateManager->setDepthStencilState(nullptr, 0xFFFFFFFF);
     deviceContext->RSSetState(mScissorDisabledRasterizerState.get());
 
@@ -1200,12 +1200,11 @@ gl::Error Blit11::copyTexture(const gl::Context *context,
     if (maskOffAlpha)
     {
         ANGLE_TRY(mAlphaMaskBlendState.resolve(mRenderer));
-        ID3D11BlendState *blendState = mAlphaMaskBlendState.get();
-        deviceContext->OMSetBlendState(blendState, nullptr, 0xFFFFFFF);
+        stateManager->setSimpleBlendState(&mAlphaMaskBlendState.getObj());
     }
     else
     {
-        deviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);
+        stateManager->setSimpleBlendState(nullptr);
     }
     stateManager->setDepthStencilState(nullptr, 0xFFFFFFFF);
 
@@ -1333,7 +1332,7 @@ gl::Error Blit11::copyDepth(const gl::Context *context,
     stateManager->setSingleVertexBuffer(&mVertexBuffer, stride, 0);
 
     // Apply state
-    deviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);
+    stateManager->setSimpleBlendState(nullptr);
     stateManager->setDepthStencilState(&mDepthStencilState, 0xFFFFFFFF);
 
     if (scissor)
@@ -2021,7 +2020,7 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveDepth(const gl::Context *conte
     deviceContext->RSSetState(nullptr);
     stateManager->setDepthStencilState(&mDepthStencilState, 0xFFFFFFFF);
     stateManager->setRenderTargets(nullptr, 0, mResolvedDepthDSView.get());
-    deviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);
+    stateManager->setSimpleBlendState(nullptr);
 
     // Set the viewport
     D3D11_VIEWPORT viewport;
@@ -2191,7 +2190,7 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(const gl::Context *con
     deviceContext->RSSetState(nullptr);
     stateManager->setDepthStencilState(nullptr, 0xFFFFFFFF);
     stateManager->setRenderTarget(mResolvedDepthStencilRTView.get(), nullptr);
-    deviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);
+    stateManager->setSimpleBlendState(nullptr);
 
     // Set the viewport
     D3D11_VIEWPORT viewport;

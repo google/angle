@@ -212,6 +212,7 @@ class StateManager11 final : angle::NonCopyable
     void setVertexConstantBuffer(unsigned int slot, const d3d11::Buffer *buffer);
     void setPixelConstantBuffer(unsigned int slot, const d3d11::Buffer *buffer);
     void setDepthStencilState(const d3d11::DepthStencilState *depthStencilState, UINT stencilRef);
+    void setSimpleBlendState(const d3d11::BlendState *blendState);
 
     // Not handled by an internal dirty bit because of the extra draw parameters.
     gl::Error applyVertexBuffer(const gl::Context *context,

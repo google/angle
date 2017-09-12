@@ -983,7 +983,7 @@ gl::Error StateManager11::syncBlendState(const gl::Context *context,
                                          const gl::ColorF &blendColor,
                                          unsigned int sampleMask)
 {
-    ID3D11BlendState *dxBlendState = nullptr;
+    const d3d11::BlendState *dxBlendState = nullptr;
     const d3d11::BlendStateKey &key =
         RenderStateCache::GetBlendStateKey(context, framebuffer, blendState);
 
@@ -1010,7 +1010,7 @@ gl::Error StateManager11::syncBlendState(const gl::Context *context,
         blendColors[3] = blendColor.alpha;
     }
 
-    mRenderer->getDeviceContext()->OMSetBlendState(dxBlendState, blendColors, sampleMask);
+    mRenderer->getDeviceContext()->OMSetBlendState(dxBlendState->get(), blendColors, sampleMask);
 
     mCurBlendState = blendState;
     mCurBlendColor = blendColor;
@@ -2047,6 +2047,22 @@ void StateManager11::setDepthStencilState(const d3d11::DepthStencilState *depthS
     }
 
     mInternalDirtyBits.set(DIRTY_BIT_DEPTH_STENCIL_STATE);
+}
+
+void StateManager11::setSimpleBlendState(const d3d11::BlendState *blendState)
+{
+    ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
+
+    if (blendState)
+    {
+        deviceContext->OMSetBlendState(blendState->get(), nullptr, 0xFFFFFFFF);
+    }
+    else
+    {
+        deviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFFF);
+    }
+
+    mInternalDirtyBits.set(DIRTY_BIT_BLEND_STATE);
 }
 
 // For each Direct3D sampler of either the pixel or vertex stage,

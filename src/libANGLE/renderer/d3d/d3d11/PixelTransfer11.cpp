@@ -195,7 +195,7 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::Context *context,
     stateManager->setPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 
     stateManager->setSingleVertexBuffer(nullptr, 0, 0);
-    deviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);
+    stateManager->setSimpleBlendState(nullptr);
     stateManager->setDepthStencilState(&mCopyDepthStencilState, 0xFFFFFFFF);
     deviceContext->RSSetState(mCopyRasterizerState.get());
 
