@@ -646,7 +646,7 @@ gl::ErrorOrResult<ID3D11Buffer *> Buffer11::getEmulatedIndexedBuffer(
 
 gl::Error Buffer11::getConstantBufferRange(GLintptr offset,
                                            GLsizeiptr size,
-                                           ID3D11Buffer **bufferOut,
+                                           const d3d11::Buffer **bufferOut,
                                            UINT *firstConstantOut,
                                            UINT *numConstantsOut)
 {
@@ -664,7 +664,7 @@ gl::Error Buffer11::getConstantBufferRange(GLintptr offset,
         *numConstantsOut  = 0;
     }
 
-    *bufferOut = GetAs<NativeStorage>(bufferStorage)->getBuffer().get();
+    *bufferOut = &GetAs<NativeStorage>(bufferStorage)->getBuffer();
 
     return gl::NoError();
 }

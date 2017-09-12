@@ -1765,20 +1765,19 @@ void ProgramD3D::initializeUniformStorage()
     }
 }
 
-gl::Error ProgramD3D::applyUniformBuffers(const gl::ContextState &data)
+void ProgramD3D::updateUniformBufferCache(const gl::Caps &caps,
+                                          unsigned int reservedVertex,
+                                          unsigned int reservedFragment)
 {
     if (mState.getUniformBlocks().empty())
     {
-        return gl::NoError();
+        return;
     }
 
     ensureUniformBlocksInitialized();
 
     mVertexUBOCache.clear();
     mFragmentUBOCache.clear();
-
-    const unsigned int reservedBuffersInVS = mRenderer->getReservedVertexUniformBuffers();
-    const unsigned int reservedBuffersInFS = mRenderer->getReservedFragmentUniformBuffers();
 
     for (unsigned int uniformBlockIndex = 0; uniformBlockIndex < mD3DUniformBlocks.size();
          uniformBlockIndex++)
@@ -1794,8 +1793,8 @@ gl::Error ProgramD3D::applyUniformBuffers(const gl::ContextState &data)
 
         if (uniformBlock.vertexStaticUse())
         {
-            unsigned int registerIndex = uniformBlock.vsRegisterIndex - reservedBuffersInVS;
-            ASSERT(registerIndex < data.getCaps().maxVertexUniformBlocks);
+            unsigned int registerIndex = uniformBlock.vsRegisterIndex - reservedVertex;
+            ASSERT(registerIndex < caps.maxVertexUniformBlocks);
 
             if (mVertexUBOCache.size() <= registerIndex)
             {
@@ -1808,8 +1807,8 @@ gl::Error ProgramD3D::applyUniformBuffers(const gl::ContextState &data)
 
         if (uniformBlock.fragmentStaticUse())
         {
-            unsigned int registerIndex = uniformBlock.psRegisterIndex - reservedBuffersInFS;
-            ASSERT(registerIndex < data.getCaps().maxFragmentUniformBlocks);
+            unsigned int registerIndex = uniformBlock.psRegisterIndex - reservedFragment;
+            ASSERT(registerIndex < caps.maxFragmentUniformBlocks);
 
             if (mFragmentUBOCache.size() <= registerIndex)
             {
@@ -1820,8 +1819,16 @@ gl::Error ProgramD3D::applyUniformBuffers(const gl::ContextState &data)
             mFragmentUBOCache[registerIndex] = blockBinding;
         }
     }
+}
 
-    return mRenderer->setUniformBuffers(data, mVertexUBOCache, mFragmentUBOCache);
+const std::vector<GLint> &ProgramD3D::getVertexUniformBufferCache() const
+{
+    return mVertexUBOCache;
+}
+
+const std::vector<GLint> &ProgramD3D::getFragmentUniformBufferCache() const
+{
+    return mFragmentUBOCache;
 }
 
 void ProgramD3D::dirtyAllUniforms()

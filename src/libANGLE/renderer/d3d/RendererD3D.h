@@ -150,13 +150,6 @@ class RendererD3D : public BufferFactoryD3D
                                            HANDLE shareHandle,
                                            const egl::AttributeMap &attribs) const = 0;
 
-    virtual gl::Error setUniformBuffers(const gl::ContextState &data,
-                                        const std::vector<GLint> &vertexUniformBuffers,
-                                        const std::vector<GLint> &fragmentUniformBuffers) = 0;
-
-    virtual unsigned int getReservedVertexUniformBuffers() const = 0;
-    virtual unsigned int getReservedFragmentUniformBuffers() const = 0;
-
     virtual int getMajorShaderModel() const = 0;
 
     const angle::WorkaroundsD3D &getWorkarounds() const;

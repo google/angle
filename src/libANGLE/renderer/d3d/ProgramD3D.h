@@ -208,7 +208,12 @@ class ProgramD3D : public ProgramImpl
                                  const GLfloat *coeffs) override;
 
     void initializeUniformStorage();
-    gl::Error applyUniformBuffers(const gl::ContextState &data);
+    void updateUniformBufferCache(const gl::Caps &caps,
+                                  unsigned int reservedVertex,
+                                  unsigned int reservedFragment);
+    const std::vector<GLint> &getVertexUniformBufferCache() const;
+    const std::vector<GLint> &getFragmentUniformBufferCache() const;
+
     void dirtyAllUniforms();
 
     void setUniform1fv(GLint location, GLsizei count, const GLfloat *v);

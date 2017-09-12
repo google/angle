@@ -129,10 +129,6 @@ class Renderer9 : public RendererD3D
                          int index,
                          gl::Texture *texture);
 
-    gl::Error setUniformBuffers(const gl::ContextState &data,
-                                const std::vector<GLint> &vertexUniformBuffers,
-                                const std::vector<GLint> &fragmentUniformBuffers) override;
-
     gl::Error updateState(const gl::Context *context, GLenum drawMode);
 
     void setScissorRectangle(const gl::Rectangle &scissor, bool enabled);
@@ -184,8 +180,6 @@ class Renderer9 : public RendererD3D
 
     unsigned int getReservedVertexUniformVectors() const;
     unsigned int getReservedFragmentUniformVectors() const;
-    unsigned int getReservedVertexUniformBuffers() const override;
-    unsigned int getReservedFragmentUniformBuffers() const override;
 
     bool getShareHandleSupport() const;
 

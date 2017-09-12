@@ -295,6 +295,8 @@ class StateManager11 final : angle::NonCopyable
     gl::Error applyDriverUniforms(const ProgramD3D &programD3D, GLenum drawMode);
     gl::Error applyUniforms(ProgramD3D *programD3D);
 
+    gl::Error syncUniformBuffers(const gl::Context *context, ProgramD3D *programD3D);
+
     enum DirtyBitType
     {
         DIRTY_BIT_RENDER_TARGET,
@@ -453,10 +455,24 @@ class StateManager11 final : angle::NonCopyable
     d3d11::Buffer mDriverConstantBufferPS;
     d3d11::Buffer mDriverConstantBufferCS;
 
-    ResourceSerial mCurrentVertexConstantBuffer;
-    ResourceSerial mCurrentPixelConstantBuffer;
     ResourceSerial mCurrentComputeConstantBuffer;
     ResourceSerial mCurrentGeometryConstantBuffer;
+
+    template <typename T>
+    using VertexConstantBufferArray =
+        std::array<T, gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS>;
+
+    VertexConstantBufferArray<ResourceSerial> mCurrentConstantBufferVS;
+    VertexConstantBufferArray<GLintptr> mCurrentConstantBufferVSOffset;
+    VertexConstantBufferArray<GLsizeiptr> mCurrentConstantBufferVSSize;
+
+    template <typename T>
+    using FragmentConstantBufferArray =
+        std::array<T, gl::IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS>;
+
+    FragmentConstantBufferArray<ResourceSerial> mCurrentConstantBufferPS;
+    FragmentConstantBufferArray<GLintptr> mCurrentConstantBufferPSOffset;
+    FragmentConstantBufferArray<GLsizeiptr> mCurrentConstantBufferPSSize;
 };
 
 }  // namespace rx

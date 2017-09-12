@@ -59,7 +59,7 @@ class Buffer11 : public BufferD3D
                                                                GLint startVertex);
     gl::Error getConstantBufferRange(GLintptr offset,
                                      GLsizeiptr size,
-                                     ID3D11Buffer **bufferOut,
+                                     const d3d11::Buffer **bufferOut,
                                      UINT *firstConstantOut,
                                      UINT *numConstantsOut);
     gl::ErrorOrResult<ID3D11ShaderResourceView *> getSRV(DXGI_FORMAT srvFormat);

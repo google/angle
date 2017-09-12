@@ -1399,132 +1399,6 @@ void *Renderer11::getD3DDevice()
     return reinterpret_cast<void *>(mDevice);
 }
 
-gl::Error Renderer11::setUniformBuffers(const gl::ContextState &data,
-                                        const std::vector<GLint> &vertexUniformBuffers,
-                                        const std::vector<GLint> &fragmentUniformBuffers)
-{
-    for (size_t uniformBufferIndex = 0; uniformBufferIndex < vertexUniformBuffers.size();
-         uniformBufferIndex++)
-    {
-        GLint binding = vertexUniformBuffers[uniformBufferIndex];
-
-        if (binding == -1)
-        {
-            continue;
-        }
-
-        const gl::OffsetBindingPointer<gl::Buffer> &uniformBuffer =
-            data.getState().getIndexedUniformBuffer(binding);
-        GLintptr uniformBufferOffset = uniformBuffer.getOffset();
-        GLsizeiptr uniformBufferSize = uniformBuffer.getSize();
-
-        if (uniformBuffer.get() == nullptr)
-        {
-            continue;
-        }
-
-        Buffer11 *bufferStorage      = GetImplAs<Buffer11>(uniformBuffer.get());
-        ID3D11Buffer *constantBuffer = nullptr;
-        UINT firstConstant           = 0;
-        UINT numConstants            = 0;
-
-        ANGLE_TRY(bufferStorage->getConstantBufferRange(uniformBufferOffset, uniformBufferSize,
-                                                        &constantBuffer, &firstConstant,
-                                                        &numConstants));
-
-        if (!constantBuffer)
-        {
-            return gl::OutOfMemory() << "Error retrieving constant buffer";
-        }
-
-        if (mCurrentConstantBufferVS[uniformBufferIndex] != bufferStorage->getSerial() ||
-            mCurrentConstantBufferVSOffset[uniformBufferIndex] != uniformBufferOffset ||
-            mCurrentConstantBufferVSSize[uniformBufferIndex] != uniformBufferSize)
-        {
-            if (firstConstant != 0 && uniformBufferSize != 0)
-            {
-                ASSERT(numConstants != 0);
-                mDeviceContext1->VSSetConstantBuffers1(
-                    getReservedVertexUniformBuffers() +
-                        static_cast<unsigned int>(uniformBufferIndex),
-                    1, &constantBuffer, &firstConstant, &numConstants);
-            }
-            else
-            {
-                mDeviceContext->VSSetConstantBuffers(
-                    getReservedVertexUniformBuffers() +
-                        static_cast<unsigned int>(uniformBufferIndex),
-                    1, &constantBuffer);
-            }
-
-            mCurrentConstantBufferVS[uniformBufferIndex]       = bufferStorage->getSerial();
-            mCurrentConstantBufferVSOffset[uniformBufferIndex] = uniformBufferOffset;
-            mCurrentConstantBufferVSSize[uniformBufferIndex]   = uniformBufferSize;
-        }
-    }
-
-    for (size_t uniformBufferIndex = 0; uniformBufferIndex < fragmentUniformBuffers.size();
-         uniformBufferIndex++)
-    {
-        GLint binding = fragmentUniformBuffers[uniformBufferIndex];
-
-        if (binding == -1)
-        {
-            continue;
-        }
-
-        const gl::OffsetBindingPointer<gl::Buffer> &uniformBuffer =
-            data.getState().getIndexedUniformBuffer(binding);
-        GLintptr uniformBufferOffset = uniformBuffer.getOffset();
-        GLsizeiptr uniformBufferSize = uniformBuffer.getSize();
-
-        if (uniformBuffer.get() == nullptr)
-        {
-            continue;
-        }
-
-        Buffer11 *bufferStorage      = GetImplAs<Buffer11>(uniformBuffer.get());
-        ID3D11Buffer *constantBuffer = nullptr;
-        UINT firstConstant           = 0;
-        UINT numConstants            = 0;
-
-        ANGLE_TRY(bufferStorage->getConstantBufferRange(uniformBufferOffset, uniformBufferSize,
-                                                        &constantBuffer, &firstConstant,
-                                                        &numConstants));
-
-        if (!constantBuffer)
-        {
-            return gl::OutOfMemory() << "Error retrieving constant buffer";
-        }
-
-        if (mCurrentConstantBufferPS[uniformBufferIndex] != bufferStorage->getSerial() ||
-            mCurrentConstantBufferPSOffset[uniformBufferIndex] != uniformBufferOffset ||
-            mCurrentConstantBufferPSSize[uniformBufferIndex] != uniformBufferSize)
-        {
-            if (firstConstant != 0 && uniformBufferSize != 0)
-            {
-                mDeviceContext1->PSSetConstantBuffers1(
-                    getReservedFragmentUniformBuffers() +
-                        static_cast<unsigned int>(uniformBufferIndex),
-                    1, &constantBuffer, &firstConstant, &numConstants);
-            }
-            else
-            {
-                mDeviceContext->PSSetConstantBuffers(
-                    getReservedFragmentUniformBuffers() +
-                        static_cast<unsigned int>(uniformBufferIndex),
-                    1, &constantBuffer);
-            }
-
-            mCurrentConstantBufferPS[uniformBufferIndex]       = bufferStorage->getSerial();
-            mCurrentConstantBufferPSOffset[uniformBufferIndex] = uniformBufferOffset;
-            mCurrentConstantBufferPSSize[uniformBufferIndex]   = uniformBufferSize;
-        }
-    }
-
-    return gl::NoError();
-}
-
 bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSize)
 {
     D3D11_PRIMITIVE_TOPOLOGY primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
@@ -2126,17 +2000,6 @@ void Renderer11::markAllStateDirty(const gl::Context *context)
     mStateManager.invalidateEverything(context);
 
     mAppliedTFObject = angle::DirtyPointer;
-
-    for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS; i++)
-    {
-        mCurrentConstantBufferVS[i]       = static_cast<unsigned int>(-1);
-        mCurrentConstantBufferVSOffset[i] = 0;
-        mCurrentConstantBufferVSSize[i]   = 0;
-        mCurrentConstantBufferPS[i]       = static_cast<unsigned int>(-1);
-        mCurrentConstantBufferPSOffset[i] = 0;
-        mCurrentConstantBufferPSSize[i]   = 0;
-    }
-
 }
 
 void Renderer11::releaseDeviceResources()
@@ -3962,8 +3825,6 @@ gl::Error Renderer11::genericDrawElements(const gl::Context *context,
     // API validation layer.
     ASSERT(!glState.isTransformFeedbackActiveUnpaused());
 
-    ANGLE_TRY(programD3D->applyUniformBuffers(data));
-
     if (!skipDraw(data, mode))
     {
         ANGLE_TRY(drawElementsImpl(context, mode, count, type, indices, instances));
@@ -3993,7 +3854,6 @@ gl::Error Renderer11::genericDrawArrays(const gl::Context *context,
     ANGLE_TRY(mStateManager.updateState(context, mode));
     ANGLE_TRY(applyTransformFeedbackBuffers(data));
     ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, first, count, instances, nullptr));
-    ANGLE_TRY(programD3D->applyUniformBuffers(data));
 
     if (!skipDraw(data, mode))
     {
@@ -4024,7 +3884,6 @@ gl::Error Renderer11::genericDrawIndirect(const gl::Context *context,
     ANGLE_TRY(mStateManager.updateState(context, mode));
     ANGLE_TRY(applyTransformFeedbackBuffers(contextState));
     ASSERT(!glState.isTransformFeedbackActiveUnpaused());
-    ANGLE_TRY(programD3D->applyUniformBuffers(contextState));
 
     if (type == GL_NONE)
     {
@@ -4087,7 +3946,6 @@ gl::Error Renderer11::dispatchCompute(const gl::Context *context,
     ANGLE_TRY(mStateManager.updateStateForCompute(context, numGroupsX, numGroupsY, numGroupsZ));
     ANGLE_TRY(applyComputeShader(context));
 
-    // TODO(Xinghua): applyUniformBuffers for compute shader.
     mDeviceContext->Dispatch(numGroupsX, numGroupsY, numGroupsZ);
 
     return gl::NoError();

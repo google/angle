@@ -1034,14 +1034,6 @@ gl::Error Renderer9::setTexture(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::Error Renderer9::setUniformBuffers(const gl::ContextState & /*data*/,
-                                       const std::vector<GLint> & /*vertexUniformBuffers*/,
-                                       const std::vector<GLint> & /*fragmentUniformBuffers*/)
-{
-    // No effect in ES2/D3D9
-    return gl::NoError();
-}
-
 gl::Error Renderer9::updateState(const gl::Context *context, GLenum drawMode)
 {
     const auto &glState = context->getGLState();
@@ -2473,16 +2465,6 @@ unsigned int Renderer9::getReservedFragmentUniformVectors() const
     return d3d9_gl::GetReservedFragmentUniformVectors();
 }
 
-unsigned int Renderer9::getReservedVertexUniformBuffers() const
-{
-    return 0;
-}
-
-unsigned int Renderer9::getReservedFragmentUniformBuffers() const
-{
-    return 0;
-}
-
 bool Renderer9::getShareHandleSupport() const
 {
     // PIX doesn't seem to support using share handles, so disable them.
@@ -3169,7 +3151,6 @@ gl::Error Renderer9::genericDrawElements(const gl::Context *context,
 
     ANGLE_TRY(applyTextures(context));
     ANGLE_TRY(applyShaders(context, mode));
-    ANGLE_TRY(programD3D->applyUniformBuffers(data));
 
     if (!skipDraw(data, mode))
     {
@@ -3203,7 +3184,6 @@ gl::Error Renderer9::genericDrawArrays(const gl::Context *context,
     ANGLE_TRY(applyVertexBuffer(data.getState(), mode, first, count, instances, nullptr));
     ANGLE_TRY(applyTextures(context));
     ANGLE_TRY(applyShaders(context, mode));
-    ANGLE_TRY(programD3D->applyUniformBuffers(data));
 
     if (!skipDraw(data, mode))
     {
