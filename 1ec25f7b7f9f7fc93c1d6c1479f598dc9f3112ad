@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b2d5e322_3e0b40d9",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 4111,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-09-12T04:54:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "97be32f6_9c18864e",
+      "range": {
+        "startLine": 4111,
+        "startChar": 37,
+        "endLine": 4111,
+        "endChar": 44
+      },
+      "revId": "1ec25f7b7f9f7fc93c1d6c1479f598dc9f3112ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8931c2a1_a052d24f",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
         "patchSetId": 28
@@ -45,6 +69,30 @@
       "revId": "1ec25f7b7f9f7fc93c1d6c1479f598dc9f3112ad",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "958fe369_5218683d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Framebuffer11.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-09-12T04:54:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8931c2a1_a052d24f",
+      "range": {
+        "startLine": 466,
+        "startChar": 37,
+        "endLine": 466,
+        "endChar": 48
+      },
+      "revId": "1ec25f7b7f9f7fc93c1d6c1479f598dc9f3112ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -119,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "34ab3d23_301fa1f9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 1459,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-09-12T04:54:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1c53b075_9a60867c",
+      "range": {
+        "startLine": 1449,
+        "startChar": 0,
+        "endLine": 1459,
+        "endChar": 0
+      },
+      "revId": "1ec25f7b7f9f7fc93c1d6c1479f598dc9f3112ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6418d729_a41b405a",
         "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
         "patchSetId": 28
@@ -139,6 +211,30 @@
       "revId": "1ec25f7b7f9f7fc93c1d6c1479f598dc9f3112ad",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e0a7e6de_0f50e4a7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 1460,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-09-12T04:54:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6418d729_a41b405a",
+      "range": {
+        "startLine": 1460,
+        "startChar": 11,
+        "endLine": 1460,
+        "endChar": 18
+      },
+      "revId": "1ec25f7b7f9f7fc93c1d6c1479f598dc9f3112ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -165,6 +261,30 @@
     },
     {
       "key": {
+        "uuid": "b3426987_77e8843c",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 645,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-09-12T04:54:02Z",
+      "side": 1,
+      "message": "According to es3.1 spec 9.2.3.1, \"The values of SAMPLE_BUFFERS and SAMPLES control whether and how multisampling is performed (see section 13.2.1). They are framebuffer-dependent constants derived from the attachments of a framebuffer object or the buffers of a default framebuffer, but may only be queried directly for the currently bound draw framebuffer, by calling GetIntegerv with pname set to SAMPLE_BUFFERS or SAMPLES.\"\nSo I think the validation was wrong, and SAMPLES should be queried from draw framebuffer instead.",
+      "parentUuid": "96007bcd_c5cc68fc",
+      "range": {
+        "startLine": 645,
+        "startChar": 48,
+        "endLine": 645,
+        "endChar": 92
+      },
+      "revId": "1ec25f7b7f9f7fc93c1d6c1479f598dc9f3112ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a2be2d30_85dc1451",
         "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
         "patchSetId": 28
@@ -176,6 +296,30 @@
       "writtenOn": "2017-09-11T14:44:42Z",
       "side": 1,
       "message": "nit: if you know why these tests are failing, can you leave a comment?",
+      "range": {
+        "startLine": 1331,
+        "startChar": 0,
+        "endLine": 1348,
+        "endChar": 94
+      },
+      "revId": "1ec25f7b7f9f7fc93c1d6c1479f598dc9f3112ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3abd5f88_de1095f8",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 28
+      },
+      "lineNbr": 1348,
+      "author": {
+        "id": 1167049
+      },
+      "writtenOn": "2017-09-12T04:54:02Z",
+      "side": 1,
+      "message": "Samplemask and TEXTURE_2D_MULTISAMPLE_ARRAY are unimplemented. Jiawei is implementing samplemask. And TEXTURE_2D_MULTISAMPLE_ARRAY is a feature of es 3.2.\nuse_texture_int_2d and use_texture_uint_2d failed on both opengl and d3d. I will investigate why the test case fails.",
+      "parentUuid": "a2be2d30_85dc1451",
       "range": {
         "startLine": 1331,
         "startChar": 0,
