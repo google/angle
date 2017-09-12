@@ -220,6 +220,8 @@ class StateManager11 final : angle::NonCopyable
     void setSimpleViewport(int width, int height);
     void setSimplePixelTextureAndSampler(const d3d11::SharedSRV &srv,
                                          const d3d11::SamplerState &samplerState);
+    void setSimpleScissorRect(const gl::Rectangle &glRect);
+    void setScissorRectD3D(const D3D11_RECT &d3dRect);
 
     // Not handled by an internal dirty bit because of the extra draw parameters.
     gl::Error applyVertexBuffer(const gl::Context *context,

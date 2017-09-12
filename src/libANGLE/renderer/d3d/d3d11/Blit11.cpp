@@ -1198,13 +1198,7 @@ gl::Error Blit11::copyTexture(const gl::Context *context,
 
     if (scissor)
     {
-        D3D11_RECT scissorRect;
-        scissorRect.left   = scissor->x;
-        scissorRect.right  = scissor->x + scissor->width;
-        scissorRect.top    = scissor->y;
-        scissorRect.bottom = scissor->y + scissor->height;
-
-        deviceContext->RSSetScissorRects(1, &scissorRect);
+        stateManager->setSimpleScissorRect(*scissor);
         stateManager->setRasterizerState(&mScissorEnabledRasterizerState);
     }
     else
@@ -1311,13 +1305,7 @@ gl::Error Blit11::copyDepth(const gl::Context *context,
 
     if (scissor)
     {
-        D3D11_RECT scissorRect;
-        scissorRect.left   = scissor->x;
-        scissorRect.right  = scissor->x + scissor->width;
-        scissorRect.top    = scissor->y;
-        scissorRect.bottom = scissor->y + scissor->height;
-
-        deviceContext->RSSetScissorRects(1, &scissorRect);
+        stateManager->setSimpleScissorRect(*scissor);
         stateManager->setRasterizerState(&mScissorEnabledRasterizerState);
     }
     else

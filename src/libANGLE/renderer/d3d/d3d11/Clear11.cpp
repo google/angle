@@ -822,7 +822,7 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
         if (needScissoredClear)
         {
             ASSERT(i < scissorRects.size());
-            deviceContext->RSSetScissorRects(1, &scissorRects[i]);
+            stateManager->setScissorRectD3D(scissorRects[i]);
         }
         // Draw the fullscreen quad.
         if (!hasLayeredLayout || isSideBySideFBO)

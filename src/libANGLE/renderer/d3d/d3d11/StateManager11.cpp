@@ -2144,6 +2144,22 @@ void StateManager11::setSimplePixelTextureAndSampler(const d3d11::SharedSRV &srv
     mInternalDirtyBits.set(DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE);
 }
 
+void StateManager11::setSimpleScissorRect(const gl::Rectangle &glRect)
+{
+    D3D11_RECT scissorRect;
+    scissorRect.left   = glRect.x;
+    scissorRect.right  = glRect.x + glRect.width;
+    scissorRect.top    = glRect.y;
+    scissorRect.bottom = glRect.y + glRect.height;
+    setScissorRectD3D(scissorRect);
+}
+
+void StateManager11::setScissorRectD3D(const D3D11_RECT &d3dRect)
+{
+    mRenderer->getDeviceContext()->RSSetScissorRects(1, &d3dRect);
+    mInternalDirtyBits.set(DIRTY_BIT_SCISSOR_STATE);
+}
+
 // For each Direct3D sampler of either the pixel or vertex stage,
 // looks up the corresponding OpenGL texture image unit and texture type,
 // and sets the texture and its addressing/filtering state (or NULL when inactive).
