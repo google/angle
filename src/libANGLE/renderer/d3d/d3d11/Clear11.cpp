@@ -800,8 +800,7 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
 
     // Apply Shaders
     stateManager->setDrawShaders(vs, gs, ps);
-    ID3D11Buffer *constantBuffer = mConstantBuffer.get();
-    deviceContext->PSSetConstantBuffers(0, 1, &constantBuffer);
+    stateManager->setPixelConstantBuffer(0, &mConstantBuffer);
 
     // Bind IL & VB if needed
     deviceContext->IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);

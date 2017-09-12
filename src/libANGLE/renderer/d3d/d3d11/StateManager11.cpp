@@ -1940,6 +1940,54 @@ void StateManager11::setComputeShader(const d3d11::ComputeShader *shader)
     }
 }
 
+void StateManager11::setVertexConstantBuffer(unsigned int slot, const d3d11::Buffer *buffer)
+{
+    ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
+    auto &currentSerial                = mCurrentConstantBufferVS[slot];
+
+    if (buffer)
+    {
+        if (currentSerial != buffer->getSerial())
+        {
+            deviceContext->VSSetConstantBuffers(slot, 1, buffer->getPointer());
+            currentSerial = buffer->getSerial();
+        }
+    }
+    else
+    {
+        if (!currentSerial.empty())
+        {
+            ID3D11Buffer *nullBuffer = nullptr;
+            deviceContext->VSSetConstantBuffers(slot, 1, &nullBuffer);
+            currentSerial.clear();
+        }
+    }
+}
+
+void StateManager11::setPixelConstantBuffer(unsigned int slot, const d3d11::Buffer *buffer)
+{
+    ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
+    auto &currentSerial                = mCurrentConstantBufferPS[slot];
+
+    if (buffer)
+    {
+        if (currentSerial != buffer->getSerial())
+        {
+            deviceContext->PSSetConstantBuffers(slot, 1, buffer->getPointer());
+            currentSerial = buffer->getSerial();
+        }
+    }
+    else
+    {
+        if (!currentSerial.empty())
+        {
+            ID3D11Buffer *nullBuffer = nullptr;
+            deviceContext->PSSetConstantBuffers(slot, 1, &nullBuffer);
+            currentSerial.clear();
+        }
+    }
+}
+
 // For each Direct3D sampler of either the pixel or vertex stage,
 // looks up the corresponding OpenGL texture image unit and texture type,
 // and sets the texture and its addressing/filtering state (or NULL when inactive).

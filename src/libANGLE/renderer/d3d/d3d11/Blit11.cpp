@@ -1084,8 +1084,7 @@ gl::Error Blit11::swizzleTexture(const gl::Context *context,
     stateManager->setSingleVertexBuffer(&mVertexBuffer, stride, 0);
 
     // Apply constant buffer
-    ID3D11Buffer *constantBuffer = mSwizzleCB.get();
-    deviceContext->PSSetConstantBuffers(0, 1, &constantBuffer);
+    stateManager->setPixelConstantBuffer(0, &mSwizzleCB);
 
     // Apply state
     deviceContext->OMSetBlendState(nullptr, nullptr, 0xFFFFFFF);

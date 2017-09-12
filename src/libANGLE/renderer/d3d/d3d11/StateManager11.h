@@ -211,6 +211,8 @@ class StateManager11 final : angle::NonCopyable
     void setGeometryShader(const d3d11::GeometryShader *shader);
     void setPixelShader(const d3d11::PixelShader *shader);
     void setComputeShader(const d3d11::ComputeShader *shader);
+    void setVertexConstantBuffer(unsigned int slot, const d3d11::Buffer *buffer);
+    void setPixelConstantBuffer(unsigned int slot, const d3d11::Buffer *buffer);
 
     // Not handled by an internal dirty bit because of the extra draw parameters.
     gl::Error applyVertexBuffer(const gl::Context *context,

@@ -207,8 +207,7 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::Context *context,
         mParamsData = shaderParams;
     }
 
-    ID3D11Buffer *paramsBuffer = mParamsConstantBuffer.get();
-    deviceContext->VSSetConstantBuffers(0, 1, &paramsBuffer);
+    stateManager->setVertexConstantBuffer(0, &mParamsConstantBuffer);
 
     // Set the viewport
     D3D11_VIEWPORT viewport;
@@ -225,9 +224,7 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::Context *context,
 
     // Unbind shader resources and invalidate state.
     stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
-
-    ID3D11Buffer *nullBuffer = nullptr;
-    deviceContext->VSSetConstantBuffers(0, 1, &nullBuffer);
+    stateManager->setVertexConstantBuffer(0, nullptr);
 
     mRenderer->markAllStateDirty(context);
 
