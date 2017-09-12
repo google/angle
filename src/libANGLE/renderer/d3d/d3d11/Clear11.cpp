@@ -781,11 +781,11 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
 
     if (needScissoredClear)
     {
-        deviceContext->RSSetState(mScissorEnabledRasterizerState.get());
+        stateManager->setRasterizerState(&mScissorEnabledRasterizerState);
     }
     else
     {
-        deviceContext->RSSetState(mScissorDisabledRasterizerState.get());
+        stateManager->setRasterizerState(&mScissorDisabledRasterizerState);
     }
 
     // Get Shaders

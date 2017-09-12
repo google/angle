@@ -1089,7 +1089,7 @@ gl::Error Blit11::swizzleTexture(const gl::Context *context,
     // Apply state
     stateManager->setSimpleBlendState(nullptr);
     stateManager->setDepthStencilState(nullptr, 0xFFFFFFFF);
-    deviceContext->RSSetState(mScissorDisabledRasterizerState.get());
+    stateManager->setRasterizerState(&mScissorDisabledRasterizerState);
 
     // Apply shaders
     stateManager->setInputLayout(support.inputLayout);
@@ -1217,11 +1217,11 @@ gl::Error Blit11::copyTexture(const gl::Context *context,
         scissorRect.bottom = scissor->y + scissor->height;
 
         deviceContext->RSSetScissorRects(1, &scissorRect);
-        deviceContext->RSSetState(mScissorEnabledRasterizerState.get());
+        stateManager->setRasterizerState(&mScissorEnabledRasterizerState);
     }
     else
     {
-        deviceContext->RSSetState(mScissorDisabledRasterizerState.get());
+        stateManager->setRasterizerState(&mScissorDisabledRasterizerState);
     }
 
     // Apply shaders
@@ -1344,11 +1344,11 @@ gl::Error Blit11::copyDepth(const gl::Context *context,
         scissorRect.bottom = scissor->y + scissor->height;
 
         deviceContext->RSSetScissorRects(1, &scissorRect);
-        deviceContext->RSSetState(mScissorEnabledRasterizerState.get());
+        stateManager->setRasterizerState(&mScissorEnabledRasterizerState);
     }
     else
     {
-        deviceContext->RSSetState(mScissorDisabledRasterizerState.get());
+        stateManager->setRasterizerState(&mScissorDisabledRasterizerState);
     }
 
     ANGLE_TRY(mQuad2DIL.resolve(mRenderer));
@@ -2017,7 +2017,7 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveDepth(const gl::Context *conte
     stateManager->setPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     stateManager->setDrawShaders(&mResolveDepthStencilVS.getObj(), nullptr,
                                  &mResolveDepthPS.getObj());
-    deviceContext->RSSetState(nullptr);
+    stateManager->setRasterizerState(nullptr);
     stateManager->setDepthStencilState(&mDepthStencilState, 0xFFFFFFFF);
     stateManager->setRenderTargets(nullptr, 0, mResolvedDepthDSView.get());
     stateManager->setSimpleBlendState(nullptr);
@@ -2187,7 +2187,7 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(const gl::Context *con
     stateManager->setInputLayout(nullptr);
     stateManager->setPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     stateManager->setDrawShaders(&mResolveDepthStencilVS.getObj(), nullptr, pixelShader);
-    deviceContext->RSSetState(nullptr);
+    stateManager->setRasterizerState(nullptr);
     stateManager->setDepthStencilState(nullptr, 0xFFFFFFFF);
     stateManager->setRenderTarget(mResolvedDepthStencilRTView.get(), nullptr);
     stateManager->setSimpleBlendState(nullptr);

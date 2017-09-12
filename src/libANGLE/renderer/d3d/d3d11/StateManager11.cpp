@@ -2065,6 +2065,22 @@ void StateManager11::setSimpleBlendState(const d3d11::BlendState *blendState)
     mInternalDirtyBits.set(DIRTY_BIT_BLEND_STATE);
 }
 
+void StateManager11::setRasterizerState(const d3d11::RasterizerState *rasterizerState)
+{
+    ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
+
+    if (rasterizerState)
+    {
+        deviceContext->RSSetState(rasterizerState->get());
+    }
+    else
+    {
+        deviceContext->RSSetState(nullptr);
+    }
+
+    mInternalDirtyBits.set(DIRTY_BIT_RASTERIZER_STATE);
+}
+
 // For each Direct3D sampler of either the pixel or vertex stage,
 // looks up the corresponding OpenGL texture image unit and texture type,
 // and sets the texture and its addressing/filtering state (or NULL when inactive).

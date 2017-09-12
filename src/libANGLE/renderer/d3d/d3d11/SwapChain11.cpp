@@ -829,7 +829,7 @@ EGLint SwapChain11::copyOffscreenToBackbuffer(const gl::Context *context,
     // Apply state
     stateManager->setDepthStencilState(nullptr, 0xFFFFFFFF);
     stateManager->setSimpleBlendState(nullptr);
-    deviceContext->RSSetState(mPassThroughRS.get());
+    stateManager->setRasterizerState(&mPassThroughRS);
 
     // Apply shaders
     stateManager->setInputLayout(&mPassThroughIL);
