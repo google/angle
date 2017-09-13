@@ -89,6 +89,30 @@
 1143 MAC : dEQP-GLES2.functional.shaders.scoping.valid.function_parameter_hides_struct_type_* = FAIL
 1143 MAC : dEQP-GLES2.functional.shaders.random.trigonometric.vertex.65 = FAIL
 
+// Mac Intel specific
+2137 MAC INTEL : dEQP_GLES2.Default/functional_color_clear_complex_rgb = FAIL
+2137 MAC INTEL : dEQP_GLES2.Default/functional_color_clear_complex_rgba = FAIL
+2137 MAC INTEL : dEQP_GLES2.Default/functional_color_clear_long_masked_rgb = FAIL
+2137 MAC INTEL : dEQP_GLES2.Default/functional_color_clear_long_masked_rgba = FAIL
+2137 MAC INTEL : dEQP_GLES2.Default/functional_color_clear_masked_rgb = FAIL
+2137 MAC INTEL : dEQP_GLES2.Default/functional_color_clear_masked_rgba = FAIL
+2137 MAC INTEL : dEQP_GLES2.Default/functional_color_clear_masked_scissored_rgb = FAIL
+2137 MAC INTEL : dEQP_GLES2.Default/functional_color_clear_masked_scissored_rgba = FAIL
+2137 MAC INTEL : dEQP_GLES2.Default/functional_color_clear_scissored_rgb = FAIL
+2137 MAC INTEL : dEQP_GLES2.Default/functional_color_clear_scissored_rgba = FAIL
+2137 MAC INTEL : dEQP_GLES2.Default/functional_color_clear_short_scissored_rgb = FAIL
+2137 MAC INTEL : dEQP_GLES2.Default/functional_texture_specification_basic_copyteximage2d_cube_alpha = FAIL
+2137 MAC INTEL : dEQP_GLES2.Default/functional_texture_specification_basic_copyteximage2d_cube_luminance = FAIL
+2137 MAC INTEL : dEQP_GLES2.Default/functional_texture_specification_basic_copyteximage2d_cube_luminance_alpha = FAIL
+2137 MAC INTEL : dEQP_GLES2.Default/functional_texture_specification_basic_copyteximage2d_cube_rgb = FAIL
+2137 MAC INTEL : dEQP_GLES2.Default/functional_texture_specification_basic_copyteximage2d_cube_rgba = FAIL
+2137 MAC INTEL : dEQP_GLES2.Default/functional_shaders_discard_dynamic_loop_never = FAIL
+2137 MAC INTEL : dEQP_GLES2.Default/functional_shaders_discard_function_static_loop_never = FAIL
+2137 MAC INTEL : dEQP_GLES2.Default/functional_shaders_discard_static_loop_never = FAIL
+
+// Mac AMD specific
+2137 MAC AMD : dEQP_GLES2.Default/functional_clipping_point_wide_point_clip = FAIL
+
 // Android only failures
 1484 ANDROID : dEQP-GLES2.functional.vertex_arrays.* = SKIP
 1485 ANDROID : dEQP-GLES2.functional.clipping.triangle_vertex.clip_three.clip_neg_x_neg_z_and_pos_x_pos_z_and_neg_x_neg_y_pos_z = FAIL
