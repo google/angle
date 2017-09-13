@@ -176,7 +176,8 @@ bool ValidReadPixelsTypeEnum(ValidationContext *context, GLenum type)
             return context->getClientVersion() >= ES_3_0;
 
         case GL_FLOAT:
-            return context->getClientVersion() >= ES_3_0 || context->getExtensions().textureFloat;
+            return context->getClientVersion() >= ES_3_0 || context->getExtensions().textureFloat ||
+                   context->getExtensions().colorBufferHalfFloat;
 
         case GL_HALF_FLOAT:
             return context->getClientVersion() >= ES_3_0 ||

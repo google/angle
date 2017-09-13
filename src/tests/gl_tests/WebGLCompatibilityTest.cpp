@@ -37,11 +37,11 @@ void CheckBlendFunctions(GLenum src, GLenum dst)
 constexpr const char *FloatingPointTextureExtensions[] = {
     "",
     "GL_EXT_texture_storage",
-    "GL_OES_texture_float",
-    "GL_OES_texture_float_linear",
     "GL_OES_texture_half_float",
     "GL_OES_texture_half_float_linear",
     "GL_EXT_color_buffer_half_float",
+    "GL_OES_texture_float",
+    "GL_OES_texture_float_linear",
     "GL_EXT_color_buffer_float",
     "GL_CHROMIUM_color_buffer_float_rgba",
     "GL_CHROMIUM_color_buffer_float_rgb",
