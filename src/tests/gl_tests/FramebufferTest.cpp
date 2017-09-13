@@ -699,7 +699,7 @@ TEST_P(FramebufferTest_ES31, RenderingLimitToDefaultFBOSizeWithNoAttachments)
     const std::string &fragShader =
         "#version 310 es\n"
         "uniform layout(location = 0) highp ivec2 u_expectedSize;\n"
-        "out layout(location = 0) mediump vec4 f_color;\n\n"
+        "out layout(location = 5) mediump vec4 f_color;\n\n"
         "void main()\n"
         "{\n"
         "   if (ivec2(gl_FragCoord.xy) != u_expectedSize) discard;\n"
@@ -739,6 +739,7 @@ TEST_P(FramebufferTest_ES31, RenderingLimitToDefaultFBOSizeWithNoAttachments)
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 2, GL_FLOAT, false, 0, 0);
+    EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
 
     validateSamplePass(query, passedCount, defaultWidth, defaultHeight);
 
@@ -748,15 +749,19 @@ TEST_P(FramebufferTest_ES31, RenderingLimitToDefaultFBOSizeWithNoAttachments)
     GLuint height = 2;
     glBindTexture(GL_TEXTURE_2D, mTexture.get());
     glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, width, height);
-    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTexture.get(),
+
+    const GLenum bufs[] = {GL_NONE, GL_NONE, GL_NONE, GL_NONE, GL_NONE, GL_COLOR_ATTACHMENT5};
+
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT5, GL_TEXTURE_2D, mTexture.get(),
                            0);
     EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+    glDrawBuffers(6, bufs);
 
     validateSamplePass(query, passedCount, width, height);
 
     // If fbo's attachment has been removed, the rendering size should be the same as framebuffer
     // default size.
-    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, 0, 0, 0);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT5, 0, 0, 0);
     EXPECT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
 
     validateSamplePass(query, passedCount, defaultWidth, defaultHeight);

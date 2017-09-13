@@ -112,6 +112,17 @@ struct WorkaroundsD3D
     // target slice will be selected in the geometry shader stage. The workaround flag is added to
     // make it possible to select the code path in end2end and performance tests.
     bool selectViewInGeometryShader = false;
+
+    // When rendering with no render target on D3D, two bugs lead to incorrect behavior on Intel
+    // drivers < 4815. The rendering samples always pass neglecting discard statements in pixel
+    // shader.
+    // 1. If rendertarget is not set, the pixel shader will be recompiled to drop 'SV_TARGET'.
+    // When using a pixel shader with no 'SV_TARGET' in a draw, the pixels are always generated even
+    // if they should be discard by 'discard' statements.
+    // 2. If ID3D11BlendState.RenderTarget[].RenderTargetWriteMask is 0 and rendertarget is not set,
+    // then rendering samples also pass neglecting discard statements in pixel shader.
+    // So we add a dummy texture as render target in such case. See http://anglebug.com/2152
+    bool addDummyTextureNoRenderTarget = false;
 };
 
 }  // namespace angle

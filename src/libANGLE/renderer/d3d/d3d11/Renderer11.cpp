@@ -80,12 +80,6 @@
 #define ANGLE_SKIP_DXGI_1_2_CHECK 0
 #endif
 
-#ifdef _DEBUG
-// this flag enables suppressing some spurious warnings that pop up in certain WebGL samples
-// and conformance tests. to enable all warnings, remove this define.
-#define ANGLE_SUPPRESS_D3D11_HAZARD_WARNINGS 1
-#endif
-
 namespace rx
 {
 
@@ -714,8 +708,8 @@ egl::Error Renderer11::initialize()
         }
     }
 
-// Disable some spurious D3D11 debug warnings to prevent them from flooding the output log
-#if defined(ANGLE_SUPPRESS_D3D11_HAZARD_WARNINGS) && defined(_DEBUG)
+    // Disable some spurious D3D11 debug warnings to prevent them from flooding the output log
+    if (mCreateDebugDevice)
     {
         TRACE_EVENT0("gpu.angle", "Renderer11::initialize (HideWarnings)");
         ID3D11InfoQueue *infoQueue;
@@ -734,7 +728,6 @@ egl::Error Renderer11::initialize()
             SafeRelease(infoQueue);
         }
     }
-#endif
 
 #if !defined(NDEBUG)
     mDebug = d3d11::DynamicCastComObject<ID3D11Debug>(mDevice);

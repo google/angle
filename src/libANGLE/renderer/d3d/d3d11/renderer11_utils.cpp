@@ -2179,6 +2179,7 @@ angle::WorkaroundsD3D GenerateWorkarounds(const Renderer11DeviceCaps &deviceCaps
         workarounds.preAddTexelFetchOffsets           = true;
         workarounds.useSystemMemoryForConstantBuffers = true;
         workarounds.disableB5G6R5Support              = capsVersion < IntelDriverVersion(4539);
+        workarounds.addDummyTextureNoRenderTarget     = capsVersion < IntelDriverVersion(4815);
         if (IsSkylake(adapterDesc.DeviceId))
         {
             workarounds.callClearTwice    = capsVersion < IntelDriverVersion(4771);

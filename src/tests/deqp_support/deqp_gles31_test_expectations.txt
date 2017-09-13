@@ -42,9 +42,6 @@
 1442 OPENGL D3D11 : dEQP-GLES31.functional.image_load_store.* = SKIP
 
 // D3D11 Failing Tests
-1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_framebuffer_width_* = FAIL
-1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_framebuffer_height_* = FAIL
-1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_framebuffer_samples_* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_compute_shared_memory_size_* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_compute_atomic_counter_buffers_* = FAIL
 1442 D3D11 : dEQP-GLES31.functional.state_query.integer.max_compute_atomic_counters_* = FAIL

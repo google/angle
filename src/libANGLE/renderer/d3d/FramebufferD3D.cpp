@@ -369,6 +369,29 @@ const gl::AttachmentList &FramebufferD3D::getColorAttachmentsForRender(const gl:
         }
     }
 
+    // When rendering with no render target on D3D, two bugs lead to incorrect behavior on Intel
+    // drivers < 4815. The rendering samples always pass neglecting discard statements in pixel
+    // shader. We add a dummy texture as render target in such case.
+    if (mRenderer->getWorkarounds().addDummyTextureNoRenderTarget &&
+        colorAttachmentsForRender.empty())
+    {
+        static_assert(static_cast<size_t>(activeProgramOutputs.size()) <= 32,
+                      "Size of active program outputs should less or equal than 32.");
+        GLenum i = static_cast<GLenum>(
+            gl::ScanForward(static_cast<uint32_t>(activeProgramOutputs.bits())));
+
+        gl::Texture *dummyTex = nullptr;
+        // TODO(Jamie): Handle error if dummy texture can't be created.
+        ANGLE_SWALLOW_ERR(mRenderer->getIncompleteTexture(context, GL_TEXTURE_2D, &dummyTex));
+        if (dummyTex)
+        {
+            gl::ImageIndex index                   = gl::ImageIndex::Make2D(0);
+            gl::FramebufferAttachment *dummyAttach = new gl::FramebufferAttachment(
+                context, GL_TEXTURE, GL_COLOR_ATTACHMENT0_EXT + i, index, dummyTex);
+            colorAttachmentsForRender.push_back(dummyAttach);
+        }
+    }
+
     mColorAttachmentsForRender = std::move(colorAttachmentsForRender);
     mCurrentActiveProgramOutputs = activeProgramOutputs;
 
