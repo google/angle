@@ -70,6 +70,29 @@
       "revId": "2e6fa5e5e609dc296593804cc93aeb9d9863f2bd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b49f12a0_2e7c6432",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 832,
+      "author": {
+        "id": 1166724
+      },
+      "writtenOn": "2017-09-13T20:11:16Z",
+      "side": 1,
+      "message": "My concern was the compatibility with non-WebGL contexts with non-D3D backends. There are end2end tests (namely, RedefineDestinationTexture) which fail upon making these extensions enableable (specifically, with GLES). However, I cannot build (or debug) that backend on my Win10 box. There also appears to be a (driver?) error when GL_EXT_texture_rg extension is enabled (incompatible level format). Is this something you could help investigate?",
+      "range": {
+        "startLine": 832,
+        "startChar": 5,
+        "endLine": 832,
+        "endChar": 30
+      },
+      "revId": "2e6fa5e5e609dc296593804cc93aeb9d9863f2bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
