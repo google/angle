@@ -1,0 +1,95 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1a5ccb6c_898a2eb7",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2119,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-13T16:25:31Z",
+      "side": 1,
+      "message": "Could you make this a function in an anonymous namespace? It doesn\u0027t use \"this\" anywhere.",
+      "revId": "c18ae8a63a5b8d644927a939e9d7d6ce286beef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "962d9b1a_63f04399",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2120,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-13T16:25:31Z",
+      "side": 1,
+      "message": "typo: interfaceBlocks.",
+      "range": {
+        "startLine": 2120,
+        "startChar": 82,
+        "endLine": 2120,
+        "endChar": 96
+      },
+      "revId": "c18ae8a63a5b8d644927a939e9d7d6ce286beef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7b9416c7_42467c53",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2230,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-13T16:25:31Z",
+      "side": 1,
+      "message": "What happens when we do this unconditionally? It seems that it should always validate to true since there will be no shader storage block.",
+      "revId": "c18ae8a63a5b8d644927a939e9d7d6ce286beef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ba54664_5e8990d7",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2878,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-13T16:25:31Z",
+      "side": 1,
+      "message": "same here, we might be able to do it unconditionally.",
+      "revId": "c18ae8a63a5b8d644927a939e9d7d6ce286beef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8972e32_d70a5faa",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-13T16:25:31Z",
+      "side": 1,
+      "message": "Do you expect additional members being required for shader storage blocks (like read, write, read-write)? If yes then it would be best to keep two different types and make them both inherit from InterfaceBlock.",
+      "revId": "c18ae8a63a5b8d644927a939e9d7d6ce286beef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
