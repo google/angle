@@ -3138,6 +3138,85 @@ TEST_P(WebGLCompatibilityTest, DrawBuffers)
     }
 }
 
+// Test that it's possible to generate mipmaps on unsized floating point textures once the
+// extensions have been enabled
+TEST_P(WebGLCompatibilityTest, GenerateMipmapUnsizedFloatingPointTexture)
+{
+    if (extensionRequestable("GL_OES_texture_float"))
+    {
+        glRequestExtensionANGLE("GL_OES_texture_float");
+    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_texture_float"));
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    constexpr GLColor32F data[4] = {
+        kFloatRed, kFloatRed, kFloatGreen, kFloatBlue,
+    };
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 4, 4, 0, GL_RGBA, GL_FLOAT, data);
+    ASSERT_GL_NO_ERROR();
+
+    glGenerateMipmap(GL_TEXTURE_2D);
+    EXPECT_GL_NO_ERROR();
+}
+// Test that it's possible to generate mipmaps on unsized floating point textures once the
+// extensions have been enabled
+TEST_P(WebGLCompatibilityTest, GenerateMipmapSizedFloatingPointTexture)
+{
+    if (extensionRequestable("GL_OES_texture_float"))
+    {
+        glRequestExtensionANGLE("GL_OES_texture_float");
+    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_OES_texture_float"));
+
+    if (extensionRequestable("GL_EXT_texture_storage"))
+    {
+        glRequestExtensionANGLE("GL_EXT_texture_storage");
+    }
+    ANGLE_SKIP_TEST_IF(!extensionEnabled("GL_EXT_texture_storage"));
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    constexpr GLColor32F data[4] = {
+        kFloatRed, kFloatRed, kFloatGreen, kFloatBlue,
+    };
+    glTexStorage2DEXT(GL_TEXTURE_2D, 2, GL_RGBA32F, 2, 2);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 2, 2, GL_RGBA, GL_FLOAT, data);
+    ASSERT_GL_NO_ERROR();
+
+    glGenerateMipmap(GL_TEXTURE_2D);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+
+    if (extensionRequestable("GL_EXT_color_buffer_float"))
+    {
+        // Format is renderable but not filterable
+        glRequestExtensionANGLE("GL_EXT_color_buffer_float");
+        glGenerateMipmap(GL_TEXTURE_2D);
+        EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+    }
+
+    if (extensionRequestable("GL_EXT_color_buffer_float_linear"))
+    {
+        // Format is renderable but not filterable
+        glRequestExtensionANGLE("GL_EXT_color_buffer_float_linear");
+
+        if (extensionEnabled("GL_EXT_color_buffer_float"))
+        {
+            // Format is filterable and renderable
+            glGenerateMipmap(GL_TEXTURE_2D);
+            EXPECT_GL_NO_ERROR();
+        }
+        else
+        {
+            // Format is filterable but not renderable
+            glGenerateMipmap(GL_TEXTURE_2D);
+            EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+        }
+    }
+}
+
 // Linking should fail when corresponding vertex/fragment uniform blocks have different precision
 // qualifiers.
 TEST_P(WebGL2CompatibilityTest, UniformBlockPrecisionMismatch)
