@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "374de8df_e618f72b",
+        "filename": "src/libANGLE/ProgramPipeline.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-13T13:52:50Z",
+      "side": 1,
+      "message": "nit: can you make this a std::unique_ptr?",
+      "range": {
+        "startLine": 59,
+        "startChar": 4,
+        "endLine": 59,
+        "endChar": 29
+      },
+      "revId": "20bced9adeb0d6c03432000082a48bf58d8736c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c2afb5a3_05cf6f5a",
+        "filename": "src/libANGLE/ProgramPipeline.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-13T13:52:50Z",
+      "side": 1,
+      "message": "This is a member of RefCountedObject, it and the id method arn\u0027t needed.",
+      "range": {
+        "startLine": 63,
+        "startChar": 4,
+        "endLine": 63,
+        "endChar": 25
+      },
+      "revId": "20bced9adeb0d6c03432000082a48bf58d8736c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
