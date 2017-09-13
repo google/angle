@@ -1337,48 +1337,6 @@ void StateManager11::invalidateBoundViews(const gl::Context *context)
     invalidateRenderTarget(context);
 }
 
-void StateManager11::invalidateEverything(const gl::Context *context)
-{
-    mInternalDirtyBits.set();
-
-    // We reset the current SRV data because it might not be in sync with D3D's state
-    // anymore. For example when a currently used SRV is used as an RTV, D3D silently
-    // remove it from its state.
-    invalidateBoundViews(context);
-
-    // All calls to IASetInputLayout go through the state manager, so it shouldn't be
-    // necessary to invalidate the state.
-
-    // Invalidate the vertex buffer state.
-    invalidateVertexBuffer();
-
-    mCurrentPrimitiveTopology = D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
-
-    mAppliedVertexShader.dirty();
-    mAppliedGeometryShader.dirty();
-    mAppliedPixelShader.dirty();
-    mAppliedComputeShader.dirty();
-
-    std::fill(mForceSetVertexSamplerStates.begin(), mForceSetVertexSamplerStates.end(), true);
-    std::fill(mForceSetPixelSamplerStates.begin(), mForceSetPixelSamplerStates.end(), true);
-    std::fill(mForceSetComputeSamplerStates.begin(), mForceSetComputeSamplerStates.end(), true);
-
-    mAppliedIB       = nullptr;
-    mAppliedIBFormat = DXGI_FORMAT_UNKNOWN;
-    mAppliedIBOffset = 0;
-
-    mLastFirstVertex.reset();
-
-    invalidateTexturesAndSamplers();
-
-    invalidateDriverUniforms();
-
-    // As long as all calls to *SSetConstantBuffes go through the StateManager11, it should not be
-    // necessary to invalidate constant buffer state.
-
-    mAppliedTFSerial = Serial();
-}
-
 void StateManager11::invalidateVertexBuffer()
 {
     unsigned int limit = std::min<unsigned int>(mRenderer->getNativeCaps().maxVertexAttributes,
@@ -1442,15 +1400,32 @@ void StateManager11::invalidateConstantBuffer(unsigned int slot)
 
 void StateManager11::setRenderTarget(ID3D11RenderTargetView *rtv, ID3D11DepthStencilView *dsv)
 {
+    if ((rtv && unsetConflictingView(rtv)) || (dsv && unsetConflictingView(dsv)))
+    {
+        mInternalDirtyBits.set(DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE);
+    }
+
     mRenderer->getDeviceContext()->OMSetRenderTargets(1, &rtv, dsv);
     mInternalDirtyBits.set(DIRTY_BIT_RENDER_TARGET);
 }
 
 void StateManager11::setRenderTargets(ID3D11RenderTargetView **rtvs,
-                                      UINT numRtvs,
+                                      UINT numRTVs,
                                       ID3D11DepthStencilView *dsv)
 {
-    mRenderer->getDeviceContext()->OMSetRenderTargets(numRtvs, (numRtvs > 0) ? rtvs : nullptr, dsv);
+    bool anyDirty = false;
+
+    for (UINT rtvIndex = 0; rtvIndex < numRTVs; ++rtvIndex)
+    {
+        anyDirty = anyDirty || unsetConflictingView(rtvs[rtvIndex]);
+    }
+
+    if (anyDirty)
+    {
+        mInternalDirtyBits.set(DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE);
+    }
+
+    mRenderer->getDeviceContext()->OMSetRenderTargets(numRTVs, (numRTVs > 0) ? rtvs : nullptr, dsv);
     mInternalDirtyBits.set(DIRTY_BIT_RENDER_TARGET);
 }
 
@@ -1527,23 +1502,35 @@ gl::Error StateManager11::clearTextures(gl::SamplerType samplerType,
     return gl::NoError();
 }
 
-void StateManager11::unsetConflictingSRVs(gl::SamplerType samplerType,
+bool StateManager11::unsetConflictingView(ID3D11View *view)
+{
+    uintptr_t resource = reinterpret_cast<uintptr_t>(GetViewResource(view));
+    return unsetConflictingSRVs(gl::SAMPLER_VERTEX, resource, nullptr) ||
+           unsetConflictingSRVs(gl::SAMPLER_PIXEL, resource, nullptr);
+}
+
+bool StateManager11::unsetConflictingSRVs(gl::SamplerType samplerType,
                                           uintptr_t resource,
-                                          const gl::ImageIndex &index)
+                                          const gl::ImageIndex *index)
 {
     auto &currentSRVs = (samplerType == gl::SAMPLER_VERTEX ? mCurVertexSRVs : mCurPixelSRVs);
+
+    bool foundOne = false;
 
     for (size_t resourceIndex = 0; resourceIndex < currentSRVs.size(); ++resourceIndex)
     {
         auto &record = currentSRVs[resourceIndex];
 
         if (record.srv && record.resource == resource &&
-            ImageIndexConflictsWithSRV(index, record.desc))
+            (!index || ImageIndexConflictsWithSRV(*index, record.desc)))
         {
             setShaderResourceInternal<d3d11::ShaderResourceView>(
                 samplerType, static_cast<UINT>(resourceIndex), nullptr);
+            foundOne = true;
         }
     }
+
+    return foundOne;
 }
 
 void StateManager11::unsetConflictingAttachmentResources(
@@ -1557,14 +1544,14 @@ void StateManager11::unsetConflictingAttachmentResources(
         const gl::ImageIndex &index = attachment->getTextureImageIndex();
         // The index doesn't need to be corrected for the small compressed texture workaround
         // because a rendertarget is never compressed.
-        unsetConflictingSRVs(gl::SAMPLER_VERTEX, resourcePtr, index);
-        unsetConflictingSRVs(gl::SAMPLER_PIXEL, resourcePtr, index);
+        unsetConflictingSRVs(gl::SAMPLER_VERTEX, resourcePtr, &index);
+        unsetConflictingSRVs(gl::SAMPLER_PIXEL, resourcePtr, &index);
     }
     else if (attachment->type() == GL_FRAMEBUFFER_DEFAULT)
     {
         uintptr_t resourcePtr = reinterpret_cast<uintptr_t>(resource);
-        unsetConflictingSRVs(gl::SAMPLER_VERTEX, resourcePtr, gl::ImageIndex::Make2D(0));
-        unsetConflictingSRVs(gl::SAMPLER_PIXEL, resourcePtr, gl::ImageIndex::Make2D(0));
+        unsetConflictingSRVs(gl::SAMPLER_VERTEX, resourcePtr, nullptr);
+        unsetConflictingSRVs(gl::SAMPLER_PIXEL, resourcePtr, nullptr);
     }
 }
 
@@ -1578,9 +1565,9 @@ gl::Error StateManager11::initialize(const gl::Caps &caps, const gl::Extensions 
 
     mCurrentValueAttribs.resize(caps.maxVertexAttributes);
 
-    mForceSetVertexSamplerStates.resize(caps.maxVertexTextureImageUnits);
-    mForceSetPixelSamplerStates.resize(caps.maxTextureImageUnits);
-    mForceSetComputeSamplerStates.resize(caps.maxComputeTextureImageUnits);
+    mForceSetVertexSamplerStates.resize(caps.maxVertexTextureImageUnits, true);
+    mForceSetPixelSamplerStates.resize(caps.maxTextureImageUnits, true);
+    mForceSetComputeSamplerStates.resize(caps.maxComputeTextureImageUnits, true);
 
     mCurVertexSamplerStates.resize(caps.maxVertexTextureImageUnits);
     mCurPixelSamplerStates.resize(caps.maxTextureImageUnits);
@@ -2140,8 +2127,8 @@ void StateManager11::setSimplePixelTextureAndSampler(const d3d11::SharedSRV &srv
     setShaderResourceInternal(gl::SAMPLER_PIXEL, 0, &srv);
     deviceContext->PSSetSamplers(0, 1, samplerState.getPointer());
 
-    // TODO(jmadill): Narrower dirty region.
     mInternalDirtyBits.set(DIRTY_BIT_TEXTURE_AND_SAMPLER_STATE);
+    mForceSetPixelSamplerStates[0] = true;
 }
 
 void StateManager11::setSimpleScissorRect(const gl::Rectangle &glRect)

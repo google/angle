@@ -215,12 +215,6 @@ gl::Error PixelTransfer11::copyBufferToTexture(const gl::Context *context,
     UINT numPixels = (destArea.width * destArea.height * destArea.depth);
     deviceContext->Draw(numPixels, 0);
 
-    // Unbind shader resources and invalidate state.
-    stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
-    stateManager->setVertexConstantBuffer(0, nullptr);
-
-    mRenderer->markAllStateDirty(context);
-
     return gl::NoError();
 }
 

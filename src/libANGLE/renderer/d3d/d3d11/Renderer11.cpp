@@ -868,9 +868,6 @@ egl::Error Renderer11::initializeDevice()
         return egl::EglBadAlloc() << "Error initializing state manager.";
     }
 
-    // No context is available here, use the proxy context in the display.
-    markAllStateDirty(mDisplay->getProxyContext());
-
     // Gather stats on DXGI and D3D feature level
     ANGLE_HISTOGRAM_BOOLEAN("GPU.ANGLE.SupportsDXGI1_2", mRenderer11DeviceCaps.supportsDXGI1_2);
 
@@ -1949,13 +1946,6 @@ gl::Error Renderer11::drawTriangleFan(const gl::State &glState,
     }
 
     return gl::NoError();
-}
-
-void Renderer11::markAllStateDirty(const gl::Context *context)
-{
-    TRACE_EVENT0("gpu.angle", "Renderer11::markAllStateDirty");
-
-    mStateManager.invalidateEverything(context);
 }
 
 void Renderer11::releaseDeviceResources()

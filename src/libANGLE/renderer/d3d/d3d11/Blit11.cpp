@@ -1098,9 +1098,6 @@ gl::Error Blit11::swizzleTexture(const gl::Context *context,
     stateManager->setDrawShaders(support.vertexShader, support.geometryShader,
                                  &shader->pixelShader);
 
-    // Unset the currently bound shader resource to avoid conflicts
-    stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
-
     // Apply render target
     stateManager->setRenderTarget(dest.get(), nullptr);
 
@@ -1112,9 +1109,6 @@ gl::Error Blit11::swizzleTexture(const gl::Context *context,
 
     // Draw the quad
     deviceContext->Draw(drawCount, 0);
-
-    // Dirty state.
-    mRenderer->markAllStateDirty(context);
 
     return gl::NoError();
 }
@@ -1213,9 +1207,6 @@ gl::Error Blit11::copyTexture(const gl::Context *context,
     stateManager->setDrawShaders(support.vertexShader, support.geometryShader,
                                  &shader->pixelShader);
 
-    // Unset the currently bound shader resource to avoid conflicts
-    stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
-
     // Apply render target
     stateManager->setRenderTarget(dest.get(), nullptr);
 
@@ -1239,9 +1230,6 @@ gl::Error Blit11::copyTexture(const gl::Context *context,
 
     // Draw the quad
     deviceContext->Draw(drawCount, 0);
-
-    // Invalidate state.
-    mRenderer->markAllStateDirty(context);
 
     return gl::NoError();
 }
@@ -1323,9 +1311,6 @@ gl::Error Blit11::copyDepth(const gl::Context *context,
 
     stateManager->setDrawShaders(&mQuad2DVS.getObj(), nullptr, &mDepthPS.getObj());
 
-    // Unset the currently bound shader resource to avoid conflicts
-    stateManager->setShaderResource(gl::SAMPLER_PIXEL, 0, nullptr);
-
     // Apply render target
     stateManager->setRenderTarget(nullptr, dest.get());
 
@@ -1337,9 +1322,6 @@ gl::Error Blit11::copyDepth(const gl::Context *context,
 
     // Draw the quad
     deviceContext->Draw(drawCount, 0);
-
-    // Invalidate all state.
-    mRenderer->markAllStateDirty(context);
 
     return gl::NoError();
 }
@@ -1955,9 +1937,6 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveDepth(const gl::Context *conte
 
     ANGLE_TRY(initResolveDepthOnly(depth->getFormatSet(), extents));
 
-    // Notify the Renderer that all state should be invalidated.
-    mRenderer->markAllStateDirty(context);
-
     ANGLE_TRY(mResolveDepthStencilVS.resolve(mRenderer));
     ANGLE_TRY(mResolveDepthPS.resolve(mRenderer));
 
@@ -2103,8 +2082,6 @@ gl::ErrorOrResult<TextureHelper11> Blit11::resolveStencil(const gl::Context *con
     }
 
     // Notify the Renderer that all state should be invalidated.
-    mRenderer->markAllStateDirty(context);
-
     ANGLE_TRY(mResolveDepthStencilVS.resolve(mRenderer));
 
     // Resolving the depth buffer works by sampling the depth in the shader using a SRV, then

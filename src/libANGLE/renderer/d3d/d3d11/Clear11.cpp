@@ -836,9 +836,6 @@ gl::Error Clear11::clearFramebuffer(const gl::Context *context,
         }
     }
 
-    // Clean up
-    mRenderer->markAllStateDirty(context);
-
     return gl::NoError();
 }
 }  // namespace rx

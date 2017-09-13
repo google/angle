@@ -158,22 +158,26 @@ class StateManager11 final : angle::NonCopyable
 
     void updateStencilSizeIfChanged(bool depthStencilInitialized, unsigned int stencilSize);
 
-    // Checks are done on a framebuffer state change to trigger other state changes.
-    // The Context is allowed to be nullptr for these methods, when called in EGL init code.
-    void invalidateRenderTarget(const gl::Context *context);
+    // These invalidations methods are called externally.
+
+    // Called from TextureStorage11.
     void invalidateBoundViews(const gl::Context *context);
-    void invalidateVertexBuffer();
-    void invalidateEverything(const gl::Context *context);
-    void invalidateViewport(const gl::Context *context);
-    void invalidateTexturesAndSamplers();
-    void invalidateSwizzles();
-    void invalidateDriverUniforms();
-    void invalidateProgramUniforms();
-    void invalidateProgramUniformBuffers();
-    void invalidateConstantBuffer(unsigned int slot);
 
     // Called from VertexArray11::updateVertexAttribStorage.
     void invalidateCurrentValueAttrib(size_t attribIndex);
+
+    // Checks are done on a framebuffer state change to trigger other state changes.
+    // The Context is allowed to be nullptr for these methods, when called in EGL init code.
+    void invalidateRenderTarget(const gl::Context *context);
+
+    // Called by instanced point sprite emulation.
+    void invalidateVertexBuffer();
+
+    // Called by Framebuffer11::syncState for the default sized viewport.
+    void invalidateViewport(const gl::Context *context);
+
+    // Called by TextureStorage11::markLevelDirty.
+    void invalidateSwizzles();
 
     void setRenderTarget(ID3D11RenderTargetView *rtv, ID3D11DepthStencilView *dsv);
     void setRenderTargets(ID3D11RenderTargetView **rtvs, UINT numRtvs, ID3D11DepthStencilView *dsv);
@@ -257,9 +261,10 @@ class StateManager11 final : angle::NonCopyable
                                    UINT resourceSlot,
                                    const SRVType *srv);
 
-    void unsetConflictingSRVs(gl::SamplerType shaderType,
+    bool unsetConflictingView(ID3D11View *view);
+    bool unsetConflictingSRVs(gl::SamplerType shaderType,
                               uintptr_t resource,
-                              const gl::ImageIndex &index);
+                              const gl::ImageIndex *index);
     void unsetConflictingAttachmentResources(const gl::FramebufferAttachment *attachment,
                                              ID3D11Resource *resource);
 
@@ -313,6 +318,13 @@ class StateManager11 final : angle::NonCopyable
 
     gl::Error syncUniformBuffers(const gl::Context *context, ProgramD3D *programD3D);
     gl::Error syncTransformFeedbackBuffers(const gl::Context *context);
+
+    // These are currently only called internally.
+    void invalidateTexturesAndSamplers();
+    void invalidateDriverUniforms();
+    void invalidateProgramUniforms();
+    void invalidateProgramUniformBuffers();
+    void invalidateConstantBuffer(unsigned int slot);
 
     enum DirtyBitType
     {

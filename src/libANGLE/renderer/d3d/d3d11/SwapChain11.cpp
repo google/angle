@@ -848,9 +848,6 @@ EGLint SwapChain11::copyOffscreenToBackbuffer(const gl::Context *context,
     // Draw
     deviceContext->Draw(4, 0);
 
-    // Rendering to the swapchain is now complete. Now we can call Present().
-    mRenderer->markAllStateDirty(context);
-
     return EGL_SUCCESS;
 }
 
