@@ -16,6 +16,24 @@
       "revId": "12110a20b12e8a7a0db5424620b66b5c03c1b573",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7a4f7493_58dc492b",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 649,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-09-13T09:36:22Z",
+      "side": 0,
+      "message": "I think we can keep that scenario in the same test case as the default number of views is 1 and corresponds to what the test is supposed to check.",
+      "parentUuid": "1b7cb9e7_5432be6e",
+      "revId": "12110a20b12e8a7a0db5424620b66b5c03c1b573",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
