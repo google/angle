@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "28f57c9d_787ed113",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-13T12:47:53Z",
+      "side": 1,
+      "message": "Add \u0027\u0026\u0026 (shaderVersion \u003c\u003d 300 || (location !\u003d -1 \u0026\u0026 other.location !\u003d -1 \u0026\u0026 location !\u003d other.location))\u0027 ?",
+      "revId": "a9009f43c8191999695bd4ccdde5a5808279c631",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9498cbf7_7b5e01c8",
+        "filename": "src/compiler/translator/ValidateVaryingLocations.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-13T12:47:53Z",
+      "side": 1,
+      "message": "Anywhere use it?",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 41
+      },
+      "revId": "a9009f43c8191999695bd4ccdde5a5808279c631",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
