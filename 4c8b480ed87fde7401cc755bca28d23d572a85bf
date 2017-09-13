@@ -16,6 +16,24 @@
       "revId": "4c8b480ed87fde7401cc755bca28d23d572a85bf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95caa6c8_8bc07e9e",
+        "filename": "src/tests/gl_tests/WebGLCompatibilityTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-13T16:05:50Z",
+      "side": 1,
+      "message": "Testing all the permutations is a bit too slow.  This at least makes sure that all the extensions for the half float formats are tested before the full float ones so that we have coverage of float vs half float validation.",
+      "parentUuid": "8c3ec396_2892f652",
+      "revId": "4c8b480ed87fde7401cc755bca28d23d572a85bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
