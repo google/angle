@@ -34,6 +34,24 @@
       "revId": "b9417490290bbc0fefe7bd255f55fb765af496bf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "47083d97_450df776",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1096,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-13T10:36:14Z",
+      "side": 1,
+      "message": "Ah right, now I get it. Looks fine, thanks for the explanation.",
+      "parentUuid": "b0318e25_9157042d",
+      "revId": "b9417490290bbc0fefe7bd255f55fb765af496bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }

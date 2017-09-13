@@ -34,6 +34,24 @@
       "revId": "12110a20b12e8a7a0db5424620b66b5c03c1b573",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "80d3fcb9_bd93a101",
+        "filename": "src/tests/gl_tests/MultiviewDrawTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 649,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-13T10:36:14Z",
+      "side": 0,
+      "message": "I think a separate test case is better - then you see right away in the test log what is working and what is not, in case something gets broken. The test code is also simpler to read that way. In general it\u0027s good practice to keep test cases as single-purpose and simple as possible.",
+      "parentUuid": "7a4f7493_58dc492b",
+      "revId": "12110a20b12e8a7a0db5424620b66b5c03c1b573",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
