@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d898b232_92f1a1a9",
+        "filename": "src/tests/gl_tests/RobustBufferAccessBehaviorTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-13T14:57:47Z",
+      "side": 1,
+      "message": "nit: all the .get calls aren\u0027t needed anymore thanks to a conversion operator defined in gl_raii.",
+      "revId": "5fb9130309b3958ff1f9acdfa29eb182040f4a79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c02cd901_bdfc1408",
+        "filename": "src/tests/gl_tests/RobustBufferAccessBehaviorTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-13T14:57:47Z",
+      "side": 1,
+      "message": "I\u0027m not sure that pixel (0, 0) is the correct one to test, it looks like it should be part of the first triangle.",
+      "revId": "5fb9130309b3958ff1f9acdfa29eb182040f4a79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8ad2e5a1_4bb7a7a0",
+        "filename": "src/tests/gl_tests/RobustBufferAccessBehaviorTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-13T14:57:47Z",
+      "side": 1,
+      "message": "nit: EXPECT_PIXEL_EQ.",
+      "revId": "5fb9130309b3958ff1f9acdfa29eb182040f4a79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

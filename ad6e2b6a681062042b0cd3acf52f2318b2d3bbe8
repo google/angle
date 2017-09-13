@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e30ae228_f26f372a",
+        "filename": "util/EGLWindow.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-13T14:57:47Z",
+      "side": 0,
+      "message": "Robustness is optional so we want the tests to explicitly enable it with a call to setRobustAccess in SetUp. Please revert the changes to EGLWindow.",
+      "revId": "ad6e2b6a681062042b0cd3acf52f2318b2d3bbe8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
