@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "9efa548e_56b99940",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-14T05:05:06Z",
+      "side": 1,
+      "message": "Yep. Done.",
+      "parentUuid": "d567102e_e4febc9e",
+      "range": {
+        "startLine": 9,
+        "startChar": 18,
+        "endLine": 9,
+        "endChar": 33
+      },
+      "revId": "2d9da1be417bee85b87802ca53a9f0c8a481a0b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b43b4aff_7e1a235e",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2017-09-14T01:40:31Z",
       "side": 1,
       "message": "Is this TODO done?",
+      "range": {
+        "startLine": 1822,
+        "startChar": 4,
+        "endLine": 1822,
+        "endChar": 37
+      },
+      "revId": "2d9da1be417bee85b87802ca53a9f0c8a481a0b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0c6ff2c2_3a03aba6",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1822,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-14T05:05:06Z",
+      "side": 1,
+      "message": "No, this will require a Program11 class or something similar - the program should notify the StateManager there are dirty uniforms, not the other way around (the State Manager checking the program). Currently the ProgramD3D class has no ability to talk directly to D3D11 (or D3D9).",
+      "parentUuid": "b43b4aff_7e1a235e",
       "range": {
         "startLine": 1822,
         "startChar": 4,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "2e289181_d1da8ba9",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2661,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-14T05:05:06Z",
+      "side": 1,
+      "message": "It\u0027s safe to mark everything - you can\u0027t have compute and draw uniforms in the same program.",
+      "parentUuid": "8d16531c_47cedcee",
+      "range": {
+        "startLine": 2661,
+        "startChar": 16,
+        "endLine": 2661,
+        "endChar": 33
+      },
+      "revId": "2d9da1be417bee85b87802ca53a9f0c8a481a0b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9d7d712f_27879d1b",
         "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
         "patchSetId": 4
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "25f607e0_6f5276ec",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2732,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-14T05:05:06Z",
+      "side": 1,
+      "message": "See above.",
+      "parentUuid": "9d7d712f_27879d1b",
+      "range": {
+        "startLine": 2732,
+        "startChar": 20,
+        "endLine": 2732,
+        "endChar": 37
+      },
+      "revId": "2d9da1be417bee85b87802ca53a9f0c8a481a0b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "99592339_35dcb537",
         "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
         "patchSetId": 4
@@ -105,6 +201,30 @@
       "writtenOn": "2017-09-14T01:40:31Z",
       "side": 1,
       "message": "A comment that compute uniforms are not implemented in D3D9 would have saved me some time reading this.",
+      "range": {
+        "startLine": 1842,
+        "startChar": 8,
+        "endLine": 1842,
+        "endChar": 88
+      },
+      "revId": "2d9da1be417bee85b87802ca53a9f0c8a481a0b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a3a8253d_08ff8105",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1842,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-14T05:05:06Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "99592339_35dcb537",
       "range": {
         "startLine": 1842,
         "startChar": 8,
