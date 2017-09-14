@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "51ad5c59_2e9ab704",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2218,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-09-14T19:05:30Z",
+      "side": 1,
+      "message": "To my understanding, this would be faster only if handling of mDirtySamplerMapping is slower than accessing the memory twice.\nDo you have any statistics to back this up?\nGuess this would depend on \"count\" argument. For small count double access wouldn\u0027t matter, since it fits in cache. But, if I understand, the API doesn\u0027t restrict \"count\" in any way, so the performance would depend on the end-user usage pattern.\n\nAlso, is this related to other changes? I don\u0027t see how.",
+      "range": {
+        "startLine": 2213,
+        "startChar": 0,
+        "endLine": 2218,
+        "endChar": 0
+      },
+      "revId": "e38de4cb8431606b374f46987732098c02e2f174",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
