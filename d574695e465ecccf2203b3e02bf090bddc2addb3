@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "355dd8bc_486a20d7",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-14T13:05:01Z",
+      "side": 1,
+      "message": "Why true not matchName?",
+      "range": {
+        "startLine": 175,
+        "startChar": 83,
+        "endLine": 175,
+        "endChar": 87
+      },
+      "revId": "d574695e465ecccf2203b3e02bf090bddc2addb3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
