@@ -22,6 +22,30 @@
       "revId": "e38de4cb8431606b374f46987732098c02e2f174",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e9c61fee_7d9dd0ff",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2218,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-14T21:40:29Z",
+      "side": 1,
+      "message": "count is ultimately restricted by API values for maximum number of samplers.\n\nthis is unrelated, I could take it out, but I think the texture dirtying step is significantly more expensive than a memcmp so I left it in. We don\u0027t have a perf test for this currently.",
+      "parentUuid": "51ad5c59_2e9ab704",
+      "range": {
+        "startLine": 2213,
+        "startChar": 0,
+        "endLine": 2218,
+        "endChar": 0
+      },
+      "revId": "e38de4cb8431606b374f46987732098c02e2f174",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
