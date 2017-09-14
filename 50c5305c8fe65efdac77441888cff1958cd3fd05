@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "04dc27c4_68c65e08",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-14T23:19:15Z",
+      "side": 1,
+      "message": "I can\u0027t imagine why a compiler warning would cause a static link conflict. The preprocessor magic here should ensure things work identically for Chrome, since Chrome uses the exact same compiler toolchain, and this shouldn\u0027t change any binary code.\n\nBTW we don\u0027t adhere to strict Chromium rules. We can adapt a bit if they fit within general Google style rules. In this case I can\u0027t think of any reason to worry.",
+      "parentUuid": "6e2f1a8e_76fea1f9",
+      "range": {
+        "startLine": 258,
+        "startChar": 27,
+        "endLine": 258,
+        "endChar": 36
+      },
+      "revId": "50c5305c8fe65efdac77441888cff1958cd3fd05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8451c53b_0815eabd",
         "filename": "src/libANGLE/Error.inl",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2017-09-14T22:14:07Z",
       "side": 1,
       "message": "Feels like we\u0027re losing information here.\nMaybe we can have one Error class which will hold both gl and egl errors?\nWith something like enum type {gl, egl, vulkan?} member.\nErrorStream could set it when it creates Error.",
+      "range": {
+        "startLine": 124,
+        "startChar": 6,
+        "endLine": 124,
+        "endChar": 26
+      },
+      "revId": "50c5305c8fe65efdac77441888cff1958cd3fd05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "542b2160_0f5aca10",
+        "filename": "src/libANGLE/Error.inl",
+        "patchSetId": 5
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-14T23:19:15Z",
+      "side": 1,
+      "message": "That sounds like a good idea Yuly. I think it\u0027s out-of-scope for this CL. One or two Surface errors lose a meaningful type, but should be very rare, and often the app doesn\u0027t care about the return type of errors. Let\u0027s defer this for later, it seems not very impactful.",
+      "parentUuid": "8451c53b_0815eabd",
       "range": {
         "startLine": 124,
         "startChar": 6,
@@ -94,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "b42bdd87_7ed212e2",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 438,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-14T23:19:15Z",
+      "side": 1,
+      "message": "handleError here is a non-const method. The Context we pass around everywhere is const. I didn\u0027t want to make handleError mutable here, but if we all agree, I can do something in a follow-up CL. Same goes for the other SWALLOW_ERR issues.\n\nAs an aside:\n\nif the Context is available at every place in the code where an Error is generated, we can immediately send the Error to handleError. The return value indicates if the code should continue or abort. This might complicate unit tests, but we didn\u0027t end up making very many mock-based tests, so this might be feasible.",
+      "parentUuid": "1f52a835_891ef7a4",
+      "range": {
+        "startLine": 438,
+        "startChar": 12,
+        "endLine": 438,
+        "endChar": 29
+      },
+      "revId": "50c5305c8fe65efdac77441888cff1958cd3fd05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0d3bf1b0_97400e40",
         "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
         "patchSetId": 5
@@ -105,6 +177,30 @@
       "writtenOn": "2017-09-14T22:14:07Z",
       "side": 1,
       "message": "mDisplay-\u003egetProxyContext()-\u003ehandleError?",
+      "range": {
+        "startLine": 56,
+        "startChar": 8,
+        "endLine": 56,
+        "endChar": 25
+      },
+      "revId": "50c5305c8fe65efdac77441888cff1958cd3fd05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "018e1b89_aec94902",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-14T23:19:15Z",
+      "side": 1,
+      "message": "Currently we don\u0027t check the proxy context for errors, although I suppose we could.",
+      "parentUuid": "0d3bf1b0_97400e40",
       "range": {
         "startLine": 56,
         "startChar": 8,
@@ -137,6 +233,30 @@
       "revId": "50c5305c8fe65efdac77441888cff1958cd3fd05",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b5f3791_d9990c06",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-14T23:19:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4e6078bc_40b218ff",
+      "range": {
+        "startLine": 57,
+        "startChar": 7,
+        "endLine": 57,
+        "endChar": 86
+      },
+      "revId": "50c5305c8fe65efdac77441888cff1958cd3fd05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -174,6 +294,30 @@
       "writtenOn": "2017-09-14T22:14:07Z",
       "side": 1,
       "message": "Why do you need to swallow here?",
+      "range": {
+        "startLine": 470,
+        "startChar": 8,
+        "endLine": 470,
+        "endChar": 25
+      },
+      "revId": "50c5305c8fe65efdac77441888cff1958cd3fd05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27c0be41_04b63446",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Image9.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 470,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-14T23:19:15Z",
+      "side": 1,
+      "message": "Changed to handle the error. Because otherwise we\u0027d leak the surface.",
+      "parentUuid": "9a30e810_e6d430be",
       "range": {
         "startLine": 470,
         "startChar": 8,
