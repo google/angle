@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "83df93dd_792438d3",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-14T14:12:53Z",
+      "side": 1,
+      "message": "Remember to change this!",
+      "range": {
+        "startLine": 28,
+        "startChar": 25,
+        "endLine": 28,
+        "endChar": 28
+      },
+      "revId": "22fb3bc2e001e1c1a6976f6211d554737b17ea57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
