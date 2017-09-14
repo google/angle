@@ -2208,8 +2208,13 @@ void ProgramD3D::setUniformInternal(GLint location, GLsizei count, const T *v, G
     if (targetUniform->typeInfo.isSampler)
     {
         ASSERT(uniformType == GL_INT);
-        memcpy(&targetUniform->mSamplerData[locationInfo.element], v, count * sizeof(T));
-        mDirtySamplerMapping = true;
+        size_t size = count * sizeof(T);
+        auto dest   = &targetUniform->mSamplerData[locationInfo.element];
+        if (memcmp(dest, v, size) != 0)
+        {
+            memcpy(dest, v, size);
+            mDirtySamplerMapping = true;
+        }
         return;
     }
 
@@ -2233,7 +2238,7 @@ void ProgramD3D::setUniformInternal(GLint location, GLsizei count, const T *v, G
 }
 
 template <int cols, int rows>
-void ProgramD3D::setUniformMatrixfvImpl(GLint location,
+bool ProgramD3D::setUniformMatrixfvImpl(GLint location,
                                         GLsizei countIn,
                                         GLboolean transpose,
                                         const GLfloat *value,
@@ -2250,20 +2255,24 @@ void ProgramD3D::setUniformMatrixfvImpl(GLint location,
     GLfloat *target = reinterpret_cast<GLfloat *>(targetData + arrayElement * sizeof(GLfloat) *
                                                                    targetMatrixStride);
 
+    bool dirty = false;
+
     for (unsigned int i = 0; i < count; i++)
     {
         // Internally store matrices as transposed versions to accomodate HLSL matrix indexing
         if (transpose == GL_FALSE)
         {
-            TransposeExpandMatrix<GLfloat, cols, rows>(target, value);
+            dirty = TransposeExpandMatrix<GLfloat, cols, rows>(target, value) || dirty;
         }
         else
         {
-            ExpandMatrix<GLfloat, cols, rows>(target, value);
+            dirty = ExpandMatrix<GLfloat, cols, rows>(target, value) || dirty;
         }
         target += targetMatrixStride;
         value += cols * rows;
     }
+
+    return dirty;
 }
 
 template <int cols, int rows>
@@ -2277,23 +2286,29 @@ void ProgramD3D::setUniformMatrixfvInternal(GLint location,
 
     if (targetUniform->vsData)
     {
-        setUniformMatrixfvImpl<cols, rows>(location, countIn, transpose, value,
-                                           targetUniform->vsData, targetUniformType);
-        mVertexUniformsDirty = true;
+        if (setUniformMatrixfvImpl<cols, rows>(location, countIn, transpose, value,
+                                               targetUniform->vsData, targetUniformType))
+        {
+            mVertexUniformsDirty = true;
+        }
     }
 
     if (targetUniform->psData)
     {
-        setUniformMatrixfvImpl<cols, rows>(location, countIn, transpose, value,
-                                           targetUniform->psData, targetUniformType);
-        mFragmentUniformsDirty = true;
+        if (setUniformMatrixfvImpl<cols, rows>(location, countIn, transpose, value,
+                                               targetUniform->psData, targetUniformType))
+        {
+            mFragmentUniformsDirty = true;
+        }
     }
 
     if (targetUniform->csData)
     {
-        setUniformMatrixfvImpl<cols, rows>(location, countIn, transpose, value,
-                                           targetUniform->csData, targetUniformType);
-        mComputeUniformsDirty = true;
+        if (setUniformMatrixfvImpl<cols, rows>(location, countIn, transpose, value,
+                                               targetUniform->csData, targetUniformType))
+        {
+            mComputeUniformsDirty = true;
+        }
     }
 }
 

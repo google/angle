@@ -402,7 +402,7 @@ class ProgramD3D : public ProgramImpl
     void setUniformInternal(GLint location, GLsizei count, const T *v, GLenum uniformType);
 
     template <int cols, int rows>
-    void setUniformMatrixfvImpl(GLint location,
+    bool setUniformMatrixfvImpl(GLint location,
                                 GLsizei count,
                                 GLboolean transpose,
                                 const GLfloat *value,
