@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5814202c_22e3c20f",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-14T14:43:25Z",
+      "side": 1,
+      "message": "What about angletypes.h for this?",
+      "range": {
+        "startLine": 266,
+        "startChar": 6,
+        "endLine": 266,
+        "endChar": 26
+      },
+      "revId": "11473ab7bfc065103fdd5e248a64a9a8a2149c4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e9e8f5c_ab188a47",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-14T14:43:25Z",
+      "side": 1,
+      "message": "Oof, we should fix these eventually.  No error checks on resizing the backbuffer of a surface.",
+      "range": {
+        "startLine": 285,
+        "startChar": 8,
+        "endLine": 285,
+        "endChar": 25
+      },
+      "revId": "11473ab7bfc065103fdd5e248a64a9a8a2149c4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b8630c98_cdf7d03e",
+        "filename": "src/libANGLE/renderer/d3d/VertexBuffer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-14T14:43:25Z",
+      "side": 1,
+      "message": "We should also eventually move this into a public initialize call.",
+      "range": {
+        "startLine": 129,
+        "startChar": 4,
+        "endLine": 129,
+        "endChar": 21
+      },
+      "revId": "11473ab7bfc065103fdd5e248a64a9a8a2149c4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "52121c76_e2661396",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1015,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-14T14:43:25Z",
+      "side": 1,
+      "message": "Should fix this properly by saving the error and calling unmap before checking it.",
+      "range": {
+        "startLine": 1015,
+        "startChar": 8,
+        "endLine": 1015,
+        "endChar": 46
+      },
+      "revId": "11473ab7bfc065103fdd5e248a64a9a8a2149c4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a89f7bdc_76b255e1",
+        "filename": "src/tests/perf_tests/IndexDataManagerTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-14T14:43:25Z",
+      "side": 1,
+      "message": "Maybe use EXPECT_TRUE (and below)?",
+      "range": {
+        "startLine": 169,
+        "startChar": 4,
+        "endLine": 169,
+        "endChar": 10
+      },
+      "revId": "11473ab7bfc065103fdd5e248a64a9a8a2149c4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
