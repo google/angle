@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d3c00579_5fb20267",
+        "filename": "src/libANGLE/Error.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-14T22:52:22Z",
+      "side": 1,
+      "message": "this fix is unrelated, but turned up in a failing test with this CL.",
+      "range": {
+        "startLine": 53,
+        "startChar": 11,
+        "endLine": 53,
+        "endChar": 41
+      },
+      "revId": "09cd851e94200348ae9d4f83fbd2fce76903abf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
