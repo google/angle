@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6e2f1a8e_76fea1f9",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-09-14T22:14:07Z",
+      "side": 1,
+      "message": "Would this be a problem if we link statically into Chrome?\nThey are just thinking about allowing C++14.",
+      "range": {
+        "startLine": 258,
+        "startChar": 27,
+        "endLine": 258,
+        "endChar": 36
+      },
+      "revId": "50c5305c8fe65efdac77441888cff1958cd3fd05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8451c53b_0815eabd",
+        "filename": "src/libANGLE/Error.inl",
+        "patchSetId": 5
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-09-14T22:14:07Z",
+      "side": 1,
+      "message": "Feels like we\u0027re losing information here.\nMaybe we can have one Error class which will hold both gl and egl errors?\nWith something like enum type {gl, egl, vulkan?} member.\nErrorStream could set it when it creates Error.",
+      "range": {
+        "startLine": 124,
+        "startChar": 6,
+        "endLine": 124,
+        "endChar": 26
+      },
+      "revId": "50c5305c8fe65efdac77441888cff1958cd3fd05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "31672326_b606b77a",
+        "filename": "src/libANGLE/RefCountObject.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-09-14T22:14:07Z",
+      "side": 1,
+      "message": "context-\u003ehandleError?",
+      "range": {
+        "startLine": 67,
+        "startChar": 12,
+        "endLine": 67,
+        "endChar": 29
+      },
+      "revId": "50c5305c8fe65efdac77441888cff1958cd3fd05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f52a835_891ef7a4",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 438,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-09-14T22:14:07Z",
+      "side": 1,
+      "message": "Does it make sense to call mContext-\u003ehandleError() in places like this?",
+      "range": {
+        "startLine": 438,
+        "startChar": 12,
+        "endLine": 438,
+        "endChar": 29
+      },
+      "revId": "50c5305c8fe65efdac77441888cff1958cd3fd05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0d3bf1b0_97400e40",
+        "filename": "src/libANGLE/renderer/d3d/RendererD3D.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-09-14T22:14:07Z",
+      "side": 1,
+      "message": "mDisplay-\u003egetProxyContext()-\u003ehandleError?",
+      "range": {
+        "startLine": 56,
+        "startChar": 8,
+        "endLine": 56,
+        "endChar": 25
+      },
+      "revId": "50c5305c8fe65efdac77441888cff1958cd3fd05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e6078bc_40b218ff",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-09-14T22:14:07Z",
+      "side": 1,
+      "message": "Doesn\u0027t seem to be doing that anymore",
+      "range": {
+        "startLine": 57,
+        "startChar": 7,
+        "endLine": 57,
+        "endChar": 86
+      },
+      "revId": "50c5305c8fe65efdac77441888cff1958cd3fd05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4fad2bca_91d01734",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Context11.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-09-14T22:14:07Z",
+      "side": 1,
+      "message": "context-\u003ehandleError?",
+      "range": {
+        "startLine": 275,
+        "startChar": 4,
+        "endLine": 275,
+        "endChar": 21
+      },
+      "revId": "50c5305c8fe65efdac77441888cff1958cd3fd05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9a30e810_e6d430be",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Image9.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 470,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-09-14T22:14:07Z",
+      "side": 1,
+      "message": "Why do you need to swallow here?",
+      "range": {
+        "startLine": 470,
+        "startChar": 8,
+        "endLine": 470,
+        "endChar": 25
+      },
+      "revId": "50c5305c8fe65efdac77441888cff1958cd3fd05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e95ec567_06b36c9c",
+        "filename": "src/libANGLE/renderer/gl/ContextGL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-09-14T22:14:07Z",
+      "side": 1,
+      "message": "context-\u003ehandleError?",
+      "range": {
+        "startLine": 356,
+        "startChar": 4,
+        "endLine": 356,
+        "endChar": 21
+      },
+      "revId": "50c5305c8fe65efdac77441888cff1958cd3fd05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
