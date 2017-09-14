@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d567102e_e4febc9e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-09-14T01:40:31Z",
+      "side": 1,
+      "message": "You mean UpdateSubresource?",
+      "range": {
+        "startLine": 9,
+        "startChar": 18,
+        "endLine": 9,
+        "endChar": 33
+      },
+      "revId": "2d9da1be417bee85b87802ca53a9f0c8a481a0b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b43b4aff_7e1a235e",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1822,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-09-14T01:40:31Z",
+      "side": 1,
+      "message": "Is this TODO done?",
+      "range": {
+        "startLine": 1822,
+        "startChar": 4,
+        "endLine": 1822,
+        "endChar": 37
+      },
+      "revId": "2d9da1be417bee85b87802ca53a9f0c8a481a0b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8d16531c_47cedcee",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2661,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-09-14T01:40:31Z",
+      "side": 1,
+      "message": "I think that compute uniforms should remain dirty?",
+      "range": {
+        "startLine": 2661,
+        "startChar": 16,
+        "endLine": 2661,
+        "endChar": 33
+      },
+      "revId": "2d9da1be417bee85b87802ca53a9f0c8a481a0b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9d7d712f_27879d1b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/StateManager11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2732,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-09-14T01:40:31Z",
+      "side": 1,
+      "message": "I think other uniforms should remain dirty?",
+      "range": {
+        "startLine": 2732,
+        "startChar": 20,
+        "endLine": 2732,
+        "endChar": 37
+      },
+      "revId": "2d9da1be417bee85b87802ca53a9f0c8a481a0b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "99592339_35dcb537",
+        "filename": "src/libANGLE/renderer/d3d/d3d9/Renderer9.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1842,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-09-14T01:40:31Z",
+      "side": 1,
+      "message": "A comment that compute uniforms are not implemented in D3D9 would have saved me some time reading this.",
+      "range": {
+        "startLine": 1842,
+        "startChar": 8,
+        "endLine": 1842,
+        "endChar": 88
+      },
+      "revId": "2d9da1be417bee85b87802ca53a9f0c8a481a0b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
