@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "ca9a5fe0_4c0154de",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2119,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-14T09:28:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a5ccb6c_898a2eb7",
+      "revId": "c18ae8a63a5b8d644927a939e9d7d6ce286beef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "962d9b1a_63f04399",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 11
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "cea05dd5_72eb1164",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2120,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-14T09:28:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "962d9b1a_63f04399",
+      "range": {
+        "startLine": 2120,
+        "startChar": 82,
+        "endLine": 2120,
+        "endChar": 96
+      },
+      "revId": "c18ae8a63a5b8d644927a939e9d7d6ce286beef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7b9416c7_42467c53",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 11
@@ -53,6 +95,24 @@
       "writtenOn": "2017-09-13T16:25:31Z",
       "side": 1,
       "message": "What happens when we do this unconditionally? It seems that it should always validate to true since there will be no shader storage block.",
+      "revId": "c18ae8a63a5b8d644927a939e9d7d6ce286beef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4cd8114f_e99631f9",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2230,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-14T09:28:37Z",
+      "side": 1,
+      "message": "Yes, it\u0027s still right if we remove this condition. The reason that I added it is to skip below validation. Because even shaderStorageBlocks is empty, it still needs to do all below checks. That will run more sentences than one condition checking. What do you think?",
+      "parentUuid": "7b9416c7_42467c53",
       "revId": "c18ae8a63a5b8d644927a939e9d7d6ce286beef5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -87,6 +147,24 @@
       "writtenOn": "2017-09-13T16:25:31Z",
       "side": 1,
       "message": "Do you expect additional members being required for shader storage blocks (like read, write, read-write)? If yes then it would be best to keep two different types and make them both inherit from InterfaceBlock.",
+      "revId": "c18ae8a63a5b8d644927a939e9d7d6ce286beef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ef58c25a_bc87c4a1",
+        "filename": "src/libANGLE/Uniform.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-14T09:28:37Z",
+      "side": 1,
+      "message": "I haven\u0027t met the case that we need to save the memory access qualifier value. All the validation has been done in compiler(ParseContext.cpp). Can we keep current implementation and refactor it if necessary in future?",
+      "parentUuid": "e8972e32_d70a5faa",
       "revId": "c18ae8a63a5b8d644927a939e9d7d6ce286beef5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
