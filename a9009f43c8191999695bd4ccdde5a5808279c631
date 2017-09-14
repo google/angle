@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "7d13c2b7_be64325c",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 371,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-09-14T05:52:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "28f57c9d_787ed113",
+      "revId": "a9009f43c8191999695bd4ccdde5a5808279c631",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9498cbf7_7b5e01c8",
         "filename": "src/compiler/translator/ValidateVaryingLocations.cpp",
         "patchSetId": 9
@@ -30,6 +48,30 @@
       "writtenOn": "2017-09-13T12:47:53Z",
       "side": 1,
       "message": "Anywhere use it?",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 41
+      },
+      "revId": "a9009f43c8191999695bd4ccdde5a5808279c631",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8d02f3a5_9d20a518",
+        "filename": "src/compiler/translator/ValidateVaryingLocations.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-09-14T05:52:23Z",
+      "side": 1,
+      "message": "Done\nThanks to point out this!",
+      "parentUuid": "9498cbf7_7b5e01c8",
       "range": {
         "startLine": 13,
         "startChar": 0,
