@@ -25,6 +25,23 @@
     },
     {
       "key": {
+        "uuid": "e5f17586_98ff27ff",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 5376,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-14T16:57:41Z",
+      "side": 1,
+      "message": "nit: this can be moved out of the switch as it set to true in both cases.",
+      "revId": "22fb3bc2e001e1c1a6976f6211d554737b17ea57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5d3a0607_4a5de2aa",
         "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
         "patchSetId": 11
