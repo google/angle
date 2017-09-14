@@ -641,9 +641,9 @@ GLuint ANGLETestBase::compileShader(GLenum type, const std::string &source)
 
 void ANGLETestBase::checkD3D11SDKLayersMessages()
 {
-#if defined(ANGLE_PLATFORM_WINDOWS) && !defined(NDEBUG)
-    // In debug D3D11 mode, check ID3D11InfoQueue to see if any D3D11 SDK Layers messages
-    // were outputted by the test
+#if defined(ANGLE_PLATFORM_WINDOWS)
+    // On Windows D3D11, check ID3D11InfoQueue to see if any D3D11 SDK Layers messages
+    // were outputted by the test. We enable the Debug layers in Release tests as well.
     if (mIgnoreD3D11SDKLayersWarnings ||
         mEGLWindow->getPlatform().renderer != EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE ||
         mEGLWindow->getDisplay() == EGL_NO_DISPLAY)
@@ -715,7 +715,7 @@ void ANGLETestBase::checkD3D11SDKLayersMessages()
     }
 
     SafeRelease(infoQueue);
-#endif
+#endif  // defined(ANGLE_PLATFORM_WINDOWS)
 }
 
 bool ANGLETestBase::extensionEnabled(const std::string &extName)
