@@ -49,9 +49,10 @@ GLuint HandleAllocator::allocate()
 {
     ASSERT(!mUnallocatedList.empty() || !mReleasedList.empty());
 
-    // Allocate from released list, constant time.
+    // Allocate from released list, logarithmic time for pop_heap.
     if (!mReleasedList.empty())
     {
+        std::pop_heap(mReleasedList.begin(), mReleasedList.end());
         GLuint reusedHandle = mReleasedList.back();
         mReleasedList.pop_back();
         return reusedHandle;
@@ -77,8 +78,9 @@ GLuint HandleAllocator::allocate()
 
 void HandleAllocator::release(GLuint handle)
 {
-    // Add to released list, constant time.
+    // Add to released list, logarithmic time for push_heap.
     mReleasedList.push_back(handle);
+    std::push_heap(mReleasedList.begin(), mReleasedList.end());
 }
 
 void HandleAllocator::reserve(GLuint handle)
