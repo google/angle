@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c5f4b376_93ee5875",
+        "filename": "src/compiler/translator/Initialize.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 677,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-09-14T13:41:28Z",
+      "side": 1,
+      "message": "Yes, that\u0027s actually the reason for the majority of failing deqp tests.",
+      "parentUuid": "177085fd_c78061a9",
+      "range": {
+        "startLine": 677,
+        "startChar": 48,
+        "endLine": 677,
+        "endChar": 53
+      },
+      "revId": "8440fd44affcf6fb5b9c7f4df4b766eea3884b49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0299c023_d3a134c3",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 5
@@ -36,6 +60,30 @@
       "writtenOn": "2017-09-12T12:35:16Z",
       "side": 1,
       "message": "I don\u0027t think that this assert is relevant here.",
+      "range": {
+        "startLine": 5348,
+        "startChar": 42,
+        "endLine": 5348,
+        "endChar": 65
+      },
+      "revId": "8440fd44affcf6fb5b9c7f4df4b766eea3884b49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b7e5174_4200dcbb",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 5348,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-09-14T13:41:28Z",
+      "side": 1,
+      "message": "Removed it.",
+      "parentUuid": "0299c023_d3a134c3",
       "range": {
         "startLine": 5348,
         "startChar": 42,
@@ -65,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "8f2c1f25_08fd54c7",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 5364,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-09-14T13:41:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "faac9984_3395bb0c",
+      "revId": "8440fd44affcf6fb5b9c7f4df4b766eea3884b49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d7d4b4b3_04036d11",
         "filename": "src/compiler/translator/ShaderLang.cpp",
         "patchSetId": 5
@@ -88,6 +154,30 @@
     },
     {
       "key": {
+        "uuid": "2a632835_4b6ac5c1",
+        "filename": "src/compiler/translator/ShaderLang.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-09-14T13:41:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d7d4b4b3_04036d11",
+      "range": {
+        "startLine": 206,
+        "startChar": 40,
+        "endLine": 206,
+        "endChar": 50
+      },
+      "revId": "8440fd44affcf6fb5b9c7f4df4b766eea3884b49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "521abc3b_3f928128",
         "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
         "patchSetId": 5
@@ -99,6 +189,24 @@
       "writtenOn": "2017-09-12T12:35:16Z",
       "side": 1,
       "message": "I\u0027d imagine the correct cases here are already covered in dEQP and an ANGLE test is quite redundant - is this not so?",
+      "revId": "8440fd44affcf6fb5b9c7f4df4b766eea3884b49",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0dc4221d_d2ead460",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 4755,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-09-14T13:41:28Z",
+      "side": 1,
+      "message": "Yes, I will remove the correct cases.",
+      "parentUuid": "521abc3b_3f928128",
       "revId": "8440fd44affcf6fb5b9c7f4df4b766eea3884b49",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
