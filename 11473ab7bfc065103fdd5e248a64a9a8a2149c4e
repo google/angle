@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "371d07b8_f5501fef",
+        "filename": "src/libANGLE/Error.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-14T19:47:16Z",
+      "side": 1,
+      "message": "Done, seems to compile.",
+      "parentUuid": "5814202c_22e3c20f",
+      "range": {
+        "startLine": 266,
+        "startChar": 6,
+        "endLine": 266,
+        "endChar": 26
+      },
+      "revId": "11473ab7bfc065103fdd5e248a64a9a8a2149c4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5e9e8f5c_ab188a47",
         "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2017-09-14T14:43:25Z",
       "side": 1,
       "message": "Oof, we should fix these eventually.  No error checks on resizing the backbuffer of a surface.",
+      "range": {
+        "startLine": 285,
+        "startChar": 8,
+        "endLine": 285,
+        "endChar": 25
+      },
+      "revId": "11473ab7bfc065103fdd5e248a64a9a8a2149c4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "870504fa_afb395e8",
+        "filename": "src/libANGLE/renderer/d3d/SurfaceD3D.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-14T19:47:16Z",
+      "side": 1,
+      "message": "Done, apparently the bool return value was never checked.",
+      "parentUuid": "5e9e8f5c_ab188a47",
       "range": {
         "startLine": 285,
         "startChar": 8,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "288c86b2_c7106cb3",
+        "filename": "src/libANGLE/renderer/d3d/VertexBuffer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-14T19:47:16Z",
+      "side": 1,
+      "message": "Left a todo for this. You can find these easily by searching for ANGLE_SWALLOW_ERR",
+      "parentUuid": "b8630c98_cdf7d03e",
+      "range": {
+        "startLine": 129,
+        "startChar": 4,
+        "endLine": 129,
+        "endChar": 21
+      },
+      "revId": "11473ab7bfc065103fdd5e248a64a9a8a2149c4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "52121c76_e2661396",
         "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
         "patchSetId": 4
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "5884f659_aff8492f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Buffer11.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1015,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-14T19:47:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "52121c76_e2661396",
+      "range": {
+        "startLine": 1015,
+        "startChar": 8,
+        "endLine": 1015,
+        "endChar": 46
+      },
+      "revId": "11473ab7bfc065103fdd5e248a64a9a8a2149c4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a89f7bdc_76b255e1",
         "filename": "src/tests/perf_tests/IndexDataManagerTest.cpp",
         "patchSetId": 4
@@ -105,6 +201,30 @@
       "writtenOn": "2017-09-14T14:43:25Z",
       "side": 1,
       "message": "Maybe use EXPECT_TRUE (and below)?",
+      "range": {
+        "startLine": 169,
+        "startChar": 4,
+        "endLine": 169,
+        "endChar": 10
+      },
+      "revId": "11473ab7bfc065103fdd5e248a64a9a8a2149c4e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "826d46c5_42ab4f3a",
+        "filename": "src/tests/perf_tests/IndexDataManagerTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 169,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-14T19:47:16Z",
+      "side": 1,
+      "message": "Done. I didn\u0027t want to mess up the test timing for the step() function, so I left those.",
+      "parentUuid": "a89f7bdc_76b255e1",
       "range": {
         "startLine": 169,
         "startChar": 4,
