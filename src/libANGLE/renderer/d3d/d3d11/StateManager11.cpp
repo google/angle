@@ -168,6 +168,14 @@ void SortAttributesByLayout(const gl::Program *program,
     }
 }
 
+void UpdateUniformBuffer(ID3D11DeviceContext *deviceContext,
+                         UniformStorage11 *storage,
+                         const d3d11::Buffer *buffer)
+{
+    deviceContext->UpdateSubresource(buffer->get(), 0, nullptr, storage->getDataPointer(0, 0), 0,
+                                     0);
+}
+
 }  // anonymous namespace
 
 // StateManager11::SRVCache Implementation.
@@ -1812,7 +1820,7 @@ gl::Error StateManager11::updateState(const gl::Context *context, GLenum drawMod
     }
 
     // TODO(jmadill): Use dirty bits.
-    if (programD3D->areUniformsDirty())
+    if (programD3D->areVertexUniformsDirty() || programD3D->areFragmentUniformsDirty())
     {
         mInternalDirtyBits.set(DIRTY_BIT_PROGRAM_UNIFORMS);
     }
@@ -2622,37 +2630,14 @@ gl::Error StateManager11::applyUniforms(ProgramD3D *programD3D)
     const d3d11::Buffer *pixelConstantBuffer = nullptr;
     ANGLE_TRY(fragmentUniformStorage->getConstantBuffer(mRenderer, &pixelConstantBuffer));
 
-    bool uniformsDirty = programD3D->areUniformsDirty();
-
-    if (vertexUniformStorage->size() > 0 && uniformsDirty)
+    if (vertexUniformStorage->size() > 0 && programD3D->areVertexUniformsDirty())
     {
-        D3D11_MAPPED_SUBRESOURCE map = {0};
-        HRESULT result =
-            deviceContext->Map(vertexConstantBuffer->get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-
-        if (FAILED(result))
-        {
-            return gl::OutOfMemory() << "Failed to Map vertex constants: " << gl::FmtHR(result);
-        }
-
-        memcpy(map.pData, vertexUniformStorage->getDataPointer(0, 0), vertexUniformStorage->size());
-        deviceContext->Unmap(vertexConstantBuffer->get(), 0);
+        UpdateUniformBuffer(deviceContext, vertexUniformStorage, vertexConstantBuffer);
     }
 
-    if (fragmentUniformStorage->size() > 0 && uniformsDirty)
+    if (fragmentUniformStorage->size() > 0 && programD3D->areFragmentUniformsDirty())
     {
-        D3D11_MAPPED_SUBRESOURCE map = {0};
-        HRESULT result =
-            deviceContext->Map(pixelConstantBuffer->get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-
-        if (FAILED(result))
-        {
-            return gl::OutOfMemory() << "Failed to Map fragment constants: " << gl::FmtHR(result);
-        }
-
-        memcpy(map.pData, fragmentUniformStorage->getDataPointer(0, 0),
-               fragmentUniformStorage->size());
-        deviceContext->Unmap(pixelConstantBuffer->get(), 0);
+        UpdateUniformBuffer(deviceContext, fragmentUniformStorage, pixelConstantBuffer);
     }
 
     unsigned int slot = d3d11::RESERVED_CONSTANT_BUFFER_SLOT_DEFAULT_UNIFORM_BLOCK;
@@ -2741,23 +2726,9 @@ gl::Error StateManager11::applyComputeUniforms(ProgramD3D *programD3D)
 
     ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
 
-    bool uniformsDirty = programD3D->areUniformsDirty();
-
-    if (computeUniformStorage->size() > 0 && uniformsDirty)
+    if (computeUniformStorage->size() > 0 && programD3D->areComputeUniformsDirty())
     {
-        D3D11_MAPPED_SUBRESOURCE map = {0};
-        HRESULT result =
-            deviceContext->Map(constantBuffer->get(), 0, D3D11_MAP_WRITE_DISCARD, 0, &map);
-
-        if (FAILED(result))
-        {
-            return gl::OutOfMemory() << "Failed to Map compute constants: " << gl::FmtHR(result);
-        }
-
-        memcpy(map.pData, computeUniformStorage->getDataPointer(0, 0),
-               computeUniformStorage->size());
-        deviceContext->Unmap(constantBuffer->get(), 0);
-
+        UpdateUniformBuffer(deviceContext, computeUniformStorage, constantBuffer);
         programD3D->markUniformsClean();
     }
 

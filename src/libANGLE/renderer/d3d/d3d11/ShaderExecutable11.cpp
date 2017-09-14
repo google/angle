@@ -104,16 +104,12 @@ gl::Error UniformStorage11::getConstantBuffer(Renderer11 *renderer, const d3d11:
 {
     if (size() > 0 && !mConstantBuffer.valid())
     {
-        D3D11_BUFFER_DESC constantBufferDescription = {0};
+        D3D11_BUFFER_DESC desc = {0};
+        desc.ByteWidth         = static_cast<unsigned int>(size());
+        desc.Usage             = D3D11_USAGE_DEFAULT;
+        desc.BindFlags         = D3D11_BIND_CONSTANT_BUFFER;
 
-        constantBufferDescription.ByteWidth           = static_cast<unsigned int>(size());
-        constantBufferDescription.Usage = D3D11_USAGE_DYNAMIC;
-        constantBufferDescription.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-        constantBufferDescription.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-        constantBufferDescription.MiscFlags = 0;
-        constantBufferDescription.StructureByteStride = 0;
-
-        ANGLE_TRY(renderer->allocateResource(constantBufferDescription, &mConstantBuffer));
+        ANGLE_TRY(renderer->allocateResource(desc, &mConstantBuffer));
     }
 
     *bufferOut = &mConstantBuffer;

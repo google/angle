@@ -558,7 +558,9 @@ ProgramD3D::ProgramD3D(const gl::ProgramState &state, RendererD3D *renderer)
       mUsedComputeSamplerRange(0),
       mDirtySamplerMapping(true),
       mSerial(issueSerial()),
-      mUniformsDirty(true)
+      mVertexUniformsDirty(true),
+      mFragmentUniformsDirty(true),
+      mComputeUniformsDirty(true)
 {
     mDynamicHLSL = new DynamicHLSL(renderer);
 }
@@ -1833,7 +1835,16 @@ const std::vector<GLint> &ProgramD3D::getFragmentUniformBufferCache() const
 
 void ProgramD3D::dirtyAllUniforms()
 {
-    mUniformsDirty = true;
+    mVertexUniformsDirty   = true;
+    mFragmentUniformsDirty = true;
+    mComputeUniformsDirty  = true;
+}
+
+void ProgramD3D::markUniformsClean()
+{
+    mVertexUniformsDirty   = false;
+    mFragmentUniformsDirty = false;
+    mComputeUniformsDirty  = false;
 }
 
 void ProgramD3D::setUniform1fv(GLint location, GLsizei count, const GLfloat *v)
@@ -2194,8 +2205,6 @@ void ProgramD3D::setUniformInternal(GLint location, GLsizei count, const T *v, G
     const gl::VariableLocation &locationInfo = mState.getUniformLocations()[location];
     D3DUniform *targetUniform                = mD3DUniforms[locationInfo.index];
 
-    mUniformsDirty = true;
-
     if (targetUniform->typeInfo.isSampler)
     {
         ASSERT(uniformType == GL_INT);
@@ -2207,16 +2216,19 @@ void ProgramD3D::setUniformInternal(GLint location, GLsizei count, const T *v, G
     if (targetUniform->vsData)
     {
         setUniformImpl(locationInfo, count, v, targetUniform->vsData, uniformType);
+        mVertexUniformsDirty = true;
     }
 
     if (targetUniform->psData)
     {
         setUniformImpl(locationInfo, count, v, targetUniform->psData, uniformType);
+        mFragmentUniformsDirty = true;
     }
 
     if (targetUniform->csData)
     {
         setUniformImpl(locationInfo, count, v, targetUniform->csData, uniformType);
+        mComputeUniformsDirty = true;
     }
 }
 
@@ -2252,8 +2264,6 @@ void ProgramD3D::setUniformMatrixfvImpl(GLint location,
         target += targetMatrixStride;
         value += cols * rows;
     }
-
-    mUniformsDirty = true;
 }
 
 template <int cols, int rows>
@@ -2269,18 +2279,21 @@ void ProgramD3D::setUniformMatrixfvInternal(GLint location,
     {
         setUniformMatrixfvImpl<cols, rows>(location, countIn, transpose, value,
                                            targetUniform->vsData, targetUniformType);
+        mVertexUniformsDirty = true;
     }
 
     if (targetUniform->psData)
     {
         setUniformMatrixfvImpl<cols, rows>(location, countIn, transpose, value,
                                            targetUniform->psData, targetUniformType);
+        mFragmentUniformsDirty = true;
     }
 
     if (targetUniform->csData)
     {
         setUniformMatrixfvImpl<cols, rows>(location, countIn, transpose, value,
                                            targetUniform->csData, targetUniformType);
+        mComputeUniformsDirty = true;
     }
 }
 
@@ -2423,7 +2436,7 @@ void ProgramD3D::reset()
 
     mGeometryShaderPreamble.clear();
 
-    mUniformsDirty = true;
+    dirtyAllUniforms();
 
     mCachedPixelExecutableIndex.reset();
     mCachedVertexExecutableIndex.reset();

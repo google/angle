@@ -292,9 +292,11 @@ class ProgramD3D : public ProgramImpl
     bool hasGeometryExecutableForPrimitiveType(GLenum drawMode);
     bool hasPixelExecutableForCachedOutputLayout();
 
-    bool areUniformsDirty() const { return mUniformsDirty; }
+    bool areVertexUniformsDirty() const { return mVertexUniformsDirty; }
+    bool areFragmentUniformsDirty() const { return mFragmentUniformsDirty; }
+    bool areComputeUniformsDirty() const { return mComputeUniformsDirty; }
     const std::vector<D3DUniform *> &getD3DUniforms() const { return mD3DUniforms; }
-    void markUniformsClean() { mUniformsDirty = false; }
+    void markUniformsClean();
 
   private:
     // These forward-declared tasks are used for multi-thread shader compiles.
@@ -492,7 +494,9 @@ class ProgramD3D : public ProgramImpl
     std::vector<D3DUniform *> mD3DUniforms;
     std::vector<D3DUniformBlock> mD3DUniformBlocks;
 
-    bool mUniformsDirty;
+    bool mVertexUniformsDirty;
+    bool mFragmentUniformsDirty;
+    bool mComputeUniformsDirty;
 
     std::map<std::string, sh::BlockMemberInfo> mBlockInfo;
     std::map<std::string, size_t> mBlockDataSizes;
