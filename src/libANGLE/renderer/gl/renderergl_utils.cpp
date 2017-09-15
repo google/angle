@@ -1052,7 +1052,6 @@ void GenerateWorkarounds(const FunctionsGL *functions, WorkaroundsGL *workaround
     workarounds->doWhileGLSLCausesGPUHang = true;
     workarounds->useUnusedBlocksWithStandardOrSharedLayout = true;
     workarounds->rewriteFloatUnaryMinusOperator            = IsIntel(vendor);
-    workarounds->dontInitializeUninitializedLocals         = true;
 #endif
 
 #if defined(ANGLE_PLATFORM_ANDROID)
