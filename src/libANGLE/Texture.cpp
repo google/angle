@@ -172,11 +172,15 @@ bool TextureState::setMaxLevel(GLuint maxLevel)
 }
 
 // Tests for cube texture completeness. [OpenGL ES 2.0.24] section 3.7.10 page 81.
+// According to [OpenGL ES 3.0.5] section 3.8.13 Texture Completeness page 160 any
+// per-level checks begin at the base-level.
+// For OpenGL ES2 the base level is always zero.
 bool TextureState::isCubeComplete() const
 {
     ASSERT(mTarget == GL_TEXTURE_CUBE_MAP);
 
-    const ImageDesc &baseImageDesc = getImageDesc(FirstCubeMapTextureTarget, 0);
+    const ImageDesc &baseImageDesc =
+        getImageDesc(FirstCubeMapTextureTarget, getEffectiveBaseLevel());
     if (baseImageDesc.size.width == 0 || baseImageDesc.size.width != baseImageDesc.size.height)
     {
         return false;
@@ -184,7 +188,7 @@ bool TextureState::isCubeComplete() const
 
     for (GLenum face = FirstCubeMapTextureTarget + 1; face <= LastCubeMapTextureTarget; face++)
     {
-        const ImageDesc &faceImageDesc = getImageDesc(face, 0);
+        const ImageDesc &faceImageDesc = getImageDesc(face, getEffectiveBaseLevel());
         if (faceImageDesc.size.width != baseImageDesc.size.width ||
             faceImageDesc.size.height != baseImageDesc.size.height ||
             !Format::SameSized(faceImageDesc.format, baseImageDesc.format))

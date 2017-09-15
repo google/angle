@@ -630,6 +630,12 @@ class TextureCubeTest : public TexCoordDrawTest
     GLint mTextureCubeUniformLocation;
 };
 
+class TextureCubeTestES3 : public ANGLETest
+{
+  protected:
+    TextureCubeTestES3() {}
+};
+
 class SamplerArrayTest : public TexCoordDrawTest
 {
   protected:
@@ -3915,6 +3921,72 @@ TEST_P(Texture2DTestES3, SingleTextureMultipleSamplers)
     EXPECT_PIXEL_NEAR(0, 0, 128, 0, 0, 255, 2);
 }
 
+// The test is added to cover http://anglebug.com/2153. Cubemap completeness checks used to start
+// always at level 0 instead of the base level resulting in an incomplete texture if the faces at
+// level 0 are not created. The test creates a cubemap texture, specifies the images only for mip
+// level 1 filled with white color, updates the base level to be 1 and renders a quad. The program
+// samples the cubemap using a direction vector (1,1,1).
+TEST_P(TextureCubeTestES3, SpecifyAndSampleFromBaseLevel1)
+{
+    if (IsOSX())
+    {
+        // Check http://anglebug.com/2155.
+        std::cout << "Test skipped on OSX." << std::endl;
+        return;
+    }
+    const std::string vs =
+        R"(#version 300 es
+                    precision mediump float;
+                    in vec3 pos;
+                    void main() {
+                        gl_Position = vec4(pos, 1.0);
+                    })";
+
+    const std::string fs =
+        R"(#version 300 es
+                precision mediump float;
+                out vec4 color;
+                uniform samplerCube uTex;
+                void main(){
+                    color = texture(uTex, vec3(1.0));
+                })";
+    ANGLE_GL_PROGRAM(program, vs, fs);
+    glUseProgram(program);
+
+    glUniform1i(glGetUniformLocation(program, "uTex"), 0);
+    glActiveTexture(GL_TEXTURE0);
+
+    GLTexture cubeTex;
+    glBindTexture(GL_TEXTURE_CUBE_MAP, cubeTex);
+
+    const int kFaceWidth  = 1;
+    const int kFaceHeight = 1;
+    std::vector<uint32_t> texData(kFaceWidth * kFaceHeight, 0xFFFFFFFF);
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 1, GL_RGBA8, kFaceWidth, kFaceHeight, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, texData.data());
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 1, GL_RGBA8, kFaceWidth, kFaceHeight, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, texData.data());
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 1, GL_RGBA8, kFaceWidth, kFaceHeight, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, texData.data());
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 1, GL_RGBA8, kFaceWidth, kFaceHeight, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, texData.data());
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 1, GL_RGBA8, kFaceWidth, kFaceHeight, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, texData.data());
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 1, GL_RGBA8, kFaceWidth, kFaceHeight, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, texData.data());
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_BASE_LEVEL, 1);
+
+    drawQuad(program, "pos", 0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, angle::GLColor::white);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these tests should be run against.
 // TODO(oetuaho): Enable all below tests on OpenGL. Requires a fix for ANGLE bug 1278.
 ANGLE_INSTANTIATE_TEST(Texture2DTest,
@@ -3999,5 +4071,6 @@ ANGLE_INSTANTIATE_TEST(SamplerInStructAndOtherVariableTest,
                        ES2_OPENGLES());
 ANGLE_INSTANTIATE_TEST(TextureLimitsTest, ES2_D3D11(), ES2_OPENGL(), ES2_OPENGLES());
 ANGLE_INSTANTIATE_TEST(Texture2DNorm16TestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
+ANGLE_INSTANTIATE_TEST(TextureCubeTestES3, ES3_D3D11(), ES3_OPENGL(), ES3_OPENGLES());
 
 }  // anonymous namespace
