@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "2768a961_b022d2fb",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-09-15T14:13:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "83df93dd_792438d3",
+      "range": {
+        "startLine": 28,
+        "startChar": 25,
+        "endLine": 28,
+        "endChar": 28
+      },
+      "revId": "22fb3bc2e001e1c1a6976f6211d554737b17ea57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e5f17586_98ff27ff",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 11
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "15fc0c35_a04ca3e6",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 5376,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-09-15T14:13:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e5f17586_98ff27ff",
+      "revId": "22fb3bc2e001e1c1a6976f6211d554737b17ea57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5d3a0607_4a5de2aa",
         "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
         "patchSetId": 11
@@ -53,6 +95,30 @@
       "writtenOn": "2017-09-14T15:47:22Z",
       "side": 1,
       "message": "I think our test expectation parser only accepts wildcards at the end.",
+      "range": {
+        "startLine": 102,
+        "startChar": 74,
+        "endLine": 102,
+        "endChar": 75
+      },
+      "revId": "22fb3bc2e001e1c1a6976f6211d554737b17ea57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "acef6577_9f39c0e3",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 11
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1160819
+      },
+      "writtenOn": "2017-09-15T14:13:19Z",
+      "side": 1,
+      "message": "It happened so that it\u0027s an ANGLE bug and I fixed it in another patch.\nThis is removed now.",
+      "parentUuid": "5d3a0607_4a5de2aa",
       "range": {
         "startLine": 102,
         "startChar": 74,
