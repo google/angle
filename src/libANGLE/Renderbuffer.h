@@ -34,7 +34,7 @@ class Renderbuffer final : public egl::ImageSibling,
     Renderbuffer(rx::RenderbufferImpl *impl, GLuint id);
     virtual ~Renderbuffer();
 
-    void onDestroy(const Context *context) override;
+    Error onDestroy(const Context *context) override;
 
     void setLabel(const std::string &label) override;
     const std::string &getLabel() const override;

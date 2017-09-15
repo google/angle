@@ -314,7 +314,9 @@ class RendererD3D : public BufferFactoryD3D
     size_t getBoundFramebufferTextures(const gl::ContextState &data,
                                        FramebufferTextureArray *outTextureArray);
 
-    gl::Texture *getIncompleteTexture(const gl::Context *context, GLenum type);
+    gl::Error getIncompleteTexture(const gl::Context *context,
+                                   GLenum type,
+                                   gl::Texture **textureOut);
 
     Serial generateSerial();
 

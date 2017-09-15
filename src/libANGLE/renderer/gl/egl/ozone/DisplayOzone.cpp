@@ -832,7 +832,7 @@ void DisplayOzone::terminate()
 
     if (mEGL)
     {
-        mEGL->terminate();
+        ANGLE_SWALLOW_ERR(mEGL->terminate());
         SafeDelete(mEGL);
     }
 

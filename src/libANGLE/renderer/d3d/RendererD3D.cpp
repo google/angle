@@ -53,7 +53,7 @@ void RendererD3D::cleanup()
 {
     for (auto &incompleteTexture : mIncompleteTextures)
     {
-        incompleteTexture.second->onDestroy(mDisplay->getProxyContext());
+        ANGLE_SWALLOW_ERR(incompleteTexture.second->onDestroy(mDisplay->getProxyContext()));
         incompleteTexture.second.set(mDisplay->getProxyContext(), nullptr);
     }
     mIncompleteTextures.clear();
@@ -114,7 +114,9 @@ size_t RendererD3D::getBoundFramebufferTextures(const gl::ContextState &data,
     return textureCount;
 }
 
-gl::Texture *RendererD3D::getIncompleteTexture(const gl::Context *context, GLenum type)
+gl::Error RendererD3D::getIncompleteTexture(const gl::Context *context,
+                                            GLenum type,
+                                            gl::Texture **textureOut)
 {
     if (mIncompleteTextures.find(type) == mIncompleteTextures.end())
     {
@@ -132,36 +134,37 @@ gl::Texture *RendererD3D::getIncompleteTexture(const gl::Context *context, GLenu
             new gl::Texture(implFactory, std::numeric_limits<GLuint>::max(), createType);
         if (createType == GL_TEXTURE_2D_MULTISAMPLE)
         {
-            t->setStorageMultisample(nullptr, createType, 1, GL_RGBA8, colorSize, true);
+            ANGLE_TRY(t->setStorageMultisample(nullptr, createType, 1, GL_RGBA8, colorSize, true));
         }
         else
         {
-            t->setStorage(nullptr, createType, 1, GL_RGBA8, colorSize);
+            ANGLE_TRY(t->setStorage(nullptr, createType, 1, GL_RGBA8, colorSize));
         }
         if (type == GL_TEXTURE_CUBE_MAP)
         {
             for (GLenum face = GL_TEXTURE_CUBE_MAP_POSITIVE_X;
                  face <= GL_TEXTURE_CUBE_MAP_NEGATIVE_Z; face++)
             {
-                t->getImplementation()->setSubImage(nullptr, face, 0, area, GL_RGBA8,
-                                                    GL_UNSIGNED_BYTE, unpack, color);
+                ANGLE_TRY(t->getImplementation()->setSubImage(nullptr, face, 0, area, GL_RGBA8,
+                                                              GL_UNSIGNED_BYTE, unpack, color));
             }
         }
         else if (type == GL_TEXTURE_2D_MULTISAMPLE)
         {
             gl::ColorF clearValue(0, 0, 0, 1);
             gl::ImageIndex index = gl::ImageIndex::Make2DMultisample();
-            GetImplAs<TextureD3D>(t)->clearLevel(context, index, clearValue, 1.0f, 0);
+            ANGLE_TRY(GetImplAs<TextureD3D>(t)->clearLevel(context, index, clearValue, 1.0f, 0));
         }
         else
         {
-            t->getImplementation()->setSubImage(nullptr, createType, 0, area, GL_RGBA8,
-                                                GL_UNSIGNED_BYTE, unpack, color);
+            ANGLE_TRY(t->getImplementation()->setSubImage(nullptr, createType, 0, area, GL_RGBA8,
+                                                          GL_UNSIGNED_BYTE, unpack, color));
         }
         mIncompleteTextures[type].set(context, t);
     }
 
-    return mIncompleteTextures[type].get();
+    *textureOut = mIncompleteTextures[type].get();
+    return gl::NoError();
 }
 
 GLenum RendererD3D::getResetStatus()

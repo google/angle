@@ -50,7 +50,7 @@ TransformFeedback::TransformFeedback(rx::GLImplFactory *implFactory, GLuint id, 
     ASSERT(mImplementation != nullptr);
 }
 
-void TransformFeedback::onDestroy(const Context *context)
+Error TransformFeedback::onDestroy(const Context *context)
 {
     if (mState.mProgram)
     {
@@ -65,11 +65,12 @@ void TransformFeedback::onDestroy(const Context *context)
         mState.mIndexedBuffers[i].set(context, nullptr);
     }
 
-    SafeDelete(mImplementation);
+    return NoError();
 }
 
 TransformFeedback::~TransformFeedback()
 {
+    SafeDelete(mImplementation);
 }
 
 void TransformFeedback::setLabel(const std::string &label)

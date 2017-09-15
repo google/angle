@@ -52,7 +52,7 @@ class MockValidationContext : public ValidationContext
     {
     }
 
-    MOCK_METHOD1(handleError, Error(const Error &));
+    MOCK_METHOD1(handleError, void(const Error &));
 };
 
 // Test that ANGLE generates an INVALID_OPERATION when validating index data that uses a value
@@ -90,7 +90,8 @@ TEST(ValidationESTest, DISABLED_DrawElementsWithMaxIndexGivesError)
 
     Texture *texture = new Texture(&mockFactory, 0, GL_TEXTURE_2D);
     texture->addRef();
-    texture->setStorage(nullptr, GL_TEXTURE_2D, 1, GL_RGBA8, Extents(1, 1, 0));
+    EXPECT_FALSE(
+        texture->setStorage(nullptr, GL_TEXTURE_2D, 1, GL_RGBA8, Extents(1, 1, 0)).isError());
 
     VertexArray *vertexArray = new VertexArray(&mockFactory, 0, 1, 1);
     Framebuffer *framebuffer = new Framebuffer(caps, &mockFactory, 1);

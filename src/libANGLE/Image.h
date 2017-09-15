@@ -74,7 +74,7 @@ class Image final : public gl::RefCountObject
           ImageSibling *buffer,
           const AttributeMap &attribs);
 
-    void onDestroy(const gl::Context *context) override;
+    gl::Error onDestroy(const gl::Context *context) override;
     ~Image();
 
     const gl::Format &getFormat() const;

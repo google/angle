@@ -312,7 +312,7 @@ void GL_APIENTRY FinishFenceNV(GLuint fence)
             return;
         }
 
-        fenceObject->finish();
+        context->handleError(fenceObject->finish());
     }
 }
 

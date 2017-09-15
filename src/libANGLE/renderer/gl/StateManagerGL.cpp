@@ -772,42 +772,46 @@ void StateManagerGL::pauseTransformFeedback()
     }
 }
 
-void StateManagerGL::pauseAllQueries()
+gl::Error StateManagerGL::pauseAllQueries()
 {
     for (QueryGL *prevQuery : mCurrentQueries)
     {
-        prevQuery->pause();
+        ANGLE_TRY(prevQuery->pause());
     }
+    return gl::NoError();
 }
 
-void StateManagerGL::pauseQuery(GLenum type)
+gl::Error StateManagerGL::pauseQuery(GLenum type)
 {
     for (QueryGL *prevQuery : mCurrentQueries)
     {
         if (prevQuery->getType() == type)
         {
-            prevQuery->pause();
+            ANGLE_TRY(prevQuery->pause());
         }
     }
+    return gl::NoError();
 }
 
-void StateManagerGL::resumeAllQueries()
+gl::Error StateManagerGL::resumeAllQueries()
 {
     for (QueryGL *prevQuery : mCurrentQueries)
     {
-        prevQuery->resume();
+        ANGLE_TRY(prevQuery->resume());
     }
+    return gl::NoError();
 }
 
-void StateManagerGL::resumeQuery(GLenum type)
+gl::Error StateManagerGL::resumeQuery(GLenum type)
 {
     for (QueryGL *prevQuery : mCurrentQueries)
     {
         if (prevQuery->getType() == type)
         {
-            prevQuery->resume();
+            ANGLE_TRY(prevQuery->resume());
         }
     }
+    return gl::NoError();
 }
 
 gl::Error StateManagerGL::onMakeCurrent(const gl::Context *context)
@@ -818,7 +822,7 @@ gl::Error StateManagerGL::onMakeCurrent(const gl::Context *context)
     auto contextID = context->getContextState().getContextID();
     if (contextID != mPrevDrawContext)
     {
-        pauseAllQueries();
+        ANGLE_TRY(pauseAllQueries());
     }
     mCurrentQueries.clear();
     mPrevDrawTransformFeedback = nullptr;
@@ -831,7 +835,7 @@ gl::Error StateManagerGL::onMakeCurrent(const gl::Context *context)
         if (query != nullptr)
         {
             QueryGL *queryGL = GetImplAs<QueryGL>(query);
-            queryGL->resume();
+            ANGLE_TRY(queryGL->resume());
 
             mCurrentQueries.insert(queryGL);
         }

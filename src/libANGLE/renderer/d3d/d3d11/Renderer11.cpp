@@ -1684,7 +1684,7 @@ gl::Error Renderer11::drawArraysIndirectImpl(const gl::Context *context,
 
     if (!DrawCallNeedsTranslation(context, mode, GL_NONE))
     {
-        mStateManager.applyVertexBuffer(context, mode, 0, 0, 0, nullptr);
+        ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, 0, 0, 0, nullptr));
         ID3D11Buffer *buffer = nullptr;
         ANGLE_TRY_RESULT(storage->getBuffer(BUFFER_USAGE_INDIRECT), buffer);
         mDeviceContext->DrawInstancedIndirect(buffer, static_cast<unsigned int>(offset));

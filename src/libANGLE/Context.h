@@ -880,8 +880,8 @@ class Context final : public ValidationContext
 
     void programUniform1iv(GLuint program, GLint location, GLsizei count, const GLint *value);
 
-    // Returns the error.
-    Error handleError(const Error &error) override;
+    // Consumes the error.
+    void handleError(const Error &error) override;
 
     GLenum getError();
     void markContextLost();

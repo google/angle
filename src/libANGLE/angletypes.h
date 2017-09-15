@@ -11,6 +11,7 @@
 
 #include "common/bitset_utils.h"
 #include "libANGLE/Constants.h"
+#include "libANGLE/Error.h"
 #include "libANGLE/RefCountObject.h"
 
 #include <stdint.h>
@@ -422,6 +423,46 @@ inline GLenum FramebufferBindingToEnum(FramebufferBinding binding)
             return GL_NONE;
     }
 }
+
+// Helper class for wrapping an onDestroy function.
+template <typename ObjT, typename ContextT>
+class UniqueObjectPointer : angle::NonCopyable
+{
+  public:
+    UniqueObjectPointer(const ContextT *context) : mObject(nullptr), mContext(context) {}
+    UniqueObjectPointer(ObjT *obj, const ContextT *context) : mObject(obj), mContext(context) {}
+    ~UniqueObjectPointer()
+    {
+        if (mObject)
+        {
+            ANGLE_SWALLOW_ERR(mObject->onDestroy(mContext));
+        }
+    }
+
+    ObjT *operator->() const { return mObject; }
+
+    ObjT *release()
+    {
+        auto obj = mObject;
+        mObject  = nullptr;
+        return obj;
+    }
+
+    ObjT *get() const { return mObject; }
+
+    void reset(ObjT *obj)
+    {
+        if (mObject)
+        {
+            ANGLE_SWALLOW_ERR(mObject->onDestroy(mContext));
+        }
+        mObject = obj;
+    }
+
+  private:
+    ObjT *mObject;
+    const ContextT *mContext;
+};
 }  // namespace angle
 
 namespace gl

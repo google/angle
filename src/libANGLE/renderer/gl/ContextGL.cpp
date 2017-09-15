@@ -353,7 +353,7 @@ GLint64 ContextGL::getTimestamp()
 void ContextGL::onMakeCurrent(const gl::Context *context)
 {
     // Queries need to be paused/resumed on context switches
-    mRenderer->getStateManager()->onMakeCurrent(context);
+    ANGLE_SWALLOW_ERR(mRenderer->getStateManager()->onMakeCurrent(context));
 }
 
 const gl::Caps &ContextGL::getNativeCaps() const

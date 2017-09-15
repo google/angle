@@ -40,46 +40,6 @@ class NonCopyable
 
 extern const uintptr_t DirtyPointer;
 
-// Helper class for wrapping an onDestroy function.
-template <typename ObjT, typename ContextT>
-class UniqueObjectPointer : angle::NonCopyable
-{
-  public:
-    UniqueObjectPointer(const ContextT *context) : mObject(nullptr), mContext(context) {}
-    UniqueObjectPointer(ObjT *obj, const ContextT *context) : mObject(obj), mContext(context) {}
-    ~UniqueObjectPointer()
-    {
-        if (mObject)
-        {
-            mObject->onDestroy(mContext);
-        }
-    }
-
-    ObjT *operator->() const { return mObject; }
-
-    ObjT *release()
-    {
-        auto obj = mObject;
-        mObject  = nullptr;
-        return obj;
-    }
-
-    ObjT *get() const { return mObject; }
-
-    void reset(ObjT *obj)
-    {
-        if (mObject)
-        {
-            mObject->onDestroy(mContext);
-        }
-        mObject = obj;
-    }
-
-  private:
-    ObjT *mObject;
-    const ContextT *mContext;
-};
-
 }  // namespace angle
 
 template <typename T, size_t N>
@@ -288,5 +248,16 @@ std::string ToString(const T &value)
 #ifndef ANGLE_MACRO_STRINGIFY
 #define ANGLE_MACRO_STRINGIFY(x) ANGLE_STRINGIFY(x)
 #endif
+
+// Detect support for C++17 [[nodiscard]]
+#if !defined(__has_cpp_attribute)
+#define __has_cpp_attribute(name) 0
+#endif  // !defined(__has_cpp_attribute)
+
+#if __has_cpp_attribute(nodiscard)
+#define ANGLE_NO_DISCARD [[nodiscard]]
+#else
+#define ANGLE_NO_DISCARD
+#endif  // __has_cpp_attribute(nodiscard)
 
 #endif // COMMON_ANGLEUTILS_H_

@@ -278,10 +278,10 @@ class SyncProviderGLQuery : public SyncProviderGL
         : mFunctions(functions), mQuery(0)
     {
         mFunctions->genQueries(1, &mQuery);
-        stateManager->pauseQuery(queryType);
+        ANGLE_SWALLOW_ERR(stateManager->pauseQuery(queryType));
         mFunctions->beginQuery(queryType, mQuery);
         mFunctions->endQuery(queryType);
-        stateManager->resumeQuery(queryType);
+        ANGLE_SWALLOW_ERR(stateManager->resumeQuery(queryType));
     }
 
     virtual ~SyncProviderGLQuery() { mFunctions->deleteQueries(1, &mQuery); }

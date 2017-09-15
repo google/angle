@@ -60,7 +60,7 @@ TEST(ImageTest, RefCounting)
     EXPECT_CALL(*renderbufferImpl, setStorageEGLImageTarget(_))
         .WillOnce(Return(gl::NoError()))
         .RetiresOnSaturation();
-    renderbuffer->setStorageEGLImageTarget(nullptr, image);
+    EXPECT_FALSE(renderbuffer->setStorageEGLImageTarget(nullptr, image).isError());
 
     // Verify that the renderbuffer added a ref to the image and the image did not add a ref to
     // the renderbuffer
@@ -110,8 +110,10 @@ TEST(ImageTest, RespecificationReleasesReferences)
     EXPECT_CALL(*textureImpl, setImage(_, _, _, _, _, _, _, _, _))
         .WillOnce(Return(gl::NoError()))
         .RetiresOnSaturation();
-    texture->setImage(nullptr, defaultUnpackState, GL_TEXTURE_2D, 0, GL_RGBA8, gl::Extents(1, 1, 1),
-                      GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_FALSE(texture
+                     ->setImage(nullptr, defaultUnpackState, GL_TEXTURE_2D, 0, GL_RGBA8,
+                                gl::Extents(1, 1, 1), GL_RGBA, GL_UNSIGNED_BYTE, nullptr)
+                     .isError());
 
     EXPECT_CALL(mockEGLFactory, createImage(_, _, _))
         .WillOnce(CreateMockImageImpl())
@@ -133,8 +135,10 @@ TEST(ImageTest, RespecificationReleasesReferences)
         .WillOnce(Return(gl::NoError()))
         .RetiresOnSaturation();
 
-    texture->setImage(nullptr, defaultUnpackState, GL_TEXTURE_2D, 0, GL_RGBA8, gl::Extents(1, 1, 1),
-                      GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    EXPECT_FALSE(texture
+                     ->setImage(nullptr, defaultUnpackState, GL_TEXTURE_2D, 0, GL_RGBA8,
+                                gl::Extents(1, 1, 1), GL_RGBA, GL_UNSIGNED_BYTE, nullptr)
+                     .isError());
 
     EXPECT_EQ(1u, texture->getRefCount());
     EXPECT_EQ(1u, image->getRefCount());

@@ -365,8 +365,8 @@ gl::Error IndexDataManager::streamIndexData(const void *data,
     ASSERT(indexBuffer != nullptr);
 
     unsigned int offset;
-    StreamInIndexBuffer(indexBuffer, data, count, srcType, dstType, usePrimitiveRestartFixedIndex,
-                        &offset);
+    ANGLE_TRY(StreamInIndexBuffer(indexBuffer, data, count, srcType, dstType,
+                                  usePrimitiveRestartFixedIndex, &offset));
 
     translated->indexBuffer = indexBuffer->getIndexBuffer();
     translated->serial      = indexBuffer->getSerial();

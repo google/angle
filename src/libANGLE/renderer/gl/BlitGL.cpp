@@ -88,13 +88,13 @@ class ScopedGLState : angle::NonCopyable
         mStateManager->setRasterizerDiscardEnabled(false);
 
         mStateManager->pauseTransformFeedback();
-        mStateManager->pauseAllQueries();
+        ANGLE_SWALLOW_ERR(mStateManager->pauseAllQueries());
     }
 
     ~ScopedGLState()
     {
         // XFB resuming will be done automatically
-        mStateManager->resumeAllQueries();
+        ANGLE_SWALLOW_ERR(mStateManager->resumeAllQueries());
     }
 
     void willUseTextureUnit(int unit)
@@ -479,7 +479,7 @@ gl::Error BlitGL::copySubTexture(const gl::Context *context,
     }
     source->setMinFilter(GL_NEAREST);
     source->setMagFilter(GL_NEAREST);
-    source->setBaseLevel(context, static_cast<GLuint>(sourceLevel));
+    ANGLE_TRY(source->setBaseLevel(context, static_cast<GLuint>(sourceLevel)));
 
     // Render to the destination texture, sampling from the source texture
     ScopedGLState scopedState(

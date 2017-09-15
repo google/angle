@@ -508,7 +508,7 @@ gl::Error TextureD3D::generateMipmapUsingImages(const gl::Context *context, cons
 
     if (mTexStorage)
     {
-        updateStorage(context);
+        ANGLE_TRY(updateStorage(context));
     }
 
     return gl::NoError();
@@ -644,8 +644,8 @@ gl::Error TextureD3D::clearLevel(const gl::Context *context,
     RenderTargetD3D *renderTargetD3D = nullptr;
     ANGLE_TRY(storage->getRenderTarget(context, index, &renderTargetD3D));
 
-    mRenderer->clearRenderTarget(renderTargetD3D, clearColorValue, clearDepthValue,
-                                 clearStencilValue);
+    ANGLE_TRY(mRenderer->clearRenderTarget(renderTargetD3D, clearColorValue, clearDepthValue,
+                                           clearStencilValue));
 
     return gl::NoError();
 }
@@ -893,9 +893,9 @@ gl::Error TextureD3D_2D::copyImage(const gl::Context *context,
         angle::MemoryBuffer *zero;
         ANGLE_TRY(context->getZeroFilledBuffer(
             origSourceArea.width * origSourceArea.height * internalFormatInfo.pixelBytes, &zero));
-        setImage(context, target, imageLevel, internalFormat, sourceExtents,
-                 internalFormatInfo.format, internalFormatInfo.type, gl::PixelUnpackState(1, 0),
-                 zero->data());
+        ANGLE_TRY(setImage(context, target, imageLevel, internalFormat, sourceExtents,
+                           internalFormatInfo.format, internalFormatInfo.type,
+                           gl::PixelUnpackState(1, 0), zero->data()));
     }
 
     gl::Rectangle sourceArea;
@@ -1655,8 +1655,9 @@ gl::Error TextureD3D_Cube::copyImage(const gl::Context *context,
         angle::MemoryBuffer *zero;
         ANGLE_TRY(context->getZeroFilledBuffer(
             origSourceArea.width * origSourceArea.height * internalFormatInfo.pixelBytes, &zero));
-        setImage(context, target, imageLevel, internalFormat, size, internalFormatInfo.format,
-                 internalFormatInfo.type, gl::PixelUnpackState(1, 0), zero->data());
+        ANGLE_TRY(setImage(context, target, imageLevel, internalFormat, size,
+                           internalFormatInfo.format, internalFormatInfo.type,
+                           gl::PixelUnpackState(1, 0), zero->data()));
     }
 
     gl::Rectangle sourceArea;
@@ -2449,13 +2450,13 @@ gl::Error TextureD3D_3D::copySubImage(const gl::Context *context,
     if (syncTexStorage)
     {
         gl::ImageIndex index = gl::ImageIndex::Make3D(level);
-        mImageArray[level]->copyFromTexStorage(context, index, mTexStorage);
+        ANGLE_TRY(mImageArray[level]->copyFromTexStorage(context, index, mTexStorage));
     }
     ANGLE_TRY(mImageArray[level]->copyFromFramebuffer(context, clippedDestOffset, clippedSourceArea,
                                                       source));
     if (syncTexStorage)
     {
-        updateStorageLevel(context, level);
+        ANGLE_TRY(updateStorageLevel(context, level));
     }
 
     return gl::NoError();

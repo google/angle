@@ -453,7 +453,7 @@ egl::Error Context::onDestroy(const egl::Display *display)
 
     for (auto &zeroTexture : mZeroTextures)
     {
-        zeroTexture.second->onDestroy(this);
+        ANGLE_TRY(zeroTexture.second->onDestroy(this));
         zeroTexture.second.set(this, nullptr);
     }
     mZeroTextures.clear();
@@ -2108,7 +2108,7 @@ void Context::getProgramInterfaceiv(GLuint program,
     QueryProgramInterfaceiv(programObject, programInterface, pname, params);
 }
 
-Error Context::handleError(const Error &error)
+void Context::handleError(const Error &error)
 {
     if (error.isError())
     {
@@ -2126,8 +2126,6 @@ Error Context::handleError(const Error &error)
                                  GL_DEBUG_SEVERITY_HIGH, error.getMessage());
         }
     }
-
-    return error;
 }
 
 // Get one of the recorded errors and clear its flag, if any.
@@ -4205,7 +4203,7 @@ void Context::dispatchCompute(GLuint numGroupsX, GLuint numGroupsY, GLuint numGr
         return;
     }
 
-    mImplementation->dispatchCompute(this, numGroupsX, numGroupsY, numGroupsZ);
+    handleError(mImplementation->dispatchCompute(this, numGroupsX, numGroupsY, numGroupsZ));
 }
 
 void Context::texStorage2D(GLenum target,

@@ -1453,7 +1453,7 @@ gl::Error StateManager11::onMakeCurrent(const gl::Context *context)
 
     for (Query11 *query : mCurrentQueries)
     {
-        query->pause();
+        ANGLE_TRY(query->pause());
     }
     mCurrentQueries.clear();
 
@@ -1463,7 +1463,7 @@ gl::Error StateManager11::onMakeCurrent(const gl::Context *context)
         if (query != nullptr)
         {
             Query11 *query11 = GetImplAs<Query11>(query);
-            query11->resume();
+            ANGLE_TRY(query11->resume());
             mCurrentQueries.insert(query11);
         }
     }
@@ -2201,8 +2201,9 @@ gl::Error StateManager11::applyTextures(const gl::Context *context,
             {
                 // Texture is not sampler complete or it is in use by the framebuffer.  Bind the
                 // incomplete texture.
-                gl::Texture *incompleteTexture =
-                    mRenderer->getIncompleteTexture(context, textureType);
+                gl::Texture *incompleteTexture = nullptr;
+                ANGLE_TRY(
+                    mRenderer->getIncompleteTexture(context, textureType, &incompleteTexture));
 
                 ANGLE_TRY(setSamplerState(context, shaderType, samplerIndex, incompleteTexture,
                                           incompleteTexture->getSamplerState()));
@@ -2220,7 +2221,7 @@ gl::Error StateManager11::applyTextures(const gl::Context *context,
     // Set all the remaining textures to NULL
     size_t samplerCount = (shaderType == gl::SAMPLER_PIXEL) ? caps.maxTextureImageUnits
                                                             : caps.maxVertexTextureImageUnits;
-    clearTextures(shaderType, samplerRange, samplerCount);
+    ANGLE_TRY(clearTextures(shaderType, samplerRange, samplerCount));
 
     return gl::NoError();
 }

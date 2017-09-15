@@ -1497,9 +1497,9 @@ gl::Error Blit11::copyAndConvert(const TextureHelper11 &source,
     deviceContext->CopySubresourceRegion(destStaging.get(), 0, 0, 0, 0, dest.get(), destSubresource,
                                          nullptr);
 
-    copyAndConvertImpl(source, sourceSubresource, sourceArea, sourceSize, destStaging, destArea,
-                       destSize, scissor, readOffset, writeOffset, copySize, srcPixelStride,
-                       destPixelStride, convertFunction);
+    ANGLE_TRY(copyAndConvertImpl(source, sourceSubresource, sourceArea, sourceSize, destStaging,
+                                 destArea, destSize, scissor, readOffset, writeOffset, copySize,
+                                 srcPixelStride, destPixelStride, convertFunction));
 
     // Work around timeouts/TDRs in older NVIDIA drivers.
     if (mRenderer->getWorkarounds().depthStencilBlitExtraCopy)

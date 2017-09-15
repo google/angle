@@ -530,7 +530,7 @@ gl::ErrorOrResult<vk::Framebuffer *> FramebufferVk::getFramebuffer(const gl::Con
     framebufferInfo.layers          = 1;
 
     vk::Framebuffer framebuffer;
-    ANGLE_TRY(static_cast<gl::Error>(framebuffer.init(device, framebufferInfo)));
+    ANGLE_TRY(framebuffer.init(device, framebufferInfo));
 
     mFramebuffer.retain(device, std::move(framebuffer));
 

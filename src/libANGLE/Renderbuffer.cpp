@@ -30,11 +30,9 @@ Renderbuffer::Renderbuffer(rx::RenderbufferImpl *impl, GLuint id)
 {
 }
 
-void Renderbuffer::onDestroy(const Context *context)
+Error Renderbuffer::onDestroy(const Context *context)
 {
-    auto err = orphanImages(context);
-    // TODO(jmadill): Handle error.
-    ASSERT(!err.isError());
+    return orphanImages(context);
 }
 
 Renderbuffer::~Renderbuffer()

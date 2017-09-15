@@ -421,16 +421,20 @@ gl::Error Image11::copyFromFramebuffer(const gl::Context *context,
     {
         size_t bufferSize = destFormatInfo.pixelBytes * sourceArea.width * sourceArea.height;
         angle::MemoryBuffer *memoryBuffer = nullptr;
-        mRenderer->getScratchMemoryBuffer(bufferSize, &memoryBuffer);
-        GLuint memoryBufferRowPitch = destFormatInfo.pixelBytes * sourceArea.width;
+        error = mRenderer->getScratchMemoryBuffer(bufferSize, &memoryBuffer);
 
-        error = mRenderer->readFromAttachment(
-            context, *srcAttachment, sourceArea, destFormatInfo.format, destFormatInfo.type,
-            memoryBufferRowPitch, gl::PixelPackState(), memoryBuffer->data());
+        if (!error.isError())
+        {
+            GLuint memoryBufferRowPitch = destFormatInfo.pixelBytes * sourceArea.width;
 
-        loadFunction.loadFunction(sourceArea.width, sourceArea.height, 1, memoryBuffer->data(),
-                                  memoryBufferRowPitch, 0, dataOffset, mappedImage.RowPitch,
-                                  mappedImage.DepthPitch);
+            error = mRenderer->readFromAttachment(
+                context, *srcAttachment, sourceArea, destFormatInfo.format, destFormatInfo.type,
+                memoryBufferRowPitch, gl::PixelPackState(), memoryBuffer->data());
+
+            loadFunction.loadFunction(sourceArea.width, sourceArea.height, 1, memoryBuffer->data(),
+                                      memoryBufferRowPitch, 0, dataOffset, mappedImage.RowPitch,
+                                      mappedImage.DepthPitch);
+        }
     }
     else
     {

@@ -391,7 +391,7 @@ gl::Error Buffer11::setSubData(const gl::Context * /*context*/,
             ANGLE_TRY(writeBuffer->resize(requiredSize, preserveData));
         }
 
-        writeBuffer->setData(static_cast<const uint8_t *>(data), offset, size);
+        ANGLE_TRY(writeBuffer->setData(static_cast<const uint8_t *>(data), offset, size));
         writeBuffer->setDataRevision(writeBuffer->getDataRevision() + 1);
 
         // Notify any vertex arrays that we have dirty data.
@@ -992,7 +992,7 @@ gl::ErrorOrResult<CopyResult> Buffer11::NativeStorage::copyFromStorage(BufferSto
     bool preserveData = (destOffset > 0);
     if (createBuffer)
     {
-        resize(requiredSize, preserveData);
+        ANGLE_TRY(resize(requiredSize, preserveData));
     }
 
     size_t clampedSize = size;
@@ -1012,9 +1012,9 @@ gl::ErrorOrResult<CopyResult> Buffer11::NativeStorage::copyFromStorage(BufferSto
         uint8_t *sourcePointer = nullptr;
         ANGLE_TRY(source->map(sourceOffset, clampedSize, GL_MAP_READ_BIT, &sourcePointer));
 
-        setData(sourcePointer, destOffset, clampedSize);
-
+        auto err = setData(sourcePointer, destOffset, clampedSize);
         source->unmap();
+        ANGLE_TRY(err);
     }
     else
     {

@@ -118,10 +118,8 @@ Image::Image(rx::EGLImplFactory *factory,
     mState.source->addImageSource(this);
 }
 
-void Image::onDestroy(const gl::Context *context)
+gl::Error Image::onDestroy(const gl::Context *context)
 {
-    SafeDelete(mImplementation);
-
     // All targets should hold a ref to the egl image and it should not be deleted until there are
     // no siblings left.
     ASSERT(mState.targets.empty());
@@ -132,11 +130,12 @@ void Image::onDestroy(const gl::Context *context)
         mState.source->removeImageSource(this);
         mState.source.set(context, nullptr);
     }
+    return gl::NoError();
 }
 
 Image::~Image()
 {
-    ASSERT(!mImplementation);
+    SafeDelete(mImplementation);
 }
 
 void Image::addTargetSibling(ImageSibling *sibling)

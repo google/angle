@@ -491,13 +491,11 @@ Texture::Texture(rx::GLImplFactory *factory, GLuint id, GLenum target)
 {
 }
 
-void Texture::onDestroy(const Context *context)
+Error Texture::onDestroy(const Context *context)
 {
     if (mBoundSurface)
     {
-        auto eglErr = mBoundSurface->releaseTexImage(context, EGL_BACK_BUFFER);
-        // TODO(jmadill): handle error.
-        ASSERT(!eglErr.isError());
+        ANGLE_TRY(mBoundSurface->releaseTexImage(context, EGL_BACK_BUFFER));
         mBoundSurface = nullptr;
     }
     if (mBoundStream)
@@ -506,21 +504,18 @@ void Texture::onDestroy(const Context *context)
         mBoundStream = nullptr;
     }
 
-    auto err = orphanImages(context);
-    // TODO(jmadill): handle error.
-    ASSERT(!err.isError());
+    ANGLE_TRY(orphanImages(context));
 
     if (mTexture)
     {
-        err = mTexture->onDestroy(context);
-        // TODO(jmadill): handle error.
-        ASSERT(!err.isError());
-        SafeDelete(mTexture);
+        ANGLE_TRY(mTexture->onDestroy(context));
     }
+    return NoError();
 }
 
 Texture::~Texture()
 {
+    SafeDelete(mTexture);
 }
 
 void Texture::setLabel(const std::string &label)

@@ -162,7 +162,7 @@ Compiler::~Compiler()
         sh::Finalize();
     }
 
-    mImplementation->release();
+    ANGLE_SWALLOW_ERR(mImplementation->release());
 }
 
 ShHandle Compiler::getCompilerHandle(GLenum type)

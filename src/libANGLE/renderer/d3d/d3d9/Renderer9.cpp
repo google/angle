@@ -376,7 +376,7 @@ egl::Error Renderer9::initializeDevice()
 
     ASSERT(!mBlit);
     mBlit = new Blit9(this);
-    mBlit->initialize();
+    ANGLE_TRY(mBlit->initialize());
 
     ASSERT(!mVertexDataManager && !mIndexDataManager);
     mVertexDataManager = new VertexDataManager(this);
@@ -1717,14 +1717,10 @@ gl::Error Renderer9::getCountingIB(size_t count, StaticIndexBufferInterface **ou
         {
             SafeDelete(mCountingIB);
             mCountingIB = new StaticIndexBufferInterface(this);
-            mCountingIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_SHORT);
+            ANGLE_TRY(mCountingIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_SHORT));
 
             void *mappedMemory = nullptr;
-            gl::Error error    = mCountingIB->mapBuffer(spaceNeeded, &mappedMemory, nullptr);
-            if (error.isError())
-            {
-                return error;
-            }
+            ANGLE_TRY(mCountingIB->mapBuffer(spaceNeeded, &mappedMemory, nullptr));
 
             unsigned short *data = reinterpret_cast<unsigned short *>(mappedMemory);
             for (size_t i = 0; i < count; i++)
@@ -1732,11 +1728,7 @@ gl::Error Renderer9::getCountingIB(size_t count, StaticIndexBufferInterface **ou
                 data[i] = static_cast<unsigned short>(i);
             }
 
-            error = mCountingIB->unmapBuffer();
-            if (error.isError())
-            {
-                return error;
-            }
+            ANGLE_TRY(mCountingIB->unmapBuffer());
         }
     }
     else if (getNativeExtensions().elementIndexUint)
@@ -1747,14 +1739,10 @@ gl::Error Renderer9::getCountingIB(size_t count, StaticIndexBufferInterface **ou
         {
             SafeDelete(mCountingIB);
             mCountingIB = new StaticIndexBufferInterface(this);
-            mCountingIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_INT);
+            ANGLE_TRY(mCountingIB->reserveBufferSpace(spaceNeeded, GL_UNSIGNED_INT));
 
             void *mappedMemory = nullptr;
-            gl::Error error    = mCountingIB->mapBuffer(spaceNeeded, &mappedMemory, nullptr);
-            if (error.isError())
-            {
-                return error;
-            }
+            ANGLE_TRY(mCountingIB->mapBuffer(spaceNeeded, &mappedMemory, nullptr));
 
             unsigned int *data = reinterpret_cast<unsigned int *>(mappedMemory);
             for (unsigned int i = 0; i < count; i++)
@@ -1762,11 +1750,7 @@ gl::Error Renderer9::getCountingIB(size_t count, StaticIndexBufferInterface **ou
                 data[i] = i;
             }
 
-            error = mCountingIB->unmapBuffer();
-            if (error.isError())
-            {
-                return error;
-            }
+            ANGLE_TRY(mCountingIB->unmapBuffer());
         }
     }
     else
@@ -2884,7 +2868,7 @@ gl::Error Renderer9::copyToRenderTarget(IDirect3DSurface9 *dest,
 
         if (SUCCEEDED(result))
         {
-            Image9::copyLockableSurfaces(surf, source);
+            ANGLE_TRY(Image9::copyLockableSurfaces(surf, source));
             result = mDevice->UpdateSurface(surf, nullptr, dest, nullptr);
             SafeRelease(surf);
         }
@@ -3242,7 +3226,8 @@ gl::Error Renderer9::applyTextures(const gl::Context *context,
             {
                 // Texture is not sampler complete or it is in use by the framebuffer.  Bind the
                 // incomplete texture.
-                gl::Texture *incompleteTexture = getIncompleteTexture(context, textureType);
+                gl::Texture *incompleteTexture = nullptr;
+                ANGLE_TRY(getIncompleteTexture(context, textureType, &incompleteTexture));
 
                 ANGLE_TRY(setSamplerState(context, shaderType, samplerIndex, incompleteTexture,
                                           incompleteTexture->getSamplerState()));

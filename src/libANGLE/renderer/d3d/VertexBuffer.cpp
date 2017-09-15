@@ -126,7 +126,8 @@ StreamingVertexBufferInterface::StreamingVertexBufferInterface(BufferFactoryD3D 
                                                                std::size_t initialSize)
     : VertexBufferInterface(factory, true), mWritePosition(0), mReservedSpace(0)
 {
-    setBufferSize(static_cast<unsigned int>(initialSize));
+    // TODO(jmadill): Make an initialize method that can return an error.
+    ANGLE_SWALLOW_ERR(setBufferSize(static_cast<unsigned int>(initialSize)));
 }
 
 StreamingVertexBufferInterface::~StreamingVertexBufferInterface()
@@ -278,7 +279,7 @@ gl::Error StaticVertexBufferInterface::storeStaticAttribute(const gl::VertexAttr
 {
     unsigned int spaceRequired = 0;
     ANGLE_TRY_RESULT(getSpaceRequired(attrib, binding, count, instances), spaceRequired);
-    setBufferSize(spaceRequired);
+    ANGLE_TRY(setBufferSize(spaceRequired));
 
     ASSERT(attrib.enabled);
     ANGLE_TRY(mVertexBuffer->storeVertexAttributes(attrib, binding, GL_NONE, start, count,

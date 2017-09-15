@@ -173,10 +173,10 @@ class StateManagerGL final : angle::NonCopyable
     gl::Error setDispatchComputeState(const gl::Context *context);
 
     void pauseTransformFeedback();
-    void pauseAllQueries();
-    void pauseQuery(GLenum type);
-    void resumeAllQueries();
-    void resumeQuery(GLenum type);
+    gl::Error pauseAllQueries();
+    gl::Error pauseQuery(GLenum type);
+    gl::Error resumeAllQueries();
+    gl::Error resumeQuery(GLenum type);
     gl::Error onMakeCurrent(const gl::Context *context);
 
     void syncState(const gl::Context *context, const gl::State::DirtyBits &glDirtyBits);

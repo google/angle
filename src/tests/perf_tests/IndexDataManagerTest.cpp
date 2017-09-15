@@ -166,8 +166,10 @@ IndexDataManagerPerfTest::IndexDataManagerPerfTest()
     {
         indexData[index] = static_cast<GLushort>(index);
     }
-    mIndexBuffer.bufferData(nullptr, GL_ARRAY_BUFFER, &indexData[0],
-                            indexData.size() * sizeof(GLushort), GL_STATIC_DRAW);
+    EXPECT_FALSE(mIndexBuffer
+                     .bufferData(nullptr, GL_ARRAY_BUFFER, &indexData[0],
+                                 indexData.size() * sizeof(GLushort), GL_STATIC_DRAW)
+                     .isError());
 }
 
 void IndexDataManagerPerfTest::step()
@@ -175,10 +177,10 @@ void IndexDataManagerPerfTest::step()
     rx::TranslatedIndexData translatedIndexData;
     for (unsigned int iteration = 0; iteration < 100; ++iteration)
     {
-        mIndexBuffer.getIndexRange(GL_UNSIGNED_SHORT, 0, mIndexCount, false,
-                                   &translatedIndexData.indexRange);
-        mIndexDataManager.prepareIndexData(GL_UNSIGNED_SHORT, mIndexCount, &mIndexBuffer, nullptr,
-                                           &translatedIndexData, false);
+        (void)mIndexBuffer.getIndexRange(GL_UNSIGNED_SHORT, 0, mIndexCount, false,
+                                         &translatedIndexData.indexRange);
+        (void)mIndexDataManager.prepareIndexData(GL_UNSIGNED_SHORT, mIndexCount, &mIndexBuffer,
+                                                 nullptr, &translatedIndexData, false);
     }
 }
 

@@ -61,8 +61,8 @@ SurfaceD3D::SurfaceD3D(const egl::SurfaceState &state,
             mD3DTexture = static_cast<IUnknown *>(clientBuffer);
             ASSERT(mD3DTexture != nullptr);
             mD3DTexture->AddRef();
-            mRenderer->getD3DTextureInfo(state.config, mD3DTexture, &mWidth, &mHeight,
-                                         &mRenderTargetFormat);
+            ANGLE_SWALLOW_ERR(mRenderer->getD3DTextureInfo(state.config, mD3DTexture, &mWidth,
+                                                           &mHeight, &mRenderTargetFormat));
             break;
 
         default:
@@ -251,12 +251,12 @@ egl::Error SurfaceD3D::swapRect(const gl::Context *context,
         }
     }
 
-    checkForOutOfDateSwapChain(context);
+    ANGLE_TRY(checkForOutOfDateSwapChain(context));
 
     return egl::NoError();
 }
 
-bool SurfaceD3D::checkForOutOfDateSwapChain(const gl::Context *context)
+egl::Error SurfaceD3D::checkForOutOfDateSwapChain(const gl::Context *context)
 {
     RECT client;
     int clientWidth = getWidth();
@@ -268,8 +268,8 @@ bool SurfaceD3D::checkForOutOfDateSwapChain(const gl::Context *context)
         // because that's not a useful size to render to.
         if (!mNativeWindow->getClientRect(&client))
         {
-            ASSERT(false);
-            return false;
+            UNREACHABLE();
+            return egl::NoError();
         }
 
         // Grow the buffer now, if the window has grown. We need to grow now to avoid losing information.
@@ -278,18 +278,16 @@ bool SurfaceD3D::checkForOutOfDateSwapChain(const gl::Context *context)
         sizeDirty = clientWidth != getWidth() || clientHeight != getHeight();
     }
 
-    bool wasDirty = (mSwapIntervalDirty || sizeDirty);
-
     if (mSwapIntervalDirty)
     {
-        resetSwapChain(context, clientWidth, clientHeight);
+        ANGLE_TRY(resetSwapChain(context, clientWidth, clientHeight));
     }
     else if (sizeDirty)
     {
-        resizeSwapChain(context, clientWidth, clientHeight);
+        ANGLE_TRY(resizeSwapChain(context, clientWidth, clientHeight));
     }
 
-    return wasDirty;
+    return egl::NoError();
 }
 
 egl::Error SurfaceD3D::swap(const gl::Context *context)

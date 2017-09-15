@@ -1056,7 +1056,7 @@ gl::Error TextureStorage11_2D::getRenderTarget(const gl::Context *context,
     if (mRenderer->getWorkarounds().zeroMaxLodWorkaround)
     {
         ASSERT(index.mipIndex == 0);
-        useLevelZeroWorkaroundTexture(true);
+        ANGLE_TRY(useLevelZeroWorkaroundTexture(true));
     }
 
     const TextureHelper11 *texture = nullptr;
@@ -2003,7 +2003,7 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::Context *context,
         if (mRenderer->getWorkarounds().zeroMaxLodWorkaround)
         {
             ASSERT(index.mipIndex == 0);
-            useLevelZeroWorkaroundTexture(true);
+            ANGLE_TRY(useLevelZeroWorkaroundTexture(true));
         }
 
         const TextureHelper11 *texture = nullptr;

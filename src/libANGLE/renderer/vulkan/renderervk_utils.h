@@ -103,10 +103,11 @@ class Error final
 
     operator gl::Error() const;
     operator egl::Error() const;
+
     template <typename T>
     operator gl::ErrorOrResult<T>() const
     {
-        return static_cast<gl::Error>(*this);
+        return operator gl::Error();
     }
 
     bool isError() const;

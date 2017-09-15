@@ -9,10 +9,8 @@
 #ifndef LIBANGLE_RENDERER_D3D_TEXTURESTORAGE_H_
 #define LIBANGLE_RENDERER_D3D_TEXTURESTORAGE_H_
 
-#include "libANGLE/Error.h"
-
 #include "common/debug.h"
-#include "libANGLE/Error.h"
+#include "libANGLE/angletypes.h"
 
 #include <GLES2/gl2.h>
 #include <stdint.h>

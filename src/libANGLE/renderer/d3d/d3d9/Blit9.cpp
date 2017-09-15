@@ -217,8 +217,8 @@ gl::Error Blit9::boxFilter(IDirect3DSurface9 *source, IDirect3DSurface9 *dest)
     device->SetTexture(0, texture);
     device->SetRenderTarget(0, dest);
 
-    setVertexShader(SHADER_VS_STANDARD);
-    setPixelShader(SHADER_PS_PASSTHROUGH);
+    ANGLE_TRY(setVertexShader(SHADER_VS_STANDARD));
+    ANGLE_TRY(setPixelShader(SHADER_PS_PASSTHROUGH));
 
     setCommonBlitState();
     device->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
