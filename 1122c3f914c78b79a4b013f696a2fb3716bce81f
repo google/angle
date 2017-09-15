@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "15610f03_fc6e0f63",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3924,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-15T12:53:29Z",
+      "side": 1,
+      "message": "nit: Include http:// in the url.",
+      "range": {
+        "startLine": 3924,
+        "startChar": 30,
+        "endLine": 3924,
+        "endChar": 47
+      },
+      "revId": "1122c3f914c78b79a4b013f696a2fb3716bce81f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "06c2565f_883c6034",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3929,
+      "author": {
+        "id": 1142464
+      },
+      "writtenOn": "2017-09-15T12:53:29Z",
+      "side": 1,
+      "message": "It\u0027s not well defined what this will actually sample. Should rather use 1,1,1 for example.",
+      "range": {
+        "startLine": 3929,
+        "startChar": 19,
+        "endLine": 3929,
+        "endChar": 27
+      },
+      "revId": "1122c3f914c78b79a4b013f696a2fb3716bce81f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
