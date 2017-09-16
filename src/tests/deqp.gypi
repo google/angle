@@ -490,7 +490,6 @@
             '<(deqp_path)/modules/gles3/functional/es3fShaderInvarianceTests.hpp',
             '<(deqp_path)/modules/gles3/functional/es3fShaderLoopTests.cpp',
             '<(deqp_path)/modules/gles3/functional/es3fShaderLoopTests.hpp',
-            '<(deqp_path)/modules/gles3/functional/es3fShaderMatrixTests.cpp',
             '<(deqp_path)/modules/gles3/functional/es3fShaderMatrixTests.hpp',
             '<(deqp_path)/modules/gles3/functional/es3fShaderOperatorTests.cpp',
             '<(deqp_path)/modules/gles3/functional/es3fShaderOperatorTests.hpp',
@@ -607,6 +606,10 @@
             '<(deqp_path)/modules/gles3/tes3TestPackage.cpp',
             '<(deqp_path)/modules/gles3/tes3TestPackage.hpp',
             '<(deqp_path)/modules/gles3/tes3TestPackageEntry.cpp',
+            # TODO(jmadill): Remove this once the test is updated in dEQP or the VC++2017
+            # compiler is fixed (crbug.com/759402)
+            #'<(deqp_path)/modules/gles3/functional/es3fShaderMatrixTests.cpp',
+            '<(angle_path)/src/tests/deqp_support/es3fShaderMatrixTests.cpp',
         ],
         'deqp_gles31_sources':
         [
