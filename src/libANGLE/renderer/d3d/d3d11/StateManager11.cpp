@@ -930,6 +930,10 @@ void StateManager11::syncState(const gl::Context *context, const gl::State::Dirt
                 break;
             case gl::State::DIRTY_BIT_VERTEX_ARRAY_BINDING:
                 invalidateVertexBuffer();
+                // Force invalidate the current value attributes, since the VertexArray11 keeps an
+                // internal cache of TranslatedAttributes, and they CurrentValue attributes are
+                // owned by the StateManager11/Context.
+                mDirtyCurrentValueAttribs.set();
                 break;
             case gl::State::DIRTY_BIT_TEXTURE_BINDINGS:
                 invalidateTexturesAndSamplers();
