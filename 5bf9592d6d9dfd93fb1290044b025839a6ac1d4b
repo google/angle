@@ -19,6 +19,29 @@
     },
     {
       "key": {
+        "uuid": "d2447c04_70f435f8",
+        "filename": "src/libANGLE/InternalEnums_autogen.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-18T21:23:26Z",
+      "side": 1,
+      "message": "These should still return something.",
+      "range": {
+        "startLine": 49,
+        "startChar": 17,
+        "endLine": 49,
+        "endChar": 31
+      },
+      "revId": "5bf9592d6d9dfd93fb1290044b025839a6ac1d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "4bde8d0c_e1ab6d9f",
         "filename": "src/libANGLE/angletypes.h",
         "patchSetId": 1
@@ -30,6 +53,47 @@
       "writtenOn": "2017-09-18T21:09:31Z",
       "side": 1,
       "message": "This is called cullMode here but sometimes it is referered to as CullFace (glCullFace for example). What should we call it? I\u0027m thinking that CullFace might be a bit more clear and could rename everything in ANGLE to make this consistent.",
+      "revId": "5bf9592d6d9dfd93fb1290044b025839a6ac1d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5125b6e9_5deee50e",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-18T21:23:26Z",
+      "side": 1,
+      "message": "I try to stick to what the names are in the tables in the es spec.  By that logic the member would be called CullFaceMode but we have a bit more discretion for the enum names because they\u0027re more generic.  I think CullFace for the enum name could work.",
+      "parentUuid": "4bde8d0c_e1ab6d9f",
+      "revId": "5bf9592d6d9dfd93fb1290044b025839a6ac1d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "596252d5_16948f07",
+        "filename": "src/libANGLE/gen_internal_enums.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-18T21:23:26Z",
+      "side": 1,
+      "message": "Can potentially use the smallest type that fits all the values.",
+      "range": {
+        "startLine": 65,
+        "startChar": 25,
+        "endLine": 65,
+        "endChar": 33
+      },
       "revId": "5bf9592d6d9dfd93fb1290044b025839a6ac1d4b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -64,6 +128,29 @@
       "writtenOn": "2017-09-18T21:09:31Z",
       "side": 1,
       "message": "nit: whitespace",
+      "revId": "5bf9592d6d9dfd93fb1290044b025839a6ac1d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9eea35b2_fdce5362",
+        "filename": "src/libANGLE/internal_enums.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-18T21:23:26Z",
+      "side": 1,
+      "message": "We could probably generate the enum names from the GL enums.",
+      "range": {
+        "startLine": 4,
+        "startChar": 8,
+        "endLine": 12,
+        "endChar": 38
+      },
       "revId": "5bf9592d6d9dfd93fb1290044b025839a6ac1d4b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
