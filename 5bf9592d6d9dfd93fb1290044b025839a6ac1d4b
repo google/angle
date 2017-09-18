@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9639ed0c_1bbbfa1d",
+        "filename": "src/libANGLE/InternalEnums.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-18T21:09:31Z",
+      "side": 1,
+      "message": "This will later contain stuff like EnumArray, IterateEnum and conversions between different internal enums.",
+      "revId": "5bf9592d6d9dfd93fb1290044b025839a6ac1d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4bde8d0c_e1ab6d9f",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-18T21:09:31Z",
+      "side": 1,
+      "message": "This is called cullMode here but sometimes it is referered to as CullFace (glCullFace for example). What should we call it? I\u0027m thinking that CullFace might be a bit more clear and could rename everything in ANGLE to make this consistent.",
+      "revId": "5bf9592d6d9dfd93fb1290044b025839a6ac1d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cbf2c8db_16395e00",
+        "filename": "src/libANGLE/gen_internal_enums.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-18T21:09:31Z",
+      "side": 1,
+      "message": "nit: whitespace",
+      "revId": "5bf9592d6d9dfd93fb1290044b025839a6ac1d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8152b33_87771260",
+        "filename": "src/libANGLE/gen_internal_enums.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-18T21:09:31Z",
+      "side": 1,
+      "message": "nit: whitespace",
+      "revId": "5bf9592d6d9dfd93fb1290044b025839a6ac1d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
