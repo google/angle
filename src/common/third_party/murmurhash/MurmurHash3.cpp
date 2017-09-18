@@ -91,6 +91,8 @@ FORCE_INLINE uint64_t fmix64 ( uint64_t k )
 
 //-----------------------------------------------------------------------------
 
+namespace angle
+{
 void MurmurHash3_x86_32 ( const void * key, int len,
                           uint32_t seed, void * out )
 {
@@ -329,6 +331,7 @@ void MurmurHash3_x64_128 ( const void * key, const int len,
 
   ((uint64_t*)out)[0] = h1;
   ((uint64_t*)out)[1] = h2;
+}
 }
 
 //-----------------------------------------------------------------------------
