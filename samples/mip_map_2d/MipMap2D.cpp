@@ -27,9 +27,8 @@ class MipMap2DSample : public SampleApplication
 
     virtual bool initialize()
     {
-        const std::string vs = SHADER_SOURCE
-        (
-            uniform float u_offset;
+        const std::string vs =
+            R"(uniform float u_offset;
             attribute vec4 a_position;
             attribute vec2 a_texCoord;
             varying vec2 v_texCoord;
@@ -38,19 +37,16 @@ class MipMap2DSample : public SampleApplication
                 gl_Position = a_position;
                 gl_Position.x += u_offset;
                 v_texCoord = a_texCoord;
-            }
-        );
+            })";
 
-        const std::string fs = SHADER_SOURCE
-        (
-            precision mediump float;
+        const std::string fs =
+            R"(precision mediump float;
             varying vec2 v_texCoord;
             uniform sampler2D s_texture;
             void main()
             {
                 gl_FragColor = texture2D(s_texture, v_texCoord);
-            }
-        );
+            })";
 
         mProgram = CompileProgram(vs, fs);
         if (!mProgram)

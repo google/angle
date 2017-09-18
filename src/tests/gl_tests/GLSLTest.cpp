@@ -30,14 +30,12 @@ class GLSLTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        mSimpleVSSource = SHADER_SOURCE
-        (
-            attribute vec4 inputAttribute;
+        mSimpleVSSource =
+            R"(attribute vec4 inputAttribute;
             void main()
             {
                 gl_Position = inputAttribute;
-            }
-        );
+            })";
     }
 
     std::string GenerateVaryingType(GLint vectorSize)
@@ -449,12 +447,12 @@ class GLSLTest_ES3 : public GLSLTest
         ANGLETest::SetUp();
 
         mSimpleVSSource =
-            "#version 300 es\n"
-            "in vec4 inputAttribute;"
-            "void main()"
-            "{"
-            "    gl_Position = inputAttribute;"
-            "}";
+            R"(#version 300 es
+            in vec4 inputAttribute;
+            void main()
+            {
+                gl_Position = inputAttribute;
+            })";
     }
 };
 
@@ -465,21 +463,19 @@ class GLSLTest_ES31 : public GLSLTest
         ANGLETest::SetUp();
 
         mSimpleVSSource =
-            "#version 310 es\n"
-            "in vec4 inputAttribute;"
-            "void main()"
-            "{"
-            "    gl_Position = inputAttribute;"
-            "}";
+            R"(#version 310 es
+            in vec4 inputAttribute;
+            void main()
+            {
+                gl_Position = inputAttribute;
+            })";
     }
 };
 
 TEST_P(GLSLTest, NamelessScopedStructs)
 {
-    const std::string fragmentShaderSource = SHADER_SOURCE
-    (
-        precision mediump float;
-
+    const std::string fragmentShaderSource =
+        R"(precision mediump float;
         void main()
         {
             struct
@@ -489,8 +485,7 @@ TEST_P(GLSLTest, NamelessScopedStructs)
 
             gl_FragColor = vec4(1, 0, 0, 1);
             gl_FragColor.a += b.q;
-        }
-    );
+        })";
 
     GLuint program = CompileProgram(mSimpleVSSource, fragmentShaderSource);
     EXPECT_NE(0u, program);
@@ -508,9 +503,8 @@ TEST_P(GLSLTest, ScopedStructsOrderBug)
         return;
     }
 
-    const std::string fragmentShaderSource = SHADER_SOURCE
-    (
-        precision mediump float;
+    const std::string fragmentShaderSource =
+        R"(precision mediump float;
 
         struct T
         {
@@ -531,8 +525,7 @@ TEST_P(GLSLTest, ScopedStructsOrderBug)
             gl_FragColor = vec4(1, 0, 0, 1);
             gl_FragColor.a += a.f;
             gl_FragColor.a += b.q;
-        }
-    );
+        })";
 
     GLuint program = CompileProgram(mSimpleVSSource, fragmentShaderSource);
     EXPECT_NE(0u, program);
@@ -540,9 +533,8 @@ TEST_P(GLSLTest, ScopedStructsOrderBug)
 
 TEST_P(GLSLTest, ScopedStructsBug)
 {
-    const std::string fragmentShaderSource = SHADER_SOURCE
-    (
-        precision mediump float;
+    const std::string fragmentShaderSource =
+        R"(precision mediump float;
 
         struct T_0
         {
@@ -563,8 +555,7 @@ TEST_P(GLSLTest, ScopedStructsBug)
 
             gl_FragColor.a += a.f;
             gl_FragColor.a += b.v.x;
-        }
-    );
+        })";
 
     GLuint program = CompileProgram(mSimpleVSSource, fragmentShaderSource);
     EXPECT_NE(0u, program);
@@ -572,28 +563,24 @@ TEST_P(GLSLTest, ScopedStructsBug)
 
 TEST_P(GLSLTest, DxPositionBug)
 {
-    const std::string &vertexShaderSource = SHADER_SOURCE
-    (
-        attribute vec4 inputAttribute;
+    const std::string &vertexShaderSource =
+        R"(attribute vec4 inputAttribute;
         varying float dx_Position;
         void main()
         {
             gl_Position = vec4(inputAttribute);
             dx_Position = 0.0;
-        }
-    );
+        })";
 
-    const std::string &fragmentShaderSource = SHADER_SOURCE
-    (
-        precision mediump float;
+    const std::string &fragmentShaderSource =
+        R"(precision mediump float;
 
         varying float dx_Position;
 
         void main()
         {
             gl_FragColor = vec4(dx_Position, 0, 0, 1);
-        }
-    );
+        })";
 
     GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
     EXPECT_NE(0u, program);
@@ -664,20 +651,17 @@ TEST_P(GLSLTest, FrontFacingAndVarying)
 {
     EGLPlatformParameters platform = GetParam().eglParameters;
 
-    const std::string vertexShaderSource = SHADER_SOURCE
-    (
-        attribute vec4 a_position;
+    const std::string vertexShaderSource =
+        R"(attribute vec4 a_position;
         varying float v_varying;
         void main()
         {
             v_varying = a_position.x;
             gl_Position = a_position;
-        }
-    );
+        })";
 
-    const std::string fragmentShaderSource = SHADER_SOURCE
-    (
-        precision mediump float;
+    const std::string fragmentShaderSource =
+        R"(precision mediump float;
         varying float v_varying;
         void main()
         {
@@ -692,8 +676,7 @@ TEST_P(GLSLTest, FrontFacingAndVarying)
                 c = vec4(0, v_varying, 0, 1.0);
             }
             gl_FragColor = c;
-        }
-    );
+        })";
 
     GLuint program = CompileProgram(vertexShaderSource, fragmentShaderSource);
 
@@ -1570,9 +1553,8 @@ TEST_P(GLSLTest, BadIndexBug)
 // Test that structs defined in uniforms are translated correctly.
 TEST_P(GLSLTest, StructSpecifiersUniforms)
 {
-    const std::string fragmentShaderSource = SHADER_SOURCE
-    (
-        precision mediump float;
+    const std::string fragmentShaderSource =
+        R"(precision mediump float;
 
         uniform struct S { float field;} s;
 
@@ -1580,8 +1562,7 @@ TEST_P(GLSLTest, StructSpecifiersUniforms)
         {
             gl_FragColor = vec4(1, 0, 0, 1);
             gl_FragColor.a += s.field;
-        }
-    );
+        })";
 
     GLuint program = CompileProgram(mSimpleVSSource, fragmentShaderSource);
     EXPECT_NE(0u, program);
@@ -1593,15 +1574,13 @@ TEST_P(GLSLTest, StructSpecifiersUniforms)
 // (note this test is still Impl-independent)
 TEST_P(GLSLTestNoValidation, DepthRangeUniforms)
 {
-    const std::string fragmentShaderSource = SHADER_SOURCE
-    (
-        precision mediump float;
+    const std::string fragmentShaderSource =
+        R"(precision mediump float;
 
         void main()
         {
             gl_FragColor = vec4(gl_DepthRange.near, gl_DepthRange.far, gl_DepthRange.diff, 1);
-        }
-    );
+        })";
 
     ANGLE_GL_PROGRAM(program, mSimpleVSSource, fragmentShaderSource);
 
@@ -1683,9 +1662,8 @@ TEST_P(GLSLTest, PowOfSmallConstant)
 // than FL9_3.
 TEST_P(GLSLTest, LoopIndexingValidation)
 {
-    const std::string fragmentShaderSource = SHADER_SOURCE
-    (
-        precision mediump float;
+    const std::string fragmentShaderSource =
+        R"(precision mediump float;
 
         uniform float loopMax;
 
@@ -1699,8 +1677,7 @@ TEST_P(GLSLTest, LoopIndexingValidation)
                     gl_FragColor.a += 0.1;
                 }
             }
-        }
-    );
+        })";
 
     GLuint shader = glCreateShader(GL_FRAGMENT_SHADER);
 

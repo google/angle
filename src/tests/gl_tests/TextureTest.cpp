@@ -49,9 +49,8 @@ class TexCoordDrawTest : public ANGLETest
 
     virtual std::string getVertexShaderSource()
     {
-        return std::string(SHADER_SOURCE
-        (
-            precision highp float;
+        return
+            R"(precision highp float;
             attribute vec4 position;
             varying vec2 texcoord;
 
@@ -59,9 +58,7 @@ class TexCoordDrawTest : public ANGLETest
             {
                 gl_Position = vec4(position.xy, 0.0, 1.0);
                 texcoord = (position.xy * 0.5) + 0.5;
-            }
-        )
-        );
+            })";
     }
 
     virtual std::string getFragmentShaderSource() = 0;
@@ -140,18 +137,15 @@ class Texture2DTest : public TexCoordDrawTest
 
     std::string getFragmentShaderSource() override
     {
-        return std::string(SHADER_SOURCE
-        (
-            precision highp float;
+        return
+            R"(precision highp float;
             uniform sampler2D tex;
             varying vec2 texcoord;
 
             void main()
             {
                 gl_FragColor = texture2D(tex, texcoord);
-            }
-        )
-        );
+            })";
     }
 
     virtual const char *getTextureUniformName() { return "tex"; }
@@ -497,9 +491,8 @@ class Texture2DTestWithDrawScale : public Texture2DTest
 
     std::string getVertexShaderSource() override
     {
-        return std::string(SHADER_SOURCE
-        (
-            precision highp float;
+        return
+            R"(precision highp float;
             attribute vec4 position;
             varying vec2 texcoord;
 
@@ -509,9 +502,7 @@ class Texture2DTestWithDrawScale : public Texture2DTest
             {
                 gl_Position = vec4(position.xy * drawScale, 0.0, 1.0);
                 texcoord = (position.xy * 0.5) + 0.5;
-            }
-        )
-        );
+            })";
     }
 
     void SetUp() override
@@ -539,9 +530,8 @@ class Sampler2DAsFunctionParameterTest : public Texture2DTest
 
     std::string getFragmentShaderSource() override
     {
-        return std::string(SHADER_SOURCE
-        (
-            precision highp float;
+        return
+            R"(precision highp float;
             uniform sampler2D tex;
             varying vec2 texcoord;
 
@@ -553,9 +543,7 @@ class Sampler2DAsFunctionParameterTest : public Texture2DTest
             void main()
             {
                 gl_FragColor = computeFragColor(tex);
-            }
-        )
-        );
+            })";
     }
 
     void SetUp() override
@@ -579,9 +567,8 @@ class TextureCubeTest : public TexCoordDrawTest
 
     std::string getFragmentShaderSource() override
     {
-        return std::string(SHADER_SOURCE
-        (
-            precision highp float;
+        return
+            R"(precision highp float;
             uniform sampler2D tex2D;
             uniform samplerCube texCube;
             varying vec2 texcoord;
@@ -590,9 +577,7 @@ class TextureCubeTest : public TexCoordDrawTest
             {
                 gl_FragColor = texture2D(tex2D, texcoord);
                 gl_FragColor += textureCube(texCube, vec3(texcoord, 0));
-            }
-        )
-        );
+            })";
     }
 
     void SetUp() override
@@ -650,18 +635,15 @@ class SamplerArrayTest : public TexCoordDrawTest
 
     std::string getFragmentShaderSource() override
     {
-        return std::string(SHADER_SOURCE
-        (
-            precision mediump float;
+        return
+            R"(precision mediump float;
             uniform highp sampler2D tex2DArray[2];
             varying vec2 texcoord;
             void main()
             {
                 gl_FragColor = texture2D(tex2DArray[0], texcoord);
                 gl_FragColor += texture2D(tex2DArray[1], texcoord);
-            }
-        )
-        );
+            })";
     }
 
     void SetUp() override
@@ -728,9 +710,8 @@ class SamplerArrayAsFunctionParameterTest : public SamplerArrayTest
 
     std::string getFragmentShaderSource() override
     {
-        return std::string(SHADER_SOURCE
-        (
-            precision mediump float;
+        return
+            R"(precision mediump float;
             uniform highp sampler2D tex2DArray[2];
             varying vec2 texcoord;
 
@@ -742,9 +723,7 @@ class SamplerArrayAsFunctionParameterTest : public SamplerArrayTest
             void main()
             {
                 gl_FragColor = computeFragColor(tex2DArray);
-            }
-        )
-        );
+            })";
     }
 };
 
@@ -3936,20 +3915,20 @@ TEST_P(TextureCubeTestES3, SpecifyAndSampleFromBaseLevel1)
     }
     const std::string vs =
         R"(#version 300 es
-                    precision mediump float;
-                    in vec3 pos;
-                    void main() {
-                        gl_Position = vec4(pos, 1.0);
-                    })";
+        precision mediump float;
+        in vec3 pos;
+        void main() {
+            gl_Position = vec4(pos, 1.0);
+        })";
 
     const std::string fs =
         R"(#version 300 es
-                precision mediump float;
-                out vec4 color;
-                uniform samplerCube uTex;
-                void main(){
-                    color = texture(uTex, vec3(1.0));
-                })";
+        precision mediump float;
+        out vec4 color;
+        uniform samplerCube uTex;
+        void main(){
+            color = texture(uTex, vec3(1.0));
+        })";
     ANGLE_GL_PROGRAM(program, vs, fs);
     glUseProgram(program);
 

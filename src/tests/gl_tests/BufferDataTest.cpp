@@ -35,27 +35,23 @@ class BufferDataTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        const char * vsSource = SHADER_SOURCE
-        (
-            attribute vec4 position;
+        const char *vsSource =
+            R"(attribute vec4 position;
             attribute float in_attrib;
             varying float v_attrib;
             void main()
             {
                 v_attrib = in_attrib;
                 gl_Position = position;
-            }
-        );
+            })";
 
-        const char * fsSource = SHADER_SOURCE
-        (
-            precision mediump float;
+        const char *fsSource =
+            R"(precision mediump float;
             varying float v_attrib;
             void main()
             {
                 gl_FragColor = vec4(v_attrib, 0, 0, 1);
-            }
-        );
+            })";
 
         glGenBuffers(1, &mBuffer);
         ASSERT_NE(mBuffer, 0U);
@@ -253,27 +249,23 @@ class IndexedBufferCopyTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        const char * vsSource = SHADER_SOURCE
-        (
-            attribute vec3 in_attrib;
+        const char *vsSource =
+            R"(attribute vec3 in_attrib;
             varying vec3 v_attrib;
             void main()
             {
                 v_attrib = in_attrib;
                 gl_Position = vec4(0.0, 0.0, 0.5, 1.0);
                 gl_PointSize = 100.0;
-            }
-        );
+            })";
 
-        const char * fsSource = SHADER_SOURCE
-        (
-            precision mediump float;
+        const char *fsSource =
+            R"(precision mediump float;
             varying vec3 v_attrib;
             void main()
             {
                 gl_FragColor = vec4(v_attrib, 1);
-            }
-        );
+            })";
 
         glGenBuffers(2, mBuffers);
         ASSERT_NE(mBuffers[0], 0U);

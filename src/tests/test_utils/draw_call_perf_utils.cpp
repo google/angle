@@ -18,49 +18,37 @@ namespace
 
 const char *SimpleScaleAndOffsetVertexShaderSource()
 {
-    // clang-format off
-    return SHADER_SOURCE
-    (
-        attribute vec2 vPosition;
+    return
+        R"(attribute vec2 vPosition;
         uniform float uScale;
         uniform float uOffset;
         void main()
         {
             gl_Position = vec4(vPosition * vec2(uScale) + vec2(uOffset), 0, 1);
-        }
-    );
-    // clang-format on
+        })";
 }
 
 const char *SimpleDrawVertexShaderSource()
 {
-    // clang-format off
-    return SHADER_SOURCE
-    (
-        attribute vec2 vPosition;
+    return
+        R"(attribute vec2 vPosition;
         const float scale = 0.5;
         const float offset = -0.5;
 
         void main()
         {
             gl_Position = vec4(vPosition * vec2(scale) + vec2(offset), 0, 1);
-        }
-    );
-    // clang-format on
+        })";
 }
 
 const char *SimpleFragmentShaderSource()
 {
-    // clang-format off
-    return SHADER_SOURCE
-    (
-        precision mediump float;
+    return
+        R"(precision mediump float;
         void main()
         {
             gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-        }
-    );
-    // clang-format on
+        })";
 }
 
 void Generate2DTriangleData(size_t numTris, std::vector<float> *floatData)

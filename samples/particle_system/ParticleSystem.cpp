@@ -36,9 +36,8 @@ class ParticleSystemSample : public SampleApplication
 
     bool initialize() override
     {
-        const std::string vs = SHADER_SOURCE
-        (
-            uniform float u_time;
+        const std::string vs =
+            R"(uniform float u_time;
             uniform vec3 u_centerPosition;
             attribute float a_lifetime;
             attribute vec3 a_startPosition;
@@ -59,12 +58,10 @@ class ParticleSystemSample : public SampleApplication
                 v_lifetime = 1.0 - (u_time / a_lifetime);
                 v_lifetime = clamp(v_lifetime, 0.0, 1.0);
                 gl_PointSize = (v_lifetime * v_lifetime) * 40.0;
-            }
-        );
+            })";
 
-        const std::string fs = SHADER_SOURCE
-        (
-            precision mediump float;
+        const std::string fs =
+            R"(precision mediump float;
             uniform vec4 u_color;
             varying float v_lifetime;
             uniform sampler2D s_texture;
@@ -74,8 +71,7 @@ class ParticleSystemSample : public SampleApplication
                 texColor = texture2D(s_texture, gl_PointCoord);
                 gl_FragColor = vec4(u_color) * texColor;
                 gl_FragColor.a *= v_lifetime;
-            }
-        );
+            })";
 
         mProgram = CompileProgram(vs, fs);
         if (!mProgram)

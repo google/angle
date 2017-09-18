@@ -39,9 +39,8 @@ class PostSubBufferSample : public SampleApplication
             return false;
         }
 
-        const std::string vs = SHADER_SOURCE
-        (
-            uniform mat4 u_mvpMatrix;
+        const std::string vs =
+            R"(uniform mat4 u_mvpMatrix;
             attribute vec4 a_position;
             attribute vec2 a_texcoord;
             varying vec2 v_texcoord;
@@ -49,18 +48,15 @@ class PostSubBufferSample : public SampleApplication
             {
                 gl_Position = u_mvpMatrix * a_position;
                 v_texcoord = a_texcoord;
-            }
-        );
+            })";
 
-        const std::string fs = SHADER_SOURCE
-        (
-            precision mediump float;
+        const std::string fs =
+            R"(precision mediump float;
             varying vec2 v_texcoord;
             void main()
             {
                 gl_FragColor = vec4(v_texcoord.x, v_texcoord.y, 1.0, 1.0);
-            }
-        );
+            })";
 
         mProgram = CompileProgram(vs, fs);
         if (!mProgram)

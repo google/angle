@@ -25,12 +25,19 @@ class LineLoopTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        const std::string vsSource = SHADER_SOURCE(attribute highp vec4 position;
-
-                                                   void main(void) { gl_Position = position; });
+        const std::string vsSource =
+            R"(attribute highp vec4 position;
+            void main(void)
+            {
+                gl_Position = position;
+            })";
 
         const std::string fsSource =
-            SHADER_SOURCE(uniform highp vec4 color; void main(void) { gl_FragColor = color; });
+            R"(uniform highp vec4 color;
+            void main(void)
+            {
+                gl_FragColor = color;
+            })";
 
         mProgram = CompileProgram(vsSource, fsSource);
         if (mProgram == 0)

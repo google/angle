@@ -40,21 +40,18 @@ class MultiTextureSample : public SampleApplication
 
     virtual bool initialize()
     {
-        const std::string vs = SHADER_SOURCE
-        (
-            attribute vec4 a_position;
+        const std::string vs =
+            R"(attribute vec4 a_position;
             attribute vec2 a_texCoord;
             varying vec2 v_texCoord;
             void main()
             {
                 gl_Position = a_position;
                 v_texCoord = a_texCoord;
-            }
-        );
+            })";
 
-        const std::string fs = SHADER_SOURCE
-        (
-            precision mediump float;
+        const std::string fs =
+            R"(precision mediump float;
             varying vec2 v_texCoord;
             uniform sampler2D s_baseMap;
             uniform sampler2D s_lightMap;
@@ -66,8 +63,7 @@ class MultiTextureSample : public SampleApplication
                 baseColor = texture2D(s_baseMap, v_texCoord);
                 lightColor = texture2D(s_lightMap, v_texCoord);
                 gl_FragColor = baseColor * (lightColor + 0.25);
-            }
-        );
+            })";
 
         mProgram = CompileProgram(vs, fs);
         if (!mProgram)

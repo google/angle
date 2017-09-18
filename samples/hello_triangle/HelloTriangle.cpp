@@ -26,23 +26,19 @@ class HelloTriangleSample : public SampleApplication
 
     virtual bool initialize()
     {
-        const std::string vs = SHADER_SOURCE
-        (
-            attribute vec4 vPosition;
+        const std::string vs =
+            R"(attribute vec4 vPosition;
             void main()
             {
                 gl_Position = vPosition;
-            }
-        );
+            })";
 
-        const std::string fs = SHADER_SOURCE
-        (
-            precision mediump float;
+        const std::string fs =
+            R"(precision mediump float;
             void main()
             {
                 gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-            }
-        );
+            })";
 
         mProgram = CompileProgram(vs, fs);
         if (!mProgram)

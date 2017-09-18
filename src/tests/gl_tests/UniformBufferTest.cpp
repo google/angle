@@ -29,14 +29,23 @@ class UniformBufferTest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        mVertexShaderSource = SHADER_SOURCE(#version 300 es\n in vec4 position;
-                                            void main() { gl_Position = position; });
+        mVertexShaderSource =
+            R"(#version 300 es
+            in vec4 position;
+            void main()
+            {
+                gl_Position = position;
+            })";
+
         mFragmentShaderSource =
-            SHADER_SOURCE(#version 300 es\n precision highp float; uniform uni { vec4 color; };
-
-                          out vec4 fragColor;
-
-                          void main() { fragColor = color; });
+            R"(#version 300 es
+            precision highp float;
+            uniform uni { vec4 color; };
+            out vec4 fragColor;
+            void main()
+            {
+                fragColor = color;
+            })";
 
         mProgram = CompileProgram(mVertexShaderSource, mFragmentShaderSource);
         ASSERT_NE(mProgram, 0u);

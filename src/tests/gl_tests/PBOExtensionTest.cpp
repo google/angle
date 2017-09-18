@@ -34,18 +34,24 @@ class PBOExtensionTest : public ANGLETest
             glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
 
             const char *vertexShaderSrc =
-                SHADER_SOURCE(attribute vec4 aTest; attribute vec2 aPosition; varying vec4 vTest;
+                R"(attribute vec4 aTest;
+                attribute vec2 aPosition;
+                varying vec4 vTest;
 
-                              void main() {
-                                  vTest        = aTest;
-                                  gl_Position  = vec4(aPosition, 0.0, 1.0);
-                                  gl_PointSize = 1.0;
-                              });
+                void main()
+                {
+                    vTest        = aTest;
+                    gl_Position  = vec4(aPosition, 0.0, 1.0);
+                    gl_PointSize = 1.0;
+                })";
 
             const char *fragmentShaderSrc =
-                SHADER_SOURCE(precision mediump float; varying vec4 vTest;
-
-                              void main() { gl_FragColor = vTest; });
+                R"(precision mediump float;
+                varying vec4 vTest;
+                void main()
+                {
+                    gl_FragColor = vTest;
+                })";
 
             mProgram = CompileProgram(vertexShaderSrc, fragmentShaderSrc);
 

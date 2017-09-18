@@ -26,24 +26,20 @@ class StencilOperationsSample : public SampleApplication
 
     virtual bool initialize()
     {
-        const std::string vs = SHADER_SOURCE
-        (
-            attribute vec4 a_position;
+        const std::string vs =
+            R"(attribute vec4 a_position;
             void main()
             {
                 gl_Position = a_position;
-            }
-        );
+            })";
 
-        const std::string fs = SHADER_SOURCE
-        (
-            precision mediump float;
+        const std::string fs =
+            R"(precision mediump float;
             uniform vec4 u_color;
             void main()
             {
                 gl_FragColor = u_color;
-            }
-        );
+            })";
 
         mProgram = CompileProgram(vs, fs);
         if (!mProgram)

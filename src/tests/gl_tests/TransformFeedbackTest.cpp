@@ -78,14 +78,21 @@ class TransformFeedbackTest : public TransformFeedbackTestBase
         ASSERT_EQ(0u, mProgram);
 
         const std::string vertexShaderSource =
-            SHADER_SOURCE(precision highp float; attribute vec4 position;
+            R"(precision highp float;
+            attribute vec4 position;
 
-                          void main() { gl_Position = position; });
+            void main()
+            {
+                gl_Position = position;
+            })";
 
         const std::string fragmentShaderSource =
-            SHADER_SOURCE(precision highp float;
+            R"(precision highp float;
 
-                          void main() { gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); });
+            void main()
+            {
+                gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+            })";
 
         mProgram = CompileProgramWithTransformFeedback(vertexShaderSource, fragmentShaderSource,
                                                        tfVaryings, bufferMode);
@@ -421,28 +428,24 @@ TEST_P(TransformFeedbackTest, MultiplePaused)
 
     const size_t transformFeedbackCount = 8;
 
-    // clang-format off
-    const std::string vertexShaderSource = SHADER_SOURCE
-    (  #version 300 es\n
-       in highp vec4 position;
-       in float transformFeedbackInput;
-       out float transformFeedbackOutput;
-       void main(void)
-       {
-           gl_Position = position;
-           transformFeedbackOutput = transformFeedbackInput;
-       }
-    );
+    const std::string vertexShaderSource =
+        R"(#version 300 es
+        in highp vec4 position;
+        in float transformFeedbackInput;
+        out float transformFeedbackOutput;
+        void main(void)
+        {
+            gl_Position = position;
+            transformFeedbackOutput = transformFeedbackInput;
+        })";
 
-    const std::string fragmentShaderSource = SHADER_SOURCE
-    (  #version 300 es\n
-       out mediump vec4 color;
-       void main(void)
-       {
-           color = vec4(1.0, 1.0, 1.0, 1.0);
-       }
-    );
-    // clang-format on
+    const std::string fragmentShaderSource =
+        R"(#version 300 es
+        out mediump vec4 color;
+        void main(void)
+        {
+            color = vec4(1.0, 1.0, 1.0, 1.0);
+        })";
 
     std::vector<std::string> tfVaryings;
     tfVaryings.push_back("transformFeedbackOutput");
@@ -558,9 +561,8 @@ TEST_P(TransformFeedbackTest, MultiContext)
 
         eglMakeCurrent(display, surface, surface, context.context);
 
-        // clang-format off
-        const std::string vertexShaderSource = SHADER_SOURCE
-        (   #version 300 es\n
+        const std::string vertexShaderSource =
+            R"(#version 300 es
             in highp vec4 position;
             in float transformFeedbackInput;
             out float transformFeedbackOutput;
@@ -568,18 +570,15 @@ TEST_P(TransformFeedbackTest, MultiContext)
             {
                 gl_Position = position;
                 transformFeedbackOutput = transformFeedbackInput;
-            }
-        );
+            })";
 
-        const std::string fragmentShaderSource = SHADER_SOURCE
-        (   #version 300 es\n
+        const std::string fragmentShaderSource =
+            R"(#version 300 es
             out mediump vec4 color;
             void main(void)
             {
                 color = vec4(1.0, 1.0, 1.0, 1.0);
-            }
-        );
-        // clang-format on
+            })";
 
         std::vector<std::string> tfVaryings;
         tfVaryings.push_back("transformFeedbackOutput");

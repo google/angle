@@ -65,9 +65,8 @@ class BlitFramebufferANGLETest : public ANGLETest
     {
         ANGLETest::SetUp();
 
-        const std::string passthroughVS = SHADER_SOURCE
-        (
-            precision highp float;
+        const std::string passthroughVS =
+            R"(precision highp float;
             attribute vec4 position;
             varying vec4 pos;
 
@@ -75,12 +74,10 @@ class BlitFramebufferANGLETest : public ANGLETest
             {
                 gl_Position = position;
                 pos = position;
-            }
-        );
+            })";
 
-        const std::string checkeredFS = SHADER_SOURCE
-        (
-            precision highp float;
+        const std::string checkeredFS =
+            R"(precision highp float;
             varying vec4 pos;
 
             void main()
@@ -93,19 +90,16 @@ class BlitFramebufferANGLETest : public ANGLETest
                 {
                     gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);
                 }
-            }
-        );
+            })";
 
-        const std::string blueFS = SHADER_SOURCE
-        (
-            precision highp float;
+        const std::string blueFS =
+            R"(precision highp float;
             varying vec4 pos;
 
             void main()
             {
                 gl_FragColor = vec4(0.0, 0.0, 1.0, 1.0);
-            }
-        );
+            })";
 
         mCheckerProgram = CompileProgram(passthroughVS, checkeredFS);
         mBlueProgram = CompileProgram(passthroughVS, blueFS);

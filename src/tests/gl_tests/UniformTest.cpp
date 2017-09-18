@@ -110,25 +110,21 @@ TEST_P(UniformTest, UniformArrayLocations)
         return;
     }
 
-    const std::string vertexShader = SHADER_SOURCE
-    (
-        precision mediump float;
+    const std::string vertexShader =
+        R"(precision mediump float;
         uniform float uPosition[4];
         void main(void)
         {
             gl_Position = vec4(uPosition[0], uPosition[1], uPosition[2], uPosition[3]);
-        }
-    );
+        })";
 
-    const std::string fragShader = SHADER_SOURCE
-    (
-        precision mediump float;
+    const std::string fragShader =
+        R"(precision mediump float;
         uniform float uColor[4];
         void main(void)
         {
             gl_FragColor = vec4(uColor[0], uColor[1], uColor[2], uColor[3]);
-        }
-    );
+        })";
 
     GLuint program = CompileProgram(vertexShader, fragShader);
     ASSERT_NE(program, 0u);

@@ -54,14 +54,12 @@ void SimpleOperationTest::verifyBuffer(const std::vector<uint8_t> &data, GLenum 
 
 TEST_P(SimpleOperationTest, CompileVertexShader)
 {
-    const std::string source = SHADER_SOURCE
-    (
-        attribute vec4 a_input;
+    const std::string source =
+        R"(attribute vec4 a_input;
         void main()
         {
             gl_Position = a_input;
-        }
-    );
+        })";
 
     GLuint shader = CompileShader(GL_VERTEX_SHADER, source);
     EXPECT_NE(shader, 0u);
@@ -72,15 +70,13 @@ TEST_P(SimpleOperationTest, CompileVertexShader)
 
 TEST_P(SimpleOperationTest, CompileFragmentShader)
 {
-    const std::string source = SHADER_SOURCE
-    (
-        precision mediump float;
+    const std::string source =
+        R"(precision mediump float;
         varying vec4 v_input;
         void main()
         {
             gl_FragColor = v_input;
-        }
-    );
+        })";
 
     GLuint shader = CompileShader(GL_FRAGMENT_SHADER, source);
     EXPECT_NE(shader, 0u);
@@ -91,21 +87,17 @@ TEST_P(SimpleOperationTest, CompileFragmentShader)
 
 TEST_P(SimpleOperationTest, LinkProgram)
 {
-    const std::string vsSource = SHADER_SOURCE
-    (
-        void main()
+    const std::string vsSource =
+        R"(void main()
         {
             gl_Position = vec4(1.0, 1.0, 1.0, 1.0);
-        }
-    );
+        })";
 
-    const std::string fsSource = SHADER_SOURCE
-    (
-        void main()
+    const std::string fsSource =
+        R"(void main()
         {
             gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
-        }
-    );
+        })";
 
     GLuint program = CompileProgram(vsSource, fsSource);
     EXPECT_NE(program, 0u);
@@ -123,23 +115,19 @@ TEST_P(SimpleOperationTest, LinkProgramWithUniforms)
         return;
     }
 
-    const std::string vsSource = SHADER_SOURCE
-    (
-        void main()
+    const std::string vsSource =
+        R"(void main()
         {
             gl_Position = vec4(1.0, 1.0, 1.0, 1.0);
-        }
-    );
+        })";
 
-    const std::string fsSource = SHADER_SOURCE
-    (
-        precision mediump float;
+    const std::string fsSource =
+        R"(precision mediump float;
         uniform vec4 u_input;
         void main()
         {
             gl_FragColor = u_input;
-        }
-    );
+        })";
 
     GLuint program = CompileProgram(vsSource, fsSource);
     EXPECT_NE(program, 0u);
@@ -161,22 +149,18 @@ TEST_P(SimpleOperationTest, LinkProgramWithAttributes)
         return;
     }
 
-    const std::string vsSource = SHADER_SOURCE
-    (
-        attribute vec4 a_input;
+    const std::string vsSource =
+        R"(attribute vec4 a_input;
         void main()
         {
             gl_Position = a_input;
-        }
-    );
+        })";
 
-    const std::string fsSource = SHADER_SOURCE
-    (
-        void main()
+    const std::string fsSource =
+        R"(void main()
         {
             gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
-        }
-    );
+        })";
 
     GLuint program = CompileProgram(vsSource, fsSource);
     EXPECT_NE(program, 0u);

@@ -64,28 +64,22 @@ TEST_P(BindUniformLocationTest, Basic)
 
     ASSERT_NE(mBindUniformLocation, nullptr);
 
-    // clang-format off
-    const std::string vsSource = SHADER_SOURCE
-    (
-        attribute vec4 a_position;
+    const std::string vsSource =
+        R"(attribute vec4 a_position;
         void main()
         {
             gl_Position = a_position;
-        }
-    );
+        })";
 
-    const std::string fsSource = SHADER_SOURCE
-    (
-        precision mediump float;
+    const std::string fsSource =
+        R"(precision mediump float;
         uniform vec4 u_colorC;
         uniform vec4 u_colorB[2];
         uniform vec4 u_colorA;
         void main()
         {
             gl_FragColor = u_colorA + u_colorB[0] + u_colorB[1] + u_colorC;
-        }
-    );
-    // clang-format on
+        })";
 
     GLint colorALocation = 3;
     GLint colorBLocation = 10;
@@ -141,27 +135,21 @@ TEST_P(BindUniformLocationTest, ConflictsDetection)
 
     ASSERT_NE(nullptr, mBindUniformLocation);
 
-    // clang-format off
-    const std::string vsSource = SHADER_SOURCE
-    (
-        attribute vec4 a_position;
+    const std::string vsSource =
+        R"(attribute vec4 a_position;
         void main()
         {
             gl_Position = a_position;
-        }
-    );
+        })";
 
-    const std::string fsSource = SHADER_SOURCE
-    (
-        precision mediump float;
+    const std::string fsSource =
+        R"(precision mediump float;
         uniform vec4 u_colorA;
         uniform vec4 u_colorB;
         void main()
         {
             gl_FragColor = u_colorA + u_colorB;
-        }
-    );
-    // clang-format on
+        })";
 
     GLint colorALocation = 3;
     GLint colorBLocation = 4;
@@ -203,10 +191,8 @@ TEST_P(BindUniformLocationTest, Compositor)
 
     ASSERT_NE(nullptr, mBindUniformLocation);
 
-    // clang-format off
-    const std::string vsSource = SHADER_SOURCE
-    (
-        attribute vec4 a_position;
+    const std::string vsSource =
+        R"(attribute vec4 a_position;
         attribute vec2 a_texCoord;
         uniform mat4 matrix;
         uniform vec2 color_a[4];
@@ -218,12 +204,10 @@ TEST_P(BindUniformLocationTest, Compositor)
             v_color.zw = color_a[2] + color_a[3];
             v_color += color_b;
             gl_Position = matrix * a_position;
-        }
-    );
+        })";
 
-    const std::string fsSource = SHADER_SOURCE
-    (
-        precision mediump float;
+    const std::string fsSource =
+        R"(precision mediump float;
         varying vec4 v_color;
         uniform float alpha;
         uniform vec4 multiplier;
@@ -242,9 +226,7 @@ TEST_P(BindUniformLocationTest, Compositor)
             color_c_sum.w = alpha;
             color_c_sum *= multiplier;
             gl_FragColor = v_color + color_c_sum;
-        }
-    );
-    // clang-format on
+        })";
 
     int counter            = 6;
     int matrixLocation     = counter++;
@@ -319,28 +301,22 @@ TEST_P(BindUniformLocationTest, UnusedUniformUpdate)
 
     ASSERT_NE(nullptr, mBindUniformLocation);
 
-    // clang-format off
-    const std::string vsSource = SHADER_SOURCE
-    (
-        attribute vec4 a_position;
+    const std::string vsSource =
+        R"(attribute vec4 a_position;
         void main()
         {
             gl_Position = a_position;
-        }
-    );
+        })";
 
-    const std::string fsSource = SHADER_SOURCE
-    (
-        precision mediump float;
+    const std::string fsSource =
+        R"(precision mediump float;
         uniform vec4 u_colorA;
         uniform float u_colorU;
         uniform vec4 u_colorC;
         void main()
         {
             gl_FragColor = u_colorA + u_colorC;
-        }
-    );
-    // clang-format on
+        })";
 
     const GLint colorULocation      = 1;
     const GLint nonexistingLocation = 5;
@@ -430,24 +406,18 @@ TEST_P(BindUniformLocationTest, UseSamplerWhenUnusedUniforms)
 
     ASSERT_NE(nullptr, mBindUniformLocation);
 
-    // clang-format off
-    const std::string vsSource = SHADER_SOURCE
-    (
-        void main()
+    const std::string vsSource =
+        R"(void main()
         {
             gl_Position = vec4(0);
-        }
-    );
+        })";
 
-    const std::string fsSource = SHADER_SOURCE
-    (
-        uniform sampler2D tex;
+    const std::string fsSource =
+        R"(uniform sampler2D tex;
         void main()
         {
             gl_FragColor = texture2D(tex, vec2(1));
-        }
-    );
-    // clang-format on
+        })";
 
     const GLuint texLocation = 54;
 
@@ -485,26 +455,20 @@ TEST_P(BindUniformLocationTest, SameLocationForUsedAndUnusedUniform)
 
     ASSERT_NE(nullptr, mBindUniformLocation);
 
-    // clang-format off
-    const std::string vsSource = SHADER_SOURCE
-    (
-        void main()
+    const std::string vsSource =
+        R"(void main()
         {
             gl_Position = vec4(0);
-        }
-    );
+        })";
 
-    const std::string fsSource = SHADER_SOURCE
-    (
-        precision mediump float;
+    const std::string fsSource =
+        R"(precision mediump float;
         uniform vec4 a;
         uniform vec4 b;
         void main()
         {
             gl_FragColor = a;
-        }
-    );
-    // clang-format on
+        })";
 
     const GLuint location = 54;
 

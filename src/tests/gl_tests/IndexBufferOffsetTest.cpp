@@ -29,14 +29,22 @@ class IndexBufferOffsetTest : public ANGLETest
         ANGLETest::SetUp();
 
         const std::string vertexShaderSource =
-            SHADER_SOURCE(precision highp float; attribute vec2 position;
+            R"(precision highp float;
+            attribute vec2 position;
 
-                          void main() { gl_Position = vec4(position, 0.0, 1.0); });
+            void main()
+            {
+                gl_Position = vec4(position, 0.0, 1.0);
+            })";
 
         const std::string fragmentShaderSource =
-            SHADER_SOURCE(precision highp float; uniform vec4 color;
+            R"(precision highp float;
+            uniform vec4 color;
 
-                          void main() { gl_FragColor = color; });
+            void main()
+            {
+                gl_FragColor = color;
+            })";
 
         mProgram = CompileProgram(vertexShaderSource, fragmentShaderSource);
         ASSERT_NE(0u, mProgram);

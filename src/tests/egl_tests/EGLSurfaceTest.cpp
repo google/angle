@@ -167,23 +167,19 @@ class EGLSurfaceTest : public testing::Test
 
     GLuint createProgram()
     {
-        const std::string testVertexShaderSource = SHADER_SOURCE
-        (
-            attribute highp vec4 position;
+        const std::string testVertexShaderSource =
+            R"(attribute highp vec4 position;
 
             void main(void)
             {
                 gl_Position = position;
-            }
-        );
+            })";
 
-        const std::string testFragmentShaderSource = SHADER_SOURCE
-        (
-            void main(void)
+        const std::string testFragmentShaderSource =
+            R"(void main(void)
             {
                 gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
-            }
-        );
+            })";
 
         return CompileProgram(testVertexShaderSource, testFragmentShaderSource);
     }
