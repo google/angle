@@ -106,9 +106,9 @@
 2137 MAC INTEL : dEQP-GLES2.functional.texture.specification.basic_copyteximage2d.cube_luminance_alpha = FAIL
 2137 MAC INTEL : dEQP-GLES2.functional.texture.specification.basic_copyteximage2d.cube_rgb = FAIL
 2137 MAC INTEL : dEQP-GLES2.functional.texture.specification.basic_copyteximage2d.cube_rgba = FAIL
-2137 MAC INTEL : dEQP-GLES2.functional.shaders.discard.dynamic_loop_never = FAIL
-2137 MAC INTEL : dEQP-GLES2.functional.shaders.discard..function_static_loop_never = FAIL
-2137 MAC INTEL : dEQP-GLES2.functional.shaders.discard..static_loop_never = FAIL
+2137 MAC INTEL : dEQP-GLES2.functional.shaders.discard.dynamic_loop_never = SKIP
+2137 MAC INTEL : dEQP-GLES2.functional.shaders.discard.function_static_loop_never = SKIP
+2137 MAC INTEL : dEQP-GLES2.functional.shaders.discard.static_loop_never = SKIP
 
 // Mac AMD specific
 2137 MAC AMD : dEQP-GLES2.functional.clipping.point.wide_point_clip = FAIL
