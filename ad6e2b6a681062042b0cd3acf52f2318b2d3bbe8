@@ -34,6 +34,24 @@
       "revId": "ad6e2b6a681062042b0cd3acf52f2318b2d3bbe8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "34709b2e_5a67fc98",
+        "filename": "util/EGLWindow.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-18T11:33:25Z",
+      "side": 0,
+      "message": "If you want to fix this problem, you can make a setup() method in your test that a) checks for the extension and returns false if not presentt, or b) destroys GL, enables the extension, then re-initializes GL again, and returns true. Then in your tests you can do ANGLE_SKIP_TEST_IF(!setup()).",
+      "parentUuid": "19941be4_b3219434",
+      "revId": "ad6e2b6a681062042b0cd3acf52f2318b2d3bbe8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
