@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd873d5a_cb1966a7",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1400,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-18T11:29:46Z",
+      "side": 1,
+      "message": "hm, interesting link. do you know if feature level 9.3 should expose this extension?",
+      "range": {
+        "startLine": 1400,
+        "startChar": 16,
+        "endLine": 1400,
+        "endChar": 43
+      },
+      "revId": "e01a11964533124485793a05698ca98cc193873b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
