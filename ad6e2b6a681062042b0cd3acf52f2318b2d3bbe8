@@ -16,6 +16,24 @@
       "revId": "ad6e2b6a681062042b0cd3acf52f2318b2d3bbe8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19941be4_b3219434",
+        "filename": "util/EGLWindow.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-18T08:07:04Z",
+      "side": 0,
+      "message": "I removed it because I met error on Mac. The situation is hasRobustness is false, but we call setRobustAccess(true) in RobustBufferAccessBehaviorTest. In this case, it will go to \"destroyGL(); return false;\" which is not we expected. So I removed it.\n\nI think we can still explicitly enable it with a call to setRobustAccess in the new change since we use below sentence:\n    contextAttributes.push_back(EGL_CONTEXT_OPENGL_ROBUST_ACCESS_EXT);\n    contextAttributes.push_back(mRobustAccess ? EGL_TRUE : EGL_FALSE);\n\nIf mRobustAccess is true, it will enable robust access. Otherwise, it will disable robust access.",
+      "parentUuid": "e30ae228_f26f372a",
+      "revId": "ad6e2b6a681062042b0cd3acf52f2318b2d3bbe8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }

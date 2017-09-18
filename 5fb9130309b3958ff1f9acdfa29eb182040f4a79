@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "b26ed085_e086fd73",
+        "filename": "src/tests/gl_tests/RobustBufferAccessBehaviorTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-18T08:07:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d898b232_92f1a1a9",
+      "revId": "5fb9130309b3958ff1f9acdfa29eb182040f4a79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "39c10953_849eba54",
         "filename": "src/tests/gl_tests/RobustBufferAccessBehaviorTest.cpp",
         "patchSetId": 6
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "12100fc9_ad6fce8f",
+        "filename": "src/tests/gl_tests/RobustBufferAccessBehaviorTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-18T08:07:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "39c10953_849eba54",
+      "range": {
+        "startLine": 97,
+        "startChar": 0,
+        "endLine": 97,
+        "endChar": 62
+      },
+      "revId": "5fb9130309b3958ff1f9acdfa29eb182040f4a79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c02cd901_bdfc1408",
         "filename": "src/tests/gl_tests/RobustBufferAccessBehaviorTest.cpp",
         "patchSetId": 6
@@ -53,6 +95,24 @@
       "writtenOn": "2017-09-13T14:57:47Z",
       "side": 1,
       "message": "I\u0027m not sure that pixel (0, 0) is the correct one to test, it looks like it should be part of the first triangle.",
+      "revId": "5fb9130309b3958ff1f9acdfa29eb182040f4a79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3af37bf1_7b91717c",
+        "filename": "src/tests/gl_tests/RobustBufferAccessBehaviorTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-18T08:07:04Z",
+      "side": 1,
+      "message": "Thanks for pointing it out. This let me find that D3D9\u0027s robustBufferAccessBehavior should be false not true. Change it to test below four points (width * 1/4, height * 1/4), (width * 1/4, height * 3/4), (width * 3/4, height * 1/4), (width * 3/4, height * 3/4).",
+      "parentUuid": "c02cd901_bdfc1408",
       "revId": "5fb9130309b3958ff1f9acdfa29eb182040f4a79",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -94,6 +154,24 @@
     },
     {
       "key": {
+        "uuid": "4a99997a_2ae05698",
+        "filename": "src/tests/gl_tests/RobustBufferAccessBehaviorTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-18T08:07:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2ead0ba8_35e5c587",
+      "revId": "5fb9130309b3958ff1f9acdfa29eb182040f4a79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e6458bf2_a455d09a",
         "filename": "src/tests/gl_tests/RobustBufferAccessBehaviorTest.cpp",
         "patchSetId": 6
@@ -114,6 +192,30 @@
       "revId": "5fb9130309b3958ff1f9acdfa29eb182040f4a79",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "54a3217c_c72cb3fb",
+        "filename": "src/tests/gl_tests/RobustBufferAccessBehaviorTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-18T08:07:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e6458bf2_a455d09a",
+      "range": {
+        "startLine": 113,
+        "startChar": 0,
+        "endLine": 115,
+        "endChar": 40
+      },
+      "revId": "5fb9130309b3958ff1f9acdfa29eb182040f4a79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -140,6 +242,30 @@
     },
     {
       "key": {
+        "uuid": "29f392fd_8f04e48f",
+        "filename": "src/tests/gl_tests/RobustBufferAccessBehaviorTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-18T08:07:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d883c53b_fd69a2b4",
+      "range": {
+        "startLine": 123,
+        "startChar": 39,
+        "endLine": 123,
+        "endChar": 66
+      },
+      "revId": "5fb9130309b3958ff1f9acdfa29eb182040f4a79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1ca9482f_2b094d5a",
         "filename": "src/tests/gl_tests/RobustBufferAccessBehaviorTest.cpp",
         "patchSetId": 6
@@ -160,6 +286,30 @@
       "revId": "5fb9130309b3958ff1f9acdfa29eb182040f4a79",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5d2e273c_751560de",
+        "filename": "src/tests/gl_tests/RobustBufferAccessBehaviorTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-18T08:07:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1ca9482f_2b094d5a",
+      "range": {
+        "startLine": 126,
+        "startChar": 5,
+        "endLine": 126,
+        "endChar": 0
+      },
+      "revId": "5fb9130309b3958ff1f9acdfa29eb182040f4a79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
