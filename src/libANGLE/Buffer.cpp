@@ -19,7 +19,7 @@ namespace gl
 
 BufferState::BufferState()
     : mLabel(),
-      mUsage(GL_STATIC_DRAW),
+      mUsage(BufferUsage::StaticDraw),
       mSize(0),
       mAccessFlags(0),
       mAccess(GL_WRITE_ONLY_OES),
@@ -66,7 +66,7 @@ Error Buffer::bufferData(const Context *context,
                          GLenum target,
                          const void *data,
                          GLsizeiptr size,
-                         GLenum usage)
+                         BufferUsage usage)
 {
     const void *dataForImpl = data;
 

@@ -3595,7 +3595,7 @@ void Context::colorMask(GLboolean red, GLboolean green, GLboolean blue, GLboolea
     mGLState.setColorMask(red == GL_TRUE, green == GL_TRUE, blue == GL_TRUE, alpha == GL_TRUE);
 }
 
-void Context::cullFace(GLenum mode)
+void Context::cullFace(CullFaceMode mode)
 {
     mGLState.setCullMode(mode);
 }
@@ -4001,7 +4001,7 @@ void Context::popDebugGroup()
     mGLState.getDebug().popGroup();
 }
 
-void Context::bufferData(GLenum target, GLsizeiptr size, const void *data, GLenum usage)
+void Context::bufferData(GLenum target, GLsizeiptr size, const void *data, BufferUsage usage)
 {
     Buffer *buffer = mGLState.getTargetBuffer(target);
     ASSERT(buffer);

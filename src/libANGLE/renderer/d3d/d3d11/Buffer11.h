@@ -84,7 +84,7 @@ class Buffer11 : public BufferD3D
                       GLenum target,
                       const void *data,
                       size_t size,
-                      GLenum usage) override;
+                      gl::BufferUsage usage) override;
     gl::Error setSubData(const gl::Context *context,
                          GLenum target,
                          const void *data,

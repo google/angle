@@ -321,7 +321,7 @@ gl::Error Buffer11::setData(const gl::Context *context,
                             GLenum target,
                             const void *data,
                             size_t size,
-                            GLenum usage)
+                            gl::BufferUsage usage)
 {
     updateD3DBufferUsage(context, usage);
     ANGLE_TRY(setSubData(context, target, data, size, 0));

@@ -82,7 +82,7 @@ class MockBufferD3D : public rx::BufferD3D
                       GLenum target,
                       const void *data,
                       size_t size,
-                      GLenum) override
+                      gl::BufferUsage) override
     {
         mData.resize(size);
         if (data && size > 0)
@@ -168,7 +168,7 @@ IndexDataManagerPerfTest::IndexDataManagerPerfTest()
     }
     EXPECT_FALSE(mIndexBuffer
                      .bufferData(nullptr, GL_ARRAY_BUFFER, &indexData[0],
-                                 indexData.size() * sizeof(GLushort), GL_STATIC_DRAW)
+                                 indexData.size() * sizeof(GLushort), gl::BufferUsage::StaticDraw)
                      .isError());
 }
 

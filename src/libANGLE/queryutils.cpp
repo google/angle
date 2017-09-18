@@ -410,7 +410,7 @@ void QueryBufferParameterBase(const Buffer *buffer, GLenum pname, ParamType *par
     switch (pname)
     {
         case GL_BUFFER_USAGE:
-            *params = CastFromGLintStateValue<ParamType>(pname, buffer->getUsage());
+            *params = CastFromGLintStateValue<ParamType>(pname, ToGLenum(buffer->getUsage()));
             break;
         case GL_BUFFER_SIZE:
             *params = CastFromStateValue<ParamType>(pname, buffer->getSize());

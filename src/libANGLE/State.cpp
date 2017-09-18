@@ -358,7 +358,7 @@ void State::setCullFace(bool enabled)
     mDirtyBits.set(DIRTY_BIT_CULL_FACE_ENABLED);
 }
 
-void State::setCullMode(GLenum mode)
+void State::setCullMode(CullFaceMode mode)
 {
     mRasterizer.cullMode = mode;
     mDirtyBits.set(DIRTY_BIT_CULL_FACE);
@@ -1694,7 +1694,9 @@ void State::getBooleanv(GLenum pname, GLboolean *params)
         params[2] = mBlend.colorMaskBlue;
         params[3] = mBlend.colorMaskAlpha;
         break;
-      case GL_CULL_FACE:                 *params = mRasterizer.cullFace;          break;
+      case GL_CULL_FACE:
+          *params = mRasterizer.cullFace;
+          break;
       case GL_POLYGON_OFFSET_FILL:       *params = mRasterizer.polygonOffsetFill; break;
       case GL_SAMPLE_ALPHA_TO_COVERAGE:  *params = mBlend.sampleAlphaToCoverage;  break;
       case GL_SAMPLE_COVERAGE:           *params = mSampleCoverage;               break;
@@ -1927,8 +1929,12 @@ void State::getIntegerv(const Context *context, GLenum pname, GLint *params)
         params[2] = mScissor.width;
         params[3] = mScissor.height;
         break;
-      case GL_CULL_FACE_MODE:                   *params = mRasterizer.cullMode;   break;
-      case GL_FRONT_FACE:                       *params = mRasterizer.frontFace;  break;
+      case GL_CULL_FACE_MODE:
+          *params = ToGLenum(mRasterizer.cullMode);
+          break;
+      case GL_FRONT_FACE:
+          *params = mRasterizer.frontFace;
+          break;
       case GL_RED_BITS:
       case GL_GREEN_BITS:
       case GL_BLUE_BITS:

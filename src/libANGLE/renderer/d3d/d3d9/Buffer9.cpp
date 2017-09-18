@@ -26,7 +26,7 @@ gl::Error Buffer9::setData(const gl::Context *context,
                            GLenum /*target*/,
                            const void *data,
                            size_t size,
-                           GLenum usage)
+                           gl::BufferUsage usage)
 {
     if (size > mMemory.size())
     {

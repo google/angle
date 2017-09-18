@@ -15,6 +15,7 @@
 #include "libANGLE/Debug.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/IndexRangeCache.h"
+#include "libANGLE/PackedGLEnums.h"
 #include "libANGLE/RefCountObject.h"
 
 namespace rx
@@ -36,7 +37,7 @@ class BufferState final : angle::NonCopyable
 
     const std::string &getLabel();
 
-    GLenum getUsage() const { return mUsage; }
+    BufferUsage getUsage() const { return mUsage; }
     GLbitfield getAccessFlags() const { return mAccessFlags; }
     GLenum getAccess() const { return mAccess; }
     GLboolean isMapped() const { return mMapped; }
@@ -50,7 +51,7 @@ class BufferState final : angle::NonCopyable
 
     std::string mLabel;
 
-    GLenum mUsage;
+    BufferUsage mUsage;
     GLint64 mSize;
     GLbitfield mAccessFlags;
     GLenum mAccess;
@@ -74,7 +75,7 @@ class Buffer final : public RefCountObject, public LabeledObject
                      GLenum target,
                      const void *data,
                      GLsizeiptr size,
-                     GLenum usage);
+                     BufferUsage usage);
     Error bufferSubData(const Context *context,
                         GLenum target,
                         const void *data,
@@ -99,7 +100,7 @@ class Buffer final : public RefCountObject, public LabeledObject
                         bool primitiveRestartEnabled,
                         IndexRange *outRange) const;
 
-    GLenum getUsage() const { return mState.mUsage; }
+    BufferUsage getUsage() const { return mState.mUsage; }
     GLbitfield getAccessFlags() const { return mState.mAccessFlags; }
     GLenum getAccess() const { return mState.mAccess; }
     GLboolean isMapped() const { return mState.mMapped; }

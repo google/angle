@@ -47,23 +47,23 @@ void BufferD3D::updateSerial()
     mSerial = mNextSerial++;
 }
 
-void BufferD3D::updateD3DBufferUsage(const gl::Context *context, GLenum usage)
+void BufferD3D::updateD3DBufferUsage(const gl::Context *context, gl::BufferUsage usage)
 {
     switch (usage)
     {
-        case GL_STATIC_DRAW:
-        case GL_STATIC_READ:
-        case GL_STATIC_COPY:
+        case gl::BufferUsage::StaticCopy:
+        case gl::BufferUsage::StaticDraw:
+        case gl::BufferUsage::StaticRead:
             mUsage = D3DBufferUsage::STATIC;
             initializeStaticData(context);
             break;
 
-        case GL_STREAM_DRAW:
-        case GL_STREAM_READ:
-        case GL_STREAM_COPY:
-        case GL_DYNAMIC_READ:
-        case GL_DYNAMIC_COPY:
-        case GL_DYNAMIC_DRAW:
+        case gl::BufferUsage::DynamicCopy:
+        case gl::BufferUsage::DynamicDraw:
+        case gl::BufferUsage::DynamicRead:
+        case gl::BufferUsage::StreamCopy:
+        case gl::BufferUsage::StreamDraw:
+        case gl::BufferUsage::StreamRead:
             mUsage = D3DBufferUsage::DYNAMIC;
             break;
         default:
@@ -168,7 +168,7 @@ void BufferD3D::promoteStaticUsage(const gl::Context *context, int dataSize)
 
         if (mUnmodifiedDataUse > 3 * getSize())
         {
-            updateD3DBufferUsage(context, GL_STATIC_DRAW);
+            updateD3DBufferUsage(context, gl::BufferUsage::StaticDraw);
         }
     }
 }

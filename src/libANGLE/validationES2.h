@@ -9,6 +9,8 @@
 #ifndef LIBANGLE_VALIDATION_ES2_H_
 #define LIBANGLE_VALIDATION_ES2_H_
 
+#include "libANGLE/PackedGLEnums.h"
+
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 
@@ -348,7 +350,7 @@ bool ValidateBufferData(ValidationContext *context,
                         GLenum target,
                         GLsizeiptr size,
                         const void *data,
-                        GLenum usage);
+                        BufferUsage usage);
 bool ValidateBufferSubData(ValidationContext *context,
                            GLenum target,
                            GLintptr offset,
@@ -418,7 +420,7 @@ bool ValidateColorMask(ValidationContext *context,
                        GLboolean alpha);
 bool ValidateCompileShader(ValidationContext *context, GLuint shader);
 bool ValidateCreateProgram(ValidationContext *context);
-bool ValidateCullFace(ValidationContext *context, GLenum mode);
+bool ValidateCullFace(ValidationContext *context, CullFaceMode mode);
 bool ValidateDeleteProgram(ValidationContext *context, GLuint program);
 bool ValidateDeleteShader(ValidationContext *context, GLuint shader);
 bool ValidateDepthFunc(ValidationContext *context, GLenum func);

@@ -73,7 +73,7 @@ bool RendererD3D::skipDraw(const gl::State &glState, GLenum drawMode)
     else if (gl::IsTriangleMode(drawMode))
     {
         if (glState.getRasterizerState().cullFace &&
-            glState.getRasterizerState().cullMode == GL_FRONT_AND_BACK)
+            glState.getRasterizerState().cullMode == gl::CullFaceMode::FrontAndBack)
         {
             return true;
         }

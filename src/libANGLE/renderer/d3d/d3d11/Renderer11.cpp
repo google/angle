@@ -446,7 +446,7 @@ void PopulateFormatDeviceCaps(ID3D11Device *device,
 bool CullsEverything(const gl::State &glState)
 {
     return (glState.getRasterizerState().cullFace &&
-            glState.getRasterizerState().cullMode == GL_FRONT_AND_BACK);
+            glState.getRasterizerState().cullMode == gl::CullFaceMode::FrontAndBack);
 }
 
 }  // anonymous namespace

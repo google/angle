@@ -86,7 +86,7 @@ class StateManager9 final : angle::NonCopyable
     void setSampleMask(unsigned int sampleMask);
 
     // Current raster state functions
-    void setCullMode(bool cullFace, GLenum cullMode, GLenum frontFace);
+    void setCullMode(bool cullFace, gl::CullFaceMode cullMode, GLenum frontFace);
     void setDepthBias(bool polygonOffsetFill,
                       GLfloat polygonOffsetFactor,
                       GLfloat polygonOffsetUnits);

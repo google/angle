@@ -45,7 +45,7 @@ RasterizerState::RasterizerState()
 
     rasterizerDiscard   = false;
     cullFace            = false;
-    cullMode            = GL_BACK;
+    cullMode            = CullFaceMode::Back;
     frontFace           = GL_CCW;
     polygonOffsetFill   = false;
     polygonOffsetFactor = 0.0f;

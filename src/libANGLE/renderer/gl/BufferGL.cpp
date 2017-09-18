@@ -59,10 +59,10 @@ gl::Error BufferGL::setData(const gl::Context * /*context*/,
                             GLenum /*target*/,
                             const void *data,
                             size_t size,
-                            GLenum usage)
+                            gl::BufferUsage usage)
 {
     mStateManager->bindBuffer(DestBufferOperationTarget, mBufferID);
-    mFunctions->bufferData(DestBufferOperationTarget, size, data, usage);
+    mFunctions->bufferData(DestBufferOperationTarget, size, data, ToGLenum(usage));
 
     if (mShadowBufferData)
     {

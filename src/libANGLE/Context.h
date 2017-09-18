@@ -21,6 +21,7 @@
 #include "libANGLE/ContextState.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/HandleAllocator.h"
+#include "libANGLE/PackedGLEnums.h"
 #include "libANGLE/RefCountObject.h"
 #include "libANGLE/ResourceMap.h"
 #include "libANGLE/VertexAttribute.h"
@@ -275,7 +276,7 @@ class Context final : public ValidationContext
     void clearDepthf(GLfloat depth);
     void clearStencil(GLint s);
     void colorMask(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha);
-    void cullFace(GLenum mode);
+    void cullFace(CullFaceMode mode);
     void depthFunc(GLenum func);
     void depthMask(GLboolean flag);
     void depthRangef(GLfloat zNear, GLfloat zFar);
@@ -667,7 +668,7 @@ class Context final : public ValidationContext
                                      GLint components,
                                      const GLfloat *coeffs);
 
-    void bufferData(GLenum target, GLsizeiptr size, const void *data, GLenum usage);
+    void bufferData(GLenum target, GLsizeiptr size, const void *data, BufferUsage usage);
     void bufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const void *data);
     void attachShader(GLuint program, GLuint shader);
     void bindAttribLocation(GLuint program, GLuint index, const GLchar *name);

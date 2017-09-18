@@ -12,6 +12,7 @@
 #include "common/bitset_utils.h"
 #include "libANGLE/Constants.h"
 #include "libANGLE/Error.h"
+#include "libANGLE/PackedGLEnums.h"
 #include "libANGLE/RefCountObject.h"
 
 #include <stdint.h>
@@ -123,7 +124,7 @@ struct RasterizerState final
     RasterizerState();
 
     bool cullFace;
-    GLenum cullMode;
+    CullFaceMode cullMode;
     GLenum frontFace;
 
     bool polygonOffsetFill;

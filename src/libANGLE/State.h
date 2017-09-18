@@ -77,7 +77,7 @@ class State : public OnAttachmentDirtyReceiver, angle::NonCopyable
     // Face culling state manipulation
     bool isCullFaceEnabled() const;
     void setCullFace(bool enabled);
-    void setCullMode(GLenum mode);
+    void setCullMode(CullFaceMode mode);
     void setFrontFace(GLenum front);
 
     // Depth test state manipulation

@@ -1,0 +1,8 @@
+{
+    "glBufferData": {
+        "usage": "BufferUsage"
+    },
+    "glCullFace": {
+        "mode": "CullFaceMode"
+    }
+}

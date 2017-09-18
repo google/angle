@@ -7,7 +7,7 @@
 # generate_entry_points.py:
 #   Generates the OpenGL bindings and entry point layers for ANGLE.
 
-import sys, os, pprint
+import sys, os, pprint, json
 import xml.etree.ElementTree as etree
 from datetime import date
 
@@ -85,12 +85,12 @@ template_entry_point_def = """{return_type}GL_APIENTRY {name}({params})
 
     Context *context = {context_getter}();
     if (context)
-    {{
-        context->gatherParams<EntryPoint::{name}>({pass_params});
+    {{{packed_gl_enum_conversions}
+        context->gatherParams<EntryPoint::{name}>({internal_params});
 
         if (context->skipValidation() || Validate{name}({validate_params}))
         {{
-            {return_if_needed}context->{name_lower}({pass_params});
+            {return_if_needed}context->{name_lower}({internal_params});
         }}
     }}
 {default_return_if_needed}}}
@@ -132,6 +132,9 @@ entry_point_decls_gles_3_0 = []
 entry_point_defs_gles_3_0 = []
 cmd_names = []
 
+with open(script_relative('entry_point_packed_gl_enums.json')) as f:
+    cmd_packed_gl_enums = json.loads(f.read())
+
 def format_entry_point_decl(cmd_name, proto, params):
     return template_entry_point_decl.format(
         name = cmd_name[2:],
@@ -148,6 +151,13 @@ def just_the_type(param):
 
 def just_the_name(param):
     return param[type_name_sep_index(param)+1:]
+
+def just_the_name_packed(param, reserved_set):
+    name = just_the_name(param)
+    if name in reserved_set:
+        return name + 'Packed'
+    else:
+        return name
 
 format_dict = {
     "GLbitfield": "0x%X",
@@ -185,6 +195,17 @@ def get_context_getter_function(cmd_name):
         return "GetValidGlobalContext"
 
 def format_entry_point_def(cmd_name, proto, params):
+    packed_gl_enums = cmd_packed_gl_enums.get(cmd_name, {})
+    internal_params = [just_the_name_packed(param, packed_gl_enums) for param in params]
+    packed_gl_enum_conversions = []
+    for param in params:
+        name = just_the_name(param)
+        if name in packed_gl_enums:
+            internal_name = name + "Packed"
+            internal_type = packed_gl_enums[name]
+            packed_gl_enum_conversions += ["\n        " + internal_type + " " + internal_name +" = FromGLenum<" +
+                                          internal_type + ">(" + name + ");"]
+
     pass_params = [just_the_name(param) for param in params]
     format_params = [param_format_string(param) for param in params]
     return_type = proto[:-len(cmd_name)]
@@ -194,9 +215,11 @@ def format_entry_point_def(cmd_name, proto, params):
         name_lower = cmd_name[2:3].lower() + cmd_name[3:],
         return_type = return_type,
         params = ", ".join(params),
+        internal_params = ", ".join(internal_params),
+        packed_gl_enum_conversions = "".join(packed_gl_enum_conversions),
         pass_params = ", ".join(pass_params),
         comma_if_needed = ", " if len(params) > 0 else "",
-        validate_params = ", ".join(["context"] + pass_params),
+        validate_params = ", ".join(["context"] + internal_params),
         format_params = ", ".join(format_params),
         return_if_needed = "" if default_return == "" else "return ",
         default_return_if_needed = "" if default_return == "" else "\n    return " + default_return + ";\n",

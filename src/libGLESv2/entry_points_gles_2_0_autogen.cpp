@@ -226,11 +226,13 @@ void GL_APIENTRY BufferData(GLenum target, GLsizeiptr size, const void *data, GL
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::BufferData>(target, size, data, usage);
+        BufferUsage usagePacked = FromGLenum<BufferUsage>(usage);
+        context->gatherParams<EntryPoint::BufferData>(target, size, data, usagePacked);
 
-        if (context->skipValidation() || ValidateBufferData(context, target, size, data, usage))
+        if (context->skipValidation() ||
+            ValidateBufferData(context, target, size, data, usagePacked))
         {
-            context->bufferData(target, size, data, usage);
+            context->bufferData(target, size, data, usagePacked);
         }
     }
 }
@@ -533,11 +535,12 @@ void GL_APIENTRY CullFace(GLenum mode)
     Context *context = GetValidGlobalContext();
     if (context)
     {
-        context->gatherParams<EntryPoint::CullFace>(mode);
+        CullFaceMode modePacked = FromGLenum<CullFaceMode>(mode);
+        context->gatherParams<EntryPoint::CullFace>(modePacked);
 
-        if (context->skipValidation() || ValidateCullFace(context, mode))
+        if (context->skipValidation() || ValidateCullFace(context, modePacked))
         {
-            context->cullFace(mode);
+            context->cullFace(modePacked);
         }
     }
 }

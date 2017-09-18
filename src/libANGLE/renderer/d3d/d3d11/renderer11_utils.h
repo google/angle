@@ -43,7 +43,7 @@ D3D11_BLEND ConvertBlendFunc(GLenum glBlend, bool isAlpha);
 D3D11_BLEND_OP ConvertBlendOp(GLenum glBlendOp);
 UINT8 ConvertColorMask(bool maskRed, bool maskGreen, bool maskBlue, bool maskAlpha);
 
-D3D11_CULL_MODE ConvertCullMode(bool cullEnabled, GLenum cullMode);
+D3D11_CULL_MODE ConvertCullMode(bool cullEnabled, gl::CullFaceMode cullMode);
 
 D3D11_COMPARISON_FUNC ConvertComparison(GLenum comparison);
 D3D11_DEPTH_WRITE_MASK ConvertDepthMask(bool depthWriteEnabled);
