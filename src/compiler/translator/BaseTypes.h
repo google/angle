@@ -721,7 +721,8 @@ enum TLayoutBlockStorage
     EbsUnspecified,
     EbsShared,
     EbsPacked,
-    EbsStd140
+    EbsStd140,
+    EbsStd430
 };
 
 enum TYuvCscStandardEXT
@@ -970,6 +971,8 @@ inline const char *getBlockStorageString(TLayoutBlockStorage bsq)
             return "packed";
         case EbsStd140:
             return "std140";
+        case EbsStd430:
+            return "std430";
         default:
             UNREACHABLE();
             return "unknown block storage";

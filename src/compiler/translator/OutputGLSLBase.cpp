@@ -1186,6 +1186,10 @@ void TOutputGLSLBase::declareInterfaceBlockLayout(const TInterfaceBlock *interfa
             out << "std140";
             break;
 
+        case EbsStd430:
+            out << "std430";
+            break;
+
         default:
             UNREACHABLE();
             break;

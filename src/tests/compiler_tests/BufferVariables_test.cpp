@@ -483,3 +483,39 @@ TEST_F(BufferVariablesTest, BufferQualifierOnFunctionParameter)
         FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
     }
 }
+
+// Test that std430 qualifier is supported for shader storage blocks.
+TEST_F(BufferVariablesTest, ShaderStorageBlockWithStd430)
+{
+    const std::string &source =
+        "#version 310 es\n"
+        "layout(std430) buffer buf {\n"
+        "    int b1;\n"
+        "    int b2;\n"
+        "};\n"
+        "void main()\n"
+        "{\n"
+        "}\n";
+    if (!compile(source))
+    {
+        FAIL() << "Shader compilation failed, expecting success:\n" << mInfoLog;
+    }
+}
+
+// Test that using std430 qualifier on a uniform block will fail to compile.
+TEST_F(BufferVariablesTest, UniformBlockWithStd430)
+{
+    const std::string &source =
+        "#version 310 es\n"
+        "layout(std430) uniform buf {\n"
+        "    int b1;\n"
+        "    int b2;\n"
+        "};\n"
+        "void main()\n"
+        "{\n"
+        "}\n";
+    if (compile(source))
+    {
+        FAIL() << "Shader compilation succeeded, expecting failure:\n" << mInfoLog;
+    }
+}

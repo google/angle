@@ -2276,7 +2276,7 @@ size_t ProgramD3D::getUniformBlockInfo(const sh::InterfaceBlock &interfaceBlock)
     sh::HLSLBlockEncoder hlslEncoder(sh::HLSLBlockEncoder::ENCODE_PACKED, false);
     sh::BlockLayoutEncoder *encoder = nullptr;
 
-    if (interfaceBlock.layout == sh::BLOCKLAYOUT_STANDARD)
+    if (interfaceBlock.layout == sh::BLOCKLAYOUT_STD140)
     {
         encoder = &std140Encoder;
     }
