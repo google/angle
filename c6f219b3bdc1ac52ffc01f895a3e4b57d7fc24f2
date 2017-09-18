@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "a801b35c_5951f7f9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-09-18T21:23:10Z",
+      "side": 1,
+      "message": "preformance -\u003e performance",
+      "range": {
+        "startLine": 9,
+        "startChar": 9,
+        "endLine": 9,
+        "endChar": 20
+      },
+      "revId": "c6f219b3bdc1ac52ffc01f895a3e4b57d7fc24f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "699b6c7f_bfcf222b",
         "filename": "src/libANGLE/Constants.h",
         "patchSetId": 5
@@ -36,6 +59,30 @@
       "writtenOn": "2017-09-18T16:08:50Z",
       "side": 1,
       "message": "Shouldn\u0027t you update mCompleteTexturesMask somewhere?",
+      "range": {
+        "startLine": 2248,
+        "startChar": 37,
+        "endLine": 2248,
+        "endChar": 59
+      },
+      "revId": "c6f219b3bdc1ac52ffc01f895a3e4b57d7fc24f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "83a20271_9dcb9a6d",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2248,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-09-18T21:23:10Z",
+      "side": 1,
+      "message": "yeah, it\u0027s never set",
+      "parentUuid": "2cfdd9e2_5d627c3d",
       "range": {
         "startLine": 2248,
         "startChar": 37,
