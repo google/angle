@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "699b6c7f_bfcf222b",
+        "filename": "src/libANGLE/Constants.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-09-18T16:08:50Z",
+      "side": 1,
+      "message": "IMPLEMENTATION_MAX_2D_TEXTURE_SIZE?",
+      "range": {
+        "startLine": 50,
+        "startChar": 58,
+        "endLine": 50,
+        "endChar": 74
+      },
+      "revId": "c6f219b3bdc1ac52ffc01f895a3e4b57d7fc24f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2cfdd9e2_5d627c3d",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2248,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2017-09-18T16:08:50Z",
+      "side": 1,
+      "message": "Shouldn\u0027t you update mCompleteTexturesMask somewhere?",
+      "range": {
+        "startLine": 2248,
+        "startChar": 37,
+        "endLine": 2248,
+        "endChar": 59
+      },
+      "revId": "c6f219b3bdc1ac52ffc01f895a3e4b57d7fc24f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
