@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bb3451e3_c0ca12d1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-09-18T21:45:28Z",
+      "side": 1,
+      "message": "tooks -\u003e tools?",
+      "range": {
+        "startLine": 12,
+        "startChar": 47,
+        "endLine": 12,
+        "endChar": 52
+      },
+      "revId": "279a2b13f1513b375c7de91e429d569b0dce156c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7205fc6b_12292a86",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 323,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-09-18T21:45:28Z",
+      "side": 1,
+      "message": "I guess this should be a separate CL",
+      "range": {
+        "startLine": 323,
+        "startChar": 4,
+        "endLine": 323,
+        "endChar": 18
+      },
+      "revId": "279a2b13f1513b375c7de91e429d569b0dce156c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
