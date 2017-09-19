@@ -266,10 +266,12 @@ inline void DefaultCacheProgram(PlatformMethods *platform,
 
 struct PlatformMethods
 {
-    ANGLE_PLATFORM_OP(ANGLE_PLATFORM_METHOD_DEF);
-
-    // User data pointer for any implementation specific members.
+    // User data pointer for any implementation specific members. Put it at the start of the
+    // platform structure so it doesn't become overwritten if one version of the platform
+    // adds or removes new members.
     void *context = 0;
+
+    ANGLE_PLATFORM_OP(ANGLE_PLATFORM_METHOD_DEF);
 };
 
 #undef ANGLE_PLATFORM_METHOD_DEF
