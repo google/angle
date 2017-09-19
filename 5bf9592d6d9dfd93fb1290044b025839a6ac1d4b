@@ -352,6 +352,30 @@
       "revId": "5bf9592d6d9dfd93fb1290044b025839a6ac1d4b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0677bc6f_fb56a793",
+        "filename": "src/libANGLE/internal_enums.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-19T19:41:38Z",
+      "side": 1,
+      "message": "\"TextureTarget\":\n  [\n       \"GL_TEXTURE_2D\", ...\n  ]\n\nHow do you know to remove GL_TEXTURE and not just GL_? For texture you might do the largest common prefix, but what if we add an enum that break the prefix etc?\n\nOverall I think having the JSON be slightly verbose is ok, it is a one-time cost for each enum.",
+      "parentUuid": "c624b2d1_0e21ff3f",
+      "range": {
+        "startLine": 4,
+        "startChar": 8,
+        "endLine": 12,
+        "endChar": 38
+      },
+      "revId": "5bf9592d6d9dfd93fb1290044b025839a6ac1d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
