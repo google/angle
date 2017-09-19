@@ -22,6 +22,30 @@
       "revId": "764b2db4a888d2032faa1a67cf8531f8ca1464a0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ff221989_ba573f52",
+        "filename": "src/tests/gl_tests/RobustBufferAccessBehaviorTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-19T14:59:03Z",
+      "side": 1,
+      "message": "Hi Jamie, I think this function is similar with what you said. Maybe I should use\n\u0027if (!eglDisplayExtensionEnabled(display, \"EGL_EXT_create_context_robustness\")) return;\u0027 instead of ANGLE_SKIP_TEST_IF in line 36. So in the test, we only call once ANGLE_SKIP_TEST.\n\nIf I make a new method that returns bool, it\u0027s almost same with the current SetUp body except missing the first sentence \u0027ANGLETest::SetUp()\u0027 in my head. It\u0027s something like below:\n\tbool initExtension()\n\t{\n\t\tEGLWindow *window \u003d getEGLWindow();\n\t\tEGLDisplay display \u003d window-\u003egetDisplay();\n\t\tif (!eglDisplayExtensionEnabled(display, \"EGL_EXT_create_context_robustness\"))\n\t\t{\n\t\t\treturn false;\n\t\t}\n\n\t\tANGLETest::TearDown();\n\t\tsetRobustAccess(true);\n\t\tANGLETest::SetUp();\n\t\tif (!extensionEnabled(\"GL_KHR_robust_buffer_access_behavior\"))\n\t\t{\n\t\t\treturn false;\n\t\t}\n\t\treturn true;\n\t}\n\nThen, at the beginning of every test, we call ANGLE_SKIP_TEST(!initExtension()). But if we put this in SetUp, the body will be only executed only once. Do I understand correctly?",
+      "parentUuid": "59dd5d53_14c34e10",
+      "range": {
+        "startLine": 31,
+        "startChar": 9,
+        "endLine": 31,
+        "endChar": 14
+      },
+      "revId": "764b2db4a888d2032faa1a67cf8531f8ca1464a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
