@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "957eb815_37f8abe9",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2845,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-19T15:29:10Z",
+      "side": 1,
+      "message": "nit: add an assert in this else statement that blockType is BLOCK_BUFFER.  With geometry shaders adding a new BLOCK_IN type we don\u0027t want to miss cases. (a bunch below too)",
+      "revId": "d2c4a8730eeb0ce941ff4c715ce15759d0329ae5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f5943c0b_2ef74121",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 2964,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-19T15:29:10Z",
+      "side": 1,
+      "message": "ASSERT here",
+      "revId": "d2c4a8730eeb0ce941ff4c715ce15759d0329ae5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e9fe688f_a60081d1",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 3022,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-19T15:29:10Z",
+      "side": 1,
+      "message": "ASSERT here",
+      "revId": "d2c4a8730eeb0ce941ff4c715ce15759d0329ae5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e7fe9d1_dbb6260e",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 3071,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-19T15:29:10Z",
+      "side": 1,
+      "message": "ASSERT here",
+      "revId": "d2c4a8730eeb0ce941ff4c715ce15759d0329ae5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
