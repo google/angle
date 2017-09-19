@@ -74,6 +74,7 @@ VkAccessFlags GetBasicLayoutAccessFlags(VkImageLayout layout)
 // Mirrors std_validation_str in loader.h
 // TODO(jmadill): Possibly wrap the loader into a safe source file. Can't be included trivially.
 const char *g_VkStdValidationLayerName = "VK_LAYER_LUNARG_standard_validation";
+const char *g_VkLoaderLayersPathEnv    = "VK_LAYER_PATH";
 
 const char *VulkanResultString(VkResult result)
 {

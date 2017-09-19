@@ -916,9 +916,7 @@
                         {
                             'AdditionalOptions':
                             [
-                                # TODO(jmadill): Force include header on other platforms.
                                 '<@(vulkan_loader_cflags_win)',
-                                '/FIangle_loader.h'
                             ],
                         },
                         'VCLinkerTool':
@@ -945,6 +943,10 @@
                                 ],
                             },
                         },
+                        'defines':
+                        [
+                            'ANGLE_VK_LAYERS_DIR="<(vulkan_json)"',
+                        ],
                         'conditions':
                         [
                             ['OS=="win"',
@@ -971,7 +973,6 @@
                         {
                             'sources':
                             [
-                                '<(angle_gen_path)/vulkan/angle_loader.h',
                                 '<@(vulkan_loader_win_sources)',
                             ],
                             'defines':
@@ -984,50 +985,11 @@
                         {
                             'defines':
                             [
-                                'DEFAULT_VK_LAYERS_PATH="."',
                                 'HAVE_SECURE_GETENV',
-                                'LAYERS_SOURCE_PATH="<(vulkan_json)"',
                                 'VK_USE_PLATFORM_XCB_KHR',
                                 'VK_USE_PLATFORM_XCB_KHX',
                             ],
                         }],
-                    ],
-                    'actions':
-                    [
-                        {
-                            # The loader header is force included into the loader and layers. Because
-                            # of issues with GYP, we can't use a normal header file, we hav to force
-                            # inclue this using compiler-specific flags.
-                            'action_name': 'vulkan_loader_gen_angle_header',
-                            'message': 'generating Vulkan loader ANGLE header',
-                            'msvs_cygwin_shell': 0,
-                            'inputs':
-                            [
-                                '<(angle_path)/scripts/generate_vulkan_header.py',
-                            ],
-                            'outputs':
-                            [
-                                '<(angle_gen_path)/vulkan/angle_loader.h',
-                            ],
-                            'action':
-                            [
-                                # TODO(jmadill): Use correct platform path
-                                'python', '<(angle_path)/scripts/generate_vulkan_header.py', '<(PRODUCT_DIR)/<(vulkan_json)',
-                                '<(angle_gen_path)/vulkan/angle_loader.h', '<(PRODUCT_DIR)',
-                            ],
-                        },
-                        {
-                            'action_name': 'vulkan_loader_order_deps',
-                            'message': 'stamping for vulkan_loader_order_deps',
-                            'msvs_cygwin_shell': 0,
-                            'inputs': [ '<@(vulkan_layer_generated_files)' ],
-                            'outputs': [ '<(angle_gen_path)/vulkan/vulkan_loader_order_deps.stamp' ],
-                            'action':
-                            [
-                                'python', '<(angle_path)/gyp/touch_stamp.py',
-                                '<(angle_gen_path)/vulkan/vulkan_loader_order_deps.stamp',
-                            ]
-                        },
                     ],
                 },
 

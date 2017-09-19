@@ -33,6 +33,7 @@ const char *VulkanResultString(VkResult result);
 bool HasStandardValidationLayer(const std::vector<VkLayerProperties> &layerProps);
 
 extern const char *g_VkStdValidationLayerName;
+extern const char *g_VkLoaderLayersPathEnv;
 
 enum class TextureDimension
 {

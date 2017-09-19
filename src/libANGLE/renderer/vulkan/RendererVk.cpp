@@ -172,9 +172,23 @@ vk::Error RendererVk::initialize(const egl::AttributeMap &attribs, const char *w
         else
         {
             previousCWD = cwd.value();
+            const char *exeDir = angle::GetExecutableDirectory();
+            if (!angle::SetCWD(exeDir))
+            {
+                ERR() << "Error setting CWD for Vulkan layers init.";
+                mEnableValidationLayers = false;
+            }
         }
-        const char *exeDir = angle::GetExecutableDirectory();
-        angle::SetCWD(exeDir);
+    }
+
+    // Override environment variable to use the ANGLE layers.
+    if (mEnableValidationLayers)
+    {
+        if (!angle::SetEnvironmentVar(g_VkLoaderLayersPathEnv, ANGLE_VK_LAYERS_DIR))
+        {
+            ERR() << "Error setting environment for Vulkan layers init.";
+            mEnableValidationLayers = false;
+        }
     }
 
     // Gather global layer properties.

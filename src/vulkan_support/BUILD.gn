@@ -195,8 +195,7 @@ config("vulkan_loader_config") {
   include_dirs = rebase_path(vulkan_gypi.vulkan_loader_include_dirs, ".", "src")
   include_dirs += [ vulkan_gen_dir ]
   defines = [
-    "LAYERS_SOURCE_PATH=\"$data_dir\"",
-    "DEFAULT_VK_LAYERS_PATH=\".\"",
+    "ANGLE_VK_LAYERS_DIR=\"$data_dir\"",
     "API_NAME=\"Vulkan\"",
   ]
 
