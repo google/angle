@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e023d3ce_14a89204",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 2926,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-19T17:30:51Z",
+      "side": 1,
+      "message": "I think this would fit better in the Texture::copyImage method.",
+      "range": {
+        "startLine": 2926,
+        "startChar": 4,
+        "endLine": 2926,
+        "endChar": 95
+      },
+      "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dc0320b5_12b01a87",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 2955,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-19T17:30:51Z",
+      "side": 1,
+      "message": "Same comment about this going into the Texture class.",
+      "range": {
+        "startLine": 2955,
+        "startChar": 4,
+        "endLine": 2955,
+        "endChar": 95
+      },
+      "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "017f9f40_069be073",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 3411,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-19T17:30:51Z",
+      "side": 1,
+      "message": "I\u0027d be ok with it being non-const so that the texture can initialize itself in the copySubTexture method.  It can probably stay const for the impl though.",
+      "range": {
+        "startLine": 3410,
+        "startChar": 4,
+        "endLine": 3411,
+        "endChar": 62
+      },
+      "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5a02e9e1_5beda44b",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 999,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-19T17:30:51Z",
+      "side": 1,
+      "message": "Does this propagate uninitialized state from the framebuffer?  Should we just initialize the framebuffer instead?",
+      "range": {
+        "startLine": 998,
+        "startChar": 4,
+        "endLine": 999,
+        "endChar": 94
+      },
+      "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
