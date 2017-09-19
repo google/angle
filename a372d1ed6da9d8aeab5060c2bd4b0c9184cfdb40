@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed5e6d0f_378276bf",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/VertexArray11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-19T20:19:43Z",
+      "side": 1,
+      "message": "this big change enables signal to have a gl::Context available here.",
+      "range": {
+        "startLine": 255,
+        "startChar": 20,
+        "endLine": 255,
+        "endChar": 26
+      },
+      "revId": "a372d1ed6da9d8aeab5060c2bd4b0c9184cfdb40",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
