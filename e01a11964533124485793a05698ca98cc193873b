@@ -22,6 +22,30 @@
       "revId": "e01a11964533124485793a05698ca98cc193873b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fdad1cb9_edeb91b5",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1400,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-19T07:22:10Z",
+      "side": 1,
+      "message": "Sorry, I didn\u0027t find a doc to introduce the feature level support when access resource. But according to above link, it only says Direct3D 11 supports robust access. I think it implicitly include feature level 9_3? I tested level 9_3 with this test case in angle. It works as expected in both Intel and NVIDIA. My change is to only add D3D_FEATURE_LEVEL_9_3 to mAvailableFeatureLevels in Renderer11.cpp.\n\nOr do you need me to change it to extensions-\u003erobustBufferAccessBehavior \u003d featureLevel \u003e\u003d D3D_FEATURE_LEVEL_10_0 ?",
+      "parentUuid": "cd873d5a_cb1966a7",
+      "range": {
+        "startLine": 1400,
+        "startChar": 16,
+        "endLine": 1400,
+        "endChar": 43
+      },
+      "revId": "e01a11964533124485793a05698ca98cc193873b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
