@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "22d6dc05_adf997a3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-19T02:01:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a801b35c_5951f7f9",
+      "range": {
+        "startLine": 9,
+        "startChar": 9,
+        "endLine": 9,
+        "endChar": 20
+      },
+      "revId": "c6f219b3bdc1ac52ffc01f895a3e4b57d7fc24f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "699b6c7f_bfcf222b",
         "filename": "src/libANGLE/Constants.h",
         "patchSetId": 5
@@ -45,6 +69,30 @@
       "revId": "c6f219b3bdc1ac52ffc01f895a3e4b57d7fc24f2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da82abfa_eb388c10",
+        "filename": "src/libANGLE/Constants.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-19T02:01:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "699b6c7f_bfcf222b",
+      "range": {
+        "startLine": 50,
+        "startChar": 58,
+        "endLine": 50,
+        "endChar": 74
+      },
+      "revId": "c6f219b3bdc1ac52ffc01f895a3e4b57d7fc24f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -83,6 +131,30 @@
       "side": 1,
       "message": "yeah, it\u0027s never set",
       "parentUuid": "2cfdd9e2_5d627c3d",
+      "range": {
+        "startLine": 2248,
+        "startChar": 37,
+        "endLine": 2248,
+        "endChar": 59
+      },
+      "revId": "c6f219b3bdc1ac52ffc01f895a3e4b57d7fc24f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "787008f6_7b620b8c",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2248,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-19T02:01:29Z",
+      "side": 1,
+      "message": "Good catch, fixed.",
+      "parentUuid": "83a20271_9dcb9a6d",
       "range": {
         "startLine": 2248,
         "startChar": 37,
