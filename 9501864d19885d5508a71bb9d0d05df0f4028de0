@@ -71,6 +71,125 @@
     },
     {
       "key": {
+        "uuid": "0a1fa8de_034acba4",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 1106,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-19T20:38:41Z",
+      "side": 1,
+      "message": "It seems that this should be implemented now, or at least before the passthrough is used by default.",
+      "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "462c0ad0_f2edb076",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 1113,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-19T20:38:41Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ff7e26d_d007e7c9",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 1122,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-19T20:38:41Z",
+      "side": 1,
+      "message": "ditto",
+      "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a23078cf_65f5a427",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 1140,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-19T20:38:41Z",
+      "side": 1,
+      "message": "Does scissor affect clears? If yes we should take scissor into account here, and in glClearBuffer*",
+      "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f5a88c61_d3958c13",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 1852,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-19T20:38:41Z",
+      "side": 1,
+      "message": "nit: || mState.mResourceNeedsInit.none()",
+      "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6eb73511_87b56d3e",
+        "filename": "src/libANGLE/FramebufferAttachment.h",
+        "patchSetId": 30
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-19T20:38:41Z",
+      "side": 1,
+      "message": "nit: Initialized, Clean sounds like the resource is Cleared.",
+      "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8eccb8dd_089036b7",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-19T20:38:41Z",
+      "side": 1,
+      "message": "The textures might not be clean but this makes the framebuffer believe they are.",
+      "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "5a02e9e1_5beda44b",
         "filename": "src/libANGLE/Texture.cpp",
         "patchSetId": 30
@@ -88,6 +207,23 @@
         "endLine": 999,
         "endChar": 94
       },
+      "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bb25eef1_9d8eaa2d",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-19T20:38:41Z",
+      "side": 1,
+      "message": "image_util already has the same thing for ETC.",
       "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
