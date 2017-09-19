@@ -70,6 +70,115 @@
       "revId": "d574695e465ecccf2203b3e02bf090bddc2addb3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "372476bf_f7b7769a",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-19T14:07:30Z",
+      "side": 1,
+      "message": "Can you quote the spec in a comment for this?",
+      "parentUuid": "9156b373_ae8d7220",
+      "range": {
+        "startLine": 175,
+        "startChar": 83,
+        "endLine": 175,
+        "endChar": 87
+      },
+      "revId": "d574695e465ecccf2203b3e02bf090bddc2addb3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "48910bf7_f5ef5ac1",
+        "filename": "src/compiler/translator/ValidateVaryingLocations.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-19T14:07:30Z",
+      "side": 1,
+      "message": "I understand that this file follows the same logic as ValidateOutputs, but it could be simpler:\n - Varyings with locations are always declared in the code so we just have to visit declaration.\n - We can skip a large amount of visiting by returning false in visitFunction.",
+      "revId": "d574695e465ecccf2203b3e02bf090bddc2addb3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8bbc9b53_e0c723d1",
+        "filename": "src/compiler/translator/ValidateVaryingLocations.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-19T14:07:30Z",
+      "side": 1,
+      "message": "nit: you can move these static member functions as regular functions next to \"error\"",
+      "revId": "d574695e465ecccf2203b3e02bf090bddc2addb3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "59470635_49b4a527",
+        "filename": "src/compiler/translator/ValidateVaryingLocations.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-19T14:07:30Z",
+      "side": 1,
+      "message": "ValidateShaderInterface does nothing when the vectors are empty, so there is no need to check for size() \u003e 1 here.",
+      "revId": "d574695e465ecccf2203b3e02bf090bddc2addb3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b9ef5001_abe5a779",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 4757,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-19T14:07:30Z",
+      "side": 1,
+      "message": "We should test that location\u003dN on varyings is disallowed in ES 3.",
+      "revId": "d574695e465ecccf2203b3e02bf090bddc2addb3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c8600412_5d795526",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 4761,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-19T14:07:30Z",
+      "side": 1,
+      "message": "nit: no need to check for all qualifiers are there aren\u0027t any interactions. Here and for the following test.",
+      "revId": "d574695e465ecccf2203b3e02bf090bddc2addb3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
