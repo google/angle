@@ -5271,8 +5271,7 @@ bool ValidateHint(ValidationContext *context, GLenum target, GLenum mode)
             if (context->getClientVersion() < ES_3_0 &&
                 !context->getExtensions().standardDerivatives)
             {
-                context->handleError(InvalidOperation()
-                                     << "hint requires OES_standard_derivatives.");
+                context->handleError(InvalidEnum() << "hint requires OES_standard_derivatives.");
                 return false;
             }
             break;
