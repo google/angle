@@ -304,6 +304,30 @@
       "revId": "5bf9592d6d9dfd93fb1290044b025839a6ac1d4b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a3ca0d12_465f82c6",
+        "filename": "src/libANGLE/internal_enums.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-19T19:22:29Z",
+      "side": 1,
+      "message": "Ah do you mean something like \n\n \"BufferUsage\":{\n    \"prefix\": \"GL_\",\n    \"values\": [\n      \"STATIC_DRAW\", ...\n    ]\n  }\n\nand split the string at underscores and change the case?",
+      "parentUuid": "a99a5cf6_d582f47e",
+      "range": {
+        "startLine": 4,
+        "startChar": 8,
+        "endLine": 12,
+        "endChar": 38
+      },
+      "revId": "5bf9592d6d9dfd93fb1290044b025839a6ac1d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
