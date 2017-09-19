@@ -46,6 +46,30 @@
       "revId": "d574695e465ecccf2203b3e02bf090bddc2addb3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9156b373_ae8d7220",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-19T01:19:06Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1ef355b1_f6dd8702",
+      "range": {
+        "startLine": 175,
+        "startChar": 83,
+        "endLine": 175,
+        "endChar": 87
+      },
+      "revId": "d574695e465ecccf2203b3e02bf090bddc2addb3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
