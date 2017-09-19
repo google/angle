@@ -70,6 +70,30 @@
       "revId": "764b2db4a888d2032faa1a67cf8531f8ca1464a0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd4607a8_f5798af2",
+        "filename": "src/tests/gl_tests/RobustBufferAccessBehaviorTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-19T18:51:48Z",
+      "side": 1,
+      "message": "Hi Jamie. Sorry to bother you again. Do you mean let me use current method with minor modification like what I said or make a new function initExtension()? My understanding is you agree to use SetUP with if instead of ANGLE_SKIP_TEST. Currently, I updated the patch like what I said. If I am wrong, please let me know. I can change it to make a new bool function.",
+      "parentUuid": "386b8fcb_ab9ea089",
+      "range": {
+        "startLine": 31,
+        "startChar": 9,
+        "endLine": 31,
+        "endChar": 14
+      },
+      "revId": "764b2db4a888d2032faa1a67cf8531f8ca1464a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
