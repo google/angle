@@ -94,6 +94,30 @@
       "revId": "764b2db4a888d2032faa1a67cf8531f8ca1464a0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cbee7c67_2827cef5",
+        "filename": "src/tests/gl_tests/RobustBufferAccessBehaviorTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-19T19:20:43Z",
+      "side": 1,
+      "message": "Sorry, please do the initExtension() thing you posted above. SetUp will not work as you expect.",
+      "parentUuid": "dd4607a8_f5798af2",
+      "range": {
+        "startLine": 31,
+        "startChar": 9,
+        "endLine": 31,
+        "endChar": 14
+      },
+      "revId": "764b2db4a888d2032faa1a67cf8531f8ca1464a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
