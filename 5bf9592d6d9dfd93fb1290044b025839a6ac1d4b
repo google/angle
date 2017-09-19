@@ -42,6 +42,30 @@
     },
     {
       "key": {
+        "uuid": "24c4ac53_e337c5fe",
+        "filename": "src/libANGLE/InternalEnums_autogen.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-19T18:52:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d2447c04_70f435f8",
+      "range": {
+        "startLine": 49,
+        "startChar": 17,
+        "endLine": 49,
+        "endChar": 31
+      },
+      "revId": "5bf9592d6d9dfd93fb1290044b025839a6ac1d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4bde8d0c_e1ab6d9f",
         "filename": "src/libANGLE/angletypes.h",
         "patchSetId": 1
@@ -77,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "13e27073_108774e9",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-19T18:52:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5125b6e9_5deee50e",
+      "revId": "5bf9592d6d9dfd93fb1290044b025839a6ac1d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "596252d5_16948f07",
         "filename": "src/libANGLE/gen_internal_enums.py",
         "patchSetId": 1
@@ -100,6 +142,30 @@
     },
     {
       "key": {
+        "uuid": "9476ba29_c4f2d3e5",
+        "filename": "src/libANGLE/gen_internal_enums.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-19T18:52:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "596252d5_16948f07",
+      "range": {
+        "startLine": 65,
+        "startChar": 25,
+        "endLine": 65,
+        "endChar": 33
+      },
+      "revId": "5bf9592d6d9dfd93fb1290044b025839a6ac1d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cbf2c8db_16395e00",
         "filename": "src/libANGLE/gen_internal_enums.py",
         "patchSetId": 1
@@ -114,6 +180,24 @@
       "revId": "5bf9592d6d9dfd93fb1290044b025839a6ac1d4b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67ac83d7_bfef1013",
+        "filename": "src/libANGLE/gen_internal_enums.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-19T18:52:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cbf2c8db_16395e00",
+      "revId": "5bf9592d6d9dfd93fb1290044b025839a6ac1d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -134,6 +218,24 @@
     },
     {
       "key": {
+        "uuid": "305bcb9c_bc5060fd",
+        "filename": "src/libANGLE/gen_internal_enums.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-19T18:52:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e8152b33_87771260",
+      "revId": "5bf9592d6d9dfd93fb1290044b025839a6ac1d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9eea35b2_fdce5362",
         "filename": "src/libANGLE/internal_enums.json",
         "patchSetId": 1
@@ -145,6 +247,30 @@
       "writtenOn": "2017-09-18T21:23:26Z",
       "side": 1,
       "message": "We could probably generate the enum names from the GL enums.",
+      "range": {
+        "startLine": 4,
+        "startChar": 8,
+        "endLine": 12,
+        "endChar": 38
+      },
+      "revId": "5bf9592d6d9dfd93fb1290044b025839a6ac1d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "28fdb56d_2f0cbe2b",
+        "filename": "src/libANGLE/internal_enums.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2017-09-19T18:52:56Z",
+      "side": 1,
+      "message": "It\u0027s hard because of cases like GL_TEXTURE_2D which should both in TextureTarget and TextureDimension.",
+      "parentUuid": "9eea35b2_fdce5362",
       "range": {
         "startLine": 4,
         "startChar": 8,
