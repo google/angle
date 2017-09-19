@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "59dd5d53_14c34e10",
+        "filename": "src/tests/gl_tests/RobustBufferAccessBehaviorTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-19T11:33:40Z",
+      "side": 1,
+      "message": "sorry, this isn\u0027t the SetUp function that I meant. Even if you call ANGLE_SKIP_TEST here the test will still run. You\u0027ll need to make a new method that returns bool. please look at my instructions again. You don\u0027t have to call it setup, you can call it initExtension or something like that.",
+      "range": {
+        "startLine": 31,
+        "startChar": 9,
+        "endLine": 31,
+        "endChar": 14
+      },
+      "revId": "764b2db4a888d2032faa1a67cf8531f8ca1464a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}

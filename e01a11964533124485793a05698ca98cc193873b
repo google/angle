@@ -46,6 +46,30 @@
       "revId": "e01a11964533124485793a05698ca98cc193873b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2e953256_0e527632",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1400,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-19T11:33:40Z",
+      "side": 1,
+      "message": "If you tested it and it works, then that\u0027s fine. You can test it by adding ES2_D3D11_FL9_3 to the list of test configurations.",
+      "parentUuid": "fdad1cb9_edeb91b5",
+      "range": {
+        "startLine": 1400,
+        "startChar": 16,
+        "endLine": 1400,
+        "endChar": 43
+      },
+      "revId": "e01a11964533124485793a05698ca98cc193873b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
