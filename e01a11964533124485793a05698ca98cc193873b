@@ -70,6 +70,30 @@
       "revId": "e01a11964533124485793a05698ca98cc193873b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "66cef4da_613f15e2",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/renderer11_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1400,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2017-09-19T20:07:31Z",
+      "side": 1,
+      "message": "Done. Add ES2_D3D11_FL9_3()",
+      "parentUuid": "2e953256_0e527632",
+      "range": {
+        "startLine": 1400,
+        "startChar": 16,
+        "endLine": 1400,
+        "endChar": 43
+      },
+      "revId": "e01a11964533124485793a05698ca98cc193873b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
