@@ -10,7 +10,6 @@
 #include "libANGLE/renderer/d3d/d3d11/InputLayoutCache.h"
 
 #include "common/bitset_utils.h"
-#include "common/third_party/murmurhash/MurmurHash3.h"
 #include "common/utilities.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Program.h"

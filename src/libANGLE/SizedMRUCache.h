@@ -9,7 +9,7 @@
 #define LIBANGLE_SIZED_MRU_CACHE_H_
 
 #include <anglebase/containers/mru_cache.h>
-#include "common/third_party/murmurhash/MurmurHash3.h"
+#include "common/third_party/smhasher/src/PMurHash.h"
 
 namespace angle
 {
@@ -163,9 +163,7 @@ std::size_t ComputeGenericHash(const T &key)
 {
     static const unsigned int seed = 0xABCDEF98;
 
-    std::size_t hash = 0;
-    MurmurHash3_x86_32(&key, sizeof(key), seed, &hash);
-    return hash;
+    return PMurHash32(seed, &key, sizeof(key));
 }
 
 }  // namespace angle
