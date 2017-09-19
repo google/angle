@@ -559,6 +559,8 @@ class State : public OnAttachmentDirtyReceiver, angle::NonCopyable
     // Also stores a notification channel to the texture itself to handle texture change events.
     std::vector<Texture *> mCompleteTextureCache;
     std::vector<OnAttachmentDirtyBinding> mCompleteTextureBindings;
+    using ActiveTextureMask = angle::BitSet<IMPLEMENTATION_MAX_ACTIVE_TEXTURES>;
+    ActiveTextureMask mCompleteTexturesMask;
 
     typedef std::vector<BindingPointer<Sampler>> SamplerBindingVector;
     SamplerBindingVector mSamplers;

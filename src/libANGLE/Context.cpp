@@ -240,6 +240,12 @@ void GetObjectLabelBase(const std::string &objectLabel,
     }
 }
 
+template <typename CapT, typename MaxT>
+void LimitCap(CapT *cap, MaxT maximum)
+{
+    *cap = std::min(*cap, static_cast<CapT>(maximum));
+}
+
 }  // anonymous namespace
 
 namespace gl
@@ -2672,19 +2678,25 @@ void Context::initCaps(const egl::DisplayExtensions &displayExtensions)
     mExtensions.programCacheControl = true;
 
     // Apply implementation limits
-    mCaps.maxVertexAttributes = std::min<GLuint>(mCaps.maxVertexAttributes, MAX_VERTEX_ATTRIBS);
-    mCaps.maxVertexAttribBindings =
-        getClientVersion() < ES_3_1
-            ? mCaps.maxVertexAttributes
-            : std::min<GLuint>(mCaps.maxVertexAttribBindings, MAX_VERTEX_ATTRIB_BINDINGS);
+    LimitCap(&mCaps.maxVertexAttributes, MAX_VERTEX_ATTRIBS);
 
-    mCaps.maxVertexUniformBlocks = std::min<GLuint>(
-        mCaps.maxVertexUniformBlocks, IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS);
-    mCaps.maxVertexOutputComponents =
-        std::min<GLuint>(mCaps.maxVertexOutputComponents, IMPLEMENTATION_MAX_VARYING_VECTORS * 4);
+    if (getClientVersion() < ES_3_1)
+    {
+        mCaps.maxVertexAttribBindings = mCaps.maxVertexAttributes;
+    }
+    else
+    {
+        LimitCap(&mCaps.maxVertexAttribBindings, MAX_VERTEX_ATTRIB_BINDINGS);
+    }
 
-    mCaps.maxFragmentInputComponents =
-        std::min<GLuint>(mCaps.maxFragmentInputComponents, IMPLEMENTATION_MAX_VARYING_VECTORS * 4);
+    LimitCap(&mCaps.maxVertexUniformBlocks, IMPLEMENTATION_MAX_VERTEX_SHADER_UNIFORM_BUFFERS);
+    LimitCap(&mCaps.maxVertexOutputComponents, IMPLEMENTATION_MAX_VARYING_VECTORS * 4);
+    LimitCap(&mCaps.maxFragmentInputComponents, IMPLEMENTATION_MAX_VARYING_VECTORS * 4);
+
+    // Limit textures as well, so we can use fast bitsets with texture bindings.
+    LimitCap(&mCaps.maxCombinedTextureImageUnits, IMPLEMENTATION_MAX_ACTIVE_TEXTURES);
+    LimitCap(&mCaps.maxVertexTextureImageUnits, IMPLEMENTATION_MAX_ACTIVE_TEXTURES / 2);
+    LimitCap(&mCaps.maxTextureImageUnits, IMPLEMENTATION_MAX_ACTIVE_TEXTURES / 2);
 
     // WebGL compatibility
     mExtensions.webglCompatibility = mWebGLContext;

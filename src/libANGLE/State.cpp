@@ -2206,12 +2206,6 @@ void State::syncDirtyObjects(const Context *context, const DirtyObjects &bitset)
 
 void State::syncProgramTextures(const Context *context)
 {
-    std::fill(mCompleteTextureCache.begin(), mCompleteTextureCache.end(), nullptr);
-    for (auto &binding : mCompleteTextureBindings)
-    {
-        binding.reset();
-    }
-
     // TODO(jmadill): Fine-grained updates.
     if (!mProgram)
     {
@@ -2220,6 +2214,8 @@ void State::syncProgramTextures(const Context *context)
 
     ASSERT(mDirtyObjects[DIRTY_OBJECT_PROGRAM_TEXTURES]);
     mDirtyBits.set(DIRTY_BIT_TEXTURE_BINDINGS);
+
+    ActiveTextureMask newActiveTextures;
 
     for (const SamplerBinding &samplerBinding : mProgram->getSamplerBindings())
     {
@@ -2231,6 +2227,8 @@ void State::syncProgramTextures(const Context *context)
         {
             Texture *texture = getSamplerTexture(textureUnitIndex, textureType);
             Sampler *sampler = getSampler(textureUnitIndex);
+            ASSERT(static_cast<size_t>(textureUnitIndex) < mCompleteTextureCache.size());
+            ASSERT(static_cast<size_t>(textureUnitIndex) < newActiveTextures.size());
 
             if (texture != nullptr)
             {
@@ -2239,20 +2237,35 @@ void State::syncProgramTextures(const Context *context)
                 if (texture->isSamplerComplete(context, sampler))
                 {
                     texture->syncState();
-                    ASSERT(static_cast<size_t>(textureUnitIndex) < mCompleteTextureCache.size());
-                    ASSERT(mCompleteTextureCache[textureUnitIndex] == nullptr ||
-                           mCompleteTextureCache[textureUnitIndex] == texture);
                     mCompleteTextureCache[textureUnitIndex] = texture;
+                }
+                else
+                {
+                    mCompleteTextureCache[textureUnitIndex] = nullptr;
                 }
 
                 // Bind the texture unconditionally, to recieve completeness change notifications.
                 mCompleteTextureBindings[textureUnitIndex].bind(texture->getDirtyChannel());
+                newActiveTextures.set(textureUnitIndex);
+                mCompleteTexturesMask.set(textureUnitIndex);
             }
 
             if (sampler != nullptr)
             {
                 sampler->syncState(context);
             }
+        }
+    }
+
+    // Unset now missing textures.
+    ActiveTextureMask negativeMask = mCompleteTexturesMask & ~newActiveTextures;
+    if (negativeMask.any())
+    {
+        for (auto textureIndex : negativeMask)
+        {
+            mCompleteTextureBindings[textureIndex].reset();
+            mCompleteTextureCache[textureIndex] = nullptr;
+            mCompleteTexturesMask.reset(textureIndex);
         }
     }
 }
