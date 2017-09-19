@@ -304,7 +304,8 @@ void VertexDataManager::StoreDirectAttrib(TranslatedAttribute *directAttrib)
     const auto &binding = *directAttrib->binding;
 
     gl::Buffer *buffer   = binding.getBuffer().get();
-    BufferD3D *bufferD3D = buffer ? GetImplAs<BufferD3D>(buffer) : nullptr;
+    ASSERT(buffer);
+    BufferD3D *bufferD3D = GetImplAs<BufferD3D>(buffer);
 
     ASSERT(DirectStoragePossible(attrib, binding));
     directAttrib->vertexBuffer.set(nullptr);

@@ -1657,12 +1657,12 @@ gl::Error StateManager11::syncFramebuffer(const gl::Context *context, gl::Frameb
             framebufferRTVs[appliedRTIndex] = renderTarget->getRenderTargetView().get();
             ASSERT(framebufferRTVs[appliedRTIndex]);
             maxExistingRT = static_cast<UINT>(appliedRTIndex) + 1;
-        }
 
-        // Unset conflicting texture SRVs
-        const auto *attachment = framebuffer->getColorbuffer(rtIndex);
-        ASSERT(attachment);
-        unsetConflictingAttachmentResources(attachment, renderTarget->getTexture().get());
+            // Unset conflicting texture SRVs
+            const auto *attachment = framebuffer->getColorbuffer(rtIndex);
+            ASSERT(attachment);
+            unsetConflictingAttachmentResources(attachment, renderTarget->getTexture().get());
+        }
 
         appliedRTIndex++;
     }
