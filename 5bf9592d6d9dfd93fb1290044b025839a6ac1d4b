@@ -376,6 +376,30 @@
       "revId": "5bf9592d6d9dfd93fb1290044b025839a6ac1d4b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fad23133_de4ac6c6",
+        "filename": "src/libANGLE/internal_enums.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2017-09-19T19:44:51Z",
+      "side": 1,
+      "message": "Yea, I\u0027m fine with leaving it more verbose.",
+      "parentUuid": "0677bc6f_fb56a793",
+      "range": {
+        "startLine": 4,
+        "startChar": 8,
+        "endLine": 12,
+        "endChar": 38
+      },
+      "revId": "5bf9592d6d9dfd93fb1290044b025839a6ac1d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
     }
   ]
 }
