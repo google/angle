@@ -167,7 +167,7 @@ gl::Error FramebufferD3D::clearBufferiv(const gl::Context *context,
     if (buffer == GL_STENCIL)
     {
         clearParams.clearStencil = true;
-        clearParams.stencilValue = values[1];
+        clearParams.stencilValue = values[0];
     }
 
     return clearImpl(context, clearParams);
