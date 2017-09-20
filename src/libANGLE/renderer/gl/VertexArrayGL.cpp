@@ -208,7 +208,8 @@ gl::Error VertexArrayGL::syncIndexData(const gl::Context *context,
         {
             ptrdiff_t elementArrayBufferOffset = reinterpret_cast<ptrdiff_t>(indices);
             Error error                        = mData.getElementArrayBuffer()->getIndexRange(
-                type, elementArrayBufferOffset, count, primitiveRestartEnabled, outIndexRange);
+                context, type, elementArrayBufferOffset, count, primitiveRestartEnabled,
+                outIndexRange);
             if (error.isError())
             {
                 return error;

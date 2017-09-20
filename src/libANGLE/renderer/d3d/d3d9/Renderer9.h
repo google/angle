@@ -145,13 +145,13 @@ class Renderer9 : public RendererD3D
                                 const gl::FramebufferAttachment *depthStencilAttachment);
     gl::Error applyUniforms(ProgramD3D *programD3D);
     bool applyPrimitiveType(GLenum primitiveType, GLsizei elementCount, bool usesPointSize);
-    gl::Error applyVertexBuffer(const gl::State &state,
+    gl::Error applyVertexBuffer(const gl::Context *context,
                                 GLenum mode,
                                 GLint first,
                                 GLsizei count,
                                 GLsizei instances,
                                 TranslatedIndexData *indexInfo);
-    gl::Error applyIndexBuffer(const gl::ContextState &data,
+    gl::Error applyIndexBuffer(const gl::Context *context,
                                const void *indices,
                                GLsizei count,
                                GLenum mode,
@@ -389,7 +389,7 @@ class Renderer9 : public RendererD3D
     bool canSelectViewInVertexShader() const override { return false; }
 
   private:
-    gl::Error drawArraysImpl(const gl::ContextState &data,
+    gl::Error drawArraysImpl(const gl::Context *context,
                              GLenum mode,
                              GLint startVertex,
                              GLsizei count,
@@ -424,12 +424,14 @@ class Renderer9 : public RendererD3D
     void applyUniformniv(const D3DUniform *targetUniform, const GLint *v);
     void applyUniformnbv(const D3DUniform *targetUniform, const GLint *v);
 
-    gl::Error drawLineLoop(GLsizei count,
+    gl::Error drawLineLoop(const gl::Context *context,
+                           GLsizei count,
                            GLenum type,
                            const void *indices,
                            int minIndex,
                            gl::Buffer *elementArrayBuffer);
-    gl::Error drawIndexedPoints(GLsizei count,
+    gl::Error drawIndexedPoints(const gl::Context *context,
+                                GLsizei count,
                                 GLenum type,
                                 const void *indices,
                                 int minIndex,

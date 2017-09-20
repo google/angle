@@ -12,6 +12,7 @@
 #include "common/bitset_utils.h"
 #include "common/third_party/murmurhash/MurmurHash3.h"
 #include "common/utilities.h"
+#include "libANGLE/Context.h"
 #include "libANGLE/Program.h"
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/VertexAttribute.h"
@@ -19,6 +20,7 @@
 #include "libANGLE/renderer/d3d/ProgramD3D.h"
 #include "libANGLE/renderer/d3d/VertexDataManager.h"
 #include "libANGLE/renderer/d3d/d3d11/Buffer11.h"
+#include "libANGLE/renderer/d3d/d3d11/Context11.h"
 #include "libANGLE/renderer/d3d/d3d11/Renderer11.h"
 #include "libANGLE/renderer/d3d/d3d11/ShaderExecutable11.h"
 #include "libANGLE/renderer/d3d/d3d11/VertexBuffer11.h"
@@ -119,13 +121,14 @@ void InputLayoutCache::clear()
 }
 
 gl::Error InputLayoutCache::applyVertexBuffers(
-    Renderer11 *renderer,
-    const gl::State &state,
+    const gl::Context *context,
     const std::vector<const TranslatedAttribute *> &currentAttributes,
     GLenum mode,
     GLint start,
     TranslatedIndexData *indexInfo)
 {
+    Renderer11 *renderer   = GetImplAs<Context11>(context)->getRenderer();
+    const gl::State &state = context->getGLState();
     auto *stateManager     = renderer->getStateManager();
     gl::Program *program   = state.getProgram();
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
@@ -162,7 +165,7 @@ gl::Error InputLayoutCache::applyVertexBuffers(
                 if (indexInfo->srcIndexData.srcBuffer != nullptr)
                 {
                     const uint8_t *bufferData = nullptr;
-                    ANGLE_TRY(indexInfo->srcIndexData.srcBuffer->getData(&bufferData));
+                    ANGLE_TRY(indexInfo->srcIndexData.srcBuffer->getData(context, &bufferData));
                     ASSERT(bufferData != nullptr);
 
                     ptrdiff_t offset =
@@ -171,14 +174,15 @@ gl::Error InputLayoutCache::applyVertexBuffers(
                     indexInfo->srcIndexData.srcIndices = bufferData + offset;
                 }
 
-                ANGLE_TRY_RESULT(bufferStorage->getEmulatedIndexedBuffer(&indexInfo->srcIndexData,
-                                                                         attrib, start),
+                ANGLE_TRY_RESULT(bufferStorage->getEmulatedIndexedBuffer(
+                                     context, &indexInfo->srcIndexData, attrib, start),
                                  buffer);
             }
             else
             {
                 ANGLE_TRY_RESULT(
-                    bufferStorage->getBuffer(BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK), buffer);
+                    bufferStorage->getBuffer(context, BUFFER_USAGE_VERTEX_OR_TRANSFORM_FEEDBACK),
+                    buffer);
             }
 
             vertexStride = attrib.stride;

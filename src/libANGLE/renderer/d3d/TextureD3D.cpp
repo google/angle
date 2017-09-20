@@ -33,8 +33,11 @@ namespace rx
 namespace
 {
 
-gl::Error GetUnpackPointer(const gl::PixelUnpackState &unpack, const uint8_t *pixels,
-                           ptrdiff_t layerOffset, const uint8_t **pointerOut)
+gl::Error GetUnpackPointer(const gl::Context *context,
+                           const gl::PixelUnpackState &unpack,
+                           const uint8_t *pixels,
+                           ptrdiff_t layerOffset,
+                           const uint8_t **pointerOut)
 {
     if (unpack.pixelBuffer.id() != 0)
     {
@@ -47,7 +50,7 @@ gl::Error GetUnpackPointer(const gl::PixelUnpackState &unpack, const uint8_t *pi
         BufferD3D *bufferD3D = GetImplAs<BufferD3D>(pixelBuffer);
         ASSERT(bufferD3D);
         const uint8_t *bufferData = nullptr;
-        ANGLE_TRY(bufferD3D->getData(&bufferData));
+        ANGLE_TRY(bufferD3D->getData(context, &bufferData));
         *pointerOut = bufferData + offset;
     }
     else
@@ -229,7 +232,7 @@ gl::Error TextureD3D::setImageImpl(const gl::Context *context,
     // We no longer need the "GLenum format" parameter to TexImage to determine what data format "pixels" contains.
     // From our image internal format we know how many channels to expect, and "type" gives the format of pixel's components.
     const uint8_t *pixelData = nullptr;
-    ANGLE_TRY(GetUnpackPointer(unpack, pixels, layerOffset, &pixelData));
+    ANGLE_TRY(GetUnpackPointer(context, unpack, pixels, layerOffset, &pixelData));
 
     if (pixelData != nullptr)
     {
@@ -262,7 +265,7 @@ gl::Error TextureD3D::subImage(const gl::Context *context,
 {
     // CPU readback & copy where direct GPU copy is not supported
     const uint8_t *pixelData = nullptr;
-    ANGLE_TRY(GetUnpackPointer(unpack, pixels, layerOffset, &pixelData));
+    ANGLE_TRY(GetUnpackPointer(context, unpack, pixels, layerOffset, &pixelData));
 
     if (pixelData != nullptr)
     {
@@ -299,7 +302,7 @@ gl::Error TextureD3D::setCompressedImageImpl(const gl::Context *context,
     // We no longer need the "GLenum format" parameter to TexImage to determine what data format "pixels" contains.
     // From our image internal format we know how many channels to expect, and "type" gives the format of pixel's components.
     const uint8_t *pixelData = nullptr;
-    ANGLE_TRY(GetUnpackPointer(unpack, pixels, layerOffset, &pixelData));
+    ANGLE_TRY(GetUnpackPointer(context, unpack, pixels, layerOffset, &pixelData));
 
     if (pixelData != nullptr)
     {
@@ -321,7 +324,7 @@ gl::Error TextureD3D::subImageCompressed(const gl::Context *context,
                                          ptrdiff_t layerOffset)
 {
     const uint8_t *pixelData = nullptr;
-    ANGLE_TRY(GetUnpackPointer(unpack, pixels, layerOffset, &pixelData));
+    ANGLE_TRY(GetUnpackPointer(context, unpack, pixels, layerOffset, &pixelData));
 
     if (pixelData != nullptr)
     {

@@ -204,7 +204,8 @@ bool IndexDataManager::IsStreamingIndexData(const gl::Context *context,
 // When we have a buffer with an unsupported format (subcase b) then we need to do some translation:
 // we will start by falling back to streaming, and after a while will start using a static
 // translated copy of the index buffer.
-gl::Error IndexDataManager::prepareIndexData(GLenum srcType,
+gl::Error IndexDataManager::prepareIndexData(const gl::Context *context,
+                                             GLenum srcType,
                                              GLsizei count,
                                              gl::Buffer *glBuffer,
                                              const void *indices,
@@ -293,14 +294,14 @@ gl::Error IndexDataManager::prepareIndexData(GLenum srcType,
 
     if (staticBufferInitialized && !staticBufferUsable)
     {
-        buffer->invalidateStaticData();
+        buffer->invalidateStaticData(context);
         staticBuffer = nullptr;
     }
 
     if (staticBuffer == nullptr || !offsetAligned)
     {
         const uint8_t *bufferData = nullptr;
-        gl::Error error           = buffer->getData(&bufferData);
+        gl::Error error           = buffer->getData(context, &bufferData);
         if (error.isError())
         {
             return error;
@@ -313,14 +314,14 @@ gl::Error IndexDataManager::prepareIndexData(GLenum srcType,
         {
             return error;
         }
-        buffer->promoteStaticUsage(count << srcTypeInfo.bytesShift);
+        buffer->promoteStaticUsage(context, count << srcTypeInfo.bytesShift);
     }
     else
     {
         if (!staticBufferInitialized)
         {
             const uint8_t *bufferData = nullptr;
-            gl::Error error           = buffer->getData(&bufferData);
+            gl::Error error           = buffer->getData(context, &bufferData);
             if (error.isError())
             {
                 return error;

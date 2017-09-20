@@ -53,7 +53,8 @@ class BufferImpl : angle::NonCopyable
                                void **mapPtr) = 0;
     virtual gl::Error unmap(const gl::Context *context, GLboolean *result) = 0;
 
-    virtual gl::Error getIndexRange(GLenum type,
+    virtual gl::Error getIndexRange(const gl::Context *context,
+                                    GLenum type,
                                     size_t offset,
                                     size_t count,
                                     bool primitiveRestartEnabled,

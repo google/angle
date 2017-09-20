@@ -32,7 +32,8 @@ class MockBufferImpl : public BufferImpl
                  gl::Error(const gl::Context *contextImpl, size_t, size_t, GLbitfield, void **));
     MOCK_METHOD2(unmap, gl::Error(const gl::Context *contextImpl, GLboolean *result));
 
-    MOCK_METHOD5(getIndexRange, gl::Error(GLenum, size_t, size_t, bool, gl::IndexRange *));
+    MOCK_METHOD6(getIndexRange,
+                 gl::Error(const gl::Context *, GLenum, size_t, size_t, bool, gl::IndexRange *));
 
     MOCK_METHOD0(destructor, void());
 

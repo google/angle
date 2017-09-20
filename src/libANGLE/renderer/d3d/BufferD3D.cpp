@@ -47,7 +47,7 @@ void BufferD3D::updateSerial()
     mSerial = mNextSerial++;
 }
 
-void BufferD3D::updateD3DBufferUsage(GLenum usage)
+void BufferD3D::updateD3DBufferUsage(const gl::Context *context, GLenum usage)
 {
     switch (usage)
     {
@@ -55,7 +55,7 @@ void BufferD3D::updateD3DBufferUsage(GLenum usage)
         case GL_STATIC_READ:
         case GL_STATIC_COPY:
             mUsage = D3DBufferUsage::STATIC;
-            initializeStaticData();
+            initializeStaticData(context);
             break;
 
         case GL_STREAM_DRAW:
@@ -71,7 +71,7 @@ void BufferD3D::updateD3DBufferUsage(GLenum usage)
     }
 }
 
-void BufferD3D::initializeStaticData()
+void BufferD3D::initializeStaticData(const gl::Context *context)
 {
     if (mStaticVertexBuffers.empty())
     {
@@ -140,7 +140,7 @@ StaticVertexBufferInterface *BufferD3D::getStaticVertexBuffer(const gl::VertexAt
     return newStaticBuffer;
 }
 
-void BufferD3D::invalidateStaticData()
+void BufferD3D::invalidateStaticData(const gl::Context *context)
 {
     emptyStaticBufferCache();
 
@@ -153,14 +153,14 @@ void BufferD3D::invalidateStaticData()
     // buffers so that they are populated the next time we use this buffer.
     if (mUsage == D3DBufferUsage::STATIC)
     {
-        initializeStaticData();
+        initializeStaticData(context);
     }
 
     mUnmodifiedDataUse = 0;
 }
 
 // Creates static buffers if sufficient used data has been left unmodified
-void BufferD3D::promoteStaticUsage(int dataSize)
+void BufferD3D::promoteStaticUsage(const gl::Context *context, int dataSize)
 {
     if (mUsage == D3DBufferUsage::DYNAMIC)
     {
@@ -168,19 +168,20 @@ void BufferD3D::promoteStaticUsage(int dataSize)
 
         if (mUnmodifiedDataUse > 3 * getSize())
         {
-            updateD3DBufferUsage(GL_STATIC_DRAW);
+            updateD3DBufferUsage(context, GL_STATIC_DRAW);
         }
     }
 }
 
-gl::Error BufferD3D::getIndexRange(GLenum type,
+gl::Error BufferD3D::getIndexRange(const gl::Context *context,
+                                   GLenum type,
                                    size_t offset,
                                    size_t count,
                                    bool primitiveRestartEnabled,
                                    gl::IndexRange *outRange)
 {
     const uint8_t *data = nullptr;
-    ANGLE_TRY(getData(&data));
+    ANGLE_TRY(getData(context, &data));
 
     *outRange = gl::ComputeIndexRange(type, data + offset, count, primitiveRestartEnabled);
     return gl::NoError();

@@ -210,7 +210,7 @@ gl::Error VertexArray11::updateDirtyAndDynamicAttribs(const gl::Context *context
                     break;
                 case VertexStorageType::STATIC:
                 {
-                    ANGLE_TRY(VertexDataManager::StoreStaticAttrib(translatedAttrib));
+                    ANGLE_TRY(VertexDataManager::StoreStaticAttrib(context, translatedAttrib));
                     break;
                 }
                 case VertexStorageType::CURRENT_VALUE:
@@ -240,8 +240,8 @@ gl::Error VertexArray11::updateDirtyAndDynamicAttribs(const gl::Context *context
                 dynamicAttrib->binding->getDivisor() * mAppliedNumViewsToDivisor;
         }
 
-        ANGLE_TRY(vertexDataManager->storeDynamicAttribs(&mTranslatedAttribs, activeDynamicAttribs,
-                                                         start, count, instances));
+        ANGLE_TRY(vertexDataManager->storeDynamicAttribs(
+            context, &mTranslatedAttribs, activeDynamicAttribs, start, count, instances));
     }
 
     return gl::NoError();
@@ -252,7 +252,7 @@ const std::vector<TranslatedAttribute> &VertexArray11::getTranslatedAttribs() co
     return mTranslatedAttribs;
 }
 
-void VertexArray11::signal(size_t channelID)
+void VertexArray11::signal(size_t channelID, const gl::Context *context)
 {
     ASSERT(mAttributeStorageTypes[channelID] != VertexStorageType::CURRENT_VALUE);
 
@@ -260,15 +260,17 @@ void VertexArray11::signal(size_t channelID)
     mAttribsToUpdate.set(channelID);
 }
 
-void VertexArray11::clearDirtyAndPromoteDynamicAttribs(const gl::State &state, GLsizei count)
+void VertexArray11::clearDirtyAndPromoteDynamicAttribs(const gl::Context *context, GLsizei count)
 {
+    const gl::State &state      = context->getGLState();
     const gl::Program *program  = state.getProgram();
     const auto &activeLocations = program->getActiveAttribLocationsMask();
     mAttribsToUpdate &= ~activeLocations;
 
     // Promote to static after we clear the dirty attributes, otherwise we can lose dirtyness.
     auto activeDynamicAttribs = (mDynamicAttribsMask & activeLocations);
-    VertexDataManager::PromoteDynamicAttribs(mTranslatedAttribs, activeDynamicAttribs, count);
+    VertexDataManager::PromoteDynamicAttribs(context, mTranslatedAttribs, activeDynamicAttribs,
+                                             count);
 }
 
 void VertexArray11::markAllAttributeDivisorsForAdjustment(int numViews)

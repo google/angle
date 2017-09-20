@@ -22,7 +22,7 @@ Buffer9::~Buffer9()
     mSize = 0;
 }
 
-gl::Error Buffer9::setData(const gl::Context * /*context*/,
+gl::Error Buffer9::setData(const gl::Context *context,
                            GLenum /*target*/,
                            const void *data,
                            size_t size,
@@ -42,20 +42,20 @@ gl::Error Buffer9::setData(const gl::Context * /*context*/,
         memcpy(mMemory.data(), data, size);
     }
 
-    updateD3DBufferUsage(usage);
+    updateD3DBufferUsage(context, usage);
 
-    invalidateStaticData();
+    invalidateStaticData(context);
 
     return gl::NoError();
 }
 
-gl::Error Buffer9::getData(const uint8_t **outData)
+gl::Error Buffer9::getData(const gl::Context *context, const uint8_t **outData)
 {
     *outData = mMemory.data();
     return gl::NoError();
 }
 
-gl::Error Buffer9::setSubData(const gl::Context * /*context*/,
+gl::Error Buffer9::setSubData(const gl::Context *context,
                               GLenum /*target*/,
                               const void *data,
                               size_t size,
@@ -75,7 +75,7 @@ gl::Error Buffer9::setSubData(const gl::Context * /*context*/,
         memcpy(mMemory.data() + offset, data, size);
     }
 
-    invalidateStaticData();
+    invalidateStaticData(context);
 
     return gl::NoError();
 }
@@ -92,7 +92,7 @@ gl::Error Buffer9::copySubData(const gl::Context *context,
 
     memcpy(mMemory.data() + destOffset, sourceBuffer->mMemory.data() + sourceOffset, size);
 
-    invalidateStaticData();
+    invalidateStaticData(context);
 
     return gl::NoError();
 }
@@ -120,7 +120,7 @@ gl::Error Buffer9::unmap(const gl::Context *context, GLboolean *result)
     return gl::InternalError();
 }
 
-gl::Error Buffer9::markTransformFeedbackUsage()
+gl::Error Buffer9::markTransformFeedbackUsage(const gl::Context *context)
 {
     UNREACHABLE();
     return gl::InternalError();

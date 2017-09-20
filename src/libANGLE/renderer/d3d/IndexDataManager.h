@@ -76,7 +76,8 @@ class IndexDataManager : angle::NonCopyable
     static bool IsStreamingIndexData(const gl::Context *context,
                                      GLenum srcType,
                                      RendererClass rendererClass);
-    gl::Error prepareIndexData(GLenum srcType,
+    gl::Error prepareIndexData(const gl::Context *context,
+                               GLenum srcType,
                                GLsizei count,
                                gl::Buffer *glBuffer,
                                const void *indices,

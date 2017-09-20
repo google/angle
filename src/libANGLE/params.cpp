@@ -37,7 +37,7 @@ const Optional<IndexRange> &HasIndexRange::getIndexRange() const
         uintptr_t offset = reinterpret_cast<uintptr_t>(mIndices);
         IndexRange indexRange;
         Error error =
-            elementArrayBuffer->getIndexRange(mType, static_cast<size_t>(offset), mCount,
+            elementArrayBuffer->getIndexRange(mContext, mType, static_cast<size_t>(offset), mCount,
                                               state.isPrimitiveRestartEnabled(), &indexRange);
         if (error.isError())
         {

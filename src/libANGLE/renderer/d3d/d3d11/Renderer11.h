@@ -484,13 +484,13 @@ class Renderer11 : public RendererD3D
 
     angle::WorkaroundsD3D generateWorkarounds() const override;
 
-    gl::Error drawLineLoop(const gl::State &glState,
+    gl::Error drawLineLoop(const gl::Context *context,
                            GLsizei count,
                            GLenum type,
                            const void *indices,
                            int baseVertex,
                            int instances);
-    gl::Error drawTriangleFan(const gl::State &glState,
+    gl::Error drawTriangleFan(const gl::Context *context,
                               GLsizei count,
                               GLenum type,
                               const void *indices,
@@ -524,7 +524,7 @@ class Renderer11 : public RendererD3D
 
     d3d11::ANGLED3D11DeviceType getDeviceType() const;
 
-    gl::Error markTransformFeedbackUsage(const gl::State &glState);
+    gl::Error markTransformFeedbackUsage(const gl::Context *context);
 
     HMODULE mD3d11Module;
     HMODULE mDxgiModule;

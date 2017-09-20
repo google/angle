@@ -85,8 +85,7 @@ class InputLayoutCache : angle::NonCopyable
 
     void clear();
 
-    gl::Error applyVertexBuffers(Renderer11 *renderer,
-                                 const gl::State &state,
+    gl::Error applyVertexBuffers(const gl::Context *context,
                                  const std::vector<const TranslatedAttribute *> &currentAttributes,
                                  GLenum mode,
                                  GLint start,

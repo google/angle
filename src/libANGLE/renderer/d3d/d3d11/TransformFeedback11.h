@@ -41,7 +41,7 @@ class TransformFeedback11 : public TransformFeedbackImpl
     bool isDirty() const;
 
     UINT getNumSOBuffers() const;
-    gl::ErrorOrResult<const std::vector<ID3D11Buffer *> *> getSOBuffers();
+    gl::ErrorOrResult<const std::vector<ID3D11Buffer *> *> getSOBuffers(const gl::Context *context);
     const std::vector<UINT> &getSOBufferOffsets() const;
 
     Serial getSerial() const;

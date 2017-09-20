@@ -1311,14 +1311,15 @@ gl::Error Renderer9::applyRenderTarget(const gl::Context *context,
                              framebuffer->getDepthOrStencilbuffer());
 }
 
-gl::Error Renderer9::applyVertexBuffer(const gl::State &state,
+gl::Error Renderer9::applyVertexBuffer(const gl::Context *context,
                                        GLenum mode,
                                        GLint first,
                                        GLsizei count,
                                        GLsizei instances,
                                        TranslatedIndexData * /*indexInfo*/)
 {
-    gl::Error error = mVertexDataManager->prepareVertexData(state, first, count,
+    const gl::State &state = context->getGLState();
+    gl::Error error        = mVertexDataManager->prepareVertexData(context, first, count,
                                                             &mTranslatedAttribCache, instances);
     if (error.isError())
     {
@@ -1330,17 +1331,17 @@ gl::Error Renderer9::applyVertexBuffer(const gl::State &state,
 }
 
 // Applies the indices and element array bindings to the Direct3D 9 device
-gl::Error Renderer9::applyIndexBuffer(const gl::ContextState &data,
+gl::Error Renderer9::applyIndexBuffer(const gl::Context *context,
                                       const void *indices,
                                       GLsizei count,
                                       GLenum mode,
                                       GLenum type,
                                       TranslatedIndexData *indexInfo)
 {
-    gl::VertexArray *vao           = data.getState().getVertexArray();
+    gl::VertexArray *vao           = context->getGLState().getVertexArray();
     gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
-    gl::Error error = mIndexDataManager->prepareIndexData(type, count, elementArrayBuffer, indices,
-                                                          indexInfo, false);
+    gl::Error error = mIndexDataManager->prepareIndexData(context, type, count, elementArrayBuffer,
+                                                          indices, indexInfo, false);
     if (error.isError())
     {
         return error;
@@ -1360,19 +1361,19 @@ gl::Error Renderer9::applyIndexBuffer(const gl::ContextState &data,
     return gl::NoError();
 }
 
-gl::Error Renderer9::drawArraysImpl(const gl::ContextState &data,
+gl::Error Renderer9::drawArraysImpl(const gl::Context *context,
                                     GLenum mode,
                                     GLint startVertex,
                                     GLsizei count,
                                     GLsizei instances)
 {
-    ASSERT(!data.getState().isTransformFeedbackActiveUnpaused());
+    ASSERT(!context->getGLState().isTransformFeedbackActiveUnpaused());
 
     startScene();
 
     if (mode == GL_LINE_LOOP)
     {
-        return drawLineLoop(count, GL_NONE, nullptr, 0, nullptr);
+        return drawLineLoop(context, count, GL_NONE, nullptr, 0, nullptr);
     }
     else if (instances > 0)
     {
@@ -1412,31 +1413,29 @@ gl::Error Renderer9::drawElementsImpl(const gl::Context *context,
                                       const void *indices,
                                       GLsizei instances)
 {
-    const auto &data = context->getContextState();
     TranslatedIndexData indexInfo;
     const gl::IndexRange &indexRange =
         context->getParams<gl::HasIndexRange>().getIndexRange().value();
     indexInfo.indexRange = indexRange;
-    ANGLE_TRY(applyIndexBuffer(data, indices, count, mode, type, &indexInfo));
+    ANGLE_TRY(applyIndexBuffer(context, indices, count, mode, type, &indexInfo));
     size_t vertexCount = indexInfo.indexRange.vertexCount();
-    ANGLE_TRY(applyVertexBuffer(data.getState(), mode,
-                                static_cast<GLsizei>(indexInfo.indexRange.start),
+    ANGLE_TRY(applyVertexBuffer(context, mode, static_cast<GLsizei>(indexInfo.indexRange.start),
                                 static_cast<GLsizei>(vertexCount), instances, &indexInfo));
 
     startScene();
 
     int minIndex = static_cast<int>(indexInfo.indexRange.start);
 
-    gl::VertexArray *vao           = data.getState().getVertexArray();
+    gl::VertexArray *vao           = context->getGLState().getVertexArray();
     gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
 
     if (mode == GL_POINTS)
     {
-        return drawIndexedPoints(count, type, indices, minIndex, elementArrayBuffer);
+        return drawIndexedPoints(context, count, type, indices, minIndex, elementArrayBuffer);
     }
     else if (mode == GL_LINE_LOOP)
     {
-        return drawLineLoop(count, type, indices, minIndex, elementArrayBuffer);
+        return drawLineLoop(context, count, type, indices, minIndex, elementArrayBuffer);
     }
     else
     {
@@ -1450,7 +1449,8 @@ gl::Error Renderer9::drawElementsImpl(const gl::Context *context,
     }
 }
 
-gl::Error Renderer9::drawLineLoop(GLsizei count,
+gl::Error Renderer9::drawLineLoop(const gl::Context *context,
+                                  GLsizei count,
                                   GLenum type,
                                   const void *indices,
                                   int minIndex,
@@ -1462,7 +1462,7 @@ gl::Error Renderer9::drawLineLoop(GLsizei count,
         BufferD3D *storage        = GetImplAs<BufferD3D>(elementArrayBuffer);
         intptr_t offset           = reinterpret_cast<intptr_t>(indices);
         const uint8_t *bufferData = nullptr;
-        gl::Error error           = storage->getData(&bufferData);
+        gl::Error error           = storage->getData(context, &bufferData);
         if (error.isError())
         {
             return error;
@@ -1668,7 +1668,8 @@ static gl::Error drawPoints(IDirect3DDevice9 *device,
     return gl::NoError();
 }
 
-gl::Error Renderer9::drawIndexedPoints(GLsizei count,
+gl::Error Renderer9::drawIndexedPoints(const gl::Context *context,
+                                       GLsizei count,
                                        GLenum type,
                                        const void *indices,
                                        int minIndex,
@@ -1683,7 +1684,7 @@ gl::Error Renderer9::drawIndexedPoints(GLsizei count,
         intptr_t offset    = reinterpret_cast<intptr_t>(indices);
 
         const uint8_t *bufferData = nullptr;
-        gl::Error error           = storage->getData(&bufferData);
+        gl::Error error           = storage->getData(context, &bufferData);
         if (error.isError())
         {
             return error;
@@ -3135,7 +3136,6 @@ gl::Error Renderer9::genericDrawArrays(const gl::Context *context,
                                        GLsizei count,
                                        GLsizei instances)
 {
-    const auto &data     = context->getContextState();
     gl::Program *program = context->getGLState().getProgram();
     ASSERT(program != nullptr);
     ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
@@ -3149,13 +3149,13 @@ gl::Error Renderer9::genericDrawArrays(const gl::Context *context,
     }
 
     ANGLE_TRY(updateState(context, mode));
-    ANGLE_TRY(applyVertexBuffer(data.getState(), mode, first, count, instances, nullptr));
+    ANGLE_TRY(applyVertexBuffer(context, mode, first, count, instances, nullptr));
     ANGLE_TRY(applyTextures(context));
     ANGLE_TRY(applyShaders(context, mode));
 
-    if (!skipDraw(data.getState(), mode))
+    if (!skipDraw(context->getGLState(), mode))
     {
-        ANGLE_TRY(drawArraysImpl(data, mode, first, count, instances));
+        ANGLE_TRY(drawArraysImpl(context, mode, first, count, instances));
     }
 
     return gl::NoError();

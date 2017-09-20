@@ -2486,8 +2486,8 @@ gl::Error StateManager11::applyVertexBuffer(const gl::Context *context,
                                                   sortedSemanticIndices, numIndicesPerInstance));
 
     // Update the applied vertex buffers.
-    ANGLE_TRY(mInputLayoutCache.applyVertexBuffers(mRenderer, state, mCurrentAttributes, mode,
-                                                   first, indexInfo));
+    ANGLE_TRY(
+        mInputLayoutCache.applyVertexBuffers(context, mCurrentAttributes, mode, first, indexInfo));
 
     // InputLayoutCache::applyVertexBuffers calls through to the Bufer11 to get the native vertex
     // buffer (ID3D11Buffer *). Because we allocate these buffers lazily, this will trigger
@@ -2496,7 +2496,7 @@ gl::Error StateManager11::applyVertexBuffer(const gl::Context *context,
     // update on the second draw call.
     // Hence we clear the flags here, after we've applied vertex data, since we know everything
     // is clean. This is a bit of a hack.
-    vertexArray11->clearDirtyAndPromoteDynamicAttribs(state, count);
+    vertexArray11->clearDirtyAndPromoteDynamicAttribs(context, count);
 
     mInputLayoutIsDirty = false;
     return gl::NoError();
@@ -2511,7 +2511,7 @@ gl::Error StateManager11::applyIndexBuffer(const gl::Context *context,
     const auto &glState            = context->getGLState();
     gl::VertexArray *vao           = glState.getVertexArray();
     gl::Buffer *elementArrayBuffer = vao->getElementArrayBuffer().get();
-    ANGLE_TRY(mIndexDataManager.prepareIndexData(type, count, elementArrayBuffer, indices,
+    ANGLE_TRY(mIndexDataManager.prepareIndexData(context, type, count, elementArrayBuffer, indices,
                                                  indexInfo, glState.isPrimitiveRestartEnabled()));
 
     ID3D11Buffer *buffer = nullptr;
@@ -2521,7 +2521,7 @@ gl::Error StateManager11::applyIndexBuffer(const gl::Context *context,
     if (indexInfo->storage)
     {
         Buffer11 *storage = GetAs<Buffer11>(indexInfo->storage);
-        ANGLE_TRY_RESULT(storage->getBuffer(BUFFER_USAGE_INDEX), buffer);
+        ANGLE_TRY_RESULT(storage->getBuffer(context, BUFFER_USAGE_INDEX), buffer);
     }
     else
     {
@@ -2799,9 +2799,9 @@ gl::Error StateManager11::syncUniformBuffers(const gl::Context *context, Program
         UINT firstConstant                  = 0;
         UINT numConstants                   = 0;
 
-        ANGLE_TRY(bufferStorage->getConstantBufferRange(uniformBufferOffset, uniformBufferSize,
-                                                        &constantBuffer, &firstConstant,
-                                                        &numConstants));
+        ANGLE_TRY(bufferStorage->getConstantBufferRange(context, uniformBufferOffset,
+                                                        uniformBufferSize, &constantBuffer,
+                                                        &firstConstant, &numConstants));
 
         ASSERT(constantBuffer);
 
@@ -2853,9 +2853,9 @@ gl::Error StateManager11::syncUniformBuffers(const gl::Context *context, Program
         UINT firstConstant                  = 0;
         UINT numConstants                   = 0;
 
-        ANGLE_TRY(bufferStorage->getConstantBufferRange(uniformBufferOffset, uniformBufferSize,
-                                                        &constantBuffer, &firstConstant,
-                                                        &numConstants));
+        ANGLE_TRY(bufferStorage->getConstantBufferRange(context, uniformBufferOffset,
+                                                        uniformBufferSize, &constantBuffer,
+                                                        &firstConstant, &numConstants));
 
         ASSERT(constantBuffer);
 
@@ -2911,7 +2911,7 @@ gl::Error StateManager11::syncTransformFeedbackBuffers(const gl::Context *contex
     }
 
     const std::vector<ID3D11Buffer *> *soBuffers = nullptr;
-    ANGLE_TRY_RESULT(tf11->getSOBuffers(), soBuffers);
+    ANGLE_TRY_RESULT(tf11->getSOBuffers(context), soBuffers);
     const std::vector<UINT> &soOffsets = tf11->getSOBufferOffsets();
 
     deviceContext->SOSetTargets(tf11->getNumSOBuffers(), soBuffers->data(), soOffsets.data());

@@ -92,7 +92,8 @@ class Buffer final : public RefCountObject, public LabeledObject
     void onTransformFeedback();
     void onPixelUnpack();
 
-    Error getIndexRange(GLenum type,
+    Error getIndexRange(const gl::Context *context,
+                        GLenum type,
                         size_t offset,
                         size_t count,
                         bool primitiveRestartEnabled,

@@ -97,7 +97,8 @@ gl::Error BufferNULL::unmap(const gl::Context *context, GLboolean *result)
     return gl::NoError();
 }
 
-gl::Error BufferNULL::getIndexRange(GLenum type,
+gl::Error BufferNULL::getIndexRange(const gl::Context *context,
+                                    GLenum type,
                                     size_t offset,
                                     size_t count,
                                     bool primitiveRestartEnabled,
