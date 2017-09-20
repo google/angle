@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "77e850fb_f0bc6fff",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 2926,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-20T17:26:05Z",
+      "side": 1,
+      "message": "Done, I put it here because the Framebuffer was const in Texture. Fixed by removing the const.",
+      "parentUuid": "e023d3ce_14a89204",
+      "range": {
+        "startLine": 2926,
+        "startChar": 4,
+        "endLine": 2926,
+        "endChar": 95
+      },
+      "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dc0320b5_12b01a87",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 30
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "3730e36c_0f2a2944",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 2955,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-20T17:26:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dc0320b5_12b01a87",
+      "range": {
+        "startLine": 2955,
+        "startChar": 4,
+        "endLine": 2955,
+        "endChar": 95
+      },
+      "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "017f9f40_069be073",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 30
@@ -59,6 +107,30 @@
       "writtenOn": "2017-09-19T17:30:51Z",
       "side": 1,
       "message": "I\u0027d be ok with it being non-const so that the texture can initialize itself in the copySubTexture method.  It can probably stay const for the impl though.",
+      "range": {
+        "startLine": 3410,
+        "startChar": 4,
+        "endLine": 3411,
+        "endChar": 62
+      },
+      "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b4fdd3cb_5946f954",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 3411,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-20T17:26:05Z",
+      "side": 1,
+      "message": "Done. It\u0027s kind of meaningless anyway since we can pull non-const objects out of the const Context.",
+      "parentUuid": "017f9f40_069be073",
       "range": {
         "startLine": 3410,
         "startChar": 4,
@@ -88,6 +160,24 @@
     },
     {
       "key": {
+        "uuid": "39948e71_1ce0056c",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 1106,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-20T17:26:05Z",
+      "side": 1,
+      "message": "Done, we can treat these as no-op in WebGL, so I left a TODO to ensure it works as expected on every back-end. Not really a robust resource init thing.",
+      "parentUuid": "0a1fa8de_034acba4",
+      "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "462c0ad0_f2edb076",
         "filename": "src/libANGLE/Framebuffer.cpp",
         "patchSetId": 30
@@ -102,6 +192,24 @@
       "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec410fbb_f931d133",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 1113,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-20T17:26:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "462c0ad0_f2edb076",
+      "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -122,6 +230,24 @@
     },
     {
       "key": {
+        "uuid": "127b8818_e9d15219",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 1122,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-20T17:26:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1ff7e26d_d007e7c9",
+      "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a23078cf_65f5a427",
         "filename": "src/libANGLE/Framebuffer.cpp",
         "patchSetId": 30
@@ -136,6 +262,24 @@
       "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a3ac47f3_aca1f764",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 1140,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-20T17:26:05Z",
+      "side": 1,
+      "message": "Done, and added test. The partial masking check for ClearBuffer* was also not implemented.",
+      "parentUuid": "a23078cf_65f5a427",
+      "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -156,6 +300,24 @@
     },
     {
       "key": {
+        "uuid": "589d3e6d_8a609a85",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 1852,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-20T17:26:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f5a88c61_d3958c13",
+      "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6eb73511_87b56d3e",
         "filename": "src/libANGLE/FramebufferAttachment.h",
         "patchSetId": 30
@@ -173,6 +335,24 @@
     },
     {
       "key": {
+        "uuid": "e3b31548_986d5dbc",
+        "filename": "src/libANGLE/FramebufferAttachment.h",
+        "patchSetId": 30
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-20T17:26:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6eb73511_87b56d3e",
+      "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8eccb8dd_089036b7",
         "filename": "src/libANGLE/ResourceManager.cpp",
         "patchSetId": 30
@@ -187,6 +367,24 @@
       "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8959ef58_c68cb743",
+        "filename": "src/libANGLE/ResourceManager.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-20T17:26:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8eccb8dd_089036b7",
+      "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     },
     {
       "key": {
@@ -213,6 +411,30 @@
     },
     {
       "key": {
+        "uuid": "9823798f_82448c2e",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 999,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-20T17:26:05Z",
+      "side": 1,
+      "message": "Done. This was outdated - the source was always initialized.",
+      "parentUuid": "5a02e9e1_5beda44b",
+      "range": {
+        "startLine": 998,
+        "startChar": 4,
+        "endLine": 999,
+        "endChar": 94
+      },
+      "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "bb25eef1_9d8eaa2d",
         "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
         "patchSetId": 30
@@ -224,6 +446,24 @@
       "writtenOn": "2017-09-19T20:38:41Z",
       "side": 1,
       "message": "image_util already has the same thing for ETC.",
+      "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5dddec68_564f9503",
+        "filename": "src/tests/gl_tests/RobustResourceInitTest.cpp",
+        "patchSetId": 30
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105324
+      },
+      "writtenOn": "2017-09-20T17:26:05Z",
+      "side": 1,
+      "message": "Thanks. Any idea how to use that code? Does it have decoding for dxt1/bc1? I didn\u0027t see anything I could use at a first glance, but didn\u0027t look closely.",
+      "parentUuid": "bb25eef1_9d8eaa2d",
       "revId": "9501864d19885d5508a71bb9d0d05df0f4028de0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
