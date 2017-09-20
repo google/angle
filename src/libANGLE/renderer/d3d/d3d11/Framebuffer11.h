@@ -52,7 +52,7 @@ class Framebuffer11 : public FramebufferD3D, public OnRenderTargetDirtyReceiver
     bool hasAnyInternalDirtyBit() const;
     void syncInternalState(const gl::Context *context);
 
-    void signal(size_t channelID) override;
+    void signal(size_t channelID, const gl::Context *context) override;
 
     gl::Error getSamplePosition(size_t index, GLfloat *xy) const override;
 

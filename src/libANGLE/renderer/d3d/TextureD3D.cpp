@@ -430,7 +430,7 @@ gl::Error TextureD3D::generateMipmap(const gl::Context *context)
         // Switch to using the mipmapped texture.
         TextureStorage *textureStorage = nullptr;
         ANGLE_TRY(getNativeTexture(context, &textureStorage));
-        ANGLE_TRY(textureStorage->useLevelZeroWorkaroundTexture(false));
+        ANGLE_TRY(textureStorage->useLevelZeroWorkaroundTexture(context, false));
     }
 
     // Set up proper mipmap chain in our Image array.

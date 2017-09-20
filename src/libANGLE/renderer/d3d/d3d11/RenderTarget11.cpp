@@ -200,12 +200,12 @@ RenderTarget11::RenderTarget11(const d3d11::Format &formatSet) : mFormatSet(form
 
 RenderTarget11::~RenderTarget11()
 {
-    signalDirty();
+    ASSERT(mBroadcastChannel.empty());
 }
 
-void RenderTarget11::signalDirty()
+void RenderTarget11::signalDirty(const gl::Context *context)
 {
-    mBroadcastChannel.signal();
+    mBroadcastChannel.signal(context);
 
     // Clear the list. We can't do this in the receiver because it would mutate during iteration.
     mBroadcastChannel.reset();

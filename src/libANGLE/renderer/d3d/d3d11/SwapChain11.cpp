@@ -110,6 +110,8 @@ SwapChain11::~SwapChain11()
 
 void SwapChain11::release()
 {
+    // TODO(jmadill): Should probably signal that the RenderTarget is dirty.
+
     SafeRelease(mSwapChain1);
     SafeRelease(mSwapChain);
     SafeRelease(mKeyedMutex);

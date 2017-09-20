@@ -22,13 +22,17 @@ RenderbufferVk::~RenderbufferVk()
 {
 }
 
-gl::Error RenderbufferVk::setStorage(GLenum internalformat, size_t width, size_t height)
+gl::Error RenderbufferVk::setStorage(const gl::Context *context,
+                                     GLenum internalformat,
+                                     size_t width,
+                                     size_t height)
 {
     UNIMPLEMENTED();
     return gl::InternalError();
 }
 
-gl::Error RenderbufferVk::setStorageMultisample(size_t samples,
+gl::Error RenderbufferVk::setStorageMultisample(const gl::Context *context,
+                                                size_t samples,
                                                 GLenum internalformat,
                                                 size_t width,
                                                 size_t height)
@@ -37,7 +41,7 @@ gl::Error RenderbufferVk::setStorageMultisample(size_t samples,
     return gl::InternalError();
 }
 
-gl::Error RenderbufferVk::setStorageEGLImageTarget(egl::Image *image)
+gl::Error RenderbufferVk::setStorageEGLImageTarget(const gl::Context *context, egl::Image *image)
 {
     UNIMPLEMENTED();
     return gl::InternalError();

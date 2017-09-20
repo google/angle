@@ -44,6 +44,8 @@ class BroadcastChannel final : NonCopyable
 
     void reset();
 
+    bool empty() const;
+
   private:
     // Only the ChannelBinding class should add or remove receivers.
     friend class ChannelBinding<ChannelID, MessageT...>;
@@ -101,6 +103,12 @@ void BroadcastChannel<ChannelID, MessageT...>::reset()
         receiver->onChannelClosed();
     }
     mReceivers.clear();
+}
+
+template <typename ChannelID, typename... MessageT>
+bool BroadcastChannel<ChannelID, MessageT...>::empty() const
+{
+    return mReceivers.empty();
 }
 
 // The dependent class keeps bindings to the host's BroadcastChannel.

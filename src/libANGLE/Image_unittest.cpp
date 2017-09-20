@@ -57,7 +57,7 @@ TEST(ImageTest, RefCounting)
     gl::Renderbuffer *renderbuffer = new gl::Renderbuffer(renderbufferImpl, 1);
     renderbuffer->addRef();
 
-    EXPECT_CALL(*renderbufferImpl, setStorageEGLImageTarget(_))
+    EXPECT_CALL(*renderbufferImpl, setStorageEGLImageTarget(_, _))
         .WillOnce(Return(gl::NoError()))
         .RetiresOnSaturation();
     EXPECT_FALSE(renderbuffer->setStorageEGLImageTarget(nullptr, image).isError());

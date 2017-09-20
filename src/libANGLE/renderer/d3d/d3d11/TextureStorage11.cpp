@@ -31,6 +31,39 @@
 namespace rx
 {
 
+namespace
+{
+
+void InvalidateRenderTarget(const gl::Context *context, RenderTarget11 *renderTarget)
+{
+    if (renderTarget)
+    {
+        renderTarget->signalDirty(context);
+    }
+}
+
+RenderTarget11 *GetRenderTarget(std::unique_ptr<RenderTarget11> *pointer)
+{
+    return pointer->get();
+}
+
+template <typename KeyT>
+RenderTarget11 *GetRenderTarget(std::pair<KeyT, std::unique_ptr<RenderTarget11>> *pair)
+{
+    return pair->second.get();
+}
+
+template <typename T>
+void InvalidateRenderTargetContainer(const gl::Context *context, T *renderTargetContainer)
+{
+    for (auto &rt : *renderTargetContainer)
+    {
+        InvalidateRenderTarget(context, GetRenderTarget(&rt));
+    }
+}
+
+}  // anonymous namespace
+
 TextureStorage11::SRVKey::SRVKey(int baseLevel, int mipLevels, bool swizzle, bool dropStencil)
     : baseLevel(baseLevel), mipLevels(mipLevels), swizzle(swizzle), dropStencil(dropStencil)
 {
@@ -191,7 +224,7 @@ gl::Error TextureStorage11::getSRV(const gl::Context *context,
     if (mRenderer->getWorkarounds().zeroMaxLodWorkaround)
     {
         // We must ensure that the level zero texture is in sync with mipped texture.
-        ANGLE_TRY(useLevelZeroWorkaroundTexture(mipLevels == 1));
+        ANGLE_TRY(useLevelZeroWorkaroundTexture(context, mipLevels == 1));
     }
 
     if (swizzleRequired)
@@ -328,7 +361,7 @@ gl::Error TextureStorage11::getSRVLevels(const gl::Context *context,
     if (mRenderer->getWorkarounds().zeroMaxLodWorkaround)
     {
         // We must ensure that the level zero texture is in sync with mipped texture.
-        ANGLE_TRY(useLevelZeroWorkaroundTexture(mipLevels == 1));
+        ANGLE_TRY(useLevelZeroWorkaroundTexture(context, mipLevels == 1));
     }
 
     // TODO(jmadill): Assert we don't need to drop stencil.
@@ -788,6 +821,10 @@ gl::Error TextureStorage11_2D::onDestroy(const gl::Context *context)
         mRenderer->getStateManager()->invalidateBoundViews(context);
     }
 
+    // Invalidate RenderTargets.
+    InvalidateRenderTargetContainer(context, &mRenderTarget);
+    InvalidateRenderTarget(context, mLevelZeroRenderTarget.get());
+
     return gl::NoError();
 }
 
@@ -809,7 +846,7 @@ gl::Error TextureStorage11_2D::copyToStorage(const gl::Context *context,
         // corresponding textures in destStorage.
         if (mTexture.valid())
         {
-            ANGLE_TRY(dest11->useLevelZeroWorkaroundTexture(false));
+            ANGLE_TRY(dest11->useLevelZeroWorkaroundTexture(context, false));
 
             const TextureHelper11 *destResource = nullptr;
             ANGLE_TRY(dest11->getResource(context, &destResource));
@@ -819,7 +856,7 @@ gl::Error TextureStorage11_2D::copyToStorage(const gl::Context *context,
 
         if (mLevelZeroTexture.valid())
         {
-            ANGLE_TRY(dest11->useLevelZeroWorkaroundTexture(true));
+            ANGLE_TRY(dest11->useLevelZeroWorkaroundTexture(context, true));
 
             const TextureHelper11 *destResource = nullptr;
             ANGLE_TRY(dest11->getResource(context, &destResource));
@@ -842,7 +879,8 @@ gl::Error TextureStorage11_2D::copyToStorage(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_2D::useLevelZeroWorkaroundTexture(bool useLevelZeroTexture)
+gl::Error TextureStorage11_2D::useLevelZeroWorkaroundTexture(const gl::Context *context,
+                                                             bool useLevelZeroTexture)
 {
     bool lastSetting = mUseLevelZeroTexture;
 
@@ -854,9 +892,9 @@ gl::Error TextureStorage11_2D::useLevelZeroWorkaroundTexture(bool useLevelZeroTe
 
             // Pull data back from the mipped texture if necessary.
             ASSERT(mLevelZeroTexture.valid());
-            ID3D11DeviceContext *context = mRenderer->getDeviceContext();
-            context->CopySubresourceRegion(mLevelZeroTexture.get(), 0, 0, 0, 0, mTexture.get(), 0,
-                                           nullptr);
+            ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
+            deviceContext->CopySubresourceRegion(mLevelZeroTexture.get(), 0, 0, 0, 0,
+                                                 mTexture.get(), 0, nullptr);
         }
 
         mUseLevelZeroTexture = true;
@@ -869,9 +907,9 @@ gl::Error TextureStorage11_2D::useLevelZeroWorkaroundTexture(bool useLevelZeroTe
 
             // Pull data back from the level zero texture if necessary.
             ASSERT(mTexture.valid());
-            ID3D11DeviceContext *context = mRenderer->getDeviceContext();
-            context->CopySubresourceRegion(mTexture.get(), 0, 0, 0, 0, mLevelZeroTexture.get(), 0,
-                                           nullptr);
+            ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
+            deviceContext->CopySubresourceRegion(mTexture.get(), 0, 0, 0, 0,
+                                                 mLevelZeroTexture.get(), 0, nullptr);
         }
 
         mUseLevelZeroTexture = false;
@@ -882,13 +920,13 @@ gl::Error TextureStorage11_2D::useLevelZeroWorkaroundTexture(bool useLevelZeroTe
         // Mark everything as dirty to be conservative.
         if (mLevelZeroRenderTarget)
         {
-            mLevelZeroRenderTarget->signalDirty();
+            mLevelZeroRenderTarget->signalDirty(context);
         }
         for (auto &renderTarget : mRenderTarget)
         {
             if (renderTarget)
             {
-                renderTarget->signalDirty();
+                renderTarget->signalDirty(context);
             }
         }
     }
@@ -1047,7 +1085,7 @@ gl::Error TextureStorage11_2D::getRenderTarget(const gl::Context *context,
     if (mRenderer->getWorkarounds().zeroMaxLodWorkaround)
     {
         ASSERT(index.mipIndex == 0);
-        ANGLE_TRY(useLevelZeroWorkaroundTexture(true));
+        ANGLE_TRY(useLevelZeroWorkaroundTexture(context, true));
     }
 
     const TextureHelper11 *texture = nullptr;
@@ -1492,7 +1530,7 @@ gl::Error TextureStorage11_EGLImage::releaseAssociatedImage(const gl::Context *c
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_EGLImage::useLevelZeroWorkaroundTexture(bool)
+gl::Error TextureStorage11_EGLImage::useLevelZeroWorkaroundTexture(const gl::Context *context, bool)
 {
     UNREACHABLE();
     return gl::InternalError();
@@ -1675,6 +1713,12 @@ gl::Error TextureStorage11_Cube::onDestroy(const gl::Context *context)
         }
     }
 
+    for (auto &faceRenderTargets : mRenderTarget)
+    {
+        InvalidateRenderTargetContainer(context, &faceRenderTargets);
+    }
+    InvalidateRenderTargetContainer(context, &mLevelZeroRenderTarget);
+
     return gl::NoError();
 }
 
@@ -1717,7 +1761,7 @@ gl::Error TextureStorage11_Cube::copyToStorage(const gl::Context *context,
         // corresponding textures in destStorage.
         if (mTexture.valid())
         {
-            ANGLE_TRY(dest11->useLevelZeroWorkaroundTexture(false));
+            ANGLE_TRY(dest11->useLevelZeroWorkaroundTexture(context, false));
 
             const TextureHelper11 *destResource = nullptr;
             ANGLE_TRY(dest11->getResource(context, &destResource));
@@ -1727,7 +1771,7 @@ gl::Error TextureStorage11_Cube::copyToStorage(const gl::Context *context,
 
         if (mLevelZeroTexture.valid())
         {
-            ANGLE_TRY(dest11->useLevelZeroWorkaroundTexture(true));
+            ANGLE_TRY(dest11->useLevelZeroWorkaroundTexture(context, true));
 
             const TextureHelper11 *destResource = nullptr;
             ANGLE_TRY(dest11->getResource(context, &destResource));
@@ -1752,7 +1796,8 @@ gl::Error TextureStorage11_Cube::copyToStorage(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::Error TextureStorage11_Cube::useLevelZeroWorkaroundTexture(bool useLevelZeroTexture)
+gl::Error TextureStorage11_Cube::useLevelZeroWorkaroundTexture(const gl::Context *context,
+                                                               bool useLevelZeroTexture)
 {
     if (useLevelZeroTexture && mMipLevels > 1)
     {
@@ -1762,13 +1807,13 @@ gl::Error TextureStorage11_Cube::useLevelZeroWorkaroundTexture(bool useLevelZero
 
             // Pull data back from the mipped texture if necessary.
             ASSERT(mLevelZeroTexture.valid());
-            ID3D11DeviceContext *context = mRenderer->getDeviceContext();
+            ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
 
             for (int face = 0; face < 6; face++)
             {
-                context->CopySubresourceRegion(mLevelZeroTexture.get(),
-                                               D3D11CalcSubresource(0, face, 1), 0, 0, 0,
-                                               mTexture.get(), face * mMipLevels, nullptr);
+                deviceContext->CopySubresourceRegion(mLevelZeroTexture.get(),
+                                                     D3D11CalcSubresource(0, face, 1), 0, 0, 0,
+                                                     mTexture.get(), face * mMipLevels, nullptr);
             }
         }
 
@@ -1782,13 +1827,13 @@ gl::Error TextureStorage11_Cube::useLevelZeroWorkaroundTexture(bool useLevelZero
 
             // Pull data back from the level zero texture if necessary.
             ASSERT(mTexture.valid());
-            ID3D11DeviceContext *context = mRenderer->getDeviceContext();
+            ID3D11DeviceContext *deviceContext = mRenderer->getDeviceContext();
 
             for (int face = 0; face < 6; face++)
             {
-                context->CopySubresourceRegion(mTexture.get(),
-                                               D3D11CalcSubresource(0, face, mMipLevels), 0, 0, 0,
-                                               mLevelZeroTexture.get(), face, nullptr);
+                deviceContext->CopySubresourceRegion(mTexture.get(),
+                                                     D3D11CalcSubresource(0, face, mMipLevels), 0,
+                                                     0, 0, mLevelZeroTexture.get(), face, nullptr);
             }
         }
 
@@ -1977,7 +2022,7 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::Context *context,
         if (mRenderer->getWorkarounds().zeroMaxLodWorkaround)
         {
             ASSERT(index.mipIndex == 0);
-            ANGLE_TRY(useLevelZeroWorkaroundTexture(true));
+            ANGLE_TRY(useLevelZeroWorkaroundTexture(context, true));
         }
 
         const TextureHelper11 *texture = nullptr;
@@ -2282,6 +2327,9 @@ gl::Error TextureStorage11_3D::onDestroy(const gl::Context *context)
         }
     }
 
+    InvalidateRenderTargetContainer(context, &mLevelRenderTargets);
+    InvalidateRenderTargetContainer(context, &mLevelLayerRenderTargets);
+
     return gl::NoError();
 }
 
@@ -2569,6 +2617,8 @@ gl::Error TextureStorage11_2DArray::onDestroy(const gl::Context *context)
         }
     }
     mAssociatedImages.clear();
+
+    InvalidateRenderTargetContainer(context, &mRenderTargets);
 
     return gl::NoError();
 }
@@ -2912,6 +2962,7 @@ TextureStorage11_2DMultisample::TextureStorage11_2DMultisample(Renderer11 *rende
 
 gl::Error TextureStorage11_2DMultisample::onDestroy(const gl::Context *context)
 {
+    InvalidateRenderTarget(context, mRenderTarget.get());
     mRenderTarget.reset();
     return gl::NoError();
 }

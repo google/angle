@@ -446,7 +446,7 @@ void Framebuffer11::syncState(const gl::Context *context,
     }
 }
 
-void Framebuffer11::signal(size_t channelID)
+void Framebuffer11::signal(size_t channelID, const gl::Context *context)
 {
     if (channelID == gl::IMPLEMENTATION_MAX_FRAMEBUFFER_ATTACHMENTS)
     {
