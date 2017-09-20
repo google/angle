@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "78c11b6f_4225745d",
+        "filename": "src/compiler/translator/ShaderVars.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-09-20T07:53:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "372476bf_f7b7769a",
+      "range": {
+        "startLine": 175,
+        "startChar": 83,
+        "endLine": 175,
+        "endChar": 87
+      },
+      "revId": "d574695e465ecccf2203b3e02bf090bddc2addb3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "48910bf7_f5ef5ac1",
         "filename": "src/compiler/translator/ValidateVaryingLocations.cpp",
         "patchSetId": 12
@@ -108,6 +132,24 @@
       "writtenOn": "2017-09-19T14:07:30Z",
       "side": 1,
       "message": "I understand that this file follows the same logic as ValidateOutputs, but it could be simpler:\n - Varyings with locations are always declared in the code so we just have to visit declaration.\n - We can skip a large amount of visiting by returning false in visitFunction.",
+      "revId": "d574695e465ecccf2203b3e02bf090bddc2addb3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fd60e798_1fbce3f4",
+        "filename": "src/compiler/translator/ValidateVaryingLocations.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-09-20T07:53:21Z",
+      "side": 1,
+      "message": "Done\nThanks to point out these!",
+      "parentUuid": "48910bf7_f5ef5ac1",
       "revId": "d574695e465ecccf2203b3e02bf090bddc2addb3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -131,6 +173,24 @@
     },
     {
       "key": {
+        "uuid": "50b82f38_51e4b003",
+        "filename": "src/compiler/translator/ValidateVaryingLocations.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-09-20T07:53:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8bbc9b53_e0c723d1",
+      "revId": "d574695e465ecccf2203b3e02bf090bddc2addb3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "59470635_49b4a527",
         "filename": "src/compiler/translator/ValidateVaryingLocations.cpp",
         "patchSetId": 12
@@ -142,6 +202,24 @@
       "writtenOn": "2017-09-19T14:07:30Z",
       "side": 1,
       "message": "ValidateShaderInterface does nothing when the vectors are empty, so there is no need to check for size() \u003e 1 here.",
+      "revId": "d574695e465ecccf2203b3e02bf090bddc2addb3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8731768d_99d36e43",
+        "filename": "src/compiler/translator/ValidateVaryingLocations.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-09-20T07:53:21Z",
+      "side": 1,
+      "message": "The location conflict validation is also unnecessary when there is only one varyings with explicit \u0027location\u0027 qualifier. So with this check we can skip initializing a locationMap and putting the only varyings into the map in function ValidateShaderInterface.",
+      "parentUuid": "59470635_49b4a527",
       "revId": "d574695e465ecccf2203b3e02bf090bddc2addb3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
@@ -165,6 +243,24 @@
     },
     {
       "key": {
+        "uuid": "f9aae85b_7a838e4f",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 4757,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-09-20T07:53:21Z",
+      "side": 1,
+      "message": "Done\nI have added UseLocationOnVertexOutES30 and UseLocationOnFragmentInES30.",
+      "parentUuid": "b9ef5001_abe5a779",
+      "revId": "d574695e465ecccf2203b3e02bf090bddc2addb3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c8600412_5d795526",
         "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
         "patchSetId": 12
@@ -179,6 +275,24 @@
       "revId": "d574695e465ecccf2203b3e02bf090bddc2addb3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8854651c_5943d6b8",
+        "filename": "src/tests/compiler_tests/ShaderValidation_test.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 4761,
+      "author": {
+        "id": 1161747
+      },
+      "writtenOn": "2017-09-20T07:53:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c8600412_5d795526",
+      "revId": "d574695e465ecccf2203b3e02bf090bddc2addb3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": false
     }
   ]
 }
