@@ -148,10 +148,8 @@ class TextureStorage9_Cube : public TextureStorage9
     gl::Error copyToStorage(const gl::Context *context, TextureStorage *destStorage) override;
 
   private:
-    static const size_t CUBE_FACE_COUNT = 6;
-
     IDirect3DCubeTexture9 *mTexture;
-    RenderTarget9 *mRenderTarget[CUBE_FACE_COUNT];
+    RenderTarget9 *mRenderTarget[gl::CUBE_FACE_COUNT];
 };
 
 }

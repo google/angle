@@ -325,7 +325,9 @@ using UniformBlockBindingMask = angle::BitSet<IMPLEMENTATION_MAX_COMBINED_SHADER
 using DrawBufferMask = angle::BitSet<IMPLEMENTATION_MAX_DRAW_BUFFERS>;
 
 using ContextID = uintptr_t;
-}
+
+constexpr size_t CUBE_FACE_COUNT = 6;
+}  // namespace gl
 
 namespace rx
 {

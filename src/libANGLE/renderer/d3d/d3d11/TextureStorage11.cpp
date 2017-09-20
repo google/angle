@@ -374,7 +374,7 @@ gl::Error TextureStorage11::generateSwizzles(const gl::Context *context,
 
 void TextureStorage11::markLevelDirty(int mipLevel)
 {
-    if (mipLevel >= 0 && static_cast<unsigned int>(mipLevel) < ArraySize(mSwizzleCache))
+    if (mipLevel >= 0 && static_cast<size_t>(mipLevel) < mSwizzleCache.size())
     {
         // The default constructor of SwizzleState has GL_INVALID_INDEX for all channels which is
         // not a valid swizzle combination
@@ -394,9 +394,9 @@ void TextureStorage11::markLevelDirty(int mipLevel)
 
 void TextureStorage11::markDirty()
 {
-    for (unsigned int mipLevel = 0; mipLevel < ArraySize(mSwizzleCache); mipLevel++)
+    for (size_t mipLevel = 0; mipLevel < mSwizzleCache.size(); ++mipLevel)
     {
-        markLevelDirty(mipLevel);
+        markLevelDirty(static_cast<int>(mipLevel));
     }
 }
 
@@ -1633,14 +1633,14 @@ TextureStorage11_Cube::TextureStorage11_Cube(Renderer11 *renderer,
 {
     for (unsigned int level = 0; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
     {
-        for (unsigned int face = 0; face < CUBE_FACE_COUNT; face++)
+        for (unsigned int face = 0; face < gl::CUBE_FACE_COUNT; face++)
         {
             mAssociatedImages[face][level] = nullptr;
             mRenderTarget[face][level]     = nullptr;
         }
     }
 
-    for (unsigned int face = 0; face < CUBE_FACE_COUNT; face++)
+    for (unsigned int face = 0; face < gl::CUBE_FACE_COUNT; face++)
     {
         mLevelZeroRenderTarget[face] = nullptr;
     }
@@ -1662,7 +1662,7 @@ gl::Error TextureStorage11_Cube::onDestroy(const gl::Context *context)
 {
     for (unsigned int level = 0; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
     {
-        for (unsigned int face = 0; face < CUBE_FACE_COUNT; face++)
+        for (unsigned int face = 0; face < gl::CUBE_FACE_COUNT; face++)
         {
             if (mAssociatedImages[face][level] != nullptr)
             {
@@ -1804,11 +1804,11 @@ void TextureStorage11_Cube::associateImage(Image11 *image, const gl::ImageIndex 
     const GLint layerTarget = index.layerIndex;
 
     ASSERT(0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
-    ASSERT(0 <= layerTarget && layerTarget < static_cast<GLint>(CUBE_FACE_COUNT));
+    ASSERT(0 <= layerTarget && layerTarget < static_cast<GLint>(gl::CUBE_FACE_COUNT));
 
     if (0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS)
     {
-        if (0 <= layerTarget && layerTarget < static_cast<GLint>(CUBE_FACE_COUNT))
+        if (0 <= layerTarget && layerTarget < static_cast<GLint>(gl::CUBE_FACE_COUNT))
         {
             mAssociatedImages[layerTarget][level] = image;
         }
@@ -1822,7 +1822,7 @@ void TextureStorage11_Cube::verifyAssociatedImageValid(const gl::ImageIndex &ind
     const GLint layerTarget = index.layerIndex;
 
     ASSERT(0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
-    ASSERT(0 <= layerTarget && layerTarget < static_cast<GLint>(CUBE_FACE_COUNT));
+    ASSERT(0 <= layerTarget && layerTarget < static_cast<GLint>(gl::CUBE_FACE_COUNT));
     // This validation check should never return false. It means the Image/TextureStorage
     // association is broken.
     ASSERT(mAssociatedImages[layerTarget][level] == expectedImage);
@@ -1835,7 +1835,7 @@ void TextureStorage11_Cube::disassociateImage(const gl::ImageIndex &index, Image
     const GLint layerTarget = index.layerIndex;
 
     ASSERT(0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
-    ASSERT(0 <= layerTarget && layerTarget < static_cast<GLint>(CUBE_FACE_COUNT));
+    ASSERT(0 <= layerTarget && layerTarget < static_cast<GLint>(gl::CUBE_FACE_COUNT));
     ASSERT(mAssociatedImages[layerTarget][level] == expectedImage);
     mAssociatedImages[layerTarget][level] = nullptr;
 }
@@ -1850,11 +1850,11 @@ gl::Error TextureStorage11_Cube::releaseAssociatedImage(const gl::Context *conte
     const GLint layerTarget = index.layerIndex;
 
     ASSERT(0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS);
-    ASSERT(0 <= layerTarget && layerTarget < static_cast<GLint>(CUBE_FACE_COUNT));
+    ASSERT(0 <= layerTarget && layerTarget < static_cast<GLint>(gl::CUBE_FACE_COUNT));
 
     if ((0 <= level && level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS))
     {
-        if (0 <= layerTarget && layerTarget < static_cast<GLint>(CUBE_FACE_COUNT))
+        if (0 <= layerTarget && layerTarget < static_cast<GLint>(gl::CUBE_FACE_COUNT))
         {
             // No need to let the old Image recover its data, if it is also the incoming Image.
             if (mAssociatedImages[layerTarget][level] != nullptr &&
@@ -1920,7 +1920,7 @@ gl::Error TextureStorage11_Cube::ensureTextureExists(int mipLevels)
         desc.Width              = mTextureWidth;
         desc.Height             = mTextureHeight;
         desc.MipLevels          = mipLevels;
-        desc.ArraySize          = CUBE_FACE_COUNT;
+        desc.ArraySize          = gl::CUBE_FACE_COUNT;
         desc.Format             = mFormatInfo.texFormat;
         desc.SampleDesc.Count   = 1;
         desc.SampleDesc.Quality = 0;
@@ -1970,7 +1970,7 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::Context *context,
     const int level     = index.mipIndex;
 
     ASSERT(level >= 0 && level < getLevelCount());
-    ASSERT(faceIndex >= 0 && faceIndex < static_cast<GLint>(CUBE_FACE_COUNT));
+    ASSERT(faceIndex >= 0 && faceIndex < static_cast<GLint>(gl::CUBE_FACE_COUNT));
 
     if (!mRenderTarget[faceIndex][level])
     {
@@ -2089,7 +2089,7 @@ gl::Error TextureStorage11_Cube::createSRV(const gl::Context *context,
         srvDesc.Texture2DArray.MostDetailedMip = mTopLevel + baseLevel;
         srvDesc.Texture2DArray.MipLevels       = mipLevels;
         srvDesc.Texture2DArray.FirstArraySlice = 0;
-        srvDesc.Texture2DArray.ArraySize       = CUBE_FACE_COUNT;
+        srvDesc.Texture2DArray.ArraySize       = gl::CUBE_FACE_COUNT;
     }
     else
     {
@@ -2139,7 +2139,7 @@ gl::Error TextureStorage11_Cube::getSwizzleTexture(const TextureHelper11 **outTe
         desc.Width              = mTextureWidth;
         desc.Height             = mTextureHeight;
         desc.MipLevels          = mMipLevels;
-        desc.ArraySize          = CUBE_FACE_COUNT;
+        desc.ArraySize          = gl::CUBE_FACE_COUNT;
         desc.Format             = format.texFormat;
         desc.SampleDesc.Count   = 1;
         desc.SampleDesc.Quality = 0;
@@ -2173,7 +2173,7 @@ gl::Error TextureStorage11_Cube::getSwizzleRenderTarget(int mipLevel,
         rtvDesc.ViewDimension                  = D3D11_RTV_DIMENSION_TEXTURE2DARRAY;
         rtvDesc.Texture2DArray.MipSlice        = mTopLevel + mipLevel;
         rtvDesc.Texture2DArray.FirstArraySlice = 0;
-        rtvDesc.Texture2DArray.ArraySize       = CUBE_FACE_COUNT;
+        rtvDesc.Texture2DArray.ArraySize       = gl::CUBE_FACE_COUNT;
 
         ANGLE_TRY(mRenderer->allocateResource(rtvDesc, mSwizzleTexture.get(),
                                               &mSwizzleRenderTargets[mipLevel]));
