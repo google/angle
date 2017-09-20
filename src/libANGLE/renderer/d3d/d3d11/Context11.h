@@ -138,8 +138,9 @@ class Context11 : public ContextImpl
                               GLuint numGroupsY,
                               GLuint numGroupsZ) override;
 
-  private:
     gl::Error triggerDrawCallProgramRecompilation(const gl::Context *context, GLenum drawMode);
+
+  private:
     gl::Error prepareForDrawCall(const gl::Context *context, GLenum drawMode);
 
     Renderer11 *mRenderer;

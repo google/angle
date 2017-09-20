@@ -68,7 +68,7 @@ void VertexArray11::syncState(const gl::Context *context,
     }
 }
 
-void VertexArray11::flushAttribUpdates(const gl::Context *context)
+bool VertexArray11::flushAttribUpdates(const gl::Context *context)
 {
     const gl::Program *program  = context->getGLState().getProgram();
     const auto &activeLocations = program->getActiveAttribLocationsMask();
@@ -83,7 +83,11 @@ void VertexArray11::flushAttribUpdates(const gl::Context *context)
             mAttribsToUpdate.reset(toUpdateIndex);
             updateVertexAttribStorage(context, toUpdateIndex);
         }
+
+        return true;
     }
+
+    return false;
 }
 
 void VertexArray11::updateVertexAttribStorage(const gl::Context *context, size_t attribIndex)
@@ -258,6 +262,10 @@ void VertexArray11::signal(size_t channelID, const gl::Context *context)
 
     // This can change a buffer's storage, we'll need to re-check.
     mAttribsToUpdate.set(channelID);
+
+    // Changing the vertex attribute state can affect the vertex shader.
+    Renderer11 *renderer = GetImplAs<Context11>(context)->getRenderer();
+    renderer->getStateManager()->invalidateShaders();
 }
 
 void VertexArray11::clearDirtyAndPromoteDynamicAttribs(const gl::Context *context, GLsizei count)

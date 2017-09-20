@@ -459,6 +459,10 @@ void Framebuffer11::signal(size_t channelID, const gl::Context *context)
         mInternalDirtyBits.set(gl::Framebuffer::DIRTY_BIT_COLOR_ATTACHMENT_0 + channelID);
         mCachedColorRenderTargets[channelID] = nullptr;
     }
+
+    // Notify the context we need to re-validate the RenderTarget.
+    // TODO(jmadill): Check that we're the active draw framebuffer.
+    mRenderer->getStateManager()->invalidateRenderTarget(context);
 }
 
 gl::Error Framebuffer11::getSamplePosition(size_t index, GLfloat *xy) const

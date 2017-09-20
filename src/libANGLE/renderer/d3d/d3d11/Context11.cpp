@@ -386,11 +386,7 @@ gl::Error Context11::triggerDrawCallProgramRecompilation(const gl::Context *cont
 
 gl::Error Context11::prepareForDrawCall(const gl::Context *context, GLenum drawMode)
 {
-    ANGLE_TRY(triggerDrawCallProgramRecompilation(context, drawMode));
-
-    // TODO(jmadill): Update state in syncState before the draw call.
     ANGLE_TRY(mRenderer->getStateManager()->updateState(context, drawMode));
-
     return gl::NoError();
 }
 

@@ -47,9 +47,10 @@ class VertexArray11 : public VertexArrayImpl, public OnBufferDataDirtyReceiver
     // is adjusted.
     void markAllAttributeDivisorsForAdjustment(int numViews);
 
+    bool flushAttribUpdates(const gl::Context *context);
+
   private:
     void updateVertexAttribStorage(const gl::Context *context, size_t attribIndex);
-    void flushAttribUpdates(const gl::Context *context);
 
     std::vector<VertexStorageType> mAttributeStorageTypes;
     std::vector<TranslatedAttribute> mTranslatedAttribs;
