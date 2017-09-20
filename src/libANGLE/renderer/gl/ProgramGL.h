@@ -83,7 +83,8 @@ class ProgramGL : public ProgramImpl
                                  GLint components,
                                  const GLfloat *coeffs) override;
 
-    void markUnusedUniformLocations(std::vector<gl::VariableLocation> *uniformLocations) override;
+    void markUnusedUniformLocations(std::vector<gl::VariableLocation> *uniformLocations,
+                                    std::vector<gl::SamplerBinding> *samplerBindings) override;
 
     GLuint getProgramID() const;
 

@@ -201,8 +201,7 @@ bool UniformLinker::indexUniforms(InfoLog &infoLog,
 
         for (unsigned int arrayIndex = 0; arrayIndex < uniform.elementCount(); arrayIndex++)
         {
-            VariableLocation location(uniform.name, arrayIndex,
-                                      static_cast<unsigned int>(uniformIndex));
+            VariableLocation location(arrayIndex, static_cast<unsigned int>(uniformIndex));
 
             if ((arrayIndex == 0 && preSetLocation != -1) || shaderLocation != -1)
             {
@@ -230,14 +229,14 @@ bool UniformLinker::indexUniforms(InfoLog &infoLog,
     // Assign ignored uniforms
     for (const auto &ignoredLocation : ignoredLocations)
     {
-        mUniformLocations[ignoredLocation].ignored = true;
+        mUniformLocations[ignoredLocation].markIgnored();
     }
 
     // Automatically assign locations for the rest of the uniforms
     size_t nextUniformLocation = 0;
     for (const auto &unlocatedUniform : unlocatedUniforms)
     {
-        while (mUniformLocations[nextUniformLocation].used ||
+        while (mUniformLocations[nextUniformLocation].used() ||
                mUniformLocations[nextUniformLocation].ignored)
         {
             nextUniformLocation++;

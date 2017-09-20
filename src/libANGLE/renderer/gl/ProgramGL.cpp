@@ -654,7 +654,7 @@ void ProgramGL::postLink()
     for (size_t uniformLocation = 0; uniformLocation < uniformLocations.size(); uniformLocation++)
     {
         const auto &entry = uniformLocations[uniformLocation];
-        if (!entry.used)
+        if (!entry.used())
         {
             continue;
         }
@@ -781,14 +781,21 @@ void ProgramGL::getUniformuiv(const gl::Context *context, GLint location, GLuint
     mFunctions->getUniformuiv(mProgramID, uniLoc(location), params);
 }
 
-void ProgramGL::markUnusedUniformLocations(std::vector<gl::VariableLocation> *uniformLocations)
+void ProgramGL::markUnusedUniformLocations(std::vector<gl::VariableLocation> *uniformLocations,
+                                           std::vector<gl::SamplerBinding> *samplerBindings)
 {
     GLint maxLocation = static_cast<GLint>(uniformLocations->size());
     for (GLint location = 0; location < maxLocation; ++location)
     {
         if (uniLoc(location) == -1)
         {
-            (*uniformLocations)[location].used = false;
+            auto &locationRef = (*uniformLocations)[location];
+            if (mState.isSamplerUniformIndex(locationRef.index))
+            {
+                GLuint samplerIndex = mState.getSamplerIndexFromUniformIndex(locationRef.index);
+                (*samplerBindings)[samplerIndex].unreferenced = true;
+            }
+            locationRef.markUnused();
         }
     }
 }

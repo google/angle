@@ -238,10 +238,8 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
          uniformIndexIndex++)
     {
         VariableLocation variable;
-        stream.readString(&variable.name);
         stream.readInt(&variable.element);
         stream.readInt(&variable.index);
-        stream.readBool(&variable.used);
         stream.readBool(&variable.ignored);
 
         state->mUniformLocations.push_back(variable);
@@ -323,7 +321,7 @@ LinkResult MemoryProgramCache::Deserialize(const Context *context,
         VariableLocation locationData;
         stream.readInt(&locationData.element);
         stream.readInt(&locationData.index);
-        stream.readString(&locationData.name);
+        stream.readBool(&locationData.ignored);
         state->mOutputLocations[locationIndex] = locationData;
     }
 
@@ -429,10 +427,8 @@ void MemoryProgramCache::Serialize(const Context *context,
     stream.writeInt(state.getUniformLocations().size());
     for (const auto &variable : state.getUniformLocations())
     {
-        stream.writeString(variable.name);
         stream.writeInt(variable.element);
-        stream.writeInt(variable.index);
-        stream.writeInt(variable.used);
+        stream.writeIntOrNegOne(variable.index);
         stream.writeInt(variable.ignored);
     }
 
@@ -486,8 +482,8 @@ void MemoryProgramCache::Serialize(const Context *context,
     {
         stream.writeInt(outputPair.first);
         stream.writeIntOrNegOne(outputPair.second.element);
-        stream.writeInt(outputPair.second.index);
-        stream.writeString(outputPair.second.name);
+        stream.writeIntOrNegOne(outputPair.second.index);
+        stream.writeInt(outputPair.second.ignored);
     }
 
     stream.writeInt(state.mOutputVariableTypes.size());

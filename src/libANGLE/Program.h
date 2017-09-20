@@ -135,17 +135,20 @@ class InfoLog : angle::NonCopyable
 // Struct used for correlating uniforms/elements of uniform arrays to handles
 struct VariableLocation
 {
-    VariableLocation();
-    VariableLocation(const std::string &name, unsigned int element, unsigned int index);
+    static constexpr unsigned int kUnused = GL_INVALID_INDEX;
 
-    std::string name;
-    unsigned int element;
-    unsigned int index;
+    VariableLocation();
+    VariableLocation(unsigned int element, unsigned int index);
 
     // If used is false, it means this location is only used to fill an empty space in an array,
     // and there is no corresponding uniform variable for this location. It can also mean the
     // uniform was optimized out by the implementation.
-    bool used;
+    bool used() const { return (index != kUnused); }
+    void markUnused() { index = kUnused; }
+    void markIgnored() { ignored = true; }
+
+    unsigned int element;
+    unsigned int index;
 
     // If this location was bound to an unreferenced uniform.  Setting data on this uniform is a
     // no-op.
@@ -342,7 +345,6 @@ class ProgramState final : angle::NonCopyable
     std::vector<gl::ImageBinding> mImageBindings;
 
     std::vector<sh::OutputVariable> mOutputVariables;
-    // TODO(jmadill): use unordered/hash map when available
     std::map<int, VariableLocation> mOutputLocations;
     DrawBufferMask mActiveOutputVariables;
 

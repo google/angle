@@ -437,7 +437,7 @@ bool ValidateUniformCommonBase(ValidationContext *context,
         return false;
     }
 
-    if (!uniformLocation.used)
+    if (!uniformLocation.used())
     {
         context->handleError(InvalidOperation());
         return false;

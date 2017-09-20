@@ -287,15 +287,12 @@ void InfoLog::reset()
 {
 }
 
-VariableLocation::VariableLocation()
-    : name(), element(0), index(GL_INVALID_INDEX), used(false), ignored(false)
+VariableLocation::VariableLocation() : element(0), index(kUnused), ignored(false)
 {
 }
 
-VariableLocation::VariableLocation(const std::string &name,
-                                   unsigned int element,
-                                   unsigned int index)
-    : name(name), element(element), index(index), used(true), ignored(false)
+VariableLocation::VariableLocation(unsigned int element, unsigned int index)
+    : element(element), index(index), ignored(false)
 {
 }
 
@@ -353,7 +350,7 @@ GLint ProgramState::getUniformLocation(const std::string &name) const
     for (size_t location = 0; location < mUniformLocations.size(); ++location)
     {
         const VariableLocation &uniformLocation = mUniformLocations[location];
-        if (!uniformLocation.used)
+        if (!uniformLocation.used())
         {
             continue;
         }
@@ -811,17 +808,7 @@ Error Program::link(const gl::Context *context)
     setUniformValuesFromBindingQualifiers();
 
     // Mark implementation-specific unreferenced uniforms as ignored.
-    mProgram->markUnusedUniformLocations(&mState.mUniformLocations);
-
-    // Update sampler bindings with unreferenced uniforms.
-    for (const auto &location : mState.mUniformLocations)
-    {
-        if (!location.used && mState.isSamplerUniformIndex(location.index))
-        {
-            GLuint samplerIndex = mState.getSamplerIndexFromUniformIndex(location.index);
-            mState.mSamplerBindings[samplerIndex].unreferenced = true;
-        }
-    }
+    mProgram->markUnusedUniformLocations(&mState.mUniformLocations, &mState.mSamplerBindings);
 
     // Save to the program cache.
     if (cache && (mState.mLinkedTransformFeedbackVaryings.empty() ||
@@ -1204,8 +1191,10 @@ GLint Program::getFragDataLocation(const std::string &name) const
     unsigned int arrayIndex = ParseAndStripArrayIndex(&baseName);
     for (auto outputPair : mState.mOutputLocations)
     {
-        const VariableLocation &outputVariable = outputPair.second;
-        if (outputVariable.name == baseName && (arrayIndex == GL_INVALID_INDEX || arrayIndex == outputVariable.element))
+        const VariableLocation &locationInfo     = outputPair.second;
+        const sh::OutputVariable &outputVariable = mState.mOutputVariables[locationInfo.index];
+        if (outputVariable.name == baseName &&
+            (arrayIndex == GL_INVALID_INDEX || arrayIndex == locationInfo.element))
         {
             return static_cast<GLint>(outputPair.first);
         }
@@ -1317,7 +1306,7 @@ bool Program::isValidUniformLocation(GLint location) const
 {
     ASSERT(angle::IsValueInRangeForNumericType<GLint>(mState.mUniformLocations.size()));
     return (location >= 0 && static_cast<size_t>(location) < mState.mUniformLocations.size() &&
-            mState.mUniformLocations[static_cast<size_t>(location)].used);
+            mState.mUniformLocations[static_cast<size_t>(location)].used());
 }
 
 const LinkedUniform &Program::getUniformByLocation(GLint location) const
@@ -2760,8 +2749,7 @@ void Program::linkOutputVariables(const Context *context)
             const int location = baseLocation + elementIndex;
             ASSERT(mState.mOutputLocations.count(location) == 0);
             unsigned int element = outputVariable.isArray() ? elementIndex : GL_INVALID_INDEX;
-            mState.mOutputLocations[location] =
-                VariableLocation(outputVariable.name, element, outputVariableIndex);
+            mState.mOutputLocations[location] = VariableLocation(element, outputVariableIndex);
         }
     }
 }

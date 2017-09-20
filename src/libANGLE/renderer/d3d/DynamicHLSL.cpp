@@ -1267,7 +1267,7 @@ void DynamicHLSL::getPixelShaderOutputKey(const gl::ContextState &data,
         {
             const VariableLocation &outputLocation   = outputPair.second;
             const sh::ShaderVariable &outputVariable = shaderOutputVars[outputLocation.index];
-            const std::string &variableName = "out_" + outputLocation.name;
+            const std::string &variableName          = "out_" + outputVariable.name;
             const std::string &elementString =
                 (outputLocation.element == GL_INVALID_INDEX ? "" : Str(outputLocation.element));
 
