@@ -659,9 +659,9 @@ gl::Error TextureD3D::releaseTexStorage(const gl::Context *context)
     {
         return gl::NoError();
     }
-    ANGLE_TRY(mTexStorage->onDestroy(context));
-    mTexStorage = nullptr;
-    return gl::NoError();
+    auto err = mTexStorage->onDestroy(context);
+    SafeDelete(mTexStorage);
+    return err;
 }
 
 gl::Error TextureD3D::onDestroy(const gl::Context *context)

@@ -781,21 +781,12 @@ gl::Error TextureStorage11_2D::onDestroy(const gl::Context *context)
         }
     }
 
-    SafeDelete(mLevelZeroRenderTarget);
-
-    for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
-    {
-        SafeDelete(mRenderTarget[i]);
-    }
-
     if (mHasKeyedMutex)
     {
         // If the keyed mutex is released that will unbind it and cause the state cache to become
         // desynchronized.
         mRenderer->getStateManager()->invalidateBoundViews(context);
     }
-
-    delete this;
 
     return gl::NoError();
 }
@@ -893,7 +884,7 @@ gl::Error TextureStorage11_2D::useLevelZeroWorkaroundTexture(bool useLevelZeroTe
         {
             mLevelZeroRenderTarget->signalDirty();
         }
-        for (auto *renderTarget : mRenderTarget)
+        for (auto &renderTarget : mRenderTarget)
         {
             if (renderTarget)
             {
@@ -1049,7 +1040,7 @@ gl::Error TextureStorage11_2D::getRenderTarget(const gl::Context *context,
     ASSERT(outRT);
     if (mRenderTarget[level])
     {
-        *outRT = mRenderTarget[level];
+        *outRT = mRenderTarget[level].get();
         return gl::NoError();
     }
 
@@ -1080,13 +1071,13 @@ gl::Error TextureStorage11_2D::getRenderTarget(const gl::Context *context,
             d3d11::RenderTargetView rtv;
             ANGLE_TRY(mRenderer->allocateResource(rtvDesc, mLevelZeroTexture.get(), &rtv));
 
-            mLevelZeroRenderTarget = new TextureRenderTarget11(
+            mLevelZeroRenderTarget.reset(new TextureRenderTarget11(
                 std::move(rtv), mLevelZeroTexture, d3d11::SharedSRV(), d3d11::SharedSRV(),
                 mFormatInfo.internalFormat, getFormatSet(), getLevelWidth(level),
-                getLevelHeight(level), 1, 0);
+                getLevelHeight(level), 1, 0));
         }
 
-        *outRT = mLevelZeroRenderTarget;
+        *outRT = mLevelZeroRenderTarget.get();
         return gl::NoError();
     }
 
@@ -1100,11 +1091,11 @@ gl::Error TextureStorage11_2D::getRenderTarget(const gl::Context *context,
         d3d11::RenderTargetView rtv;
         ANGLE_TRY(mRenderer->allocateResource(rtvDesc, texture->get(), &rtv));
 
-        mRenderTarget[level] = new TextureRenderTarget11(
+        mRenderTarget[level].reset(new TextureRenderTarget11(
             std::move(rtv), *texture, *srv, *blitSRV, mFormatInfo.internalFormat, getFormatSet(),
-            getLevelWidth(level), getLevelHeight(level), 1, 0);
+            getLevelWidth(level), getLevelHeight(level), 1, 0));
 
-        *outRT = mRenderTarget[level];
+        *outRT = mRenderTarget[level].get();
         return gl::NoError();
     }
 
@@ -1119,11 +1110,11 @@ gl::Error TextureStorage11_2D::getRenderTarget(const gl::Context *context,
     d3d11::DepthStencilView dsv;
     ANGLE_TRY(mRenderer->allocateResource(dsvDesc, texture->get(), &dsv));
 
-    mRenderTarget[level] = new TextureRenderTarget11(
+    mRenderTarget[level].reset(new TextureRenderTarget11(
         std::move(dsv), *texture, *srv, mFormatInfo.internalFormat, getFormatSet(),
-        getLevelWidth(level), getLevelHeight(level), 1, 0);
+        getLevelWidth(level), getLevelHeight(level), 1, 0));
 
-    *outRT = mRenderTarget[level];
+    *outRT = mRenderTarget[level].get();
     return gl::NoError();
 }
 
@@ -1285,8 +1276,6 @@ gl::Error TextureStorage11_External::onDestroy(const gl::Context *context)
         // desynchronized.
         mRenderer->getStateManager()->invalidateBoundViews(context);
     }
-
-    delete this;
 
     return gl::NoError();
 }
@@ -1686,21 +1675,6 @@ gl::Error TextureStorage11_Cube::onDestroy(const gl::Context *context)
         }
     }
 
-    for (unsigned int face = 0; face < CUBE_FACE_COUNT; face++)
-    {
-        SafeDelete(mLevelZeroRenderTarget[face]);
-    }
-
-    for (unsigned int level = 0; level < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; level++)
-    {
-        for (unsigned int face = 0; face < CUBE_FACE_COUNT; face++)
-        {
-            SafeDelete(mRenderTarget[face][level]);
-        }
-    }
-
-    delete this;
-
     return gl::NoError();
 }
 
@@ -2023,14 +1997,14 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::Context *context,
                 d3d11::RenderTargetView rtv;
                 ANGLE_TRY(mRenderer->allocateResource(rtvDesc, mLevelZeroTexture.get(), &rtv));
 
-                mLevelZeroRenderTarget[faceIndex] = new TextureRenderTarget11(
+                mLevelZeroRenderTarget[faceIndex].reset(new TextureRenderTarget11(
                     std::move(rtv), mLevelZeroTexture, d3d11::SharedSRV(), d3d11::SharedSRV(),
                     mFormatInfo.internalFormat, getFormatSet(), getLevelWidth(level),
-                    getLevelHeight(level), 1, 0);
+                    getLevelHeight(level), 1, 0));
             }
 
             ASSERT(outRT);
-            *outRT = mLevelZeroRenderTarget[faceIndex];
+            *outRT = mLevelZeroRenderTarget[faceIndex].get();
             return gl::NoError();
         }
 
@@ -2061,9 +2035,9 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::Context *context,
             ANGLE_TRY(mRenderer->allocateResource(rtvDesc, texture->get(), &rtv));
             rtv.setDebugName("TexStorageCube.RenderTargetRTV");
 
-            mRenderTarget[faceIndex][level] = new TextureRenderTarget11(
+            mRenderTarget[faceIndex][level].reset(new TextureRenderTarget11(
                 std::move(rtv), *texture, srv, blitSRV, mFormatInfo.internalFormat, getFormatSet(),
-                getLevelWidth(level), getLevelHeight(level), 1, 0);
+                getLevelWidth(level), getLevelHeight(level), 1, 0));
         }
         else if (mFormatInfo.dsvFormat != DXGI_FORMAT_UNKNOWN)
         {
@@ -2079,9 +2053,9 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::Context *context,
             ANGLE_TRY(mRenderer->allocateResource(dsvDesc, texture->get(), &dsv));
             dsv.setDebugName("TexStorageCube.RenderTargetDSV");
 
-            mRenderTarget[faceIndex][level] = new TextureRenderTarget11(
+            mRenderTarget[faceIndex][level].reset(new TextureRenderTarget11(
                 std::move(dsv), *texture, srv, mFormatInfo.internalFormat, getFormatSet(),
-                getLevelWidth(level), getLevelHeight(level), 1, 0);
+                getLevelWidth(level), getLevelHeight(level), 1, 0));
         }
         else
         {
@@ -2090,7 +2064,7 @@ gl::Error TextureStorage11_Cube::getRenderTarget(const gl::Context *context,
     }
 
     ASSERT(outRT);
-    *outRT = mRenderTarget[faceIndex][level];
+    *outRT = mRenderTarget[faceIndex][level].get();
     return gl::NoError();
 }
 
@@ -2308,20 +2282,6 @@ gl::Error TextureStorage11_3D::onDestroy(const gl::Context *context)
         }
     }
 
-    for (RenderTargetMap::iterator i = mLevelLayerRenderTargets.begin();
-         i != mLevelLayerRenderTargets.end(); i++)
-    {
-        SafeDelete(i->second);
-    }
-    mLevelLayerRenderTargets.clear();
-
-    for (unsigned int i = 0; i < gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS; i++)
-    {
-        SafeDelete(mLevelRenderTargets[i]);
-    }
-
-    delete this;
-
     return gl::NoError();
 }
 
@@ -2471,14 +2431,14 @@ gl::Error TextureStorage11_3D::getRenderTarget(const gl::Context *context,
             ANGLE_TRY(mRenderer->allocateResource(rtvDesc, texture->get(), &rtv));
             rtv.setDebugName("TexStorage3D.RTV");
 
-            mLevelRenderTargets[mipLevel] = new TextureRenderTarget11(
+            mLevelRenderTargets[mipLevel].reset(new TextureRenderTarget11(
                 std::move(rtv), *texture, *srv, *blitSRV, mFormatInfo.internalFormat,
                 getFormatSet(), getLevelWidth(mipLevel), getLevelHeight(mipLevel),
-                getLevelDepth(mipLevel), 0);
+                getLevelDepth(mipLevel), 0));
         }
 
         ASSERT(outRT);
-        *outRT = mLevelRenderTargets[mipLevel];
+        *outRT = mLevelRenderTargets[mipLevel].get();
         return gl::NoError();
     }
 
@@ -2505,13 +2465,13 @@ gl::Error TextureStorage11_3D::getRenderTarget(const gl::Context *context,
         ANGLE_TRY(mRenderer->allocateResource(rtvDesc, texture->get(), &rtv));
         rtv.setDebugName("TexStorage3D.LayerRTV");
 
-        mLevelLayerRenderTargets[key] = new TextureRenderTarget11(
+        mLevelLayerRenderTargets[key].reset(new TextureRenderTarget11(
             std::move(rtv), *texture, srv, blitSRV, mFormatInfo.internalFormat, getFormatSet(),
-            getLevelWidth(mipLevel), getLevelHeight(mipLevel), 1, 0);
+            getLevelWidth(mipLevel), getLevelHeight(mipLevel), 1, 0));
     }
 
     ASSERT(outRT);
-    *outRT = mLevelLayerRenderTargets[key];
+    *outRT = mLevelLayerRenderTargets[key].get();
     return gl::NoError();
 }
 
@@ -2609,14 +2569,6 @@ gl::Error TextureStorage11_2DArray::onDestroy(const gl::Context *context)
         }
     }
     mAssociatedImages.clear();
-
-    for (auto iter : mRenderTargets)
-    {
-        SafeDelete(iter.second);
-    }
-    mRenderTargets.clear();
-
-    delete this;
 
     return gl::NoError();
 }
@@ -2813,9 +2765,9 @@ gl::Error TextureStorage11_2DArray::getRenderTarget(const gl::Context *context,
             ANGLE_TRY(mRenderer->allocateResource(rtvDesc, texture->get(), &rtv));
             rtv.setDebugName("TexStorage2DArray.RenderTargetRTV");
 
-            mRenderTargets[key] = new TextureRenderTarget11(
+            mRenderTargets[key].reset(new TextureRenderTarget11(
                 std::move(rtv), *texture, srv, blitSRV, mFormatInfo.internalFormat, getFormatSet(),
-                getLevelWidth(mipLevel), getLevelHeight(mipLevel), 1, 0);
+                getLevelWidth(mipLevel), getLevelHeight(mipLevel), 1, 0));
         }
         else
         {
@@ -2833,14 +2785,14 @@ gl::Error TextureStorage11_2DArray::getRenderTarget(const gl::Context *context,
             ANGLE_TRY(mRenderer->allocateResource(dsvDesc, texture->get(), &dsv));
             dsv.setDebugName("TexStorage2DArray.RenderTargetDSV");
 
-            mRenderTargets[key] = new TextureRenderTarget11(
+            mRenderTargets[key].reset(new TextureRenderTarget11(
                 std::move(dsv), *texture, srv, mFormatInfo.internalFormat, getFormatSet(),
-                getLevelWidth(mipLevel), getLevelHeight(mipLevel), 1, 0);
+                getLevelWidth(mipLevel), getLevelHeight(mipLevel), 1, 0));
         }
     }
 
     ASSERT(outRT);
-    *outRT = mRenderTargets[key];
+    *outRT = mRenderTargets[key].get();
     return gl::NoError();
 }
 
@@ -2961,8 +2913,6 @@ TextureStorage11_2DMultisample::TextureStorage11_2DMultisample(Renderer11 *rende
 gl::Error TextureStorage11_2DMultisample::onDestroy(const gl::Context *context)
 {
     mRenderTarget.reset();
-    delete this;
-
     return gl::NoError();
 }
 

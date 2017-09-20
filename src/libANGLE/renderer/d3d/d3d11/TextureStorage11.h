@@ -222,7 +222,7 @@ class TextureStorage11_2D : public TextureStorage11
                         d3d11::SharedSRV *outSRV) const override;
 
     TextureHelper11 mTexture;
-    RenderTarget11 *mRenderTarget[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
+    std::unique_ptr<RenderTarget11> mRenderTarget[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
     bool mHasKeyedMutex;
 
     // These are members related to the zero max-LOD workaround.
@@ -235,7 +235,7 @@ class TextureStorage11_2D : public TextureStorage11
     // A more likely example is an app that creates an empty texture, renders to it, and then calls glGenerateMipmap
     // TODO: In this rendering scenario, release the mLevelZeroTexture after mTexture has been created to save memory.
     TextureHelper11 mLevelZeroTexture;
-    RenderTarget11 *mLevelZeroRenderTarget;
+    std::unique_ptr<RenderTarget11> mLevelZeroRenderTarget;
     bool mUseLevelZeroTexture;
 
     // Swizzle-related variables
@@ -396,11 +396,12 @@ class TextureStorage11_Cube : public TextureStorage11
     static const size_t CUBE_FACE_COUNT = 6;
 
     TextureHelper11 mTexture;
-    RenderTarget11 *mRenderTarget[CUBE_FACE_COUNT][gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
+    std::unique_ptr<RenderTarget11> mRenderTarget[CUBE_FACE_COUNT]
+                                                 [gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
     // Level-zero workaround members. See TextureStorage11_2D's workaround members for a description.
     TextureHelper11 mLevelZeroTexture;
-    RenderTarget11 *mLevelZeroRenderTarget[CUBE_FACE_COUNT];
+    std::unique_ptr<RenderTarget11> mLevelZeroRenderTarget[CUBE_FACE_COUNT];
     bool mUseLevelZeroTexture;
 
     TextureHelper11 mSwizzleTexture;
@@ -445,10 +446,9 @@ class TextureStorage11_3D : public TextureStorage11
                         d3d11::SharedSRV *outSRV) const override;
 
     typedef std::pair<int, int> LevelLayerKey;
-    typedef std::map<LevelLayerKey, RenderTarget11*> RenderTargetMap;
-    RenderTargetMap mLevelLayerRenderTargets;
+    std::map<LevelLayerKey, std::unique_ptr<RenderTarget11>> mLevelLayerRenderTargets;
 
-    RenderTarget11 *mLevelRenderTargets[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
+    std::unique_ptr<RenderTarget11> mLevelRenderTargets[gl::IMPLEMENTATION_MAX_TEXTURE_LEVELS];
 
     TextureHelper11 mTexture;
     TextureHelper11 mSwizzleTexture;
@@ -520,8 +520,7 @@ class TextureStorage11_2DArray : public TextureStorage11
                                     DXGI_FORMAT resourceFormat,
                                     d3d11::SharedSRV *srv) const;
 
-    typedef std::map<LevelLayerRangeKey, RenderTarget11 *> RenderTargetMap;
-    RenderTargetMap mRenderTargets;
+    std::map<LevelLayerRangeKey, std::unique_ptr<RenderTarget11>> mRenderTargets;
 
     TextureHelper11 mTexture;
 
