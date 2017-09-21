@@ -146,7 +146,7 @@ class Renderer11 : public RendererD3D
                                    HANDLE shareHandle,
                                    const egl::AttributeMap &attribs) const override;
 
-    bool applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSize);
+    bool applyPrimitiveType(const gl::State &glState, GLenum mode, GLsizei count);
 
     // lost device
     bool testDeviceLost() override;
@@ -380,23 +380,24 @@ class Renderer11 : public RendererD3D
 
     egl::Error getEGLDevice(DeviceImpl **device) override;
 
-    gl::Error genericDrawArrays(const gl::Context *context,
-                                GLenum mode,
-                                GLint first,
-                                GLsizei count,
-                                GLsizei instances);
+    gl::Error drawArrays(const gl::Context *context,
+                         GLenum mode,
+                         GLint startVertex,
+                         GLsizei count,
+                         GLsizei instances);
 
-    gl::Error genericDrawElements(const gl::Context *context,
-                                  GLenum mode,
-                                  GLsizei count,
-                                  GLenum type,
-                                  const void *indices,
-                                  GLsizei instances);
+    gl::Error drawElements(const gl::Context *context,
+                           GLenum mode,
+                           GLsizei count,
+                           GLenum type,
+                           const void *indices,
+                           GLsizei instances);
 
-    gl::Error genericDrawIndirect(const gl::Context *context,
-                                  GLenum mode,
-                                  GLenum type,
-                                  const void *indirect);
+    gl::Error drawArraysIndirect(const gl::Context *context, GLenum mode, const void *indirect);
+    gl::Error drawElementsIndirect(const gl::Context *context,
+                                   GLenum mode,
+                                   GLenum type,
+                                   const void *indirect);
 
     // Necessary hack for default framebuffers in D3D.
     FramebufferImpl *createDefaultFramebuffer(const gl::FramebufferState &state) override;
@@ -460,23 +461,6 @@ class Renderer11 : public RendererD3D
     bool canSelectViewInVertexShader() const override;
 
   private:
-    gl::Error drawArraysImpl(const gl::Context *context,
-                             GLenum mode,
-                             GLint startVertex,
-                             GLsizei count,
-                             GLsizei instances);
-    gl::Error drawElementsImpl(const gl::Context *context,
-                               GLenum mode,
-                               GLsizei count,
-                               GLenum type,
-                               const void *indices,
-                               GLsizei instances);
-    gl::Error drawArraysIndirectImpl(const gl::Context *context, GLenum mode, const void *indirect);
-    gl::Error drawElementsIndirectImpl(const gl::Context *context,
-                                       GLenum mode,
-                                       GLenum type,
-                                       const void *indirect);
-
     void generateCaps(gl::Caps *outCaps,
                       gl::TextureCapsMap *outTextureCaps,
                       gl::Extensions *outExtensions,

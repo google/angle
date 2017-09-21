@@ -425,6 +425,12 @@ void PopulateFormatDeviceCaps(ID3D11Device *device,
     }
 }
 
+bool CullsEverything(const gl::State &glState)
+{
+    return (glState.getRasterizerState().cullFace &&
+            glState.getRasterizerState().cullMode == GL_FRONT_AND_BACK);
+}
+
 }  // anonymous namespace
 
 Renderer11::Renderer11(egl::Display *display)
@@ -1395,7 +1401,7 @@ void *Renderer11::getD3DDevice()
     return reinterpret_cast<void *>(mDevice);
 }
 
-bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSize)
+bool Renderer11::applyPrimitiveType(const gl::State &glState, GLenum mode, GLsizei count)
 {
     D3D11_PRIMITIVE_TOPOLOGY primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_UNDEFINED;
 
@@ -1404,6 +1410,19 @@ bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSi
     switch (mode)
     {
         case GL_POINTS:
+        {
+            bool usesPointSize = GetImplAs<ProgramD3D>(glState.getProgram())->usesPointSize();
+
+            // ProgramBinary assumes non-point rendering if gl_PointSize isn't written,
+            // which affects varying interpolation. Since the value of gl_PointSize is
+            // undefined when not written, just skip drawing to avoid unexpected results.
+            if (!usesPointSize && !glState.isTransformFeedbackActiveUnpaused())
+            {
+                // Notify developers of risking undefined behavior.
+                WARN() << "Point rendering without writing to gl_PointSize.";
+                return false;
+            }
+
             // If instanced pointsprites are enabled and the shader uses gl_PointSize, the topology
             // must be D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST.
             if (usesPointSize && getWorkarounds().useInstancedPointSpriteEmulation)
@@ -1416,6 +1435,7 @@ bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSi
             }
             minCount = 1;
             break;
+        }
         case GL_LINES:
             primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
             minCount          = 2;
@@ -1430,16 +1450,16 @@ bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSi
             break;
         case GL_TRIANGLES:
             primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-            minCount          = 3;
+            minCount          = CullsEverything(glState) ? std::numeric_limits<GLsizei>::max() : 3;
             break;
         case GL_TRIANGLE_STRIP:
             primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
-            minCount          = 3;
+            minCount          = CullsEverything(glState) ? std::numeric_limits<GLsizei>::max() : 3;
             break;
         // emulate fans via rewriting index buffer
         case GL_TRIANGLE_FAN:
             primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-            minCount          = 3;
+            minCount          = CullsEverything(glState) ? std::numeric_limits<GLsizei>::max() : 3;
             break;
         default:
             UNREACHABLE();
@@ -1451,16 +1471,31 @@ bool Renderer11::applyPrimitiveType(GLenum mode, GLsizei count, bool usesPointSi
     return count >= minCount;
 }
 
-gl::Error Renderer11::drawArraysImpl(const gl::Context *context,
-                                     GLenum mode,
-                                     GLint startVertex,
-                                     GLsizei count,
-                                     GLsizei instances)
+gl::Error Renderer11::drawArrays(const gl::Context *context,
+                                 GLenum mode,
+                                 GLint startVertex,
+                                 GLsizei count,
+                                 GLsizei instances)
 {
-    const auto &glState           = context->getGLState();
-    gl::Program *program          = glState.getProgram();
-    ProgramD3D *programD3D        = GetImplAs<ProgramD3D>(program);
+    const auto &glState = context->getGLState();
+
+    if (!applyPrimitiveType(glState, mode, count))
+    {
+        return gl::NoError();
+    }
+
+    ANGLE_TRY(
+        mStateManager.applyVertexBuffer(context, mode, startVertex, count, instances, nullptr));
+
+    if (glState.isTransformFeedbackActiveUnpaused())
+    {
+        ANGLE_TRY(markTransformFeedbackUsage(context));
+    }
+
+    gl::Program *program = glState.getProgram();
+    ASSERT(program != nullptr);
     GLsizei adjustedInstanceCount = GetAdjustedInstanceCount(program, instances);
+    ProgramD3D *programD3D        = GetImplAs<ProgramD3D>(program);
 
     if (programD3D->usesGeometryShader(mode) && glState.isTransformFeedbackActiveUnpaused())
     {
@@ -1563,14 +1598,24 @@ gl::Error Renderer11::drawArraysImpl(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::Error Renderer11::drawElementsImpl(const gl::Context *context,
-                                       GLenum mode,
-                                       GLsizei count,
-                                       GLenum type,
-                                       const void *indices,
-                                       GLsizei instances)
+gl::Error Renderer11::drawElements(const gl::Context *context,
+                                   GLenum mode,
+                                   GLsizei count,
+                                   GLenum type,
+                                   const void *indices,
+                                   GLsizei instances)
 {
     const auto &glState = context->getGLState();
+
+    if (!applyPrimitiveType(glState, mode, count))
+    {
+        return gl::NoError();
+    }
+
+    // Transform feedback is not allowed for DrawElements, this error should have been caught at the
+    // API validation layer.
+    ASSERT(!glState.isTransformFeedbackActiveUnpaused());
+
     TranslatedIndexData indexInfo;
     const gl::Program *program    = glState.getProgram();
     GLsizei adjustedInstanceCount = GetAdjustedInstanceCount(program, instances);
@@ -1667,12 +1712,14 @@ gl::Error Renderer11::drawElementsImpl(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::Error Renderer11::drawArraysIndirectImpl(const gl::Context *context,
-                                             GLenum mode,
-                                             const void *indirect)
+gl::Error Renderer11::drawArraysIndirect(const gl::Context *context,
+                                         GLenum mode,
+                                         const void *indirect)
 {
     const auto &glState = context->getGLState();
-    if (skipDraw(glState, mode))
+    ASSERT(!glState.isTransformFeedbackActiveUnpaused());
+
+    if (!applyPrimitiveType(glState, mode, std::numeric_limits<int>::max() - 1))
     {
         return gl::NoError();
     }
@@ -1715,13 +1762,15 @@ gl::Error Renderer11::drawArraysIndirectImpl(const gl::Context *context,
     return gl::NoError();
 }
 
-gl::Error Renderer11::drawElementsIndirectImpl(const gl::Context *context,
-                                               GLenum mode,
-                                               GLenum type,
-                                               const void *indirect)
+gl::Error Renderer11::drawElementsIndirect(const gl::Context *context,
+                                           GLenum mode,
+                                           GLenum type,
+                                           const void *indirect)
 {
     const auto &glState = context->getGLState();
-    if (skipDraw(glState, mode))
+    ASSERT(!glState.isTransformFeedbackActiveUnpaused());
+
+    if (!applyPrimitiveType(glState, mode, std::numeric_limits<int>::max() - 1))
     {
         return gl::NoError();
     }
@@ -3786,92 +3835,6 @@ egl::Error Renderer11::getEGLDevice(DeviceImpl **device)
 ContextImpl *Renderer11::createContext(const gl::ContextState &state)
 {
     return new Context11(state, this);
-}
-
-gl::Error Renderer11::genericDrawElements(const gl::Context *context,
-                                          GLenum mode,
-                                          GLsizei count,
-                                          GLenum type,
-                                          const void *indices,
-                                          GLsizei instances)
-{
-    const auto &glState  = context->getGLState();
-    gl::Program *program = glState.getProgram();
-    ASSERT(program != nullptr);
-    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
-    bool usesPointSize     = programD3D->usesPointSize();
-
-    if (!applyPrimitiveType(mode, count, usesPointSize))
-    {
-        return gl::NoError();
-    }
-
-    // Transform feedback is not allowed for DrawElements, this error should have been caught at the
-    // API validation layer.
-    ASSERT(!glState.isTransformFeedbackActiveUnpaused());
-
-    if (!skipDraw(glState, mode))
-    {
-        ANGLE_TRY(drawElementsImpl(context, mode, count, type, indices, instances));
-    }
-
-    return gl::NoError();
-}
-
-gl::Error Renderer11::genericDrawArrays(const gl::Context *context,
-                                        GLenum mode,
-                                        GLint first,
-                                        GLsizei count,
-                                        GLsizei instances)
-{
-    const auto &glState  = context->getGLState();
-    gl::Program *program = glState.getProgram();
-    ASSERT(program != nullptr);
-    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
-
-    if (!applyPrimitiveType(mode, count, programD3D->usesPointSize()))
-    {
-        return gl::NoError();
-    }
-
-    ANGLE_TRY(mStateManager.applyVertexBuffer(context, mode, first, count, instances, nullptr));
-
-    if (!skipDraw(glState, mode))
-    {
-        ANGLE_TRY(drawArraysImpl(context, mode, first, count, instances));
-
-        if (glState.isTransformFeedbackActiveUnpaused())
-        {
-            ANGLE_TRY(markTransformFeedbackUsage(context));
-        }
-    }
-
-    return gl::NoError();
-}
-
-gl::Error Renderer11::genericDrawIndirect(const gl::Context *context,
-                                          GLenum mode,
-                                          GLenum type,
-                                          const void *indirect)
-{
-    const auto &glState = context->getGLState();
-    ASSERT(!glState.isTransformFeedbackActiveUnpaused());
-
-    gl::Program *program = glState.getProgram();
-    ASSERT(program != nullptr);
-    ProgramD3D *programD3D = GetImplAs<ProgramD3D>(program);
-    applyPrimitiveType(mode, 0, programD3D->usesPointSize());
-
-    if (type == GL_NONE)
-    {
-        ANGLE_TRY(drawArraysIndirectImpl(context, mode, indirect));
-    }
-    else
-    {
-        ANGLE_TRY(drawElementsIndirectImpl(context, mode, type, indirect));
-    }
-
-    return gl::NoError();
 }
 
 FramebufferImpl *Renderer11::createDefaultFramebuffer(const gl::FramebufferState &state)

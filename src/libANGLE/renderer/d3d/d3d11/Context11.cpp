@@ -160,7 +160,7 @@ gl::Error Context11::finish()
 gl::Error Context11::drawArrays(const gl::Context *context, GLenum mode, GLint first, GLsizei count)
 {
     ANGLE_TRY(prepareForDrawCall(context, mode));
-    return mRenderer->genericDrawArrays(context, mode, first, count, 0);
+    return mRenderer->drawArrays(context, mode, first, count, 0);
 }
 
 gl::Error Context11::drawArraysInstanced(const gl::Context *context,
@@ -170,7 +170,7 @@ gl::Error Context11::drawArraysInstanced(const gl::Context *context,
                                          GLsizei instanceCount)
 {
     ANGLE_TRY(prepareForDrawCall(context, mode));
-    return mRenderer->genericDrawArrays(context, mode, first, count, instanceCount);
+    return mRenderer->drawArrays(context, mode, first, count, instanceCount);
 }
 
 gl::Error Context11::drawElements(const gl::Context *context,
@@ -180,7 +180,7 @@ gl::Error Context11::drawElements(const gl::Context *context,
                                   const void *indices)
 {
     ANGLE_TRY(prepareForDrawCall(context, mode));
-    return mRenderer->genericDrawElements(context, mode, count, type, indices, 0);
+    return mRenderer->drawElements(context, mode, count, type, indices, 0);
 }
 
 gl::Error Context11::drawElementsInstanced(const gl::Context *context,
@@ -191,7 +191,7 @@ gl::Error Context11::drawElementsInstanced(const gl::Context *context,
                                            GLsizei instances)
 {
     ANGLE_TRY(prepareForDrawCall(context, mode));
-    return mRenderer->genericDrawElements(context, mode, count, type, indices, instances);
+    return mRenderer->drawElements(context, mode, count, type, indices, instances);
 }
 
 gl::Error Context11::drawRangeElements(const gl::Context *context,
@@ -203,7 +203,7 @@ gl::Error Context11::drawRangeElements(const gl::Context *context,
                                        const void *indices)
 {
     ANGLE_TRY(prepareForDrawCall(context, mode));
-    return mRenderer->genericDrawElements(context, mode, count, type, indices, 0);
+    return mRenderer->drawElements(context, mode, count, type, indices, 0);
 }
 
 gl::Error Context11::drawArraysIndirect(const gl::Context *context,
@@ -211,7 +211,7 @@ gl::Error Context11::drawArraysIndirect(const gl::Context *context,
                                         const void *indirect)
 {
     ANGLE_TRY(prepareForDrawCall(context, mode));
-    return mRenderer->genericDrawIndirect(context, mode, GL_NONE, indirect);
+    return mRenderer->drawArraysIndirect(context, mode, indirect);
 }
 
 gl::Error Context11::drawElementsIndirect(const gl::Context *context,
@@ -220,7 +220,7 @@ gl::Error Context11::drawElementsIndirect(const gl::Context *context,
                                           const void *indirect)
 {
     ANGLE_TRY(prepareForDrawCall(context, mode));
-    return mRenderer->genericDrawIndirect(context, mode, type, indirect);
+    return mRenderer->drawElementsIndirect(context, mode, type, indirect);
 }
 
 GLenum Context11::getResetStatus()
