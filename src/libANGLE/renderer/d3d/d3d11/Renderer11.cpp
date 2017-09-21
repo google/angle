@@ -3996,8 +3996,10 @@ gl::Error Renderer11::clearRenderTarget(RenderTargetD3D *renderTarget,
 {
     RenderTarget11 *rt11 = GetAs<RenderTarget11>(renderTarget);
 
-    if (rt11->getDepthStencilView().valid())
+    if (rt11->getFormatSet().dsvFormat != DXGI_FORMAT_UNKNOWN)
     {
+        ASSERT(rt11->getDepthStencilView().valid());
+
         const auto &format    = rt11->getFormatSet();
         const UINT clearFlags = (format.format().depthBits > 0 ? D3D11_CLEAR_DEPTH : 0) |
                                 (format.format().stencilBits ? D3D11_CLEAR_STENCIL : 0);

@@ -190,20 +190,42 @@ class RobustResourceInitTest : public ANGLETest
         setConfigGreenBits(8);
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
+        setConfigDepthBits(24);
+        setConfigStencilBits(8);
 
         setRobustResourceInit(true);
     }
 
-    bool hasGLExtension()
+    bool isSkippedPlatform()
     {
         // Skip all tests on the OpenGL backend. It is not fully implemented but still needs to be
         // exposed to test in Chromium.
-        if (IsDesktopOpenGL() || IsOpenGLES())
+        return IsDesktopOpenGL() || IsOpenGLES();
+    }
+
+    bool hasGLExtension()
+    {
+        return !isSkippedPlatform() && extensionEnabled("GL_ANGLE_robust_resource_initialization");
+    }
+
+    bool hasEGLExtension()
+    {
+        return !isSkippedPlatform() &&
+               eglDisplayExtensionEnabled(getEGLWindow()->getDisplay(),
+                                          "EGL_ANGLE_robust_resource_initialization");
+    }
+
+    bool hasRobustSurfaceInit()
+    {
+        if (!hasEGLExtension())
         {
             return false;
         }
 
-        return extensionEnabled("GL_ANGLE_robust_resource_initialization");
+        EGLint robustSurfaceInit = EGL_FALSE;
+        eglQuerySurface(getEGLWindow()->getDisplay(), getEGLWindow()->getSurface(),
+                        EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE, &robustSurfaceInit);
+        return robustSurfaceInit;
     }
 
     void setupTexture(GLTexture *tex);
@@ -292,6 +314,8 @@ TEST_P(RobustResourceInitTest, ExpectedRendererSupport)
 {
     bool shouldHaveSupport = IsD3D11() || IsD3D11_FL93() || IsD3D9();
     EXPECT_EQ(shouldHaveSupport, hasGLExtension());
+    EXPECT_EQ(shouldHaveSupport, hasEGLExtension());
+    EXPECT_EQ(shouldHaveSupport, hasRobustSurfaceInit());
 }
 
 // Tests of the GL_ROBUST_RESOURCE_INITIALIZATION_ANGLE query.
@@ -1498,6 +1522,46 @@ TEST_P(RobustResourceInitTest, ClearWithScissor)
     EXPECT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
     EXPECT_PIXEL_COLOR_EQ(kSize - 1, 0, GLColor::transparentBlack);
+}
+
+// Tests that surfaces are initialized when they are created
+TEST_P(RobustResourceInitTest, SurfaceInitialized)
+{
+    ANGLE_SKIP_TEST_IF(!hasRobustSurfaceInit());
+
+    checkFramebufferNonZeroPixels(0, 0, 0, 0, GLColor::black);
+}
+
+// Tests that surfaces are initialized after swapping if they are not preserved
+TEST_P(RobustResourceInitTest, SurfaceInitializedAfterSwap)
+{
+    ANGLE_SKIP_TEST_IF(!hasRobustSurfaceInit());
+
+    EGLint swapBehaviour = 0;
+    ASSERT_TRUE(eglQuerySurface(getEGLWindow()->getDisplay(), getEGLWindow()->getSurface(),
+                                EGL_SWAP_BEHAVIOR, &swapBehaviour));
+
+    const std::array<GLColor, 4> clearColors = {{
+        GLColor::blue, GLColor::cyan, GLColor::red, GLColor::yellow,
+    }};
+    for (size_t i = 0; i < clearColors.size(); i++)
+    {
+        if (swapBehaviour == EGL_BUFFER_PRESERVED && i > 0)
+        {
+            EXPECT_PIXEL_COLOR_EQ(0, 0, clearColors[i - 1]);
+        }
+        else
+        {
+            checkFramebufferNonZeroPixels(0, 0, 0, 0, GLColor::black);
+        }
+
+        angle::Vector4 clearColor = clearColors[i].toNormalizedVector();
+        glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
+        glClear(GL_COLOR_BUFFER_BIT);
+        EXPECT_GL_NO_ERROR();
+
+        swapBuffers();
+    }
 }
 
 ANGLE_INSTANTIATE_TEST(RobustResourceInitTest,

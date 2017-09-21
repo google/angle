@@ -1736,11 +1736,9 @@ void Framebuffer::setAttachmentImpl(const Context *context,
             break;
 
         case GL_BACK:
-            mState.mColorAttachments[0].attach(context, type, binding, textureIndex, resource,
-                                               numViews, baseViewIndex, multiviewLayout,
-                                               viewportOffsets);
-            mDirtyBits.set(DIRTY_BIT_COLOR_ATTACHMENT_0);
-            // No need for a resource binding for the default FBO, it's always complete.
+            updateAttachment(context, &mState.mColorAttachments[0], DIRTY_BIT_COLOR_ATTACHMENT_0,
+                             &mDirtyColorAttachmentBindings[0], type, binding, textureIndex,
+                             resource, numViews, baseViewIndex, multiviewLayout, viewportOffsets);
             break;
 
         default:
@@ -1805,8 +1803,13 @@ void Framebuffer::syncState(const Context *context)
 
 void Framebuffer::signal(size_t dirtyBit, InitState state)
 {
-    // TOOD(jmadill): Make this only update individual attachments to do less work.
-    mCachedStatus.reset();
+    // Only reset the cached status if this is not the default framebuffer.  The default framebuffer
+    // will still use this channel to mark itself dirty.
+    if (mId != 0)
+    {
+        // TOOD(jmadill): Make this only update individual attachments to do less work.
+        mCachedStatus.reset();
+    }
 
     // Mark the appropriate init flag.
     mState.mResourceNeedsInit.set(dirtyBit, state == InitState::MayNeedInit);

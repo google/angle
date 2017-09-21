@@ -62,7 +62,8 @@ Surface::Surface(EGLint surfaceType,
       mOrientation(0),
       mTexture(),
       mColorFormat(config->renderTargetFormat),
-      mDSFormat(config->depthStencilFormat)
+      mDSFormat(config->depthStencilFormat),
+      mInitState(gl::InitState::Initialized)
 {
     mPostSubBufferRequested = (attributes.get(EGL_POST_SUB_BUFFER_SUPPORTED_NV, EGL_FALSE) == EGL_TRUE);
     mFlexibleSurfaceCompatibilityRequested =
@@ -84,6 +85,10 @@ Surface::Surface(EGLint surfaceType,
 
     mRobustResourceInitialization =
         (attributes.get(EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE, EGL_FALSE) == EGL_TRUE);
+    if (mRobustResourceInitialization)
+    {
+        mInitState = gl::InitState::MayNeedInit;
+    }
 
     mFixedSize = (attributes.get(EGL_FIXED_SIZE_ANGLE, EGL_FALSE) == EGL_TRUE);
     if (mFixedSize)
@@ -144,6 +149,15 @@ Error Surface::destroyImpl(const Display *display)
 
     delete this;
     return NoError();
+}
+
+void Surface::postSwap()
+{
+    if (mRobustResourceInitialization && mSwapBehavior != EGL_BUFFER_PRESERVED)
+    {
+        mInitState = gl::InitState::MayNeedInit;
+        mDirtyChannel.signal(mInitState);
+    }
 }
 
 Error Surface::initialize(const Display *display)
@@ -216,12 +230,16 @@ EGLint Surface::getType() const
 
 Error Surface::swap(const gl::Context *context)
 {
-    return mImplementation->swap(context);
+    ANGLE_TRY(mImplementation->swap(context));
+    postSwap();
+    return NoError();
 }
 
 Error Surface::swapWithDamage(const gl::Context *context, EGLint *rects, EGLint n_rects)
 {
-    return mImplementation->swapWithDamage(context, rects, n_rects);
+    ANGLE_TRY(mImplementation->swapWithDamage(context, rects, n_rects));
+    postSwap();
+    return NoError();
 }
 
 Error Surface::postSubBuffer(const gl::Context *context,
@@ -435,13 +453,12 @@ gl::Framebuffer *Surface::createDefaultFramebuffer(const Display *display)
 
 gl::InitState Surface::initState(const gl::ImageIndex & /*imageIndex*/) const
 {
-    // TODO(jmadill): Lazy surface init.
-    return gl::InitState::Initialized;
+    return mInitState;
 }
 
-void Surface::setInitState(const gl::ImageIndex & /*imageIndex*/, gl::InitState /*initState*/)
+void Surface::setInitState(const gl::ImageIndex & /*imageIndex*/, gl::InitState initState)
 {
-    // No-op.
+    mInitState = initState;
 }
 
 WindowSurface::WindowSurface(rx::EGLImplFactory *implFactory,
