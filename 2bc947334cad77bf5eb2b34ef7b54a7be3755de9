@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "96d00cfe_3dd0476f",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 426,
+      "author": {
+        "id": 1001426
+      },
+      "writtenOn": "2017-09-21T18:11:44Z",
+      "side": 0,
+      "message": "you haven\u0027t removed swapImpl() from SurfaceVk.h",
+      "range": {
+        "startLine": 426,
+        "startChar": 27,
+        "endLine": 426,
+        "endChar": 35
+      },
+      "revId": "2bc947334cad77bf5eb2b34ef7b54a7be3755de9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
+      "unresolved": true
+    }
+  ]
+}
