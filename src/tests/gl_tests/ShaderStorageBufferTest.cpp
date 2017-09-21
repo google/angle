@@ -87,6 +87,7 @@ TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferReadWrite)
 {
     // TODO(jiajia.qin@intel.com): Figure out why it fails on AMD platform.
     ANGLE_SKIP_TEST_IF(IsAMD() && IsDesktopOpenGL());
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsIntel() && IsOpenGL());
 
     const std::string &csSource =
         "#version 310 es\n"

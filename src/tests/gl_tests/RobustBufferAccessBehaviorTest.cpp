@@ -148,6 +148,7 @@ class RobustBufferAccessBehaviorTest : public ANGLETest
 // GL_KHR_robust_buffer_access_behavior is supported.
 TEST_P(RobustBufferAccessBehaviorTest, DrawElementsIndexOutOfRangeWithStaticDraw)
 {
+    ANGLE_SKIP_TEST_IF(IsNVIDIA() && IsWindows() && IsOpenGL());
     ANGLE_SKIP_TEST_IF(!initExtension());
 
     runIndexOutOfRangeTests(GL_STATIC_DRAW);
@@ -158,6 +159,7 @@ TEST_P(RobustBufferAccessBehaviorTest, DrawElementsIndexOutOfRangeWithStaticDraw
 // GL_KHR_robust_buffer_access_behavior is supported.
 TEST_P(RobustBufferAccessBehaviorTest, DrawElementsIndexOutOfRangeWithDynamicDraw)
 {
+    ANGLE_SKIP_TEST_IF(IsNVIDIA() && IsWindows() && IsOpenGL());
     ANGLE_SKIP_TEST_IF(!initExtension());
 
     runIndexOutOfRangeTests(GL_DYNAMIC_DRAW);
