@@ -101,6 +101,8 @@ void VertexArray11::updateVertexAttribStorage(const gl::Context *context, size_t
 
     mAttributeStorageTypes[attribIndex] = newStorageType;
 
+    StateManager11 *stateManager = GetImplAs<Context11>(context)->getRenderer()->getStateManager();
+
     if (newStorageType == VertexStorageType::DYNAMIC)
     {
         if (oldStorageType != VertexStorageType::DYNAMIC)
@@ -113,6 +115,7 @@ void VertexArray11::updateVertexAttribStorage(const gl::Context *context, size_t
     else
     {
         mAttribsToTranslate.set(attribIndex);
+        stateManager->invalidateVertexAttributeTranslation();
 
         if (oldStorageType == VertexStorageType::DYNAMIC)
         {
@@ -125,8 +128,6 @@ void VertexArray11::updateVertexAttribStorage(const gl::Context *context, size_t
     gl::Buffer *newBufferGL = binding.getBuffer().get();
     Buffer11 *oldBuffer11   = oldBufferGL ? GetImplAs<Buffer11>(oldBufferGL) : nullptr;
     Buffer11 *newBuffer11   = newBufferGL ? GetImplAs<Buffer11>(newBufferGL) : nullptr;
-
-    StateManager11 *stateManager = GetImplAs<Context11>(context)->getRenderer()->getStateManager();
 
     if (oldBuffer11 != newBuffer11 || oldStorageType != newStorageType)
     {

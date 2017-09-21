@@ -182,6 +182,9 @@ class StateManager11 final : angle::NonCopyable
     // Called by the Framebuffer11 and VertexArray11.
     void invalidateShaders();
 
+    // Called by VertexArray11 to trigger attribute translation.
+    void invalidateVertexAttributeTranslation();
+
     void setRenderTarget(ID3D11RenderTargetView *rtv, ID3D11DepthStencilView *dsv);
     void setRenderTargets(ID3D11RenderTargetView **rtvs, UINT numRtvs, ID3D11DepthStencilView *dsv);
 
@@ -307,7 +310,8 @@ class StateManager11 final : angle::NonCopyable
     gl::Error clearTextures(gl::SamplerType samplerType, size_t rangeStart, size_t rangeEnd);
     void handleMultiviewDrawFramebufferChange(const gl::Context *context);
 
-    gl::Error syncCurrentValueAttribs(const gl::State &state);
+    gl::Error syncVertexAttributes(const gl::Context *context);
+    gl::Error syncCurrentValueAttribs(const gl::State &glState);
 
     gl::Error generateSwizzle(const gl::Context *context, gl::Texture *texture);
     gl::Error generateSwizzlesForShader(const gl::Context *context, gl::SamplerType type);
@@ -342,6 +346,7 @@ class StateManager11 final : angle::NonCopyable
         DIRTY_BIT_DRIVER_UNIFORMS,
         DIRTY_BIT_PROGRAM_UNIFORM_BUFFERS,
         DIRTY_BIT_SHADERS,
+        DIRTY_BIT_CURRENT_VALUE_ATTRIBS,
         DIRTY_BIT_INVALID,
         DIRTY_BIT_MAX = DIRTY_BIT_INVALID,
     };
@@ -440,6 +445,7 @@ class StateManager11 final : angle::NonCopyable
     // Current applied input layout.
     ResourceSerial mCurrentInputLayout;
     bool mInputLayoutIsDirty;
+    bool mVertexAttribsNeedTranslation;
 
     // Current applied vertex states.
     // TODO(jmadill): Figure out how to use ResourceSerial here.

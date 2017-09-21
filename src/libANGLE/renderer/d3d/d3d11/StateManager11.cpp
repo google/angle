@@ -542,6 +542,7 @@ StateManager11::StateManager11(Renderer11 *renderer)
       mCurrentValueAttribs(),
       mCurrentInputLayout(),
       mInputLayoutIsDirty(false),
+      mVertexAttribsNeedTranslation(false),
       mDirtyVertexBufferRange(gl::MAX_VERTEX_ATTRIBS, 0),
       mCurrentPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_UNDEFINED),
       mDirtySwizzles(false),
@@ -976,7 +977,7 @@ void StateManager11::syncState(const gl::Context *context, const gl::State::Dirt
                 {
                     size_t attribIndex =
                         static_cast<size_t>(dirtyBit - gl::State::DIRTY_BIT_CURRENT_VALUE_0);
-                    mDirtyCurrentValueAttribs.set(attribIndex);
+                    invalidateCurrentValueAttrib(attribIndex);
                 }
                 break;
         }
@@ -1367,6 +1368,8 @@ void StateManager11::invalidateVertexBuffer()
                                                 gl::MAX_VERTEX_ATTRIBS);
     mDirtyVertexBufferRange = gl::RangeUI(0, limit);
     mInputLayoutIsDirty     = true;
+    mInternalDirtyBits.set(DIRTY_BIT_CURRENT_VALUE_ATTRIBS);
+    invalidateVertexAttributeTranslation();
 }
 
 void StateManager11::invalidateViewport(const gl::Context *context)
@@ -1456,6 +1459,11 @@ void StateManager11::setRenderTargets(ID3D11RenderTargetView **rtvs,
 
     mRenderer->getDeviceContext()->OMSetRenderTargets(numRTVs, (numRTVs > 0) ? rtvs : nullptr, dsv);
     mInternalDirtyBits.set(DIRTY_BIT_RENDER_TARGET);
+}
+
+void StateManager11::invalidateVertexAttributeTranslation()
+{
+    mVertexAttribsNeedTranslation = true;
 }
 
 void StateManager11::onBeginQuery(Query11 *query)
@@ -1712,22 +1720,22 @@ gl::Error StateManager11::syncFramebuffer(const gl::Context *context, gl::Frameb
 void StateManager11::invalidateCurrentValueAttrib(size_t attribIndex)
 {
     mDirtyCurrentValueAttribs.set(attribIndex);
+    mInternalDirtyBits.set(DIRTY_BIT_CURRENT_VALUE_ATTRIBS);
 }
 
-gl::Error StateManager11::syncCurrentValueAttribs(const gl::State &state)
+gl::Error StateManager11::syncCurrentValueAttribs(const gl::State &glState)
 {
-    const auto &activeAttribsMask  = state.getProgram()->getActiveAttribLocationsMask();
+    const auto &activeAttribsMask  = glState.getProgram()->getActiveAttribLocationsMask();
     const auto &dirtyActiveAttribs = (activeAttribsMask & mDirtyCurrentValueAttribs);
-    const auto &vertexAttributes   = state.getVertexArray()->getVertexAttributes();
-    const auto &vertexBindings     = state.getVertexArray()->getVertexBindings();
 
     if (!dirtyActiveAttribs.any())
     {
         return gl::NoError();
     }
 
-    invalidateVertexBuffer();
-    mDirtyCurrentValueAttribs = (mDirtyCurrentValueAttribs & ~dirtyActiveAttribs);
+    const auto &vertexAttributes = glState.getVertexArray()->getVertexAttributes();
+    const auto &vertexBindings   = glState.getVertexArray()->getVertexBindings();
+    mDirtyCurrentValueAttribs    = (mDirtyCurrentValueAttribs & ~dirtyActiveAttribs);
 
     for (auto attribIndex : dirtyActiveAttribs)
     {
@@ -1735,7 +1743,7 @@ gl::Error StateManager11::syncCurrentValueAttribs(const gl::State &state)
             continue;
 
         const auto *attrib                   = &vertexAttributes[attribIndex];
-        const auto &currentValue             = state.getVertexAttribCurrentValue(attribIndex);
+        const auto &currentValue             = glState.getVertexAttribCurrentValue(attribIndex);
         auto currentValueAttrib              = &mCurrentValueAttribs[attribIndex];
         currentValueAttrib->currentValueType = currentValue.Type;
         currentValueAttrib->attribute        = attrib;
@@ -1939,6 +1947,9 @@ gl::Error StateManager11::updateState(const gl::Context *context, GLenum drawMod
                 break;
             case DIRTY_BIT_SHADERS:
                 ANGLE_TRY(syncProgram(context, drawMode));
+                break;
+            case DIRTY_BIT_CURRENT_VALUE_ATTRIBS:
+                ANGLE_TRY(syncCurrentValueAttribs(glState));
                 break;
             default:
                 UNREACHABLE();
@@ -2481,14 +2492,15 @@ gl::Error StateManager11::applyVertexBuffer(const gl::Context *context,
     const auto &vertexArray = state.getVertexArray();
     auto *vertexArray11     = GetImplAs<VertexArray11>(vertexArray);
 
-    if (vertexArray11->hasDirtyOrDynamicAttrib(context))
+    if (mVertexAttribsNeedTranslation)
     {
         ANGLE_TRY(vertexArray11->updateDirtyAndDynamicAttribs(context, &mVertexDataManager, first,
                                                               count, instances));
-        invalidateVertexBuffer();
-    }
+        mInputLayoutIsDirty = true;
 
-    ANGLE_TRY(syncCurrentValueAttribs(state));
+        // Determine if we need to update attribs on the next draw.
+        mVertexAttribsNeedTranslation = (vertexArray11->hasDynamicAttrib(context));
+    }
 
     if (!mLastFirstVertex.valid() || mLastFirstVertex.value() != first)
     {
